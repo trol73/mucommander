@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =================================================== -->
+<!-- Author:           Oleg Trifonov                   -->
+<!-- Description:                                        -->
+<!-- A dark theme  -->
+<!-- =================================================== -->
+
+<theme>
+    <file_table>
+        <border color="868686"/>
+        <inactive_border color="868686"/>
+        <outline color="244c8a"/>
+        <inactive_outline color="a6a6a6"/>
+        <font family="Lucida Grande" size="13"/>
+        <normal>
+            <background color="000000"/>
+            <inactive_background color="000000"/>
+        </normal>
+        <selected>
+            <background color="3875d7"/>
+            <inactive_background color="c0c0c0"/>
+            <inactive_secondary_background color="d9d9d9"/>
+            <secondary_background color="3f85f2"/>
+        </selected>
+        <alternate>
+            <background color="151515"/>
+            <inactive_background color="151515"/>
+        </alternate>
+        <unmatched>
+            <background color="b2b2b2"/>
+            <foreground color="000000"/>
+        </unmatched>
+        <hidden>
+            <normal>
+                <foreground color="666666"/>
+                <inactive_foreground color="666666"/>
+            </normal>
+            <selected>
+                <foreground color="ffffff"/>
+                <inactive_foreground color="666666"/>
+            </selected>
+        </hidden>
+        <folder>
+            <normal>
+                <inactive_foreground color="ffffff"/>
+                <foreground color="ffffff"/>
+            </normal>
+            <selected>
+                <inactive_foreground color="000000"/>
+                <foreground color="ffffff"/>
+            </selected>
+        </folder>
+        <archive>
+            <normal>
+                <inactive_foreground color="9999ff"/>
+                <foreground color="9999ff"/>
+            </normal>
+            <selected>
+                <inactive_foreground color="000000"/>
+                <foreground color="ffffff"/>
+            </selected>
+        </archive>
+        <symlink>
+            <normal>
+                <inactive_foreground color="ff00ff"/>
+                <foreground color="ff00ff"/>
+            </normal>
+            <selected>
+                <inactive_foreground color="000000"/>
+                <foreground color="ffffff"/>
+            </selected>
+        </symlink>
+        <marked>
+            <normal>
+                <inactive_foreground color="ffff00"/>
+                <foreground color="ffff00"/>
+            </normal>
+            <selected>
+                <inactive_foreground color="cc0000"/>
+                <foreground color="cc0000"/>
+            </selected>
+        </marked>
+        <file>
+            <normal>
+                <inactive_foreground color="66ffff"/>
+                <foreground color="66ffff"/>
+            </normal>
+            <selected>
+                <inactive_foreground color="000000"/>
+                <foreground color="ffffff"/>
+            </selected>
+        </file>
+    </file_table>
+    <shell>
+        <font family="Monospaced" size="12" bold="true"/>
+        <normal>
+            <background color="ffffff"/>
+            <foreground color="000000"/>
+        </normal>
+        <selected>
+            <background color="3875d7"/>
+            <foreground color="ffffff"/>
+        </selected>
+    </shell>
+    <shell_history>
+        <font family="Lucida Grande" size="12"/>
+        <normal>
+            <background color="ffffff"/>
+            <foreground color="000000"/>
+        </normal>
+        <selected>
+            <background color="3875d7"/>
+            <foreground color="ffffff"/>
+        </selected>
+    </shell_history>
+    <editor>
+        <font family="Lucida Grande" size="13"/>
+        <normal>
+            <background color="000000"/>
+            <foreground color="99ff99"/>
+        </normal>
+        <selected>
+            <background color="3875d7"/>
+            <foreground color="ffffff"/>
+        </selected>
+    </editor>
+    <location_bar>
+        <font family="Lucida Grande" size="12"/>
+        <progress color="3875d7" alpha="40"/>
+        <normal>
+            <background color="ffffff"/>
+            <foreground color="000000"/>
+        </normal>
+        <selected>
+            <background color="3875d7"/>
+            <foreground color="ffffff"/>
+        </selected>
+    </location_bar>
+    <status_bar>
+        <font family="Lucida Grande" size="12"/>
+        <background color="d6d6d6"/>
+        <foreground color="000000"/>
+        <border color="868686"/>
+        <ok color="5dc23c"/>
+        <warning color="f6dc6c"/>
+        <critical color="e6594e"/>
+    </status_bar>
+    <quick_list>
+        <header>
+            <font family="Lucida Grande" size="13"/>
+            <foreground color="ffffff"/>
+            <background color="1b44f3"/>
+            <secondary_background color="5170f6"/>
+        </header>
+        <item>
+            <font family="Lucida Grande" size="12"/>
+            <normal>
+                <foreground color="000000"/>
+                <background color="ffffff"/>
+            </normal>
+            <selected>
+                <foreground color="ffffff"/>
+                <background color="3875d7"/>
+            </selected>
+        </item>
+    </quick_list>
+</theme>
