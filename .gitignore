@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+tmp/*
+lib/*
+dist/*
+reports/*
+out/*
+.svn/*
+.idea/*
