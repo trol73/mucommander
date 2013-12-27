@@ -9,6 +9,7 @@ import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.FindFileAction;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.helper.MnemonicHelper;
+import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.icon.SpinningDial;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.XBoxPanel;
@@ -16,7 +17,8 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.text.FilePathField;
-
+import com.mucommander.ui.viewer.EditorRegistrar;
+import com.mucommander.ui.viewer.ViewerRegistrar;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -163,8 +165,10 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int index = list.locationToIndex(e.getPoint());
-                final AbstractFile file = listModel.get(index);
+                final AbstractFile file = getSelectedFile();
+                if (file == null) {
+                    return;
+                }
                 final FileTable table = mainFrame.getActivePanel().getFileTable();
 
                 if (e.getClickCount() >= 2) {
@@ -186,6 +190,27 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                     }.start();
                 }
             }
+        });
+        list.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                final AbstractFile file = getSelectedFile();
+                if (file == null) {
+                    return;
+                }
+                switch(e.getKeyCode()) {
+                    case KeyEvent.VK_F3:
+                        ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
+
+                        break;
+                    case KeyEvent.VK_F4:
+                        EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
+                        break;
+
+                }
+            }
+
         });
         JScrollPane scrollPane = new JScrollPane(list);
         contentPane.add(scrollPane, BorderLayout.CENTER);
@@ -235,6 +260,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
         updateButtons();
         getRootPane().setDefaultButton(btnNewSearch);
+
         setModal(false);
     }
 
@@ -306,4 +332,15 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         fileName = edtFileName.getText();
         searchText = edtText.getText();
     }
+
+    private AbstractFile getSelectedFile() {
+        int index = list.getSelectedIndex();
+        if (index < 0) {
+            return null;
+        }
+        final AbstractFile file = listModel.get(index);
+        return file;
+    }
+
+
 }
