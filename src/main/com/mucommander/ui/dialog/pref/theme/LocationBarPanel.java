@@ -73,8 +73,12 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
         label.setTextPainted(true);
         addFontChooserListener(fontChooser, label);
         colorsPanel.add(createCaptionLabel("theme_editor.progress"));
+        PreviewLabel previewLabel = new PreviewLabel();
+        previewLabel.setTextPainted(true);
         colorsPanel.add(new JLabel());
-        colorsPanel.add(new ColorButton(parent, themeData, ThemeData.LOCATION_BAR_PROGRESS_COLOR, PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME, label));
+        ColorButton btn = new ColorButton(parent, themeData, ThemeData.LOCATION_BAR_PROGRESS_COLOR, PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME, previewLabel);
+        colorsPanel.add(btn);
+        btn.addUpdatedPreviewComponent(label);
         label.addPropertyChangeListener(this);
 
         flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

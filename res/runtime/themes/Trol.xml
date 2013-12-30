@@ -123,6 +123,9 @@
             <background color="3875d7"/>
             <foreground color="ffffff"/>
         </selected>
+         <current>
+            <background color="111111"/>
+        </current>
     </editor>
     <location_bar>
         <font family="Lucida Grande" size="12"/>

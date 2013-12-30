@@ -41,6 +41,7 @@ import com.mucommander.ui.theme.FontChangedEvent;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -53,7 +54,8 @@ class TextEditorImpl implements ThemeListener {
 
 	private JFrame frame;
 
-	private JTextArea textArea;
+	//private JTextArea textArea;
+    RSyntaxTextArea textArea;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -71,12 +73,14 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 	private void initTextArea(boolean isEditable) {
-		textArea = new JTextArea() {
-			@Override
-			public Insets getInsets() {
-				return new Insets(4, 3, 4, 3);
-			}
-		};
+//		textArea = new JTextArea() {
+//			@Override
+//			public Insets getInsets() {
+//				return new Insets(4, 3, 4, 3);
+//			}
+//		};
+        textArea = new RSyntaxTextArea();
+        textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
 
 		textArea.setEditable(isEditable);
 

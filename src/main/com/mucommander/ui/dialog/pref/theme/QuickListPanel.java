@@ -188,16 +188,9 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
         // Color buttons.        
         addColorButtons(gridPanel, fontChooser, "",
         		ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR, ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+        addColorButtons(gridPanel, fontChooser, "",
+                -1, ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         label.addPropertyChangeListener(this);
-        
-        gridPanel.add(createCaptionLabel(""));
-        gridPanel.add(new JLabel());
-        PreviewLabel label3 = new PreviewLabel();        
-        ColorButton butt;
-        gridPanel.add(butt = new ColorButton(parent, themeData, ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, label3));//.addPropertyChangeListener(this);
-        label3.setTextPainted(true);
-        label3.addPropertyChangeListener(this);
-        butt.addUpdatedPreviewComponent(label3);
 
         // Wraps everything in a flow layout.
         colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

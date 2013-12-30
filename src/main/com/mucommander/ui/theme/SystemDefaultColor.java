@@ -69,6 +69,8 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
     public static final int SELECTION_FOREGROUND = 3;
     /** Identifies a selection background color (linked to {@link JTextComponent#getSelectionColor()}). */
     public static final int SELECTION_BACKGROUND = 4;
+    /** Identifies a current line background color. */
+    public static final int CURRENT_LINE_BACKGROUND = 5;
 
 
 

@@ -26,6 +26,7 @@ import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.theme.ThemeData;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +41,7 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Used to preview the editor's theme. */
-    private JTextArea preview;
+    private RSyntaxTextArea preview;
 
 
 
@@ -75,11 +76,19 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
         // Header.
         addLabelRow(gridPanel, false);
 
+        PreviewLabel label = new PreviewLabel();
+
         // Color buttons.
         addColorButtons(gridPanel, fontChooser, "theme_editor.normal",
-                        ThemeData.EDITOR_FOREGROUND_COLOR, ThemeData.EDITOR_BACKGROUND_COLOR).addPropertyChangeListener(this);
+                        ThemeData.EDITOR_FOREGROUND_COLOR, ThemeData.EDITOR_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         addColorButtons(gridPanel, fontChooser, "theme_editor.selected",
-                        ThemeData.EDITOR_SELECTED_FOREGROUND_COLOR, ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR).addPropertyChangeListener(this);
+                        ThemeData.EDITOR_SELECTED_FOREGROUND_COLOR, ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+
+        addColorButtons(gridPanel, fontChooser, "theme_editor.current",
+                -1, ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+
+        label.addPropertyChangeListener(this);
+        //butt.addUpdatedPreviewComponent(label);
 
         // Wraps everything in a flow layout.
         colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -124,7 +133,7 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
         JScrollPane scroll; // Wraps the preview text are.
 
         // Initialises the preview text area.
-        preview = new JTextArea(15, 15);
+        preview = new RSyntaxTextArea(15, 15);
 
         // Initialises colors.
         setBackgroundColors();
@@ -146,6 +155,7 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
      * Listens on changes on the foreground and background colors.
      */
     public void propertyChange(PropertyChangeEvent event) {
+System.out.println(" -> " + event.getPropertyName() + "    "  + event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME) + "  " + themeData.getColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR));
         // Background color changed.
         if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
             setBackgroundColors();
@@ -153,11 +163,13 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
         // Foreground color changed.
         else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
             setForegroundColors();
+//        setBackgroundColors();
     }
 
     private void setBackgroundColors() {
         preview.setBackground(themeData.getColor(ThemeData.EDITOR_BACKGROUND_COLOR));
         preview.setSelectionColor(themeData.getColor(ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR));
+        preview.setCurrentLineHighlightColor(themeData.getColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR));
     }
 
     private void setForegroundColors() {

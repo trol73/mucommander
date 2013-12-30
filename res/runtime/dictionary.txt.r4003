@@ -1,4 +1,4 @@
-﻿###############################
+###############################
 # muCommander dictionary file #
 ###############################
 #
@@ -3070,118 +3070,6 @@ action_categories.misc:EN:$[prefs_dialog.misc_tab]
 
 # All actions have a label and an optional tooltip. Labels are usually displayed in buttons and menus and therefore should be kept reasonably
 # short. Tooltips are displayed when leaving the mouse over a component (button, menu...) or used in dialog titles and therefore can be longer.
-
-Terminal.label:EN:Terminal
-Terminal.label:FR:Terminal
-Terminal.label:ES:Terminal
-Terminal.label:RU:Консоль
-Terminal.label:zh_TW:Terminal
-Terminal.label:PL:Terminal
-Terminal.label:zh_CN:Terminal
-Terminal.label:SL:Terminal
-Terminal.label:RO:Terminal
-Terminal.label:IT:Terminal
-Terminal.label:CS:Terminal
-Terminal.label:DE:Terminal
-Terminal.label:KO:Terminal
-Terminal.label:pt_BR:Terminal
-Terminal.label:NL:Terminal
-Terminal.label:SK:Terminal
-Terminal.label:HU:Terminal
-Terminal.label:JA:Terminal
-Terminal.label:SV:Terminal
-Terminal.label:DA:Terminal
-Terminal.label:UA:Terminal
-Terminal.label:AR:Terminal
-Terminal.label:BE:Terminal
-Terminal.label:NB:Terminal
-Terminal.label:TR:Terminal
-Terminal.label:CA:Terminal
-
-
-Terminal.tooltip:EN:Run Terminal window in current directory
-Terminal.tooltip:FR:Terminal
-Terminal.tooltip:ES:Terminal
-Terminal.tooltip:RU:Открыть консоль в текущей директории
-Terminal.tooltip:zh_TW:Terminal
-Terminal.tooltip:PL:Terminal
-Terminal.tooltip:zh_CN:Terminal
-Terminal.tooltip:SL:Terminal
-Terminal.tooltip:RO:Terminal
-Terminal.tooltip:IT:Terminal
-Terminal.tooltip:CS:Terminal
-Terminal.tooltip:DE:Terminal
-Terminal.tooltip:KO:Terminal
-Terminal.tooltip:pt_BR:Terminal
-Terminal.tooltip:NL:Terminal
-Terminal.tooltip:SK:Terminal
-Terminal.tooltip:HU:Terminal
-Terminal.tooltip:JA:Terminal
-Terminal.tooltip:SV:Terminal
-Terminal.tooltip:DA:Terminal
-Terminal.tooltip:UA:Terminal
-Terminal.tooltip:AR:Terminal
-Terminal.tooltip:BE:Terminal
-Terminal.tooltip:NB:Terminal
-Terminal.tooltip:TR:Terminal
-Terminal.tooltip:CA:Terminal
-
-
-FindFile.label:EN:Find file
-FindFile.label:FR:Find file
-FindFile.label:ES:Find file
-FindFile.label:RU:Find file
-FindFile.label:zh_TW:Find file
-FindFile.label:PL:Find file
-FindFile.label:zh_CN:Find file
-FindFile.label:SL:Find file
-FindFile.label:RO:Find file
-FindFile.label:IT:Find file
-FindFile.label:CS:Find file
-FindFile.label:DE:Find file
-FindFile.label:KO:Find file
-FindFile.label:pt_BR:Find file
-FindFile.label:NL:Find file
-FindFile.label:SK:Find file
-FindFile.label:HU:Find file
-FindFile.label:JA:Find file
-FindFile.label:SV:Find file
-FindFile.label:DA:Find file
-FindFile.label:UA:Find file
-FindFile.label:AR:Find file
-FindFile.label:BE:Find file
-FindFile.label:NB:Find file
-FindFile.label:TR:Find file
-FindFile.label:CA:Find file
-
-
-FindFile.tooltip:EN:Find file
-FindFile.tooltip:FR:Find file
-FindFile.tooltip:ES:Find file
-FindFile.tooltip:RU:Поиск файла
-FindFile.tooltip:zh_TW:Find file
-FindFile.tooltip:PL:Find file
-FindFile.tooltip:zh_CN:Find file
-FindFile.tooltip:SL:Find file
-FindFile.tooltip:RO:Find file
-FindFile.tooltip:IT:Find file
-FindFile.tooltip:CS:Find file
-FindFile.tooltip:DE:Find file
-FindFile.tooltip:KO:Find file
-FindFile.tooltip:pt_BR:Find file
-FindFile.tooltip:NL:Find file
-FindFile.tooltip:SK:Find file
-FindFile.tooltip:HU:Find file
-FindFile.tooltip:JA:Find file
-FindFile.tooltip:SV:Find file
-FindFile.tooltip:DA:Find file
-FindFile.tooltip:UA:Find file
-FindFile.tooltip:AR:Find file
-FindFile.tooltip:BE:Find file
-FindFile.tooltip:NB:Find file
-FindFile.tooltip:TR:Find file
-FindFile.tooltip:CA:Find file
-
 
 AddBookmark.label:EN:Add bookmark
 AddBookmark.label:FR:Ajouter aux favoris
@@ -14925,8 +14813,8 @@ theme_editor.header:ES:Cabecera
 
 
 
-theme_editor.current:EN:Current line
-theme_editor.current:RU:Подсветка строки
+
+
 
 
 
@@ -19215,20 +19103,3 @@ tabs_quick_list.empty_message:TR:Sadece bir sekme görüntüleniyor
 #Pack.label:AR:أرشفة الملفات
 #Pack.label:NB:Pakk filer
 #Pack.label:TR:Dosyaları arşivle
-
-
-find_dialog.name:EN:File name
-find_dialog.contains:EN:Contains
-find_dialog.initial_directory:EN:Start at
-find_dialog.search_subdirectories:EN:Search subdirectories
-find_dialog.case_sensitive:EN:Case sensitive
-find_dialog.ignore_hidden:EN:Ignore hidden
-find_dialog.search_results:EN:Search results
-
-find_dialog.name:RU:Имя файла
-find_dialog.contains:RU:Содержит текст
-find_dialog.initial_directory:RU:Стартовая директория
-find_dialog.search_subdirectories:RU:Поиск в поддиректориях
-find_dialog.case_sensitive:RU:Различать регистр
-find_dialog.ignore_hidden:RU:Игнорировать скрытые файлы
-find_dialog.search_results:RU:Результаты поиска

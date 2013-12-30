@@ -87,7 +87,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this color.
      * </p>
      */
-    public static final int COLOR_COUNT = 68;
+    public static final int COLOR_COUNT = 69;
 
 
 
@@ -677,6 +677,13 @@ public class ThemeData {
      */
     public static final int QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR = 67;
 
+    /**
+     * Color used to paint current line in the file editor / viewer's background when selected.
+     * <p>
+     * This defaults to the current <code>RTextArea</code> selection background color.
+     * </p>
+     */
+    public static final int EDITOR_CURRENT_BACKGROUND_COLOR = 68;
 
 
 
@@ -693,6 +700,7 @@ public class ThemeData {
     public static final String DEFAULT_TEXT_AREA_BACKGROUND            = "TextArea.background";
     public static final String DEFAULT_TEXT_AREA_SELECTION_FOREGROUND  = "TextArea.selectionForeground";
     public static final String DEFAULT_TEXT_AREA_SELECTION_BACKGROUND  = "TextArea.selectionBackground";
+    public static final String DEFAULT_TEXT_AREA_CURRENT_BACKGROUND    = "TextArea.currentBackground";
     public static final String DEFAULT_TEXT_FIELD_FOREGROUND           = "TextField.foreground";
     public static final String DEFAULT_TEXT_FIELD_BACKGROUND           = "TextField.background";
     public static final String DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND = "TextField.selectionForeground";
@@ -711,6 +719,7 @@ public class ThemeData {
     public static final String DEFAULT_LABEL_FONT                      = "Label.font";
     public static final String DEFAULT_TABLE_FONT                      = "Table.font";
     public static final String DEFAULT_MENU_HEADER_FONT                = "MenuHeader.font";
+
 
 
     
@@ -829,6 +838,9 @@ public class ThemeData {
                              new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextArea.selectionForeground", mapper));
         registerDefaultColor(DEFAULT_TEXT_AREA_SELECTION_BACKGROUND,
                              new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextArea.selectionBackground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_AREA_CURRENT_BACKGROUND,
+                new SystemDefaultColor(SystemDefaultColor.CURRENT_LINE_BACKGROUND, "TextArea.currentBackground", mapper));
+
 
         // Register TextField related default values.
         mapper = new ComponentMapper() {
@@ -958,7 +970,7 @@ public class ThemeData {
         registerColor(FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR,              FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR);
 
         // Shell default values.
-        registerFont(SHELL_FONT,                              DEFAULT_TEXT_AREA_FONT);
+        registerFont(SHELL_FONT,                               DEFAULT_TEXT_AREA_FONT);
         registerFont(SHELL_HISTORY_FONT,                       DEFAULT_TEXT_FIELD_FONT);
         registerColor(SHELL_FOREGROUND_COLOR,                  DEFAULT_TEXT_AREA_FOREGROUND);
         registerColor(SHELL_BACKGROUND_COLOR,                  DEFAULT_TEXT_AREA_BACKGROUND);
@@ -975,6 +987,7 @@ public class ThemeData {
         registerColor(EDITOR_BACKGROUND_COLOR,          DEFAULT_TEXT_AREA_BACKGROUND);
         registerColor(EDITOR_SELECTED_FOREGROUND_COLOR, DEFAULT_TEXT_AREA_SELECTION_FOREGROUND);
         registerColor(EDITOR_SELECTED_BACKGROUND_COLOR, DEFAULT_TEXT_AREA_SELECTION_BACKGROUND);
+        registerColor(EDITOR_CURRENT_BACKGROUND_COLOR,  DEFAULT_TEXT_AREA_CURRENT_BACKGROUND);
 
         // Location default values.
         registerFont(LOCATION_BAR_FONT,                       DEFAULT_TEXT_FIELD_FONT);

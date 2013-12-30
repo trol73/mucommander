@@ -241,14 +241,20 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         addFontChooserListener(fontChooser, previewLabel);
 
         // Creates the foreground color button.
-        gridPanel.add(colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel));
-        if(comp != null)
-            colorButton.addUpdatedPreviewComponent(comp);
+        if (foregroundId >= 0 ) {
+            gridPanel.add(colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel));
+            if(comp != null)
+                colorButton.addUpdatedPreviewComponent(comp);
+        } else {
+            gridPanel.add(new JLabel());
+        }
 
         // Creates the background color button.
-        gridPanel.add(colorButton = new ColorButton(parent, themeData, backgroundId, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel));
-        if(comp != null)
-            colorButton.addUpdatedPreviewComponent(comp);
+        if (backgroundId >= 0) {
+            gridPanel.add(colorButton = new ColorButton(parent, themeData, backgroundId, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel));
+            if(comp != null)
+                colorButton.addUpdatedPreviewComponent(comp);
+        }
 
         return previewLabel;
     }
