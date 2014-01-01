@@ -310,8 +310,14 @@ class ThemeWriter implements ThemeXmlConstants {
         if(theme.isColorSet(Theme.EDITOR_SELECTED_FOREGROUND_COLOR))
             out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_SELECTED_FOREGROUND_COLOR)));
         out.endElement(ELEMENT_SELECTED);
-        out.endElement(ELEMENT_EDITOR);
 
+        // Current line
+        out.startElement(ELEMENT_CURRENT);
+        out.println();
+        if(theme.isColorSet(Theme.EDITOR_CURRENT_BACKGROUND_COLOR))
+            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR)));
+        out.endElement(ELEMENT_CURRENT);
+        out.endElement(ELEMENT_EDITOR);
 
         // - Location bar description ----------------------------------------------------
         // -------------------------------------------------------------------------------

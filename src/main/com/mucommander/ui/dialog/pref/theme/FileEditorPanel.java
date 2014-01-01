@@ -155,7 +155,6 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
      * Listens on changes on the foreground and background colors.
      */
     public void propertyChange(PropertyChangeEvent event) {
-System.out.println(" -> " + event.getPropertyName() + "    "  + event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME) + "  " + themeData.getColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR));
         // Background color changed.
         if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
             setBackgroundColors();
@@ -163,7 +162,6 @@ System.out.println(" -> " + event.getPropertyName() + "    "  + event.getPropert
         // Foreground color changed.
         else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
             setForegroundColors();
-//        setBackgroundColors();
     }
 
     private void setBackgroundColors() {

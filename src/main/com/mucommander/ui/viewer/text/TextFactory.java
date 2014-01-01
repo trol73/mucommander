@@ -33,6 +33,8 @@ import java.io.InputStream;
  */
 public class TextFactory implements ViewerFactory, EditorFactory {
 
+    private static final long FILE_SIZE_WARNING_THRESHOLD = 10*1024*1024;
+
     public boolean canViewFile(AbstractFile file) throws WarnUserException {
         return doGenericChecks(file);
     }
@@ -56,7 +58,7 @@ public class TextFactory implements ViewerFactory, EditorFactory {
 
         // Warn the user if the file is large that a certain size as the whole file is loaded into memory
         // (in a JTextArea)
-        if(file.getSize()>1048576)
+        if (file.getSize()>FILE_SIZE_WARNING_THRESHOLD)
             throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
 
         // Warn the user if the file looks like a binary file

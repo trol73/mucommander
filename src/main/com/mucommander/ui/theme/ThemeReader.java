@@ -103,6 +103,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     private static final int STATE_QUICK_LIST_ITEM          = 40;
     private static final int STATE_QUICK_LIST_ITEM_NORMAL   = 41;
     private static final int STATE_QUICK_LIST_ITEM_SELECTED = 42;
+    /** Parsing the editor.selected element. */
+    private static final int STATE_EDITOR_CURRENT           = 43;
 
 
     // - Instance variables --------------------------------------------------------------
@@ -320,6 +322,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             	state = STATE_QUICK_LIST_ITEM_SELECTED;
             else
                 traceIllegalDeclaration(qName);
+
+        }
+        // Current element declaration.
+        else if(qName.equals(ELEMENT_CURRENT)) {
+            if(state == STATE_EDITOR) {
+                state = STATE_EDITOR_CURRENT;
+            } else
+                traceIllegalDeclaration(qName);
         }
 
         // Font creation.
@@ -468,6 +478,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 template.setColor(ThemeData.EDITOR_BACKGROUND_COLOR, createColor(attributes));
             else if(state == STATE_EDITOR_SELECTED)
                 template.setColor(ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_EDITOR_CURRENT)
+                template.setColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR, createColor(attributes));
 
             else if(state == STATE_LOCATION_BAR_NORMAL)
                 template.setColor(ThemeData.LOCATION_BAR_BACKGROUND_COLOR, createColor(attributes));

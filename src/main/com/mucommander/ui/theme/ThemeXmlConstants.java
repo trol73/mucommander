@@ -54,6 +54,8 @@ interface ThemeXmlConstants {
     public static final String ELEMENT_ALTERNATE            = "alternate";
     /** Item unmatched state description element. */
     public static final String ELEMENT_UNMATCHED            = "unmatched";
+    /** Item current line state description element. */
+    public static final String ELEMENT_CURRENT               = "current";
     
     
     
