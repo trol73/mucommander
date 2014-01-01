@@ -22,6 +22,7 @@ import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 
+import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -412,7 +413,7 @@ public class Launcher {
 
             // - Configuration init ---------------------------------------
             // ------------------------------------------------------------
-
+            Profiler.start("init.start");
             // Ensure that a graphics environment is available, exit otherwise.
             checkHeadless();
 
@@ -480,20 +481,28 @@ public class Launcher {
 
             // Traps VM shutdown
             Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+            Profiler.stop();
 
+            Profiler.start("init.configure_fs");
             // Configure filesystems
             configureFilesystems();
+            Profiler.stop();
             
             // Initializes the desktop.
+            Profiler.start("init.init_desktop");
             try {com.mucommander.desktop.DesktopManager.init(isFirstBoot);}
             catch(Exception e) {printError("Could not initialize desktop", e, true);}
+            Profiler.stop();
 
             // Loads dictionary
+            Profiler.start("init.load_dict");
             printStartupMessage("Loading dictionary...");
             try {com.mucommander.text.Translator.loadDictionaryFile();}
             catch(Exception e) {printError("Could not load dictionary", e, true);}
+            Profiler.stop();
 
             // Loads custom commands
+            Profiler.start("init.load_custom_commands");
             printStartupMessage("Loading file associations...");
             try {com.mucommander.command.CommandManager.loadCommands();}
             catch(Exception e) {
@@ -514,16 +523,21 @@ public class Launcher {
             catch(Exception e) {
                 printFileError("Could not load custom associations", e, fatalWarnings);
             }
+            Profiler.stop();
 
             // Loads bookmarks
+            Profiler.start("init.load_bookmarks");
             printStartupMessage("Loading bookmarks...");
             try {com.mucommander.bookmark.BookmarkManager.loadBookmarks();}
             catch(Exception e) {printFileError("Could not load bookmarks", e, fatalWarnings);}
+            Profiler.stop();
 
             // Loads credentials
+            Profiler.start("init.load_credentials");
             printStartupMessage("Loading credentials...");
             try {com.mucommander.auth.CredentialsManager.loadCredentials();}
             catch(Exception e) {printFileError("Could not load credentials", e, fatalWarnings);}
+            Profiler.stop();
 
             // Loads shell history
             printStartupMessage("Loading shell history...");
@@ -535,6 +549,7 @@ public class Launcher {
             com.mucommander.text.CustomDateFormat.init();
 
             // Initialize file icons
+            Profiler.start("init.load_file_icons");
             printStartupMessage("Loading icons...");
             // Initialize the SwingFileIconProvider from the main thread, see method Javadoc for an explanation on why we do this now
             SwingFileIconProvider.forceInit();
@@ -542,35 +557,49 @@ public class Launcher {
             com.mucommander.ui.icon.FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE,
                                                                                               MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
             com.mucommander.ui.icon.FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
+            Profiler.stop();
 
             // Register actions
+            Profiler.start("init.register_actions");
             printStartupMessage("Registering actions...");
             ActionManager.registerActions();
+            Profiler.stop();
 
             // Loads the ActionKeymap file
+            Profiler.start("init.load_shortcuts");
             printStartupMessage("Loading actions shortcuts...");
             try {com.mucommander.ui.action.ActionKeymapIO.loadActionKeymap();}
             catch(Exception e) {printFileError("Could not load actions shortcuts", e, fatalWarnings);}
+            Profiler.stop();
 
             // Loads the ToolBar's description file
+            Profiler.start("init.load_toolbar");
             printStartupMessage("Loading toolbar description...");
             try {ToolBarIO.loadDescriptionFile();}
             catch(Exception e) {printFileError("Could not load toolbar description", e, fatalWarnings);}
+            Profiler.stop();
 
             // Loads the CommandBar's description file
+            Profiler.start("init.load_comand_bar");
             printStartupMessage("Loading command bar description...");
             try {CommandBarIO.loadCommandBar();}
             catch(Exception e) {printFileError("Could not load commandbar description", e, fatalWarnings);}
+            Profiler.stop();
 
             // Loads the themes.
+            Profiler.start("init.load_themes");
             printStartupMessage("Loading theme...");
             com.mucommander.ui.theme.ThemeManager.loadCurrentTheme();
+            Profiler.stop();
 
             // Starts Bonjour services discovery (only if enabled in prefs)
+            Profiler.start("init.start_bonjjour");
             printStartupMessage("Starting Bonjour services discovery...");
             com.mucommander.bonjour.BonjourDirectory.setActive(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY));
+            Profiler.stop();
 
             // Creates the initial main frame using any initial path specified by the command line.
+            Profiler.start("init.create_window");
             printStartupMessage("Initializing window...");
             String[] folders = new String[args.length - i];
             System.arraycopy(args, i, folders, 0, folders.length);
@@ -579,7 +608,9 @@ public class Launcher {
             // If no initial path was specified, start a default main window.
             if(WindowManager.getCurrentMainFrame() == null)
                 WindowManager.createNewMainFrame(new DefaultMainFramesBuilder());
+            Profiler.stop();
 
+            Profiler.start("init.create_window_sync");
             // Done launching, wake up threads waiting for the application being launched.
             // Important: this must be done before disposing the splash screen, as this would otherwise create a deadlock
             // if the AWT event thread were waiting in #waitUntilLaunched .
@@ -587,7 +618,9 @@ public class Launcher {
                 isLaunching = false;
                 LAUNCH_LOCK.notifyAll();
             }
+            Profiler.stop();
 
+            Profiler.start("init.enable_notifications");
             // Enable system notifications, only after MainFrame is created as SystemTrayNotifier needs to retrieve
             // a MainFrame instance
             if(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS)) {
@@ -595,11 +628,15 @@ public class Launcher {
                 if(com.mucommander.ui.notifier.AbstractNotifier.isAvailable())
                     com.mucommander.ui.notifier.AbstractNotifier.getNotifier().setEnabled(true);
             }
+            Profiler.stop();
 
+            Profiler.start("init.dispose_splash");
             // Dispose splash screen.
             if(splashScreen!=null)
                 splashScreen.dispose();
+            Profiler.stop();
 
+            Profiler.start("init.check_updates");
             // Check for newer version unless it was disabled
             if(MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE))
                 new CheckVersionDialog(WindowManager.getCurrentMainFrame(), false);
@@ -607,6 +644,7 @@ public class Launcher {
             // If no theme is configured in the preferences, ask for an initial theme.
             if(showSetup)
                 new InitialSetupDialog(WindowManager.getCurrentMainFrame()).showDialog();
+            Profiler.stop();
         }
         catch(Throwable t) {
             // Startup failed, dispose the splash screen
@@ -621,6 +659,7 @@ public class Launcher {
             // Quit the application
             WindowManager.quit();
         }
+        Profiler.print();
     }
 
     private static void configureFilesystems() {
