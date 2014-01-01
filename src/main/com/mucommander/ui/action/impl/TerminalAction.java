@@ -41,7 +41,7 @@ public class TerminalAction extends ParentFolderAction {
     private static String getConsoleCommand(AbstractFile folder) {
         switch (OsFamily.getCurrent()) {
             case WINDOWS:
-                return "cmd.exe /K \"cd /d " + folder + '"';
+                return "cmd /c start cmd.exe /K \"cd /d " + folder + '"';
             case LINUX:
                 break;
             case MAC_OS_X:

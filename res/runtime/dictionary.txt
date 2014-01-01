@@ -1228,6 +1228,11 @@ customize:ES:Personalizar
 
 
 
+clean:EN:Clean
+clean:RU:Очистить
+
+search:EN:Search
+search:RU:Поиск
 
 
 
@@ -3130,7 +3135,7 @@ Terminal.tooltip:CA:Terminal
 FindFile.label:EN:Find file
 FindFile.label:FR:Find file
 FindFile.label:ES:Find file
-FindFile.label:RU:Find file
+FindFile.label:RU:Поиск файлов
 FindFile.label:zh_TW:Find file
 FindFile.label:PL:Find file
 FindFile.label:zh_CN:Find file
@@ -3158,7 +3163,7 @@ FindFile.label:CA:Find file
 FindFile.tooltip:EN:Find file
 FindFile.tooltip:FR:Find file
 FindFile.tooltip:ES:Find file
-FindFile.tooltip:RU:Поиск файла
+FindFile.tooltip:RU:Поиск файлов
 FindFile.tooltip:zh_TW:Find file
 FindFile.tooltip:PL:Find file
 FindFile.tooltip:zh_CN:Find file
@@ -19232,3 +19237,8 @@ find_dialog.search_subdirectories:RU:Поиск в поддиректориях
 find_dialog.case_sensitive:RU:Различать регистр
 find_dialog.ignore_hidden:RU:Игнорировать скрытые файлы
 find_dialog.search_results:RU:Результаты поиска
+
+image_viewer.next_image:EN:Next image
+image_viewer.next_image:RU:Следующий рисунок
+image_viewer.previous_image:EN:Previous image
+image_viewer.previous_image:RU:Предыдущий рисунок

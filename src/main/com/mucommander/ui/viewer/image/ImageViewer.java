@@ -33,14 +33,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.text.Translator;
+import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.theme.ColorChangedEvent;
@@ -66,12 +63,14 @@ class ImageViewer extends FileViewer implements ActionListener {
     // Menus //
     private JMenu controlsMenu;
     // Items //
-    //	private JMenuItem prevImageItem;
-    //	private JMenuItem nextImageItem;
+    private JMenuItem prevImageItem;
+    private JMenuItem nextImageItem;
     private JMenuItem zoomInItem;
     private JMenuItem zoomOutItem;
-	
+
     private ImageViewerImpl imageViewerImpl;
+    private AbstractFile[] filesInDirectory;
+    private int indexInDirectory = -1;
     
     public ImageViewer() {
     	imageViewerImpl = new ImageViewerImpl();
@@ -82,9 +81,9 @@ class ImageViewer extends FileViewer implements ActionListener {
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
     	controlsMenu = MenuToolkit.addMenu(Translator.get("image_viewer.controls_menu"), menuMnemonicHelper, null);
     	
-        //		nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), this);
-        //		prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), this);
-        //		controlsMenu.add(new JSeparator());
+        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), this);
+        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), this);
+        controlsMenu.add(new JSeparator());
         zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
         zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
     }
@@ -135,6 +134,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             zoom(zoomFactor);
 			
         checkZoom();
+        checkNextPrev();
         frame.setCursor(Cursor.getDefaultCursor());
     }
 
@@ -181,12 +181,27 @@ class ImageViewer extends FileViewer implements ActionListener {
                                                   && zoomFactor/2*image.getHeight(null)>120));
     }
 
+    private void checkNextPrev() {
+        prevImageItem.setEnabled(indexInDirectory > 0);
+        nextImageItem.setEnabled(indexInDirectory < filesInDirectory.length-1);
+    }
+
     ///////////////////////////////
     // FileViewer implementation //
     ///////////////////////////////
 
     @Override
     public void show(AbstractFile file) throws IOException {
+        if (filesInDirectory == null) {
+            filesInDirectory = file.getParent().ls();
+            for (int i = 0 ; i < filesInDirectory.length; i++) {
+                AbstractFile f = filesInDirectory[i];
+                if (f.equals(file)) {
+                    indexInDirectory = i;
+                    break;
+                }
+            }
+        }
         loadImage(file);
     }
 
@@ -196,17 +211,15 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     @Override
     public String getTitle() {
-        return super.getTitle()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
+        return new StringBuilder(filesInDirectory[indexInDirectory].toString()).
+                append(" - ").append(image.getWidth(null)).append("x").append(image.getHeight(null)).append(" - ").
+                append((int) (zoomFactor * 100)).append("%").
+                toString();
+        //return file.getAbsolutePath()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
     }
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-		
-        //		if(source == prevImageItem)
-        //			goToImage(false);
-        //		else if(source == nextImageItem)
-        //			goToImage(true);
-        //		else {
 
         if(source==zoomInItem && zoomInItem.isEnabled()) {
             zoomFactor = zoomFactor*2;
@@ -218,13 +231,45 @@ class ImageViewer extends FileViewer implements ActionListener {
             zoom(zoomFactor);
             updateFrame();
         }
+        else if (source == nextImageItem && nextImageItem.isEnabled()) {
+            gotoNextFile();
+        }
+        else if (source == prevImageItem && prevImageItem.isEnabled()) {
+            gotoPrevFile();
+        }
         else {
         	super.actionPerformed(e);
         	return;
         }
-			
+
         checkZoom();
-        //		}
+    }
+
+
+    private void gotoNextFile() {
+        if (indexInDirectory >= filesInDirectory.length-1) {
+            return;
+        }
+        indexInDirectory++;
+        gotoFile();
+    }
+
+    private void gotoPrevFile() {
+        if (indexInDirectory <= 0) {
+            return;
+        }
+        indexInDirectory--;
+        gotoFile();
+    }
+
+    private void gotoFile() {
+        try {
+            show(filesInDirectory[indexInDirectory]);
+            updateFrame();
+        } catch (IOException e) {
+            InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));
+            e.printStackTrace();
+        }
     }
     
     private class ImageViewerImpl extends JPanel implements ThemeListener {
