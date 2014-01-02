@@ -19229,6 +19229,7 @@ find_dialog.search_subdirectories:EN:Search subdirectories
 find_dialog.case_sensitive:EN:Case sensitive
 find_dialog.ignore_hidden:EN:Ignore hidden
 find_dialog.search_results:EN:Search results
+find_dialog.found:EN:Found files 
 
 find_dialog.name:RU:Имя файла
 find_dialog.contains:RU:Содержит текст
@@ -19237,6 +19238,7 @@ find_dialog.search_subdirectories:RU:Поиск в поддиректориях
 find_dialog.case_sensitive:RU:Различать регистр
 find_dialog.ignore_hidden:RU:Игнорировать скрытые файлы
 find_dialog.search_results:RU:Результаты поиска
+find_dialog.found:RU:Найдено файлов
 
 image_viewer.next_image:EN:Next image
 image_viewer.next_image:RU:Следующий рисунок

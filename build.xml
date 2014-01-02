@@ -326,6 +326,7 @@
             </and>
         </condition>
 
+        <echo message="Check launch4j: ${launch4j.available}"/>
         <fail message="Launch4j not configured">
             <condition>
                 <and>
@@ -340,7 +341,7 @@
 
     <target name="load-launch4j" depends="check-launch4j" if="launch4j.available">
         <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
-                 classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/xstream.jar"/>
+                 classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar"/>
     </target>
 
     <target name="skip-launch4j" unless="launch4j.available">

@@ -96,7 +96,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         protected void process(List<AbstractFile> chunks) {
             for (AbstractFile f : chunks) {
                 listModel.addElement(f);
-                lblTotal.setText(Translator.get("Found files: ") + listModel.size() + " ");
+                lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
             }
         }
 
