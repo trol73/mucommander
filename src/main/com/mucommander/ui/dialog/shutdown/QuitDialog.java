@@ -51,7 +51,7 @@ public class QuitDialog extends QuestionDialog {
     /**
      * Creates a new instance of QuitDialog, displays the dialog and waits for a user's choice. This dialog
      * doesn't quit the application when 'Quit' is confirmed, it is up to the method that invoked this dialog
-     * to perform that task, only if {@link #quitConfirmed()} returns <code>true</code>.
+     * to perform that getTask, only if {@link #quitConfirmed()} returns <code>true</code>.
      *
      * <p>If 'Quit' is selected and the 'Show next time' checkbox is unchecked, the preference will be saved and
      * {@link #confirmQuit()} will return <code>true</code>.

@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

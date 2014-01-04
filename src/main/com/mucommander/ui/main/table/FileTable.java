@@ -504,7 +504,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // refreshed frames and such unpleasant graphical artifacts.
         Runnable folderChangeThread = new FolderChangeThread(folder, children, markedFiles, fileToSelect);
 
-        // Wait for the task to complete, so that we return only when the folder has actually been changed and the
+        // Wait for the getTask to complete, so that we return only when the folder has actually been changed and the
         // table updated to reflect the new folder.
         // Note: we use a wait/notify scheme rather than calling SwingUtilities#invokeAndWait to avoid deadlocks
         // due to AWT thread synchronization issues.

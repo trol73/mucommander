@@ -158,8 +158,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     /**
      * Creates a new MainFrame and makes it visible on the screen, on top of any other frames.
      *
-     * @param leftFolders initial paths for the left frame.
-     * @param rightFolders initial paths for the right frame.
+     * @param mainFrameBuilder
      * @return the newly created MainFrame.
      */
     public static synchronized void createNewMainFrame(MainFrameBuilder mainFrameBuilder) {
@@ -206,7 +205,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
             // Dispose current MainFrame last so that its attributes (last folders, window position...) are saved last
             // in the preferences
-            instance.mainFrames.get(currentMainFrameIndex).dispose();
+            if (currentMainFrameIndex >= 0) {
+                instance.mainFrames.get(currentMainFrameIndex).dispose();
+            }
         }
 
         // Dispose all other frames (viewers, editors...)

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * This class maintains a list of tasks to execute and a thread that 
  * executes these tasks. It checks periodically if the IOThread is running.
  * If IOThread has been blocked then it's killed and a new IOThread is 
- * instantiated. Then the next task from the list will be executed.
+ * instantiated. Then the next getTask from the list will be executed.
  * @author Mariusz Jakubowski
  *
  */
@@ -51,7 +51,7 @@ public class AbstractIOThreadManager extends Thread {
     /**
      * Creates a new monitoring thread.
      * @param name a name of this thread
-     * @param blockThreshold a time after an i/o task is marked as blocked [ms]
+     * @param blockThreshold a time after an i/o getTask is marked as blocked [ms]
      */
     public AbstractIOThreadManager(String name, long blockThreshold) {
         super(name);
@@ -61,10 +61,10 @@ public class AbstractIOThreadManager extends Thread {
     }
 
     /**
-     * Adds new task to execute. A task is an instance of Runnable interface.
+     * Adds new getTask to execute. A getTask is an instance of Runnable interface.
      * A proper exception handling within the Runnable instance have to be implemented.
-     * If this task rises an exception, this exception is printed to stderr.
-     * @param task a task to be executed
+     * If this getTask rises an exception, this exception is printed to stderr.
+     * @param task a getTask to be executed
      */
     public void addTask(Runnable task) {
         queue.add(task);

@@ -67,8 +67,9 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @throws IOException if an error occured while locating the default configuration file.
      */
     private synchronized AbstractFile getConfigurationFile() throws IOException {
-        if(configurationFile == null)
+        if(configurationFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_CONFIGURATION_FILE_NAME);
+        }
         return configurationFile;
     }
 
@@ -79,7 +80,7 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      */
     private synchronized void setConfigurationFile(String path) throws FileNotFoundException {
         AbstractFile file;
-
+System.out.println("setConfigurationFile-0 " + path);
         if((file = FileFactory.getFile(path)) == null)
             setConfigurationFile(new File(path));
         else
@@ -91,7 +92,10 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @param  file                  path to the file that should be used for configuration storage.
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
-    private synchronized void setConfigurationFile(File file) throws FileNotFoundException {setConfigurationFile(FileFactory.getFile(file.getAbsolutePath()));}
+    private synchronized void setConfigurationFile(File file) throws FileNotFoundException {
+System.out.println("setConfigurationFile-1 " + file);
+        setConfigurationFile(FileFactory.getFile(file.getAbsolutePath()));
+    }
 
     /**
      * Sets the path to the configuration file.
@@ -99,6 +103,7 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(AbstractFile file) throws FileNotFoundException {
+System.out.println("setConfigurationFile-2 " + file);
         // Makes sure file can be used as a configuration.
         if(file.isBrowsable())
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());

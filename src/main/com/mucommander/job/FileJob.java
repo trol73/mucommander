@@ -42,7 +42,7 @@ import com.mucommander.ui.notifier.NotificationType;
 
 
 /**
- * FileJob is a container for a 'file task' : basically an operation that involves files and bytes.
+ * FileJob is a container for a 'file getTask' : basically an operation that involves files and bytes.
  * The class extending FileJob is required to give some information about the status of the job that
  * will be used to display visual indications of the job's progress.
  * <p>

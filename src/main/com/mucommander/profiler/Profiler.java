@@ -20,15 +20,19 @@ public class Profiler {
             return;
         }
         lastSectionName = name;
-        times.put(name, System.currentTimeMillis());
+        synchronized (times) {
+            times.put(name, System.currentTimeMillis());
+        }
     }
 
     public static final void stop(String name) {
         if (!ENABLED) {
             return;
         }
-        long t = times.get(name);
-        times.put(name, System.currentTimeMillis() - t);
+        synchronized (times) {
+            long t = times.get(name);
+            times.put(name, System.currentTimeMillis() - t);
+        }
     }
 
     public static final void stop() {
@@ -42,10 +46,12 @@ public class Profiler {
         if (!ENABLED) {
             return;
         }
-        TreeMap<String, Long> sortedMap = new TreeMap<String, Long>(new ValueComparator(times));
-        sortedMap.putAll(times);
-        for (String name : sortedMap.keySet()) {
-            System.out.println(withSpaces(name, 30) + "\t" + times.get(name));
+        synchronized (times) {
+            TreeMap<String, Long> sortedMap = new TreeMap<String, Long>(new ValueComparator(times));
+            sortedMap.putAll(times);
+            for (String name : sortedMap.keySet()) {
+                System.out.println(withSpaces(name, 40) + "\t" + times.get(name));
+            }
         }
     }
 

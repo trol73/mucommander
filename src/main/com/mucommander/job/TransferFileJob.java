@@ -46,7 +46,7 @@ import com.mucommander.ui.main.MainFrame;
 
 
 /**
- * TransferFileJob is a container for a file task : basically an operation that involves files and bytes.<br>
+ * TransferFileJob is a container for a file getTask : basically an operation that involves files and bytes.<br>
  *
  * <p>What makes TransferFileJob different from FileJob (and explains its very inspired name) is that a class
  * implementing TransferFileJob has to be able to give progress information about the file currently being processed.

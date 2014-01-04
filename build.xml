@@ -353,8 +353,9 @@
 
 
         <launch4j>
+ <!-- customprocname="true" -->
             <config headertype="gui" outfile="${dist.exe}" jarpath="mucommander.jar"
-                    icon="${res.package}/windows/mucommander.ico" dontwrapjar="true" chdir="." customprocname="true"
+                    icon="${res.package}/windows/mucommander.ico" dontwrapjar="true" chdir="." 
                     supporturl="${url.homepage}">
                 <jre minversion="${source.version}.0">
                     <opt>-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader</opt>
@@ -1005,11 +1006,15 @@
         <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
     </target>
 
+
     <target name="ivy-config" depends="get-ivy" unless="ivy.offline">
-        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
-        <echo>Resolving dependencies repository...</echo>
-        <ivy:configure/>
-        <ivy:resolve file="${res.ivy}/ivy.xml" haltonfailure="false"/>
+ 		<echo>Resolving dependencies repository...</echo>
+
+            <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+
+		<ivy:configure/>
+
+		<ivy:resolve file="${res.ivy}/ivy.xml" haltonfailure="false" />
     </target>
 
     <target name="retrieve-runtime" depends="ivy-config" unless="ivy.offline">

@@ -22,7 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Animated icon of a spinning dial used to notify users that an application is performing a task.
+ * Animated icon of a spinning dial used to notify users that an application is performing a getTask.
  * <p>
  * This behaves as any animated icon except for one thing: when the animation is stopped using
  * {@link #setAnimated(boolean)}, the dial won't be displayed anymore until the animation is

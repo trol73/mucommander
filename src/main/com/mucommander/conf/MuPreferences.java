@@ -375,11 +375,15 @@ public class MuPreferences implements MuPreferencesAPI {
 	
 	private String configurationVersion;
 
+    private final MuPreferencesFile muPreferencesFile;
+
 	/**
 	 * Prevents instantiation of this class from outside of this package.
 	 */
 	MuPreferences() {
-		configuration = new Configuration(MuPreferencesFile.getPreferencesFile(), new VersionedXmlConfigurationReaderFactory(),
+        muPreferencesFile = MuPreferencesFile.getPreferencesFile();
+
+        configuration = new Configuration(muPreferencesFile, new VersionedXmlConfigurationReaderFactory(),
 				new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
 	}
 
@@ -463,7 +467,6 @@ public class MuPreferences implements MuPreferencesAPI {
 	 * Sets the path to the CONFIGURATION file.
 	 * @param  file                  path to the file that should be used for CONFIGURATION storage.
 	 * @throws FileNotFoundException if the specified file is not a valid file.
-	 * @see                          #getConfigurationFile()
 	 */
 	void setConfigurationFile(String file) throws FileNotFoundException {
 		configuration.setSource(MuPreferencesFile.getPreferencesFile(file));
