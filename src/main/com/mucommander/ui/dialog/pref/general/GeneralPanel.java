@@ -38,7 +38,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.PlainDocument;
 
 import com.mucommander.conf.MuConfigurations;
@@ -54,6 +53,7 @@ import com.mucommander.ui.dialog.pref.component.PrefRadioButton;
 import com.mucommander.ui.dialog.pref.component.PrefTextField;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.layout.YBoxPanel;
+import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
 
 
 /**
@@ -137,15 +137,14 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         };
 
         // Use a custom combo box renderer to display language icons 
-        class LanguageComboBoxRenderer extends BasicComboBoxRenderer {
+        class LanguageComboBoxRenderer extends BasicComboBoxRenderer<String> {
 
             @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                String language = (String)value;
-                label.setText(Translator.get("language."+language));
-                label.setIcon(IconManager.getIcon(IconManager.LANGUAGE_ICON_SET, language+".png"));
+                label.setText(Translator.get("language."+value));
+                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value+".png"));
 
                 return label;
             }

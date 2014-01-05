@@ -215,7 +215,9 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
     			//  Move to the next row
     			rowStartOffset = Utilities.getRowEnd(component, rowStartOffset) + 1;
 			}
-			catch(Exception e) {}
+			catch(Exception e) {
+                e.printStackTrace();
+            }
 		}
 	}
 	

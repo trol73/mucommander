@@ -43,7 +43,7 @@ import com.mucommander.ui.icon.IconManager;
 public class CachedDirectory extends ProxyFile {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CachedDirectory.class);
 	
-    private static final ImageIcon NOT_ACCESSIBLE_ICON = IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
+    private static final ImageIcon NOT_ACCESSIBLE_ICON = IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
 
     /** an array of cached children */
     private AbstractFile[] cachedChildren = null;
@@ -55,7 +55,7 @@ public class CachedDirectory extends ProxyFile {
     private long lsTimeStamp = -1;
     
     /** a cache in which this object is stored */
-    private DirectoryCache cache;
+    private final DirectoryCache cache;
 
     /** a cached icon */
     private Icon cachedIcon;

@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * This {@link com.mucommander.commons.file.icon.FileIconProvider} returns icons from the
- * {@link IconManager#FILE_ICON_SET IconManager's custom file icon set}, based on files' extension and type.
+ * {@link com.mucommander.ui.icon.IconManager.IconSet#FILE IconManager's custom file icon set}, based on files' extension and type.
  * No caching is performed by this class as {@link IconManager} already takes care of this. 
  *
  * @author Maxence Bernard
@@ -124,12 +124,10 @@ public class CustomFileIconProvider implements FileIconProvider {
     private static void init() {
         // Map known file extensions to icon names
         extensionMap = new Hashtable<String, String>();
-        int nbIcons = ICON_EXTENSIONS.length;
-        for(int i=0; i<nbIcons; i++) {
-            int nbExtensions = ICON_EXTENSIONS[i].length;
-            String iconName = ICON_EXTENSIONS[i][0];
-            for(int j=1; j<nbExtensions; j++)
-                 extensionMap.put(ICON_EXTENSIONS[i][j], iconName);
+        for (String[] iconExt : ICON_EXTENSIONS) {
+            String iconName = iconExt[0];
+            for (int j = 1; j < iconExt.length; j++)
+                extensionMap.put(iconExt[j], iconName);
         }
 
         initialized = true;
@@ -142,7 +140,7 @@ public class CustomFileIconProvider implements FileIconProvider {
      * @return an icon symbolizing a symlink to the given target
      */
     private static ImageIcon getSymlinkIcon(Icon targetIcon) {
-        return IconManager.getCompositeIcon(targetIcon, IconManager.getIcon(IconManager.FILE_ICON_SET, SYMLINK_ICON_NAME));
+        return IconManager.getCompositeIcon(targetIcon, IconManager.getIcon(IconManager.IconSet.FILE, SYMLINK_ICON_NAME));
     }
 
 
@@ -165,42 +163,42 @@ public class CustomFileIconProvider implements FileIconProvider {
         String fileExtension = file.getExtension();
 
         if (!file.exists()) {
-        	icon = IconManager.getIcon(IconManager.FILE_ICON_SET, DISCONNECTED_ICON_NAME);
+        	icon = IconManager.getIcon(IconManager.IconSet.FILE, DISCONNECTED_ICON_NAME);
         }
         // Special icon for the root of remote (non-local) locations
         else if(!FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
-            icon = IconManager.getIcon(IconManager.FILE_ICON_SET, NETWORK_ICON_NAME);
+            icon = IconManager.getIcon(IconManager.IconSet.FILE, NETWORK_ICON_NAME);
         }
         // If file is a directory, use folder icon. One exception is made for 'app' extension under MAC OS
         else if(file.isDirectory()) {
             // Mac OS X application are directories with the .app extension and have a dedicated icon
             if(fileExtension!=null && fileExtension.equals("app"))
-                icon = IconManager.getIcon(IconManager.FILE_ICON_SET, MAC_OS_X_APP_ICON_NAME);
+                icon = IconManager.getIcon(IconManager.IconSet.FILE, MAC_OS_X_APP_ICON_NAME);
             // Default folder icon
             else
-                icon = IconManager.getIcon(IconManager.FILE_ICON_SET, FOLDER_ICON_NAME);
+                icon = IconManager.getIcon(IconManager.IconSet.FILE, FOLDER_ICON_NAME);
         }
         // If the file is browsable (supported archive or other), use an icon symbolizing an archive
         else if(file.isBrowsable()) {
-            icon = IconManager.getIcon(IconManager.FILE_ICON_SET, ARCHIVE_ICON_NAME);
+            icon = IconManager.getIcon(IconManager.IconSet.FILE, ARCHIVE_ICON_NAME);
         }
         // Regular file icon
         else {
             // Determine if the file's extension has an associated icon
             if(fileExtension==null)
                 // File has no extension, use default file icon
-                icon = IconManager.getIcon(IconManager.FILE_ICON_SET, FILE_ICON_NAME);
+                icon = IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
             else {
                 // Compare extension against lower-cased extensions
                 String iconName = extensionMap.get(fileExtension.toLowerCase());
                 if(iconName==null)	// No icon associated to extension, use default file icon
-                    icon = IconManager.getIcon(IconManager.FILE_ICON_SET, FILE_ICON_NAME);
+                    icon = IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
                 else {
                     // Retrieves the cached (or freshly loaded if not in cache already) ImageIcon instance corresponding to the icon's name
-                    icon = IconManager.getIcon(IconManager.FILE_ICON_SET, iconName);
+                    icon = IconManager.getIcon(IconManager.IconSet.FILE, iconName);
                     // Returned IconImage should never be null, but if it is (icon file missing), return default file icon
                     if(icon==null)
-                        return IconManager.getIcon(IconManager.FILE_ICON_SET, FILE_ICON_NAME);
+                        return IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
                 }
             }
         }

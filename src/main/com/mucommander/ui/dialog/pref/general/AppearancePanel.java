@@ -38,8 +38,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
+import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,11 +101,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     // - Icon size fields ----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Displays the list of available sizes for toolbar icons. */
-    private PrefComboBox        toolbarIconsSizeComboBox;
+    private PrefComboBox<String> toolbarIconsSizeComboBox;
     /** Displays the list of available sizes for command bar icons. */
-    private PrefComboBox        commandBarIconsSizeComboBox;
+    private PrefComboBox<String> commandBarIconsSizeComboBox;
     /** Displays the list of available sizes for file icons. */
-    private PrefComboBox        fileIconsSizeComboBox;
+    private PrefComboBox<String>fileIconsSizeComboBox;
     /** All icon sizes label. */
     private final static String ICON_SIZES[]                = {"100%", "125%", "150%", "175%", "200%", "300%"};
     /** All icon sizes scale factors. */
@@ -144,6 +144,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private boolean      ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
     private AbstractFile lastSelectedFolder;
+
+    // - Editor Theme fields --------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
+    /** Lists all available editor themes. */
+    private PrefComboBox<String> syntaxThemeComboBox;
 
 
 
@@ -193,6 +198,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         mainPanel.add(createThemesPanel());
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        // Syntax highlighting.
+        mainPanel.add(createSyntaxHighlightThemePanel());
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
         // System icons.
         mainPanel.add(createSystemIconsPanel());
         mainPanel.add(Box.createVerticalGlue());
@@ -206,6 +215,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         
         lookAndFeelComboBox.addDialogListener(parent);
         themeComboBox.addDialogListener(parent);
+        syntaxThemeComboBox.addDialogListener(parent);
         useSystemFileIconsComboBox.addDialogListener(parent);
         toolbarIconsSizeComboBox.addDialogListener(parent);
         commandBarIconsSizeComboBox.addDialogListener(parent);
@@ -263,22 +273,15 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                 return !lookAndFeels[selectedIndex].getClassName().equals(MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL));
 			}
         };
-        lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer() {
+        lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
                 @Override
-                public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label;
-
-                    label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                    if(index < 0)
+                public Component getListCellRendererComponent(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+                    JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (index < 0) {
                         return label;
-
+                    }
                     // All look and feels that are not modifiable must be flagged with a lock icon.
-                    if(isLookAndFeelModifiable(lookAndFeels[index]))
-                        label.setIcon(transparentIcon);
-                    else
-                        label.setIcon(lockIcon);
-
+                    label.setIcon(isLookAndFeelModifiable(lookAndFeels[index]) ? transparentIcon : lockIcon);
                     return label;
                 }
             });
@@ -371,34 +374,26 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         typeLabel = new JLabel("");
 
         // Creates the theme combo box.
-        themeComboBox   = new PrefComboBox<Theme>() {
+        themeComboBox = new PrefComboBox<Theme>() {
 			public boolean hasChanged() {
-				return !ThemeManager.isCurrentTheme((Theme)getSelectedItem());
+				return !ThemeManager.isCurrentTheme((Theme) getSelectedItem());
 			}        	
         };
         themeComboBox.addActionListener(this);
 
         // Sets the combobox's renderer.
-        lockIcon        = IconManager.getIcon(IconManager.PREFERENCES_ICON_SET, "lock.png");
+        lockIcon = IconManager.getIcon(IconManager.IconSet.PREFERENCES, "lock.png");
         transparentIcon = new ImageIcon(new BufferedImage(lockIcon.getIconWidth(), lockIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB));
-        themeComboBox.setRenderer(new BasicComboBoxRenderer() {
+        themeComboBox.setRenderer(new BasicComboBoxRenderer<Theme>() {
                 @Override
-                public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label;
-                    Theme  theme;
-
-                    label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    theme = (Theme)value;
-
+                public Component getListCellRendererComponent(JList list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
+                    JLabel label = (JLabel)super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
                     if(ThemeManager.isCurrentTheme(theme))
                         label.setText(theme.getName() +  " (" + Translator.get("theme.current") + ")");
                     else
                         label.setText(theme.getName());
 
-                    if(theme.getType() != Theme.Type.CUSTOM)
-                        label.setIcon(lockIcon);
-                    else
-                        label.setIcon(transparentIcon);
+                    label.setIcon(theme.getType() != Theme.Type.CUSTOM ? lockIcon : transparentIcon);
 
                     return label;
                 }
@@ -416,6 +411,31 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         gridPanel.add(renameThemeButton);
         gridPanel.add(deleteThemeButton);
         gridPanel.add(duplicateThemeButton);
+
+        JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.themes")));
+        flowPanel.add(gridPanel);
+
+        return flowPanel;
+    }
+
+    private JPanel createSyntaxHighlightThemePanel() {
+        JPanel gridPanel = new ProportionalGridPanel(1);
+
+        syntaxThemeComboBox = new PrefComboBox<String>() {
+            @Override
+            public boolean hasChanged() {
+                String selectedTheme = (String)getSelectedItem();
+                return !ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(selectedTheme);
+            }
+        };
+        for (String s : ThemeManager.predefinedSyntaxThemeNames()) {
+            syntaxThemeComboBox.addItem(s);
+        }
+
+        syntaxThemeComboBox.addActionListener(this);
+        syntaxThemeComboBox.setSelectedItem(ThemeManager.getCurrentSyntaxThemeName());
+        gridPanel.add(syntaxThemeComboBox);
 
         JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.themes")));
@@ -540,6 +560,13 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             ThemeManager.setCurrentTheme((Theme)themeComboBox.getSelectedItem());
             resetThemeButtons((Theme)themeComboBox.getSelectedItem());
             themeComboBox.repaint();
+        }
+
+        // Sets the current syntax theme.
+        final String syntaxThemeName = (String)syntaxThemeComboBox.getSelectedItem();
+        if ( !ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(syntaxThemeName) ) {
+            ThemeManager.setCurrentSyntaxTheme(syntaxThemeName);
+            syntaxThemeComboBox.repaint();
         }
 
         // Set system icons policy
@@ -712,17 +739,16 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         AbstractFile destFile = ExtensionManager.getExtensionsFile(library.getName());
 
         int collision = FileCollisionChecker.checkForCollision(library, destFile);
-        if(collision!=FileCollisionChecker.NO_COLLOSION) {
+        if(collision != FileCollisionChecker.NO_COLLOSION) {
             // Do not offer the multiple files mode options such as 'skip' and 'apply to all'
             int action = new FileCollisionDialog(parent, parent, collision, library, destFile, false, false).getActionValue();
 
             // User chose to overwrite the file
             if(action==FileCollisionDialog.OVERWRITE_ACTION) {
                 // Simply continue and file will be overwritten
-            }
-            else if(action==FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
+            } else if(action==FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
                 // Overwrite if the source is more recent than the destination
-                if(library.getDate()<=destFile.getDate())
+                if(library.getDate() <= destFile.getDate())
                     return false;
                 // Simply continue and file will be overwritten
             }
@@ -758,6 +784,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                         try {
                             WindowManager.installLookAndFeel(currentName);
                         } catch (Throwable e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -982,9 +1009,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     // User chose to overwrite the file
                     if(action==FileCollisionDialog.OVERWRITE_ACTION) {
                         // Simply continue and file will be overwritten
-                    }
-                    // User chose to cancel or closed the dialog
-                    else {
+                    } else { // User chose to cancel or closed the dialog
                         return;
                     }
                 }

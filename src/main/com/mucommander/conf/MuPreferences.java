@@ -327,8 +327,12 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final String DEFAULT_THEME_TYPE                 = THEME_PREDEFINED;
 	/** Name of the current theme. */
 	public static final String THEME_NAME                         = THEME_SECTION + '.' + "path";
+    /** Name of the current theme. */
+    public static final String SYNTAX_THEME_NAME                  = "editor.syntax.path";
 	/** Default current theme name. */
 	public static final String DEFAULT_THEME_NAME                 = RuntimeConstants.DEFAULT_THEME;
+    /** Default current editor syntax theme name. */
+    public static final String DEFAULT_SYNTAX_THEME_NAME          = "Default";
 
 
 

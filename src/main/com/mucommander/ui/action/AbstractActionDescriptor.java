@@ -129,7 +129,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      * @return the standard path to the icon image corresponding to the specified MuAction
      */
     private static String getStandardIconPath(String actionId) {
-        return IconManager.getIconSetFolder(IconManager.ACTION_ICON_SET) + actionId + ".png";
+        return IconManager.IconSet.ACTION.getFolder() + actionId + ".png";
     }
     
     /**

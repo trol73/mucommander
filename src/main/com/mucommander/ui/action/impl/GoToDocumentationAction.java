@@ -42,7 +42,7 @@ public class GoToDocumentationAction extends OpenURLInBrowserAction implements P
     public GoToDocumentationAction(MainFrame mainFrame, Map<String,Object> properties) {
         super(mainFrame, properties);
 
-        setIcon(IconManager.getIcon(IconManager.COMMON_ICON_SET, "help.png"));
+        setIcon(IconManager.getIcon(IconManager.IconSet.COMMON, "help.png"));
 
         // Set the URL
         updateURL();

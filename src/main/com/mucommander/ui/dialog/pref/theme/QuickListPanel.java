@@ -19,19 +19,16 @@
 package com.mucommander.ui.dialog.pref.theme;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -66,7 +63,7 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
     private final static String[] sampleData;
     
     /** The icon of the sample items */
-    private final Icon sampleIcon = IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.FOLDER_ICON_NAME);
+    private final Icon sampleIcon = IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FOLDER_ICON_NAME);
 
     static {
         String sampleText = Translator.get("sample_text");

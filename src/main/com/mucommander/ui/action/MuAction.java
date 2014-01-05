@@ -350,7 +350,7 @@ public abstract class MuAction extends AbstractAction {
      * @return the standard path to the icon image corresponding to the specified MuAction class
      */
     public static String getStandardIconPath(Class<? extends MuAction> action) {
-        return IconManager.getIconSetFolder(IconManager.ACTION_ICON_SET) + getActionName(action) + ".png";
+        return IconManager.IconSet.ACTION.getFolder() + getActionName(action) + ".png";
     }
 
     private static String getActionName(Class<? extends MuAction> action) {

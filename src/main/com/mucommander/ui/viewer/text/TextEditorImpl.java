@@ -87,7 +87,7 @@ class TextEditorImpl implements ThemeListener {
         textArea.setAntiAliasingEnabled(true);
 		textArea.setEditable(isEditable);
         try {
-            ThemeManager.readEditorTheme("Dark").apply(textArea);
+            ThemeManager.readEditorTheme(ThemeManager.getCurrentSyntaxThemeName()).apply(textArea);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -70,8 +70,8 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
         super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.data     = data;
         this.isActive = isActive;
-        symlinkIcon   = IconManager.getCompositeIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.FILE_ICON_NAME),
-                                                     IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.SYMLINK_ICON_NAME));
+        symlinkIcon   = IconManager.getCompositeIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FILE_ICON_NAME),
+                                                     IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.SYMLINK_ICON_NAME));
 
         initUI();
     }
@@ -315,13 +315,13 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
             if(column == 0) {
                 currentLabel = icon;
                 if(row == FOLDER)
-                    currentLabel.setIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.FOLDER_ICON_NAME));
+                    currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FOLDER_ICON_NAME));
                 else if(row == ARCHIVE)
-                    currentLabel.setIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.ARCHIVE_ICON_NAME));
+                    currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.ARCHIVE_ICON_NAME));
                 else if(row == SYMLINK)
                     currentLabel.setIcon(symlinkIcon);
                 else
-                    currentLabel.setIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.FILE_ICON_NAME));
+                    currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FILE_ICON_NAME));
             }
             // Text label foreground.
             else {

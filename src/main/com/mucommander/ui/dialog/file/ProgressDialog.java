@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -166,7 +167,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
         yPanel.addSpace(10);
         elapsedTimeLabel = new JLabel(Translator.get("progress_dialog.elapsed_time")+": ");
-        elapsedTimeLabel.setIcon(IconManager.getIcon(IconManager.STATUS_BAR_ICON_SET, StatusBar.WAITING_ICON));
+        elapsedTimeLabel.setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, StatusBar.WAITING_ICON));
         yPanel.add(elapsedTimeLabel);
 
         if(transferFileJob!=null) {
@@ -174,7 +175,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
             this.currentSpeedLabel = new JLabel();
             updateCurrentSpeedLabel("");
-            currentSpeedLabel.setIcon(IconManager.getIcon(IconManager.PROGRESS_ICON_SET, CURRENT_SPEED_ICON));
+            currentSpeedLabel.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, CURRENT_SPEED_ICON));
             tempPanel.add(currentSpeedLabel, BorderLayout.WEST);
 
             YBoxPanel advancedPanel = new YBoxPanel();
@@ -218,15 +219,15 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         yPanel.add(Box.createVerticalGlue());
         contentPane.add(yPanel, BorderLayout.CENTER);
 
-        pauseResumeButton = new JButton(Translator.get("pause"), IconManager.getIcon(IconManager.PROGRESS_ICON_SET, PAUSE_ICON));
+        pauseResumeButton = new JButton(Translator.get("pause"), IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
         pauseResumeButton.addActionListener(this);
 
         if(transferFileJob!=null) {
-            skipButton = new JButton(Translator.get("skip"), IconManager.getIcon(IconManager.PROGRESS_ICON_SET, SKIP_ICON));
+            skipButton = new JButton(Translator.get("skip"), IconManager.getIcon(IconManager.IconSet.PROGRESS, SKIP_ICON));
             skipButton.addActionListener(this);
         }
 
-        stopButton = new JButton(Translator.get("stop"), IconManager.getIcon(IconManager.PROGRESS_ICON_SET, STOP_ICON));
+        stopButton = new JButton(Translator.get("stop"), IconManager.getIcon(IconManager.IconSet.PROGRESS, STOP_ICON));
         stopButton.addActionListener(this);
 
 //        hideButton = new JButton(Translator.get("progress_dialog.hide"));
@@ -327,7 +328,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
         else if(newState==FileJob.PAUSED) {
             pauseResumeButton.setText(Translator.get("resume"));
-            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.PROGRESS_ICON_SET, RESUME_ICON));
+            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, RESUME_ICON));
 
             // Update buttons mnemonics
             buttonsChoicePanel.updateMnemonics();
@@ -337,7 +338,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
         else if(newState==FileJob.RUNNING) {
             pauseResumeButton.setText(Translator.get("pause"));
-            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.PROGRESS_ICON_SET, PAUSE_ICON));
+            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
 
             // Update buttons mnemonics
             buttonsChoicePanel.updateMnemonics();
@@ -512,7 +513,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
         private static final int STROKE_WIDTH = 1;
 
-        private java.util.List<Long> samples = new Vector<Long>(NB_SAMPLES_MAX);
+        private final List<Long> samples = new Vector<Long>(NB_SAMPLES_MAX);
 
         private Stroke lineStroke = new BasicStroke(STROKE_WIDTH);
 
@@ -586,7 +587,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 Polygon p = new Polygon();
                 int sampleOffset = firstSample;
                 for(int l=0; l<nbLines; l++) {
-                    p.addPoint(x, height-STROKE_WIDTH-(int)((Long) samples.get(sampleOffset++) /yRatio));
+                    p.addPoint(x, height-STROKE_WIDTH-(int)(samples.get(sampleOffset++) /yRatio));
                     x+=LINE_SPACING;
                 }
                 p.addPoint(x-LINE_SPACING, height-1);
@@ -598,8 +599,8 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 x = STROKE_WIDTH;
                 sampleOffset = firstSample;
                 for(int l=0; l<nbLines-1; l++) {
-                    g.drawLine(x, height-STROKE_WIDTH-(int)((Long) samples.get(sampleOffset) /yRatio),
-                              (x+=LINE_SPACING), height-STROKE_WIDTH-(int)((Long) samples.get(++sampleOffset) /yRatio));
+                    g.drawLine(x, height-STROKE_WIDTH-(int)(samples.get(sampleOffset) /yRatio),
+                              (x+=LINE_SPACING), height-STROKE_WIDTH-(int)(samples.get(++sampleOffset) /yRatio));
                 }
 
                 // Draw an horizontal line at the bottom of the graph

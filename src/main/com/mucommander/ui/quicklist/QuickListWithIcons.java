@@ -48,7 +48,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 	// This SpinningDial will appear until the icon fetching of an item is over.
 	private static final SpinningDial waitingIcon = new SpinningDial();
 	// If the icon fetching fails for some item, the following icon will appear for it. 
-	private static final Icon notAvailableIcon = IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
+	private static final Icon notAvailableIcon = IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
 	// Saves the number of waiting-icons (SpinningDials) appearing in the list.
 	private int numOfWaitingIconInList;
 	

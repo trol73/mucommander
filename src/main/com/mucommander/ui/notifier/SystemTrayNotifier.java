@@ -114,7 +114,7 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
 
             SystemTray systemTray = SystemTray.getSystemTray();
 
-            Image iconImage = IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, TRAY_ICON_NAME).getImage();
+            Image iconImage = IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, TRAY_ICON_NAME).getImage();
             Dimension trayIconSize = systemTray.getTrayIconSize();
             // If the sytem tray icon size is larger than the icon size, center the icon as the default is to display
             // the icon in the top left corner which is plain ugly

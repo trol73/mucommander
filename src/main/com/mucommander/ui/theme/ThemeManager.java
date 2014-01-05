@@ -27,13 +27,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.WeakHashMap;
+import java.util.*;
 
+import com.mucommander.commons.file.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,13 +66,18 @@ public class ThemeManager {
     /** List of all registered theme change listeners. */
     private static final WeakHashMap<ThemeListener, Object>  listeners = new WeakHashMap<ThemeListener, Object>();
     /** List of all predefined theme names. */
-    private static final String[]     PREDEFINED_THEME_NAMES = {
+    private static List<String> predefinedThemeNames;
+    /** List of all predefined syntax highlight theme names. */
+    private static List<String> predefinedSyntaxThemeNames;
+    /*
+    private static String[] PREDEFINED_THEME_NAMES = {
         "ClassicCommander",
         "Native",
         "RetroCommander",
         "Striped",
         "Trol"
     };
+    */
 
 
     // - Instance variables --------------------------------------------------------------
@@ -87,6 +88,8 @@ public class ThemeManager {
     private static Theme         currentTheme;
     /** Used to listen on the current theme's modifications. */
     private static ThemeListener listener = new CurrentThemeListener();
+    /** Theme that is currently applied to viewer and editor. */
+    private static String currentSyntaxThemeName;
 
 
 
@@ -145,7 +148,9 @@ public class ThemeManager {
             catch(Exception e2) {
                 if(!wasUserThemeLoaded) {
                     try {currentTheme = readTheme(Theme.Type.USER, null);}
-                    catch(Exception e3) {}
+                    catch(Exception e3) {
+                        e3.printStackTrace();
+                    }
                 }
                 if(currentTheme == null) {
                     currentTheme         = new Theme(listener);
@@ -154,6 +159,7 @@ public class ThemeManager {
             }
             setConfigurationTheme(currentTheme);
         }
+        currentSyntaxThemeName = MuConfigurations.getPreferences().getVariable(MuPreference.SYNTAX_THEME_NAME, MuPreferences.DEFAULT_SYNTAX_THEME_NAME);
     }
 
 
@@ -164,50 +170,67 @@ public class ThemeManager {
         // The list of predefined themes is no longer dynamically created as this causes Webstart to retrieve and
         // explore the application's JAR via HTTP, which is inefficient and prevents the application from being
         // launched offline.
-
-//        try {
-//            return getThemeNames(ResourceLoader.getRootPackageAsFile(ThemeManager.class).getChild(PathUtils.removeLeadingSeparator(RuntimeConstants.THEMES_PATH, "/")));
-//        }
-//        catch(IOException e) {return Collections.emptyList().iterator();}
-
-        return Arrays.asList(PREDEFINED_THEME_NAMES).iterator();
+        if (predefinedThemeNames == null) {
+            try {
+                predefinedThemeNames = getThemeNames(ResourceLoader.getRootPackageAsFile(ThemeManager.class).getChild(PathUtils.removeLeadingSeparator(RuntimeConstants.THEMES_PATH, "/")));
+            } catch (IOException e) {
+                predefinedThemeNames = new ArrayList<String>();
+            }
+        }
+        return predefinedThemeNames.iterator();
     }
+
+    public static List<String> predefinedSyntaxThemeNames() {
+        // The list of predefined themes is no longer dynamically created as this causes Webstart to retrieve and
+        // explore the application's JAR via HTTP, which is inefficient and prevents the application from being
+        // launched offline.
+        if (predefinedSyntaxThemeNames == null) {
+            try {
+                predefinedSyntaxThemeNames = getThemeNames(ResourceLoader.getRootPackageAsFile(ThemeManager.class).getChild(PathUtils.removeLeadingSeparator(RuntimeConstants.TEXT_SYNTAX_THEMES_PATH, "/")));
+            } catch (IOException e) {
+                predefinedSyntaxThemeNames = new ArrayList<String>();
+            }
+        }
+        return predefinedSyntaxThemeNames;
+    }
+
 
     private static Iterator<String> customThemeNames() throws IOException {
-        return getThemeNames(FileFactory.getFile(getCustomThemesFolder().getAbsolutePath()));
+        return getThemeNames(FileFactory.getFile(getCustomThemesFolder().getAbsolutePath())).iterator();
     }
 
-    private static Iterator<String> getThemeNames(AbstractFile themeFolder) {
-        AbstractFile[] files;
-        Vector<String> names;
-
+    private static List<String> getThemeNames(AbstractFile themeFolder) {
         try {
-            files = themeFolder.ls(new ExtensionFilenameFilter(".xml"));
-            names = new Vector<String>();
+            AbstractFile[] files = themeFolder.ls(new ExtensionFilenameFilter(".xml"));
+            List<String> names = new ArrayList<String>();
             for (AbstractFile file : files)
                 names.add(getThemeName(file));
-            return names.iterator();
+            return names;
+        } catch(Exception e) {
+            return new ArrayList<String>();
         }
-        catch(Exception e) {return new Vector<String>().iterator();}
     }
 
-    public static Vector<Theme> getAvailableThemes() {
-        Vector<Theme>   themes;
+    public static List<Theme> getAvailableThemes() {
         Iterator<String> iterator;
         String          name;
 
-        themes = new Vector<Theme>();
+        List<Theme> themes = new ArrayList<Theme>();
 
         // Tries to load the user theme. If it's corrupt, uses an empty user theme.
-        try {themes.add(readTheme(Theme.Type.USER, null));}
-        catch(Exception e) {themes.add(new Theme(listener));}
+        try {
+            themes.add(readTheme(Theme.Type.USER, null));
+        } catch(Exception e) {
+            themes.add(new Theme(listener));
+        }
 
         // Loads predefined themes.
         iterator = predefinedThemeNames();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             name = iterator.next();
-            try {themes.add(readTheme(Theme.Type.PREDEFINED, name));}
-            catch(Exception e) {
+            try {
+                themes.add(readTheme(Theme.Type.PREDEFINED, name));
+            } catch(Exception e) {
                 LOGGER.warn("Failed to load predefined theme " + name, e);
             }
         }
@@ -215,15 +238,15 @@ public class ThemeManager {
         // Loads custom themes.
         try {
             iterator = customThemeNames();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 name = iterator.next();
-                try {themes.add(readTheme(Theme.Type.CUSTOM, name));}
-                catch(Exception e) {
+                try {
+                    themes.add(readTheme(Theme.Type.CUSTOM, name));
+                } catch(Exception e) {
                     LOGGER.warn("Failed to load custom theme " + name, e);
                 }
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.warn("Failed to load custom themes", e);
         }
 
@@ -524,7 +547,9 @@ public class ThemeManager {
         finally {
             if(out != null) {
                 try {out.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -555,7 +580,9 @@ public class ThemeManager {
         finally {
             if(in != null) {
                 try {in.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -655,7 +682,7 @@ public class ThemeManager {
         return buffer;
     }
 
-    public static Theme duplicateTheme(Theme theme) throws IOException, Exception {return importTheme(theme.cloneData(), theme.getName());}
+    public static Theme duplicateTheme(Theme theme) throws Exception {return importTheme(theme.cloneData(), theme.getName());}
 
     public static Theme importTheme(ThemeData data, String name) throws IOException, Exception {
         writeTheme(data, Theme.Type.CUSTOM, name = getAvailableCustomThemeName(name));
@@ -724,7 +751,7 @@ public class ThemeManager {
      * @throws IOException if an I/O related error occurs.
      */
     private static InputStream getPredefinedEditorThemeInputStream(String name) throws IOException {
-        return ResourceLoader.getResourceAsStream(RuntimeConstants.EDITOR_THEMES_PATH + "/" + name + ".xml");
+        return ResourceLoader.getResourceAsStream(RuntimeConstants.TEXT_SYNTAX_THEMES_PATH + "/" + name + ".xml");
     }
 
     /**
@@ -896,6 +923,8 @@ public class ThemeManager {
 
     public static Theme getCurrentTheme() {return currentTheme;}
 
+    public static String getCurrentSyntaxThemeName() {return currentSyntaxThemeName;}
+
     /**
      * Changes the current theme.
      * <p>
@@ -923,6 +952,15 @@ public class ThemeManager {
 
         // Triggers the events generated by the theme change.
         triggerThemeChange(oldTheme, currentTheme);
+    }
+
+    /**
+     *
+     * @param name
+     */
+    public synchronized static void setCurrentSyntaxTheme(String name) {
+        currentSyntaxThemeName = name;
+        MuConfigurations.getPreferences().setVariable(MuPreference.SYNTAX_THEME_NAME, name);
     }
 
     public synchronized static Font getCurrentFont(int id) {return currentTheme.getFont(id);}

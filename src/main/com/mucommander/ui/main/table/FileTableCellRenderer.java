@@ -197,7 +197,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         if(column == Column.EXTENSION) {
             // Set file icon (parent folder icon if '..' file)
             label.setIcon(rowIndex ==0 && tableModel.hasParentFolder()
-                    ?IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
+                    ?IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
                     :FileIcons.getFileIcon(file));
         }
         // Any other column (name, date or size)

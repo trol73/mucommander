@@ -83,7 +83,7 @@ public class ToolbarMoreButton extends JToggleButton implements ActionListener {
   JToolBar toolbar;
 
   protected ToolbarMoreButton(final JToolBar toolbar) {
-    super(IconManager.getIcon(IconManager.COMMON_ICON_SET, "more.png"));
+    super(IconManager.getIcon(IconManager.IconSet.COMMON, "more.png"));
     this.toolbar = toolbar;
     addActionListener(this);
     setFocusPainted(false);

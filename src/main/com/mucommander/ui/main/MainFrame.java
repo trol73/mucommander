@@ -122,23 +122,23 @@ public class MainFrame extends JFrame implements LocationListener {
             java.util.List<Image> icons = new Vector<Image>();
 
             // Start by adding a 16x16 image with 1-bit transparency, any OS should support that.
-            icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon16_8.png").getImage());
+            icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon16_8.png").getImage());
 
             // - Windows XP messes up 8-bit PNG transparency.
             // We would be better off with the .ico of the launch4j exe (which has 8-bit alpha transparency) but there
             // seems to be no way to keep it when in 'dontWrapJar' mode (separate exe and jar files).
             if(OsFamily.WINDOWS.isCurrent() && OsVersion.WINDOWS_XP.isCurrentOrLower()) {
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon48_8.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon48_8.png").getImage());
             }
             // - Windows Vista supports 8-bit transparency and icon resolutions up to 256x256.
             // - GNOME and KDE support 8-bit transparency.
             else {
                 // Add PNG 24 images (8-bit transparency)
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon16_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon32_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon48_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon128_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon256_24.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon16_24.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon32_24.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon48_24.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png").getImage());
+                icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon256_24.png").getImage());
             }
 
             setIconImages(icons);
@@ -146,7 +146,7 @@ public class MainFrame extends JFrame implements LocationListener {
         else {      // Java 1.5 or lower
             // Err on the safe side by assuming that 8-bit transparency is not supported.
             // Any OS should support 16x16 icons with 1-bit transparency.
-            setIconImage(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon16_8.png").getImage());
+            setIconImage(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon16_8.png").getImage());
         }
     }
 
@@ -269,11 +269,16 @@ public class MainFrame extends JFrame implements LocationListener {
     	this(new ConfFileTableTab[] {leftTab}, 0, leftTableConf, new ConfFileTableTab[] {rightTab}, 0, rightTableConf);
     }
     
+
     /**
      * Creates a new main frame set to the given initial folders.
      *
-     * @param leftInitialFolders the initial folders to display in the left panel's tabs
-     * @param rightInitialFolders the initial folders to display in the right panel's tabs
+     * @param leftTabs
+     * @param indexOfLeftSelectedTab
+     * @param leftTableConf
+     * @param rightTabs
+     * @param indexOfRightSelectedTab
+     * @param rightTableConf
      */
     public MainFrame(ConfFileTableTab[] leftTabs, int indexOfLeftSelectedTab, FileTableConfiguration leftTableConf,
     		         ConfFileTableTab[] rightTabs, int indexOfRightSelectedTab, FileTableConfiguration rightTableConf) {
@@ -564,7 +569,7 @@ public class MainFrame extends JFrame implements LocationListener {
         leftTable.setColumnModel(rightTable.getColumnModel());
         rightTable.setColumnModel(model);
 
-        SortInfo sortInfo = (SortInfo)leftTable.getSortInfo().clone();
+        SortInfo sortInfo = leftTable.getSortInfo().clone();
 
         leftTable.sortBy(rightTable.getSortInfo());
         leftTable.updateColumnsVisibility();
@@ -628,13 +633,11 @@ public class MainFrame extends JFrame implements LocationListener {
         if(isActive())
             return true;
 
-        Window ownedWindows[] = getOwnedWindows();
-
-        int nbWindows = ownedWindows.length;
-        for(int i=0; i<nbWindows; i++)
-            if(ownedWindows[i].isActive())
+        for (Window w : getOwnedWindows()) {
+            if (w.isActive()) {
                 return true;
-
+            }
+        }
         return false;
     }
 

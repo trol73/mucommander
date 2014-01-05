@@ -49,7 +49,7 @@ public class TabsQL extends QuickListWithIcons<FileTableTab> {
 	
 	private TabFactory<FileTableTab, FileTableTab> tabsFactory = new PrintableFileTableTabFactory();
 	
-	Icon lockedTabIcon = IconManager.getIcon(IconManager.COMMON_ICON_SET, FileTableTabHeader.LOCKED_ICON_NAME);
+	Icon lockedTabIcon = IconManager.getIcon(IconManager.IconSet.COMMON, FileTableTabHeader.LOCKED_ICON_NAME);
 	Icon unlockedTabIcon = new EmptyIcon(8, 9);
 	
 	public TabsQL(FolderPanel folderPanel) {
@@ -68,18 +68,17 @@ public class TabsQL extends QuickListWithIcons<FileTableTab> {
 		return item.isLocked() ? lockedTabIcon : unlockedTabIcon;
 	}
 
-	@Override
 	protected FileTableTab[] getData() {
 		List<FileTableTab> tabsList = new ArrayList<FileTableTab>();
 		Iterator<FileTableTab> tabsIterator = folderPanel.getTabs().iterator();
 		
-		while(tabsIterator.hasNext())
+		while (tabsIterator.hasNext())
 			tabsList.add(tabsFactory.createTab(tabsIterator.next()));
 		
 		// Remove the selected tab from the list
 		tabsList.remove(folderPanel.getTabs().getSelectedIndex());
 		
-		return tabsList.toArray(new FileTableTab[0]);
+		return tabsList.toArray(new FileTableTab[tabsList.size()]);
 	}
 
 	@Override

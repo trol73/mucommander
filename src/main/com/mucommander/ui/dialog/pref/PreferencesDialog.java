@@ -138,7 +138,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param scroll    whether this panel should be wrapped in a scroll panel.
      */
     public void addPreferencesPanel(PreferencesPanel prefPanel, String iconName, boolean scroll) {
-        tabbedPane.addTab(prefPanel.getTitle(), IconManager.getIcon(IconManager.PREFERENCES_ICON_SET, iconName), getTabbedPanel(prefPanel, scroll));
+        tabbedPane.addTab(prefPanel.getTitle(), IconManager.getIcon(IconManager.IconSet.PREFERENCES, iconName), getTabbedPanel(prefPanel, scroll));
         prefPanels.add(prefPanel);
     }
 
@@ -170,9 +170,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      */
     public void commit() {
         // Ask pref panels to commit changes
-        int nbPanels = prefPanels.size();
-        for(int i = 0; i < nbPanels; i++)
-            prefPanels.get(i).commit();
+        for (PreferencesPanel panel : prefPanels) {
+            panel.commit();
+        }
         setCommitButtonsEnabled(false);
     }
 
@@ -186,10 +186,10 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      */
     public boolean checkCommit() {
         // Ask pref panels to commit changes
-        int nbPanels = prefPanels.size();
-        for(int i = 0; i < nbPanels; i++)
-            if(!prefPanels.get(i).checkCommit())
+        for (PreferencesPanel panel : prefPanels) {
+            if(!panel.checkCommit())
                 return false;
+        }
         return true;
     }
 

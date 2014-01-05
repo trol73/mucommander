@@ -47,7 +47,7 @@ public class SplashScreen extends JWindow {
     private Font customFont;
 
     /** Path to the splash screen logo image within the JAR file */
-    private final static String SPLASH_IMAGE_PATH = IconManager.getIconSetFolder(IconManager.MUCOMMANDER_ICON_SET)+"splash.png";
+    private final static String SPLASH_IMAGE_PATH = IconManager.IconSet.MUCOMMANDER.getFolder() + "splash.png";
 
     /** Name of the font used to display text on this splash screen */
     private final static String FONT_NAME = "Courier";
@@ -93,8 +93,10 @@ public class SplashScreen extends JWindow {
         // Wait for the image to be fully loaded
         MediaTracker mediaTracker = new MediaTracker(this);
         mediaTracker.addImage(imageIcon.getImage(), 0);
-        try { mediaTracker.waitForID(0); }
-        catch(InterruptedException e) {}
+        try {
+            mediaTracker.waitForID(0); }
+        catch(InterruptedException e) {
+        }
 
         setContentPane(new JLabel(imageIcon));
 		

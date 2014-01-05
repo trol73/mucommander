@@ -42,53 +42,52 @@ import com.mucommander.commons.file.util.ResourceLoader;
  */
 public class IconManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(IconManager.class);
-	
-    /** Caches for the different icon sets */
-    private final static Map<String, ImageIcon> caches[];
 
-    /** Designates the file icon set */
-    public final static int FILE_ICON_SET        = 0;
-    /** Designates the action icon set */
-    public final static int ACTION_ICON_SET      = 1;
-    /** Designates the toolbar icon set */
-    public final static int STATUS_BAR_ICON_SET  = 2;
-    /** Designates the table icon set */
-    public final static int COMMON_ICON_SET      = 3;
-    /** Designates the preferences icon set */
-    public final static int PREFERENCES_ICON_SET = 4;
-    /** Designates the progress icon set */
-    public final static int PROGRESS_ICON_SET    = 5;
-    /** Designates the language icon set */
-    public final static int LANGUAGE_ICON_SET    = 6;
-    /** Designates the mucommander icon set */
-    public final static int MUCOMMANDER_ICON_SET = 7;
+    public enum IconSet {
+        /** Designates the file icon set */
+        FILE("file"),
+        /** Designates the action icon set */
+        ACTION("action"),
+        /** Designates the toolbar icon set */
+        STATUS_BAR("status_bar"),
+        /** Designates the table icon set */
+        COMMON("common"),
+        /** Designates the preferences icon set */
+        PREFERENCES("preferences"),
+        /** Designates the progress icon set */
+        PROGRESS("progress"),
+        /** Designates the language icon set */
+        LANGUAGE("language"),
+        /** Designates the mucommander icon set */
+        MUCOMMANDER("mucommander");
 
-    /** Base folder of all images */
-    private final static String BASE_IMAGE_FOLDER = "/images";
-    /** Icon sets folders within the application's JAR file */
-    private final static String ICON_SET_FOLDERS[] = {
-        BASE_IMAGE_FOLDER +"/file/",
-        BASE_IMAGE_FOLDER +"/action/",
-        BASE_IMAGE_FOLDER +"/status_bar/",
-        BASE_IMAGE_FOLDER +"/common/",
-        BASE_IMAGE_FOLDER +"/preferences/",
-        BASE_IMAGE_FOLDER +"/progress/",
-        BASE_IMAGE_FOLDER +"/language/",
-        BASE_IMAGE_FOLDER +"/mucommander/"
-    };
+        /** Base folder of all images */
+        private final static String BASE_IMAGE_FOLDER = "/images/";
+
+        /** Icon sets folders within the application's JAR file */
+        private final String folder;
+
+        /** Caches for the different icon sets */
+        private final Map<String, ImageIcon> cache = new Hashtable<String, ImageIcon>();
+
+        private IconSet(String folder) {
+            this.folder = BASE_IMAGE_FOLDER + folder + '/';
+        }
+
+        /**
+         * Returns the path to the folder that contains the image resource files of the given icon set.
+         * The returned path is relative to the application JAR file's root and contains a trailing slash.
+         */
+        public String getFolder() {
+            return folder;
+        }
+
+        private Map<String, ImageIcon> getCache() {
+            return cache;
+        }
 
 
-    static {
-        // Initialize caches for icon sets that need it.
-        // Icons which are displayed once in a while like preferences icons don't need to be cached
-        caches = new Hashtable[ICON_SET_FOLDERS.length];
-        caches[FILE_ICON_SET]       = new Hashtable<String, ImageIcon>();
-        caches[ACTION_ICON_SET]     = new Hashtable<String, ImageIcon>();
-        caches[STATUS_BAR_ICON_SET] = new Hashtable<String, ImageIcon>();
-        caches[COMMON_ICON_SET]     = new Hashtable<String, ImageIcon>();
-        caches[PROGRESS_ICON_SET]   = new Hashtable<String, ImageIcon>();
     }
-
 
     /**
      * Creates a new instance of IconManager.
@@ -172,38 +171,39 @@ public class IconManager {
      * @return an ImageIcon instance corresponding to the specified icon set, name and scale factor,
      * <code>null</code> if the image wasn't found or couldn't be loaded
      */
-    public static ImageIcon getIcon(int iconSet, String iconName, float scaleFactor) {
-        Map<String, ImageIcon> cache = caches[iconSet];
+    public static ImageIcon getIcon(IconSet iconSet, String iconName, float scaleFactor) {
+        Map<String, ImageIcon> cache = iconSet.getCache();
         ImageIcon icon;
 
-        if(cache==null) {
+        if (cache == null) {
             // No caching, simply create the icon
-            icon = getIcon(ICON_SET_FOLDERS[iconSet]+iconName);
+            icon = getIcon(iconSet.getFolder() + iconName);
         }
         else {
             // Look for the icon in the cache
             icon = cache.get(iconName);
-            if(icon==null) {
+            if (icon==null) {
                 // Icon is not in the cache, let's create it
-                icon = getIcon(ICON_SET_FOLDERS[iconSet]+iconName);
+                icon = getIcon(iconSet.getFolder()+iconName);
                 // and add it to the cache if icon exists
-                if(icon!=null)
+                if (icon!=null) {
                     cache.put(iconName, icon);
+                }
             }
         }
 
-        if(icon==null)
+        if (icon == null)
             return null;
 
-        return scaleFactor==1.0f?icon:getScaledIcon(icon, scaleFactor);
+        return scaleFactor==1.0f ? icon:getScaledIcon(icon, scaleFactor);
     }
 
 
     /**
-     * Convenience method, calls and returns the result of {@link #getIcon(int, String, float) getIcon(iconSet, iconName, scaleFactor)}
+     * Convenience method, calls and returns the result of {@link #getIcon(IconSet, String, float) getIcon(iconSet, iconName, scaleFactor)}
      * with a scale factor of 1.0f (no rescaling).
      */
-    public static ImageIcon getIcon(int iconSet, String iconName) {
+    public static ImageIcon getIcon(IconSet iconSet, String iconName) {
         return getIcon(iconSet, iconName, 1.0f);
     }
 
@@ -246,14 +246,4 @@ public class IconManager {
         return new ImageIcon(bi);
     }
 
-
-    /**
-     * Returns the path to the folder that contains the image resource files of the given icon set.
-     * The returned path is relative to the application JAR file's root and contains a trailing slash.
-     *
-     * @param iconSet an icon set (see public constants for possible values)
-     */
-    public static String getIconSetFolder(int iconSet) {
-        return ICON_SET_FOLDERS[iconSet];
-    }
 }

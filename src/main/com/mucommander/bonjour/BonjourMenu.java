@@ -45,7 +45,7 @@ public abstract class BonjourMenu extends JMenu implements MenuListener {
     public BonjourMenu() {
         super(Translator.get("bonjour.bonjour_services"));
 
-        setIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, "bonjour.png"));
+        setIcon(IconManager.getIcon(IconManager.IconSet.FILE, "bonjour.png"));
 
         // Menu items will be added when menu gets selected
         addMenuListener(this);
@@ -80,8 +80,8 @@ public abstract class BonjourMenu extends JMenu implements MenuListener {
                 JMenuItem menuItem;
                 MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
-                for(int i=0; i<nbServices; i++) {
-                    menuItem = new JMenuItem(getMenuItemAction(services[i]));
+                for (BonjourService service : services) {
+                    menuItem = new JMenuItem(getMenuItemAction(service));
                     menuItem.setMnemonic(mnemonicHelper.getMnemonic(menuItem.getText()));
 
                     add(menuItem);

@@ -73,6 +73,6 @@ public class ArrowButton extends JButton {
      * {@link #LEFT_DIRECTION} or {@link #RIGHT_DIRECTION}
      */
     public void setArrowDirection(int direction) {
-        setIcon(IconManager.getIcon(IconManager.COMMON_ICON_SET, ICONS[direction]));
+        setIcon(IconManager.getIcon(IconManager.IconSet.COMMON, ICONS[direction]));
     }
 }

@@ -45,8 +45,6 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
 	
 	private FolderPanel folderPanel;
 	
-	private JLabel lockedIcon;
-
 	private static final String CLOSE_ICON_NAME = "close.png";
     private static final String CLOSE_ROLLOVER_ICON_NAME = "close_rollover.png";
     private static final int CLOSE_ICON_SIZE = 12;
@@ -66,7 +64,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
         gbc.gridy = 0;
 
         // Locked tab icon
-        lockedIcon = new LockedIcon();
+        JLabel lockedIcon = new LockedIcon();
         gbc.weightx = 0;    // required otherwise extra width may be redistributed around the button
         gbc.gridx = 0;
         lockedIcon.setVisible(false);
@@ -131,10 +129,10 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
             //No need to be focusable
             setFocusable(false);
             setBorderPainted(false);
-            setIcon(IconManager.getIcon(IconManager.COMMON_ICON_SET, CLOSE_ICON_NAME));
+            setIcon(IconManager.getIcon(IconManager.IconSet.COMMON, CLOSE_ICON_NAME));
             //Making nice rollover effect
             setRolloverEnabled(true);
-            setRolloverIcon(IconManager.getIcon(IconManager.COMMON_ICON_SET, CLOSE_ROLLOVER_ICON_NAME));
+            setRolloverIcon(IconManager.getIcon(IconManager.IconSet.COMMON, CLOSE_ROLLOVER_ICON_NAME));
         }
 
 
@@ -153,7 +151,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
     private class LockedIcon extends JLabel {
    	 
         public LockedIcon() {
-        	super(IconManager.getIcon(IconManager.COMMON_ICON_SET, LOCKED_ICON_NAME));
+        	super(IconManager.getIcon(IconManager.IconSet.COMMON, LOCKED_ICON_NAME));
             setPreferredSize(new Dimension(LOCKED_ICON_SIZE, LOCKED_ICON_SIZE));
             //No need to be focusable
             setFocusable(false);

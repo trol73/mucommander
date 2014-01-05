@@ -43,7 +43,7 @@ public class RuntimeConstants {
     /** Path to the themes directory. */
     public static final String THEMES_PATH     = "/themes";
     /** Path to the viewer/editor themes directory. */
-    public static final String EDITOR_THEMES_PATH     = "/themes/editor";
+    public static final String TEXT_SYNTAX_THEMES_PATH = "/themes/editor";
     /** Path to the muCommander license file. */
     public static final String LICENSE         = "/license.txt";
     /** Default muCommander theme. */

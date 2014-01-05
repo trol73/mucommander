@@ -720,7 +720,13 @@
             <!-- Yanfs uses reflection.                                                                              -->
             <keep name="com.sun.nfs.XFileAccessor"/>
             <keep name="com.sun.nfs.XFileExtensionAccessor"/>
-            <keep name="org.fife.ui.rsyntaxtextarea.DefaultTokenMakerFactory"/>
+            <!-- RSyntaxTextArea -->
+            <keep name="org.fife.ui.rsyntaxtextarea.**">
+                <field name="*"/>
+                <method name="*"/>
+                <constructor name="*"/>
+            </keep>
+            
             <!-- Main class.                                                                                         -->
             <keep name="${app.main}">
                 <method access="public static" type="void" name="main" parameters="java.lang.String[]"/>

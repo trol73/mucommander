@@ -295,7 +295,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 				return new Insets(10, 10, 0, 10);
 			}
 		}.add(new FluentPanel(new BorderLayout())
-                  .add(new JLabel(IconManager.getIcon(IconManager.MUCOMMANDER_ICON_SET, "icon128_24.png")),
+                  .add(new JLabel(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png")),
                 	   BorderLayout.NORTH)
                   .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createAppString()),
   				       BorderLayout.CENTER)

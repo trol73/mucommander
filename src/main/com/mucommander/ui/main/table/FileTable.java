@@ -1675,14 +1675,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
             // Display the new search string in the status bar
             // that indicates that the search has yielded a match
-            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.STATUS_BAR_ICON_SET, QUICK_SEARCH_OK_ICON), false);
+            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_OK_ICON), false);
 		}
 
 		@Override
 		protected void matchNotFound(String searchString) {
 			// No file matching the search string, display the new search string with an icon
             // that indicates that the search has failed
-            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.STATUS_BAR_ICON_SET, QUICK_SEARCH_KO_ICON), false);
+            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_KO_ICON), false);
 		}
 		
         ///////////////////////////////

@@ -102,7 +102,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
             icon = FileIcons.getFileIcon(singleFile, ICON_DIMENSION);
         }
         else {
-            ImageIcon imageIcon = IconManager.getIcon(IconManager.COMMON_ICON_SET, "many_files.png");
+            ImageIcon imageIcon = IconManager.getIcon(IconManager.IconSet.COMMON, "many_files.png");
             icon = IconManager.getScaledIcon(imageIcon, (float)ICON_DIMENSION.getWidth()/imageIcon.getIconWidth());
         }
 

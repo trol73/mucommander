@@ -29,7 +29,7 @@ import javax.swing.*;
  */
 
 public abstract class QuickListWithDataList<T> extends QuickList {	
-	protected QuickListDataList dataList;	
+	protected QuickListDataList<T> dataList;
 	private QuickListWithEmptyMsg emptyPopup;
 	
 	public QuickListWithDataList(QuickListContainer container, String header, String emptyPopupHeader) {

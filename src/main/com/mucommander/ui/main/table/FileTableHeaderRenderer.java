@@ -36,8 +36,8 @@ import java.awt.*;
  */
 public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
 
-    private final static ImageIcon ASCENDING_ICON = IconManager.getIcon(IconManager.COMMON_ICON_SET, "arrow_up.png");
-    private final static ImageIcon DESCENDING_ICON = IconManager.getIcon(IconManager.COMMON_ICON_SET, "arrow_down.png");
+    private final static ImageIcon ASCENDING_ICON = IconManager.getIcon(IconManager.IconSet.COMMON, "arrow_up.png");
+    private final static ImageIcon DESCENDING_ICON = IconManager.getIcon(IconManager.IconSet.COMMON, "arrow_down.png");
 
 
     public FileTableHeaderRenderer() {

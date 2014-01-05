@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
@@ -172,11 +173,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // First tries to find a bookmark matching the specified folder
         java.util.List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
-        int nbBookmarks = bookmarks.size();
-        Bookmark b;
-        for(int i=0; i<nbBookmarks; i++) {
-            b = bookmarks.get(i);
-            if(currentPath.equals(b.getLocation())) {
+
+        for (Bookmark b : bookmarks) {
+            if (currentPath.equals(b.getLocation())) {
                 // Note: if several bookmarks match current folder, the first one will be used
                 newLabel = b.getName();
                 break;
@@ -338,14 +337,10 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         popupMenu.add(new JSeparator());
 
-        // Add boookmarks
-        java.util.List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
-        int nbBookmarks = bookmarks.size();
-        Bookmark b;   
-
-        if(nbBookmarks>0) {
-            for(int i=0; i<nbBookmarks; i++) {
-                b = bookmarks.get(i);
+        // Add bookmarks
+        List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
+        if (!bookmarks.isEmpty()) {
+            for (Bookmark b : bookmarks) {
                 item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), b));
                 setMnemonic(item, mnemonicHelper);
             }
@@ -360,7 +355,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         // Add 'Network shares' shortcut
         if(FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
             action = new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
-            action.setIcon(IconManager.getIcon(IconManager.FILE_ICON_SET, CustomFileIconProvider.NETWORK_ICON_NAME));
+            action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
 

@@ -55,7 +55,7 @@ public class ColorPicker extends JButton implements ActionListener, AWTEventList
     }
 
     public ColorPicker() {
-        super(IconManager.getIcon(IconManager.COMMON_ICON_SET, "picker.png"));
+        super(IconManager.getIcon(IconManager.IconSet.COMMON, "picker.png"));
         addActionListener(this);
     }
 
@@ -136,7 +136,7 @@ public class ColorPicker extends JButton implements ActionListener, AWTEventList
         // Retrieve the cursor icon fill mask as an alpha-enabled BufferedImage
         BufferedImage iconMaskBi = new BufferedImage(iconWidth, iconHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = iconMaskBi.getGraphics();
-        g.drawImage(IconManager.getIcon(IconManager.COMMON_ICON_SET, "picker_mask.png").getImage(), 0, 0, null);
+        g.drawImage(IconManager.getIcon(IconManager.IconSet.COMMON, "picker_mask.png").getImage(), 0, 0, null);
 
         // Replace solid (non-transparent) pixels with specified fill color
         for(int y=0; y<iconHeight; y++) {
