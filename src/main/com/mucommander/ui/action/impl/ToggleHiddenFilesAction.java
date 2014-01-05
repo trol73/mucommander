@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.swing.KeyStroke;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
@@ -83,6 +84,12 @@ public class ToggleHiddenFilesAction extends MuAction {
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, KeyEvent.CTRL_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, KeyEvent.META_DOWN_MASK);
+            }
+        }
     }
 }

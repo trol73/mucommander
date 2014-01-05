@@ -9,7 +9,7 @@ import java.util.TreeMap;
  * Created by trol on 01/01/14.
  */
 public class Profiler {
-    public static final boolean ENABLED = true;
+    public static final boolean ENABLED = false;
 
     private static Map<String, Long> times = new HashMap<String, Long>();
     private static String lastSectionName;

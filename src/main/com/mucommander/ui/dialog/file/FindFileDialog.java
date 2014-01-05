@@ -1,3 +1,20 @@
+/*
+ * This file is part of muCommander, http://www.mucommander.com
+ * Copyright (C) 2013-2014 Oleg Trifonov
+ *
+ * muCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * muCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mucommander.ui.dialog.file;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -15,7 +32,6 @@ import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.text.FilePathField;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.ViewerRegistrar;
@@ -33,7 +49,7 @@ import java.awt.event.*;
 import java.util.List;
 
 /**
- * Created by trol on 18/12/13.
+ * Find file dialog
  */
 public class FindFileDialog extends FocusDialog implements ActionListener, DocumentListener {
 
@@ -41,7 +57,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private static String searchText = "";
 
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(640, 480);
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 10000);
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(10000, 1024);
 
     /** How often should progress information be refreshed (in ms) */
     private final static int REFRESH_RATE = 200;
@@ -96,17 +112,16 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         protected void process(List<AbstractFile> chunks) {
             for (AbstractFile f : chunks) {
                 listModel.addElement(f);
-                lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
+                updateResultLabel();
             }
         }
-
 
         private void checkUpdates() {
             if (job == null) {
                 return;
             }
-            List<AbstractFile> jobResults = job.getResults();
-            synchronized (jobResults) {
+            final List<AbstractFile> jobResults = job.getResults();
+            synchronized (job) {
                 for (int i = listModel.size(); i < jobResults.size(); i++) {
                     AbstractFile f = jobResults.get(i);
                     publish(f);
@@ -169,25 +184,10 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 if (file == null) {
                     return;
                 }
-                final FileTable table = mainFrame.getActivePanel().getFileTable();
+                //final FileTable table = mainFrame.getActivePanel().getFileTable();
 
                 if (e.getClickCount() >= 2) {
-                    mainFrame.getActivePanel().tryChangeCurrentFolder(file.getParent());
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            for (int i = 0; i < 30; i++) {
-                                if ( table.selectFile(file) ) {
-                                    break;
-                                }
-                                try {
-                                    Thread.sleep(50);
-                                } catch (InterruptedException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                        }
-                    }.start();
+                    mainFrame.getActivePanel().tryChangeCurrentFolder(file.getParent(), file, false);
                 }
             }
         });
@@ -206,6 +206,10 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                         break;
                     case KeyEvent.VK_F4:
                         EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
+                        break;
+
+                    case KeyEvent.VK_SPACE:
+                        mainFrame.getActivePanel().tryChangeCurrentFolder(file.getParent(), file, false);
                         break;
 
                 }
@@ -277,6 +281,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         job = new FindFileJob(mainFrame);
         job.setStartDirectory(FileFactory.getFile(edtFromDirectory.getText()));
         job.setup(edtFileName.getText(), edtText.getText(), cbSearchSubdirectories.isSelected(), cbCaseSensitive.isSelected(), cbIgnoreHidden.isSelected());
+        updateResultLabel();
         job.start();
         updateButtons();
         new UpdateRunner().execute();
@@ -338,9 +343,14 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         if (index < 0) {
             return null;
         }
-        final AbstractFile file = listModel.get(index);
-        return file;
+        return listModel.get(index);
     }
+
+
+    private void updateResultLabel() {
+        lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
+    }
+
 
 
 }

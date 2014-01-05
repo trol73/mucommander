@@ -1,3 +1,20 @@
+/*
+ * This file is part of muCommander, http://www.mucommander.com
+ * Copyright (C) 2013-2014 Oleg Trifonov
+ *
+ * muCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * muCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mucommander.job;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -14,12 +31,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Created by trol on 18/12/13.
+ * Job for directory scanning
  */
 public class FindFileJob extends FileJob {
 
     private AbstractFile startDirectory;
-    private String fileMask;
     private String fileContent;
     private boolean searchSubdirs;
     private boolean caseSensitive;
@@ -27,7 +43,7 @@ public class FindFileJob extends FileJob {
 
     private AbstractFileFilter fileFilter;
 
-    private List<AbstractFile> list = new ArrayList<AbstractFile>();
+    private final List<AbstractFile> list = new ArrayList<AbstractFile>();
 
     public FindFileJob(MainFrame mainFrame) {
         super(mainFrame);
@@ -77,7 +93,7 @@ public class FindFileJob extends FileJob {
     private void searchInFile(AbstractFile file) {
         File f = new File(file.toString());
         if (fileFilter.accept(f) && fileContainsString(f)) {
-            synchronized (list) {
+            synchronized (this) {
                 list.add(file);
             }
         }
@@ -93,18 +109,18 @@ public class FindFileJob extends FileJob {
             in = new Scanner(new FileReader(f));
             while (in.hasNextLine() && !result) {
                 String line = in.nextLine();
-                if (caseSensitive) {
-                    result = line.indexOf(fileContent) >= 0;
-                } else {
+                if (!caseSensitive) {
                     line = line.toLowerCase();
-                    result = line.indexOf(fileContent) >= 0;
                 }
+                result = line.contains(fileContent);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -128,13 +144,13 @@ public class FindFileJob extends FileJob {
 
     public void setup(String fileMask, String fileContent, boolean searchSubdirs, boolean caseSensitive, boolean ignoreHidden) {
         fileMask = fileMask.trim();
-        this.fileMask = fileMask.isEmpty() ? "*" : fileMask;
+        fileMask = fileMask.isEmpty() ? "*" : fileMask;
         this.fileContent = fileContent;
         this.searchSubdirs = searchSubdirs;
         this.caseSensitive = caseSensitive;
         this.ignoreHidden = ignoreHidden;
 
-        fileFilter = new WildcardFileFilter(this.fileMask);
+        fileFilter = new WildcardFileFilter(fileMask);
         if (!caseSensitive && fileContent != null) {
             this.fileContent = fileContent.toLowerCase();
         }

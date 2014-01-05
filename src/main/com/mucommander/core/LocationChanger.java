@@ -21,8 +21,6 @@ package com.mucommander.core;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
@@ -34,16 +32,12 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AuthException;
 import com.mucommander.commons.file.AuthenticationType;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.PermissionBits;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.commons.io.RandomAccessInputStream;
-import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
@@ -313,7 +307,7 @@ public class LocationChanger {
 
 	/**
 	 * Refreshes the current folder's contents. If the folder is no longer available, the folder will be changed to a
-	 * 'workable' folder (see {@link #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean)}.
+	 * 'workable' folder (see {@link #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean, boolean)}.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
 	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
@@ -323,7 +317,7 @@ public class LocationChanger {
 	 * @param selectThisFileAfter file to be selected after the folder has been refreshed (if it exists in the folder),
 	 * can be null in which case FileTable rules will be used to select current file
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
-	 * @see #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean)
+	 * @see #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean, boolean)
 	 */
 	public ChangeFolderThread tryRefreshCurrentFolder(AbstractFile selectThisFileAfter) {
 		folderPanel.getFoldersTreePanel().refreshFolder(locationManager.getCurrentFolder());
@@ -339,13 +333,12 @@ public class LocationChanger {
      * </p>
      *
      * @param folder folder to be made current folder
-     * @param children current folder's files (value of folder.ls())
      * @param fileToSelect file to be selected after the folder has been refreshed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
      * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 	 * @throws IOException 
 	 * @throws UnsupportedFileOperationException 
      */
-    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) throws UnsupportedFileOperationException, IOException {
+    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) throws IOException {
     	// Update the timestamp right before the folder is set in case FolderChangeMonitor checks the timestamp
         // while FileTable#setCurrentFolder is being called. 
         lastFolderChangeTime = System.currentTimeMillis();
