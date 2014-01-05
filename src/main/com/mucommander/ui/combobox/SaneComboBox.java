@@ -35,7 +35,7 @@ import java.util.WeakHashMap;
  *
  * @author Maxence Bernard
  */
-public class SaneComboBox extends JComboBox {
+public class SaneComboBox<E> extends JComboBox<E> {
 
     private WeakHashMap<ComboBoxListener, Object> listeners = new WeakHashMap<ComboBoxListener, Object>();
     private boolean ignoreActionEvent;
@@ -46,17 +46,17 @@ public class SaneComboBox extends JComboBox {
         init();
     }
 
-    public SaneComboBox(ComboBoxModel comboBoxModel) {
+    public SaneComboBox(ComboBoxModel<E> comboBoxModel) {
         super(comboBoxModel);
         init();
     }
 
-    public SaneComboBox(Object[] items) {
+    public SaneComboBox(E[] items) {
         super(items);
         init();
     }
 
-    public SaneComboBox(Vector<Object> items) {
+    public SaneComboBox(Vector<E> items) {
         super(items);
         init();
     }
@@ -127,14 +127,14 @@ public class SaneComboBox extends JComboBox {
 
 
     @Override
-    public void addItem(Object object) {
+    public void addItem(E object) {
         ignoreActionEvent = true;
         super.addItem(object);
         ignoreActionEvent = false;
     }
 
     @Override
-    public void insertItemAt(Object object, int i) {
+    public void insertItemAt(E object, int i) {
         ignoreActionEvent = true;
         super.insertItemAt(object, i);
         ignoreActionEvent = false;

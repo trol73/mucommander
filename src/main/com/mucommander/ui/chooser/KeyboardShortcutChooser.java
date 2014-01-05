@@ -54,7 +54,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 	
     private JTextField textField;
     private JCheckBox modifierCheckBoxes[];
-    private SaneComboBox keyComboBox;
+    private SaneComboBox<KeyChoice> keyComboBox;
 
     private KeyStroke currentKeyStroke;
 
@@ -130,7 +130,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
         
 
-        keyComboBox = new SaneComboBox();
+        keyComboBox = new SaneComboBox<KeyChoice>();
         keyComboBox.addItem(new KeyChoice(0, noneString));
         for (int keyChoice : KEY_CHOICES)
             addKeyChoice(keyChoice);
@@ -173,12 +173,10 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         LOGGER.trace("keyCode="+ keyCode);
 
         int nbChoices = keyComboBox.getItemCount();
-        for(int i=1; i<nbChoices; i++) {
-            LOGGER.trace("i="+i+" value="+((KeyChoice)keyComboBox.getItemAt(i)).getKeyValue()+" label="+((KeyChoice)keyComboBox.getItemAt(i)).getKeyLabel());
-            if(((KeyChoice)keyComboBox.getItemAt(i)).getKeyValue()== keyCode)
-            {
+        for (int i=1; i<nbChoices; i++) {
+            LOGGER.trace("i="+i+" value="+(keyComboBox.getItemAt(i)).getKeyValue()+" label="+(keyComboBox.getItemAt(i)).getKeyLabel());
+            if ((keyComboBox.getItemAt(i)).getKeyValue()== keyCode) {
                 keyComboBox.setSelectedIndex(i);
-
                 updatingComboBox = false;
                 return;
             }
@@ -304,7 +302,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
 
         public boolean equals(Object o) {
-            if(!(o instanceof KeyChoice))
+            if (!(o instanceof KeyChoice))
                 return false;
 
             return ((KeyChoice)o).keyValue == keyValue;

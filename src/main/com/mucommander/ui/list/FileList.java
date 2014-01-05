@@ -37,7 +37,7 @@ import java.awt.*;
  *
  * @author Maxence Bernard
  */
-public class FileList extends JList {
+public class FileList extends JList<AbstractFile> {
 
     /** Files to display */
     protected FileSet files;
@@ -84,12 +84,12 @@ public class FileList extends JList {
         }
 
         // Use a custom ListModel
-        setModel(new AbstractListModel() {
+        setModel(new AbstractListModel<AbstractFile>() {
             public int getSize() {
                 return files.size();
             }
 
-            public Object getElementAt(int index) {
+            public AbstractFile getElementAt(int index) {
                 return files.elementAt(index);
             }
         });

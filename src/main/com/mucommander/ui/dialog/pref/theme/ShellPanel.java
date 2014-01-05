@@ -38,7 +38,7 @@ import java.beans.PropertyChangeListener;
  */
 class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
     private JTextArea        shellPreview;
-    private EditableComboBox historyPreview;
+    private EditableComboBox<String> historyPreview;
 
 
 
@@ -92,7 +92,7 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
 
         headerPanel = new YBoxPanel();
         headerPanel.add(new JLabel(Translator.get("run_dialog.run_command_description") + ":"));
-        headerPanel.add(historyPreview = new EditableComboBox(new JTextField("mucommander -v")));
+        headerPanel.add(historyPreview = new EditableComboBox<String>(new JTextField("mucommander -v")));
         historyPreview.addItem("mucommander -v");
         historyPreview.addItem("java -version");
 

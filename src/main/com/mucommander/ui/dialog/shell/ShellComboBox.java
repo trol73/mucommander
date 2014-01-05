@@ -46,7 +46,7 @@ import java.util.Iterator;
  * </p>
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class ShellComboBox extends AutocompletedEditableCombobox implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
+public class ShellComboBox extends AutocompletedEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
     // - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** Input field used to type in commands. */

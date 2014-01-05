@@ -42,6 +42,8 @@ public class RuntimeConstants {
     public static final String DICTIONARY_FILE = "/dictionary.txt";
     /** Path to the themes directory. */
     public static final String THEMES_PATH     = "/themes";
+    /** Path to the viewer/editor themes directory. */
+    public static final String EDITOR_THEMES_PATH     = "/themes/editor";
     /** Path to the muCommander license file. */
     public static final String LICENSE         = "/license.txt";
     /** Default muCommander theme. */

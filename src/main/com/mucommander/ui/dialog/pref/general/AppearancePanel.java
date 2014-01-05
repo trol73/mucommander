@@ -26,10 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -85,7 +82,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     // - Look and feel fields ------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Combo box containing the list of available look&feels. */
-    private PrefComboBox              lookAndFeelComboBox;
+    private PrefComboBox<String> lookAndFeelComboBox;
     /** All available look&feels. */
     private UIManager.LookAndFeelInfo lookAndFeels[];
     /** 'Use brushed metal look' checkbox */
@@ -128,7 +125,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     // - Theme fields --------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Lists all available themes. */
-    private PrefComboBox themeComboBox;
+    private PrefComboBox<Theme> themeComboBox;
     /** Triggers the theme editor. */
     private JButton      editThemeButton;
     /** Triggers the theme duplication dialog. */
@@ -153,7 +150,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     // - Misc. fields --------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** System icon combobox. */
-    private PrefComboBox 	       useSystemFileIconsComboBox;
+    private PrefComboBox<String> useSystemFileIconsComboBox;
     /** Identifier of 'yes' actions in question dialogs. */
     private final static int       YES_ACTION = 0;
     /** Identifier of 'no' actions in question dialogs. */
@@ -161,7 +158,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Identifier of 'cancel' actions in question dialogs. */
     private final static int       CANCEL_ACTION = 2;
     /** All known custom look and feels. */
-    private java.util.List<String> customLookAndFeels;
+    private List<String> customLookAndFeels;
 
 
 
@@ -257,7 +254,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lnfPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.look_and_feel")));
 
         // Creates the look and feel combo box.
-        lookAndFeelComboBox = new PrefComboBox() {
+        lookAndFeelComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				int selectedIndex = getSelectedIndex();
                 if(selectedIndex<0)
@@ -374,7 +371,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         typeLabel = new JLabel("");
 
         // Creates the theme combo box.
-        themeComboBox   = new PrefComboBox() {
+        themeComboBox   = new PrefComboBox<Theme>() {
 			public boolean hasChanged() {
 				return !ThemeManager.isCurrentTheme((Theme)getSelectedItem());
 			}        	
@@ -398,7 +395,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     else
                         label.setText(theme.getName());
 
-                    if(theme.getType() != Theme.CUSTOM_THEME)
+                    if(theme.getType() != Theme.Type.CUSTOM)
                         label.setIcon(lockIcon);
                     else
                         label.setIcon(transparentIcon);
@@ -448,7 +445,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private JPanel createSystemIconsPanel() {
         /* 'Use system file icons' combo box */
-        this.useSystemFileIconsComboBox = new PrefComboBox() {
+        this.useSystemFileIconsComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				String systemIconsPolicy;
 				switch(useSystemFileIconsComboBox.getSelectedIndex()) {
@@ -481,12 +478,12 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Creates a combo box that allows to choose a size for a certain type of icon. The returned combo box is filled
      * with allowed choices, and the current configuration value is selected.
      *
-     * @param confVar the name of the configuration variable that contains the icon scale factor
+     * @param preference
      * @param defaultValue the default value for the icon scale factor if the configuration variable has no value
      * @return a combo box that allows to choose a size for a certain type of icon
      */
     private PrefComboBox createIconSizeCombo(final MuPreference preference, float defaultValue) {
-    	PrefComboBox iconSizeCombo = new PrefComboBox() {
+    	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(
 						MuConfigurations.getPreferences().getVariable(preference));
@@ -597,9 +594,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @return <code>true</code> if the specified look and feel is modifiable, <code>false</code> otherwise.
      */
     private boolean isLookAndFeelModifiable(UIManager.LookAndFeelInfo laf) {
-        if(isCustomLookAndFeel(laf.getClassName()))
-            return !laf.getClassName().equals(UIManager.getLookAndFeel().getClass().getName());
-        return false;
+        return isCustomLookAndFeel(laf.getClassName()) && !laf.getClassName().equals(UIManager.getLookAndFeel().getClass().getName());
     }
 
     /**
@@ -756,12 +751,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     customLookAndFeels = new Vector<String>();
 
                 // Adds all new instances to the list of custom look&feels.
-                for(int i = 0; i < newLookAndFeels.size(); i++) {
-                    currentName = newLookAndFeels.get(i).getName();
-                    if(!customLookAndFeels.contains(currentName)) {
+                for (Class<?> newLookAndFeel : newLookAndFeels) {
+                    currentName = newLookAndFeel.getName();
+                    if (!customLookAndFeels.contains(currentName)) {
                         customLookAndFeels.add(currentName);
-                        try {WindowManager.installLookAndFeel(currentName);}
-                        catch(Throwable e) {}
+                        try {
+                            WindowManager.installLookAndFeel(currentName);
+                        } catch (Throwable e) {
+                        }
                     }
                 }
 
@@ -815,9 +812,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private void setTypeLabel(Theme theme) {
         String label;
 
-        if(theme.getType() == Theme.USER_THEME)
+        if(theme.getType() == Theme.Type.USER)
             label = Translator.get("theme.custom");
-        else if(theme.getType() == Theme.PREDEFINED_THEME)
+        else if(theme.getType() == Theme.Type.PREDEFINED)
             label = Translator.get("theme.built_in");
         else
             label = Translator.get("theme.add_on");
@@ -831,7 +828,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         setTypeLabel(theme);
 
-        if(theme.getType() != Theme.CUSTOM_THEME) {
+        if(theme.getType() != Theme.Type.CUSTOM) {
             renameThemeButton.setEnabled(false);
             deleteThemeButton.setEnabled(false);
         }
@@ -912,7 +909,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         count = themeComboBox.getItemCount();
         for(i = 0; i < count; i++) {
-            if(((Theme)themeComboBox.getItemAt(i)).getName().compareTo(theme.getName()) >= 0) {
+            if((themeComboBox.getItemAt(i)).getName().compareTo(theme.getName()) >= 0) {
                 themeComboBox.insertItemAt(theme, i);
                 break;
             }
@@ -1098,17 +1095,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
          */
         @Override
         public boolean accept(java.io.File file) {
-            String ext;
-
             // Directories are always displayed.
             if(file.isDirectory())
                 return true;
 
             // If the file has an extension, and it matches .xml, return true.
             // Otherwise, return false.
-            if((ext = AbstractFile.getExtension(file.getName())) != null)
-                return extension.equalsIgnoreCase(ext);
-            return false;
+            String ext = AbstractFile.getExtension(file.getName());
+            return ext != null && extension.equalsIgnoreCase(ext);
         }
 
         @Override

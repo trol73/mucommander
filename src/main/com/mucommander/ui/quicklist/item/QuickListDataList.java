@@ -27,7 +27,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ import com.mucommander.ui.theme.ThemeManager;
  * @author Arik Hadas
  */
 
-public class QuickListDataList<T> extends JList {	
+public class QuickListDataList<T> extends JList<T> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QuickListDataList.class);
 	
 	private final static int VISIBLE_ROWS_COUNT = 10;
@@ -93,7 +92,7 @@ public class QuickListDataList<T> extends JList {
 	 * It does the required steps before the popup is shown.	
 	 */
 	@Override
-	public void setListData(Object[] data) {
+	public void setListData(T[] data) {
 		super.setListData(data);
 
 		int numOfRowsInList = getModel().getSize();
@@ -108,7 +107,7 @@ public class QuickListDataList<T> extends JList {
 		if (index > getModel().getSize() || index < 0)
 			return null;
 
-		return (T) getModel().getElementAt(index);
+		return getModel().getElementAt(index);
 	}
 
 	protected void addMouseListenerToList() {
@@ -120,7 +119,7 @@ public class QuickListDataList<T> extends JList {
 				if (e.getClickCount() == 2) {
 					int index = locationToIndex(e.getPoint());
 					setSelectedIndex(index);
-					((QuickListWithDataList)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
+					((QuickListWithDataList<T>)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
 				}
 			}
 		});
@@ -166,7 +165,7 @@ public class QuickListDataList<T> extends JList {
 			}
 
 			QuickSearch<T> search = QuickListDataList.this.getQuickSearch();
-			boolean matches = search.isActive() ? search.matches(getItemAsString(item)) : true;
+			boolean matches = search.isActive() || search.matches(getItemAsString(item));
 
 			CellLabel label = new CellLabel();
 			label.setFont(itemFont);
@@ -291,7 +290,7 @@ public class QuickListDataList<T> extends JList {
 						tryToTransferFocusToTheNextComponent();
 					
 					if (keyCode == KeyEvent.VK_ENTER)
-						((QuickListWithDataList)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
+						((QuickListWithDataList<T>)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
 					
 					return;
 				}
@@ -357,7 +356,7 @@ public class QuickListDataList<T> extends JList {
 				break;
 				case KeyEvent.VK_ENTER:
 					tryToTransferFocusToTheNextComponent();
-					((QuickListWithDataList)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
+					((QuickListWithDataList<T>)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
 					stop();
 					break;
 				case KeyEvent.VK_TAB:

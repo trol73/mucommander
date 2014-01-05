@@ -51,7 +51,7 @@ import com.mucommander.ui.text.FilePathField;
  */
 public class PackDialog extends TransferDestinationDialog implements ItemListener {
 
-    private JComboBox formatsComboBox;
+    private JComboBox<String> formatsComboBox;
     private int formats[];
 	
     private JTextArea commentArea;
@@ -87,9 +87,9 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tempPanel.add(new JLabel(Translator.get("pack_dialog.archive_format")));		
-        this.formatsComboBox = new JComboBox();
-        for(int i=0; i<nbFormats; i++)
-            formatsComboBox.addItem(Archiver.getFormatName(formats[i]));
+        this.formatsComboBox = new JComboBox<String>();
+        for(int format : formats)
+            formatsComboBox.addItem(Archiver.getFormatName(format));
 
         formatsComboBox.setSelectedIndex(lastFormatIndex);
 		

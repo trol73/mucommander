@@ -173,19 +173,17 @@ public class Launcher {
         public final Void call() throws Exception {
             if (depends != null && depends.length > 0) {
                 Profiler.start(name + ".depends");
-//System.out.println("task " + this + " waiting START");
                 for (LauncherTask t : depends) {
                     t.task.get();
                 }
                 Profiler.stop(name + ".depends");
-//System.out.println("task " + this + " waiting FINISH");
             }
             Profiler.start(name);
             try {
                 run();
             } catch (Throwable e) {
-                helper.printFileError("Launcher getTask error for " + name + ": ", e);
                 e.printStackTrace();
+                helper.printFileError("Launcher getTask error for " + name + ": ", e);
             }
             Profiler.stop(name);
             return null;
@@ -299,7 +297,6 @@ public class Launcher {
             printStartupMessage("Loading icons...");
             // Initialize the SwingFileIconProvider from the main thread, see method Javadoc for an explanation on why we do this now
             SwingFileIconProvider.forceInit();
-
             // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
             com.mucommander.ui.icon.FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE,
                     MuPreferences.DEFAULT_TABLE_ICON_SCALE)));

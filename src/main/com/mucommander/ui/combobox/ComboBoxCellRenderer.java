@@ -24,7 +24,7 @@ import java.awt.*;
 /**
  * @author Nicolas Rinaudo
  */
-public class ComboBoxCellRenderer implements ListCellRenderer {
+public class ComboBoxCellRenderer<E> implements ListCellRenderer<E> {
     private Color textColor;
     private Color backgroundColor;
     private Color selectedTextColor;

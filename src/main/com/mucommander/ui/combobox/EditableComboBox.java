@@ -45,9 +45,9 @@ import java.util.WeakHashMap;
  * @see EditableComboBoxListener
  * @author Maxence Bernard
  */
-public class EditableComboBox extends SaneComboBox {
+public class EditableComboBox<E> extends SaneComboBox<E> {
     /** Used to render the content of the combo box. */
-    private ComboBoxCellRenderer renderer;
+    private ComboBoxCellRenderer<E> renderer;
     /** The text field used as the combo box's editor */
     private JTextField textField;
 
@@ -83,7 +83,7 @@ public class EditableComboBox extends SaneComboBox {
      * will be created and used.
      * @param comboBoxModel the ComboBoxModel to use for this combo box
      */
-    public EditableComboBox(JTextField textField, ComboBoxModel comboBoxModel) {
+    public EditableComboBox(JTextField textField, ComboBoxModel<E> comboBoxModel) {
         super(comboBoxModel);
         init(textField);
     }
@@ -95,7 +95,7 @@ public class EditableComboBox extends SaneComboBox {
      * will be created and used.
      * @param items items used to populate the initial items list.
      */
-    public EditableComboBox(JTextField textField, Object[] items) {
+    public EditableComboBox(JTextField textField, E[] items) {
         super(items);
         init(textField);
     }
@@ -107,7 +107,7 @@ public class EditableComboBox extends SaneComboBox {
      * will be created and used.
      * @param items items used to populate the initial items list.
      */
-    public EditableComboBox(JTextField textField, Vector<Object> items) {
+    public EditableComboBox(JTextField textField, Vector<E> items) {
         super(items);
         init(textField);
     }
@@ -143,7 +143,7 @@ public class EditableComboBox extends SaneComboBox {
      * @param textField the text field to be used as the combo box's editor. If null, a JTextField instance will be created and used.
      */
     private void init(JTextField textField) {
-        setRenderer(renderer = new ComboBoxCellRenderer());
+        setRenderer(renderer = new ComboBoxCellRenderer<E>());
         // Create a new JTextField if no text field was specified
         if(textField==null) {
             this.textField = new JTextField();

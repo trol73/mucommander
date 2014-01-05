@@ -208,6 +208,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     public void show(AbstractFile file) throws IOException {
+        FileType type = FileType.getFileType(file);
+        textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
     	textViewerDelegate.startEditing(file, this);
     }
     

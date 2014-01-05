@@ -181,9 +181,9 @@ public class CommandBarDialog extends CustomizeDialog {
     
 	private Collection<String> initCommandBarActionsList() {
 		String[] commandBarActionIds = CommandBarAttributes.getActions();
-		int nbCommandBarActionIds = commandBarActionIds.length;
-		for (int i=0; i<nbCommandBarActionIds; ++i)
-			commandBarButtons.add(CommandBarButtonForDisplay.create(commandBarActionIds[i]));
+		//int nbCommandBarActionIds = commandBarActionIds.length;
+        for (String commandBarActionId : commandBarActionIds)
+            commandBarButtons.add(CommandBarButtonForDisplay.create(commandBarActionId));
 		
 		commandBarButtonsList = new DynamicList<JButton>(commandBarButtons);
 		
@@ -289,9 +289,9 @@ public class CommandBarDialog extends CustomizeDialog {
 	
 	private Collection<String> initCommandBarAlternateActionsList() {
 		String[] commandBarActionIds = CommandBarAttributes.getAlternateActions();
-		int nbCommandBarActionIds = commandBarActionIds.length;
-		for (int i=0; i<nbCommandBarActionIds; ++i)
-			commandBarAlternateButtons.add(CommandBarButtonForDisplay.create(commandBarActionIds[i]));
+		//int nbCommandBarActionIds = commandBarActionIds.length;
+        for (String commandBarActionId : commandBarActionIds)
+            commandBarAlternateButtons.add(CommandBarButtonForDisplay.create(commandBarActionId));
 		
 		commandBarAlternateButtonsList = new DynamicList<JButton>(commandBarAlternateButtons);
 		
@@ -396,17 +396,16 @@ public class CommandBarDialog extends CustomizeDialog {
 			@Override
 			public void exportDone(JComponent c, Transferable t, int action) {
 				if (action == TransferHandler.MOVE) {
-					if (c instanceof JList)
-						commandBarAvailableButtons.remove(((JList) c).getSelectedValue());
+					if (c instanceof JList) {
+						commandBarAvailableButtons.remove(((JList<JButton>) c).getSelectedValue());
+                    }
 					componentChanged();
 				}
 			}
 			
 			@Override
 			public boolean canImport(TransferHandler.TransferSupport support) {
-				if (!support.isDataFlavorSupported(TransferableButton.buttonFlavor))
-					return false;
-				return true;
+                return support.isDataFlavorSupported(TransferableButton.buttonFlavor);
 			}
 			
 			@Override
@@ -511,31 +510,27 @@ public class CommandBarDialog extends CustomizeDialog {
     	}
     }
 	
-	private static class CommandBarButtonListCellRenderer implements ListCellRenderer {
-		
-		public Component getListCellRendererComponent(JList list, Object value,
+	private static class CommandBarButtonListCellRenderer implements ListCellRenderer<JButton> {
+        @Override
+        public Component getListCellRendererComponent(JList<? extends JButton> list, JButton value, int index, boolean isSelected, boolean cellHasFocus) {
+            return value == null ? createBoxFiller() : value;
+        }
+    }
+
+	private static class CommandBarAlternativeButtonListRenderer implements ListCellRenderer<JButton> {
+
+		public Component getListCellRendererComponent(JList list, JButton value,
 				int index, boolean isSelected, boolean cellHasFocus) {
-			return value == null ? createBoxFiller() : (CommandBarButtonForDisplay) value;
+			return value == null ? createBoxFiller() : value;
         }
 	}
 
-	private static class CommandBarAlternativeButtonListRenderer implements ListCellRenderer {
+	private static class AvailableButtonCellListRenderer implements ListCellRenderer<JButton> {
 
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			return value == null ? createBoxFiller() : (CommandBarButtonForDisplay) value;
-        }
-	}
-
-	private static class AvailableButtonCellListRenderer implements ListCellRenderer {
-
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			
+		public Component getListCellRendererComponent(JList list, JButton value, int index, boolean isSelected, boolean cellHasFocus) {
 			JPanel panel = new JPanel(new BorderLayout());
-			CommandBarButtonForDisplay button = (CommandBarButtonForDisplay) value;
-			panel.add(button, BorderLayout.CENTER);
-			panel.setToolTipText(button.getToolTipText());
+			panel.add(value, BorderLayout.CENTER);
+			panel.setToolTipText(value.getToolTipText());
 			return panel;
         }
 	}	

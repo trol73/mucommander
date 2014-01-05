@@ -264,6 +264,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
     @Override
     public void show(AbstractFile file) throws IOException {
         startEditing(file, null);
+        FileType type = FileType.getFileType(file);
+        textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
     }
     
     ///////////////////////////////////

@@ -65,11 +65,11 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
 
     // Language
     private String languages[];
-    private PrefComboBox languageComboBox;
+    private PrefComboBox<String> languageComboBox;
 	
     // Date/time format
     private PrefRadioButton time12RadioButton;
-    private PrefComboBox dateFormatComboBox;
+    private PrefComboBox<String> dateFormatComboBox;
     private PrefTextField dateSeparatorField;
     private PrefCheckBox showSecondsCheckBox;
     private PrefCheckBox showCenturyCheckBox;
@@ -112,8 +112,10 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
     private final static String HOUR_12_TIME_FORMAT_WITH_SECONDS = "hh:mm:ss a";
     private final static String HOUR_24_TIME_FORMAT = "HH:mm";
     private final static String HOUR_24_TIME_FORMAT_WITH_SECONDS = "HH:mm:ss";
+    private final static String YYYY = "yyyy";
 
-	
+
+
     public GeneralPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.general_tab"));
 
@@ -128,7 +130,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         this.languages = Translator.getAvailableLanguages();
         String currentLang = MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE);
         String lang;
-        languageComboBox = new PrefComboBox() {
+        languageComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				return !languages[getSelectedIndex()].equals(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
 			}
@@ -177,7 +179,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         dateFormatPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.date")));
 
         // Date format combo
-        dateFormatComboBox = new PrefComboBox() {
+        dateFormatComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				return !getDateFormatString().equals(MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT));
 			}
@@ -237,10 +239,10 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
 
         showCenturyCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_century")) {
 			public boolean hasChanged() {
-				return isSelected() != (MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT).indexOf("yyyy")!=-1);
+				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT).contains(YYYY);
 			}
         };
-        showCenturyCheckBox.setSelected(dateFormat.indexOf("yyyy")!=-1);
+        showCenturyCheckBox.setSelected(dateFormat.contains(YYYY));
         showCenturyCheckBox.addItemListener(this);
         dateFormatPanel.add(showCenturyCheckBox);
         dateFormatPanel.addSpace(10);
@@ -281,10 +283,10 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
 
         showSecondsCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_seconds")) {
 			public boolean hasChanged() {
-				return isSelected() != (MuConfigurations.getPreferences().getVariable(MuPreference.TIME_FORMAT).indexOf(":ss")!=-1);
+				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.TIME_FORMAT).contains(":ss");
 			}
         };
-        showSecondsCheckBox.setSelected(timeFormat.indexOf(":ss")!=-1);
+        showSecondsCheckBox.setSelected(timeFormat.contains(":ss"));
         showSecondsCheckBox.addItemListener(this);
         timeFormatPanel.add(showSecondsCheckBox);
         timeFormatPanel.addSpace(10);
@@ -297,7 +299,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         tempPanel.add(new JLabel(Translator.get("example")+": "));
         previewLabel = new JLabel();
         Calendar calendar = Calendar.getInstance(); 
-        calendar.set(calendar.get(Calendar.YEAR)-1, 11, 31, 23, 59);
+        calendar.set(calendar.get(Calendar.YEAR)-1, Calendar.DECEMBER, 31, 23, 59);
         exampleDate = calendar.getTime();
         updatePreviewLabel();
         tempPanel.add(previewLabel);

@@ -69,12 +69,12 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
         connections = ConnectionPool.getConnectionHandlersSnapshot();
 
-        connectionList = new JList(new AbstractListModel() {
+        connectionList = new JList<String>(new AbstractListModel<String>() {
             public int getSize() {
                 return connections.size();
             }
 
-            public Object getElementAt(int i) {
+            public String getElementAt(int i) {
                 ConnectionHandler connHandler = connections.get(i);
 
                 // Show login (but not password) in the URL

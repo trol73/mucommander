@@ -68,7 +68,8 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 	 * If the return value is true, the quick list will be shown. Otherwise, it won't be shown.
 	 */
 	protected abstract boolean prepareForShowing(QuickListContainer container);
-	
+
+    @SuppressWarnings("deprecated")
 	public void show() {
         
 		if (prepareForShowing(container)) {

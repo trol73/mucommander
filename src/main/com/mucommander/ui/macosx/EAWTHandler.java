@@ -19,14 +19,14 @@
 
 package com.mucommander.ui.macosx;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationEvent;
-import com.apple.eawt.ApplicationListener;
+import com.apple.eawt.*;
 import com.mucommander.Launcher;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.WindowManager;
+
+import java.io.File;
 
 
 /**
@@ -35,57 +35,68 @@ import com.mucommander.ui.main.WindowManager;
  *
  * @author Maxence Bernard
  */
-class EAWTHandler implements ApplicationListener {
+class EAWTHandler implements AboutHandler, PreferencesHandler, AppReOpenedListener, OpenFilesHandler,
+        PrintFilesHandler, QuitHandler {
 
     public EAWTHandler() {
-        Application app = new Application();
+        Application app = Application.getApplication();
+
         // Enable the 'About' menu item
-        app.setEnabledAboutMenu(true);
+        app.setAboutHandler(this);
+
         // Enable the 'Preferences' menu item
-        app.setEnabledPreferencesMenu(true);
-        // Register this ApplicationListener
-        app.addApplicationListener(this);
+        app.setPreferencesHandler(this);
+
+        app.setOpenFileHandler(this);
+        app.setPrintFileHandler(this);
+        app.setQuitHandler(this);
     }
 
-    public void handleAbout(ApplicationEvent event) {
-        event.setHandled(true);
+    @Override
+    public void handleAbout(AppEvent.AboutEvent aboutEvent) {
         OSXIntegration.showAbout();
     }
 
-    public void handlePreferences(ApplicationEvent event) {
-        event.setHandled(true);
-        OSXIntegration.showPreferences();
-    }
-
-    public void handleQuit(ApplicationEvent event) {
-        // Accept or reject the request to quit based on user's response
-        event.setHandled(OSXIntegration.doQuit());
-    }
-
-    public void handleOpenApplication(ApplicationEvent event) {
+    @Override
+    public void appReOpened(AppEvent.AppReOpenedEvent appReOpenedEvent) {
         // No-op
     }
 
-    public void handleReOpenApplication(ApplicationEvent event) {
-        // No-op
-    }
-
-    public void handleOpenFile(ApplicationEvent event) {
-        // Wait until the application has been launched. This step is required to properly handle the case where the 
+    @Override
+    public void openFiles(AppEvent.OpenFilesEvent openFilesEvent) {
+        // Wait until the application has been launched. This step is required to properly handle the case where the
         // application is launched with a file to open, for instance when drag-n-dropping a file to the Dock icon
         // when muCommander is not started yet. In this case, this method is called while Launcher is still busy
         // launching the application (no mainframe exists yet).
         Launcher.waitUntilLaunched();
+        for (File f : openFilesEvent.getFiles()) {
+            AbstractFile file = FileFactory.getFile(f.toString());
+            FolderPanel activePanel = WindowManager.getCurrentMainFrame().getActivePanel();
+            if(file.isBrowsable())
+                activePanel.tryChangeCurrentFolder(file);
+            else
+                activePanel.tryChangeCurrentFolder(file.getParent(), file, false);
+        }
 
-        AbstractFile file = FileFactory.getFile(event.getFilename());
-        FolderPanel activePanel = WindowManager.getCurrentMainFrame().getActivePanel();
-        if(file.isBrowsable())
-            activePanel.tryChangeCurrentFolder(file);
-        else
-            activePanel.tryChangeCurrentFolder(file.getParent(), file, false);
     }
 
-    public void handlePrintFile(ApplicationEvent event) {
+    @Override
+    public void handlePreferences(AppEvent.PreferencesEvent preferencesEvent) {
+        OSXIntegration.showPreferences();
+    }
+
+    @Override
+    public void printFiles(AppEvent.PrintFilesEvent printFilesEvent) {
         // No-op
+    }
+
+    @Override
+    public void handleQuitRequestWith(AppEvent.QuitEvent quitEvent, QuitResponse quitResponse) {
+        // Accept or reject the request to quit based on user's response
+        if (OSXIntegration.doQuit()) {
+            quitResponse.performQuit();
+        } else {
+            quitResponse.cancelQuit();
+        }
     }
 }

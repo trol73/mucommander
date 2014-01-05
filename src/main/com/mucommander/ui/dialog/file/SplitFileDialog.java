@@ -129,7 +129,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 			"700 " + Translator.get("unit.mb")
 		};
 		edtSize = new JTextField();
-		EditableComboBox cbSize = new EditableComboBox(edtSize, sizes);
+		EditableComboBox<String> cbSize = new EditableComboBox<String>(edtSize, sizes);
 		cbSize.setComboSelectionUpdatesTextField(true);
 		cbSize.setSelectedIndex(1);
 		edtSize.addKeyListener(new KeyAdapter() {
@@ -222,7 +222,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
  
     /**
      * Returns number of bytes entered in "Bytes per part" control.
-     * @return
+     * @return number of bytes entered in "Bytes per part" control.
      */
     private long getBytes() {
 		String strVal = edtSize.getText().trim();
@@ -258,7 +258,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
     
     /**
      * Returns number of parts this file will be splitted.
-     * @return
+     * @return number of parts this file will be splitted.
      */
     private long getParts() {
 		long size = getBytes();
