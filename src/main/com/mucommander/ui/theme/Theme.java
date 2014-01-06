@@ -128,7 +128,13 @@ public class Theme extends ThemeData {
      * Returns the theme's name.
      * @return the theme's name.
      */
-    public String getName() {return name;}
+    public String getName() {
+        // Lazy loading for Launcher speedup
+        if (name == null && type == Type.USER) {
+            name = Translator.get("theme.custom_theme");
+        }
+        return name;
+    }
 
 
 
@@ -196,8 +202,9 @@ public class Theme extends ThemeData {
         checkType(type);
 
         this.type = type;
-        if(type == Type.USER)
-            setName(Translator.get("theme.custom_theme"));
+        if(type == Type.USER) {
+            setName(null);      // the name will be lazy loaded later after dictionaly loading
+        }
     }
 
     /**

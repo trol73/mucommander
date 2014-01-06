@@ -110,23 +110,27 @@ public class ThemeManager {
         boolean wasUserThemeLoaded; // Whether we have tried loading the user theme or not.
 
         // Loads the current theme type as defined in configuration.
-        try {type = getThemeTypeFromLabel(MuConfigurations.getPreferences().getVariable(MuPreference.THEME_TYPE, MuPreferences.DEFAULT_THEME_TYPE));}
-        catch(Exception e) {type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);}
+        try {
+            type = getThemeTypeFromLabel(MuConfigurations.getPreferences().getVariable(MuPreference.THEME_TYPE, MuPreferences.DEFAULT_THEME_TYPE));
+        } catch(Exception e) {
+            e.printStackTrace();
+            type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);
+        }
 
         // Loads the current theme name as defined in configuration.
-        if(type != Theme.Type.USER) {
+        if (type != Theme.Type.USER) {
             wasUserThemeLoaded = false;
-            name               = MuConfigurations.getPreferences().getVariable(MuPreference.THEME_NAME, MuPreferences.DEFAULT_THEME_NAME);
-        }
-        else {
-            name               = null;
+            name = MuConfigurations.getPreferences().getVariable(MuPreference.THEME_NAME, MuPreferences.DEFAULT_THEME_NAME);
+        } else {
+            name = null;
             wasUserThemeLoaded = true;
         }
-
         // If the current theme couldn't be loaded, uses the default theme as defined in the configuration.
         currentTheme = null;
-        try {currentTheme = readTheme(type, name);}
-        catch(Exception e1) {
+        try {
+            currentTheme = readTheme(type, name);
+        } catch(Exception e1) {
+            e1.printStackTrace();
             type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);
             name = MuPreferences.DEFAULT_THEME_NAME;
 
@@ -501,7 +505,9 @@ public class ThemeManager {
         finally {
             if(out != null) {
                 try {out.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -603,7 +609,9 @@ public class ThemeManager {
         finally {
             if(out != null) {
                 try {out.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -673,9 +681,11 @@ public class ThemeManager {
         return buffer;
     }
 
-    public static Theme duplicateTheme(Theme theme) throws Exception {return importTheme(theme.cloneData(), theme.getName());}
+    public static Theme duplicateTheme(Theme theme) throws IOException {
+        return importTheme(theme.cloneData(), theme.getName());
+    }
 
-    public static Theme importTheme(ThemeData data, String name) throws IOException, Exception {
+    public static Theme importTheme(ThemeData data, String name) throws IOException {
         writeTheme(data, Theme.Type.CUSTOM, name = getAvailableCustomThemeName(name));
         return new Theme(listener, data, Theme.Type.CUSTOM, name);
     }
@@ -701,11 +711,15 @@ public class ThemeManager {
         finally {
             if(in != null) {
                 try {in.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
             if(out != null) {
                 try {out.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -804,7 +818,9 @@ public class ThemeManager {
         finally {
             if(in != null) {
                 try {in.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -816,9 +832,9 @@ public class ThemeManager {
      * Return the requested theme for file viewer/editor
      * @param name
      * @return
-     * @throws Exception
+     * @throws IOException
      */
-    public static EditorTheme readEditorTheme(String name) throws Exception {
+    public static EditorTheme readEditorTheme(String name) throws IOException {
         InputStream is = getPredefinedEditorThemeInputStream(name);
         return EditorTheme.load(is, ThemeManager.getCurrentFont(Theme.EDITOR_FONT));
     }
@@ -827,7 +843,7 @@ public class ThemeManager {
      * Reads theme data from the specified input stream.
      * @param  in        where to read the theme data from.
      * @return           the resulting theme data.
-     * @throws Exception if an I/O or syntax error occurs.
+     * @throws IOException if an I/O or syntax error occurs.
      */
     public static ThemeData readThemeData(InputStream in) throws Exception {
         ThemeData data; // Buffer for the data.
@@ -856,7 +872,9 @@ public class ThemeManager {
         finally {
             if(in != null) {
                 try {in.close();}
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -912,7 +930,9 @@ public class ThemeManager {
         }
     }
 
-    public static Theme getCurrentTheme() {return currentTheme;}
+    public static Theme getCurrentTheme() {
+        return currentTheme;
+    }
 
     public static String getCurrentSyntaxThemeName() {return currentSyntaxThemeName;}
 
@@ -932,8 +952,9 @@ public class ThemeManager {
             return;
 
         // Saves the current theme if necessary.
-        try {saveCurrentTheme();}
-        catch(IOException e) {
+        try {
+            saveCurrentTheme();
+        } catch(IOException e) {
             LOGGER.warn("Couldn't save current theme", e);
         }
 
@@ -947,7 +968,7 @@ public class ThemeManager {
 
     /**
      *
-     * @param name
+     * @param name name of the theme
      */
     public synchronized static void setCurrentSyntaxTheme(String name) {
         currentSyntaxThemeName = name;
@@ -960,13 +981,11 @@ public class ThemeManager {
 
     public synchronized static Theme overwriteUserTheme(ThemeData themeData) throws IOException {
         // If the current theme is the user one, we just need to import the new data.
-        if(currentTheme.getType() == Theme.Type.USER) {
+        if (currentTheme.getType() == Theme.Type.USER) {
             currentTheme.importData(themeData);
             writeTheme(currentTheme);
             return currentTheme;
-        }
-
-        else {
+        } else {
             writeTheme(themeData, Theme.Type.USER, null);
             return new Theme(listener, themeData);
         }
@@ -980,9 +999,7 @@ public class ThemeManager {
      *                <code>false</code> otherwise.
      */
     public synchronized static boolean willOverwriteUserTheme(int fontId, Font font) {
-        if(currentTheme.isFontDifferent(fontId, font))
-            return currentTheme.getType() != Theme.Type.USER;
-        return false;
+        return currentTheme.isFontDifferent(fontId, font) && currentTheme.getType() != Theme.Type.USER;
     }
 
     /**
@@ -993,9 +1010,7 @@ public class ThemeManager {
      *                 <code>false</code> otherwise.
      */
     public synchronized static boolean willOverwriteUserTheme(int colorId, Color color) {
-        if(currentTheme.isColorDifferent(colorId, color))
-            return currentTheme.getType() != Theme.Type.USER;
-        return false;
+        return currentTheme.isColorDifferent(colorId, color) && currentTheme.getType() != Theme.Type.USER;
     }
 
     /**
@@ -1061,9 +1076,7 @@ public class ThemeManager {
     private static boolean isCurrentTheme(Theme.Type type, String name) {
         if(type != currentTheme.getType())
             return false;
-        if(type == Theme.Type.USER)
-            return true;
-        return name.equals(currentTheme.getName());
+        return type == Theme.Type.USER || name.equals(currentTheme.getName());
     }
 
 
@@ -1128,7 +1141,11 @@ public class ThemeManager {
      * </p>
      * @param listener current theme listener to remove.
      */
-    public static void removeCurrentThemeListener(ThemeListener listener) {synchronized (listeners) {listeners.remove(listener);}}
+    public static void removeCurrentThemeListener(ThemeListener listener) {
+        synchronized (listeners) {
+            listeners.remove(listener);
+        }
+    }
 
     /**
      * Notifies all theme listeners of the specified font event.

@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
+import com.mucommander.conf.MuConfigurations;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
@@ -34,11 +35,6 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class ThemeEditorDialog extends PreferencesDialog {
-    // - Action listening -------------------------------------------------------
-    // --------------------------------------------------------------------------
-//    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580,0);
-//    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(620,500);
-
     private ThemeData data;
     private Theme     theme;
     private boolean   wasThemeModified;
@@ -63,7 +59,9 @@ public class ThemeEditorDialog extends PreferencesDialog {
         initUI(theme);
     }
 
-    private static String createTitle(Theme theme) {return Translator.get("theme_editor.title") + ": " + theme.getName();}
+    private static String createTitle(Theme theme) {
+        return Translator.get("theme_editor.title") + ": " + theme.getName();
+    }
 
     private void initUI(Theme theme) {
         this.theme       = theme;
@@ -78,8 +76,6 @@ public class ThemeEditorDialog extends PreferencesDialog {
         addPreferencesPanel(new QuickListPanel(this, data));
 
         // Sets the dialog's size.
-//        setMinimumSize(MINIMUM_DIALOG_DIMENSION);
-//        setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension minimumSize = new Dimension(580, 300);
         Dimension maximumSize = new Dimension(screenSize);
@@ -115,43 +111,42 @@ public class ThemeEditorDialog extends PreferencesDialog {
     @Override
     public void commit() {
         super.commit();
+        if (theme.isIdentical(data)) {
+            return;
+        }
 
-        if(!theme.isIdentical(data)) {
-            wasThemeModified = true;
+        wasThemeModified = true;
 
-            try {
-                // If the theme cannot be modified, overwrites the user theme with the new data.
-                if(!theme.canModify()) {
-                    boolean updateCurrentTheme;
+        try {
+            // If the theme cannot be modified, overwrites the user theme with the new data.
+            if (!theme.canModify()) {
+                boolean updateCurrentTheme = ThemeManager.isCurrentTheme(theme);
+                // Overwrites the user theme and changes the dialog's title to reflect the change.
+                theme = ThemeManager.overwriteUserTheme(data);
+                setTitle(createTitle(theme));
 
-                    updateCurrentTheme = ThemeManager.isCurrentTheme(theme);
-
-                    // Overwrites the user theme and changes the dialog's title to reflect the change.
-                    theme = ThemeManager.overwriteUserTheme(data);
-                    setTitle(createTitle(theme));
-
-                    // If the old theme was the current one, switch to 'user theme'.
-                    if(updateCurrentTheme)
-                        ThemeManager.setCurrentTheme(theme);
-                }
-
-                // Otherwise, imports the new data in the user theme and saves it.
-                else {
-                    theme.importData(data);
-                    ThemeManager.writeTheme(theme);
+                // If the old theme was the current one, switch to 'user theme'.
+                if (!updateCurrentTheme) {
+                    ThemeManager.setCurrentTheme(theme);
+                    MuConfigurations.savePreferences();
                 }
             }
-            catch(Exception exception) {
-                try {
-                    InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", ThemeManager.getUserThemeFile().getAbsolutePath()));
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
+
+            // Otherwise, imports the new data in the user theme and saves it.
+            else {
+                theme.importData(data);
+                ThemeManager.writeTheme(theme);
+            }
+        } catch (Exception exception) {
+            try {
+                InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", ThemeManager.getUserThemeFile().getAbsolutePath()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
     }
-    
+
     @Override
     public void componentChanged(PrefComponent component) {
 		setCommitButtonsEnabled(!theme.isIdentical(data));

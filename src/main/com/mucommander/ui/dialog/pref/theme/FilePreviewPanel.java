@@ -41,6 +41,7 @@ import java.beans.PropertyChangeListener;
 class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
     // - Row identifiers ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
+    // TODO use enum
     private static final int FOLDER      = 0;
     private static final int PLAIN_FILE  = 1;
     private static final int ARCHIVE     = 2;

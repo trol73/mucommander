@@ -393,7 +393,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     else
                         label.setText(theme.getName());
 
-                    label.setIcon(theme.getType() != Theme.Type.CUSTOM ? lockIcon : transparentIcon);
+                    label.setIcon(theme.getType() == Theme.Type.PREDEFINED ? lockIcon : transparentIcon);
 
                     return label;
                 }
@@ -422,23 +422,19 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private JPanel createSyntaxHighlightThemePanel() {
         JPanel gridPanel = new ProportionalGridPanel(1);
 
-        syntaxThemeComboBox = new PrefComboBox<String>() {
+        syntaxThemeComboBox = new PrefComboBox<String>(ThemeManager.predefinedSyntaxThemeNames()) {
             @Override
             public boolean hasChanged() {
                 String selectedTheme = (String)getSelectedItem();
                 return !ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(selectedTheme);
             }
         };
-        for (String s : ThemeManager.predefinedSyntaxThemeNames()) {
-            syntaxThemeComboBox.addItem(s);
-        }
-
         syntaxThemeComboBox.addActionListener(this);
         syntaxThemeComboBox.setSelectedItem(ThemeManager.getCurrentSyntaxThemeName());
         gridPanel.add(syntaxThemeComboBox);
 
         JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.themes")));
+        flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.syntax_themes")));
         flowPanel.add(gridPanel);
 
         return flowPanel;
@@ -503,16 +499,12 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @return a combo box that allows to choose a size for a certain type of icon
      */
     private PrefComboBox createIconSizeCombo(final MuPreference preference, float defaultValue) {
-    	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>() {
+    	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>(ICON_SIZES) {
 			public boolean hasChanged() {
 				return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(
 						MuConfigurations.getPreferences().getVariable(preference));
 			}
     	};
-
-        for (String iconSize : ICON_SIZES)
-            iconSizeCombo.addItem(iconSize);
-
         float scaleFactor = MuConfigurations.getPreferences().getVariable(preference, defaultValue);
         int index = 0;
         for(int i=0; i<ICON_SCALE_FACTORS.length; i++) {
@@ -762,7 +754,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     public void run() {
-        java.util.List<Class<?>> newLookAndFeels;
+        List<Class<?>> newLookAndFeels;
 
         setLookAndFeelsLoading(true);
         try {
