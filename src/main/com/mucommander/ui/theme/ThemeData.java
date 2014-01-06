@@ -18,6 +18,8 @@
 
  package com.mucommander.ui.theme;
 
+import org.fife.ui.rtextarea.RTextArea;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Hashtable;
@@ -828,7 +830,7 @@ public class ThemeData {
         // -------------------------------------------------------------------------------------------------------------
         mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new JTextArea();}};
+            public JComponent getComponent() {return new RTextArea();}};
         registerDefaultFont(DEFAULT_TEXT_AREA_FONT,new SystemDefaultFont("TextArea.font", mapper));
         registerDefaultColor(DEFAULT_TEXT_AREA_FOREGROUND,
                              new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextArea.foreground", mapper));

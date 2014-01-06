@@ -25,7 +25,7 @@ import com.mucommander.ui.main.MainFrame;
 public abstract class FileFrame extends JFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileFrame.class);
 
-	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
+//	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
 
 	// The file presenter within this frame
 	private FilePresenter filePresenter;
@@ -61,26 +61,24 @@ public abstract class FileFrame extends JFrame {
 		}
 
 		AsyncPanel asyncPanel = new AsyncPanel() {
-        	
             @Override
-            public JComponent getTargetComponent() {
-                try {
-                    // Ask the presenter to present the file
-                	filePresenter.open(file);
-                }
-                catch(Exception e) {
+            public void initTargetComponent() throws Exception {
+                filePresenter.open(file);
+            }
+
+
+            @Override
+            public JComponent getTargetComponent(Exception e) {
+                if (e != null) {
                     LOGGER.debug("Exception caught", e);
-
                     showGenericErrorDialog();
-
                     dispose();
                     return filePresenter==null?new JPanel():filePresenter;
                 }
-
                 setJMenuBar(filePresenter.getMenuBar());
-                
                 return filePresenter;
             }
+
 
             @Override
             protected void updateLayout() {
@@ -93,6 +91,7 @@ public abstract class FileFrame extends JFrame {
                 FocusRequester.requestFocus(filePresenter);
             }
         };
+
 
         // Add the AsyncPanel to the content pane
         JPanel contentPane = new JPanel(new BorderLayout());

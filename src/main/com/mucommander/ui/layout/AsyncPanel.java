@@ -34,7 +34,8 @@ import java.awt.*;
  * <ol>
  *  <li>Initially, AsyncPanel displays a 'please wait component' that symbolizes the fact that the contents of the
  *      panel is being loaded.</li>
- *  <li>When AsyncPanel becomes visible on screen, the {@link #getTargetComponent()} method is called to trigger the
+ *  <li>Then the initialization of the component will be executed in background thread by the method {@link #initTargetComponent()}</li>
+ *  <li>When AsyncPanel becomes visible on screen, the {@link #getTargetComponent(Exception)} method is called to trigger the
  *      initialization of the real component to display.</li>
  *  <li>As soon as the method returns, the wait component is removed and the target component added to AsyncPanel.
  *      If AsyncPanel is the child of a <code>java.awt.Window</code>, the window is repacked to take into account the
@@ -47,6 +48,29 @@ import java.awt.*;
  * @author Maxence Bernard
  */
 public abstract class AsyncPanel extends JPanel {
+
+    private class InitWorker extends SwingWorker<Void, Void> {
+        private Exception exception;
+
+        @Override
+        protected Void doInBackground() {
+            try {
+                initTargetComponent();
+            } catch (Exception e) {
+                exception = e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            JComponent targetComponent = getTargetComponent(exception);
+            remove(waitComponent);
+            setBorder(new EmptyBorder(0, 0, 0, 0));
+            add(targetComponent, BorderLayout.CENTER);
+            updateLayout();
+        }
+    }
 
     /** The component displayed while the target component is being loaded */
     private JComponent waitComponent;
@@ -83,7 +107,8 @@ public abstract class AsyncPanel extends JPanel {
                 visibleOnScreen = true;
                 removeAncestorListener(this);
 
-                loadTargetComponent();
+//                loadTargetComponent();
+                new InitWorker().execute();
             }
 
             public void ancestorRemoved(AncestorEvent event) {}
@@ -96,6 +121,7 @@ public abstract class AsyncPanel extends JPanel {
     /**
      * Loads the target component by calling {@link #getTargetComponent()} and replace the wait component by it.
      */
+/*
     private void loadTargetComponent() {
         new Thread() {
             @Override
@@ -111,7 +137,7 @@ public abstract class AsyncPanel extends JPanel {
             }
         }.start();
     }
-
+*/
     /**
      * Returns the default component to be displayed while the target component is being loaded.
      *
@@ -155,5 +181,7 @@ public abstract class AsyncPanel extends JPanel {
     // Abstract methods //
     //////////////////////
 
-    public abstract JComponent getTargetComponent();
+    public abstract JComponent getTargetComponent(Exception e);
+
+    public abstract void initTargetComponent() throws Exception;
 }

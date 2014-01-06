@@ -23,10 +23,7 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -114,7 +111,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 		
         // Maps the dispose action to the 'Apple+W' keystroke under Mac OS X
         if(OsFamily.MAC_OS_X.isCurrent())
-            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
 
         // Under Windows, Alt+F4 automagically disposes the dialog, nothing to do
     }
@@ -163,7 +160,7 @@ public class FocusDialog extends JDialog implements WindowListener {
     }
 
     /**
-     * Sets a minium width and height for this dialog.
+     * Sets a minimum width and height for this dialog.
      */
     @Override
     public void setMinimumSize(Dimension dimension) {

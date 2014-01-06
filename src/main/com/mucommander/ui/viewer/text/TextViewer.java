@@ -19,6 +19,7 @@
 package com.mucommander.ui.viewer.text;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,8 +105,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         super.setFrame(frame);
 
         frame.setFullScreen(isFullScreen());
-
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
     	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
     		public void actionPerformed(ActionEvent e){
     			setFullScreen(!frame.isFullScreen());
@@ -275,22 +275,23 @@ public class TextViewer extends FileViewer implements EncodingListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if(source == copyItem)
+        if (source == copyItem) {
         	textEditorImpl.copy();
-        else if(source == selectAllItem)
+        } else if(source == selectAllItem) {
         	textEditorImpl.selectAll();
-        else if(source == findItem)
+        } else if(source == findItem) {
         	textEditorImpl.find();
-        else if(source == findNextItem)
+        } else if(source == findNextItem) {
         	textEditorImpl.findNext();
-        else if(source == findPreviousItem)
+        } else if(source == findPreviousItem) {
         	textEditorImpl.findPrevious();
-        else if(source == toggleLineWrapItem)
+        } else if(source == toggleLineWrapItem) {
         	setLineWrap(toggleLineWrapItem.isSelected());
-        else if(source == toggleLineNumbersItem)
+        } else if(source == toggleLineNumbersItem) {
         	showLineNumbers(toggleLineNumbersItem.isSelected());
-        else
+        } else {
         	super.actionPerformed(e);
+        }
     }
 
     /////////////////////////////////////

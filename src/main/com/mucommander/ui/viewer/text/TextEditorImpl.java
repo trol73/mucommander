@@ -27,7 +27,6 @@ import java.awt.event.MouseWheelListener;
 import java.io.*;
 
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
@@ -39,7 +38,6 @@ import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -52,8 +50,7 @@ class TextEditorImpl implements ThemeListener {
 
 	private JFrame frame;
 
-	//private JTextArea textArea;
-    RSyntaxTextArea textArea;
+    private RSyntaxTextArea textArea;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -71,12 +68,6 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 	private void initTextArea(boolean isEditable) {
-//		textArea = new JTextArea() {
-//			@Override
-//			public Insets getInsets() {
-//				return new Insets(4, 3, 4, 3);
-//			}
-//		};
         textArea = new RSyntaxTextArea() {
             @Override
             public Insets getInsets() {

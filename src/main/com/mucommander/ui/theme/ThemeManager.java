@@ -69,15 +69,6 @@ public class ThemeManager {
     private static List<String> predefinedThemeNames;
     /** List of all predefined syntax highlight theme names. */
     private static List<String> predefinedSyntaxThemeNames;
-    /*
-    private static String[] PREDEFINED_THEME_NAMES = {
-        "ClassicCommander",
-        "Native",
-        "RetroCommander",
-        "Striped",
-        "Trol"
-    };
-    */
 
 
     // - Instance variables --------------------------------------------------------------
@@ -689,7 +680,7 @@ public class ThemeManager {
         return new Theme(listener, data, Theme.Type.CUSTOM, name);
     }
 
-    public static Theme importTheme(File file) throws IOException, Exception {
+    public static Theme importTheme(File file) throws Exception {
         String       name; // Name of the new theme.
         OutputStream out;  // Where to write the theme data to.
         InputStream  in;   // Where to read the theme data from.

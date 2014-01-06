@@ -36,8 +36,8 @@ import java.awt.*;
 public class ThemeEditorDialog extends PreferencesDialog {
     // - Action listening -------------------------------------------------------
     // --------------------------------------------------------------------------
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580,0);
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(620,500);
+//    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580,0);
+//    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(620,500);
 
     private ThemeData data;
     private Theme     theme;
@@ -78,8 +78,16 @@ public class ThemeEditorDialog extends PreferencesDialog {
         addPreferencesPanel(new QuickListPanel(this, data));
 
         // Sets the dialog's size.
-        setMinimumSize(MINIMUM_DIALOG_DIMENSION);
-        setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
+//        setMinimumSize(MINIMUM_DIALOG_DIMENSION);
+//        setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension minimumSize = new Dimension(580, 300);
+        Dimension maximumSize = new Dimension(screenSize);
+        if (screenSize.getWidth() >= 1024 && screenSize.getHeight() > 700) {
+            minimumSize.setSize(800, 480);
+        }
+        setMinimumSize(minimumSize);
+        setMaximumSize(maximumSize);
     }
 
     /**
@@ -137,7 +145,9 @@ public class ThemeEditorDialog extends PreferencesDialog {
                 try {
                     InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", ThemeManager.getUserThemeFile().getAbsolutePath()));
                 }
-                catch(Exception e) {}
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

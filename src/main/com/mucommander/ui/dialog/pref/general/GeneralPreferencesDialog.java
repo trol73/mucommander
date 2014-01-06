@@ -19,6 +19,7 @@
 package com.mucommander.ui.dialog.pref.general;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -46,14 +47,15 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     // - Dimensions -------------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Dialog's minimum dimensions. */
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580,0);
+//    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580, 300);
     /** Dialog's maximum dimensions. */
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(640,480);
+//    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 800);
 
 
 
     // - Available tabs ---------------------------------------------------------
     // --------------------------------------------------------------------------
+    // TODO use enum
     /** Identifier of the 'general' tab. */
     public static final int GENERAL_TAB    = 0;
     /** Identifier of the 'folders' tab. */
@@ -109,8 +111,14 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
         addPreferencesPanel(new MiscPanel(this),       MISC_ICON);
 
         // Sets the dialog's size.
-        setMinimumSize(MINIMUM_DIALOG_DIMENSION);
-        setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension minimumSize = new Dimension(580, 300);
+        Dimension maximumSize = new Dimension(screenSize);
+        if (screenSize.getWidth() >= 1024 && screenSize.getHeight() > 700) {
+            minimumSize.setSize(640, 480);
+        }
+        setMinimumSize(minimumSize);
+        setMaximumSize(maximumSize);
 
         // Restores the last selected index.
         setActiveTab(lastTabIndex);
