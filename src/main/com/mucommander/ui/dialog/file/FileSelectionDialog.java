@@ -202,7 +202,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
                 testString = keywordString;
             }
 
-            // Instantiate the main file filter
+            // Instantiate the main file IMAGE_FILTER
             FileFilter filter;
             switch (comparison) {
                 case CONTAINS:
@@ -226,13 +226,13 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
                         // Todo: let the user know the regexp is invalid
                         LOGGER.debug("Invalid regexp", ex);
 
-                        // This filter does match any file
+                        // This IMAGE_FILTER does match any file
                         filter = new PassThroughFileFilter(false);
                     }
                     break;
             }
 
-            // If folders are excluded, add a regular file filter and chain it with an AndFileFilter
+            // If folders are excluded, add a regular file IMAGE_FILTER and chain it with an AndFileFilter
             if(!includeFolders) {
                 filter = new AndFileFilter(
                     new AttributeFileFilter(FileAttribute.FILE),
@@ -240,7 +240,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
                 );
             }
 
-            // Mark/unmark the files using the filter
+            // Mark/unmark the files using the IMAGE_FILTER
             activeTable.getFileTableModel().setFilesMarked(filter, addToSelection);
 
             // Notify registered listeners that currently marked files have changed on this FileTable

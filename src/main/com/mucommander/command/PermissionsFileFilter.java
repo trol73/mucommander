@@ -50,14 +50,14 @@ public class PermissionsFileFilter extends AbstractFileFilter implements Permiss
     }
 
     /**
-     * Returns the permission that this filter will check.
-     * @return the permission that this filter will check.
+     * Returns the permission that this IMAGE_FILTER will check.
+     * @return the permission that this IMAGE_FILTER will check.
      */
     public int getPermission() {return permission;}
 
     /**
-     * Returns <code>true</code> if files must have the filter's permission flag set in order to be accepted.
-     * @return <code>true</code> if files must have the filter's permission flag set in order to be accepted, <code>false</code> otherwise.
+     * Returns <code>true</code> if files must have the IMAGE_FILTER's permission flag set in order to be accepted.
+     * @return <code>true</code> if files must have the IMAGE_FILTER's permission flag set in order to be accepted, <code>false</code> otherwise.
      */
     public boolean getFilter() {return filter;}
 }

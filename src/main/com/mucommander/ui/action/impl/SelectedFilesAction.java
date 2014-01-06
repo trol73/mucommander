@@ -30,7 +30,7 @@ import java.util.Map;
  * When none of those conditions is satisfied, this action is disabled.
  *
  * <p>Optionally, a FileFilter can be specified using {@link #setSelectedFileFilter(com.mucommander.commons.file.filter.FileFilter) setSelectedFileFilter}
- * to further restrict the enabled condition to files that match the filter.</p>
+ * to further restrict the enabled condition to files that match the IMAGE_FILTER.</p>
  *
  * @author Maxence Bernard
  */

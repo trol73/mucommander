@@ -50,9 +50,9 @@ public class ClassFinder {
     // -----------------------------------------------------------------------------------
     /** ClassLoader used to load classes from explored files. */
     private ClassLoader  loader;
-    /** Used to filter out files that are neither classes nor directories. */
+    /** Used to IMAGE_FILTER out files that are neither classes nor directories. */
     private OrFileFilter filter;
-    /** Used to filter out unwanted classes. */
+    /** Used to IMAGE_FILTER out unwanted classes. */
     private ClassFilter  classFilter;
 
 
@@ -91,7 +91,7 @@ public class ClassFinder {
             if (file.isDirectory())
                 result.addAll(find(currentPackage + file.getName() + '.', file));
 
-                // Passes each class through the class filter.
+                // Passes each class through the class IMAGE_FILTER.
                 // Errors are treated as 'this class is not wanted'.
             else {
                 try {
@@ -110,7 +110,7 @@ public class ClassFinder {
     // - Public code ---------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
-     * Explores the content of the specified file and looks for classes that match the specified class filter.
+     * Explores the content of the specified file and looks for classes that match the specified class IMAGE_FILTER.
      * <p>
      * The <code>browsable</code> argument must be browsable as defined by {@link com.mucommander.commons.file.AbstractFile#isBrowsable()}.
      * If such is not the case, the returned vector will be empty.
@@ -136,7 +136,7 @@ public class ClassFinder {
     }
 
     /**
-     * Explores the content of the specified file and looks for classes that match the specified class filter.
+     * Explores the content of the specified file and looks for classes that match the specified class IMAGE_FILTER.
      * <p>
      * This is a convenience method and is strictly equivalent to calling {@link #find(AbstractFile,ClassFilter,ClassLoader)}
      * with a class loader argument initialized with the following code:

@@ -382,7 +382,7 @@ public class CommandManager implements CommandBuilder {
     public static void buildAssociations(AssociationBuilder builder) throws CommandException {
         Iterator<CommandAssociation> iterator; // Used to iterate through commands and associations.
         Iterator<FileFilter>         filters;  // Used to iterate through each association's filters.
-        FileFilter                   filter;   // Buffer for the current file filter.
+        FileFilter                   filter;   // Buffer for the current file IMAGE_FILTER.
         CommandAssociation           current;  // Current command association.
 
         builder.startBuilding();

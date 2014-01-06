@@ -23,9 +23,13 @@ import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 
 import javax.swing.*;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An abstract class to be subclassed by file viewer implementations.
@@ -35,8 +39,12 @@ import java.awt.event.KeyEvent;
  * @author Maxence Bernard, Arik Hadas
  */
 public abstract class FileViewer extends FilePresenter implements ActionListener {
-	
-    
+
+    /**
+     * This map used to fix java issues with some menu hot-keys - some accelerators (etc. F2, arrows, Enter, Escape) doesn't work
+     * properly in menu
+     */
+    private Map<KeyStroke, JMenuItem> menuKeyStrokes;
 	
     /** Close menu item */
     private JMenuItem closeItem;
@@ -74,5 +82,57 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==closeItem)
             getFrame().dispose();
+    }
+
+
+    /**
+     * Set main component that will be listen key codes to fix issue with not workings menu accelerators
+     *
+     * @param comp
+     * @param menuBar
+     */
+    protected void setMainKeyListener(Component comp, JMenuBar menuBar) {
+        fillMenuKeyStrokes(menuBar);
+        comp.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                KeyStroke keyStrole = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+                JMenuItem menuItem = menuKeyStrokes.get(keyStrole);
+                if (menuItem != null) {
+                    actionPerformed(new ActionEvent(menuItem, 0, null));
+                    e.consume();
+                    return;
+                }
+                super.keyPressed(e);
+            }
+        });
+
+    }
+
+    /**
+     * Fills map for all keycodes that can be not processed properly
+     *
+     * @param menuBar
+     */
+    protected void fillMenuKeyStrokes(JMenuBar menuBar) {
+        menuKeyStrokes = new HashMap<KeyStroke, JMenuItem>();
+        for (int menuIndex = 0; menuIndex < menuBar.getMenuCount(); menuIndex++) {
+            JMenu menu = menuBar.getMenu(menuIndex);
+            for (int itemIndex = 0; itemIndex < menu.getItemCount(); itemIndex++) {
+                JMenuItem menuItem = menu.getItem(itemIndex);
+                if (menuItem == null) {
+                    continue;
+                }
+                KeyStroke keyStroke = menuItem.getAccelerator();
+                if (keyStroke == null) {
+                    continue;
+                }
+                int keyCode = keyStroke.getKeyCode();
+                if ((keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) || (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN)
+                        || keyCode == KeyEvent.VK_ENTER) {
+                    menuKeyStrokes.put(keyStroke, menuItem);
+                }
+            }
+        }
     }
 }

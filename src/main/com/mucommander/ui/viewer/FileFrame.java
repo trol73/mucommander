@@ -2,6 +2,7 @@ package com.mucommander.ui.viewer;
 
 import java.awt.*;
 
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -42,7 +43,7 @@ public abstract class FileFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
         setResizable(true);
-        
+
         initContentPane(file);
 	}
 	

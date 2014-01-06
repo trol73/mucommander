@@ -29,12 +29,13 @@ import com.mucommander.ui.viewer.ViewerFactory;
  * @author Nicolas Rinaudo
  */
 public class ImageFactory implements ViewerFactory {
-    /** Used to filter out file extensions that the image viewer cannot open. */
-    private ExtensionFilenameFilter filter;
+    /** Used to IMAGE_FILTER out file extensions that the image viewer cannot open. */
+    public final static ExtensionFilenameFilter IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {".png", ".gif", ".jpg", ".jpeg"});
+    static {
+        IMAGE_FILTER.setCaseSensitive(false);
+    }
 
     public ImageFactory() {
-        filter = new ExtensionFilenameFilter(new String[] {".png", ".gif", ".jpg", ".jpeg"});
-        filter.setCaseSensitive(false);
     }
 
     public boolean canViewFile(AbstractFile file) {
@@ -42,7 +43,7 @@ public class ImageFactory implements ViewerFactory {
         if(file.isDirectory())
             return false;
 
-        return filter.accept(file);
+        return IMAGE_FILTER.accept(file);
     }
 
     public FileViewer createFileViewer() {

@@ -27,9 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class filter for look and feels.
+ * Class IMAGE_FILTER for look and feels.
  * <p>
- * This filter will only accept classes if:
+ * This IMAGE_FILTER will only accept classes if:
  * <ul>
  *   <li>They subclass <code>javax.swing.LookAndFeel</code>.</li>
  *   <li>They are public and not abstract.</li>

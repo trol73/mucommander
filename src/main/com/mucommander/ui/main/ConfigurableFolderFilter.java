@@ -42,7 +42,7 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
     
     private FileFilter hiddenFileFilter = new AttributeFileFilter(FileAttribute.HIDDEN, true);
     private FileFilter dsFileFilter = new DSStoreFileFilter();
-    /** Filter used to filter out system files and folders that should not be displayed to inexperienced users. */
+    /** Filter used to IMAGE_FILTER out system files and folders that should not be displayed to inexperienced users. */
     private FileFilter systemFileFilter = new AttributeFileFilter(FileAttribute.SYSTEM, true);
     
 
@@ -54,7 +54,7 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
     private void configureFilters() {
         // Filters out hidden files, null when 'show hidden files' option is enabled
         if(!MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES)) {
-            // This filter is inverted and matches non-hidden files            
+            // This IMAGE_FILTER is inverted and matches non-hidden files
             addFileFilter(hiddenFileFilter);
         }
 

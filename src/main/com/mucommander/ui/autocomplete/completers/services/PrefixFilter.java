@@ -35,8 +35,8 @@ public class PrefixFilter {
 	
 	/**
 	 * 
-	 * @param prefix - The prefix that each string should start with in order to pass this filter.
-	 * @return A filter of the given prefix.
+	 * @param prefix - The prefix that each string should start with in order to pass this IMAGE_FILTER.
+	 * @return A IMAGE_FILTER of the given prefix.
 	 */
 	public static PrefixFilter createPrefixFilter(String prefix) {
 		return new PrefixFilter(prefix);
@@ -45,17 +45,17 @@ public class PrefixFilter {
 	/**
 	 * 
 	 * @param input - Some string.
-	 * @return <code>true</code> if the given input was accepted by this filter, <code>false</code> otherwise.
+	 * @return <code>true</code> if the given input was accepted by this IMAGE_FILTER, <code>false</code> otherwise.
 	 */
 	public boolean accept(String input) {
 		return prefix == null || input.toLowerCase().startsWith(prefix);
 	}
 		
 	/**
-	 * Convenient method that filters out strings that do not start with this filter's prefix.
+	 * Convenient method that filters out strings that do not start with this IMAGE_FILTER's prefix.
 	 * 
 	 * @param strings - Array of strings.
-	 * @return Vector of strings which start with this filter's prefix.
+	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
 	public Vector<String> filter(String[] strings) {
 		Vector<String> result = new Vector<String>();
@@ -69,10 +69,10 @@ public class PrefixFilter {
 	}
 	
 	/**
-	 * Convenient method that filters out strings that do not start with this filter's prefix.
+	 * Convenient method that filters out strings that do not start with this IMAGE_FILTER's prefix.
 	 * 
 	 * @param strings - Vector of strings.
-	 * @return Vector of strings which start with this filter's prefix.
+	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
 	public Vector<String> filter(Vector<String> strings) {
 		Vector<String> result = new Vector<String>();

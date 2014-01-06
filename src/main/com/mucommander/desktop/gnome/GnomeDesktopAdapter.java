@@ -65,9 +65,9 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
             // Disabled actual permissions checking as this will break normal +x files.
             // With this, a +x PDF file will not be opened.
             /*
-            // Identifies which kind of filter should be used to match executable files.
+            // Identifies which kind of IMAGE_FILTER should be used to match executable files.
             if(JavaVersion.JAVA_1_6.isCurrentOrHigher())
-                filter = new PermissionsFileFilter(PermissionTypes.EXECUTE_PERMISSION, true);
+                IMAGE_FILTER = new PermissionsFileFilter(PermissionTypes.EXECUTE_PERMISSION, true);
             else
             */
                 filter = new RegexpFilenameFilter("[^.]+", true);

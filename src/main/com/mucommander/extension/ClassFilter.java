@@ -19,7 +19,7 @@
 package com.mucommander.extension;
 
 /**
- * Used to filter classes.
+ * Used to IMAGE_FILTER classes.
  * <p>
  * <code>ClassFilter</code> implementations are meant to be used in conjonction with {@link ClassFinder}.
  * </p>

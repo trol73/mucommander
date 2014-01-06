@@ -178,6 +178,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             if(in != null) {
                 try {in.close();}
                 catch(IOException e) {
+                    e.printStackTrace();
                     // Nothing to do here.
                 }
             }
@@ -185,7 +186,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     }
 
     void loadDocument(InputStream in, final String encoding, DocumentListener documentListener) throws IOException {
-        // If the encoding is UTF-something, wrap the stream in a BOMInputStream to filter out the byte-order mark
+        // If the encoding is UTF-something, wrap the stream in a BOMInputStream to IMAGE_FILTER out the byte-order mark
         // (see ticket #245)
         if(encoding != null && encoding.toLowerCase().startsWith("utf")) {
             in = new BOMInputStream(in);
@@ -211,8 +212,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
-        menuBar.add(encodingMenu);
-        
+        menuBar.add(encodingMenu, menuBar);
+
+        setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
         return menuBar;
     }
     
@@ -250,7 +252,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     	
     	// View menu
     	viewMenu = new JMenu(Translator.get("text_viewer.view"));
-    	
+
     	toggleLineWrapItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_viewer.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), this);
     	toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
     	toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_viewer.line_numbers"), menuItemMnemonicHelper, null, this);

@@ -81,8 +81,8 @@ class ImageViewer extends FileViewer implements ActionListener {
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
     	controlsMenu = MenuToolkit.addMenu(Translator.get("image_viewer.controls_menu"), menuMnemonicHelper, null);
     	
-        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), this);
-        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), this);
+        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
+        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
         controlsMenu.add(new JSeparator());
         zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
         zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
@@ -93,6 +93,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     	JMenuBar menuBar = super.getMenuBar();
     	
         menuBar.add(controlsMenu);
+        setMainKeyListener(imageViewerImpl, menuBar);
     	
     	return menuBar;
     }
@@ -143,8 +144,10 @@ class ImageViewer extends FileViewer implements ActionListener {
         //AppLogger.finest("Waiting for image to load "+image);
         MediaTracker tracker = new MediaTracker(imageViewerImpl);
         tracker.addImage(image, 0);
-        try { tracker.waitForID(0); }
-        catch(InterruptedException e) {}
+        try {
+            tracker.waitForID(0); }
+        catch(InterruptedException e) {
+        }
         tracker.removeImage(image);
         //AppLogger.finest("Image loaded "+image);
     }
@@ -182,8 +185,8 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private void checkNextPrev() {
-        prevImageItem.setEnabled(indexInDirectory > 0);
-        nextImageItem.setEnabled(indexInDirectory < filesInDirectory.length-1);
+        prevImageItem.setEnabled(getPrevFileIndex() >= 0);
+        nextImageItem.setEnabled(getNextFileIndex() >= 0);
     }
 
     ///////////////////////////////
@@ -245,21 +248,46 @@ class ImageViewer extends FileViewer implements ActionListener {
         checkZoom();
     }
 
+    private int getNextFileIndex() {
+        int index = indexInDirectory;
+        while (index < filesInDirectory.length-1) {
+            index++;
+            AbstractFile file = filesInDirectory[index];
+            if (file.isDirectory() || !ImageFactory.IMAGE_FILTER.accept(file)) {
+                continue;
+            }
+            return index;
+        }
+        return -1;
+    }
 
     private void gotoNextFile() {
-        if (indexInDirectory >= filesInDirectory.length-1) {
-            return;
+        int index = getNextFileIndex();
+        if (index >= 0) {
+            indexInDirectory = index;
+            gotoFile();
         }
-        indexInDirectory++;
-        gotoFile();
+    }
+
+    private int getPrevFileIndex() {
+        int index = indexInDirectory;
+        while (index > 0) {
+            index--;
+            AbstractFile file = filesInDirectory[index];
+            if (file.isDirectory() || !ImageFactory.IMAGE_FILTER.accept(file)) {
+                continue;
+            }
+            return index;
+        }
+        return  -1;
     }
 
     private void gotoPrevFile() {
-        if (indexInDirectory <= 0) {
-            return;
+        int index = getPrevFileIndex();
+        if (index >= 0) {
+            indexInDirectory = index;
+            gotoFile();
         }
-        indexInDirectory--;
-        gotoFile();
     }
 
     private void gotoFile() {

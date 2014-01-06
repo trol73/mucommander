@@ -135,13 +135,13 @@ public class MarkExtensionAction extends MuAction {
     /**
      * Creates a {@link com.mucommander.commons.file.filter.FilenameFilter} that should be applied to all current files.
      * <p>
-     * If the action has been configured using the <code>file.extension</code> property, the returned filter
+     * If the action has been configured using the <code>file.extension</code> property, the returned IMAGE_FILTER
      * will match that extension. Otherwise, the currently selected file's extension will be used. If it doesn't
-     * have one, the returned filter will match all files such that 
+     * have one, the returned IMAGE_FILTER will match all files such that
      * <code>file.getExtension() == null</code>.
      * </p>
      * @param  file currently selected file.
-     * @return      the filter that should be applied by this action.
+     * @return      the IMAGE_FILTER that should be applied by this action.
      */
     private FilenameFilter getFilter(AbstractFile file) {
         String                  ext;
@@ -154,7 +154,7 @@ public class MarkExtensionAction extends MuAction {
             if(file == null)
                 return null;
 
-            // If the current file doesn't have an extension, return a filename filter that
+            // If the current file doesn't have an extension, return a filename IMAGE_FILTER that
             // match null extensions.
             if((ext = file.getExtension()) == null)
                 return new AbstractFilenameFilter() {
@@ -165,7 +165,7 @@ public class MarkExtensionAction extends MuAction {
         // At this point, ext contains the extension that should be matched.
         filter = new ExtensionFilenameFilter("." + ext);
 
-        // Initialises the filter's case-sensitivy depending on the action's propeties.
+        // Initialises the IMAGE_FILTER's case-sensitivy depending on the action's propeties.
         filter.setCaseSensitive(isCaseSensitive());
 
         return filter;
@@ -190,7 +190,7 @@ public class MarkExtensionAction extends MuAction {
         rowCount   = tableModel.getRowCount();
         mark       = !tableModel.isRowMarked(fileTable.getSelectedRow());
 
-        // Goes through all files in the active table, marking all that match 'filter'.
+        // Goes through all files in the active table, marking all that match 'IMAGE_FILTER'.
         for(int i = tableModel.getFirstMarkableRow(); i < rowCount; i++)
             if(filter.accept(tableModel.getCachedFileAtRow(i)))
                 tableModel.setRowMarked(i, mark);

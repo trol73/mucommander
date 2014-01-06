@@ -29,7 +29,7 @@ class CommandAssociation {
 
     // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
-    /** Command associated to this file name filter. */
+    /** Command associated to this file name IMAGE_FILTER. */
     private Command    command;
     private FileFilter fileFilter;
 
@@ -40,7 +40,7 @@ class CommandAssociation {
     /**
      * Creates a new <code>CommandAssociation</code>.
      * @param command command that must be executed if the association is matched.
-     * @param filter  filter that files must match in order to be taken into account by the association.
+     * @param filter  IMAGE_FILTER that files must match in order to be taken into account by the association.
      */
     public CommandAssociation(Command command, FileFilter filter) {
         this.command    = command;

@@ -667,7 +667,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		private List<String> filter(List<String> actionIds, ActionFilter filter) {
 			List<String> filteredActionsList = new LinkedList<String>();
             for (String actionId : actionIds) {
-                // Discard actions that are parameterized, and those that are rejected by the filter
+                // Discard actions that are parameterized, and those that are rejected by the IMAGE_FILTER
                 if (!ActionProperties.getActionDescriptor(actionId).isParameterized() && filter.accept(actionId))
                     filteredActionsList.add(actionId);
             }

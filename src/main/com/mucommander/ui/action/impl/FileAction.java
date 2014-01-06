@@ -65,7 +65,7 @@ public abstract class FileAction extends MuAction implements TableSelectionListe
 
 
     /**
-     * Enables/disables this action if both of the {@link #getFileTableCondition(FileTable)} and file filter
+     * Enables/disables this action if both of the {@link #getFileTableCondition(FileTable)} and file IMAGE_FILTER
      * (if there is one) tests are satisfied.
      *
      * <p>This method is called each time:
@@ -86,7 +86,7 @@ public abstract class FileAction extends MuAction implements TableSelectionListe
     /**
      * This method is called to determine if the current FileTable state allows this action to be enabled.
      * If <code>false</code> is returned, the action will be disabled.
-     * If <code>true</code> is returned, the action will be enabled if the file filter (if there is one) matches the
+     * If <code>true</code> is returned, the action will be enabled if the file IMAGE_FILTER (if there is one) matches the
      * selected file.
      *
      * @param fileTable currently active FileTable

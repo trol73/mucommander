@@ -40,7 +40,7 @@ public class DirectoryCache {
     /** Comparator used to sort folders */
     private FileComparator sort;
 
-    /** A file filter */
+    /** A file IMAGE_FILTER */
     private FileFilter filter;
 
     /** Listeners. */
@@ -49,7 +49,7 @@ public class DirectoryCache {
 
     /**
      * Creates a new directory cache.
-     * @param filter filter used to filter children directories.
+     * @param filter IMAGE_FILTER used to IMAGE_FILTER children directories.
      * @param sort a comparator used to sort children
      */
     public DirectoryCache(FileFilter filter, FileComparator sort) {
@@ -67,7 +67,7 @@ public class DirectoryCache {
     }
 
     /**
-     * Returns current filter.
+     * Returns current IMAGE_FILTER.
      */
     public FileFilter getFilter() {
         return filter;

@@ -377,7 +377,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         themeComboBox = new PrefComboBox<Theme>() {
 			public boolean hasChanged() {
 				return !ThemeManager.isCurrentTheme((Theme) getSelectedItem());
-			}        	
+			}
         };
         themeComboBox.addActionListener(this);
 
@@ -1086,7 +1086,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
 
-    // - File filter ------------------------------------------------------------
+    // - File IMAGE_FILTER ------------------------------------------------------------
     // --------------------------------------------------------------------------
     /**
      * Filter used to only display XML files in the JFileChooser.
@@ -1099,7 +1099,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         private String description;
 
         /**
-         * Creates a new extension file filter that will match files with the specified extension.
+         * Creates a new extension file IMAGE_FILTER that will match files with the specified extension.
          * @param extension extension to match.
          */
         public ExtensionFileFilter(String extension, String description) {

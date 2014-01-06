@@ -30,7 +30,7 @@ import java.util.Map;
  * and that is enabled only when a file other than the parent folder file '..' is selected.
  *
  * <p>Optionally, a FileFilter can be specified using {@link #setSelectedFileFilter(com.mucommander.commons.file.filter.FileFilter) setSelectedFileFilter}
- * to further restrict the enabled condition to files that match the filter.</p>
+ * to further restrict the enabled condition to files that match the IMAGE_FILTER.</p>
  *
  * @author Maxence Bernard
  */
@@ -41,16 +41,16 @@ public abstract class SelectedFileAction extends FileAction {
     }
 
     /**
-     * Returns the filter that restricts the enabled condition to selected files that match the specified filter.
+     * Returns the IMAGE_FILTER that restricts the enabled condition to selected files that match the specified IMAGE_FILTER.
      *
-     * @return the filter that restricts the enabled condition to selected files that match the specified filter.
+     * @return the IMAGE_FILTER that restricts the enabled condition to selected files that match the specified IMAGE_FILTER.
      */
     public FileFilter getSelectedFileFilter() {
         return filter;
     }
 
     /**
-     * Restricts the enabled condition to selected files that match the specified filter.
+     * Restricts the enabled condition to selected files that match the specified IMAGE_FILTER.
      *
      * @param filter FileFilter instance
      */
