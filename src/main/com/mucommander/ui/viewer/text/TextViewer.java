@@ -27,12 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -82,8 +77,11 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private JMenuItem findPreviousItem;
     private JMenuItem toggleLineWrapItem;
     private JMenuItem toggleLineNumbersItem;
+    private JMenuItem gotoLineItem;
     
     private String encoding;
+
+    private TextFilesHistory.FileRecord historyRecord;
     
     TextViewer() {
     	this(new TextEditorImpl(false));
@@ -139,6 +137,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 	}
 
     void startEditing(AbstractFile file, DocumentListener documentListener) throws IOException {
+        historyRecord = TextFilesHistory.getInstance().get(file);
         // Auto-detect encoding
 
         // Get a RandomAccessInputStream on the file if possible, if not get a simple InputStream
@@ -217,7 +216,24 @@ public class TextViewer extends FileViewer implements EncodingListener {
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
         return menuBar;
     }
-    
+
+    @Override
+    protected void saveStateOnClose() {
+        historyRecord.setLine(textEditorImpl.getTextArea().getLine());
+        historyRecord.setColumn(textEditorImpl.getTextArea().getColumn());
+        historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
+        historyRecord.setEncoding(encoding);
+        TextFilesHistory.getInstance().updateRecord(historyRecord);
+        TextFilesHistory.getInstance().save();
+    }
+
+    @Override
+    protected void restoreStateOnStartup() {
+        final TextArea textArea = textEditorImpl.getTextArea();
+        getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
+        textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
+    }
+
     String getEncoding() {
     	return encoding;
     }
@@ -249,6 +265,12 @@ public class TextViewer extends FileViewer implements EncodingListener {
         }
     	findNextItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
     	findPreviousItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
+        editMenu.addSeparator();
+        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK), this);
+        } else {
+            gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK), this);
+        }
     	
     	// View menu
     	viewMenu = new JMenu(Translator.get("text_viewer.view"));
@@ -267,7 +289,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
     public void show(AbstractFile file) throws IOException {
         startEditing(file, null);
         FileType type = FileType.getFileType(file);
+        restoreStateOnStartup();
         textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
+
+
     }
     
     ///////////////////////////////////
@@ -291,6 +316,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
         	setLineWrap(toggleLineWrapItem.isSelected());
         } else if(source == toggleLineNumbersItem) {
         	showLineNumbers(toggleLineNumbersItem.isSelected());
+        } else if(source == gotoLineItem) {
+            textEditorImpl.gotoLine();
         } else {
         	super.actionPerformed(e);
         }

@@ -37,7 +37,6 @@ import com.mucommander.ui.theme.FontChangedEvent;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -50,7 +49,7 @@ class TextEditorImpl implements ThemeListener {
 
 	private JFrame frame;
 
-    private RSyntaxTextArea textArea;
+    private TextArea textArea;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -68,7 +67,7 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 	private void initTextArea(boolean isEditable) {
-        textArea = new RSyntaxTextArea() {
+        textArea = new TextArea() {
             @Override
             public Insets getInsets() {
                 return new Insets(4, 3, 4, 3);
@@ -145,6 +144,13 @@ class TextEditorImpl implements ThemeListener {
 		doSearch(textArea.getSelectionStart() - 1, false);
 	}
 
+    void gotoLine() {
+        GotoLineDialog gotoDialog = new GotoLineDialog(frame);
+        if (gotoDialog.wasValidated()) {
+            textArea.gotoLine(gotoDialog.getLine());
+        }
+    }
+
 	private String getTextLC() {
 		return textArea.getText().toLowerCase();
 	}
@@ -209,7 +215,7 @@ class TextEditorImpl implements ThemeListener {
 		textArea.requestFocus();
 	}
 
-    RSyntaxTextArea getTextArea() {
+    TextArea getTextArea() {
 		return textArea;
 	}
 
@@ -225,7 +231,8 @@ class TextEditorImpl implements ThemeListener {
 		lineSeparatorExists = textArea.getLineCount() > 1;
 
 		// Move cursor to the top
-		textArea.setCaretPosition(0);
+//		textArea.setCaretPosition(0);
+
 	}
 
 	void write(Writer writer) throws IOException {
@@ -253,21 +260,25 @@ class TextEditorImpl implements ThemeListener {
 	 */
 	public void colorChanged(ColorChangedEvent event) {
 		switch(event.getColorId()) {
-		case Theme.EDITOR_FOREGROUND_COLOR:
-			textArea.setForeground(event.getColor());
-			break;
+            case Theme.EDITOR_FOREGROUND_COLOR:
+                textArea.setForeground(event.getColor());
+                break;
 
-		case Theme.EDITOR_BACKGROUND_COLOR:
-			textArea.setBackground(event.getColor());
-			break;
+            case Theme.EDITOR_BACKGROUND_COLOR:
+                textArea.setBackground(event.getColor());
+                break;
 
-		case Theme.EDITOR_SELECTED_FOREGROUND_COLOR:
-			textArea.setSelectedTextColor(event.getColor());
-			break;
+            case Theme.EDITOR_SELECTED_FOREGROUND_COLOR:
+                textArea.setSelectedTextColor(event.getColor());
+                break;
 
-		case Theme.EDITOR_SELECTED_BACKGROUND_COLOR:
-			textArea.setSelectionColor(event.getColor());
-			break;
+            case Theme.EDITOR_SELECTED_BACKGROUND_COLOR:
+                textArea.setSelectionColor(event.getColor());
+                break;
+
+            case Theme.EDITOR_CURRENT_BACKGROUND_COLOR:
+                textArea.setCurrentLineHighlightColor(event.getColor());
+                break;
 		}
 	}
 

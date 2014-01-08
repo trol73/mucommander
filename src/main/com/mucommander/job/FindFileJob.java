@@ -104,6 +104,9 @@ public class FindFileJob extends FileJob {
         if (fileContent == null || fileContent.isEmpty()) {
             return true;
         }
+        if (f.isDirectory()) {
+            return false;
+        }
         Scanner in = null;
         boolean result = false;
         try {

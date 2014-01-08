@@ -65,6 +65,7 @@ public abstract class FileFrame extends JFrame {
             @Override
             public void initTargetComponent() throws Exception {
                 filePresenter.open(file);
+                filePresenter.restoreStateOnStartup();
             }
 
 
@@ -74,7 +75,7 @@ public abstract class FileFrame extends JFrame {
                     LOGGER.debug("Exception caught", e);
                     showGenericErrorDialog();
                     dispose();
-                    return filePresenter==null?new JPanel():filePresenter;
+                    return filePresenter == null ? new JPanel() : filePresenter;
                 }
                 setJMenuBar(filePresenter.getMenuBar());
                 return filePresenter;
@@ -146,6 +147,11 @@ public abstract class FileFrame extends JFrame {
     	}
     }
 
+    @Override
+    public void dispose() {
+        filePresenter.saveStateOnClose();
+        super.dispose();
+    }
 
     //////////////////////
     // Abstract methods //

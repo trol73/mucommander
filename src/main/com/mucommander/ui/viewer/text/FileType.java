@@ -51,7 +51,7 @@ public enum FileType {
     LUA("Lua", SyntaxConstants.SYNTAX_STYLE_LUA, "*.lua"),
     MAKEFILE("Makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE, "Makefile"),
     MXML("MXML", SyntaxConstants.SYNTAX_STYLE_MXML, "*.mxml"),
-    NSIS("Nsis", SyntaxConstants.SYNTAX_STYLE_NSIS, "*.nsis"),
+    NSIS("Nsis", SyntaxConstants.SYNTAX_STYLE_NSIS, "*.nsi"),
     PERL("Perl", SyntaxConstants.SYNTAX_STYLE_PERL, "*.pl"),
     PHP("PHP", SyntaxConstants.SYNTAX_STYLE_PHP, "*.php"),
     PROPERTIES_FILE("Properties file", SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE, "*.properties"),

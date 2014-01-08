@@ -67,7 +67,7 @@ import javax.swing.SwingUtilities;
  * This class is used to start muCommander. It will analyse command line
  * arguments, initialize the whole software and start the main window.
  * </p>
- * @author Maxence Bernard, Nicolas Rinaudo
+ * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
 public class Launcher {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);

@@ -98,6 +98,16 @@ class ImageViewer extends FileViewer implements ActionListener {
     	return menuBar;
     }
 
+    @Override
+    protected void saveStateOnClose() {
+
+    }
+
+    @Override
+    protected void restoreStateOnStartup() {
+
+    }
+
     private synchronized void loadImage(AbstractFile file) throws IOException {
         FileFrame frame = getFrame();
         frame.setCursor(new Cursor(Cursor.WAIT_CURSOR));

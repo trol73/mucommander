@@ -315,7 +315,13 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			public void run() {
-        		int preferredHeight = component.getPreferredSize().height;
+                int preferredHeight;
+                try {
+        		    preferredHeight = component.getPreferredSize().height;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
 
 				//  Document change has caused a change in the number of lines.
 				//  Repaint to reflect the new line numbers

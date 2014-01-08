@@ -82,11 +82,16 @@ public abstract class JobDialog extends FocusDialog {
     protected AsyncPanel createFileDetailsPanel() {
         return new AsyncPanel() {
             @Override
-            public JComponent getTargetComponent() {
+            public JComponent getTargetComponent(Exception e) {
                 FileList fileList = new FileList(files, true);
                 fileList.setVisibleRowCount(NB_FILE_DETAILS_ROWS);
 
                 return new JScrollPane(fileList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            }
+
+            @Override
+            public void initTargetComponent() throws Exception {
+
             }
         };
     }

@@ -110,7 +110,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     }
 
     /**
-     * Fills map for all keycodes that can be not processed properly
+     * Fills map for all keycodes that can be not processed properly in swing
      *
      * @param menuBar
      */

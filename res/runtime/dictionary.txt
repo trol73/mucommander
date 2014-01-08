@@ -13357,6 +13357,7 @@ text_viewer.find_previous:CA:Busca l'anterior
 # Translation missing (KO)
 
 text_viewer.view:EN:View
+text_viewer.view:RU:Просмотр
 text_viewer.view:NB:Vis
 text_viewer.view:TR:Görünüm
 text_viewer.view:CA:Vista
@@ -13365,6 +13366,7 @@ text_viewer.view:ES:Vista
 # Translation missing (New!)
 
 text_viewer.line_wrap:EN:Line wrap
+text_viewer.line_wrap:RU:Перенос строк
 text_viewer.line_wrap:NB:Tekstbrytning
 text_viewer.line_wrap:TR:Sözcük kaydır
 text_viewer.line_wrap:CA:Ajusta el text
@@ -13373,6 +13375,7 @@ text_viewer.line_wrap:ES:Ajuste de línea
 # Translation missing (New!)
 
 text_viewer.line_numbers:EN:Line numbers
+text_viewer.line_numbers:RU:Нумерация строк
 text_viewer.line_numbers:NB:Linjenummere
 text_viewer.line_numbers:TR:Satır numaraları
 text_viewer.line_numbers:CA:Numera línies
@@ -13407,6 +13410,11 @@ text_viewer.binary_file_warning:TR:Bu ikili dosya gibi görünüyor, metin deği
 text_viewer.binary_file_warning:CA:El fitxer sembla binari
 # Translation missing (KO)
 
+text_viewer.goto_line:EN:Goto line
+text_viewer.goto_line:RU:Перейти к строке
+
+text_viewer.line:EN:Line
+text_viewer.line:RU:Строка
 
 ################
 # Image viewer #
@@ -16134,6 +16142,9 @@ prefs_dialog.themes:BE:Тэмы
 prefs_dialog.themes:NB:Temaer
 prefs_dialog.themes:TR:Temalar
 prefs_dialog.themes:CA:Temes
+
+prefs_dialog.syntax_themes:EN:Editor syntax coloring Theme
+prefs_dialog.syntax_themes:Ru:Тема подсветки синтаксиса в редакторе
 
 prefs_dialog.import_theme:EN:Import theme
 prefs_dialog.import_theme:FR:Importer un thème

@@ -24,12 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -40,8 +35,6 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.io.bom.BOMWriter;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
@@ -73,12 +66,15 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     private JMenuItem findItem;
     private JMenuItem findNextItem;
     private JMenuItem findPreviousItem;
+    private JMenuItem gotoLineItem;
     private JMenuItem toggleLineWrapItem;
     private JMenuItem toggleLineNumbersItem;
 
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
-    
+
+    private TextFilesHistory.FileRecord historyRecord;
+
     public TextEditor() {
     	textViewerDelegate = new TextViewer(textEditorImpl = new TextEditorImpl(true)) {
     		
@@ -113,6 +109,12 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
                 }
     	        findNextItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), TextEditor.this);
     	        findPreviousItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), TextEditor.this);
+                editMenu.addSeparator();
+                if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+                    gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK), TextEditor.this);
+                } else {
+                    gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK), TextEditor.this);
+                }
     	        
     	        viewMenu = new JMenu(Translator.get("text_editor.view"));
     	        
@@ -152,7 +154,24 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
          
     	return menuBar;
     }
-    
+
+    @Override
+    protected void saveStateOnClose() {
+        historyRecord.setLine(textEditorImpl.getTextArea().getLine());
+        historyRecord.setColumn(textEditorImpl.getTextArea().getColumn());
+        historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
+        historyRecord.setEncoding(textViewerDelegate.getEncoding());
+        TextFilesHistory.getInstance().updateRecord(historyRecord);
+        TextFilesHistory.getInstance().save();
+    }
+
+    @Override
+    protected void restoreStateOnStartup() {
+        final TextArea textArea = textEditorImpl.getTextArea();
+        getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
+        textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
+    }
+
 
     ///////////////////////////////
     // FileEditor implementation //
@@ -170,6 +189,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             if(out != null) {
                 try {out.close();}
                 catch(IOException e) {
+                    e.printStackTrace();
                     // Ignored
                 }
             }
@@ -208,7 +228,12 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     public void show(AbstractFile file) throws IOException {
-        FileType type = FileType.getFileType(file);
+        historyRecord = TextFilesHistory.getInstance().get(file);
+        FileType type = historyRecord.getFileType();
+        if (type == null) {
+            type = FileType.getFileType(file);
+            historyRecord.setFileType(type);
+        }
         textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
     	textViewerDelegate.startEditing(file, this);
     }
@@ -236,26 +261,29 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if(source == copyItem)
+        if (source == copyItem) {
         	textEditorImpl.copy();
-        else if(source == cutItem)
+        } else if(source == cutItem) {
         	textEditorImpl.cut();
-        else if(source == pasteItem)
+        } else if(source == pasteItem) {
         	textEditorImpl.paste();
-        else if(source == selectAllItem)
+        } else if(source == selectAllItem) {
         	textEditorImpl.selectAll();
-        else if(source == findItem)
+        } else if(source == findItem) {
         	textEditorImpl.find();
-        else if(source == findNextItem)
+        } else if(source == findNextItem) {
         	textEditorImpl.findNext();
-        else if(source == findPreviousItem)
+        } else if(source == findPreviousItem) {
         	textEditorImpl.findPrevious();
-        else if(source == toggleLineWrapItem)
+        } else if(source == toggleLineWrapItem) {
         	textViewerDelegate.wrapLines(toggleLineWrapItem.isSelected());
-        else if(source == toggleLineNumbersItem)
+        } else if(source == toggleLineNumbersItem) {
         	textViewerDelegate.showLineNumbers(toggleLineNumbersItem.isSelected());
-        else
+        } else if (source == gotoLineItem) {
+            textEditorImpl.gotoLine();
+        } else {
         	super.actionPerformed(e);
+        }
     }
     
     /////////////////////////////////////

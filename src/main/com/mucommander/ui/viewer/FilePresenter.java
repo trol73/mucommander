@@ -151,4 +151,14 @@ public abstract class FilePresenter extends JScrollPane {
      * @return the menu bar that controls the presenter's frame.
      */
     protected abstract JMenuBar getMenuBar();
+
+    /**
+     * Executed before editor/viewer closed to save sate (cursor position, syntax type etc.)
+     */
+    protected abstract void saveStateOnClose();
+
+    /**
+     * Executed before editor/viewer shows to restore saved state
+     */
+    protected abstract void restoreStateOnStartup();
 }
