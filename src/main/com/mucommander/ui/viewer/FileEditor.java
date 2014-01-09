@@ -73,8 +73,9 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             this.saveNeeded = saveNeeded;
 
             // Marks/unmarks the window as dirty under Mac OS X (symbolized by a dot in the window closing icon)
-        	if(OsFamily.MAC_OS_X.isCurrent())
-        		getFrame().getRootPane().putClientProperty("windowModified", saveNeeded?Boolean.TRUE:Boolean.FALSE);
+        	if (OsFamily.MAC_OS_X.isCurrent()) {
+        		getFrame().getRootPane().putClientProperty("windowModified", saveNeeded);
+            }
     	}
     }
     

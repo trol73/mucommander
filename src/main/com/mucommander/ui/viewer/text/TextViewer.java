@@ -35,7 +35,6 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.bom.BOMInputStream;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
@@ -43,8 +42,6 @@ import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
-import com.mucommander.ui.helper.MenuToolkit;
-import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
 
@@ -65,20 +62,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private static boolean lineNumbers = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, MuSnapshot.DEFAULT_LINE_NUMBERS);
 
-    /** Menu items */
-    // Menus //
-    private JMenu editMenu;
-    private JMenu viewMenu;
-    // Items //
-    private JMenuItem copyItem;
-    private JMenuItem selectAllItem;
-    private JMenuItem findItem;
-    private JMenuItem findNextItem;
-    private JMenuItem findPreviousItem;
-    private JMenuItem toggleLineWrapItem;
-    private JMenuItem toggleLineNumbersItem;
-    private JMenuItem gotoLineItem;
-    
+    private TextMenuHelper menuHelper;
+
     private String encoding;
 
     private TextFilesHistory.FileRecord historyRecord;
@@ -209,8 +194,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
     	EncodingMenu encodingMenu = new EncodingMenu(new DialogOwner(getFrame()), encoding);
         encodingMenu.addEncodingListener(this);
 
-        menuBar.add(editMenu);
-        menuBar.add(viewMenu);
+        menuBar.add(menuHelper.getEditMenu());
+        menuBar.add(menuHelper.getViewMenu());
         menuBar.add(encodingMenu, menuBar);
 
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
@@ -219,8 +204,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     @Override
     protected void saveStateOnClose() {
-        historyRecord.setLine(textEditorImpl.getTextArea().getLine());
-        historyRecord.setColumn(textEditorImpl.getTextArea().getColumn());
+        TextArea textArea = textEditorImpl.getTextArea();
+        historyRecord.setLine(textArea.getLine());
+        historyRecord.setColumn(textArea.getColumn());
+        historyRecord.setFileType(textArea.getFileType());
         historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
         historyRecord.setEncoding(encoding);
         TextFilesHistory.getInstance().updateRecord(historyRecord);
@@ -249,6 +236,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
     }
 
     protected void initMenuBarItems() {
+        menuHelper = new TextMenuHelper(textEditorImpl);
+        menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
+/*
     	// Edit menu
     	editMenu = new JMenu(Translator.get("text_viewer.edit"));
     	MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
@@ -279,6 +269,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     	toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
     	toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_viewer.line_numbers"), menuItemMnemonicHelper, null, this);
     	toggleLineNumbersItem.setSelected(getRowHeader().getView() != null);
+*/
     }
 
     ///////////////////////////////
@@ -288,11 +279,14 @@ public class TextViewer extends FileViewer implements EncodingListener {
     @Override
     public void show(AbstractFile file) throws IOException {
         startEditing(file, null);
-        FileType type = FileType.getFileType(file);
+        FileType type = historyRecord.getFileType();
+        if (type == null) {
+            type = FileType.getFileType(file);
+            historyRecord.setFileType(type);
+        }
+        menuHelper.setSyntax(type);
         restoreStateOnStartup();
-        textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
-
-
+        textEditorImpl.getTextArea().setFileType(type);
     }
     
     ///////////////////////////////////
@@ -300,27 +294,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
     ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-
-        if (source == copyItem) {
-        	textEditorImpl.copy();
-        } else if(source == selectAllItem) {
-        	textEditorImpl.selectAll();
-        } else if(source == findItem) {
-        	textEditorImpl.find();
-        } else if(source == findNextItem) {
-        	textEditorImpl.findNext();
-        } else if(source == findPreviousItem) {
-        	textEditorImpl.findPrevious();
-        } else if(source == toggleLineWrapItem) {
-        	setLineWrap(toggleLineWrapItem.isSelected());
-        } else if(source == toggleLineNumbersItem) {
-        	showLineNumbers(toggleLineNumbersItem.isSelected());
-        } else if(source == gotoLineItem) {
-            textEditorImpl.gotoLine();
-        } else {
-        	super.actionPerformed(e);
+        if (menuHelper.performAction(e, this)) {
+            return;
         }
+      	super.actionPerformed(e);
     }
 
     /////////////////////////////////////

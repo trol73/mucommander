@@ -35,7 +35,7 @@ public enum FileType {
     CLOJURE("Clojure", SyntaxConstants.SYNTAX_STYLE_CLOJURE, "*.clj"),
     CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc"),
     CSHARP("C#", SyntaxConstants.SYNTAX_STYLE_CSHARP, "*.cs"),
-    CSS("Css", SyntaxConstants.SYNTAX_STYLE_CSS, "*.css"),
+    CSS("CSS", SyntaxConstants.SYNTAX_STYLE_CSS, "*.css"),
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
     DTD("DTD", SyntaxConstants.SYNTAX_STYLE_DTD, "*.dtd"),
     FORTRAN("Fortran", SyntaxConstants.SYNTAX_STYLE_FORTRAN, "*.f,*.for,*.ftn,*.i"),
@@ -126,6 +126,25 @@ public enum FileType {
             result[i] = new WildcardFileFilter(masks[i]);
         }
         return result;
+    }
+
+    public static FileType getByName(String name) {
+        for (FileType fileType : FileType.values()) {
+            if (fileType.getName().equals(name)) {
+                return fileType;
+            }
+        }
+        return null;
+    }
+
+
+    public static FileType getByContentType(String contentType) {
+        for (FileType fileType : FileType.values()) {
+            if (fileType.getContentType().equals(contentType)) {
+                return fileType;
+            }
+        }
+        return null;
     }
 
 }

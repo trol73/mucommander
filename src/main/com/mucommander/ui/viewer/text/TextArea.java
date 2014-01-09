@@ -56,6 +56,15 @@ public class TextArea extends RSyntaxTextArea {
         return map.getElementIndex(dot) + 1;
     }
 
+    public void setFileType(FileType fileType) {
+        setSyntaxEditingStyle(fileType.getContentType());
+    }
+
+    public FileType getFileType() {
+        return FileType.getByContentType(getSyntaxEditingStyle());
+    }
+
+
     /**
      *
      * @return current cursor position in line (started from 1)

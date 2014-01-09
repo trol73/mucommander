@@ -13753,6 +13753,9 @@ text_editor.line_wrap:EN:$[text_viewer.line_wrap]
 
 text_editor.line_numbers:EN:$[text_viewer.line_numbers]
 
+text_editor.syntax:EN:Syntax
+text_editor.syntax:RU:Синтаксис
+
 ####################
 # Shortcuts dialog #
 ####################

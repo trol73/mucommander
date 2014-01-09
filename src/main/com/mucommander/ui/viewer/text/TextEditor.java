@@ -19,6 +19,7 @@
 package com.mucommander.ui.viewer.text;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.mucommander.commons.runtime.OsFamily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +40,6 @@ import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
-import com.mucommander.ui.helper.MenuToolkit;
-import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.viewer.FileEditor;
 import com.mucommander.ui.viewer.FileFrame;
 
@@ -54,22 +52,8 @@ import com.mucommander.ui.viewer.FileFrame;
 class TextEditor extends FileEditor implements DocumentListener, EncodingListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextEditor.class);
 
-    /** Menu bar */
-    // Menus //
-    private JMenu editMenu;
-    private JMenu viewMenu;
-    // Items //
-    private JMenuItem copyItem;
-    private JMenuItem cutItem;
-    private JMenuItem pasteItem;
-    private JMenuItem selectAllItem;
-    private JMenuItem findItem;
-    private JMenuItem findNextItem;
-    private JMenuItem findPreviousItem;
-    private JMenuItem gotoLineItem;
-    private JMenuItem toggleLineWrapItem;
-    private JMenuItem toggleLineNumbersItem;
 
+    private TextMenuHelper menuHelper;
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
 
@@ -90,38 +74,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     		
     		@Override
     		protected void initMenuBarItems() {
-    			// Edit menu
-    	        editMenu = new JMenu(Translator.get("text_editor.edit"));
-    	        MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
-
-    	        copyItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.copy"), menuItemMnemonicHelper, null, TextEditor.this);
-
-    	        cutItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.cut"), menuItemMnemonicHelper, null, TextEditor.this);
-    	        pasteItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.paste"), menuItemMnemonicHelper, null, TextEditor.this);
-
-    	        selectAllItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.select_all"), menuItemMnemonicHelper, null, TextEditor.this);
-    	        editMenu.addSeparator();
-
-                if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                    findItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK), TextEditor.this);
-                } else {
-                    findItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_DOWN_MASK), TextEditor.this);
-                }
-    	        findNextItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), TextEditor.this);
-    	        findPreviousItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), TextEditor.this);
-                editMenu.addSeparator();
-                if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                    gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK), TextEditor.this);
-                } else {
-                    gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK), TextEditor.this);
-                }
-    	        
-    	        viewMenu = new JMenu(Translator.get("text_editor.view"));
-    	        
-    	        toggleLineWrapItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_wrap"), menuItemMnemonicHelper, null, TextEditor.this);
-    	        toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
-    	        toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_numbers"), menuItemMnemonicHelper, null, TextEditor.this);
-    	        toggleLineNumbersItem.setSelected(TextEditor.this.getRowHeader().getView() != null);
+                menuHelper = new TextMenuHelper(textEditorImpl);
+                menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
     		}
     	};
     	
@@ -145,22 +99,25 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     	JMenuBar menuBar = super.getMenuBar();
 
     	// Encoding menu
-         EncodingMenu encodingMenu = new EncodingMenu(new DialogOwner(getFrame()), textViewerDelegate.getEncoding());
-         encodingMenu.addEncodingListener(this);
+        EncodingMenu encodingMenu = new EncodingMenu(new DialogOwner(getFrame()), textViewerDelegate.getEncoding());
+        encodingMenu.addEncodingListener(this);
 
-         menuBar.add(editMenu);
-         menuBar.add(viewMenu);
-         menuBar.add(encodingMenu);
+        menuBar.add(menuHelper.getEditMenu());
+        menuBar.add(menuHelper.getViewMenu());
+        menuBar.add(encodingMenu);
          
     	return menuBar;
     }
 
     @Override
     protected void saveStateOnClose() {
-        historyRecord.setLine(textEditorImpl.getTextArea().getLine());
-        historyRecord.setColumn(textEditorImpl.getTextArea().getColumn());
+        TextArea textArea = textEditorImpl.getTextArea();
+        historyRecord.setLine(textArea.getLine());
+        historyRecord.setColumn(textArea.getColumn());
+        historyRecord.setFileType(textArea.getFileType());
         historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
         historyRecord.setEncoding(textViewerDelegate.getEncoding());
+
         TextFilesHistory.getInstance().updateRecord(historyRecord);
         TextFilesHistory.getInstance().save();
     }
@@ -217,7 +174,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     	
     	frame.setFullScreen(TextViewer.isFullScreen());
 
-    	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
+    	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
     	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
     		public void actionPerformed(ActionEvent e){
     			TextViewer.setFullScreen(!frame.isFullScreen());
@@ -234,7 +191,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
-        textEditorImpl.getTextArea().setSyntaxEditingStyle(type.getContentType());
+        menuHelper.setSyntax(type);
+        textEditorImpl.getTextArea().setFileType(type);
     	textViewerDelegate.startEditing(file, this);
     }
     
@@ -243,7 +201,10 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     /////////////////////////////////////
 	
     public void changedUpdate(DocumentEvent e) {
-        setSaveNeeded(true);
+        // ignore change event if it was caused by syntax change
+        if (!menuHelper.checkWaitChangeSyntaxEvent()) {
+            setSaveNeeded(true);
+        }
     }
 	
     public void insertUpdate(DocumentEvent e) {
@@ -259,31 +220,10 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-
-        if (source == copyItem) {
-        	textEditorImpl.copy();
-        } else if(source == cutItem) {
-        	textEditorImpl.cut();
-        } else if(source == pasteItem) {
-        	textEditorImpl.paste();
-        } else if(source == selectAllItem) {
-        	textEditorImpl.selectAll();
-        } else if(source == findItem) {
-        	textEditorImpl.find();
-        } else if(source == findNextItem) {
-        	textEditorImpl.findNext();
-        } else if(source == findPreviousItem) {
-        	textEditorImpl.findPrevious();
-        } else if(source == toggleLineWrapItem) {
-        	textViewerDelegate.wrapLines(toggleLineWrapItem.isSelected());
-        } else if(source == toggleLineNumbersItem) {
-        	textViewerDelegate.showLineNumbers(toggleLineNumbersItem.isSelected());
-        } else if (source == gotoLineItem) {
-            textEditorImpl.gotoLine();
-        } else {
-        	super.actionPerformed(e);
+        if (menuHelper.performAction(e, textViewerDelegate)) {
+            return;
         }
+        super.actionPerformed(e);
     }
     
     /////////////////////////////////////
