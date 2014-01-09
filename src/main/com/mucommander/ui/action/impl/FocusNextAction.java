@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategories;
 import com.mucommander.ui.action.ActionCategory;
@@ -100,6 +101,12 @@ public class FocusNextAction extends MuAction {
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.META_DOWN_MASK);
+            }
+        }
     }
 }

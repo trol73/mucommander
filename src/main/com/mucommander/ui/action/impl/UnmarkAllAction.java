@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -57,6 +58,12 @@ public class UnmarkAllAction extends MarkAllAction {
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.META_DOWN_MASK);
+            }
+        }
     }
 }

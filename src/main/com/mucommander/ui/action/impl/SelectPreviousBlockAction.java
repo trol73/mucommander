@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.swing.KeyStroke;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategories;
 import com.mucommander.ui.action.ActionCategory;
@@ -75,7 +76,11 @@ public class SelectPreviousBlockAction extends SelectBackwardAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK);
+            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.META_DOWN_MASK);
+            }
         }
 
         public KeyStroke getDefaultAltKeyStroke() {
