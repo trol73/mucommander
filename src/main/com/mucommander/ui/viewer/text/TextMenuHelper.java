@@ -17,7 +17,7 @@ import java.awt.event.KeyEvent;
  * Created by trol on 09/01/14.
  */
 public class TextMenuHelper {
-    private TextEditorImpl textEditorImpl;
+    private final TextEditorImpl textEditorImpl;
 
     /** Menu bar */
     // Menus //
@@ -147,7 +147,7 @@ public class TextMenuHelper {
 
     /**
      * Check if last editor change fired by syntax change event ant will be ignored in document listener
-     * @return
+     * @return true if if last editor change fired by syntax change event ant will be ignored in document listener
      */
     public boolean checkWaitChangeSyntaxEvent() {
         boolean result = waitChangeSyntaxEvent;

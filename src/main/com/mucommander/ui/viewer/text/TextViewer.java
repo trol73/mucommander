@@ -122,7 +122,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 	}
 
     void startEditing(AbstractFile file, DocumentListener documentListener) throws IOException {
-        historyRecord = TextFilesHistory.getInstance().get(file);
+        initHistoryRecord(file);
         // Auto-detect encoding
 
         // Get a RandomAccessInputStream on the file if possible, if not get a simple InputStream
@@ -139,7 +139,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             if(in==null)
                 in = file.getInputStream();
 
-            String encoding = EncodingDetector.detectEncoding(in);
+            String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
 
             if(in instanceof RandomAccessInputStream) {
                 // Seek to the beginning of the file and reuse the stream
@@ -168,6 +168,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             }
         }
     }
+
 
     void loadDocument(InputStream in, final String encoding, DocumentListener documentListener) throws IOException {
         // If the encoding is UTF-something, wrap the stream in a BOMInputStream to IMAGE_FILTER out the byte-order mark
@@ -204,12 +205,13 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     @Override
     protected void saveStateOnClose() {
-        TextArea textArea = textEditorImpl.getTextArea();
+        final TextArea textArea = textEditorImpl.getTextArea();
         historyRecord.setLine(textArea.getLine());
         historyRecord.setColumn(textArea.getColumn());
         historyRecord.setFileType(textArea.getFileType());
         historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
         historyRecord.setEncoding(encoding);
+
         TextFilesHistory.getInstance().updateRecord(historyRecord);
         TextFilesHistory.getInstance().save();
     }
@@ -238,38 +240,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
     protected void initMenuBarItems() {
         menuHelper = new TextMenuHelper(textEditorImpl);
         menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
-/*
-    	// Edit menu
-    	editMenu = new JMenu(Translator.get("text_viewer.edit"));
-    	MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
-
-    	copyItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.copy"), menuItemMnemonicHelper, null, this);
-
-    	selectAllItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.select_all"), menuItemMnemonicHelper, null, this);
-    	editMenu.addSeparator();
-
-        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-    	    findItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK), this);
-        } else {
-            findItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_DOWN_MASK), this);
-        }
-    	findNextItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
-    	findPreviousItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
-        editMenu.addSeparator();
-        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-            gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK), this);
-        } else {
-            gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK), this);
-        }
-    	
-    	// View menu
-    	viewMenu = new JMenu(Translator.get("text_viewer.view"));
-
-    	toggleLineWrapItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_viewer.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), this);
-    	toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
-    	toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_viewer.line_numbers"), menuItemMnemonicHelper, null, this);
-    	toggleLineNumbersItem.setSelected(getRowHeader().getView() != null);
-*/
     }
 
     ///////////////////////////////
@@ -305,13 +275,33 @@ public class TextViewer extends FileViewer implements EncodingListener {
     /////////////////////////////////////
 
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
-    	try {
+        // Store caret and scrollbar position before change
+        TextArea textArea = textEditorImpl.getTextArea();
+        int line = textArea.getLine();
+        int column = textArea.getColumn();
+        int horizontalPos = getHorizontalScrollBar().getValue();
+        int verticalPos = getVerticalScrollBar().getValue();
+
+        try {
     		// Reload the file using the new encoding
     		// Note: loadDocument closes the InputStream
     		loadDocument(getCurrentFile().getInputStream(), newEncoding, null);
-    	}
-    	catch(IOException ex) {
+
+            // Restore caret and scrollbar
+            textArea.gotoLine(line, column);
+            getViewport().setViewPosition(new java.awt.Point(horizontalPos, verticalPos));
+    	} catch(IOException ex) {
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}   
+    }
+
+    public TextFilesHistory.FileRecord initHistoryRecord(AbstractFile file) {
+        historyRecord = TextFilesHistory.getInstance().get(file);
+        return historyRecord;
+    }
+
+
+    public TextFilesHistory.FileRecord getHistoryRecord() {
+        return historyRecord;
     }
 }

@@ -57,7 +57,6 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
 
-    private TextFilesHistory.FileRecord historyRecord;
 
     public TextEditor() {
     	textViewerDelegate = new TextViewer(textEditorImpl = new TextEditorImpl(true)) {
@@ -111,20 +110,13 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     protected void saveStateOnClose() {
-        TextArea textArea = textEditorImpl.getTextArea();
-        historyRecord.setLine(textArea.getLine());
-        historyRecord.setColumn(textArea.getColumn());
-        historyRecord.setFileType(textArea.getFileType());
-        historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
-        historyRecord.setEncoding(textViewerDelegate.getEncoding());
-
-        TextFilesHistory.getInstance().updateRecord(historyRecord);
-        TextFilesHistory.getInstance().save();
+        textViewerDelegate.saveStateOnClose();
     }
 
     @Override
     protected void restoreStateOnStartup() {
         final TextArea textArea = textEditorImpl.getTextArea();
+        final TextFilesHistory.FileRecord historyRecord = textViewerDelegate.getHistoryRecord();
         getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
         textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
     }
@@ -185,7 +177,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     public void show(AbstractFile file) throws IOException {
-        historyRecord = TextFilesHistory.getInstance().get(file);
+        TextFilesHistory.FileRecord historyRecord = textViewerDelegate.initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {
             type = FileType.getFileType(file);
@@ -234,12 +226,24 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     	if(!askSave())
     		return;         // Abort if the file could not be saved
 
-    	try {
+        // Store caret and scrollbar position before change
+        TextArea textArea = textEditorImpl.getTextArea();
+        int line = textArea.getLine();
+        int column = textArea.getColumn();
+        int horizontalPos = getHorizontalScrollBar().getValue();
+        int verticalPos = getVerticalScrollBar().getValue();
+
+
+        try {
     		// Reload the file using the new encoding
     		// Note: loadDocument closes the InputStream
     		loadDocument(getCurrentFile().getInputStream(), newEncoding, null);
-    	}
-    	catch(IOException ex) {
+
+            // Restore caret and scrollbar
+            textArea.gotoLine(line, column);
+            getViewport().setViewPosition(new java.awt.Point(horizontalPos, verticalPos));
+            setSaveNeeded(false);
+        } catch(IOException ex) {
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}
     }
