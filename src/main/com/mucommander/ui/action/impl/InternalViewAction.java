@@ -32,6 +32,8 @@ import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.FileTableModel;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 
 /**
@@ -60,7 +62,13 @@ public class InternalViewAction extends AbstractViewerAction {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     protected void performInternalAction(AbstractFile file) {
-        ViewerRegistrar.createViewerFrame(mainFrame, file, getIcon().getImage());
+        if (file.isDirectory()) {
+            FileTable activeTable = mainFrame.getActiveTable();
+            FileTableModel fileTableModel = (FileTableModel)activeTable.getModel();
+            fileTableModel.startDirectorySizeCalculation(activeTable, file);
+        } else {
+            ViewerRegistrar.createViewerFrame(mainFrame, file, getIcon().getImage());
+        }
     }
 
     @Override

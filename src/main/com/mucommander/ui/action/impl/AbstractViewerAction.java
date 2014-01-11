@@ -52,10 +52,11 @@ abstract class AbstractViewerAction extends SelectedFileAction {
         super(mainFrame, properties);
 
         // Enable this action only if the currently selected file is not a directory and can be read.
-        setSelectedFileFilter(new AndFileFilter(
-            new FileOperationFilter(FileOperation.READ_FILE),
-            new AttributeFileFilter(FileAttribute.DIRECTORY, true)
-        ));
+//        setSelectedFileFilter(new AndFileFilter(
+//            new FileOperationFilter(FileOperation.READ_FILE),
+//            new AttributeFileFilter(FileAttribute.DIRECTORY, true)
+//        ));
+        setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));
     }
 
 
@@ -95,8 +96,9 @@ abstract class AbstractViewerAction extends SelectedFileAction {
                 }
             }
             // If we're not using a custom editor, this action behaves exactly like its parent.
-            else
+            else {
                 performInternalAction(file);
+            }
         }
     }
 

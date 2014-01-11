@@ -50,6 +50,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.mucommander.text.SizeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1062,13 +1063,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         int                   remainingWidth;
         int                   columnWidth;
         int                   rowCount;
-        FontMetrics           fm;
         String                val;
-        int                   dirStringWidth;
         int                   stringWidth;
 
-        fm             = getFontMetrics(FileTableCellRenderer.getCellFont());
-        dirStringWidth = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
+        final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
+        final int dirStringWidth1 = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
+        final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024*1024*555, FileTableModel.getSizeFormat())); // some big value with big string-length
+        final int dirStringWidth = Math.max(dirStringWidth1, dirStringWidth2);
+
         remainingWidth = getSize().width - RESERVED_NAME_COLUMN_WIDTH;
         columns        = respectSize ? new Enumerator<TableColumn>(getColumnModel().getColumns()) : getFileTableColumnModel().getAllColumns();
         nameColumn     = null;
@@ -1088,10 +1090,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     rowCount = getModel().getRowCount();
                     for(int rowNum = 0; rowNum < rowCount; rowNum++) {
                         val = (String)getModel().getValueAt(rowNum, column.getModelIndex());
-                        stringWidth = val==null?0
-                                :c==Column.SIZE && val.equals(FileTableModel.DIRECTORY_SIZE_STRING)?dirStringWidth
-                                :fm.stringWidth(val);
-
+                        boolean isDirectorySize = c == Column.SIZE && val.equals(FileTableModel.DIRECTORY_SIZE_STRING);
+                        stringWidth = val == null ? 0 : isDirectorySize ? dirStringWidth : fm.stringWidth(val);
                         columnWidth = Math.max(columnWidth, stringWidth);
                     }
                 }
@@ -1910,4 +1910,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             }
         }
     }
+
+    public void updateSelectedFilesStatusbar() {
+        mainFrame.getStatusBar().updateSelectedFilesInfo();
+    }
+
 }

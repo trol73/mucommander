@@ -209,6 +209,7 @@ public class SizeFormat {
 
 
     public static String getUnitString(int unit, boolean speedUnit) {
+// TODO use array
         String unitString;
 
         switch(unit) {
@@ -243,7 +244,7 @@ public class SizeFormat {
      */
     public static long getUnitBytes(int unit) {
         long bytes;
-
+// TODO use array
         switch(unit) {
             case BYTE_UNIT:
                 bytes = 1;
