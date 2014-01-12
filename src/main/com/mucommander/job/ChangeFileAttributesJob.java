@@ -125,6 +125,10 @@ public class ChangeFileAttributesJob extends FileJob {
     // This job modifies the FileSet's base folder and potentially its subfolders
     @Override
     protected boolean hasFolderChanged(AbstractFile folder) {
-        return getBaseSourceFolder().isParentOf(folder);
+        AbstractFile baseFolder = getBaseSourceFolder();
+        if (baseFolder == null) {
+            baseFolder = files.get(0);
+        }
+        return baseFolder.isParentOf(folder);
     }
 }

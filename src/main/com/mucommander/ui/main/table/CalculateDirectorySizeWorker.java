@@ -61,7 +61,7 @@ public class CalculateDirectorySizeWorker extends SwingWorker<Long, Long> {
             lastRefreshTime = tm;
             publish(size);
         }
-        if (path.isSymlink()) {
+        if (path.isSymlink() && path != this.path) {
             return;
         }
         AbstractFile[] childs;
