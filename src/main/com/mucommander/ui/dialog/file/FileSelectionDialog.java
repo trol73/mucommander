@@ -23,13 +23,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.PatternSyntaxException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -40,13 +38,8 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
-import com.mucommander.commons.file.filter.ContainsFilenameFilter;
-import com.mucommander.commons.file.filter.EndsWithFilenameFilter;
-import com.mucommander.commons.file.filter.EqualsFilenameFilter;
 import com.mucommander.commons.file.filter.FileFilter;
-import com.mucommander.commons.file.filter.PassThroughFileFilter;
-import com.mucommander.commons.file.filter.RegexpFilenameFilter;
-import com.mucommander.commons.file.filter.StartsWithFilenameFilter;
+import com.mucommander.commons.file.filter.WildcardFileFilter;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -62,18 +55,10 @@ import com.mucommander.ui.main.table.FileTable;
  */
 public class FileSelectionDialog extends FocusDialog implements ActionListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileSelectionDialog.class);
-	
-    /* Filename comparison criteria */		
-    private final static int CONTAINS    = 0;
-    private final static int STARTS_WITH = 1;
-    private final static int ENDS_WIDTH  = 2;
-    private final static int IS          = 3;
-    private final static int REGEXP      = 4;
 
     /** Add to or remove from selection ? */	 
     private boolean addToSelection;
 
-    private JComboBox<String> comparisonComboBox;
     private JTextField selectionField;
 
     private JCheckBox caseSensitiveCheckBox;
@@ -94,12 +79,6 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
      * <br>Note: this field is static so the value is kept after the dialog is OKed.
      */ 
     private static boolean includeFolders = false;
-	
-    /** 
-     * Filename comparison: contains, starts with, ends with, is ?
-     * <br>Note: this field is static so the value is kept after the dialog is OKed.
-     */ 
-    private static int comparison = CONTAINS;
 
     /** 
      * Keyword which has last been typed to mark or unmark files.
@@ -133,15 +112,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
 
         JPanel tempPanel = new JPanel();
         tempPanel.setLayout(new BoxLayout(tempPanel, BoxLayout.X_AXIS));
-        comparisonComboBox = new JComboBox<String>();
-        comparisonComboBox.addItem(Translator.get("file_selection_dialog.contains"));
-        comparisonComboBox.addItem(Translator.get("file_selection_dialog.starts_with"));
-        comparisonComboBox.addItem(Translator.get("file_selection_dialog.ends_with"));
-        comparisonComboBox.addItem(Translator.get("file_selection_dialog.is"));
-        comparisonComboBox.addItem(Translator.get("file_selection_dialog.matches_regexp"));
-        comparisonComboBox.setSelectedIndex(comparison);
-        tempPanel.add(comparisonComboBox);
-				
+
         // selectionField is initialized with last textfield's value (if any)
         selectionField = new JTextField(keywordString);
         selectionField.addActionListener(this);
@@ -189,48 +160,11 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
             // Save values for next time this dialog is invoked
             caseSensitive = caseSensitiveCheckBox.isSelected();
             includeFolders = includeFoldersCheckBox.isSelected();
-            comparison = comparisonComboBox.getSelectedIndex();
 
-
-            String testString;
             keywordString = selectionField.getText();
-            if(comparison!=REGEXP) {
-                // Remove '*' characters
-                testString = keywordString.replace("*", "");
-            }
-            else {
-                testString = keywordString;
-            }
 
             // Instantiate the main file IMAGE_FILTER
-            FileFilter filter;
-            switch (comparison) {
-                case CONTAINS:
-                    filter = new ContainsFilenameFilter(testString, caseSensitive);
-                    break;
-                case STARTS_WITH:
-                    filter = new StartsWithFilenameFilter(testString, caseSensitive);
-                    break;
-                case ENDS_WIDTH:
-                    filter = new EndsWithFilenameFilter(testString, caseSensitive);
-                    break;
-                case IS:
-                    filter = new EqualsFilenameFilter(testString, caseSensitive);
-                    break;
-                case REGEXP:
-                default:
-                    try {
-                        filter = new RegexpFilenameFilter(testString, caseSensitive);
-                    }
-                    catch(PatternSyntaxException ex) {
-                        // Todo: let the user know the regexp is invalid
-                        LOGGER.debug("Invalid regexp", ex);
-
-                        // This IMAGE_FILTER does match any file
-                        filter = new PassThroughFileFilter(false);
-                    }
-                    break;
-            }
+            FileFilter filter = new WildcardFileFilter(keywordString, caseSensitive);
 
             // If folders are excluded, add a regular file IMAGE_FILTER and chain it with an AndFileFilter
             if(!includeFolders) {
