@@ -53,7 +53,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextEditor.class);
 
 
-    private TextMenuHelper menuHelper;
+    //private TextMenuHelper menuHelper;
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
 
@@ -73,7 +73,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     		
     		@Override
     		protected void initMenuBarItems() {
-                menuHelper = new TextMenuHelper(textEditorImpl);
+                menuHelper = new TextMenuHelper(textEditorImpl, true);
                 menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
     		}
     	};
@@ -101,16 +101,17 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         EncodingMenu encodingMenu = new EncodingMenu(new DialogOwner(getFrame()), textViewerDelegate.getEncoding());
         encodingMenu.addEncodingListener(this);
 
-        menuBar.add(menuHelper.getEditMenu());
-        menuBar.add(menuHelper.getViewMenu());
+        menuBar.add(textViewerDelegate.menuHelper.getEditMenu());
+        menuBar.add(textViewerDelegate.menuHelper.getViewMenu());
         menuBar.add(encodingMenu);
-         
+
+        textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
     	return menuBar;
     }
 
     @Override
     protected void saveStateOnClose() {
-        textViewerDelegate.saveStateOnClose();
+        textViewerDelegate.saveState(getVerticalScrollBar());
     }
 
     @Override
@@ -177,13 +178,16 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     public void show(AbstractFile file) throws IOException {
+        textEditorImpl.getTextArea().discardAllEdits();
+        textViewerDelegate.menuHelper.updateEditActions();
+
         TextFilesHistory.FileRecord historyRecord = textViewerDelegate.initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
-        menuHelper.setSyntax(type);
+        textViewerDelegate.menuHelper.setSyntax(type);
         textEditorImpl.getTextArea().setFileType(type);
     	textViewerDelegate.startEditing(file, this);
     }
@@ -194,7 +198,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 	
     public void changedUpdate(DocumentEvent e) {
         // ignore change event if it was caused by syntax change
-        if (!menuHelper.checkWaitChangeSyntaxEvent()) {
+        if (!textViewerDelegate.menuHelper.checkWaitChangeSyntaxEvent()) {
             setSaveNeeded(true);
         }
     }
@@ -212,7 +216,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        if (menuHelper.performAction(e, textViewerDelegate)) {
+        if (textViewerDelegate.menuHelper.performAction(e, textViewerDelegate)) {
             return;
         }
         super.actionPerformed(e);

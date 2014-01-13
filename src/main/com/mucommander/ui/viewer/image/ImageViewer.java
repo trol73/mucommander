@@ -234,23 +234,19 @@ class ImageViewer extends FileViewer implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if(source==zoomInItem && zoomInItem.isEnabled()) {
+        if (source==zoomInItem && zoomInItem.isEnabled()) {
             zoomFactor = zoomFactor*2;
             zoom(zoomFactor);
             updateFrame();
-        }
-        else if(source==zoomOutItem && zoomOutItem.isEnabled()) {
+        } else if(source==zoomOutItem && zoomOutItem.isEnabled()) {
             zoomFactor = zoomFactor/2;
             zoom(zoomFactor);
             updateFrame();
-        }
-        else if (source == nextImageItem && nextImageItem.isEnabled()) {
+        } else if (source == nextImageItem && nextImageItem.isEnabled()) {
             gotoNextFile();
-        }
-        else if (source == prevImageItem && prevImageItem.isEnabled()) {
+        } else if (source == prevImageItem && prevImageItem.isEnabled()) {
             gotoPrevFile();
-        }
-        else {
+        } else {
         	super.actionPerformed(e);
         	return;
         }

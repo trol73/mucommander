@@ -62,7 +62,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private static boolean lineNumbers = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, MuSnapshot.DEFAULT_LINE_NUMBERS);
 
-    private TextMenuHelper menuHelper;
+    protected TextMenuHelper menuHelper;
 
     private String encoding;
 
@@ -203,17 +203,20 @@ public class TextViewer extends FileViewer implements EncodingListener {
         return menuBar;
     }
 
-    @Override
-    protected void saveStateOnClose() {
+    public void saveState(JScrollBar scrollBar) {
         final TextArea textArea = textEditorImpl.getTextArea();
         historyRecord.setLine(textArea.getLine());
         historyRecord.setColumn(textArea.getColumn());
         historyRecord.setFileType(textArea.getFileType());
-        historyRecord.setScrollPosition(getVerticalScrollBar().getValue());
+        historyRecord.setScrollPosition(scrollBar.getValue());
         historyRecord.setEncoding(encoding);
-
         TextFilesHistory.getInstance().updateRecord(historyRecord);
         TextFilesHistory.getInstance().save();
+    }
+
+    @Override
+    protected void saveStateOnClose() {
+        saveState(getVerticalScrollBar());
     }
 
     @Override
@@ -238,7 +241,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     }
 
     protected void initMenuBarItems() {
-        menuHelper = new TextMenuHelper(textEditorImpl);
+        menuHelper = new TextMenuHelper(textEditorImpl, false);
         menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
     }
 

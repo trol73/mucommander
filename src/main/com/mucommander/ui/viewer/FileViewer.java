@@ -24,6 +24,7 @@ import com.mucommander.ui.helper.MnemonicHelper;
 
 import javax.swing.*;
 import java.awt.Component;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -91,13 +92,13 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      * @param comp
      * @param menuBar
      */
-    protected void setMainKeyListener(Component comp, JMenuBar menuBar) {
+    public void setMainKeyListener(Component comp, JMenuBar menuBar) {
         fillMenuKeyStrokes(menuBar);
         comp.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                KeyStroke keyStrole = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
-                JMenuItem menuItem = menuKeyStrokes.get(keyStrole);
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+                JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
                 if (menuItem != null) {
                     actionPerformed(new ActionEvent(menuItem, 0, null));
                     e.consume();

@@ -39,7 +39,7 @@ public enum FileType {
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
     DTD("DTD", SyntaxConstants.SYNTAX_STYLE_DTD, "*.dtd"),
     FORTRAN("Fortran", SyntaxConstants.SYNTAX_STYLE_FORTRAN, "*.f,*.for,*.ftn,*.i"),
-    GROOVY("Groovy", SyntaxConstants.SYNTAX_STYLE_GROOVY,"*.groovy,*.gvy,*.gy,*.gsh"),
+    GROOVY("Groovy", SyntaxConstants.SYNTAX_STYLE_GROOVY,"*.groovy,*.gvy,*.gy,*.gsh,*.gradle"),
     HTACCESS("htaccess", SyntaxConstants.SYNTAX_STYLE_HTACCESS, ".htaccess"),
     HTML("HTML", SyntaxConstants.SYNTAX_STYLE_HTML, "*.html,*.htm"),
     JAVA("Java", SyntaxConstants.SYNTAX_STYLE_JAVA, "*.java"),

@@ -211,6 +211,14 @@ class TextEditorImpl implements ThemeListener {
 		textArea.selectAll();
 	}
 
+    void undo() {
+        textArea.undoLastAction();
+    }
+
+    void redo() {
+        textArea.redoLastAction();
+    }
+
 	void requestFocus() {
 		textArea.requestFocus();
 	}

@@ -13735,6 +13735,12 @@ text_editor.paste:NB:Lim inn
 text_editor.paste:TR:Yapıştır
 text_editor.paste:CA:Enganxa
 
+text_editor.undo:EN:Undo
+text_editor.undo:RU:Отменить изменение
+
+text_editor.redo:EN:Redo
+text_editor.redo:RU:Вернуть изменение
+
 text_editor.edit:EN:$[text_viewer.edit]
 
 text_editor.copy:EN:$[text_viewer.copy]
