@@ -11064,7 +11064,7 @@ file_selection_dialog.unmark:NB:Fjern markering
 file_selection_dialog.unmark:TR:İşareti kaldır
 file_selection_dialog.unmark:CA:Desmarca
 
-file_selection_dialog.mark_description:EN:Mark files whose filename
+file_selection_dialog.mark_description:EN:Mark files
 file_selection_dialog.mark_description:FR:Marquer les fichiers dont le nom
 file_selection_dialog.mark_description:DE:Markiere Dateien deren Name
 file_selection_dialog.mark_description:ES:Marcar ficheros cuyo nombre
@@ -11091,7 +11091,7 @@ file_selection_dialog.mark_description:NB:Marker filer hvis navn
 file_selection_dialog.mark_description:TR:Bu isimdeki dosyaları işaretle
 file_selection_dialog.mark_description:CA:Marca fitxers amb el nom
 
-file_selection_dialog.unmark_description:EN:Unmark files whose filename
+file_selection_dialog.unmark_description:EN:Unmark files
 file_selection_dialog.unmark_description:FR:Dé-marquer les fichiers dont le nom
 file_selection_dialog.unmark_description:DE:Demarkiere Dateien deren Name
 file_selection_dialog.unmark_description:ES:Desmarcar ficheros cuyo nombre
