@@ -43,6 +43,8 @@ public class ViewerRegistrar {
     private final static java.util.List<ViewerFactory> viewerFactories = new Vector<ViewerFactory>();
 
     static {
+        registerFileViewer(new com.mucommander.ui.viewer.pdf.PdfFactory());
+
         registerFileViewer(new com.mucommander.ui.viewer.image.ImageFactory());
         // The TextFactory must be the last FileViewer to be registered (otherwise it would open other factories file types)
         registerFileViewer(new com.mucommander.ui.viewer.text.TextFactory());
