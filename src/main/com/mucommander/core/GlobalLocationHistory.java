@@ -67,7 +67,7 @@ public class GlobalLocationHistory extends LocationAdapter {
 	private GlobalLocationHistory() {
 		Configuration snapshot = MuConfigurations.getSnapshot();
 
-		// Restore the global history from last run
+		// Restore the global history from last init
 		int nbLocations = snapshot.getIntegerVariable(MuSnapshot.getRecentLocationsCountVariable());
     	for (int i=0; i<nbLocations; ++i) {
     		String filePath = snapshot.getVariable(MuSnapshot.getRecentLocationVariable(i));

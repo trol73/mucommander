@@ -51,7 +51,7 @@ public class ShellComboBox extends AutocompletedEditableCombobox<String> impleme
     // -----------------------------------------------------------------------
     /** Input field used to type in commands. */
     private JTextField input;
-    /** Where to run commands. */
+    /** Where to init commands. */
     private RunDialog  parent;
 
 

@@ -32,7 +32,7 @@ import com.mucommander.process.ProcessListener;
 import com.mucommander.process.ProcessRunner;
 
 /**
- * This class allows to run AppleScript code under Mac OS X, relying on the <code>osacript</code> command available
+ * This class allows to init AppleScript code under Mac OS X, relying on the <code>osacript</code> command available
  * that comes with any install of Mac OS X. This command is used instead of the Cocoa-Java library which has been
  * deprecated by Apple.<br/>
  * Calls to {@link #execute(String, StringBuilder)} on any OS other than Mac OS X will always fail.

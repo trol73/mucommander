@@ -574,18 +574,18 @@ public class LocationChanger {
 					return false;
 				}
 
-				// This field needs to be set before actually killing the thread, #run() relies on it
+				// This field needs to be set before actually killing the thread, #init() relies on it
 				killed = true;
 
 				// Call Thread#interrupt() the first time this method is called to give the thread a chance to stop
 				// gracefully if it is waiting in Thread#sleep() or Thread#wait() or Thread#join() or in an
 				// interruptible operation such as java.nio.channel.InterruptibleChannel. If this is the case,
 				// InterruptedException or ClosedByInterruptException will be thrown and thus need to be catched by
-				// #run().
+				// #init().
 				if(!killedByInterrupt) {
 					LOGGER.debug("Killing thread using #interrupt()");
 
-					// This field needs to be set before actually interrupting the thread, #run() relies on it
+					// This field needs to be set before actually interrupting the thread, #init() relies on it
 					killedByInterrupt = true;
 					interrupt();
 				}
@@ -595,8 +595,8 @@ public class LocationChanger {
 
 					killedByStop = true;
 					super.stop();
-					// Execute #cleanup() as it would have been done by #run() had the thread not been stopped.
-					// Note that #run() may end pseudo-gracefully and catch the underlying Exception. In this case
+					// Execute #cleanup() as it would have been done by #init() had the thread not been stopped.
+					// Note that #init() may end pseudo-gracefully and catch the underlying Exception. In this case
 					// it will also call #cleanup() but the (2nd) call to #cleanup() will be ignored.
 					cleanup(false);
 				}

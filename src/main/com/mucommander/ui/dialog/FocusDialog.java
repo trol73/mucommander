@@ -120,7 +120,7 @@ public class FocusDialog extends JDialog implements WindowListener {
      * Method called when the user has canceled through the escape key.
      * <p>
      * This method is equivalent to a call to {@link #dispose()}. It's meant to be
-     * overriden by those implementations of <code>FocusDialog</code> that need to run
+     * overriden by those implementations of <code>FocusDialog</code> that need to init
      * code before canceling the dialog.
      * </p>
      */

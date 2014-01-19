@@ -189,7 +189,7 @@ public class DesktopManager {
         innerRegisterOperation(OPEN,                 SYSTEM_OPERATION,    new CommandOpen(false));
 
         // The only FALLBACK operation we have at the time of writing is for OPEN,
-        // where we can try to run the file as if it was an executable.
+        // where we can try to init the file as if it was an executable.
         innerRegisterOperation(OPEN, FALLBACK_OPERATION,  new CommandOpen(true));
     }
 
@@ -541,7 +541,7 @@ public class DesktopManager {
     /**
      * Returns the command used to start shell processes.
      * <p>
-     * The returned command must set the shell in its 'run script' mode.
+     * The returned command must set the shell in its 'init script' mode.
      * For example, for bash, the returned command should be <code>/bin/bash -l -c"</code>.
      * </p>
      * @return the command used to start shell processes.

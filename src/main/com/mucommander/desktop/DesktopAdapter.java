@@ -37,7 +37,7 @@ import java.awt.event.MouseEvent;
  * This is achieved through the {@link #isAvailable()} method. While it has a fairly
  * simple contract, this method can prove quite difficult to implement properly.<br>
  * The <code>com.mucommander.commons.runtime</code> package provides helpfull classes for this,
- * but application developers might end up having to try to run commands to see if they work
+ * but application developers might end up having to try to init commands to see if they work
  * (this can be done through the {@link com.mucommander.process.ProcessRunner} class), query
  * environment variables, ...
  * </p>
@@ -138,7 +138,7 @@ public interface DesktopAdapter {
     /**
      * Returns the command used to start shell processes.
      * <p>
-     * The returned command must set the shell in its 'run script' mode.
+     * The returned command must set the shell in its 'init script' mode.
      * For example, for bash, the returned command should be <code>/bin/bash -l -c"</code>.
      * </p>
      * @return the command used to start shell processes.

@@ -81,7 +81,7 @@ abstract class AbstractViewerAction extends SelectedFileAction {
 
             // If we're using a custom command...
             if(customCommand != null) {
-                // If it's local, run the custom editor on it.
+                // If it's local, init the custom editor on it.
                 if(file.hasAncestor(LocalFile.class)) {
                     try {ProcessRunner.execute(customCommand.getTokens(file), file);}
                     catch(Exception e) {

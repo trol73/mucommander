@@ -145,8 +145,8 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         mainPanel = new YBoxPanel();
 
         // Adds a textual description:
-        // - if we're working in a local directory, 'run in current folder'.
-        // - if we're working on a non-standard FS, 'run in home folder'.
+        // - if we're working in a local directory, 'init in current folder'.
+        // - if we're working on a non-standard FS, 'init in home folder'.
         mainPanel.add(new JLabel(mainFrame.getActivePanel().getCurrentFolder().getURL().getScheme().equals(FileProtocols.FILE)?
                                  Translator.get("run_dialog.run_command_description")+":" : Translator.get("run_dialog.run_in_home_description")+":"));
 
@@ -184,7 +184,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
         // 'Run / stop' and 'Cancel' buttons.
         buttonsPanel.add(DialogToolkit.createOKCancelPanel(
-                runStopButton = new JButton(Translator.get("run_dialog.run")),
+                runStopButton = new JButton(Translator.get("run_dialog.init")),
                 cancelButton  = new JButton(Translator.get("cancel")),
                 getRootPane(),
                 this));
@@ -365,7 +365,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         dial.setAnimated(false);
 
         // Change 'Stop' button to 'Run'
-        this.runStopButton.setText(Translator.get("run_dialog.run"));
+        this.runStopButton.setText(Translator.get("run_dialog.init"));
 
         // Make command field active again
         this.inputCombo.setEnabled(true);
@@ -380,7 +380,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
     /**
      * Runs the specified command.
-     * @param command command to run.
+     * @param command command to init.
      */
     public void runCommand(String command) {
         try {

@@ -171,7 +171,7 @@ public class VersionChecker extends DefaultHandler {
     public boolean isNewVersionAvailable() {
         // If the local and remote versions are the same, compares release dates.
         if(latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
-            // This ensures backward compatiblity - if the remote version file does not contain
+            // This ensures backward compatibility - if the remote version file does not contain
             // release date information, ignore it.
             if(releaseDate.equals(""))
                 return true;

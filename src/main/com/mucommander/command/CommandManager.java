@@ -72,9 +72,9 @@ public class CommandManager implements CommandBuilder {
 
     // - Self-open command -----------------------------------------------------
     // -------------------------------------------------------------------------
-    /** Alias of the 'run as executable' command. */
+    /** Alias of the 'init as executable' command. */
     public static final String  RUN_AS_EXECUTABLE_ALIAS   = "execute";
-    /** Command used to run a file as an executable. */
+    /** Command used to init a file as an executable. */
     public static final Command RUN_AS_EXECUTABLE_COMMAND = new Command(RUN_AS_EXECUTABLE_ALIAS, "$f", CommandType.SYSTEM_COMMAND);
 
 

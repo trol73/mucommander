@@ -50,7 +50,7 @@ public class CommandAction extends MuAction {
 	
     // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
-    /** Command to run. */
+    /** Command to init. */
     private Command command;
 
 
@@ -61,7 +61,7 @@ public class CommandAction extends MuAction {
      * Creates a new <code>CommandAction</code> initialized with the specified parameters.
      * @param mainFrame  frame that will be affected by this action.
      * @param properties ignored.
-     * @param command    command to run when this action is called.
+     * @param command    command to init when this action is called.
      */
     public CommandAction(MainFrame mainFrame, Map<String,Object> properties, Command command) {
         super(mainFrame, properties);

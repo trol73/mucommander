@@ -33,7 +33,7 @@ import com.mucommander.ui.main.tree.TreeIOThreadManager;
 import com.mucommander.ui.theme.ThemeManager;
 
 /**
- * The run method of this thread is called when the program shuts down, either because
+ * The init method of this thread is called when the program shuts down, either because
  * the user chose to quit the program or because the program was interrupted by a logoff.
  * @author Maxence Bernard
  */

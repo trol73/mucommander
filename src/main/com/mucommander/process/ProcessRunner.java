@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 /**
- * Used to run process in as safe a manner as possible.
+ * Used to init process in as safe a manner as possible.
  * <p>
  * The Java process API, while very simple, contains a lot of pitfalls and requires some work to use properly.
  * Typical errors are forgetting to monitor a process' output streams, which will make it deadlock more often than not.
@@ -177,7 +177,7 @@ public class ProcessRunner {
      * This is a convenience method and behaves exactly as a call to <code>execute(command, currentDirectory, null, null)</code>.
      * </p>
      * @param  command          command to execute.
-     * @param  currentDirectory directory in which to run the command.
+     * @param  currentDirectory directory in which to init the command.
      * @return                  the generated process.
      * @see                     #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
@@ -190,7 +190,7 @@ public class ProcessRunner {
      * This is a convenience method and behaves exactly as a call to <code>execute(command, currentDirectory, null, encoding)</code>.
      * </p>
      * @param  command          command to execute.
-     * @param  currentDirectory directory in which to run the command (uses the VM's current directory if <code>null</code>).
+     * @param  currentDirectory directory in which to init the command (uses the VM's current directory if <code>null</code>).
      * @param  encoding         encoding used to read from the process' stream (system default is used if <code>null</code>).
      * @return                  the generated process.
      * @see                     #execute(String,AbstractFile,ProcessListener,String)
@@ -210,7 +210,7 @@ public class ProcessRunner {
      *  tokenizer are then placed in the new string array <code>tokens</code>, in the same order.
      * </p>
      * @param  command          command to execute.
-     * @param  currentDirectory directory in which to run the command (uses the VM's current directory if <code>null</code>).
+     * @param  currentDirectory directory in which to init the command (uses the VM's current directory if <code>null</code>).
      * @param  encoding         encoding used to read from the process' stream (system default is used if <code>null</code>).
      * @param  listener         object that will be notified of modifications in the process' state (ignored if <code>null</code>).
      * @return                  the generated process.
@@ -238,7 +238,7 @@ public class ProcessRunner {
      * This is a convenience method and behaves exactly as a call to <code>execute(tokens, currentDirectory, listener, null)</code>.
      * </p>
      * @param  tokens           command to execute.
-     * @param  currentDirectory directory in which to run the command (uses the VM's current directory if <code>null</code>).
+     * @param  currentDirectory directory in which to init the command (uses the VM's current directory if <code>null</code>).
      * @param  listener         object that will be notified of any modification in the process' state.
      * @return                  the generated process.
      * @throws IOException thrown if an error happens while starting the process.
@@ -301,7 +301,7 @@ public class ProcessRunner {
      * This is a convenience method and behaves exactly as a call to <code>execute(tokens, currentDirectory, null, null)</code>.
      * </p>
      * @param  tokens           command to execute.
-     * @param  currentDirectory directory in which to run the command.
+     * @param  currentDirectory directory in which to init the command.
      * @return                  the generated process.
      * @see                     #execute(String[],AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
@@ -314,7 +314,7 @@ public class ProcessRunner {
      * This is a convenience method and behaves exactly as a call to <code>execute(tokens, currentDirectory, null, null)</code>.
      * </p>
      * @param  tokens           command to execute.
-     * @param  currentDirectory directory in which to run the command.
+     * @param  currentDirectory directory in which to init the command.
      * @param  encoding         encoding used to read from the process' stream (system default is used if <code>null</code>).
      * @return                  the generated process.
      * @see                     #execute(String[],AbstractFile,ProcessListener,String)

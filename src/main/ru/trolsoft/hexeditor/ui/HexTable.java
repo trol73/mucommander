@@ -178,6 +178,7 @@ public class HexTable extends JTable {
 
         final int hexColumns = model.getNumberOfHexColumns();
         int w = Math.max(widthOfW*3, fmHeader.stringWidth("+999"));
+System.out.println(">> " + widthOfW*3 + "   " + fmHeader.stringWidth("+999"));
         for (int i = 1; i <= hexColumns; i++) {
             setColumnWidth(i, w);
         }

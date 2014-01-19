@@ -752,15 +752,13 @@ public class Launcher {
         if (MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    boolean newVersionAvailable;
                     try {
-                        newVersionAvailable = VersionChecker.getInstance().isNewVersionAvailable();
+                        VersionChecker versionChecker = VersionChecker.getInstance();
+                        if (versionChecker.isNewVersionAvailable()) {
+                            new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
+                        }
                     } catch (Exception e) {
-                        newVersionAvailable = false;
                         e.printStackTrace();
-                    }
-                    if (newVersionAvailable) {
-                        new CheckVersionDialog(WindowManager.getCurrentMainFrame(), false);
                     }
                 }
             });

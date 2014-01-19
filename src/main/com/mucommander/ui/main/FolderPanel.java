@@ -175,7 +175,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         // Create the Tabs (Must be called after the fileTable was created and current folder was set)
         tabs = new FileTableTabs(mainFrame, this, initialTabs);
         
-		// Select the tab that was previously selected on last run
+		// Select the tab that was previously selected on last init
 		tabs.selectTab(indexOfSelectedTab);
 		
 		tabs.addActiveTabListener(this);

@@ -41,7 +41,6 @@ public class FileByteBuffer {
         getFile().seek(offset);
         size = getFile().read(buffer);
         lastReadedByteIndex = offset + size - 1;
-buffer[0] = 0;buffer[1] = 1;buffer[2] = 2;buffer[3] = 3;buffer[4] = 4;buffer[5] = 5;buffer[6] = 'M';
     }
 
     private RandomAccessFile getFile() throws FileNotFoundException {

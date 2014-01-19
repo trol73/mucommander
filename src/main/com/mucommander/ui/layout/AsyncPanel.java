@@ -125,7 +125,7 @@ public abstract class AsyncPanel extends JPanel {
     private void loadTargetComponent() {
         new Thread() {
             @Override
-            public void run() {
+            public void init() {
                 JComponent targetComponent = getTargetComponent();
 
                 remove(waitComponent);

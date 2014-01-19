@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.net.URL;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JCheckBox;
@@ -52,7 +53,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * @author Maxence Bernard
  */
-public class CheckVersionDialog extends QuestionDialog implements Runnable {
+public class CheckVersionDialog extends QuestionDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckVersionDialog.class);
 	
     /** Parent MainFrame instance */
@@ -78,26 +79,27 @@ public class CheckVersionDialog extends QuestionDialog implements Runnable {
      * false if the update check was automatically triggered on startup. If the check was automatically triggered,
      * the user won't be notified if there is no new version (current version is the latest).
      */
-    public CheckVersionDialog(MainFrame mainFrame, boolean userInitiated) {
+    public CheckVersionDialog(MainFrame mainFrame, VersionChecker versionChecker, boolean userInitiated) {
         super(mainFrame, "", mainFrame);
         this.mainFrame = mainFrame;
         this.userInitiated = userInitiated;
 
         // Do all the hard work in a separate thread
-        new Thread(this, "com.mucommander.ui.dialog.startup.CheckVersionDialog's Thread").start();
+        //new Thread(this, "com.mucommander.ui.dialog.startup.CheckVersionDialog's Thread").start();
+        init(versionChecker);
     }
 	
     
     /**
      * Checks for updates and notifies the user of the outcome.
      */
-    public void run() {    
+    public void init(VersionChecker version) {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         
         String         message;
         String         title;
-        VersionChecker version;
+        //VersionChecker version;
         URL            downloadURL = null;
         boolean        downloadOption = false;
         String         jarURL = null;
@@ -105,7 +107,7 @@ public class CheckVersionDialog extends QuestionDialog implements Runnable {
         try {
             LOGGER.debug("Checking for new version...");
 
-            version = VersionChecker.getInstance();
+            //version = VersionChecker.getInstance();
             // A newer version is available
             if(version.isNewVersionAvailable()) {
                 LOGGER.info("A new version is available!");
@@ -118,12 +120,7 @@ public class CheckVersionDialog extends QuestionDialog implements Runnable {
                 
                 // If the platform is not capable of opening a new browser window,
                 // display the download URL.
-                if(downloadOption) {
-                    message = Translator.get("version_dialog.new_version");
-                }
-                else {
-                    message = Translator.get("version_dialog.new_version_url", downloadURL.toString());
-                }
+                message = downloadOption ? Translator.get("version_dialog.new_version") : Translator.get("version_dialog.new_version_url", downloadURL.toString());
 
                 jarURL = version.getJarURL();
             }
@@ -158,8 +155,8 @@ public class CheckVersionDialog extends QuestionDialog implements Runnable {
         // Set title
         setTitle(title);
 
-        java.util.List<Integer> actionsV = new Vector<Integer>();
-        java.util.List<String> labelsV = new Vector<String>();
+        List<Integer> actionsV = new Vector<Integer>();
+        List<String> labelsV = new Vector<String>();
 
         // 'OK' choice
         actionsV.add(OK_ACTION);
@@ -181,7 +178,7 @@ public class CheckVersionDialog extends QuestionDialog implements Runnable {
         int nbChoices = actionsV.size();
         int actions[] = new int[nbChoices];
         String labels[] = new String[nbChoices];
-        for(int i=0; i<nbChoices; i++) {
+        for (int i=0; i < nbChoices; i++) {
             actions[i] = actionsV.get(i);
             labels[i] = labelsV.get(i);
         }

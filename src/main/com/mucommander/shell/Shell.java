@@ -91,13 +91,13 @@ public class Shell implements ConfigurationListener {
      * Executes the specified command in the specified folder.
      * <p>
      * The <code>currentFolder</code> folder parameter will only be used if it's neither a
-     * remote directory nor an archive. Otherwise, the command will run from the user's
+     * remote directory nor an archive. Otherwise, the command will init from the user's
      * home directory.
      * </p>
-     * @param     command       command to run.
-     * @param     currentFolder where to run the command from.
+     * @param     command       command to init.
+     * @param     currentFolder where to init the command from.
      * @return                  the resulting process.
-     * @exception IOException   thrown if any error occurs while trying to run the command.
+     * @exception IOException   thrown if any error occurs while trying to init the command.
      */
     public static AbstractProcess execute(String command, AbstractFile currentFolder) throws IOException {return execute(command, currentFolder, null);}
 
@@ -105,17 +105,17 @@ public class Shell implements ConfigurationListener {
      * Executes the specified command in the specified folder.
      * <p>
      * The <code>currentFolder</code> folder parameter will only be used if it's neither a
-     * remote directory nor an archive. Otherwise, the command will run from the user's
+     * remote directory nor an archive. Otherwise, the command will init from the user's
      * home directory.
      * </p>
      * <p>
      * Information about the resulting process will be sent to the specified <code>listener</code>.
      * </p>
-     * @param     command       command to run.
-     * @param     currentFolder where to run the command from.
+     * @param     command       command to init.
+     * @param     currentFolder where to init the command from.
      * @param     listener      where to send information about the resulting process.
      * @return                  the resulting process.
-     * @exception IOException   thrown if any error occurs while trying to run the command.
+     * @exception IOException   thrown if any error occurs while trying to init the command.
      */
     public static synchronized AbstractProcess execute(String command, AbstractFile currentFolder, ProcessListener listener) throws IOException {
         String[] commandTokens;
