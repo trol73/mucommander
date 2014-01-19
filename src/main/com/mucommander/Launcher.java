@@ -629,6 +629,9 @@ public class Launcher {
      */
     @SuppressWarnings({"unchecked"})
     public static void main(String args[]) throws IOException {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "muCommander");
+        }
         Profiler.start("init");
         int processors = Runtime.getRuntime().availableProcessors();
         System.out.println("Processors: " + processors);
@@ -764,5 +767,6 @@ public class Launcher {
         }
         Profiler.stop("init");
         Profiler.print();
+        Profiler.hide("launcher.");
     }
 }

@@ -53,9 +53,9 @@ public class PdfViewer extends FileViewer {
         //getContentPane().add(factory.buildCompleteMenuBar(), BorderLayout.NORTH);
         setComponentToPresent(factory.buildViewerPanel());
     }
+
     @Override
     protected void show(AbstractFile file) throws IOException {
-        System.out.println("SHOW pdf " + file);
         controller.openDocument(file.getPath());
     }
 
