@@ -46,7 +46,7 @@ public class CheckForUpdatesAction extends MuAction {
 
     @Override
     public void performAction() {
-        new CheckVersionDialog(mainFrame, true);
+        new CheckVersionDialog(mainFrame, null, true);
     }
 
 	@Override

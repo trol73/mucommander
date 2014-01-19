@@ -107,6 +107,9 @@ public class CheckVersionDialog extends QuestionDialog {
         try {
             LOGGER.debug("Checking for new version...");
 
+            if (version == null) {
+                version = VersionChecker.getInstance();
+            }
             //version = VersionChecker.getInstance();
             // A newer version is available
             if(version.isNewVersionAvailable()) {
