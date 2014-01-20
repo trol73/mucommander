@@ -26,12 +26,8 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.text.Translator;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategories;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.StatusBar;
 
@@ -87,7 +83,7 @@ public class ToggleStatusBarAction extends MuAction {
     	
 		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategories.VIEW; }
+		public ActionCategory getCategory() { return ActionCategory.VIEW; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 

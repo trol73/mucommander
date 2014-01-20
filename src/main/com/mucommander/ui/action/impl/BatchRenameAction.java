@@ -28,13 +28,8 @@ import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.filter.OrFileFilter;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategories;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.InvokesDialog;
-import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.file.BatchRenameDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -81,7 +76,7 @@ public class BatchRenameAction extends SelectedFilesAction {
     	
 		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategories.FILES; }
+		public ActionCategory getCategory() { return ActionCategory.FILES; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 

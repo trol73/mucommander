@@ -27,12 +27,7 @@ import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.filter.FileOperationFilter;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.InvokesDialog;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.SplitFileDialog;
 import com.mucommander.ui.main.MainFrame;
 

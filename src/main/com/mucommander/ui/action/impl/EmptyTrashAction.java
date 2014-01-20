@@ -24,12 +24,8 @@ import javax.swing.KeyStroke;
 
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategories;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
 /**
@@ -70,7 +66,7 @@ public class EmptyTrashAction extends MuAction {
     	
 		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategories.FILES; }
+		public ActionCategory getCategory() { return ActionCategory.FILES; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 

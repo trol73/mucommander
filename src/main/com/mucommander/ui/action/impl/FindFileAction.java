@@ -67,7 +67,7 @@ public class FindFileAction extends ParentFolderAction {
 
         public String getId() { return ACTION_ID; }
 
-        public ActionCategory getCategory() { return ActionCategories.NAVIGATION; }
+        public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 

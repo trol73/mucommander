@@ -25,40 +25,51 @@ import com.mucommander.text.Translator;
  * 
  * @author Arik Hadas
  */
-public class ActionCategory implements Comparable<ActionCategory> {
-	
-	/** The category's label key in the dictionary file */
-	private String descriptionKey;
-	 
-	protected ActionCategory(String descriptionKey) {
-		this.descriptionKey = "action_categories." + descriptionKey;
-	}
+public enum ActionCategory {
+    ALL("all") {
+        @Override
+        public boolean contains(String actionId) {
+            return true;
+        }
+    },
+    NAVIGATION("navigation"),
+    SELECTION("selection"),
+    VIEW("view"),
+    FILES("file_operations"),
+    WINDOW("windows"),
+    TAB("tabs"),
+    MISC("misc"),
+    COMMANDS("commands");
 
-	public String getDescriptionKey() { return descriptionKey; } 
 
-	public String getDescription() { return Translator.get(descriptionKey); }
-	
-	public boolean contains(String actionId) {
-		ActionCategory actionCategory = ActionProperties.getActionCategory(actionId);
-		if (actionCategory != null)
-			return descriptionKey.equals(actionCategory.getDescriptionKey());
-		return false;
-	}
-	
-	public String toString() { 
-		String description = getDescription();
-		if (description != null)
-			return description;
-		return getDescriptionKey();
-	}
-	
-	public boolean equals(Object obj) {
-		if (obj instanceof ActionCategory)
-			return descriptionKey.equals(((ActionCategory) obj).descriptionKey);
-		return false;
-	}
+    /** The category's label key in the dictionary file */
+    private final String descriptionKey;
 
-	public int compareTo(ActionCategory actionCategory) {
-        return getDescription().compareTo(actionCategory.getDescription());
-	}
+    ActionCategory(String descriptionKey) {
+        this.descriptionKey = "action_categories." + descriptionKey;
+    }
+
+    public String getDescriptionKey() {
+        return descriptionKey;
+    }
+
+    public String getDescription() { return Translator.get(descriptionKey); }
+
+    public boolean contains(String actionId) {
+        ActionCategory actionCategory = ActionProperties.getActionCategory(actionId);
+        if (actionCategory != null) {
+            return descriptionKey.equals(actionCategory.getDescriptionKey());
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        String description = getDescription();
+        if (description != null) {
+            return description;
+        }
+        return getDescriptionKey();
+    }
+
 }

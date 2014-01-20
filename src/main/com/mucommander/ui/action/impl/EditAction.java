@@ -67,7 +67,7 @@ public class EditAction extends InternalEditAction {
     	
 		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategories.FILES; }
+		public ActionCategory getCategory() { return ActionCategory.FILES; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 

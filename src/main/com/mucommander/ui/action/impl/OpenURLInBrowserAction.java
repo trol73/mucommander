@@ -24,11 +24,7 @@ import java.util.Map;
 import javax.swing.KeyStroke;
 
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
 

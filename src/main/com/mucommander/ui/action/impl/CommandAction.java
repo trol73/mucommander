@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.swing.KeyStroke;
 
+import com.mucommander.ui.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.TempOpenWithJob;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.text.Translator;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategories;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -133,7 +129,7 @@ public class CommandAction extends MuAction {
 
     	public String getLabel() { return label; }
 
-    	public ActionCategory getCategory() { return ActionCategories.COMMANDS; }
+    	public ActionCategory getCategory() { return ActionCategory.COMMANDS; }
 
     	public KeyStroke getDefaultAltKeyStroke() { return null; }
 

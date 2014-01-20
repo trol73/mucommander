@@ -4,12 +4,10 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -74,7 +72,7 @@ public class TerminalAction extends ParentFolderAction {
 
         public String getId() { return ACTION_ID; }
 
-        public ActionCategory getCategory() { return ActionCategories.COMMANDS; }
+        public ActionCategory getCategory() { return ActionCategory.COMMANDS; }
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
