@@ -42,6 +42,7 @@ public class EncodingPreferences {
         "UTF-8",
         "UTF-16",
         "ISO-8859-1",
+        "windows-1251",
         "windows-1252",
         "KOI8-R",
         "Big5",
@@ -50,6 +51,7 @@ public class EncodingPreferences {
         "Shift_JIS",
         "ISO-2022-JP",
         "EUC-JP",
+        "cp866"
     };
 
 
@@ -74,7 +76,7 @@ public class EncodingPreferences {
      * @return a default list of preferred encodings.
      */
     public static List<String> getDefaultPreferredEncodings() {
-        List<String> encodingsV = new Vector<String>();
+        List<String> encodingsV = new Vector<>();
         for (String encoding : DEFAULT_PREFERRED_ENCODINGS) {
             // Ensure that the encoding is supported before adding it
             if (Charset.isSupported(encoding))

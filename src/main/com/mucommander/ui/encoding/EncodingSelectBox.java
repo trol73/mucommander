@@ -43,7 +43,7 @@ import com.mucommander.ui.dialog.DialogOwner;
 public class EncodingSelectBox extends JPanel {
 
     /** Allows the encoding to be selected */
-    protected SaneComboBox comboBox;
+    protected SaneComboBox<String> comboBox;
 
     /** Button that invokes the dialog that allows to customize the list of preferred encodings */
     protected JButton customizeButton;
@@ -76,7 +76,7 @@ public class EncodingSelectBox extends JPanel {
     public EncodingSelectBox(final DialogOwner dialogOwner, String selectedEncoding) {
         super(new BorderLayout());
 
-        comboBox = new SaneComboBox();
+        comboBox = new SaneComboBox<>();
         populateComboBox(selectedEncoding);
 
         comboBox.addActionListener(new ActionListener() {
@@ -135,14 +135,12 @@ public class EncodingSelectBox extends JPanel {
         for(String encoding: encodings)
             comboBox.addItem(encoding);
 
-        if(selectEncoding!=null) {
+        if (selectEncoding != null) {
             comboBox.setSelectedItem(selectEncoding);
-            currentEncoding = selectEncoding;
-        }
-        else if(nbEncodings>0) {
+        } else if(nbEncodings>0) {
             comboBox.setSelectedItem(encodings.get(0));
-            currentEncoding = selectEncoding;
         }
+        currentEncoding = selectEncoding;
     }
 
     /**
@@ -156,7 +154,7 @@ public class EncodingSelectBox extends JPanel {
         if(index==-1)
             return null;
 
-        return (String)comboBox.getItemAt(index);
+        return comboBox.getItemAt(index);
     }
     
 

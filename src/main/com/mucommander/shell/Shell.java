@@ -128,23 +128,20 @@ public class Shell implements ConfigurationListener {
         // Builds the shell command.
         // Local files use the configuration defined shell. Remote files
         // will execute the command as-is.
-        if(currentFolder.hasAncestor(LocalFile.class)) {
+        if (currentFolder.hasAncestor(LocalFile.class)) {
             tokens[tokens.length - 1] = command;
-            commandTokens             = tokens;
-        }
-        else {
+            commandTokens = tokens;
+        } else {
             remoteTokens[0] = command;
-            commandTokens   = remoteTokens;
+            commandTokens  = remoteTokens;
         }
 
         // Starts the process.
-        if(autoDetectEncoding) {
+        if (autoDetectEncoding) {
             if(listener == null)
                 listener = new ShellEncodingListener();
             else {
-                ProcessListenerList listeners;
-
-                listeners = new ProcessListenerList();
+                ProcessListenerList listeners = new ProcessListenerList();
                 listeners.add(listener);
                 listeners.add(new ShellEncodingListener());
                 listener = listeners;

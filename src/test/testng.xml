@@ -3,6 +3,7 @@
     <test name="io">
         <packages>
             <package name="com.mucommander.*"/>
+            <package name="com.mucommander.commons.io.*"/>
         </packages>
     </test>
 </suite>

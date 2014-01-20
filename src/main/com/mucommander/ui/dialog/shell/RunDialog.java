@@ -184,7 +184,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
         // 'Run / stop' and 'Cancel' buttons.
         buttonsPanel.add(DialogToolkit.createOKCancelPanel(
-                runStopButton = new JButton(Translator.get("run_dialog.init")),
+                runStopButton = new JButton(Translator.get("run_dialog.run")),
                 cancelButton  = new JButton(Translator.get("cancel")),
                 getRootPane(),
                 this));
@@ -252,8 +252,9 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * Notifies the RunDialog that the process has output some text.
      * @param output contains the process' output.
      */
-    public void processOutput(String output) {addToTextArea(output);}
-
+    public void processOutput(String output) {
+        addToTextArea(output);
+    }
 
 
     // - KeyListener code ----------------------------------------------------------------
@@ -365,7 +366,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         dial.setAnimated(false);
 
         // Change 'Stop' button to 'Run'
-        this.runStopButton.setText(Translator.get("run_dialog.init"));
+        this.runStopButton.setText(Translator.get("run_dialog.run"));
 
         // Make command field active again
         this.inputCombo.setEnabled(true);

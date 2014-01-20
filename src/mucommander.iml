@@ -16,6 +16,7 @@
     <orderEntry type="library" name="apache" level="project" />
     <orderEntry type="library" name="runtime" level="project" />
     <orderEntry type="library" name="icepdf" level="project" />
+    <orderEntry type="library" name="icu4j-charset-detect-52_1" level="project" />
   </component>
 </module>
 
