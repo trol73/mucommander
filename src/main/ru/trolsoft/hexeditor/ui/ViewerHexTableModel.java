@@ -69,13 +69,23 @@ public class ViewerHexTableModel extends AbstractTableModel {
             return STRING_OF_ZERO[8-result.length()] + result;
         } else if (columnIndex == hexDataColumns + 1) {
             // dump
-            return getAsciiDump(rowIndex * hexDataColumns);
+            try {
+                return getAsciiDump(rowIndex * hexDataColumns);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+            }
         } else {
             long fileOffset = rowIndex * hexDataColumns + columnIndex - 1;
             if (fileOffset >= fileSize) {
                 return "";
             }
-            return byteToHex(buffer.getFileByte(fileOffset));
+            try {
+                return byteToHex(buffer.getByte(fileOffset));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "xx";
+            }
         }
     }
 
@@ -105,11 +115,11 @@ public class ViewerHexTableModel extends AbstractTableModel {
         return row * hexDataColumns;
     }
 
-    private String getAsciiDump(long fileOffset) {
+    private String getAsciiDump(long fileOffset) throws IOException {
         StringBuilder sb = new StringBuilder();
         final int bufferOffset = (int)(fileOffset - buffer.getOffset());
         for (int i = 0; i <  hexDataColumns; i++) {
-            int b = buffer.getData()[i + bufferOffset] & 0xff;
+            int b = buffer.getByte(fileOffset + i) & 0xff;// getData()[i + bufferOffset] & 0xff;
             char ch = (char)b;
             if (!VISIBLE_SYMBOLS[b]) {
                 ch = ' ';

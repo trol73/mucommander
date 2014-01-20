@@ -15,7 +15,6 @@ public class FileByteBuffer {
     private int size;
     private long offset;
     private byte[] buffer;
-    private long lastReadedByteIndex;
 
     public FileByteBuffer(String filePath, String fileMode, int capacity) {
         this.filePath = filePath;
@@ -24,7 +23,6 @@ public class FileByteBuffer {
         buffer = new byte[capacity];
         this.offset = 0;
         this.size = 0;
-        this.lastReadedByteIndex = 0;
     }
 
 
@@ -32,7 +30,7 @@ public class FileByteBuffer {
         this(filePath, fileMode, DEFAULT_CAPACITY);
     }
 
-    public void load(long offset) throws IOException {
+    protected void load(long offset) throws IOException {
         this.offset = offset;
         load();
     }
@@ -40,7 +38,6 @@ public class FileByteBuffer {
     public void load() throws IOException {
         getFile().seek(offset);
         size = getFile().read(buffer);
-        lastReadedByteIndex = offset + size - 1;
     }
 
     private RandomAccessFile getFile() throws FileNotFoundException {
@@ -50,16 +47,26 @@ public class FileByteBuffer {
         return file;
     }
 
-    public byte getFileByte(long fileOffset) {
-        if (fileOffset >= offset && fileOffset <= lastReadedByteIndex) {
-            return buffer[(int)(fileOffset - offset)];
+    /**
+     *
+     * @param fileOffset
+     * @return
+     * @throws IOException
+     */
+    public byte getByte(long fileOffset) throws IOException {
+        long index = fileOffset - offset;
+        if (index < 0 || index >= size) {
+            if (fileOffset < 0 || fileOffset >= file.length()) {
+                throw new IndexOutOfBoundsException("Position: " + fileOffset + ", file size = " + file.length());
+            }
+            offset = fileOffset - buffer.length/2;
+            if (offset < 0) {
+                offset = 0;
+            }
+            load();
+            index = fileOffset - offset;
         }
-        throw new IndexOutOfBoundsException("Invalid position for buffer " + fileOffset + ". Buffer = [" + offset + ", " + size + "]");
-    }
-
-
-    public byte getBufferByte(int index) {
-        return buffer[index];
+        return buffer[(int)index];
     }
 
 
@@ -71,10 +78,6 @@ public class FileByteBuffer {
 
     public long getFileSize() throws IOException {
         return file.length();
-    }
-
-    public byte[] getData() {
-        return buffer;
     }
 
     public long getOffset() {
