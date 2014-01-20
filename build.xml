@@ -124,8 +124,9 @@
 
 
     <!-- = Compilation targets ===================================================================================== -->
-    <!-- =========================================================================================================== -->
-    <target name="compile" depends="load-properties,retrieve-runtime,retrieve-compile"
+    <!-- =========================================================================================================== 
+    retrieve-runtime,retrieve-compile-->
+    <target name="compile" depends="load-properties"
             description="Compiles the library's sources">
         <echo>Compiling sources...</echo>
         <mkdir dir="${tmp.main}"/>
@@ -144,7 +145,8 @@
         </copy>
     </target>
 
-    <target name="compile-tests" depends="compile,retrieve-test">
+<!-- retrieve-test -->
+    <target name="compile-tests" depends="compile">
         <echo>Compiling test sources...</echo>
         <mkdir dir="${tmp.test}"/>
         <javac destdir="${tmp.test}" debug="on" deprecation="on"
@@ -842,8 +844,9 @@
 
 
     <!-- = Documentation targets =================================================================================== -->
-    <!-- =========================================================================================================== -->
-    <target name="javadoc" depends="retrieve-runtime,release-prefixes">
+    <!-- =========================================================================================================== 
+    retrieve-runtime,-->
+    <target name="javadoc" depends="release-prefixes">
         <echo>Creating API javadoc...</echo>
         <mkdir dir="${docs}"/>
         <javadoc destdir="${docs}" author="true" windowtitle="${app.name}" doctitle="${app.name}" encoding="UTF-8"
@@ -862,9 +865,11 @@
 
     <!-- = Reports targets ========================================================================================= -->
     <!-- =========================================================================================================== -->
-    <target name="reports" depends="checkstyle,pmd,cpd,javancss,findbugs,ivy,test" description="Generates all available reports."/>
+<!-- ivy -->    
+    <target name="reports" depends="checkstyle,pmd,cpd,javancss,findbugs,test" description="Generates all available reports."/>
 
-    <target name="javancss" depends="retrieve-tools" description='Generates JavaNCSS reports.'>
+<!-- depends="retrieve-tools" -->
+    <target name="javancss" description='Generates JavaNCSS reports.'>
         <echo>Generating JavaNCSS reports...</echo>
         <taskdef name="javancss" classname="javancss.JavancssAntTask" classpathref="lib.tools"/>
         <mkdir dir="${javancss.reports}"/>
@@ -874,7 +879,8 @@
               style="${lib.tools}/mucommander/javancss.xsl"/>
     </target>
 
-    <target name="checkstyle" depends="compile,retrieve-tools" description='Generates CheckStyle reports.'>
+<!-- retrieve-tools -->
+    <target name="checkstyle" depends="compile" description='Generates CheckStyle reports.'>
         <echo>Generating CheckStyle reports...</echo>
         <mkdir dir="${checkstyle.reports}"/>
         <taskdef resource="checkstyletask.properties" classpathref="lib.tools"/>
@@ -892,7 +898,8 @@
         </xslt>
     </target>
 
-    <target name="pmd" depends="retrieve-tools,compile" description="Generates PMD reports.">
+<!-- retrieve-tools -->
+    <target name="pmd" depends="compile" description="Generates PMD reports.">
         <echo>Generating PMD report...</echo>
         <taskdef classpathref="lib.tools" name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
         <mkdir dir="${pmd.reports}"/>
@@ -911,7 +918,8 @@
         </xslt>
     </target>
 
-    <target name="cpd" depends="retrieve-tools" description="Generates CPD reports.">
+<!-- depends="retrieve-tools" -->
+    <target name="cpd" description="Generates CPD reports.">
         <echo>Generating CPD reports...</echo>
         <taskdef name="cpd" classpathref="lib.tools" classname="net.sourceforge.pmd.cpd.CPDTask" />
         <property file="${lib.tools}/mucommander/cpd.properties"/>
@@ -928,7 +936,8 @@
         </xslt>
     </target>
 
-    <target name="findbugs" depends="retrieve-tools" description="Generates FindBugs reports.">
+<!-- depends="retrieve-tools" -->
+    <target name="findbugs" description="Generates FindBugs reports.">
         <echo>Generating FindBugs reports...</echo>
         <taskdef classpathref="lib.tools" name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
         <mkdir dir="${findbugs.reports}"/>
@@ -944,12 +953,13 @@
               style="${lib.tools}/mucommander/findbugs.xsl"/>
     </target>
 
+<!--
     <target name="ivy" depends="ivy-config" description="Generates Ivy dependency reports." unless="ivy.offline">
         <echo>Generating Ivy dependency report...</echo>
         <mkdir dir="${ivy.reports}"/>
         <ivy:report todir="${ivy.reports}" xml="true" graph="false" conf="runtime,test,tools"/>
     </target>
-
+-->
 
 
     <!-- = Maintenance targets ===================================================================================== -->
@@ -965,11 +975,13 @@
         <property file="${build.properties}"/>
     </target>
 
-    <target name="load-muant" depends="retrieve-tools">
+<!--  depends="retrieve-tools -->
+    <target name="load-muant">
         <taskdef resource="com/mucommander/commons/ant/antlib.xml" classpathref="lib.tools"/>
     </target>
 
-    <target name="load-ant-contribs" depends="retrieve-tools">
+<!-- depends="retrieve-tools" -->
+    <target name="load-ant-contribs">
         <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="lib.tools"/>
     </target>
 
@@ -997,10 +1009,10 @@
         <property name="ivy.cache.ttl.default" value="eternal"/>
         <property name="ivy.offline"           value="true"/>
     </target>
-
+<!--
     <target name="synchronize" description="Forces synchronisation of all dependencies."
             depends="retrieve-runtime,retrieve-test,retrieve-tools,retrieve-compile"/>
-
+-->
     <target name="check-ivy">
         <condition property="ivy.available">
             <available file="${ivy.jar.file}" type="file"/>
@@ -1012,7 +1024,7 @@
         <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
     </target>
 
-
+<!--
     <target name="ivy-config" depends="get-ivy" unless="ivy.offline">
  		<echo>Resolving dependencies repository...</echo>
 
@@ -1042,7 +1054,7 @@
         <echo>Retrieving test dependencies...</echo>
         <ivy:retrieve symlink="true" conf="test" type="jar"/>
     </target>
-
+-->
 
 
     <!-- = Application launching targets =========================================================================== -->
