@@ -18,16 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -91,8 +82,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	
 	/** Base width and height of icons for a scale factor of 1 */
     private final static int BASE_ICON_DIMENSION = 16;
-	
-	/** Transparent icon used to align non-locked themes with the others. */
+
+    private static final Stroke DOTTED_BORDER_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 2.0f, new float[]{2.0f}, 0);
+
+    /** Transparent icon used to align non-locked themes with the others. */
     private static ImageIcon transparentIcon = new ImageIcon(new BufferedImage(BASE_ICON_DIMENSION, BASE_ICON_DIMENSION, BufferedImage.TYPE_INT_ARGB));
 
 	/** Private object used to indicate that a delete operation was made */
@@ -157,7 +150,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		setCellSelectionEnabled(false);
 		setColumnSelectionAllowed(false);
 		setDragEnabled(false);		
-		
+
 		if (!usesTableHeaderRenderingProperties()) {
 			CenteredTableHeaderRenderer renderer = new CenteredTableHeaderRenderer();
 			getColumnModel().getColumn(ACTION_DESCRIPTION_COLUMN_INDEX).setHeaderRenderer(renderer);
@@ -184,8 +177,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
      */
     private static void paintDottedBorder(Graphics g, int width, int height, Color color) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER,
-                2.0f, new float[]{2.0f}, 0));
+        g2.setStroke(DOTTED_BORDER_STROKE);
         g2.setColor(color);
 
         g2.drawLine(0, 0, width, 0);
@@ -243,8 +235,8 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
     public void valueChanged(ListSelectionEvent e) {
 		super.valueChanged(e);
 		// Selection might be changed, update tooltip
-		int selectetRow = getSelectedRow();
-		if (selectetRow == -1) // no row is selected
+		int selectedRow = getSelectedRow();
+		if (selectedRow == -1) // no row is selected
 			tooltipBar.showDefaultMessage();
 		else
 			tooltipBar.showActionTooltip(data.getCurrentTooltip());
@@ -398,13 +390,13 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		@Override
         public boolean isCellEditable(int row, int column) {
 			switch(column) {
-			case ACTION_DESCRIPTION_COLUMN_INDEX:
-				return false;
-			case ACCELERATOR_COLUMN_INDEX:
-			case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
-				return true;
-			default:
-				return false;
+                case ACTION_DESCRIPTION_COLUMN_INDEX:
+                    return false;
+                case ACCELERATOR_COLUMN_INDEX:
+                case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
+                    return true;
+                default:
+                    return false;
 			}
 		}
 		
@@ -530,7 +522,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		private HashMap<String, HashMap<Integer, Object>> db;
 		
 		public ShortcutsTableData() {
-            allActionIds = new ArrayList<String>();
+            allActionIds = new ArrayList<>();
             Iterator<String> iterator = ActionManager.getActionIds();
             while(iterator.hasNext())
                 allActionIds.add(iterator.next());
@@ -542,10 +534,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			int nbRows = allActionIds.size();
 			data = new Object[nbRows][NUM_OF_COLUMNS];
 
+            final Insets insets = new Insets(0, 4, 0, 4);
             for(String actionId : allActionIds) {
 				ActionDescriptor actionDescriptor = ActionProperties.getActionDescriptor(actionId);
 				
-				HashMap<Integer, Object> actionProperties = new HashMap<Integer, Object>();
+				HashMap<Integer, Object> actionProperties = new HashMap<>();
 				
 				ImageIcon actionIcon = actionDescriptor.getIcon();
 				if (actionIcon == null)
@@ -553,7 +546,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				String actionLabel = actionDescriptor.getLabel();
 				
 				/* 0 -> action's icon & name pair */
-				actionProperties.put(description, new Pair<ImageIcon, String>(IconManager.getPaddedIcon(actionIcon, new Insets(0, 4, 0, 4)), actionLabel));
+				actionProperties.put(description, new Pair<ImageIcon, String>(IconManager.getPaddedIcon(actionIcon, insets), actionLabel));
 				/* 1 -> action's accelerator */
 				actionProperties.put(accelerator, ActionKeymap.getAccelerator(actionId));
 				/* 2 -> action's alternate accelerator */
@@ -665,7 +658,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		}
 		
 		private List<String> filter(List<String> actionIds, ActionFilter filter) {
-			List<String> filteredActionsList = new LinkedList<String>();
+			List<String> filteredActionsList = new LinkedList<>();
             for (String actionId : actionIds) {
                 // Discard actions that are parameterized, and those that are rejected by the IMAGE_FILTER
                 if (!ActionProperties.getActionDescriptor(actionId).isParameterized() && filter.accept(actionId))

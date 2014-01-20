@@ -8174,7 +8174,8 @@ shortcuts_panel.show:ES:Mostrar
 # Translation missing (New!)
 
 
-
+shortcuts_panel.search:EN:Search
+shortcuts_panel.search:RU:Поиск
 
 
 

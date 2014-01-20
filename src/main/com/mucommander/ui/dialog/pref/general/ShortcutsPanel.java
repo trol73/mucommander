@@ -20,16 +20,14 @@ package com.mucommander.ui.dialog.pref.general;
 
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +38,34 @@ import java.awt.event.ActionListener;
  * @author Arik Hadas, Johann Schmitz
  */
 public class ShortcutsPanel extends PreferencesPanel {
+
+    private class Filter extends ShortcutsTable.ActionFilter {
+
+        private ActionCategory actionCategory;
+        private String text;
+
+        Filter() {
+            this.actionCategory = ActionCategory.ALL;
+        }
+
+        @Override
+        public boolean accept(String actionId) {
+            ActionDescriptor descriptor = ActionProperties.getActionDescriptor(actionId);
+            boolean containsText = text == null || text.isEmpty() || descriptor.getDescription().toLowerCase().contains(text) ||
+                    descriptor.getLabel().toLowerCase().contains(text);
+            return actionCategory.contains(actionId) && containsText;
+        }
+
+        void setActionCategory(ActionCategory actionCategory) {
+            this.actionCategory = actionCategory;
+        }
+
+        void setText(String text) {
+            this.text = text != null ? text.toLowerCase() : null;
+        }
+    }
+
+    private Filter filter = new Filter();
 	
 	// The table with action mappings
 	private ShortcutsTable shortcutsTable;
@@ -127,34 +153,58 @@ public class ShortcutsPanel extends PreferencesPanel {
 		
 		return panel;
 	}
+
 	
 	private JPanel createFilteringPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		panel.add(new JLabel(Translator.get("shortcuts_panel" + ".show") + ":"));
+		panel.add(new JLabel(Translator.get("shortcuts_panel.show") + ":"));
 		
-		final JComboBox combo = new JComboBox();
+		final JComboBox<ActionCategory> combo = new JComboBox<>();
 		combo.addItem(ActionCategory.ALL);
-	    for(ActionCategory category : ActionProperties.getActionCategories())
-	      combo.addItem(category);
+	    for (ActionCategory category : ActionProperties.getActionCategories()) {
+            combo.addItem(category);
+        }
 	    
 	    combo.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-				final ActionCategory selectedActionCategory = (ActionCategory) combo.getSelectedItem();
-				shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
-					@Override
-                    public boolean accept(String actionId) {
-						return selectedActionCategory.contains(actionId);
-					}
-				});
+                filter.setActionCategory((ActionCategory)combo.getSelectedItem());
+				shortcutsTable.updateModel(filter);
 				tooltipBar.showDefaultMessage();
 			}
-	    });
+        });
 
 	    combo.setSelectedIndex(0);
 		
 		panel.add(combo);
+
+        panel.add(new JLabel(Translator.get("shortcuts_panel.search") + ":"));
+
+        final JTextField text = new JTextField(16);
+        text.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            private void updateFilter() {
+                filter.setText(text.getText());
+                shortcutsTable.updateModel(filter);
+                tooltipBar.showDefaultMessage();
+            }
+        });
+        panel.add(text);
 		
 		return panel;
 	}

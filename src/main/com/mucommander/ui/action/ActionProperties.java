@@ -32,17 +32,17 @@ import java.util.*;
 public class ActionProperties {
 	
 	/* Maps action id -> action descriptor */
-	private static Map<String, ActionDescriptor> actionDescriptors = new Hashtable<String, ActionDescriptor>();
+	private static Map<String, ActionDescriptor> actionDescriptors = new Hashtable<>();
 
 	private static ActionDescriptor nullActionDescriptor = new NullActionDescriptor();
 	
 	/* Contains all used action categories (i.e for each category at least one action is registered) */
-	private static TreeSet<ActionCategory> actionCategories = new TreeSet<ActionCategory>();
+	private static TreeSet<ActionCategory> actionCategories = new TreeSet<>();
 
 	/* Maps action id -> primary shortcut */
-	private static HashMap<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<String, KeyStroke>();
+	private static HashMap<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<>();
 	/* Maps action id -> alternative shortcut */
-	private static HashMap<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<String, KeyStroke>();
+	private static HashMap<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
 	/* Maps shortcut -> action id */
 	private static AcceleratorMap defaultAcceleratorMap = new AcceleratorMap();
 	

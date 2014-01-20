@@ -370,7 +370,7 @@ public class ActionManager {
             mainFrameActions.put(actionParameters, new ActionAndIdPair(action, actionId));
 
             // If the action's label has not been set yet, use the action descriptor's
-            if(action.getLabel()==null) {
+            if (action.getLabel() == null) {
                 // Retrieve the standard label entry from the dictionary and use it as this action's label
                 String label = ActionProperties.getActionLabel(actionId);
                 
