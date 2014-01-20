@@ -4,6 +4,11 @@
         <packages>
             <package name="com.mucommander.*"/>
             <package name="com.mucommander.commons.io.*"/>
+            <package name="com.mucommander.commons.collections.*"/>
+            <package name="com.mucommander.commons.conf.*"/>
+            <package name="com.mucommander.commons.file.*"/>
+            <package name="com.mucommander.commons.util.*"/>
+            <package name="com.mucommander.commons.runtime.*"/>
         </packages>
     </test>
 </suite>
