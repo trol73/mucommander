@@ -117,14 +117,18 @@ public class ViewerHexTableModel extends AbstractTableModel {
 
     private String getAsciiDump(long fileOffset) throws IOException {
         StringBuilder sb = new StringBuilder();
-        final int bufferOffset = (int)(fileOffset - buffer.getOffset());
         for (int i = 0; i <  hexDataColumns; i++) {
-            int b = buffer.getByte(fileOffset + i) & 0xff;// getData()[i + bufferOffset] & 0xff;
-            char ch = (char)b;
-            if (!VISIBLE_SYMBOLS[b]) {
-                ch = ' ';
+            long offset = fileOffset + i;
+            if (offset >= fileSize) {
+                sb.append(' ');
+            } else {
+                int b = buffer.getByte(offset) & 0xff;// getData()[i + bufferOffset] & 0xff;
+                char ch = (char)b;
+                if (!VISIBLE_SYMBOLS[b]) {
+                    ch = ' ';
+                }
+                sb.append(ch);
             }
-            sb.append(ch);
         }
         return sb.toString();
     }

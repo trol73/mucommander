@@ -19,6 +19,16 @@ public class HexTable extends JTable {
 
     private static final Dimension ZERO_DIMENSION = new Dimension(0, 0);
 
+    /**
+     * ASCII characters. Used to prevent strings creation on repainting cell
+     */
+    private static final String[] CHARACTERS = new String[256];
+
+    static {
+        for (char i = 0; i < CHARACTERS.length; i++) {
+            CHARACTERS[i] = Character.toString(i);
+        }
+    }
 
 
     private final ViewerHexTableModel model;
@@ -228,6 +238,7 @@ public class HexTable extends JTable {
             final long fileSize = model.getSize();
             final int hexColumns = model.getNumberOfHexColumns();
             int lastRowCount = (int)(fileSize % hexColumns);
+// TODO
             if (lastRowCount == 0) {
                 lastRowCount = hexColumns;
             } else {
@@ -271,7 +282,7 @@ public class HexTable extends JTable {
         // Check row and column individually to prevent them being invalid
         // values but still pointing to a valid offset in the buffer.
         final int hexColumns = model.getNumberOfHexColumns();
-        // Don't include last column (ascii dump)
+        // Don't include last column (ASCII dump)
         if (row < 0 || row >= getRowCount() || col < 1 || col > hexColumns) {
             return -1;
         }
@@ -624,16 +635,6 @@ public class HexTable extends JTable {
             }
         }
         super.processKeyEvent(e);
-    }
-
-
-
-    private static final String[] CHARACTERS = new String[256];
-
-    static {
-        for (char i = 0; i < CHARACTERS.length; i++) {
-            CHARACTERS[i] = Character.toString(i);
-        }
     }
 
 
