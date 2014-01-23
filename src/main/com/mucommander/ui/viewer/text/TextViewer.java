@@ -129,15 +129,16 @@ public class TextViewer extends FileViewer implements EncodingListener {
         InputStream in = null;
 
         try {
-            if(file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
+            if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
                 try { in = file.getRandomAccessInputStream(); }
                 catch(IOException e) {
                     // In that case we simply get an InputStream
                 }
             }
 
-            if(in==null)
+            if (in == null) {
                 in = file.getInputStream();
+            }
 
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
 

@@ -233,16 +233,13 @@ public class HexTable extends JTable {
         if (col < 0) {
             return 0;
         }
-        // ASCII dump
+        // last row
         if (row == getRowCount() - 1) {
             final long fileSize = model.getSize();
             final int hexColumns = model.getNumberOfHexColumns();
             int lastRowCount = (int)(fileSize % hexColumns);
-// TODO
-            if (lastRowCount == 0) {
-                lastRowCount = hexColumns;
-            } else {
-                return Math.min(col, lastRowCount-1);
+            if (lastRowCount > 0) {
+                return Math.min(col, lastRowCount);
             }
         }
         return Math.min(col, getColumnCount()-2);

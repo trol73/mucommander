@@ -128,21 +128,29 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         waitForImage(image);
 
-        int width = image.getWidth(null);
-        int height = image.getHeight(null);
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
         this.zoomFactor = 1.0;
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-
-        while(width>d.width || height>d.height) {
-            width = width/2;
-            height = height/2;
-            zoomFactor = zoomFactor/2;
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+/*
+        while (imageWidth > screen.width || imageHeight > screen.height) {
+            imageWidth /= 2;
+            imageHeight /= 2;
+            zoomFactor /= 2;
         }
-		
-        if(zoomFactor==1.0)
+*/
+        double zoomFactorX = 1.0 * screen.width / imageWidth;
+        double zoomFactorY = 1.0 * screen.height / imageHeight;
+        zoomFactor = Math.min(zoomFactorX, zoomFactorY);
+        if (zoomFactor > 1.0) {
+            zoomFactor = 1.0;
+        }
+
+        if (zoomFactor == 1.0) {
             this.scaledImage = image;
-        else
+        } else {
             zoom(zoomFactor);
+        }
 			
         checkZoom();
         checkNextPrev();
@@ -234,12 +242,12 @@ class ImageViewer extends FileViewer implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source==zoomInItem && zoomInItem.isEnabled()) {
-            zoomFactor = zoomFactor*2;
+        if (source == zoomInItem && zoomInItem.isEnabled()) {
+            zoomFactor *= 2;
             zoom(zoomFactor);
             updateFrame();
-        } else if(source==zoomOutItem && zoomOutItem.isEnabled()) {
-            zoomFactor = zoomFactor/2;
+        } else if(source == zoomOutItem && zoomOutItem.isEnabled()) {
+            zoomFactor /= 2;
             zoom(zoomFactor);
             updateFrame();
         } else if (source == nextImageItem && nextImageItem.isEnabled()) {
@@ -327,7 +335,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             g.setColor(backgroundColor);
             g.fillRect(0, 0, width, height);
 
-            if(scaledImage!=null) {
+            if (scaledImage != null) {
                 int imageWidth = scaledImage.getWidth(null);
                 int imageHeight = scaledImage.getHeight(null);
                 g.drawImage(scaledImage, Math.max(0, (width-imageWidth)/2), Math.max(0, (height-imageHeight)/2), null);
