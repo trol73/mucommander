@@ -21,6 +21,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileViewer;
+import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
+import ru.trolsoft.hexeditor.data.FileByteBuffer;
+import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
 import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
 
@@ -35,11 +38,13 @@ public class HexViewer extends FileViewer {
 
     private HexTable hexTable;
     private ViewerHexTableModel model;
+    private AbstractByteBuffer byteBuffer;
 
     @Override
     protected void show(AbstractFile file) throws IOException {
 try {
-        model = new ViewerHexTableModel(file.getAbsolutePath(), "r");
+        byteBuffer = new MuCommanderByteBuffer(file);
+        model = new ViewerHexTableModel(byteBuffer);
         model.load();
         hexTable = new HexTable(model);
         hexTable.setBackground(ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR));
@@ -64,7 +69,11 @@ try {
 
     @Override
     protected void saveStateOnClose() {
-
+        try {
+            byteBuffer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

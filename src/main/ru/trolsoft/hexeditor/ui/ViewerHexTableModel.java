@@ -1,5 +1,6 @@
 package ru.trolsoft.hexeditor.ui;
 
+import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.FileByteBuffer;
 
 import javax.swing.table.AbstractTableModel;
@@ -19,21 +20,24 @@ public class ViewerHexTableModel extends AbstractTableModel {
     protected long fileSize;
 
     private int hexDataColumns = 16*2;
-    protected final FileByteBuffer buffer;
+    protected final AbstractByteBuffer buffer;
 
 
 
 
-    public ViewerHexTableModel(String fileName, String fileMode) {
-        buffer = new FileByteBuffer(fileName, fileMode);
+    public ViewerHexTableModel(AbstractByteBuffer byteBuffer) {
+        this.buffer = byteBuffer;
         for (int i = 0; i < VISIBLE_SYMBOLS.length; i++) {
             VISIBLE_SYMBOLS[i] = i > 0;
         }
     }
 
+
     public void load() throws IOException {
-        buffer.load();
-        fileSize = buffer.getFileSize();
+        this.fileSize = buffer.getFileSize();
+        if (fileSize > 0) {
+            buffer.getByte(0);
+        }
     }
 
 
@@ -130,6 +134,7 @@ public class ViewerHexTableModel extends AbstractTableModel {
                 sb.append(ch);
             }
         }
+
         return sb.toString();
     }
 

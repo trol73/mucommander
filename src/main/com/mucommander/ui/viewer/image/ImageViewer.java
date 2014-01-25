@@ -116,8 +116,9 @@ class ImageViewer extends FileViewer implements ActionListener {
         byte buffer[] = new byte[1024];
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         InputStream in = file.getInputStream();
-        while ((read=in.read(buffer, 0, buffer.length))!=-1)
+        while ( (read=in.read(buffer, 0, buffer.length)) != -1) {
             bout.write(buffer, 0, read);
+        }
 
         byte imageBytes[] = bout.toByteArray();
         bout.close();

@@ -59,7 +59,9 @@ public class IconManager {
         /** Designates the language icon set */
         LANGUAGE("language"),
         /** Designates the mucommander icon set */
-        MUCOMMANDER("mucommander");
+        MUCOMMANDER("mucommander"),
+        /** Other images */
+        MISC("misc");
 
         /** Base folder of all images */
         private final static String BASE_IMAGE_FOLDER = "/images/";

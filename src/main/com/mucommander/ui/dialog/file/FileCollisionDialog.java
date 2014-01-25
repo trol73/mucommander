@@ -25,6 +25,7 @@ import com.mucommander.text.CustomDateFormat;
 import com.mucommander.text.SizeFormat;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
+import com.mucommander.ui.layout.CompareImagesPanel;
 import com.mucommander.ui.layout.InformationPane;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -66,6 +67,8 @@ public class FileCollisionDialog extends QuestionDialog {
     public final static String RENAME_TEXT = Translator.get("rename");
 
     private JCheckBox applyToAllCheckBox;
+
+    private JLabel lblImageSize1, lblImageSize2;
 
 	
     /**
@@ -113,24 +116,24 @@ public class FileCollisionDialog extends QuestionDialog {
         choicesTextV.add(CANCEL_TEXT);
         choicesActionsV.add(CANCEL_ACTION);
 
-        if(multipleFilesMode) {
+        if (multipleFilesMode) {
             choicesTextV.add(SKIP_TEXT);
             choicesActionsV.add(SKIP_ACTION);
         }
 
         // Add 'overwrite' / 'overwrite if older' / 'resume' actions only for 'destination file already exists' collision type
-        if(collisionType==FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS && !destFile.isDirectory()) {
+        if (collisionType == FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS && !destFile.isDirectory()) {
             choicesTextV.add(OVERWRITE_TEXT);
             choicesActionsV.add(OVERWRITE_ACTION);
 
-            if(sourceFile!=null) {
+            if (sourceFile != null) {
                 choicesTextV.add(OVERWRITE_IF_OLDER_TEXT);
                 choicesActionsV.add(OVERWRITE_IF_OLDER_ACTION);
 
                 // Give resume option only if destination file is smaller than source file
                 long destSize = destFile.getSize();
                 long sourceSize = sourceFile.getSize();
-                if(destSize!=-1 && (sourceSize==-1 || destSize<sourceSize)) {
+                if (destSize != -1 && (sourceSize == -1 || destSize < sourceSize)) {
                     choicesTextV.add(RESUME_TEXT);
                     choicesActionsV.add(RESUME_ACTION);
                 }
@@ -150,26 +153,49 @@ public class FileCollisionDialog extends QuestionDialog {
         choicesTextV.toArray(choicesText);
 
         int choicesActions[] = new int[nbChoices];
-        for(int i=0; i<nbChoices; i++)
+        for (int i = 0; i < nbChoices; i++) {
             choicesActions[i] = choicesActionsV.get(i);
+        }
 
         // Init UI
 
         String desc;
 
-        if(collisionType==FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS)
+        if (collisionType == FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS) {
             desc = Translator.get("file_exists_in_destination");
-        else if(collisionType==FileCollisionChecker.SAME_SOURCE_AND_DESTINATION)
+        } else if (collisionType==FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
             desc = Translator.get("same_source_destination");
-        else if(collisionType==FileCollisionChecker.SOURCE_PARENT_OF_DESTINATION)
+        } else if (collisionType==FileCollisionChecker.SOURCE_PARENT_OF_DESTINATION) {
             desc = Translator.get("source_parent_of_destination");
-        else
+        } else {
             desc = null;
+        }
 
         YBoxPanel yPanel = new YBoxPanel();
 
-        if(desc!=null) {
-            yPanel.add(new InformationPane(desc, null, Font.PLAIN, InformationPane.QUESTION_ICON));
+        String destFilePath = destFile.getAbsolutePath().toLowerCase();
+        boolean imageMode = destFilePath.endsWith(".png") || destFilePath.endsWith(".jpg") || destFilePath.endsWith(".jpeg") || destFilePath.endsWith(".bmp") || destFilePath.endsWith(".gif");
+
+        if (imageMode) {
+            lblImageSize1 = new JLabel();
+            lblImageSize2 = new JLabel();
+        }
+
+        if (desc != null) {
+            if (imageMode) {
+                yPanel.add(new InformationPane(desc, null, Font.PLAIN, null));
+            } else {
+                yPanel.add(new InformationPane(desc, null, Font.PLAIN, InformationPane.QUESTION_ICON));
+                yPanel.addSpace(10);
+            }
+
+        }
+        if (imageMode) {
+            if (collisionType != FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
+                yPanel.add(new CompareImagesPanel(sourceFile, destFile, this, lblImageSize1, lblImageSize2));
+            } else {
+                yPanel.add(new CompareImagesPanel(sourceFile, null, this, lblImageSize1, null));
+            }
             yPanel.addSpace(10);
         }
 
@@ -178,15 +204,14 @@ public class FileCollisionDialog extends QuestionDialog {
 
         XAlignedComponentPanel tfPanel = new XAlignedComponentPanel(10);
 
-        // If collision type is 'same source and destination' no need to show both source and destination 
-        if(collisionType==FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
-            addFileDetails(tfPanel, sourceFile, Translator.get("name"));
-        }
-        else {
-            if(sourceFile!=null)
-                addFileDetails(tfPanel, sourceFile, Translator.get("source"));
-
-            addFileDetails(tfPanel, destFile, Translator.get("destination"));
+        // If collision type is 'same source and destination' no need to show both source and destination
+        if (collisionType == FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
+            addFileDetails(tfPanel, sourceFile, Translator.get("name"), lblImageSize1);
+        } else {
+            if (sourceFile != null) {
+                addFileDetails(tfPanel, sourceFile, Translator.get("source"), lblImageSize1);
+            }
+            addFileDetails(tfPanel, destFile, Translator.get("destination"), lblImageSize2);
         }
 
         yPanel.add(tfPanel);
@@ -194,35 +219,37 @@ public class FileCollisionDialog extends QuestionDialog {
         // Add a separator after file details
         yPanel.add(new JSeparator());
         
-        init(yPanel,
-             choicesText,
-             choicesActions,
-             3);
+        init(yPanel, choicesText, choicesActions, 3);
 
         // 'Apply to all' is available only for 'destination file already exists' collision type
-        if(multipleFilesMode && collisionType==FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS) {
+        if (multipleFilesMode && collisionType == FileCollisionChecker.DESTINATION_FILE_ALREADY_EXISTS) {
             applyToAllCheckBox = new JCheckBox(Translator.get("apply_to_all"));
             addComponent(applyToAllCheckBox);
         }
 
         // Send a system notification if a notifier is available and enabled
-        if(AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled())
+        if (AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled()) {
             AbstractNotifier.getNotifier().displayBackgroundNotification(NotificationType.JOB_ERROR, getTitle(), desc);
+        }
     }
 
 
-    private void addFileDetails(XAlignedComponentPanel panel, AbstractFile file, String nameLabel) {
+    private void addFileDetails(XAlignedComponentPanel panel, AbstractFile file, String nameLabel, JLabel imgSizeLabel) {
         addFileDetailsRow(panel, nameLabel+":", new FileLabel(file, false), 0);
 
         AbstractFile parent = file.getParent();
 
-        addFileDetailsRow(panel, Translator.get("location")+":", new FileLabel((parent==null?file:parent), true), 0);
+        addFileDetailsRow(panel, Translator.get("location")+":", new FileLabel((parent == null ? file:parent), true), 0);
 
         addFileDetailsRow(panel, Translator.get("size")+":", new JLabel(SizeFormat.format(file.getSize(), SizeFormat.DIGITS_FULL| SizeFormat.UNIT_LONG| SizeFormat.INCLUDE_SPACE)), 0);
 
         addFileDetailsRow(panel, Translator.get("date")+":", new JLabel(CustomDateFormat.format(new Date(file.getDate()))), 0);
 
-        addFileDetailsRow(panel, Translator.get("permissions")+":", new JLabel(file.getPermissionsString()), 10);
+        addFileDetailsRow(panel, Translator.get("permissions")+":", new JLabel(file.getPermissionsString()), imgSizeLabel == null ? 10 :0);
+
+        if (imgSizeLabel != null) {
+            addFileDetailsRow(panel, Translator.get("image_size")+":", imgSizeLabel, 10);
+        }
     }
 
     private void addFileDetailsRow(XAlignedComponentPanel panel, String label, JComponent comp, int ySpaceAfter) {

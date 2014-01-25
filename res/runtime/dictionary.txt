@@ -2714,8 +2714,8 @@ startup_error:ES:Un error ha impedido iniciar muCommander
 
 
 
-
-
+image_size:EN:Image size
+image_size:RU:Размеры изображения
 
 
 
