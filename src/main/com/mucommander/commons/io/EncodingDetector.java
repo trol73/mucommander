@@ -77,9 +77,12 @@ public class EncodingDetector {
      * <p>
      * See http://philip.html5.org/data/charsets.html and http://philip.html5.org/data/encoding-detection.svg
      * for why 4096 is the recommended size.
+     *
+     * Comment by Trol: 4096 is wrong value here. I have a lot of times situation when the encoding doesn't detected correctly
+     * in case of source file with UTF-8 comments at the end
      * </p>
      *  */
-    public final static int MAX_RECOMMENDED_BYTE_SIZE = 4096;
+    public final static int MAX_RECOMMENDED_BYTE_SIZE = 1024*1024;
 
 
     /**

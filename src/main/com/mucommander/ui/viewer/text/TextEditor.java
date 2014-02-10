@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -90,7 +91,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     }
     
     private void write(OutputStream out) throws IOException {
-    	textEditorImpl.write(new BOMWriter(out, textViewerDelegate.getEncoding())); 
+        // TODO make BOM optional
+    	//textEditorImpl.write(new BOMWriter(out, textViewerDelegate.getEncoding()));
+        textEditorImpl.write(new OutputStreamWriter(out, textViewerDelegate.getEncoding()));
     }
 
     @Override

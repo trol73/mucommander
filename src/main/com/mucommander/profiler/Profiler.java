@@ -6,7 +6,7 @@ import java.util.*;
  * Created by trol on 01/01/14.
  */
 public class Profiler {
-    public static final boolean ENABLED = true;
+    public static final boolean ENABLED = false;
 
     private static final Map<String, Long> timesStart = new HashMap<>();
     private static final Map<String, Long> timesDuration = new HashMap<>();
