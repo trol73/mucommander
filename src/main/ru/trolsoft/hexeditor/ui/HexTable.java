@@ -574,7 +574,7 @@ public class HexTable extends JTable {
     }
 
     @Override
-    protected void processKeyEvent (java.awt.event.KeyEvent e) {
+    protected void processKeyEvent (KeyEvent e) {
         // TODO: Convert into Actions and put into InputMap/ActionMap?
         final int hexColumns = model.getNumberOfHexColumns();
         final long lastOffset = model.getSize() - 1;
@@ -597,7 +597,7 @@ public class HexTable extends JTable {
                     e.consume();
                     return;
                 case KeyEvent.VK_DOWN:
-                    offs = Math.min(leadSelectionIndex+hexColumns, lastOffset);
+                    offs = Math.min(leadSelectionIndex + hexColumns, lastOffset);
                     changeSelectionByOffset(offs, extend);
                     e.consume();
                     return;
@@ -641,6 +641,7 @@ public class HexTable extends JTable {
 
         private final Point highlight;
         private final Map desktopAAHints;
+        private boolean hasSeparatorLine;
 
         public CellRenderer() {
             highlight = new Point();
@@ -654,6 +655,7 @@ Profiler.start("hexviewer.getrenderer");
             setValue(value);
 
             highlight.setLocation(-1, -1);
+            hasSeparatorLine = column > 1 && column % 4 == 1;
             // ASCII dump
             if (column == table.getColumnCount() - 1) {
                 long selStart = getSmallestSelectionIndex();
@@ -670,6 +672,7 @@ Profiler.start("hexviewer.getrenderer");
                 boolean alternateColor = alternateRowBackground && (row & 1) > 0;
                 setBackground(alternateColor ? alternateCellColor : table.getBackground());
                 setForeground(asciiDumpColor);
+                hasSeparatorLine = false;
             }  else {
                 if (!isSelected) {
                     if ((alternateRowBackground && (row & 1) > 0) ^ (alternateColumnBackground && (column & 1)>0)) {
@@ -687,6 +690,7 @@ Profiler.start("hexviewer.getrenderer");
                     setForeground(table.getForeground());
                 }
             }
+
 Profiler.stop("hexviewer.getrenderer");
 
             return this;
@@ -732,6 +736,11 @@ Profiler.start("hexviewer.paint_cell");
             // Restore rendering hints appropriately.
             if (desktopAAHints != null) {
                 g2d.addRenderingHints((Map)oldHints);
+            }
+
+            if (hasSeparatorLine) {
+                g.setColor(Color.GRAY);
+                g.drawLine(0, 0, 0, getHeight());
             }
 Profiler.stop("hexviewer.paint_cell");
         }

@@ -123,11 +123,12 @@ class TextEditorImpl implements ThemeListener {
 	void find() {
 		FindDialog findDialog = new FindDialog(frame);
 
-		if(findDialog.wasValidated()) {
+		if (findDialog.wasValidated()) {
 			searchString = findDialog.getSearchString().toLowerCase();
 
-			if(!searchString.equals(""))
+			if (!searchString.equals("")) {
 				doSearch(0, true);
+            }
 		}
 
 		// Request the focus on the text area which could be lost after the Find dialog was disposed

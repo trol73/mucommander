@@ -42,7 +42,9 @@ public class ImageFactory implements ViewerFactory {
         // Do not allow directories
         if(file.isDirectory())
             return false;
-
+        if ("scr".equalsIgnoreCase(file.getExtension()) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE ) {
+            return true;
+        }
         return IMAGE_FILTER.accept(file);
     }
 

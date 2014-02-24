@@ -125,10 +125,13 @@ class ImageViewer extends FileViewer implements ActionListener {
         in.close();
 
         this.scaledImage = null;
-        this.image = imageViewerImpl.getToolkit().createImage(imageBytes);
+        if ("scr".equalsIgnoreCase(file.getExtension()) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
+            this.image = ZxSpectrumScrImage.load(imageBytes);
+        } else {
+            this.image = imageViewerImpl.getToolkit().createImage(imageBytes);
 
-        waitForImage(image);
-
+            waitForImage(image);
+        }
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);
         this.zoomFactor = 1.0;

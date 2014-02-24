@@ -96,4 +96,59 @@ public class TextArea extends RSyntaxTextArea {
         }
     }
 
+/*
+    @Override
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed STR " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed BOOL " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, char oldValue, char newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed CHAR " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, int oldValue, int newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed INT " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed BYTE " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, short oldValue, short newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed SHORT " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, long oldValue, long newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed LONG " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, float oldValue, float newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed FLOAT " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, double oldValue, double newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
+System.out.println(">>> changed DOUBLE " + propertyName + " " + oldValue + " -> " +newValue);
+    }
+*/
 }
