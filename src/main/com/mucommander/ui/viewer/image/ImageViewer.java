@@ -19,23 +19,20 @@
 
 package com.mucommander.ui.viewer.image;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.ByteArrayOutputStream;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.helper.MenuToolkit;
@@ -55,8 +52,13 @@ import com.mucommander.ui.viewer.FileViewer;
  * @author Maxence Bernard, Arik Hadas
  */
 class ImageViewer extends FileViewer implements ActionListener {
-    private Image image;
-    private Image scaledImage;
+
+    private static final Cursor CURSOR_WAIT = new Cursor(Cursor.WAIT_CURSOR);
+    private static final Cursor CURSOR_DEFAULT = Cursor.getDefaultCursor();
+    private static final Cursor CURSOR_CROSS = new Cursor(Cursor.CROSSHAIR_CURSOR);
+
+    private BufferedImage image;
+    private BufferedImage scaledImage;
     private double zoomFactor;
 	
     /** Menu bar */
@@ -71,7 +73,18 @@ class ImageViewer extends FileViewer implements ActionListener {
     private ImageViewerImpl imageViewerImpl;
     private AbstractFile[] filesInDirectory;
     private int indexInDirectory = -1;
-    
+
+    private StatusBar statusBar;
+
+    private boolean waitCursorMode = false;
+
+    /**
+     * Unknown swing issue = MouseMovement events doesn't received on windows show.
+     * To fix it we make windows resize and undo it after start.
+     */
+    private boolean mouseMovementIssueFixed = false;
+
+
     public ImageViewer() {
     	imageViewerImpl = new ImageViewerImpl();
     	
@@ -84,8 +97,13 @@ class ImageViewer extends FileViewer implements ActionListener {
         nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
         prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
         controlsMenu.add(new JSeparator());
-        zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
-        zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
+        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
+        } else {
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), this);
+        }
     }
     
     @Override
@@ -99,6 +117,12 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     @Override
+    protected StatusBar getStatusBar() {
+        statusBar = new StatusBar();
+        return statusBar;
+    }
+
+    @Override
     protected void saveStateOnClose() {
 
     }
@@ -109,40 +133,28 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private synchronized void loadImage(AbstractFile file) throws IOException {
-        FileFrame frame = getFrame();
-        frame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-        int read;
-        byte buffer[] = new byte[1024];
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        InputStream in = file.getInputStream();
-        while ( (read=in.read(buffer, 0, buffer.length)) != -1) {
-            bout.write(buffer, 0, read);
-        }
+        setFrameCursor(CURSOR_WAIT);
 
-        byte imageBytes[] = bout.toByteArray();
-        bout.close();
-        in.close();
-
+        statusBar.setFileSize(file.getSize());
+        statusBar.setDateTime(file.getDate());
+        int imageWidth, imageHeight;
         this.scaledImage = null;
         if ("scr".equalsIgnoreCase(file.getExtension()) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
-            this.image = ZxSpectrumScrImage.load(imageBytes);
+            this.image = ZxSpectrumScrImage.load(file.getInputStream());
+            imageWidth = ZxSpectrumScrImage.WIDTH;
+            imageHeight = ZxSpectrumScrImage.HEIGHT;
+            statusBar.setImageBpp(4);
         } else {
-            this.image = imageViewerImpl.getToolkit().createImage(imageBytes);
-
-            waitForImage(image);
+            this.image = ImageIO.read(file.getInputStream());
+            imageWidth = image.getWidth();
+            imageHeight = image.getHeight();
+            statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
-        int imageWidth = image.getWidth(null);
-        int imageHeight = image.getHeight(null);
+        statusBar.setImageSize(imageWidth, imageHeight);
+
         this.zoomFactor = 1.0;
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-/*
-        while (imageWidth > screen.width || imageHeight > screen.height) {
-            imageWidth /= 2;
-            imageHeight /= 2;
-            zoomFactor /= 2;
-        }
-*/
+
         double zoomFactorX = 1.0 * screen.width / imageWidth;
         double zoomFactorY = 1.0 * screen.height / imageHeight;
         zoomFactor = Math.min(zoomFactorX, zoomFactorY);
@@ -150,40 +162,71 @@ class ImageViewer extends FileViewer implements ActionListener {
             zoomFactor = 1.0;
         }
 
-        if (zoomFactor == 1.0) {
-            this.scaledImage = image;
-        } else {
-            zoom(zoomFactor);
-        }
-			
-        checkZoom();
+        zoom(zoomFactor);
+        fixMouseMovementEventsIssue();
+
         checkNextPrev();
-        frame.setCursor(Cursor.getDefaultCursor());
+        setFrameCursor(CURSOR_DEFAULT);
     }
 
-	
-    private void waitForImage(Image image) {
-        //AppLogger.finest("Waiting for image to load "+image);
-        MediaTracker tracker = new MediaTracker(imageViewerImpl);
-        tracker.addImage(image, 0);
-        try {
-            tracker.waitForID(0); }
-        catch(InterruptedException e) {
+
+    private void setFrameCursor(Cursor cursor) {
+        if (cursor == CURSOR_WAIT) {
+            waitCursorMode = true;
+        } else if (cursor == CURSOR_DEFAULT) {
+            waitCursorMode = false;
+        } else if (cursor == CURSOR_CROSS && waitCursorMode) {
+            return;
         }
-        tracker.removeImage(image);
-        //AppLogger.finest("Image loaded "+image);
+        if (getFrame().getCursor() != cursor) {
+            getFrame().setCursor(cursor);
+        }
     }
+
 	
-	
+
     private synchronized void zoom(double factor) {
-        FileFrame frame = getFrame();
+        setFrameCursor(CURSOR_WAIT);
 
-        frame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        final int srcWidth = image.getWidth(null);
+        final int srcHeight = image.getHeight(null);
+        final int scaledWidth = (int)(srcWidth*factor);
+        final int scaledHeight = (int)(srcHeight*factor);
+        //this.scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
 
-        this.scaledImage = image.getScaledInstance((int)(image.getWidth(null)*factor), (int)(image.getHeight(null)*factor), Image.SCALE_DEFAULT);
-        waitForImage(scaledImage);
+        if (factor != 1.0) {
+            this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+            AffineTransform at = new AffineTransform();
+            at.scale(factor, factor);
+            AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+            this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
+        } else {
+            this.scaledImage = image;
+        }
 
-        frame.setCursor(Cursor.getDefaultCursor());
+        statusBar.setZoom(factor);
+        checkZoom();
+        setFrameCursor(CURSOR_DEFAULT);
+    }
+
+
+    private void fixMouseMovementEventsIssue() {
+        if (mouseMovementIssueFixed) {
+            return;
+        }
+        mouseMovementIssueFixed = true;
+        Runnable task = new Runnable() {
+            public void run() {
+                try {
+                    int w = getFrame().getWidth();
+                    int h = getFrame().getHeight();
+                    getFrame().setSize(w, h-1);
+                    getFrame().setSize(w, h);
+                } catch (Exception e) {
+                }
+            }
+        };
+        Executors.newSingleThreadScheduledExecutor().schedule(task, 1000, TimeUnit.MILLISECONDS);
     }
 
     private void updateFrame() {
@@ -194,6 +237,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         imageViewerImpl.revalidate();
         frame.pack();
         frame.getContentPane().repaint();
+
     }
 
     private void checkZoom() {
@@ -202,8 +246,8 @@ class ImageViewer extends FileViewer implements ActionListener {
         zoomInItem.setEnabled(zoomFactor<1.0 || (2*zoomFactor*image.getWidth(null) < d.width
                                                  && 2*zoomFactor*image.getHeight(null) < d.height));
 
-        zoomOutItem.setEnabled(zoomFactor>1.0 || (zoomFactor/2*image.getWidth(null)>160
-                                                  && zoomFactor/2*image.getHeight(null)>120));
+        zoomOutItem.setEnabled(zoomFactor > 1.0 || (zoomFactor / 2 * image.getWidth(null) > 160
+                && zoomFactor / 2 * image.getHeight(null) > 120));
     }
 
     private void checkNextPrev() {
@@ -226,6 +270,7 @@ class ImageViewer extends FileViewer implements ActionListener {
                     break;
                 }
             }
+            statusBar.setFileNumber(1, filesInDirectory.length);
         }
         loadImage(file);
     }
@@ -260,21 +305,18 @@ class ImageViewer extends FileViewer implements ActionListener {
             gotoPrevFile();
         } else {
         	super.actionPerformed(e);
-        	return;
         }
-
-        checkZoom();
     }
 
     private int getNextFileIndex() {
         int index = indexInDirectory;
+        ImageFactory factory = new ImageFactory();
         while (index < filesInDirectory.length-1) {
             index++;
             AbstractFile file = filesInDirectory[index];
-            if (file.isDirectory() || !ImageFactory.IMAGE_FILTER.accept(file)) {
-                continue;
+            if (factory.canViewFile(file)) {
+                return index;
             }
-            return index;
         }
         return -1;
     }
@@ -289,13 +331,13 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     private int getPrevFileIndex() {
         int index = indexInDirectory;
+        ImageFactory factory = new ImageFactory();
         while (index > 0) {
             index--;
             AbstractFile file = filesInDirectory[index];
-            if (file.isDirectory() || !ImageFactory.IMAGE_FILTER.accept(file)) {
-                continue;
+            if (factory.canViewFile(file)) {
+                return index;
             }
-            return index;
         }
         return  -1;
     }
@@ -311,21 +353,60 @@ class ImageViewer extends FileViewer implements ActionListener {
     private void gotoFile() {
         try {
             show(filesInDirectory[indexInDirectory]);
+            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.length);
             updateFrame();
         } catch (IOException e) {
             InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));
             e.printStackTrace();
         }
     }
-    
-    private class ImageViewerImpl extends JPanel implements ThemeListener {
+
+
+    private static String colorToRgbStr(int color) {
+        int a = (color >> 24) & 0xff;
+        int r = (color >> 16) & 0xff;
+        int g = (color >> 8) & 0xff;
+        int b = (color) & 0xff;
+        String result = r + ", " + g + ", " + b;
+        if (a == 0xff) {
+            result = "RGB: (" + result + ")";
+        } else {
+            result = a + ", " + result;
+            result = "ARGB: (" + result + ")";
+        }
+        return result;
+    }
+
+    private static String colorToHexStr(int color) {
+        int a = (color >> 24) & 0xff;
+        if (a == 0xff) {
+            color &= 0x00ffffff;
+        }
+        String result = Integer.toHexString(color);
+        while (result.length() < 6) {
+            result = '0' + result;
+        }
+        if (result.length() == 7) {
+            result = '0' + result;
+        }
+        return '#' + result.toUpperCase();
+    }
+
+
+
+    /**
+     * Image viewer panel
+     */
+    private class ImageViewerImpl extends JPanel implements MouseMotionListener, MouseListener, ThemeListener {
 
     	private Color backgroundColor;
     	
     	ImageViewerImpl() {
     		backgroundColor = ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR);
             ThemeManager.addCurrentThemeListener(this);
-    	}
+            addMouseListener(this);
+            addMouseMotionListener(this);
+        }
     	
     	////////////////////////
         // Overridden methods //
@@ -340,15 +421,15 @@ class ImageViewer extends FileViewer implements ActionListener {
             g.fillRect(0, 0, width, height);
 
             if (scaledImage != null) {
-                int imageWidth = scaledImage.getWidth(null);
-                int imageHeight = scaledImage.getHeight(null);
+                int imageWidth = scaledImage.getWidth();
+                int imageHeight = scaledImage.getHeight();
                 g.drawImage(scaledImage, Math.max(0, (width-imageWidth)/2), Math.max(0, (height-imageHeight)/2), null);
             }
         }
         
         @Override
         public synchronized Dimension getPreferredSize() {
-            return new Dimension(scaledImage.getWidth(null), scaledImage.getHeight(null));
+            return new Dimension(scaledImage.getWidth(), scaledImage.getHeight());
         }
     	
     	//////////////////////////////////
@@ -365,9 +446,78 @@ class ImageViewer extends FileViewer implements ActionListener {
             }
         }
 
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            final int imageOffsetX = Math.max(0, (imageViewerImpl.getWidth()-scaledImage.getWidth())/2);
+            final int imageOffsetY = Math.max(0, (imageViewerImpl.getHeight()-scaledImage.getHeight())/2);
+
+            boolean inImageArea = x >= imageOffsetX && y >= imageOffsetY && x < imageOffsetX + scaledImage.getWidth() && y < imageOffsetY + scaledImage.getHeight();
+            if (inImageArea) {
+                setFrameCursor(CURSOR_CROSS);
+            } else {
+                setFrameCursor(CURSOR_DEFAULT);
+            }
+        }
+
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            final int w = scaledImage.getWidth();
+            final int h = scaledImage.getHeight();
+            final int imageOffsetX = Math.max(0, (imageViewerImpl.getWidth()-w)/2);
+            final int imageOffsetY = Math.max(0, (imageViewerImpl.getHeight()-h)/2);
+
+            int pixelX = x - imageOffsetX;
+            if (pixelX < 0 || pixelX >= w) {
+                return;
+            }
+            int pixelY = y - imageOffsetY;
+            if (pixelY < 0 || pixelY >= h) {
+                return;
+            }
+            pixelX = (int)(pixelX/zoomFactor);
+            pixelY = (int)(pixelY/zoomFactor);
+            int color = image.getRGB(pixelX, pixelY);
+            int r = (color >> 16) & 0xff;
+            int g = (color >> 8) & 0xff;
+            int b = (color) & 0xff;
+            statusBar.setStatusMessage("XY: (" +pixelX + ", " + pixelY + ")  " + colorToRgbStr(color) + "  HTML: (" + colorToHexStr(color) + ")");
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            setFrameCursor(CURSOR_DEFAULT);
+        }
+
+
+
+
         /**
          * Not used, implemented as a no-op.
          */
+        @Override
         public void fontChanged(FontChangedEvent event) {}
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+//            mouseMoved(e);
+        }
+
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
     }
 }

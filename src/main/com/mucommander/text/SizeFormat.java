@@ -111,8 +111,9 @@ public class SizeFormat {
      * @return a String representation of the given byte size
      */
     public static String format(long size, int format) {
-        if(size<0)
+        if (size < 0) {
             return "?";
+        }
 
         String digitsString;
         String unitString;
@@ -129,14 +130,14 @@ public class SizeFormat {
         boolean roundToKb = (format&ROUND_TO_KB)!=0;
 		
         // size < 1KB
-        if(size<KB_1) {
+        if(size < KB_1) {
             if(roundToKb) {
                 // Note: ROUND_TO_KB must have precedence over DIGITS_FULL
-                digitsString = size==0?"0":"1";
-                unitString = noUnit?"":KB;
+                digitsString = size == 0 ? " 0" : "1";
+                unitString = noUnit ? "" : KB;
             }
             else {
-                digitsString = ""+size;
+                digitsString = "" + size;
                 unitString = unitLong?(size<=1?BYTE:BYTES):unitShort?B:"";
             }
         }
@@ -150,7 +151,7 @@ public class SizeFormat {
             synchronized(DECIMAL_FORMAT) {
                 digitsString = DECIMAL_FORMAT.format(size);
             }
-            unitString = unitLong?BYTES:unitShort?B:"";
+            unitString = unitLong ? BYTES : unitShort ? B :"";
         }
         else {
             // size < 10KB	-> "9.6 KB"

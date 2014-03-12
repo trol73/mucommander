@@ -44,6 +44,7 @@ import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import org.fife.ui.StatusBar;
 
 /**
  * A simple text viewer. Most of the implementation is located in {@link TextEditorImpl}.
@@ -202,6 +203,11 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
         return menuBar;
+    }
+
+    @Override
+    protected StatusBar getStatusBar() {
+        return null;
     }
 
     public void saveState(JScrollBar scrollBar) {

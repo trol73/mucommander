@@ -1,10 +1,8 @@
 package com.mucommander.ui.viewer.image;
 
-import com.mucommander.commons.file.AbstractFile;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,31 +15,38 @@ public class ZxSpectrumScrImage {
     public static final int WIDTH = 256;
     public static final int HEIGHT = 192;
 
+    public static final int DEFAULT_ZOOM = 1;
+
     //private static final int ROWS =
 
     public static final int SCR_IMAGE_FILE_SIZE = 6912;
 
-    private static final Color[] PALETTE = {
-        new Color(0, 0, 0),
-        new Color(0, 0, 0xff),
-        new Color(0xff, 0, 0),
-        new Color(0xff, 0, 0xff),
-        new Color(0, 0xff, 0),
-        new Color(0, 0xff, 0xff),
-        new Color(0xff, 0xff, 0),
-        new Color(0xff, 0xff, 0xff)
+    private static final Color[] PALETTE_BRIGHT_0 = {
+        new Color(0x000000),
+        new Color(0x0000cd),
+        new Color(0xcd0000),
+        new Color(0xff00ff),
+        new Color(0x00cd00),
+        new Color(0x00cdcd),
+        new Color(0xcdcd00),
+        new Color(0xcdcdcd)
+    };
+    private static final Color[] PALETTE_BRIGHT_1 = {
+        new Color(0x000000),
+        new Color(0x0000ff),
+        new Color(0xff0000),
+        new Color(0xff00ff),
+        new Color(0x00ff00),
+        new Color(0x00ffff),
+        new Color(0xffff00),
+        new Color(0xffffff)
     };
 
 
-    public static Image load(AbstractFile f) {
-        if (f.getSize() != SCR_IMAGE_FILE_SIZE) {
-            return null;
-        }
+    public static BufferedImage load(InputStream is, int zoomFactor) {
         byte[] data = new byte[SCR_IMAGE_FILE_SIZE];
         int readTotal = 0;
-        InputStream is = null;
         try {
-            is = f.getInputStream();
             while (readTotal < SCR_IMAGE_FILE_SIZE) {
                 int bytesRead = is.read(data, readTotal, SCR_IMAGE_FILE_SIZE - readTotal);
                 if (bytesRead < 0) {
@@ -62,12 +67,12 @@ public class ZxSpectrumScrImage {
         if (readTotal != SCR_IMAGE_FILE_SIZE) {
             return null;
         }
-        return load(data);
+        return load(data, zoomFactor);
     }
 
 
 
-    public static Image load(byte[] data, int zoomFactor) {
+    public static BufferedImage load(byte[] data, int zoomFactor) {
         if (data == null || data.length != SCR_IMAGE_FILE_SIZE) {
             return null;
         }
@@ -81,37 +86,42 @@ public class ZxSpectrumScrImage {
         // read colour data (attributes)
         byte[] ink = new byte[32*24];
         byte[] paper = new byte[32*24];
+        boolean[] bright = new boolean[32*24];
         for (int row = 0; row < 24; row++) {
             for (int col = 0; col < 32; col++) {
                 int offset = WIDTH * HEIGHT / 8 + (row*32)+col;
                 byte val = data[offset];
-                ink[row*32+col] = (byte)(val & 0x7);
-                paper[row*32+col] = (byte)((val & 0x38)>>3);
+
+                ink[row*32+col]   = (byte)( val & 0b00000111);
+                paper[row*32+col] = (byte)((val & 0b00111000)>>3);
+                bright[row*32+col] = ((val & 0b11000000)>>6) != 0;
             }
         }
 
         // render pixels
         for (int y = 0; y < HEIGHT; y++) {
             // display address 010[L4][L3][R2][R1][R0][L2][L1][L0][C4][C3][C2][C1][C0]
-            // where C is column number (5 bits)
-            // where L is line number (0..23, 5 bits)
-            // where R is pixel row in line (0..8, 3 bits)
-            int l = y / 8;
-            int r = y % 8;
-            final int lPatt = ((l & 0x18)<<8)|((l & 0x7)<<5);
-            final int rPatt = (r&0x7)<<8;
+            int line = y / 8;       // line number (0..23, 5 bits)
+            int row = y % 8;        // pixel row in line (0..8, 3 bits)
+            final int lPatt = ((line & 0x18)<<8)|((line & 0x7)<<5);
+            final int rPatt = (row & 0x7)<<8;
             for (int x = 0; x < WIDTH; x++) {
-                int C = x / 8;
-                int cPatt = C & 0x1F;
+                int col = x / 8;    // column number (5 bits)
+                int cPatt = col & 0x1F;
                 int bit = 7 - (x % 8);
-                int addr = (((0x4000 | lPatt) | rPatt) | cPatt) - 16384;
-                int inkIndex = ink[((y/8)*32)+(x/8)];
-                int paperIndex = paper[((y/8)*32)+(x/8)];
-
-                if (((data[addr]&(0x1<<bit))>>bit) != 0) {
-                    g.setColor(PALETTE[inkIndex]);
+                int address = (((0x4000 | lPatt) | rPatt) | cPatt) - 16384;
+                int attrIndex = ((y/8)*32)+(x/8);
+                int inkIndex = ink[attrIndex];
+                int paperIndex = paper[attrIndex];
+                boolean istBright = bright[attrIndex];
+                if (((data[address]&(0x1<<bit))>>bit) != 0) {
+                    g.setColor(PALETTE_BRIGHT_0[inkIndex]);
                 } else {
-                    g.setColor(PALETTE[paperIndex]);
+                    if (istBright) {
+                        g.setColor(PALETTE_BRIGHT_1[paperIndex]);
+                    } else {
+                        g.setColor(PALETTE_BRIGHT_0[paperIndex]);
+                    }
                 }
                 g.fillRect(x*zoomFactor, y*zoomFactor, zoomFactor, zoomFactor);
             }
@@ -120,7 +130,11 @@ public class ZxSpectrumScrImage {
     }
 
 
-    public static Image load(byte[] data) {
-        return load(data, 2);
+    public static BufferedImage load(byte[] data) {
+        return load(data, DEFAULT_ZOOM);
+    }
+
+    public static BufferedImage load(InputStream is) {
+        return load(is, DEFAULT_ZOOM);
     }
 }

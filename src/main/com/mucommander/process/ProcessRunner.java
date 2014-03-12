@@ -225,8 +225,9 @@ public class ProcessRunner {
         tokens = new String[parser.countTokens()];
 
         // Breaks command into tokens.
-        for(int i = 0; i < tokens.length; i++)
+        for(int i = 0; i < tokens.length; i++) {
             tokens[i] = parser.nextToken();
+        }
 
         // Starts the process.
         return execute(tokens, currentDirectory, listener, encoding);

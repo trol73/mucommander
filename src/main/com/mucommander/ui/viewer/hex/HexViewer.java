@@ -21,8 +21,8 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileViewer;
+import org.fife.ui.StatusBar;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
-import ru.trolsoft.hexeditor.data.FileByteBuffer;
 import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
 import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
@@ -65,6 +65,11 @@ try {
 } catch (Exception e) {
     e.printStackTrace();
 }
+    }
+
+    @Override
+    protected StatusBar getStatusBar() {
+        return null;
     }
 
     @Override

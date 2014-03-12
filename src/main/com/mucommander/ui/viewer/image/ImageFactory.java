@@ -40,8 +40,9 @@ public class ImageFactory implements ViewerFactory {
 
     public boolean canViewFile(AbstractFile file) {
         // Do not allow directories
-        if(file.isDirectory())
+        if (file.isDirectory()) {
             return false;
+        }
         if ("scr".equalsIgnoreCase(file.getExtension()) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE ) {
             return true;
         }

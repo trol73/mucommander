@@ -30,12 +30,12 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
-import com.mucommander.commons.io.bom.BOMWriter;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
@@ -110,6 +110,11 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
         textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
     	return menuBar;
+    }
+
+    @Override
+    protected StatusBar getStatusBar() {
+        return null;
     }
 
     @Override

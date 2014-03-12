@@ -29,7 +29,8 @@ public class TerminalAction extends ParentFolderAction {
         AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
         String cmd = getConsoleCommand(currentFolder);
         try {
-            ProcessRunner.execute(cmd);
+            //ProcessRunner.execute(cmd);
+            ProcessRunner.execute(cmd, currentFolder);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +44,7 @@ public class TerminalAction extends ParentFolderAction {
             case LINUX:
                 break;
             case MAC_OS_X:
-                return "open -a Terminal " + folder;
+                return "open -a Terminal .";// + folder;
         }
         return null;
     }

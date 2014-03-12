@@ -18,6 +18,7 @@
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.viewer.FileViewer;
+import org.fife.ui.StatusBar;
 import org.icepdf.ri.common.MyAnnotationCallback;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
@@ -57,6 +58,11 @@ public class PdfViewer extends FileViewer {
     @Override
     protected void show(AbstractFile file) throws IOException {
         controller.openDocument(file.getPath());
+    }
+
+    @Override
+    protected StatusBar getStatusBar() {
+        return null;
     }
 
     @Override

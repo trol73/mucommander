@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +99,13 @@ public abstract class FileFrame extends JFrame {
         // Add the AsyncPanel to the content pane
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(asyncPanel, BorderLayout.CENTER);
+
+        // Add status bar if exists
+        StatusBar statusBar = filePresenter.getStatusBar();
+        if (statusBar != null) {
+            contentPane.add(statusBar, BorderLayout.SOUTH);
+        }
+
         setContentPane(contentPane);
 
         //setSize(WAIT_DIALOG_SIZE);
@@ -152,6 +160,7 @@ public abstract class FileFrame extends JFrame {
         filePresenter.saveStateOnClose();
         super.dispose();
     }
+
 
     //////////////////////
     // Abstract methods //

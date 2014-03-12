@@ -62,6 +62,8 @@ import com.mucommander.ui.theme.ThemeListener;
  */
 public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileTableCellRenderer.class);
+
+    private static final String DOTS = "...";
 	
     private FileTable table;
     private FileTableModel tableModel;
@@ -227,7 +229,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
                     else
                         rightText = rightText.substring(1, rightText.length());
 
-                    label.setText(leftText+"..."+rightText);
+                    label.setText(leftText + DOTS + rightText);
                 }
 
                 // Set the toop

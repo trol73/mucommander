@@ -1,10 +1,7 @@
 package com.mucommander.ui.viewer;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
@@ -16,6 +13,7 @@ import javax.swing.KeyStroke;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import org.fife.ui.StatusBar;
 
 /**
  * Abstract class that serves as a common base for the file presenter objects (FileViewer, FileEditor).
@@ -50,7 +48,7 @@ public abstract class FilePresenter extends JScrollPane {
 
 		// Catch Apple+W keystrokes under Mac OS X to close the window
         if(OsFamily.MAC_OS_X.isCurrent()) {
-        	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
+        	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
         	getActionMap().put(CUSTOM_DISPOSE_EVENT, new AbstractAction() {
         		public void actionPerformed(ActionEvent e){
         			getFrame().dispose();
@@ -153,6 +151,12 @@ public abstract class FilePresenter extends JScrollPane {
     protected abstract JMenuBar getMenuBar();
 
     /**
+     * Returns the status bar for presenter frame. Can return null if the viewer doesn't have status bar.
+     * @return
+     */
+    protected abstract StatusBar getStatusBar();
+
+    /**
      * Executed before editor/viewer closed to save sate (cursor position, syntax type etc.)
      */
     protected abstract void saveStateOnClose();
@@ -161,4 +165,5 @@ public abstract class FilePresenter extends JScrollPane {
      * Executed before editor/viewer shows to restore saved state
      */
     protected abstract void restoreStateOnStartup();
+
 }
