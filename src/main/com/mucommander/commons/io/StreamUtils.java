@@ -400,7 +400,7 @@ public class StreamUtils {
      */
     public static int readUpTo(InputStream in, byte b[], int off, int len) throws IOException {
         int totalRead = 0;
-        if(len>0) {
+        if (len > 0) {
             do {
                 int nbRead = in.read(b, off + totalRead, len - totalRead);
                 if (nbRead < 0)

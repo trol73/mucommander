@@ -76,6 +76,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private JTextField edtFromDirectory;
 
     private JCheckBox cbSearchSubdirectories;
+    private JCheckBox cbSearchArchives;
     private JCheckBox cbCaseSensitive;
     private JCheckBox cbIgnoreHidden;
 
@@ -165,9 +166,11 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         // Checkboxes
         cbSearchSubdirectories = new JCheckBox(Translator.get("find_dialog.search_subdirectories"));
         cbSearchSubdirectories.setSelected(true);
+        cbSearchArchives = new JCheckBox(Translator.get("find_dialog.search_archives"));
         cbCaseSensitive = new JCheckBox(Translator.get("find_dialog.case_sensitive"));
         cbIgnoreHidden = new JCheckBox(Translator.get("find_dialog.ignore_hidden"));
         compPanel.addRow("", cbSearchSubdirectories, 10);
+        compPanel.addRow("", cbSearchArchives, 10);
         compPanel.addRow("", cbCaseSensitive, 10);
         compPanel.addRow("", cbIgnoreHidden, 10);
 
@@ -280,7 +283,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         clearResults();
         job = new FindFileJob(mainFrame);
         job.setStartDirectory(FileFactory.getFile(edtFromDirectory.getText()));
-        job.setup(edtFileName.getText(), edtText.getText(), cbSearchSubdirectories.isSelected(), cbCaseSensitive.isSelected(), cbIgnoreHidden.isSelected());
+        job.setup(edtFileName.getText(), edtText.getText(), cbSearchSubdirectories.isSelected(), cbSearchArchives.isSelected(), cbCaseSensitive.isSelected(), cbIgnoreHidden.isSelected());
         updateResultLabel();
         job.start();
         updateButtons();

@@ -32,7 +32,7 @@ import java.awt.event.ActionListener;
  *
  * @author Maxence Bernard
  */
-public class FindDialog extends FocusDialog implements ActionListener {
+public abstract class FindDialog extends FocusDialog implements ActionListener {
 
     private static String text;
 
@@ -42,8 +42,6 @@ public class FindDialog extends FocusDialog implements ActionListener {
     /** The 'OK' button */
     private JButton okButton;
 
-    /** true if the dialog was validated by the user */
-    private boolean wasValidated;
 
     /**
      * Creates a new FindDialog and shows it to the screen.
@@ -67,19 +65,8 @@ public class FindDialog extends FocusDialog implements ActionListener {
 
         // The text field will receive initial focus
         setInitialFocusComponent(findField);
-
-        showDialog();
     }
 
-    /**
-     * Returns <code>true</code> if the dialog was validated by the user, i.e. the user pressed the 'OK' button
-     * or the 'Enter' key in the text field.
-     *
-     * @return <code>true</code> if the dialog was validated by the user
-     */
-    public boolean wasValidated() {
-        return wasValidated;
-    }
 
     /**
      * Returns the search string entered by the user in the text field.
@@ -95,12 +82,11 @@ public class FindDialog extends FocusDialog implements ActionListener {
     // ActionListener implementation //
     ///////////////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-
-        wasValidated = source== okButton || source==findField;
-
         dispose();
+        doSearch(source == okButton || source == findField ? getSearchString() : null);
     }
 
     @Override
@@ -108,4 +94,10 @@ public class FindDialog extends FocusDialog implements ActionListener {
         super.saveState();
         text = findField.getText();
     }
+
+    /**
+     * Search operation listener
+     * @param text nul if the dialog was cancelled
+     */
+    protected abstract void doSearch(String text);
 }

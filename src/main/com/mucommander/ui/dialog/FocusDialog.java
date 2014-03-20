@@ -54,6 +54,7 @@ import com.mucommander.ui.helper.FocusRequester;
  */
 public class FocusDialog extends JDialog implements WindowListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FocusDialog.class);
+    private static final EmptyBorder BORDER = new EmptyBorder(6, 8, 6, 8);
 	
     /** Minimum dimensions of this dialog, may be null */
     private Dimension minimumDimension;
@@ -89,7 +90,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         setLocationRelativeTo(locationRelativeComp);
 
         JPanel contentPane = (JPanel)getContentPane();
-        contentPane.setBorder(new EmptyBorder(6, 8, 6, 8));
+        contentPane.setBorder(BORDER);
         setResizable(true);
 
         // Important: dispose (release resources) window on close, default is HIDE_ON_CLOSE
@@ -144,10 +145,11 @@ public class FocusDialog extends JDialog implements WindowListener {
     public void setInitialFocusComponent(JComponent initialFocusComponent) {
         this.initialFocusComponent = initialFocusComponent;
 
-        if(initialFocusComponent==null)
+        if (initialFocusComponent == null) {
             removeWindowListener(this);
-        else
+        } else {
             addWindowListener(this);
+        }
     }
 	
 	
@@ -186,13 +188,15 @@ public class FocusDialog extends JDialog implements WindowListener {
     @Override
     public void pack()  {
         super.pack();
-        if(maximumDimension!=null)
+        if (maximumDimension != null) {
             DialogToolkit.fitToMaxDimension(this, maximumDimension);
-        else
+        } else {
             DialogToolkit.fitToScreen(this);
+        }
 		
-        if(minimumDimension!=null)
+        if (minimumDimension != null) {
             DialogToolkit.fitToMinDimension(this, minimumDimension);
+        }
     }
 
 	
@@ -202,10 +206,11 @@ public class FocusDialog extends JDialog implements WindowListener {
     public void showDialog() {
         pack();
 
-        if(locationRelativeComp==null)
+        if (locationRelativeComp == null) {
             DialogToolkit.centerOnScreen(this);
-        else
+        } else {
             setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
+        }
         setVisible(true);
     }
 

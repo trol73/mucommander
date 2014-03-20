@@ -30,6 +30,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
+import com.mucommander.ui.viewer.audio.AudioFactory;
 
 /**
  * ViewerRegistrar maintains a list of registered file viewers and provides methods to dynamically register file viewers
@@ -47,8 +48,10 @@ public class ViewerRegistrar {
 
         registerFileViewer(new com.mucommander.ui.viewer.image.ImageFactory());
 
+        registerFileViewer(new AudioFactory());
 
         registerFileViewer(new com.mucommander.ui.viewer.text.TextFactory());
+
 
         // The HexFactory must be the last FileViewer to be registered (otherwise it would open other factories file types)
         registerFileViewer(new com.mucommander.ui.viewer.hex.HexFactory());

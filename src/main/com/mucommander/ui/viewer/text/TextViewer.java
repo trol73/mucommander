@@ -264,6 +264,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
+        // detect XML files
+        if (type == FileType.NONE && textEditorImpl.isXmlFile(file)) {
+            type = FileType.XML;
+        }
         menuHelper.setSyntax(type);
         restoreStateOnStartup();
         textEditorImpl.getTextArea().setFileType(type);

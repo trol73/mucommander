@@ -24,7 +24,6 @@ import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +36,14 @@ public class FindFileJob extends FileJob {
 
     private AbstractFile startDirectory;
     private String fileContent;
-    private boolean searchSubdirs;
+    private boolean searchSubdirectories;
+    private boolean searchArchives;
     private boolean caseSensitive;
     private boolean ignoreHidden;
 
     private AbstractFileFilter fileFilter;
 
-    private final List<AbstractFile> list = new ArrayList<AbstractFile>();
+    private final List<AbstractFile> list = new ArrayList<>();
 
     public FindFileJob(MainFrame mainFrame) {
         super(mainFrame);
@@ -63,10 +63,10 @@ public class FindFileJob extends FileJob {
             return false;
         }
 
-        // If file is a directory, recurse
+        // If file is a directory, recurs
         if (file.isDirectory() && !file.isSymlink()) {
             searchInFile(file);
-            if (!searchSubdirs && !file.equals(startDirectory)) {
+            if (!searchSubdirectories && !file.equals(startDirectory)) {
                 return true;
             }
             try {
@@ -88,19 +88,35 @@ public class FindFileJob extends FileJob {
             }
         }
 
+        if (file.isArchive() && searchArchives) {
+            try {
+                AbstractFile subFiles[] = file.ls();
+                for (int i = 0; i < subFiles.length && getState() != INTERRUPTED; i++) {
+                    if (ignoreHidden && file.isHidden()) {
+                        continue;
+                    }
+                    // Notify job that we're starting to process this file (needed for recursive calls to processFile)
+                    nextFile(subFiles[i]);
+                    processFile(subFiles[i], null);
+                }
+            } catch(IOException e) {
+                // Should we tell the user?
+            }
+        }
+
         return true;
     }
 
     private void searchInFile(AbstractFile file) {
         File f = new File(file.toString());
-        if (fileFilter.accept(f) && fileContainsString(f)) {
+        if (fileFilter.accept(f) && fileContainsString(file)) {
             synchronized (this) {
                 list.add(file);
             }
         }
     }
 
-    private boolean fileContainsString(File f) {
+    private boolean fileContainsString(AbstractFile f) {
         if (fileContent == null || fileContent.isEmpty()) {
             return true;
         }
@@ -110,7 +126,7 @@ public class FindFileJob extends FileJob {
         Scanner in = null;
         boolean result = false;
         try {
-            in = new Scanner(new FileReader(f));
+            in = new Scanner(f.getInputStream());
             while (in.hasNextLine() && !result) {
                 String line = in.nextLine();
                 if (!caseSensitive) {
@@ -146,11 +162,12 @@ public class FindFileJob extends FileJob {
         setFiles(fs);
     }
 
-    public void setup(String fileMask, String fileContent, boolean searchSubdirs, boolean caseSensitive, boolean ignoreHidden) {
+    public void setup(String fileMask, String fileContent, boolean searchSubdirs, boolean searchArchives, boolean caseSensitive, boolean ignoreHidden) {
         fileMask = fileMask.trim();
         fileMask = fileMask.isEmpty() ? "*" : fileMask;
         this.fileContent = fileContent;
-        this.searchSubdirs = searchSubdirs;
+        this.searchSubdirectories = searchSubdirs;
+        this.searchArchives = searchArchives;
         this.caseSensitive = caseSensitive;
         this.ignoreHidden = ignoreHidden;
 

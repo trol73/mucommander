@@ -30,6 +30,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import com.mucommander.commons.io.BufferPool;
+import com.mucommander.commons.io.StreamUtils;
 import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,10 +197,16 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
+        // detect XML files
+        if (type == FileType.NONE && textEditorImpl.isXmlFile(file)) {
+            type = FileType.XML;
+        }
         textViewerDelegate.menuHelper.setSyntax(type);
         textEditorImpl.getTextArea().setFileType(type);
     	textViewerDelegate.startEditing(file, this);
     }
+
+
     
     /////////////////////////////////////
     // DocumentListener implementation //
@@ -259,4 +267,6 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}
     }
+
+
 }

@@ -18,6 +18,9 @@
 
 package com.mucommander.ui.viewer.text;
 
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.io.BufferPool;
+import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.ui.theme.*;
 
 import javax.swing.JFrame;
@@ -31,10 +34,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -120,27 +120,30 @@ class TextEditorImpl implements ThemeListener {
 	// Search code //
 	/////////////////
 
-	void find() {
-		FindDialog findDialog = new FindDialog(frame);
+    void find() {
+		FindDialog findDialog = new FindDialog(frame) {
+            @Override
+            protected void doSearch(String text) {
+                if (text != null && text.length() > 0) {
+                    searchString = getSearchString().toLowerCase();
 
-		if (findDialog.wasValidated()) {
-			searchString = findDialog.getSearchString().toLowerCase();
-
-			if (!searchString.equals("")) {
-				doSearch(0, true);
+                    if (!searchString.equals("")) {
+                        search(0, true);
+                    }
+                }
+                // Request the focus on the text area which could be lost after the Find dialog was disposed
+                textArea.requestFocus();
             }
-		}
-
-		// Request the focus on the text area which could be lost after the Find dialog was disposed
-		textArea.requestFocus();
+        };
+        findDialog.showDialog();
 	}
 
 	void findNext() {
-		doSearch(textArea.getSelectionEnd(), true);
+		search(textArea.getSelectionEnd(), true);
 	}
 
 	void findPrevious() {
-		doSearch(textArea.getSelectionStart() - 1, false);
+		search(textArea.getSelectionStart() - 1, false);
 	}
 
     void gotoLine() {
@@ -154,7 +157,7 @@ class TextEditorImpl implements ThemeListener {
 		return textArea.getText().toLowerCase();
 	}
 
-	private void doSearch(int startPos, boolean forward) {
+	private void search(int startPos, boolean forward) {
 		if (searchString == null || searchString.length() == 0)
 			return;
 		int pos;
@@ -296,4 +299,31 @@ class TextEditorImpl implements ThemeListener {
 		if(event.getFontId() == Theme.EDITOR_FONT)
 			textArea.setFont(event.getFont());
 	}
+
+
+    public boolean isXmlFile(AbstractFile file) {
+        byte bytes[] = BufferPool.getByteArray(256);
+        InputStream is = null;
+        int readBytes;
+        try {
+            is = file.getInputStream();
+            readBytes = StreamUtils.readUpTo(is, bytes);
+        } catch (IOException e) {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            return false;
+        }
+        if (readBytes < 5) {
+            return false;
+        }
+
+        String str = new String(bytes, 0, readBytes).trim().toLowerCase();
+        return str.startsWith("<?xml");
+    }
+
 }
