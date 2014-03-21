@@ -226,6 +226,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         saveState(getVerticalScrollBar());
     }
 
+
     @Override
     protected void restoreStateOnStartup() {
         final TextArea textArea = textEditorImpl.getTextArea();
@@ -269,7 +270,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
             type = FileType.XML;
         }
         menuHelper.setSyntax(type);
-        restoreStateOnStartup();
         textEditorImpl.getTextArea().setFileType(type);
     }
     

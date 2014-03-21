@@ -93,7 +93,6 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     }
     
     private void write(OutputStream out) throws IOException {
-        // TODO make BOM optional
     	//textEditorImpl.write(new BOMWriter(out, textViewerDelegate.getEncoding()));
         textEditorImpl.write(new OutputStreamWriter(out, textViewerDelegate.getEncoding()));
     }

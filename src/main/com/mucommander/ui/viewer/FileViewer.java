@@ -81,8 +81,9 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==closeItem)
+        if (e.getSource() == closeItem) {
             getFrame().dispose();
+        }
     }
 
 

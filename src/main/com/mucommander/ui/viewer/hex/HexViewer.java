@@ -39,6 +39,7 @@ public class HexViewer extends FileViewer {
     private HexTable hexTable;
     private ViewerHexTableModel model;
     private AbstractByteBuffer byteBuffer;
+    private StatusBar statusBar;
 
     @Override
     protected void show(AbstractFile file) throws IOException {
@@ -69,7 +70,8 @@ try {
 
     @Override
     protected StatusBar getStatusBar() {
-        return null;
+        statusBar = new StatusBar();
+        return statusBar;
     }
 
     @Override
