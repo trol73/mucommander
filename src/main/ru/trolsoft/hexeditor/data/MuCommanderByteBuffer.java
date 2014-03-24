@@ -41,19 +41,19 @@ public class MuCommanderByteBuffer extends AbstractByteBuffer {
             RandomAccessInputStream rndIs = ((RandomAccessInputStream) is);
             // Seek and reuse the stream
             rndIs.seek(offset);
-System.out.println("RANDOM ACCESS " + offset);
+//System.out.println("RANDOM ACCESS " + offset);
         } else {
             // TODO: it would be more efficient to use some sort of PushBackInputStream, though we can't use PushBackInputStream because we don't want to keep pushing back for the whole InputStream lifetime
             // Close the InputStream and open a new one
             // Note: we could use mark/reset if the InputStream supports it, but it is almost never implemented by
             // InputStream subclasses and a broken by design anyway.
             if (lastOffset > offset) {
-System.out.println("GENERAL ACCESS WITH RECREATE " + offset + "   " + lastOffset + "    " + (lastOffset - offset));
+//System.out.println("GENERAL ACCESS WITH RECREATE " + offset + "   " + lastOffset + "    " + (lastOffset - offset));
                 is.close();
                 is = file.getInputStream();
                 is.skip(offset);
             } else if (lastOffset != offset) {
-System.out.println("GENERAL ACCESS WITH SKIP " + offset + "   " + (offset - lastOffset));
+//System.out.println("GENERAL ACCESS WITH SKIP " + offset + "   " + (offset - lastOffset));
                 is.skip(offset - lastOffset);
             }
         }

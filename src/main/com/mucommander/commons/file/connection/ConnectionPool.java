@@ -19,7 +19,9 @@
 package com.mucommander.commons.file.connection;
 
 import java.io.InterruptedIOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public class ConnectionPool implements Runnable {
     private static ConnectionPool instance = new ConnectionPool();
 
     /** List of registered ConnectionHandler */
-    private final static Vector<ConnectionHandler> connectionHandlers = new Vector<ConnectionHandler>();
+    private final static List<ConnectionHandler> connectionHandlers = new ArrayList<>();
 
     /** The thread that monitors connections, null if there currently is no registered ConnectionHandler */
     private static Thread monitorThread;
@@ -60,12 +62,12 @@ public class ConnectionPool implements Runnable {
                 int matchingConnHandlers = 0;
 
                 // Try and find an appropriate existing ConnectionHandler
-                for(ConnectionHandler connHandler : connectionHandlers) {
+                for (ConnectionHandler connHandler : connectionHandlers) {
                 	// ConnectionHandler must match the realm and credentials and must not be locked
-                	if(connHandler.equals(realm, urlCredentials)) {
+                	if (connHandler.equals(realm, urlCredentials)) {
                 		matchingConnHandlers++;
                 		synchronized(connHandler) {     // Ensures that lock remains unchanged while we access/update it
-                			if(!connHandler.isLocked()) {
+                			if (!connHandler.isLocked()) {
                 				// Try to acquire lock if a lock was requested
                 				if(!acquireLock || connHandler.acquireLock()) {
                 					LOGGER.info("returning ConnectionHandler {}, realm = {}", connHandler, realm);
@@ -85,31 +87,32 @@ public class ConnectionPool implements Runnable {
                             // Wait for a ConnectionHandler to be released or removed from the pool
                             connectionHandlers.wait();      // relinquishes the lock on connectionHandlers
                             break;
-                        }
-                        catch(InterruptedException e) {
+                        } catch(InterruptedException e) {
                             LOGGER.info("Interrupted while waiting on a connection for {}", url, e);
                             throw new InterruptedIOException();
                         }
                     }
                 }
 
-                if(matchingConnHandlers==MAX_CONNECTIONS_PER_REALM)
+                if (matchingConnHandlers == MAX_CONNECTIONS_PER_REALM) {
                     continue;
+                }
 
                 // No suitable ConnectionHandler found, create a new one
                 ConnectionHandler connHandler = connectionHandlerFactory.createConnectionHandler(url);
 
                 // Acquire lock if a lock was requested
-                if(acquireLock)
+                if (acquireLock) {
                     connHandler.acquireLock();
+                }
 
                 LOGGER.info("adding new ConnectionHandler {}, realm = {}", connHandler, connHandler.getRealm());
 
                 // Insert new ConnectionHandler at first position as if it has more chances to be accessed again soon
-                connectionHandlers.insertElementAt(connHandler, 0);
+                connectionHandlers.add(0, connHandler);// insertElementAt(connHandler, 0);
 
                 // Start monitor thread if it is not currently running (if there previously was no registered ConnectionHandler)
-                if(monitorThread==null) {
+                if (monitorThread == null) {
                     LOGGER.info("starting monitor thread");
                     monitorThread = new Thread(instance);
                     monitorThread.start();
@@ -127,27 +130,27 @@ public class ConnectionPool implements Runnable {
     /**
      * Returns a list of registered ConnectionHandler instances. As the name of this method implies, the returned
      * list is only a snapshot and will not reflect the modifications that are made after this method has been called.
-     * The Vector is a cloned one and thus can be safely modified. 
+     * The List is a cloned one and thus can be safely modified.
      *
      * @return a list of registered ConnectionHandler instances
      */
-    public static Vector<ConnectionHandler> getConnectionHandlersSnapshot() {
-        return (Vector<ConnectionHandler>)connectionHandlers.clone();
+    public static List<ConnectionHandler> getConnectionHandlersSnapshot() {
+        return new ArrayList<>(connectionHandlers);
     }
     
-    /**
-     * Returns the ConnectionHandler instance located at the given position in the list.
-     */
-    private static ConnectionHandler getConnectionHandlerAt(int i) {
-        return connectionHandlers.elementAt(i);
-    }
+//    /**
+//     * Returns the ConnectionHandler instance located at the given position in the list.
+//     */
+//    private static ConnectionHandler getConnectionHandlerAt(int i) {
+//        return connectionHandlers.get(i);
+//    }
 
     /**
      * Called by {@link ConnectionHandler#releaseLock()} to notify the <code>ConnectionHandler</code> that a
      * <code>ConnectionHandler</code> has been released.
      */
     static void notifyConnectionHandlerLockReleased() {
-        synchronized(connectionHandlers) {
+        synchronized (connectionHandlers) {
             // Notify any thread waiting for a ConnectionHandler to be released
             connectionHandlers.notify();
         }
@@ -162,61 +165,67 @@ public class ConnectionPool implements Runnable {
      */
     public void run() {
 
-        while(monitorThread!=null) {        // Thread will be interrupted by CloseConnectionThread if there are no more ConnectionHandler
+        while (monitorThread != null) {        // Thread will be interrupted by CloseConnectionThread if there are no more ConnectionHandler
             long now = System.currentTimeMillis();
 
             synchronized(connectionHandlers) {      // Ensures that getConnectionHandler is not currently changing the list while we access it
-                for(ConnectionHandler connHandler : connectionHandlers) {
+                for (Iterator<ConnectionHandler> it = connectionHandlers.iterator(); it.hasNext();) {
+                    final ConnectionHandler connHandler = it.next();
+                //for (ConnectionHandler connHandler : connectionHandlers) {
 
-                    synchronized(connHandler) {     // Ensures that no one is trying to acquire a lock on the connection while we access it 
-                        if(!connHandler.isLocked()) {   // Do not touch ConnectionHandler if it is currently locked
+                    synchronized(connHandler) {     // Ensures that no one is trying to acquire a lock on the connection while we access it
+                        // Do not touch ConnectionHandler if it is currently locked
+                        if (connHandler.isLocked()) {
+                            continue;
+                        }
 
-                            // Remove ConnectionHandler instance from the list of registered ConnectionHandler
-                            // if it is not connected
-                            if(!connHandler.isConnected()) {
-                                LOGGER.info("Removing unconnected ConnectionHandler {}", connHandler);
+                        // Remove ConnectionHandler instance from the list of registered ConnectionHandler
+                        // if it is not connected
+                        if (!connHandler.isConnected()) {
+                            LOGGER.info("Removing unconnected ConnectionHandler {}", connHandler);
 
-                                connectionHandlers.remove(connHandler);
-                                // Notify any thread waiting for a ConnectionHandler to be released
-                                connectionHandlers.notify();
+                            //connectionHandlers.remove(connHandler);
+                            it.remove();
+                            // Notify any thread waiting for a ConnectionHandler to be released
+                            connectionHandlers.notify();
 
-                                continue;       // Skips close on inactivity and keep alive checks
-                            }
+                            continue;       // Skips close on inactivity and keep alive checks
+                        }
 
-                            long lastUsed = connHandler.getLastActivityTimestamp();
+                        long lastUsed = connHandler.getLastActivityTimestamp();
 
-                            // If time-to-live has been reached without any connection activity, remove ConnectionHandler
-                            // from the list of registered ConnectionHandler and close the connection in a separate thread
-                            long closePeriod = connHandler.getCloseOnInactivityPeriod();
-                            if(closePeriod!=-1 && now-lastUsed>closePeriod*1000) {
-                                LOGGER.info("Removing timed-out ConnectionHandler {}",connHandler);
+                        // If time-to-live has been reached without any connection activity, remove ConnectionHandler
+                        // from the list of registered ConnectionHandler and close the connection in a separate thread
+                        long closePeriod = connHandler.getCloseOnInactivityPeriod();
+                        if (closePeriod != -1 && now - lastUsed > closePeriod*1000) {
+                            LOGGER.info("Removing timed-out ConnectionHandler {}",connHandler);
 
-                                connectionHandlers.remove(connHandler);
-                                // Notify any thread waiting for a ConnectionHandler to be released
-                                connectionHandlers.notify();
+                            //connectionHandlers.remove(connHandler);
+                            it.remove();
+                            // Notify any thread waiting for a ConnectionHandler to be released
+                            connectionHandlers.notify();
 
-                                // Close connection in a separate thread as it could lock this thread
-                                new CloseConnectionThread(connHandler).start();
+                            // Close connection in a separate thread as it could lock this thread
+                            new CloseConnectionThread(connHandler).start();
 
-                                continue;       // Skips keep alive check
-                            }
+                            continue;       // Skips keep alive check
+                        }
 
-                            // If keep-alive period has been reached without any connection activity or a keep alive,
-                            // keep connection alive in a separate thread
-                            long keepAlivePeriod = connHandler.getKeepAlivePeriod(); 
-                            if(keepAlivePeriod!=-1 && now-Math.max(lastUsed, connHandler.getLastKeepAliveTimestamp())>keepAlivePeriod*1000) {
-                                // Update last keep alive timestamp to now
-                                connHandler.updateLastKeepAliveTimestamp();
+                        // If keep-alive period has been reached without any connection activity or a keep alive,
+                        // keep connection alive in a separate thread
+                        long keepAlivePeriod = connHandler.getKeepAlivePeriod();
+                        if (keepAlivePeriod!=-1 && now-Math.max(lastUsed, connHandler.getLastKeepAliveTimestamp())>keepAlivePeriod*1000) {
+                            // Update last keep alive timestamp to now
+                            connHandler.updateLastKeepAliveTimestamp();
 
-                                // Keep connection alive in a separate thread as it could lock this thread
-                                new KeepAliveConnectionThread(connHandler).start();
-                            }
+                            // Keep connection alive in a separate thread as it could lock this thread
+                            new KeepAliveConnectionThread(connHandler).start();
                         }
                     }
                 }
 
                 // Stop monitor thread if there are no more ConnectionHandler
-                if(connectionHandlers.size()==0) {
+                if (connectionHandlers.size() == 0) {
                     LOGGER.info("No more ConnectionHandler, stopping monitor thread");
                     monitorThread = null;
                 }
@@ -225,8 +234,7 @@ public class ConnectionPool implements Runnable {
             // Sleep for MONITOR_SLEEP_PERIOD milliseconds, minus the processing time of this loop
             try {
                 Thread.sleep(Math.max(0, MONITOR_SLEEP_PERIOD-(System.currentTimeMillis()-now)));
-            }
-            catch(InterruptedException e) {
+            } catch(InterruptedException e) {
                 // Will loop again
             }
         }
