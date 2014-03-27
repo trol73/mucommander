@@ -255,8 +255,7 @@ class TextEditorImpl implements ThemeListener {
 
 		try {
 			textArea.getUI().getEditorKit(textArea).write(new BufferedWriter(writer), document, 0, document.getLength());
-		}
-		catch(BadLocationException e) {
+		} catch(BadLocationException e) {
 			throw new IOException(e.getMessage());
 		}
 	}

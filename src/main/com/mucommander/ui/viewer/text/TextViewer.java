@@ -230,8 +230,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
     @Override
     protected void restoreStateOnStartup() {
         final TextArea textArea = textEditorImpl.getTextArea();
-        getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
         textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
+        getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
     }
 
     String getEncoding() {

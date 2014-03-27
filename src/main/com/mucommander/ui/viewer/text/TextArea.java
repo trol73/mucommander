@@ -37,7 +37,7 @@ public class TextArea extends RSyntaxTextArea {
             }
             return true;
         } catch (BadLocationException e) {
-            e.printStackTrace();
+            System.out.println("Invalid line: " + line + ":" + column);
             return false;
         }
     }

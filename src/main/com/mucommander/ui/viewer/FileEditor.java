@@ -88,19 +88,18 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         int ret = fileChooser.showSaveDialog(getFrame());
 		
-        if (ret==JFileChooser.APPROVE_OPTION) {
+        if (ret == JFileChooser.APPROVE_OPTION) {
             AbstractFile destFile;
             try {
                 destFile = FileFactory.getFile(fileChooser.getSelectedFile().getAbsolutePath(), true);
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
                 return;
             }
 
             // Check for file collisions, i.e. if the file already exists in the destination
             int collision = FileCollisionChecker.checkForCollision(null, destFile);
-            if(collision!=FileCollisionChecker.NO_COLLOSION) {
+            if (collision!=FileCollisionChecker.NO_COLLOSION) {
                 // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
                 // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
                 int action = new FileCollisionDialog(getFrame(), getFrame()/*mainFrame*/, collision, null, destFile, false, false).getActionValue();
@@ -136,8 +135,9 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     // Returns true if the file does not have any unsaved change or if the user refused to save the changes,
     // false if the user canceled the dialog or the save failed.
     public boolean askSave() {
-        if(!saveNeeded)
+        if (!saveNeeded) {
             return true;
+        }
 
         QuestionDialog dialog = new QuestionDialog(getFrame(), null, Translator.get("file_editor.save_warning"), getFrame(),
                                                    new String[] {Translator.get("save"), Translator.get("dont_save"), Translator.get("cancel")},
@@ -188,13 +188,11 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         Object source = e.getSource();
 		
         // File menu
-        if (source==saveItem) {
+        if (source == saveItem) {
             trySave(getCurrentFile());
-        }		
-        else if (source==saveAsItem) {
+        } else if (source == saveAsItem) {
             trySaveAs();
-        }		
-        else if (source==closeItem) {
+        } else if (source==closeItem) {
         	getFrame().dispose();
         }			
     }

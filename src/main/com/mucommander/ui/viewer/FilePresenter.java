@@ -4,12 +4,7 @@ import java.awt.Component;
 import java.awt.event.*;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
@@ -166,4 +161,12 @@ public abstract class FilePresenter extends JScrollPane {
      */
     protected abstract void restoreStateOnStartup();
 
+
+//    @Override
+//    public JViewport getViewport() {
+//if (super.getViewport() == null) return null;
+//new Exception().printStackTrace();
+//System.out.println("::: " + super.getViewport().getViewPosition());
+//        return super.getViewport();
+//    }
 }

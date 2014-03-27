@@ -85,12 +85,13 @@ public abstract class FileFrame extends JFrame {
             @Override
             protected void updateLayout() {
                 super.updateLayout();
-                // Restore (caret position, scroll position etc.)
-                filePresenter.restoreStateOnStartup();
                 // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
                 pack();
                 // Request focus on the viewer when it is visible
                 FocusRequester.requestFocus(filePresenter);
+
+                // Restore (caret position, scroll position etc.)
+                filePresenter.restoreStateOnStartup();
             }
         };
 
