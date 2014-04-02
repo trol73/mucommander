@@ -80,10 +80,11 @@ public class ViewerRegistrar {
         ViewerFrame frame = new ViewerFrame(mainFrame, file, icon);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             // Displays the document icon in the window title bar, works only for local files
-            if(file.getURL().getScheme().equals(FileProtocols.FILE))
-                frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject()); 
+            if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
+                frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+            }
         }
 
         // WindowManager will listen to window closed events to trigger shutdown sequence
@@ -104,14 +105,13 @@ public class ViewerRegistrar {
      */
     public static FileViewer createFileViewer(AbstractFile file, ViewerFrame frame) throws UserCancelledException {
     	FileViewer viewer = null;
-        for(ViewerFactory factory : viewerFactories) {
+        for (ViewerFactory factory : viewerFactories) {
             try {
-                if(factory.canViewFile(file)) {
+                if (factory.canViewFile(file)) {
                     viewer = factory.createFileViewer();
                     break;
                 }
-            }
-            catch(WarnUserException e) {
+            } catch (WarnUserException e) {
             	// TODO: question the user how does he want to open the file (as image, text..)
                 // Todo: display a proper warning dialog with the appropriate icon
             	
@@ -121,7 +121,7 @@ public class ViewerRegistrar {
                                                            0);
 
                 int ret = dialog.getActionValue();
-                if(ret==1 || ret==-1)   // User canceled the operation
+                if (ret == 1 || ret == -1)   // User canceled the operation
                     throw new UserCancelledException();
 
                 // User confirmed the operation

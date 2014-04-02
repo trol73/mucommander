@@ -25,6 +25,7 @@ import com.mucommander.commons.io.bom.BOMInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * This class provides methods to determine whether some data is binary data or text data.
@@ -41,7 +42,7 @@ public class BinaryDetector {
 
     /** Provides an indication as to the number of bytes that should fed to the detector for it to have enough
      * confidence. */
-    public final static int RECOMMENDED_BYTE_SIZE = 1024;
+    public final static int RECOMMENDED_BYTE_SIZE = 1024*4;
 
 
     /**
@@ -71,24 +72,21 @@ public class BinaryDetector {
             // So first, we try and look for a BOM (byte-order mark) to see if the stream is UTF-16 or UTF-32 encoded.
             BOMInputStream bin = new BOMInputStream(new ByteArrayInputStream(b, off, len));
             BOM bom = bin.getBOM();
-
-            if(bom!=null) {
-                if(bom.equals(BOMConstants.UTF16_BE_BOM) || bom.equals(BOMConstants.UTF16_LE_BOM)
+            if (bom != null) {
+                if (bom.equals(BOMConstants.UTF16_BE_BOM) || bom.equals(BOMConstants.UTF16_LE_BOM)
                 || bom.equals(BOMConstants.UTF32_BE_BOM) || bom.equals(BOMConstants.UTF32_LE_BOM)) {
                     return false;
                 }
             }
-            // No BOM, start looking for zeros
-
-            int i;
-            while((i=bin.read())!=-1)
-                if(i==0x00)
-                    return true;
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             // Can never happen in practice with a ByteArrayInputStream.
         }
-
+        // No BOM, start looking for zeros
+        for (int i = 0; i < len; i++) {
+            if (b[i+off] == 0x00) {
+                return true;
+            }
+        }
         return false;
     }
 

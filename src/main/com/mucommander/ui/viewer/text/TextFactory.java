@@ -53,29 +53,31 @@ public class TextFactory implements ViewerFactory, EditorFactory {
 
     private boolean doGenericChecks(AbstractFile file) throws WarnUserException {
         // Do not allow directories
-        if(file.isDirectory())
+        if (file.isDirectory()) {
             return false;
-
-        // Warn the user if the file is large that a certain size as the whole file is loaded into memory
-        // (in a JTextArea)
-        if (file.getSize()>FILE_SIZE_WARNING_THRESHOLD)
-            throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
+        }
 
         // Warn the user if the file looks like a binary file
         InputStream in = null;
         try {
             in = file.getInputStream();
-            if(BinaryDetector.guessBinary(in))
-            	return false;
-        }
-        catch(IOException e) {
+            if (BinaryDetector.guessBinary(in)) {
+                return false;
+            }
+        } catch (IOException e) {
             // Not much too do
-        }
-        finally {
-            if(in!=null) {
+        } finally {
+            if (in != null) {
                 try { in.close(); } catch(IOException e2) {}
             }
         }
+
+        // Warn the user if the file is large that a certain size as the whole file is loaded into memory
+        // (in a JTextArea)
+        if (file.getSize() > FILE_SIZE_WARNING_THRESHOLD) {
+            throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
+        }
+
 
         return true;
     }

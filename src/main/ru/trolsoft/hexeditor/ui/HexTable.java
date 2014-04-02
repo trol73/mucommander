@@ -2,6 +2,7 @@ package ru.trolsoft.hexeditor.ui;
 
 
 import com.mucommander.profiler.Profiler;
+import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -46,11 +47,10 @@ public class HexTable extends JTable {
     private Color highlightSelectionInAsciiDumpColor;
     private boolean alternateRowBackground;
     private boolean alternateColumnBackground;
-
     private long leadSelectionIndex;
-
     private long anchorSelectionIndex;
 
+    private OnOffsetChangeListener onOffsetChangeListener;
 
     public HexTable(ViewerHexTableModel model) {
         super(model);
@@ -108,6 +108,9 @@ public class HexTable extends JTable {
             leadSelectionIndex = cellToOffset(row, col);
         } else {
             anchorSelectionIndex = leadSelectionIndex = cellToOffset(row, col);
+        }
+        if (onOffsetChangeListener != null) {
+            onOffsetChangeListener.onChange(anchorSelectionIndex);
         }
 
         // Scroll after changing the selection as blit scrolling is
@@ -650,7 +653,6 @@ public class HexTable extends JTable {
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-Profiler.start("hexviewer.getrenderer");
 //            Component result = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setValue(value);
 
@@ -691,14 +693,11 @@ Profiler.start("hexviewer.getrenderer");
                 }
             }
 
-Profiler.stop("hexviewer.getrenderer");
-
             return this;
         }
 
         @Override
         protected void paintComponent(Graphics g) {
-Profiler.start("hexviewer.paint_cell");
             g.setColor(getBackground());
             g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -742,15 +741,17 @@ Profiler.start("hexviewer.paint_cell");
                 g.setColor(Color.GRAY);
                 g.drawLine(0, 0, 0, getHeight());
             }
-Profiler.stop("hexviewer.paint_cell");
         }
     }
 
 
-    @Override
-    public void repaint() {
-        Profiler.start("hexview.repaint");
-        super.repaint();
-        Profiler.stop("hexview.repaint");
+
+    public OnOffsetChangeListener getOnOffsetChangeListener() {
+        return onOffsetChangeListener;
     }
+
+    public void setOnOffsetChangeListener(OnOffsetChangeListener onOffsetChangeListener) {
+        this.onOffsetChangeListener = onOffsetChangeListener;
+    }
+
 }

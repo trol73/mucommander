@@ -21,9 +21,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileViewer;
-import org.fife.ui.StatusBar;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
+import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
 
@@ -40,6 +40,15 @@ public class HexViewer extends FileViewer {
     private ViewerHexTableModel model;
     private AbstractByteBuffer byteBuffer;
     private StatusBar statusBar;
+
+    private OnOffsetChangeListener onOffsetChangeListener = new OnOffsetChangeListener() {
+        @Override
+        public void onChange(long offset) {
+            if (statusBar != null) {
+                statusBar.setOffset(offset);
+            }
+        }
+    };
 
     @Override
     protected void show(AbstractFile file) throws IOException {
@@ -60,6 +69,8 @@ try {
         hexTable.setFont(new Font("Monospaced", Font.PLAIN, 14));
         hexTable.getTableHeader().setFont(new Font("Monospaced", Font.PLAIN, 12));
 
+        hexTable.setOnOffsetChangeListener(onOffsetChangeListener);
+        onOffsetChangeListener.onChange(0);
 
         setComponentToPresent(hexTable);
         getViewport().setBackground(hexTable.getBackground());

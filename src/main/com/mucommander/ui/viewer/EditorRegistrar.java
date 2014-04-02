@@ -68,10 +68,11 @@ public class EditorRegistrar {
         EditorFrame frame = new EditorFrame(mainFrame, file, icon);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             // Displays the document icon in the window title bar, works only for local files
-            if(file.getURL().getScheme().equals(FileProtocols.FILE))
+            if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
                 frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+            }
         }
 
         // WindowManager will listen to window closed events to trigger shutdown sequence
@@ -92,30 +93,32 @@ public class EditorRegistrar {
      */
     public static FileEditor createFileEditor(AbstractFile file, EditorFrame frame) throws UserCancelledException {
         FileEditor editor = null;
-    	for(EditorFactory factory : editorFactories) {
+    	for (EditorFactory factory : editorFactories) {
             try {
-                if(factory.canEditFile(file)) {
+                if (factory.canEditFile(file)) {
                     editor = factory.createFileEditor();
                     break;
                 }
-            }
-            catch(WarnUserException e) {
+            } catch (WarnUserException e) {
+e.printStackTrace();
                 QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get(e.getMessage()), null,
                                                            new String[] {Translator.get("file_editor.open_anyway"), Translator.get("cancel")},
                                                            new int[]  {0, 1},
                                                            0);
 
                 int ret = dialog.getActionValue();
-                if(ret==1 || ret==-1)   // User canceled the operation
+                if (ret==1 || ret == -1) {   // User canceled the operation
                     throw new UserCancelledException();
+                }
 
                 // User confirmed the operation
                 editor = factory.createFileEditor();
             }
         }
 
-    	if (editor != null)
-    		editor.setFrame(frame);
+    	if (editor != null) {
+            editor.setFrame(frame);
+        }
     	
     	return editor;
     }
