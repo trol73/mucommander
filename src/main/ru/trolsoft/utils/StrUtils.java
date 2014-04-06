@@ -1,0 +1,110 @@
+package ru.trolsoft.utils;
+
+/**
+ * Created by trol on 03/04/14.
+ */
+public class StrUtils {
+    private static final char[] HEX_CHAR_ARRAY = "0123456789ABCDEF".toCharArray();
+    private static final String[] STRING_OF_ZERO = {"", "0", "00", "000", "0000", "00000", "000000", "0000000", "00000000", "000000000", "0000000000"};
+
+    private static final String[] HEX_BYTE_STRINGS = new String[256];
+    private static final String[] BINARY_BYTE_STRINGS = new String[256];
+    private static final String[] OCTAL_BYTE_STRINGS = new String[256];
+
+    /**
+     *
+     * @param val
+     * @return
+     */
+    public static String dwordToHexStr(long val) {
+        String result = Long.toHexString(val);
+        return STRING_OF_ZERO[8-result.length()] + result;
+    }
+
+
+    /**
+     *
+     * @param b
+     * @return
+     */
+    public static String byteToHexStr(byte b) {
+        int v = b & 0xFF;
+        String result = HEX_BYTE_STRINGS[v];
+        if (result == null) {
+            result = Character.toString(HEX_CHAR_ARRAY[v >>> 4]) + HEX_CHAR_ARRAY[v & 0x0f];
+            HEX_BYTE_STRINGS[v] = result;
+        }
+        return result;
+    }
+
+
+    /**
+     *
+     * @param bytes
+     * @param offset
+     * @param size
+     * @return
+     */
+    public static String bytesToHexStr(byte[] bytes, int offset, int size) {
+        char[] hexChars = new char[size * 2];
+        for (int i = offset; i < offset + size; i++) {
+            int v = bytes[i] & 0xFF;
+            hexChars[i * 2] = HEX_CHAR_ARRAY[v >>> 4];
+            hexChars[i * 2 + 1] = HEX_CHAR_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+
+    /**
+     *
+     * @param b
+     * @return
+     */
+    public static String byteToBinaryStr(byte b) {
+        int v = b & 0xFF;
+        return byteToBinaryStr(v);
+    }
+
+    /**
+     *
+     * @param v
+     * @return
+     */
+    public static String byteToBinaryStr(int v) {
+        String result = BINARY_BYTE_STRINGS[v];
+        if (result == null) {
+            result = Integer.toBinaryString(v);
+            result = STRING_OF_ZERO[8 - result.length()] + result;
+            BINARY_BYTE_STRINGS[v] = result;
+        }
+        return result;
+    }
+
+
+    /**
+     *
+     * @param b
+     * @return
+     */
+    public static String byteToOctalStr(byte b) {
+        int v = b & 0xFF;
+        return byteToOctalStr(v);
+    }
+
+    /**
+     *
+     * @param v
+     * @return
+     */
+    public static String byteToOctalStr(int v) {
+        String result = OCTAL_BYTE_STRINGS[v];
+        if (result == null) {
+            result = Integer.toOctalString(v);
+            result = STRING_OF_ZERO[3 - result.length()] + result;
+            OCTAL_BYTE_STRINGS[v] = result;
+        }
+        return result;
+    }
+
+}

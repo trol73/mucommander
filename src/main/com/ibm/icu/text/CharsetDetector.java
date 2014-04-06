@@ -182,17 +182,17 @@ public class CharsetDetector {
      * @stable ICU 3.4
      */
     public CharsetMatch[] detectAll() {
-        ArrayList<CharsetMatch>         matches = new ArrayList<CharsetMatch>();
+        ArrayList<CharsetMatch> matches = new ArrayList<>();
         
         MungeInput();  // Strip html markup, collect byte stats.
         
         //  Iterate over all possible charsets, remember all that
         //    give a match quality > 0.
         for (int i = 0; i < ALL_CS_RECOGNIZERS.size(); i++) {
-            CSRecognizerInfo rcinfo = ALL_CS_RECOGNIZERS.get(i);
-            boolean active = (fEnabledRecognizers != null) ? fEnabledRecognizers[i] : rcinfo.isDefaultEnabled;
+            CSRecognizerInfo rcInfo = ALL_CS_RECOGNIZERS.get(i);
+            boolean active = (fEnabledRecognizers != null) ? fEnabledRecognizers[i] : rcInfo.isDefaultEnabled;
             if (active) {
-                CharsetMatch m = rcinfo.recognizer.match(this);
+                CharsetMatch m = rcInfo.recognizer.match(this);
                 if (m != null) {
                     matches.add(m);
                 }

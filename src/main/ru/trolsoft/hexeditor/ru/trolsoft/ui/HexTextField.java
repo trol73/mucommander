@@ -17,12 +17,16 @@
  */
 package ru.trolsoft.hexeditor.ru.trolsoft.ui;
 
+import ru.trolsoft.utils.StrUtils;
+
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Input filed for text and hex values
@@ -43,8 +47,15 @@ public class HexTextField extends JTextField implements DocumentListener {
     private int maxLength = 0xff;
     private boolean filtering = false;
 
+    private List<HexTextField> assignedFields;
+
     public HexTextField() {
         super();
+        getDocument().addDocumentListener(this);
+    }
+
+    public HexTextField(int columns) {
+        super(columns);
         getDocument().addDocumentListener(this);
     }
 
@@ -84,6 +95,7 @@ public class HexTextField extends JTextField implements DocumentListener {
 
     private void filterText() {
         if (filterType == null || filterType == FilterType.ANY_TEXT) {
+            updateAssignedFields();
             return;
         }
         if (filtering) {
@@ -97,6 +109,7 @@ public class HexTextField extends JTextField implements DocumentListener {
                 String input = getText().toUpperCase();
                 String filtered = filterHexString(input, maxLength);
                 setText(filtered);
+                updateAssignedFields();
                 filtering = false;
             }
         });
@@ -117,22 +130,72 @@ public class HexTextField extends JTextField implements DocumentListener {
             }
         }
         // limit size
-        if (filtered.length() > 3 * maxBytes) {
-            filtered.setLength(3 * maxBytes);
-            Toolkit.getDefaultToolkit().beep();
+        if (maxBytes > 0) {
+            if (filtered.length() > 3 * maxBytes) {
+                filtered.setLength(3 * maxBytes);
+                Toolkit.getDefaultToolkit().beep();
+            }
         }
         return filtered.toString();
     }
 
 
-
-    public byte[] getBytes() {
-        String text = getText().replace(" ", "");
+    private static byte[] hexStringToBytes(String text) {
         if (text.length() % 2 == 1) {
             text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
         }
+         return DatatypeConverter.parseHexBinary(text);
+    }
 
-        return DatatypeConverter.parseHexBinary(text);
+    private static String bytesToHexString(byte[] bytes) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            s.append(StrUtils.byteToHexStr(bytes[i]));
+            s.append(' ');
+        }
+        return s.toString();
+    }
+
+    public byte[] getBytes() {
+        String text = getText().replace(" ", "");
+        return hexStringToBytes(text);
+    }
+
+    public static byte[] hexDumpToBytes(String s) {
+        return hexStringToBytes(s.replace(" ", ""));
+    }
+
+    public void assignField(HexTextField field) {
+        if (assignedFields == null) {
+            assignedFields = new ArrayList<>();
+        }
+        assignedFields.add(field);
+    }
+
+
+    private void updateAssignedFields() {
+        if (assignedFields == null) {
+            return;
+        }
+        final String src = getText();
+        for (HexTextField field : assignedFields) {
+            String text = convert(src, filterType, field.getFilterType());
+            if (!text.equals(field.getText())) {
+//                field.setText(text);
+            }
+        }
+    }
+
+    private static String convert(String text, FilterType from, FilterType to) {
+        if (from == to) {
+            return text;
+        }
+        if (from == FilterType.ANY_TEXT && to == FilterType.HEX) {
+            return filterHexString(text, 0);
+        } else if (from == FilterType.HEX && to == FilterType.ANY_TEXT) {
+            return bytesToHexString(hexDumpToBytes(text));
+        }
+        return text;
     }
 
 }

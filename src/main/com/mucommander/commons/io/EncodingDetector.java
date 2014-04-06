@@ -112,17 +112,19 @@ public class EncodingDetector {
     public static String detectEncoding(byte bytes[], int off, int len) {
         // The current ICU CharsetDetector class will throw an ArrayIndexOutOfBoundsException exception if the
         // supplied array is less than 4 bytes long. In that case, return null.
-        if(len<4)
+        if (len < 4) {
             return null;
+        }
 
         // Trim the array if it is too long, detecting the charset is an expensive operation and past a certain point,
         // having more bytes won't help any further        
-        if(len > MAX_RECOMMENDED_BYTE_SIZE)
-                len = MAX_RECOMMENDED_BYTE_SIZE;
+        if (len > MAX_RECOMMENDED_BYTE_SIZE) {
+            len = MAX_RECOMMENDED_BYTE_SIZE;
+        }
 
         // CharsetDetector will process the array fully, so if the data does not start at 0 or ends before the array's
         // length, create a new array that fits the data exactly
-        if(off>0 || len<bytes.length) {
+        if (off > 0 || len < bytes.length) {
             byte tmp[] = new byte[len];
             System.arraycopy(bytes, off, tmp, 0, len);
             bytes = tmp;
@@ -132,7 +134,29 @@ public class EncodingDetector {
         cd.setText(bytes);
 
 
-//        CharsetMatch[] matches = cd.detectAll();
+        CharsetMatch[] matches = cd.detectAll();
+
+        CharsetMatch cm;
+        if (matches == null || matches.length == 0) {
+            cm = null;
+        } else {
+            cm = matches[0];
+        }
+
+        // detect win-1251 for case latin + cyrillic
+        if (matches.length > 1) {
+            String detectedName = cm.getName().toLowerCase();
+            if (detectedName.startsWith("iso-8859-")) {
+                for (CharsetMatch match : matches) {
+                    if (match.getConfidence()*2 >= cm.getConfidence() && match.getName().toLowerCase().startsWith("windows-1251")) {
+                        cm = match;
+                        break;
+                    }
+                }
+
+            }
+        }
+
 //        for (CharsetMatch cm : matches) {
 //            System.out.println(cm.getName() + " " + cm.getConfidence());
 //        }
@@ -140,7 +164,7 @@ public class EncodingDetector {
 //System.out.println("DETECTED " + cm.getName() + " " + cm.getConfidence() + "   VS " + cd.detect().getName());
 
 
-        CharsetMatch cm = cd.detect();
+//        CharsetMatch cm = cd.detect();
 
         // Debug info
         LOGGER.trace("bestMatch getName()={}, getConfidence()={}", (cm==null?"null":cm.getName()),
@@ -149,7 +173,7 @@ public class EncodingDetector {
 //            for(int i=0; i<cms.length; i++)
 //                CommonsLogger.finest("getName()="+cms[i].getName()+" getConfidence()="+cms[i].getConfidence());
 
-        return cm==null?null:cm.getName();
+        return cm == null ? null : cm.getName();
     }
 
 

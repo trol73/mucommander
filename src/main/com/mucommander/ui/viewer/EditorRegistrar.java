@@ -21,7 +21,8 @@ package com.mucommander.ui.viewer;
 
 import java.awt.Frame;
 import java.awt.Image;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
@@ -41,7 +42,7 @@ import com.mucommander.ui.main.WindowManager;
 public class EditorRegistrar {
 	
     /** List of registered file editors */ 
-    private final static java.util.List<EditorFactory> editorFactories = new Vector<EditorFactory>();
+    private final static List<EditorFactory> editorFactories = new ArrayList<>();
 
     static {
         registerFileEditor(new com.mucommander.ui.viewer.text.TextFactory());
@@ -100,7 +101,6 @@ public class EditorRegistrar {
                     break;
                 }
             } catch (WarnUserException e) {
-e.printStackTrace();
                 QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get(e.getMessage()), null,
                                                            new String[] {Translator.get("file_editor.open_anyway"), Translator.get("cancel")},
                                                            new int[]  {0, 1},

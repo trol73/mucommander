@@ -18,6 +18,7 @@
 package com.mucommander.ui.viewer.hex;
 
 import org.fife.ui.StatusBarPanel;
+import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
@@ -28,7 +29,15 @@ import java.awt.GridBagConstraints;
  */
 public class StatusBar extends org.fife.ui.StatusBar {
     private StatusBarPanel panelOffset;
+    private StatusBarPanel panelEncoding;
+    private StatusBarPanel panelValue;
+
     private JLabel lblOffset;
+    private JLabel lblEncoding;
+    private JLabel lblValue;
+
+    private long maxOffset = -1;
+
 
     public StatusBar() {
         super("");
@@ -36,16 +45,43 @@ public class StatusBar extends org.fife.ui.StatusBar {
         lblOffset = new JLabel();
         panelOffset = new StatusBarPanel(new BorderLayout(), lblOffset);
 
+        lblEncoding = new JLabel();
+        panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
+
+        lblValue = new JLabel();
+        panelValue = new StatusBarPanel(new BorderLayout(), lblValue);
+
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
 
         c.weightx = 0.0;
         addStatusBarComponent(panelOffset, c);
+        c.weightx = 0.0;
+        addStatusBarComponent(panelEncoding, c);
+        c.weightx = 0.0;
+        addStatusBarComponent(panelValue, c);
     }
 
     public void setOffset(long offset) {
-        lblOffset.setText(Long.toHexString(offset));
+        String str = StrUtils.dwordToHexStr(offset);
+        if (maxOffset >= 0) {
+            str += " / " + StrUtils.dwordToHexStr(maxOffset);
+        }
+        lblOffset.setText(str);
+    }
+
+    public void setMaxOffset(long maxOffset) {
+        this.maxOffset = maxOffset;
+    }
+
+    public void setEncoding(String encoding) {
+        lblEncoding.setText(encoding);
+    }
+
+    public void setByteValue(byte val) {
+        String s = StrUtils.byteToBinaryStr(val)  + " - " + StrUtils.byteToOctalStr(val);
+        lblValue.setText(s);
     }
 
 }

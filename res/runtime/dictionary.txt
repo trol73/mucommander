@@ -1,4 +1,4 @@
-﻿###############################
+###############################
 # muCommander dictionary file #
 ###############################
 #
@@ -19131,3 +19131,21 @@ image_viewer.next_image:EN:Next image
 image_viewer.next_image:RU:Следующий рисунок
 image_viewer.previous_image:EN:Previous image
 image_viewer.previous_image:RU:Предыдущий рисунок
+
+
+hex_viewer.offset:EN:Offset
+hex_viewer.offset:RU:Адрес
+hex_viewer.ascii_dump:EN:ASCII dump
+hex_viewer.ascii_dump:RU:Дамп ASCII
+hex_viewer.view:EN:View
+hex_viewer.view:RU:Просмотр
+hex_viewer.goto:EN:Goto
+hex_viewer.goto:RU:Переход
+hex_viewer.search:EN:Search
+hex_viewer.search:RU:Поиск
+hex_viewer.find:EN:Find
+hex_viewer.find:RU:Найти
+hex_view.text:EN:Search for
+hex_view.text:RU:Искать
+hex_viewer.hex:EN:Hex
+hex_viewer.hex:RU:Hex

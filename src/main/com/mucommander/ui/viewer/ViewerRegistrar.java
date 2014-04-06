@@ -20,7 +20,8 @@ package com.mucommander.ui.viewer;
 
 import java.awt.Frame;
 import java.awt.Image;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
@@ -41,7 +42,7 @@ import com.mucommander.ui.viewer.audio.AudioFactory;
 public class ViewerRegistrar {
 	
     /** List of registered file viewers */ 
-    private final static java.util.List<ViewerFactory> viewerFactories = new Vector<ViewerFactory>();
+    private final static List<ViewerFactory> viewerFactories = new ArrayList<>();
 
     static {
         registerFileViewer(new com.mucommander.ui.viewer.pdf.PdfFactory());

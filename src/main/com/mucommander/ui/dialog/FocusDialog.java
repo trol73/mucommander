@@ -188,14 +188,18 @@ public class FocusDialog extends JDialog implements WindowListener {
     @Override
     public void pack()  {
         super.pack();
+
         if (maximumDimension != null) {
             DialogToolkit.fitToMaxDimension(this, maximumDimension);
         } else {
+            super.setMaximumSize(getSize());
             DialogToolkit.fitToScreen(this);
         }
 		
         if (minimumDimension != null) {
             DialogToolkit.fitToMinDimension(this, minimumDimension);
+        } else {
+            super.setMinimumSize(getSize());
         }
     }
 
@@ -233,7 +237,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     public void windowActivated(WindowEvent e) {
         // (this method is called each time the dialog is activated)
-        if (!firstTimeActivated && initialFocusComponent!=null) {
+        if (!firstTimeActivated && initialFocusComponent != null) {
             LOGGER.trace("requesting focus on initial focus component");
 
             // First try using requestFocusInWindow() which is preferred over requestFocus(). If it fails
@@ -241,7 +245,7 @@ public class FocusDialog extends JDialog implements WindowListener {
             // "The focus behavior of this method can be implemented uniformly across platforms, and thus developers are
             // strongly encouraged to use this method over requestFocus when possible. Code which relies on requestFocus
             // may exhibit different focus behavior on different platforms."
-            if(!initialFocusComponent.requestFocusInWindow()) {
+            if (!initialFocusComponent.requestFocusInWindow()) {
                 LOGGER.trace("requestFocusInWindow failed, calling requestFocus");
                 FocusRequester.requestFocus(initialFocusComponent);
             }

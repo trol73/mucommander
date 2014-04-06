@@ -1,7 +1,7 @@
 package ru.trolsoft.hexeditor.ui;
 
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
-import ru.trolsoft.hexeditor.data.FileByteBuffer;
+import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.table.AbstractTableModel;
 import java.io.IOException;
@@ -10,11 +10,6 @@ import java.io.IOException;
  * The table model used by the <code>JTable</code> in the hex viewer/editor.
  */
 public class ViewerHexTableModel extends AbstractTableModel {
-
-    private static final char[] HEX_CHAR_ARRAY = "0123456789ABCDEF".toCharArray();
-    private static final String[] STRING_OF_ZERO = {"", "0", "00", "000", "0000", "00000", "000000", "0000000", "00000000", "000000000", "0000000000"};
-
-    protected static final String[] HEX_BYTE_STRINGS = new String[256];
 
     protected final boolean[] VISIBLE_SYMBOLS = new boolean[256];
     protected long fileSize;
@@ -69,8 +64,7 @@ public class ViewerHexTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
             // offset
-            String result = Long.toHexString(getRowOffset(rowIndex));
-            return STRING_OF_ZERO[8-result.length()] + result;
+            return StrUtils.dwordToHexStr(getRowOffset(rowIndex));
         } else if (columnIndex == hexDataColumns + 1) {
             // dump
             try {
@@ -85,33 +79,12 @@ public class ViewerHexTableModel extends AbstractTableModel {
                 return "";
             }
             try {
-                return byteToHex(buffer.getByte(fileOffset));
+                return StrUtils.byteToHexStr(buffer.getByte(fileOffset));
             } catch (IOException e) {
                 e.printStackTrace();
                 return "xx";
             }
         }
-    }
-
-    protected static String byteToHex(byte b) {
-        int v = b & 0xFF;
-        String result = HEX_BYTE_STRINGS[v];
-        if (result == null) {
-            result = Character.toString(HEX_CHAR_ARRAY[v >>> 4]) + HEX_CHAR_ARRAY[v & 0x0f];
-            HEX_BYTE_STRINGS[v] = result;
-        }
-        return result;
-    }
-
-
-    protected static String bytesToHex(byte[] bytes, int offset, int size) {
-        char[] hexChars = new char[size * 2];
-        for (int i = offset; i < offset + size; i++) {
-            int v = bytes[i] & 0xFF;
-            hexChars[i * 2] = HEX_CHAR_ARRAY[v >>> 4];
-            hexChars[i * 2 + 1] = HEX_CHAR_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
     }
 
 
