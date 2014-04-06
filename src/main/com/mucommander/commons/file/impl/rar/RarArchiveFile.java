@@ -21,8 +21,11 @@ package com.mucommander.commons.file.impl.rar;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.github.junrar.exception.RarException;
+import com.github.junrar.rarfile.FileHeader;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractROArchiveFile;
 import com.mucommander.commons.file.ArchiveEntry;
@@ -30,8 +33,6 @@ import com.mucommander.commons.file.ArchiveEntryIterator;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.WrapperArchiveEntryIterator;
 
-import de.innosystec.unrar.exception.RarException;
-import de.innosystec.unrar.rarfile.FileHeader;
 
 /**
  * RarArchiveFile provides read-only access to archives in the Rar format.
@@ -87,7 +88,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
      */
     private ArchiveEntry createArchiveEntry(FileHeader header) {
     	return new ArchiveEntry(
-    			header.getFileNameString().replace('\\', '/'),
+                header.getFileNameW().replace('\\', '/'),       //header.getFileNameString().replace('\\', '/'),
     			header.isDirectory(),
     			header.getMTime().getTime(),
     			header.getFullUnpackSize(),
@@ -108,9 +109,10 @@ public class RarArchiveFile extends AbstractROArchiveFile {
 			throw new IOException();
 		}
 
-        Vector<ArchiveEntry> entries = new Vector<ArchiveEntry>();
-        for (Object o : rarFile.getEntries())
-            entries.add(createArchiveEntry((FileHeader)o));
+        List<ArchiveEntry> entries = new ArrayList<>();
+        for (FileHeader header : rarFile.getEntries()) {
+            entries.add(createArchiveEntry(header));
+        }
 
         return new WrapperArchiveEntryIterator(entries.iterator());
     }

@@ -225,7 +225,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertDetailedUrl(doc,    "JetS3t",              "Apache License",                       "http://jets3t.s3.amazonaws.com/index.html");
             insertDetailedUrl(doc,    "JmDNS",               "LGPL",                                 "http://jmdns.sourceforge.net");
             insertDetailedUrl(doc,    "JNA",                 "LGPL",                                 "http://jna.dev.java.net");
-            insertDetailedUrl(doc,    "JUnRar",              "Freeware",                             "http://sourceforge.net/projects/java-unrar");
+            insertDetailedUrl(doc,    "JUnRar",              "Freeware",                             "https://github.com/edmund-wagner/junrar");
             insertDetailedUrl(doc,    "Yanfs",               "BSD",                                  "http://yanfs.dev.java.net");
             insertDetailedUrl(doc,    "RSyntaxTextArea",     "Modified BSD",                         "http://fifesoft.com/rsyntaxtextarea");
             insertDetailedUrl(doc,    "ICEpdf",              "Apache License",                       "http://www.icesoft.org/java/home.jsf");
