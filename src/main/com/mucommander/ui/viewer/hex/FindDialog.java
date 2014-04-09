@@ -40,7 +40,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
      *
      * @param frame the parent frame
      */
-    public FindDialog(JFrame frame) {
+    public FindDialog(JFrame frame, String encoding) {
         super(frame, Translator.get("hex_viewer.find"), frame);
 
         Container contentPane = getContentPane();
@@ -63,18 +63,11 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
 
         textField.assignField(hexField);
         hexField.assignField(textField);
+        textField.setTextEncoding(encoding);
+        hexField.setTextEncoding(encoding);
 
         contentPane.add(compPanel, BorderLayout.CENTER);
 
-//        hexField = new HexTextField(60);
-//        hexField.setText(text);
-//        hexField.addActionListener(this);
-//        contentPane.add(hexField, BorderLayout.CENTER);
-//
-//        textField = new HexTextField(60);
-//        //textField.setText(text);
-//        textField.addActionListener(this);
-//        contentPane.add(textField);
 
         okButton = new JButton(Translator.get("ok"));
         JButton cancelButton = new JButton(Translator.get("cancel"));
@@ -94,6 +87,10 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         return hexField.getText();
     }
 
+    public byte[] getSearchBytes() {
+        return hexField.getBytes();
+    }
+
 
     ///////////////////////////////////
     // ActionListener implementation //
@@ -103,7 +100,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         dispose();
-        doSearch(source == okButton || source == hexField || source == textField ? getSearchString() : null);
+        doSearch(source == okButton || source == hexField || source == textField ? getSearchBytes() : null);
     }
 
     @Override
@@ -112,9 +109,15 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         text = hexField.getText();
     }
 
-    /**
-     * Search operation listener
-     * @param text nul if the dialog was cancelled
-     */
-    protected abstract void doSearch(String text);
+    public void setSearchBytes(byte[] searchBytes) {
+        hexField.setBytes(searchBytes);
+    }
+
+
+        /**
+         * Search operation listener
+         * @param bytes nul if the dialog was cancelled
+         */
+    protected abstract void doSearch(byte[] bytes);
+
 }

@@ -25,10 +25,12 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -44,6 +46,15 @@ import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import net.sf.image4j.codec.ico.ICODecoder;
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.formats.ico.IcoImageParser;
+import org.apache.sanselan.formats.pnm.PNMImageParser;
+import org.apache.sanselan.formats.psd.PsdImageParser;
+import org.apache.sanselan.formats.tiff.TiffImageParser;
+
+//import org.apache.commons.imaging.Imaging;
+
 
 
 /**
@@ -83,6 +94,11 @@ class ImageViewer extends FileViewer implements ActionListener {
      * To fix it we make windows resize and undo it after start.
      */
     private boolean mouseMovementIssueFixed = false;
+
+    static {
+        IIORegistry registry = IIORegistry.getDefaultInstance();
+        registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+    }
 
 
     public ImageViewer() {
@@ -132,24 +148,34 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     }
 
-    private synchronized void loadImage(AbstractFile file) throws IOException {
+    private synchronized void loadImage(AbstractFile file) throws IOException, ImageReadException {
         setFrameCursor(CURSOR_WAIT);
 
         statusBar.setFileSize(file.getSize());
         statusBar.setDateTime(file.getDate());
         int imageWidth, imageHeight;
         this.scaledImage = null;
-        if ("scr".equalsIgnoreCase(file.getExtension()) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
+        final String ext = file.getExtension().toLowerCase();
+        if ("scr".equals(ext) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
             this.image = ZxSpectrumScrImage.load(file.getInputStream());
-            imageWidth = ZxSpectrumScrImage.WIDTH;
-            imageHeight = ZxSpectrumScrImage.HEIGHT;
             statusBar.setImageBpp(4);
+        } else if ("psd".equals(ext)) {
+            this.image = new PsdImageParser().getBufferedImage(loadFile(file), null);
+        } else if ("tif".equals(ext) || "tiff".equals(ext)) {
+            this.image = new TiffImageParser().getBufferedImage(loadFile(file), null);
+        } else if ("ico".equals(ext)) {
+            this.image = ICODecoder.read(file.getInputStream()).get(0);
+            //this.image = (BufferedImage) (new IcoImageParser().getAllBufferedImages(loadFile(file)).get(0));
+        } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
+            // TODO pBm raw format reading error
+            this.image = (BufferedImage) (new PNMImageParser().getAllBufferedImages(loadFile(file)).get(0));
         } else {
             this.image = ImageIO.read(file.getInputStream());
-            imageWidth = image.getWidth();
-            imageHeight = image.getHeight();
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
+        imageWidth = image.getWidth();
+        imageHeight = image.getHeight();
+
         statusBar.setImageSize(imageWidth, imageHeight);
 
         this.zoomFactor = 1.0;
@@ -167,6 +193,32 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         checkNextPrev();
         setFrameCursor(CURSOR_DEFAULT);
+    }
+
+
+    private static byte[] loadFile(AbstractFile file) throws IOException {
+        InputStream is = file.getInputStream();
+        byte[] data = new byte[(int)file.getSize()];
+        int readTotal = 0;
+        try {
+            while (readTotal < data.length) {
+                int bytesRead = is.read(data, readTotal, data.length - readTotal);
+                if (bytesRead < 0) {
+                    break;
+                }
+                readTotal += bytesRead;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
     }
 
 
@@ -272,7 +324,12 @@ class ImageViewer extends FileViewer implements ActionListener {
             }
             statusBar.setFileNumber(1, filesInDirectory.length);
         }
-        loadImage(file);
+        try {
+            loadImage(file);
+        } catch (ImageReadException e) {
+            e.printStackTrace();
+            throw new IOException("Image parsing error", e);
+        }
     }
 
     ///////////////////////////////////
@@ -339,7 +396,7 @@ class ImageViewer extends FileViewer implements ActionListener {
                 return index;
             }
         }
-        return  -1;
+        return -1;
     }
 
     private void gotoPrevFile() {

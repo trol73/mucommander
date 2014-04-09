@@ -30,7 +30,9 @@ import com.mucommander.ui.viewer.ViewerFactory;
  */
 public class ImageFactory implements ViewerFactory {
     /** Used to IMAGE_FILTER out file extensions that the image viewer cannot open. */
-    public final static ExtensionFilenameFilter IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {".png", ".gif", ".jpg", ".jpeg"});
+    public final static ExtensionFilenameFilter IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {
+            ".png", ".gif", ".jpg", ".jpeg", ".bmp", ".wbmp",   // java built in formats
+            ".ico", ".psd", ".tga", ".tiff", ".tif", ".pnm", ".pbm", ".pgm", ".ppm"});          // additional formats
     static {
         IMAGE_FILTER.setCaseSensitive(false);
     }

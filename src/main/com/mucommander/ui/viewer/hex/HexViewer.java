@@ -25,10 +25,10 @@ import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileViewer;
-import com.mucommander.ui.viewer.text.*;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
+import ru.trolsoft.hexeditor.search.ByteBufferSearchUtils;
 import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
 
@@ -44,14 +44,21 @@ import java.io.IOException;
  */
 public class HexViewer extends FileViewer {
 
+    private static final String DEFAULT_ENCODING = "windows-1252";
+
     private HexTable hexTable;
     private ViewerHexTableModel model;
     private AbstractByteBuffer byteBuffer;
     private StatusBar statusBar;
+    private String encoding = DEFAULT_ENCODING;
+    private byte[] lastSearchBytes;
+    private long lastSearchResult = -1;
 
     private JMenu menuView;
     private JMenuItem gotoItem;
-    private JMenuItem searchItem;
+    private JMenuItem findItem;
+    private JMenuItem findNextItem;
+    private JMenuItem findPrevItem;
 
     public HexViewer() {
         super();
@@ -60,7 +67,9 @@ public class HexViewer extends FileViewer {
         menuView = MenuToolkit.addMenu(Translator.get("hex_viewer.view"), menuMnemonicHelper, null);
 
         gotoItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.goto"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), this);
-        searchItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.search"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), this);
+        findItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.search"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), this);
+        findNextItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchNext"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
+        findPrevItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchPrev"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
     }
 
     private int getCtrlOrMetaMask() {
@@ -119,6 +128,7 @@ public class HexViewer extends FileViewer {
     @Override
     protected StatusBar getStatusBar() {
         statusBar = new StatusBar();
+        statusBar.setEncoding(encoding);
         return statusBar;
     }
 
@@ -146,20 +156,60 @@ public class HexViewer extends FileViewer {
 
 
     public void actionPerformed(ActionEvent e) {
+System.out.println("ACTION " + e);
         Object source = e.getSource();
 
         if (source == gotoItem && gotoItem.isEnabled()) {
-            System.out.println("goto");
-        } else if (source == searchItem && searchItem.isEnabled()) {
-            FindDialog findDialog = new FindDialog(getFrame()) {
-                @Override
-                protected void doSearch(String text) {
-
-                }
-            };
-            findDialog.showDialog();
+            gotoOffset();
+        } else if (source == findItem && findItem.isEnabled()) {
+            findFirst();
+        } else if (source == findNextItem && findNextItem.isEnabled()) {
+            findNext();
+        } else if (source == findPrevItem && findPrevItem.isEnabled()) {
+            findPrev();
         } else {
             super.actionPerformed(e);
         }
+    }
+
+
+    private void findFirst() {
+        FindDialog findDialog = new FindDialog(getFrame(), encoding) {
+            @Override
+            protected void doSearch(byte[] bytes) {
+                doSearchFromPos(bytes, 0);
+            }
+        };
+        findDialog.setSearchBytes(lastSearchBytes);
+        findDialog.showDialog();
+    }
+
+    private void doSearchFromPos(byte[] bytes, long pos) {
+        lastSearchBytes = bytes;
+        try {
+            lastSearchResult = ByteBufferSearchUtils.indexOf(byteBuffer, bytes, pos);
+            if (lastSearchResult >= 0) {
+                hexTable.gotoOffset(lastSearchResult);
+            } else {
+                statusBar.setStatusMessage("Not found");    // TODO
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+
+    private void findNext() {
+        if (lastSearchResult >= 0) {
+            doSearchFromPos(lastSearchBytes, lastSearchResult+1);
+        }
+    }
+
+    private void findPrev() {
+
+    }
+
+    private void gotoOffset() {
+
     }
 }

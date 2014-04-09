@@ -25,7 +25,9 @@ import javax.swing.event.DocumentListener;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,23 +42,31 @@ public class HexTextField extends JTextField implements DocumentListener {
 
     private static final String HEX_SYMBOLS = "0123456789ABCDEF";
 
+    private static final String DEFAULT_ENCODING = "windows-1252";
 
     private FilterType filterType = FilterType.HEX;
 
-
     private int maxLength = 0xff;
+
     private boolean filtering = false;
+
+    private String textEncoding;
 
     private List<HexTextField> assignedFields;
 
     public HexTextField() {
         super();
-        getDocument().addDocumentListener(this);
+        init();
     }
 
     public HexTextField(int columns) {
         super(columns);
+        init();
+    }
+
+    private void init() {
         getDocument().addDocumentListener(this);
+        this.textEncoding = DEFAULT_ENCODING;
     }
 
     @Override
@@ -94,11 +104,11 @@ public class HexTextField extends JTextField implements DocumentListener {
 
 
     private void filterText() {
-        if (filterType == null || filterType == FilterType.ANY_TEXT) {
-            updateAssignedFields();
+        if (filtering) {
             return;
         }
-        if (filtering) {
+        if (filterType == null || filterType == FilterType.ANY_TEXT) {
+            updateAssignedFields();
             return;
         }
         filtering = true;
@@ -140,36 +150,30 @@ public class HexTextField extends JTextField implements DocumentListener {
     }
 
 
-    private static byte[] hexStringToBytes(String text) {
-        if (text.length() % 2 == 1) {
-            text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
-        }
-         return DatatypeConverter.parseHexBinary(text);
-    }
-
-    private static String bytesToHexString(byte[] bytes) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            s.append(StrUtils.byteToHexStr(bytes[i]));
-            s.append(' ');
-        }
-        return s.toString();
-    }
-
     public byte[] getBytes() {
-        String text = getText().replace(" ", "");
-        return hexStringToBytes(text);
+        return StrUtils.hexStringToBytes(getText());
     }
 
-    public static byte[] hexDumpToBytes(String s) {
-        return hexStringToBytes(s.replace(" ", ""));
+    public void setBytes(byte[] bytes) {
+        if (bytes == null) {
+            setText("");
+        } else {
+            setText(StrUtils.bytesToHexStr(bytes, 0, bytes.length));
+        }
     }
+
 
     public void assignField(HexTextField field) {
         if (assignedFields == null) {
             assignedFields = new ArrayList<>();
         }
         assignedFields.add(field);
+    }
+
+    private void setTextWithoutFilter(String text) {
+        filtering = true;
+        setText(text);
+        filtering = false;
     }
 
 
@@ -179,23 +183,39 @@ public class HexTextField extends JTextField implements DocumentListener {
         }
         final String src = getText();
         for (HexTextField field : assignedFields) {
-            String text = convert(src, filterType, field.getFilterType());
+            String text = null;
+            try {
+                text = convert(src, filterType, field.getFilterType());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                text = "";
+            }
             if (!text.equals(field.getText())) {
-//                field.setText(text);
+                field.setTextWithoutFilter(text);
             }
         }
     }
 
-    private static String convert(String text, FilterType from, FilterType to) {
+
+    private String convert(String text, FilterType from, FilterType to) throws UnsupportedEncodingException {
         if (from == to) {
             return text;
         }
         if (from == FilterType.ANY_TEXT && to == FilterType.HEX) {
-            return filterHexString(text, 0);
+            return StrUtils.bytesToHexString(text.getBytes(textEncoding));
         } else if (from == FilterType.HEX && to == FilterType.ANY_TEXT) {
-            return bytesToHexString(hexDumpToBytes(text));
+            return new String(StrUtils.hexStringToBytes(text), textEncoding);
         }
         return text;
     }
+
+    public String getTextEncoding() {
+        return textEncoding;
+    }
+
+    public void setTextEncoding(String textEncoding) {
+        this.textEncoding = textEncoding;
+    }
+
 
 }

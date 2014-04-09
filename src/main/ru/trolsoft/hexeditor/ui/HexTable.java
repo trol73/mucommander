@@ -413,6 +413,10 @@ public class HexTable extends JTable {
         repaintSelection(prevSelectionIndexFrom, prevSelectionIndexTo);
     }
 
+    public void gotoOffset(long offset) {
+        setSelectionByOffsets(offset, offset);
+    }
+
 
     /**
      * Ensures the specified cell is visible.

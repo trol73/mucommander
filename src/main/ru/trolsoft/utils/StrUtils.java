@@ -1,5 +1,7 @@
 package ru.trolsoft.utils;
 
+import javax.xml.bind.DatatypeConverter;
+
 /**
  * Created by trol on 03/04/14.
  */
@@ -106,5 +108,31 @@ public class StrUtils {
         }
         return result;
     }
+
+
+    /**
+     *
+     * @param bytes
+     * @return
+     */
+    public static String bytesToHexString(byte[] bytes) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            s.append(StrUtils.byteToHexStr(bytes[i]));
+            s.append(' ');
+        }
+        return s.toString();
+    }
+
+
+    public static byte[] hexStringToBytes(String text) {
+        text = text.replace(" ", "");
+        if (text.length() % 2 == 1) {
+            text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
+        }
+        return DatatypeConverter.parseHexBinary(text);
+    }
+
+
 
 }

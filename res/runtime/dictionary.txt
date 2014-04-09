@@ -19143,9 +19143,15 @@ hex_viewer.goto:EN:Goto
 hex_viewer.goto:RU:Переход
 hex_viewer.search:EN:Search
 hex_viewer.search:RU:Поиск
+hex_viewer.searchNext:EN:Find next
+hex_viewer.searchNext:RU:Искать далее
+hex_viewer.searchPrev:EN:Find previous
+hex_viewer.searchPrev:RU:Искать предыдущий
 hex_viewer.find:EN:Find
 hex_viewer.find:RU:Найти
 hex_view.text:EN:Search for
 hex_view.text:RU:Искать
 hex_viewer.hex:EN:Hex
 hex_viewer.hex:RU:Hex
+hex_viewer.search_not_found:EN:Pattern not found
+hex_viewer.search_not_found:RU:Шаблон не найден

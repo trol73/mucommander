@@ -65,7 +65,9 @@ public class ByteBufferSearchUtils {
         int[] failure = computeFailure(pattern);
 
         int j = 0;
-        if (data.length == 0) return -1;
+        if (data.length == 0) {
+            return -1;
+        }
 
         for (int i = 0; i < data.length; i++) {
             while (j > 0 && pattern[j] != data[i]) {
