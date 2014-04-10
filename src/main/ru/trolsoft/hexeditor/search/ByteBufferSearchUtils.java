@@ -56,6 +56,29 @@ public class ByteBufferSearchUtils {
     }
 
 
+    public static long indexOfBackward(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
+        byte[] patternInvert = new byte[pattern.length];
+        for (int i = 0; i < pattern.length; i++) {
+            patternInvert[i] = pattern[pattern.length-i-1];
+        }
+        int[] failure = computeFailure(patternInvert);
+        int j = 0;
+        for (long i = fromOffset; i >= 0; i--) {
+// TODO buffer cache
+            while (j > 0 && patternInvert[j] != data.getByte(i)) {
+                j = failure[j - 1];
+            }
+            if (pattern[j] == data.getByte(i)) {
+                j++;
+            }
+            if (j == pattern.length) {
+                return i - pattern.length + 1;
+            }
+        }
+        return -1;
+    }
+
+
 
     /**
      * Knuth-Morris-Pratt Algorithm for Pattern Matching

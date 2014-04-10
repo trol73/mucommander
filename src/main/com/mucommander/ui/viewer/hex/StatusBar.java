@@ -22,6 +22,7 @@ import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 /**
@@ -42,13 +43,13 @@ public class StatusBar extends org.fife.ui.StatusBar {
     public StatusBar() {
         super("");
 
-        lblOffset = new JLabel();
+        lblOffset = createLabel();
         panelOffset = new StatusBarPanel(new BorderLayout(), lblOffset);
 
-        lblEncoding = new JLabel();
+        lblEncoding = createLabel();
         panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
 
-        lblValue = new JLabel();
+        lblValue = createLabel();
         panelValue = new StatusBarPanel(new BorderLayout(), lblValue);
 
         // Make the layout such that different items can be different sizes.
@@ -58,9 +59,16 @@ public class StatusBar extends org.fife.ui.StatusBar {
         c.weightx = 0.0;
         addStatusBarComponent(panelOffset, c);
         c.weightx = 0.0;
-        addStatusBarComponent(panelEncoding, c);
-        c.weightx = 0.0;
         addStatusBarComponent(panelValue, c);
+        c.weightx = 0.0;
+        addStatusBarComponent(panelEncoding, c);
+    }
+
+    private JLabel createLabel() {
+        JLabel lbl = new JLabel();
+        Font fnt = lbl.getFont();
+        lbl.setFont(new Font(Font.MONOSPACED, fnt.getStyle(), fnt.getSize()));
+        return lbl;
     }
 
     public void setOffset(long offset) {
@@ -84,4 +92,7 @@ public class StatusBar extends org.fife.ui.StatusBar {
         lblValue.setText(s);
     }
 
+    public void clearStatusMessage() {
+        setStatusMessage("");
+    }
 }

@@ -20,14 +20,9 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
+import ru.trolsoft.ui.InputField;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -41,10 +36,10 @@ import java.awt.event.ActionListener;
 public class GotoLineDialog extends FocusDialog implements ActionListener {
 
     /** The text field where a search string can be entered */
-    private JTextField lineNumberField;
+    private InputField edtLineNumber;
 
     /** The 'OK' button */
-    private JButton okButton;
+    private JButton btnOk;
 
     /** true if the dialog was validated by the user */
     private boolean wasValidated;
@@ -60,21 +55,23 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
         Container contentPane = getContentPane();
         contentPane.add(new JLabel(Translator.get("text_viewer.line")+":"), BorderLayout.NORTH);
 
-        lineNumberField = new JTextField(16);
-        lineNumberField.setText("1");
-        lineNumberField.addActionListener(this);
-        AbstractDocument doc = (AbstractDocument)lineNumberField.getDocument();
-        doc.addDocumentListener(new Listener());
-        doc.setDocumentFilter(new NumberDocumentFilter());
+        edtLineNumber = new InputField(16, InputField.FilterType.DEC_LONG) {
+            @Override
+            public void onChange() {
+                btnOk.setEnabled(!edtLineNumber.isEmpty());
+            }
+        };
+        edtLineNumber.setText("1");
+        edtLineNumber.addActionListener(this);
 
-        contentPane.add(lineNumberField, BorderLayout.CENTER);
+        contentPane.add(edtLineNumber, BorderLayout.CENTER);
 
-        okButton = new JButton(Translator.get("ok"));
+        btnOk = new JButton(Translator.get("ok"));
         JButton cancelButton = new JButton(Translator.get("cancel"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus
-        setInitialFocusComponent(lineNumberField);
+        setInitialFocusComponent(edtLineNumber);
 
         showDialog();
     }
@@ -95,7 +92,7 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
      * @return the line number entered by the user in the text field
      */
     public int getLine() {
-        return Integer.parseInt(lineNumberField.getText());
+        return Integer.parseInt(edtLineNumber.getText());
     }
 
 
@@ -106,62 +103,8 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        wasValidated = source== okButton || source== lineNumberField;
+        wasValidated = source== btnOk || source== edtLineNumber;
 
         dispose();
-    }
-
-    /**
-     * A document filter that only lets the user enter digits.
-     */
-    private class NumberDocumentFilter extends DocumentFilter {
-
-        private String fix(String str) {
-            if (str!=null) {
-                int origLength = str.length();
-                for (int i=0; i<str.length(); i++) {
-                    if (!Character.isDigit(str.charAt(i))) {
-                        str = str.substring(0, i) + str.substring(i+1);
-                        i--;
-                    }
-                }
-                if (origLength!=str.length()) {
-                    UIManager.getLookAndFeel().provideErrorFeedback(GotoLineDialog.this);
-                }
-            }
-            return str;
-        }
-
-        @Override
-        public void insertString(FilterBypass fb, int offset, String string,
-                                 AttributeSet attr) throws BadLocationException {
-            fb.insertString(offset, fix(string), attr);
-        }
-
-        @Override
-        public void replace(DocumentFilter.FilterBypass fb, int offset,
-                            int length, String text, AttributeSet attr)
-                throws BadLocationException {
-            fb.replace(offset, length, fix(text), attr);
-        }
-
-    }
-
-
-    private class Listener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            okButton.setEnabled(lineNumberField.getDocument().getLength()>0);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            okButton.setEnabled(lineNumberField.getDocument().getLength()>0);
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-        }
     }
 }

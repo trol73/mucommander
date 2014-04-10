@@ -60,6 +60,9 @@ public class HexViewer extends FileViewer {
     private JMenuItem findNextItem;
     private JMenuItem findPrevItem;
 
+    private GotoDialog dlgGoto;
+    private FindDialog dlgFind;
+
     public HexViewer() {
         super();
 
@@ -105,7 +108,7 @@ public class HexViewer extends FileViewer {
             hexTable.setForeground(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
             //hexTable.setAlternateBackground(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
             hexTable.setAlternateBackground(new Color(20, 20, 20));
-            hexTable.setOffsetColomnColor(new Color(0, 255, 255));
+            hexTable.setOffsetColumnColor(new Color(0, 255, 255));
             hexTable.setAsciiColumnColor(new Color(255, 0, 255));
             hexTable.setHighlightSelectionInAsciiDumpColor(new Color(0, 0, 255));
             hexTable.setAlternateRowBackground(true);
@@ -117,6 +120,7 @@ public class HexViewer extends FileViewer {
             onOffsetChangeListener.onChange(0);
 
             statusBar.setMaxOffset(file.getSize() - 1);
+            statusBar.setOffset(hexTable.getCurrentAddress());
 
             setComponentToPresent(hexTable);
             getViewport().setBackground(hexTable.getBackground());
@@ -156,7 +160,6 @@ public class HexViewer extends FileViewer {
 
 
     public void actionPerformed(ActionEvent e) {
-System.out.println("ACTION " + e);
         Object source = e.getSource();
 
         if (source == gotoItem && gotoItem.isEnabled()) {
@@ -174,24 +177,32 @@ System.out.println("ACTION " + e);
 
 
     private void findFirst() {
-        FindDialog findDialog = new FindDialog(getFrame(), encoding) {
+        if (dlgFind != null && dlgFind.isVisible()) {
+            return;
+        }
+        dlgFind = new FindDialog(getFrame(), encoding) {
             @Override
             protected void doSearch(byte[] bytes) {
-                doSearchFromPos(bytes, 0);
+                doSearchFromPos(bytes, 0, true);
             }
         };
-        findDialog.setSearchBytes(lastSearchBytes);
-        findDialog.showDialog();
+        dlgFind.setSearchBytes(lastSearchBytes);
+        dlgFind.showDialog();
     }
 
-    private void doSearchFromPos(byte[] bytes, long pos) {
+    private void doSearchFromPos(byte[] bytes, long pos, boolean next) {
         lastSearchBytes = bytes;
         try {
-            lastSearchResult = ByteBufferSearchUtils.indexOf(byteBuffer, bytes, pos);
+            if (next) {
+                lastSearchResult = ByteBufferSearchUtils.indexOf(byteBuffer, bytes, pos);
+            } else {
+                lastSearchResult = ByteBufferSearchUtils.indexOfBackward(byteBuffer, bytes, pos);
+            }
             if (lastSearchResult >= 0) {
                 hexTable.gotoOffset(lastSearchResult);
+                statusBar.clearStatusMessage();
             } else {
-                statusBar.setStatusMessage("Not found");    // TODO
+                statusBar.setStatusMessage(Translator.get("hex_viewer.search_not_found"));
             }
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -200,16 +211,29 @@ System.out.println("ACTION " + e);
 
 
     private void findNext() {
-        if (lastSearchResult >= 0) {
-            doSearchFromPos(lastSearchBytes, lastSearchResult+1);
+        if (lastSearchBytes != null && lastSearchBytes.length > 0) {
+            long pos = hexTable.getCurrentAddress()+1;
+            doSearchFromPos(lastSearchBytes, pos, true);
         }
     }
 
     private void findPrev() {
-
+        if (lastSearchBytes != null && lastSearchBytes.length > 0) {
+            long pos = hexTable.getCurrentAddress()-1;
+            doSearchFromPos(lastSearchBytes, pos, false);
+        }
     }
 
     private void gotoOffset() {
-
+        if (dlgGoto != null && dlgGoto.isVisible()) {
+            return;
+        }
+        dlgGoto = new GotoDialog(getFrame(), model.getSize() - 1) {
+            @Override
+            protected void doGoto(long value) {
+                hexTable.gotoOffset(value);
+            }
+        };
+        dlgGoto.showDialog();
     }
 }

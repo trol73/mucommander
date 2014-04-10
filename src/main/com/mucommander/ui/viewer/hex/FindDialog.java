@@ -8,7 +8,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
-import ru.trolsoft.hexeditor.ru.trolsoft.ui.HexTextField;
+import ru.trolsoft.ui.InputField;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -23,13 +23,13 @@ import java.awt.event.ActionListener;
  */
 public abstract class FindDialog extends FocusDialog implements ActionListener {
 
-    private static String text;
+    private static String text = "";
 
     /** The text field where a search dump can be entered */
-    private HexTextField hexField;
+    private InputField hexField;
 
     /** The text field where a search string can be entered */
-    private HexTextField textField;
+    private InputField textField;
 
     /** The 'OK' button */
     private JButton okButton;
@@ -44,20 +44,17 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         super(frame, Translator.get("hex_viewer.find"), frame);
 
         Container contentPane = getContentPane();
-        //contentPane.add(new JLabel(Translator.get("hex_viewer.find")+":"), BorderLayout.NORTH);
 
         // Text fields panel
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
-        textField = new HexTextField(60);
-        //textField.setText(text);
+        textField = new InputField(60, InputField.FilterType.ANY_TEXT);
+        textField.setText(text);
         textField.addActionListener(this);
-        textField.setFilterType(HexTextField.FilterType.ANY_TEXT);
         compPanel.addRow(Translator.get("hex_view.text")+":", textField, 5);
 
-        hexField = new HexTextField(60);
-//        hexField.setText(text);
-        hexField.setFilterType(HexTextField.FilterType.HEX);
+        hexField = new InputField(60, InputField.FilterType.HEX_DUMP);
+        hexField.setText(text);
         hexField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_viewer.hex")+":", hexField, 10);
 

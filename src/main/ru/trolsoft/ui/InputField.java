@@ -15,36 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.trolsoft.hexeditor.ru.trolsoft.ui;
+package ru.trolsoft.ui;
 
 import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.xml.bind.DatatypeConverter;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Input filed for text and hex values
  */
-public class HexTextField extends JTextField implements DocumentListener {
+public class InputField extends JTextField implements DocumentListener {
 
     public enum FilterType {
         ANY_TEXT,
-        HEX,
+        HEX_DUMP,
+        HEX_LONG,
+        DEC_LONG
     }
 
     private static final String HEX_SYMBOLS = "0123456789ABCDEF";
 
     private static final String DEFAULT_ENCODING = "windows-1252";
 
-    private FilterType filterType = FilterType.HEX;
+    private FilterType filterType = FilterType.HEX_DUMP;
 
     private int maxLength = 0xff;
 
@@ -52,15 +52,21 @@ public class HexTextField extends JTextField implements DocumentListener {
 
     private String textEncoding;
 
-    private List<HexTextField> assignedFields;
+    private List<InputField> assignedFields;
 
-    public HexTextField() {
+    public InputField() {
         super();
         init();
     }
 
-    public HexTextField(int columns) {
+    public InputField(int columns) {
         super(columns);
+        init();
+    }
+
+    public InputField(int columns, FilterType filterType) {
+        super(columns);
+        this.filterType = filterType;
         init();
     }
 
@@ -107,7 +113,9 @@ public class HexTextField extends JTextField implements DocumentListener {
         if (filtering) {
             return;
         }
+        // don't filter text value
         if (filterType == null || filterType == FilterType.ANY_TEXT) {
+            onChange();
             updateAssignedFields();
             return;
         }
@@ -117,12 +125,27 @@ public class HexTextField extends JTextField implements DocumentListener {
             @Override
             public void run() {
                 String input = getText().toUpperCase();
-                String filtered = filterHexString(input, maxLength);
+                String filtered = filterInput(input, maxLength);
                 setText(filtered);
                 updateAssignedFields();
+                onChange();
                 filtering = false;
             }
         });
+    }
+
+
+
+    private String filterInput(String input, int maxLength) {
+        switch (filterType) {
+            case HEX_DUMP:
+                return filterHexString(input, maxLength);
+            case DEC_LONG:
+                return filterDecLong(input);
+            case HEX_LONG:
+                return filterHexLong(input);
+        }
+        return input;
     }
 
 
@@ -143,11 +166,53 @@ public class HexTextField extends JTextField implements DocumentListener {
         if (maxBytes > 0) {
             if (filtered.length() > 3 * maxBytes) {
                 filtered.setLength(3 * maxBytes);
-                Toolkit.getDefaultToolkit().beep();
+                beep();
             }
         }
         return filtered.toString();
     }
+
+
+    private String filterDecLong(String input) {
+        if (input == null) {
+            return null;
+        }
+        StringBuilder filtered = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (Character.isDigit(ch)) {
+                filtered.append(ch);
+            }
+        }
+        if (filtered.length() != input.length()) {
+            beep();
+        }
+        return filtered.toString();
+    }
+
+    private String filterHexLong(String input) {
+        if (input == null) {
+            return null;
+        }
+        StringBuilder filtered = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (HEX_SYMBOLS.indexOf(ch) >= 0) {
+                filtered.append(ch);
+            }
+        }
+        if (filtered.length() != input.length()) {
+            beep();
+        }
+        return filtered.toString();
+    }
+
+
+
+    private static void beep() {
+        Toolkit.getDefaultToolkit().beep();
+    }
+
 
 
     public byte[] getBytes() {
@@ -162,8 +227,22 @@ public class HexTextField extends JTextField implements DocumentListener {
         }
     }
 
+    public long getValue() {
+        switch (filterType) {
+            case DEC_LONG:
+                return Long.parseLong(getText());
+            case HEX_LONG:
+                return Long.parseLong(getText(), 16);
+        }
+        return 0;
+    }
 
-    public void assignField(HexTextField field) {
+    public void setValue(long val) {
+        setText(Long.toString(val));
+    }
+
+
+    public void assignField(InputField field) {
         if (assignedFields == null) {
             assignedFields = new ArrayList<>();
         }
@@ -182,8 +261,8 @@ public class HexTextField extends JTextField implements DocumentListener {
             return;
         }
         final String src = getText();
-        for (HexTextField field : assignedFields) {
-            String text = null;
+        for (InputField field : assignedFields) {
+            String text;
             try {
                 text = convert(src, filterType, field.getFilterType());
             } catch (UnsupportedEncodingException e) {
@@ -201,9 +280,9 @@ public class HexTextField extends JTextField implements DocumentListener {
         if (from == to) {
             return text;
         }
-        if (from == FilterType.ANY_TEXT && to == FilterType.HEX) {
+        if (from == FilterType.ANY_TEXT && to == FilterType.HEX_DUMP) {
             return StrUtils.bytesToHexString(text.getBytes(textEncoding));
-        } else if (from == FilterType.HEX && to == FilterType.ANY_TEXT) {
+        } else if (from == FilterType.HEX_DUMP && to == FilterType.ANY_TEXT) {
             return new String(StrUtils.hexStringToBytes(text), textEncoding);
         }
         return text;
@@ -215,6 +294,15 @@ public class HexTextField extends JTextField implements DocumentListener {
 
     public void setTextEncoding(String textEncoding) {
         this.textEncoding = textEncoding;
+    }
+
+
+    public boolean isEmpty() {
+        return getText().isEmpty();
+    }
+
+    public void onChange() {
+
     }
 
 

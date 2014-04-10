@@ -411,6 +411,9 @@ public class HexTable extends JTable {
 
         // Draw the new selection.
         repaintSelection(prevSelectionIndexFrom, prevSelectionIndexTo);
+        if (onOffsetChangeListener != null) {
+            onOffsetChangeListener.onChange(anchorSelectionIndex);
+        }
     }
 
     public void gotoOffset(long offset) {
@@ -472,6 +475,14 @@ public class HexTable extends JTable {
     }
 
     /**
+     * Current offset in file
+     * @return
+     */
+    public long getCurrentAddress() {
+        return anchorSelectionIndex;
+    }
+
+    /**
      * Set alternate background color
      * @param color alternate background color
      */
@@ -491,7 +502,7 @@ public class HexTable extends JTable {
      * Set color to render the first offset column
      * @param color
      */
-    public void setOffsetColomnColor(Color color) {
+    public void setOffsetColumnColor(Color color) {
         this.offsetColor = color;
     }
 
@@ -632,8 +643,8 @@ public class HexTable extends JTable {
                     e.consume();
                     return;
                 case KeyEvent.VK_BACK_SPACE:
-                    System.out.println();
-                    Profiler.print();
+//System.out.println();
+//Profiler.print();
                     //System.out.println(Profiler.getTime());
                     return;
             }
