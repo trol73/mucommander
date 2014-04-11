@@ -75,15 +75,6 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
     }
 
 
-    /**
-     * Returns the search string entered by the user in the text field.
-     *
-     * @return the search string entered by the user in the text field
-     */
-    public String getSearchString() {
-        return hexField.getText();
-    }
-
     public byte[] getSearchBytes() {
         return hexField.getBytes();
     }

@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 import com.mucommander.profiler.Profiler;
+import com.mucommander.utils.MuLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

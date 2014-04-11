@@ -57,7 +57,9 @@ public class PdfViewer extends FileViewer {
 
     @Override
     protected void show(AbstractFile file) throws IOException {
-        controller.openDocument(file.getPath());
+        String description = "";
+        String path = file.getPath();
+        controller.openDocument(file.getInputStream(), description, path);
     }
 
     @Override

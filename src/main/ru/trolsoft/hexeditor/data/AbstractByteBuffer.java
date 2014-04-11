@@ -25,6 +25,15 @@ import java.io.IOException;
 public abstract class AbstractByteBuffer {
 
     /**
+     * Стратегия кеширования при чтении
+     */
+    public enum CacheStrategy {
+        FORWARD,
+        BACKWARD,
+        CENTER
+    }
+
+    /**
      *
      */
     protected static final int DEFAULT_CAPACITY = 1024*256;
@@ -46,6 +55,9 @@ public abstract class AbstractByteBuffer {
      * Size of file
      */
     protected long streamSize;
+
+
+    private CacheStrategy cacheStrategy = CacheStrategy.CENTER;
 
     public AbstractByteBuffer(int capacity) {
         this.capacity = capacity;
@@ -74,12 +86,8 @@ public abstract class AbstractByteBuffer {
             if (fileOffset < 0 || fileOffset >= getFileSize()) {
                 throw new IndexOutOfBoundsException("Position: " + fileOffset + ", file size = " + getFileSize());
             }
-            // TODO detect if we scroll up or down and try forecast next offset
-            if (supportRandomAccess()) {
-                offset = fileOffset - buffer.length/2;
-            } else {
-                offset = fileOffset;
-            }
+            offset = calcOffset(fileOffset, supportRandomAccess());
+            // FIXME if offset > size
             if (offset < 0) {
                 offset = 0;
             }
@@ -87,6 +95,30 @@ public abstract class AbstractByteBuffer {
             index = fileOffset - offset;
         }
         return buffer[(int)index];
+    }
+
+
+    protected long calcOffset(long fileOffset, boolean randomAccessStream) {
+        if (randomAccessStream) {
+            switch (cacheStrategy) {
+                case FORWARD:
+                    return fileOffset;
+                case BACKWARD:
+                    return fileOffset - buffer.length;
+                case CENTER:
+                    return fileOffset - buffer.length / 2;
+            }
+        } else {
+            switch (cacheStrategy) {
+                case FORWARD:
+                    return fileOffset;
+                case BACKWARD:
+                    return fileOffset - buffer.length;
+                case CENTER:
+                    return fileOffset;
+            }
+        }
+        return fileOffset;
     }
 
     /**
@@ -143,5 +175,14 @@ public abstract class AbstractByteBuffer {
      * @return
      */
     abstract protected boolean supportRandomAccess();
+
+    public CacheStrategy getCacheStrategy() {
+        return cacheStrategy;
+    }
+
+    public void setCacheStrategy(CacheStrategy cacheStrategy) {
+        this.cacheStrategy = cacheStrategy;
+    }
+
 
 }

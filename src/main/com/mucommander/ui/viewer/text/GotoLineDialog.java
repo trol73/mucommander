@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  *
  * @author Oleg Trifonov
  */
-public class GotoLineDialog extends FocusDialog implements ActionListener {
+public abstract class GotoLineDialog extends FocusDialog implements ActionListener {
 
     /** The text field where a search string can be entered */
     private InputField edtLineNumber;
@@ -41,16 +41,17 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
     /** The 'OK' button */
     private JButton btnOk;
 
-    /** true if the dialog was validated by the user */
-    private boolean wasValidated;
+    private final int maxLines;
+
 
     /**
      * Creates a new FindDialog and shows it to the screen.
      *
      * @param editorFrame the parent editor frame
      */
-    public GotoLineDialog(JFrame editorFrame) {
+    public GotoLineDialog(JFrame editorFrame, final int maxLines) {
         super(editorFrame, Translator.get("text_viewer.goto_line"), editorFrame);
+        this.maxLines = maxLines;
 
         Container contentPane = getContentPane();
         contentPane.add(new JLabel(Translator.get("text_viewer.line")+":"), BorderLayout.NORTH);
@@ -58,7 +59,8 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
         edtLineNumber = new InputField(16, InputField.FilterType.DEC_LONG) {
             @Override
             public void onChange() {
-                btnOk.setEnabled(!edtLineNumber.isEmpty());
+                boolean enabled = !edtLineNumber.isEmpty() && edtLineNumber.getValue() <= maxLines;
+                btnOk.setEnabled(enabled);
             }
         };
         edtLineNumber.setText("1");
@@ -72,27 +74,6 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
 
         // The text field will receive initial focus
         setInitialFocusComponent(edtLineNumber);
-
-        showDialog();
-    }
-
-    /**
-     * Returns <code>true</code> if the dialog was validated by the user, i.e. the user pressed the 'OK' button
-     * or the 'Enter' key in the text field.
-     *
-     * @return <code>true</code> if the dialog was validated by the user
-     */
-    public boolean wasValidated() {
-        return wasValidated;
-    }
-
-    /**
-     * Returns the line number entered by the user in the text field.
-     *
-     * @return the line number entered by the user in the text field
-     */
-    public int getLine() {
-        return Integer.parseInt(edtLineNumber.getText());
     }
 
 
@@ -103,8 +84,11 @@ public class GotoLineDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        wasValidated = source== btnOk || source== edtLineNumber;
-
-        dispose();
+        if ( (source == btnOk || source == edtLineNumber) && btnOk.isEnabled() ) {
+            doGoto((int)edtLineNumber.getValue());
+            dispose();
+        }
     }
+
+    abstract protected void doGoto(int value);
 }

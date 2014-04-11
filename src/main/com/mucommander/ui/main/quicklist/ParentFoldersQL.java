@@ -1,6 +1,6 @@
 /*
  * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * Copyright (C) 2002-2014 Maxence Bernard
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 package com.mucommander.ui.main.quicklist;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.LinkedList;
 
 import javax.swing.Icon;
 
@@ -27,8 +27,6 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowParentFoldersQLAction;
-import com.mucommander.ui.event.LocationEvent;
-import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 
@@ -37,18 +35,16 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  * 
  * @author Arik Hadas
  */
-public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> implements LocationListener {
-	
-	private List<AbstractFile> parents = new Vector<AbstractFile>();
-	private boolean updated = true;
+public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> {
+
 	private FolderPanel folderPanel;
 	
 	public ParentFoldersQL(FolderPanel folderPanel) {
-		super(folderPanel, ActionProperties.getActionLabel(ShowParentFoldersQLAction.Descriptor.ACTION_ID), Translator.get("parent_folders_quick_list.empty_message"));
+		super(folderPanel,
+                ActionProperties.getActionLabel(ShowParentFoldersQLAction.Descriptor.ACTION_ID),
+                Translator.get("parent_folders_quick_list.empty_message"));
 		
 		this.folderPanel = folderPanel;
-		
-		folderPanel.getLocationManager().addLocationListener(this);
 	}
 	
 	@Override
@@ -56,19 +52,10 @@ public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> implements
 		folderPanel.tryChangeCurrentFolder(item);
 	}
 	
-	protected void populateParentFolders(AbstractFile folder) {
-		parents = new Vector<AbstractFile>();
-				
-		while((folder=folder.getParent())!=null)
-            parents.add(folder);
-    }
-	
+
 	@Override
     public AbstractFile[] getData() {
-		if (!updated && (updated = true))
-			populateParentFolders(folderPanel.getCurrentFolder());
-		
-		return parents.toArray(new AbstractFile[0]);
+        return populateParentFolders(folderPanel.getCurrentFolder()).toArray(new AbstractFile[0]);
 	}
 
 	@Override
@@ -76,17 +63,11 @@ public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> implements
 		return getIconOfFile(item);
 	}
 
-	/**********************************
-	 * LocationListener Implementation
-	 **********************************/
-
-	public void locationChanged(LocationEvent locationEvent) {
-		updated = false;
-	}
-	
-	public void locationChanging(LocationEvent locationEvent) { }
-
-	public void locationCancelled(LocationEvent locationEvent) { }
-
-	public void locationFailed(LocationEvent locationEvent) { }
+    protected List<AbstractFile> populateParentFolders(AbstractFile folder) {
+        List<AbstractFile> parents = new LinkedList<AbstractFile>();
+        while ((folder = folder.getParent()) != null) {
+            parents.add(folder);
+        }
+        return parents;
+    }
 }

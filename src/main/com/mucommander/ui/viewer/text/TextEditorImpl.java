@@ -43,11 +43,15 @@ import java.io.*;
  */
 class TextEditorImpl implements ThemeListener {
 
+    private static final Insets INSETS = new Insets(4, 3, 4, 3);
+
 	private String searchString;
 
 	private JFrame frame;
 
     private TextArea textArea;
+
+    private GotoLineDialog dlgGoto;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -68,7 +72,7 @@ class TextEditorImpl implements ThemeListener {
         textArea = new TextArea() {
             @Override
             public Insets getInsets() {
-                return new Insets(4, 3, 4, 3);
+                return INSETS;
             }
         };
         textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
@@ -121,7 +125,7 @@ class TextEditorImpl implements ThemeListener {
 	/////////////////
 
     void find() {
-		FindDialog findDialog = new FindDialog(frame) {
+		FindDialog dlgFind = new FindDialog(frame) {
             @Override
             protected void doSearch(String text) {
                 if (text != null && text.length() > 0) {
@@ -135,7 +139,7 @@ class TextEditorImpl implements ThemeListener {
                 textArea.requestFocus();
             }
         };
-        findDialog.showDialog();
+        dlgFind.showDialog();
 	}
 
 	void findNext() {
@@ -147,10 +151,13 @@ class TextEditorImpl implements ThemeListener {
 	}
 
     void gotoLine() {
-        GotoLineDialog gotoDialog = new GotoLineDialog(frame);
-        if (gotoDialog.wasValidated()) {
-            textArea.gotoLine(gotoDialog.getLine());
-        }
+        GotoLineDialog dlgGoto = new GotoLineDialog(frame, textArea.getLineCount()) {
+            @Override
+            protected void doGoto(int value) {
+                textArea.gotoLine(value);
+            }
+        };
+        dlgGoto.showDialog();
     }
 
 	private String getTextLC() {

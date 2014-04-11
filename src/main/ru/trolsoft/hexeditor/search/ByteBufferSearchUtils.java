@@ -40,6 +40,9 @@ public class ByteBufferSearchUtils {
             return -1;
         }
         int[] failure = computeFailure(pattern);
+        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
+        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
+
         int j = 0;
         for (long i = fromOffset; i < fileSize; i++) {
             while (j > 0 && pattern[j] != data.getByte(i)) {
@@ -49,9 +52,11 @@ public class ByteBufferSearchUtils {
                 j++;
             }
             if (j == pattern.length) {
+                data.setCacheStrategy(cacheStrategy);
                 return i - pattern.length + 1;
             }
         }
+        data.setCacheStrategy(cacheStrategy);
         return -1;
     }
 
@@ -62,9 +67,11 @@ public class ByteBufferSearchUtils {
             patternInvert[i] = pattern[pattern.length-i-1];
         }
         int[] failure = computeFailure(patternInvert);
+        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
+        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.BACKWARD);
+
         int j = 0;
         for (long i = fromOffset; i >= 0; i--) {
-// TODO buffer cache
             while (j > 0 && patternInvert[j] != data.getByte(i)) {
                 j = failure[j - 1];
             }
@@ -72,9 +79,11 @@ public class ByteBufferSearchUtils {
                 j++;
             }
             if (j == pattern.length) {
+                data.setCacheStrategy(cacheStrategy);
                 return i - pattern.length + 1;
             }
         }
+        data.setCacheStrategy(cacheStrategy);
         return -1;
     }
 

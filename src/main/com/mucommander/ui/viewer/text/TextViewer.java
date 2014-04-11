@@ -159,9 +159,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
             // Load the file into the text area
             loadDocument(in, encoding, documentListener);
-        }
-        finally {
-            if(in != null) {
+        } finally {
+            if (in != null) {
                 try {in.close();}
                 catch(IOException e) {
                     e.printStackTrace();
@@ -175,18 +174,19 @@ public class TextViewer extends FileViewer implements EncodingListener {
     void loadDocument(InputStream in, final String encoding, DocumentListener documentListener) throws IOException {
         // If the encoding is UTF-something, wrap the stream in a BOMInputStream to IMAGE_FILTER out the byte-order mark
         // (see ticket #245)
-        if(encoding != null && encoding.toLowerCase().startsWith("utf")) {
+        if (encoding != null && encoding.toLowerCase().startsWith("utf")) {
             in = new BOMInputStream(in);
         }
 
         // If the given encoding is invalid (null or not supported), default to "UTF-8" 
-        this.encoding = encoding==null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
+        this.encoding = encoding == null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
 
         textEditorImpl.read(new BufferedReader(new InputStreamReader(in, this.encoding)));
         
         // Listen to document changes
-        if(documentListener!=null)
+        if (documentListener != null) {
             textEditorImpl.addDocumentListener(documentListener);
+        }
     }
     
     @Override

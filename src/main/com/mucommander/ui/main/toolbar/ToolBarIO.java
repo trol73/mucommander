@@ -18,11 +18,9 @@
 
 package com.mucommander.ui.main.toolbar;
 
-import com.mucommander.MuLogging;
 import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.ui.notifier.SystemTrayNotifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

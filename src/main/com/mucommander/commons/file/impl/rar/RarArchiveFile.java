@@ -87,8 +87,10 @@ public class RarArchiveFile extends AbstractROArchiveFile {
      * @return an ArchiveEntry whose attributes are fetched from the given FileHeader
      */
     private ArchiveEntry createArchiveEntry(FileHeader header) {
+        String fileName = header.getFileNameW().isEmpty() ? header.getFileNameString() : header.getFileNameW();
     	return new ArchiveEntry(
-                header.getFileNameW().replace('\\', '/'),       //header.getFileNameString().replace('\\', '/'),
+                fileName.replace('\\', '/'),
+                //header.getFileNameW().replace('\\', '/'),  //              header.getFileNameString().replace('\\', '/'),
     			header.isDirectory(),
     			header.getMTime().getTime(),
     			header.getFullUnpackSize(),

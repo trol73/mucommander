@@ -58,7 +58,9 @@ public class RarFile {
 //    	final FileHeader header = archive.getgetFileHeader(path);
     	FileHeader header1 = null;
     	for (FileHeader h : archive.getFileHeaders()) {
-    		if (h.getFileNameW().equals(path)) {
+            String fileName = h.getFileNameW().isEmpty() ? h.getFileNameString() : h.getFileNameW();
+    		//if (h.getFileNameW().equals(path)) {
+            if (fileName.equals(path)) {
     			header1 = h;
     			break;
     		}
