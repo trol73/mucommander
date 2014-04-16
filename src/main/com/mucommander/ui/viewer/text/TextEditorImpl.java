@@ -103,7 +103,7 @@ class TextEditorImpl implements ThemeListener {
 			 * we just bubble it up to the parent component of the JTextArea.  
 			 */
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK)!=0;
+				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
 				if (isCtrlPressed) {
 					Font currentFont = textArea.getFont();
 					int currentFontSize = currentFont.getSize();
@@ -131,7 +131,7 @@ class TextEditorImpl implements ThemeListener {
                 if (text != null && text.length() > 0) {
                     searchString = getSearchString().toLowerCase();
 
-                    if (!searchString.equals("")) {
+                    if (!searchString.isEmpty()) {
                         search(0, true);
                     }
                 }

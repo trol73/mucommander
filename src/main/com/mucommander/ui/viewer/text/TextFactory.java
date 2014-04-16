@@ -56,7 +56,6 @@ public class TextFactory implements ViewerFactory, EditorFactory {
         if (file.isDirectory()) {
             return false;
         }
-
         // Warn the user if the file looks like a binary file
         InputStream in = null;
         try {

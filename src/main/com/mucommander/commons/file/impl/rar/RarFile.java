@@ -24,12 +24,11 @@ import java.util.Collection;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
-import com.mucommander.commons.util.CircularByteBuffer;
 
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
-import com.github.junrar.exception.RarException.RarExceptionType;
 import com.github.junrar.rarfile.FileHeader;
+import com.mucommander.commons.util.CircularByteBuffer;
 
 /**
  * 
@@ -39,9 +38,10 @@ public class RarFile {
 	
     /** Interface to junrar library */
     private Archive archive;
-    
+    private AbstractFile file;
 
     public RarFile(AbstractFile file) throws IOException, UnsupportedFileOperationException, RarException {
+        this.file = file;
     	InputStream fileIn = file.getInputStream();
         try {
             archive = new Archive(new File(file.getPath()));
@@ -50,52 +50,67 @@ public class RarFile {
         }
     }
 
+
     public Collection<FileHeader> getEntries() {
     	return archive.getFileHeaders();
     }
+
+
     
     public InputStream getEntryInputStream(String path) throws IOException, RarException {
-//    	final FileHeader header = archive.getgetFileHeader(path);
-    	FileHeader header1 = null;
-    	for (FileHeader h : archive.getFileHeaders()) {
+        // reopen archive to prevent crc error on reading if the file was reopened (issue for text files only)
+        try {
+            archive.close();
+            archive = new Archive(new File(file.getPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    	final FileHeader header = findFileHeader(path);
+        if (header == null) {
+            return null;
+        }
+        return archive.getInputStream(header);
+
+
+        // If the file that is going to be extracted is divided and continued in another archive
+        // part - don't extract it and throw corresponding exception to raise an error.
+//        if (header.isSplitAfter())
+//    		throw new RarException(RarException.RarExceptionType.notImplementedYet);
+//
+//        final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
+//
+//        new Thread(
+//    		    new Runnable(){
+//    		      public void run() {
+//    		    	try {
+//                        archive.extractFile(header, cbb.getOutputStream());
+//					} catch (RarException e) {
+//                        e.printStackTrace();
+//					}
+//    		    	finally {
+//    		    		try {
+//							cbb.getOutputStream().close();
+//						} catch (IOException e1) {
+//							// TODO Auto-generated catch block
+//							e1.printStackTrace();
+//						}
+//    		    	}
+//    		      }
+//    		    }
+//    		  ).start();
+//
+//        return cbb.getInputStream();
+    }
+
+
+    private FileHeader findFileHeader(String path) {
+        for (FileHeader h : archive.getFileHeaders()) {
             String fileName = h.getFileNameW().isEmpty() ? h.getFileNameString() : h.getFileNameW();
-    		//if (h.getFileNameW().equals(path)) {
             if (fileName.equals(path)) {
-    			header1 = h;
-    			break;
-    		}
-    	}
-
-    	final FileHeader header = header1;
-
-    	// If the file that is going to be extracted is divided and continued in another archive 
-        // part - don't extract it and throw corresponding exception to raise an error. 
-        if (header.isSplitAfter())
-    		throw new RarException(RarExceptionType.notImplementedYet);
-    	
-        final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
-        
-        new Thread(
-    		    new Runnable(){
-    		      public void run(){
-    		    	try {
-						archive.extractFile(header, cbb.getOutputStream());
-					} catch (RarException e) {
-						if (e.getType() != RarExceptionType.crcError)
-							e.printStackTrace();
-					}
-    		    	finally {
-    		    		try {
-							cbb.getOutputStream().close();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-    		    	}
-    		      }
-    		    }
-    		  ).start();
-        
-        return cbb.getInputStream();
+                return h;
+            }
+        }
+        return null;
     }
 }

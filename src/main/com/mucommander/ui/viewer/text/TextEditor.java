@@ -187,7 +187,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     public void show(AbstractFile file) throws IOException {
-        textEditorImpl.getTextArea().discardAllEdits();
+        TextArea textArea = textEditorImpl.getTextArea();
+        textArea.discardAllEdits();
         textViewerDelegate.menuHelper.updateEditActions();
 
         TextFilesHistory.FileRecord historyRecord = textViewerDelegate.initHistoryRecord(file);
@@ -201,8 +202,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             type = FileType.XML;
         }
         textViewerDelegate.menuHelper.setSyntax(type);
-        textEditorImpl.getTextArea().setFileType(type);
+        textArea.setFileType(type);
     	textViewerDelegate.startEditing(file, this);
+        textArea.discardAllEdits();
     }
 
 
@@ -212,10 +214,11 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     /////////////////////////////////////
 	
     public void changedUpdate(DocumentEvent e) {
+        textViewerDelegate.menuHelper.updateEditActions();
         // ignore change event if it was caused by syntax change
-        if (!textViewerDelegate.menuHelper.checkWaitChangeSyntaxEvent()) {
+//        if (!textViewerDelegate.menuHelper.checkWaitChangeSyntaxEvent()) {
             setSaveNeeded(true);
-        }
+ //        }
     }
 	
     public void insertUpdate(DocumentEvent e) {
@@ -242,7 +245,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     /////////////////////////////////////
 
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
-    	if(!askSave())
+    	if (!askSave())
     		return;         // Abort if the file could not be saved
 
         // Store caret and scrollbar position before change

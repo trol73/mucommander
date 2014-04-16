@@ -69,22 +69,25 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
 	
 
     protected void setSaveNeeded(boolean saveNeeded) {
-    	if(getFrame()!=null && this.saveNeeded!=saveNeeded) {
-            this.saveNeeded = saveNeeded;
+    	if (getFrame() == null || this.saveNeeded == saveNeeded) {
+            return;
+        }
 
-            // Marks/unmarks the window as dirty under Mac OS X (symbolized by a dot in the window closing icon)
-        	if (OsFamily.MAC_OS_X.isCurrent()) {
-        		getFrame().getRootPane().putClientProperty("windowModified", saveNeeded);
-            }
-    	}
+        this.saveNeeded = saveNeeded;
+
+        // Marks/unmarks the window as dirty under Mac OS X (symbolized by a dot in the window closing icon)
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            getFrame().getRootPane().putClientProperty("windowModified", saveNeeded);
+        }
     }
     
     private void trySaveAs() {
         JFileChooser fileChooser = new JFileChooser();
 		AbstractFile currentFile = getCurrentFile();
         // Sets selected file in JFileChooser to current file
-        if(currentFile.getURL().getScheme().equals(FileProtocols.FILE))
+        if (currentFile.getURL().getScheme().equals(FileProtocols.FILE)) {
             fileChooser.setSelectedFile(new java.io.File(currentFile.getAbsolutePath()));
+        }
         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         int ret = fileChooser.showSaveDialog(getFrame());
 		
@@ -92,20 +95,20 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             AbstractFile destFile;
             try {
                 destFile = FileFactory.getFile(fileChooser.getSelectedFile().getAbsolutePath(), true);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
                 return;
             }
 
             // Check for file collisions, i.e. if the file already exists in the destination
             int collision = FileCollisionChecker.checkForCollision(null, destFile);
-            if (collision!=FileCollisionChecker.NO_COLLOSION) {
+            if (collision != FileCollisionChecker.NO_COLLOSION) {
                 // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
                 // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
                 int action = new FileCollisionDialog(getFrame(), getFrame()/*mainFrame*/, collision, null, destFile, false, false).getActionValue();
 
                 // User chose to overwrite the file
-                if (action== FileCollisionDialog.OVERWRITE_ACTION) {
+                if (action == FileCollisionDialog.OVERWRITE_ACTION) {
                     // Do nothing, simply continue and file will be overwritten
                 }
                 // User chose to cancel or closed the dialog
@@ -125,8 +128,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         try {
             saveAs(destFile);
             return true;
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
             return false;
         }
@@ -145,7 +147,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
                                                    0);
         int ret = dialog.getActionValue();
 
-        if((ret==JOptionPane.YES_OPTION && trySave(getCurrentFile())) || ret==JOptionPane.NO_OPTION) {
+        if ((ret == JOptionPane.YES_OPTION && trySave(getCurrentFile())) || ret == JOptionPane.NO_OPTION) {
             setSaveNeeded(false);
             return true;
         }
@@ -192,7 +194,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             trySave(getCurrentFile());
         } else if (source == saveAsItem) {
             trySaveAs();
-        } else if (source==closeItem) {
+        } else if (source == closeItem) {
         	getFrame().dispose();
         }			
     }

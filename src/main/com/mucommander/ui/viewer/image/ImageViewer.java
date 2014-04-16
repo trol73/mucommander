@@ -26,6 +26,8 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +50,6 @@ import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
 import net.sf.image4j.codec.ico.ICODecoder;
 import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.formats.ico.IcoImageParser;
 import org.apache.sanselan.formats.pnm.PNMImageParser;
 import org.apache.sanselan.formats.psd.PsdImageParser;
 import org.apache.sanselan.formats.tiff.TiffImageParser;
@@ -82,7 +83,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     private JMenuItem zoomOutItem;
 
     private ImageViewerImpl imageViewerImpl;
-    private AbstractFile[] filesInDirectory;
+    private List<AbstractFile> filesInDirectory;
     private int indexInDirectory = -1;
 
     private StatusBar statusBar;
@@ -314,15 +315,22 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     public void show(AbstractFile file) throws IOException {
         if (filesInDirectory == null) {
-            filesInDirectory = file.getParent().ls();
-            for (int i = 0 ; i < filesInDirectory.length; i++) {
-                AbstractFile f = filesInDirectory[i];
+            filesInDirectory = new ArrayList<>();
+            AbstractFile ls[] = file.getParent().ls();
+            ImageFactory imageFactory = new ImageFactory();
+            for (AbstractFile f : ls) {
+                if (imageFactory.canViewFile(f)) {
+                    filesInDirectory.add(f);
+                }
+            }
+            for (int i = 0 ; i < filesInDirectory.size(); i++) {
+                AbstractFile f = filesInDirectory.get(i);
                 if (f.equals(file)) {
                     indexInDirectory = i;
                     break;
                 }
             }
-            statusBar.setFileNumber(1, filesInDirectory.length);
+            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.size());
         }
         try {
             loadImage(file);
@@ -338,7 +346,7 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     @Override
     public String getTitle() {
-        return new StringBuilder(filesInDirectory[indexInDirectory].toString()).
+        return new StringBuilder(filesInDirectory.get(indexInDirectory).toString()).
                 append(" - ").append(image.getWidth(null)).append("x").append(image.getHeight(null)).append(" - ").
                 append((int) (zoomFactor * 100)).append("%").
                 toString();
@@ -366,16 +374,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private int getNextFileIndex() {
-        int index = indexInDirectory;
-        ImageFactory factory = new ImageFactory();
-        while (index < filesInDirectory.length-1) {
-            index++;
-            AbstractFile file = filesInDirectory[index];
-            if (factory.canViewFile(file)) {
-                return index;
-            }
-        }
-        return -1;
+        return indexInDirectory < filesInDirectory.size() - 1 ? indexInDirectory + 1 : -1;
     }
 
     private void gotoNextFile() {
@@ -387,16 +386,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private int getPrevFileIndex() {
-        int index = indexInDirectory;
-        ImageFactory factory = new ImageFactory();
-        while (index > 0) {
-            index--;
-            AbstractFile file = filesInDirectory[index];
-            if (factory.canViewFile(file)) {
-                return index;
-            }
-        }
-        return -1;
+        return indexInDirectory > 0 ? indexInDirectory - 1 : -1;
     }
 
     private void gotoPrevFile() {
@@ -409,8 +399,8 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     private void gotoFile() {
         try {
-            show(filesInDirectory[indexInDirectory]);
-            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.length);
+            show(filesInDirectory.get(indexInDirectory));
+            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.size());
             updateFrame();
         } catch (IOException e) {
             InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));

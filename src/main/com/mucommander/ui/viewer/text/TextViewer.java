@@ -131,8 +131,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         try {
             if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
-                try { in = file.getRandomAccessInputStream(); }
-                catch(IOException e) {
+                try {
+                    in = file.getRandomAccessInputStream();
+                } catch (IOException e) {
                     // In that case we simply get an InputStream
                 }
             }
@@ -143,11 +144,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
 
-            if(in instanceof RandomAccessInputStream) {
+            if (in instanceof RandomAccessInputStream) {
                 // Seek to the beginning of the file and reuse the stream
                 ((RandomAccessInputStream)in).seek(0);
-            }
-            else {
+            } else {
                 // TODO: it would be more efficient to use some sort of PushBackInputStream, though we can't use PushBackInputStream because we don't want to keep pushing back for the whole InputStream lifetime
 
                 // Close the InputStream and open a new one
@@ -162,7 +162,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         } finally {
             if (in != null) {
                 try {in.close();}
-                catch(IOException e) {
+                catch (IOException e) {
                     e.printStackTrace();
                     // Nothing to do here.
                 }
@@ -182,7 +182,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         this.encoding = encoding == null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
 
         textEditorImpl.read(new BufferedReader(new InputStreamReader(in, this.encoding)));
-        
+
         // Listen to document changes
         if (documentListener != null) {
             textEditorImpl.addDocumentListener(documentListener);
@@ -300,11 +300,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
     		// Reload the file using the new encoding
     		// Note: loadDocument closes the InputStream
     		loadDocument(getCurrentFile().getInputStream(), newEncoding, null);
-
             // Restore caret and scrollbar
             textArea.gotoLine(line, column);
             getViewport().setViewPosition(new java.awt.Point(horizontalPos, verticalPos));
-    	} catch(IOException ex) {
+    	} catch (IOException ex) {
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}   
     }

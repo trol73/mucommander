@@ -397,15 +397,14 @@ public class Launcher {
             // ------------------------------------------------------------
             // If muCommander is running under Mac OS X (how lucky!), add some glue for the main menu bar and other OS X
             // specifics.
-            if(OsFamily.MAC_OS_X.isCurrent()) {
+            if (OsFamily.MAC_OS_X.isCurrent()) {
                 // Use reflection to create an OSXIntegration instance so that ClassLoader
                 // doesn't throw an NoClassDefFoundException under platforms other than Mac OS X
                 try {
                     Class<?> osxIntegrationClass = Class.forName("com.mucommander.ui.macosx.OSXIntegration");
                     Constructor<?> constructor   = osxIntegrationClass.getConstructor(new Class[]{});
                     constructor.newInstance();
-                }
-                catch(Exception e) {
+                } catch(Exception e) {
                     LOGGER.debug("Exception thrown while initializing Mac OS X integration", e);
                 }
             }
@@ -416,8 +415,7 @@ public class Launcher {
             // Adds all extensions to the classpath.
             try {
                 ExtensionManager.addExtensionsToClasspath();
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 LOGGER.debug("Failed to add extensions to the classpath", e);
             }
 

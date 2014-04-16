@@ -1,23 +1,41 @@
 package com.mucommander.ui.viewer.text;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextAreaEditorKit;
+import org.fife.ui.rtextarea.RUndoManager;
 
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.xml.soap.Text;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 /**
  * Created by trol on 08/01/14.
  */
-public class TextArea extends RSyntaxTextArea {
+public class TextArea extends RSyntaxTextArea implements DocumentListener {
+
+    public static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
 
     /**
      * The #gotoLine(int) method can't be executed successfully if the model is not painted.
      * In this case the operation wll be postponed after calling #paint() method
      */
     private int postponedCaretPosition = -1;
+
+    /**
+     * Whether the file is dirty.
+     */
+    private boolean dirty;
+
+    public TextArea() {
+        dirty = false;
+        getDocument().addDocumentListener(this);
+    }
 
     /**
      *
@@ -96,59 +114,146 @@ public class TextArea extends RSyntaxTextArea {
         }
     }
 
-/*
     @Override
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed STR " + propertyName + " " + oldValue + " -> " +newValue);
+    public void insertUpdate(DocumentEvent e) {
+        if (!dirty) {
+            setDirty(true);
+        }
     }
 
     @Override
-    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed BOOL " + propertyName + " " + oldValue + " -> " +newValue);
+    public void removeUpdate(DocumentEvent e) {
+        if (!dirty) {
+            setDirty(true);
+        }
     }
 
     @Override
-    public void firePropertyChange(String propertyName, char oldValue, char newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed CHAR " + propertyName + " " + oldValue + " -> " +newValue);
+    public void changedUpdate(DocumentEvent e) {
+
     }
 
-    @Override
-    public void firePropertyChange(String propertyName, int oldValue, int newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed INT " + propertyName + " " + oldValue + " -> " +newValue);
+    /**
+     * Returns whether or not the text in this editor has unsaved changes.
+     *
+     * @return Whether or not the text has unsaved changes.
+     * @see #setDirty(boolean)
+     */
+    public boolean isDirty() {
+        return dirty;
     }
 
-    @Override
-    public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed BYTE " + propertyName + " " + oldValue + " -> " +newValue);
+    /**
+     * Sets whether or not this text in this editor has unsaved changes.
+     * This fires a property change event of type {@link #DIRTY_PROPERTY}.<p>
+     *
+     * Applications will usually have no need to call this method directly; the
+     * only time you might have a need to call this method directly is if you
+     * have to initialize an instance of TextEditorPane with content that does
+     * not come from a file. <code>TextEditorPane</code> automatically sets its
+     * own dirty flag when its content is edited, when its encoding is changed,
+     * or when its line ending property is changed.  It is cleared whenever
+     * <code>load()</code>, <code>reload()</code>, <code>save()</code>, or
+     * <code>saveAs()</code> are called.
+     *
+     * @param dirty Whether or not the text has been modified.
+     * @see #isDirty()
+     */
+    public void setDirty(boolean dirty) {
+        if (this.dirty != dirty) {
+            this.dirty = dirty;
+            firePropertyChange(DIRTY_PROPERTY, !dirty, dirty);
+        }
     }
 
+    /**
+     * Sets the document for this editor.
+     *
+     * @param doc The new document.
+     */
     @Override
-    public void firePropertyChange(String propertyName, short oldValue, short newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed SHORT " + propertyName + " " + oldValue + " -> " +newValue);
+    public void setDocument(Document doc) {
+        Document old = getDocument();
+        if (old != null) {
+            old.removeDocumentListener(this);
+        }
+        super.setDocument(doc);
+        doc.addDocumentListener(this);
     }
 
-    @Override
-    public void firePropertyChange(String propertyName, long oldValue, long newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed LONG " + propertyName + " " + oldValue + " -> " +newValue);
+
+    /**
+     * Sets the line separator sequence to use when this file is saved (e.g.
+     * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
+     *
+     * Besides parameter checking, this method is preferred over
+     * <code>getDocument().putProperty()</code> because can set the editor's
+     * dirty flag when the line separator is changed.
+     *
+     * @param separator The new line separator.
+     * @param setDirty Whether the dirty flag should be set if the line
+     *        separator is changed.
+     * @throws NullPointerException If <code>separator</code> is
+     *         <code>null</code>.
+     * @throws IllegalArgumentException If <code>separator</code> is not one
+     *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+     * @see #getLineSeparator()
+     */
+    public void setLineSeparator(String separator, boolean setDirty) {
+        if (separator == null) {
+            throw new NullPointerException("terminator cannot be null");
+        }
+        if (!"\r\n".equals(separator) && !"\n".equals(separator) && !"\r".equals(separator)) {
+            throw new IllegalArgumentException("Invalid line terminator");
+        }
+        Document doc = getDocument();
+        Object old = doc.getProperty(RTextAreaEditorKit.EndOfLineStringProperty);
+        if (!separator.equals(old)) {
+            doc.putProperty(RTextAreaEditorKit.EndOfLineStringProperty, separator);
+            if (setDirty) {
+                setDirty(true);
+            }
+        }
     }
 
-    @Override
-    public void firePropertyChange(String propertyName, float oldValue, float newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed FLOAT " + propertyName + " " + oldValue + " -> " +newValue);
+    /**
+     * Returns the line separator used when writing this file (e.g.
+     * "<code>\n</code>", "<code>\r\n</code>", or "<code>\r</code>").<p>
+     *
+     * Note that this value is an <code>Object</code> and not a
+     * <code>String</code> as that is the way the {@link Document} interface
+     * defines its property values.  If you always use
+     * {@link #setLineSeparator(String)} to modify this value, then the value
+     * returned from this method will always be a <code>String</code>.
+     *
+     * @return The line separator.  If this value is <code>null</code>, then
+     *         the system default line separator is used (usually the value
+     *         of <code>System.getProperty("line.separator")</code>).
+     * @see #setLineSeparator(String)
+     * @see #setLineSeparator(String, boolean)
+     */
+    public Object getLineSeparator() {
+        return getDocument().getProperty(RTextAreaEditorKit.EndOfLineStringProperty);
     }
 
-    @Override
-    public void firePropertyChange(String propertyName, double oldValue, double newValue) {
-        super.firePropertyChange(propertyName, oldValue, newValue);
-System.out.println(">>> changed DOUBLE " + propertyName + " " + oldValue + " -> " +newValue);
+
+    /**
+     * Sets the line separator sequence to use when this file is saved (e.g.
+     * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
+     *
+     * Besides parameter checking, this method is preferred over
+     * <code>getDocument().putProperty()</code> because it sets the editor's
+     * dirty flag when the line separator is changed.
+     *
+     * @param separator The new line separator.
+     * @throws NullPointerException If <code>separator</code> is
+     *         <code>null</code>.
+     * @throws IllegalArgumentException If <code>separator</code> is not one
+     *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+     * @see #getLineSeparator()
+     */
+    public void setLineSeparator(String separator) {
+        setLineSeparator(separator, true);
     }
-*/
+
 }

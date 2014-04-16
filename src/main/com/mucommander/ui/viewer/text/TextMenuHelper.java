@@ -56,8 +56,6 @@ public class TextMenuHelper {
     private JMenuItem toggleLineWrapItem;
     private JMenuItem toggleLineNumbersItem;
 
-    private boolean waitChangeSyntaxEvent = false;
-
     public TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
         this.textEditorImpl = textEditorImpl;
         this.editMode = editMode;
@@ -134,7 +132,6 @@ public class TextMenuHelper {
                 JCheckBoxMenuItem item = (JCheckBoxMenuItem)viewMenuSyntax.getItem(i);
                 if (source == item) {
                     FileType fileType = FileType.getByName(item.getText());
-                    waitChangeSyntaxEvent = true;
                     textEditorImpl.getTextArea().setFileType(fileType);
                     setSyntax(fileType);
                     return true;
@@ -186,12 +183,12 @@ public class TextMenuHelper {
      * Check if last editor change fired by syntax change event ant will be ignored in document listener
      * @return true if if last editor change fired by syntax change event ant will be ignored in document listener
      */
-    public boolean checkWaitChangeSyntaxEvent() {
-        boolean result = waitChangeSyntaxEvent;
-        updateEditActions();
-        waitChangeSyntaxEvent = false;
-        return result;
-    }
+//    public boolean checkWaitChangeSyntaxEvent() {
+//        boolean result = waitChangeSyntaxEvent;
+//        updateEditActions();
+//        waitChangeSyntaxEvent = false;
+//        return result;
+//    }
 
 
     public void updateEditActions() {
