@@ -152,7 +152,7 @@ public class TextFilesHistory {
         BufferedReader reader = null;
         records.clear();
         try {
-            reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+            reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             String line;
             while( (line = reader.readLine() ) != null) {
                 if (line.isEmpty() || line.startsWith("#")) {
@@ -209,7 +209,7 @@ public class TextFilesHistory {
     public void save(AbstractFile file) throws  IOException {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
+            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()));
             for (FileRecord rec : records) {
                 writer.write(rec.toString());
                 writer.write('\n');

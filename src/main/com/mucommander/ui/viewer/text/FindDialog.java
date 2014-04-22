@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.viewer.text;
 
+import com.jidesoft.swing.AutoCompletion;
+import com.mucommander.cache.TextHistory;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -57,6 +59,8 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         findField = new JTextField(20);
         findField.setText(text);
         findField.addActionListener(this);
+        new AutoCompletion(findField, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        findField.setText("");
         contentPane.add(findField, BorderLayout.CENTER);
 
         okButton = new JButton(Translator.get("ok"));
@@ -86,6 +90,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         dispose();
+        TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, findField.getText(), true);
         doSearch(source == okButton || source == findField ? getSearchString() : null);
     }
 

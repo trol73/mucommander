@@ -4,6 +4,8 @@ package com.mucommander.ui.viewer.hex;
  * Created by trol on 03/04/14.
  */
 
+import com.jidesoft.swing.AutoCompletion;
+import com.mucommander.cache.TextHistory;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -22,8 +24,6 @@ import java.awt.event.ActionListener;
  * @author Oleg Trifonov
  */
 public abstract class FindDialog extends FocusDialog implements ActionListener {
-
-    private static String text = "";
 
     /** The text field where a search dump can be entered */
     private InputField hexField;
@@ -49,14 +49,17 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
         textField = new InputField(60, InputField.FilterType.ANY_TEXT);
-        textField.setText(text);
         textField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_view.text")+":", textField, 5);
+        new AutoCompletion(textField, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        textField.setText("");
+
 
         hexField = new InputField(60, InputField.FilterType.HEX_DUMP);
-        hexField.setText(text);
         hexField.addActionListener(this);
-        compPanel.addRow(Translator.get("hex_viewer.hex")+":", hexField, 10);
+        compPanel.addRow(Translator.get("hex_viewer.hex") + ":", hexField, 10);
+        new AutoCompletion(hexField, TextHistory.getInstance().getList(TextHistory.Type.HEX_DATA_SEARCH)).setStrict(false);
+        hexField.setText("");
 
         textField.assignField(hexField);
         hexField.assignField(textField);
@@ -94,7 +97,8 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
     @Override
     protected void saveState() {
         super.saveState();
-        text = hexField.getText();
+        TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, textField.getText(), true);
+        TextHistory.getInstance().add(TextHistory.Type.HEX_DATA_SEARCH, hexField.getText(), true);
     }
 
     public void setSearchBytes(byte[] searchBytes) {

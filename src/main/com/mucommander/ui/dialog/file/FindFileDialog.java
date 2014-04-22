@@ -17,6 +17,8 @@
  */
 package com.mucommander.ui.dialog.file;
 
+import com.jidesoft.swing.AutoCompletion;
+import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.job.FileJob;
@@ -52,9 +54,6 @@ import java.util.List;
  * Find file dialog
  */
 public class FindFileDialog extends FocusDialog implements ActionListener, DocumentListener {
-
-    private static String fileName = "";
-    private static String searchText = "";
 
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(640, 480);
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(10000, 1024);
@@ -148,13 +147,18 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
         // Add filename field
-        this.edtFileName = new JTextField(fileName);
+        this.edtFileName = new JTextField();
         edtFileName.getDocument().addDocumentListener(this);
+        new AutoCompletion(edtFileName, TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME)).setStrict(false);
+        edtFileName.setText("");
         compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
 
         // Add contains field
-        this.edtText = new JTextField(searchText);
+        this.edtText = new JTextField();
         edtText.getDocument().addDocumentListener(this);
+        new AutoCompletion(edtText, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        edtText.setText("");
+
         compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);
 
         // Create a path field with auto-completion capabilities
@@ -179,7 +183,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
         // Search results
         yPanel.add(new JLabel(Translator.get("find_dialog.search_results")));
-        list = new JList<AbstractFile>(listModel);
+        list = new JList<>(listModel);
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -279,6 +283,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     }
 
     private void start() {
+        TextHistory.getInstance().add(TextHistory.Type.FILE_NAME, edtFileName.getText(), true);
+        TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, edtText.getText(), true);
         showProgress(true);
         clearResults();
         job = new FindFileJob(mainFrame);
@@ -333,13 +339,6 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
     }
 
-
-    @Override
-    protected void saveState() {
-        super.saveState();
-        fileName = edtFileName.getText();
-        searchText = edtText.getText();
-    }
 
     private AbstractFile getSelectedFile() {
         int index = list.getSelectedIndex();
