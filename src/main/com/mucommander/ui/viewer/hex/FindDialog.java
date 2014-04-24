@@ -4,6 +4,7 @@ package com.mucommander.ui.viewer.hex;
  * Created by trol on 03/04/14.
  */
 
+import com.jidesoft.hints.ListDataIntelliHints;
 import com.jidesoft.swing.AutoCompletion;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.text.Translator;
@@ -17,6 +18,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * This dialog allows the user to enter a string or hex value to be searched for in the hex editor.
@@ -51,14 +53,18 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         textField = new InputField(60, InputField.FilterType.ANY_TEXT);
         textField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_view.text")+":", textField, 5);
-        new AutoCompletion(textField, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        List<String> historyText = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
+        new AutoCompletion(textField, historyText).setStrict(false);
+        new ListDataIntelliHints<String>(textField, historyText).setCaseSensitive(true);
         textField.setText("");
 
 
         hexField = new InputField(60, InputField.FilterType.HEX_DUMP);
         hexField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_viewer.hex") + ":", hexField, 10);
-        new AutoCompletion(hexField, TextHistory.getInstance().getList(TextHistory.Type.HEX_DATA_SEARCH)).setStrict(false);
+        List<String> historyHex = TextHistory.getInstance().getList(TextHistory.Type.HEX_DATA_SEARCH);
+        new AutoCompletion(hexField, historyHex).setStrict(false);
+        new ListDataIntelliHints<String>(hexField, historyHex).setCaseSensitive(false);
         hexField.setText("");
 
         textField.assignField(hexField);

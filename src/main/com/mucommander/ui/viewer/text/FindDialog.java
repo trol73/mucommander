@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.viewer.text;
 
+import com.jidesoft.hints.ListDataIntelliHints;
 import com.jidesoft.swing.AutoCompletion;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.text.Translator;
@@ -25,9 +26,11 @@ import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * This dialog allows the user to enter a string to be searched for in the text editor.
@@ -59,8 +62,10 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         findField = new JTextField(20);
         findField.setText(text);
         findField.addActionListener(this);
-        new AutoCompletion(findField, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        List<String> history = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
+        new AutoCompletion(findField, history).setStrict(false);
         findField.setText("");
+        new ListDataIntelliHints<String>(findField, history).setCaseSensitive(true);
         contentPane.add(findField, BorderLayout.CENTER);
 
         okButton = new JButton(Translator.get("ok"));

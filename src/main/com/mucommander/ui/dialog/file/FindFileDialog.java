@@ -17,6 +17,7 @@
  */
 package com.mucommander.ui.dialog.file;
 
+import com.jidesoft.hints.ListDataIntelliHints;
 import com.jidesoft.swing.AutoCompletion;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
@@ -149,14 +150,18 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         // Add filename field
         this.edtFileName = new JTextField();
         edtFileName.getDocument().addDocumentListener(this);
-        new AutoCompletion(edtFileName, TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME)).setStrict(false);
+        List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
+        new AutoCompletion(edtFileName, filesHistory).setStrict(false);
+        new ListDataIntelliHints<String>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
         compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
 
         // Add contains field
         this.edtText = new JTextField();
         edtText.getDocument().addDocumentListener(this);
-        new AutoCompletion(edtText, TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH)).setStrict(false);
+        List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
+        new AutoCompletion(edtText, textHistory).setStrict(false);
+        new ListDataIntelliHints<String>(edtText, textHistory).setCaseSensitive(false);
         edtText.setText("");
 
         compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);

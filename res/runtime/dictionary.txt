@@ -19113,6 +19113,7 @@ find_dialog.name:EN:File name
 find_dialog.contains:EN:Contains
 find_dialog.initial_directory:EN:Start at
 find_dialog.search_subdirectories:EN:Search subdirectories
+find_dialog.search_archives:EN:Search archives
 find_dialog.case_sensitive:EN:Case sensitive
 find_dialog.ignore_hidden:EN:Ignore hidden
 find_dialog.search_results:EN:Search results
@@ -19122,6 +19123,7 @@ find_dialog.name:RU:Имя файла
 find_dialog.contains:RU:Содержит текст
 find_dialog.initial_directory:RU:Стартовая директория
 find_dialog.search_subdirectories:RU:Поиск в поддиректориях
+find_dialog.search_archives:EN:Поиск в архивах
 find_dialog.case_sensitive:RU:Различать регистр
 find_dialog.ignore_hidden:RU:Игнорировать скрытые файлы
 find_dialog.search_results:RU:Результаты поиска

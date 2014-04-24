@@ -73,6 +73,9 @@ public class TextHistory {
         if (alreadyInList) {
             list.remove(s);
         }
+        if (s.trim().length() == 0) {
+            return;
+        }
         list.add(0, s);
         while (list.size() > MAX_RECORDS) {
             list.remove(0);
@@ -100,10 +103,13 @@ public class TextHistory {
             reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             String line;
             while ( (line = reader.readLine() ) != null) {
-                if (line.isEmpty() || line.startsWith("#")) {
+                String trim = line.trim();
+                if (trim.isEmpty() || trim.startsWith("#")) {
                     continue;
                 }
-                result.add(line);
+                if (line.trim().length() > 0) {
+                    result.add(line);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
