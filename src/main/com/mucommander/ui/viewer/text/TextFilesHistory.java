@@ -29,6 +29,12 @@ import java.util.List;
  */
 public class TextFilesHistory {
 
+    /** Default text file history file name */
+    private static final String DEFAULT_HISTORY_FILE_NAME = "textfiles.history";
+
+    private static final int MAX_NUMBER_OF_RECORDS = 500;
+
+
     public static class FileRecord {
         private String fileName;
         private int scrollPosition;
@@ -108,10 +114,6 @@ public class TextFilesHistory {
         }
     }
 
-    /** Default text file history file name */
-    private static final String DEFAULT_HISTORY_FILE_NAME = "textfiles.history";
-
-    private static final int MAX_NUMBER_OF_RECORDS = 100;
 
     private static TextFilesHistory instance;
 

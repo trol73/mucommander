@@ -63,6 +63,7 @@ public class HexViewer extends FileViewer {
     private GotoDialog dlgGoto;
     private FindDialog dlgFind;
 
+
     public HexViewer() {
         super();
 
@@ -148,6 +149,11 @@ public class HexViewer extends FileViewer {
     protected void saveStateOnClose() {
         try {
             byteBuffer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            getCurrentFile().closePushbackInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }

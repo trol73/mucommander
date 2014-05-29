@@ -768,9 +768,9 @@
             </keep>
 			<!-- Don't obfuscate the VMWare Infrastructure library.                                                  -->
 			<keep name="com.vmware.vim25.**">
-                <field name="*"/>
-                <method name="*"/>
-                <constructor name="*"/>
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
             </keep>
             <!-- Hadoop HDFS.                                                                                        -->
             <keep name="org.apache.hadoop.hdfs.DistributedFileSystem"/>
@@ -778,6 +778,14 @@
             <keep name="org.apache.hadoop.hdfs.protocol.DatanodeInfo$AdminStates"/>
             <!-- Apache Commons logging (Hadoop + JetS3t dependency).                                                -->
             <keep name="org.apache.commons.logging.impl.LogFactoryImpl"/>
+<!--            
+            <keep name="com.jidesoft.plaf.aqua.**">
+-->            
+		<keep name="com.jidesoft.plaf.**">
+            <field name="*"/>
+                <method name="*"/>
+                <constructor name="*"/>
+            </keep>
             <keep name="org.apache.commons.logging.impl.Jdk14Logger">
                 <constructor/>
             </keep>
@@ -807,7 +815,9 @@
             <patternset>
                 <exclude name="**/*.html"/>
                 <exclude name="**/*.css"/>
+<!--                
                 <exclude name="**/*.gif"/>
+-->                
                 <exclude name="**/*.MF"/>
                 <exclude name="jcifs/util/mime.map"/>
                 <exclude name="META-INF/**/*"/>

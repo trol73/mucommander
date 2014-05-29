@@ -25,6 +25,7 @@ import com.mucommander.commons.io.bom.BOMInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.Arrays;
 
 /**
@@ -42,7 +43,7 @@ public class BinaryDetector {
 
     /** Provides an indication as to the number of bytes that should fed to the detector for it to have enough
      * confidence. */
-    public final static int RECOMMENDED_BYTE_SIZE = 1024*4;
+    public final static int RECOMMENDED_BYTE_SIZE = 1024*16;
 
 
     /**
@@ -66,6 +67,29 @@ public class BinaryDetector {
      * @return true if BinaryDetector thinks that the specified data is binary
      */
     public static boolean guessBinary(byte b[], int off, int len) {
+        // binary .torrent files etc. doesn't contains any 0x0A, 0x0D or 0x00 bytes
+        int x0Acnt = 0;
+        int x0Dcnt = 0;
+        boolean containsZero = false;
+        for (int i = 0; i < len; i++) {
+            byte v = b[i+off];
+            if (v == 0x0A) {
+                x0Acnt++;
+                if (x0Acnt > 16) {
+                    break;
+                }
+            } else if (v == 0x0D) {
+                x0Dcnt++;
+                if (x0Dcnt > 16) {
+                    break;
+                }
+            } else if (v == 0) {
+                containsZero = true;
+            }
+        }
+        if (x0Acnt < 4 && x0Dcnt < 4 && len > 1024*8) {
+            return true;
+        }
         try {
             // Returns true if any of the bytes are the NUL character. The NUL character is usually not found in a text
             // file, except for UTF-16 and UTF-32 streams.
@@ -82,12 +106,7 @@ public class BinaryDetector {
             // Can never happen in practice with a ByteArrayInputStream.
         }
         // No BOM, start looking for zeros
-        for (int i = 0; i < len; i++) {
-            if (b[i+off] == 0x00) {
-                return true;
-            }
-        }
-        return false;
+        return containsZero;
     }
 
     /**
@@ -107,5 +126,13 @@ public class BinaryDetector {
     public static boolean guessBinary(InputStream in) throws IOException {
         byte[] bytes = new byte[RECOMMENDED_BYTE_SIZE];
         return guessBinary(bytes, 0, StreamUtils.readUpTo(in, bytes));
+    }
+
+    public static boolean guessBinary(PushbackInputStream in) throws IOException {
+        byte[] bytes = new byte[RECOMMENDED_BYTE_SIZE];
+        int read = StreamUtils.readUpTo(in, bytes);
+        boolean result = guessBinary(bytes, 0, read);
+        in.unread(bytes, 0, read);
+        return result;
     }
 }

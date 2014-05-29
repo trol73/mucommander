@@ -104,21 +104,19 @@ public class StreamUtils {
         int nbRead;
         long totalRead = 0;
 
-        while(length>0) {
+        while (length > 0) {
             try {
                 nbRead = in.read(buffer, 0, (int)Math.min(buffer.length, length));	// the result of min will be int
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.READING_SOURCE);
             }
 
-            if(nbRead==-1)
+            if (nbRead == -1) {
                 break;
-
+            }
             try {
                 out.write(buffer, 0, nbRead);
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.WRITING_DESTINATION, totalRead);
             }
 
@@ -175,23 +173,22 @@ public class StreamUtils {
             int nbRead;
             long totalRead = 0;
 
-            while(true) {
+            while (true) {
                 try {
                     nbRead = isr.read(buffer, 0, buffer.length);
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     throw new FileTransferException(FileTransferException.READING_SOURCE);
                 }
 
-                if(nbRead==-1)
+                if (nbRead == -1) {
                     break;
+                }
 
                 try {
                     osw.write(buffer, 0, nbRead);
                     // Let's not forget to flush as the writer will *not* be closed (to avoid closing the OutputStream)
                     osw.flush();
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     throw new FileTransferException(FileTransferException.WRITING_DESTINATION);
                 }
 
@@ -242,7 +239,7 @@ public class StreamUtils {
         try {
             long remaining = len;
             int nbWrite;
-            while(remaining>0) {
+            while (remaining > 0) {
                 nbWrite = (int)(remaining>bufferSize?bufferSize:remaining);
                 out.write(buffer, 0, nbWrite);
                 remaining -= nbWrite;
@@ -332,7 +329,7 @@ public class StreamUtils {
      * @throws IOException if an I/O error occurs
      */
     public static byte[] readFully(InputStream in, byte b[], int off, int len) throws EOFException, IOException {
-        if(len>0) {
+        if (len > 0) {
             int totalRead = 0;
             do {
                 int nbRead = in.read(b, off + totalRead, len - totalRead);
@@ -363,7 +360,7 @@ public class StreamUtils {
 
         do {
             long nbSkipped = in.skip(n);
-            if(nbSkipped<0)
+            if (nbSkipped < 0)
                 throw new EOFException();
 
             n -= nbSkipped;

@@ -10,8 +10,7 @@ import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.IArc
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.IInArchive;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZipEntry;
 
-public class MuArchiveExtractCallback implements IArchiveExtractCallback // , ICryptoGetTextPassword,
-	{
+public class MuArchiveExtractCallback implements IArchiveExtractCallback { // , ICryptoGetTextPassword,
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MuArchiveExtractCallback.class);
 	private java.io.OutputStream out;
@@ -70,7 +69,7 @@ public class MuArchiveExtractCallback implements IArchiveExtractCallback // , IC
 	        switch (askExtractMode) {
 	            case IInArchive.NExtract_NAskMode_kExtract:
 	                _extractMode = true;
-	        };
+	        }
 	        System.out.println("here1");
 	        switch (askExtractMode) {
 	            case IInArchive.NExtract_NAskMode_kExtract:

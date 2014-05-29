@@ -20,11 +20,13 @@ package com.mucommander.ui.viewer.text;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BinaryDetector;
+import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 
 /**
  * <code>ViewerFactory</code> and <code>EditorFactory</code> implementation for creating text viewers and editors.
@@ -57,17 +59,17 @@ public class TextFactory implements ViewerFactory, EditorFactory {
             return false;
         }
         // Warn the user if the file looks like a binary file
-        InputStream in = null;
         try {
-            in = file.getInputStream();
-            if (BinaryDetector.guessBinary(in)) {
+            PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
+            if (BinaryDetector.guessBinary(is)) {
                 return false;
             }
         } catch (IOException e) {
-            // Not much too do
-        } finally {
-            if (in != null) {
-                try { in.close(); } catch(IOException e2) {}
+            e.printStackTrace();
+            try {
+                file.closePushbackInputStream();
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
         }
 
@@ -76,7 +78,6 @@ public class TextFactory implements ViewerFactory, EditorFactory {
         if (file.getSize() > FILE_SIZE_WARNING_THRESHOLD) {
             throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
         }
-
 
         return true;
     }

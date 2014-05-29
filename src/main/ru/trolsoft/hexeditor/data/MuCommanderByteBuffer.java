@@ -101,7 +101,7 @@ public class MuCommanderByteBuffer extends AbstractByteBuffer {
                 }
             }
             if (is == null) {
-                is = file.getInputStream();
+                is = file.getPushBackInputStream(1024);
             }
             lastOffset = 0;
         }

@@ -54,7 +54,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         textField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_view.text")+":", textField, 5);
         List<String> historyText = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
-        new AutoCompletion(textField, historyText).setStrict(false);
+//        new AutoCompletion(textField, historyText).setStrict(false);
         new ListDataIntelliHints<String>(textField, historyText).setCaseSensitive(true);
         textField.setText("");
 
@@ -63,7 +63,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         hexField.addActionListener(this);
         compPanel.addRow(Translator.get("hex_viewer.hex") + ":", hexField, 10);
         List<String> historyHex = TextHistory.getInstance().getList(TextHistory.Type.HEX_DATA_SEARCH);
-        new AutoCompletion(hexField, historyHex).setStrict(false);
+//        new AutoCompletion(hexField, historyHex).setStrict(false);
         new ListDataIntelliHints<String>(hexField, historyHex).setCaseSensitive(false);
         hexField.setText("");
 

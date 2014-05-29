@@ -121,6 +121,11 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     @Override
     protected void saveStateOnClose() {
         textViewerDelegate.saveState(getVerticalScrollBar());
+        try {
+            getCurrentFile().closePushbackInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

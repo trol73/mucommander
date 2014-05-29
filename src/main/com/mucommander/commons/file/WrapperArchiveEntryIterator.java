@@ -48,9 +48,9 @@ public class WrapperArchiveEntryIterator implements ArchiveEntryIterator {
     //////////////////////////////////////////
 
     public ArchiveEntry nextEntry() {
-        if(!iterator.hasNext())
+        if (!iterator.hasNext()) {
             return null;
-        
+        }
         return iterator.next();
     }
 

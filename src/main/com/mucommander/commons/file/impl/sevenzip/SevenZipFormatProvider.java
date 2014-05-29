@@ -46,6 +46,7 @@ public class SevenZipFormatProvider implements ArchiveFormatProvider {
 
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
         return new SevenZipArchiveFile(file);
+//        return new OldSevenZipArchiveFile(file);
     }
 
     public FilenameFilter getFilenameFilter() {

@@ -105,8 +105,9 @@ public abstract class RandomAccessInputStream extends InputStream implements Ran
      */
     @Override
     public long skip(long n) throws IOException {
-        if(n<=0)
+        if (n <= 0) {
             return 0;
+        }
 
         long offset = getOffset();
         long length = getLength();

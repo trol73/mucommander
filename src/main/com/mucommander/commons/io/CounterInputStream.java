@@ -103,9 +103,9 @@ public class CounterInputStream extends InputStream {
     @Override
     public int read() throws IOException {
         int i = in.read();
-        if(i>0)
+        if ( i > 0) {
             counter.add(1);
-
+        }
         return i;
     }
 
@@ -113,18 +113,18 @@ public class CounterInputStream extends InputStream {
     @Override
     public int read(byte b[]) throws IOException {
         int nbRead = in.read(b);
-        if(nbRead>0)
+        if (nbRead > 0) {
             counter.add(nbRead);
-
+        }
         return nbRead;
     }
 
     @Override
     public int read(byte b[], int off, int len) throws IOException {
         int nbRead = in.read(b, off, len);
-        if(nbRead>0)
+        if (nbRead > 0) {
             counter.add(nbRead);
-
+        }
         return nbRead;
     }
 
@@ -133,8 +133,9 @@ public class CounterInputStream extends InputStream {
         long nbSkipped = in.skip(n);
 
         // Count skipped bytes only if this has been enabled
-        if(countSkippedBytes && nbSkipped>0)
+        if (countSkippedBytes && nbSkipped > 0) {
             counter.add(nbSkipped);
+        }
 
         return nbSkipped;
     }

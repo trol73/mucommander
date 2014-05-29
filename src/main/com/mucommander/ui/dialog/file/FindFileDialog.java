@@ -18,7 +18,6 @@
 package com.mucommander.ui.dialog.file;
 
 import com.jidesoft.hints.ListDataIntelliHints;
-import com.jidesoft.swing.AutoCompletion;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
@@ -151,7 +150,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         this.edtFileName = new JTextField();
         edtFileName.getDocument().addDocumentListener(this);
         List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
-        new AutoCompletion(edtFileName, filesHistory).setStrict(false);
+//        new AutoCompletion(edtFileName, filesHistory).setStrict(false);
         new ListDataIntelliHints<String>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
         compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
@@ -160,7 +159,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         this.edtText = new JTextField();
         edtText.getDocument().addDocumentListener(this);
         List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
-        new AutoCompletion(edtText, textHistory).setStrict(false);
+//        new AutoCompletion(edtText, textHistory).setStrict(false);
         new ListDataIntelliHints<String>(edtText, textHistory).setCaseSensitive(false);
         edtText.setText("");
 

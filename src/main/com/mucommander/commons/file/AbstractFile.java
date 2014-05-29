@@ -20,10 +20,7 @@
 package com.mucommander.commons.file;
 
 import java.awt.Dimension;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -64,6 +61,12 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     // Note: raising buffer size from 8192 to 65536 makes a huge difference in SFTP read transfer rates but beyond
     // 65536, no more gain (not sure why).
     public final static int IO_BUFFER_SIZE = 65536;
+
+
+    /**
+     * Used for method <code>getPushBackInputStream()</code>
+     */
+    private MuPushbackInputStream pushbackInputStream;
 
 
     /**
@@ -127,10 +130,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public String getName() {
         String name = fileURL.getFilename();
         // If filename is null, use host instead
-        if(name==null) {
+        if (name == null) {
             name = fileURL.getHost();
             // If host is null, return an empty string
-            if(name==null)
+            if (name == null)
                 return "";
         }
 
@@ -315,7 +318,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public InputStream getInputStream(long offset) throws IOException, UnsupportedFileOperationException {
         // Use a random access input stream when available
-        if(isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
+        if (isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
             RandomAccessInputStream rais = getRandomAccessInputStream();
             rais.seek(offset);
 
@@ -362,21 +365,18 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         try {
             out = append?getAppendOutputStream():getOutputStream();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // TODO: re-throw UnsupportedFileOperationException ? 
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
         }
 
         try {
             StreamUtils.copyStream(in, out, IO_BUFFER_SIZE);
-        }
-        finally {
+        } finally {
             // Close stream even if copyStream() threw an IOException
             try {
                 out.close();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.CLOSING_DESTINATION);
             }
         }
@@ -410,13 +410,12 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final void copyTo(AbstractFile destFile) throws IOException {
         // First, try to perform a remote copy of the file if the operation is supported
-        if(isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
+        if (isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
             try {
                 copyRemotelyTo(destFile);
                 // Operation was a success, all done.
                 return;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Fail silently
             }
         }
@@ -460,7 +459,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final void moveTo(AbstractFile destFile) throws IOException {
         // First, try to rename the file if the operation is supported
-        if(isFileOperationSupported(FileOperation.RENAME)) {
+        if (isFileOperationSupported(FileOperation.RENAME)) {
             try {
                 renameTo(destFile);
                 // Rename was a success, all done.
@@ -479,8 +478,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // Note that the file won't be deleted if copyTo() failed (threw an IOException)
         try {
             deleteRecursively();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             throw new FileTransferException(FileTransferException.DELETING_SOURCE);
         }
     }
@@ -498,13 +496,15 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public void mkfile() throws IOException, UnsupportedFileOperationException {
-        if(exists())
+        if (exists()) {
             throw new IOException();
+        }
 
-        if(isFileOperationSupported(FileOperation.WRITE_FILE))
+        if (isFileOperationSupported(FileOperation.WRITE_FILE)) {
             getOutputStream().close();
-        else
+        } else {
             copyStream(new ByteArrayInputStream(new byte[]{}), false, 0);
+        }
     }
 
 
@@ -1056,8 +1056,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         try {
             return calculateChecksum(in, messageDigest);
-        }
-        finally {
+        } finally {
             in.close();
         }
     }
@@ -1074,8 +1073,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // Even though getAbsolutePath() is not supposed to return a trailing separator, root folders ('/', 'c:\' ...)
         // are exceptions that's why we still have to test if path ends with a separator
         String separator = getSeparator();
-        if(!path.endsWith(separator))
-            return path+separator;
+        if (!path.endsWith(separator)) {
+            return path + separator;
+        }
         return path;
     }
 
@@ -1201,22 +1201,21 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws FileTransferException if an error occurred while copying the file
      */
     protected final void copyRecursively(AbstractFile sourceFile, AbstractFile destFile) throws FileTransferException {
-        if(sourceFile.isSymlink())
+        if (sourceFile.isSymlink()) {
             return;
+        }
 
-        if(sourceFile.isDirectory()) {
+        if (sourceFile.isDirectory()) {
             try {
                 destFile.mkdir();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.WRITING_DESTINATION);
             }
 
             AbstractFile children[];
             try {
                 children = sourceFile.ls();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.READING_SOURCE);
             }
 
@@ -1224,33 +1223,27 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             for (AbstractFile child : children) {
                 try {
                     destChild = destFile.getDirectChild(child.getName());
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
                 }
-
                 copyRecursively(child, destChild);
             }
-        }
-        else {
+        } else {
             InputStream in;
 
             try {
                 in = sourceFile.getInputStream();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 throw new FileTransferException(FileTransferException.OPENING_SOURCE);
             }
 
             try {
                 destFile.copyStream(in, false, sourceFile.getSize());
-            }
-            finally {
+            } finally {
                 // Close stream even if copyStream() threw an IOException
                 try {
                     in.close();
-                }
-                catch(IOException e) {
+                } catch (IOException e) {
                     throw new FileTransferException(FileTransferException.CLOSING_SOURCE);
                 }
             }
@@ -1720,7 +1713,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public abstract InputStream getInputStream() throws IOException, UnsupportedFileOperationException;
 
     /**
-     * Returns an <code>OuputStream</code> to write the contents of this file, overwriting the existing contents, if any.
+     * Returns an <code>OutputStream</code> to write the contents of this file, overwriting the existing contents, if any.
      * This file will be created as a zero-byte file if it does not yet exist.
      * <p>
      * This method may throw an <code>IOException</code> in any of the following cases, but may never return
@@ -1744,7 +1737,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public abstract OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException;
 
     /**
-     * Returns an <code>OuputStream</code> to write the contents of this file, appending the existing contents, if any.
+     * Returns an <code>OutputStream</code> to write the contents of this file, appending the existing contents, if any.
      * This file will be created as a zero-byte file if it does not yet exist.
      * <p>
      * This method may throw an <code>IOException</code> in any of the following cases, but may never return
@@ -1930,4 +1923,63 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * is none
      */
     public abstract Object getUnderlyingFileObject();
+
+
+
+    /**
+     * Returns the stream which can be re-used for file reading.
+     * All method calls will return the same class until the stream was closed.
+     * If the stream has been created but has insufficient buffer size it will be recreated.
+     * This method used for the file viewer and editor etc. to prevent multiple re-opening of files (and archives).
+     *
+     * @param bufferSize minimum size of buffer for <code>PushbackInputStream</code>.
+     * @return
+     * @throws IOException
+     */
+    public PushbackInputStream getPushBackInputStream(final int bufferSize) throws IOException {
+        if (pushbackInputStream == null) {
+            pushbackInputStream = new MuPushbackInputStream(getInputStream(), bufferSize);
+        } else if (pushbackInputStream.getBufferSize() < bufferSize) {
+            pushbackInputStream.close();
+            pushbackInputStream = new MuPushbackInputStream(getInputStream(), bufferSize);
+        }
+        return pushbackInputStream;
+    }
+
+
+    /**
+     * Closes PushbackStream if it exists
+     * @throws IOException
+     */
+    public void closePushbackInputStream() throws IOException {
+        if (pushbackInputStream != null) {
+            pushbackInputStream.close();
+        }
+    }
+
+
+    /**
+     *
+     */
+    private class MuPushbackInputStream extends PushbackInputStream {
+
+        public MuPushbackInputStream(InputStream in) {
+            super(in);
+        }
+
+        public MuPushbackInputStream(InputStream in, int size) {
+            super(in, size);
+        }
+
+        @Override
+        public synchronized void close() throws IOException {
+            super.close();
+            pushbackInputStream = null;
+System.out.println("=======> CLOSE " + this + "    " + pushbackInputStream);
+        }
+
+        int getBufferSize() {
+            return buf.length;
+        }
+    }
 }

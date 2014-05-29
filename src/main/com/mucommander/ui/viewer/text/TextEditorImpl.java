@@ -302,25 +302,25 @@ class TextEditorImpl implements ThemeListener {
 	 * Receives theme font changes notifications.
 	 */
 	public void fontChanged(FontChangedEvent event) {
-		if(event.getFontId() == Theme.EDITOR_FONT)
-			textArea.setFont(event.getFont());
+		if (event.getFontId() == Theme.EDITOR_FONT) {
+            textArea.setFont(event.getFont());
+        }
 	}
 
 
     public boolean isXmlFile(AbstractFile file) {
         byte bytes[] = BufferPool.getByteArray(256);
-        InputStream is = null;
         int readBytes;
         try {
-            is = file.getInputStream();
+            PushbackInputStream is = file.getPushBackInputStream(256);
             readBytes = StreamUtils.readUpTo(is, bytes);
+            is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+            e.printStackTrace();
+            try {
+                file.closePushbackInputStream();
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
             return false;
         }

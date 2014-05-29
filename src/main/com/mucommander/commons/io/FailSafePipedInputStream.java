@@ -84,7 +84,7 @@ public class FailSafePipedInputStream extends PipedInputStream {
      * @throws java.io.IOException if an external failure has been registered
      */
     protected void checkExternalFailure() throws IOException {
-        if(failure!=null)
+        if (failure != null)
             throw failure;
     }
 

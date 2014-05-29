@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.Arrays;
 
 /**
@@ -82,7 +83,7 @@ public class EncodingDetector {
      * in case of source file with UTF-8 comments at the end
      * </p>
      *  */
-    public final static int MAX_RECOMMENDED_BYTE_SIZE = 1024*1024;
+    public final static int MAX_RECOMMENDED_BYTE_SIZE = 1024*16;
 
 
     /**
@@ -157,8 +158,8 @@ public class EncodingDetector {
             }
         }
 
-//        for (CharsetMatch cm : matches) {
-//            System.out.println(cm.getName() + " " + cm.getConfidence());
+//        for (CharsetMatch cm0 : matches) {
+//            System.out.println(cm0.getName() + " " + cm0.getConfidence());
 //        }
 //        CharsetMatch cm = matches[0];
 //System.out.println("DETECTED " + cm.getName() + " " + cm.getConfidence() + "   VS " + cd.detect().getName());
@@ -200,6 +201,18 @@ public class EncodingDetector {
             return detectEncoding(buf, 0, StreamUtils.readUpTo(in, buf));
         }
         finally {
+            BufferPool.releaseByteArray(buf);
+        }
+    }
+
+    public static String detectEncoding(PushbackInputStream in) throws IOException {
+        byte buf[] = BufferPool.getByteArray(MAX_RECOMMENDED_BYTE_SIZE);
+        try {
+            int readBytes = StreamUtils.readUpTo(in, buf);
+            String result = detectEncoding(buf, 0, readBytes);
+            in.unread(buf, 0, readBytes);
+            return result;
+        } finally {
             BufferPool.releaseByteArray(buf);
         }
     }

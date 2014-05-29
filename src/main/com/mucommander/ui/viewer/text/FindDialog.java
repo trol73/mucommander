@@ -63,7 +63,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         findField.setText(text);
         findField.addActionListener(this);
         List<String> history = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
-        new AutoCompletion(findField, history).setStrict(false);
+//        new AutoCompletion(findField, history).setStrict(false);
         findField.setText("");
         new ListDataIntelliHints<String>(findField, history).setCaseSensitive(true);
         contentPane.add(findField, BorderLayout.CENTER);

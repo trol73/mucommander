@@ -100,12 +100,12 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 	 */
 	private void setDigitAlignment(ALIGNMENT alignment) {
 		switch(alignment) {
-		case LEFT:
-			digitAlignment = 0;
-		case RIGHT:
-			digitAlignment = 1;
-		case CENTER:
-			digitAlignment = 0.5;
+            case LEFT:
+                digitAlignment = 0;
+            case RIGHT:
+                digitAlignment = 1;
+            case CENTER:
+                digitAlignment = 0.5;
 		}
 	}
 	

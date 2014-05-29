@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer;
 
 import java.awt.Frame;
 import java.awt.Image;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +108,12 @@ public class EditorRegistrar {
                                                            0);
 
                 int ret = dialog.getActionValue();
-                if (ret==1 || ret == -1) {   // User canceled the operation
+                if (ret == 1 || ret == -1) {   // User canceled the operation
+                    try {
+                        file.closePushbackInputStream();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     throw new UserCancelledException();
                 }
 

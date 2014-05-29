@@ -239,7 +239,7 @@ public class CircularByteBuffer {
 	 * @since ostermillerutils 1.00.00
 	 */
 	public int getSize(){
-		synchronized (this){
+		synchronized (this) {
 			return buffer.length;
 		}
 	}
@@ -249,7 +249,7 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	private void resize(){
+	private void resize() {
 		byte[] newBuffer = new byte[buffer.length * 2];
 		int marked = marked();
 		int available = available();
@@ -276,7 +276,7 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	private int spaceLeft(){
+	private int spaceLeft() {
 		if (writePosition < markPosition){
 			// any space between the first write and
 			// the mark except one byte is available.
@@ -292,7 +292,7 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	private int available(){
+	private int available() {
 		if (readPosition <= writePosition){
 			// any space between the first read and
 			// the first write is available.  In this case i
@@ -308,7 +308,7 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	private int marked(){
+	private int marked() {
 		if (markPosition <= readPosition){
 			// any space between the markPosition and
 			// the first write is marked.  In this case i
@@ -325,7 +325,7 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	private void ensureMark(){
+	private void ensureMark() {
 		if (marked() > markSize){
 			markPosition = readPosition;
 			markSize = 0;
@@ -397,8 +397,8 @@ public class CircularByteBuffer {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	public CircularByteBuffer(int size, boolean blockingWrite){
-		if (size == INFINITE_SIZE){
+	public CircularByteBuffer(int size, boolean blockingWrite) {
+		if (size == INFINITE_SIZE) {
 			buffer = new byte[DEFAULT_SIZE];
 			infinite = true;
 		} else {
@@ -426,8 +426,10 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public int available() throws IOException {
-			synchronized (CircularByteBuffer.this){
-				if (inputStreamClosed) throw new IOException("InputStream has been closed, it is not ready.");
+			synchronized (CircularByteBuffer.this) {
+				if (inputStreamClosed) {
+                    throw new IOException("InputStream has been closed, it is not ready.");
+                }
 				return (CircularByteBuffer.this.available());
 			}
 		}
@@ -442,7 +444,7 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public void close() throws IOException {
-			synchronized (CircularByteBuffer.this){
+			synchronized (CircularByteBuffer.this) {
 				inputStreamClosed = true;
 			}
 		}
@@ -461,7 +463,7 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public void mark(int readAheadLimit) {
-			synchronized (CircularByteBuffer.this){
+			synchronized (CircularByteBuffer.this) {
 				//if (inputStreamClosed) throw new IOException("InputStream has been closed; cannot mark a closed InputStream.");
 				if (buffer.length - 1 > readAheadLimit) {
 					markSize = readAheadLimit;
@@ -493,11 +495,11 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public int read() throws IOException {
-			while (true){
+			while (true) {
 				synchronized (CircularByteBuffer.this){
 					if (inputStreamClosed) throw new IOException("InputStream has been closed; cannot read from a closed InputStream.");
 					int available = CircularByteBuffer.this.available();
-					if (available > 0){
+					if (available > 0) {
 						int result = buffer[readPosition] & 0xff;
 						readPosition++;
 						if (readPosition == buffer.length){
@@ -505,7 +507,7 @@ public class CircularByteBuffer {
 						}
 						ensureMark();
 						return result;
-					} else if (outputStreamClosed){
+					} else if (outputStreamClosed) {
 						return -1;
 					}
 				}
@@ -548,11 +550,13 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public int read(byte[] cbuf, int off, int len) throws IOException {
-			while (true){
-				synchronized (CircularByteBuffer.this){
-					if (inputStreamClosed) throw new IOException("InputStream has been closed; cannot read from a closed InputStream.");
+			while (true) {
+				synchronized (CircularByteBuffer.this) {
+					if (inputStreamClosed) {
+                        throw new IOException("InputStream has been closed; cannot read from a closed InputStream.");
+                    }
 					int available = CircularByteBuffer.this.available();
-					if (available > 0){
+					if (available > 0) {
 						int length = Math.min(len, available);
 						int firstLen = Math.min(length, buffer.length - readPosition);
 						int secondLen = length - firstLen;
@@ -592,7 +596,9 @@ public class CircularByteBuffer {
 		 */
 		@Override public void reset() throws IOException {
 			synchronized (CircularByteBuffer.this){
-				if (inputStreamClosed) throw new IOException("InputStream has been closed; cannot reset a closed InputStream.");
+				if (inputStreamClosed) {
+                    throw new IOException("InputStream has been closed; cannot reset a closed InputStream.");
+                }
 				readPosition = markPosition;
 			}
 		}
@@ -610,7 +616,7 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public long skip(long n) throws IOException, IllegalArgumentException {
-			while (true){
+			while (true) {
 				synchronized (CircularByteBuffer.this){
 					if (inputStreamClosed) throw new IOException("InputStream has been closed; cannot skip bytes on a closed InputStream.");
 					int available = CircularByteBuffer.this.available();
@@ -720,16 +726,22 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override public void write(byte[] cbuf, int off, int len) throws IOException {
-			while (len > 0){
-				synchronized (CircularByteBuffer.this){
-					if (outputStreamClosed) throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
-					if (inputStreamClosed) throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+			while (len > 0) {
+				synchronized (CircularByteBuffer.this) {
+					if (outputStreamClosed) {
+                        throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
+                    }
+					if (inputStreamClosed) {
+                        throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+                    }
 					int spaceLeft = spaceLeft();
 					while (infinite && spaceLeft < len){
 						resize();
 						spaceLeft = spaceLeft();
 					}
-					if (!blockingWrite && spaceLeft < len) throw new BufferOverflowException("CircularByteBuffer is full; cannot write " + len + " bytes");
+					if (!blockingWrite && spaceLeft < len) {
+                        throw new BufferOverflowException("CircularByteBuffer is full; cannot write " + len + " bytes");
+                    }
 					int realLen = Math.min(len, spaceLeft);
 					int firstLen = Math.min(realLen, buffer.length - writePosition);
 					int secondLen = Math.min(realLen - firstLen, buffer.length - markPosition - 1);
@@ -775,16 +787,22 @@ public class CircularByteBuffer {
 		 */
 		@Override public void write(int c) throws IOException {
 			boolean written = false;
-			while (!written){
+			while (!written) {
 				synchronized (CircularByteBuffer.this){
-					if (outputStreamClosed) throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
-					if (inputStreamClosed) throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+					if (outputStreamClosed) {
+                        throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
+                    }
+					if (inputStreamClosed) {
+                        throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+                    }
 					int spaceLeft = spaceLeft();
 					while (infinite && spaceLeft < 1){
 						resize();
 						spaceLeft = spaceLeft();
 					}
-					if (!blockingWrite && spaceLeft < 1) throw new BufferOverflowException("CircularByteBuffer is full; cannot write 1 byte");
+					if (!blockingWrite && spaceLeft < 1) {
+                        throw new BufferOverflowException("CircularByteBuffer is full; cannot write 1 byte");
+                    }
 					if (spaceLeft > 0){
 						buffer[writePosition] = (byte)(c & 0xff);
 						writePosition++;

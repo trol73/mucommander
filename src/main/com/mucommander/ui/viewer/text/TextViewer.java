@@ -21,10 +21,7 @@ package com.mucommander.ui.viewer.text;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 
 import javax.swing.*;
@@ -123,40 +120,42 @@ public class TextViewer extends FileViewer implements EncodingListener {
 	}
 
     void startEditing(AbstractFile file, DocumentListener documentListener) throws IOException {
-        initHistoryRecord(file);
+        //initHistoryRecord(file);
         // Auto-detect encoding
 
         // Get a RandomAccessInputStream on the file if possible, if not get a simple InputStream
-        InputStream in = null;
+        //InputStream in = null;
+        PushbackInputStream in = null;
 
         try {
-            if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
-                try {
-                    in = file.getRandomAccessInputStream();
-                } catch (IOException e) {
-                    // In that case we simply get an InputStream
-                }
-            }
+//            if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
+//                try {
+//                    in = file.getRandomAccessInputStream();
+//                } catch (IOException e) {
+//                    // In that case we simply get an InputStream
+//                }
+//            }
 
-            if (in == null) {
-                in = file.getInputStream();
-            }
+//            if (in == null) {
+//                in = file.getInputStream();
+//            }
 
+            in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
 
-            if (in instanceof RandomAccessInputStream) {
-                // Seek to the beginning of the file and reuse the stream
-                ((RandomAccessInputStream)in).seek(0);
-            } else {
+//            if (in instanceof RandomAccessInputStream) {
+//                // Seek to the beginning of the file and reuse the stream
+//                ((RandomAccessInputStream)in).seek(0);
+//            } else {
                 // TODO: it would be more efficient to use some sort of PushBackInputStream, though we can't use PushBackInputStream because we don't want to keep pushing back for the whole InputStream lifetime
 
                 // Close the InputStream and open a new one
                 // Note: we could use mark/reset if the InputStream supports it, but it is almost never implemented by
                 // InputStream subclasses and a broken by design anyway.
-                in.close();
-                in = file.getInputStream();
-            }
-
+// TODO WTF?!
+// !!               in.close();
+// !!               in = file.getInputStream();
+//            }
             // Load the file into the text area
             loadDocument(in, encoding, documentListener);
         } finally {
@@ -180,7 +179,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         // If the given encoding is invalid (null or not supported), default to "UTF-8" 
         this.encoding = encoding == null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
-
         textEditorImpl.read(new BufferedReader(new InputStreamReader(in, this.encoding)));
 
         // Listen to document changes
@@ -224,6 +222,11 @@ public class TextViewer extends FileViewer implements EncodingListener {
     @Override
     protected void saveStateOnClose() {
         saveState(getVerticalScrollBar());
+        try {
+            getCurrentFile().closePushbackInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -259,7 +262,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     @Override
     public void show(AbstractFile file) throws IOException {
-        startEditing(file, null);
+        initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {
             type = FileType.getFileType(file);
@@ -269,6 +272,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         if (type == FileType.NONE && textEditorImpl.isXmlFile(file)) {
             type = FileType.XML;
         }
+        startEditing(file, null);
         menuHelper.setSyntax(type);
         textEditorImpl.getTextArea().setFileType(type);
     }
