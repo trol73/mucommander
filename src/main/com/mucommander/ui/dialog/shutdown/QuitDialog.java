@@ -40,6 +40,10 @@ import com.mucommander.ui.main.WindowManager;
  * @author Maxence Bernard
  */
 public class QuitDialog extends QuestionDialog {
+    /**
+     * This flag used to prevent duplication of QuitDialog on MacOsX
+     */
+    private static boolean displayed = false;
 
     /** True when quit confirmation button has been pressed by the user */
     private boolean quitConfirmed;
@@ -70,8 +74,8 @@ public class QuitDialog extends QuestionDialog {
         JCheckBox showNextTimeCheckBox = new JCheckBox(Translator.get("quit_dialog.show_next_time"), true);
         addComponent(showNextTimeCheckBox);
 		
-        this.quitConfirmed = getActionValue()==QUIT_ACTION;
-        if(quitConfirmed) {
+        this.quitConfirmed = getActionValue() == QUIT_ACTION;
+        if (quitConfirmed) {
             // Remember user preference
         	MuConfigurations.getPreferences().setVariable(MuPreference.CONFIRM_ON_QUIT, showNextTimeCheckBox.isSelected());
         }
@@ -107,14 +111,19 @@ public class QuitDialog extends QuestionDialog {
      *
      * @return <code>true</code> if user confirmed the quit operation
      */
-    public static boolean confirmQuit() {
+    public static synchronized boolean confirmQuit() {
+        if (displayed) {
+            return false;
+        }
+        displayed = true;
         // Show confirmation dialog only if it hasn't been disabled in the preferences
-        if(confirmationRequired()) {
+        if (confirmationRequired()) {
             QuitDialog quitDialog = new QuitDialog(WindowManager.getCurrentMainFrame());
             // Return true if user confirmed quit
+            displayed = false;
             return quitDialog.quitConfirmed();
         }
-        
+        displayed = false;
         return true;
     }
 }

@@ -103,9 +103,9 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
         @Override
         protected void done() {
-            super.done();
             showProgress(false);
             updateButtons();
+            super.done();
         }
 
         @Override
@@ -140,9 +140,6 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
         YBoxPanel yPanel = new YBoxPanel(10);
 
-
-        //JPanel fileDetailsPanel = new JPanel(new BorderLayout());
-
         // Text fields panel
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
@@ -150,8 +147,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         this.edtFileName = new JTextField();
         edtFileName.getDocument().addDocumentListener(this);
         List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
-//        new AutoCompletion(edtFileName, filesHistory).setStrict(false);
-        new ListDataIntelliHints<String>(edtFileName, filesHistory).setCaseSensitive(false);
+        new ListDataIntelliHints<>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
         compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
 
@@ -159,8 +155,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         this.edtText = new JTextField();
         edtText.getDocument().addDocumentListener(this);
         List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
-//        new AutoCompletion(edtText, textHistory).setStrict(false);
-        new ListDataIntelliHints<String>(edtText, textHistory).setCaseSensitive(false);
+        new ListDataIntelliHints<>(edtText, textHistory).setCaseSensitive(false);
         edtText.setText("");
 
         compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);
@@ -233,9 +228,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         // Bottom line
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
-
 //        yPanel.add(new JLabel(dial = new SpinningDial()));
-
         XBoxPanel buttonsPanel = new XBoxPanel();
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -356,7 +349,5 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private void updateResultLabel() {
         lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
     }
-
-
 
 }

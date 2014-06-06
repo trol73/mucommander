@@ -97,7 +97,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         pathField.addActionListener(this);
         mainPanel.add(pathField);
 
-        if(mkfileMode) {
+        if (mkfileMode) {
             JPanel tempPanel = new JPanel(new BorderLayout());
 
             allocateSpaceCheckBox = new JCheckBox(Translator.get("mkfile_dialog.allocate_space")+":", false);
@@ -143,7 +143,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
         // Checks if the directory already exists and reports the error if that's the case
         int destinationType = resolvedDest.getDestinationType();
-        if(destinationType==PathUtils.ResolvedDestination.EXISTING_FOLDER) {
+        if (destinationType == PathUtils.ResolvedDestination.EXISTING_FOLDER) {
             InformationDialog.showErrorDialog(mainFrame, Translator.get("directory_already_exists", enteredPath));
             return;
         }
@@ -158,10 +158,11 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         ProgressDialog progressDialog = new ProgressDialog(mainFrame, getTitle());
 
         MkdirJob job;
-        if(mkfileMode)
-            job = new MkdirJob(progressDialog, mainFrame, fileSet, allocateSpaceCheckBox.isSelected()?allocateSpaceChooser.getValue():-1);
-        else
+        if (mkfileMode) {
+            job = new MkdirJob(progressDialog, mainFrame, fileSet, allocateSpaceCheckBox.isSelected() ? allocateSpaceChooser.getValue() : -1);
+        } else {
             job = new MkdirJob(progressDialog, mainFrame, fileSet);
+        }
 
         progressDialog.start(job);
     }
@@ -176,7 +177,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         dispose();
 		
         // OK Button
-        if(source == okButton || source == pathField) {
+        if (source == okButton || source == pathField) {
             startJob();
         }
     }

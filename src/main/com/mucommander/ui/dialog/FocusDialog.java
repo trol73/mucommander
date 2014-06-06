@@ -35,6 +35,7 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.mucommander.cache.WindowsStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,8 +112,9 @@ public class FocusDialog extends JDialog implements WindowListener {
         actionMap.put(CUSTOM_DISPOSE_EVENT, disposeAction);
 		
         // Maps the dispose action to the 'Apple+W' keystroke under Mac OS X
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
+        }
 
         // Under Windows, Alt+F4 automagically disposes the dialog, nothing to do
     }
@@ -132,6 +134,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     @Override
     public void dispose() {
+        WindowsStorage.getInstance().put(this);
         saveState();
         super.dispose();
     }
@@ -208,13 +211,15 @@ public class FocusDialog extends JDialog implements WindowListener {
      * Packs this dialog, makes it non-resizable and visible.
      */
     public void showDialog() {
-        pack();
-
-        if (locationRelativeComp == null) {
-            DialogToolkit.centerOnScreen(this);
-        } else {
-            setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
+        if (!WindowsStorage.getInstance().init(this)) {
+            pack();
+            if (locationRelativeComp == null) {
+                DialogToolkit.centerOnScreen(this);
+            } else {
+                setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
+            }
         }
+
         setVisible(true);
     }
 

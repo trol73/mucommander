@@ -228,8 +228,9 @@ public abstract class FileJob implements Runnable {
      */
     public void start() {
         // Return if job has already been started
-        if(getState()!=NOT_STARTED)
+        if (getState() != NOT_STARTED) {
             return;
+        }
 
         // Pause auto-refresh during file job as it potentially modifies the current folders contents
         // and would potentially cause folder panel to auto-refresh
@@ -423,7 +424,7 @@ public abstract class FileJob implements Runnable {
         // Lock the pause lock while updating paused status
         synchronized(pauseLock) {
             // Resume job if it was paused
-            if(!paused && getState()==PAUSED) {
+            if (!paused && getState()==PAUSED) {
                 // Calculate pause time
                 calcPausedTime();                
                 // Call the jobResumed method to notify of the new job's state
@@ -436,7 +437,7 @@ public abstract class FileJob implements Runnable {
                 setState(RUNNING);
             }
             // Pause job if it not paused already
-            else if(paused && getState()!=PAUSED && getState()!=INTERRUPTED && getState()!=FINISHED) {
+            else if(paused && getState() != PAUSED && getState() != INTERRUPTED && getState() != FINISHED) {
                 // Memorize pause time in order to calculate pause time when the job is resumed
                 setPauseStartDate();
                 // Call the jobPaused method to notify of the new job's state

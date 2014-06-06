@@ -143,13 +143,16 @@ public class EncodingDetector {
         } else {
             cm = matches[0];
         }
-
+//for (CharsetMatch match : matches) {
+//    System.out.println("> " + match.getName() + "  " + match.getConfidence());
+//}
         // detect win-1251 for case latin + cyrillic
         if (matches.length > 1) {
             String detectedName = cm.getName().toLowerCase();
             if (detectedName.startsWith("iso-8859-")) {
                 for (CharsetMatch match : matches) {
-                    if (match.getConfidence()*2 >= cm.getConfidence() && match.getName().toLowerCase().startsWith("windows-1251")) {
+                    //if (match.getConfidence()*5 >= cm.getConfidence() && match.getName().toLowerCase().startsWith("windows-1251")) {
+                    if (match.getName().toLowerCase().startsWith("windows-1251")) {
                         cm = match;
                         break;
                     }
@@ -157,15 +160,6 @@ public class EncodingDetector {
 
             }
         }
-
-//        for (CharsetMatch cm0 : matches) {
-//            System.out.println(cm0.getName() + " " + cm0.getConfidence());
-//        }
-//        CharsetMatch cm = matches[0];
-//System.out.println("DETECTED " + cm.getName() + " " + cm.getConfidence() + "   VS " + cd.detect().getName());
-
-
-//        CharsetMatch cm = cd.detect();
 
         // Debug info
         LOGGER.trace("bestMatch getName()={}, getConfidence()={}", (cm==null?"null":cm.getName()),

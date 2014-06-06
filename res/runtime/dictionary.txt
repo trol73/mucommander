@@ -19159,3 +19159,10 @@ hex_viewer.hex:EN:Hex
 hex_viewer.hex:RU:Hex
 hex_viewer.search_not_found:EN:Pattern not found
 hex_viewer.search_not_found:RU:Шаблон не найден
+
+calculator.calculator:EN:Calculator
+calculator.calculator:RU:Калькулятор
+calculator.expression:EN:Expression
+calculator.expression:RU:Выражение
+calculator.error:EN:Error in expression
+calculator.error:RU:Ошибка в выражении

@@ -288,7 +288,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         // Revalidate, pack and repaint should be called in this order
         frame.setTitle(this.getTitle());
         imageViewerImpl.revalidate();
-        frame.pack();
+        //frame.pack();
         frame.getContentPane().repaint();
 
     }

@@ -75,8 +75,9 @@ public class OSXIntegration {
         MainFrame mainFrame = WindowManager.getCurrentMainFrame();
         
         // Do nothing (return) when in 'no events mode'
-        if(mainFrame.getNoEventsMode())
+        if (mainFrame.getNoEventsMode()) {
             return;
+        }
 
         new AboutDialog(mainFrame).showDialog();
     }
@@ -88,8 +89,9 @@ public class OSXIntegration {
         MainFrame mainFrame = WindowManager.getCurrentMainFrame();
 
         // Do nothing (return) when in 'no events mode'
-        if(mainFrame.getNoEventsMode())
+        if (mainFrame.getNoEventsMode()) {
             return;
+        }
 
         ActionManager.performAction(com.mucommander.ui.action.impl.ShowPreferencesAction.Descriptor.ACTION_ID, mainFrame);
     }
@@ -100,8 +102,9 @@ public class OSXIntegration {
      */
     public static boolean doQuit() {
         // Ask the user for confirmation and abort if user refused to quit.
-        if(!QuitDialog.confirmQuit())
+        if (!QuitDialog.confirmQuit()) {
             return false;
+        }
 
         // We got a green -> quit!
         WindowManager.quit();

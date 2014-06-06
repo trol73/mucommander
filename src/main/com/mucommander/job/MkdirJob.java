@@ -89,8 +89,9 @@ public class MkdirJob extends FileJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted (although there is no way to stop the job at this time)
-        if(getState()==INTERRUPTED)
+        if (getState() == INTERRUPTED) {
             return false;
+        }
 
         do {
             try {
@@ -98,13 +99,13 @@ public class MkdirJob extends FileJob {
 
                 // Check for file collisions, i.e. if the file already exists in the destination
                 int collision = FileCollisionChecker.checkForCollision(null, file);
-                if(collision!=FileCollisionChecker.NO_COLLOSION) {
+                if (collision!=FileCollisionChecker.NO_COLLOSION) {
                     // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
                     // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
                     int choice = waitForUserResponse(new FileCollisionDialog(getMainFrame(), getMainFrame(), collision, null, file, false, false));
 
                     // Overwrite file
-                    if (choice==FileCollisionDialog.OVERWRITE_ACTION) {
+                    if (choice == FileCollisionDialog.OVERWRITE_ACTION) {
                         // Delete the file
                         file.delete();
                     }
@@ -117,9 +118,9 @@ public class MkdirJob extends FileJob {
                 }
 
                 // Create file
-                if(mkfileMode) {
+                if (mkfileMode) {
                     // Use mkfile
-                    if(allocateSpace==-1) {
+                    if (allocateSpace == -1) {
                         file.mkfile();
                     }
                     // Allocate the requested number of bytes
@@ -127,7 +128,7 @@ public class MkdirJob extends FileJob {
                         OutputStream mkfileOut = null;
                         try {
                             // using RandomAccessOutputStream if we can have one
-                            if(file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
+                            if (file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
                                 mkfileOut = file.getRandomAccessOutputStream();
                                 ((RandomAccessOutputStream)mkfileOut).setLength(allocateSpace);
                             }
@@ -142,19 +143,17 @@ public class MkdirJob extends FileJob {
                                 try {
                                     long remaining = allocateSpace;
                                     int nbWrite;
-                                    while(remaining>0 && getState()!=INTERRUPTED) {
-                                        nbWrite = (int)(remaining>bufferSize?bufferSize:remaining);
+                                    while(remaining > 0 && getState() != INTERRUPTED) {
+                                        nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
                                         mkfileOut.write(buffer, 0, nbWrite);
                                         remaining -= nbWrite;
                                     }
-                                }
-                                finally {
+                                } finally {
                                     BufferPool.releaseByteArray(buffer);
                                 }
                             }
-                        }
-                        finally {
-                            if(mkfileOut!=null)
+                        } finally {
+                            if (mkfileOut != null)
                                 try { mkfileOut.close(); }
                                 catch(IOException e) {}
                         }
@@ -173,12 +172,12 @@ public class MkdirJob extends FileJob {
                 selectFileWhenFinished(file);
 
                 return true;		// Return Success
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 // In mkfile mode, interrupting the job will close the OutputStream and cause an IOException to be
                 // thrown, this is normal behavior
-                if(mkfileMode && getState()==INTERRUPTED)
+                if (mkfileMode && getState() == INTERRUPTED) {
                     return false;
+                }
 
                 LOGGER.debug("IOException caught", e);
 
@@ -189,7 +188,7 @@ public class MkdirJob extends FileJob {
                      new int[]{RETRY_ACTION, CANCEL_ACTION}
                 );
                 // Retry (loop)
-                if(action==RETRY_ACTION)
+                if (action == RETRY_ACTION)
                     continue;
 				
                 // Cancel action

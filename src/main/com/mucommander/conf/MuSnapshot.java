@@ -608,7 +608,7 @@ public class MuSnapshot {
     }
 
     private void setTextPresenterProperties() {
-    	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_FULL_SCREEN, TextViewer.isFullScreen());
+//    	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_FULL_SCREEN, TextViewer.isFullScreen());
     	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TextViewer.isLineWrap());
     	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TextViewer.isLineNumbers());
     }

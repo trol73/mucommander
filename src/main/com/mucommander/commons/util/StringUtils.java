@@ -288,23 +288,24 @@ public final class StringUtils {
      * @return the flattened string array
      */
     public static String flatten(String s[], String separator) {
-        if(s==null)
+        if (s == null) {
             return null;
+        }
 
         StringBuilder sb = new StringBuilder();
         int sLen = s.length;
         boolean first = true;
-        String el;
 
-        for(int i=0; i<sLen; i++) {
-            el = s[i];
+        for (int i = 0; i < sLen; i++) {
+            String el = s[i];
             if (isNullOrEmpty(el))
                 continue;
 
-            if(first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 sb.append(separator);
+            }
 
             sb.append(el);
         }

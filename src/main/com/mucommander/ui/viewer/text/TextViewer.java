@@ -28,9 +28,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.io.EncodingDetector;
-import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
@@ -85,23 +83,23 @@ public class TextViewer extends FileViewer implements EncodingListener {
     public void setFrame(final FileFrame frame) {
         super.setFrame(frame);
 
-        frame.setFullScreen(isFullScreen());
+        //frame.setFullScreen(isFullScreen());
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
-    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
-    		public void actionPerformed(ActionEvent e){
-    			setFullScreen(!frame.isFullScreen());
-    			frame.setFullScreen(isFullScreen());
-    		}
-    	});
+//    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
+//    		public void actionPerformed(ActionEvent e){
+//    			setFullScreen(!frame.isFullScreen());
+//    			frame.setFullScreen(isFullScreen());
+//    		}
+//    	});
     }
 
     static void setFullScreen(boolean fullScreen) {
-		TextViewer.fullScreen = fullScreen;
+		//TextViewer.fullScreen = fullScreen;
 	}
 
-	public static boolean isFullScreen() {
-		return fullScreen;
-	}
+//	public static boolean isFullScreen() {
+//		return fullScreen;
+//	}
 
 	static void setLineWrap(boolean lineWrap) {
 		TextViewer.lineWrap = lineWrap;
@@ -143,19 +141,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
             in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
 
-//            if (in instanceof RandomAccessInputStream) {
-//                // Seek to the beginning of the file and reuse the stream
-//                ((RandomAccessInputStream)in).seek(0);
-//            } else {
-                // TODO: it would be more efficient to use some sort of PushBackInputStream, though we can't use PushBackInputStream because we don't want to keep pushing back for the whole InputStream lifetime
-
-                // Close the InputStream and open a new one
-                // Note: we could use mark/reset if the InputStream supports it, but it is almost never implemented by
-                // InputStream subclasses and a broken by design anyway.
-// TODO WTF?!
-// !!               in.close();
-// !!               in = file.getInputStream();
-//            }
             // Load the file into the text area
             loadDocument(in, encoding, documentListener);
         } finally {

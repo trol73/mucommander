@@ -43,7 +43,7 @@ public abstract class Completer {
 	private Set<CompletionService> services;
 	
 	public Completer() {
-		services = new LinkedHashSet<CompletionService>();
+		services = new LinkedHashSet<>();
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public abstract class Completer {
 
 				// in case the suggestions-list contains only one suggestion and it 
 				// match the typed path - do not show an auto-completion popup.
-				if (typedFilename==null || typedFilename.equalsIgnoreCase((String) list.getModel().getElementAt(0)))
+				if (typedFilename == null || typedFilename.equalsIgnoreCase((String) list.getModel().getElementAt(0)))
 					return false;
 			} catch (MalformedURLException e) { }
     	}

@@ -150,7 +150,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             write(out);
         }
         finally {
-            if(out != null) {
+            if (out != null) {
                 try {out.close();}
                 catch(IOException e) {
                     e.printStackTrace();
@@ -164,11 +164,10 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         setSaveNeeded(false);
 
         // Change the parent folder's date to now, so that changes are picked up by folder auto-refresh (see ticket #258)
-        if(destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
             try {
                 destFile.getParent().changeDate(System.currentTimeMillis());
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 LOGGER.debug("failed to change the date of "+destFile, e);
                 // Fail silently
             }
@@ -179,15 +178,15 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     public void setFrame(final FileFrame frame) {
     	super.setFrame(frame);
     	
-    	frame.setFullScreen(TextViewer.isFullScreen());
+    	//frame.setFullScreen(TextViewer.isFullScreen());
 
     	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
-    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
-    		public void actionPerformed(ActionEvent e){
-    			TextViewer.setFullScreen(!frame.isFullScreen());
-    			frame.setFullScreen(TextViewer.isFullScreen());
-    		}
-    	});
+//    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
+//    		public void actionPerformed(ActionEvent e){
+//    			TextViewer.setFullScreen(!frame.isFullScreen());
+//    			frame.setFullScreen(TextViewer.isFullScreen());
+//    		}
+//    	});
     }
 
     @Override

@@ -197,7 +197,6 @@ public class TextFilesHistory {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public void save() {

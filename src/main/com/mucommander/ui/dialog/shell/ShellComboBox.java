@@ -84,8 +84,9 @@ public class ShellComboBox extends AutocompletedEditableCombobox<String> impleme
         ShellHistoryManager.addListener(this);
 
         // Select first item in the combo box (if any)
-        if(getItemCount()>0)
+        if (getItemCount() > 0) {
             setSelectedIndex(0);
+        }
 
         // Automatically update the text field's contents when an item is selected in this combo box
         setComboSelectionUpdatesTextField(true);
@@ -98,20 +99,18 @@ public class ShellComboBox extends AutocompletedEditableCombobox<String> impleme
      * Fills the combo box with the current shell history.
      */
     private void populateHistory() {
-        Iterator<String> iterator;
-        String   command;
-
         // Empties the content of the combo box
         removeAllItems();
 
         // Iterates through all shell history elements.
-        iterator = ShellHistoryManager.getHistoryIterator();
-        command  = null;
-        while(iterator.hasNext())
+        Iterator<String> iterator = ShellHistoryManager.getHistoryIterator();
+        String command = null;
+        while (iterator.hasNext()) {
             insertItemAt((command = iterator.next()), 0);
+        }
 
         // If the list is not empty, initialises the input field on the last command.
-        if(command != null) {
+        if (command != null) {
             input.setText(command);
             input.setSelectionStart(0);
             input.setSelectionEnd(command.length());
@@ -130,7 +129,7 @@ public class ShellComboBox extends AutocompletedEditableCombobox<String> impleme
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
-        if(enabled) {
+        if (enabled) {
             input.setSelectionStart(0);
             input.setSelectionEnd(input.getText().length());
         }
@@ -175,8 +174,9 @@ public class ShellComboBox extends AutocompletedEditableCombobox<String> impleme
      */
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         setComboSelectionUpdatesTextField(false);
-        if(getItemCount() > 0)
+        if (getItemCount() > 0) {
             setSelectedIndex(0);
+        }
 
         setComboSelectionUpdatesTextField(true);
     }

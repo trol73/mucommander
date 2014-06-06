@@ -111,7 +111,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
         mainPanel = new YBoxPanel();
 
-        if(comp!=null) {
+        if (comp != null) {
             mainPanel.addSpace(5);
             mainPanel.add(comp);
             mainPanel.addSpace(10);
@@ -121,7 +121,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
         buttons = new JButton[nbButtons];
         String text;
 		
-        for(int i=0; i<nbButtons; i++) {
+        for(int i = 0; i < nbButtons; i++) {
             text = actionText[i];
 
             buttons[i] = new JButton(text);
@@ -167,8 +167,8 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
-        for(int i=0; i<buttons.length; i++)
-            if (buttons[i]==source) {
+        for (int i = 0; i < buttons.length; i++)
+            if (buttons[i] == source) {
                 retValue = actionValues[i];
                 break;
             }

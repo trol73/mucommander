@@ -1975,7 +1975,6 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         public synchronized void close() throws IOException {
             super.close();
             pushbackInputStream = null;
-System.out.println("=======> CLOSE " + this + "    " + pushbackInputStream);
         }
 
         int getBufferSize() {

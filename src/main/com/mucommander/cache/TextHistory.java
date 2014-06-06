@@ -34,7 +34,8 @@ public class TextHistory {
     public enum Type {
         TEXT_SEARCH("search-text.history"),
         HEX_DATA_SEARCH("search-hex.history"),
-        FILE_NAME("search-files.history");
+        FILE_NAME("search-files.history"),
+        CALCULATOR("calculator.history");
 
         private final String fileName;
         private Type(String fileName) {
@@ -73,7 +74,7 @@ public class TextHistory {
         if (alreadyInList) {
             list.remove(s);
         }
-        if (s.trim().length() == 0) {
+        if (s.trim().isEmpty()) {
             return;
         }
         list.add(0, s);
@@ -107,9 +108,7 @@ public class TextHistory {
                 if (trim.isEmpty() || trim.startsWith("#")) {
                     continue;
                 }
-                if (line.trim().length() > 0) {
-                    result.add(line);
-                }
+                result.add(line);
             }
         } catch (Exception e) {
             e.printStackTrace();

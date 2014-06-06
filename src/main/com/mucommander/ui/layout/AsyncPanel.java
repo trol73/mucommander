@@ -171,9 +171,9 @@ public abstract class AsyncPanel extends JPanel {
      * needs to be done to update the layout.
      */
     protected void updateLayout() {
-        Container tla = getTopLevelAncestor();
-        if(tla instanceof Window)
-            ((Window)tla).pack();
+//        Container tla = getTopLevelAncestor();
+//        if(tla instanceof Window)
+//            ((Window)tla).pack();
     }
 
 

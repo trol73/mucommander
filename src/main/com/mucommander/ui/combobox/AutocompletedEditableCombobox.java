@@ -126,14 +126,12 @@ public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
      */
 	public void respondToEscapeKeyPressing(KeyEvent keyEvent) {
 		// Combo popup menu is visible
-		if(isPopupVisible()) {
+		if (isPopupVisible()) {
 			 // Explicitely hide popup menu, JComboBox does not seem do it automatically (at least under Mac OS X + Java 1.5 and Java 1.4)
             hidePopup();
             // Consume the event so that it is not propagated, since dialogs catch this event to close the window
             keyEvent.consume();
-		}
-		// Combo popup menu is not visible, these events really belong to the text field
-        else {
+		} else {    // Combo popup menu is not visible, these events really belong to the text field
         	// Notify listeners that the text field has been cancelled
         	fireComboFieldCancelled();
         }

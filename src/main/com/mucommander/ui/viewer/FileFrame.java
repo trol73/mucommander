@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import com.mucommander.cache.WindowsStorage;
 import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,8 @@ public abstract class FileFrame extends JFrame {
             protected void updateLayout() {
                 super.updateLayout();
                 // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
-                pack();
+                //pack();
+                WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName());
                 // Request focus on the viewer when it is visible
                 FocusRequester.requestFocus(filePresenter);
 
@@ -109,8 +111,12 @@ public abstract class FileFrame extends JFrame {
         setContentPane(contentPane);
         //setSize(WAIT_DIALOG_SIZE);
         //setFullScreenSize();
-        setFullScreen(true);
-        DialogToolkit.centerOnWindow(this, mainFrame);
+        //setFullScreen(true);
+        if (!WindowsStorage.getInstance().init(this, filePresenter.getClass().getCanonicalName())) {
+            setSize(800, 600);
+            DialogToolkit.centerOnWindow(this, mainFrame);
+        }
+
         setVisible(true);
     }
 
@@ -118,13 +124,13 @@ public abstract class FileFrame extends JFrame {
 		InformationDialog.showErrorDialog(mainFrame, getGenericErrorDialogTitle(), getGenericErrorDialogMessage());
 	}
 
-	/**
-	 * Sets this file presenter to full screen
-	 */
-	public void setFullScreen(boolean on) {
-		int currentExtendedState = getExtendedState();
-		setExtendedState(on ? currentExtendedState | Frame.MAXIMIZED_BOTH : currentExtendedState & ~Frame.MAXIMIZED_BOTH);
-	}
+//	/**
+//	 * Sets this file presenter to full screen
+//	 */
+//	public void setFullScreen(boolean on) {
+//		int currentExtendedState = getExtendedState();
+//		setExtendedState(on ? currentExtendedState | Frame.MAXIMIZED_BOTH : currentExtendedState & ~Frame.MAXIMIZED_BOTH);
+//}
 
 	/**
 	 * Returns whether this frame is set to be displayed in full screen mode
@@ -156,6 +162,7 @@ public abstract class FileFrame extends JFrame {
     @Override
     public void dispose() {
         filePresenter.saveStateOnClose();
+        WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
         super.dispose();
     }
 

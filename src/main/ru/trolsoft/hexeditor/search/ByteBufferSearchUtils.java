@@ -36,7 +36,7 @@ public class ByteBufferSearchUtils {
      */
     public static long indexOf(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
         long fileSize = data.getFileSize();
-        if (fileSize <= 0) {
+        if (fileSize <= 0 || pattern.length == 0) {
             return -1;
         }
         int[] failure = computeFailure(pattern);
