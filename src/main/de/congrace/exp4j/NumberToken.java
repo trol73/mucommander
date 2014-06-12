@@ -48,7 +48,7 @@ class NumberToken extends CalculationToken {
             } else if (ch2 == 'b' || ch2 == 'B') {
                 isBin = true;
                 value = value.substring(2);
-            } else {
+            } else if (ch2 != '.' ) {
                 isOct = true;
                 value = value.substring(1);
             }

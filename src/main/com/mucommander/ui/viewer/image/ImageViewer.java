@@ -251,7 +251,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
             AffineTransform at = new AffineTransform();
             at.scale(factor, factor);
-            AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+            AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
             this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
         } else {
             this.scaledImage = image;
@@ -347,8 +347,8 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     public String getTitle() {
         return new StringBuilder(filesInDirectory.get(indexInDirectory).toString()).
-                append(" - ").append(image.getWidth(null)).append("x").append(image.getHeight(null)).append(" - ").
-                append((int) (zoomFactor * 100)).append("%").
+                //append(" - ").append(image.getWidth(null)).append("x").append(image.getHeight(null)).append(" - ").
+                //append((int) (zoomFactor * 100)).append("%").
                 toString();
         //return file.getAbsolutePath()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
     }

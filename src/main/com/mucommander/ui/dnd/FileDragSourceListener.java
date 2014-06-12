@@ -97,14 +97,14 @@ public class FileDragSourceListener implements DragGestureListener, DragSourceLi
     /////////////////////////////////
 
     public void dragGestureRecognized(DragGestureEvent event) {
-        if(folderPanel.getMainFrame().getNoEventsMode())
+        if (folderPanel.getMainFrame().getNoEventsMode())
             return;
 
         FileTable fileTable = folderPanel.getFileTable();
         FileTableModel tableModel = fileTable.getFileTableModel();
 
         // Return (do not initiate drag) if mouse button2 or button3 was used
-        if((event.getTriggerEvent().getModifiers() & (InputEvent.BUTTON2_MASK|InputEvent.BUTTON3_MASK))!=0)
+        if ((event.getTriggerEvent().getModifiers() & (InputEvent.BUTTON2_MASK|InputEvent.BUTTON3_MASK)) != 0)
             return;
 
 // Do not use that to retrieve the current selected file as it is inaccurate: the selection could have changed since the
@@ -130,8 +130,7 @@ public class FileDragSourceListener implements DragGestureListener, DragSourceLi
         FileSet draggedFiles;
         if(tableModel.getNbMarkedFiles()>0 && (markedFiles=fileTable.getSelectedFiles()).contains(selectedFile)) {
             draggedFiles = markedFiles;
-        }
-        else {
+        } else {
             draggedFiles = new FileSet(folderPanel.getCurrentFolder(), selectedFile);
         }
 

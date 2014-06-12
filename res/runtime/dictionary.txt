@@ -3719,8 +3719,8 @@ InternalEdit.label:ES:Editar (interno)
 # Translation missing (New!)
 
 
-
-
+Calculator.label:EN:Calculator
+Calculator.label:RU:Калькулятор
 
 
 
@@ -7798,6 +7798,9 @@ go_menu:BE:Перайсьці
 go_menu:NB:Gå
 go_menu:TR:Git
 go_menu:CA:Ves
+
+tools_menu:EN:Tools
+tools_menu:RU:Инструменты
 
 # Title of the Bookmarks menu
 bookmarks_menu:EN:Bookmarks

@@ -161,7 +161,6 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
 
     private void calculate() {
         String expression = cbExpression.getSelectedItem().toString().trim();
-        System.out.println("calc " + expression);
         boolean success;
         try {
             double res = evaluate(expression);
@@ -198,7 +197,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         btnBin.setEnabled(success);
         btnOct.setEnabled(success);
         btnExp.setEnabled(success);
-        lblError.setText(success ? " " : Translator.get("calculator.error"));
+        lblError.setText(success ? "" : Translator.get("calculator.error"));
     }
 
     private static double evaluate(String expression) throws Exception {
@@ -226,7 +225,6 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
-        System.out.println(e.getActionCommand());
         if (src == cbExpression) {
             calculate();
         } else if (src == btnClose) {

@@ -185,11 +185,10 @@ public class FileDropTargetListener implements DropTargetListener {
 
         LOGGER.trace("dragAccepted="+dragAccepted+" dropAction="+currentDropAction);
 
-        if(dragAccepted) {
+        if (dragAccepted) {
             // Accept the drag event with our drop action
             event.acceptDrag(currentDropAction);
-        }
-        else {
+        } else {
             // Reject the drag event
             event.rejectDrag();
         }
@@ -236,7 +235,7 @@ public class FileDropTargetListener implements DropTargetListener {
 
         // The drop() method is called even if a DropTargetDropEvent was rejected before,
         // so this test is really necessary
-        if(!dragAccepted) {
+        if (!dragAccepted) {
             event.rejectDrop();
             return;
         }
@@ -248,10 +247,9 @@ public class FileDropTargetListener implements DropTargetListener {
         FileSet droppedFiles = TransferableFileSet.getTransferFiles(event.getTransferable());
 
         // Stop and report failure if no file could not be retrieved
-        if(droppedFiles==null || droppedFiles.size()==0) {
+        if (droppedFiles == null || droppedFiles.size() == 0) {
             // Report drop failure
             event.dropComplete(false);
-
             return;
         }
 
@@ -260,11 +258,11 @@ public class FileDropTargetListener implements DropTargetListener {
         // - If the file is a directory, the current folder is changed to that directory
         // - For any other file kind (archive, regular file...), current folder is changed to the file's parent folder and the file is selected
         // If more than one file is dropped, only the first one is used
-        if(changeFolderOnlyMode || currentDropAction==DnDConstants.ACTION_LINK) {
+        if (changeFolderOnlyMode || currentDropAction == DnDConstants.ACTION_LINK) {
             AbstractFile file = droppedFiles.elementAt(0);
 
             // If file is a directory, change current folder to that directory
-            if(file.isDirectory())
+            if (file.isDirectory())
                 folderPanel.tryChangeCurrentFolder(file);
             // For any other file kind (archive, regular file...), change directory to the file's parent folder
             // and select the file

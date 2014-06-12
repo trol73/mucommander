@@ -80,7 +80,7 @@ class Tokenizer {
                             valueBuilder.append(cc);
                             numberLen++;
                             continue;
-                        } else {                                // octal
+                        } else if (cc != '.') {                  // octal
                             octNotationPrefixOccurred = true;
                         }
                     }
