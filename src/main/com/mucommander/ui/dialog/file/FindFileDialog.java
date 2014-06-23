@@ -208,8 +208,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_F3:
                         ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
-
                         break;
+
                     case KeyEvent.VK_F4:
                         EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
                         break;

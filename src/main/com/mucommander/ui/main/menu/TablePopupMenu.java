@@ -22,6 +22,8 @@ package com.mucommander.ui.main.menu;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.DesktopManager;
+import com.mucommander.ui.action.ActionManager;
+import com.mucommander.ui.action.impl.CreateSymlinkAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.popup.MuActionsPopupMenu;
 
@@ -99,10 +101,14 @@ public class TablePopupMenu extends MuActionsPopupMenu {
         add(new JSeparator());
 
         // 'Rename' displayed if a single file was clicked
-        if(clickedFile!=null)
+        if (clickedFile != null) {
             addAction(com.mucommander.ui.action.impl.RenameAction.Descriptor.ACTION_ID);
-
+        }
         addAction(com.mucommander.ui.action.impl.DeleteAction.Descriptor.ACTION_ID);
+        addAction(com.mucommander.ui.action.impl.CreateSymlinkAction.Descriptor.ACTION_ID);
+        if (clickedFile != null && clickedFile.isSymlink()) {
+            addAction(com.mucommander.ui.action.impl.LocateSymlinkAction.Descriptor.ACTION_ID);
+        }
 
         add(new JSeparator());
 

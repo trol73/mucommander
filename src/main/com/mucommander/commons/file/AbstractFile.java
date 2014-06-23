@@ -201,15 +201,16 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public AbstractFile getCanonicalFile() {
         String canonicalPath = getCanonicalPath(false);
-        if(canonicalPath.equals(getAbsolutePath(false)))
+        if (canonicalPath.equals(getAbsolutePath(false))) {
             return this;
+        }
 
         try {
             FileURL canonicalURL = FileURL.getFileURL(canonicalPath);
             canonicalURL.setCredentials(fileURL.getCredentials());
 
             return FileFactory.getFile(canonicalURL);
-        } catch(IOException e) {
+        } catch (IOException e) {
             return this;
         }
     }

@@ -3722,8 +3722,11 @@ InternalEdit.label:ES:Editar (interno)
 Calculator.label:EN:Calculator
 Calculator.label:RU:Калькулятор
 
-CreateSymLink.label:EN:Create symlink
-CreateSymLink.label:RU:Создать ссылку
+CreateSymlink.label:EN:Create symlink
+CreateSymlink.label:RU:Создать ссылку
+LocateSymlink.label:EN:Goto symlink target
+LocateSymlink.label:RU:Перейти к файлу ссылки
+
 
 symboliclinkeditor.edit:EN:Edit symlink
 symboliclinkeditor.edit:RU:Редактировать ссылку

@@ -12,9 +12,9 @@ import java.util.Map;
 
 
 /**
- * This action brings up the 'Make directory' dialog which allows to create a new directory in the currently active folder.
+ * This action brings up the 'Create symlink' dialog.
  *
- * @author Maxence Bernard
+ * @author Oleg Trifonov
  */
 public class CreateSymlinkAction extends ParentFolderAction {
 
