@@ -53,6 +53,7 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.theme.ThemeEditorDialog;
+import com.mucommander.ui.dialog.symlink.CreateSymlinkDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.main.MainFrame;
@@ -163,6 +164,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(BatchRenameAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(SplitFileAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(CombineFilesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(CreateSymlinkAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
         fileMenu.add(new JSeparator());
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(ShowFilePropertiesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);

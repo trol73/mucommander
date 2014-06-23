@@ -209,8 +209,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             canonicalURL.setCredentials(fileURL.getCredentials());
 
             return FileFactory.getFile(canonicalURL);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return this;
         }
     }
@@ -606,7 +605,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         int supportedPerms = permissions.getMask().getIntValue();
 
         String s = "";
-        s += isSymlink()?'l':isDirectory()?'d':'-';
+        s += isSymlink() ? 'l' : isDirectory() ? 'd' : '-';
 
         int perms = permissions.getIntValue();
 

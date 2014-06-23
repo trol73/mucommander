@@ -3722,7 +3722,19 @@ InternalEdit.label:ES:Editar (interno)
 Calculator.label:EN:Calculator
 Calculator.label:RU:Калькулятор
 
+CreateSymLink.label:EN:Create symlink
+CreateSymLink.label:RU:Создать ссылку
 
+symboliclinkeditor.edit:EN:Edit symlink
+symboliclinkeditor.edit:RU:Редактировать ссылку
+symboliclinkeditor.create:EN:Symbolic link
+symboliclinkeditor.create:RU:Символическая ссылка
+symboliclinkeditor.target_file_create:EN:Existing filename (filename symlink will point to)
+symboliclinkeditor.target_file_create:RU:Существующий файл (ссылка будет указывать на него)
+symboliclinkeditor.target_file_edit:EN:Symlink '%s' points to
+symboliclinkeditor.target_file_edit:RU:Ссылка '%s' указывает на
+symboliclinkeditor.link_name:EN:Symbolic link filename
+symboliclinkeditor.link_name:RU:Имя ссылки
 
 
 

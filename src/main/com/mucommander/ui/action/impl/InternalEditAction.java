@@ -32,6 +32,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
+import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.viewer.EditorRegistrar;
 
@@ -57,8 +58,9 @@ public class InternalEditAction extends AbstractViewerAction {
         ));
 
         ImageIcon icon;
-        if((icon = getStandardIcon(EditAction.class)) != null)
+        if ((icon = getStandardIcon(EditAction.class)) != null) {
             setIcon(icon);
+        }
     }
 
 
@@ -70,7 +72,9 @@ public class InternalEditAction extends AbstractViewerAction {
      */
     @Override
     protected void performInternalAction(AbstractFile file) {
-        if (file.isDirectory()) {
+        if (file.isSymlink()) {
+            new EditSymlinkDialog(mainFrame, file).showDialog();
+        } else if (file.isDirectory()) {
             FileSet fileSet = new FileSet();
             fileSet.add(file);
             new ChangePermissionsDialog(mainFrame, fileSet).showDialog();

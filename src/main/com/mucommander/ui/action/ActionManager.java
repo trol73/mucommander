@@ -233,6 +233,7 @@ public class ActionManager {
         registerAction(new TerminalAction.Descriptor(),                     new TerminalAction.Factory());
         registerAction(new FindFileAction.Descriptor(),                     new FindFileAction.Factory());
         registerAction(new CalculatorAction.Descriptor(),                   new CalculatorAction.Factory());
+        registerAction(new CreateSymlinkAction.Descriptor(),                new CreateSymlinkAction.Factory());
 
     	// register "open with" commands as actions, to allow for keyboard shortcuts for them
     	for (Command command : CommandManager.commands()) {
