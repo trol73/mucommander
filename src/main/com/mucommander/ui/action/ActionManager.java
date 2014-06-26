@@ -378,36 +378,40 @@ public class ActionManager {
                 String label = ActionProperties.getActionLabel(actionId);
                 
                 // Append '...' to the label if this action invokes a dialog when performed
-                if(action.getClass().isAnnotationPresent(InvokesDialog.class))
+                if (action.getClass().isAnnotationPresent(InvokesDialog.class)) {
                     label += "...";
+                }
 
                 action.setLabel(label);
 
                 // Looks for a standard label entry in the dictionary and if it is defined, use it as this action's tooltip
                 String tooltip = ActionProperties.getActionTooltip(actionId);
-                if(tooltip!=null)
+                if (tooltip != null)
                     action.setToolTipText(tooltip);
             }
             
             // If the action's accelerators have not been set yet, use the ones from ActionKeymap
-            if(action.getAccelerator()==null) {
+            if (action.getAccelerator() == null) {
                 // Retrieve the standard accelerator (if any) and use it as this action's accelerator
                 KeyStroke accelerator = ActionKeymap.getAccelerator(actionId);
-                if(accelerator!=null)
+                if (accelerator != null) {
                     action.setAccelerator(accelerator);
+                }
 
                 // Retrieve the standard alternate accelerator (if any) and use it as this action's alternate accelerator
                 accelerator = ActionKeymap.getAlternateAccelerator(actionId);
-                if(accelerator!=null)
+                if (accelerator != null) {
                     action.setAlternateAccelerator(accelerator);
+                }
             }
             
             // If the action's icon has not been set yet, use the action descriptor's
-            if(action.getIcon()==null) {
+            if (action.getIcon() == null) {
                 // Retrieve the standard icon image (if any) and use it as the action's icon
                 ImageIcon icon = ActionProperties.getActionIcon(actionId);
-                if(icon!=null)
+                if (icon != null) {
                     action.setIcon(icon);
+                }
             }
             
             return action;
@@ -467,8 +471,9 @@ public class ActionManager {
     public static boolean performAction(ActionParameters actionParameters, MainFrame mainFrame) {
         MuAction action = getActionInstance(actionParameters, mainFrame);
 
-        if(action==null)
+        if (action == null) {
             return false;
+        }
 
         action.performAction();
 

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.swing.KeyStroke;
 
+import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,13 +78,16 @@ public class CommandAction extends MuAction {
         selectedFiles = mainFrame.getActiveTable().getSelectedFiles();
 
         // If no files are either selected or marked, aborts.
-        if(selectedFiles.size() == 0)
+        if (selectedFiles.size() == 0) {
             return;
+        }
 
         // If we're working with local files, go ahead and runs the command.
-        if(selectedFiles.getBaseFolder().getURL().getScheme().equals(FileProtocols.FILE) && (selectedFiles.getBaseFolder().hasAncestor(LocalFile.class))) {
-            try {ProcessRunner.execute(command.getTokens(selectedFiles), selectedFiles.getBaseFolder());}
-            catch(Exception e) {
+        AbstractFile baseFolder = selectedFiles.getBaseFolder();
+        if (baseFolder.getURL().getScheme().equals(FileProtocols.FILE) && (baseFolder.hasAncestor(LocalFile.class))) {
+            try {
+                ProcessRunner.execute(command.getTokens(selectedFiles), selectedFiles.getBaseFolder());
+            } catch(Exception e) {
                 InformationDialog.showErrorDialog(mainFrame);
 
                 LOGGER.debug("Failed to execute command: " + command.getCommand(), e);

@@ -236,21 +236,21 @@ public class Command implements Comparable<Command> {
         isInQuotes   = false;
 
         // Parses the command.
-        for(int i = 0; i < command.length(); i++) {
+        for (int i = 0; i < command.length(); i++) {
             // Quote escaping: toggle isInQuotes.
-            if(buffer[i] == '\"') {
+            if (buffer[i] == '\"') {
                 currentToken.append(buffer[i]);
                 isInQuotes = !isInQuotes;
             }
 
             // Backslash escaping: the next character is not analyzed.
-            else if(buffer[i] == '\\') {
-                if(i + 1 != command.length())
+            else if (buffer[i] == '\\') {
+                if (i + 1 != command.length())
                     currentToken.append(buffer[++i]);
             }
 
             // Whitespace: end of token if we're not between quotes.
-            else if(buffer[i] == ' ' && !isInQuotes) {
+            else if (buffer[i] == ' ' && !isInQuotes) {
                 // Skips un-escaped blocks of spaces.
                 while(i + 1 < command.length() && buffer[i + 1] == ' ')
                     i++;
@@ -261,10 +261,10 @@ public class Command implements Comparable<Command> {
             }
 
             // Keyword: perform keyword substitution.
-            else if(buffer[i] == KEYWORD_HEADER) {
+            else if (buffer[i] == KEYWORD_HEADER) {
                 // Skips keyword replacement if we're not interested
                 // in it.
-                if(files == null)
+                if (files == null)
                     currentToken.append(KEYWORD_HEADER);
 
                 // If this is the last character, append it.
@@ -277,10 +277,10 @@ public class Command implements Comparable<Command> {
                     currentToken.append(getKeywordReplacement(buffer[i], files[0]));
 
                     // $j is a special case, we only ever insert it once.
-                    if(buffer[i] != KEYWORD_VM_PATH) {
+                    if (buffer[i] != KEYWORD_VM_PATH) {
                         // If we're not between quotes and there's more than one file,
                         // each file will be in its own token.
-                        if(!isInQuotes && files.length != 1) {
+                        if (!isInQuotes && files.length != 1) {
                             tokens.add(currentToken.toString());
                             currentToken.setLength(0);
                         }
@@ -288,8 +288,8 @@ public class Command implements Comparable<Command> {
                         // Deals with all subsequent files:
                         // - if we're in quotes, separates each files by a space.
                         // - if we're not in quotes, each new file is its own token.
-                        for(int j = 1; j < files.length; j++) {
-                            if(isInQuotes) {
+                        for (int j = 1; j < files.length; j++) {
+                            if (isInQuotes) {
                                 currentToken.append(' ');
                                 currentToken.append(getKeywordReplacement(buffer[i], files[j]));
                             }
@@ -317,11 +317,11 @@ public class Command implements Comparable<Command> {
         }
 
         // Adds a possible last token.
-        if(currentToken.length() != 0)
+        if (currentToken.length() != 0)
             tokens.add(currentToken.toString());
 
         // Empty commands are returned as an empty token rather than an empty array.
-        if(tokens.size() == 0)
+        if (tokens.size() == 0)
             return new String[] {""};
 
         return tokens.toArray(new String[tokens.size()]);
@@ -345,28 +345,28 @@ public class Command implements Comparable<Command> {
      */
     private static String getKeywordReplacement(char keyword, AbstractFile file) {
         switch(keyword) {
-        case KEYWORD_PATH:
-            return file.getAbsolutePath();
+            case KEYWORD_PATH:
+                return file.getAbsolutePath();
 
-        case KEYWORD_NAME:
-            return file.getName();
+            case KEYWORD_NAME:
+                return file.getName();
 
-        case KEYWORD_PARENT:
-            AbstractFile parentFile = file.getParent();
-            return parentFile==null?"":parentFile.getAbsolutePath();
+            case KEYWORD_PARENT:
+                AbstractFile parentFile = file.getParent();
+                return parentFile==null?"":parentFile.getAbsolutePath();
 
-        case KEYWORD_VM_PATH:
-            return new File(System.getProperty("user.dir")).getAbsolutePath();
+            case KEYWORD_VM_PATH:
+                return new File(System.getProperty("user.dir")).getAbsolutePath();
 
-        case KEYWORD_EXTENSION:
-            String extension;
+            case KEYWORD_EXTENSION:
+                String extension;
 
-            if((extension = file.getExtension()) == null)
-                return "";
-            return extension;
+                if((extension = file.getExtension()) == null)
+                    return "";
+                return extension;
 
-        case KEYWORD_NAME_WITHOUT_EXTENSION:
-            return file.getNameWithoutExtension();
+            case KEYWORD_NAME_WITHOUT_EXTENSION:
+                return file.getNameWithoutExtension();
         }
         throw new IllegalArgumentException();
     }
@@ -387,7 +387,7 @@ public class Command implements Comparable<Command> {
     }
 
     public boolean equals(Object object) {
-        if(object == null || !(object instanceof Command))
+        if (object == null || !(object instanceof Command))
             return false;
 
         Command cmd;
@@ -399,9 +399,9 @@ public class Command implements Comparable<Command> {
     public int compareTo(Command command) {
         int buffer;
 
-        if((buffer = getDisplayName().compareTo(command.getDisplayName())) != 0)
+        if ((buffer = getDisplayName().compareTo(command.getDisplayName())) != 0)
             return buffer;
-        if((buffer = getAlias().compareTo(command.getAlias())) != 0)
+        if ((buffer = getAlias().compareTo(command.getAlias())) != 0)
             return buffer;
         return this.command.compareTo(command.command);
     }
