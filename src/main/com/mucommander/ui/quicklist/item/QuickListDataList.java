@@ -133,8 +133,8 @@ public class QuickListDataList<T> extends JList<T> {
 
 	public void setBackgroundColors(Color background, Color selectedBackground) {
 		DataListItemRenderer cellRenderer = (DataListItemRenderer) getCellRenderer();
-		cellRenderer.setItemBackgound(background);
-		cellRenderer.setSelectedItemBackgound(selectedBackground);
+		cellRenderer.setItemBackground(background);
+		cellRenderer.setSelectedItemBackground(selectedBackground);
 	}
 
 	/**
@@ -142,9 +142,9 @@ public class QuickListDataList<T> extends JList<T> {
 	 */
 	protected class DataListItemRenderer extends DefaultListCellRenderer implements ThemeListener {
 
-		private Color selectedItemBackgound = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
+		private Color selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
 		private Color selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
-		private Color itemBackgound = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
+		private Color itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
 		private Color itemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR);
 
 		private Font itemFont = ThemeManager.getCurrentFont(ThemeData.QUICK_LIST_ITEM_FONT);
@@ -159,13 +159,13 @@ public class QuickListDataList<T> extends JList<T> {
 			T item = getListItem(rowIndex);
 
 			// Sanity check.
-			if(item==null) {
+			if (item == null) {
 				LOGGER.debug("tableModel.getCachedFileAtRow("+ rowIndex +") RETURNED NULL !");
 				return null;
 			}
 
 			QuickSearch<T> search = QuickListDataList.this.getQuickSearch();
-			boolean matches = search.isActive() || search.matches(getItemAsString(item));
+			boolean matches = !search.isActive() || search.matches(getItemAsString(item));
 
 			CellLabel label = new CellLabel();
 			label.setFont(itemFont);
@@ -175,27 +175,26 @@ public class QuickListDataList<T> extends JList<T> {
 
 			// Set background color depending on whether the row is selected or not, and whether the table has focus or not
 			if (isSelected) {
-				label.setBackground(selectedItemBackgound);
+				label.setBackground(selectedItemBackground);
 				label.setForeground(selectedItemForeground);
-			}
-			else {
-				label.setBackground(matches ? itemBackgound : ThemeCache.unmatchedBackground);
+			} else {
+				label.setBackground(matches ? itemBackground : ThemeCache.unmatchedBackground);
 				label.setForeground(matches ? itemForeground : ThemeCache.unmatchedForeground);
 			}
-			
+
 			return label;
 		}
 
-		public void setSelectedItemBackgound(Color selectedItemBackgound) {
-			this.selectedItemBackgound = selectedItemBackgound;
+		public void setSelectedItemBackground(Color selectedItemBackground) {
+			this.selectedItemBackground = selectedItemBackground;
 		}
 
 		public void setSelectedItemForeground(Color selectedItemForeground) {
 			this.selectedItemForeground = selectedItemForeground;
 		}
 
-		public void setItemBackgound(Color itemBackgound) {
-			this.itemBackgound = itemBackgound;
+		public void setItemBackground(Color itemBackground) {
+			this.itemBackground = itemBackground;
 		}
 
 		public void setItemForeground(Color itemForeground) {
@@ -206,18 +205,16 @@ public class QuickListDataList<T> extends JList<T> {
 		// ThemeListener implementation //
 		//////////////////////////////////
 
-		public void colorChanged(ColorChangedEvent event) {		
-			if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR)
-				itemBackgound = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
-
-			else if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR)
-				itemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR);
-
-			else if (event.getColorId() == ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR)
-				selectedItemBackgound= ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
-
-			else if (event.getColorId() == ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR)
-				selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
+		public void colorChanged(ColorChangedEvent event) {
+            if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR) {
+                itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
+            } else if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR) {
+                itemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR);
+            } else if (event.getColorId() == ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR) {
+                selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
+            } else if (event.getColorId() == ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR) {
+                selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
+            }
 		}
 
 		public void fontChanged(FontChangedEvent event) {
@@ -261,7 +258,7 @@ public class QuickListDataList<T> extends JList<T> {
 
 		@Override
 		protected void matchFound(int row, String searchString) {
-			if(row!=getSelectedIndex()) {
+			if (row != getSelectedIndex()) {
 				setSelectedIndex(row);
 				ensureIndexIsVisible(row);
 			}

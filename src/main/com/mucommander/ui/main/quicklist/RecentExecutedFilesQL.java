@@ -44,27 +44,25 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  */
 
 public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
-	private static LinkedList<AbstractFile> list = new LinkedList<AbstractFile>();
+	private static LinkedList<AbstractFile> list = new LinkedList<>();
 	private static final int MAX_NUM_OF_ELEMENTS = 10;
-	private FolderPanel folderPanel;
+//	private FolderPanel folderPanel;
 	
 	public RecentExecutedFilesQL(FolderPanel folderPanel) {
 		super(folderPanel, ActionProperties.getActionLabel(ShowRecentExecutedFilesQLAction.Descriptor.ACTION_ID), Translator.get("recent_executed_files_quick_list.empty_message"));
 		
-		this.folderPanel = folderPanel;
+//		this.folderPanel = folderPanel;
 	}
 	
 	@Override
     protected void acceptListItem(AbstractFile item) {
 		MainFrame mainFrame = WindowManager.getCurrentMainFrame();
 
-		if(item.getURL().getScheme().equals(FileProtocols.FILE) && (item.hasAncestor(LocalFile.class))) {
+		if (item.getURL().getScheme().equals(FileProtocols.FILE) && (item.hasAncestor(LocalFile.class))) {
             try { DesktopManager.open(item); }
             catch(IOException e) {}
-        }
-
-        // Copies non-local file in a temporary local file and opens them using their native association.
-        else {
+        } else {
+            // Copies non-local file in a temporary local file and opens them using their native association.
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
             TempExecJob job = new TempExecJob(progressDialog, mainFrame, item);
             progressDialog.start(job);
@@ -72,8 +70,9 @@ public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
 	}
 	
 	public static void addFile(AbstractFile file) {
-		if (!list.remove(file) && list.size() > MAX_NUM_OF_ELEMENTS)
-			list.removeLast();
+		if (!list.remove(file) && list.size() > MAX_NUM_OF_ELEMENTS) {
+            list.removeLast();
+        }
 		list.addFirst(file);
 	}
 

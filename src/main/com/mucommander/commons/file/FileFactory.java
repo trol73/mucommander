@@ -121,7 +121,7 @@ public class FileFactory {
         registerProtocol(FileProtocols.FTP, new com.mucommander.commons.file.impl.ftp.FTPProtocolProvider());
         registerProtocol(FileProtocols.NFS, new com.mucommander.commons.file.impl.nfs.NFSProtocolProvider());
         registerProtocol(FileProtocols.SFTP, new com.mucommander.commons.file.impl.sftp.SFTPProtocolProvider());
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             // Hadoop requires Java 1.6
             registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
 //            registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
@@ -324,8 +324,9 @@ public class FileFactory {
      * if something went wrong during file creation.
      */
     public static AbstractFile getFile(String absPath) {
-        try {return getFile(absPath, null);}
-        catch(IOException e) {
+        try {
+            return getFile(absPath, null);
+        } catch(IOException e) {
             LOGGER.info("Caught an exception", e);
             return null;
         }
@@ -431,87 +432,84 @@ public class FileFactory {
      */
     public static AbstractFile getFile(FileURL fileURL, AbstractFile parent, Authenticator authenticator, Object... instantiationParams) throws IOException {
         String protocol = fileURL.getScheme();
-        if(!isRegisteredProtocol(protocol))
-            throw new IOException("Unsupported file protocol: "+protocol);
+        if (!isRegisteredProtocol(protocol)) {
+            throw new IOException("Unsupported file protocol: " + protocol);
+        }
 
         // Lookup the pool for an existing AbstractFile instance, only if there are no instantiationParams.
         // If there are instantiationParams (the file was created by the AbstractFile implementation directly, that is
         // by ls()), any existing file in the pool must be replaced with a new, more up-to-date one.
         FilePool filePool = FILE_POOL_MAP.get(fileURL.getScheme().toLowerCase());
-        if(instantiationParams.length==0) {
+        if (instantiationParams.length == 0) {
             // Note: FileURL#equals(Object) and #hashCode() take into account credentials and properties and are
             // trailing slash insensitive (e.g. '/root' and '/root/' URLS are one and the same)
             AbstractFile file = filePool.get(fileURL);
-            if(file!=null)
+            if (file != null)
                 return file;
         }
 
         String filePath = fileURL.getPath();
         // For local paths under Windows (e.g. "/C:\temp"), remove the leading '/' character
-        if(OsFamily.WINDOWS.isCurrent() && FileProtocols.FILE.equals(protocol))
+        if (OsFamily.WINDOWS.isCurrent() && FileProtocols.FILE.equals(protocol)) {
             filePath = PathUtils.removeLeadingSeparator(filePath, "/");
+        }
 
         String pathSeparator = fileURL.getPathSeparator();
 
-        PathTokenizer pt = new PathTokenizer(filePath,
-                pathSeparator,
-                false);
+        PathTokenizer pt = new PathTokenizer(filePath, pathSeparator, false);
 
         AbstractFile currentFile = null;
         boolean lastFileResolved = false;
 
         // Extract every filename from the path from left to right and for each of them, see if it looks like an archive.
         // If it does, create the appropriate protocol file and wrap it with an archive file.
-        while(pt.hasMoreFilenames()) {
+        while (pt.hasMoreFilenames()) {
             // Test if the filename's extension looks like a supported archive format...
             // Note that the archive can also be a directory with an archive extension.
-            if(isArchiveFilename(pt.nextFilename())) {
+            if (isArchiveFilename(pt.nextFilename())) {
                 // Remove trailing separator of file, some file protocols such as SFTP don't like trailing separators.
                 // On the contrary, directories without a trailing slash are fine.
                 String currentPath = PathUtils.removeTrailingSeparator(pt.getCurrentPath(), pathSeparator);
 
                 // Test if current file is an archive and if it is, create an archive entry file instead of a raw
                 // protocol file
-                if(currentFile==null || !currentFile.isArchive()) {
+                if (currentFile == null || !currentFile.isArchive()) {
                     // Create a fresh FileURL with the current path
                     FileURL clonedURL = (FileURL)fileURL.clone();
                     clonedURL.setPath(currentPath);
 
                     // Look for a cached file instance before creating a new one
                     currentFile = filePool.get(clonedURL);
-                    if(currentFile==null) {
+                    if (currentFile == null) {
                         currentFile = wrapArchive(createRawFile(clonedURL, authenticator, instantiationParams));
                         // Add the intermediate file instance to the cache
                         filePool.put(clonedURL, currentFile);
                     }
 
                     lastFileResolved = true;
-                }
-                else {          // currentFile is an AbstractArchiveFile
+                } else {          // currentFile is an AbstractArchiveFile
                     // Note: wrapArchive() is already called by AbstractArchiveFile#createArchiveEntryFile()
                     AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
-                    if(tempEntryFile.isArchive()) {
+                    if (tempEntryFile.isArchive()) {
                         currentFile = tempEntryFile;
                         lastFileResolved = true;
-                    }
-                    else {
+                    } else {
                         lastFileResolved = false;
                     }
                     // Note: don't cache the entry file
                 }
-            }
-            else {
+            } else {
                 lastFileResolved = false;
             }
         }
 
         // Create last file if it hasn't been already (if the last filename was not an archive), same routine as above
         // except that it doesn't wrap the file with an archive file
-        if(!lastFileResolved) {
+        if (!lastFileResolved) {
             // Note: DON'T strip out the trailing separator, as this would cause problems with root resources
             String currentPath = pt.getCurrentPath();
 
-            if(currentFile==null || !currentFile.isArchive()) {
+            if (currentFile == null || !currentFile.isArchive()) {
                 FileURL clonedURL = (FileURL)fileURL.clone();
                 clonedURL.setPath(currentPath);
 
@@ -519,15 +517,14 @@ public class FileFactory {
                 currentFile = createRawFile(clonedURL, authenticator, instantiationParams);
                 // Add the final file instance to the cache
                 filePool.put(currentFile.getURL(), currentFile);
-            }
-            else {          // currentFile is an AbstractArchiveFile
+            } else {          // currentFile is an AbstractArchiveFile
                 currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
                 // Note: don't cache the entry file
             }
         }
 
         // Reuse existing parent file instance if one was specified
-        if(parent!=null)
+        if (parent != null)
             currentFile.setParent(parent);
 
         return currentFile;
@@ -538,8 +535,8 @@ public class FileFactory {
 
         // Special case for local files to avoid provider hashtable lookup and other unnecessary checks
         // (for performance reasons)
-        if(scheme.equals(FileProtocols.FILE)) {
-            if(localFileProvider == null)
+        if (scheme.equals(FileProtocols.FILE)) {
+            if (localFileProvider == null)
                 throw new IOException("Unknown file protocol: " + scheme);
 
             return localFileProvider.getFile(fileURL, instantiationParams);
@@ -551,13 +548,14 @@ public class FileFactory {
         else {
             // If an Authenticator has been specified and the specified FileURL's protocol is authenticated and the
             // FileURL doesn't contain any credentials, use it to authenticate the FileURL.
-            if(authenticator!=null && fileURL.getAuthenticationType()!=AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials())
+            if (authenticator != null && fileURL.getAuthenticationType() != AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials())
                 authenticator.authenticate(fileURL);
 
             // Finds the right file protocol provider
             ProtocolProvider provider = getProtocolProvider(scheme);
-            if(provider == null)
+            if (provider == null) {
                 throw new IOException("Unknown file protocol: " + scheme);
+            }
 
             return provider.getFile(fileURL, instantiationParams);
         }
@@ -572,12 +570,13 @@ public class FileFactory {
     private static String getFilenameVariation(String filename) {
         int lastDotPos = filename.lastIndexOf('.');
         int len = filename.length();
-        String nameSuffix = "_"+System.currentTimeMillis()+(new Random().nextInt(10000));
+        String nameSuffix = "_" + System.currentTimeMillis() + (new Random().nextInt(10000));
 
-        if(lastDotPos==-1)
+        if (lastDotPos == -1) {
             filename += nameSuffix;
-        else
+        } else {
             filename = filename.substring(0, lastDotPos) + nameSuffix + filename.substring(lastDotPos, len);
+        }
 
         return filename;
     }
@@ -600,16 +599,17 @@ public class FileFactory {
      * normal circumstances.
      */
     public static AbstractFile getTemporaryFile(String desiredFilename, boolean deleteOnExit) throws IOException {
-        if(desiredFilename==null || desiredFilename.equals(""))
+        if (desiredFilename == null || desiredFilename.isEmpty()) {
             desiredFilename = "temp";
+        }
         
         // Attempt to use the desired name
         AbstractFile tempFile = TEMP_DIRECTORY.getDirectChild(desiredFilename);
 
-        if(tempFile.exists())
+        if (tempFile.exists())
             tempFile = TEMP_DIRECTORY.getDirectChild(getFilenameVariation(desiredFilename));
 
-        if(deleteOnExit)
+        if (deleteOnExit)
             ((java.io.File)tempFile.getUnderlyingFileObject()).deleteOnExit();
 
         return tempFile;
@@ -668,9 +668,9 @@ public class FileFactory {
         // Comparing the filename against each and every archive extension has a cost, so we only perform the test if
         // the filename contains a dot '.' character, since most of the time this method is called with a filename that
         // doesn't match any of the filters.
-        if(filename.indexOf('.')!=-1) {
+        if (filename.indexOf('.') >= 0) {
             ArchiveFormatProvider provider;
-            if((provider = getArchiveFormatProvider(filename)) != null) {
+            if ((provider = getArchiveFormatProvider(filename)) != null) {
                 return provider.getFile(file);
             }
         }

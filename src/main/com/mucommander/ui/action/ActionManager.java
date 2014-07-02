@@ -195,6 +195,8 @@ public class ActionManager {
     	registerAction(new ShowRecentExecutedFilesQLAction.Descriptor(),    new ShowRecentExecutedFilesQLAction.Factory());
     	registerAction(new ShowRecentLocationsQLAction.Descriptor(),        new ShowRecentLocationsQLAction.Factory());
     	registerAction(new ShowRootFoldersQLAction.Descriptor(), 			new ShowRootFoldersQLAction.Factory());
+        registerAction(new ShowRecentViewedFilesQLAction.Descriptor(), 		new ShowRecentViewedFilesQLAction.Factory());
+        registerAction(new ShowRecentEditedFilesQLAction.Descriptor(), 		new ShowRecentEditedFilesQLAction.Factory());
     	registerAction(new ShowServerConnectionsAction.Descriptor(),        new ShowServerConnectionsAction.Factory());
     	registerAction(new ShowTabsQLAction.Descriptor(),					new ShowTabsQLAction.Factory());
     	registerAction(new SortByDateAction.Descriptor(),             		new SortByDateAction.Factory());

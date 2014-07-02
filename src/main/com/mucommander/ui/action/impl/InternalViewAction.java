@@ -48,8 +48,9 @@ public class InternalViewAction extends AbstractViewerAction {
         super(mainFrame, properties);
 
         ImageIcon icon;
-        if((icon = getStandardIcon(ViewAction.class)) != null)
+        if ((icon = getStandardIcon(ViewAction.class)) != null) {
             setIcon(icon);
+        }
     }
 
 

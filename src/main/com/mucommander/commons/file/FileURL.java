@@ -138,7 +138,7 @@ public class FileURL implements Cloneable {
     private final static SchemeHandler DEFAULT_HANDLER = new DefaultSchemeHandler();
 
     /** Maps schemes (String) onto SchemeHandler instances */
-    private final static Hashtable<String, SchemeHandler> handlers = new Hashtable<String, SchemeHandler>();
+    private final static Hashtable<String, SchemeHandler> handlers = new Hashtable<>();
 
     /** String designating the localhost */
     public final static String LOCALHOST = "localhost";
@@ -214,22 +214,20 @@ public class FileURL implements Cloneable {
         int schemeDelimPos = location.indexOf("://");
         SchemeHandler handler;
 
-        if(schemeDelimPos==-1) {
+        if (schemeDelimPos == -1) {
             // No scheme: the location is a local or UNC path, not a URL
             handler = getDefaultHandler();
-        }
-        else {
+        } else {
             handler = getSchemeHandler(location.substring(0, schemeDelimPos));
         }
 
         FileURL fileURL = new FileURL(handler);
         try {
             handler.getParser().parse(location, fileURL);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             // Catch any unexpected exception thrown by the SchemeParser and turn it into a MalformedURLException
             // with a specific error message.
-            if(e instanceof MalformedURLException)
+            if (e instanceof MalformedURLException)
                 throw (MalformedURLException)e;
 
             throw new MalformedURLException("URL parser error");
@@ -246,8 +244,9 @@ public class FileURL implements Cloneable {
      */
     private static SchemeHandler getSchemeHandler(String scheme) {
         SchemeHandler handler = getRegisteredHandler(scheme);
-        if(handler==null)
+        if (handler == null) {
             return getDefaultHandler();
+        }
 
         return handler;
     }
@@ -331,8 +330,9 @@ public class FileURL implements Cloneable {
         // Remove any trailing separator
         path = PathUtils.removeTrailingSeparator(path, separator);
 
-        if(!separator.equals("/"))
+        if (!separator.equals("/")) {
             path = PathUtils.removeLeadingSeparator(path, "/");
+        }
 
         // Extract filename
         int pos = path.lastIndexOf(separator);
@@ -367,8 +367,9 @@ public class FileURL implements Cloneable {
      * @see #getScheme()
      */
     public void setScheme(String scheme) {
-        if(scheme==null)
+        if (scheme == null) {
             throw new IllegalArgumentException();
+        }
 
         this.scheme = scheme;
 
@@ -768,24 +769,22 @@ public class FileURL implements Cloneable {
         StringBuffer sb = new StringBuffer(scheme);
         sb.append("://");
 
-        if(includeCredentials && credentials!=null) {
+        if (includeCredentials && credentials!=null) {
             try {
                 sb.append(URLEncoder.encode(credentials.getLogin(), "UTF-8"));
-            }
-            catch(UnsupportedEncodingException e) {
+            } catch(UnsupportedEncodingException e) {
                 // This can't happen in practice, UTF-8 is necessarily supported
             }
 
             String password = credentials.getPassword();
-            if(!"".equals(password)) {
+            if( !password.isEmpty()) {
                 sb.append(':');
-                if(maskPassword)
+                if (maskPassword)
                     sb.append(credentials.getMaskedPassword());
                 else {
                     try {
                         sb.append(URLEncoder.encode(password, "UTF-8"));
-                    }
-                    catch(UnsupportedEncodingException e) {
+                    } catch (UnsupportedEncodingException e) {
                         // This can't happen in practice, UTF-8 is necessarily supported
                     }
                 }
@@ -793,20 +792,20 @@ public class FileURL implements Cloneable {
             sb.append('@');
         }
 
-        if(host!=null)
+        if (host != null) {
             sb.append(host);
+        }
 
         // Set the port only if it has a value that is different from the standard port
-        if(port!=-1 && port!=handler.getStandardPort()) {
+        if (port != -1 && port != handler.getStandardPort()) {
             sb.append(':');
             sb.append(port);
         }
 
-        if(host!=null || !path.equals("/"))	{ // Test to avoid URLs like 'smb:///'
-            if(path.startsWith("/")) {
+        if (host != null || !path.equals("/"))	{ // Test to avoid URLs like 'smb:///'
+            if (path.startsWith("/")) {
                 sb.append(path);
-            }
-            else {
+            } else {
                 // Add a leading '/' if path doesn't already start with one, needed for scheme paths that are not
                 // forward slash-separated
                 sb.append('/');
@@ -814,7 +813,7 @@ public class FileURL implements Cloneable {
             }
         }
 
-        if(query!=null) {
+        if (query != null) {
             sb.append('?');
             sb.append(query);
         }
@@ -926,7 +925,7 @@ public class FileURL implements Cloneable {
             int len2 = path2.length();
 
             // If the difference between the 2 strings is just a trailing path separator, we consider the paths as equal
-            if(Math.abs(len1-len2)==separatorLen && (len1>len2 ? path1.startsWith(path2) : path2.startsWith(path1))) {
+            if (Math.abs(len1-len2) == separatorLen && (len1 > len2 ? path1.startsWith(path2) : path2.startsWith(path1))) {
                 String diff = len1>len2 ? path1.substring(len1-separatorLen) : path2.substring(len2-separatorLen);
                 return separator.equals(diff);
             }
@@ -957,9 +956,9 @@ public class FileURL implements Cloneable {
         Credentials creds1 = this.credentials;
         Credentials creds2 = url.credentials;
 
-        return (creds1==null && creds2==null)
-            || (creds1!=null && creds1.equals(creds2, true))
-            || (creds2!=null && creds2.equals(creds1, true));
+        return (creds1 == null && creds2 == null)
+            || (creds1 != null && creds1.equals(creds2, true))
+            || (creds2 != null && creds2.equals(creds1, true));
     }
 
     /**

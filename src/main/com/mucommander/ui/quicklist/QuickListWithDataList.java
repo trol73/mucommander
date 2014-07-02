@@ -74,10 +74,9 @@ public abstract class QuickListWithDataList<T> extends QuickList {
 		if ((data = getData()).length > 0) {
 			dataList.setListData(data);
 			toShow = true;
-		}
-		// else, show popup with a "no elements" message.
-		else
-			emptyPopup.show();
+		} else {        // else, show popup with a "no elements" message.
+            emptyPopup.show();
+        }
 		
 		return toShow;
 	}

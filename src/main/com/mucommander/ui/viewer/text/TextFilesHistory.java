@@ -18,9 +18,16 @@
 package com.mucommander.ui.viewer.text;
 
 import com.mucommander.PlatformManager;
+import com.mucommander.cache.WindowsStorage;
+import com.mucommander.commons.DummyDecoratedFile;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.DummyFile;
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.FileURL;
+import com.mucommander.ui.theme.SystemDefaultColor;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,6 +260,25 @@ public class TextFilesHistory {
         while (records.size() > MAX_NUMBER_OF_RECORDS) {
             records.remove(records.size()-1);
         }
+    }
+
+
+    public List<AbstractFile> getLastList(int maxCount) {
+        List<AbstractFile> result = new ArrayList<>();
+        for (FileRecord rec : records) {
+            try {
+//                result.add(FileFactory.getFile(rec.fileName));
+//                result.add(FileFactory.getFile(FileURL.getFileURL(rec.fileName)));
+                FileURL fileUrl = FileURL.getFileURL(rec.fileName);
+                result.add(new DummyDecoratedFile(fileUrl));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            if (result.size() >= maxCount) {
+                break;
+            }
+        }
+        return result;
     }
 
 }

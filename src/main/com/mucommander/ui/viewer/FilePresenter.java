@@ -161,12 +161,4 @@ public abstract class FilePresenter extends JScrollPane {
      */
     protected abstract void restoreStateOnStartup();
 
-
-//    @Override
-//    public JViewport getViewport() {
-//if (super.getViewport() == null) return null;
-//new Exception().printStackTrace();
-//System.out.println("::: " + super.getViewport().getViewPosition());
-//        return super.getViewport();
-//    }
 }

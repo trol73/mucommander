@@ -7448,6 +7448,15 @@ ShowTabsQL.label:EN:Open tabs
 ShowTabsQL.label:TR:Sekmeleri aç
 # Translation missing (New!)
 
+ShowRecentViewedFilesQL.label:EN:Recently viewed files
+ShowRecentViewedFilesQL.label:RU:Недавно просматриваемые файлы
+# Translation missing (New!)
+
+ShowRecentEditedFilesQL.label:EN:Recently edited files
+ShowRecentEditedFilesQL.label:RU:Недавно редактируемые файлы
+# Translation missing (New!)
+
+
 SplitFile.label:EN:$[split]
 
 SplitFile.tooltip:EN:Split a file into multiple parts

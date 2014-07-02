@@ -21,6 +21,7 @@ package com.mucommander.ui.quicklist;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -43,13 +44,21 @@ import com.mucommander.ui.quicklist.item.QuickListDataListWithIcons;
  */
 
 public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
-	// This HashMap's keys are items and its objects are the corresponding icon.
-	private final HashMap<T, Icon> itemToIconCacheMap = new HashMap<T, Icon>();
-	// This SpinningDial will appear until the icon fetching of an item is over.
-	private static final SpinningDial waitingIcon = new SpinningDial();
-	// If the icon fetching fails for some item, the following icon will appear for it. 
-	private static final Icon notAvailableIcon = IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
-	// Saves the number of waiting-icons (SpinningDials) appearing in the list.
+    /**
+     * This Map's keys are items and its objects are the corresponding icon.
+     */
+	private final Map<T, Icon> itemToIconCacheMap = new HashMap<>();
+    /**
+     * This SpinningDial will appear until the icon fetching of an item is over.
+     */
+	private static final SpinningDial WAITING_ICON = new SpinningDial();
+    /**
+     * If the icon fetching fails for some item, the following icon will appear for it.
+     */
+	private static final Icon NOT_AVAILABLE_ICON = IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NOT_ACCESSIBLE_FILE);
+	/**
+	 * Saves the number of waiting-icons (SpinningDials) appearing in the list.
+	 */
 	private int numOfWaitingIconInList;
 	
 	public QuickListWithIcons(QuickListContainer container, String header, String emptyPopupHeader) {
@@ -74,7 +83,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 	private synchronized void waitingIconAddedToList() {
 		// If there was no other waitingIcon in the list before current addition - start the spinning dial.
 		if (numOfWaitingIconInList++ == 0)
-			waitingIcon.setAnimated(true);
+            WAITING_ICON.setAnimated(true);
 	}
 	
 	/**
@@ -83,7 +92,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 	private synchronized void waitingIconRemovedFromList() {
 		// If after current remove operation, there will be no waitingIcon in the list - stop the spinning dial.
 		if (--numOfWaitingIconInList == 0)
-			waitingIcon.setAnimated(false);
+            WAITING_ICON.setAnimated(false);
 	}
 	
 	@Override
@@ -119,7 +128,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 		boolean found;
 		synchronized(itemToIconCacheMap) {
 			if (!(found = itemToIconCacheMap.containsKey(item))) {
-				itemToIconCacheMap.put(item, waitingIcon);
+				itemToIconCacheMap.put(item, WAITING_ICON);
 				waitingIconAddedToList();
 			}
 		}
@@ -132,7 +141,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
                 public void run() {
 					Icon icon = itemToIcon(item);
 					// If the item does not exist or is not accessible, show notAvailableIcon for it.
-					itemToIconCacheMap.put(item, icon != null ? icon : notAvailableIcon);
+					itemToIconCacheMap.put(item, icon != null ? icon : NOT_AVAILABLE_ICON);
 					waitingIconRemovedFromList();
 					repaint();
 				}

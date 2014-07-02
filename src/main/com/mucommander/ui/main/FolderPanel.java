@@ -37,6 +37,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import com.mucommander.ui.main.quicklist.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,12 +56,6 @@ import com.mucommander.ui.action.impl.FocusPreviousAction;
 import com.mucommander.ui.dnd.FileDragSourceListener;
 import com.mucommander.ui.dnd.FileDropTargetListener;
 import com.mucommander.ui.event.LocationManager;
-import com.mucommander.ui.main.quicklist.BookmarksQL;
-import com.mucommander.ui.main.quicklist.ParentFoldersQL;
-import com.mucommander.ui.main.quicklist.RecentExecutedFilesQL;
-import com.mucommander.ui.main.quicklist.RecentLocationsQL;
-import com.mucommander.ui.main.quicklist.RootFoldersQL;
-import com.mucommander.ui.main.quicklist.TabsQL;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.FileTableConfiguration;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
@@ -158,13 +153,16 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         add(locationPanel, BorderLayout.NORTH);
 
         // Initialize quick lists
-    	fileTablePopups = new QuickList[]{
+    	fileTablePopups = new QuickList[] {
     			new ParentFoldersQL(this),
     			new RecentLocationsQL(this),
     			new RecentExecutedFilesQL(this),
     			new BookmarksQL(this),
     			new RootFoldersQL(this),
-                new TabsQL(this)};
+                new TabsQL(this),
+                new RecentViewedQL(this),
+                new RecentEditedQL(this)
+        };
 
         // Create the FileTable
         fileTable = new FileTable(mainFrame, this, conf);
