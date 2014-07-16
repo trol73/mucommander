@@ -46,6 +46,7 @@ public class EditorFrame extends FileFrame {
      */
     EditorFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
         super(mainFrame, file, icon);
+        initContentPane(file);
     }
 
     ////////////////////////

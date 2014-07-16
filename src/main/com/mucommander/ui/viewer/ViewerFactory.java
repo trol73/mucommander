@@ -46,4 +46,11 @@ public interface ViewerFactory {
      * @return a new instance of {@link FileViewer}.
      */
     public FileViewer createFileViewer();
+
+    /**
+     * Returns a name for ViewAs list
+     *
+     * @return
+     */
+    public String getName();
 }

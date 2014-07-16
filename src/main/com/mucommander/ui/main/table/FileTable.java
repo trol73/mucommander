@@ -322,10 +322,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private void focusGained() {
         focusGainedTime = System.currentTimeMillis();
 
-        if(isEditing()) {
+        if (isEditing()) {
             filenameEditor.filenameField.requestFocus();
-        }
-        else {
+        } else {
             overlayTable.getOverlayComponents()[0].setEnabled(true);
             // Repaints the table to reflect the new focused state
             overlayTable.repaint();
@@ -597,14 +596,13 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public void setAutoSizeColumnsEnabled(boolean enabled) {
         this.autoSizeColumnsEnabled = enabled;
-        if(autoSizeColumnsEnabled) {
+        if (autoSizeColumnsEnabled) {
             getTableHeader().setResizingAllowed(false);
-
             // Will invoke doLayout()
             resizeAndRepaint();
-        }
-        else
+        } else {
             getTableHeader().setResizingAllowed(true);
+        }
     }
 
 
@@ -625,7 +623,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param enabled if true, folders are displayed before regular files. If false, files are mixed with directories.
      */
     public void setFoldersFirst(boolean enabled) {
-        if(sortInfo.getFoldersFirst()!=enabled) {
+        if (sortInfo.getFoldersFirst() != enabled) {
             sortInfo.setFoldersFirst(enabled);
             sortTable();
         }
@@ -681,13 +679,15 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param repaint true to repaint the row after it has been marked/unmarked
      */
     public void setRowMarked(int row, boolean marked, boolean repaint) {
-        if(isParentFolder(row))
+        if (isParentFolder(row)) {
             return;
+        }
 
         tableModel.setRowMarked(row, marked);
         
-        if(repaint)
+        if (repaint) {
             repaintRow(row);
+        }
 
         // Notify registered listeners that currently marked files have changed on this FileTable
         fireMarkedFilesChangedEvent();
@@ -715,8 +715,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void setFileMarked(AbstractFile file, boolean marked, boolean repaint) {
         int row = tableModel.getFileRow(file);
 
-        if(row!=-1)
+        if (row >= 0) {
             setRowMarked(row, marked, repaint);
+        }
     }
 
 

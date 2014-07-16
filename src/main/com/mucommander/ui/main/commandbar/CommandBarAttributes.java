@@ -54,7 +54,7 @@ public class CommandBarAttributes {
     private static final String DEFAULT_ALTERNATE_ACTION_IDS[] =
     {
         null,
-    	null,
+        com.mucommander.ui.action.impl.ViewAsAction.Descriptor.ACTION_ID,
     	null,
     	com.mucommander.ui.action.impl.LocalCopyAction.Descriptor.ACTION_ID,
     	com.mucommander.ui.action.impl.RenameAction.Descriptor.ACTION_ID,

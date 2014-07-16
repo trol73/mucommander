@@ -71,7 +71,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
      * timed out or has been cancelled by user.
      */
     protected synchronized void start() {
-        if(!isActive()) {
+        if (!isActive()) {
             // Reset search string
             searchString = "";
             // Start the thread that's responsible for canceling the quick search on timeout
@@ -87,7 +87,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
      * Stops the current quick search. This method has no effect if the quick search is not currently active.
      */
     public synchronized void stop() {
-        if(isActive()) {
+        if (isActive()) {
             timeoutThread = null;
 
             searchStopped();
@@ -112,7 +112,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
      * @return true if the current quick search string matches the given string
      */
     public boolean matches(String string) {
-        return isActive() && string.toLowerCase().indexOf(searchString.toLowerCase())!=-1;
+        return isActive() && string.toLowerCase().contains(searchString.toLowerCase());
     }
 
 
@@ -130,11 +130,11 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
      * @return true if the given <code>KeyEvent</code> corresponds to a valid quick search input
      */
     protected boolean isValidQuickSearchInput(KeyEvent e) {
-        if((e.getModifiersEx()&(KeyEvent.ALT_DOWN_MASK|KeyEvent.CTRL_DOWN_MASK|KeyEvent.META_DOWN_MASK))!=0)
+        if ((e.getModifiersEx()&(KeyEvent.ALT_DOWN_MASK|KeyEvent.CTRL_DOWN_MASK|KeyEvent.META_DOWN_MASK))!=0)
             return false;
 
         char keyChar = e.getKeyChar();
-        return keyChar>=32 && keyChar!=127 && Character.isDefined(keyChar);
+        return keyChar >= 32 && keyChar != 127 && Character.isDefined(keyChar);
     }
     
     /**
@@ -158,8 +158,9 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         // the cancel() method will be called, and repainting twice would result in an
         // unpleasant graphical artifact.
         searchString = searchString.substring(0, searchString.length()-1);
-        if(searchString.length() != 0)
+        if (!searchString.isEmpty()) {
             component.repaint();
+        }
 	}
 	
 	protected void appendCharacterToSearchString(char keyChar) {
@@ -181,16 +182,16 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         LOGGER.trace("startRow="+startRow+" descending="+descending+" findMatch="+findBestMatch);
 
         // If search string is empty, update status bar without any icon and return
-        if(searchString.length()==0) {
+        if (searchString.isEmpty()) {
             searchStringBecameEmpty(searchString);
-        }
-        else {
+        } else {
         	int bestMatch = getBestMatch(startRow, descending, findBestMatch);
 
-            if (bestMatch != -1)
+            if (bestMatch >= 0) {
                 matchFound(bestMatch, searchString);
-            else
+            } else {
                 matchNotFound(searchString);
+            }
         }
     }
 	
@@ -209,9 +210,9 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         // - search string matches the beginning of the string with a different case
         // - string contains search string with the same case
         // - string contains search string with a different case
-        for(int i=startRow; descending?i<nbRows:i>=0; i=descending?i+1:i-1) {
+        for (int i = startRow; descending?i<nbRows:i>=0; i=descending?i+1:i-1) {
             // if findBestMatch was not specified, stop to the first match
-            if(!findBestMatch && (startsWithCaseMatch!=-1 || startsWithNoCaseMatch!=-1 || containsCaseMatch!=-1 || containsNoCaseMatch!=-1))
+            if (!findBestMatch && (startsWithCaseMatch!=-1 || startsWithNoCaseMatch!=-1 || containsCaseMatch!=-1 || containsNoCaseMatch!=-1))
                 break;
 
             String item = getItemString(i);
@@ -219,7 +220,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 
             // No need to compare strings if quick search string is longer than compared string,
             // they won't match
-            if(itemLen<searchStringLen)
+            if (itemLen<searchStringLen)
                 continue;
 
             // Compare quick search string against
@@ -230,48 +231,47 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
             }
 
             // If we already have a match on this test case, let's skip to the next string
-            if(startsWithNoCaseMatch!=-1)
+            if (startsWithNoCaseMatch!=-1)
                 continue;
 
             String itemLC = item.toLowerCase();
-            if(itemLC.startsWith(searchStringLC)) {
+            if (itemLC.startsWith(searchStringLC)) {
                 // We've got a match, let's see if we can find a better match on the next string
                 startsWithNoCaseMatch = i;
             }
 
             // No need to check if the compared string contains search string if both size are equal,
             // in the case startsWith test yields the same result
-            if(itemLen==searchStringLen)
+            if (itemLen==searchStringLen)
                 continue;
 
             // If we already have a match on this test case, let's skip to the next string
-            if(containsCaseMatch!=-1)
+            if (containsCaseMatch!=-1)
                 continue;
 
-            if(item.indexOf(searchString)!=-1) {
+            if (item.contains(searchString)) {
                 // We've got a match, let's see if we can find a better match on the next string
                 containsCaseMatch = i;
                 continue;
             }
 
             // If we already have a match on this test case, let's skip to the next string
-            if(containsNoCaseMatch!=-1)
+            if (containsNoCaseMatch!=-1)
                 continue;
 
-            if(itemLC.indexOf(searchStringLC)!=-1) {
+            if (itemLC.contains(searchStringLC)) {
                 // We've got a match, let's see if we can find a better match on the next string
                 containsNoCaseMatch = i;
-                continue;
+                //continue;
             }
         }
     	
         // Determines what the best match is, based on all the matches we found
-        int bestMatch = startsWithCaseMatch!=-1?startsWithCaseMatch
-            :startsWithNoCaseMatch!=-1?startsWithNoCaseMatch
-            :containsCaseMatch!=-1?containsCaseMatch
-            :containsNoCaseMatch!=-1?containsNoCaseMatch
-            :-1;
-        
+        int bestMatch = startsWithCaseMatch != -1 ? startsWithCaseMatch
+            : startsWithNoCaseMatch != -1 ? startsWithNoCaseMatch
+            : containsCaseMatch !=-1 ? containsCaseMatch
+            : containsNoCaseMatch != -1 ? containsNoCaseMatch
+            : -1;
         LOGGER.trace("startsWithCaseMatch="+startsWithCaseMatch+" containsCaseMatch="+containsCaseMatch+" startsWithNoCaseMatch="+startsWithNoCaseMatch+" containsNoCaseMatch="+containsNoCaseMatch);
         LOGGER.trace("bestMatch="+bestMatch);
         
@@ -335,18 +335,18 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 
     public void run() {
         do {
-            try { Thread.sleep(100); }
-            catch(InterruptedException e) {
-                // No problemo
+            try {
+                Thread.sleep(100);
+            } catch(InterruptedException e) {
             }
 
             synchronized(this) {
-                if(timeoutThread!=null && System.currentTimeMillis()-lastSearchStringChange >= QUICK_SEARCH_TIMEOUT) {
+                if (timeoutThread != null && System.currentTimeMillis()-lastSearchStringChange >= QUICK_SEARCH_TIMEOUT) {
                     stop();
                 }
             }
         }
-        while(timeoutThread!=null);
+        while(timeoutThread != null);
     }
 
     ///////////////////////////////
@@ -359,7 +359,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         // This check is done on key release, so that if backspace key is maintained pressed
         // to remove all the search string, it does not trigger the JComponent's back action 
     	// which is mapped on backspace too
-        if(isActive() && e.getKeyCode()==KeyEvent.VK_BACK_SPACE && searchString.equals("")) {
+        if (isActive() && e.getKeyCode() == KeyEvent.VK_BACK_SPACE && searchString.isEmpty()) {
             e.consume();
             stop();
         }

@@ -73,6 +73,13 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     private boolean keyboardDisposalEnabled = true;
 
+    /**
+     * Suffix of keyname for position/size storage
+     */
+    private String storageSuffix = null;
+
+    private boolean storeSizes = true;
+
     private final static String CUSTOM_DISPOSE_EVENT = "CUSTOM_DISPOSE_EVENT";
 
     
@@ -134,7 +141,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     @Override
     public void dispose() {
-        WindowsStorage.getInstance().put(this);
+        WindowsStorage.getInstance().put(this, storageSuffix);
         saveState();
         super.dispose();
     }
@@ -211,7 +218,7 @@ public class FocusDialog extends JDialog implements WindowListener {
      * Packs this dialog, makes it non-resizable and visible.
      */
     public void showDialog() {
-        if (!WindowsStorage.getInstance().init(this)) {
+        if (!WindowsStorage.getInstance().init(this, storageSuffix, storeSizes)) {
             pack();
             if (locationRelativeComp == null) {
                 DialogToolkit.centerOnScreen(this);
@@ -276,5 +283,13 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     protected void saveState() {
 
+    }
+
+    public void setStorageSuffix(String storageSuffix) {
+        this.storageSuffix = storageSuffix;
+    }
+
+    public void setStoreSizes(boolean storeSizes) {
+        this.storeSizes = storeSizes;
     }
 }

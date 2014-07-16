@@ -32,6 +32,7 @@ import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.audio.AudioFactory;
+import com.mucommander.ui.viewer.hex.HexFactory;
 
 /**
  * ViewerRegistrar maintains a list of registered file viewers and provides methods to dynamically register file viewers
@@ -77,8 +78,8 @@ public class ViewerRegistrar {
      * @param icon window's icon.
      * @return the created ViewerFrame
      */
-    public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
-        ViewerFrame frame = new ViewerFrame(mainFrame, file, icon);
+    public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory) {
+        ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
         if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
@@ -94,7 +95,10 @@ public class ViewerRegistrar {
         
         return frame;
     }
-    
+
+    public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+        return createViewerFrame(mainFrame, file, icon, null);
+    }
     
     /**
      * Creates and returns an appropriate FileViewer for the given file type.
@@ -104,9 +108,12 @@ public class ViewerRegistrar {
      * @return the created FileViewer, or null if no suitable viewer was found
      * @throws UserCancelledException if the user has been asked to confirm the operation and canceled
      */
-    public static FileViewer createFileViewer(AbstractFile file, ViewerFrame frame) throws UserCancelledException {
+    public static FileViewer createFileViewer(AbstractFile file, ViewerFrame frame, ViewerFactory defaultFactory) throws UserCancelledException {
     	FileViewer viewer = null;
         for (ViewerFactory factory : viewerFactories) {
+            if (defaultFactory != null && !factory.getName().equals(defaultFactory.getName())) {
+                continue;
+            }
             try {
                 if (factory.canViewFile(file)) {
                     viewer = factory.createFileViewer();
@@ -117,22 +124,42 @@ public class ViewerRegistrar {
                 // Todo: display a proper warning dialog with the appropriate icon
             	
                 QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get(e.getMessage()), frame,
-                                                           new String[] {Translator.get("file_editor.open_anyway"), Translator.get("cancel")},
-                                                           new int[]  {0, 1},
+                                                           new String[] {Translator.get("file_viewer.open_anyway"), Translator.get("file_viewer.open_hex"), Translator.get("cancel")},
+                                                           new int[]  {0, 1, 2},
                                                            0);
 
                 int ret = dialog.getActionValue();
-                if (ret == 1 || ret == -1)   // User canceled the operation
+                if (ret == 0) {
+                    // User confirmed the operation
+                    viewer = factory.createFileViewer();
+                    break;
+                } else if (ret == 1) {
+                    viewer = new HexFactory().createFileViewer();
+                    break;
+                } else {
+                    // User canceled the operation
                     throw new UserCancelledException();
-
-                // User confirmed the operation
-                viewer = factory.createFileViewer();
+                }
             }
         }
-
-        if (viewer != null)
-        	viewer.setFrame(frame);
+        if (viewer != null) {
+            viewer.setFrame(frame);
+        }
         
         return viewer;
+    }
+
+
+    public static List<ViewerFactory> getAllViewers(AbstractFile file) {
+        List<ViewerFactory> result = new ArrayList<>();
+        for (ViewerFactory factory : viewerFactories) {
+            try {
+                if (!factory.canViewFile(file)) {
+                    continue;
+                }
+            } catch (WarnUserException e) {}
+            result.add(factory);
+        }
+        return result;
     }
 }

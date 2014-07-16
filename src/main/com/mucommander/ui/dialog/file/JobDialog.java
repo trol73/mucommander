@@ -28,6 +28,8 @@ import com.mucommander.ui.list.FileList;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
+import java.awt.Container;
+import java.awt.Window;
 
 /**
  * This abstract dialog is to be sub-classed by job confirmation dialogs and provides helper methods for common
@@ -91,8 +93,14 @@ public abstract class JobDialog extends FocusDialog {
 
             @Override
             public void initTargetComponent() throws Exception {
-
             }
+
+            @Override
+            protected void updateLayout() {
+                Container tla = getTopLevelAncestor();
+                if (tla instanceof Window)
+                    ((Window)tla).pack();
+                }
         };
     }
 
@@ -104,7 +112,7 @@ public abstract class JobDialog extends FocusDialog {
      * @return a button that expands/collapses the specified 'File details' panel
      */
     protected CollapseExpandButton createFileDetailsButton(JPanel detailsPanel) {
-        collapseExpandButton = new CollapseExpandButton(Translator.get("nb_files", ""+files.size()), detailsPanel, false);
+        collapseExpandButton = new CollapseExpandButton(Translator.get("nb_files", String.valueOf(files.size())), detailsPanel, false);
         return collapseExpandButton;
     }
 

@@ -60,6 +60,40 @@ public class ByteBufferSearchUtils {
         return -1;
     }
 
+    public static long indexOf(AbstractByteBuffer data, byte[][] patterns, long fromOffset) throws IOException {
+        long fileSize = data.getFileSize();
+        if (fileSize <= 0 || patterns.length == 0) {
+            return -1;
+        }
+        int[][] failures = new int[patterns.length][];
+        for (int i = 0; i < patterns.length; i++) {
+            failures[i] = computeFailure(patterns[i]);
+        }
+        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
+        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
+
+        int[] j = new int[patterns.length];
+        for (int i = 0; i < j.length; i++) {
+            j[i] = 0;
+        }
+/*
+        for (long i = fromOffset; i < fileSize; i++) {
+            while (j > 0 && pattern[j] != data.getByte(i)) {
+                j = failure[j - 1];
+            }
+            if (pattern[j] == data.getByte(i)) {
+                j++;
+            }
+            if (j == pattern.length) {
+                data.setCacheStrategy(cacheStrategy);
+                return i - pattern.length + 1;
+            }
+        }
+        */
+        data.setCacheStrategy(cacheStrategy);
+        return -1;
+    }
+
 
     public static long indexOfBackward(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
         byte[] patternInvert = new byte[pattern.length];

@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.text.Position;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +82,6 @@ public class QuickListDataList<T> extends JList<T> {
 
 	public QuickSearch<T> getQuickSearch() { 
 		return quickSearch;
-	}
-	
-	public String getItemAsString(T item) {
-		return ""+item;
 	}
 
 	/**
@@ -165,12 +162,12 @@ public class QuickListDataList<T> extends JList<T> {
 			}
 
 			QuickSearch<T> search = QuickListDataList.this.getQuickSearch();
-			boolean matches = !search.isActive() || search.matches(getItemAsString(item));
+			boolean matches = !search.isActive() || search.matches(item.toString());
 
 			CellLabel label = new CellLabel();
 			label.setFont(itemFont);
 
-			label.setText(getItemAsString(item));
+			label.setText(item.toString());
 			//label.setToolTipText(""+item);
 
 			// Set background color depending on whether the row is selected or not, and whether the table has focus or not
@@ -248,7 +245,7 @@ public class QuickListDataList<T> extends JList<T> {
 
 		@Override
 		protected String getItemString(int index) {
-			return getItemAsString(getListItem(index));
+			return getListItem(index).toString();
 		}
 
 		@Override
@@ -282,7 +279,7 @@ public class QuickListDataList<T> extends JList<T> {
 			// If quick search is not active...
 			if (!isActive()) {
 				// Return (do not start quick search) if the key is not a valid quick search input
-				if(!isValidQuickSearchInput(e)) {
+				if (!isValidQuickSearchInput(e)) {
 					if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER)
 						tryToTransferFocusToTheNextComponent();
 					
@@ -300,10 +297,11 @@ public class QuickListDataList<T> extends JList<T> {
 			boolean keyHasModifiers = (e.getModifiersEx()&(KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK|KeyEvent.CTRL_DOWN_MASK|KeyEvent.META_DOWN_MASK))!=0;
 
 			// Backspace removes the last character of the search string
-			if(keyCode==KeyEvent.VK_BACK_SPACE && !keyHasModifiers) {
+			if (keyCode == KeyEvent.VK_BACK_SPACE && !keyHasModifiers) {
 				// Search string is empty already
-				if(isSearchStringEmpty())
-					return;
+				if (isSearchStringEmpty()) {
+                    return;
+                }
 
 				removeLastCharacterFromSearchString();
 
@@ -311,19 +309,19 @@ public class QuickListDataList<T> extends JList<T> {
 				findMatch(0, true, true);
 			}
 			// Escape immediately cancels the quick search
-			else if(keyCode==KeyEvent.VK_ESCAPE && !keyHasModifiers) {
+			else if (keyCode == KeyEvent.VK_ESCAPE && !keyHasModifiers) {
 				stop();
 			}
 			// Up/Down jumps to previous/next match
 			// Shift+Up/Shift+Down marks currently selected file and jumps to previous/next match
-			else if((keyCode==KeyEvent.VK_UP || keyCode==KeyEvent.VK_DOWN) && !keyHasModifiers) {
+			else if ((keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN) && !keyHasModifiers) {
 				// Find the first row before/after the current row that matches the search string
-				boolean down = keyCode==KeyEvent.VK_DOWN;
+				boolean down = keyCode == KeyEvent.VK_DOWN;
 				findMatch(getSelectedIndex() + (down ? 1 : -1), down, false);
 			}
 			// If no modifier other than Shift is pressed and the typed character is not a control character (space is ok)
 			// and a valid Unicode character, add it to the current search string
-			else if(isValidQuickSearchInput(e)) {
+			else if (isValidQuickSearchInput(e)) {
 				appendCharacterToSearchString(e.getKeyChar());
 
 				// Find the row that best matches the new search string and select it
@@ -377,4 +375,11 @@ public class QuickListDataList<T> extends JList<T> {
 				nextFocusableComponent.requestFocus();
 		}
 	}
+
+
+    @Override
+    public int getNextMatch(String prefix, int startIndex, Position.Bias bias) {
+        // This method is overridden to prevent the swing native search
+        return -1;
+    }
 }

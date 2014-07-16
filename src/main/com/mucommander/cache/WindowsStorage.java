@@ -76,6 +76,10 @@ public class WindowsStorage {
             window.setLocation(left, top);
             window.setSize(width, height);
         }
+
+        public void applyPos(Window window) {
+            window.setLocation(left, top);
+        }
     }
 
     public static WindowsStorage getInstance() {
@@ -119,11 +123,15 @@ public class WindowsStorage {
         put(key, rec);
     }
 
-    public boolean init(Window window, String suffix) {
+    public boolean init(Window window, String suffix, boolean storeSizes) {
         String key = getKey(window, suffix);
         Record rec = getRecords().get(key);
         if (rec != null) {
-            rec.apply(window);
+            if (storeSizes) {
+                rec.apply(window);
+            } else {
+                rec.applyPos(window);
+            }
             return true;
         }
         return false;
@@ -144,7 +152,7 @@ public class WindowsStorage {
     }
 
     public boolean init(Window window) {
-        return init(window, null);
+        return init(window, null, true);
     }
 
 

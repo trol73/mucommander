@@ -18,6 +18,7 @@
 package com.mucommander.ui.viewer.hex;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 import com.mucommander.ui.viewer.WarnUserException;
@@ -36,5 +37,10 @@ public class HexFactory implements ViewerFactory {
     @Override
     public FileViewer createFileViewer() {
         return new HexViewer();
+    }
+
+    @Override
+    public String getName() {
+        return Translator.get("viewer_type.hex");
     }
 }

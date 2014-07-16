@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.button;
 
+import com.mucommander.ui.dialog.FocusDialog;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -91,21 +93,18 @@ public class CollapseExpandButton extends ArrowButton implements ActionListener,
      * the component fits properly.
      */
     private void setExpandedState(boolean expanded, boolean packWindow) {
-        if(expanded) {
-            setArrowDirection(DOWN_DIRECTION);
-            comp.setVisible(true);
-        }
-        else {
-            setArrowDirection(RIGHT_DIRECTION);
-            comp.setVisible(false);
-        }
-
+        comp.setVisible(expanded);
+        setArrowDirection(expanded ? DOWN_DIRECTION : RIGHT_DIRECTION);
         this.expandedState = expanded;
 
-        if(packWindow) {
-            Container tla = getTopLevelAncestor();
-            if(tla instanceof Window)
-                ((Window)tla).pack();
+        if (packWindow) {
+            final Container tla = getTopLevelAncestor();
+            if (tla instanceof Window) {
+                ((Window) tla).pack();
+            }
+            if (tla instanceof FocusDialog) {
+                ((FocusDialog) tla).setStorageSuffix(expanded ? "expanded" : null);
+            }
         }
     }
 

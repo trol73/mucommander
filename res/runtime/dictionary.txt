@@ -3623,6 +3623,9 @@ View.label:NB:Vis
 View.label:TR:Görüntüle
 View.label:CA:Visualitza
 
+ViewAs.label:EN:View as
+ViewAs.label:RU:Просмотреть как
+
 # View with the internal viewer
 InternalView.label:EN:View (internal)
 InternalView.label:FR:Voir (interne)
@@ -3653,7 +3656,20 @@ InternalView.label:ES:Visualizar (interno)
 
 
 
+viewer_type.text:EN:Text file
+viewer_type.text:RU:Текстовый файл
 
+viewer_type.hex:EN:Binary file
+viewer_type.hex:RU:Двоичный файл
+
+viewer_type.image:EN:Image
+viewer_type.image:RU:Рисунок
+
+viewer_type.pdf:EN:PDF document
+viewer_type.pdf:RU:Документ PDF
+
+viewer_type.audio:EN:Audio file
+viewer_type.audio:RU:Аудио файл
 
 
 
@@ -13079,6 +13095,9 @@ file_viewer.open_anyway:BE:Адчыніць усё-адно
 file_viewer.open_anyway:NB:Åpne allikevel
 file_viewer.open_anyway:TR:Yine de aç
 file_viewer.open_anyway:CA:Obrir igualment
+
+file_viewer.open_hex:EN:Hex view
+file_viewer.open_hex:RU:Двоичный просмотр
 
 
 ###############

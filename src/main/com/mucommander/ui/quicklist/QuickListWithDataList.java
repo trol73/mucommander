@@ -43,8 +43,8 @@ public abstract class QuickListWithDataList<T> extends QuickList {
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);				
 		scroll.setBorder(null);		        
-		scroll.getVerticalScrollBar().setFocusable( false ); 
-        scroll.getHorizontalScrollBar().setFocusable( false );
+		scroll.getVerticalScrollBar().setFocusable(false);
+        scroll.getHorizontalScrollBar().setFocusable(false);
         add(scroll);
         
         dataList.addFocusListener(this);

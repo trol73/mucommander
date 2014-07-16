@@ -232,6 +232,7 @@ public class ActionManager {
     	registerAction(new UnmarkGroupAction.Descriptor(),            		new UnmarkGroupAction.Factory());
     	registerAction(new UnpackAction.Descriptor(),             			new UnpackAction.Factory());
     	registerAction(new ViewAction.Descriptor(),              			new ViewAction.Factory());
+        registerAction(new ViewAsAction.Descriptor(),              			new ViewAsAction.Factory());
         registerAction(new TerminalAction.Descriptor(),                     new TerminalAction.Factory());
         registerAction(new FindFileAction.Descriptor(),                     new FindFileAction.Factory());
         registerAction(new CalculatorAction.Descriptor(),                   new CalculatorAction.Factory());

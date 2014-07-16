@@ -33,8 +33,8 @@ import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CopyAction;
 import com.mucommander.ui.main.MainFrame;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -74,11 +74,11 @@ public class CopyDialog extends AbstractCopyDialog {
 
         // If the source files are located inside an archive, use UnpackJob instead of CopyJob to unpack archives in
         // their natural order (more efficient)
-        if(parentArchiveFile!=null) {
+        if (parentArchiveFile != null) {
             // Add all selected archive entries to a vector
             int nbFiles = files.size();
-            List<ArchiveEntry> selectedEntries = new Vector<ArchiveEntry>();
-            for(int i=0; i<nbFiles; i++) {
+            List<ArchiveEntry> selectedEntries = new ArrayList<>();
+            for(int i = 0; i < nbFiles; i++) {
                 selectedEntries.add((ArchiveEntry)files.elementAt(i).getAncestor(AbstractArchiveEntryFile.class).getUnderlyingFileObject());
             }
 
@@ -92,8 +92,7 @@ public class CopyDialog extends AbstractCopyDialog {
                 defaultFileExistsAction,
                 selectedEntries
             );
-        }
-        else {
+        } else {
             job = new CopyJob(
                 progressDialog,
                 mainFrame,

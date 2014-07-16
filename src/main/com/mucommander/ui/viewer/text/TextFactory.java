@@ -49,6 +49,11 @@ public class TextFactory implements ViewerFactory, EditorFactory {
         return new TextViewer();
     }
 
+    @Override
+    public String getName() {
+        return Translator.get("viewer_type.text");
+    }
+
     public FileEditor createFileEditor() {
         return new TextEditor();
     }

@@ -86,7 +86,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     // Dialog size constraints
     protected final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360,0);
     // Dialog width should not exceed 360, height is not an issue (always the same)
-    protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400,10000);	
+    protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
 
 	
     private final static int DEFAULT_ACTIONS[] = {
@@ -132,7 +132,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         // Path field will receive initial focus
         setInitialFocusComponent(pathField);		
 
-        if(enableTransferOptions) {
+        if (enableTransferOptions) {
             // Combo box that allows the user to choose the default action when a file already exists in destination
             mainPanel.add(new JLabel(Translator.get("destination_dialog.file_exists_action")+" :"));
             fileExistsActionComboBox.addItem(Translator.get("ask"));
@@ -228,7 +228,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * Interrupts the ongoing thread if there is one, does nothing otherwise.
      */
     private synchronized void interruptOngoingThread() {
-        if(thread!=null) {
+        if (thread != null) {
             LOGGER.trace("Calling interrupt() on "+thread);
             thread.interrupt();
             // Set the current thread to null
@@ -267,14 +267,15 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         int defaultFileExistsAction;
         boolean skipErrors;
         boolean verifyIntegrity;
-        if(enableTransferOptions) {
+        if (enableTransferOptions) {
             // Retrieve default action when a file exists in destination, default choice
             // (if not specified by the user) is 'Ask'
             defaultFileExistsAction = fileExistsActionComboBox.getSelectedIndex();
-            if(defaultFileExistsAction==0)
+            if (defaultFileExistsAction == 0) {
                 defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
-            else
-                defaultFileExistsAction = DEFAULT_ACTIONS[defaultFileExistsAction-1];
+            } else {
+                defaultFileExistsAction = DEFAULT_ACTIONS[defaultFileExistsAction - 1];
+            }
             // Note: we don't remember default action on purpose: we want the user to specify it each time,
             // it would be too dangerous otherwise.
 
@@ -290,7 +291,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         ProgressDialog progressDialog = new ProgressDialog(mainFrame, getProgressDialogTitle());
         TransferFileJob job = createTransferFileJob(progressDialog, resolvedDest, defaultFileExistsAction);
 
-        if(job!=null) {
+        if (job != null) {
             job.setAutoSkipErrors(skipErrors);
             job.setIntegrityCheckEnabled(verifyIntegrity);
             progressDialog.start(job);

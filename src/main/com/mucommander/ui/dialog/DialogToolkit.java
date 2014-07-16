@@ -67,33 +67,34 @@ public class DialogToolkit {
         boolean changeSize = false;
 		
         // Minimum dimension
-        if(min) {
-            if(windowWidth<maxWidth) {
+        if (min) {
+            if (windowWidth < maxWidth) {
                 windowWidth = maxWidth;
                 changeSize = true;
             }
 				
-            if(windowHeight<maxHeight) {
+            if(windowHeight < maxHeight) {
                 windowHeight = maxHeight;
                 changeSize = true;
             }
         }
         // Maximum dimension
         else {
-            if(windowWidth>maxWidth) {
+            if (windowWidth > maxWidth) {
                 windowWidth = maxWidth;
                 changeSize = true;
             }
 				
-            if(windowHeight>maxHeight) {
+            if (windowHeight > maxHeight) {
                 windowHeight = maxHeight;
                 changeSize = true;
             }
         }
 		
         // Dimension needs to be changed
-        if(changeSize)
+        if (changeSize) {
             window.setSize(windowWidth, windowHeight);
+        }
 		
         // Return true if dimension was changed 
         return changeSize;

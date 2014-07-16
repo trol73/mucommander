@@ -20,6 +20,7 @@ package com.mucommander.ui.viewer.image;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 
@@ -53,5 +54,10 @@ public class ImageFactory implements ViewerFactory {
 
     public FileViewer createFileViewer() {
         return new ImageViewer();
+    }
+
+    @Override
+    public String getName() {
+        return Translator.get("viewer_type.image");
     }
 }

@@ -46,7 +46,7 @@ public abstract class FileFrame extends JFrame {
         
         setResizable(true);
 
-        initContentPane(file);
+        //initContentPane(file);
 	}
 	
 	protected void initContentPane(final AbstractFile file) {

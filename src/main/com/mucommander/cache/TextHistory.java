@@ -42,7 +42,7 @@ public class TextHistory {
             this.fileName = fileName;
         }
     }
-    private final Map<Type, List<String>> history = new HashMap<>();
+    private final Map<Type, LinkedList<String>> history = new HashMap<>();
 
     private static TextHistory instance;
 
@@ -54,14 +54,14 @@ public class TextHistory {
     }
 
 
-    public List<String> getList(Type type) {
-        List<String> result = history.get(type);
+    public LinkedList<String> getList(Type type) {
+        LinkedList<String> result = history.get(type);
         if (result == null) {
             try {
                 result = load(getHistoryFile(type));
             } catch (IOException e) {
                 e.printStackTrace();
-                result = new ArrayList<>();
+                result = new LinkedList<>();
             }
             history.put(type, result);
         }
@@ -69,7 +69,7 @@ public class TextHistory {
     }
 
     public void add(Type type, String s, boolean save) {
-        List<String> list = getList(type);
+        LinkedList<String> list = getList(type);
         boolean alreadyInList = list.contains(s);
         if (alreadyInList) {
             list.remove(s);
@@ -77,9 +77,9 @@ public class TextHistory {
         if (s.trim().isEmpty()) {
             return;
         }
-        list.add(0, s);
+        list.addFirst(s);
         while (list.size() > MAX_RECORDS) {
-            list.remove(0);
+            list.removeLast();
         }
         // save only if new record was added
         if (!alreadyInList && save) {
@@ -97,9 +97,9 @@ public class TextHistory {
     }
 
 
-    private List<String> load(AbstractFile file) throws IOException {
+    private LinkedList<String> load(AbstractFile file) throws IOException {
         BufferedReader reader = null;
-        List<String> result = new ArrayList<>();
+        LinkedList<String> result = new LinkedList<>();
         try {
             reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             String line;

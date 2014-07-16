@@ -36,15 +36,19 @@ import com.mucommander.ui.main.MainFrame;
 public class ViewerFrame extends FileFrame {
 	
     private final static Dimension MIN_DIMENSION = new Dimension(500, 360);
-	
+
+    private final ViewerFactory defaultFactory;
+
     /**
      * Creates a new ViewerFrame to start viewing the given file.
      *
      * <p>This constructor has package access only, ViewerFrame need to be created can
      * {@link ViewerRegistrar#createViewerFrame(MainFrame,AbstractFile,Image)}.
      */
-    ViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+    ViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory) {
         super(mainFrame, file, icon);
+        this.defaultFactory = defaultFactory;
+        initContentPane(file);
     }
 
     ////////////////////////
@@ -58,7 +62,7 @@ public class ViewerFrame extends FileFrame {
 
 	@Override
 	protected FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException {
-		return ViewerRegistrar.createFileViewer(file, ViewerFrame.this);
+		return ViewerRegistrar.createFileViewer(file, ViewerFrame.this, defaultFactory);
 	}
 
 	@Override

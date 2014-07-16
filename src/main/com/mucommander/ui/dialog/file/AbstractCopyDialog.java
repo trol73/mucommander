@@ -53,7 +53,7 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
 
         // If the current file is a directory and not an application file (e.g. Mac OS X .app directory), select
         // the whole file name.
-        if(file.isDirectory() && !DesktopManager.isApplication(file)) {
+        if (file.isDirectory() && !DesktopManager.isApplication(file)) {
             endPosition = path.length();
         }
         // Otherwise, select the file name without its extension, except when empty ('.DS_Store', for example).
@@ -85,20 +85,19 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
         // Append filename to destination path if there is only one file to copy
         // and if the file is not a directory that already exists in destination
         // (otherwise folder would be copied into the destination folder)
-        if(nbFiles==1) {
+        if (nbFiles == 1) {
             AbstractFile file = files.elementAt(0);
             AbstractFile destFile;
 
             startPosition  = fieldText.length();
 
-            if(!(file.isDirectory() && (destFile= FileFactory.getFile(fieldText+file.getName()))!=null && destFile.exists() && destFile.isDirectory())) {
+            if (!(file.isDirectory() && (destFile = FileFactory.getFile(fieldText+file.getName()))!=null && destFile.exists() && destFile.isDirectory())) {
                 return selectDestinationFilename(file, fieldText + file.getName(), startPosition);
-            }
-            else
+            } else {
                 endPosition = fieldText.length();
-        }
-        else {
-            endPosition   = fieldText.length();
+            }
+        } else {
+            endPosition = fieldText.length();
             startPosition = 0;
         }
 

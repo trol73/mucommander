@@ -19,6 +19,7 @@ package com.mucommander.ui.viewer.audio;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 import com.mucommander.ui.viewer.WarnUserException;
@@ -45,5 +46,10 @@ if (1==1) return false;     // TODO
     @Override
     public FileViewer createFileViewer() {
         return new AudioViewer();
+    }
+
+    @Override
+    public String getName() {
+        return Translator.get("viewer_type.audio");
     }
 }
