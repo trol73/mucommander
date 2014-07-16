@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!-- =============================================================================================================== -->
-<!-- Build file for muCommander.                                                                                     -->
+<!-- Build file for trolCommander.                                                                                     -->
 <!--                                                                                                                 -->
-<!-- Author: Nicolas Rinaudo                                                                                         -->
+<!-- Author: Nicolas Rinaudo, Oleg Trifonov                                                                                         -->
 <!-- =============================================================================================================== -->
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="muCommander" default="run">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="trolCommander" default="run">
     <!-- = Project structure ======================================================================================= -->
     <!-- =========================================================================================================== -->
     <!-- Source directory.                                                                                           -->
@@ -23,7 +23,7 @@
     <property name="ivy.install.version"  value="2.2.0"/>
     <!-- Runtime resources directory.                                                                                -->
     <property name="res.runtime"          location="${res}/runtime"/>
-    <!-- Resources required for muCommander packaging.                                                               -->
+    <!-- Resources required for trolCommander packaging.                                                               -->
     <property name="res.package"          location="${res}/package"/>
     <!-- External libraries directory.                                                                               -->
     <property name="lib"                  location="lib"/>
@@ -38,8 +38,8 @@
     <!-- Where to store temporary files.                                                                             -->
     <property name="tmp"                  location="tmp"/>
     <property name="tmp.deb"              location="${tmp}/deb"/>
-    <property name="jar.normal"           location="${tmp}/mucommander-normal.jar"/>
-    <property name="jar.obf"              location="${tmp}/mucommander-obf.jar"/>
+    <property name="jar.normal"           location="${tmp}/trolcommander-normal.jar"/>
+    <property name="jar.obf"              location="${tmp}/trolcommander-obf.jar"/>
     <property name="tmp.nsis"             location="${tmp}/nsis"/>
     <property name="tmp.portable"         location="${tmp}/portable"/>
     <property name="tmp.unix"             location="${tmp}/unix"/>
@@ -80,20 +80,20 @@
     <!-- Where to store distribution files.                                                                          -->
     <property name="dist"                 location="dist"/>
     <!-- JAR distribution file.                                                                                      -->
-    <property name="dist.jar"             location="${dist}/mucommander.jar"/>
+    <property name="dist.jar"             location="${dist}/trolcommander.jar"/>
     <!-- Signed JAR distribution file.                                                                               -->
-    <property name="dist.jar.signed"      location="${dist}/mucommander_signed.jar"/>
+    <property name="dist.jar.signed"      location="${dist}/trolcommander_signed.jar"/>
     <!-- Where to store the Win32 executable.                                                                        -->
-    <property name="dist.exe"             value="${dist}/muCommander.exe"/>
+    <property name="dist.exe"             value="${dist}/trolCommander.exe"/>
     <!-- Where to store the OS X executable.                                                                         -->
-    <property name="dist.app.name"        value="muCommander.app"/>
+    <property name="dist.app.name"        value="trolCommander.app"/>
     <property name="dist.app"             value="${dist}/${dist.app.name}"/>
     <!-- Ivy dependencies retrieval pattern.                                                                         -->
     <property name="ivy.retrieve.pattern" value="${lib}/[conf]/[organisation]/[artifact].[ext]"/>
     <!-- Name of the icon used by the JNLP file.                                                                     -->
     <property name="jnlp.icon"            value="icon.gif"/>
-    <!-- Name of the muCommander JNLP file.                                                                          -->
-    <property name="jnlp.file"            value="mucommander.jnlp"/>
+    <!-- Name of the trolCommander JNLP file.                                                                          -->
+    <property name="jnlp.file"            value="trolcommander.jnlp"/>
     <!-- Path to the Ivy settings file.                                                                              -->
     <property name="ivy.settings.file"    value="${res.ivy}/ivysettings.xml"/>
 
@@ -209,8 +209,8 @@
         <echo>Creating Win32 launcher...</echo>
         <mkdir dir="${tmp.portable}"/>
         <launch4j>
-            <config outfile="${tmp.portable}/mucommander.exe" jarpath="mucommander.jar"
-                    icon="${res.package}/windows/mucommander.ico" dontwrapjar="true" cmdline="-p .mucommander"
+            <config outfile="${tmp.portable}/trolcommander.exe" jarpath="trolcommander.jar"
+                    icon="${res.package}/windows/trolcommander.ico" dontwrapjar="true" cmdline="-p .trolcommander"
                     chdir=".">
                 <jre minversion="${source.version}.0">
                     <opt>-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader</opt>
@@ -223,9 +223,9 @@
         <echo>Packaging portable distribution file...</echo>
 
         <copy todir="${tmp.portable}" overwrite="true">
-            <fileset file="${res.package}/unix/mucommander.sh"/>
+            <fileset file="${res.package}/unix/trolcommander.sh"/>
             <filterset>
-                <filter token="ARGS" value="-p $0/../.mucommander"/>
+                <filter token="ARGS" value="-p $0/../.trolcommander"/>
                 <filter token="JAVA_ARGS"
                         value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader"/>
             </filterset>
@@ -233,8 +233,8 @@
 
         <!-- Generates the TGZ file, keeping execution flags.      -->
         <tar destfile="${dist}/${package.prefix}-portable.tar.gz" compression="gzip">
-            <tarfileset file="${tmp.portable}/mucommander.sh"  prefix="${archive.prefix}" mode="755"/>
-            <tarfileset file="${tmp.portable}/mucommander.exe" prefix="${archive.prefix}"/>
+            <tarfileset file="${tmp.portable}/trolcommander.sh"  prefix="${archive.prefix}" mode="755"/>
+            <tarfileset file="${tmp.portable}/trolcommander.exe" prefix="${archive.prefix}"/>
             <tarfileset file="${res.runtime}/license.txt"      prefix="${archive.prefix}"/>
             <tarfileset file="readme.txt"                      prefix="${archive.prefix}"/>
             <tarfileset file="${dist.jar}"                     prefix="${archive.prefix}"/>
@@ -263,14 +263,14 @@
         <echo>Creating Mac OS X application...</echo>
         <mkapp jar="${dist.jar}" dest="${dist.app}" type="APPL" creator="MUCO" icon="${res.package}/osx/icon.icns"
                infoversion="0.9" classpath="/System/Library/Java">
-            <string  name="CFBundleName"                    value="muCommander"/>
-            <string  name="CFBundleIdentifier"              value="com.mucommander.muCommander"/>
+            <string  name="CFBundleName"                    value="trolCommander"/>
+            <string  name="CFBundleIdentifier"              value="com.mucommander.trolCommander"/>
             <string  name="CFBundleVersion"                 value="${app.version}"/>
             <boolean name="CFBundleAllowMixedLocalizations" value="true"/>
             <string  name="CFBundleDevelopmentRegion"       value="English"/>
             <string  name="CFBundleShortVersionString"      value="${app.version}"/>
             <string  name="CFBundleGetInfoString"
-                     value="muCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"/>
+                     value="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"/>
             <string  name="CFBundleInfoDictionaryVersion"   value="6.0"/>
             <array name="CFBundleDocumentTypes">
                 <dict>
@@ -356,8 +356,8 @@
 
         <launch4j>
  <!-- customprocname="true" -->
-            <config headertype="gui" outfile="${dist.exe}" jarpath="mucommander.jar"
-                    icon="${res.package}/windows/mucommander.ico" dontwrapjar="true" chdir="." 
+            <config headertype="gui" outfile="${dist.exe}" jarpath="trolcommander.jar"
+                    icon="${res.package}/windows/trolcommander.ico" dontwrapjar="true" chdir="." 
                     supporturl="${url.homepage}">
                 <jre minversion="${source.version}.0">
                     <opt>-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader</opt>
@@ -392,21 +392,21 @@
         <echo>Creating Win32 installer...</echo>
 
         <mkdir dir="${tmp.nsis}"/>
-        <copy file="${dist.exe}"                            tofile="${tmp.nsis}/muCommander.exe" overwrite="true"/>
-        <copy file="${dist.jar}"                            tofile="${tmp.nsis}/mucommander.jar" overwrite="true"/>
-        <copy file="${res.package}/windows/mucommander.ico" tofile="${tmp.nsis}/mucommander.ico" overwrite="true"/>
+        <copy file="${dist.exe}"                            tofile="${tmp.nsis}/trolCommander.exe" overwrite="true"/>
+        <copy file="${dist.jar}"                            tofile="${tmp.nsis}/trolcommander.jar" overwrite="true"/>
+        <copy file="${res.package}/windows/trolcommander.ico" tofile="${tmp.nsis}/trolcommander.ico" overwrite="true"/>
 
         <!-- Makes sure readme.txt and license.txt contain proper windows linebreaks.                                -->
         <fixcrlf srcdir="." destdir="${tmp.nsis}" includes="readme.txt" eol="crlf"/>
         <fixcrlf srcdir="${res.runtime}" destdir="${tmp.nsis}" includes="license.txt" eol="crlf"/>
 
-        <copy file="${res.package}/windows/mucommander.nsi" tofile="${tmp.nsis}/mucommander.nsi">
+        <copy file="${res.package}/windows/trolcommander.nsi" tofile="${tmp.nsis}/trolcommander.nsi">
             <filterset>
                 <filter token="MU_VERSION" value="${app.version}"/>
-                <filter token="MU_EXE"     value="muCommander.exe"/>
-                <filter token="MU_JAR"     value="mucommander.jar"/>
-                <filter token="MU_ICON"    value="mucommander.ico"/>
-                <filter token="MU_OUT"     value="mucommander-setup.exe"/>
+                <filter token="MU_EXE"     value="trolCommander.exe"/>
+                <filter token="MU_JAR"     value="trolcommander.jar"/>
+                <filter token="MU_ICON"    value="trolcommander.ico"/>
+                <filter token="MU_OUT"     value="trolcommander-setup.exe"/>
                 <filter token="MU_README"  value="readme.txt"/>
                 <filter token="MU_LICENSE" value="license.txt"/>
             </filterset>
@@ -414,13 +414,13 @@
 
         <exec executable="${nsis.bin}" failonerror="true">
             <arg value="-V3"/>
-            <arg value="${tmp.nsis}/mucommander.nsi"/>
+            <arg value="${tmp.nsis}/trolcommander.nsi"/>
 
             <!-- Set the NSISDIR environment variable, required for includes to work properly.                       -->
             <env key="NSISDIR" value="${nsis.dir}"/>
         </exec>
 
-        <copy file="${tmp.nsis}/mucommander-setup.exe" tofile="${dist}/${package.prefix}-setup.exe" overwrite="true"/>
+        <copy file="${tmp.nsis}/trolcommander-setup.exe" tofile="${dist}/${package.prefix}-setup.exe" overwrite="true"/>
     </target>
 
     <target name="skip-nsis" unless="nsis.available">
@@ -438,7 +438,7 @@
 
         <mkdir dir="${tmp.unix}"/>
         <copy todir="${tmp.unix}" overwrite="true">
-            <fileset file="${res.package}/unix/mucommander.sh"/>
+            <fileset file="${res.package}/unix/trolcommander.sh"/>
             <filterset>
                 <filter token="ARGS"      value=""/>
                 <filter token="JAVA_ARGS"
@@ -447,14 +447,14 @@
         </copy>
 
         <tar destfile="${dist}/${package.prefix}.tar.gz" compression="gzip">
-            <tarfileset file="${tmp.unix}/mucommander.sh" prefix="${archive.prefix}" mode="755"/>
+            <tarfileset file="${tmp.unix}/trolcommander.sh" prefix="${archive.prefix}" mode="755"/>
             <tarfileset file="${res.runtime}/license.txt" prefix="${archive.prefix}"/>
             <tarfileset file="readme.txt"                 prefix="${archive.prefix}"/>
             <tarfileset file="${dist.jar}"                prefix="${archive.prefix}"/>
         </tar>
     </target>
 
-    <!-- Generates the muCommander debian package.               -->
+    <!-- Generates the trolCommander debian package.               -->
     <!-- Output will be stored in ${dist}/${deb.name}.           -->
     <!-- This target will only be executed if JDeb is properly   -->
     <!-- configured.                                             -->
@@ -464,8 +464,8 @@
             <istrue value="${build.snapshot}"/>
         </condition>
 
-        <condition property="deb.name" value="mucommander_current_all.deb"
-                   else="mucommander_${deb.version}_all.deb">
+        <condition property="deb.name" value="trolcommander_current_all.deb"
+                   else="trolcommander_${deb.version}_all.deb">
             <istrue value="${build.snapshot}"/>
         </condition>
 
@@ -474,41 +474,41 @@
         <mkdir dir="${tmp.deb}"/>
         <mkdir dir="${tmp.deb}/control"/>
         <mkdir dir="${tmp.deb}/data"/>
-        <mkdir dir="${tmp.deb}/data/usr/share/mucommander"/>
+        <mkdir dir="${tmp.deb}/data/usr/share/trolcommander"/>
         <mkdir dir="${tmp.deb}/data/usr/share/applications"/>
         <mkdir dir="${tmp.deb}/data/usr/share/pixmaps"/>
 
         <taskdef name="jdeb" classname="org.vafer.jdeb.ant.DebAntTask" classpathref="lib.tools"/>
 
         <!-- Copies the debian data files.                         -->
-        <copy todir="${tmp.deb}/data/usr/share/mucommander" overwrite="true">
-            <fileset file="${res.package}/unix/mucommander.sh"/>
+        <copy todir="${tmp.deb}/data/usr/share/trolcommander" overwrite="true">
+            <fileset file="${res.package}/unix/trolcommander.sh"/>
             <filterset>
                 <filter token="ARGS"      value=""/>
                 <filter token="JAVA_ARGS"
                         value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader"/>
             </filterset>
         </copy>
-        <copy todir="${tmp.deb}/data/usr/share/mucommander" overwrite="true">
+        <copy todir="${tmp.deb}/data/usr/share/trolcommander" overwrite="true">
             <fileset file="${res.runtime}/license.txt"/>
             <fileset file="readme.txt"/>
             <fileset file="${dist.jar}"/>
         </copy>
         <copy todir="${tmp.deb}/data/usr/share/applications" overwrite="true">
-            <fileset file="${res.package}/unix/mucommander.desktop"/>
+            <fileset file="${res.package}/unix/trolcommander.desktop"/>
         </copy>
-        <copy tofile="${tmp.deb}/data/usr/share/pixmaps/mucommander.png" overwrite="true">
-            <fileset file="${res.runtime}/images/mucommander/icon128_24.png"/>
+        <copy tofile="${tmp.deb}/data/usr/share/pixmaps/trolcommander.png" overwrite="true">
+            <fileset file="${res.runtime}/images/trolcommander/icon128_24.png"/>
         </copy> 
 
         <!-- Generates the data.tar.gz file.                       -->
         <tar destfile="${tmp.deb}/data.tar.gz" compression="gzip">
             <tarfileset dir="${tmp.deb}/data/">
                 <include name="**"/>
-                <exclude name="**/usr/share/mucommander/mucommander.sh"/>
+                <exclude name="**/usr/share/trolcommander/trolcommander.sh"/>
             </tarfileset>
             <tarfileset dir="${tmp.deb}/data/" mode="755">
-                <include name="**/usr/share/mucommander/mucommander.sh"/>
+                <include name="**/usr/share/trolcommander/trolcommander.sh"/>
             </tarfileset>
         </tar>
 
@@ -536,7 +536,7 @@
     <!-- = Packaging targets ======================================================================================= -->
     <!-- =========================================================================================================== -->
     <target name="release-prefixes" depends="load-ant-contribs,load-properties">
-        <condition property="package.prefix.tmp" value="mucommander-${app.version}" else="mucommander-current">
+        <condition property="package.prefix.tmp" value="trolcommander-${app.version}" else="trolcommander-current">
             <not>
                 <istrue value="${build.snapshot}"/>
             </not>
@@ -551,9 +551,9 @@
         </condition>
         <echo message="Using package prefix: ${package.prefix}"/>
 
-        <propertyregex property="archive.prefix" input="muCommander-${app.version}" regexp="[ .]" replace="_"/>
+        <propertyregex property="archive.prefix" input="trolCommander-${app.version}" regexp="[ .]" replace="_"/>
         <!-- propertyregex doesn't set the property if the regexp isn't matched.                                     -->
-        <condition property="archive.prefix" value="muCommander-${app.version}">
+        <condition property="archive.prefix" value="trolCommander-${app.version}">
             <not>
                 <isset property="archive.prefix"/>
             </not>
@@ -587,7 +587,7 @@
 
         <mkjnlp out="${dist}/${jnlp.file}" spec="1.0+" version="${app.version}" codebase="${url.jnlp}"
                 href="${jnlp.file}" allpermissions="true">
-            <information homepage="${url.homepage}" title="muCommander" vendor="Maxence Bernard" offline="true">
+            <information homepage="${url.homepage}" title="trolCommander" vendor="Oleg Trifonov" offline="true">
                 <description>A cross-platform file manager.</description>
                 <description kind="short">A cross-platform file manager.</description>
                 <icon href="icon.gif" />
@@ -600,7 +600,7 @@
             </resources>
             <resources>
                 <j2se version="1.5+"/>
-                <jar  href="mucommander.jar"/>
+                <jar  href="trolcommander.jar"/>
             </resources>
             <applicationdesc main="com.mucommander.Launcher"/>
         </mkjnlp>
@@ -815,7 +815,7 @@
     <target name="jar" depends="compile">
         <tstamp/>
 
-        <!-- Extract external libraries to be packed with muCommander, exclusing non-bytecode files.                 -->
+        <!-- Extract external libraries to be packed with trolCommander, exclusing non-bytecode files.                 -->
         <echo>Unpacking external libraries...</echo>
         <mkdir dir="${tmp.libs}"/>
         <unjar dest="${tmp.libs}">
@@ -894,7 +894,7 @@
         <javancss srcdir="${src.main}" includes="**/*.java" generateReport="true"
                   outputfile="${javancss.reports}/javancss.xml" format="xml"/>
         <xslt in="${javancss.reports}/javancss.xml" out="${javancss.reports}/javancss.html"
-              style="${lib.tools}/mucommander/javancss.xsl"/>
+              style="${lib.tools}/trolcommander/javancss.xsl"/>
     </target>
 
 <!-- retrieve-tools -->
@@ -902,7 +902,7 @@
         <echo>Generating CheckStyle reports...</echo>
         <mkdir dir="${checkstyle.reports}"/>
         <taskdef resource="checkstyletask.properties" classpathref="lib.tools"/>
-        <checkstyle config="${lib.tools}/mucommander/checkstyle.xml" failOnViolation="false">
+        <checkstyle config="${lib.tools}/trolcommander/checkstyle.xml" failOnViolation="false">
             <fileset dir="${src.main}" includes="**/*.java"/>
             <formatter type="xml" toFile="${checkstyle.reports}/checkstyle.xml"/>
             <classpath>
@@ -911,7 +911,7 @@
             </classpath>
         </checkstyle>
         <xslt in="${checkstyle.reports}/checkstyle.xml" out="${checkstyle.reports}/checkstyle.html"
-              style="${lib.tools}/mucommander/checkstyle.xsl">
+              style="${lib.tools}/trolcommander/checkstyle.xsl">
             <param name="root" expression="${src.main}/"/>
         </xslt>
     </target>
@@ -921,7 +921,7 @@
         <echo>Generating PMD report...</echo>
         <taskdef classpathref="lib.tools" name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
         <mkdir dir="${pmd.reports}"/>
-        <pmd encoding="${source.encoding}" rulesetfiles="${lib.tools}/mucommander/pmd.xml">
+        <pmd encoding="${source.encoding}" rulesetfiles="${lib.tools}/trolcommander/pmd.xml">
 
             <formatter type="xml" toFile="${pmd.reports}/pmd.xml"/>
             <auxclasspath path="${tmp.main}"/>
@@ -931,7 +931,7 @@
             </fileset>
         </pmd>
         <xslt in="${pmd.reports}/pmd.xml" out="${pmd.reports}/pmd.html"
-              style="${lib.tools}/mucommander/pmd.xsl">
+              style="${lib.tools}/trolcommander/pmd.xsl">
             <param name="root" expression="${src.main}/"/>
         </xslt>
     </target>
@@ -940,7 +940,7 @@
     <target name="cpd" description="Generates CPD reports.">
         <echo>Generating CPD reports...</echo>
         <taskdef name="cpd" classpathref="lib.tools" classname="net.sourceforge.pmd.cpd.CPDTask" />
-        <property file="${lib.tools}/mucommander/cpd.properties"/>
+        <property file="${lib.tools}/trolcommander/cpd.properties"/>
         <mkdir dir="${cpd.reports}"/>
         <cpd minimumTokenCount="${cpd.tokens}" encoding="${source.encoding}" format="xml" outputFile="${cpd.reports}/cpd.xml"
              ignoreidentifiers="${cpd.ignoreIdentifiers}" ignoreliterals="${cpd.ignoreLiterals}">
@@ -949,7 +949,7 @@
             </fileset>
         </cpd>
         <xslt in="${cpd.reports}/cpd.xml" out="${cpd.reports}/cpd.html"
-              style="${lib.tools}/mucommander/cpd.xsl">
+              style="${lib.tools}/trolcommander/cpd.xsl">
             <param name="root" expression="${src.main}/"/>
         </xslt>
     </target>
@@ -960,7 +960,7 @@
         <taskdef classpathref="lib.tools" name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
         <mkdir dir="${findbugs.reports}"/>
         <findbugs classpathref="lib.tools" output="xml:withMessages" outputFile="${findbugs.reports}/findbugs.xml"
-                  effort="max" jvmargs="-Xmx512m" excludefilter="${lib.tools}/mucommander/findbugs.xml">
+                  effort="max" jvmargs="-Xmx512m" excludefilter="${lib.tools}/trolcommander/findbugs.xml">
             <auxClasspath>
                 <path refid="lib.runtime"/>
             </auxClasspath>
@@ -968,7 +968,7 @@
             <class location="${tmp.main}"/>
         </findbugs>
         <xslt in="${findbugs.reports}/findbugs.xml" out="${findbugs.reports}/findbugs.html"
-              style="${lib.tools}/mucommander/findbugs.xsl"/>
+              style="${lib.tools}/trolcommander/findbugs.xsl"/>
     </target>
 
 <!--
@@ -1077,7 +1077,7 @@
 
     <!-- = Application launching targets =========================================================================== -->
     <!-- =========================================================================================================== -->
-    <target name="stress-test" depends="compile" description="Starts muCommander in stress test mode.">
+    <target name="stress-test" depends="compile" description="Starts trolCommander in stress test mode.">
         <java classname="com.mucommander.StressTester" fork="true">
             <sysproperty key="java.system.class.loader" value="com.mucommander.commons.file.AbstractFileClassLoader"/>
             <classpath>
@@ -1087,7 +1087,7 @@
         </java>
     </target>
 
-    <target name="run" depends="compile" description="Starts muCommander.">
+    <target name="run" depends="compile" description="Starts trolCommander.">
         <java classname="${app.main}" fork="true">
             <sysproperty key="java.system.class.loader" value="com.mucommander.commons.file.AbstractFileClassLoader"/>
             <classpath>

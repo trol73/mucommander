@@ -1,4 +1,4 @@
 #! /bin/sh
-if [ -h /usr/bin/mucommander ] ; then
-  rm /usr/bin/mucommander
+if [ -h /usr/bin/trolcommander ] ; then
+  rm /usr/bin/trolcommander
 fi

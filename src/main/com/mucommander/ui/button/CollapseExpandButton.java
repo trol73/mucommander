@@ -97,14 +97,14 @@ public class CollapseExpandButton extends ArrowButton implements ActionListener,
         setArrowDirection(expanded ? DOWN_DIRECTION : RIGHT_DIRECTION);
         this.expandedState = expanded;
 
+        final Container tla = getTopLevelAncestor();
         if (packWindow) {
-            final Container tla = getTopLevelAncestor();
             if (tla instanceof Window) {
                 ((Window) tla).pack();
             }
-            if (tla instanceof FocusDialog) {
-                ((FocusDialog) tla).setStorageSuffix(expanded ? "expanded" : null);
-            }
+        }
+        if (tla instanceof FocusDialog) {
+            ((FocusDialog) tla).setStorageSuffix(expanded ? "expanded" : null);
         }
     }
 

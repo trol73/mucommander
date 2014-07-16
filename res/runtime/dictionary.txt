@@ -1,8 +1,8 @@
-###############################
-# muCommander dictionary file #
-###############################
+#################################
+# trolCommander dictionary file #
+#################################
 #
-# This file is used by muCommander to localize the user interface into multiple languages. Translating muCommander into a new language 
+# This file is used by trolCommander to localize the user interface into multiple languages. Translating trolCommander into a new language 
 # consists in adding a new entry for each existing key.
 #
 # The format of the dictionary file is relatively straightforward but requires nonetheless some explanations. It contains a list of localized
@@ -30,7 +30,7 @@
 #
 # Lines that start with a '#' character (such as this one) are comments and are simply ignored when the dictionary file is loaded.
 # 
-# Here are a few things you should be aware of when translation muCommander into a new language:
+# Here are a few things you should be aware of when translation trolCommander into a new language:
 #  - the dictionary file of the latest nightly build should be used to ensure that the list of entries is up-to-date.
 #  - the entry keys should never be modified, only their localized values. Similarly, variable names should not be changed.
 #  - when an entry is requested by the application in a language for which the dictionary has no defined value, the EN (English) value is used.
@@ -42,17 +42,17 @@
 #   parameter is in the middle of the entry, the text after might get truncated if one of the parameter's values is too long.
 #
 # When you're done modifying the dictionary file, you may want to test it to ensure that it is working propertly. Here are the steps to follow:
-#  1/ Extract the 'mucommander.jar' file to a directory of your choice, for example ~/mucommander/ (you can use muCommander for that)
-#  2/ Copy your 'dictionary.txt' file to the /res subfolder (~/mucommander/res), replacing the existing dictionary file
-#  3/ Launch muCommander by typing on a command line: java -classpath ~/mucommander/ com.mucommander.Launcher
+#  1/ Extract the 'trolcommander.jar' file to a directory of your choice, for example ~/trolcommander/ (you can use trolCommander for that)
+#  2/ Copy your 'dictionary.txt' file to the /res subfolder (~/trolcommander/res), replacing the existing dictionary file
+#  3/ Launch trolCommander by typing on a command line: java -classpath ~/trolcommander/ com.mucommander.Launcher
 # 
 # You should then see the modifications you made reflected in the user interface. For new languages, you'll need to add the new language code
 # to the 'available_language' entry and create a 'language.<lang>' entry containing the new language's name expressed in the language itself, 
 # e.g. 'Français' for 'language.fr'. The new language should then appear in the preferences, allowing you to select it and then restart the
 # application to see your translation.
-# Note that muCommander needs to be restarted each time an entry is modified for the change to become visible.
+# Note that trolCommander needs to be restarted each time an entry is modified for the change to become visible.
 #
-# IMPORTANT: This file is encoded in the UTF-8 character encoding. Please ensure that you use UTF-8 when saving it, otherwise muCommander
+# IMPORTANT: This file is encoded in the UTF-8 character encoding. Please ensure that you use UTF-8 when saving it, otherwise trolCommander
 # will not be able to load it properly.
 
 
@@ -2687,28 +2687,28 @@ integrity_check_error:CA:Comprovació d'integritat fallada
 # Translation missing (KO)
 
 # Used when an unexpected error occurs on startup.
-startup_error:EN:An error prevented muCommander from starting.
-startup_error:FR:Une erreur a empêché muCommander de démarrer.
-startup_error:DA:En fejl forhindrede muCommander fra at starte.
-startup_error:pt_BR:Um erro impediu muCommander de iniciar.
-startup_error:RO:O eroare a prevenit muCommander să pornească.
-startup_error:SK:Chyba bráni spusteniu muCommander-a.
-startup_error:zh_TW:有錯誤造成 muCommander 無法啟動
-startup_error:DE:Ein Fehler hat muCommander am Start gehindert.
-startup_error:SV:Ett fel förhindrade muCommander från att starta.
-startup_error:NL:Een fout verhinderde het opstarten van muCommander.
-startup_error:AR:حدث خطأ منع من تشغيل muCommander.
-startup_error:HU:Váratlan hiba fordult elő a muCommander indulásakor.
-startup_error:CS:Vyskytla se chyba bránící spuštění aplikace muCommander.
-startup_error:zh_CN:一个错误阻止了 muCommander 的启动
-startup_error:PL:Błąd uniemożliwił uruchomienie muCommander'a.
-startup_error:RU:Предстартовая ошибка muCommander'а.
-startup_error:BE:Пры запуску muCommander'у ўзьнікла памылка.
-startup_error:NB:En feil forhindret muCommander fra å starte.
-startup_error:TR:muCommander başlatılırken bir hata oluştu.
-startup_error:CA:Un error ha impedit iniciar l'muCommander
-startup_error:UA:Під час запуску muCommander'а виникла помилка.
-startup_error:ES:Un error ha impedido iniciar muCommander
+startup_error:EN:An error prevented trolCommander from starting.
+startup_error:FR:Une erreur a empêché trolCommander de démarrer.
+startup_error:DA:En fejl forhindrede trolCommander fra at starte.
+startup_error:pt_BR:Um erro impediu trolCommander de iniciar.
+startup_error:RO:O eroare a prevenit trolCommander să pornească.
+startup_error:SK:Chyba bráni spusteniu trolCommander-a.
+startup_error:zh_TW:有錯誤造成 trolCommander 無法啟動
+startup_error:DE:Ein Fehler hat trolCommander am Start gehindert.
+startup_error:SV:Ett fel förhindrade trolCommander från att starta.
+startup_error:NL:Een fout verhinderde het opstarten van trolCommander.
+startup_error:AR:حدث خطأ منع من تشغيل trolCommander.
+startup_error:HU:Váratlan hiba fordult elő a trolCommander indulásakor.
+startup_error:CS:Vyskytla se chyba bránící spuštění aplikace trolCommander.
+startup_error:zh_CN:一个错误阻止了 trolCommander 的启动
+startup_error:PL:Błąd uniemożliwił uruchomienie trolCommander'a.
+startup_error:RU:Предстартовая ошибка trolCommander'а.
+startup_error:BE:Пры запуску trolCommander'у ўзьнікла памылка.
+startup_error:NB:En feil forhindret trolCommander fra å starte.
+startup_error:TR:trolCommander başlatılırken bir hata oluştu.
+startup_error:CA:Un error ha impedit iniciar l'trolCommander
+startup_error:UA:Під час запуску trolCommander'а виникла помилка.
+startup_error:ES:Un error ha impedido iniciar trolCommander
 # Translation missing (New!)
 
 
@@ -5948,32 +5948,32 @@ ShowPreferences.label:NB:Innstillinger
 ShowPreferences.label:TR:Seçenekler
 ShowPreferences.label:CA:Preferències
 
-ShowPreferences.tooltip:EN:Configure muCommander
-ShowPreferences.tooltip:FR:Configurer muCommander
-ShowPreferences.tooltip:DE:muCommander konfigurieren
-ShowPreferences.tooltip:ES:Configurar muCommander
-ShowPreferences.tooltip:CS:Přizpůsobit muCommander
-ShowPreferences.tooltip:zh_TW:設定 muCommander
-ShowPreferences.tooltip:PL:Konfiguruj muCommandera
-ShowPreferences.tooltip:HU:muCommander beállítása
-ShowPreferences.tooltip:RU:Настройка muCommander
-ShowPreferences.tooltip:zh_CN:配置 muCommander
-ShowPreferences.tooltip:SL:Konfiguriraj muCommander
-ShowPreferences.tooltip:RO:Configurează muCommander
-ShowPreferences.tooltip:IT:Configura muCommander
-ShowPreferences.tooltip:KO:muCommander 설정
-ShowPreferences.tooltip:pt_BR:Configurar muCommander
-ShowPreferences.tooltip:NL:muCommander configureren
-ShowPreferences.tooltip:SK:Konfigurovať muCommander
-ShowPreferences.tooltip:JA:muCommander を構成します
-ShowPreferences.tooltip:SV:Konfigurera muCommander
-ShowPreferences.tooltip:DA:Konfigurer muCommander
-ShowPreferences.tooltip:UA:Налаштувати muCommander
-ShowPreferences.tooltip:AR:ضبط muCommander
-ShowPreferences.tooltip:BE:Наладзіць muCommander
-ShowPreferences.tooltip:NB:Konfigurer muCommander
-ShowPreferences.tooltip:TR:muCommander'ı yapılandır
-ShowPreferences.tooltip:CA:Configura muCommander
+ShowPreferences.tooltip:EN:Configure trolCommander
+ShowPreferences.tooltip:FR:Configurer trolCommander
+ShowPreferences.tooltip:DE:trolCommander konfigurieren
+ShowPreferences.tooltip:ES:Configurar trolCommander
+ShowPreferences.tooltip:CS:Přizpůsobit trolCommander
+ShowPreferences.tooltip:zh_TW:設定 trolCommander
+ShowPreferences.tooltip:PL:Konfiguruj trolCommandera
+ShowPreferences.tooltip:HU:trolCommander beállítása
+ShowPreferences.tooltip:RU:Настройка trolCommander
+ShowPreferences.tooltip:zh_CN:配置 trolCommander
+ShowPreferences.tooltip:SL:Konfiguriraj trolCommander
+ShowPreferences.tooltip:RO:Configurează trolCommander
+ShowPreferences.tooltip:IT:Configura trolCommander
+ShowPreferences.tooltip:KO:trolCommander 설정
+ShowPreferences.tooltip:pt_BR:Configurar trolCommander
+ShowPreferences.tooltip:NL:trolCommander configureren
+ShowPreferences.tooltip:SK:Konfigurovať trolCommander
+ShowPreferences.tooltip:JA:trolCommander を構成します
+ShowPreferences.tooltip:SV:Konfigurera trolCommander
+ShowPreferences.tooltip:DA:Konfigurer trolCommander
+ShowPreferences.tooltip:UA:Налаштувати trolCommander
+ShowPreferences.tooltip:AR:ضبط trolCommander
+ShowPreferences.tooltip:BE:Наладзіць trolCommander
+ShowPreferences.tooltip:NB:Konfigurer trolCommander
+ShowPreferences.tooltip:TR:trolCommander'ı yapılandır
+ShowPreferences.tooltip:CA:Configura trolCommander
 
 ShowServerConnections.label:EN:Show open connections
 ShowServerConnections.label:FR:Afficher les connexions ouvertes
@@ -7054,10 +7054,10 @@ GoToWebsite.label:ES:Ir a sitio web
 GoToWebsite.label:CS:Webová stránka
 GoToWebsite.label:zh_TW:連至網站
 GoToWebsite.label:PL:Idź do strony internetowej
-GoToWebsite.label:HU:muCommander honlap
+GoToWebsite.label:HU:trolCommander honlap
 GoToWebsite.label:RU:Перейти на домашнюю страницу программы
 GoToWebsite.label:zh_CN:访问网站
-GoToWebsite.label:SL:Domača stran muCommander
+GoToWebsite.label:SL:Domača stran trolCommander
 GoToWebsite.label:RO:Vizitează situl Web
 GoToWebsite.label:IT:Visualizza sito Web
 GoToWebsite.label:KO:웹사이트 이동
@@ -7067,7 +7067,7 @@ GoToWebsite.label:SK:Webová stránka
 GoToWebsite.label:JA:ウェブサイトへ移動
 GoToWebsite.label:SV:Besök hemsidan
 GoToWebsite.label:DA:Gå til hjemmeside
-GoToWebsite.label:UA:Перейти на сторінку muCommander
+GoToWebsite.label:UA:Перейти на сторінку trolCommander
 GoToWebsite.label:AR:اذهب إلى الموقع
 GoToWebsite.label:BE:Перайсьці на хатнюю старонку праграмы
 GoToWebsite.label:NB:Gå til nettside
@@ -7081,7 +7081,7 @@ GoToForums.label:ES:Foros
 GoToForums.label:CS:Diskuzní fórum
 GoToForums.label:zh_TW:連至討論區
 GoToForums.label:PL:Zobacz forum
-GoToForums.label:HU:muCommander fórum
+GoToForums.label:HU:trolCommander fórum
 GoToForums.label:RU:Перейти на форум
 GoToForums.label:zh_CN:访问论坛
 GoToForums.label:SL:Forum
@@ -7155,32 +7155,32 @@ Donate.label:NB:Doner
 Donate.label:TR:Bağış yap
 Donate.label:CA:Fes una donació
 
-ShowAbout.label:EN:About muCommander
-ShowAbout.label:FR:A propos de muCommander
-ShowAbout.label:DE:Über muCommander
-ShowAbout.label:ES:Acerca de muCommander
-ShowAbout.label:CS:O aplikaci muCommander
-ShowAbout.label:zh_TW:有關 muCommander
-ShowAbout.label:PL:O programie muCommander
-ShowAbout.label:HU:muCommander névjegy
-ShowAbout.label:RU:О программе muCommander
-ShowAbout.label:zh_CN:关于 muCommander
-ShowAbout.label:SL:O programu muCommander
-ShowAbout.label:RO:Despre muCommander
-ShowAbout.label:IT:Info su muCommander
-ShowAbout.label:KO:muCommander에 대해서
-ShowAbout.label:pt_BR:Sobre muCommander
-ShowAbout.label:NL:Over muCommander
-ShowAbout.label:SK:O aplikácii muCommander
-ShowAbout.label:JA:muCommander のバージョン情報
-ShowAbout.label:SV:Om muCommander
-ShowAbout.label:DA:Om muCommander
-ShowAbout.label:UA:Про програму muCommander
-ShowAbout.label:AR:حول muCommander
-ShowAbout.label:BE:Пра праграму muCommander
-ShowAbout.label:NB:Om muCommander
-ShowAbout.label:TR:muCommander Hakkında
-ShowAbout.label:CA:Sobre muCommander
+ShowAbout.label:EN:About trolCommander
+ShowAbout.label:FR:A propos de trolCommander
+ShowAbout.label:DE:Über trolCommander
+ShowAbout.label:ES:Acerca de trolCommander
+ShowAbout.label:CS:O aplikaci trolCommander
+ShowAbout.label:zh_TW:有關 trolCommander
+ShowAbout.label:PL:O programie trolCommander
+ShowAbout.label:HU:trolCommander névjegy
+ShowAbout.label:RU:О программе trolCommander
+ShowAbout.label:zh_CN:关于 trolCommander
+ShowAbout.label:SL:O programu trolCommander
+ShowAbout.label:RO:Despre trolCommander
+ShowAbout.label:IT:Info su trolCommander
+ShowAbout.label:KO:trolCommander에 대해서
+ShowAbout.label:pt_BR:Sobre trolCommander
+ShowAbout.label:NL:Over trolCommander
+ShowAbout.label:SK:O aplikácii trolCommander
+ShowAbout.label:JA:trolCommander のバージョン情報
+ShowAbout.label:SV:Om trolCommander
+ShowAbout.label:DA:Om trolCommander
+ShowAbout.label:UA:Про програму trolCommander
+ShowAbout.label:AR:حول trolCommander
+ShowAbout.label:BE:Пра праграму trolCommander
+ShowAbout.label:NB:Om trolCommander
+ShowAbout.label:TR:trolCommander Hakkında
+ShowAbout.label:CA:Sobre trolCommander
 
 OpenTrash.label:EN:Open Trash
 OpenTrash.label:FR:Ouvrir la Corbeille
@@ -8732,59 +8732,59 @@ version_dialog.new_version_title:NB:Ny versjon tilgjengelig
 version_dialog.new_version_title:TR:Yeni sürüm mevcut
 version_dialog.new_version_title:CA:Nova versió disponible
 
-version_dialog.new_version:EN:A new version of muCommander is available.
-version_dialog.new_version:FR:Une nouvelle version de muCommander est disponible.
-version_dialog.new_version:DE:Eine neue Version des muCommander ist verfügbar.
-version_dialog.new_version:ES:Una nueva versión de muCommander está disponible.
-version_dialog.new_version:CS:K dispozici je nová verze aplikace muCommander.
-version_dialog.new_version:zh_TW:找到 muCommander 的新版本.
-version_dialog.new_version:PL:Dostępna jest nowsza wersja muCommandera.
-version_dialog.new_version:HU:Egy új muCommander verzió elérhető.
-version_dialog.new_version:RU:Доступна новая версия muCommander.
-version_dialog.new_version:zh_CN:找到 muCommander 的新版本
-version_dialog.new_version:SL:Nova različica muCommander-ja je na razpolago.
-version_dialog.new_version:RO:O versiune nouă de muCommander este disponibilă.
-version_dialog.new_version:IT:E' disponibile una nuova versione di muCommander.
-version_dialog.new_version:KO:새로운 버전의 muCommander가 사용 가능합니다
-version_dialog.new_version:pt_BR:Uma nova versão do muCommander está disponível.
-version_dialog.new_version:NL:Een nieuwe versie van muCommander is beschikbaar.
-version_dialog.new_version:SK:Nová verzia muCommander-a je k dispozícii.
-version_dialog.new_version:JA:muCommander の新しいバージョンは利用可能です。
-version_dialog.new_version:SV:En ny version av muCommander finns tillgänglig.
-version_dialog.new_version:DA:En ny version af muCommander er tilgængelig.
-version_dialog.new_version:UA:Є нова версія muCommander.
-version_dialog.new_version:AR:توفر إصدار جديد من muCommander.
-version_dialog.new_version:BE:Даступна новая вэрсія muCommander.
-version_dialog.new_version:NB:En ny versjon av muCommander er tilgjengelig.
-version_dialog.new_version:TR:muCommander'ın yeni bir sürümü mevcut.
-version_dialog.new_version:CA:Una nova versió d'muCommander està disponible
+version_dialog.new_version:EN:A new version of trolCommander is available.
+version_dialog.new_version:FR:Une nouvelle version de trolCommander est disponible.
+version_dialog.new_version:DE:Eine neue Version des trolCommander ist verfügbar.
+version_dialog.new_version:ES:Una nueva versión de trolCommander está disponible.
+version_dialog.new_version:CS:K dispozici je nová verze aplikace trolCommander.
+version_dialog.new_version:zh_TW:找到 trolCommander 的新版本.
+version_dialog.new_version:PL:Dostępna jest nowsza wersja trolCommandera.
+version_dialog.new_version:HU:Egy új trolCommander verzió elérhető.
+version_dialog.new_version:RU:Доступна новая версия trolCommander.
+version_dialog.new_version:zh_CN:找到 trolCommander 的新版本
+version_dialog.new_version:SL:Nova različica trolCommander-ja je na razpolago.
+version_dialog.new_version:RO:O versiune nouă de trolCommander este disponibilă.
+version_dialog.new_version:IT:E' disponibile una nuova versione di trolCommander.
+version_dialog.new_version:KO:새로운 버전의 trolCommander가 사용 가능합니다
+version_dialog.new_version:pt_BR:Uma nova versão do trolCommander está disponível.
+version_dialog.new_version:NL:Een nieuwe versie van trolCommander is beschikbaar.
+version_dialog.new_version:SK:Nová verzia trolCommander-a je k dispozícii.
+version_dialog.new_version:JA:trolCommander の新しいバージョンは利用可能です。
+version_dialog.new_version:SV:En ny version av trolCommander finns tillgänglig.
+version_dialog.new_version:DA:En ny version af trolCommander er tilgængelig.
+version_dialog.new_version:UA:Є нова версія trolCommander.
+version_dialog.new_version:AR:توفر إصدار جديد من trolCommander.
+version_dialog.new_version:BE:Даступна новая вэрсія trolCommander.
+version_dialog.new_version:NB:En ny versjon av trolCommander er tilgjengelig.
+version_dialog.new_version:TR:trolCommander'ın yeni bir sürümü mevcut.
+version_dialog.new_version:CA:Una nova versió d'trolCommander està disponible
 
-version_dialog.new_version_url:EN:A new version of muCommander is available at %1.
-version_dialog.new_version_url:FR:Une nouvelle version de muCommander est disponible à %1.
-version_dialog.new_version_url:DE:Eine neue Version des muCommander ist bei %1 erhältlich.
-version_dialog.new_version_url:ES:Una nueva versión de muCommander está disponible en %1.
-version_dialog.new_version_url:CS:Novou verzi aplikace muCommander naleznete na %1.
-version_dialog.new_version_url:zh_TW:找到 muCommander 的新版本在 %1.
-version_dialog.new_version_url:PL:Dostępna jest nowsza wersja muCommandera pod adresem %1.
-version_dialog.new_version_url:HU:Egy új muCommander verzió elérhető itt %1.
-version_dialog.new_version_url:RU:Новая версия muCommander доступна по адресу %1.
-version_dialog.new_version_url:zh_CN:找到 muCommander 的新版本在 %1.
-version_dialog.new_version_url:SL:Nova različica muCommander-ja se nahaja na %1.
-version_dialog.new_version_url:RO:O versiune nouă de muCommander este disponibilă la: %1.
-version_dialog.new_version_url:IT:E' disponibile una nuova versione di muCommander: %1.
-version_dialog.new_version_url:KO:새로운 버전의 muCommander를 다음 주소에서 받아 주십시오 %1.
-version_dialog.new_version_url:pt_BR:Uma nova versão do muCommander está disponível em %1.
-version_dialog.new_version_url:NL:Een nieuwe versie van muCommander is beschikbaar op %1.
-version_dialog.new_version_url:SK:Nová verzia muCommander-a je k dispozícii na %1.
-version_dialog.new_version_url:JA:muCommander の新しいバージョンは %1 で 利用可能です。
-version_dialog.new_version_url:SV:En ny version av muCommander finns här: %1.
-version_dialog.new_version_url:DA:En ny version af muCommander er tilgængelig på: %1.
-version_dialog.new_version_url:UA:Нова версія muCommander доступна за адресою %1.
-version_dialog.new_version_url:AR:توفر إصدار جديد من muCommander على %1.
-version_dialog.new_version_url:BE:Новая вэрсія muCommander даступна па адрэсе %1.
-version_dialog.new_version_url:NB:En ny versjon av muCommander er tilgjengelig på %1.
-version_dialog.new_version_url:TR:muCommander'ın yeni bir sürümü %1 adresinde mevcut.
-version_dialog.new_version_url:CA:Una nova versió d'muCommander està disponible a %1
+version_dialog.new_version_url:EN:A new version of trolCommander is available at %1.
+version_dialog.new_version_url:FR:Une nouvelle version de trolCommander est disponible à %1.
+version_dialog.new_version_url:DE:Eine neue Version des trolCommander ist bei %1 erhältlich.
+version_dialog.new_version_url:ES:Una nueva versión de trolCommander está disponible en %1.
+version_dialog.new_version_url:CS:Novou verzi aplikace trolCommander naleznete na %1.
+version_dialog.new_version_url:zh_TW:找到 trolCommander 的新版本在 %1.
+version_dialog.new_version_url:PL:Dostępna jest nowsza wersja trolCommandera pod adresem %1.
+version_dialog.new_version_url:HU:Egy új trolCommander verzió elérhető itt %1.
+version_dialog.new_version_url:RU:Новая версия trolCommander доступна по адресу %1.
+version_dialog.new_version_url:zh_CN:找到 trolCommander 的新版本在 %1.
+version_dialog.new_version_url:SL:Nova različica trolCommander-ja se nahaja na %1.
+version_dialog.new_version_url:RO:O versiune nouă de trolCommander este disponibilă la: %1.
+version_dialog.new_version_url:IT:E' disponibile una nuova versione di trolCommander: %1.
+version_dialog.new_version_url:KO:새로운 버전의 trolCommander를 다음 주소에서 받아 주십시오 %1.
+version_dialog.new_version_url:pt_BR:Uma nova versão do trolCommander está disponível em %1.
+version_dialog.new_version_url:NL:Een nieuwe versie van trolCommander is beschikbaar op %1.
+version_dialog.new_version_url:SK:Nová verzia trolCommander-a je k dispozícii na %1.
+version_dialog.new_version_url:JA:trolCommander の新しいバージョンは %1 で 利用可能です。
+version_dialog.new_version_url:SV:En ny version av trolCommander finns här: %1.
+version_dialog.new_version_url:DA:En ny version af trolCommander er tilgængelig på: %1.
+version_dialog.new_version_url:UA:Нова версія trolCommander доступна за адресою %1.
+version_dialog.new_version_url:AR:توفر إصدار جديد من trolCommander على %1.
+version_dialog.new_version_url:BE:Новая вэрсія trolCommander даступна па адрэсе %1.
+version_dialog.new_version_url:NB:En ny versjon av trolCommander er tilgjengelig på %1.
+version_dialog.new_version_url:TR:trolCommander'ın yeni bir sürümü %1 adresinde mevcut.
+version_dialog.new_version_url:CA:Una nova versió d'trolCommander està disponible a %1
 
 version_dialog.not_available_title:EN:Server not reachable
 version_dialog.not_available_title:FR:Serveur indisponible
@@ -8842,7 +8842,7 @@ version_dialog.not_available:CA:No s'ha pogut obtenir la informació del servido
 
 # This entry is used as a button label in the 'Check for updates' dialog.
 # As such, the text should be reasonnably short. Clicking this button will
-# download the latest version, install it and restart muCommander.
+# download the latest version, install it and restart trolCommander.
 version_dialog.install_and_restart:EN:Install and restart
 version_dialog.install_and_restart:FR:Installer et redémarrer
 version_dialog.install_and_restart:NL:Installeren en opnieuw opstarten
@@ -8903,32 +8903,32 @@ version_dialog.preparing_for_update:CA:Preparant l'actualització...
 # Quit dialog #
 ###############
 
-quit_dialog.title:EN:Quit muCommander
-quit_dialog.title:FR:Quitter muCommander
-quit_dialog.title:DE:muCommander beenden
-quit_dialog.title:ES:Salir de muCommander
-quit_dialog.title:CS:Ukončit muCommander
-quit_dialog.title:zh_TW:離開 muCommander
-quit_dialog.title:PL:Zakończ muCommandera
-quit_dialog.title:HU:Kilépés a muCommanderből
-quit_dialog.title:RU:Выход из  muCommander
-quit_dialog.title:zh_CN:退出 muCommander
-quit_dialog.title:SL:Izhod iz muCommander-ja
-quit_dialog.title:RO:Închide muCommander
-quit_dialog.title:IT:Esci da muCommander
-quit_dialog.title:KO:muCommander 종료
-quit_dialog.title:pt_BR:Sair do muCommander
-quit_dialog.title:NL:muCommander afsluiten
-quit_dialog.title:SK:Ukončiť muCommander
-quit_dialog.title:JA:muCommander の終了
-quit_dialog.title:SV:Avsluta muCommander
-quit_dialog.title:DA:Afslut muCommander
-quit_dialog.title:UA:Вийти з muCommander
-quit_dialog.title:AR:إنهاء muCommander
-quit_dialog.title:BE:Выхад з  muCommander
-quit_dialog.title:NB:Avslutt muCommander
-quit_dialog.title:TR:muCommander çıkış
-quit_dialog.title:CA:Surt de l'muCommander
+quit_dialog.title:EN:Quit trolCommander
+quit_dialog.title:FR:Quitter trolCommander
+quit_dialog.title:DE:trolCommander beenden
+quit_dialog.title:ES:Salir de trolCommander
+quit_dialog.title:CS:Ukončit trolCommander
+quit_dialog.title:zh_TW:離開 trolCommander
+quit_dialog.title:PL:Zakończ trolCommandera
+quit_dialog.title:HU:Kilépés a trolCommanderből
+quit_dialog.title:RU:Выход из  trolCommander
+quit_dialog.title:zh_CN:退出 trolCommander
+quit_dialog.title:SL:Izhod iz trolCommander-ja
+quit_dialog.title:RO:Închide trolCommander
+quit_dialog.title:IT:Esci da trolCommander
+quit_dialog.title:KO:trolCommander 종료
+quit_dialog.title:pt_BR:Sair do trolCommander
+quit_dialog.title:NL:trolCommander afsluiten
+quit_dialog.title:SK:Ukončiť trolCommander
+quit_dialog.title:JA:trolCommander の終了
+quit_dialog.title:SV:Avsluta trolCommander
+quit_dialog.title:DA:Afslut trolCommander
+quit_dialog.title:UA:Вийти з trolCommander
+quit_dialog.title:AR:إنهاء trolCommander
+quit_dialog.title:BE:Выхад з  trolCommander
+quit_dialog.title:NB:Avslutt trolCommander
+quit_dialog.title:TR:trolCommander çıkış
+quit_dialog.title:CA:Surt de l'trolCommander
 
 # %1 will be replaced by the number of windows that are currently open. This
 # number may be 1 or more, so the phrase has to accomodate both singular
@@ -8936,27 +8936,27 @@ quit_dialog.title:CA:Surt de l'muCommander
 # stay reasonnably short.
 quit_dialog.desc:EN:You have %1 window(s) open. Are you sure you want to quit ? 
 quit_dialog.desc:FR:Il y a %1 fenêtre(s) ouverte(s). Etes-vous sûr de vouloir quitter ?
-quit_dialog.desc:DE:Sie haben %1 offene(s) Fenster. Alle Fenster schließen und muCommander beenden?
+quit_dialog.desc:DE:Sie haben %1 offene(s) Fenster. Alle Fenster schließen und trolCommander beenden?
 quit_dialog.desc:ES:Tienes %1 ventana(s) abierta(s). ¿Estás seguro de que deseas salir?
-quit_dialog.desc:CS:Chcete zavřít všechna otevřená okna (%1) a ukončit muCommander ?
+quit_dialog.desc:CS:Chcete zavřít všechna otevřená okna (%1) a ukončit trolCommander ?
 quit_dialog.desc:zh_TW:你有 %1 個開啟的視窗. 確定要離開 ?
-quit_dialog.desc:PL:Masz otwartych %1 okien. Zamknąć wszystkie okna i zakończyć pracę muCommandera ?
-quit_dialog.desc:HU:Biztos ki akar lépni? (%1 muCommander van megnyitva.)
-quit_dialog.desc:RU:Закрыть %1 окон и выйти из muCommander ?
+quit_dialog.desc:PL:Masz otwartych %1 okien. Zamknąć wszystkie okna i zakończyć pracę trolCommandera ?
+quit_dialog.desc:HU:Biztos ki akar lépni? (%1 trolCommander van megnyitva.)
+quit_dialog.desc:RU:Закрыть %1 окон и выйти из trolCommander ?
 quit_dialog.desc:zh_CN:您有 %1 个开启中的窗口. 确认退出 ?
 quit_dialog.desc:SL:Odprto/-ih je %1 okno/-en. Želite zapreti vsa okna? 
-quit_dialog.desc:RO:Aveți %1 ferestre deschise. Sunteți sigur ca doriti sa închideți muCommander?
+quit_dialog.desc:RO:Aveți %1 ferestre deschise. Sunteți sigur ca doriti sa închideți trolCommander?
 quit_dialog.desc:IT:Hai %1 finestra(e) aperta(e). Sei sicuro di voler uscire ?
-quit_dialog.desc:KO:모든 창들과 muCommander를 종료 하시겠습니까? 
+quit_dialog.desc:KO:모든 창들과 trolCommander를 종료 하시겠습니까? 
 quit_dialog.desc:pt_BR:Você tem %1 janela(s) aberta(s). Deseja realmente sair?
-quit_dialog.desc:NL:Er zijn %1 venster(s) geopend. Alle vensters sluiten en muCommander afsluiten?
-quit_dialog.desc:SK:Chcete zatvoriť všetkých %1 okien a ukončiť muCommander?
+quit_dialog.desc:NL:Er zijn %1 venster(s) geopend. Alle vensters sluiten en trolCommander afsluiten?
+quit_dialog.desc:SK:Chcete zatvoriť všetkých %1 okien a ukončiť trolCommander?
 quit_dialog.desc:JA:%1 個のウィンドウを開いています。終了してもよろしいですか ? 
 quit_dialog.desc:SV:Du har %1 fönster öppna. Vill du avsluta ändå?
 quit_dialog.desc:DA:Du har %1 vinduer åbne. Er du sikker på du vil afslutte? 
-quit_dialog.desc:UA:Вийти з muCommander (відкрито %1 вікон) ?
+quit_dialog.desc:UA:Вийти з trolCommander (відкрито %1 вікон) ?
 quit_dialog.desc:AR:لديك %1 من النوافذ المفتوحة، هل أنت متأكد أنك تريد الخروج؟
-quit_dialog.desc:BE:Зачыніць %1 вакенцаў і выйсьці з muCommander ?
+quit_dialog.desc:BE:Зачыніць %1 вакенцаў і выйсьці з trolCommander ?
 quit_dialog.desc:NB:Du har %1 vindu(er) åpne. Er du sikker på at du vil avslutte? 
 quit_dialog.desc:TR:%1 pencere açık. Çıkmak istediğinizden emin misiniz ?
 quit_dialog.desc:CA:Té %1 finestra(es) oberta(es). N'està segur?
@@ -17462,59 +17462,59 @@ cannot_open_cyclic_symlink:EN:Cannot open the selected link because it is cyclic
 
 # This dialog appears at first launch
 
-setup.title:EN:Welcome to muCommander
-setup.title:FR:Bienvenue dans muCommander
-setup.title:SL:Dobrodošli v muCommanderju
-setup.title:IT:Benvenuti in muCommander
-setup.title:CS:Vítá Vás muCommander
-setup.title:zh_TW:歡迎來到 muCommander
-setup.title:DE:Willkommen beim muCommander
-setup.title:RO:Bine ați venit în muCommander
-setup.title:zh_CN:欢迎进入 muCommander
-setup.title:RU:Добро пожаловать в muCommander
-setup.title:ES:Bienvenida/o a muCommander
-setup.title:PL:Witamy w programie muCommander
-setup.title:KO:muCommander에 환영합니다
-setup.title:pt_BR:Bem-vindo ao muCommander
-setup.title:NL:Welkom bij muCommander
-setup.title:SK:Víta Vás muCommander
-setup.title:HU:Üdvözöljük a muCommanderben
-setup.title:JA:muCommander へようこそ
-setup.title:SV:Välkommen till muCommander
-setup.title:DA:Velkommen til muCommander
-setup.title:UA:Вітаємо в muCommander
-setup.title:AR:مرحباً إلى muCommander
-setup.title:BE:Вітаем у muCommander
-setup.title:NB:Velkommen til muCommander
-setup.title:TR:muCommander'a Hoşgeldiniz
-setup.title:CA:Benvinguts a muCommander
+setup.title:EN:Welcome to trolCommander
+setup.title:FR:Bienvenue dans trolCommander
+setup.title:SL:Dobrodošli v trolCommanderju
+setup.title:IT:Benvenuti in trolCommander
+setup.title:CS:Vítá Vás trolCommander
+setup.title:zh_TW:歡迎來到 trolCommander
+setup.title:DE:Willkommen beim trolCommander
+setup.title:RO:Bine ați venit în trolCommander
+setup.title:zh_CN:欢迎进入 trolCommander
+setup.title:RU:Добро пожаловать в trolCommander
+setup.title:ES:Bienvenida/o a trolCommander
+setup.title:PL:Witamy w programie trolCommander
+setup.title:KO:trolCommander에 환영합니다
+setup.title:pt_BR:Bem-vindo ao trolCommander
+setup.title:NL:Welkom bij trolCommander
+setup.title:SK:Víta Vás trolCommander
+setup.title:HU:Üdvözöljük a trolCommanderben
+setup.title:JA:trolCommander へようこそ
+setup.title:SV:Välkommen till trolCommander
+setup.title:DA:Velkommen til trolCommander
+setup.title:UA:Вітаємо в trolCommander
+setup.title:AR:مرحباً إلى trolCommander
+setup.title:BE:Вітаем у trolCommander
+setup.title:NB:Velkommen til trolCommander
+setup.title:TR:trolCommander'a Hoşgeldiniz
+setup.title:CA:Benvinguts a trolCommander
 
-setup.intro:EN:Please choose the way you want muCommander to behave.
-setup.intro:FR:Veuillez choisir le comportement souhaité de muCommander.
-setup.intro:SL:Izberite prosim lastnosti muCommanderja.
-setup.intro:IT:Prego, scegliere il modo di comportarsi di muCommander.
-setup.intro:CS:Prosím, zvolte vlastní nastavení aplikace muCommander.
-setup.intro:zh_TW:請選擇你所希望的 muCommander 行為模式
-setup.intro:DE:Bitte wählen Sie, wie sich der muCommander verhalten soll.
-setup.intro:RO:Vă rugăm să alegeți modul în care muCommander se va comporta.
-setup.intro:zh_CN:请选择你所希望的 muCommander 行为模式
-setup.intro:RU:Выберите основные настройки muCommander.
-setup.intro:ES:Por favor, seleccione la forma en la que desea que muCommander se comporte.
-setup.intro:PL:Proszę wybrać jak ma się zachowywać muCommander.
-setup.intro:KO:muCommander가 작동하는 방식을 선택하세요
-setup.intro:pt_BR:Por favor, selecione como o muCommander deve se comportar.
-setup.intro:NL:Kiest u a.u.b. de manier waarop muCommander zich moet gedragen.
-setup.intro:SK:Prosím, zvoľte vlastné nastavenie aplikácie muCommander.
-setup.intro:HU:Válassza ki a muCommander működési módját
-setup.intro:JA:muCommander の挙動を選択してください。
-setup.intro:SV:Vänligen välj hur du vill att muCommander ska agera.
-setup.intro:DA:Vælg venligst hvordan du vil have muCommander til at optræde.
-setup.intro:UA:Виберіть головні налаштування muCommander
-setup.intro:AR:رجاءً اختر سلوك muCommander الذي تفضل.
-setup.intro:BE:Абярыце асноўныя наладкі muCommander.
-setup.intro:NB:Vennligst velg hvordan du ønsker at muCommander skal oppføre seg.
-setup.intro:TR:muCommander'ın çalışmasını istediğiniz yolu seçiniz.
-setup.intro:CA:Trieu el comportament desitjat de muCommander.
+setup.intro:EN:Please choose the way you want trolCommander to behave.
+setup.intro:FR:Veuillez choisir le comportement souhaité de trolCommander.
+setup.intro:SL:Izberite prosim lastnosti trolCommanderja.
+setup.intro:IT:Prego, scegliere il modo di comportarsi di trolCommander.
+setup.intro:CS:Prosím, zvolte vlastní nastavení aplikace trolCommander.
+setup.intro:zh_TW:請選擇你所希望的 trolCommander 行為模式
+setup.intro:DE:Bitte wählen Sie, wie sich der trolCommander verhalten soll.
+setup.intro:RO:Vă rugăm să alegeți modul în care trolCommander se va comporta.
+setup.intro:zh_CN:请选择你所希望的 trolCommander 行为模式
+setup.intro:RU:Выберите основные настройки trolCommander.
+setup.intro:ES:Por favor, seleccione la forma en la que desea que trolCommander se comporte.
+setup.intro:PL:Proszę wybrać jak ma się zachowywać trolCommander.
+setup.intro:KO:trolCommander가 작동하는 방식을 선택하세요
+setup.intro:pt_BR:Por favor, selecione como o trolCommander deve se comportar.
+setup.intro:NL:Kiest u a.u.b. de manier waarop trolCommander zich moet gedragen.
+setup.intro:SK:Prosím, zvoľte vlastné nastavenie aplikácie trolCommander.
+setup.intro:HU:Válassza ki a trolCommander működési módját
+setup.intro:JA:trolCommander の挙動を選択してください。
+setup.intro:SV:Vänligen välj hur du vill att trolCommander ska agera.
+setup.intro:DA:Vælg venligst hvordan du vil have trolCommander til at optræde.
+setup.intro:UA:Виберіть головні налаштування trolCommander
+setup.intro:AR:رجاءً اختر سلوك trolCommander الذي تفضل.
+setup.intro:BE:Абярыце асноўныя наладкі trolCommander.
+setup.intro:NB:Vennligst velg hvordan du ønsker at trolCommander skal oppføre seg.
+setup.intro:TR:trolCommander'ın çalışmasını istediğiniz yolu seçiniz.
+setup.intro:CA:Trieu el comportament desitjat de trolCommander.
 
 setup.look_and_feel:EN:Select your Look & feel
 setup.look_and_feel:FR:Selectionnez votre Look & Feel

@@ -88,7 +88,7 @@ public abstract class FileFrame extends JFrame {
                 super.updateLayout();
                 // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
                 //pack();
-                WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName());
+                WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName(), true);
                 // Request focus on the viewer when it is visible
                 FocusRequester.requestFocus(filePresenter);
 
@@ -112,7 +112,7 @@ public abstract class FileFrame extends JFrame {
         //setSize(WAIT_DIALOG_SIZE);
         //setFullScreenSize();
         //setFullScreen(true);
-        if (!WindowsStorage.getInstance().init(this, filePresenter.getClass().getCanonicalName())) {
+        if (!WindowsStorage.getInstance().init(this, filePresenter.getClass().getCanonicalName(), true)) {
             setSize(800, 600);
             DialogToolkit.centerOnWindow(this, mainFrame);
         }

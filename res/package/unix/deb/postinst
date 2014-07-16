@@ -1,2 +1,2 @@
 #! /bin/sh
-ln -s /usr/share/mucommander/mucommander.sh /usr/bin/mucommander
+ln -s /usr/share/trolcommander/trolcommander.sh /usr/bin/trolcommander

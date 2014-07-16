@@ -6,15 +6,15 @@ Recommends: java-virtual-machine, java2-runtime
 Suggests: sun-java6-jre
 Architecture: all
 Installed-Size: @SIZE@
-Maintainer: Maxence Bernard <maxence@maxence.info>
+Maintainer: Oleg Trifonov <admin@trolsoft.ru>
 Description: a lightweight, cross-platform file manager
- muCommander is a lightweight, cross-platform file manager running on any operating system with Java support.
+ trolCommander is a lightweight, cross-platform file manager running on any operating system with Java support.
  It features a dual-pane interface in the tradition of Norton Commander and other commanders, allowing to quickly
  and efficiently manage your files.
  .
- muCommander comes with built-in support for a variety of file protocols (Local, FTP, SFTP, SMB, NFS, HTTP) and
- archive formats (ZIP, TAR, GZIP, BZIP2, ISO, NRG, AR, DEB, LST) and is available in 18 languages.
+ trolCommander comes with built-in support for a variety of file protocols (Local, FTP, SFTP, SMB, NFS, HTTP) and
+ archive formats (ZIP, TAR, GZIP, BZIP2, ISO, NRG, AR, DEB, LST, 7Z, RAR) and is available in 18 languages.
  .
- Java 1.4 or higher is required to run muCommander. Some features are available only under Java 1.5 and 1.6.
+ Java 1.7 or higher is required to run trolCommander. 
  .
- muCommander can be found at http://www.mucommander.com
+ trolCommander can be found at http://www.trolsoft.ru/trolcommander
