@@ -39,8 +39,6 @@ import java.util.List;
  */
 public abstract class FindDialog extends FocusDialog implements ActionListener {
 
-    private static String text;
-
     /** The text field where a search string can be entered */
     private JTextField findField;
 
@@ -60,7 +58,6 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         contentPane.add(new JLabel(Translator.get("text_viewer.find")+":"), BorderLayout.NORTH);
 
         findField = new JTextField(20);
-        findField.setText(text);
         findField.addActionListener(this);
         List<String> history = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
 //        new AutoCompletion(findField, history).setStrict(false);
@@ -102,7 +99,10 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
     @Override
     protected void saveState() {
         super.saveState();
-        text = findField.getText();
+    }
+
+    public void setText(String text) {
+        findField.setText(text);
     }
 
     /**

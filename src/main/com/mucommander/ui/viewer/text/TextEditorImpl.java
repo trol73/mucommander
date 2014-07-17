@@ -139,6 +139,7 @@ class TextEditorImpl implements ThemeListener {
                 textArea.requestFocus();
             }
         };
+        dlgFind.setText(searchString);
         dlgFind.showDialog();
 	}
 

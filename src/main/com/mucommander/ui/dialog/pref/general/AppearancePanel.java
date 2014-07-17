@@ -507,8 +507,8 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     	};
         float scaleFactor = MuConfigurations.getPreferences().getVariable(preference, defaultValue);
         int index = 0;
-        for(int i=0; i<ICON_SCALE_FACTORS.length; i++) {
-            if(scaleFactor==ICON_SCALE_FACTORS[i]) {
+        for (int i = 0; i < ICON_SCALE_FACTORS.length; i++) {
+            if (scaleFactor == ICON_SCALE_FACTORS[i]) {
                 index = i;
                 break;
             }
@@ -548,7 +548,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         MuConfigurations.getPreferences().setVariable(MuPreference.TABLE_ICON_SCALE , scaleFactor);
 
         // Sets the current theme.
-        if(!ThemeManager.isCurrentTheme((Theme)themeComboBox.getSelectedItem())) {
+        if (!ThemeManager.isCurrentTheme((Theme)themeComboBox.getSelectedItem())) {
             ThemeManager.setCurrentTheme((Theme)themeComboBox.getSelectedItem());
             resetThemeButtons((Theme)themeComboBox.getSelectedItem());
             themeComboBox.repaint();
@@ -556,7 +556,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // Sets the current syntax theme.
         final String syntaxThemeName = (String)syntaxThemeComboBox.getSelectedItem();
-        if ( !ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(syntaxThemeName) ) {
+        if (!ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(syntaxThemeName)) {
             ThemeManager.setCurrentSyntaxTheme(syntaxThemeName);
             syntaxThemeComboBox.repaint();
         }
@@ -621,10 +621,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private void resetLookAndFeelButtons() {
         // If the dial is animated, we're currently loading look&feels and should ignore this call.
-        if(dial == null || !dial.isAnimated()) {
+        if (dial == null || !dial.isAnimated()) {
             int selectedIndex = lookAndFeelComboBox.getSelectedIndex();
-            if(selectedIndex!=-1)
+            if (selectedIndex >= 0) {
                 deleteLookAndFeelButton.setEnabled(isLookAndFeelModifiable(lookAndFeels[selectedIndex]));
+            }
         }
     }
 
@@ -655,9 +656,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @param selection currently selection look and feel.
      */
     private void deleteCustomLookAndFeel(UIManager.LookAndFeelInfo selection) {
-        if(customLookAndFeels != null)
-            if(customLookAndFeels.remove(selection.getClassName()))
-            	MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, customLookAndFeels, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+        if (customLookAndFeels != null) {
+            if (customLookAndFeels.remove(selection.getClassName())) {
+                MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, customLookAndFeels, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+            }
+        }
     }
 
     /**
@@ -677,7 +680,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         selection = lookAndFeels[lookAndFeelComboBox.getSelectedIndex()];
 
         // Asks the user whether he's sure he wants to delete the selected look and feel.
-        if(new QuestionDialog(parent, null, Translator.get("prefs_dialog.delete_look_and_feel", selection.getName()), parent,
+        if (new QuestionDialog(parent, null, Translator.get("prefs_dialog.delete_look_and_feel", selection.getName()), parent,
                               new String[] {Translator.get("yes"), Translator.get("no")},
                               new int[]  {YES_ACTION, NO_ACTION},
                               0).getActionValue() != YES_ACTION)
@@ -708,10 +711,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // A special case must be made for the delete button
         // as it might not need to be re-enabled.
-        if(loading)
+        if (loading) {
             deleteLookAndFeelButton.setEnabled(false);
-        else
+        } else {
             resetLookAndFeelButtons();
+        }
     }
 
     /**
@@ -731,22 +735,20 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         AbstractFile destFile = ExtensionManager.getExtensionsFile(library.getName());
 
         int collision = FileCollisionChecker.checkForCollision(library, destFile);
-        if(collision != FileCollisionChecker.NO_COLLOSION) {
+        if (collision != FileCollisionChecker.NO_COLLOSION) {
             // Do not offer the multiple files mode options such as 'skip' and 'apply to all'
             int action = new FileCollisionDialog(parent, parent, collision, library, destFile, false, false).getActionValue();
 
             // User chose to overwrite the file
-            if(action==FileCollisionDialog.OVERWRITE_ACTION) {
+            if (action == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Simply continue and file will be overwritten
             } else if(action==FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
                 // Overwrite if the source is more recent than the destination
                 if(library.getDate() <= destFile.getDate())
                     return false;
                 // Simply continue and file will be overwritten
-            }
-            // User chose to cancel or closed the dialog
-            else {
-                return false;
+            } else {
+                return false;       // User chose to cancel or closed the dialog
             }
         }
 
@@ -760,13 +762,13 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         try {
             // Identifies all the look&feels contained by the new library and adds them to the list of custom
             // If no look&feel was found, notifies the user.
-            if((newLookAndFeels = new ClassFinder().find(lookAndFeelLibrary, new LookAndFeelFilter())).isEmpty())
+            if ((newLookAndFeels = new ClassFinder().find(lookAndFeelLibrary, new LookAndFeelFilter())).isEmpty())
                 InformationDialog.showWarningDialog(this, Translator.get("prefs_dialog.no_look_and_feel"));
-            else if(importLookAndFeelLibrary(lookAndFeelLibrary)) {
+            else if (importLookAndFeelLibrary(lookAndFeelLibrary)) {
                 String currentName;
 
-                if(customLookAndFeels == null)
-                    customLookAndFeels = new Vector<String>();
+                if (customLookAndFeels == null)
+                    customLookAndFeels = new Vector<>();
 
                 // Adds all new instances to the list of custom look&feels.
                 for (Class<?> newLookAndFeel : newLookAndFeels) {
@@ -781,39 +783,34 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     }
                 }
 
-                if(customLookAndFeels.isEmpty())
+                if (customLookAndFeels.isEmpty())
                     customLookAndFeels = null;
                 else
                 	MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, customLookAndFeels, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
 
                 populateLookAndFeels();
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
         	LOGGER.debug("Exception caught", e);
-
             InformationDialog.showErrorDialog(this);
         }
         setLookAndFeelsLoading(false);
     }
 
     private void importLookAndFeel() {
-        JFileChooser chooser; // Used to select the theme to import.
-        AbstractFile file;    // Path to the theme to import.
-
         // Initialises the file chooser.
-        chooser = createFileChooser();
+        JFileChooser chooser = createFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.addChoosableFileFilter(new ExtensionFileFilter("jar", Translator.get("prefs_dialog.jar_file")));
         chooser.setDialogTitle(Translator.get("prefs_dialog.import_look_and_feel"));
         chooser.setDialogType(JFileChooser.OPEN_DIALOG);
 
-        if(chooser.showDialog(parent, Translator.get("prefs_dialog.import")) == JFileChooser.APPROVE_OPTION) {
-            file               = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
+        if (chooser.showDialog(parent, Translator.get("prefs_dialog.import")) == JFileChooser.APPROVE_OPTION) {
+            AbstractFile file = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
             lastSelectedFolder = file.getParent();
 
             // Makes sure the file actually exists - JFileChooser apparently doesn't enforce that properly in all look&feels.
-            if(!file.exists()) {
+            if (!file.exists()) {
                 InformationDialog.showErrorDialog(this, Translator.get("this_file_does_not_exist", file.getName()));
                 return;
             }
@@ -831,32 +828,29 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private void setTypeLabel(Theme theme) {
         String label;
 
-        if(theme.getType() == Theme.Type.USER)
+        if (theme.getType() == Theme.Type.USER) {
             label = Translator.get("theme.custom");
-        else if(theme.getType() == Theme.Type.PREDEFINED)
+        } else if(theme.getType() == Theme.Type.PREDEFINED) {
             label = Translator.get("theme.built_in");
-        else
+        } else {
             label = Translator.get("theme.add_on");
+        }
 
         typeLabel.setText(Translator.get("prefs_dialog.theme_type", label));
     }
 
     private void resetThemeButtons(Theme theme) {
-        if(ignoreComboChanges)
+        if (ignoreComboChanges)
             return;
 
         setTypeLabel(theme);
 
-        if(theme.getType() != Theme.Type.CUSTOM) {
+        if (theme.getType() != Theme.Type.CUSTOM) {
             renameThemeButton.setEnabled(false);
             deleteThemeButton.setEnabled(false);
-        }
-        else {
+        } else {
             renameThemeButton.setEnabled(true);
-            if(ThemeManager.isCurrentTheme(theme))
-                deleteThemeButton.setEnabled(false);
-            else 
-                deleteThemeButton.setEnabled(true);
+            deleteThemeButton.setEnabled(!ThemeManager.isCurrentTheme(theme));
         }
     }
 
@@ -865,16 +859,15 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @param theme theme to rename.
      */
     private void renameTheme(Theme theme) {
-        ThemeNameDialog dialog;
+        ThemeNameDialog dialog = new ThemeNameDialog(parent, theme.getName());
 
-        if((dialog = new ThemeNameDialog(parent, theme.getName())).wasValidated()) {
+        if (dialog.wasValidated()) {
             // If the rename operation was a success, makes sure the theme is located at its proper position.
             try {
                 ThemeManager.renameCustomTheme(theme, dialog.getText());
                 themeComboBox.removeItem(theme);
                 insertTheme(theme);
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 // Otherwise, notifies the user.
                 InformationDialog.showErrorDialog(this, Translator.get("prefs_dialog.rename_failed", theme.getName()));
             }
@@ -887,7 +880,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private void deleteTheme(Theme theme) {
         // Asks the user whether he's sure he wants to delete the selected theme.
-        if(new QuestionDialog(parent, null, Translator.get("prefs_dialog.delete_theme", theme.getName()), parent,
+        if (new QuestionDialog(parent, null, Translator.get("prefs_dialog.delete_theme", theme.getName()), parent,
                               new String[] {Translator.get("yes"), Translator.get("no")},
                               new int[]  {YES_ACTION, NO_ACTION},
                               0).getActionValue() != YES_ACTION)
@@ -897,8 +890,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         try {
             ThemeManager.deleteCustomTheme(theme.getName());
             themeComboBox.removeItem(theme);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             InformationDialog.showErrorDialog(this);
         }
     }
@@ -917,8 +909,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Creates a file chooser initialised on the last selected folder.
      */
     private JFileChooser createFileChooser() {
-        if(lastSelectedFolder == null)
+        if (lastSelectedFolder == null) {
             return new JFileChooser();
+        }
         return new JFileChooser((java.io.File)lastSelectedFolder.getUnderlyingFileObject());
     }
 
@@ -933,8 +926,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                 break;
             }
         }
-        if(i == count)
+        if (i == count) {
             themeComboBox.addItem(theme);
+        }
         themeComboBox.setSelectedItem(theme);
     }
 
@@ -975,17 +969,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @param theme theme to export.
      */
     private void exportTheme(Theme theme) {
-        JFileChooser chooser;
-        AbstractFile         file;
-
-        chooser = createFileChooser();
+        JFileChooser chooser = createFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.addChoosableFileFilter(new ExtensionFileFilter("xml", Translator.get("prefs_dialog.xml_file")));
 
         chooser.setDialogTitle(Translator.get("prefs_dialog.export_theme", theme.getName()));
         if(chooser.showDialog(parent, Translator.get("prefs_dialog.export")) == JFileChooser.APPROVE_OPTION) {
 
-            file               = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
+            AbstractFile file = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
             lastSelectedFolder = file.getParent();
 
             // Makes sure the file's extension is .xml.
@@ -999,7 +990,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     int action = new FileCollisionDialog(parent, parent, collision, null, file, false, false).getActionValue();
 
                     // User chose to overwrite the file
-                    if(action==FileCollisionDialog.OVERWRITE_ACTION) {
+                    if (action == FileCollisionDialog.OVERWRITE_ACTION) {
                         // Simply continue and file will be overwritten
                     } else { // User chose to cancel or closed the dialog
                         return;
@@ -1113,7 +1104,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         @Override
         public boolean accept(java.io.File file) {
             // Directories are always displayed.
-            if(file.isDirectory())
+            if (file.isDirectory())
                 return true;
 
             // If the file has an extension, and it matches .xml, return true.

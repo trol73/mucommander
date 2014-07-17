@@ -91,7 +91,13 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         YBoxPanel yPanel = new YBoxPanel(10);
 
         // Text fields panel
-        XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
+        XAlignedComponentPanel compPanel = new XAlignedComponentPanel() {
+            @Override
+            public void add(Component comp, Object constraints) {
+                ((GridBagConstraints)constraints).fill = GridBagConstraints.HORIZONTAL;
+                super.add(comp, constraints);
+            }
+        };
 
         List<String> calcHistory = TextHistory.getInstance().getList(TextHistory.Type.CALCULATOR);
         cbExpression = new HistoryComboBox(this, calcHistory);
@@ -102,32 +108,44 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         compPanel.addRow("", lblError, 10);
         //lblError.setVisible(false);
 
+        Font buttonFont = Font.getFont(Font.MONOSPACED);
+
         btnDec = new JButton("DEC");
         btnDec.addActionListener(this);
+        btnDec.setFont(buttonFont);
         this.edtDec = new JTextField();
         edtDec.setEditable(false);
+
+//FontMetrics fm = btnDec.getFontMetrics(buttonFont);
+//System.out.println(fm.stringWidth("DEC"));
+
+
         compPanel.addRow(btnDec, edtDec, 0);
 
         btnHex = new JButton("HEX");
         btnHex.addActionListener(this);
+        btnHex.setFont(buttonFont);
         this.edtHex = new JTextField();
         edtHex.setEditable(false);
         compPanel.addRow(btnHex, edtHex, 0);
 
         btnBin = new JButton("BIN");
         btnBin.addActionListener(this);
+        btnBin.setFont(buttonFont);
         this.edtBin = new JTextField();
         edtBin.setEditable(false);
         compPanel.addRow(btnBin, edtBin, 0);
 
         btnOct = new JButton("OCT");
         btnOct.addActionListener(this);
+        btnOct.setFont(buttonFont);
         this.edtOct = new JTextField();
         edtOct.setEditable(false);
         compPanel.addRow(btnOct, edtOct, 0);
 
         btnExp = new JButton("EXP");
         btnExp.addActionListener(this);
+        btnExp.setFont(buttonFont);
         this.edtExp = new JTextField();
         edtExp.setEditable(false);
         compPanel.addRow(btnExp, edtExp, 0);
@@ -157,7 +175,6 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         setMinimumSize(MIN_DIMENSION);
         setModal(false);
     }
-
 
     private void calculate() {
         String expression = cbExpression.getSelectedItem().toString().trim();
@@ -254,4 +271,23 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         TextHistory.getInstance().save(TextHistory.Type.CALCULATOR);
     }
 
+
+//    @Override
+//    public void setVisible(boolean show) {
+//        super.setVisible(show);
+//        if (show) {
+//            int buttonWidth = Math.max(btnHex.getWidth(), btnDec.getWidth());
+//            buttonWidth = Math.max(btnBin.getWidth(), buttonWidth);
+//            buttonWidth = Math.max(btnHex.getWidth(), buttonWidth);
+//            buttonWidth = Math.max(btnOct.getWidth(), buttonWidth);
+//            buttonWidth = Math.max(btnExp.getWidth(), buttonWidth);
+//            Dimension d = new Dimension(buttonWidth, btnDec.getHeight());
+//
+//            btnDec.setMinimumSize(d);
+//            btnHex.setMinimumSize(d);
+//            btnBin.setMinimumSize(d);
+//            btnOct.setMinimumSize(d);
+//            btnExp.setMinimumSize(d);
+//        }
+//    }
 }

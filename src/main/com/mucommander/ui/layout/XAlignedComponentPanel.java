@@ -112,8 +112,9 @@ public class XAlignedComponentPanel extends JPanel {
      * @param ySpaceAfter number of pixels to be inserted after this row
      */
     public void addRow(JComponent label, JComponent component, int ySpaceAfter) {
-        if(firstComponent ==null)
+        if (firstComponent == null) {
             firstComponent = component;
+        }
 		
         // Prepare grid bag constraints for label
         c.gridwidth = GridBagConstraints.RELATIVE;
@@ -157,10 +158,10 @@ public class XAlignedComponentPanel extends JPanel {
      */
     @Override
     public void requestFocus() {
-        if(firstComponent ==null)
+        if (firstComponent == null)
             super.requestFocus();
         else {
-            if(firstComponent instanceof JTextComponent) {
+            if (firstComponent instanceof JTextComponent) {
                 JTextComponent textComponent = (JTextComponent) firstComponent;
                 String text = textComponent.getText();
                 if(!text.equals("")) {

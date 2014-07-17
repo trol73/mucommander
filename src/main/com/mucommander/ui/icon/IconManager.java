@@ -59,7 +59,7 @@ public class IconManager {
         /** Designates the language icon set */
         LANGUAGE("language"),
         /** Designates the mucommander icon set */
-        MUCOMMANDER("mucommander"),
+        MUCOMMANDER("trolcommander"),
         /** Other images */
         MISC("misc");
 

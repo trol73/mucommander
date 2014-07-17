@@ -94,8 +94,8 @@ public class SplashScreen extends JWindow {
         MediaTracker mediaTracker = new MediaTracker(this);
         mediaTracker.addImage(imageIcon.getImage(), 0);
         try {
-            mediaTracker.waitForID(0); }
-        catch(InterruptedException e) {
+            mediaTracker.waitForID(0);
+        } catch(InterruptedException e) {
         }
 
         setContentPane(new JLabel(imageIcon));

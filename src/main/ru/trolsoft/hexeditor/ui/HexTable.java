@@ -1,12 +1,13 @@
 package ru.trolsoft.hexeditor.ui;
 
 
-import com.mucommander.profiler.Profiler;
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -34,6 +35,7 @@ public class HexTable extends JTable {
 
     private final ViewerHexTableModel model;
     private final CellRenderer cellRenderer = new CellRenderer();
+    private final HeaderRenderer headerRenderer = new HeaderRenderer();
     private final Rectangle repaintRect = new Rectangle();
 
 
@@ -70,6 +72,11 @@ public class HexTable extends JTable {
         setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         setDefaultEditor(Object.class, cellEditor);
         setDefaultRenderer(Object.class, cellRenderer);
+
+        for (int i = getColumnModel().getColumnCount()-1; i >= 0; i--) {
+            TableColumn col = getColumnModel().getColumn(i);
+            col.setHeaderRenderer(headerRenderer);
+        }
         getTableHeader().setReorderingAllowed(false);
         setShowGrid(false);
 
@@ -190,8 +197,7 @@ public class HexTable extends JTable {
         fontAscent = fm.getAscent();
 
         final int hexColumns = model.getNumberOfHexColumns();
-        int w = Math.max(widthOfW*3, fmHeader.stringWidth("+999"));
-//System.out.println(">> " + widthOfW*3 + "   " + fmHeader.stringWidth("+999"));
+        int w = Math.max(widthOfW*3, fmHeader.stringWidth("+9D9")+2);   // +9W9
         for (int i = 1; i <= hexColumns; i++) {
             setColumnWidth(i, w);
         }
@@ -208,7 +214,6 @@ public class HexTable extends JTable {
         }
 
         setPreferredScrollableViewportSize(new Dimension(w * 16 + 200, 25 * getRowHeight()));    // todo
-
     }
 
     /**
@@ -652,6 +657,15 @@ public class HexTable extends JTable {
         super.processKeyEvent(e);
     }
 
+    public OnOffsetChangeListener getOnOffsetChangeListener() {
+        return onOffsetChangeListener;
+    }
+
+    public void setOnOffsetChangeListener(OnOffsetChangeListener onOffsetChangeListener) {
+        this.onOffsetChangeListener = onOffsetChangeListener;
+    }
+
+
 
     private class CellRenderer extends DefaultTableCellRenderer {
 
@@ -760,13 +774,58 @@ public class HexTable extends JTable {
     }
 
 
+    private class HeaderRenderer extends DefaultTableCellRenderer {
 
-    public OnOffsetChangeListener getOnOffsetChangeListener() {
-        return onOffsetChangeListener;
-    }
+        private static final long serialVersionUID = 1L;
 
-    public void setOnOffsetChangeListener(OnOffsetChangeListener onOffsetChangeListener) {
-        this.onOffsetChangeListener = onOffsetChangeListener;
+        private final Map desktopAAHints;
+        private boolean centerText;
+
+        public HeaderRenderer() {
+            desktopAAHints = getDesktopAntiAliasHints();
+            setFont(HexTable.this.getFont());
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setValue(value);
+            centerText = column != 0 && column != getColumnCount()-1;
+            return this;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            final String text = getText();
+            final int len = text.length();
+            int x;
+            if (centerText) {
+                x = (getWidth() - widthOfW*len)/2 + 1;
+            } else {
+                x = 5;
+            }
+            int y = (getHeight() - fontHeight)/2 + fontAscent;
+
+            Graphics2D g2d = (Graphics2D)g;
+            Object oldHints = null;
+            if (desktopAAHints != null) {
+                oldHints = g2d.getRenderingHints();
+                g2d.addRenderingHints(desktopAAHints);
+            }
+
+            g.setColor(getForeground());
+            g2d.drawString(text, x, y);
+
+            // Restore rendering hints appropriately.
+            if (desktopAAHints != null) {
+                g2d.addRenderingHints((Map)oldHints);
+            }
+
+            // separator
+            g.setColor(Color.GRAY);
+            g.drawLine(0, 0, 0, getHeight());
+        }
     }
 
 }
