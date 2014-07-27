@@ -22,7 +22,7 @@ import java.nio.file.Path;
 /**
  * Created by trol on 09/06/14.
  */
-public class CreateSymlinkDialog extends FocusDialog implements ActionListener {
+public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
 
     /**
      * Dialog size constraints
@@ -48,7 +48,7 @@ public class CreateSymlinkDialog extends FocusDialog implements ActionListener {
      * @param linkPath path of root directory for created symbolic link or symbolic link itself
      * @param targetFile existing filename (filename symlink will point to)
      */
-    public CreateSymlinkDialog(Frame mainFrame, AbstractFile linkPath, AbstractFile targetFile) {
+    public CreateSymLinkDialog(Frame mainFrame, AbstractFile linkPath, AbstractFile targetFile) {
         super(mainFrame, Translator.get("symboliclinkeditor.create"), null);
         this.mainFrame = mainFrame;
         this.linkPath = linkPath;
