@@ -3,7 +3,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.dialog.symlink.CreateSymlinkDialog;
+import com.mucommander.ui.dialog.symlink.CreateSymLinkDialog;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -42,7 +42,7 @@ public class CreateSymlinkAction extends ParentFolderAction {
             targetFile = mainFrame.getActiveTable().getFileTableModel().getFileAt(0).getParent();
         }
         AbstractFile linkPath = mainFrame.getInactivePanel().getCurrentFolder();
-        new CreateSymlinkDialog(mainFrame, linkPath, targetFile).showDialog();
+        new CreateSymLinkDialog(mainFrame, linkPath, targetFile).showDialog();
     }
 
     @Override

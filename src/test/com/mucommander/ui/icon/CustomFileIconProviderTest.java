@@ -68,7 +68,7 @@ public class CustomFileIconProviderTest {
      * @return Retreives the icon designated by the given filename and returns it
      */
     private Icon getIcon(String iconName) {
-        return IconManager.getIcon(IconManager.FILE_ICON_SET, iconName);
+        return IconManager.getIcon(IconManager.IconSet.FILE, iconName);
     }
 
 }
