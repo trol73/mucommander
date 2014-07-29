@@ -85,8 +85,9 @@
     <property name="dist.jar.signed"      location="${dist}/trolcommander_signed.jar"/>
     <!-- Where to store the Win32 executable.                                                                        -->
     <property name="dist.exe"             value="${dist}/trolCommander.exe"/>
-    <!-- Where to store the OS X executable.                                                                         -->
-    <property name="dist.app.name"        value="trolCommander.app"/>
+    <!-- Where to store the OS X executable.                  														 -->
+    <property name="dist.app.name.short"  value="trolCommander"/>                                                       
+    <property name="dist.app.name"        value="${dist.app.name.short}.app"/>
     <property name="dist.app"             value="${dist}/${dist.app.name}"/>
     <!-- Ivy dependencies retrieval pattern.                                                                         -->
     <property name="ivy.retrieve.pattern" value="${lib}/[conf]/[organisation]/[artifact].[ext]"/>
@@ -259,56 +260,42 @@
         </tar>
     </target>
 
-    <target name="app" depends="load-muant,compress">
-        <echo>Creating Mac OS X application...</echo>
-        <mkapp jar="${dist.jar}" dest="${dist.app}" type="APPL" creator="MUCO" icon="${res.package}/osx/icon.icns"
-               infoversion="0.9" classpath="/System/Library/Java">
-            <string  name="CFBundleName"                    value="trolCommander"/>
-            <string  name="CFBundleIdentifier"              value="com.mucommander.trolCommander"/>
-            <string  name="CFBundleVersion"                 value="${app.version}"/>
-            <boolean name="CFBundleAllowMixedLocalizations" value="true"/>
-            <string  name="CFBundleDevelopmentRegion"       value="English"/>
-            <string  name="CFBundleShortVersionString"      value="${app.version}"/>
-            <string  name="CFBundleGetInfoString"
-                     value="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"/>
-            <string  name="CFBundleInfoDictionaryVersion"   value="6.0"/>
-            <array name="CFBundleDocumentTypes">
-                <dict>
-                    <array name="CFBundleTypeExtensions">
-                        <string value="*"/>
-                    </array>
-                    <array name="CFBundleTypeMIMETypes">
-                        <string value="*/*"/>
-                    </array>
-                    <array name="CFBundleTypeOSTypes">
-                        <string value="****"/>
-                    </array>
-                    <string name="CFBundleTypeName" value="All"/>
-                    <string name="CFBundleTypeRole" value="Viewer"/>
-                </dict>
-            </array>
-            <dict    name="Java">
-                <string name="MainClass"                      value="${app.main}"/>
-                <string name="JVMVersion"                     value="${source.version}+"/>
-                <array name="JVMArchs">
-                    <string value="x86_64"/>
-                    <string value="i386"/>
-                    <string value="ppc"/>
-                </array>
-                <string name="VMOptions"                      value="-Xmx128m"/>
-                <dict name="Properties">
-                    <string name="java.system.class.loader"
-                            value="com.mucommander.commons.file.AbstractFileClassLoader"/>
-                    <string name="com.apple.smallTabs"          value="true"/>
-                    <string name="com.apple.hwaccel"            value="true"/>
-                    <string name="apple.laf.useScreenMenuBar"   value="true"/>
-                    <string name="file.encoding"                value="UTF-8"/>
-                </dict>
-            </dict>
-            <boolean name="NSHighResolutionCapable" value="true"/> 
-        </mkapp>
-    </target>
+	<taskdef 
+	    name="bundleapp" 
+	    classname="com.oracle.appbundler.AppBundlerTask" 
+		 classpathref="lib.tools" />
 
+    <target name="app" depends="load-muant, compress">
+        <echo>Creating Mac OS X application...</echo>
+	    <bundleapp 
+	        outputdirectory="${dist}" 
+	        name="${dist.app.name.short}" 
+	        displayname="trolCommander" 
+	        identifier="com.mucommander.trolCommander" 
+	        shortversion="${app.version}"
+	        applicationCategory="public.app-category.developer-tools"
+	        mainclassname="${app.main}" 
+	    	copyright="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"
+	    	icon="${res.package}/osx/icon.icns" >
+	        <classpath file="${dist.jar}" />
+	    	<option value="-Xmx128m"/>
+	    	<option value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader" />
+	    	<option value="-Dcom.apple.smallTabs=true" />
+	    	<option value="-Dcom.apple.hwaccel" />
+	    	<option value="-Dapple.laf.useScreenMenuBar=true"/>
+	    	<option value="-Dfile.encoding=UTF-8"/>   
+	    	
+			<!-- Bundle the JRE with the App Package -->
+			<!--<runtime dir="${env.JAVA_HOME}" />-->
+	    	
+	    </bundleapp>
+    	
+    	<replace file="${dist}/${dist.app.name}/Contents/Info.plist">
+    	                <replacetoken><![CDATA[</dict>]]></replacetoken>
+    	                <replacevalue><![CDATA[<key>NSHighResolutionCapable</key><true/></dict>]]></replacevalue>    	                
+    	</replace>
+    	
+	</target>
 
 
     <!-- = Win32 packaging ========================================================================================= -->
@@ -834,11 +821,13 @@
 
         <mkdir dir="${dist}"/>
 
-        <!-- Retrieves the implementation version.                                                                   -->
+        <!-- Retrieves the implementation version.                                                                 
         <exec executable="svnversion" failifexecutionfails="no" outputproperty="svn.version">
             <arg value="."/>
             <arg value="-n"/>
         </exec>
+          -->
+    	
 
         <echo>Creating JAR file...</echo>
         <property name="version.url" value="${url.version}"/>
@@ -852,7 +841,7 @@
                 <attribute name="Specification-Version"  value="${app.version}"/>
                 <attribute name="Implementation-Title"   value="${app.name}"/>
                 <attribute name="Implementation-Vendor"  value="${app.vendor}"/>
-                <attribute name="Implementation-Version" value="${svn.version}"/>
+<!--                <attribute name="Implementation-Version" value="${svn.version}"/> -->
                 <attribute name="Build-Date"             value="${DSTAMP}"/>
                 <attribute name="Build-URL"              value="${version.url}"/>
             </manifest>
