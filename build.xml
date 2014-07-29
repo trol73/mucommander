@@ -260,58 +260,6 @@
         </tar>
     </target>
 
-	<!--
-    <target name="app" depends="load-muant,compress">
-        <echo>Creating Mac OS X application...</echo>
-        <mkapp jar="${dist.jar}" dest="${dist.app}" type="APPL" creator="MUCO" icon="${res.package}/osx/icon.icns"
-               infoversion="0.9" classpath="/System/Library/Java">
-            <string  name="CFBundleName"                    value="trolCommander"/>
-            <string  name="CFBundleIdentifier"              value="com.mucommander.trolCommander"/>
-            <string  name="CFBundleVersion"                 value="${app.version}"/>
-            <boolean name="CFBundleAllowMixedLocalizations" value="true"/>
-            <string  name="CFBundleDevelopmentRegion"       value="English"/>
-            <string  name="CFBundleShortVersionString"      value="${app.version}"/>
-            <string  name="CFBundleGetInfoString"
-                     value="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"/>
-            <string  name="CFBundleInfoDictionaryVersion"   value="6.0"/>
-            <array name="CFBundleDocumentTypes">
-                <dict>
-                    <array name="CFBundleTypeExtensions">
-                        <string value="*"/>
-                    </array>
-                    <array name="CFBundleTypeMIMETypes">
-                        <string value="*/*"/>
-                    </array>
-                    <array name="CFBundleTypeOSTypes">
-                        <string value="****"/>
-                    </array>
-                    <string name="CFBundleTypeName" value="All"/>
-                    <string name="CFBundleTypeRole" value="Viewer"/>
-                </dict>
-            </array>
-            <dict    name="Java">
-                <string name="MainClass"                      value="${app.main}"/>
-                <string name="JVMVersion"                     value="${source.version}+"/>
-                <array name="JVMArchs">
-                    <string value="x86_64"/>
-                    <string value="i386"/>
-                    <string value="ppc"/>
-                </array>
-                <string name="VMOptions"                      value="-Xmx128m"/>
-                <dict name="Properties">
-                    <string name="java.system.class.loader"
-                            value="com.mucommander.commons.file.AbstractFileClassLoader"/>
-                    <string name="com.apple.smallTabs"          value="true"/>
-                    <string name="com.apple.hwaccel"            value="true"/>
-                    <string name="apple.laf.useScreenMenuBar"   value="true"/>
-                    <string name="file.encoding"                value="UTF-8"/>
-                </dict>
-            </dict>
-            <boolean name="NSHighResolutionCapable" value="true"/> 
-        </mkapp>
-    </target>
-   -->
-
 	<taskdef 
 	    name="bundleapp" 
 	    classname="com.oracle.appbundler.AppBundlerTask" 
