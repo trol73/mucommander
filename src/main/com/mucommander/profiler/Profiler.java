@@ -14,6 +14,7 @@ public class Profiler {
     private static final Set<String> hiddenGroups = new HashSet<>();
 
     private static String lastSectionName;
+    private static List<String> initThreads = new ArrayList<>();
 
     public static long getTime() {
 //        return System.nanoTime();
@@ -129,6 +130,32 @@ public class Profiler {
     }
 
 
+/*
+    public static void printThreads() {
+        System.out.println("---------------------------");
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
+            String s = thread2str(thread);
+            if (initThreads.contains(s)) {
+                continue;
+            }
+            System.out.println(s);
+        }
+        System.out.println("---------------------------");
+    }
 
+    public static void initThreads() {
+        if (initThreads.size() > 0) {
+            return;
+        }
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
+            initThreads.add(thread2str(thread));
+        }
+    }
 
+    private static String thread2str(Thread thread) {
+        return thread.getId() + ":" + thread.getName() + ":" + thread.getState();
+    }
+*/
 }

@@ -814,7 +814,6 @@ public class FileTableModel extends AbstractTableModel {
         }
         if (calculateDirectorySizeWorker == null) {
             processNextQueuedFile(table);
-
         }
     }
 

@@ -1,6 +1,7 @@
 package ru.trolsoft.calculator;
 
 import com.mucommander.cache.TextHistory;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -271,23 +272,4 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         TextHistory.getInstance().save(TextHistory.Type.CALCULATOR);
     }
 
-
-//    @Override
-//    public void setVisible(boolean show) {
-//        super.setVisible(show);
-//        if (show) {
-//            int buttonWidth = Math.max(btnHex.getWidth(), btnDec.getWidth());
-//            buttonWidth = Math.max(btnBin.getWidth(), buttonWidth);
-//            buttonWidth = Math.max(btnHex.getWidth(), buttonWidth);
-//            buttonWidth = Math.max(btnOct.getWidth(), buttonWidth);
-//            buttonWidth = Math.max(btnExp.getWidth(), buttonWidth);
-//            Dimension d = new Dimension(buttonWidth, btnDec.getHeight());
-//
-//            btnDec.setMinimumSize(d);
-//            btnHex.setMinimumSize(d);
-//            btnBin.setMinimumSize(d);
-//            btnOct.setMinimumSize(d);
-//            btnExp.setMinimumSize(d);
-//        }
-//    }
 }

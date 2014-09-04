@@ -62,7 +62,7 @@ public class ViewAsAction extends SelectedFilesAction {
 
         // At this stage, no assumption should be made on the type of file that is allowed to be viewed/edited:
         // viewer/editor implementations will decide whether they allow a particular file or not.
-        if (file == null) {
+        if (file == null || file.isDirectory()) {
             return;
         }
         new ViewAsQL(mainFrame, file).show();

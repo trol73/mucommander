@@ -167,7 +167,7 @@ public class FileURL implements Cloneable {
                 String newPath = location.getPath();
                 // Find first path token (share)
                 int pos = newPath.indexOf('/', 1);
-                newPath = newPath.substring(0, pos==-1?newPath.length():pos+1);
+                newPath = newPath.substring(0, pos < 0 ? newPath.length() : pos+1);
 
                 realm.setPath(newPath);
                 realm.setScheme(location.getScheme());
@@ -769,7 +769,7 @@ public class FileURL implements Cloneable {
         StringBuffer sb = new StringBuffer(scheme);
         sb.append("://");
 
-        if (includeCredentials && credentials!=null) {
+        if (includeCredentials && credentials != null) {
             try {
                 sb.append(URLEncoder.encode(credentials.getLogin(), "UTF-8"));
             } catch(UnsupportedEncodingException e) {

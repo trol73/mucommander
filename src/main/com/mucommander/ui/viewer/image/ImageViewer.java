@@ -24,6 +24,8 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,6 +51,10 @@ import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
 import net.sf.image4j.codec.ico.ICODecoder;
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.pnm.PNMImageParser;
 import org.apache.sanselan.formats.psd.PsdImageParser;
@@ -61,7 +67,7 @@ import org.apache.sanselan.formats.tiff.TiffImageParser;
 /**
  * A simple image viewer, capable of displaying <code>PNG</code>, <code>GIF</code> and <code>JPEG</code> images. 
  *
- * @author Maxence Bernard, Arik Hadas
+ * @author Maxence Bernard, Arik Hadas, Oleg Trifonov
  */
 class ImageViewer extends FileViewer implements ActionListener {
 
@@ -89,6 +95,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     private StatusBar statusBar;
 
     private boolean waitCursorMode = false;
+    private boolean hasTransparentPixels;
 
     /**
      * Unknown swing issue = MouseMovement events doesn't received on windows show.
@@ -170,12 +177,15 @@ class ImageViewer extends FileViewer implements ActionListener {
         } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
             // TODO pBm raw format reading error
             this.image = (BufferedImage) (new PNMImageParser().getAllBufferedImages(loadFile(file)).get(0));
+        } else if ("svg".equals(ext)) {
+            this.image = transcodeSVGDocument(file);
         } else {
             this.image = ImageIO.read(file.getInputStream());
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
         imageWidth = image.getWidth();
         imageHeight = image.getHeight();
+        this.hasTransparentPixels = image.getColorModel().hasAlpha();
 
         statusBar.setImageSize(imageWidth, imageHeight);
 
@@ -440,13 +450,53 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
+    private static BufferedImage transcodeSVGDocument(AbstractFile file) throws IOException {
+        // Create a PNG transcoder.
+        Transcoder t = new PNGTranscoder();
+        // Set the transcoding hints.
+//        t.addTranscodingHint(PNGTranscoder.KEY_WIDTH,  x);
+//        t.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, y);
 
+        // Create the transcoder input.
+        TranscoderInput input = new TranscoderInput(file.getInputStream());
+        ByteArrayOutputStream ostream = null;
+        try {
+            // Create the transcoder output.
+            ostream = new ByteArrayOutputStream();
+            TranscoderOutput output = new TranscoderOutput(ostream);
+
+            // Save the image.
+            t.transcode(input, output);
+
+            // Flush and close the stream.
+            ostream.flush();
+            ostream.close();
+        } catch( Exception ex ){
+            ex.printStackTrace();
+        }
+
+        // Convert the byte stream into an image.
+        byte[] imgData = ostream.toByteArray();
+
+        // Return the newly rendered image.
+        return ImageIO.read(new ByteArrayInputStream(imgData));
+        //return new BufferedImage(img);
+    }
+
+
+
+
+    private static final Color TRANSPARENT_COLOR_1 = new Color(0x666666);
+    private static final Color TRANSPARENT_COLOR_2 = new Color(0x999999);
+    private static final int TRANSPARENT_GRID_STEP = 8;
     /**
      * Image viewer panel
      */
     private class ImageViewerImpl extends JPanel implements MouseMotionListener, MouseListener, ThemeListener {
 
     	private Color backgroundColor;
+
+
     	
     	ImageViewerImpl() {
     		backgroundColor = ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR);
@@ -468,14 +518,48 @@ class ImageViewer extends FileViewer implements ActionListener {
             g.fillRect(0, 0, width, height);
 
             if (scaledImage != null) {
-                int imageWidth = scaledImage.getWidth();
-                int imageHeight = scaledImage.getHeight();
-                g.drawImage(scaledImage, Math.max(0, (width-imageWidth)/2), Math.max(0, (height-imageHeight)/2), null);
+                final int imageWidth = scaledImage.getWidth();
+                final int imageHeight = scaledImage.getHeight();
+                final int x0 = Math.max(0, (width-imageWidth)/2);
+                final int y0 = Math.max(0, (height-imageHeight)/2);
+                if (hasTransparentPixels) {
+                    int cellW = imageWidth/TRANSPARENT_GRID_STEP;
+                    if (imageWidth % TRANSPARENT_GRID_STEP > 0) {
+                        cellW++;
+                    }
+                    int cellH = imageHeight/TRANSPARENT_GRID_STEP;
+                    if (imageHeight % TRANSPARENT_GRID_STEP > 0) {
+                        cellH++;
+                    }
+                    int x = x0;
+                    int w = TRANSPARENT_GRID_STEP;
+                    for (int cellX = 0; cellX < cellW; cellX++) {
+                        if (cellX == cellW-1) {
+                            w = (imageWidth % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageWidth % TRANSPARENT_GRID_STEP);
+                        }
+                        int y = y0;
+                        int h = TRANSPARENT_GRID_STEP;
+                        for (int cellY = 0; cellY < cellH; cellY++) {
+                            g.setColor((cellX + cellY) % 2 == 0 ? TRANSPARENT_COLOR_1 : TRANSPARENT_COLOR_2);
+                            if (cellY == cellH-1) {
+                                h = (imageHeight % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageHeight % TRANSPARENT_GRID_STEP);
+                            }
+                            g.fillRect(x, y, w, h);
+                            y += TRANSPARENT_GRID_STEP;
+                        }
+                        x += TRANSPARENT_GRID_STEP;
+                    }
+                }
+
+                g.drawImage(scaledImage, x0, y0, null);
             }
         }
         
         @Override
         public synchronized Dimension getPreferredSize() {
+            if (scaledImage == null) {
+                return new Dimension(0, 0);
+            }
             return new Dimension(scaledImage.getWidth(), scaledImage.getHeight());
         }
     	
@@ -487,7 +571,7 @@ class ImageViewer extends FileViewer implements ActionListener {
          * Receives theme color changes notifications.
          */
         public void colorChanged(ColorChangedEvent event) {
-            if(event.getColorId() == Theme.EDITOR_BACKGROUND_COLOR) {
+            if (event.getColorId() == Theme.EDITOR_BACKGROUND_COLOR) {
                 backgroundColor = event.getColor();
                 repaint();
             }
@@ -496,6 +580,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+            if (scaledImage == null) {
+                return;
+            }
             int x = e.getX();
             int y = e.getY();
 
@@ -513,6 +600,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            if (scaledImage == null) {
+                return;
+            }
             int x = e.getX();
             int y = e.getY();
 
