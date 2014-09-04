@@ -15,32 +15,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.ui.viewer.hex;
+package com.mucommander.ui.viewer.html;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 import com.mucommander.ui.viewer.WarnUserException;
 
 /**
- * <code>ViewerFactory</code> implementation for creating hex viewers.
+ * <code>ViewerFactory</code> implementation for creating html viewers.
  *
  * @author Oleg Trifonov
  */
-public class HexFactory implements ViewerFactory {
+public class HtmlFactory implements ViewerFactory {
+
+    public final static ExtensionFilenameFilter HTML_FILTER = new ExtensionFilenameFilter(new String[] {
+            ".htm", ".html"
+    });
+
+    public static Boolean webViewIsAvailable;
+
+    static {
+        HTML_FILTER.setCaseSensitive(false);
+    }
+
+
     @Override
     public boolean canViewFile(AbstractFile file) throws WarnUserException {
-        return !file.isDirectory();
+        if (webViewIsAvailable == null) {
+            webViewIsAvailable = isWebViewIsAvailable();
+        }
+        return webViewIsAvailable && !file.isDirectory() && HTML_FILTER.accept(file);
     }
 
     @Override
     public FileViewer createFileViewer() {
-        return new HexViewer();
+        return new HtmlViewer();
     }
 
     @Override
     public String getName() {
-        return Translator.get("viewer_type.hex");
+        return Translator.get("viewer_type.html");
+    }
+
+
+    private static boolean isWebViewIsAvailable() {
+        try {
+            Class.forName("javafx.application.Platform");
+            Class.forName("javafx.embed.swing.JFXPanel");
+            Class.forName("javafx.scene.Group");
+            Class.forName("javafx.scene.Scene");
+            Class.forName("javafx.scene.web.WebView");
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 }

@@ -101,7 +101,7 @@ public class TextHistory {
         BufferedReader reader = null;
         LinkedList<String> result = new LinkedList<>();
         try {
-            reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"));
             String line;
             while ( (line = reader.readLine() ) != null) {
                 String trim = line.trim();
@@ -123,7 +123,7 @@ public class TextHistory {
     private void save(AbstractFile file, List<String> list) throws  IOException {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), "UTF8"));
             for (String s : list) {
                 writer.write(s);
                 writer.write('\n');

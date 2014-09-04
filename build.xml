@@ -773,6 +773,12 @@
 				<method name="*"/>
 				<constructor name="*"/>
 			</keep>
+			<keep name="org.apache.batik.**">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
+
 			<keep name="com.mucommander.commons.file.impl.sevenzip.SevenZipRandomAccessFile">
 				<method name="*"/>
 			</keep>

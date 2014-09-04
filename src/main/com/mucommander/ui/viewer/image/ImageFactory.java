@@ -33,7 +33,7 @@ public class ImageFactory implements ViewerFactory {
     /** Used to IMAGE_FILTER out file extensions that the image viewer cannot open. */
     public final static ExtensionFilenameFilter IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {
             ".png", ".gif", ".jpg", ".jpeg", ".bmp", ".wbmp",   // java built in formats
-            ".ico", ".psd", ".tga", ".tiff", ".tif", ".pnm", ".pbm", ".pgm", ".ppm"});          // additional formats
+            ".ico", ".psd", ".tga", ".tiff", ".tif", ".pnm", ".pbm", ".pgm", ".ppm", ".svg"});          // additional formats
     static {
         IMAGE_FILTER.setCaseSensitive(false);
     }
@@ -41,6 +41,7 @@ public class ImageFactory implements ViewerFactory {
     public ImageFactory() {
     }
 
+    @Override
     public boolean canViewFile(AbstractFile file) {
         // Do not allow directories
         if (file.isDirectory()) {

@@ -77,7 +77,7 @@ public class VersionChecker extends DefaultHandler {
     // - XML structure ----------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Root XML element. */
-    public static final String ROOT_ELEMENT    = "mucommander";
+    public static final String ROOT_ELEMENT    = "trolcommander";
     /** Version XML element. */
     public static final String VERSION_ELEMENT = "latest_version";
     /** Download URL XML element. */
@@ -141,8 +141,7 @@ public class VersionChecker extends DefaultHandler {
         in = FileFactory.getFile(RuntimeConstants.VERSION_URL).getInputStream();
         try {
             SAXParserFactory.newInstance().newSAXParser().parse(in, instance = new VersionChecker());
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.debug("Failed to read version XML file at "+RuntimeConstants.VERSION_URL, e);
             throw e;
         }
@@ -170,10 +169,10 @@ public class VersionChecker extends DefaultHandler {
      */
     public boolean isNewVersionAvailable() {
         // If the local and remote versions are the same, compares release dates.
-        if(latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
+        if (latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
             // This ensures backward compatibility - if the remote version file does not contain
             // release date information, ignore it.
-            if(releaseDate.equals(""))
+            if ("".equals(releaseDate))
                 return true;
 
             // Checks whether the remote release date is later than the current release date.
@@ -272,8 +271,9 @@ public class VersionChecker extends DefaultHandler {
         latestVersion = latestVersion.toLowerCase().trim();
         downloadURL   = downloadURL.trim();
         jarURL        = jarURL.trim();
-        if("".equals(jarURL))
+        if (jarURL.length() == 0) {
             jarURL = null;
+        }
         releaseDate   = releaseDate.trim();
 
         // Logs the data if in debug mode.

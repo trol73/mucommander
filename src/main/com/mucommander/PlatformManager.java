@@ -46,24 +46,24 @@ public class PlatformManager {
      * <p>
      * This folder is:
      * <ul>
-     *  <li><code>~/Library/Preferences/muCommander/</code> under MAC OS X.</li>
-     *  <li><code>~/.mucommander/</code> under all other OSes.</li>
+     *  <li><code>~/Library/Preferences/trolCommander/</code> under MAC OS X.</li>
+     *  <li><code>~/.trolcommander/</code> under all other OSes.</li>
      * </ul>
      * </p>
      * <p>
      * If the default preferences folder doesn't exist, this method will create it.
      * </p>
-     * @return the path to the default muCommander preferences folder.
+     * @return the path to the default trolCommander preferences folder.
      */
     public static AbstractFile getDefaultPreferencesFolder() {
         File folder;
 
-        // Mac OS X specific folder (~/Library/Preferences/muCommander)
+        // Mac OS X specific folder (~/Library/Preferences/trolCommander)
         if(OsFamily.MAC_OS_X.isCurrent())
-            folder = new File(System.getProperty("user.home")+"/Library/Preferences/muCommander");
-        // For all other platforms, use generic folder (~/.mucommander)
+            folder = new File(System.getProperty("user.home")+"/Library/Preferences/trolCommander");
+        // For all other platforms, use generic folder (~/.trolcommander)
         else
-            folder = new File(System.getProperty("user.home"), "/.mucommander");
+            folder = new File(System.getProperty("user.home"), "/.trolcommander");
 
         // Makes sure the folder exists.
         if(!folder.exists())
@@ -96,12 +96,12 @@ public class PlatformManager {
     }
 
     /**
-     * Sets the path to the folder in which muCommander will look for its preferences.
+     * Sets the path to the folder in which trolCommander will look for its preferences.
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
      * </p>
-     * @param  folder      path to the folder in which muCommander will look for its preferences.
+     * @param  folder      path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()
      * @see                #setPreferencesFolder(String)
@@ -110,12 +110,12 @@ public class PlatformManager {
     public static void setPreferencesFolder(File folder) throws IOException {setPreferencesFolder(FileFactory.getFile(folder.getAbsolutePath()));}
 
     /**
-     * Sets the path to the folder in which muCommande rwill look for its preferences.
+     * Sets the path to the folder in which trolCommande rwill look for its preferences.
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
      * </p>
-     * @param  path        path to the folder in which muCommander will look for its preferences.
+     * @param  path        path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()
      * @see                #setPreferencesFolder(File)
@@ -131,12 +131,12 @@ public class PlatformManager {
     }
 
     /**
-     * Sets the path to the folder in which muCommander will look for its preferences.
+     * Sets the path to the folder in which trolCommander will look for its preferences.
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
      * </p>
-     * @param  folder      path to the folder in which muCommander will look for its preferences.
+     * @param  folder      path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()
      * @see                #setPreferencesFolder(String)

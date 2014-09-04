@@ -108,7 +108,7 @@ public class SelfUpdateJob extends CopyJob {
     private static AbstractFile createTemporaryFolder() {
         AbstractFile tempFolder;
         try {
-            tempFolder = FileFactory.getTemporaryFile("mucomander-self-update", true);
+            tempFolder = FileFactory.getTemporaryFile("trolcomander-self-update", true);
             tempFolder.mkdir();
         }
         catch(IOException e) {
@@ -221,15 +221,15 @@ public class SelfUpdateJob extends CopyJob {
                 EqualsFilenameFilter launcherFilter;
 
                 // Windows
-                if(OsFamily.WINDOWS.isCurrent()) {
+                if (OsFamily.WINDOWS.isCurrent()) {
                     // Look for a muCommander.exe launcher located in the same folder as the JAR file
-                    launcherFilter = new EqualsFilenameFilter("muCommander.exe", false);
+                    launcherFilter = new EqualsFilenameFilter("trolCommander.exe", false);
 
                 }
                 // Other platforms, possibly Unix/Linux
                 else {
                     // Look for a mucommander.sh located in the same folder as the JAR file
-                    launcherFilter = new EqualsFilenameFilter("mucommander.sh", false);
+                    launcherFilter = new EqualsFilenameFilter("trolcommander.sh", false);
                 }
 
                 AbstractFile[] launcherFile = parent.ls(launcherFilter);

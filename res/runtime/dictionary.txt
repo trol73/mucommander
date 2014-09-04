@@ -3671,6 +3671,9 @@ viewer_type.pdf:RU:Документ PDF
 viewer_type.audio:EN:Audio file
 viewer_type.audio:RU:Аудио файл
 
+viewer_type.html:EN:HTML document
+viewer_type.html:RU:Документ HTML
+
 
 
 

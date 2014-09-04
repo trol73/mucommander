@@ -765,5 +765,7 @@ public class Launcher {
         Profiler.stop("init");
         Profiler.print();
         Profiler.hide("launcher.");
+        //Profiler.printThreads();
+        //Profiler.initThreads();
     }
 }
