@@ -178,7 +178,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             // TODO pBm raw format reading error
             this.image = (BufferedImage) (new PNMImageParser().getAllBufferedImages(loadFile(file)).get(0));
         } else if ("svg".equals(ext)) {
-            this.image = transcodeSVGDocument(file);
+            this.image = transcodeSVGDocument(file, 0, 0);
         } else {
             this.image = ImageIO.read(file.getInputStream());
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
@@ -255,14 +255,22 @@ class ImageViewer extends FileViewer implements ActionListener {
         final int srcHeight = image.getHeight(null);
         final int scaledWidth = (int)(srcWidth*factor);
         final int scaledHeight = (int)(srcHeight*factor);
-        //this.scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
 
         if (factor != 1.0) {
-            this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-            AffineTransform at = new AffineTransform();
-            at.scale(factor, factor);
-            AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
+            AbstractFile file = filesInDirectory.get(indexInDirectory);
+            if ("svg".equalsIgnoreCase(file.getExtension())) {
+                try {
+                    this.scaledImage = transcodeSVGDocument(file, scaledWidth, scaledHeight);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+                AffineTransform at = new AffineTransform();
+                at.scale(factor, factor);
+                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
+            }
         } else {
             this.scaledImage = image;
         }
@@ -450,37 +458,46 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    private static BufferedImage transcodeSVGDocument(AbstractFile file) throws IOException {
-        // Create a PNG transcoder.
-        Transcoder t = new PNGTranscoder();
-        // Set the transcoding hints.
-//        t.addTranscodingHint(PNGTranscoder.KEY_WIDTH,  x);
-//        t.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, y);
+    private static BufferedImage transcodeSVGDocument(AbstractFile file, float width, float height) throws IOException {
+try {
+    // Create a PNG transcoder.
+    Transcoder t = new PNGTranscoder();
+    // Set the transcoding hints.
+    if (width > 0) {
+        t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width);
+    }
+    if (height > 0) {
+        t.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, height);
+    }
 
-        // Create the transcoder input.
-        TranscoderInput input = new TranscoderInput(file.getInputStream());
-        ByteArrayOutputStream ostream = null;
-        try {
-            // Create the transcoder output.
-            ostream = new ByteArrayOutputStream();
-            TranscoderOutput output = new TranscoderOutput(ostream);
+    // Create the transcoder input.
+    TranscoderInput input = new TranscoderInput(file.getInputStream());
+    ByteArrayOutputStream ostream = null;
+    try {
+        // Create the transcoder output.
+        ostream = new ByteArrayOutputStream();
+        TranscoderOutput output = new TranscoderOutput(ostream);
 
-            // Save the image.
-            t.transcode(input, output);
+        // Save the image.
+        t.transcode(input, output);
 
-            // Flush and close the stream.
-            ostream.flush();
-            ostream.close();
-        } catch( Exception ex ){
-            ex.printStackTrace();
-        }
+        // Flush and close the stream.
+        ostream.flush();
+        ostream.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
 
-        // Convert the byte stream into an image.
-        byte[] imgData = ostream.toByteArray();
+    // Convert the byte stream into an image.
+    byte[] imgData = ostream.toByteArray();
 
-        // Return the newly rendered image.
-        return ImageIO.read(new ByteArrayInputStream(imgData));
-        //return new BufferedImage(img);
+    // Return the newly rendered image.
+    return ImageIO.read(new ByteArrayInputStream(imgData));
+    //return new BufferedImage(img);
+} catch (Throwable t) {
+    t.printStackTrace();
+    return null;
+}
     }
 
 
