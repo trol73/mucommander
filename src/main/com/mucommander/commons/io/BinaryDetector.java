@@ -87,7 +87,7 @@ public class BinaryDetector {
                 containsZero = true;
             }
         }
-        if (x0Acnt == 0 && x0Dcnt == 0 && len > 1024*8) {
+        if (x0Acnt == 0 && x0Dcnt == 0 && len > 1024*32) {
             return true;
         }
         try {

@@ -13678,6 +13678,10 @@ text_editor.line_numbers:EN:$[text_viewer.line_numbers]
 text_editor.syntax:EN:Syntax
 text_editor.syntax:RU:Синтаксис
 
+text_editor.format:EN:Format
+text_editor.format:RU:Форматировать
+
+
 ####################
 # Shortcuts dialog #
 ####################

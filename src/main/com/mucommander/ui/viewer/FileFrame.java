@@ -53,10 +53,10 @@ public abstract class FileFrame extends JFrame {
 		try {
 			filePresenter = createFilePresenter(file);
 		} catch (UserCancelledException e) {
+            e.printStackTrace();
 			// May get a UserCancelledException if the user canceled (refused to confirm the operation after a warning)
 			return;
 		}
-
 		// If not suitable presenter was found for the given file
 		if (filePresenter == null) {
 			showGenericErrorDialog();

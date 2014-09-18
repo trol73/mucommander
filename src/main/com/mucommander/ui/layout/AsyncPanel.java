@@ -57,6 +57,7 @@ public abstract class AsyncPanel extends JPanel {
             try {
                 initTargetComponent();
             } catch (Exception e) {
+e.printStackTrace();
                 exception = e;
             }
             return null;
@@ -101,7 +102,7 @@ public abstract class AsyncPanel extends JPanel {
         addAncestorListener(new AncestorListener() {
 
             public void ancestorAdded(AncestorEvent e) {
-                if(visibleOnScreen)
+                if (visibleOnScreen)
                     return;
 
                 visibleOnScreen = true;
