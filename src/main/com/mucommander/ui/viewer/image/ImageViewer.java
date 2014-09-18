@@ -459,45 +459,40 @@ class ImageViewer extends FileViewer implements ActionListener {
 
 
     private static BufferedImage transcodeSVGDocument(AbstractFile file, float width, float height) throws IOException {
-try {
-    // Create a PNG transcoder.
-    Transcoder t = new PNGTranscoder();
-    // Set the transcoding hints.
-    if (width > 0) {
-        t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width);
-    }
-    if (height > 0) {
-        t.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, height);
-    }
+        // Create a PNG transcoder.
+        Transcoder t = new PNGTranscoder();
+        // Set the transcoding hints.
+        if (width > 0) {
+            t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width);
+        }
+        if (height > 0) {
+            t.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, height);
+        }
+        t.addTranscodingHint(PNGTranscoder.KEY_XML_PARSER_VALIDATING, false);
 
-    // Create the transcoder input.
-    TranscoderInput input = new TranscoderInput(file.getInputStream());
-    ByteArrayOutputStream ostream = null;
-    try {
-        // Create the transcoder output.
-        ostream = new ByteArrayOutputStream();
-        TranscoderOutput output = new TranscoderOutput(ostream);
+        // Create the transcoder input.
+        TranscoderInput input = new TranscoderInput(file.getInputStream());
+        ByteArrayOutputStream ostream = null;
+        try {
+            // Create the transcoder output.
+            ostream = new ByteArrayOutputStream();
+            TranscoderOutput output = new TranscoderOutput(ostream);
 
-        // Save the image.
-        t.transcode(input, output);
+            // Save the image.
+            t.transcode(input, output);
 
-        // Flush and close the stream.
-        ostream.flush();
-        ostream.close();
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
+            // Flush and close the stream.
+            ostream.flush();
+            ostream.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-    // Convert the byte stream into an image.
-    byte[] imgData = ostream.toByteArray();
+        // Convert the byte stream into an image.
+        byte[] imgData = ostream.toByteArray();
 
-    // Return the newly rendered image.
-    return ImageIO.read(new ByteArrayInputStream(imgData));
-    //return new BufferedImage(img);
-} catch (Throwable t) {
-    t.printStackTrace();
-    return null;
-}
+        // Return the newly rendered image.
+        return ImageIO.read(new ByteArrayInputStream(imgData));
     }
 
 

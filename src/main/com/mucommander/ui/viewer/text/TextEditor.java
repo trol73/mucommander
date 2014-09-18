@@ -205,8 +205,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         if (type == FileType.NONE && textEditorImpl.isXmlFile(file)) {
             type = FileType.XML;
         }
-        textViewerDelegate.menuHelper.setSyntax(type);
         textArea.setFileType(type);
+        textViewerDelegate.menuHelper.setSyntax(type);
     	textViewerDelegate.startEditing(file, this);
         textArea.discardAllEdits();
     }

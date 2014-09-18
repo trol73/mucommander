@@ -22,12 +22,14 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.ui.theme.*;
+import com.mucommander.ui.viewer.text.utils.CodeFormatter;
 
 import javax.swing.JFrame;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -78,6 +80,7 @@ class TextEditorImpl implements ThemeListener {
         textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
         textArea.setAntiAliasingEnabled(true);
 		textArea.setEditable(isEditable);
+
         try {
             ThemeManager.readEditorTheme(ThemeManager.getCurrentSyntaxThemeName()).apply(textArea);
         } catch (Exception e) {
@@ -88,10 +91,16 @@ class TextEditorImpl implements ThemeListener {
 		// Use theme colors and font
 		textArea.setForeground(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
 		textArea.setCaretColor(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
-		textArea.setBackground(ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR));
+        Color background = ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR);
+        textArea.setBackground(background);
+
+        for (int i = 1; i <= textArea.getSecondaryLanguageCount(); i++) {
+            textArea.setSecondaryLanguageBackground(i, background);
+        }
 		textArea.setSelectedTextColor(ThemeManager.getCurrentColor(Theme.EDITOR_SELECTED_FOREGROUND_COLOR));
 		textArea.setSelectionColor(ThemeManager.getCurrentColor(Theme.EDITOR_SELECTED_BACKGROUND_COLOR));
 		textArea.setFont(ThemeManager.getCurrentFont(Theme.EDITOR_FONT));
+        textArea.setCodeFoldingEnabled(true);
 
 		textArea.setWrapStyleWord(true);
 
@@ -276,7 +285,7 @@ class TextEditorImpl implements ThemeListener {
 	 * Receives theme color changes notifications.
 	 */
 	public void colorChanged(ColorChangedEvent event) {
-		switch(event.getColorId()) {
+		switch (event.getColorId()) {
             case Theme.EDITOR_FOREGROUND_COLOR:
                 textArea.setForeground(event.getColor());
                 break;
@@ -331,6 +340,24 @@ class TextEditorImpl implements ThemeListener {
 
         String str = new String(bytes, 0, readBytes).trim().toLowerCase();
         return str.startsWith("<?xml");
+    }
+
+
+    public void formatCode() {
+        String src = textArea.getText();
+        String formatted = null;
+
+        switch (textArea.getFileType()) {
+            case XML:
+                formatted = CodeFormatter.formatXml(src);
+                break;
+            case JSON:
+                formatted = CodeFormatter.formatJson(src);
+                break;
+        }
+        if (formatted != null) {
+            textArea.setText(formatted);
+        }
     }
 
 }

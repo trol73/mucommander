@@ -165,7 +165,11 @@ class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener
     }
 
     private void setBackgroundColors() {
-        preview.setBackground(themeData.getColor(ThemeData.EDITOR_BACKGROUND_COLOR));
+        Color background = themeData.getColor(ThemeData.EDITOR_BACKGROUND_COLOR);
+        preview.setBackground(background);
+        for (int i = 0; i < preview.getSecondaryLanguageCount(); i++) {
+            preview.setSecondaryLanguageBackground(i, background);
+        }
         preview.setSelectionColor(themeData.getColor(ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR));
         preview.setCurrentLineHighlightColor(themeData.getColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR));
     }

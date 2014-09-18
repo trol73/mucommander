@@ -55,6 +55,7 @@ public class TextMenuHelper {
     private JMenuItem gotoLineItem;
     private JMenuItem toggleLineWrapItem;
     private JMenuItem toggleLineNumbersItem;
+    private JMenuItem formatItem;
 
     public TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
         this.textEditorImpl = textEditorImpl;
@@ -88,7 +89,11 @@ public class TextMenuHelper {
         editMenu.addSeparator();
         gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
 
+        if (editMode) {
+            formatItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.format"), menuItemMnemonicHelper, null, actionListener);
+        }
         viewMenu = new JMenu(Translator.get("text_editor.view"));
+
 
         toggleLineWrapItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
         toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
@@ -164,6 +169,8 @@ public class TextMenuHelper {
             textEditorImpl.undo();
         } else if (source == redoItem) {
             textEditorImpl.redo();
+        } else if (source == formatItem) {
+            textEditorImpl.formatCode();
         } else {
             return false;
         }
@@ -176,6 +183,7 @@ public class TextMenuHelper {
             JCheckBoxMenuItem item = (JCheckBoxMenuItem)viewMenuSyntax.getItem(i);
             item.setSelected(item.getText().equals(fileType.getName()));
         }
+        updateEditActions();
     }
 
 
@@ -198,5 +206,9 @@ public class TextMenuHelper {
         final TextArea textArea = textEditorImpl.getTextArea();
         undoItem.setEnabled(textArea.canUndo());
         redoItem.setEnabled(textArea.canRedo());
+        FileType ft = textArea.getFileType();
+        formatItem.setVisible(ft == FileType.XML || ft == FileType.JSON);
     }
+
+
 }
