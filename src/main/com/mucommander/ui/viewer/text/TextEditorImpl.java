@@ -318,7 +318,7 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 
-    public boolean isXmlFile(AbstractFile file) {
+    public FileType detectFileFormat(AbstractFile file) {
         byte bytes[] = BufferPool.getByteArray(256);
         int readBytes;
         try {
@@ -332,14 +332,19 @@ class TextEditorImpl implements ThemeListener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            return false;
+            return FileType.NONE;
         }
         if (readBytes < 5) {
-            return false;
+            return FileType.NONE;
         }
 
         String str = new String(bytes, 0, readBytes).trim().toLowerCase();
-        return str.startsWith("<?xml");
+        if (str.startsWith("<?xml")) {
+            return FileType.XML;
+        } else if (str.startsWith("<?php")) {
+            return FileType.PHP;
+        }
+        return FileType.NONE;
     }
 
 
