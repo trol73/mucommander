@@ -22,6 +22,7 @@ import java.io.*;
 
 /**
  * Created by trol on 18/09/14.
+ *
  */
 public class CodeFormatter {
 
@@ -50,7 +51,7 @@ public class CodeFormatter {
             final Document document = parseXmlFile(unformattedXml);
 
             OutputFormat format = new OutputFormat(document);
-            format.setLineWidth(80);
+            format.setLineWidth(120);
             format.setIndenting(true);
             format.setIndent(3);
 

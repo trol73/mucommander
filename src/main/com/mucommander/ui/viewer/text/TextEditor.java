@@ -30,8 +30,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.mucommander.commons.io.BufferPool;
-import com.mucommander.commons.io.StreamUtils;
 import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,9 +199,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
-        // detect XML files
-        if (type == FileType.NONE && textEditorImpl.isXmlFile(file)) {
-            type = FileType.XML;
+        // detect XML and PHP files
+        if (type == FileType.NONE) {
+            type = textEditorImpl.detectFileFormat(file);
         }
         textArea.setFileType(type);
         textViewerDelegate.menuHelper.setSyntax(type);
