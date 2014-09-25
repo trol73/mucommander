@@ -1,5 +1,5 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
+ * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
  * Copyright (C) 2013-2014 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
@@ -24,7 +24,8 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import java.io.File;
 
 /**
- * Created by trol on 04/01/14.
+ * @author Oleg Trifonov
+ * Created on 04/01/14.
  */
 public enum FileType {
     NONE("None", SyntaxConstants.SYNTAX_STYLE_NONE),

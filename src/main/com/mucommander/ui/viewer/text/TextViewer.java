@@ -39,7 +39,7 @@ import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
-import org.fife.ui.StatusBar;
+
 
 /**
  * A simple text viewer. Most of the implementation is located in {@link TextEditorImpl}.
@@ -65,7 +65,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private TextFilesHistory.FileRecord historyRecord;
     
     TextViewer() {
-    	this(new TextEditorImpl(false));
+    	this(new TextEditorImpl(false, null));
     }
     
     TextViewer(TextEditorImpl textEditorImpl) {
@@ -140,7 +140,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
             in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
-
+            if (textEditorImpl.getStatusBar() != null) {
+                textEditorImpl.getStatusBar().setEncoding(encoding);
+            }
             // Load the file into the text area
             loadDocument(in, encoding, documentListener);
         } finally {
@@ -164,6 +166,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         // If the given encoding is invalid (null or not supported), default to "UTF-8" 
         this.encoding = encoding == null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
+        if (getStatusBar() != null) {
+            getStatusBar().setEncoding(encoding);
+        }
         textEditorImpl.read(new BufferedReader(new InputStreamReader(in, this.encoding)));
 
         // Listen to document changes

@@ -1,5 +1,5 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * This file is part of trolCommander, http://www.mucommander.com
  * Copyright (C) 2013-2014 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
@@ -15,26 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.ui.viewer.text;
-
-import com.mucommander.text.Translator;
-import com.mucommander.ui.dialog.FocusDialog;
-
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package com.mucommander.ui.viewer.text.utils;
 
 /**
- * Created on 17/09/14.
+ * @author Oleg Trifonov
  */
-public class ReplaceDialog extends FocusDialog implements ActionListener {
+public class CodeFormatException extends Exception {
 
-    public ReplaceDialog(Frame editorFrame) {
-        super(editorFrame, Translator.get("text_editor.replace"), editorFrame);
+    private final int line;
+    private final int row;
+
+    public CodeFormatException(String message, int line, int row, Throwable cause) {
+        super(message, cause);
+        this.line = line;
+        this.row = row;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
+    public int getLine() {
+        return line;
+    }
+
+    public int getRow() {
+        return row;
     }
 }
