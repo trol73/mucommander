@@ -133,8 +133,10 @@ public class HexViewer extends FileViewer {
 
     @Override
     protected StatusBar getStatusBar() {
-        statusBar = new StatusBar();
-        statusBar.setEncoding(encoding);
+        if (statusBar == null) {
+            statusBar = new StatusBar();
+            statusBar.setEncoding(encoding);
+        }
         return statusBar;
     }
 

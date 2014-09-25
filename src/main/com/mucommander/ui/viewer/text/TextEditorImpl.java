@@ -22,9 +22,12 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.ui.theme.*;
+import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
 
 import javax.swing.JFrame;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
@@ -58,13 +61,26 @@ class TextEditorImpl implements ThemeListener {
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
 
-	////////////////////
+    private StatusBar statusBar;
+
+    private CaretListener caretListener = new CaretListener() {
+        @Override
+        public void caretUpdate(CaretEvent e) {
+            if (statusBar != null) {
+                statusBar.setPosition(textArea.getLine(), textArea.getColumn());
+            }
+        }
+    };
+
+
+    ////////////////////
 	// Initialization //
 	////////////////////
 
-	public TextEditorImpl(boolean isEditable) {
+	public TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
 		initTextArea(isEditable);
+        this.statusBar = statusBar;
 
 		// Listen to theme changes to update the text area if it is visible
 		ThemeManager.addCurrentThemeListener(this);
@@ -127,7 +143,9 @@ class TextEditorImpl implements ThemeListener {
 				}
 			}
 		});
-	}
+
+        textArea.addCaretListener(caretListener);
+    }
 
 	/////////////////
 	// Search code //
@@ -348,7 +366,7 @@ class TextEditorImpl implements ThemeListener {
     }
 
 
-    public void formatCode() {
+    private void formatTextArea() throws CodeFormatException {
         String src = textArea.getText();
         String formatted = null;
 
@@ -363,6 +381,28 @@ class TextEditorImpl implements ThemeListener {
         if (formatted != null) {
             textArea.setText(formatted);
         }
+
     }
 
+    public void formatCode() {
+        try {
+            formatTextArea();
+            getStatusBar().setStatusMessage("");
+        } catch (CodeFormatException e) {
+            if (e.getLine() > 0 ) {
+                if (e.getRow() > 0) {
+                    textArea.gotoLine(e.getLine(), e.getRow());
+                } else {
+                    textArea.gotoLine(e.getLine());
+                }
+            }
+            getStatusBar().setStatusMessage(e.getLocalizedMessage());
+        } catch (Exception e) {
+            getStatusBar().setStatusMessage("Error");
+        }
+    }
+
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.ui.viewer.audio;
+package com.mucommander.ui.viewer.text;
 
 import org.fife.ui.StatusBarPanel;
 
@@ -24,28 +24,42 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 
 /**
- * Created on 14/03/14.
+ *
+ * Created by trol on 25/09/14.
  */
 public class StatusBar extends org.fife.ui.StatusBar {
-    private StatusBarPanel panel;
-    private JLabel lbl;
+
+    private StatusBarPanel panelPosition;
+    private StatusBarPanel panelEncoding;
+
+    private JLabel lblPosition;
+    private JLabel lblEncoding;
+
 
     public StatusBar() {
         super("");
 
-        lbl = new JLabel();
-        panel = new StatusBarPanel(new BorderLayout(), lbl);
+        lblPosition = new JLabel();
+        panelPosition = new StatusBarPanel(new BorderLayout(), lblPosition);
+
+        lblEncoding = new JLabel();
+        panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
 
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
 
         c.weightx = 0.0;
-        addStatusBarComponent(panel, c);
+        addStatusBarComponent(panelPosition, c);
+        c.weightx = 0.0;
+        addStatusBarComponent(panelEncoding, c);
     }
 
-    public void set(String s) {
-        lbl.setText(s);
+    public void setPosition(int line, int column) {
+        lblPosition.setText(line + " : " + column);
     }
 
+    public void setEncoding(String encoding) {
+        lblEncoding.setText(encoding);
+    }
 }

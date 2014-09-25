@@ -1,5 +1,21 @@
+/*
+ * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * Copyright (C) 2013-2014 Oleg Trifonov
+ *
+ * muCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * muCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mucommander.ui.viewer.text.utils;
-
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +30,7 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,7 +43,7 @@ import java.io.*;
  */
 public class CodeFormatter {
 
-    public static String formatXml2(String src) {
+    public static String formatXml2(String src) throws CodeFormatException {
         final Document document = parseXmlFile(src);
         OutputStream bos = new ByteArrayOutputStream();
 
@@ -46,7 +63,7 @@ public class CodeFormatter {
         return bos.toString();
     }
 
-    public static String formatXml(String unformattedXml) {
+    public static String formatXml(String unformattedXml) throws CodeFormatException {
         try {
             final Document document = parseXmlFile(unformattedXml);
 
@@ -66,7 +83,7 @@ public class CodeFormatter {
         }
     }
 
-    private static Document parseXmlFile(String in) {
+    private static Document parseXmlFile(String in) throws CodeFormatException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -74,6 +91,8 @@ public class CodeFormatter {
             return db.parse(is);
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
+        } catch (SAXParseException e) {
+            throw new CodeFormatException(e.getMessage(), e.getLineNumber(), e.getColumnNumber(), e);
         } catch (SAXException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -82,7 +101,7 @@ public class CodeFormatter {
     }
 
 
-    public static String formatJson(String json) {
+    public static String formatJson(String json) throws CodeFormatException {
         JsonParser parser = new JsonParser();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement el = parser.parse(json);

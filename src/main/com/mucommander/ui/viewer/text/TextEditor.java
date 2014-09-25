@@ -30,7 +30,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +56,11 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     //private TextMenuHelper menuHelper;
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
+    private StatusBar statusBar;
 
 
     public TextEditor() {
-    	textViewerDelegate = new TextViewer(textEditorImpl = new TextEditorImpl(true)) {
+    	textViewerDelegate = new TextViewer(textEditorImpl = new TextEditorImpl(true, getStatusBar())) {
     		
     		@Override
     		protected void setComponentToPresent(JComponent component) {
@@ -88,6 +88,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     
     void loadDocument(InputStream in, String encoding, DocumentListener documentListener) throws IOException {
     	textViewerDelegate.loadDocument(in, encoding, documentListener);
+        if (getStatusBar() != null) {
+            getStatusBar().setEncoding(encoding);
+        }
     }
     
     private void write(OutputStream out) throws IOException {
@@ -113,7 +116,10 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     protected StatusBar getStatusBar() {
-        return null;
+        if (statusBar == null) {
+            statusBar = new StatusBar();
+        }
+        return statusBar;
     }
 
     @Override
@@ -247,8 +253,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     /////////////////////////////////////
 
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
-    	if (!askSave())
-    		return;         // Abort if the file could not be saved
+    	if (!askSave()) {
+            return;         // Abort if the file could not be saved
+        }
 
         // Store caret and scrollbar position before change
         TextArea textArea = textEditorImpl.getTextArea();

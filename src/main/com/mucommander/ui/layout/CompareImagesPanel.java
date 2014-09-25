@@ -1,6 +1,6 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2014 Oleg Trifonov
+ * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * Copyright (C) 2013-2014 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import java.awt.Image;
 import java.io.IOException;
 
 /**
- * Created by trol on 24/01/14.
+ * Created on 24/01/14.
  */
 public class CompareImagesPanel extends JPanel {
 

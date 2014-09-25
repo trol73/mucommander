@@ -1,5 +1,5 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
+ * This file is part of trolCommander, http://www.mucommander.com
  * Copyright (C) 2014 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify

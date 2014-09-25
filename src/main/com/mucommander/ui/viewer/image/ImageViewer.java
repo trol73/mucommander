@@ -142,7 +142,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     @Override
     protected StatusBar getStatusBar() {
-        statusBar = new StatusBar();
+        if (statusBar == null) {
+            statusBar = new StatusBar();
+        }
         return statusBar;
     }
 
