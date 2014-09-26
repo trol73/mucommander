@@ -252,7 +252,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         // Listen to job state changes
         job.addFileJobListener(this);
 
-        if(job instanceof TransferFileJob)
+        if( job instanceof TransferFileJob)
             this.transferFileJob = (TransferFileJob)job;
 
         initUI();

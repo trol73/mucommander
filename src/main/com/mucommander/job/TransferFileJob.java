@@ -126,12 +126,11 @@ public abstract class TransferFileJob extends FileJob {
         // may also offer server to server copy which is more efficient than stream copy.
 
         boolean copied = false;
-        if(sourceFile.isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
+        if (sourceFile.isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
             try {
                 sourceFile.copyRemotelyTo(destFile);
                 copied = true;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // The file will be copied manually
             }
         }
@@ -158,13 +157,13 @@ public abstract class TransferFileJob extends FileJob {
                     }
                     else {
                         in = sourceFile.getInputStream();
-                        if(integrityCheckEnabled)
+                        if (integrityCheckEnabled) {
                             in = new ChecksumInputStream(in, MessageDigest.getInstance(CHECKSUM_VERIFICATION_ALGORITHM));
+                        }
                     }
 
                     setCurrentInputStream(in);
-                }
-                catch(Exception e) {
+                } catch(Exception e) {
                     LOGGER.debug("IOException caught, throwing FileTransferException", e);
                     throw new FileTransferException(FileTransferException.OPENING_SOURCE);
                 }
@@ -182,11 +181,10 @@ public abstract class TransferFileJob extends FileJob {
         }
 
         // Preserve source file's date
-        if(destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
             try {
                 destFile.changeDate(sourceFile.getDate());
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 LOGGER.debug("failed to change the date of "+destFile, e);
                 // Fail silently
             }
@@ -611,10 +609,10 @@ public abstract class TransferFileJob extends FileJob {
         int nbFiles = getNbFiles();
 
         // If file is in base folder and is not a directory...
-        if(getCurrentFile()!=null && nbFilesProcessed!=nbFiles && files.indexOf(getCurrentFile())!=-1 && !getCurrentFile().isDirectory()) {
+        if (getCurrentFile() != null && nbFilesProcessed != nbFiles && files.indexOf(getCurrentFile()) >= 0 && !getCurrentFile().isDirectory()) {
             // Add current file's progress
             long currentFileSize = getCurrentFile().getSize();
-            if(currentFileSize>0)
+            if (currentFileSize > 0)
                 nbFilesProcessed += getCurrentFileByteCounter().getByteCount()/(float)currentFileSize;
         }
 
@@ -627,8 +625,9 @@ public abstract class TransferFileJob extends FileJob {
      */
     @Override
     public String getStatusString() {
-        if(isCheckingIntegrity())
+        if (isCheckingIntegrity()) {
             return Translator.get("progress_dialog.verifying_file", getCurrentFilename());
+        }
 
         return super.getStatusString();
     }

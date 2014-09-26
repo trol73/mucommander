@@ -21,6 +21,7 @@ package com.mucommander.job;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractRWArchiveFile;
 import com.mucommander.commons.file.util.FileSet;
+import com.mucommander.job.utils.ScanDirectoryThread;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.FileCollisionRenameDialog;
@@ -59,6 +60,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
     /** True when an archive is being optimized */
     protected boolean isOptimizingArchive;
 
+
     /**
      * Creates a new <code>AbstractCopyJob</code>.
      *
@@ -84,21 +86,20 @@ public abstract class AbstractCopyJob extends TransferFileJob {
      * @param destFileName a destination file name
      * @return the destination file or null if it cannot be created
      */
-    protected AbstractFile createDestinationFile(AbstractFile destFolder,
-            String destFileName) {
+    protected AbstractFile createDestinationFile(AbstractFile destFolder, String destFileName) {
         AbstractFile destFile;
         do {    // Loop for retry
             try {
                 destFile = destFolder.getDirectChild(destFileName);
                 break;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Destination file couldn't be instantiated
 
                 int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFileName));
                 // Retry loops
-                if(ret==RETRY_ACTION)
+                if (ret==RETRY_ACTION) {
                     continue;
+                }
                 // Cancel or close dialog return false
                 return null;
                 // Skip continues
@@ -133,7 +134,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             // If allowCaseVariation is true and both files are equal, test if the destination filename is a variation
             // of the original filename with a different case. If that is the case, do not warn about the source and
             // destination being the same.
-            if(allowCaseVariation && collision==FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
+            if (allowCaseVariation && collision==FileCollisionChecker.SAME_SOURCE_AND_DESTINATION) {
                 String sourceFileName = file.getName();
                 String destFileName = destFile.getName();
                 if(sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName))
@@ -141,7 +142,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             }
             
             // Handle collision, asking the user what to do or using a default action to resolve the collision 
-            if(collision != FileCollisionChecker.NO_COLLOSION) {
+            if (collision != FileCollisionChecker.NO_COLLOSION) {
                 int choice;
                 // Use default action if one has been set, if not show up a dialog
                 if(defaultFileExistsAction==FileCollisionDialog.ASK_ACTION) {
@@ -150,9 +151,9 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                     // If 'apply to all' was selected, this choice will be used for any other files (user will not be asked again)
                     if(dialog.applyToAllSelected())
                         defaultFileExistsAction = choice;
-                }
-                else
+                } else {
                     choice = defaultFileExistsAction;
+                }
     
                 // Cancel, skip or close dialog
                 if (choice==-1 || choice== FileCollisionDialog.CANCEL_ACTION) {
@@ -211,10 +212,8 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             try {
                 archiveToOptimize = rwArchiveFile;
                 archiveToOptimize.optimizeArchive();
-
                 break;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 if(showErrorDialog(errorDialogTitle, Translator.get("error_while_optimizing_archive", rwArchiveFile.getName()))==RETRY_ACTION)
                     continue;
 

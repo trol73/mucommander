@@ -31,6 +31,7 @@ import com.mucommander.ui.main.MainFrame;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,6 +50,12 @@ public class UnpackJob extends AbstractCopyJob {
     /** Depth of the folder in which the top entries are located. 0 is the highest depth (archive's root folder) */
     protected int baseArchiveDepth;
 
+    private long totalFilesSize;
+    private int totalFilesCount;
+
+    private int processedFilesCount;
+    private long processedFilesSize;
+    private boolean preparingFinished;
 
     /**
      * Creates a new UnpackJob without starting it.
@@ -99,18 +106,18 @@ public class UnpackJob extends AbstractCopyJob {
         super.jobStarted();
 
         // Create the base destination folder if it doesn't exist yet
-        if(!baseDestFolder.exists()) {
+        if (!baseDestFolder.exists()) {
             // Loop for retry
             do {
                 try {
                     baseDestFolder.mkdir();
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // Unable to create folder
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", baseDestFolder.getName()));
                     // Retry loops
-                    if(ret==RETRY_ACTION)
+                    if (ret == RETRY_ACTION) {
                         continue;
+                    }
                     // Cancel or close dialog interrupts the job
                     interrupt();
                     // Skip continues
@@ -131,14 +138,15 @@ public class UnpackJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if(getState()==INTERRUPTED)
+        if (getState() == INTERRUPTED) {
             return false;
+        }
 
         // Destination folder
         AbstractFile destFolder = baseDestFolder;
 
         // If the file is a directory, process its children recursively
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             do {    // Loop for retries
                 try {
                     // List files inside archive file (can throw an IOException)
@@ -153,13 +161,13 @@ public class UnpackJob extends AbstractCopyJob {
                     }
                     // Return true when complete
                     return true;
-                }
-                catch(IOException e) {
+                } catch (IOException e) {
                     // File could not be uncompressed properly
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_file", getCurrentFilename()));
                     // Retry loops
-                    if(ret==RETRY_ACTION)
+                    if (ret==RETRY_ACTION) {
                         continue;
+                    }
                     // cancel, skip or close dialog will simply return false
                     return false;
                 }
@@ -167,12 +175,16 @@ public class UnpackJob extends AbstractCopyJob {
         }
 
         // Abort if the file is neither an archive file nor a directory
-        if(!file.isArchive())
+        if (!file.isArchive())
             return false;
 
         // 'Cast' the file as an archive file
         AbstractArchiveFile archiveFile = file.getAncestor(AbstractArchiveFile.class);
         ArchiveEntryIterator iterator = null;
+
+
+        // calculate total size and files count
+        calculateTotalSize(archiveFile);
 
         ArchiveEntry entry;
         String entryPath;
@@ -184,28 +196,26 @@ public class UnpackJob extends AbstractCopyJob {
         // Unpack the archive, copying entries one by one, in the iterator's order
         try {
             iterator = archiveFile.getEntryIterator();
-            while((entry = iterator.nextEntry())!=null && getState()!=INTERRUPTED) {
+            while ((entry = iterator.nextEntry()) != null && getState() != INTERRUPTED) {
                 entryPath = entry.getPath();
 
                 boolean processEntry = false;
-                if(selectedEntries ==null) {    // Entries are processed
+                if (selectedEntries == null) {    // Entries are processed
                     processEntry = true;
-                }
-                else {                          // We need to determine if the entry should be processed or not
+                } else {                          // We need to determine if the entry should be processed or not
                     // Process this entry if the selectedEntries set contains this entry, or a parent of this entry
                     int nbSelectedEntries = selectedEntries.size();
                     for(int i=0; i<nbSelectedEntries; i++) {
                         ArchiveEntry selectedEntry = selectedEntries.get(i);
                         // Note: paths of directory entries must end with '/', so this compares whether
                         // selectedEntry is a parent of the current entry.
-                        if(selectedEntry.isDirectory()) {
-                            if(entryPath.startsWith(selectedEntry.getPath())) {
+                        if (selectedEntry.isDirectory()) {
+                            if (entryPath.startsWith(selectedEntry.getPath())) {
                                 processEntry = true;
                                 break;
                                 // Note: we can't remove selectedEntryPath from the set, we still need it
                             }
-                        }
-                        else if(entryPath.equals(selectedEntry.getPath())) {
+                        } else if (entryPath.equals(selectedEntry.getPath())) {
                             // If the (regular file) entry is in the set, remove it as we no longer need it (will speed up
                             // subsequent searches)
                             processEntry = true;
@@ -215,8 +225,11 @@ public class UnpackJob extends AbstractCopyJob {
                     }
                 }
 
-                if(!processEntry)
+                if (!processEntry) {
                     continue;
+                }
+                processedFilesCount++;
+                processedFilesSize += entry.getSize();
 
                 // Resolve the entry file
                 entryFile = archiveFile.getArchiveEntryFile(entryPath);
@@ -229,18 +242,21 @@ public class UnpackJob extends AbstractCopyJob {
                         ?entry.getPath()
                         :PathUtils.removeLeadingFragments(entry.getPath(), "/", baseArchiveDepth);
 
-                if(newName!=null)
-                    relDestPath = newName+(PathUtils.getDepth(relDestPath, "/")<=1?"":"/"+PathUtils.removeLeadingFragments(relDestPath, "/", 1));
+                if (newName != null) {
+                    relDestPath = newName + (PathUtils.getDepth(relDestPath, "/") <= 1 ? "" : "/" + PathUtils.removeLeadingFragments(relDestPath, "/", 1));
+                }
 
-                if(!"/".equals(destSeparator))
+                if (!"/".equals(destSeparator)) {
                     relDestPath = relDestPath.replace("/", destSeparator);
+                }
 
                 // Create destination AbstractFile instance
                 destFile = destFolder.getChild(relDestPath);
 
                 // Do nothing if the file is a symlink (skip file and return)
-                if(entryFile.isSymlink())
+                if (entryFile.isSymlink()) {
                     return true;
+                }
 
                 // Check if the file does not already exist in the destination
                 destFile = checkForCollision(entryFile, destFolder, destFile, false);
@@ -254,21 +270,21 @@ public class UnpackJob extends AbstractCopyJob {
                 // before the entry itself.
 
                 // If the entry is a directory ...
-                if(entryFile.isDirectory()) {
+                if (entryFile.isDirectory()) {
                     // Create the directory in the destination, if it doesn't already exist
-                    if(!(destFile.exists() && destFile.isDirectory())) {
+                    if (!(destFile.exists() && destFile.isDirectory())) {
                         // Loop for retry
                         do {
                             try {
                                 // Use mkdirs() instead of mkdir() to create any parent folder that doesn't exist yet
                                 destFile.mkdirs();
-                            }
-                            catch(IOException e) {
+                            } catch(IOException e) {
                                 // Unable to create folder
                                 int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", entryFile.getName()));
                                 // Retry loops
-                                if(ret==RETRY_ACTION)
+                                if (ret == RETRY_ACTION) {
                                     continue;
+                                }
                                 // Cancel or close dialog return false
                                 return false;
                                 // Skip continues
@@ -281,7 +297,7 @@ public class UnpackJob extends AbstractCopyJob {
                 else  {
                     // Create the file's parent directory(s) if it doesn't already exist
                     AbstractFile destParentFile = destFile.getParent();
-                    if(!destParentFile.exists()) {
+                    if (!destParentFile.exists()) {
                         // Use mkdirs() instead of mkdir() to create any parent folder that doesn't exist yet
                         destParentFile.mkdirs();
                     }
@@ -289,8 +305,10 @@ public class UnpackJob extends AbstractCopyJob {
                     // The entry is wrapped in a ProxyFile to override #getInputStream() and delegate it to
                     // ArchiveFile#getEntryInputStream in order to take advantage of the ArchiveEntryIterator, which for
                     // some archive file implementations (such as TAR) can speed things by an order of magnitude.
-                    if(!tryCopyFile(new ProxiedEntryFile(entryFile, entry, archiveFile, iterator), destFile, append, errorDialogTitle))
-                       return false;
+                    if (!tryCopyFile(new ProxiedEntryFile(entryFile, entry, archiveFile, iterator), destFile, append, errorDialogTitle)) {
+                        // !!! we don't need to break the process in this case
+//                        return false;
+                    }
                 }
             }
 
@@ -301,9 +319,10 @@ public class UnpackJob extends AbstractCopyJob {
         }
         finally {
             // The ArchiveEntryIterator must be closed when finished
-            if(iterator!=null) {
-                try { iterator.close(); }
-                catch(IOException e) {
+            if (iterator != null) {
+                try {
+                    iterator.close();
+                } catch(IOException e) {
                     // Not much we can do about it
                 }
             }
@@ -333,21 +352,91 @@ public class UnpackJob extends AbstractCopyJob {
             optimizeArchive((AbstractRWArchiveFile)archiveFile);
 
         // Unselect all files in the active table upon successful completion
-        if(selectedEntries!=null) {
+        if (selectedEntries != null) {
             ActionManager.performAction(UnmarkAllAction.Descriptor.ACTION_ID, getMainFrame());
         }
     }
 
     @Override
     public String getStatusString() {
-        if(isCheckingIntegrity())
+        if(isCheckingIntegrity() || !preparingFinished) {
             return super.getStatusString();
+        }
 
-        if(isOptimizingArchive)
+        if (isOptimizingArchive) {
             return Translator.get("optimizing_archive", archiveToOptimize.getName());
+        }
 
         return Translator.get("unpack_dialog.unpacking_file", getCurrentFilename());
     }
+
+
+    private void calculateTotalSize(AbstractArchiveFile archiveFile) {
+        totalFilesSize = 0;
+        totalFilesCount = 0;
+        // get all directoires
+        List<String> selectedDirectories = new ArrayList<>();
+        List<ArchiveEntry> fileEntries = new ArrayList<>();
+        for (ArchiveEntry entry : selectedEntries) {
+            if (entry.isDirectory()) {
+                selectedDirectories.add(entry.getPath());
+            } else {
+                fileEntries.add(entry);
+            }
+        }
+
+        try {
+            ArchiveEntryIterator iterator = archiveFile.getEntryIterator();
+            ArchiveEntry entry;
+            while ((entry = iterator.nextEntry()) != null && getState() != INTERRUPTED) {
+                // check in directories
+                boolean addThisEntry = false;
+                if (selectedDirectories.size() > 0) {
+                    String path = entry.getPath();
+                    for (String dir : selectedDirectories) {
+                        if (path.startsWith(dir)) {
+                            addThisEntry = true;
+                            break;
+                        }
+                    }
+                } // directories
+                if (!addThisEntry && selectedEntries.size() > 0) {
+                    for (ArchiveEntry selEntry : selectedEntries) {
+                        if (entry == selEntry) {
+                            addThisEntry = true;
+                            break;
+                        }
+                    }
+                } // entries
+                if (addThisEntry) {
+                    totalFilesSize += entry.getSize();
+                    totalFilesCount++;
+                }
+            } // while
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        preparingFinished = true;
+    }
+
+
+    @Override
+    public float getTotalPercentDone() {
+        if (totalFilesSize == 0) {
+            float result = super.getTotalPercentDone();
+            return  result > 5 ? 5 : result;
+        }
+        float progressBySize = 1.0f*processedFilesSize / totalFilesSize;
+        float progressByCount = 1.0f*(processedFilesCount-1) / totalFilesCount;
+        float result = (progressBySize * 8 + progressByCount * 2) / 10;
+        if (result < 0) {
+            result = 0;
+        } else if (result > 1) {
+            result = 1;
+        }
+        return result;
+    }
+
 
 
     ///////////////////

@@ -21,6 +21,7 @@ package com.mucommander.job;
 
 import java.io.IOException;
 
+import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +48,21 @@ public class CopyJob extends AbstractCopyJob {
      * The value can be used by subclasses that override processFile should they need to work on the destination file. */
     protected AbstractFile currentDestFile;
 
+    protected ScanDirectoryThread scanDirectoryThread;
+
+    /** Processed files counter */
+    protected long processedFilesCount;
+
+
+
     /** Operating mode : COPY_MODE or DOWNLOAD_MODE */
-    private int mode;
+    public enum Mode {
+        COPY_MODE,
+        DOWNLOAD_MODE
+    }
+    private Mode mode;
 
-    public final static int COPY_MODE = 0;
-    public final static int DOWNLOAD_MODE = 1;
 
-	
 	
     /**
      * Creates a new CopyJob without starting it.
@@ -63,14 +72,16 @@ public class CopyJob extends AbstractCopyJob {
      * @param files files which are going to be copied
      * @param destFolder destination folder where the files will be copied
      * @param newName the new filename in the destination folder, can be <code>null</code> in which case the original filename will be used.
-     * @param mode mode in which CopyJob is to operate: {@link #COPY_MODE} or {@link #DOWNLOAD_MODE}.
+     * @param mode mode in which CopyJob is to operate: {@link com.mucommander.job.CopyJob.Mode#COPY_MODE} or {@link com.mucommander.job.CopyJob.Mode#DOWNLOAD_MODE}.
      * @param fileExistsAction default action to be performed when a file already exists in the destination, see {@link com.mucommander.ui.dialog.file.FileCollisionDialog} for allowed values
      */
-    public CopyJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFolder, String newName, int mode, int fileExistsAction) {
+    public CopyJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFolder, String newName, Mode mode, int fileExistsAction) {
         super(progressDialog, mainFrame, files, destFolder, newName, fileExistsAction);
 
         this.mode = mode;
-        this.errorDialogTitle = Translator.get(mode==DOWNLOAD_MODE?"download_dialog.error_title":"copy_dialog.error_title");
+        this.errorDialogTitle = Translator.get(mode==Mode.DOWNLOAD_MODE?"download_dialog.error_title":"copy_dialog.error_title");
+        scanDirectoryThread = new ScanDirectoryThread(files);
+        scanDirectoryThread.start();
     }
 
 
@@ -90,50 +101,50 @@ public class CopyJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if(getState()==INTERRUPTED)
+        if (getState() == INTERRUPTED) {
             return false;
+        }
+        processedFilesCount++;
 		
         // Destination folder
-        AbstractFile destFolder = recurseParams==null?baseDestFolder:(AbstractFile)recurseParams;
+        AbstractFile destFolder = recurseParams == null ? baseDestFolder : (AbstractFile)recurseParams;
 		
         // Is current file in base folder ?
-        boolean isFileInBaseFolder = files.indexOf(file)!=-1;
+        boolean isFileInBaseFolder = files.indexOf(file) >= 0;
 
         // Determine filename in destination
-        String destFileName;
-        if(isFileInBaseFolder && newName!=null)
-            destFileName = newName;
-       	else
-            destFileName = file.getName();
+        String destFileName = (isFileInBaseFolder && newName != null) ? newName : file.getName();
 
         // Create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
-        if (destFile == null)
+        if (destFile == null) {
             return false;
+        }
         currentDestFile = destFile;
 
         // Do nothing if file is a symlink (skip file and return)
-        if(file.isSymlink())
+        if (file.isSymlink()) {
             return true;
+        }
 
         destFile = checkForCollision(file, destFolder, destFile, false);
-        if (destFile == null)
+        if (destFile == null) {
             return false;
+        }
 
         // Copy directory recursively
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             // Create the folder in the destination folder if it doesn't exist
-            if(!(destFile.exists() && destFile.isDirectory())) {
+            if (!(destFile.exists() && destFile.isDirectory())) {
                 // Loop for retry
                 do {
                     try {
                         destFile.mkdir();
-                    }
-                    catch(IOException e) {
+                    } catch(IOException e) {
                         // Unable to create folder
                         int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", destFileName));
                         // Retry loops
-                        if(ret==RETRY_ACTION)
+                        if (ret == RETRY_ACTION)
                             continue;
                         // Cancel or close dialog return false
                         return false;
@@ -160,24 +171,23 @@ public class CopyJob extends AbstractCopyJob {
                     currentDestFile = destFile;
 
                     // Only when finished with folder, set destination folder's date to match the original folder one
-                    if(destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+                    if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
                         try {
                             destFile.changeDate(file.getDate());
-                        }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             LOGGER.debug("failed to change the date of "+destFile, e);
                             // Fail silently
                         }
                     }
 
                     return true;
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // file.ls() failed
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_folder", file.getName()));
                     // Retry loops
-                    if(ret==RETRY_ACTION)
+                    if (ret == RETRY_ACTION) {
                         continue;
+                    }
                     // Cancel, skip or close dialog returns false
                     return false;
                 }
@@ -209,12 +219,12 @@ public class CopyJob extends AbstractCopyJob {
 
         // If the destination files are located inside an archive, optimize the archive file
         AbstractArchiveFile archiveFile = baseDestFolder.getParentArchive();
-        if(archiveFile!=null && archiveFile.isArchive() && archiveFile.isWritable())
+        if (archiveFile != null && archiveFile.isArchive() && archiveFile.isWritable())
             optimizeArchive((AbstractRWArchiveFile)archiveFile);
 
         // If this job correponds to a 'local copy' of a single file and in the same directory,
         // select the copied file in the active table after this job has finished (and hasn't been cancelled)
-        if(files.size()==1 && newName!=null && baseDestFolder.equalsCanonical(files.elementAt(0).getParent())) {
+        if (files.size()==1 && newName != null && baseDestFolder.equalsCanonical(files.elementAt(0).getParent())) {
             // Resolve new file instance now that it exists: some remote files do not immediately update file attributes
             // after creation, we need to get an instance that reflects the newly created file attributes
             selectFileWhenFinished(FileFactory.getFile(baseDestFolder.getAbsolutePath(true)+newName));
@@ -223,12 +233,41 @@ public class CopyJob extends AbstractCopyJob {
 
     @Override
     public String getStatusString() {
-        if(isCheckingIntegrity())
+        if (isCheckingIntegrity()) {
             return super.getStatusString();
+        }
         
-        if(isOptimizingArchive)
+        if (isOptimizingArchive) {
             return Translator.get("optimizing_archive", archiveToOptimize.getName());
+        }
 
-        return Translator.get(mode==DOWNLOAD_MODE?"download_dialog.downloading_file":"copy_dialog.copying_file", getCurrentFilename());
+        return Translator.get(mode == Mode.DOWNLOAD_MODE ? "download_dialog.downloading_file" : "copy_dialog.copying_file", getCurrentFilename());
     }
+
+    @Override
+    public void interrupt() {
+        super.interrupt();
+        if (scanDirectoryThread != null) {
+            scanDirectoryThread.interrupt();
+        }
+    }
+
+    @Override
+    public float getTotalPercentDone() {
+        if (scanDirectoryThread == null || !scanDirectoryThread.isCompleted()) {
+            float result = super.getTotalPercentDone();
+            return  result > 5 ? 5 : result;
+        }
+        float progressBySize = 1.0f*(getTotalByteCounter().getByteCount() + getTotalSkippedByteCounter().getByteCount()) / scanDirectoryThread.getTotalBytes();
+        float progressByCount = 1.0f*(processedFilesCount-1) / scanDirectoryThread.getFilesCount();
+        float result = (progressBySize * 8 + progressByCount * 2) / 10;
+        if (result < 0) {
+            result = 0;
+        } else if (result > 1) {
+            result = 1;
+        }
+        return result;
+    }
+
+
 }

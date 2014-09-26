@@ -99,7 +99,7 @@ public class CopyDialog extends AbstractCopyDialog {
                 files,
                 resolvedDest.getDestinationFolder(),
                 newName,
-                CopyJob.COPY_MODE,
+                CopyJob.Mode.COPY_MODE,
                 defaultFileExistsAction);
         }
 
