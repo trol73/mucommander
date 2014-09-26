@@ -264,7 +264,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         }
         startEditing(file, null);
         menuHelper.setSyntax(type);
-        textEditorImpl.getTextArea().setFileType(type);
+        textEditorImpl.setSyntaxType(type);
     }
     
     ///////////////////////////////////

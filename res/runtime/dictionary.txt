@@ -13681,6 +13681,11 @@ text_editor.syntax:RU:Синтаксис
 text_editor.format:EN:Format
 text_editor.format:RU:Форматировать
 
+text_editor.writing:EN:Writing...
+text_editor.writing:RU:Сохраняю...
+
+text_editor.saved:EN:File saved
+text_editor.saved:RU:Файл сохранен
 
 ####################
 # Shortcuts dialog #

@@ -67,8 +67,6 @@ public class TextMenuHelper {
         editMenu = new JMenu(Translator.get("text_editor.edit"));
         MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
 
-
-
         if (editMode) {
             undoItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.undo"), menuItemMnemonicHelper, null, actionListener);
             redoItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.redo"), menuItemMnemonicHelper, null, actionListener);
@@ -90,7 +88,7 @@ public class TextMenuHelper {
         gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
 
         if (editMode) {
-            formatItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.format"), menuItemMnemonicHelper, null, actionListener);
+            formatItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.format"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
         }
         viewMenu = new JMenu(Translator.get("text_editor.view"));
 
@@ -137,7 +135,7 @@ public class TextMenuHelper {
                 JCheckBoxMenuItem item = (JCheckBoxMenuItem)viewMenuSyntax.getItem(i);
                 if (source == item) {
                     FileType fileType = FileType.getByName(item.getText());
-                    textEditorImpl.getTextArea().setFileType(fileType);
+                    textEditorImpl.setSyntaxType(fileType);
                     setSyntax(fileType);
                     return true;
                 }
