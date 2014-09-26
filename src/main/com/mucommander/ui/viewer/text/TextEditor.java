@@ -148,12 +148,12 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     @Override
     protected void saveAs(AbstractFile destFile) throws IOException {
         OutputStream out = null;
+        getStatusBar().setStatusMessage(Translator.get("text_editor.writing"));
 
         try {
             out = destFile.getOutputStream();
             write(out);
-        }
-        finally {
+        } finally {
             if (out != null) {
                 try {out.close();}
                 catch(IOException e) {
@@ -176,6 +176,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
                 // Fail silently
             }
         }
+        getStatusBar().setStatusMessage(Translator.get("text_editor.saved"));
     }
 
     @Override
@@ -209,7 +210,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         if (type == FileType.NONE) {
             type = textEditorImpl.detectFileFormat(file);
         }
-        textArea.setFileType(type);
+        textEditorImpl.setSyntaxType(type);
         textViewerDelegate.menuHelper.setSyntax(type);
     	textViewerDelegate.startEditing(file, this);
         textArea.discardAllEdits();

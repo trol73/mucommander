@@ -31,9 +31,11 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     private StatusBarPanel panelPosition;
     private StatusBarPanel panelEncoding;
+    private StatusBarPanel panelSyntax;
 
     private JLabel lblPosition;
     private JLabel lblEncoding;
+    private JLabel lblSyntax;
 
 
     public StatusBar() {
@@ -41,6 +43,9 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
         lblPosition = new JLabel();
         panelPosition = new StatusBarPanel(new BorderLayout(), lblPosition);
+
+        lblSyntax = new JLabel();
+        panelSyntax = new StatusBarPanel(new BorderLayout(), lblSyntax);
 
         lblEncoding = new JLabel();
         panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
@@ -52,6 +57,8 @@ public class StatusBar extends org.fife.ui.StatusBar {
         c.weightx = 0.0;
         addStatusBarComponent(panelPosition, c);
         c.weightx = 0.0;
+        addStatusBarComponent(panelSyntax, c);
+        c.weightx = 0.0;
         addStatusBarComponent(panelEncoding, c);
     }
 
@@ -61,5 +68,9 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     public void setEncoding(String encoding) {
         lblEncoding.setText(encoding);
+    }
+
+    public void setSyntax(String syntax) {
+        lblSyntax.setText(syntax);
     }
 }

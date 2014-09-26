@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
@@ -404,5 +405,12 @@ class TextEditorImpl implements ThemeListener {
 
     public StatusBar getStatusBar() {
         return statusBar;
+    }
+
+    public void setSyntaxType(FileType fileType) {
+        textArea.setFileType(fileType);
+        if (statusBar != null) {
+            statusBar.setSyntax(fileType.getName());
+        }
     }
 }
