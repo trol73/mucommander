@@ -383,11 +383,13 @@ public abstract class FileJob implements Runnable {
      */	
     public void interrupt() {
         int state = getState();
-        if(state==INTERRUPTED || state==FINISHED)
+        if (state==INTERRUPTED || state==FINISHED) {
             return;
+        }
 
-        if(state==PAUSED)
+        if (state == PAUSED) {
             setPaused(false);
+        }
 
         // Set state before calling stop() so that state is INTERRUPTED when jobStopped() is called
         // (some FileJob rely on that)

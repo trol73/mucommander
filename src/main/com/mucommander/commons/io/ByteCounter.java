@@ -60,8 +60,9 @@ public class ByteCounter {
      * Return the number of bytes which have been accounted for.
      */
     public synchronized long getByteCount() {
-        if(addedCounter!=null)
+        if (addedCounter != null) {
             return count + addedCounter.getByteCount();
+        }
 
         return this.count;
     }
@@ -74,8 +75,9 @@ public class ByteCounter {
      * @param nbBytes number of bytes to add to the byte counter, will be ignored if negative
      */
     public synchronized void add(long nbBytes) {
-        if(nbBytes>0)
+        if (nbBytes > 0) {
             this.count += nbBytes;
+        }
     }
 
 
