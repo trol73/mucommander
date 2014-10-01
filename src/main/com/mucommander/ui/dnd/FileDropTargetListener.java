@@ -285,7 +285,7 @@ public class FileDropTargetListener implements DropTargetListener {
             else {
                 // Start copying files
                 ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
-                CopyJob job = new CopyJob(progressDialog, mainFrame, droppedFiles, destFolder, null, CopyJob.COPY_MODE, FileCollisionDialog.ASK_ACTION);
+                CopyJob job = new CopyJob(progressDialog, mainFrame, droppedFiles, destFolder, null, CopyJob.Mode.COPY, FileCollisionDialog.ASK_ACTION);
                 progressDialog.start(job);
             }
         }

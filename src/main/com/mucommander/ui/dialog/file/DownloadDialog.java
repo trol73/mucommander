@@ -67,7 +67,7 @@ public class DownloadDialog extends TransferDestinationDialog {
                 files,
                 resolvedDest.getDestinationFolder(),
                 resolvedDest.getDestinationType()==PathUtils.ResolvedDestination.EXISTING_FOLDER?null:resolvedDest.getDestinationFile().getName(),
-                CopyJob.DOWNLOAD_MODE,
+                CopyJob.Mode.DOWNLOAD,
                 defaultFileExistsAction);
     }
 
