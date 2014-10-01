@@ -49,7 +49,7 @@ public class ScanDirectoryThread extends Thread {
         }
         completed = true;
         executionTime = System.currentTimeMillis() - executionTime;
-System.out.println("finished  " + totalBytes + " " + filesCount + "    time " + executionTime);
+//System.out.println("finished  " + totalBytes + " " + filesCount + "    time " + executionTime);
     }
 
     private void processFile(AbstractFile file) {

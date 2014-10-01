@@ -55,10 +55,10 @@ public class CopyJob extends AbstractCopyJob {
 
 
 
-    /** Operating mode : COPY_MODE or DOWNLOAD_MODE */
+    /** Operating mode : COPY or DOWNLOAD */
     public enum Mode {
-        COPY_MODE,
-        DOWNLOAD_MODE
+        COPY,
+        DOWNLOAD
     }
     private Mode mode;
 
@@ -72,14 +72,14 @@ public class CopyJob extends AbstractCopyJob {
      * @param files files which are going to be copied
      * @param destFolder destination folder where the files will be copied
      * @param newName the new filename in the destination folder, can be <code>null</code> in which case the original filename will be used.
-     * @param mode mode in which CopyJob is to operate: {@link com.mucommander.job.CopyJob.Mode#COPY_MODE} or {@link com.mucommander.job.CopyJob.Mode#DOWNLOAD_MODE}.
+     * @param mode mode in which CopyJob is to operate: {@link com.mucommander.job.CopyJob.Mode#COPY} or {@link com.mucommander.job.CopyJob.Mode#DOWNLOAD}.
      * @param fileExistsAction default action to be performed when a file already exists in the destination, see {@link com.mucommander.ui.dialog.file.FileCollisionDialog} for allowed values
      */
     public CopyJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFolder, String newName, Mode mode, int fileExistsAction) {
         super(progressDialog, mainFrame, files, destFolder, newName, fileExistsAction);
 
         this.mode = mode;
-        this.errorDialogTitle = Translator.get(mode==Mode.DOWNLOAD_MODE?"download_dialog.error_title":"copy_dialog.error_title");
+        this.errorDialogTitle = Translator.get(mode==Mode.DOWNLOAD ?"download_dialog.error_title":"copy_dialog.error_title");
         scanDirectoryThread = new ScanDirectoryThread(files);
         scanDirectoryThread.start();
     }
@@ -241,7 +241,7 @@ public class CopyJob extends AbstractCopyJob {
             return Translator.get("optimizing_archive", archiveToOptimize.getName());
         }
 
-        return Translator.get(mode == Mode.DOWNLOAD_MODE ? "download_dialog.downloading_file" : "copy_dialog.copying_file", getCurrentFilename());
+        return Translator.get(mode == Mode.DOWNLOAD ? "download_dialog.downloading_file" : "copy_dialog.copying_file", getCurrentFilename());
     }
 
     @Override
