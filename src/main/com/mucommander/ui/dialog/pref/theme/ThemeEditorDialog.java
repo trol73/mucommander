@@ -101,8 +101,8 @@ public class ThemeEditorDialog extends PreferencesDialog {
 
         // If the theme has been modified and is not the user theme, asks the user to confirm
         // whether it's ok to overwrite his user theme.
-        if(!theme.isIdentical(data) && !theme.canModify())
-            if(new QuestionDialog(this, Translator.get("warning"), Translator.get("theme_editor.theme_warning"),
+        if (!theme.isIdentical(data) && !theme.canModify())
+            if (new QuestionDialog(this, Translator.get("warning"), Translator.get("theme_editor.theme_warning"),
                                   this, new String[]{Translator.get("yes"), Translator.get("no")}, new int[]{0,1}, 0).getActionValue() != 0)
                 return false;
         return true;

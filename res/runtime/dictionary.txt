@@ -14875,7 +14875,23 @@ theme_editor.header:ES:Cabecera
 theme_editor.current:EN:Current line
 theme_editor.current:RU:Подсветка строки
 
+theme_editor.file_groups:EN:File groups
+theme_editor.file_groups:RU:Группы файлов
 
+theme_editor.group_:EN:Group
+theme_editor.group_:RU:Группа
+
+theme_editor.normal_color:EN:Normal color
+theme_editor.normal_color:RU:Нормальный цвет
+
+theme_editor.selected_color:EN:Selected color
+theme_editor.selected_color:RU:Выделенный цвет
+
+theme_editor.filemask:EN:File masks
+theme_editor.filemask:RU:Маски файлов
+
+theme_editor.group_file_:EN:File of group 
+theme_editor.group_file_:RU:Файл группы 
 
 
 

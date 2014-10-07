@@ -27,7 +27,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * @author Maxence Bernard, Nicolas Rinaudo
@@ -122,11 +122,11 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
 
 
     void addUpdatedPreviewComponent(JComponent previewComponent) {
-        if(previewColorPropertyName == null)
+        if (previewColorPropertyName == null)
             return;
 
-        if(updatedPreviewComponents == null)
-            updatedPreviewComponents = new Vector<JComponent>();
+        if (updatedPreviewComponents == null)
+            updatedPreviewComponents = new ArrayList<>();
 
         updatedPreviewComponents.add(previewComponent);
 
@@ -152,8 +152,9 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
 
     private ColorChooser createColorChooser() {
         if(previewComponent!=null && previewColorPropertyName!=null && (previewComponent instanceof PreviewLabel)) {
-            try {return new ColorChooser(currentColor, (PreviewLabel)((PreviewLabel)previewComponent).clone(), previewColorPropertyName);}
-            catch(CloneNotSupportedException e) {}
+            try {
+                return new ColorChooser(currentColor, (PreviewLabel)((PreviewLabel)previewComponent).clone(), previewColorPropertyName);
+            } catch(CloneNotSupportedException e) {}
         }
         return new ColorChooser(currentColor, new PreviewLabel(), PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME);
     }

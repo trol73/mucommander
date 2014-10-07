@@ -33,6 +33,8 @@ public class ThemeCache implements ThemeListener {
     // -------------------------------------------------------------------------------
     public static Color[][][] foregroundColors;
     public static Color[][]   backgroundColors;
+    public static Color[]     groupColors;
+    public static Color[]     groupSelectedColors;
     public static Color       unmatchedForeground;
     public static Color       unmatchedBackground;
     public static Color       activeOutlineColor;
@@ -50,6 +52,7 @@ public class ThemeCache implements ThemeListener {
     public static final int MARKED               = 4;
     public static final int PLAIN_FILE           = 5;
 
+
     // - Font definitions ------------------------------------------------------------
     // -------------------------------------------------------------------------------
     public static Font tableFont;
@@ -62,6 +65,8 @@ public class ThemeCache implements ThemeListener {
     static {
         foregroundColors = new Color[2][2][6];
         backgroundColors = new Color[2][4];
+        groupColors = new Color[10];
+        groupSelectedColors = new Color[10];
 
         // Active background colors.
         backgroundColors[ACTIVE][NORMAL]    = ThemeManager.getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR);
@@ -114,6 +119,11 @@ public class ThemeCache implements ThemeListener {
         activeOutlineColor                                 = ThemeManager.getCurrentColor(Theme.FILE_TABLE_SELECTED_OUTLINE_COLOR);
         inactiveOutlineColor                               = ThemeManager.getCurrentColor(Theme.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR);
 
+        for (int i = 0; i < 10; i++) {
+            groupColors[i] = ThemeManager.getCurrentColor(Theme.FILE_GROUP_1_FOREGROUND_COLOR + i);
+            groupSelectedColors[i] = ThemeManager.getCurrentColor(Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + i);
+        }
+
         ThemeManager.addCurrentThemeListener(instance);
     }
 
@@ -150,190 +160,196 @@ public class ThemeCache implements ThemeListener {
      * Receives theme color changes notifications.
      */
     public void colorChanged(ColorChangedEvent event) {
-        switch(event.getColorId()) {
-            // Plain file color.
-        case Theme.FILE_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][PLAIN_FILE] = event.getColor();
-            break;
+        int colorId = event.getColorId();
+        if (colorId >= Theme.FILE_GROUP_1_FOREGROUND_COLOR && colorId <= Theme.FILE_GROUP_10_FOREGROUND_COLOR) {
+            groupColors[colorId - Theme.FILE_GROUP_1_FOREGROUND_COLOR] = event.getColor();
+        } else if (colorId >= Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR && colorId <= Theme.FILE_GROUP_10_SELECTED_FOREGROUND_COLOR) {
+            groupSelectedColors[colorId - Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR] = event.getColor();
+        } else
+            switch(colorId) {
+                // Plain file color.
+            case Theme.FILE_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][PLAIN_FILE] = event.getColor();
+                break;
 
-            // Selected file color.
-        case Theme.FILE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][PLAIN_FILE] = event.getColor();
-            break;
+                // Selected file color.
+            case Theme.FILE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][PLAIN_FILE] = event.getColor();
+                break;
 
-            // Hidden files.
-        case Theme.HIDDEN_FILE_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][HIDDEN_FILE] = event.getColor();
-            break;
+                // Hidden files.
+            case Theme.HIDDEN_FILE_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][HIDDEN_FILE] = event.getColor();
+                break;
 
-            // Selected hidden files.
-        case Theme.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][HIDDEN_FILE] = event.getColor();
-            break;
+                // Selected hidden files.
+            case Theme.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][HIDDEN_FILE] = event.getColor();
+                break;
 
-            // Folders.
-        case Theme.FOLDER_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][FOLDER] = event.getColor();
-            break;
+                // Folders.
+            case Theme.FOLDER_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][FOLDER] = event.getColor();
+                break;
 
-            // Selected folders.
-        case Theme.FOLDER_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][FOLDER] = event.getColor();
-            break;
+                // Selected folders.
+            case Theme.FOLDER_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][FOLDER] = event.getColor();
+                break;
 
-            // Archives.
-        case Theme.ARCHIVE_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][ARCHIVE] = event.getColor();
-            break;
+                // Archives.
+            case Theme.ARCHIVE_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][ARCHIVE] = event.getColor();
+                break;
 
-            // Selected archives.
-        case Theme.ARCHIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][ARCHIVE] = event.getColor();
-            break;
+                // Selected archives.
+            case Theme.ARCHIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][ARCHIVE] = event.getColor();
+                break;
 
-            // Symlinks.
-        case Theme.SYMLINK_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][SYMLINK] = event.getColor();
-            break;
+                // Symlinks.
+            case Theme.SYMLINK_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][SYMLINK] = event.getColor();
+                break;
 
-            // Selected symlinks.
-        case Theme.SYMLINK_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][SYMLINK] = event.getColor();
-            break;
+                // Selected symlinks.
+            case Theme.SYMLINK_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][SYMLINK] = event.getColor();
+                break;
 
-            // Marked files.
-        case Theme.MARKED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][NORMAL][MARKED] = event.getColor();
-            break;
+                // Marked files.
+            case Theme.MARKED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][NORMAL][MARKED] = event.getColor();
+                break;
 
-            // Selected marked files.
-        case Theme.MARKED_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[ACTIVE][SELECTED][MARKED] = event.getColor();
-            break;
+                // Selected marked files.
+            case Theme.MARKED_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[ACTIVE][SELECTED][MARKED] = event.getColor();
+                break;
 
-            // Plain file color.
-        case Theme.FILE_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][PLAIN_FILE] = event.getColor();
-            break;
+                // Plain file color.
+            case Theme.FILE_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][PLAIN_FILE] = event.getColor();
+                break;
 
-            // Selected file color.
-        case Theme.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][PLAIN_FILE] = event.getColor();
-            break;
+                // Selected file color.
+            case Theme.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][PLAIN_FILE] = event.getColor();
+                break;
 
-            // Hidden files.
-        case Theme.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][HIDDEN_FILE] = event.getColor();
-            break;
+                // Hidden files.
+            case Theme.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][HIDDEN_FILE] = event.getColor();
+                break;
 
-            // Selected hidden files.
-        case Theme.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][HIDDEN_FILE] = event.getColor();
-            break;
+                // Selected hidden files.
+            case Theme.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][HIDDEN_FILE] = event.getColor();
+                break;
 
-            // Folders.
-        case Theme.FOLDER_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][FOLDER] = event.getColor();
-            break;
+                // Folders.
+            case Theme.FOLDER_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][FOLDER] = event.getColor();
+                break;
 
-            // Selected folders.
-        case Theme.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][FOLDER] = event.getColor();
-            break;
+                // Selected folders.
+            case Theme.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][FOLDER] = event.getColor();
+                break;
 
-            // Archives.
-        case Theme.ARCHIVE_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][ARCHIVE] = event.getColor();
-            break;
+                // Archives.
+            case Theme.ARCHIVE_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][ARCHIVE] = event.getColor();
+                break;
 
-            // Selected archives.
-        case Theme.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][ARCHIVE] = event.getColor();
-            break;
+                // Selected archives.
+            case Theme.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][ARCHIVE] = event.getColor();
+                break;
 
-            // Symlinks.
-        case Theme.SYMLINK_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][SYMLINK] = event.getColor();
-            break;
+                // Symlinks.
+            case Theme.SYMLINK_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][SYMLINK] = event.getColor();
+                break;
 
-            // Selected symlinks.
-        case Theme.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][SYMLINK] = event.getColor();
-            break;
+                // Selected symlinks.
+            case Theme.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][SYMLINK] = event.getColor();
+                break;
 
-            // Marked files.
-        case Theme.MARKED_INACTIVE_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][NORMAL][MARKED] = event.getColor();
-            break;
+                // Marked files.
+            case Theme.MARKED_INACTIVE_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][NORMAL][MARKED] = event.getColor();
+                break;
 
-            // Selected marked files.
-        case Theme.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR:
-            foregroundColors[INACTIVE][SELECTED][MARKED] = event.getColor();
-            break;
+                // Selected marked files.
+            case Theme.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR:
+                foregroundColors[INACTIVE][SELECTED][MARKED] = event.getColor();
+                break;
 
-            // Unmatched foreground
-        case Theme.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR:
-            unmatchedForeground = event.getColor();
-            break;
+                // Unmatched foreground
+            case Theme.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR:
+                unmatchedForeground = event.getColor();
+                break;
 
-            // Unmached background
-        case Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR:
-            unmatchedBackground = event.getColor();
-            break;
+                // Unmached background
+            case Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR:
+                unmatchedBackground = event.getColor();
+                break;
 
-            // Active normal background.
-        case Theme.FILE_TABLE_BACKGROUND_COLOR:
-            backgroundColors[ACTIVE][NORMAL] = event.getColor();
-            break;
+                // Active normal background.
+            case Theme.FILE_TABLE_BACKGROUND_COLOR:
+                backgroundColors[ACTIVE][NORMAL] = event.getColor();
+                break;
 
-            // Active selected background.
-        case Theme.FILE_TABLE_SELECTED_BACKGROUND_COLOR:
-            backgroundColors[ACTIVE][SELECTED] = event.getColor();
-            break;
+                // Active selected background.
+            case Theme.FILE_TABLE_SELECTED_BACKGROUND_COLOR:
+                backgroundColors[ACTIVE][SELECTED] = event.getColor();
+                break;
 
-            // Active alternate background.
-        case Theme.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR:
-            backgroundColors[ACTIVE][ALTERNATE] = event.getColor();
-            break;
+                // Active alternate background.
+            case Theme.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR:
+                backgroundColors[ACTIVE][ALTERNATE] = event.getColor();
+                break;
 
-            // Inactive normal background.
-        case Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR:
-            backgroundColors[INACTIVE][NORMAL] = event.getColor();
-            break;
+                // Inactive normal background.
+            case Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR:
+                backgroundColors[INACTIVE][NORMAL] = event.getColor();
+                break;
 
-            // Inactive selected background.
-        case Theme.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR:
-            backgroundColors[INACTIVE][SELECTED] = event.getColor();
-            break;
+                // Inactive selected background.
+            case Theme.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR:
+                backgroundColors[INACTIVE][SELECTED] = event.getColor();
+                break;
 
-            // Inactive alternate background.
-        case Theme.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR:
-            backgroundColors[INACTIVE][ALTERNATE] = event.getColor();
-            break;
+                // Inactive alternate background.
+            case Theme.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR:
+                backgroundColors[INACTIVE][ALTERNATE] = event.getColor();
+                break;
 
-            // Active selection outline.
-        case Theme.FILE_TABLE_SELECTED_OUTLINE_COLOR:
-            activeOutlineColor = event.getColor();
-            break;
+                // Active selection outline.
+            case Theme.FILE_TABLE_SELECTED_OUTLINE_COLOR:
+                activeOutlineColor = event.getColor();
+                break;
 
-            // Inactive selection outline.
-        case Theme.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
-            inactiveOutlineColor = event.getColor();
-            break;
+                // Inactive selection outline.
+            case Theme.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
+                inactiveOutlineColor = event.getColor();
+                break;
 
-            // Secondary background color.
-        case Theme.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-            backgroundColors[ACTIVE][SECONDARY] = event.getColor();
-            break;
+                // Secondary background color.
+            case Theme.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                backgroundColors[ACTIVE][SECONDARY] = event.getColor();
+                break;
 
-            // Inactive secondary background color.
-        case Theme.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-            backgroundColors[INACTIVE][SECONDARY] = event.getColor();
-            break;
+                // Inactive secondary background color.
+            case Theme.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                backgroundColors[INACTIVE][SECONDARY] = event.getColor();
+                break;
 
-        default:
-            return;
-        }
+            default:
+                return;
+            }
         fireColorChanged(event);
     }
 

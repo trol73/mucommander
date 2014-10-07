@@ -920,7 +920,7 @@ public class ThemeManager {
     public static void saveCurrentTheme() throws IOException {
         // Makes sure no NullPointerException is raised if this method is called
         // before themes have been initialised.
-        if(currentTheme == null)
+        if (currentTheme == null)
             return;
 
         // Saves the user theme if it's the current one.
@@ -986,8 +986,11 @@ public class ThemeManager {
             writeTheme(currentTheme);
             return currentTheme;
         } else {
-            writeTheme(themeData, Theme.Type.USER, null);
-            return new Theme(listener, themeData);
+            writeTheme(themeData, Theme.Type.CUSTOM, currentTheme.getName());
+            Theme theme = new Theme(listener, themeData);
+            theme.setName(currentTheme.getName());
+            currentTheme = theme;
+            return theme;
         }
     }
 

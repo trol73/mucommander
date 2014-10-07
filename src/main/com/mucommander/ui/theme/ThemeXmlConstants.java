@@ -42,6 +42,10 @@ interface ThemeXmlConstants {
     /** Quick list label description element. */
     public static final String ELEMENT_QUICK_LIST           = "quick_list";
 
+    public static final String ELEMENT_FILE_GROUPS          = "file_groups";
+    public static final String ELEMENT_GROUP                = "group";
+
+
 
 
     // - Status element ------------------------------------------------------------------
@@ -84,6 +88,7 @@ interface ThemeXmlConstants {
     public static final String VALUE_TRUE                   = "true";
     /** <i>false</i> value. */
     public static final String VALUE_FALSE                  = "false";
+
 
 
 

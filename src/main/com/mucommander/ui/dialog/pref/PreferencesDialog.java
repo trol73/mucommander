@@ -211,14 +211,16 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
         // Commit changes
         if (source == okButton || source == applyButton) {
-            if(!checkCommit())
+            if (!checkCommit()) {
                 return;
+            }
             commit();
         }
 
         // Dispose dialog
-        if (source == okButton || source == cancelButton)
+        if (source == okButton || source == cancelButton) {
             dispose();
+        }
     }
 
     /**
@@ -234,7 +236,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param enable - parameter that indicated if the commit button will turn to be
      *  enabled (true) or disabled (false).
      */
-    protected void setCommitButtonsEnabled(boolean enable) {
+    public void setCommitButtonsEnabled(boolean enable) {
     	okButton.setEnabled(enable);
     	applyButton.setEnabled(enable);
     }
