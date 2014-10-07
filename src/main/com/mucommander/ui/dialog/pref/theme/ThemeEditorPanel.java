@@ -30,7 +30,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for theme editor panels.
@@ -48,13 +49,16 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Edited theme data. */
-    protected ThemeData                      themeData;
+    protected ThemeData themeData;
+
     /** Holds references to listeners to prevent them from being garbage collected. */
-    private   java.util.List<ChangeListener> listenerReferences = new Vector<ChangeListener>();
+    private List<ChangeListener> listenerReferences = new ArrayList<>();
+
     /** Font used to display caption labels. */
-    private   Font                           captionLabelFont;
+    private Font captionLabelFont;
+
     /** Color used to display caption labels. */
-    private   Color                           captionTextColor = new Color(48, 48, 48);
+    private Color captionTextColor = new Color(48, 48, 48);
 
 
 
@@ -86,14 +90,26 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @return               a caption label containing the specified localised entry.
      */
     protected JLabel createCaptionLabel(String dictionaryKey) {
-        JLabel captionLabel;
-
-        captionLabel = new JLabel(Translator.get(dictionaryKey));
+        JLabel captionLabel = new JLabel(Translator.get(dictionaryKey));
         captionLabel.setFont(captionLabelFont);
         captionLabel.setForeground(captionTextColor);
 
         return captionLabel;
     }
+
+    /**
+     * Creates a caption label containing the specified entry.
+     * @param title label title
+     * @return a caption label containing the specified entry.
+     */
+    protected JLabel createCaptionLabelWithTitle(String title) {
+        JLabel captionLabel = new JLabel(title);
+        captionLabel.setFont(captionLabelFont);
+        captionLabel.setForeground(captionTextColor);
+
+        return captionLabel;
+    }
+
 
 
     /**
@@ -126,7 +142,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         panel.add(createCaptionLabel("theme_editor.background"));
 
         // Adds the preview label if requested.
-        if(includePreview)
+        if (includePreview)
             panel.add(createCaptionLabel("preview"));
     }
 
@@ -164,7 +180,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      */
     protected void addFontChooserListener(FontChooser fontChooser, JComponent previewComponent) {
         // Update button font when a new font has been chosen in the FontChooser
-        if(fontChooser!=null) {
+        if (fontChooser != null) {
             ChangeListener listener;
             fontChooser.addChangeListener(listener = new PreviewFontChooserListener(previewComponent));
             previewComponent.setFont(fontChooser.getCurrentFont());
@@ -243,7 +259,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         // Creates the foreground color button.
         if (foregroundId >= 0 ) {
             gridPanel.add(colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel));
-            if(comp != null)
+            if (comp != null)
                 colorButton.addUpdatedPreviewComponent(comp);
         } else {
             gridPanel.add(new JLabel());
@@ -252,7 +268,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         // Creates the background color button.
         if (backgroundId >= 0) {
             gridPanel.add(colorButton = new ColorButton(parent, themeData, backgroundId, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel));
-            if(comp != null)
+            if (comp != null)
                 colorButton.addUpdatedPreviewComponent(comp);
         }
 

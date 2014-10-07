@@ -370,6 +370,21 @@ public class MuPreferences implements MuPreferencesAPI {
 	/** Default value for {@link #SMB_USE_EXTENDED_SECURITY}. */
 	public static final boolean DEFAULT_SMB_USE_EXTENDED_SECURITY = false;
 
+    // - File group masks ----------------------------------------------------
+    // -----------------------------------------------------------------------
+    public static final String FILE_GROUP_SECTION                 = "file_groups";
+    public static final String FILE_GROUP_1_MASK                  = FILE_GROUP_SECTION + ".files1";
+    public static final String FILE_GROUP_2_MASK                  = FILE_GROUP_SECTION + ".files2";
+    public static final String FILE_GROUP_3_MASK                  = FILE_GROUP_SECTION + ".files3";
+    public static final String FILE_GROUP_4_MASK                  = FILE_GROUP_SECTION + ".files4";
+    public static final String FILE_GROUP_5_MASK                  = FILE_GROUP_SECTION + ".files5";
+    public static final String FILE_GROUP_6_MASK                  = FILE_GROUP_SECTION + ".files6";
+    public static final String FILE_GROUP_7_MASK                  = FILE_GROUP_SECTION + ".files7";
+    public static final String FILE_GROUP_8_MASK                  = FILE_GROUP_SECTION + ".files8";
+    public static final String FILE_GROUP_9_MASK                  = FILE_GROUP_SECTION + ".files9";
+    public static final String FILE_GROUP_10_MASK                 = FILE_GROUP_SECTION + ".files10";
+
+
 	
 	private static final String ROOT_ELEMENT = "preferences";
 

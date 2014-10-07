@@ -33,6 +33,8 @@ import java.awt.*;
  */
 class FolderPanePanel extends ThemeEditorPanel {
 
+    private FileGroupsPanel fileGroupsPanel;
+
     // - Initialisation ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
@@ -70,6 +72,10 @@ class FolderPanePanel extends ThemeEditorPanel {
         // Adds the inactive panel.
         filePanel = new FilePanel(parent, false, themeData, fontChooser);
         tabbedPane.add(filePanel.getTitle(), createScrollPane(filePanel));
+
+        // Adds the file groups panel.
+        fileGroupsPanel = new FileGroupsPanel(parent, themeData);
+        tabbedPane.add(fileGroupsPanel.getTitle(), createScrollPane(fileGroupsPanel));
 
         // Creates the layout.
         setLayout(new BorderLayout());
@@ -114,6 +120,8 @@ class FolderPanePanel extends ThemeEditorPanel {
      * Ignored.
      */
     @Override
-    public void commit() {}
+    public void commit() {
+        fileGroupsPanel.commit();
+    }
 }
 

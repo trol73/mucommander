@@ -89,7 +89,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this color.
      * </p>
      */
-    public static final int COLOR_COUNT = 69;
+    public static final int COLOR_COUNT = 89;
 
 
 
@@ -687,6 +687,28 @@ public class ThemeData {
      */
     public static final int EDITOR_CURRENT_BACKGROUND_COLOR = 68;
 
+    public static final int FILE_GROUP_1_FOREGROUND_COLOR = 69;
+    public static final int FILE_GROUP_2_FOREGROUND_COLOR = 70;
+    public static final int FILE_GROUP_3_FOREGROUND_COLOR = 71;
+    public static final int FILE_GROUP_4_FOREGROUND_COLOR = 72;
+    public static final int FILE_GROUP_5_FOREGROUND_COLOR = 73;
+    public static final int FILE_GROUP_6_FOREGROUND_COLOR = 74;
+    public static final int FILE_GROUP_7_FOREGROUND_COLOR = 75;
+    public static final int FILE_GROUP_8_FOREGROUND_COLOR = 76;
+    public static final int FILE_GROUP_9_FOREGROUND_COLOR = 77;
+    public static final int FILE_GROUP_10_FOREGROUND_COLOR = 78;
+
+    public static final int FILE_GROUP_1_SELECTED_FOREGROUND_COLOR = 79;
+    public static final int FILE_GROUP_2_SELECTED_FOREGROUND_COLOR = 80;
+    public static final int FILE_GROUP_3_SELECTED_FOREGROUND_COLOR = 81;
+    public static final int FILE_GROUP_4_SELECTED_FOREGROUND_COLOR = 82;
+    public static final int FILE_GROUP_5_SELECTED_FOREGROUND_COLOR = 83;
+    public static final int FILE_GROUP_6_SELECTED_FOREGROUND_COLOR = 84;
+    public static final int FILE_GROUP_7_SELECTED_FOREGROUND_COLOR = 85;
+    public static final int FILE_GROUP_8_SELECTED_FOREGROUND_COLOR = 86;
+    public static final int FILE_GROUP_9_SELECTED_FOREGROUND_COLOR = 87;
+    public static final int FILE_GROUP_10_SELECTED_FOREGROUND_COLOR = 88;
+
 
 
     // - Default fonts -------------------------------------------------------------------------------------------------
@@ -776,9 +798,9 @@ public class ThemeData {
     }
 
     public static void registerFont(int id, String defaultFont) {
-        DefaultFont font;
+        DefaultFont font = DEFAULT_FONTS.get(defaultFont);
 
-        if((font = DEFAULT_FONTS.get(defaultFont)) == null)
+        if (font == null)
             throw new IllegalArgumentException("Not a registered default font: " + defaultFont);
         registerFont(id, font);
     }
@@ -971,6 +993,14 @@ public class ThemeData {
         registerColor(FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR, FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR);
         registerColor(FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR,              FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR);
 
+        // File groups colors
+        for (int i = FILE_GROUP_1_FOREGROUND_COLOR; i<= FILE_GROUP_10_FOREGROUND_COLOR; i++) {
+            registerColor(i, DEFAULT_TABLE_FOREGROUND);
+        }
+        for (int i = FILE_GROUP_1_SELECTED_FOREGROUND_COLOR; i<= FILE_GROUP_10_SELECTED_FOREGROUND_COLOR; i++) {
+            registerColor(i, DEFAULT_TABLE_FOREGROUND);
+        }
+
         // Shell default values.
         registerFont(SHELL_FONT,                               DEFAULT_TEXT_AREA_FONT);
         registerFont(SHELL_HISTORY_FONT,                       DEFAULT_TEXT_FIELD_FONT);
@@ -1007,6 +1037,7 @@ public class ThemeData {
         registerColor(STATUS_BAR_BACKGROUND_COLOR, new Color(0xD5D5D5));
         registerColor(STATUS_BAR_OK_COLOR,         new Color(0x70EC2B));
         registerColor(STATUS_BAR_WARNING_COLOR,    new Color(0xFF7F00));
+
     }
 
 

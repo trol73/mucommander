@@ -105,6 +105,18 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     private static final int STATE_QUICK_LIST_ITEM_SELECTED = 42;
     /** Parsing the editor.selected element. */
     private static final int STATE_EDITOR_CURRENT           = 43;
+    private static final int STATE_FILE_GROUP               = 44;
+    private static final int STATE_GROUP_1                  = 45;
+    private static final int STATE_GROUP_2                  = 46;
+    private static final int STATE_GROUP_3                  = 47;
+    private static final int STATE_GROUP_4                  = 48;
+    private static final int STATE_GROUP_5                  = 49;
+    private static final int STATE_GROUP_6                  = 50;
+    private static final int STATE_GROUP_7                  = 51;
+    private static final int STATE_GROUP_8                  = 52;
+    private static final int STATE_GROUP_9                  = 53;
+    private static final int STATE_GROUP_10                 = 54;
+
 
 
     // - Instance variables --------------------------------------------------------------
@@ -162,6 +174,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             if(state != STATE_ROOT)
                 traceIllegalDeclaration(qName);
             state = STATE_TABLE;
+        }
+
+        else if (qName.equals(ELEMENT_FILE_GROUPS)) {
+            if(state != STATE_ROOT)
+                traceIllegalDeclaration(qName);
+            state = STATE_FILE_GROUP;
         }
 
         // Shell declaration.
@@ -290,6 +308,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_TABLE_NORMAL;
             else if(state == STATE_QUICK_LIST_ITEM)
             	state = STATE_QUICK_LIST_ITEM_NORMAL;
+            else if (state >= STATE_GROUP_1 && state <= STATE_GROUP_10) {
+                int group = state - STATE_GROUP_1;
+                template.setColor(ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group, createColor(attributes));
+            }
             else
                 traceIllegalDeclaration(qName);
         }
@@ -320,6 +342,11 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_TABLE_SELECTED;
             else if(state == STATE_QUICK_LIST_ITEM)
             	state = STATE_QUICK_LIST_ITEM_SELECTED;
+            else if (state >= STATE_GROUP_1 && state <= STATE_GROUP_10) {
+                int group = state - STATE_GROUP_1;
+                template.setColor(ThemeData.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + group, createColor(attributes));
+            }
+
             else
                 traceIllegalDeclaration(qName);
 
@@ -606,6 +633,15 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 traceIllegalDeclaration(qName);
         }
 
+        else if (qName.startsWith(ELEMENT_GROUP)) {
+            if (state != STATE_FILE_GROUP) {
+                traceIllegalDeclaration(qName);
+            }
+            String groupStr = qName.substring(ELEMENT_GROUP.length());
+            state = STATE_GROUP_1 + Integer.parseInt(groupStr) - 1;
+        }
+
+
         else
             traceIllegalDeclaration(qName);
     }
@@ -748,6 +784,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             else if(state == STATE_QUICK_LIST_ITEM_SELECTED)
             	state = STATE_QUICK_LIST_ITEM;
         }
+
+        else if (qName.startsWith(ELEMENT_GROUP)) {
+            state = STATE_FILE_GROUP;
+        }
     }
 
 
@@ -827,18 +867,18 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
      * @return            the resulting Color instance.
      */
     private static Color createColor(Attributes attributes) {
-        String buffer;
-        int    color;
+        String buffer = attributes.getValue(ATTRIBUTE_COLOR);
 
         // Retrieves the color attribute's value.
-        if((buffer = attributes.getValue(ATTRIBUTE_COLOR)) == null) {
+        if (buffer == null) {
             LOGGER.debug("Missing color attribute in theme, ignoring.");
             return null;
         }
-        color = Integer.parseInt(buffer, 16);
+        int color = Integer.parseInt(buffer, 16);
 
         // Retrieves the transparency attribute's value..
-        if((buffer = attributes.getValue(ATTRIBUTE_ALPHA)) == null)
+        buffer = attributes.getValue(ATTRIBUTE_ALPHA);
+        if (buffer == null)
             return new Color(color);
         return new Color(color | (Integer.parseInt(buffer, 16) << 24), true);
     }

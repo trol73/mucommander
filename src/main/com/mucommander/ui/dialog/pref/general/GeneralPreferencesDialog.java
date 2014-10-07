@@ -196,7 +196,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
 	}
     
     @Override
-    protected void setCommitButtonsEnabled(boolean enable) {
+    public void setCommitButtonsEnabled(boolean enable) {
     	super.setCommitButtonsEnabled(enable);
     	// if "commit buttons" are disabled that's mean that there is no change in any component
     	// located in this dialog => we can clear the list of modified components in this dialog.

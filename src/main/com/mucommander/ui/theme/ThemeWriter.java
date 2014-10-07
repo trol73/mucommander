@@ -229,6 +229,23 @@ class ThemeWriter implements ThemeXmlConstants {
         out.endElement(ELEMENT_TABLE);
 
 
+        // File groups
+        out.startElement(ELEMENT_FILE_GROUPS);
+        out.println();
+        for (int i = 0; i < 10; i++) {
+            out.startElement(ELEMENT_GROUP + (i+1));
+            out.println();
+
+            if (theme.isColorSet(Theme.FILE_GROUP_1_FOREGROUND_COLOR+i))
+                out.writeStandAloneElement(ELEMENT_NORMAL, getColorAttributes(theme.getColor(Theme.FILE_GROUP_1_FOREGROUND_COLOR+i)));
+
+            if (theme.isColorSet(Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR+i))
+                out.writeStandAloneElement(ELEMENT_SELECTED, getColorAttributes(theme.getColor(Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR+i)));
+
+            out.endElement(ELEMENT_GROUP + (i+1));
+        }
+        out.endElement(ELEMENT_FILE_GROUPS);
+
 
         // - Shell description ----------------------------------------------------------
         // -------------------------------------------------------------------------------

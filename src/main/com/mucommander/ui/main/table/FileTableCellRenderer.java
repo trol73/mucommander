@@ -77,7 +77,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         this.tableModel = table.getFileTableModel();
 
         // Create a label for each column
-        for(Column c : Column.values())
+        for (Column c : Column.values())
             this.cellLabels[c.ordinal()] = new CellLabel();
 
         // Set labels' font.
@@ -110,10 +110,11 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
      */
     private void setCellLabelsFont(Font newFont) {
         // Set custom font
-        for(Column c : Column.values()) {
+        for (Column c : Column.values()) {
             // No need to set extension label's font as this label renders only icons and no text
-            if(c==Column.EXTENSION)
+            if(c == Column.EXTENSION) {
                 continue;
+            }
 
             cellLabels[c.ordinal()].setFont(newFont);
         }
@@ -126,89 +127,76 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 
     private static int getColorIndex(int row, AbstractFile file, FileTableModel tableModel) {
         // Parent directory.
-        if(row==0 && tableModel.hasParentFolder())
+        if (row==0 && tableModel.hasParentFolder())
             return ThemeCache.FOLDER;
 
         // Marked file.
-        if(tableModel.isRowMarked(row))
+        if (tableModel.isRowMarked(row))
             return ThemeCache.MARKED;
 
         // Symlink.
-        if(file.isSymlink())
+        if (file.isSymlink())
             return ThemeCache.SYMLINK;
 
         // Hidden file.
-        if(file.isHidden())
+        if (file.isHidden())
             return ThemeCache.HIDDEN_FILE;
 
         // Directory.
-        if(file.isDirectory())
+        if (file.isDirectory())
             return ThemeCache.FOLDER;
 
         // Archive.
-        if(file.isBrowsable())
+        if (file.isBrowsable())
             return ThemeCache.ARCHIVE;
+
+
 
         // Plain file.
         return ThemeCache.PLAIN_FILE;
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
-        Column                column;
-        int                   colorIndex;
-        int                   focusedIndex;
-        int                   selectedIndex;
-        CellLabel             label;
-        AbstractFile          file;
-        boolean               matches;
-        QuickSearch 		  search;
-
         // Need to check that row index is not out of bounds because when the folder
         // has just been changed, the JTable may try to repaint the old folder and
         // ask for a row index greater than the length if the old folder contained more files
-        if(rowIndex < 0 || rowIndex >= tableModel.getRowCount())
+        if (rowIndex < 0 || rowIndex >= tableModel.getRowCount())
             return null;
 
         // Sanity check.
-        file = tableModel.getCachedFileAtRow(rowIndex);
-        if(file==null) {
+        final AbstractFile file = tableModel.getCachedFileAtRow(rowIndex);
+        if (file == null) {
             LOGGER.debug("tableModel.getCachedFileAtRow("+ rowIndex +") RETURNED NULL !");
             return null;
         }
 
-        search = this.table.getQuickSearch();
-        if(!table.hasFocus())
-            matches = true;
-        else {
-            if(search.isActive())
-                matches = search.matches(this.table.getFileNameAtRow(rowIndex));
-            else
-                matches = true;
-        }
+        final QuickSearch search = this.table.getQuickSearch();
+        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.table.getFileNameAtRow(rowIndex));
 
         // Retrieves the various indexes of the colors to apply.
         // Selection only applies when the table is the active one
-        selectedIndex =  (isSelected && ((FileTable)table).isActiveTable()) ? ThemeCache.SELECTED : ThemeCache.NORMAL;
-        focusedIndex  = table.hasFocus() ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
-        colorIndex    = getColorIndex(rowIndex, file, tableModel);
+        final int selectedIndex =  (isSelected && ((FileTable)table).isActiveTable()) ? ThemeCache.SELECTED : ThemeCache.NORMAL;
+        final int focusedIndex = table.hasFocus() ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
+        final int colorIndex = getColorIndex(rowIndex, file, tableModel);
 
-        column = Column.valueOf(table.convertColumnIndexToModel(columnIndex));
-        label = cellLabels[column.ordinal()];
+        final Column column = Column.valueOf(table.convertColumnIndexToModel(columnIndex));
+        final CellLabel label = cellLabels[column.ordinal()];
 
         // Extension/icon column: return ImageIcon instance
-        if(column == Column.EXTENSION) {
+        if (column == Column.EXTENSION) {
             // Set file icon (parent folder icon if '..' file)
-            label.setIcon(rowIndex ==0 && tableModel.hasParentFolder()
+            label.setIcon(rowIndex == 0 && tableModel.hasParentFolder()
                     ?IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
                     :FileIcons.getFileIcon(file));
         }
         // Any other column (name, date or size)
         else {
             String text = (String)value;
-            if(matches || isSelected)
+            if (matches || isSelected) {
                 label.setForeground(ThemeCache.foregroundColors[focusedIndex][selectedIndex][colorIndex]);
-            else
+            } else {
                 label.setForeground(ThemeCache.unmatchedForeground);
+            }
 
             // Set the label's text, before calculating it width
             label.setText(text);
@@ -217,22 +205,28 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             // - truncate the text from the center and equally to the left and right sides, adding an ellipsis ('...')
             // where characters have been removed. This allows both the start and end of filename to be visible.
             // - set a tooltip text that will display the whole text when mouse is over the label
+// TODO table.getColumnModel().getColumn(columnIndex).getWidth()
             if (table.getColumnModel().getColumn(columnIndex).getWidth() < label.getPreferredSize().getWidth()) {
-                String leftText = text.substring(0, text.length()/2);
-                String rightText = text.substring(text.length()/2, text.length());
+                final int tl = text.length();
+                final int tl2 = tl/2;
+                String leftText = text.substring(0, tl2);
+                String rightText = text.substring(tl2, tl);
 
-                while(table.getColumnModel().getColumn(columnIndex).getWidth() < label.getPreferredSize().getWidth()
-                   && leftText.length()>0 && rightText.length()>0) {    // Prevents against going out of bounds
+                while (table.getColumnModel().getColumn(columnIndex).getWidth() < label.getPreferredSize().getWidth()
+                   && !leftText.isEmpty() && !rightText.isEmpty()) {    // Prevents against going out of bounds
 
-                    if(leftText.length()>rightText.length())
-                        leftText = leftText.substring(0, leftText.length()-1);
-                    else
-                        rightText = rightText.substring(1, rightText.length());
+                    final int ltl = leftText.length();
+                    final int rtl = rightText.length();
+                    if (ltl > rtl) {
+                        leftText = leftText.substring(0, ltl - 1);
+                    } else {
+                        rightText = rightText.substring(1, rtl);
+                    }
 
                     label.setText(leftText + DOTS + rightText);
                 }
 
-                // Set the toop
+                // Set the tool tip
                 label.setToolTipText(text);
             }
             // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one
@@ -242,10 +236,10 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         }
 
         // Set background color depending on whether the row is selected or not, and whether the table has focus or not
-        if(selectedIndex == ThemeCache.SELECTED)
+        if (selectedIndex == ThemeCache.SELECTED)
             label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.SELECTED], ThemeCache.backgroundColors[focusedIndex][ThemeCache.SECONDARY]);
-        else if(matches) {
-            if(table.hasFocus() && search.isActive())
+        else if (matches) {
+            if (table.hasFocus() && search.isActive())
                 label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.NORMAL]);
             else
                 label.setBackground(ThemeCache.backgroundColors[focusedIndex][(rowIndex % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE]);
@@ -253,10 +247,11 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         else
             label.setBackground(ThemeCache.unmatchedBackground);
 
-        if(selectedIndex == ThemeCache.SELECTED)
+        if (selectedIndex == ThemeCache.SELECTED) {
             label.setOutline(table.hasFocus() ? ThemeCache.activeOutlineColor : ThemeCache.inactiveOutlineColor);
-        else
+        } else {
             label.setOutline(null);
+        }
 
         return label;
     }
