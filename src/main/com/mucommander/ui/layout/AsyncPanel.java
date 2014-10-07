@@ -57,7 +57,6 @@ public abstract class AsyncPanel extends JPanel {
             try {
                 initTargetComponent();
             } catch (Exception e) {
-e.printStackTrace();
                 exception = e;
             }
             return null;
@@ -78,6 +77,8 @@ e.printStackTrace();
 
     /** This field becomes true when this panel has become visible on screen. */
     private boolean visibleOnScreen;
+
+    private InitWorker worker;
 
     /**
      * Creates a new <code>AsyncPanel</code> with the default wait component.
@@ -102,14 +103,16 @@ e.printStackTrace();
         addAncestorListener(new AncestorListener() {
 
             public void ancestorAdded(AncestorEvent e) {
-                if (visibleOnScreen)
+                if (visibleOnScreen) {
                     return;
+                }
 
                 visibleOnScreen = true;
                 removeAncestorListener(this);
 
 //                loadTargetComponent();
-                new InitWorker().execute();
+                worker = new InitWorker();
+                worker.execute();
             }
 
             public void ancestorRemoved(AncestorEvent event) {}
@@ -117,6 +120,13 @@ e.printStackTrace();
             public void ancestorMoved(AncestorEvent event) {}
         });
 
+    }
+
+
+    protected void cancel() {
+        if (worker != null) {
+            worker.cancel(true);
+        }
     }
 
     /**
