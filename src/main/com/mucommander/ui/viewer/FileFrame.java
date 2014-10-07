@@ -1,6 +1,7 @@
 package com.mucommander.ui.viewer;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 
 import javax.swing.JComponent;
@@ -62,11 +63,28 @@ public abstract class FileFrame extends JFrame {
 			showGenericErrorDialog();
 			return;
 		}
-
 		AsyncPanel asyncPanel = new AsyncPanel() {
             @Override
             public void initTargetComponent() throws Exception {
-                filePresenter.open(file);
+                // key dispatcher for Esc detection
+                final KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
+                    @Override
+                    public boolean dispatchKeyEvent(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                            cancel();
+                            setVisible(false);
+                            dispose();
+                        }
+                        return false;
+                    }
+                };
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
+                try {
+                    filePresenter.open(file);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
             }
 
 
