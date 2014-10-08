@@ -307,8 +307,9 @@ public class ThemeManager {
      * @throws IOException if an error occured while locating the default user theme file.
      */
     public static AbstractFile getUserThemeFile() throws IOException {
-        if(userThemeFile == null)
+        if (userThemeFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(USER_THEME_FILE_NAME);
+        }
         return userThemeFile;
     }
 
@@ -989,6 +990,7 @@ public class ThemeManager {
             writeTheme(themeData, Theme.Type.CUSTOM, currentTheme.getName());
             Theme theme = new Theme(listener, themeData);
             theme.setName(currentTheme.getName());
+            theme.canModify();
             currentTheme = theme;
             return theme;
         }
