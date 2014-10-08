@@ -19,6 +19,7 @@
 
 package com.mucommander.ui.main.table;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -150,8 +151,6 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         if (file.isBrowsable())
             return ThemeCache.ARCHIVE;
 
-
-
         // Plain file.
         return ThemeCache.PLAIN_FILE;
     }
@@ -192,11 +191,18 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         // Any other column (name, date or size)
         else {
             String text = (String)value;
+            Color foregroundColor;
             if (matches || isSelected) {
-                label.setForeground(ThemeCache.foregroundColors[focusedIndex][selectedIndex][colorIndex]);
+                int group = FileGroupResolver.getInstance().resolve(file);
+                if (group >= 0) {
+                    foregroundColor = isSelected ? ThemeCache.groupSelectedColors[group] : ThemeCache.groupColors[group];
+                } else {
+                    foregroundColor = ThemeCache.foregroundColors[focusedIndex][selectedIndex][colorIndex];
+                }
             } else {
-                label.setForeground(ThemeCache.unmatchedForeground);
+                foregroundColor = ThemeCache.unmatchedForeground;
             }
+            label.setForeground(foregroundColor);
 
             // Set the label's text, before calculating it width
             label.setText(text);
@@ -236,16 +242,16 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         }
 
         // Set background color depending on whether the row is selected or not, and whether the table has focus or not
-        if (selectedIndex == ThemeCache.SELECTED)
+        if (selectedIndex == ThemeCache.SELECTED) {
             label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.SELECTED], ThemeCache.backgroundColors[focusedIndex][ThemeCache.SECONDARY]);
-        else if (matches) {
+        } else if (matches) {
             if (table.hasFocus() && search.isActive())
                 label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.NORMAL]);
             else
                 label.setBackground(ThemeCache.backgroundColors[focusedIndex][(rowIndex % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE]);
-        }
-        else
+        } else {
             label.setBackground(ThemeCache.unmatchedBackground);
+        }
 
         if (selectedIndex == ThemeCache.SELECTED) {
             label.setOutline(table.hasFocus() ? ThemeCache.activeOutlineColor : ThemeCache.inactiveOutlineColor);

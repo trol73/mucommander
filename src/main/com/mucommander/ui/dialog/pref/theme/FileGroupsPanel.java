@@ -24,6 +24,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.chooser.PreviewLabel;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
+import com.mucommander.ui.main.table.FileGroupResolver;
 import com.mucommander.ui.theme.ThemeData;
 
 import javax.swing.JLabel;
@@ -104,5 +105,6 @@ public class FileGroupsPanel extends ThemeEditorPanel {
             MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
             prefs.setVariable(preference, fileMasks[i].getText().trim());
         }
+        FileGroupResolver.getInstance().init();
     }
 }

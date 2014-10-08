@@ -115,6 +115,7 @@ public class Theme extends ThemeData {
      * which produces exactly the same result as <code>getType() == USER</code>.
      * </p>
      * @return <code>true</code> if the theme is modifiable, <code>false</code> otherwise.
+     *
      */
     public boolean canModify() {return type == Type.USER;}
 
