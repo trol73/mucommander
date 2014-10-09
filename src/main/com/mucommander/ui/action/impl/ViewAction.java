@@ -20,6 +20,7 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
+import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -47,8 +48,8 @@ public class ViewAction extends InternalViewAction {
     // - AbstractViewerAction implementation ---------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     @Override
-    protected Command getCustomCommand() {
-        return CommandManager.getCommandForAlias(CommandManager.VIEWER_ALIAS);
+    protected Command getCustomCommand(AbstractFile file) {
+        return CommandManager.getCommandForAlias(CommandManager.VIEWER_ALIAS, file);
     }
 
 

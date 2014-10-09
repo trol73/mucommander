@@ -208,9 +208,9 @@ public class DesktopManager {
 
         // Browses desktop from the last registered to the first, to make sure that
         // custom desktop adapters are used before the default ones.
-        for(int i = desktops.size() - 1; i >= 0; i--) {
+        for (int i = desktops.size() - 1; i >= 0; i--) {
             current = desktops.elementAt(i);
-            if(current.isAvailable()) {
+            if (current.isAvailable()) {
                 desktop = current;
                 LOGGER.debug("Using desktop: " + desktop);
                 desktop.init(install);
@@ -281,87 +281,100 @@ public class DesktopManager {
     // - Operation support -----------------------------------------------
     // -------------------------------------------------------------------
     private static List<DesktopOperation> getOperations(String type, int priority) {
-        if(operations[priority] == null)
+        if (operations[priority] == null)
             return null;
 
         return operations[priority].get(type);
     }
 
     private static DesktopOperation getAvailableOperation(String type, int priority) {
-        DesktopOperation       operation;
-        List<DesktopOperation> container;
+        List<DesktopOperation> container = getOperations(type, priority);
 
         // If the operation vector is null, no need to look further.
-        if((container = getOperations(type, priority)) != null)
-            for(int i = container.size() - 1; i >= 0; i--)
-                if((operation = container.get(i)).isAvailable())
+        if (container != null) {
+            for (int i = container.size() - 1; i >= 0; i--) {
+                DesktopOperation operation = container.get(i);
+                if (operation.isAvailable()) {
                     return operation;
+                }
+            }
+        }
         return null;
     }
 
     private static DesktopOperation getSupportedOperation(String type, int priority, Object[] target) {
-        DesktopOperation       operation;
-        List<DesktopOperation> container;
+        List<DesktopOperation> container = getOperations(type, priority);
 
         // If the operation vector is null, no need to look further.
-        if((container = getOperations(type, priority)) != null)
-            for(int i = container.size() - 1; i >= 0; i--)
-                if((operation = container.get(i)).canExecute(target))
+        if (container != null)
+            for (int i = container.size() - 1; i >= 0; i--) {
+                DesktopOperation operation = container.get(i);
+                if (operation.canExecute(target)) {
                     return operation;
+                }
+            }
         return null;
     }
 
     private static DesktopOperation getSupportedOperation(String type, Object[] target) {
         DesktopOperation operation;
-
-        if((operation = getSupportedOperation(type, SYSTEM_OPERATION, target)) != null)
+        if ((operation = getSupportedOperation(type, SYSTEM_OPERATION, target)) != null) {
             return operation;
-        if((operation = getSupportedOperation(type, CUSTOM_OPERATION, target)) != null)
+        }
+        if ((operation = getSupportedOperation(type, CUSTOM_OPERATION, target)) != null) {
             return operation;
-        if((operation = getSupportedOperation(type, FALLBACK_OPERATION, target)) != null)
+        }
+        if ((operation = getSupportedOperation(type, FALLBACK_OPERATION, target)) != null) {
             return operation;
+        }
         return null;
     }
 
     private static DesktopOperation getAvailableOperation(String type) {
         DesktopOperation operation;
 
-        if((operation = getAvailableOperation(type, SYSTEM_OPERATION)) != null)
+        if ((operation = getAvailableOperation(type, SYSTEM_OPERATION)) != null)
             return operation;
-        if((operation = getAvailableOperation(type, CUSTOM_OPERATION)) != null)
+        if ((operation = getAvailableOperation(type, CUSTOM_OPERATION)) != null)
             return operation;
-        if((operation = getAvailableOperation(type, FALLBACK_OPERATION)) != null)
+        if ((operation = getAvailableOperation(type, FALLBACK_OPERATION)) != null)
             return operation;
         return null;
     }
 
-    public static boolean isOperationAvailable(String type) {return getAvailableOperation(type) != null;}
+    public static boolean isOperationAvailable(String type) {
+        return getAvailableOperation(type) != null;
+    }
 
-    public static boolean isOperationSupported(String type, Object[] target) {return getSupportedOperation(type, target) != null;}
+    public static boolean isOperationSupported(String type, Object[] target) {
+        return getSupportedOperation(type, target) != null;
+    }
 
     public static void executeOperation(String type, Object[] target) throws IOException, UnsupportedOperationException {
-        DesktopOperation operation;
+        DesktopOperation operation = getSupportedOperation(type, target);
 
-        if((operation = getSupportedOperation(type, target)) != null)
+        if (operation != null) {
             operation.execute(target);
-        else
+        } else {
             throw new UnsupportedOperationException();
+        }
     }
 
     public static String getOperationName(String type) throws UnsupportedOperationException {
-        DesktopOperation operation;
-
-        if((operation = getAvailableOperation(type)) != null)
+        DesktopOperation operation = getAvailableOperation(type);
+        if (operation != null) {
             return operation.getName();
+        }
         throw new UnsupportedOperationException();
 
    }
 
     public static String getOperationName(String type, Object[] target) throws UnsupportedOperationException {
-        DesktopOperation operation;
+        DesktopOperation operation = getSupportedOperation(type, target);
 
-        if((operation = getSupportedOperation(type, target)) != null)
+        if (operation != null) {
             return operation.getName();
+        }
         throw new UnsupportedOperationException();
     }
 
@@ -405,27 +418,44 @@ public class DesktopManager {
 
     // - File manager helpers --------------------------------------------
     // -------------------------------------------------------------------
-    public static boolean canOpenInFileManager() {return isOperationAvailable(OPEN_IN_FILE_MANAGER);}
+    public static boolean canOpenInFileManager() {
+        return isOperationAvailable(OPEN_IN_FILE_MANAGER);
+    }
 
-    public static boolean canOpenInFileManager(File file) {return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static boolean canOpenInFileManager(File file) {
+        return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
-    public static boolean canOpenInFileManager(String file) {return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static boolean canOpenInFileManager(String file) {
+        return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
-    public static boolean canOpenInFileManager(AbstractFile file) {return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static boolean canOpenInFileManager(AbstractFile file) {
+        return isOperationSupported(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
-    public static void openInFileManager(File file) throws IOException, UnsupportedOperationException {executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static void openInFileManager(File file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
-    public static void openInFileManager(String file) throws IOException, UnsupportedOperationException {executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static void openInFileManager(String file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
-    public static void openInFileManager(AbstractFile file) throws IOException, UnsupportedOperationException {executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});}
+    public static void openInFileManager(AbstractFile file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});
+    }
 
     private static String getFileManagerName(DesktopOperation operation) throws UnsupportedOperationException {
-        if(operation == null)
+        if (operation == null) {
             throw new UnsupportedOperationException();
+        }
         return operation.getName();
     }
 
-    public static String getFileManagerName() throws UnsupportedOperationException {return getFileManagerName(getAvailableOperation(OPEN_IN_FILE_MANAGER));}
+    public static String getFileManagerName() throws UnsupportedOperationException {
+        return getFileManagerName(getAvailableOperation(OPEN_IN_FILE_MANAGER));
+    }
 
     public static String getFileManagerName(File file) throws UnsupportedOperationException {
         return getFileManagerName(getSupportedOperation(OPEN_IN_FILE_MANAGER, new Object[] {file}));
@@ -448,12 +478,8 @@ public class DesktopManager {
      * @return an instance of the AbstractTrash implementation that can be used on the current platform, or <code>null</code> if none is available.
      */
     public static AbstractTrash getTrash() {
-        TrashProvider provider;
-
-        if((provider = getTrashProvider()) == null)
-            return null;
-
-        return provider.getTrash();
+        TrashProvider provider = getTrashProvider();
+        return provider == null ? null : provider.getTrash();
     }
 
     /**

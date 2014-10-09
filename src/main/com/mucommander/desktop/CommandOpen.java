@@ -46,26 +46,25 @@ class CommandOpen extends LocalFileOperation {
     // -------------------------------------------------------------------
     @Override
     public boolean isAvailable() {
-        if(allowDefault)
+        if (allowDefault)
             return true;
-        return CommandManager.getCommandForAlias(CommandManager.FILE_OPENER_ALIAS) != null;
+        return CommandManager.getCommandForAlias(CommandManager.FILE_OPENER_ALIAS, null) != null;
     }
 
     @Override
     public boolean canExecute(AbstractFile file) {
-        if(allowDefault)
-            return true;
+        return allowDefault || CommandManager.getCommandForFile(file, false) != null;
 
-        return CommandManager.getCommandForFile(file, false) != null;
     }
 
     @Override
     public void execute(AbstractFile file) throws IOException {
-        Command command;
+        Command command = CommandManager.getCommandForFile(file, allowDefault);
 
         // Attemps to find a command that matches the specified target.
-        if((command = CommandManager.getCommandForFile(file, allowDefault)) == null)
+        if (command == null) {
             throw new UnsupportedOperationException();
+        }
 
         // If found, executes it.
         ProcessRunner.execute(command.getTokens(file), file);

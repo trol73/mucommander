@@ -61,7 +61,7 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
             CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS,   EXE_OPENER,  CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FILE_OPENER, CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME, null));
 
-            FileFilter filter;
+            FileFilter filter = new RegexpFilenameFilter("[^.]+", true);
             // Disabled actual permissions checking as this will break normal +x files.
             // With this, a +x PDF file will not be opened.
             /*
@@ -70,24 +70,23 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
                 IMAGE_FILTER = new PermissionsFileFilter(PermissionTypes.EXECUTE_PERMISSION, true);
             else
             */
-                filter = new RegexpFilenameFilter("[^.]+", true);
-
             CommandManager.registerDefaultAssociation(CommandManager.EXE_OPENER_ALIAS, filter);
 
             // Multi-click interval retrieval
             try {
                 String value = GnomeConfig.getValue(DOUBLE_CLICK_CONFIG_KEY);
-                if(value==null)
+                if (value == null)
                     multiClickInterval = super.getMultiClickInterval();
                 
                 multiClickInterval = Integer.parseInt(value);
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
             	LOGGER.debug("Error while retrieving double-click interval from gconftool", e);
                 multiClickInterval = super.getMultiClickInterval();
             }
         }
-        catch(CommandException e) {throw new DesktopInitialisationException(e);}
+        catch (CommandException e) {
+            throw new DesktopInitialisationException(e);
+        }
     }
 
     /**

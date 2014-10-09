@@ -61,14 +61,14 @@ abstract class AbstractViewerAction extends SelectedFileAction {
      */
     @Override
     public synchronized void performAction() {
-        AbstractFile file = mainFrame.getActiveTable().getSelectedFile(false, true);
+        final AbstractFile file = mainFrame.getActiveTable().getSelectedFile(false, true);
 
         // At this stage, no assumption should be made on the type of file that is allowed to be viewed/edited:
         // viewer/editor implementations will decide whether they allow a particular file or not.
         if (file == null) {
             return;
         }
-        Command customCommand = getCustomCommand();
+        Command customCommand = getCustomCommand(file);
         if (customCommand == null) {
             // If we're not using a custom editor, this action behaves exactly like its parent.
             performInternalAction(file);
@@ -99,5 +99,5 @@ abstract class AbstractViewerAction extends SelectedFileAction {
      */
     protected abstract void performInternalAction(AbstractFile file);
 
-    protected abstract Command getCustomCommand();
+    protected abstract Command getCustomCommand(AbstractFile file);
 }

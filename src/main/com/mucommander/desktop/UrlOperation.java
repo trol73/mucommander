@@ -86,11 +86,8 @@ public abstract class UrlOperation implements DesktopOperation {
      * @see           #extractTarget(Object[])
      */
     public boolean canExecute(Object[] target) {
-        URL url;
-
-        if((url = extractTarget(target)) != null)
-            return canExecute(url);
-        return false;
+        URL url = extractTarget(target);
+        return url != null && canExecute(url);
     }
 
     /**
@@ -106,10 +103,10 @@ public abstract class UrlOperation implements DesktopOperation {
      * @see                                  #extractTarget(Object[])
      */
     public void execute(Object[] target) throws IOException, UnsupportedOperationException {
-        URL url;
-
-        if((url = extractTarget(target)) == null)
+        URL url = extractTarget(target);
+        if (url == null) {
             throw new UnsupportedOperationException();
+        }
         execute(url);
     }
 
