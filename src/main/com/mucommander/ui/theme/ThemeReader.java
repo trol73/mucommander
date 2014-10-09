@@ -342,10 +342,6 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_TABLE_SELECTED;
             else if(state == STATE_QUICK_LIST_ITEM)
             	state = STATE_QUICK_LIST_ITEM_SELECTED;
-            else if (state >= STATE_GROUP_1 && state <= STATE_GROUP_10) {
-                int group = state - STATE_GROUP_1;
-                template.setColor(ThemeData.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + group, createColor(attributes));
-            }
 
             else
                 traceIllegalDeclaration(qName);

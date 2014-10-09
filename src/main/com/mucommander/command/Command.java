@@ -22,8 +22,8 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Compiled shell commands.
@@ -33,8 +33,8 @@ import java.util.Vector;
  *   <li>An {@link #getAlias() alias}, used to identify the command through the application.</li>
  *   <li>A {@link #getCommand() command}, which is what will be executed by the instance of <code>Command</code>.</li>
  *   <li>
- *     A {@link #getType() type}, which can be any of {@link #SYSTEM_COMMAND system} (invisible and inmutable),
- *     {@link #INVISIBLE_COMMAND invisible} (invisible and mutable) or {@link #NORMAL_COMMAND} (visible and mutable).
+ *     A {@link #getType() type}, which can be any of {@link CommandType#SYSTEM_COMMAND system} (invisible and inmutable),
+ *     {@link CommandType#INVISIBLE_COMMAND invisible} (invisible and mutable) or {@link CommandType#NORMAL_COMMAND} (visible and mutable).
  *   </li>
  * </ul>
  * </p>
@@ -95,13 +95,15 @@ public class Command implements Comparable<Command> {
     // - Instance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Command's alias. */
-    private final String      alias;
+    private final String alias;
     /** Original command. */
-    private final String      command;
+    private final String command;
     /** Name used to display the command to users. */
-    private final String      displayName;
+    private final String displayName;
     /** Command type. */
     private final CommandType type;
+    /** Filemask */
+    private final String fileMask;
 
 
 
@@ -113,39 +115,41 @@ public class Command implements Comparable<Command> {
      * @param command command that will be executed.
      * @param type        type of the command.
      * @param displayName name of the command as seen by users (if <code>null</code>, defaults to <code>alias</code>).
+     * @param fileMask mask for files specification
      */
-    public Command(String alias, String command, CommandType type, String displayName) {
-        this.alias       = alias;
-        this.type        = type;
+    public Command(String alias, String command, CommandType type, String displayName, String fileMask) {
+        this.alias = alias;
+        this.type = type;
         this.displayName = displayName;
-        this.command     = command;
+        this.command = command;
+        this.fileMask = fileMask;
     }
 
     /**
      * Creates a new command.
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
-     * <code>{@link #Command(String,String,int,String) Command(}alias, command, {@link #NORMAL_COMMAND}, null)</code>.
+     * <code>{@link Command(String,String,CommandType,String) Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null)</code>.
      * </p>
      * @param alias   alias of the command.
      * @param command command that will be executed.
      */
     public Command(String alias, String command) {
-    	this(alias, command, CommandType.NORMAL_COMMAND, null);
+    	this(alias, command, CommandType.NORMAL_COMMAND, null, null);
     }
 
     /**
      * Creates a new command.
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
-     * <code>{@link #Command(String,String,int,String) Command(}alias, command, type, null)</code>.
+     * <code>{@link Command(String,String,int,String) Command(}alias, command, type, null)</code>.
      * </p>
      * @param alias   alias of the command.
      * @param command command that will be executed.
      * @param type    type of the command.
      */
     public Command(String alias, String command, CommandType type) {
-    	this(alias, command, type, null);
+    	this(alias, command, type, null, null);
     }
 
 
@@ -223,17 +227,12 @@ public class Command implements Comparable<Command> {
      * @return         the specified command's tokens after replacing keywords by the corresponding values from the specified files.
      */
     public static String[] getTokens(String command, AbstractFile[] files) {
-        List<String>  tokens;        // All tokens.
-        char[]        buffer;        // All the characters that compose command.
-        StringBuilder currentToken;  // Buffer for the current token.
-        boolean       isInQuotes;    // Whether we're currently within quotes or not.
-
         // Initialises parsing.
-        tokens       = new Vector<String>();
-        command      = command.trim();
-        currentToken = new StringBuilder(command.length());
-        buffer       = command.toCharArray();
-        isInQuotes   = false;
+        List<String> tokens = new ArrayList<>();                                // All tokens.
+        command = command.trim();
+        StringBuilder currentToken = new StringBuilder(command.length());       // Buffer for the current token.
+        char[] buffer = command.toCharArray();                                  // All the characters that compose command.
+        boolean isInQuotes = false;                                             // Whether we're currently within quotes or not.
 
         // Parses the command.
         for (int i = 0; i < command.length(); i++) {
@@ -429,6 +428,8 @@ public class Command implements Comparable<Command> {
     public synchronized CommandType getType() {
     	return type;
     }
+
+    public synchronized String getFileMask() { return fileMask; }
 
     /**
      * Returns the command's display name.

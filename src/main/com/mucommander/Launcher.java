@@ -104,8 +104,7 @@ public class Launcher {
                 try {
                     LOGGER.debug("waiting");
                     LAUNCH_LOCK.wait();
-                }
-                catch(InterruptedException e) {
+                } catch(InterruptedException e) {
                     // will loop
                 }
             }
@@ -136,10 +135,10 @@ public class Launcher {
     private static void migrateCommand(String useName, String commandName, String alias) {
         String command;
 
-        if(MuConfigurations.getPreferences().getBooleanVariable(useName) && (command = MuConfigurations.getPreferences().getVariable(commandName)) != null) {
+        if (MuConfigurations.getPreferences().getBooleanVariable(useName) && (command = MuConfigurations.getPreferences().getVariable(commandName)) != null) {
             try {
-                CommandManager.registerCommand(new Command(alias, command, CommandType.SYSTEM_COMMAND));}
-            catch(CommandException e) {
+                CommandManager.registerCommand(new Command(alias, command, CommandType.SYSTEM_COMMAND));
+            } catch(CommandException e) {
                 // Ignore this: the command didn't work in the first place, we might as well get rid of it.
             }
             MuConfigurations.getPreferences().removeVariable(useName);
@@ -581,8 +580,11 @@ public class Launcher {
         void run() throws Exception {
             // Loads shell history
             printStartupMessage("Loading shell history...");
-            try {ShellHistoryManager.loadHistory();}
-            catch(Exception e) {helper.printFileError("Could not load shell history", e);}
+            try {
+                ShellHistoryManager.loadHistory();
+            } catch(Exception e) {
+                helper.printFileError("Could not load shell history", e);
+            }
         }
     }
 

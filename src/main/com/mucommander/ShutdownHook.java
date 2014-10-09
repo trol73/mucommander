@@ -83,7 +83,7 @@ public class ShutdownHook extends Thread {
      */
     private synchronized static void performShutdownTasks() {
         // Return if shutdown tasks have already been performed
-        if(shutdownTasksPerformed)
+        if (shutdownTasksPerformed)
             return;
         
         TreeIOThreadManager.getInstance().interrupt();

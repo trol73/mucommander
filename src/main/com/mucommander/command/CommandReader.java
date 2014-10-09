@@ -101,15 +101,19 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
         if(qName.equals(ELEMENT_COMMAND)) {
             String alias = attributes.getValue(ATTRIBUTE_ALIAS);
             String command = attributes.getValue(ATTRIBUTE_VALUE);
+            String fileMask = attributes.getValue(ATTRIBUTE_FILEMASK);
 
             // Makes sure the required attributes are there.
-            if(alias != null && command != null) {
+            if (alias != null && command != null) {
             	CommandType type = CommandType.parseCommandType(attributes.getValue(ATTRIBUTE_TYPE));
             	String display = attributes.getValue(ATTRIBUTE_DISPLAY);
 
             	// Creates the command and passes it to the builder.
-            	try {builder.addCommand(new Command(alias, command, type, display));}
-            	catch(CommandException e) {throw new SAXException(e);}
+            	try {
+                    builder.addCommand(new Command(alias, command, type, display, fileMask));
+                } catch(CommandException e) {
+                    throw new SAXException(e);
+                }
             }
         }
     }

@@ -114,7 +114,6 @@ public class ThemeEditorDialog extends PreferencesDialog {
         if (theme.isIdentical(data)) {
             return;
         }
-
         wasThemeModified = true;
 
         try {

@@ -89,7 +89,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this color.
      * </p>
      */
-    public static final int COLOR_COUNT = 89;
+    public static final int COLOR_COUNT = 79;
 
 
 
@@ -698,17 +698,6 @@ public class ThemeData {
     public static final int FILE_GROUP_9_FOREGROUND_COLOR = 77;
     public static final int FILE_GROUP_10_FOREGROUND_COLOR = 78;
 
-    public static final int FILE_GROUP_1_SELECTED_FOREGROUND_COLOR = 79;
-    public static final int FILE_GROUP_2_SELECTED_FOREGROUND_COLOR = 80;
-    public static final int FILE_GROUP_3_SELECTED_FOREGROUND_COLOR = 81;
-    public static final int FILE_GROUP_4_SELECTED_FOREGROUND_COLOR = 82;
-    public static final int FILE_GROUP_5_SELECTED_FOREGROUND_COLOR = 83;
-    public static final int FILE_GROUP_6_SELECTED_FOREGROUND_COLOR = 84;
-    public static final int FILE_GROUP_7_SELECTED_FOREGROUND_COLOR = 85;
-    public static final int FILE_GROUP_8_SELECTED_FOREGROUND_COLOR = 86;
-    public static final int FILE_GROUP_9_SELECTED_FOREGROUND_COLOR = 87;
-    public static final int FILE_GROUP_10_SELECTED_FOREGROUND_COLOR = 88;
-
 
 
     // - Default fonts -------------------------------------------------------------------------------------------------
@@ -997,10 +986,6 @@ public class ThemeData {
         for (int i = FILE_GROUP_1_FOREGROUND_COLOR; i<= FILE_GROUP_10_FOREGROUND_COLOR; i++) {
             registerColor(i, DEFAULT_TABLE_FOREGROUND);
         }
-        for (int i = FILE_GROUP_1_SELECTED_FOREGROUND_COLOR; i<= FILE_GROUP_10_SELECTED_FOREGROUND_COLOR; i++) {
-            registerColor(i, DEFAULT_TABLE_FOREGROUND);
-        }
-
         // Shell default values.
         registerFont(SHELL_FONT,                               DEFAULT_TEXT_AREA_FONT);
         registerFont(SHELL_HISTORY_FONT,                       DEFAULT_TEXT_FIELD_FONT);
@@ -1135,15 +1120,15 @@ public class ThemeData {
      * @param data data to import.
      */
     public void importData(ThemeData data) {
-        int i;
-
         // Imports the theme's colors.
-        for(i = 0; i < COLOR_COUNT; i++)
+        for (int i = 0; i < COLOR_COUNT; i++) {
             setColor(i, data.colors[i]);
+        }
 
         // Imports the theme's fonts.
-        for(i = 0; i < FONT_COUNT; i++)
+        for (int i = 0; i < FONT_COUNT; i++) {
             setFont(i, data.fonts[i]);
+        }
     }
 
 
@@ -1173,12 +1158,16 @@ public class ThemeData {
 
         buffer = isColorDifferent(id, color);
         colors[id] = color;
-        switch(id) {
-        case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-        case FILE_TABLE_SELECTED_OUTLINE_COLOR:
-        case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-        case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
+        if (id >= FILE_GROUP_1_FOREGROUND_COLOR && id <= FILE_GROUP_10_FOREGROUND_COLOR) {
             triggerColorEvent(id, color);
+        } else {
+            switch (id) {
+                case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                case FILE_TABLE_SELECTED_OUTLINE_COLOR:
+                case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
+                    triggerColorEvent(id, color);
+            }
         }
 
         return buffer;
@@ -1203,11 +1192,8 @@ public class ThemeData {
      * @return      <code>true</code> if the call actually changed the data, <code>false</code> otherwise.
      */
     public synchronized boolean setFont(int id, Font font) {
-        boolean buffer; // Used to store the result of isFontDifferent.
-
-        buffer = isFontDifferent(id, font);
+        boolean buffer = isFontDifferent(id, font); // Used to store the result of isFontDifferent.
         fonts[id] = font;
-
         return buffer;
     }
 
@@ -1241,7 +1227,6 @@ public class ThemeData {
      */
     public synchronized Font getFont(int id) {
         checkFontIdentifier(id);
-
         return (fonts[id] == null) ? getDefaultFont(id, this) : fonts[id];
     }
 
@@ -1316,16 +1301,14 @@ public class ThemeData {
      * @see                   #isColorDifferent(int,Color,boolean)
      */
     public boolean isIdentical(ThemeData data, boolean ignoreDefaults) {
-        int i;
-
         // Compares the colors.
-        for(i = 0; i < COLOR_COUNT; i++)
-            if(isColorDifferent(i, data.colors[i] , ignoreDefaults))
+        for (int i = 0; i < COLOR_COUNT; i++)
+            if (isColorDifferent(i, data.colors[i] , ignoreDefaults))
                 return false;
 
         // Compares the fonts.
-        for(i = 0; i < FONT_COUNT; i++)
-            if(isFontDifferent(i, data.fonts[i], ignoreDefaults))
+        for (int i = 0; i < FONT_COUNT; i++)
+            if (isFontDifferent(i, data.fonts[i], ignoreDefaults))
                 return false;
 
         return true;
@@ -1374,13 +1357,15 @@ public class ThemeData {
 
         // If the specified font is null, the only way for both fonts to be equal is for fonts[id]
         // to be null as well.
-        if(font == null)
+        if( font == null) {
             return fonts[id] != null;
+        }
 
         // If fonts[id] is null and we're set to ignore defaults, both fonts are different.
         // If we're set to use defaults, we must compare font and the default value for id.
-        if(fonts[id] == null)
+        if (fonts[id] == null) {
             return ignoreDefaults || !getDefaultFont(id, this).equals(font);
+        }
 
         // 'Standard' case: both fonts are set, compare them normally.
         return !font.equals(fonts[id]);
@@ -1419,12 +1404,12 @@ public class ThemeData {
 
         // If the specified color is null, the only way for both colors to be equal is for colors[id]
         // to be null as well.
-        if(color == null)
+        if (color == null)
             return colors[id] != null;
 
         // If colors[id] is null and we're set to ignore defaults, both colors are different.
         // If we're set to use defaults, we must compare color and the default value for id.
-        if(colors[id] == null)
+        if (colors[id] == null)
             return ignoreDefaults || !getDefaultColor(id, this).equals(color);
 
         // 'Standard' case: both colors are set, compare them normally.
@@ -1489,14 +1474,12 @@ public class ThemeData {
      * @param color new value for the color that changed.
      */
     static void triggerColorEvent(int id, Color color) {
-        ColorChangedEvent event;    // Event that will be dispatched.
-
-        // Creates the event.
-        event = new ColorChangedEvent(null, id, color);
+        ColorChangedEvent event = new ColorChangedEvent(null, id, color);
 
         // Dispatches it.
-        for(ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet()) {
             listener.colorChanged(event);
+        }
     }
 
 
@@ -1509,8 +1492,9 @@ public class ThemeData {
      * @throws IllegalArgumentException if <code>id</code> is not a legal color identifier.
      */
     private static void checkColorIdentifier(int id) {
-        if(id < 0 || id >= COLOR_COUNT)
+        if (id < 0 || id >= COLOR_COUNT) {
             throw new IllegalArgumentException("Illegal color identifier: " + id);
+        }
     }
 
     /**
@@ -1519,7 +1503,8 @@ public class ThemeData {
      * @throws IllegalArgumentException if <code>id</code> is not a legal font identifier.
      */
     private static void checkFontIdentifier(int id) {
-        if(id < 0 || id >= FONT_COUNT)
+        if (id < 0 || id >= FONT_COUNT) {
             throw new IllegalArgumentException("Illegal font identifier: " + id);
+        }
     }
 }

@@ -41,11 +41,7 @@ public class FileGroupsPanel extends ThemeEditorPanel {
 
     private static final int NUMBER_OF_GROUPS = 10;
 
-    private ColorButton[] normalColors = new ColorButton[NUMBER_OF_GROUPS];
-    private ColorButton[] selectedColors = new ColorButton[NUMBER_OF_GROUPS];
     private JTextField[] fileMasks = new JTextField[NUMBER_OF_GROUPS];
-
-    private final DocumentListener documentListener;
 
     // - Initialisation ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -57,19 +53,24 @@ public class FileGroupsPanel extends ThemeEditorPanel {
     public FileGroupsPanel(final PreferencesDialog parent, ThemeData data) {
         super(parent, Translator.get("theme_editor.file_groups"), data);
 
-        documentListener = new DocumentListener() {
+        DocumentListener documentListener = new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {parent.setCommitButtonsEnabled(true);}
+            public void insertUpdate(DocumentEvent e) {
+                parent.setCommitButtonsEnabled(true);
+            }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {parent.setCommitButtonsEnabled(true);}
+            public void removeUpdate(DocumentEvent e) {
+                parent.setCommitButtonsEnabled(true);
+            }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {}
+            public void changedUpdate(DocumentEvent e) {
+            }
         };
 
         FilePreviewPanel preview = new FilePreviewPanel(themeData, true);
-        JPanel gridPanel = new ProportionalGridPanel(4);
+        JPanel gridPanel = new ProportionalGridPanel(3);
 
         // Header
         gridPanel.add(new JLabel());
@@ -81,10 +82,8 @@ public class FileGroupsPanel extends ThemeEditorPanel {
             MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
             String mask = prefs.getVariable(preference);
             gridPanel.add(createCaptionLabelWithTitle(Translator.get("theme_editor.group_") + " " + (i+1)));
-            normalColors[i]  = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
-            gridPanel.add(normalColors[i]);
-            selectedColors[i] = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
-            gridPanel.add(selectedColors[i]);
+            ColorButton сolorButton  = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
+            gridPanel.add(сolorButton);
             fileMasks[i] = new JTextField(24);
             fileMasks[i].setText(mask);
             gridPanel.add(fileMasks[i]);
