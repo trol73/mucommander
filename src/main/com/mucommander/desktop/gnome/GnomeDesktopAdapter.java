@@ -56,10 +56,10 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
         DesktopManager.setTrashProvider(new GnomeTrashProvider());
         
         try {
-            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  FILE_OPENER, CommandType.SYSTEM_COMMAND, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   FILE_OPENER, CommandType.SYSTEM_COMMAND, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS,   EXE_OPENER,  CommandType.SYSTEM_COMMAND, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FILE_OPENER, CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME));
+            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  FILE_OPENER, CommandType.SYSTEM_COMMAND, null, null));
+            CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   FILE_OPENER, CommandType.SYSTEM_COMMAND, null, null));
+            CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS,   EXE_OPENER,  CommandType.SYSTEM_COMMAND, null, null));
+            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FILE_OPENER, CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME, null));
 
             FileFilter filter;
             // Disabled actual permissions checking as this will break normal +x files.

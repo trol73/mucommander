@@ -332,8 +332,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
                 case GROUP_9_FILE:
                 case GROUP_10_FILE:
                     int group = row - GROUP_1_FILE;
-                        return FilePreviewPanel.this.data.getColor(isSelected ? ThemeData.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + group :
-                                ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group);
+                        return FilePreviewPanel.this.data.getColor(ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group);
             }
 
             // Impossible.

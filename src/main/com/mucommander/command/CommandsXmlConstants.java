@@ -66,6 +66,7 @@ interface CommandsXmlConstants {
     public static final String ATTRIBUTE_ALIAS   = "alias";
     /** Name of the attribute containing a command's value. */
     public static final String ATTRIBUTE_VALUE   = "value";
+    public static final String ATTRIBUTE_FILEMASK   = "filemask";
     /** Name of the attribute containing a command's type. */
     public static final String ATTRIBUTE_TYPE    = "type";
     /** Describes <i>system</i> commands. */

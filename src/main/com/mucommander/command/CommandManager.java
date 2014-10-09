@@ -22,13 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +32,6 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.PermissionTypes;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
-import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.filter.ChainedFileFilter;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.RegexpFilenameFilter;
@@ -67,6 +60,7 @@ public class CommandManager implements CommandBuilder {
     /** Alias for the default text editor. */ 
     public static final String EDITOR_ALIAS                = "edit";
 
+    public static final String FILEMASK_ALIAS              = "filemask";
 
 
 
@@ -115,10 +109,10 @@ public class CommandManager implements CommandBuilder {
      * Initializes the command manager.
      */
     static {
-        systemAssociations = new Vector<CommandAssociation>();
-        associations       = new Vector<CommandAssociation>();
-        commands           = new Hashtable<String, Command>();
-        defaultCommand     = null;
+        systemAssociations = new ArrayList<>();
+        associations = new ArrayList<>();
+        commands = new HashMap<>();
+        defaultCommand = null;
     }
 
     /**
@@ -148,11 +142,8 @@ public class CommandManager implements CommandBuilder {
      * @return              the tokens that compose the command that must be executed to open the specified file, <code>null</code> if not found.
      */
     public static String[] getTokensForFile(AbstractFile file, boolean allowDefault) {
-        Command command;
-
-        if((command = getCommandForFile(file, allowDefault)) == null)
-            return null;
-        return command.getTokens(file);
+        Command command = getCommandForFile(file, allowDefault);
+        return command == null ? null : command.getTokens(file);
     }
 
     /**
@@ -166,12 +157,11 @@ public class CommandManager implements CommandBuilder {
      */
     public static Command getCommandForFile(AbstractFile file) {return getCommandForFile(file, true);}
 
-    private static Command getCommandForFile(AbstractFile file, Iterator<CommandAssociation> iterator) {
-        CommandAssociation association;
-
-        while(iterator.hasNext())
-            if((association = iterator.next()).accept(file))
+    private static Command getCommandForFile(AbstractFile file, List<CommandAssociation> associations) {
+        for (CommandAssociation association : associations) {
+            if (association.accept(file))
                 return association.getCommand();
+        }
         return null;
     }
 
@@ -185,21 +175,21 @@ public class CommandManager implements CommandBuilder {
         Command command;
 
         // Goes through all known associations and checks whether file matches any.
-        if((command = getCommandForFile(file, associations.iterator())) != null)
+        if ((command = getCommandForFile(file, associations)) != null)
             return command;
 
         // Goes through all system associations and checks whether file matches any.
-        if((command = getCommandForFile(file, systemAssociations.iterator())) != null)
+        if ((command = getCommandForFile(file, systemAssociations)) != null)
             return command;
 
         // We haven't found a command explicitely associated with 'file',
         // but we might have a generic file opener.
-        if(defaultCommand != null)
+        if (defaultCommand != null)
             return defaultCommand;
 
         // We don't have a generic file opener, return the 'self execute'
         // command if we're allowed.
-        if(allowDefault)
+        if (allowDefault)
             return RUN_AS_EXECUTABLE_COMMAND;
         return null;
     }
@@ -210,7 +200,7 @@ public class CommandManager implements CommandBuilder {
      */
     public static Collection<Command> commands() {
         // Copy the registered commands to a new list
-    	List<Command> list = new Vector<Command>(commands.values());
+    	List<Command> list = new ArrayList<>(commands.values());
     	// Sorts the list.
         Collections.sort(list);
         
@@ -276,9 +266,9 @@ public class CommandManager implements CommandBuilder {
     }
     
     private static CommandAssociation createAssociation(String cmd, FileFilter filter) throws CommandException {
-        Command command;
+        Command command = getCommandForAlias(cmd);
 
-        if((command = getCommandForAlias(cmd)) == null) {
+        if (command == null) {
         	LOGGER.debug("Failed to create association as '" + command + "' is not known.");
             throw new CommandException(command + " not found");
         }
@@ -317,8 +307,9 @@ public class CommandManager implements CommandBuilder {
         	// Goes through all the registered commands.
         	for (Command command : commands())
                 builder.addCommand(command);
+        } finally {
+            builder.endBuilding();
         }
-        finally {builder.endBuilding();}
     }
 
 
@@ -327,7 +318,7 @@ public class CommandManager implements CommandBuilder {
     // -------------------------------------------------------------------------
     private static void buildFilter(FileFilter filter, AssociationBuilder builder) throws CommandException {
         // Filter on the file type.
-        if(filter instanceof AttributeFileFilter) {
+        if (filter instanceof AttributeFileFilter) {
             AttributeFileFilter attributeFilter;
 
             attributeFilter = (AttributeFileFilter)filter;
@@ -341,7 +332,7 @@ public class CommandManager implements CommandBuilder {
                 break;
             }
         }
-        else if(filter instanceof PermissionsFileFilter) {
+        else if (filter instanceof PermissionsFileFilter) {
             PermissionsFileFilter permissionFilter;
 
             permissionFilter = (PermissionsFileFilter)filter;
@@ -360,7 +351,7 @@ public class CommandManager implements CommandBuilder {
                 break;
             }
         }
-        else if(filter instanceof RegexpFilenameFilter) {
+        else if (filter instanceof RegexpFilenameFilter) {
             RegexpFilenameFilter regexpFilter;
 
             regexpFilter = (RegexpFilenameFilter)filter;
@@ -432,7 +423,7 @@ public class CommandManager implements CommandBuilder {
      * @throws IOException if there was an error locating the default commands file.
      */
     public static AbstractFile getAssociationFile() throws IOException {
-        if(associationFile == null)
+        if (associationFile == null)
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_ASSOCIATION_FILE_NAME);
         return associationFile;
     }
@@ -449,9 +440,8 @@ public class CommandManager implements CommandBuilder {
      * @see    #writeAssociations()
      */
     public static void setAssociationFile(String path) throws FileNotFoundException {
-        AbstractFile file;
-
-        if((file = FileFactory.getFile(path)) == null)
+        AbstractFile file = FileFactory.getFile(path);
+        if (file == null)
             setAssociationFile(new File(path));
         else
             setAssociationFile(file);
@@ -479,7 +469,7 @@ public class CommandManager implements CommandBuilder {
      * @see    #writeAssociations()
      */
     public static void setAssociationFile(AbstractFile file) throws FileNotFoundException {
-        if(file.isBrowsable())
+        if (file.isBrowsable())
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
 
         associationFile = file;
@@ -497,22 +487,20 @@ public class CommandManager implements CommandBuilder {
      * @see                #setAssociationFile(String)
      */
     public static void loadAssociations() throws IOException, CommandException {
-        AbstractFile file;
-        InputStream  in;
-
-        file = getAssociationFile();
+        AbstractFile file = getAssociationFile();
         LOGGER.debug("Loading associations from file: " + file.getAbsolutePath());
 
         // Tries to load the associations file.
         // Associations are not considered to be modified by this. 
-        in = null;
+        InputStream in = null;
         try {AssociationReader.read(in = new BackupInputStream(file), new AssociationFactory());}
         finally {
             wereAssociationsModified = false;
             // Makes sure the input stream is closed.
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception e) {
                     // Ignores this.
                 }
             }
@@ -538,28 +526,26 @@ public class CommandManager implements CommandBuilder {
      */
     public static void writeAssociations() throws CommandException, IOException {
         // Do not save the associations if they were not modified.
-        if(wereAssociationsModified) {
-            BackupOutputStream out;    // Where to write the associations.
+        if (!wereAssociationsModified) {
+            LOGGER.debug("Custom file associations not modified, skip saving.");
+            return;
+        }
+        LOGGER.debug("Writing associations to file: " + getAssociationFile());
 
-            LOGGER.debug("Writing associations to file: " + getAssociationFile());
-
-            // Writes the associations.
-            out = null;
-            try {
-                buildAssociations(new AssociationWriter(out = new BackupOutputStream(getAssociationFile())));
-                wereAssociationsModified = false;
-            }
-            finally {
-                if(out != null) {
-                    try {out.close();}
-                    catch(Exception e) {
-                        // Ignores this.
-                    }
+        // Writes the associations.
+        BackupOutputStream out = null;
+        try {
+            buildAssociations(new AssociationWriter(out = new BackupOutputStream(getAssociationFile())));
+            wereAssociationsModified = false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch(Exception e) {
+                    // Ignores this.
                 }
             }
         }
-        else
-        	LOGGER.debug("Custom file associations not modified, skip saving.");
     }
 
 
@@ -585,7 +571,7 @@ public class CommandManager implements CommandBuilder {
      * @throws IOException if there was some error locating the default commands file.
      */
     public static AbstractFile getCommandFile() throws IOException {
-        if(commandsFile == null)
+        if (commandsFile == null)
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_COMMANDS_FILE_NAME);
         return commandsFile;
     }

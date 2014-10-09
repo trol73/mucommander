@@ -47,12 +47,12 @@ public enum CommandType {
      * <p>
      * Note that this method is not strict in the arguments it receives:
      * <ul>
-     *   <li>If <code>type</code> equals {CommandsXmlConstants#VALUE_SYSTEM}, {@link Command#SYSTEM_COMMAND} will be returned.</li>
-     *   <li>If <code>type</code> equals {CommandsXmlConstants#VALUE_INVISIBLE}, {@link Command#INVISIBLE_COMMAND} will be returned.</li>
-     *   <li>In any other case, {@link Command#NORMAL_COMMAND} will be returned.</li>
+     *   <li>If <code>type</code> equals {CommandsXmlConstants#VALUE_SYSTEM}, {@link #SYSTEM_COMMAND} will be returned.</li>
+     *   <li>If <code>type</code> equals {CommandsXmlConstants#VALUE_INVISIBLE}, {@link #INVISIBLE_COMMAND} will be returned.</li>
+     *   <li>In any other case, {@link #NORMAL_COMMAND} will be returned.</li>
      * </ul>
      * </p>
-     * @param  type String representation of type to analyze.
+     * @param  value String representation of type to analyze.
      * @return <code>type</code>'s integer equivalent.
      */
     public static CommandType parseCommandType(String value) {

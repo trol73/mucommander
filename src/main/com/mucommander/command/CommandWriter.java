@@ -60,16 +60,20 @@ public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
         try {
             out.startElement(ELEMENT_ROOT);
             out.println();
+        } catch(IOException e) {
+            throw new CommandException(e);
         }
-        catch(IOException e) {throw new CommandException(e);}
     }
 
     /**
      * Closes the root XML element.
      */
     public void endBuilding() throws CommandException {
-        try {out.endElement(ELEMENT_ROOT);}
-        catch(IOException e) {throw new CommandException(e);}
+        try {
+            out.endElement(ELEMENT_ROOT);
+        } catch(IOException e) {
+            throw new CommandException(e);
+        }
     }
 
     /**
@@ -84,13 +88,19 @@ public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
         attributes = new XmlAttributes();
         attributes.add(ATTRIBUTE_ALIAS, command.getAlias());
         attributes.add(ATTRIBUTE_VALUE, command.getCommand());
-        if (command.getType().toString() != null)
-        	attributes.add(ATTRIBUTE_TYPE, command.getType().toString());
-        if(command.isDisplayNameSet())
+        attributes.add(ATTRIBUTE_FILEMASK, command.getFileMask());
+        if (command.getType().toString() != null) {
+            attributes.add(ATTRIBUTE_TYPE, command.getType().toString());
+        }
+        if (command.isDisplayNameSet()) {
             attributes.add(ATTRIBUTE_DISPLAY, command.getDisplayName());
+        }
 
         // Writes the XML description.
-        try {out.writeStandAloneElement(ELEMENT_COMMAND, attributes);}
-        catch(IOException e) {throw new CommandException(e);}
+        try {
+            out.writeStandAloneElement(ELEMENT_COMMAND, attributes);
+        } catch(IOException e) {
+            throw new CommandException(e);
+        }
     }
 }

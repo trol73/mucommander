@@ -34,7 +34,6 @@ public class ThemeCache implements ThemeListener {
     public static Color[][][] foregroundColors;
     public static Color[][]   backgroundColors;
     public static Color[]     groupColors;
-    public static Color[]     groupSelectedColors;
     public static Color       unmatchedForeground;
     public static Color       unmatchedBackground;
     public static Color       activeOutlineColor;
@@ -66,7 +65,6 @@ public class ThemeCache implements ThemeListener {
         foregroundColors = new Color[2][2][6];
         backgroundColors = new Color[2][4];
         groupColors = new Color[10];
-        groupSelectedColors = new Color[10];
 
         // Active background colors.
         backgroundColors[ACTIVE][NORMAL]    = ThemeManager.getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR);
@@ -121,7 +119,6 @@ public class ThemeCache implements ThemeListener {
 
         for (int i = 0; i < 10; i++) {
             groupColors[i] = ThemeManager.getCurrentColor(Theme.FILE_GROUP_1_FOREGROUND_COLOR + i);
-            groupSelectedColors[i] = ThemeManager.getCurrentColor(Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR + i);
         }
 
         ThemeManager.addCurrentThemeListener(instance);
@@ -163,8 +160,6 @@ public class ThemeCache implements ThemeListener {
         int colorId = event.getColorId();
         if (colorId >= Theme.FILE_GROUP_1_FOREGROUND_COLOR && colorId <= Theme.FILE_GROUP_10_FOREGROUND_COLOR) {
             groupColors[colorId - Theme.FILE_GROUP_1_FOREGROUND_COLOR] = event.getColor();
-        } else if (colorId >= Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR && colorId <= Theme.FILE_GROUP_10_SELECTED_FOREGROUND_COLOR) {
-            groupSelectedColors[colorId - Theme.FILE_GROUP_1_SELECTED_FOREGROUND_COLOR] = event.getColor();
         } else
             switch(colorId) {
                 // Plain file color.
