@@ -56,7 +56,9 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
      * Creates a new command reader.
      * @param b where to send custom command events.
      */
-    private CommandReader(CommandBuilder b) {builder = b;}
+    private CommandReader(CommandBuilder b) {
+        builder = b;
+    }
 
 
 
@@ -82,10 +84,13 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
      */
     public static void read(InputStream in, CommandBuilder b) throws CommandException, IOException {
         b.startBuilding();
-        try {SAXParserFactory.newInstance().newSAXParser().parse(in, new CommandReader(b));}
-        catch(ParserConfigurationException e) {throw new CommandException(e);}
-        catch(SAXException e) {throw new CommandException(e);}
-        finally {b.endBuilding();}
+        try {
+            SAXParserFactory.newInstance().newSAXParser().parse(in, new CommandReader(b));
+        } catch(ParserConfigurationException | SAXException e) {
+            throw new CommandException(e);
+        } finally {
+            b.endBuilding();
+        }
     }
 
 
@@ -98,7 +103,7 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // New custom command declaration.
-        if(qName.equals(ELEMENT_COMMAND)) {
+        if (qName.equals(ELEMENT_COMMAND)) {
             String alias = attributes.getValue(ATTRIBUTE_ALIAS);
             String command = attributes.getValue(ATTRIBUTE_VALUE);
             String fileMask = attributes.getValue(ATTRIBUTE_FILEMASK);
@@ -111,7 +116,7 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
             	// Creates the command and passes it to the builder.
             	try {
                     builder.addCommand(new Command(alias, command, type, display, fileMask));
-                } catch(CommandException e) {
+                } catch (CommandException e) {
                     throw new SAXException(e);
                 }
             }

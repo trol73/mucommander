@@ -79,9 +79,8 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(String path) throws FileNotFoundException {
-        AbstractFile file;
-System.out.println("setConfigurationFile-0 " + path);
-        if((file = FileFactory.getFile(path)) == null)
+        AbstractFile file= FileFactory.getFile(path);
+        if (file == null)
             setConfigurationFile(new File(path));
         else
             setConfigurationFile(file);
@@ -93,7 +92,6 @@ System.out.println("setConfigurationFile-0 " + path);
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(File file) throws FileNotFoundException {
-System.out.println("setConfigurationFile-1 " + file);
         setConfigurationFile(FileFactory.getFile(file.getAbsolutePath()));
     }
 
@@ -103,7 +101,6 @@ System.out.println("setConfigurationFile-1 " + file);
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(AbstractFile file) throws FileNotFoundException {
-System.out.println("setConfigurationFile-2 " + file);
         // Makes sure file can be used as a configuration.
         if(file.isBrowsable())
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());

@@ -64,15 +64,11 @@ public class OrFileFilter extends ChainedFileFilter {
      * @return if the file was matched by one filter, false if none of them did
      */
     public boolean accept(AbstractFile file) {
-        int nbFilters = filters.size();
-
-        if(nbFilters==0)
-            return true;
-
-        for(int i=0; i<nbFilters; i++)
-            if((filters.elementAt(i)).match(file))
+        for (FileFilter filter : filters) {
+            if (filter.match(file)) {
                 return true;
-
-        return false;
+            }
+        }
+        return filters.isEmpty();
     }
 }

@@ -18,8 +18,10 @@
 
 package com.mucommander.commons.file.filter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+
 
 /**
  * ChainedFileFilter combines one or several {@link FileFilter} to act as just one.
@@ -36,7 +38,7 @@ import java.util.Vector;
 public abstract class ChainedFileFilter extends AbstractFileFilter {
 
     /** List of registered FileFilter */
-    protected Vector<FileFilter> filters = new Vector<FileFilter>();
+    protected List<FileFilter> filters = new ArrayList<>();
 
     /**
      * Creates a new <code>ChainedFileFilter</code> operating in non-inverted mode and containing the specified filters,
@@ -58,7 +60,7 @@ public abstract class ChainedFileFilter extends AbstractFileFilter {
     public ChainedFileFilter(boolean inverted, FileFilter... filters) {
         super(inverted);
 
-        for(FileFilter filter : filters)
+        for (FileFilter filter : filters)
             addFileFilter(filter);
     }
 

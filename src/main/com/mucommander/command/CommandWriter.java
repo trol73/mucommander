@@ -82,10 +82,8 @@ public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
      * @throws CommandException if an error occurs.
      */
     public void addCommand(Command command) throws CommandException {
-        XmlAttributes attributes;
-
         // Builds the XML description of the command.
-        attributes = new XmlAttributes();
+        XmlAttributes attributes = new XmlAttributes();
         attributes.add(ATTRIBUTE_ALIAS, command.getAlias());
         attributes.add(ATTRIBUTE_VALUE, command.getCommand());
         attributes.add(ATTRIBUTE_FILEMASK, command.getFileMask());

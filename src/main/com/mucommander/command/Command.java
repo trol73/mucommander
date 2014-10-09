@@ -452,6 +452,6 @@ public class Command implements Comparable<Command> {
 
     @Override
     public String toString() {
-    	return alias + (displayName == null ? "" : ":" + displayName) + ":" + command;
+    	return alias + (displayName == null ? "" : ":" + displayName) + ":" + command + (fileMask != null ? "[" + fileMask + "]" : "");
     }
 }

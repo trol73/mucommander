@@ -84,7 +84,7 @@ public class InternalEditAction extends AbstractViewerAction {
     }
 
     @Override
-    protected Command getCustomCommand() {
+    protected Command getCustomCommand(AbstractFile file) {
         return null;
     }
 

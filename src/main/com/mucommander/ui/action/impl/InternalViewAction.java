@@ -47,8 +47,8 @@ public class InternalViewAction extends AbstractViewerAction {
     public InternalViewAction(MainFrame mainFrame, Map<String,Object> properties) {
         super(mainFrame, properties);
 
-        ImageIcon icon;
-        if ((icon = getStandardIcon(ViewAction.class)) != null) {
+        ImageIcon icon = getStandardIcon(ViewAction.class);
+        if (icon != null) {
             setIcon(icon);
         }
     }
@@ -69,7 +69,7 @@ public class InternalViewAction extends AbstractViewerAction {
     }
 
     @Override
-    protected Command getCustomCommand() {
+    protected Command getCustomCommand(AbstractFile file) {
         return null;
     }
 

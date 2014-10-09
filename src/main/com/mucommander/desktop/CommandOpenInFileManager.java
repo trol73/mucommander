@@ -30,24 +30,23 @@ import java.io.IOException;
  */
 class CommandOpenInFileManager extends LocalFileOperation {
     @Override
-    public boolean isAvailable() {return CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS) != null;}
+    public boolean isAvailable() {
+        return CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS, null) != null;
+    }
 
     @Override
     public void execute(AbstractFile file) throws IOException {
-        Command command;
+        Command command = CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS, file);
 
-        if((command = CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS)) == null)
+        if (command == null) {
             throw new UnsupportedOperationException();
-
+        }
         ProcessRunner.execute(command.getTokens(file), file);
     }
 
     @Override
     public String getName() {
-        Command command;
-
-        if((command = CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS)) != null)
-            return command.getDisplayName();
-        return null;
+        Command command = CommandManager.getCommandForAlias(CommandManager.FILE_MANAGER_ALIAS, null);
+        return command == null ? null : command.getDisplayName();
     }
 }

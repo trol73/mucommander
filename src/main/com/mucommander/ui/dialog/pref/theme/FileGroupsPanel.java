@@ -75,7 +75,6 @@ public class FileGroupsPanel extends ThemeEditorPanel {
         // Header
         gridPanel.add(new JLabel());
         gridPanel.add(createCaptionLabel("theme_editor.normal_color"));
-        gridPanel.add(createCaptionLabel("theme_editor.selected_color"));
         gridPanel.add(createCaptionLabel("theme_editor.filemask"));
         MuPreferencesAPI prefs = MuConfigurations.getPreferences();
         for (int i = 0; i < NUMBER_OF_GROUPS; i++) {

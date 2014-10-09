@@ -64,11 +64,11 @@ public class AndFileFilter extends ChainedFileFilter {
      * @return if the file was matched by all filters, false if one of them didn't 
      */
     public boolean accept(AbstractFile file) {
-        int nbFilters = filters.size();
-
-        for(int i=0; i<nbFilters; i++)
-            if(!filters.elementAt(i).match(file))
+        for (FileFilter filter : filters) {
+            if (!filter.match(file)) {
                 return false;
+            }
+        }
         return true;
     }
 }
