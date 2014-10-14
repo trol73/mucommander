@@ -57,10 +57,7 @@ public enum ActionCategory {
 
     public boolean contains(String actionId) {
         ActionCategory actionCategory = ActionProperties.getActionCategory(actionId);
-        if (actionCategory != null) {
-            return descriptionKey.equals(actionCategory.getDescriptionKey());
-        }
-        return false;
+        return actionCategory != null && descriptionKey.equals(actionCategory.getDescriptionKey());
     }
 
     @Override

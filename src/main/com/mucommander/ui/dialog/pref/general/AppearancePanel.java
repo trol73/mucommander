@@ -742,9 +742,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             // User chose to overwrite the file
             if (action == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Simply continue and file will be overwritten
-            } else if(action==FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
+            } else if (action==FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
                 // Overwrite if the source is more recent than the destination
-                if(library.getDate() <= destFile.getDate())
+                if (library.getDate() <= destFile.getDate())
                     return false;
                 // Simply continue and file will be overwritten
             } else {

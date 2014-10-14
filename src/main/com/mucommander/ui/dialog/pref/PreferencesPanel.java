@@ -36,6 +36,7 @@ public abstract class PreferencesPanel extends JPanel {
      * @param title  panel's title.
      */
     public PreferencesPanel(PreferencesDialog parent, String title) {
+        super();
         this.title  = title;
         this.parent = parent;
     }

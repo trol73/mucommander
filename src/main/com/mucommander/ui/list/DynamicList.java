@@ -70,8 +70,9 @@ public class DynamicList<E> extends JList<E> {
         }
 
         public E getElementAt(int i) {
-            if(i<0 || i>=items.size())
+            if (i < 0 || i >= items.size()) {
                 return null;
+            }
 
             return items.elementAt(i);
         }
@@ -152,14 +153,14 @@ public class DynamicList<E> extends JList<E> {
         public void actionPerformed(ActionEvent actionEvent) {
             int selectedIndex = getSelectedIndex();
 
-            if(!isIndexValid(selectedIndex))
+            if (!isIndexValid(selectedIndex))
                 return;
 
             items.removeElementAt(selectedIndex);
 
             // Select previous item (if there is one) and make sure it is visible.
             int nbItems = items.size();
-            if(nbItems>0)
+            if (nbItems > 0)
                 selectAndScroll(Math.min(selectedIndex, nbItems-1));
             
             // Request focus back on the list
@@ -193,8 +194,9 @@ public class DynamicList<E> extends JList<E> {
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Select first item, if there is at least one
-        if(items.size()>0)
-           setSelectedIndex(0);
+        if (!items.isEmpty()) {
+            setSelectedIndex(0);
+        }
 
         // Create action instances
         this.moveUpAction = new MoveUpAction();
@@ -284,22 +286,23 @@ public class DynamicList<E> extends JList<E> {
      */
     public void moveItem(int index, boolean moveUp) {
         // Make sure that the given index is not out of bounds
-        if(!isIndexValid(index))
+        if (!isIndexValid(index)) {
             return;
+        }
 
         int newIndex;
 
         // Calculate the new index for the item to move
         if (moveUp)  {
             // Item is already at the top, do nothing
-            if(index<1)
+            if (index < 1)
                 return;
 
             newIndex = index-1;
         }
         else {
             // Item is already at the bottom, do nothing
-            if(index>=items.size()-1)
+            if (index >= items.size()-1)
                 return;
 
             newIndex = index+1;

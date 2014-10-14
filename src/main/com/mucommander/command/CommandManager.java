@@ -255,7 +255,7 @@ public class CommandManager implements CommandBuilder {
         }
     }
 
-    private static void registerCommand(Command command, boolean mark) throws CommandException {
+    private static void registerCommand(Command command, boolean mark)  {
         // Registers the command and marks command as having been modified.
         setDefaultCommand(command);
 
@@ -281,9 +281,8 @@ public class CommandManager implements CommandBuilder {
     /**
      * Registers the specified command at the end of the command list.
      * @param  command          command to register.
-     * @throws CommandException if a command with same alias has already been registered.
      */
-    public static void registerCommand(Command command) throws CommandException {
+    public static void registerCommand(Command command) {
         registerCommand(command, true);
     }
 
@@ -337,15 +336,18 @@ public class CommandManager implements CommandBuilder {
      * the builder.
      * </p>
      * @param  builder          object that will receive commands list building messages.
+     * @param type              if not null then build only commands with specified type
      * @throws CommandException if anything goes wrong.
      */
-    public static void buildCommands(CommandBuilder builder) throws CommandException {
+    public static void buildCommands(CommandBuilder builder, CommandType type) throws CommandException {
         builder.startBuilding();
 
         try {
         	// Goes through all the registered commands.
         	for (Command command : commands()) {
-                builder.addCommand(command);
+                if (type == null || command.getType() == type) {
+                    builder.addCommand(command);
+                }
             }
         } finally {
             builder.endBuilding();
@@ -664,7 +666,7 @@ public class CommandManager implements CommandBuilder {
     }
 
     /**
-     * Writes all registered commands to the custom commands file.
+     * Writes Normal registered commands to the custom commands file.
      * <p>
      * Data will be written to the path returned by {@link #getCommandFile()}. Note, however,
      * that this method will not actually do anything if the command list hasn't been modified
@@ -682,29 +684,27 @@ public class CommandManager implements CommandBuilder {
      */
     public static void writeCommands() throws IOException, CommandException {
         // Only saves the command if they were modified since the last time they were written.
-        if (wereCommandsModified) {
-System.out.println("SAVE");
-new Exception().printStackTrace();
+        if (!wereCommandsModified) {
+            LOGGER.debug("Custom commands not modified, skip saving.");
+            return;
+        }
+        LOGGER.debug("Writing custom commands to file: " + getCommandFile());
 
-            LOGGER.debug("Writing custom commands to file: " + getCommandFile());
-
-            // Writes the commands.
-            BackupOutputStream out = null;
-            try {
-                buildCommands(new CommandWriter(out = new BackupOutputStream(getCommandFile())));
-                wereCommandsModified = false;
-            }
-            finally {
-                if(out != null) {
-                    try {out.close();}
-                    catch(Exception e) {
-                        // Ignores this.
-                    }
+        // Writes the commands.
+        BackupOutputStream out = null;
+        try {
+            out = new BackupOutputStream(getCommandFile());
+            buildCommands(new CommandWriter(out), CommandType.NORMAL_COMMAND);
+            wereCommandsModified = false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch(Exception e) {
+                    // Ignores this.
                 }
             }
         }
-        else
-        	LOGGER.debug("Custom commands not modified, skip saving.");
     }
 
     /**
@@ -769,4 +769,31 @@ new Exception().printStackTrace();
      * This method is public as an implementation side effect and must not be called directly.
      */
     public void endBuilding() {}
+
+
+    public static List<Command> getCommands(String type) {
+        if (!commands.containsKey(type)) {
+            commands.put(type, new ArrayList<Command>());
+        }
+        return commands.get(type);
+    }
+
+
+    /**
+     * Removes all user defined commands with Normal type.
+     * Called before updating list in editor dialog
+     */
+    public static void removeAllNormalCommands() {
+        for (String type : commands.keySet()) {
+            List<Command> list = commands.get(type);
+            Iterator<Command> it = list.iterator();
+            while (it.hasNext()) {
+                Command cmd = it.next();
+                if (cmd.getType() == CommandType.NORMAL_COMMAND) {
+                    it.remove();
+                }
+
+            }
+        }
+    }
 }

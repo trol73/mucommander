@@ -29,7 +29,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -42,7 +43,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
     /** Displays the different panels. */
     private JTabbedPane                      tabbedPane;
     /** Stores the different panels. */
-    private java.util.List<PreferencesPanel> prefPanels;
+    private List<PreferencesPanel> prefPanels;
     /** Apply button. */
     private JButton                          applyButton;
     /** OK button. */
@@ -82,21 +83,17 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Initializes the tabbed panel's UI.
      */
     private void initUI() {
-        Container contentPane;
-        XBoxPanel buttonsPanel;
-        JPanel    tempPanel;
-
         // Initializes the tabbed pane.
-        prefPanels = new Vector<PreferencesPanel>();
+        prefPanels = new ArrayList<>();
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
         // Adds the tabbed pane.
-        contentPane = getContentPane();
+        Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
         // Buttons panel.
-        buttonsPanel = new XBoxPanel();
+        XBoxPanel buttonsPanel = new XBoxPanel();
         buttonsPanel.add(applyButton = new JButton(Translator.get("apply")));
         buttonsPanel.addSpace(20);
         buttonsPanel.add(okButton     = new JButton(Translator.get("ok")));
@@ -112,7 +109,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
         cancelButton.addActionListener(this);
 
         // Aligns the button panel to the right.
-        tempPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         tempPanel.add(buttonsPanel);
         contentPane.add(tempPanel, BorderLayout.SOUTH);
 
@@ -122,13 +119,12 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
     private Component getTabbedPanel(PreferencesPanel prefPanel, boolean scroll) {
-        if(scroll) {
-            JScrollPane scrollPane = new JScrollPane(prefPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollPane.setBorder(null);
-
-            return scrollPane;
+        if (!scroll) {
+            return prefPanel;
         }
-        return prefPanel;
+        JScrollPane scrollPane = new JScrollPane(prefPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
+        return scrollPane;
     }
 
     /**
@@ -147,7 +143,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param prefPanel panel to add.
      * @param iconName  name of the icon that represents this dialog.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel, String iconName) {addPreferencesPanel(prefPanel, iconName, true);}
+    public void addPreferencesPanel(PreferencesPanel prefPanel, String iconName) {
+        addPreferencesPanel(prefPanel, iconName, true);
+    }
 
     /**
      * Adds the specified preferences panel to this dialog.
@@ -163,7 +161,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Adds the specified preferences panel to this dialog.
      * @param prefPanel panel to add.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel) {addPreferencesPanel(prefPanel, true);}
+    public void addPreferencesPanel(PreferencesPanel prefPanel) {
+        addPreferencesPanel(prefPanel, true);
+    }
 
     /**
      * Calls {@link PreferencesPanel#commit()} on all registered preference panels.
@@ -187,8 +187,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
     public boolean checkCommit() {
         // Ask pref panels to commit changes
         for (PreferencesPanel panel : prefPanels) {
-            if(!panel.checkCommit())
+            if (!panel.checkCommit()) {
                 return false;
+            }
         }
         return true;
     }
@@ -197,7 +198,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Sets the currently active tab.
      * @param index index of the tab to select.
      */
-    public void setActiveTab(int index) {tabbedPane.setSelectedIndex(index);}
+    public void setActiveTab(int index) {
+        tabbedPane.setSelectedIndex(index);
+    }
 
 
 
@@ -227,7 +230,9 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Returns the index of the currently selected configuration panel.
      * @return the index of the currently selected configuration panel.
      */
-    public int getSelectedPanelIndex() {return tabbedPane.getSelectedIndex();}
+    public int getSelectedPanelIndex() {
+        return tabbedPane.getSelectedIndex();
+    }
     
     /**
      * This function set the "commit buttons", i.e apply & ok buttons, enabled\disabled
