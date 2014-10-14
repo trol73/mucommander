@@ -99,10 +99,10 @@ public class Bookmark implements Cloneable {
      */
     public void setLocation(String newLocation) {
         // Replace null values by empty strings
-        if(newLocation==null)
+        if (newLocation == null)
             newLocation = "";
 
-        if(!newLocation.equals(this.location)) {
+        if (!newLocation.equals(this.location)) {
             this.location = newLocation;
 
             // Notify registered listeners of the change
@@ -129,8 +129,7 @@ public class Bookmark implements Cloneable {
         if(!(object instanceof Bookmark))
             return false;
 
-        Bookmark bookmark;
-        bookmark = (Bookmark)object;
+        Bookmark bookmark = (Bookmark)object;
         return bookmark.getName().equals(name);
     }
 }

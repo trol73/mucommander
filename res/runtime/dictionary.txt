@@ -3743,9 +3743,33 @@ Calculator.label:RU:Калькулятор
 
 CreateSymlink.label:EN:Create symlink
 CreateSymlink.label:RU:Создать ссылку
+
 LocateSymlink.label:EN:Goto symlink target
 LocateSymlink.label:RU:Перейти к файлу ссылки
 
+EditCommands.label:EN:Edit commands
+EditCommands.label:RU:Редактирование команд
+
+EditCommands.group.view:EN:Viewier
+EditCommands.group.view:RU:Программы просмотра
+
+EditCommands.group.edit:EN:Editors
+EditCommands.group.edit:RU:Редакторы
+
+EditCommands.group.others:EN:Others
+EditCommands.group.others:RU:Прочие
+
+EditCommands.new:EN:New
+EditCommands.new:RU:Новая
+
+EditCommands.alias:EN:Alias
+EditCommands.alias:RU:Имя
+EditCommands.command:EN:Command
+EditCommands.command:RU:Команда
+EditCommands.display_name:EN:Display name
+EditCommands.display_name:RU:Отображаемое имя
+EditCommands.filemask:EN:File mask
+EditCommands.filemask:RU:Маски файлов
 
 symboliclinkeditor.edit:EN:Edit symlink
 symboliclinkeditor.edit:RU:Редактировать ссылку

@@ -194,10 +194,10 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
         boolean componentsEnabled = false;
 
-        if(!bookmarkList.isSelectionEmpty() && bookmarks.size()>0) {
+        if (!bookmarkList.isSelectionEmpty() && !bookmarks.isEmpty()) {
             componentsEnabled = true;
 
-            Bookmark b = (Bookmark)bookmarkList.getSelectedValue();
+            Bookmark b = bookmarkList.getSelectedValue();
             nameValue = b.getName();
             locationValue = b.getLocation();
         }
@@ -226,13 +226,13 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
      * @param sourceDocument the javax.swing.text.Document of the JTextField that was modified
      */
     private void modifyBookmark(Document sourceDocument) {
-        if(ignoreDocumentListenerEvents || bookmarks.size()==0)
+        if (ignoreDocumentListenerEvents || bookmarks.isEmpty())
             return;
 
         int selectedIndex = bookmarkList.getSelectedIndex();
 
         // Make sure that the selected index is not out of bounds
-        if(!bookmarkList.isIndexValid(selectedIndex))
+        if (!bookmarkList.isIndexValid(selectedIndex))
             return;
 
         Bookmark selectedBookmark = bookmarks.elementAt(selectedIndex);
@@ -240,16 +240,18 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         if(currentBookmarkSave==null) {
             // Create a clone of the current bookmark in order to cancel any modifications made to it if the dialog
             // is cancelled.
-            try { currentBookmarkSave = (Bookmark)selectedBookmark.clone(); }
-            catch(CloneNotSupportedException ex) {}
+            try {
+                currentBookmarkSave = (Bookmark)selectedBookmark.clone();
+            } catch(CloneNotSupportedException ex) {
+            }
 
             this.currentListIndex = selectedIndex;
         }
 
         // Update name
-        if(sourceDocument==nameField.getDocument()) {
+        if (sourceDocument==nameField.getDocument()) {
             String name = nameField.getText();
-            if(name.trim().equals(""))
+            if (name.trim().isEmpty())
                 name = getFreeNameVariation(Translator.get("untitled"));
 
             selectedBookmark.setName(name);
@@ -268,14 +270,14 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
      * <br>"music (2)" -> "music (3)" and so on...
      */
     private String getFreeNameVariation(String name) {
-
-        if(!containsName(name))
+        if (!containsName(name)) {
             return name;
+        }
 
         int len = name.length();
         char c;
         int num = 2;
-        if(len>4 && name.charAt(len-1)==')'
+        if (len>4 && name.charAt(len-1)==')'
                     && (c=name.charAt(len-2))>='0' && c<='9'
                     && name.charAt(len-3)=='('
                     && name.charAt(len-4)==' ')
@@ -286,7 +288,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
 
         String newName;
-        while(containsName(newName=(name+" ("+num+++")")));
+        while (containsName(newName=(name+" ("+num+++")")));
 
         return newName;
     }
@@ -338,7 +340,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         Object source = e.getSource();
 		
         // Dispose the dialog (bookmarks save is performed in dispose())
-        if (source== closeButton)  {
+        if (source == closeButton)  {
             // Do not rollback current bookmark's modifications on dispose()
             currentBookmarkSave = null;
 

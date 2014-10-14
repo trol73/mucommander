@@ -107,16 +107,16 @@ public class MenuToolkit {
     private static JMenuItem addMenuItem(JMenu menu, String text, MnemonicHelper mnemonicHelper, KeyStroke accelerator, ActionListener actionListener, boolean createCheckBoxMenuItem) {
         JMenuItem menuItem = createCheckBoxMenuItem?new JCheckBoxMenuItem(text, false):new JMenuItem(text);
 
-        if(mnemonicHelper!=null) {
+        if (mnemonicHelper!=null) {
             char mnemonic = mnemonicHelper.getMnemonic(text);
-            if(mnemonic!=0)
+            if (mnemonic != 0)
                 menuItem.setMnemonic(mnemonic);
         }
 
-        if(accelerator!=null)
+        if (accelerator != null)
             menuItem.setAccelerator(accelerator);
 
-        if(actionListener!=null)
+        if (actionListener != null)
             menuItem.addActionListener(actionListener);
 
         menu.add(menuItem);
@@ -158,9 +158,9 @@ public class MenuToolkit {
     private static JMenuItem addMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper, boolean createCheckBoxMenuItem) {
         JMenuItem menuItem = createCheckBoxMenuItem?new JCheckBoxMenuItem(action):new JMenuItem(action);
 
-        if(mnemonicHelper!=null) {
+        if (mnemonicHelper != null) {
             char mnemonic = mnemonicHelper.getMnemonic(action.getLabel());
-            if(mnemonic!=0)
+            if (mnemonic != 0)
                 menuItem.setMnemonic(mnemonic);
         }
 

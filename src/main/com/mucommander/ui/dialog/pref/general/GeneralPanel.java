@@ -157,7 +157,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
             lang = languages[i];
             languageComboBox.addItem(lang);
 
-            if(lang.equalsIgnoreCase(currentLang))
+            if (lang.equalsIgnoreCase(currentLang))
                 languageIndex = i;
             else if(languageIndex==-1 && lang.equalsIgnoreCase("en"))
                 languageIndex = i;

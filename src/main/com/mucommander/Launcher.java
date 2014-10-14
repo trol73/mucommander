@@ -136,11 +136,7 @@ public class Launcher {
         String command;
 
         if (MuConfigurations.getPreferences().getBooleanVariable(useName) && (command = MuConfigurations.getPreferences().getVariable(commandName)) != null) {
-            try {
-                CommandManager.registerCommand(new Command(alias, command, CommandType.SYSTEM_COMMAND));
-            } catch(CommandException e) {
-                // Ignore this: the command didn't work in the first place, we might as well get rid of it.
-            }
+            CommandManager.registerCommand(new Command(alias, command, CommandType.SYSTEM_COMMAND));
             MuConfigurations.getPreferences().removeVariable(useName);
             MuConfigurations.getPreferences().removeVariable(commandName);
         }
@@ -502,8 +498,9 @@ public class Launcher {
             // Migrates the custom editor and custom viewer if necessary.
             migrateCommand("viewer.use_custom", "viewer.custom_command", CommandManager.VIEWER_ALIAS);
             migrateCommand("editor.use_custom", "editor.custom_command", CommandManager.EDITOR_ALIAS);
-            try {CommandManager.writeCommands();}
-            catch(Exception e) {
+            try {
+                CommandManager.writeCommands();
+            } catch(Exception e) {
                 System.out.println("###############################");
                 LOGGER.debug("Caught exception", e);
                 // There's really nothing we can do about this...

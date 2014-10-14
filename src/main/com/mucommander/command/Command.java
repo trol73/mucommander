@@ -153,6 +153,14 @@ public class Command implements Comparable<Command> {
     }
 
 
+    public Command(Command cmd) {
+        this.alias = cmd.getAlias();
+        this.type = cmd.getType();
+        this.displayName = cmd.getDisplayName();
+        this.command = cmd.getCommand();
+        this.fileMask = cmd.getFileMask();
+    }
+
 
     // - Token retrieval -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------

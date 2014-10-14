@@ -25,7 +25,8 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
- * Created by trol on 06/06/14.
+ * @author Oleg Trifonov
+ * Created on 06/06/14.
  */
 public class HistoryComboBox extends JComboBox<String> {
     private final FocusDialog parent;

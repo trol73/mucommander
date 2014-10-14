@@ -126,7 +126,7 @@ public class WindowsStorage {
     public boolean init(Window window, String suffix, boolean storeSizes) {
         String key = getKey(window, suffix);
         Record rec = getRecords().get(key);
-        if (rec != null) {
+        if (rec != null && rec.width > 0 && rec.height > 40) {
             if (storeSizes) {
                 rec.apply(window);
             } else {

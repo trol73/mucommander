@@ -35,7 +35,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Created by trol on 04/06/14.
+ * Created on 04/06/14.
+ * @author Oleg Trifonov
  */
 public class CalculatorDialog extends FocusDialog implements ActionListener {
 
