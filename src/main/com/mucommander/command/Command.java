@@ -328,7 +328,7 @@ public class Command implements Comparable<Command> {
             tokens.add(currentToken.toString());
 
         // Empty commands are returned as an empty token rather than an empty array.
-        if (tokens.size() == 0)
+        if (tokens.isEmpty())
             return new String[] {""};
 
         return tokens.toArray(new String[tokens.size()]);

@@ -19,6 +19,9 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
@@ -51,19 +54,28 @@ public class TerminalAction extends ParentFolderAction {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static String getDefaultTerminalCommand() {
+        switch (OsFamily.getCurrent()) {
+            case WINDOWS:
+                return "cmd /c start cmd.exe /K \"cd /d $p\"";
+            case LINUX:
+                return "";
+            case MAC_OS_X:
+                return "open -a Terminal .";
+        }
+        return "";
     }
 
     private static String getConsoleCommand(AbstractFile folder) {
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                return "cmd /c start cmd.exe /K \"cd /d " + folder + '"';
-            case LINUX:
-                break;
-            case MAC_OS_X:
-                return "open -a Terminal .";// + folder;
+        String cmd;
+        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL)) {
+            cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL);
+        } else {
+            cmd = getDefaultTerminalCommand();
         }
-        return null;
+        return cmd.replace("$p", folder.getAbsolutePath());
     }
 
     @Override

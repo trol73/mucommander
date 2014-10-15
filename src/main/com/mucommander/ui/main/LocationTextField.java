@@ -137,7 +137,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
      * change failed or was cancelled, keeps the path intact and request focus on the text field so the user can modify it.
      */
     private void folderChangeCompleted(boolean folderChangedSuccessfully) {
-        if(folderChangedSuccessfully || !folderChangeInitiatedByLocationField) {
+        if (folderChangedSuccessfully || !folderChangeInitiatedByLocationField) {
             // Set the location field's contents to the new current folder's path
             setText(folderPanel.getCurrentFolder().getAbsolutePath());
         }
@@ -146,7 +146,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
         setEnabled(true);
 
         // If the location was entered and validated in the location field and the folder change failed or was cancelled...
-        if(!folderChangedSuccessfully && folderChangeInitiatedByLocationField) {
+        if (!folderChangedSuccessfully && folderChangeInitiatedByLocationField) {
             // Restore the text that was entered by the user
             setText(locationFieldTextSave);
             // Select the text to grab user's attention and make it easier to modify
@@ -167,11 +167,11 @@ public class LocationTextField extends ProgressTextField implements LocationList
     public void locationChanging(LocationEvent e) {
         // Change the location field's text to the folder being changed, only if the folder change was not initiated
         // by the location field (to preserve the path entered by the user while the folder is being changed) 
-        if(!folderChangeInitiatedByLocationField) {
+        if (!folderChangeInitiatedByLocationField) {
             FileURL folderURL = e.getFolderURL();
 
             String locationText;
-            if(folderURL.getScheme().equals(FileProtocols.FILE)) {
+            if (folderURL.getScheme().equals(FileProtocols.FILE)) {
                 // Do not display the URL's scheme & host for local files
             	if (FileURL.LOCALHOST.equals(folderURL.getHost())) {
             		locationText = folderURL.getPath();
@@ -221,7 +221,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
      * @return true if a malformed url was entered, false otherwise.
      */
     public boolean textFieldValidated() {
-        String location = getText();
+        String location = getText().trim();
 
         // Under Windows, trim the entered path for the following reason.
         // If a file 'A' (e.g. "C:\temp") exists and 'A ' (e.g. "C:\temp ") is requested, the java.io.File will resolve
@@ -232,10 +232,10 @@ public class LocationTextField extends ProgressTextField implements LocationList
         // Note that Win32 doesn't allow creating files with trailing spaces (in Explorer, command prompt...), but
         // those files can still be manually crafted and thus exist on one's hard drive.
         // Mucommander should in theory be able to access such files without any problem but this hasn't been tested.
-        if(OsFamily.WINDOWS.isCurrent() && location.indexOf(":\\")==1) {
+        if (OsFamily.WINDOWS.isCurrent() && location.indexOf(":\\")==1) {
             // Looks for trailing spaces and if some 
             Matcher matcher = windowsTrailingSpacePattern.matcher(location);
-            if(matcher.find())
+            if (matcher.find())
                 location = location.substring(0, matcher.start());
         }
                 
@@ -248,7 +248,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
 
         // Look for a bookmark which name is the entered string (case insensitive)
         Bookmark b = BookmarkManager.getBookmark(location);
-        if(b!=null) {
+        if (b != null) {
         	// Change the current folder to the bookmark's location
         	setText(location = b.getLocation());
         	tryToInterpretEnteredString = false;

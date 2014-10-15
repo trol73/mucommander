@@ -35,6 +35,7 @@ import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.text.Translator;
+import com.mucommander.ui.action.impl.TerminalAction;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
@@ -81,6 +82,13 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     /** Shell encoding select box. */
     private PrefEncodingSelectBox shellEncodingSelectBox;
 
+    /** Custom console command text field */
+    private PrefTextField customTerminalField;
+
+    /** 'Use custom console' radio button */
+    private PrefRadioButton useCustomTerminalRadioButton;
+
+
 
     private JPanel createShellEncodingPanel(PreferencesDialog parent) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -123,7 +131,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
 			}
         };
 
-        // Use sytem default or custom shell ?
+        // Use system default or custom shell ?
         if(MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
             useCustomShellRadioButton.setSelected(true);
         else
@@ -156,6 +164,49 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
 
         northPanel.addSpace(10);
 
+
+        // Terminal panel
+        XAlignedComponentPanel terminalPanel = new XAlignedComponentPanel();
+        terminalPanel.setLabelLeftAligned(true);
+        terminalPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.terminal")));
+
+        JRadioButton useDefaultTerminalRadioButton = new JRadioButton(Translator.get("prefs_dialog.default_terminal") + ':');
+        useCustomTerminalRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_terminal") + ':') {
+            public boolean hasChanged() {
+                return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL);
+            }
+        };
+
+        // Create a path field with auto-completion capabilities
+        customTerminalField = new PrefFilePathField(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL, "")) {
+            public boolean hasChanged() {
+                return isEnabled() && !getText().equals(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL));
+            }
+        };
+
+        terminalPanel.addRow(useDefaultTerminalRadioButton, new JLabel(TerminalAction.getDefaultTerminalCommand()), 5);
+        terminalPanel.addRow(useCustomTerminalRadioButton, customTerminalField, 10);
+
+        northPanel.add(terminalPanel, 5);
+
+        northPanel.addSpace(10);
+
+        // Use system default or custom terminal ?
+        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL))
+            useCustomTerminalRadioButton.setSelected(true);
+        else
+            useDefaultTerminalRadioButton.setSelected(true);
+        customTerminalField.setEnabled(useCustomTerminalRadioButton.isSelected());
+
+        useCustomTerminalRadioButton.addItemListener(this);
+
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(useDefaultTerminalRadioButton);
+        buttonGroup.add(useCustomTerminalRadioButton);
+
+
+
+
         // 'Show splash screen' option
         showSplashScreenCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_splash_screen")) {
 			public boolean hasChanged() {
@@ -184,7 +235,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         northPanel.add(quitConfirmationCheckBox);
 
         // 'Enable system notifications' option, displayed only if current platform supports system notifications
-        if(AbstractNotifier.isAvailable()) {
+        if (AbstractNotifier.isAvailable()) {
             systemNotificationsCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.enable_system_notifications")+" ("+AbstractNotifier.getNotifier().getPrettyName()+")") {
 				public boolean hasChanged() {
 					return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS,
@@ -211,14 +262,17 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         
         customShellField.addDialogListener(parent);
     	useCustomShellRadioButton.addDialogListener(parent);
+        useCustomTerminalRadioButton.addDialogListener(parent);
+        customTerminalField.addDialogListener(parent);
     	checkForUpdatesCheckBox.addDialogListener(parent);
     	quitConfirmationCheckBox.addDialogListener(parent);
         showSplashScreenCheckBox.addDialogListener(parent);
         bonjourDiscoveryCheckBox.addDialogListener(parent);
         shellEncodingautoDetectCheckbox.addDialogListener(parent);
         shellEncodingSelectBox.addDialogListener(parent);
-        if(systemNotificationsCheckBox!=null)
+        if (systemNotificationsCheckBox != null) {
             systemNotificationsCheckBox.addDialogListener(parent);
+        }
     }
 
 
@@ -228,11 +282,12 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
 
     public void itemStateChanged(ItemEvent e) {
         Object source = e.getSource();
-        if(source==useCustomShellRadioButton) {
+        if (source == useCustomShellRadioButton) {
             customShellField.setEnabled(useCustomShellRadioButton.isSelected());
-        }
-        else if(source==shellEncodingautoDetectCheckbox) {
+        } else if (source == shellEncodingautoDetectCheckbox) {
             shellEncodingSelectBox.setEnabled(!shellEncodingautoDetectCheckbox.isSelected());
+        } else if (source == useCustomTerminalRadioButton) {
+            customTerminalField.setEnabled(useCustomTerminalRadioButton.isSelected());
         }
     }
 
@@ -252,14 +307,18 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         // Saves the shell encoding data.
         boolean isAutoDetect = shellEncodingautoDetectCheckbox.isSelected();
         MuConfigurations.getPreferences().setVariable(MuPreference.AUTODETECT_SHELL_ENCODING, isAutoDetect);
-        if(!isAutoDetect)
-        	MuConfigurations.getPreferences().setVariable(MuPreference.SHELL_ENCODING, shellEncodingSelectBox.getSelectedEncoding());
+        if (!isAutoDetect) {
+            MuConfigurations.getPreferences().setVariable(MuPreference.SHELL_ENCODING, shellEncodingSelectBox.getSelectedEncoding());
+        }
+        MuConfigurations.getPreferences().setVariable(MuPreference.USE_CUSTOM_TERMINAL, useCustomTerminalRadioButton.isSelected());
+        MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_TERMINAL, customTerminalField.getText());
+
 
         MuConfigurations.getPreferences().setVariable(MuPreference.CONFIRM_ON_QUIT, quitConfirmationCheckBox.isSelected());
         MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_SPLASH_SCREEN, showSplashScreenCheckBox.isSelected());
 
         boolean enabled;
-        if(systemNotificationsCheckBox!=null) {
+        if (systemNotificationsCheckBox != null) {
             enabled = systemNotificationsCheckBox.isSelected();
             MuConfigurations.getPreferences().setVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, enabled);
             AbstractNotifier.getNotifier().setEnabled(enabled);

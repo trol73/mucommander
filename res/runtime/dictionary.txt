@@ -16844,6 +16844,14 @@ prefs_dialog.auto_detect_shell_encoding:TR:Otomatik algıla
 prefs_dialog.auto_detect_shell_encoding:CA:Detecció automàtica
 # Translation missing (KO)
 
+
+prefs_dialog.terminal:EN:Terminal
+prefs_dialog.terminal:RU:Терминал
+prefs_dialog.default_terminal:EN:Use default Terminal program
+prefs_dialog.default_terminal:RU:Использовать команду по умолчанию
+prefs_dialog.custom_terminal:EN:Use custom command
+prefs_dialog.custom_terminal:RU:Использовать указанную команду
+
 # Bonjour is a service discovery protocol : http://en.wikipedia.org/wiki/Bonjour_%28software%29
 prefs_dialog.enable_bonjour_discovery:EN:Enable Bonjour services discovery
 prefs_dialog.enable_bonjour_discovery:FR:Activer la découverte des services Bonjour

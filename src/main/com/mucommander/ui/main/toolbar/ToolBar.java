@@ -106,21 +106,19 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
     }
     
     private void addButtons(String[] actionIds) {
-    	int nbActions = actionIds.length;
-        for(int i=0; i<nbActions; i++) {
-            String actionId = actionIds[i];
-            if(actionId==null)
+        for (String actionId : actionIds) {
+            if (actionId == null)
                 addSeparator(SEPARATOR_DIMENSION);
             else {
                 // Get a MuAction instance
                 MuAction action = ActionManager.getActionInstance(actionId, mainFrame);
                 // Do not add buttons for actions that do not have an icon
-                if(action.getIcon()!=null)
+                if (action.getIcon() != null)
                     addButton(action);
             }
         }
 
-        if(USE_MAC_OS_X_CLIENT_PROPERTIES) {
+        if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
             int nbComponents = getComponentCount();
             Component comp;
             boolean hasPrevious, hasNext;

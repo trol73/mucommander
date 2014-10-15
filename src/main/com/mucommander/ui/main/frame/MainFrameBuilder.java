@@ -133,7 +133,7 @@ public abstract class MainFrameBuilder {
         			: preferences.getVariable(MuPreference.RIGHT_CUSTOM_FOLDER));
         }
 
-        AbstractFile result = null;
+        AbstractFile result;
         if (customPath == null || (result = FileFactory.getFile(customPath)) == null || !result.exists())
         	result = getHomeFolder();
         

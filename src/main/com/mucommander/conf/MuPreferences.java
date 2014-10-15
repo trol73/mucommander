@@ -126,8 +126,20 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final boolean DEFAULT_AUTODETECT_SHELL_ENCODING = true;
 
 
+    // - Terminal variables -----------------------------------------------------
+    /** Section describing the console CONFIGURATION. */
+    public static final String TERMINAL_SECTION = "terminal";
+    /** Console invocation command. */
+    public static final String CUSTOM_TERMINAL = TERMINAL_SECTION + '.' + "custom_command";
+    /** Whether or not to use a custom shell invocation command. */
+    public static final String USE_CUSTOM_TERMINAL = TERMINAL_SECTION + '.' + "use_custom";
+    /** Default custom terminal behavior. */
+    public static final boolean DEFAULT_USE_CUSTOM_TERMINAL = false;
 
-	// - Mail variables ------------------------------------------------------
+
+
+
+    // - Mail variables ------------------------------------------------------
 	// -----------------------------------------------------------------------
 	/** Section describing mail CONFIGURATION. */
 	public static final String MAIL_SECTION                       = "mail";
@@ -429,8 +441,8 @@ public class MuPreferences implements MuPreferencesAPI {
 		}
 
 		// Initializes MAC OS X specific values
-		if(OsFamily.MAC_OS_X.isCurrent()) {
-			if(configuration.getVariable(SHELL_ENCODING) == null) {
+		if (OsFamily.MAC_OS_X.isCurrent()) {
+			if (configuration.getVariable(SHELL_ENCODING) == null) {
 				configuration.setVariable(SHELL_ENCODING, "UTF-8");
 				configuration.setVariable(AUTODETECT_SHELL_ENCODING, false);
 			}
@@ -443,7 +455,7 @@ public class MuPreferences implements MuPreferencesAPI {
 	 * @throws ConfigurationException if a CONFIGURATION related error occurs.
 	 */
 	void write() throws IOException, ConfigurationException {
-		if(configurationVersion != null && !configurationVersion.equals(RuntimeConstants.VERSION)) {
+		if (configurationVersion != null && !configurationVersion.equals(RuntimeConstants.VERSION)) {
 			// Clear the configuration before saving to drop preferences which are unused anymore
 			Configuration conf = new Configuration(MuPreferencesFile.getPreferencesFile(), new VersionedXmlConfigurationReaderFactory(),
 					new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
