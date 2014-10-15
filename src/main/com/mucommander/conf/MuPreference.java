@@ -86,7 +86,9 @@ public enum MuPreference {
     FILE_GROUP_7_MASK(MuPreferences.FILE_GROUP_7_MASK),
     FILE_GROUP_8_MASK(MuPreferences.FILE_GROUP_8_MASK),
     FILE_GROUP_9_MASK(MuPreferences.FILE_GROUP_9_MASK),
-    FILE_GROUP_10_MASK(MuPreferences.FILE_GROUP_10_MASK);
+    FILE_GROUP_10_MASK(MuPreferences.FILE_GROUP_10_MASK),
+    CUSTOM_TERMINAL(MuPreferences.CUSTOM_TERMINAL),
+    USE_CUSTOM_TERMINAL(MuPreferences.USE_CUSTOM_TERMINAL);
 
 	
 	private String label;

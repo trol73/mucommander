@@ -92,11 +92,8 @@ public class RuntimeConstants {
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes  attributes; // JAR file's manifest's attributes.
-        InputStream in;
-
-        in         = null;
-        attributes = null;
+        Attributes  attributes = null; // JAR file's manifest's attributes.
+        InputStream in = null;
         try {
             if((in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) != null) {
                 Manifest manifest;
@@ -108,22 +105,21 @@ public class RuntimeConstants {
             else {
                 LOGGER.warn("MANIFEST.MF not found, default values will be used");
             }
-        }
-        catch(Exception e) {
+        }  catch(Exception e) {
             LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
             // Ignore this, attributes is already set to null.
-        }
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(IOException e) {
+        }  finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(IOException e) {
                     // Ignore this, we don't really care if we can't close this stream.
                 }
             }
         }
         
         // No MANIFEST.MF found, use default values.
-        if(attributes == null) {
+        if (attributes == null) {
             VERSION = "?";
             COPYRIGHT    = "2002-" + Calendar.getInstance().get(Calendar.YEAR);
             // We use a date that we are sure is later than the latest version to trigger the version checker.
@@ -153,10 +149,7 @@ public class RuntimeConstants {
      * @return            the requested attribute value.
      */
     private static String getAttribute(Attributes attributes, String name) {
-        String buffer;
-
-        if((buffer = attributes.getValue(name)) == null)
-            return "?";
-        return buffer;
+        String buffer = attributes.getValue(name);
+        return buffer == null ? "?" : buffer;
     }
 }
