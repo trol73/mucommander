@@ -25,8 +25,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -47,7 +47,7 @@ import com.mucommander.ui.quicklist.item.QuickListHeaderItem;
 public abstract class QuickList extends JPopupMenu implements FocusListener {
 	private static final int PADDING = 2;
 	protected QuickListHeaderItem headerMenuItem;
-	private List<Component> items = new Vector<Component>();
+	private List<Component> items = new ArrayList<>();
 	private QuickListContainer container;
 	
 	protected QuickList(QuickListContainer container, String header) {

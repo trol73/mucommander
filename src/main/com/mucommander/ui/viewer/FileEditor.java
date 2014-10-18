@@ -72,7 +72,9 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     	if (getFrame() == null || this.saveNeeded == saveNeeded) {
             return;
         }
-
+        if (!this.saveNeeded && saveNeeded) {
+            getStatusBar().setStatusMessage(Translator.get("text_editor.modified"));
+        }
         this.saveNeeded = saveNeeded;
 
         // Marks/unmarks the window as dirty under Mac OS X (symbolized by a dot in the window closing icon)

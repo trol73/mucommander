@@ -72,23 +72,22 @@ public final class StringUtils {
      * @throws ArrayIndexOutOfBoundsException if <code>a.length</code> is smaller than <code>posA</code>.
      */
     public static boolean matchesIgnoreCase(String a, String b, int posA) {
-        int  posB; // Position in b.
-        char cA;   // Current character in a.
-        char cB;   // Current character in b.
+        int posB = b.length(); // Position in b.
 
         // Checks whether there's any point in testing the strings.
-        if(posA < (posB = b.length()))
+        if (posA < posB)
             return false;
 
         // Loops until we've tested the whole of b.
-        while(posB > 0) {
-
-            // Works on lower-case characters only. 
-            if(!Character.isLowerCase(cA = a.charAt(--posA)))
+        while (posB > 0) {
+            char cA = a.charAt(--posA);   // Current character in a.
+            // Works on lower-case characters only.
+            if (!Character.isLowerCase(cA))
                 cA = Character.toLowerCase(cA);
-            if(!Character.isLowerCase(cB = b.charAt(--posB)))
+            char cB = b.charAt(--posB);   // Current character in b.
+            if (!Character.isLowerCase(cB))
                 cB = Character.toLowerCase(cB);
-            if(cA != cB)
+            if (cA != cB)
                 return false;
         }
         return true;
@@ -129,20 +128,20 @@ public final class StringUtils {
      * @throws ArrayIndexOutOfBoundsException if <code>a.length</code> is smaller than <code>posA</code>.
      */
     public static boolean matchesIgnoreCase(String a, char[] b, int posA) {
-        int  posB; // Position in b.
-        char cA;   // Current character in a.
-        char cB;   // Current character in b.
+        int posB = b.length; // Position in b.
 
         // Checks whether there's any point in testing the strings.
-        if(posA < (posB = b.length))
+        if (posA < posB)
             return false;
 
-        while(posB > 0) {
-            if(!Character.isLowerCase(cA = a.charAt(--posA)))
+        while (posB > 0) {
+            char cA = a.charAt(--posA);   // Current character in a.
+            if (!Character.isLowerCase(cA))
                 cA = Character.toLowerCase(cA);
-            if(!Character.isLowerCase(cB = b[--posB]))
+            char cB = b[--posB];          // Current character in b.
+            if (!Character.isLowerCase(cB))
                 cB = Character.toLowerCase(cB);
-            if(cA != cB)
+            if (cA != cB)
                 return false;
         }
         return true;
@@ -166,12 +165,12 @@ public final class StringUtils {
      * @return      <code>true</code> if <code>a</code> contains <code>b</code> at position <code>posA - b.length()</code>, <code>false</code> otherwise..
      */
     public static boolean matches(String a, char[] b, int posA) {
-        int posB;
+        int posB = b.length;
 
-        if(posA < (posB = b.length))
+        if (posA < posB)
             return false;
-        while(posB > 0)
-            if(a.charAt(--posA) != b[--posB])
+        while (posB > 0)
+            if (a.charAt(--posA) != b[--posB])
                 return false;
         return true;
     }
@@ -222,10 +221,10 @@ public final class StringUtils {
      * @return <code>true</code> if strings are equal or both null
      */
     public static boolean equals(String s1, String s2, boolean caseSensitive) {
-        if(s1 == null && s2 == null)
+        if (s1 == null && s2 == null)
             return true;
 
-        if(caseSensitive)
+        if (caseSensitive)
             return s1 != null && s1.equals(s2);
         return s1 != null && s1.equalsIgnoreCase(s2);
     }
@@ -253,14 +252,12 @@ public final class StringUtils {
      * @return the capitalized string
      */
     public static String capitalize(String s) {
-        if(isNullOrEmpty(s))
+        if (isNullOrEmpty(s))
             return EMPTY;
 
-        StringBuilder out;
-
-        out = new StringBuilder(s.length());
+        StringBuilder out = new StringBuilder(s.length());
         out.append(Character.toUpperCase(s.charAt(0)));
-        if(s.length() > 1)
+        if (s.length() > 1)
             out.append(s.substring(1).toLowerCase());
         return out.toString();
     }
@@ -293,11 +290,9 @@ public final class StringUtils {
         }
 
         StringBuilder sb = new StringBuilder();
-        int sLen = s.length;
         boolean first = true;
 
-        for (int i = 0; i < sLen; i++) {
-            String el = s[i];
+        for (String el : s) {
             if (isNullOrEmpty(el))
                 continue;
 

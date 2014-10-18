@@ -40,6 +40,7 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
 
     /** The 'OK' button */
     private JButton btnOk;
+    private JButton btnCancel;
 
     private final int maxLines;
 
@@ -69,8 +70,8 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
         contentPane.add(edtLineNumber, BorderLayout.CENTER);
 
         btnOk = new JButton(Translator.get("ok"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        btnCancel = new JButton(Translator.get("cancel"));
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus
         setInitialFocusComponent(edtLineNumber);
@@ -87,6 +88,8 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
         if ( (source == btnOk || source == edtLineNumber) && btnOk.isEnabled() ) {
             doGoto((int)edtLineNumber.getValue());
             dispose();
+        } else if (source == btnCancel) {
+            cancel();
         }
     }
 
