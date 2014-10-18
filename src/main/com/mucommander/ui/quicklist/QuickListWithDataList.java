@@ -19,8 +19,12 @@
 package com.mucommander.ui.quicklist;
 
 import com.mucommander.ui.quicklist.item.QuickListDataList;
+import com.mucommander.ui.quicklist.item.QuickListDataModel;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Vector;
 
 /**
  * FileTablePopupWithDataList is a FileTablePopup which contains FileTablePopupDataList.
@@ -28,9 +32,12 @@ import javax.swing.*;
  * @author Arik Hadas
  */
 
-public abstract class QuickListWithDataList<T> extends QuickList {	
+public abstract class QuickListWithDataList<T> extends QuickList implements KeyListener {
 	protected QuickListDataList<T> dataList;
 	private QuickListWithEmptyMsg emptyPopup;
+
+
+    private boolean supportDeleteItem;
 	
 	public QuickListWithDataList(QuickListContainer container, String header, String emptyPopupHeader) {
 		super(container, header);
@@ -52,6 +59,7 @@ public abstract class QuickListWithDataList<T> extends QuickList {
         // create TablePopupWithEmptyMsg that will be shown instead of this popup, if this
         // popup's data list won't have any elements.
         emptyPopup = new QuickListWithEmptyMsg(container, header, emptyPopupHeader);
+        dataList.addKeyListener(this);
 	}
 	
 	protected abstract T[] getData();
@@ -70,8 +78,8 @@ public abstract class QuickListWithDataList<T> extends QuickList {
     protected boolean prepareForShowing(QuickListContainer container) {
 		boolean toShow = false;
 		// if data list contains at least 1 element, show this popup.
-		T[] data;
-		if ((data = getData()).length > 0) {
+		T[] data = getData();
+		if (data.length > 0) {
 			dataList.setListData(data);
 			toShow = true;
 		} else {        // else, show popup with a "no elements" message.
@@ -100,4 +108,50 @@ public abstract class QuickListWithDataList<T> extends QuickList {
 	protected abstract void acceptListItem(T item);
 	
 	protected abstract QuickListDataList<T> getList();
+
+    protected void deleteListItem(int index, T item) {
+        if (!supportDeleteItem) {
+            return;
+        }
+        onDeleteItem(index, item);
+        QuickListDataModel model = (QuickListDataModel)dataList.getModel();
+        model.remove(index);
+
+        int selectedIndex = index;
+        if (selectedIndex >= model.getSize()) {
+            selectedIndex--;
+        }
+        dataList.setSelectedIndex(selectedIndex);
+        dataList.repaint();
+    }
+
+    protected void onDeleteItem(int index, T item) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (supportDeleteItem && e.getKeyCode() == KeyEvent.VK_DELETE) {
+            int index = dataList.getSelectedIndex();
+            if (index >= 0 && dataList.getModel().getSize() > 0) {
+                deleteListItem(index, dataList.getSelectedValue());
+            }
+        }
+    }
+
+    protected boolean isSupportDeleteItem() {
+        return supportDeleteItem;
+    }
+
+    protected void setSupportDeleteItem(boolean supportDeleteItem) {
+        this.supportDeleteItem = supportDeleteItem;
+    }
+
 }

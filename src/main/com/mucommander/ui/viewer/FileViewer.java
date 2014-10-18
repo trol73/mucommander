@@ -107,7 +107,6 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
                 super.keyPressed(e);
             }
         });
-
     }
 
     /**

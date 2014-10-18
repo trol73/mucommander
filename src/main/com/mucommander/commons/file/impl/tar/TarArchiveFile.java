@@ -72,7 +72,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
 
         String name = getName();
             // Gzip-compressed file
-        if(StringUtils.endsWithIgnoreCase(name, "tgz") || StringUtils.endsWithIgnoreCase(name, "tar.gz"))
+        if (StringUtils.endsWithIgnoreCase(name, "tgz") || StringUtils.endsWithIgnoreCase(name, "tar.gz"))
                 // Note: this will fail for gz/tgz entries inside a tar file (IOException: Not in GZIP format),
                 // why is a complete mystery: the gz/tgz entry can be extracted and then properly browsed
             in = new GZIPInputStream(in);
@@ -90,8 +90,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
                 // "CBZip2InputStream reads bytes from the compressed source stream via the single byte {@link java.io.InputStream#read()
                 // read()} method exclusively. Thus you should consider to use a buffered source stream."
                 in = new CBZip2InputStream(new BufferedInputStream(in));
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 // CBZip2InputStream is known to throw NullPointerException if file is not properly Bzip2-encoded
                 // so we need to catch those and throw them as IOException
                 LOGGER.info("Exception caught while creating CBZip2InputStream, throwing IOException", e);
@@ -116,14 +115,14 @@ public class TarArchiveFile extends AbstractROArchiveFile {
 
     @Override
     public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
-        if(entry.isDirectory())
+        if (entry.isDirectory())
             throw new IOException();
 
         // Optimization: first check if the specified iterator is positionned at the beginning of the entry.
         // This will typically be the case if an iterator is being used to read all the archive's entries
         // (unpack operation). In that case, we save the cost of looking for the entry in the archive, which is all
         // the more expensive if the TAR archive is GZipped.
-        if(entryIterator!=null && (entryIterator instanceof TarEntryIterator)) {
+        if (entryIterator != null && (entryIterator instanceof TarEntryIterator)) {
             ArchiveEntry currentEntry = ((TarEntryIterator)entryIterator).getCurrentEntry();
             if(currentEntry.getPath().equals(entry.getPath())) {
                 // The entry/tar stream is wrapped in a FilterInputStream where #close is implemented as a no-op:
@@ -141,7 +140,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
 
         // Iterate through the archive until we've found the entry
         TarEntry tarEntry = (TarEntry)entry.getEntryObject();
-        if(tarEntry!=null) {
+        if (tarEntry != null) {
             TarInputStream tin = createTarStream(tarEntry.getOffset());
             tin.getNextEntry();
 

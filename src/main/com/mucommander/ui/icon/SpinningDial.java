@@ -359,30 +359,25 @@ public class SpinningDial extends AnimatedIcon {
             // Checks whether the current frame has already been generated or not, generates
             // it if not.
             if((frames[currentFrame = getFrame()]) == null) {
-                Image      frame;
-                GraphicsConfiguration gc;
-                Graphics2D g;
-                int        alpha;
-                double     cos;
-                double     sin;
-                int        radius;
-
                 // Initialises the frame.
-                // Note: getGraphicsConfiguration() returns null if the component has not yet been added to a container 
-                if(c!=null && (gc=c.getGraphicsConfiguration())!=null)
+                // Note: getGraphicsConfiguration() returns null if the component has not yet been added to a container
+                GraphicsConfiguration gc = c.getGraphicsConfiguration();
+                Image frame;
+                if (c != null && gc != null)
                     frame = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
                 else
                     frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
                 // Initialises the frame's g.
-                initialiseGraphics(g = (Graphics2D)frame.getGraphics());
+                Graphics2D g = (Graphics2D)frame.getGraphics();
+                initialiseGraphics(g);
 
                 // Draws each spoke in the dial.
-                alpha  = 255;
-                radius = FULL_SIZE / 2 - 1 - (int)(strokeWidth / 2);
-                for(int i = 0; i < getFrameCount(); i++) {
-                    cos = Math.cos((Math.PI * 2) - (Math.PI * 2 * (i - currentFrame)) / getFrameCount());
-                    sin = Math.sin((Math.PI * 2) - (Math.PI * 2 * (i - currentFrame)) / getFrameCount());
+                int alpha  = 255;
+                int radius = FULL_SIZE / 2 - 1 - (int)(strokeWidth / 2);
+                for (int i = 0; i < getFrameCount(); i++) {
+                    double cos = Math.cos((Math.PI * 2) - (Math.PI * 2 * (i - currentFrame)) / getFrameCount());
+                    double sin = Math.sin((Math.PI * 2) - (Math.PI * 2 * (i - currentFrame)) / getFrameCount());
 
                     g.setColor(getSpokeColor(alpha));
                     g.drawLine((int)(radius * FRACTION * cos), (int)(radius * FRACTION * sin),

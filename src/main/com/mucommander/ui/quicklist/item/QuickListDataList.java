@@ -53,7 +53,7 @@ import com.mucommander.ui.theme.ThemeManager;
 public class QuickListDataList<T> extends JList<T> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QuickListDataList.class);
 	
-	private final static int VISIBLE_ROWS_COUNT = 10;
+	public final static int VISIBLE_ROWS_COUNT = 10;
 
 	private QuickSearch<T> quickSearch = new QuickListQuickSearch();
 	
@@ -89,10 +89,11 @@ public class QuickListDataList<T> extends JList<T> {
 	 * It does the required steps before the popup is shown.	
 	 */
 	@Override
-	public void setListData(T[] data) {
-		super.setListData(data);
+	public void setListData(final T[] data) {
+		//super.setListData(data);
+        setModel(new QuickListDataModel<>(data));
 
-		int numOfRowsInList = getModel().getSize();
+        int numOfRowsInList = getModel().getSize();
 		if (numOfRowsInList > 0) {
 			setVisibleRowCount(Math.min(numOfRowsInList, VISIBLE_ROWS_COUNT));
 			setSelectedIndex(0);
@@ -358,6 +359,7 @@ public class QuickListDataList<T> extends JList<T> {
 					tryToTransferFocusToTheNextComponent();
 					stop();
 					break;
+
 				}
 
 				// Do not update last search string's change timestamp
