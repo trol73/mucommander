@@ -312,7 +312,7 @@ public class S3Object extends S3File {
 
     @Override
     public void copyStream(InputStream in, boolean append, long length) throws FileTransferException {
-        if(append) {
+        if (append) {
 //            throw new UnsupportedFileOperationException(FileOperation.APPEND_FILE);
             throw new FileTransferException(FileTransferException.READING_SOURCE);
         }
@@ -332,8 +332,7 @@ public class S3Object extends S3File {
             try {
                 tempFile = FileFactory.getTemporaryFile(false);
                 tempOut = tempFile.getOutputStream();
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
             }
 
@@ -346,8 +345,7 @@ public class S3Object extends S3File {
                     // Close the stream even if copyStream() threw an IOException
                     try {
                         tempOut.close();
-                    }
-                    catch(IOException e) {
+                    } catch(IOException e) {
                         // Do not re-throw the exception to prevent swallowing the exception thrown in the try block
                     }
                 }
@@ -355,8 +353,7 @@ public class S3Object extends S3File {
                 InputStream tempIn;
                 try {
                     tempIn = tempFile.getInputStream();
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     throw new FileTransferException(FileTransferException.OPENING_SOURCE);
                 }
 
@@ -366,8 +363,7 @@ public class S3Object extends S3File {
                 // Delete the temporary file, no matter what.
                 try {
                     tempFile.delete();
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // Do not re-throw the exception to prevent exceptions caught in the catch block from being replaced
                 }
             }

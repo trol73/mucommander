@@ -563,8 +563,8 @@ skip_all:ES:Saltar todos
 
 
 
-
-
+overwrite_all:EN:Overwrite all
+overwrite_all:RU:Перезаписать все
 
 
 
@@ -2408,6 +2408,9 @@ cannot_write_file:BE:Не атрымліваецца запісаць файл %
 cannot_write_file:NB:Kan ikke skrive til filen %1
 cannot_write_file:TR:Dosya yazılamıyor %1
 cannot_write_file:CA:No es pot escriure al fitxer %1
+
+overwrite_readonly_file:EN:File is read-only: %1
+overwrite_readonly_file:RU:Файл только для чтения: %1
 
 cannot_create_folder:EN:Unable to create directory %1
 cannot_create_folder:FR:Erreur lors de la création du répertoire %1

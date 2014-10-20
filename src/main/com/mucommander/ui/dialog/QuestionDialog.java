@@ -53,7 +53,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
 
     /** Maximum dialog size */
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(480, 10000);
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 10000);
 
 
     /**
@@ -120,9 +120,8 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
         int nbButtons = actionText.length;
         buttons = new JButton[nbButtons];
 
-        for(int i = 0; i < nbButtons; i++) {
+        for (int i = 0; i < nbButtons; i++) {
             String text = actionText[i];
-
             buttons[i] = new JButton(text);
             buttons[i].addActionListener(this);
         }
