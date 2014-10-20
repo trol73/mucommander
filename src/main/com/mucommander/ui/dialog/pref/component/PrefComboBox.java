@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.component;
 
+import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * @author Arik Hadas, Oleg Trifonov
  */
-public abstract class PrefComboBox<E> extends JComboBox<E> implements PrefComponent {
+public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefComponent {
 
 	public PrefComboBox() {
 		super();
@@ -68,20 +69,4 @@ public abstract class PrefComboBox<E> extends JComboBox<E> implements PrefCompon
 		});		
 	}
 
-    @Override
-    public void processKeyEvent(KeyEvent e) {
-        boolean popupVisible = isPopupVisible();
-        super.processKeyEvent(e);
-        // Close parent FocusDialog if ESC pressed
-        if (!popupVisible && e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            Container container = getParent();
-            while (container != null) {
-                if (container instanceof FocusDialog) {
-                    ((FocusDialog) container).dispose();
-                    break;
-                }
-                container = container.getParent();
-            }
-        }
-    }
 }

@@ -13614,6 +13614,12 @@ file_editor.close:EN:$[file_viewer.close]
 
 file_editor.open_anyway:EN:$[file_viewer.open_anyway]
 
+file_editor.save_anyway:EN:Save anyway
+file_editor.save_anyway:RU:Все равно сохранить
+
+file_editor.overwrite_readonly:EN:The file is read-only
+file_editor.overwrite_readonly:RU:Файл только для чтения
+
 
 ###############
 # Text editor #
@@ -13708,8 +13714,14 @@ text_editor.format:RU:Форматировать
 text_editor.writing:EN:Writing...
 text_editor.writing:RU:Сохраняю...
 
+text_editor.modified:EN:Modified
+text_editor.modified:RU:Изменен
+
 text_editor.saved:EN:File saved
 text_editor.saved:RU:Файл сохранен
+
+text_editor.cant_save_file:EN:Can't save file
+text_editor.cant_save_file:RU:Не удалось сохранить файл
 
 ####################
 # Shortcuts dialog #
