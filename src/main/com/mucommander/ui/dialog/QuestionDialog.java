@@ -119,10 +119,9 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 		
         int nbButtons = actionText.length;
         buttons = new JButton[nbButtons];
-        String text;
-		
+
         for(int i = 0; i < nbButtons; i++) {
-            text = actionText[i];
+            String text = actionText[i];
 
             buttons[i] = new JButton(text);
             buttons[i].addActionListener(this);
