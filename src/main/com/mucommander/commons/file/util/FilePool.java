@@ -20,7 +20,7 @@
 package com.mucommander.commons.file.util;
 
 import com.mucommander.commons.file.AbstractFile;
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 
 /**
  * This class allows {@link AbstractFile} instances to be pooled, so that existing file instances can be reused,
@@ -39,7 +39,7 @@ import org.apache.commons.collections.map.ReferenceMap;
 public class FilePool {
 
     /** The actual hash map */
-    protected final ReferenceMap hashMap = new ReferenceMap(ReferenceMap.HARD, ReferenceMap.WEAK);
+    protected final ReferenceMap<Object, AbstractFile> hashMap = new ReferenceMap<>(ReferenceMap.ReferenceStrength.HARD, ReferenceMap.ReferenceStrength.WEAK);
 
     /**
      * Creates a new file pool.
@@ -57,7 +57,7 @@ public class FilePool {
      * such mapping existed
      */
     public synchronized AbstractFile put(Object key, AbstractFile value) {
-        return (AbstractFile)hashMap.put(key, value);
+        return hashMap.put(key, value);
     }
 
     /**
@@ -69,7 +69,7 @@ public class FilePool {
      * <code>null</code> otherwise
      */
     public synchronized AbstractFile get(Object key) {
-        return (AbstractFile)hashMap.get(key);
+        return hashMap.get(key);
     }
 
     /**

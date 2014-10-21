@@ -20,7 +20,7 @@
 package com.mucommander.commons.file.impl.bzip2;
 
 import com.mucommander.commons.file.*;
-import org.apache.tools.bzip2.CBZip2InputStream;
+import org.apache.hadoop.io.compress.bzip2.CBZip2InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,13 +59,13 @@ public class Bzip2ArchiveFile extends AbstractROArchiveFile {
         String extension = getExtension();
         String name = getName();
 		
-        if(extension!=null) {
+        if (extension != null) {
             extension = extension.toLowerCase();
 			
             // Remove the 'bz2' or 'tbz2' extension from the entry's name
-            if(extension.equals("tbz2"))
+            if (extension.equals("tbz2"))
                 name = name.substring(0, name.length()-4)+"tar";
-            else if(extension.equals("bz2"))
+            else if (extension.equals("bz2"))
                 name = name.substring(0, name.length()-4);
         }
 
@@ -90,8 +90,7 @@ public class Bzip2ArchiveFile extends AbstractROArchiveFile {
             // "CBZip2InputStream reads bytes from the compressed source stream via the single byte {@link java.io.InputStream#read()
             // read()} method exclusively. Thus you should consider to use a buffered source stream."
             return new CBZip2InputStream(new BufferedInputStream(in));
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             // CBZip2InputStream is known to throw NullPointerException if file is not properly Bzip2-encoded
             // so we need to catch those and throw them as IOException
             LOGGER.info("Exception caught while creating CBZip2InputStream, throwing IOException", e);

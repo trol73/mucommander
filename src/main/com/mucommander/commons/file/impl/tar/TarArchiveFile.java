@@ -24,7 +24,7 @@ import com.mucommander.commons.file.impl.tar.provider.TarEntry;
 import com.mucommander.commons.file.impl.tar.provider.TarInputStream;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.util.StringUtils;
-import org.apache.tools.bzip2.CBZip2InputStream;
+import org.apache.hadoop.io.compress.bzip2.CBZip2InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +90,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
                 // "CBZip2InputStream reads bytes from the compressed source stream via the single byte {@link java.io.InputStream#read()
                 // read()} method exclusively. Thus you should consider to use a buffered source stream."
                 in = new CBZip2InputStream(new BufferedInputStream(in));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // CBZip2InputStream is known to throw NullPointerException if file is not properly Bzip2-encoded
                 // so we need to catch those and throw them as IOException
                 LOGGER.info("Exception caught while creating CBZip2InputStream, throwing IOException", e);
