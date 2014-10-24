@@ -250,8 +250,7 @@ public class TarBuffer {
         int bytesNeeded = blockSize;
 
         while (bytesNeeded > 0) {
-            long numBytes = inStream.read(blockBuffer, offset,
-                                               bytesNeeded);
+            long numBytes = inStream.read(blockBuffer, offset, bytesNeeded);
 
             //
             // NOTE
@@ -314,7 +313,7 @@ public class TarBuffer {
             long numBytes = inStream.skip(bytesToSkip);
             // Adopt the same 'generous' behavior as #readBlock(), i.e. allow a premature EOF only if at least
             // a byte was properly skipped.
-            if(numBytes==-1) {
+            if (numBytes == -1) {
                 return bytesToSkip != blockSize;
             }
 
