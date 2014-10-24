@@ -78,7 +78,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
             in = new GZIPInputStream(in);
 
         // Bzip2-compressed file
-        else if(StringUtils.endsWithIgnoreCase(name, "tbz2") || StringUtils.endsWithIgnoreCase(name, "tar.bz2")) {
+        else if (StringUtils.endsWithIgnoreCase(name, "tbz2") || StringUtils.endsWithIgnoreCase(name, "tar.bz2")) {
             try {
                 // Skips the 2 magic bytes 'BZ', as required by CBZip2InputStream. Quoted from CBZip2InputStream's Javadoc:
                 // "Although BZip2 headers are marked with the magic 'Bz'. this constructor expects the next byte in the
@@ -124,7 +124,7 @@ public class TarArchiveFile extends AbstractROArchiveFile {
         // the more expensive if the TAR archive is GZipped.
         if (entryIterator != null && (entryIterator instanceof TarEntryIterator)) {
             ArchiveEntry currentEntry = ((TarEntryIterator)entryIterator).getCurrentEntry();
-            if(currentEntry.getPath().equals(entry.getPath())) {
+            if (currentEntry.getPath().equals(entry.getPath())) {
                 // The entry/tar stream is wrapped in a FilterInputStream where #close is implemented as a no-op:
                 // we don't want the TarInputStream to be closed when the caller closes the entry's stream.
                 return new FilterInputStream(((TarEntryIterator)entryIterator).getTarInputStream()) {
