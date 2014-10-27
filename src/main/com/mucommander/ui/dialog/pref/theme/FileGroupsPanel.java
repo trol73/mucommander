@@ -81,8 +81,8 @@ public class FileGroupsPanel extends ThemeEditorPanel {
             MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
             String mask = prefs.getVariable(preference);
             gridPanel.add(createCaptionLabelWithTitle(Translator.get("theme_editor.group_") + " " + (i+1)));
-            ColorButton сolorButton  = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
-            gridPanel.add(сolorButton);
+            ColorButton colorButton  = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
+            gridPanel.add(colorButton);
             fileMasks[i] = new JTextField(24);
             fileMasks[i].setText(mask);
             gridPanel.add(fileMasks[i]);
