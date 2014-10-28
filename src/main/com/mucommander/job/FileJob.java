@@ -152,6 +152,8 @@ public abstract class FileJob implements Runnable {
     protected final static int CANCEL_ACTION = 3;
     protected final static int APPEND_ACTION = 4;
     protected final static int OK_ACTION = 5;
+    protected final static int OVERWRITE_READONLY_ACTION = 6;
+    protected final static int OVERWRITE_READONLY_ALL_ACTION = 7;
 
     protected final static String SKIP_TEXT = Translator.get("skip");
     protected final static String SKIP_ALL_TEXT = Translator.get("skip_all");
@@ -159,6 +161,8 @@ public abstract class FileJob implements Runnable {
     protected final static String CANCEL_TEXT = Translator.get("cancel");
     protected final static String APPEND_TEXT = Translator.get("resume");
     protected final static String OK_TEXT = Translator.get("ok");
+    protected final static String OVERWRITE_READONLY_TEXT = Translator.get("overwrite");
+    protected final static String OVERWRITE_READONLY_ALL_TEXT = Translator.get("overwrite_all");
 
 
     /**
@@ -382,15 +386,14 @@ public abstract class FileJob implements Runnable {
      * Interrupts this job, changes the job state to {@link #INTERRUPTED} and notifies listeners.
      */	
     public void interrupt() {
-        int state = getState();
-        if (state==INTERRUPTED || state==FINISHED) {
-            return;
+        switch (getState()) {
+            case INTERRUPTED:
+            case FINISHED:
+                return;
+            case PAUSED:
+                setPaused(false);
+                break;
         }
-
-        if (state == PAUSED) {
-            setPaused(false);
-        }
-
         // Set state before calling stop() so that state is INTERRUPTED when jobStopped() is called
         // (some FileJob rely on that)
         setState(INTERRUPTED);
@@ -404,7 +407,7 @@ public abstract class FileJob implements Runnable {
      */
     private void stop() {
         // Return if job has already been stopped
-        if(jobThread==null)
+        if (jobThread == null)
             return;
 
 //        // Start by calling interrupt to have the thread return from any blocking I/O occurring in an interruptible
@@ -596,40 +599,41 @@ public abstract class FileJob implements Runnable {
      */
     protected int showErrorDialog(String title, String message, String actionTexts[], int actionValues[]) {
         // Return SKIP_ACTION if 'skip all' has previously been selected and 'skip' is in the list of actions.
-        if(autoSkipErrors) {
+        if (autoSkipErrors) {
             for (int actionValue : actionValues)
                 if (actionValue == SKIP_ACTION)
                     return SKIP_ACTION;
         }
 
         // Send a system notification if a notifier is available and enabled
-        if(AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled())
+        if (AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled()) {
             AbstractNotifier.getNotifier().displayBackgroundNotification(NotificationType.JOB_ERROR, title, message);
+        }
 
         QuestionDialog dialog;
-        if(getProgressDialog()==null)
-            dialog = new QuestionDialog(getMainFrame(), 
-                                        title,
-                                        message,
-                                        getMainFrame(),
-                                        actionTexts,
-                                        actionValues,
-                                        0);
-        else
-            dialog = new QuestionDialog(getProgressDialog(), 
-                                        title,
-                                        message,
-                                        getMainFrame(),
-                                        actionTexts,
-                                        actionValues,
-                                        0);
-
+        if (getProgressDialog() == null) {
+            dialog = new QuestionDialog(getMainFrame(),
+                    title,
+                    message,
+                    getMainFrame(),
+                    actionTexts,
+                    actionValues,
+                    0);
+        } else {
+            dialog = new QuestionDialog(getProgressDialog(),
+                    title,
+                    message,
+                    getMainFrame(),
+                    actionTexts,
+                    actionValues,
+                    0);
+        }
         // Cancel or close dialog stops this job
         int userChoice = waitForUserResponse(dialog);
-        if(userChoice==-1 || userChoice==CANCEL_ACTION)
+        if (userChoice == -1 || userChoice == CANCEL_ACTION)
             interrupt();
         // Keep 'skip all' choice for further error and return SKIP_ACTION
-        else if(userChoice==SKIP_ALL_ACTION) {
+        else if (userChoice == SKIP_ALL_ACTION) {
             autoSkipErrors = true;
             return SKIP_ACTION;
         }
@@ -754,9 +758,8 @@ public abstract class FileJob implements Runnable {
         // Note: When cached methods are called, they no longer reflect changes in the underlying files. In particular,
         // changes of size or date could potentially not be reflected when files are being processed but this should
         // not really present a risk.
-        AbstractFile tempFile;
-        for (int i=0; i<nbFiles; i++) {
-            tempFile = files.elementAt(i);
+        for (int i = 0; i < nbFiles; i++) {
+            AbstractFile tempFile = files.elementAt(i);
             files.setElementAt((tempFile instanceof CachedFile)?tempFile:new CachedFile(tempFile, true), i);
         }
 
@@ -802,7 +805,6 @@ public abstract class FileJob implements Runnable {
      */
     public final void run() {
         FileTable activeTable = getMainFrame().getActiveTable();
-        AbstractFile currentFile;
 
         // Notify that this job has started
         jobStarted();
@@ -810,8 +812,8 @@ public abstract class FileJob implements Runnable {
 //this.nbFilesDiscovered += nbFiles;
 
         // Loop on all source files, checking that job has not been interrupted
-        for(int i=0; i<nbFiles; i++) {
-            currentFile = files.elementAt(i);
+        for(int i = 0; i < nbFiles; i++) {
+            AbstractFile currentFile = files.elementAt(i);
 
             // Change current file and advance file index
             currentFileIndex = i;
@@ -821,19 +823,19 @@ public abstract class FileJob implements Runnable {
             boolean success = processFile(currentFile, null);
 
             // Stop if job was interrupted
-            if(getState()==INTERRUPTED)
+            if (getState() == INTERRUPTED)
                 break;
 
             // Unmark file in active table if 'auto unmark' is enabled
             // and file was processed successfully
-            if(autoUnmark && success) {
+            if (autoUnmark && success) {
                 // Do not repaint rows individually as it would be too expensive
                 activeTable.setFileMarked(currentFile, false, false);
             }
 
             // If last file was reached without any user interruption, all files have been processed with or
             // without errors, switch to FINISHED state and notify listeners
-            if(i==nbFiles-1) {
+            if (i == nbFiles-1) {
                 currentFileIndex++;
                 stop();
                 jobCompleted();

@@ -24,13 +24,11 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.mucommander.commons.file.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.apple.eio.FileManager;
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileOperation;
-import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.io.ByteCounter;
@@ -88,6 +86,11 @@ public abstract class TransferFileJob extends FileJob {
      * possible (to have the minimum impact on transfer speed) and does not need to have a good resitance to collision. */
     private final static String CHECKSUM_VERIFICATION_ALGORITHM = "Adler32";
 
+    /**
+     * If user changed "Overwrite all readonly" in the question dialog
+     */
+    private boolean overwriteAllReadonly = false;
+
 
     static {
         // Register additional MessageDigest implementations provided by the muCommander API
@@ -108,6 +111,16 @@ public abstract class TransferFileJob extends FileJob {
         this.totalSkippedByteCounter = new ByteCounter(currentFileSkippedByteCounter);
     }
 
+    protected void copyToReadonlyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
+        try {
+            destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
+            copyFile(sourceFile, destFile, append);
+            destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
+        } catch (IOException e) {
+            throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
+        }
+    }
+
 	
     /**
      * Copies the given source file to the specified destination file, optionally resuming the operation.
@@ -118,7 +131,7 @@ public abstract class TransferFileJob extends FileJob {
         isCheckingIntegrity = false;
 
         // Throw a specific FileTransferException if source and destination files are identical
-        if(sourceFile.equalsCanonical(destFile))
+        if (sourceFile.equalsCanonical(destFile))
             throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
 
         // Determine whether or not AbstractFile.copyRemotelyTo() should be used to copy the file.
@@ -137,7 +150,7 @@ public abstract class TransferFileJob extends FileJob {
 
         // If the file wasn't copied using copyRemotelyTo(), or if copyRemotelyTo() failed
         InputStream in = null;
-        if(!copied) {
+        if (!copied) {
             // Copy source file stream to destination file
             try {
                 long inLength = sourceFile.getSize();
@@ -154,8 +167,7 @@ public abstract class TransferFileJob extends FileJob {
                         currentFileByteCounter.add(destFileSize);
                         // Increase skipped ByteCounter by the number of bytes skipped
                         currentFileSkippedByteCounter.add(destFileSize);
-                    }
-                    else {
+                    } else {
                         in = sourceFile.getInputStream();
                         if (integrityCheckEnabled) {
                             in = new ChecksumInputStream(in, MessageDigest.getInstance(CHECKSUM_VERIFICATION_ALGORITHM));
@@ -192,11 +204,10 @@ public abstract class TransferFileJob extends FileJob {
 
         // Preserve source file's permissions: preserve only the permissions bits that are supported by the source file
         // and use default permissions for the rest of them.
-        if(destFile.isFileOperationSupported(FileOperation.CHANGE_PERMISSION)) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_PERMISSION)) {
             try {
                 destFile.importPermissions(sourceFile, FilePermissions.DEFAULT_FILE_PERMISSIONS);  // use #importPermissions(AbstractFile, int) to avoid isDirectory test
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 LOGGER.debug("failed to import "+sourceFile+" permissions into "+destFile, e);
                 // Fail silently
             }
@@ -210,15 +221,14 @@ public abstract class TransferFileJob extends FileJob {
             String sourcePath = sourceFile.getAbsolutePath();
             try {
                 FileManager.setFileTypeAndCreator(destFile.getAbsolutePath(), FileManager.getFileType(sourcePath), FileManager.getFileCreator(sourcePath));
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Swallow the exception and do not interrupt the transfer
                 LOGGER.debug("Error while setting Mac OS X file type and creator on destination", e);
             }
         }
 
         // This block is executed only if integrity check has been enabled (disabled by default)
-        if(integrityCheckEnabled) {
+        if (integrityCheckEnabled) {
             String sourceChecksum;
             String destinationChecksum;
 
@@ -280,18 +290,22 @@ public abstract class TransferFileJob extends FileJob {
      *
      */
     protected boolean tryCopyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append, String errorDialogTitle) {
+        boolean overwriteReadonly = false;
         // Copy file to destination
         do {				// Loop for retry
             try {
-                copyFile(sourceFile, destFile, append);
+                if (overwriteReadonly) {
+                    copyToReadonlyFile(sourceFile, destFile, append);
+                } else {
+                    copyFile(sourceFile, destFile, append);
+                }
                 return true;
-            }
-            catch(FileTransferException e) {
+            } catch(FileTransferException e) {
                 // If the job was interrupted by the user at the time the exception occurred, it most likely means that
                 // the IOException was caused by the stream being closed as a result of the user interruption.
                 // If that is the case, the exception should not be interpreted as an error.
                 // Same goes if the current file was skipped.
-                if(getState()==INTERRUPTED || wasCurrentFileSkipped())
+                if (getState() == INTERRUPTED || wasCurrentFileSkipped())
                     return false;
 
                 // Print the exception's stack trace
@@ -306,7 +320,18 @@ public abstract class TransferFileJob extends FileJob {
                         break;
                     // Could not open destination file for write
                     case FileTransferException.OPENING_DESTINATION:
-                        choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
+                        // if write to read-only file
+                        if (!destFile.getPermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION)) {
+                            if (overwriteAllReadonly) {
+                                choice = OVERWRITE_READONLY_ACTION;
+                            } else {
+                                String actionTexts[] = new String[]{SKIP_TEXT, SKIP_ALL_TEXT, OVERWRITE_READONLY_TEXT, OVERWRITE_READONLY_ALL_TEXT, CANCEL_TEXT};
+                                int actionValues[] = new int[]{SKIP_ACTION, SKIP_ALL_ACTION, OVERWRITE_READONLY_ACTION, OVERWRITE_READONLY_ALL_ACTION, CANCEL_ACTION};
+                                choice = showErrorDialog(errorDialogTitle, Translator.get("overwrite_readonly_file", destFile.getName()), actionTexts, actionValues);
+                            }
+                        } else {
+                            choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
+                        }
                         break;
                     // Source and destination files are identical
                     case FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL:
@@ -324,14 +349,17 @@ public abstract class TransferFileJob extends FileJob {
                                                  );
                     break;
                 }
-
                 // Retry action (append or retry)
-                if(choice==RETRY_ACTION || choice==APPEND_ACTION) {
+                if (choice == RETRY_ACTION || choice == APPEND_ACTION || choice == OVERWRITE_READONLY_ACTION || choice == OVERWRITE_READONLY_ALL_ACTION) {
                     // Reset current file byte counters
                     currentFileByteCounter.reset();
                     currentFileSkippedByteCounter.reset();
                     // Append resumes transfer
-                    append = choice==APPEND_ACTION;
+                    append = choice == APPEND_ACTION;
+                    overwriteReadonly = choice == OVERWRITE_READONLY_ACTION || choice == OVERWRITE_READONLY_ALL_ACTION;
+                    if (choice == OVERWRITE_READONLY_ALL_ACTION) {
+                        overwriteAllReadonly = true;
+                    }
                     continue;
                 }
 
@@ -371,9 +399,12 @@ public abstract class TransferFileJob extends FileJob {
      * Closes the currently registered source InputStream.
      */
     protected synchronized void closeCurrentInputStream() {
-        if(tlin !=null) {
-            try { tlin.close(); }
-            catch(IOException e) {}
+        if (tlin != null) {
+            try {
+                tlin.close();
+            } catch(IOException e) {
+
+            }
         }
     }
 
@@ -412,7 +443,7 @@ public abstract class TransferFileJob extends FileJob {
      * Interrupts the current file transfer and advance to the next one.
      */
     public synchronized void skipCurrentFile() {
-        if(tlin !=null) {
+        if (tlin != null) {
             LOGGER.debug("skipping current file, closing "+ tlin);
 
             // Prevents an error from being reported when the current InputStream is closed
@@ -423,7 +454,7 @@ public abstract class TransferFileJob extends FileJob {
         }
 
         // Resume job if currently paused 
-        if(getState()==PAUSED)
+        if (getState() == PAUSED)
             setPaused(false);
     }
 

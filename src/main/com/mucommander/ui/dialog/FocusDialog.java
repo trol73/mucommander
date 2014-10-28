@@ -109,7 +109,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         ActionMap actionMap = contentPane.getActionMap();
         AbstractAction disposeAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e){
-                if(keyboardDisposalEnabled)
+                if (keyboardDisposalEnabled)
                     cancel();
             }
         };

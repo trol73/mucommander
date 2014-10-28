@@ -78,24 +78,22 @@ public class ButtonChoicePanel extends JPanel implements KeyListener, FocusListe
     public ButtonChoicePanel(JButton buttons[], int nbCols, JRootPane rootPane) {
         this.buttons = buttons;
         this.nbButtons = buttons.length;
-        this.nbCols = nbCols<=0?nbButtons:nbCols;
+        this.nbCols = nbCols <= 0 ? nbButtons : nbCols;
         this.rootPane = rootPane;
-        this.nbRows = nbCols<=0?1:nbButtons/nbCols+(nbButtons%nbCols==0?0:1);
+        this.nbRows = nbCols <= 0 ? 1 : nbButtons/nbCols+(nbButtons % nbCols == 0 ? 0 : 1);
 
         // If the provided number of columns is <= 0, lay out all buttons on a single row
         // and use FlowLayout to do that
-        if (nbCols<=0) {
+        if (nbCols <= 0) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
         }
         // Use GridLayout to lay out buttons on 2-dimensional grid
         else {
             setLayout(new GridLayout(0, nbCols));
         }
-        
-        JButton button;
-        for(int i=0; i<nbButtons; i++) {
-            button = buttons[i];
 
+        for(int i = 0; i < nbButtons; i++) {
+            JButton button = buttons[i];
             // Listener to key events to transfer focus 
             button.addKeyListener(this);
 

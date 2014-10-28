@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
+ * @author Oleg Trifonov
  * Created on 17/12/13.
  */
 public class TerminalAction extends ParentFolderAction {

@@ -719,15 +719,12 @@ public class CommandManager implements CommandBuilder {
      * @see                #setCommandFile(String)
      */
     public static void loadCommands() throws IOException, CommandException {
-        AbstractFile file;
-        InputStream  in;
-
-        file = getCommandFile();
+        AbstractFile file = getCommandFile();
         LOGGER.debug("Loading custom commands from: " + file.getAbsolutePath());
 
         // Tries to load the commands file.
         // Commands are not considered to be modified by this.
-        in = null;
+        InputStream in = null;
         try {
             in = new BackupInputStream(file);
             CommandReader.read(in, new CommandManager());

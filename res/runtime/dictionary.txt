@@ -563,8 +563,8 @@ skip_all:ES:Saltar todos
 
 
 
-
-
+overwrite_all:EN:Overwrite all
+overwrite_all:RU:Перезаписать все
 
 
 
@@ -2409,6 +2409,9 @@ cannot_write_file:NB:Kan ikke skrive til filen %1
 cannot_write_file:TR:Dosya yazılamıyor %1
 cannot_write_file:CA:No es pot escriure al fitxer %1
 
+overwrite_readonly_file:EN:File is read-only: %1
+overwrite_readonly_file:RU:Файл только для чтения: %1
+
 cannot_create_folder:EN:Unable to create directory %1
 cannot_create_folder:FR:Erreur lors de la création du répertoire %1
 cannot_create_folder:DE:Kann Ordner %1 nicht erstellen
@@ -3130,6 +3133,12 @@ Terminal.tooltip:BE:Terminal
 Terminal.tooltip:NB:Terminal
 Terminal.tooltip:TR:Terminal
 Terminal.tooltip:CA:Terminal
+
+TerminalPanel.label:EN:Terminal
+TerminalPanel.label:RU:Терминал
+
+TerminalPanel.tooltip:EN:Show/hide Terminal panel
+TerminalPanel.tooltip:RU:Открыть/закрыть панель терминала
 
 
 FindFile.label:EN:Find file
@@ -13614,6 +13623,12 @@ file_editor.close:EN:$[file_viewer.close]
 
 file_editor.open_anyway:EN:$[file_viewer.open_anyway]
 
+file_editor.save_anyway:EN:Save anyway
+file_editor.save_anyway:RU:Все равно сохранить
+
+file_editor.overwrite_readonly:EN:The file is read-only
+file_editor.overwrite_readonly:RU:Файл только для чтения
+
 
 ###############
 # Text editor #
@@ -13708,8 +13723,14 @@ text_editor.format:RU:Форматировать
 text_editor.writing:EN:Writing...
 text_editor.writing:RU:Сохраняю...
 
+text_editor.modified:EN:Modified
+text_editor.modified:RU:Изменен
+
 text_editor.saved:EN:File saved
 text_editor.saved:RU:Файл сохранен
+
+text_editor.cant_save_file:EN:Can't save file
+text_editor.cant_save_file:RU:Не удалось сохранить файл
 
 ####################
 # Shortcuts dialog #

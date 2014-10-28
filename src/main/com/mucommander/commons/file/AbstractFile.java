@@ -694,13 +694,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see    #getExtension()
      */
     public final String getNameWithoutExtension() {
-        String name;
-        int    position;
+        String name = getName();
+        int position = name.lastIndexOf('.');
 
-        name     = getName();
-        position = name.lastIndexOf('.');
-
-        if((position<=0) || (position == name.length() - 1))
+        if ((position <= 0) || (position == name.length() - 1))
             return name;
 
         return name.substring(0, position);
@@ -769,8 +766,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public final AbstractFile getChildSilently(String relativePath) {
         try {
             return getChild(relativePath);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return null;
         }
     }
@@ -792,7 +788,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws IOException in any of the cases listed above
      */
     public final AbstractFile getDirectChild(String filename) throws IOException {
-        if(filename.indexOf(getSeparator())!=-1)
+        if (filename.contains(getSeparator()))
             throw new IOException();
 
         AbstractFile childFile = getChild(filename);
@@ -829,8 +825,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public final void mkdirs() throws IOException, UnsupportedFileOperationException {
-        AbstractFile parent;
-        if(((parent=getParent())!=null) && !parent.exists())
+        AbstractFile parent = getParent();
+        if ((parent != null) && !parent.exists())
             parent.mkdirs();
 
         mkdir();
@@ -862,7 +858,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return the immediate ancestor of this <code>AbstractFile</code> if it has one, <code>this</code> otherwise
      */
     public final AbstractFile getAncestor() {
-        if(this instanceof ProxyFile)
+        if (this instanceof ProxyFile)
             return ((ProxyFile)this).getProxiedFile();
 
         return this;
@@ -885,13 +881,12 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         AbstractFile lastAncestor;
 
         do {
-            if(abstractFileClass.isAssignableFrom(ancestor.getClass()))
+            if (abstractFileClass.isAssignableFrom(ancestor.getClass()))
                 return (T) ancestor;
 
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        }
-        while(lastAncestor!=ancestor);
+        } while(lastAncestor!=ancestor);
 
         return null;
     }
@@ -904,7 +899,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final AbstractFile getTopAncestor() {
         AbstractFile topAncestor = this;
-        while(topAncestor.hasAncestor())
+        while (topAncestor.hasAncestor())
             topAncestor = topAncestor.getAncestor();
 
         return topAncestor;
@@ -936,7 +931,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         AbstractFile lastAncestor;
 
         do {
-            if(abstractFileClass.isAssignableFrom(ancestor.getClass()))
+            if (abstractFileClass.isAssignableFrom(ancestor.getClass()))
                 return true;
 
             lastAncestor = ancestor;
@@ -973,7 +968,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return the parent {@link AbstractArchiveFile} that contains this file
      */
     public final AbstractArchiveFile getParentArchive() {
-        if(hasAncestor(AbstractArchiveFile.class))
+        if (hasAncestor(AbstractArchiveFile.class))
             return getAncestor(AbstractArchiveFile.class);
         else if(hasAncestor(AbstractArchiveEntryFile.class))
             return getAncestor(AbstractArchiveEntryFile.class).getArchiveFile();
@@ -1260,7 +1255,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     protected final void deleteRecursively(AbstractFile file) throws IOException, UnsupportedFileOperationException {
-        if(file.isDirectory() && !file.isSymlink()) {
+        if (file.isDirectory() && !file.isSymlink()) {
             AbstractFile children[] = file.ls();
             for (AbstractFile child : children)
                 deleteRecursively(child);
@@ -1403,8 +1398,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         try {
             StreamUtils.readUntilEOF(cin);
             return cin.getChecksumString();
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             throw new FileTransferException(FileTransferException.READING_SOURCE);
         }
     }
@@ -1430,7 +1424,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #equalsCanonical(Object)
      */
     public boolean equals(Object o) {
-        if(o==null || !(o instanceof AbstractFile))
+        if (o == null || !(o instanceof AbstractFile))
             return false;
 
         return getURL().equals(((AbstractFile)o).getURL(), true, true);

@@ -79,7 +79,7 @@ public class CopyJob extends AbstractCopyJob {
         super(progressDialog, mainFrame, files, destFolder, newName, fileExistsAction);
 
         this.mode = mode;
-        this.errorDialogTitle = Translator.get(mode==Mode.DOWNLOAD ?"download_dialog.error_title":"copy_dialog.error_title");
+        this.errorDialogTitle = Translator.get(mode==Mode.DOWNLOAD ? "download_dialog.error_title" : "copy_dialog.error_title");
         scanDirectoryThread = new ScanDirectoryThread(files);
         scanDirectoryThread.start();
     }
@@ -181,7 +181,7 @@ public class CopyJob extends AbstractCopyJob {
                     }
 
                     return true;
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // file.ls() failed
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_folder", file.getName()));
                     // Retry loops

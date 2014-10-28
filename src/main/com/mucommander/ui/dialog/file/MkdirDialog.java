@@ -86,6 +86,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         super(mainFrame, ActionManager.getActionInstance(mkfileMode?MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID,mainFrame).getLabel(), mainFrame);
         this.mainFrame = mainFrame;
         this.mkfileMode = mkfileMode;
+        setStorageSuffix(mkfileMode ? "file" : "dir");
 
         Container contentPane = getContentPane();
 

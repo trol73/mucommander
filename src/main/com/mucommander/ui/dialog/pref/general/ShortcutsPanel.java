@@ -23,6 +23,7 @@ import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionProperties;
+import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 
@@ -160,7 +161,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		panel.add(new JLabel(Translator.get("shortcuts_panel.show") + ":"));
 		
-		final JComboBox<ActionCategory> combo = new JComboBox<>();
+		final MuComboBox<ActionCategory> combo = new MuComboBox<>();
 		combo.addItem(ActionCategory.ALL);
 	    for (ActionCategory category : ActionProperties.getActionCategories()) {
             combo.addItem(category);
@@ -264,7 +265,9 @@ public class ShortcutsPanel extends PreferencesPanel {
             public void run() {
 				try {
 					Thread.sleep(MESSAGE_SHOWING_TIME);
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+                    //
+                }
 				
 				if (!stopped)
 					showActionTooltip(lastActionTooltipShown);

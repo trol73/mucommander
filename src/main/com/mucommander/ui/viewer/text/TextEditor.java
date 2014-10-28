@@ -267,7 +267,6 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         int horizontalPos = getHorizontalScrollBar().getValue();
         int verticalPos = getVerticalScrollBar().getValue();
 
-
         try {
     		// Reload the file using the new encoding
     		// Note: loadDocument closes the InputStream

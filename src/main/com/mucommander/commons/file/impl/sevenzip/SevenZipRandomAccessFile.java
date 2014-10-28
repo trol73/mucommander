@@ -18,7 +18,10 @@
 package com.mucommander.commons.file.impl.sevenzip;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileOperation;
+import com.mucommander.commons.file.UnsupportedFileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
+import com.mucommander.commons.io.StreamUtils;
 import net.sf.sevenzipjbinding.IInStream;
 import net.sf.sevenzipjbinding.ISequentialInStream;
 import net.sf.sevenzipjbinding.SevenZipException;
@@ -27,13 +30,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 
 /**
- * @autor Oleg Trifonov
+ * @author  Oleg Trifonov
  */
 public class SevenZipRandomAccessFile implements IInStream, ISequentialInStream {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SevenZipRandomAccessFile.class);
+
+    private static final byte[] SIGNATURE_7ZIP = {0x37, 0x7A, (byte)0xBC, (byte)0xAF, 0x27 ,0x1C};
 
     private AbstractFile file;
 
@@ -43,12 +49,14 @@ public class SevenZipRandomAccessFile implements IInStream, ISequentialInStream 
 
     public SevenZipRandomAccessFile(AbstractFile file) throws UnsupportedFileOperationException {
         super();
-        position = 0;
+        this.position = 0;
         this.file = file;
         try {
-            stream = file.getInputStream();
+            this.stream = openStreamAndCheckSignature(file);
         } catch (IOException e) {
+            e.printStackTrace();
             LOGGER.trace("Error", e);
+            throw new UnsupportedFileOperationException(FileOperation.READ_FILE);
         }
     }
 
@@ -81,5 +89,27 @@ public class SevenZipRandomAccessFile implements IInStream, ISequentialInStream 
         } catch (IOException e) {
             throw new SevenZipException(e);
         }
+    }
+
+
+    private InputStream openStreamAndCheckSignature(AbstractFile file) throws IOException {
+        byte[] buf = new byte[16];
+        PushbackInputStream pushbackInputStream = file.getPushBackInputStream(buf.length);
+        int read = StreamUtils.readUpTo(pushbackInputStream, buf);
+        if (!checkSignature(buf)) {
+            pushbackInputStream.close();
+            throw new IOException("Wrong 7zip signature");
+        }
+        pushbackInputStream.unread(buf, 0, read);
+        return pushbackInputStream;
+    }
+
+    private static boolean checkSignature(byte[] data) {
+        for (int i = 0; i < SIGNATURE_7ZIP.length; i++) {
+            if (data[i] != SIGNATURE_7ZIP[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
