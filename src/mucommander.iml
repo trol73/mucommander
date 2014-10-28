@@ -26,6 +26,7 @@
     <orderEntry type="library" name="junrar" level="project" />
     <orderEntry type="library" name="yanfs" level="project" />
     <orderEntry type="library" name="testng" level="project" />
+    <orderEntry type="library" name="jediterm" level="project" />
   </component>
 </module>
 

@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.main.commandbar;
 
+import com.mucommander.ui.action.impl.*;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.WeakHashMap;
@@ -40,26 +42,26 @@ public class CommandBarAttributes {
     /** Command bar default actions */
     private static final String DEFAULT_ACTION_IDS[] = 
     {
-        com.mucommander.ui.action.impl.TerminalAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.ViewAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.EditAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.CopyAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.MoveAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.MkdirAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.DeleteAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.RefreshAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.CloseWindowAction.Descriptor.ACTION_ID
+        TerminalAction.Descriptor.ACTION_ID,
+    	ViewAction.Descriptor.ACTION_ID,
+    	EditAction.Descriptor.ACTION_ID,
+    	CopyAction.Descriptor.ACTION_ID,
+    	MoveAction.Descriptor.ACTION_ID,
+    	MkdirAction.Descriptor.ACTION_ID,
+    	DeleteAction.Descriptor.ACTION_ID,
+    	RefreshAction.Descriptor.ACTION_ID,
+    	CloseWindowAction.Descriptor.ACTION_ID
     };
     /** Command bar default alternate actions */
     private static final String DEFAULT_ALTERNATE_ACTION_IDS[] =
     {
-        null,
-        com.mucommander.ui.action.impl.ViewAsAction.Descriptor.ACTION_ID,
+        TerminalPanelAction.Descriptor.ACTION_ID,
+        ViewAsAction.Descriptor.ACTION_ID,
     	null,
-    	com.mucommander.ui.action.impl.LocalCopyAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.RenameAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.MkfileAction.Descriptor.ACTION_ID,
-    	com.mucommander.ui.action.impl.PermanentDeleteAction.Descriptor.ACTION_ID,
+    	LocalCopyAction.Descriptor.ACTION_ID,
+    	RenameAction.Descriptor.ACTION_ID,
+    	MkfileAction.Descriptor.ACTION_ID,
+    	PermanentDeleteAction.Descriptor.ACTION_ID,
     	null,
     	null
     };
@@ -67,7 +69,7 @@ public class CommandBarAttributes {
     private static KeyStroke DEFAULT_MODIFIER = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
     
     /** Contains all registered command-bar attributes listeners, stored as weak references */
-    private static WeakHashMap<CommandBarAttributesListener, ?> listeners = new WeakHashMap<CommandBarAttributesListener, Object>();
+    private static final WeakHashMap<CommandBarAttributesListener, ?> listeners = new WeakHashMap<CommandBarAttributesListener, Object>();
 
     /**
      * This method restore the default command-bar attributes.

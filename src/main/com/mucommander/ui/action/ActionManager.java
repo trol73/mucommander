@@ -18,28 +18,19 @@
 
 package com.mucommander.ui.action;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.WeakHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
-import com.mucommander.profiler.Profiler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ActionManager provides methods to retrieve {@link MuAction} instances and invoke them. It keeps track of all the
@@ -62,10 +53,10 @@ public class ActionManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
 	
     /** MuAction id -> factory map */
-    private static Map<String, ActionFactory> actionFactories = new Hashtable<String, ActionFactory>();
+    private static Map<String, ActionFactory> actionFactories = new Hashtable<>();
     
     /** MainFrame -> MuAction map */
-    private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>>();
+    private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
     
     /** Pattern to resolve the action ID from action class path */
     private final static Pattern pattern = Pattern.compile(".*\\.(.*)?Action");
@@ -239,6 +230,7 @@ public class ActionManager {
         registerAction(new CreateSymlinkAction.Descriptor(),                new CreateSymlinkAction.Factory());
         registerAction(new LocateSymlinkAction.Descriptor(),                new LocateSymlinkAction.Factory());
         registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
+        registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
 
     	// register "open with" commands as actions, to allow for keyboard shortcuts for them
     	for (Command command : CommandManager.commands()) {
@@ -341,8 +333,8 @@ public class ActionManager {
      */
     public static MuAction getActionInstance(ActionParameters actionParameters, MainFrame mainFrame) {
         Map<ActionParameters, ActionAndIdPair> mainFrameActions = mainFrameActionsMap.get(mainFrame);
-        if(mainFrameActions==null) {
-            mainFrameActions = new Hashtable<ActionParameters, ActionAndIdPair>();
+        if (mainFrameActions == null) {
+            mainFrameActions = new Hashtable<>();
             mainFrameActionsMap.put(mainFrame, mainFrameActions);
         }
 
@@ -362,14 +354,13 @@ public class ActionManager {
 
             Map<String,Object> properties = actionParameters.getInitProperties();
             // If no properties hashtable is specified in the action descriptor
-            if(properties==null) {
+            if (properties == null) {
             	properties = Collections.emptyMap();
             }
             // else clone the hashtable to ensure that it doesn't get modified by action instances.
             // Since cloning is an expensive operation, this is done only if the hashtable is not empty.
             else if(!properties.isEmpty()) {
-                Map<String,Object> buffer = new Hashtable<String,Object>(properties);
-                properties = buffer;
+                properties = new Hashtable<>(properties);
             }
 
             // Instantiate the MuAction class
@@ -424,13 +415,13 @@ public class ActionManager {
 
 
     /**
-     * Returns a Vector of all MuAction instances matching the specified action id.
+     * Returns a ArrayList of all MuAction instances matching the specified action id.
      *
      * @param muActionId the MuAction id to compare instances against
-     * @return  a Vector of all MuAction instances matching the specified action id
+     * @return  a ArrayList of all MuAction instances matching the specified action id
      */
     public static List<MuAction> getActionInstances(String muActionId) {
-        List<MuAction> actionInstances = new Vector<MuAction>();
+        List<MuAction> actionInstances = new ArrayList<>();
 
         // Iterate on all MainFrame instances
         for (Map<ActionParameters, ActionAndIdPair> actionParametersActionAndIdPairHashtable : mainFrameActionsMap.values()) {
