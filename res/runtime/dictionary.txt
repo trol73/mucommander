@@ -3134,6 +3134,12 @@ Terminal.tooltip:NB:Terminal
 Terminal.tooltip:TR:Terminal
 Terminal.tooltip:CA:Terminal
 
+TerminalPanel.label:EN:Terminal
+TerminalPanel.label:RU:Терминал
+
+TerminalPanel.tooltip:EN:Show/hide Terminal panel
+TerminalPanel.tooltip:RU:Открыть/закрыть панель терминала
+
 
 FindFile.label:EN:Find file
 FindFile.label:FR:Find file

@@ -21,6 +21,7 @@ package com.mucommander.commons.file.util;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.sun.jna.Native;
+import com.sun.jna.win32.W32APIOptions;
 
 /**
  * This class provides access to a static instance of the {@link com.mucommander.commons.file.util.Shell32API} interface,
@@ -40,7 +41,7 @@ public class Shell32 {
     static {
         if(OsFamily.WINDOWS.isCurrent()) {        // Don't even bother if we're not running Windows
             try {
-                INSTANCE = (Shell32API)Native.loadLibrary("shell32", Shell32API.class, Shell32API.DEFAULT_OPTIONS);
+                INSTANCE = (Shell32API)Native.loadLibrary("shell32", Shell32API.class, W32APIOptions.UNICODE_OPTIONS);
             }
             catch(Throwable e) {
                 // java.lang.UnsatisfiedLinkError is thrown if the CPU architecture is not supported by JNA.

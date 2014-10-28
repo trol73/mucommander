@@ -108,7 +108,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     private final static int TICK = 300;
 
     static {
-        instances = new Vector<FolderChangeMonitor>();
+        instances = new Vector<>();
 
         // Retrieve configuration values
         checkPeriod = MuConfigurations.getPreferences().getVariable(MuPreference.REFRESH_CHECK_PERIOD,
@@ -173,8 +173,11 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         while(monitorThread!=null) {
 			
             // Sleep for a while
-            try { Thread.sleep(TICK);}
-            catch(InterruptedException e) {}
+            try {
+                Thread.sleep(TICK);
+            } catch(InterruptedException e) {
+                // ignore exception
+            }
 			
             // Loop on instances
             nbInstances = instances.size();

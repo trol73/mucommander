@@ -21,6 +21,7 @@ package com.mucommander.commons.file.util;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.sun.jna.Native;
+import com.sun.jna.win32.W32APIOptions;
 
 /**
  * This class provides access to a static instance of the {@link com.mucommander.commons.file.util.Kernel32API} interface,
@@ -40,7 +41,7 @@ public class Kernel32 {
     static {
         if(OsFamily.WINDOWS.isCurrent()) {        // Don't even bother if we're not running Windows
             try {
-                INSTANCE = (Kernel32API)Native.loadLibrary("Kernel32", Kernel32API.class, Kernel32API.DEFAULT_OPTIONS);
+                INSTANCE = (Kernel32API)Native.loadLibrary("Kernel32", Kernel32API.class, W32APIOptions.UNICODE_OPTIONS);
             }
             catch(Throwable e) {
                 // java.lang.UnsatisfiedLinkError is thrown if the CPU architecture is not supported by JNA.

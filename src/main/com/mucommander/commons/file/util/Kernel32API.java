@@ -20,10 +20,13 @@
 package com.mucommander.commons.file.util;
 
 import com.sun.jna.Structure;
-import com.sun.jna.examples.win32.W32API;
+import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.LongByReference;
+import com.sun.jna.win32.StdCallLibrary;
 
 import java.nio.CharBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Exposes parts of the Windows Kernel32 API using the JNA (Java Native Access) library.
@@ -32,7 +35,7 @@ import java.nio.CharBuffer;
  * @see Kernel32
  * @author Maxence Bernard
  */
-public interface Kernel32API extends W32API {
+public interface Kernel32API extends StdCallLibrary {
 
     /** Custom alignment of structures. */
     int STRUCTURE_ALIGNMENT = Structure.ALIGN_NONE;
@@ -325,9 +328,9 @@ public interface Kernel32API extends W32API {
     // FindFirstFile function //
     ////////////////////////////
     /** Alias class for W32API.HANDLE. */
-    public final class FindFileHandle extends W32API.HANDLE {
+    public final class FindFileHandle extends WinNT.HANDLE {
     	public boolean isValid() {
-    		return this != W32API.INVALID_HANDLE_VALUE;
+    		return this != WinNT.INVALID_HANDLE_VALUE;
     	}
     }
 
@@ -359,6 +362,12 @@ public interface Kernel32API extends W32API {
     	/** An alternative name for the file.
     	 * This name is in the classic 8.3 file name format. */
     	public char[] cAlternateFileName = new char[14];
+
+        @Override
+        protected List getFieldOrder() {
+            return Arrays.asList("dwFileAttributes", "ftCreationTime", "ftLastAccessTime", "ftLastWriteTime", "nFileSizeHigh",
+                    "nFileSizeLow", "dwReserved0", "dwReserved1", "cFileName", "cAlternateFileName");
+        }
     }
 
     /**
