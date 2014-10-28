@@ -18,9 +18,11 @@
 
 package com.mucommander.ui.viewer;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
@@ -32,9 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileProtocols;
+import com.mucommander.commons.file.*;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.FileCollisionChecker;
 import com.mucommander.text.Translator;
@@ -65,14 +65,18 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     /**
      * Creates a new FileEditor.
      */
-    public FileEditor() {}
+    public FileEditor() {
+
+    }
 	
 
     protected void setSaveNeeded(boolean saveNeeded) {
     	if (getFrame() == null || this.saveNeeded == saveNeeded) {
             return;
         }
-
+        if (!this.saveNeeded && saveNeeded) {
+            getStatusBar().setStatusMessage(Translator.get("text_editor.modified"));
+        }
         this.saveNeeded = saveNeeded;
 
         // Marks/unmarks the window as dirty under Mac OS X (symbolized by a dot in the window closing icon)
@@ -81,7 +85,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         }
     }
     
-    private void trySaveAs() {
+    private boolean trySaveAs() {
         JFileChooser fileChooser = new JFileChooser();
 		AbstractFile currentFile = getCurrentFile();
         // Sets selected file in JFileChooser to current file
@@ -97,7 +101,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
                 destFile = FileFactory.getFile(fileChooser.getSelectedFile().getAbsolutePath(), true);
             } catch (IOException e) {
                 InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
-                return;
+                return false;
             }
 
             // Check for file collisions, i.e. if the file already exists in the destination
@@ -113,14 +117,16 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
                 }
                 // User chose to cancel or closed the dialog
                 else {
-                    return;
+                    return false;
                 }
             }
 
             if (trySave(destFile)) {
                 setCurrentFile(destFile);
+                return true;
             }
         }
+        return false;
     }
 
     // Returns false if an error occurred while saving the file.
@@ -128,10 +134,42 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         try {
             saveAs(destFile);
             return true;
-        } catch(IOException e) {
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException) {
+                if (!destFile.getPermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION)) {
+                    return trySaveReadOnly(destFile);
+                }
+            }
+            getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
             InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
             return false;
         }
+    }
+
+
+    private boolean trySaveReadOnly(AbstractFile destFile) {
+        QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get("file_editor.overwrite_readonly"), getFrame(),
+                new String[] {Translator.get("file_editor.save_anyway"), Translator.get("file_editor.save_as"), Translator.get("cancel")},
+                new int[]  {0, 1, JOptionPane.CLOSED_OPTION},
+                0);
+        int ret = dialog.getActionValue();
+        if (ret == 0) { // Overwrite
+            try {
+                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
+                saveAs(destFile);
+                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
+                return true;
+            } catch (IOException e) {
+                getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
+                InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
+            }
+        } else if (ret == 1) {  // Save as...
+            if (trySaveAs() ) {
+                return true;
+            }
+        }
+        getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
+        return false;
     }
 
     // Returns true if the file does not have any unsaved change or if the user refused to save the changes,

@@ -59,8 +59,11 @@ public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
 		MainFrame mainFrame = WindowManager.getCurrentMainFrame();
 
 		if (item.getURL().getScheme().equals(FileProtocols.FILE) && (item.hasAncestor(LocalFile.class))) {
-            try { DesktopManager.open(item); }
-            catch(IOException e) {}
+            try {
+                DesktopManager.open(item);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
         } else {
             // Copies non-local file in a temporary local file and opens them using their native association.
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
@@ -78,7 +81,7 @@ public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
 
 	@Override
     protected AbstractFile[] getData() {
-		return list.toArray(new AbstractFile[0]);
+		return list.toArray(new AbstractFile[list.size()]);
 	}
 
 	@Override

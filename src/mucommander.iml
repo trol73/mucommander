@@ -18,6 +18,15 @@
     <orderEntry type="library" name="icu4j-charset-detect-52_1" level="project" />
     <orderEntry type="library" name="image4j" level="project" />
     <orderEntry type="library" name="batik" level="project" />
+    <orderEntry type="library" name="jets3t" level="project" />
+    <orderEntry type="library" name="vim25" level="project" />
+    <orderEntry type="library" name="j2ssh" level="project" />
+    <orderEntry type="library" name="jcifs" level="project" />
+    <orderEntry type="library" name="jna" level="project" />
+    <orderEntry type="library" name="junrar" level="project" />
+    <orderEntry type="library" name="yanfs" level="project" />
+    <orderEntry type="library" name="testng" level="project" />
+    <orderEntry type="library" name="jediterm" level="project" />
   </component>
 </module>
 

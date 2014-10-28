@@ -106,8 +106,8 @@ public class TarInputStream extends InputStream {
         this.debug = false;
         this.hasHitEOF = false;
 
-        if(entryOffset>0) {
-            if((entryOffset%recordSize)!=0)
+        if (entryOffset > 0) {
+            if ((entryOffset % recordSize) != 0)
                 throw new IllegalArgumentException("entryOffset ("+entryOffset+") is not a multiple of recordSize ("+recordSize+")");
 
             skipBytes(entryOffset);
@@ -134,8 +134,7 @@ public class TarInputStream extends InputStream {
         if (!closed) {
             try {
                 buffer.close();
-            }
-            finally {
+            } finally {
                 BufferPool.releaseByteArray(recordBuf);
                 BufferPool.releaseByteArray(nameBuf);
                 BufferPool.releaseByteArray(oneBuf);
@@ -302,7 +301,7 @@ public class TarInputStream extends InputStream {
 
         if (currEntry != null && currEntry.isGNULongNameEntry()) {
             // read in the name
-            StringBuffer longName = new StringBuffer();
+            StringBuilder longName = new StringBuilder();
             int length;
             while ((length = read(nameBuf)) >= 0) {
                 longName.append(new String(nameBuf, 0, length));
@@ -436,7 +435,7 @@ public class TarInputStream extends InputStream {
 
         while (numToSkip > 0) {
             // If the record buffer has some data left, empty it
-            if(recordBufLeft>0) {
+            if (recordBufLeft > 0) {
                 int sz = (numToSkip > recordBufLeft)
                         ? recordBufLeft
                         : (int)numToSkip;
@@ -449,7 +448,7 @@ public class TarInputStream extends InputStream {
                 entryOffset += sz;
             }
             // Skip a whole block if there are enough bytes left to skip, and if we are at the end of the current block
-            else if(numToSkip>=blockSize && buffer.getCurrentRecordNum()==buffer.getRecordsPerBlock()-1) {
+            else if (numToSkip >= blockSize && buffer.getCurrentRecordNum() == buffer.getRecordsPerBlock()-1) {
                 if (!buffer.skipBlock()) {
                     // Unexpected EOF!
                     throw new EOFException("unexpected EOF with " + numToSkip + " bytes unskipped");
@@ -460,7 +459,7 @@ public class TarInputStream extends InputStream {
                 entryOffset += blockSize;
             }
             // Skip a whole record if there are enough bytes left to skip
-            else if(numToSkip>=recordSize) {
+            else if (numToSkip >= recordSize) {
                 if (!buffer.skipRecord()) {
                     // Unexpected EOF!
                     throw new EOFException("unexpected EOF with " + numToSkip + " bytes unskipped");

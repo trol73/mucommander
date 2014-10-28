@@ -27,7 +27,9 @@ import com.mucommander.job.CalculateChecksumJob;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CalculateChecksumAction;
+import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.DialogToolkit;
+import com.mucommander.ui.dialog.pref.component.PrefComboBox;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
@@ -54,7 +56,7 @@ import java.util.TreeSet;
  */
 public class CalculateChecksumDialog extends JobDialog implements ActionListener, ItemListener {
 
-    private JComboBox<String> algorithmComboBox = new JComboBox<String>();
+    private MuComboBox<String> algorithmComboBox = new MuComboBox<>();
     private JRadioButton specificLocationRadioButton;
     private JTextField specificLocationTextField;
     private JButton okButton;
@@ -86,7 +88,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         // Retrieve all MessageDigest instances and sort them by alphabetical order of their algorithm
 
         // Create a TreeSet with a custom Comparator
-        SortedSet<MessageDigest> algorithmSortedSet = new TreeSet<MessageDigest>(new Comparator<MessageDigest>() {
+        SortedSet<MessageDigest> algorithmSortedSet = new TreeSet<>(new Comparator<MessageDigest>() {
                     public int compare(MessageDigest md1, MessageDigest md2) {
                         return md1.getAlgorithm().compareTo(md2.getAlgorithm());
                     }
@@ -258,8 +260,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
                 ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("properties_dialog.calculating"));
                 CalculateChecksumJob job = new CalculateChecksumJob(progressDialog, mainFrame, files, checksumFile, digest);
                 progressDialog.start(job);
-            }
-            catch(IOException ex) {
+            } catch(IOException ex) {
                 // Note: FileFactory.getTemporaryFile() should never throw an IOException
 
                 showErrorDialog(Translator.get("invalid_path", specificLocationTextField.getText()));
@@ -275,12 +276,12 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
     public void itemStateChanged(ItemEvent e) {
         Object source = e.getSource();
 
-        if(source==specificLocationRadioButton) {
+        if (source == specificLocationRadioButton) {
             // Enables/disables the text field when the corresponding radio button's selected state has changed.
             specificLocationTextField.setEnabled(specificLocationRadioButton.isSelected());
             specificLocationTextField.requestFocus();
         }
-        else if(source==algorithmComboBox) {
+        else if (source == algorithmComboBox) {
             specificLocationTextField.setText(getChecksumFilename(getSelectedMessageDigest().getAlgorithm()));
         }
     }

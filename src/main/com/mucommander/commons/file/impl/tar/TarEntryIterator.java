@@ -95,11 +95,7 @@ class TarEntryIterator implements ArchiveEntryIterator {
      */
     private ArchiveEntry getNextEntry() throws IOException {
         TarEntry entry = tin.getNextEntry();
-
-        if(entry==null)
-            return null;
-
-        return createArchiveEntry(entry);
+        return entry == null ? null : createArchiveEntry(entry);
     }
 
 
@@ -110,7 +106,6 @@ class TarEntryIterator implements ArchiveEntryIterator {
     public ArchiveEntry nextEntry() throws IOException {
         // Get the next entry, if any
         this.currentEntry = getNextEntry();
-
         return currentEntry;
     }
 

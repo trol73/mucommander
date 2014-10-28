@@ -28,7 +28,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Created by trol on 23/05/14.
+ * Created on 23/05/14.
+ * @author Oleg Trifonov
  */
 public class SevenZipArchiveFile extends AbstractROArchiveFile {
 
@@ -71,7 +72,9 @@ public class SevenZipArchiveFile extends AbstractROArchiveFile {
             throw new IOException(e);
         } finally {
             try {
-                inArchive.close();
+                if (inArchive != null) {
+                    inArchive.close();
+                }
             } catch (SevenZipException e) {
                 System.err.println("Error closing archive: " + e);
             }
@@ -245,7 +248,7 @@ public class SevenZipArchiveFile extends AbstractROArchiveFile {
         }
 
         public void prepareOperation(ExtractAskMode extractAskMode) throws SevenZipException {
-System.out.println("prepare  " + index);
+//System.out.println("prepare  " + index);
         }
 
         public void setOperationResult(ExtractOperationResult extractOperationResult) throws SevenZipException {
@@ -262,7 +265,7 @@ System.out.println("prepare  " + index);
         }
 
         public void setCompleted(long completeValue) throws SevenZipException {
-System.out.println("completed  " + completeValue);
+//System.out.println("completed  " + completeValue);
         }
 
         public void setTotal(long total) throws SevenZipException {

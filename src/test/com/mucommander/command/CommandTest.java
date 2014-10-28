@@ -393,8 +393,8 @@ public class CommandTest {
         checkCommand(new Command(ALIAS, COMMAND, CommandType.INVISIBLE_COMMAND), CommandType.INVISIBLE_COMMAND, false);
 
         // Tests the 4 arguments constructor.
-        checkCommand(new Command(ALIAS, COMMAND, CommandType.NORMAL_COMMAND, DISPLAY_NAME), CommandType.NORMAL_COMMAND, true);
-        checkCommand(new Command(ALIAS, COMMAND, CommandType.SYSTEM_COMMAND, DISPLAY_NAME), CommandType.SYSTEM_COMMAND, true);
-        checkCommand(new Command(ALIAS, COMMAND, CommandType.INVISIBLE_COMMAND, DISPLAY_NAME), CommandType.INVISIBLE_COMMAND, true);
+        checkCommand(new Command(ALIAS, COMMAND, CommandType.NORMAL_COMMAND, DISPLAY_NAME, null), CommandType.NORMAL_COMMAND, true);
+        checkCommand(new Command(ALIAS, COMMAND, CommandType.SYSTEM_COMMAND, DISPLAY_NAME, null), CommandType.SYSTEM_COMMAND, true);
+        checkCommand(new Command(ALIAS, COMMAND, CommandType.INVISIBLE_COMMAND, DISPLAY_NAME, null), CommandType.INVISIBLE_COMMAND, true);
     }
 }

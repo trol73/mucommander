@@ -18,25 +18,6 @@
 
 package com.mucommander.ui.main;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
-import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Vector;
-import java.util.WeakHashMap;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.WindowConstants;
-import javax.swing.table.TableColumnModel;
-
 import com.apple.eawt.FullScreenUtilities;
 import com.mucommander.commons.file.AbstractArchiveEntryFile;
 import com.mucommander.commons.file.AbstractFile;
@@ -66,6 +47,21 @@ import com.mucommander.ui.main.table.FileTableConfiguration;
 import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
+import com.mucommander.ui.terminal.TerminalPanel;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.WeakHashMap;
 
 /**
  * This is the main frame, which contains all other UI components visible on a mucommander window.
@@ -84,6 +80,9 @@ public class MainFrame extends JFrame implements LocationListener {
     
     /** Active table in the MainFrame */
     private FileTable activeTable;
+
+    private TerminalPanel terminalPanel;
+    private JSplitPane terminalSplitPane;
 
     /** Toolbar panel */
     private JPanel toolbarPanel;
@@ -106,6 +105,8 @@ public class MainFrame extends JFrame implements LocationListener {
     /** Contains all registered ActivePanelListener instances, stored as weak references */
     private WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<ActivePanelListener, Object>();
 
+    private JPanel insetsPane;
+
     /**
      * Sets the window icon, using the best method (Java 1.6's Window#setIconImages when available, Window#setIconImage
      * otherwise) and icon resolution(s) (OS-dependent).
@@ -118,8 +119,8 @@ public class MainFrame extends JFrame implements LocationListener {
             return;
 
         // Use Java 1.6 's new Window#setIconImages(List<Image>) when available
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            java.util.List<Image> icons = new Vector<Image>();
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+            List<Image> icons = new ArrayList<>();
 
             // Start by adding a 16x16 image with 1-bit transparency, any OS should support that.
             icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon16_8.png").getImage());
@@ -182,7 +183,7 @@ public class MainFrame extends JFrame implements LocationListener {
         this.toolbarPanel.setVisible(MuConfigurations.getPreferences().getVariable(MuPreference.TOOLBAR_VISIBLE, MuPreferences.DEFAULT_TOOLBAR_VISIBLE));
         contentPane.add(toolbarPanel, BorderLayout.NORTH);
 
-        JPanel insetsPane = new JPanel(new BorderLayout()) {
+        insetsPane = new JPanel(new BorderLayout()) {
                 // Add an x=3,y=3 gap around content pane
                 @Override
                 public Insets getInsets() {
@@ -343,7 +344,7 @@ public class MainFrame extends JFrame implements LocationListener {
      * @param folderPanel the new active panel
      */
     private void fireActivePanelChanged(FolderPanel folderPanel) {
-        for(ActivePanelListener listener : activePanelListeners.keySet())
+        for (ActivePanelListener listener : activePanelListeners.keySet())
             listener.activePanelChanged(folderPanel);
     }
 
@@ -772,4 +773,38 @@ public class MainFrame extends JFrame implements LocationListener {
 	public void locationCancelled(LocationEvent locationEvent) { }
 
 	public void locationFailed(LocationEvent locationEvent) { }
+
+
+
+    public void showTerminalPanel(boolean show) {
+        if (terminalPanel == null && show) {
+            terminalPanel = new TerminalPanel(this);
+            terminalSplitPane = new JSplitPane();
+            terminalSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+            terminalSplitPane.setTopComponent(splitPane);
+            terminalSplitPane.setBottomComponent(terminalPanel);
+            int height = terminalPanel.loadHeight();
+            if (height >= 0) {
+                terminalSplitPane.setDividerLocation(height);
+            }
+
+            insetsPane.remove(splitPane);
+            insetsPane.add(terminalSplitPane, BorderLayout.CENTER);
+            revalidate();
+            activeTable.requestFocus();
+        } else if (terminalPanel != null && !show) {
+            terminalPanel.storeHeight(terminalSplitPane.getDividerLocation());
+            insetsPane.remove(terminalSplitPane);
+            insetsPane.add(splitPane, BorderLayout.CENTER);
+            revalidate();
+            activeTable.requestFocus();
+            terminalPanel = null;
+            terminalPanel = null;
+        }
+    }
+
+
+    public void toggleTerminalPanel() {
+        showTerminalPanel(terminalPanel == null || !terminalPanel.isVisible());
+    }
 }

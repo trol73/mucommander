@@ -68,7 +68,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
         // Retrieve available formats for single file or many file archives
         int nbFiles = files.size();
-        this.formats = Archiver.getFormats(nbFiles>1 || (nbFiles>0 && files.elementAt(0).isDirectory()));
+        this.formats = Archiver.getFormats(nbFiles > 1 || (nbFiles>0 && files.elementAt(0).isDirectory()));
         int nbFormats = formats.length;
 
         int initialFormat = formats[0];		// this value will only be used if last format is not available
@@ -87,7 +87,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tempPanel.add(new JLabel(Translator.get("pack_dialog.archive_format")));		
-        this.formatsComboBox = new JComboBox<String>();
+        this.formatsComboBox = new JComboBox<>();
         for(int format : formats)
             formatsComboBox.addItem(Archiver.getFormatName(format));
 

@@ -22,7 +22,11 @@ package com.mucommander.commons.file.util;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
-import com.sun.jna.examples.win32.W32API;
+import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.win32.StdCallLibrary;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Exposes parts of the Windows Shell32 API using the JNA (Java Native Access) library.
@@ -31,7 +35,7 @@ import com.sun.jna.examples.win32.W32API;
  * @see Shell32
  * @author Maxence Bernard
  */
-public interface Shell32API extends W32API {
+public interface Shell32API extends StdCallLibrary {
 
     //
     // Note that the C header "shellapi.h" includes "pshpack1.h", which disables automatic alignment of structure fields.
@@ -92,7 +96,7 @@ public interface Shell32API extends W32API {
     public static class SHFILEOPSTRUCT extends Structure {
 
         /** Window handle to the dialog box to display information about the status of the file operation. */
-        public HANDLE hwnd;
+        public WinNT.HANDLE hwnd;
         /** Value that indicates which operation to perform. The following values are accepted:
          *  FO_COPY, FO_DELETE, FO_MOVE or FO_RENAME */
         public int wFunc;
@@ -131,6 +135,10 @@ public interface Shell32API extends W32API {
             encodedPaths.append('\0');
 
             return encodedPaths.toString();
+        }
+
+        protected List getFieldOrder() {
+            return Arrays.asList("hwnd", "wFunc", "pFrom", "pTo", "fFlags", "fAnyOperationsAborted", "pNameMappings", "lpszProgressTitle");
         }
     }
 
@@ -173,7 +181,7 @@ public interface Shell32API extends W32API {
      * @param dwFlags a bitwise combination of SHERB_NOCONFIRMATION, SHERB_NOPROGRESSUI and SHERB_NOSOUND.
      * @return Returns S_OK (0) if successful, or a COM-defined error value otherwise.
      */
-    int SHEmptyRecycleBin(HANDLE hwnd, String pszRootPath, int dwFlags);
+    int SHEmptyRecycleBin(WinNT.HANDLE hwnd, String pszRootPath, int dwFlags);
 
 
     ////////////////////////////////
@@ -191,6 +199,11 @@ public interface Shell32API extends W32API {
         public long i64Size;
         /** The total number of items in the specified Recycle Bin. */
         public long i64NumItems;
+
+        @Override
+        protected List getFieldOrder() {
+            return Arrays.asList("cbSize", "i64Size", "i64NumItems");
+        }
     }
 
     /**
