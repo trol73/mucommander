@@ -84,7 +84,11 @@ public class FileGroupResolver {
     private void addMask(String mask, int group) {
         if (mask.startsWith("*.")) {
             String ext = mask.substring(2);
-            extensionsMap.put(ext, group);
+            if (ext.contains("*") || ext.contains("?")) {
+                filtersList.add(new ResolverRecord(group, mask));
+            } else {
+                extensionsMap.put(ext, group);
+            }
         } else {
             filtersList.add(new ResolverRecord(group, mask));
         }
