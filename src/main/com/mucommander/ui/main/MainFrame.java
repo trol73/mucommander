@@ -47,18 +47,13 @@ import com.mucommander.ui.main.table.FileTableConfiguration;
 import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
-import com.mucommander.ui.terminal.TerminalPanel;
+import com.mucommander.ui.terminal.MuTerminal;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -81,7 +76,7 @@ public class MainFrame extends JFrame implements LocationListener {
     /** Active table in the MainFrame */
     private FileTable activeTable;
 
-    private TerminalPanel terminalPanel;
+    private MuTerminal muTerminal;
     private JSplitPane terminalSplitPane;
 
     /** Toolbar panel */
@@ -700,7 +695,6 @@ public class MainFrame extends JFrame implements LocationListener {
     }
 
 
-
     ///////////////////
     // Inner classes //
     ///////////////////
@@ -777,34 +771,50 @@ public class MainFrame extends JFrame implements LocationListener {
 
 
     public void showTerminalPanel(boolean show) {
-        if (terminalPanel == null && show) {
-            terminalPanel = new TerminalPanel(this);
-            terminalSplitPane = new JSplitPane();
-            terminalSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-            terminalSplitPane.setTopComponent(splitPane);
-            terminalSplitPane.setBottomComponent(terminalPanel);
-            int height = terminalPanel.loadHeight();
-            if (height >= 0) {
-                terminalSplitPane.setDividerLocation(height);
+        if (show) {
+            if (muTerminal == null) {
+                muTerminal = new MuTerminal(this);
+                terminalSplitPane = new JSplitPane();
+                terminalSplitPane.setBorder(null);
+                terminalSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
             }
 
+            terminalSplitPane.setTopComponent(splitPane);
+            terminalSplitPane.setBottomComponent(muTerminal.getComponent());
+
+            int height = muTerminal.loadHeight();
+            if (height < 0) {
+                height = getHeight()/2;
+            }
+            terminalSplitPane.setDividerLocation(height);
+
+            muTerminal.show(true);
             insetsPane.remove(splitPane);
             insetsPane.add(terminalSplitPane, BorderLayout.CENTER);
+            muTerminal.updateTitle();
             revalidate();
-            activeTable.requestFocus();
-        } else if (terminalPanel != null && !show) {
-            terminalPanel.storeHeight(terminalSplitPane.getDividerLocation());
+            muTerminal.getComponent().requestFocusInWindow();
+        } else if (muTerminal != null) {
+            muTerminal.storeHeight(terminalSplitPane.getDividerLocation());
             insetsPane.remove(terminalSplitPane);
             insetsPane.add(splitPane, BorderLayout.CENTER);
+            muTerminal.show(false);
             revalidate();
             activeTable.requestFocus();
-            terminalPanel = null;
-            terminalPanel = null;
+            updateWindowTitle();
         }
     }
 
 
     public void toggleTerminalPanel() {
-        showTerminalPanel(terminalPanel == null || !terminalPanel.isVisible());
+        showTerminalPanel(muTerminal == null || !muTerminal.getComponent().isVisible());
     }
+
+
+    public void closeTerminalSession() {
+        showTerminalPanel(false);
+        muTerminal = null;
+        terminalSplitPane = null;
+    }
+
 }
