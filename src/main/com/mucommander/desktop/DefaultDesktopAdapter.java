@@ -20,6 +20,7 @@ package com.mucommander.desktop;
 
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +49,13 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     /** Multi-click interval, cached to avoid polling the value every time {@link #getMultiClickInterval()} is called */
     private static int multiClickInterval;
 
+    private String defaultShell;
+
     static {
         try {
             Integer value = ((Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval"));
-            if(value==null)
-                multiClickInterval = DEFAULT_MULTICLICK_INTERVAL;
-            else
-                multiClickInterval = value;
-        }
-        catch(Exception e) {
+            multiClickInterval = value == null ? DEFAULT_MULTICLICK_INTERVAL : value;
+        } catch(Exception e) {
             LOGGER.debug("Error while retrieving multi-click interval value desktop property", e);
 
             multiClickInterval = DEFAULT_MULTICLICK_INTERVAL;
@@ -140,7 +139,25 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * Returns <code>/bin/sh -l -c"</code>.
      * @return <code>/bin/sh -l -c"</code>.
      */
-    public String getDefaultShell() {return "/bin/sh -l -c";}
+    public String getDefaultShell() {
+        return getDefaultShellPath() + " -l -c";
+    }
+
+
+    public String getDefaultShellPath() {
+        if (defaultShell == null) {
+            if (new File("/bin/zsh").exists()) {
+                defaultShell = "/bin/zsh";
+            } else if (new File("/bin/sh").exists()) {
+                defaultShell = "/bin/sh";
+            } else if (new File("/bin/bash").exists()) {
+                defaultShell = "/bin/bash";
+            } else {
+                defaultShell = "/bin/sh";
+            }
+        }
+        return defaultShell;
+    }
 
     /**
      * Always returns <code>false</code>.

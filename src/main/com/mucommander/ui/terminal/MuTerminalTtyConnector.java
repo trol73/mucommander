@@ -22,6 +22,7 @@ import com.google.common.collect.Maps;
 import com.jediterm.pty.PtyProcessTtyConnector;
 import com.jediterm.terminal.LoggingTtyConnector;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.desktop.DesktopManager;
 import com.pty4j.PtyProcess;
 import com.pty4j.unix.Pty;
 import com.pty4j.unix.UnixPtyProcess;
@@ -73,7 +74,7 @@ public class MuTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
 
     private static PtyProcess createPtyProcess(String directory) throws IOException {
         Map<String, String> envs = Maps.newHashMap(System.getenv());
-        envs.put("TERM", "xterm");
+        envs.put("TERM", "xterm-256color");
         String[] command;
 
         switch (OsFamily.getCurrent()) {
@@ -81,7 +82,7 @@ public class MuTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
                 command = new String[]{"cmd.exe"};
                 break;
             default:
-                command = new String[]{"/bin/zsh", "--login"};
+                command = new String[]{DesktopManager.getDefaultShellTerminal(), "--login"};
         }
         if (Platform.isWindows()) {
             return new WinPtyProcess(command, PtyUtil.toStringArray(envs), directory);
