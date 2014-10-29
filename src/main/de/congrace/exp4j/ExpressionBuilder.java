@@ -55,6 +55,7 @@ public class ExpressionBuilder {
 	}
 
 	private List<Character> getValidOperators() {
+	    //TODO - change non-ascii paragraph sign to '\u00a7'
 		return Arrays.asList('!', '#', '§', '$', '&', ';', ':', '~', '<', '>', '|', '=', '^');
 	}
 
@@ -260,6 +261,7 @@ public class ExpressionBuilder {
 		for (CustomOperator op : customOperators.values()) {
 			for (int i = 0; i < op.symbol.length(); i++) {
 				if (!validOperatorSymbols.contains(op.symbol.charAt(i))) {
+				    //TODO - change non-ascii paragraph sign to '\u00a7'
 					throw new UnparsableExpressionException("" + op.symbol
 							+ " is not a valid symbol for an operator please choose from: !,#,§,$,&,;,:,~,<,>,|,=");
 				}
