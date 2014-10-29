@@ -1,12 +1,29 @@
+/*
+ * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * Copyright (C) 2013-2014 Oleg Trifonov
+ *
+ * muCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * muCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mucommander.ui.terminal;
 
-import com.jediterm.terminal.display.BackBuffer;
-import com.jediterm.terminal.display.StyleState;
+import com.jediterm.terminal.model.StyleState;
+import com.jediterm.terminal.model.TerminalTextBuffer;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.commandbar.CommandBarAttributes;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 
 /**
@@ -17,24 +34,38 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
 
     private final MainFrame mainFrame;
 
-    public JediTerminalPanelEx(@NotNull SettingsProvider settingsProvider, @NotNull BackBuffer backBuffer,
+    public JediTerminalPanelEx(@NotNull SettingsProvider settingsProvider, @NotNull TerminalTextBuffer terminalTextBuffer,
                                @NotNull StyleState styleState, MainFrame mainFrame) {
-        super(settingsProvider, backBuffer, styleState);
+        super(settingsProvider, terminalTextBuffer, styleState);
         this.mainFrame = mainFrame;
-    }
-
-
-    public Dimension getCharSize() {
-        return myCharSize;
     }
 
 
     @Override
     public void processKeyEvent(KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2 && e.getModifiers() == KeyEvent.SHIFT_MASK) {
+        final int id = e.getID();
+        if (id == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2 && e.getModifiers() == KeyEvent.SHIFT_MASK) {
             mainFrame.showTerminalPanel(false);
             return;
+        } else if (id == KeyEvent.KEY_PRESSED) {
+            myKeyListener.keyPressed(e);
+        } else if (id == KeyEvent.KEY_TYPED) {
+            myKeyListener.keyTyped(e);
         }
-        super.processKeyEvent(e);
+
+        if (e.getKeyCode() == CommandBarAttributes.getModifier().getKeyCode()) {
+            if (id == KeyEvent.KEY_PRESSED) {
+                mainFrame.getCommandBar().keyPressed(e);
+            } else if (id == KeyEvent.KEY_RELEASED) {
+                mainFrame.getCommandBar().keyReleased(e);
+            }
+
+        }
+
+        e.consume();
+        //mainFrame.dispatchEvent(e);
+        //super.processKeyEvent(e);
     }
+
+
 }
