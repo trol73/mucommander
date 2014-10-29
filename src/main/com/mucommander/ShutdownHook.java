@@ -93,8 +93,9 @@ public class ShutdownHook extends Thread {
         catch(Exception e) {LOGGER.warn("Failed to save snapshot", e);}
         
         // Save preferences
-        try {MuConfigurations.savePreferences();}
-        catch(Exception e) {LOGGER.warn("Failed to save configuration", e);}
+        // Don't need to save preferences on shutdown because it saves in Preferences edit dialog on Ok pressed
+//        try {MuConfigurations.savePreferences();}
+//        catch(Exception e) {LOGGER.warn("Failed to save configuration", e);}
 
         // Save shell history
         try {ShellHistoryManager.writeHistory();}
@@ -109,14 +110,14 @@ public class ShutdownHook extends Thread {
         catch(Exception e) {LOGGER.warn("Failed to save bookmarks", e);}
 
         // Saves the current theme.
-        try {ThemeManager.saveCurrentTheme();}
-        catch(Exception e) {LOGGER.warn("Failed to save user theme", e);}
+//        try {ThemeManager.saveCurrentTheme();}
+//        catch(Exception e) {LOGGER.warn("Failed to save user theme", e);}
 
         // Saves the file associations.
-        try {CommandManager.writeCommands();}
-        catch(Exception e) {LOGGER.warn("Failed to save commands", e);}
-        try {CommandManager.writeAssociations();}
-        catch(Exception e) {LOGGER.warn("Failed to save associations", e);}
+//        try {CommandManager.writeCommands();}
+//        catch(Exception e) {LOGGER.warn("Failed to save commands", e);}
+//        try {CommandManager.writeAssociations();}
+//        catch(Exception e) {LOGGER.warn("Failed to save associations", e);}
         
         // Saves the action keymap.
         try { ActionKeymapIO.saveActionKeymap(); }

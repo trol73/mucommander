@@ -28,7 +28,6 @@ import com.jediterm.terminal.ui.TerminalSession;
 import com.jediterm.terminal.ui.TerminalWidget;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.cache.WindowsStorage;
-import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.main.MainFrame;
 import com.pty4j.PtyProcess;
 
@@ -142,6 +141,7 @@ public class MuTerminal {
         if (!show) {
             return;
         }
+
 //        try {
 //            termWidget.getCurrentSession().getTtyConnector().write("cd " + getCurrentFolder() + "\n");
 //        } catch (IOException e) {
@@ -149,7 +149,7 @@ public class MuTerminal {
 //        }
 
         try {
-System.out.println(getCurrentFolder());
+//System.out.println(getCurrentFolder());
             PtyProcess.exec(new String[]{"cd", getCurrentFolder()});
         } catch (IOException e) {
             e.printStackTrace();

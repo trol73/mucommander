@@ -103,6 +103,11 @@ public class FileGroupsPanel extends ThemeEditorPanel {
             MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
             prefs.setVariable(preference, fileMasks[i].getText().trim());
         }
+        try {
+            MuConfigurations.savePreferences();
+        } catch(Exception e) {
+            // TODO
+        }
         FileGroupResolver.getInstance().init();
     }
 }

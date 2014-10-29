@@ -19,6 +19,7 @@
 package com.mucommander.ui.chooser;
 
 import com.mucommander.text.Translator;
+import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.layout.YBoxPanel;
 
 import javax.swing.*;
@@ -83,7 +84,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
         setAlignmentX(LEFT_ALIGNMENT);
 
         // Font families.
-        families      = new JComboBox<String>();
+        families      = new MuComboBox<>();
         familyNames   = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         selectedIndex = 0;
         for(int i = 0; i < familyNames.length; i++) {

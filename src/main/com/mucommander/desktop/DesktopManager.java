@@ -577,6 +577,12 @@ public class DesktopManager {
         return desktop.getDefaultShell();
     }
 
+
+    public static String getDefaultShellTerminal() {
+        checkInit();
+        return desktop.getDefaultShellPath();
+    }
+
     /**
      * Returns <code>true</code> if the given file is an application file. What an application file actually is
      * is system-dependent and can take various forms.
