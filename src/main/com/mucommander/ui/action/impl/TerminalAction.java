@@ -71,8 +71,8 @@ public class TerminalAction extends ParentFolderAction {
 
     private static String getConsoleCommand(AbstractFile folder) {
         String cmd;
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL)) {
-            cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL);
+        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL)) {
+            cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
         } else {
             cmd = getDefaultTerminalCommand();
         }
@@ -107,7 +107,7 @@ public class TerminalAction extends ParentFolderAction {
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0); }
+        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK); }
     }
 
 }

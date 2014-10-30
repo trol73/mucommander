@@ -245,17 +245,15 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param comp         component to register as a listener on the color buttons.
      */
     protected PreviewLabel addColorButtons(ProportionalGridPanel gridPanel, FontChooser fontChooser, String label, int foregroundId, int backgroundId, JComponent comp) {
-        ColorButton  colorButton;
-        PreviewLabel previewLabel;
-
         // Adds the row's caption label.
         gridPanel.add(createCaptionLabel(label));
 
         // Initialises the color buttons' preview label.
-        previewLabel = new PreviewLabel();
+        PreviewLabel previewLabel = new PreviewLabel();
         previewLabel.setTextPainted(true);
         addFontChooserListener(fontChooser, previewLabel);
 
+        ColorButton colorButton;
         // Creates the foreground color button.
         if (foregroundId >= 0 ) {
             gridPanel.add(colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel));

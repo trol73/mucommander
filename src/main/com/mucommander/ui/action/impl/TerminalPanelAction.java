@@ -72,7 +72,7 @@ public class TerminalPanelAction extends MuAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK);
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
         }
     }
 }

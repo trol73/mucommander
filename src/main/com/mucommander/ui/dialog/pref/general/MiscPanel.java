@@ -33,6 +33,7 @@ import com.mucommander.bonjour.BonjourDirectory;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.impl.TerminalAction;
@@ -82,12 +83,17 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     /** Shell encoding select box. */
     private PrefEncodingSelectBox shellEncodingSelectBox;
 
-    /** Custom console command text field */
-    private PrefTextField customTerminalField;
+    /** Custom external terminal command text field */
+    private PrefTextField customExternalTerminalField;
 
-    /** 'Use custom console' radio button */
-    private PrefRadioButton useCustomTerminalRadioButton;
+    /** 'Use custom external terminal' radio button */
+    private PrefRadioButton useCustomExternalTerminalRadioButton;
 
+    /** Custom builtin terminal command text field */
+    private PrefTextField customTerminalShellField;
+
+    /** 'Use custom builtin terminal shell' radio button */
+    private PrefRadioButton useCustomTerminalShellRadioButton;
 
 
     private JPanel createShellEncodingPanel(PreferencesDialog parent) {
@@ -120,6 +126,8 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     public MiscPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.misc_tab"));
 
+        final MuPreferencesAPI pref = MuConfigurations.getPreferences();
+
         setLayout(new BorderLayout());
 
         YBoxPanel northPanel = new YBoxPanel();
@@ -127,12 +135,12 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         JRadioButton useDefaultShellRadioButton = new JRadioButton(Translator.get("prefs_dialog.default_shell") + ':');
         useCustomShellRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_shell") + ':') {
 			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL);
+				return isSelected() != pref.getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL);
 			}
         };
 
         // Use system default or custom shell ?
-        if(MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
+        if (pref.getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
             useCustomShellRadioButton.setSelected(true);
         else
             useDefaultShellRadioButton.setSelected(true);
@@ -149,9 +157,9 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         shellPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.shell")));
 
         // Create a path field with auto-completion capabilities
-        customShellField = new PrefFilePathField(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_SHELL, "")) {
+        customShellField = new PrefFilePathField(pref.getVariable(MuPreference.CUSTOM_SHELL, "")) {
 			public boolean hasChanged() {
-				return isEnabled() && !getText().equals(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_SHELL));
+				return isEnabled() && !getText().equals(pref.getVariable(MuPreference.CUSTOM_SHELL));
 			}
         };
         customShellField.setEnabled(useCustomShellRadioButton.isSelected());
@@ -165,84 +173,120 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         northPanel.addSpace(10);
 
 
-        // Terminal panel
-        XAlignedComponentPanel terminalPanel = new XAlignedComponentPanel();
-        terminalPanel.setLabelLeftAligned(true);
-        terminalPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.terminal")));
+        // External Terminal panel
+        XAlignedComponentPanel externalTerminalPanel = new XAlignedComponentPanel();
+        externalTerminalPanel.setLabelLeftAligned(true);
+        externalTerminalPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.external_terminal")));
 
-        JRadioButton useDefaultTerminalRadioButton = new JRadioButton(Translator.get("prefs_dialog.default_terminal") + ':');
-        useCustomTerminalRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_terminal") + ':') {
+        JRadioButton useDefaultExternalTerminalRadioButton = new JRadioButton(Translator.get("prefs_dialog.default_terminal") + ':');
+        useCustomExternalTerminalRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_terminal") + ':') {
             public boolean hasChanged() {
-                return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL);
+                return isSelected() != pref.getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
             }
         };
 
         // Create a path field with auto-completion capabilities
-        customTerminalField = new PrefFilePathField(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL, "")) {
+        customExternalTerminalField = new PrefFilePathField(pref.getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL, "")) {
             public boolean hasChanged() {
-                return isEnabled() && !getText().equals(MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_TERMINAL));
+                return isEnabled() && !getText().equals(pref.getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL));
             }
         };
 
-        terminalPanel.addRow(useDefaultTerminalRadioButton, new JLabel(TerminalAction.getDefaultTerminalCommand()), 5);
-        terminalPanel.addRow(useCustomTerminalRadioButton, customTerminalField, 10);
+        externalTerminalPanel.addRow(useDefaultExternalTerminalRadioButton, new JLabel(TerminalAction.getDefaultTerminalCommand()), 5);
+        externalTerminalPanel.addRow(useCustomExternalTerminalRadioButton, customExternalTerminalField, 10);
 
-        northPanel.add(terminalPanel, 5);
-
+        northPanel.add(externalTerminalPanel, 5);
         northPanel.addSpace(10);
 
-        // Use system default or custom terminal ?
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_TERMINAL))
-            useCustomTerminalRadioButton.setSelected(true);
+        // Use system default or custom external terminal ?
+        if (pref.getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL))
+            useCustomExternalTerminalRadioButton.setSelected(true);
         else
-            useDefaultTerminalRadioButton.setSelected(true);
-        customTerminalField.setEnabled(useCustomTerminalRadioButton.isSelected());
+            useDefaultExternalTerminalRadioButton.setSelected(true);
+        customExternalTerminalField.setEnabled(useCustomExternalTerminalRadioButton.isSelected());
 
-        useCustomTerminalRadioButton.addItemListener(this);
+        useCustomExternalTerminalRadioButton.addItemListener(this);
 
         buttonGroup = new ButtonGroup();
-        buttonGroup.add(useDefaultTerminalRadioButton);
-        buttonGroup.add(useCustomTerminalRadioButton);
+        buttonGroup.add(useDefaultExternalTerminalRadioButton);
+        buttonGroup.add(useCustomExternalTerminalRadioButton);
 
 
+        // Builtin Terminal panel
+        XAlignedComponentPanel terminalPanel = new XAlignedComponentPanel();
+        terminalPanel.setLabelLeftAligned(true);
+        terminalPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.builtin_terminal")));
+
+        JRadioButton useDefaultTerminalShellRadioButton = new JRadioButton(Translator.get("prefs_dialog.default_shell") + ':');
+        useCustomTerminalShellRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_shell") + ':') {
+            public boolean hasChanged() {
+                return isSelected() != pref.getVariable(MuPreference.TERMINAL_USE_CUSTOM_SHELL, MuPreferences.DEFAULT_TERMINAL_USE_CUSTOM_SHELL);
+            }
+        };
+
+        // Create a path field with auto-completion capabilities
+        customTerminalShellField = new PrefFilePathField(pref.getVariable(MuPreference.TERMINAL_SHELL, "")) {
+            public boolean hasChanged() {
+                return isEnabled() && !getText().equals(pref.getVariable(MuPreference.TERMINAL_SHELL));
+            }
+        };
+
+        terminalPanel.addRow(useDefaultTerminalShellRadioButton, new JLabel(DesktopManager.getDefaultTerminalShellCommand()), 5);
+        terminalPanel.addRow(useCustomTerminalShellRadioButton, customTerminalShellField, 10);
+
+        northPanel.add(terminalPanel, 5);
+        northPanel.addSpace(10);
+
+        // Use system default or custom builtin terminal ?
+        if (pref.getVariable(MuPreference.TERMINAL_USE_CUSTOM_SHELL, MuPreferences.DEFAULT_TERMINAL_USE_CUSTOM_SHELL))
+            useCustomTerminalShellRadioButton.setSelected(true);
+        else
+            useDefaultTerminalShellRadioButton.setSelected(true);
+        customTerminalShellField.setEnabled(useCustomTerminalShellRadioButton.isSelected());
+
+        useCustomTerminalShellRadioButton.addItemListener(this);
+
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(useCustomTerminalShellRadioButton);
+        buttonGroup.add(useDefaultTerminalShellRadioButton);
 
 
         // 'Show splash screen' option
         showSplashScreenCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_splash_screen")) {
 			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
+				return isSelected() != pref.getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
 			}
         };
-        showSplashScreenCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN));
+        showSplashScreenCheckBox.setSelected(pref.getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN));
         northPanel.add(showSplashScreenCheckBox);
 
         // 'Check for updates on startup' option
         checkForUpdatesCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.check_for_updates_on_startup")) {
 			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE);
+				return isSelected() != pref.getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE);
 			}
         };
-        checkForUpdatesCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE));
+        checkForUpdatesCheckBox.setSelected(pref.getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE));
         northPanel.add(checkForUpdatesCheckBox);
 
         // 'Show confirmation dialog on quit' option
         quitConfirmationCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.confirm_on_quit")) {
 			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.CONFIRM_ON_QUIT, MuPreferences.DEFAULT_CONFIRM_ON_QUIT);
+				return isSelected() != pref.getVariable(MuPreference.CONFIRM_ON_QUIT, MuPreferences.DEFAULT_CONFIRM_ON_QUIT);
 			}
         };
-        quitConfirmationCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.CONFIRM_ON_QUIT, MuPreferences.DEFAULT_CONFIRM_ON_QUIT));
+        quitConfirmationCheckBox.setSelected(pref.getVariable(MuPreference.CONFIRM_ON_QUIT, MuPreferences.DEFAULT_CONFIRM_ON_QUIT));
         northPanel.add(quitConfirmationCheckBox);
 
         // 'Enable system notifications' option, displayed only if current platform supports system notifications
         if (AbstractNotifier.isAvailable()) {
             systemNotificationsCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.enable_system_notifications")+" ("+AbstractNotifier.getNotifier().getPrettyName()+")") {
 				public boolean hasChanged() {
-					return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS,
+					return isSelected() != pref.getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS,
                             								MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS);
 				}
             };
-            systemNotificationsCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS,
+            systemNotificationsCheckBox.setSelected(pref.getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS,
                                                                                      MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS));
             northPanel.add(systemNotificationsCheckBox);
         }
@@ -250,20 +294,21 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         // 'Enable Bonjour services discovery' option
         bonjourDiscoveryCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.enable_bonjour_discovery")) {
 			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY,
+				return isSelected() != pref.getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY,
                         									MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY);
 			}
         };
-        bonjourDiscoveryCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY,
-                                                                              MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY));
+        bonjourDiscoveryCheckBox.setSelected(pref.getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY));
         northPanel.add(bonjourDiscoveryCheckBox);
 
         add(northPanel, BorderLayout.NORTH);
         
         customShellField.addDialogListener(parent);
     	useCustomShellRadioButton.addDialogListener(parent);
-        useCustomTerminalRadioButton.addDialogListener(parent);
-        customTerminalField.addDialogListener(parent);
+        useCustomExternalTerminalRadioButton.addDialogListener(parent);
+        customExternalTerminalField.addDialogListener(parent);
+        useCustomTerminalShellRadioButton.addDialogListener(parent);
+        customTerminalShellField.addDialogListener(parent);
     	checkForUpdatesCheckBox.addDialogListener(parent);
     	quitConfirmationCheckBox.addDialogListener(parent);
         showSplashScreenCheckBox.addDialogListener(parent);
@@ -286,8 +331,10 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
             customShellField.setEnabled(useCustomShellRadioButton.isSelected());
         } else if (source == shellEncodingautoDetectCheckbox) {
             shellEncodingSelectBox.setEnabled(!shellEncodingautoDetectCheckbox.isSelected());
-        } else if (source == useCustomTerminalRadioButton) {
-            customTerminalField.setEnabled(useCustomTerminalRadioButton.isSelected());
+        } else if (source == useCustomExternalTerminalRadioButton) {
+            customExternalTerminalField.setEnabled(useCustomExternalTerminalRadioButton.isSelected());
+        } else if (source == useCustomTerminalShellRadioButton) {
+            customTerminalShellField.setEnabled(useCustomTerminalShellRadioButton.isSelected());
         }
     }
 
@@ -298,34 +345,37 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
 
     @Override
     protected void commit() {
-    	MuConfigurations.getPreferences().setVariable(MuPreference.CHECK_FOR_UPDATE, checkForUpdatesCheckBox.isSelected());
+        MuPreferencesAPI pref = MuConfigurations.getPreferences();
+    	pref.setVariable(MuPreference.CHECK_FOR_UPDATE, checkForUpdatesCheckBox.isSelected());
 
         // Saves the shell data.
-    	MuConfigurations.getPreferences().setVariable(MuPreference.USE_CUSTOM_SHELL, useCustomShellRadioButton.isSelected());
-        MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_SHELL, customShellField.getText());
+    	pref.setVariable(MuPreference.USE_CUSTOM_SHELL, useCustomShellRadioButton.isSelected());
+        pref.setVariable(MuPreference.CUSTOM_SHELL, customShellField.getText());
 
         // Saves the shell encoding data.
         boolean isAutoDetect = shellEncodingautoDetectCheckbox.isSelected();
-        MuConfigurations.getPreferences().setVariable(MuPreference.AUTODETECT_SHELL_ENCODING, isAutoDetect);
+        pref.setVariable(MuPreference.AUTODETECT_SHELL_ENCODING, isAutoDetect);
         if (!isAutoDetect) {
-            MuConfigurations.getPreferences().setVariable(MuPreference.SHELL_ENCODING, shellEncodingSelectBox.getSelectedEncoding());
+            pref.setVariable(MuPreference.SHELL_ENCODING, shellEncodingSelectBox.getSelectedEncoding());
         }
-        MuConfigurations.getPreferences().setVariable(MuPreference.USE_CUSTOM_TERMINAL, useCustomTerminalRadioButton.isSelected());
-        MuConfigurations.getPreferences().setVariable(MuPreference.CUSTOM_TERMINAL, customTerminalField.getText());
+        pref.setVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, useCustomExternalTerminalRadioButton.isSelected());
+        pref.setVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL, customExternalTerminalField.getText());
 
+        pref.setVariable(MuPreference.TERMINAL_USE_CUSTOM_SHELL, useCustomTerminalShellRadioButton.isSelected());
+        pref.setVariable(MuPreference.TERMINAL_SHELL, customTerminalShellField.getText());
 
-        MuConfigurations.getPreferences().setVariable(MuPreference.CONFIRM_ON_QUIT, quitConfirmationCheckBox.isSelected());
-        MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_SPLASH_SCREEN, showSplashScreenCheckBox.isSelected());
+        pref.setVariable(MuPreference.CONFIRM_ON_QUIT, quitConfirmationCheckBox.isSelected());
+        pref.setVariable(MuPreference.SHOW_SPLASH_SCREEN, showSplashScreenCheckBox.isSelected());
 
         boolean enabled;
         if (systemNotificationsCheckBox != null) {
             enabled = systemNotificationsCheckBox.isSelected();
-            MuConfigurations.getPreferences().setVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, enabled);
+            pref.setVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, enabled);
             AbstractNotifier.getNotifier().setEnabled(enabled);
         }
 
         enabled = bonjourDiscoveryCheckBox.isSelected();
-        MuConfigurations.getPreferences().setVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, enabled);
+        pref.setVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, enabled);
         BonjourDirectory.setActive(enabled);
     }
 }

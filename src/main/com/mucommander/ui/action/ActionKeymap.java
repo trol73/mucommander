@@ -33,9 +33,9 @@ import java.util.Iterator;
 public class ActionKeymap {
 
     /** Maps action id onto Keystroke instances */
-    private static HashMap<String, KeyStroke> customPrimaryActionKeymap = new HashMap<String, KeyStroke>();
+    private static HashMap<String, KeyStroke> customPrimaryActionKeymap = new HashMap<>();
     /** Maps action id instances onto Keystroke instances */
-    private static HashMap<String, KeyStroke> customAlternateActionKeymap = new HashMap<String, KeyStroke>();
+    private static HashMap<String, KeyStroke> customAlternateActionKeymap = new HashMap<>();
     /** Maps Keystroke instances onto action id */
     private static AcceleratorMap acceleratorMap = new AcceleratorMap();
 
@@ -50,15 +50,14 @@ public class ActionKeymap {
      */
     public static void registerActions(MainFrame mainFrame) {
         Iterator<String> actionIds = ActionManager.getActionIds();
-        String actionId;
-        ActionDescriptor actionDescriptor;
-        while(actionIds.hasNext()) {
-            actionId = actionIds.next();
-            actionDescriptor = ActionProperties.getActionDescriptor(actionId);
+
+        while (actionIds.hasNext()) {
+            String actionId = actionIds.next();
+            ActionDescriptor actionDescriptor = ActionProperties.getActionDescriptor(actionId);
 
             // Instantiate the action only if it is not parameterized: parameterized actions should only be instantiated
             // when they are needed and with the required parameters.
-            if(!actionDescriptor.isParameterized()) {
+            if (!actionDescriptor.isParameterized()) {
                 registerAction(mainFrame, ActionManager.getActionInstance(actionId, mainFrame));
             }
         }
@@ -221,7 +220,7 @@ public class ActionKeymap {
      * @return Iterator of actions that their accelerators were customized.
      */
     public static Iterator<String> getCustomizedActions() {
-    	HashSet<String> modifiedActions = new HashSet<String>();
+    	HashSet<String> modifiedActions = new HashSet<>();
     	modifiedActions.addAll(customPrimaryActionKeymap.keySet());
     	modifiedActions.addAll(customAlternateActionKeymap.keySet());
     	return modifiedActions.iterator();

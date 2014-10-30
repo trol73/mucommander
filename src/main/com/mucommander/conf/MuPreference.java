@@ -87,11 +87,13 @@ public enum MuPreference {
     FILE_GROUP_8_MASK(MuPreferences.FILE_GROUP_8_MASK),
     FILE_GROUP_9_MASK(MuPreferences.FILE_GROUP_9_MASK),
     FILE_GROUP_10_MASK(MuPreferences.FILE_GROUP_10_MASK),
-    CUSTOM_TERMINAL(MuPreferences.CUSTOM_TERMINAL),
-    USE_CUSTOM_TERMINAL(MuPreferences.USE_CUSTOM_TERMINAL);
+    CUSTOM_EXTERNAL_TERMINAL(MuPreferences.CUSTOM_EXTERNAL_TERMINAL),
+    USE_CUSTOM_EXTERNAL_TERMINAL(MuPreferences.USE_CUSTOM_EXTERNAL_TERMINAL),
+    TERMINAL_SHELL(MuPreferences.TERMINAL_SHELL),
+    TERMINAL_USE_CUSTOM_SHELL(MuPreferences.TERMINAL_USE_CUSTOM_SHELL);
 
-	
-	private String label;
+
+    private String label;
 	
 	private MuPreference(String label) {
 		this.label = label;

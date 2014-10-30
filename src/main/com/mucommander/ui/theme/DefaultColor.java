@@ -18,8 +18,10 @@
 
 package com.mucommander.ui.theme;
 
-import java.awt.*;
-import java.util.Vector;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a default value for a theme color.
@@ -38,7 +40,7 @@ public abstract class DefaultColor {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of colors linked to this default value. */
-    private java.util.List<Integer> linkedColors;
+    private List<Integer> linkedColors = new ArrayList<>();
 
 
 
@@ -48,7 +50,6 @@ public abstract class DefaultColor {
      * Creates a new instance of {@link DefaultColor}.
      */
     protected DefaultColor() {
-        linkedColors = new Vector<Integer>();
     }
 
 

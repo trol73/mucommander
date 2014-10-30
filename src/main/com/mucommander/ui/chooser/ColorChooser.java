@@ -164,11 +164,8 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
      * Creates the preview panel.
      */
     private JPanel createPreviewPanel(JComponent previewComponent) {
-        JPanel    panel;
-        Dimension size;
-
         // Sets the label's preferred size (same width as the chooser, twice the normal label height).
-        size = previewComponent.getPreferredSize();
+        Dimension size = previewComponent.getPreferredSize();
         size.width = chooser.getPreferredSize().width;
         size.height *= 2;
         previewComponent.setPreferredSize(size);
@@ -177,7 +174,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         previewComponent.setOpaque(true);
 
         // Creates the preview panel.
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         panel.add(previewComponent);
         panel.setBorder(BorderFactory.createTitledBorder(Translator.get("preview")));
 
@@ -238,7 +235,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         currentColor = initialColor;
 
         /// Propagates the color to the choosers.
-        if(updateUI) {
+        if (updateUI) {
             alpha.setValue(currentColor.getAlpha());
             chooser.setColor(currentColor);
 
@@ -251,7 +248,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
      * Update the preview panel to the current color.
      */
     private void updatePreview() {
-        if(previewComponent!=null) {
+        if (previewComponent != null) {
             previewComponent.putClientProperty(previewColorPropertyName, currentColor);
         }
     }
@@ -260,10 +257,8 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
      * This method is public as an implementation side effect and should not be called directly.
      */
     public void stateChanged(ChangeEvent e) {
-        Color buffer;
-
         // Creates the new current color.
-        buffer       = chooser.getColor();
+        Color buffer = chooser.getColor();
         currentColor = new Color(buffer.getRed(), buffer.getGreen(), buffer.getBlue(), alpha.getValue());
 
         updatePreview();

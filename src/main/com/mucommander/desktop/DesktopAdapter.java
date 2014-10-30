@@ -145,7 +145,7 @@ public interface DesktopAdapter {
      */
     public String getDefaultShell();
 
-    public String getDefaultShellPath();
+    public String getDefaultTerminalShellCommand();
 
     /**
      * Returns <code>true</code> if the given file is an application file. What an application file actually is

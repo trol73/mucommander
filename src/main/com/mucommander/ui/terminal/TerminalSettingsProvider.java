@@ -20,8 +20,11 @@ package com.mucommander.ui.terminal;
 import com.jediterm.terminal.TerminalColor;
 import com.jediterm.terminal.TextStyle;
 import com.jediterm.terminal.ui.settings.DefaultSettingsProvider;
+import com.mucommander.ui.theme.Theme;
+import com.mucommander.ui.theme.ThemeManager;
 
 import java.awt.Color;
+import java.awt.Font;
 
 /**
  *
@@ -33,11 +36,30 @@ public class TerminalSettingsProvider extends DefaultSettingsProvider {
 
     @Override
     public TextStyle getDefaultStyle() {
-        return new TextStyle(TerminalColor.awt(Color.GREEN), TerminalColor.awt(Color.BLACK));
+        Color fg = ThemeManager.getCurrentColor(Theme.TERMINAL_FOREGROUND_COLOR);
+        Color bg = ThemeManager.getCurrentColor(Theme.TERMINAL_BACKGROUND_COLOR);
+        return new TextStyle(TerminalColor.awt(fg), TerminalColor.awt(bg));
     }
 
     @Override
     public TextStyle getSelectionColor() {
-        return new TextStyle(TerminalColor.WHITE, TerminalColor.rgb(82, 109, 165));
+        Color fg = ThemeManager.getCurrentColor(Theme.TERMINAL_SELECTED_FOREGROUND_COLOR);
+        Color bg = ThemeManager.getCurrentColor(Theme.TERMINAL_SELECTED_BACKGROUND_COLOR);
+        return new TextStyle(TerminalColor.awt(fg), TerminalColor.awt(bg));
     }
+
+    @Override
+    public Font getTerminalFont() {
+        return ThemeManager.getCurrentFont(Theme.TERMINAL_FONT);
+    }
+
+    @Override
+    public float getTerminalFontSize() {
+        return getTerminalFont().getSize();
+    }
+
+    public boolean useInverseSelectionColor() {
+        return false;
+    }
+
 }

@@ -18,10 +18,12 @@
 
 package com.mucommander.ui.main.commandbar;
 
+import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.impl.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.WeakHashMap;
 
 /**
@@ -76,7 +78,32 @@ public class CommandBarAttributes {
      * The attributes are updated only if they are not already equal to the default attributes.
      */
     public static void restoreDefault() {
-    	setAttributes(DEFAULT_ACTION_IDS, DEFAULT_ALTERNATE_ACTION_IDS, DEFAULT_MODIFIER);
+        String[] defaultActions = null;
+        String[] alternateActions = null;
+        for (int i = 0; i < DEFAULT_ACTION_IDS.length; i++) {
+            String id1 = DEFAULT_ACTION_IDS[i];
+            KeyStroke key1 = ActionKeymap.getAccelerator(id1);
+            if (key1.getModifiers() != 0) {
+                String id2 = DEFAULT_ALTERNATE_ACTION_IDS[i];
+                KeyStroke key2 = ActionKeymap.getAccelerator(id2);
+                if (key2.getModifiers() == 0) {
+                    // swap keys
+                    if (defaultActions == null) {
+                        defaultActions = Arrays.copyOf(DEFAULT_ACTION_IDS, DEFAULT_ACTION_IDS.length);
+                        alternateActions = Arrays.copyOf(DEFAULT_ALTERNATE_ACTION_IDS, DEFAULT_ALTERNATE_ACTION_IDS.length);
+                    }
+                    defaultActions[i] = id2;
+                    alternateActions[i] = id1;
+                }
+            }
+        }
+        if (defaultActions == null) {
+            defaultActions = DEFAULT_ACTION_IDS;
+        }
+        if (alternateActions == null) {
+            alternateActions = DEFAULT_ALTERNATE_ACTION_IDS;
+        }
+    	setAttributes(defaultActions, alternateActions, DEFAULT_MODIFIER);
     }
     
     /**
@@ -156,7 +183,7 @@ public class CommandBarAttributes {
     protected static void fireAttributesChanged() {
     	synchronized(listeners) {
             // Iterate on all listeners
-            for(CommandBarAttributesListener listener : listeners.keySet())
+            for (CommandBarAttributesListener listener : listeners.keySet())
                 listener.commandBarAttributeChanged();
         }
     }
