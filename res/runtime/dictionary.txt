@@ -3082,7 +3082,7 @@ action_categories.misc:EN:$[prefs_dialog.misc_tab]
 Terminal.label:EN:Terminal
 Terminal.label:FR:Terminal
 Terminal.label:ES:Terminal
-Terminal.label:RU:Консоль
+Terminal.label:RU:Терминал
 Terminal.label:zh_TW:Terminal
 Terminal.label:PL:Terminal
 Terminal.label:zh_CN:Terminal
@@ -14014,6 +14014,10 @@ theme_editor.shell_history_tab:TR:Kabuk geçmişi
 theme_editor.shell_history_tab:CA:Historial del intèrpret d'ordres
 # Translation missing (KO)
 
+theme_editor.terminal_tab:EN:Terminal
+theme_editor.terminal_tab:RU:Терминал
+
+
 theme_editor.statusbar_tab:EN:Status bar
 theme_editor.statusbar_tab:FR:Barre de status
 theme_editor.statusbar_tab:HU:Állapotsor
@@ -16866,12 +16870,20 @@ prefs_dialog.auto_detect_shell_encoding:CA:Detecció automàtica
 # Translation missing (KO)
 
 
-prefs_dialog.terminal:EN:Terminal
-prefs_dialog.terminal:RU:Терминал
+prefs_dialog.external_terminal:EN:External terminal
+prefs_dialog.external_terminal:RU:Внешний терминал
 prefs_dialog.default_terminal:EN:Use default Terminal program
 prefs_dialog.default_terminal:RU:Использовать команду по умолчанию
 prefs_dialog.custom_terminal:EN:Use custom command
 prefs_dialog.custom_terminal:RU:Использовать указанную команду
+
+prefs_dialog.builtin_terminal:EN:Builtin terminal
+prefs_dialog.builtin_terminal:RU:Встроенный терминал
+prefs_dialog.default_shell:EN:Use default shell
+prefs_dialog.default_shell:RU:Использовать оболочку по умолчанию
+prefs_dialog.custom_shell:EN:Use custom command
+prefs_dialog.custom_shell:RU:Использовать указанную команду
+
 
 # Bonjour is a service discovery protocol : http://en.wikipedia.org/wiki/Bonjour_%28software%29
 prefs_dialog.enable_bonjour_discovery:EN:Enable Bonjour services discovery

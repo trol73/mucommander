@@ -22,6 +22,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
+import com.mucommander.commons.runtime.OsFamily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +145,10 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     }
 
 
-    public String getDefaultShellPath() {
+    private String getDefaultShellPath() {
+        if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            return "cmd.exe";
+        }
         if (defaultShell == null) {
             if (new File("/bin/zsh").exists()) {
                 defaultShell = "/bin/zsh";
@@ -157,6 +161,14 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
             }
         }
         return defaultShell;
+    }
+
+    public String getDefaultTerminalShellCommand() {
+        String path = getDefaultShellPath();
+        if (OsFamily.getCurrent() != OsFamily.WINDOWS) {
+            return path + " --login";
+        }
+        return path;
     }
 
     /**

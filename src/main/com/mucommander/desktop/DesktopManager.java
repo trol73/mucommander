@@ -143,7 +143,7 @@ public class DesktopManager {
     static {
         // - Adapters initialisation -------------------------------------
         // ---------------------------------------------------------------
-        desktops = new Vector<DesktopAdapter>();
+        desktops = new Vector<>();
 
         // The default desktop adapter must be registered first, as we only want to use
         // it if nothing else worked.
@@ -578,9 +578,9 @@ public class DesktopManager {
     }
 
 
-    public static String getDefaultShellTerminal() {
+    public static String getDefaultTerminalShellCommand() {
         checkInit();
-        return desktop.getDefaultShellPath();
+        return desktop.getDefaultTerminalShellCommand();
     }
 
     /**

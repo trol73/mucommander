@@ -36,7 +36,7 @@ public class AcceleratorMap {
     public final static int ALTERNATIVE_ACCELERATOR = 2;
     
     // Maps KeyStrokes to MuAction id and accelerator type (PRIMARY_ACCELERATOR/ALTERNATIVE_ACCELERATOR) pair.
-	private static HashMap<KeyStroke, Pair<String, Integer>> map = new HashMap<KeyStroke, Pair<String, Integer>>();
+	private static HashMap<KeyStroke, Pair<String, Integer>> map = new HashMap<>();
     
 	/**
 	 * Register KeyStroke to MuAction as primary accelerator.
@@ -98,7 +98,7 @@ public class AcceleratorMap {
     
     private void put(KeyStroke ks, String actionId, int acceleratorType) {
     	if (ks != null)
-    		map.put(ks, new Pair<String, Integer>(actionId, acceleratorType));
+    		map.put(ks, new Pair<>(actionId, acceleratorType));
     }
     
     private Pair<String, Integer> getActionIdAndAcceleratorTypeOfKeyStroke(KeyStroke ks) {

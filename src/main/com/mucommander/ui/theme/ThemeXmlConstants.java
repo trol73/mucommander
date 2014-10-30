@@ -44,6 +44,7 @@ interface ThemeXmlConstants {
 
     public static final String ELEMENT_FILE_GROUPS          = "file_groups";
     public static final String ELEMENT_GROUP                = "group";
+    public static final String ELEMENT_TERMINAL             = "terminal";
 
 
 

@@ -20,10 +20,13 @@ package com.mucommander.ui.terminal;
 import com.jediterm.terminal.model.StyleState;
 import com.jediterm.terminal.model.TerminalTextBuffer;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
+import com.mucommander.ui.action.ActionKeymap;
+import com.mucommander.ui.action.impl.TerminalPanelAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.commandbar.CommandBarAttributes;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 
 /**
@@ -44,10 +47,13 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
     @Override
     public void processKeyEvent(KeyEvent e) {
         final int id = e.getID();
-        if (id == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2 && e.getModifiers() == KeyEvent.SHIFT_MASK) {
-            mainFrame.showTerminalPanel(false);
-            return;
-        } else if (id == KeyEvent.KEY_PRESSED) {
+
+        if (id == KeyEvent.KEY_PRESSED) {
+            String actionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false));
+            if (TerminalPanelAction.Descriptor.ACTION_ID.equals(actionId)) {
+                mainFrame.showTerminalPanel(false);
+                return;
+            }
             myKeyListener.keyPressed(e);
         } else if (id == KeyEvent.KEY_TYPED) {
             myKeyListener.keyTyped(e);

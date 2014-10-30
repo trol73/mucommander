@@ -529,7 +529,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			Collections.sort(allActionIds, ACTIONS_COMPARATOR);
 			
 			final int nbActions = allActionIds.size();
-			db = new HashMap<String, HashMap<Integer, Object>>(nbActions);
+			db = new HashMap<>(nbActions);
 
 			int nbRows = allActionIds.size();
 			data = new Object[nbRows][NUM_OF_COLUMNS];
@@ -546,7 +546,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				String actionLabel = actionDescriptor.getLabel();
 				
 				/* 0 -> action's icon & name pair */
-				actionProperties.put(description, new Pair<ImageIcon, String>(IconManager.getPaddedIcon(actionIcon, insets), actionLabel));
+				actionProperties.put(description, new Pair<>(IconManager.getPaddedIcon(actionIcon, insets), actionLabel));
 				/* 1 -> action's accelerator */
 				actionProperties.put(accelerator, ActionKeymap.getAccelerator(actionId));
 				/* 2 -> action's alternate accelerator */

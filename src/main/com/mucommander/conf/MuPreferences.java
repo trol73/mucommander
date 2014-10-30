@@ -127,16 +127,20 @@ public class MuPreferences implements MuPreferencesAPI {
 
 
     // - Terminal variables -----------------------------------------------------
-    /** Section describing the console CONFIGURATION. */
+    /** Section describing the terminal (external and built in) CONFIGURATION. */
     public static final String TERMINAL_SECTION = "terminal";
-    /** Console invocation command. */
-    public static final String CUSTOM_TERMINAL = TERMINAL_SECTION + '.' + "custom_command";
-    /** Whether or not to use a custom shell invocation command. */
-    public static final String USE_CUSTOM_TERMINAL = TERMINAL_SECTION + '.' + "use_custom";
+    /** Terminal invocation command. */
+    public static final String CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "custom_external_command";
+    /** Whether or not to use a custom shell invocation Terminal command. */
+    public static final String USE_CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "use_custom_external";
     /** Default custom terminal behavior. */
-    public static final boolean DEFAULT_USE_CUSTOM_TERMINAL = false;
+    public static final boolean DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL = false;
 
+    /** Terminal shell command. */
+    public static final String TERMINAL_SHELL = TERMINAL_SECTION + '.' + "shell";
+    public static final String TERMINAL_USE_CUSTOM_SHELL = TERMINAL_SECTION + '.' + "use_custom_shell";
 
+    public static final boolean DEFAULT_TERMINAL_USE_CUSTOM_SHELL = false;
 
 
     // - Mail variables ------------------------------------------------------

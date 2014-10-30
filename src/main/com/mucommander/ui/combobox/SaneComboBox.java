@@ -18,8 +18,12 @@
 
 package com.mucommander.ui.combobox;
 
+import com.mucommander.ui.dialog.FocusDialog;
+
 import javax.swing.*;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.WeakHashMap;
 
@@ -160,4 +164,22 @@ public class SaneComboBox<E> extends JComboBox<E> {
         super.removeAllItems();
         ignoreActionEvent = false;
     }
+
+    @Override
+    public void processKeyEvent(KeyEvent e) {
+        boolean popupVisible = isPopupVisible();
+        super.processKeyEvent(e);
+        // Close parent FocusDialog if ESC pressed
+        if (!popupVisible && e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            Container container = getParent();
+            while (container != null) {
+                if (container instanceof FocusDialog) {
+                    ((FocusDialog) container).dispose();
+                    break;
+                }
+                container = container.getParent();
+            }
+        }
+    }
+
 }

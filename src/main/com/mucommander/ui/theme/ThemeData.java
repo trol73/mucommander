@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- package com.mucommander.ui.theme;
+package com.mucommander.ui.theme;
 
+import com.mucommander.commons.runtime.OsFamily;
 import org.fife.ui.rtextarea.RTextArea;
 
 import javax.swing.*;
@@ -80,7 +81,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this value.
      * </p>
      */
-    public static final int FONT_COUNT  = 8;
+    public static final int FONT_COUNT  = 9;
 
     /**
      * Number of known colors.
@@ -89,7 +90,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this color.
      * </p>
      */
-    public static final int COLOR_COUNT = 79;
+    public static final int COLOR_COUNT = 83;
 
 
 
@@ -158,6 +159,8 @@ public class ThemeData {
      * </p>
      */
     public static final int QUICK_LIST_ITEM_FONT = 7;
+
+    public static final int TERMINAL_FONT = 8;
 
 
     // - Color definitions ---------------------------------------------------------------------------------------------
@@ -698,6 +701,11 @@ public class ThemeData {
     public static final int FILE_GROUP_9_FOREGROUND_COLOR = 77;
     public static final int FILE_GROUP_10_FOREGROUND_COLOR = 78;
 
+    public static final int TERMINAL_BACKGROUND_COLOR = 79;
+    public static final int TERMINAL_FOREGROUND_COLOR = 80;
+    public static final int TERMINAL_SELECTED_FOREGROUND_COLOR = 81;
+    public static final int TERMINAL_SELECTED_BACKGROUND_COLOR = 82;
+
 
 
     // - Default fonts -------------------------------------------------------------------------------------------------
@@ -732,9 +740,6 @@ public class ThemeData {
     public static final String DEFAULT_LABEL_FONT                      = "Label.font";
     public static final String DEFAULT_TABLE_FONT                      = "Table.font";
     public static final String DEFAULT_MENU_HEADER_FONT                = "MenuHeader.font";
-
-
-
     
 
     // - Listeners -----------------------------------------------------------------------------------------------------
@@ -763,11 +768,7 @@ public class ThemeData {
     private Color[] colors;
     /** All the fonts contained by the theme. */
     private Font[]  fonts;
-
-
-
-
-
+    private int defaultTerminalFont;
 
 
     public static void registerDefaultColor(String name, DefaultColor color) {
@@ -779,9 +780,8 @@ public class ThemeData {
     }
 
     public static void registerColor(int id, String defaultColor) {
-        DefaultColor color;
-
-        if((color = DEFAULT_COLORS.get(defaultColor)) == null)
+        DefaultColor color = DEFAULT_COLORS.get(defaultColor);
+        if (color == null)
             throw new IllegalArgumentException("Not a registered default color: " + defaultColor);
         registerColor(id, color);
     }
@@ -998,6 +998,13 @@ public class ThemeData {
         registerColor(SHELL_HISTORY_SELECTED_FOREGROUND_COLOR, DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND);
         registerColor(SHELL_HISTORY_SELECTED_BACKGROUND_COLOR, DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND);
 
+        // Terminal
+        registerFont(TERMINAL_FONT,                           createDefaultTerminalFont());
+        registerColor(TERMINAL_BACKGROUND_COLOR,              Color.BLACK);
+        registerColor(TERMINAL_FOREGROUND_COLOR,              Color.GREEN);
+        registerColor(TERMINAL_SELECTED_BACKGROUND_COLOR,     new Color(0x6666ff));
+        registerColor(TERMINAL_SELECTED_FOREGROUND_COLOR,     Color.WHITE);
+
         // Editor default values.
         registerFont(EDITOR_FONT,                       DEFAULT_TEXT_AREA_FONT);
         registerColor(EDITOR_FOREGROUND_COLOR,          DEFAULT_TEXT_AREA_FOREGROUND);
@@ -1154,9 +1161,7 @@ public class ThemeData {
      * @return       <code>true</code> if the call actually changed the data, <code>false</code> otherwise.
      */
     public synchronized boolean setColor(int id, Color color) {
-        boolean buffer; // Used to store the result of isColorDifferent.
-
-        buffer = isColorDifferent(id, color);
+        boolean buffer = isColorDifferent(id, color);   // Used to store the result of isColorDifferent.
         colors[id] = color;
         if (id >= FILE_GROUP_1_FOREGROUND_COLOR && id <= FILE_GROUP_10_FOREGROUND_COLOR) {
             triggerColorEvent(id, color);
@@ -1263,7 +1268,7 @@ public class ThemeData {
         // Makes sure id is a legal color identifier.
         checkColorIdentifier(id);
 
-        return COLORS.get(Integer.valueOf(id)).getColor(data);
+        return COLORS.get(id).getColor(data);
     }
 
     /**
@@ -1280,7 +1285,7 @@ public class ThemeData {
     private static Font getDefaultFont(int id, ThemeData data) {
         checkFontIdentifier(id);
 
-        return FONTS.get(Integer.valueOf(id)).getFont(data);
+        return FONTS.get(id).getFont(data);
     }
 
 
@@ -1458,13 +1463,11 @@ public class ThemeData {
      * @param font new value for the font that changed.
      */
     static void triggerFontEvent(int id, Font font) {
-        FontChangedEvent event;    // Event that will be dispatched.
-
         // Creates the event.
-        event = new FontChangedEvent(null, id, font);
+        FontChangedEvent event = new FontChangedEvent(null, id, font);  // Event that will be dispatched.
 
         // Dispatches it.
-        for(ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet())
             listener.fontChanged(event);
     }
 
@@ -1506,5 +1509,17 @@ public class ThemeData {
         if (id < 0 || id >= FONT_COUNT) {
             throw new IllegalArgumentException("Illegal font identifier: " + id);
         }
+    }
+
+    private static Font createDefaultTerminalFont() {
+        String name;
+        if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            name = "Consolas";
+        } else if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            name = "Menlo";
+        } else {
+            name = "Monospaced";
+        }
+        return new Font(name, Font.PLAIN, 14);
     }
 }

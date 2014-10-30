@@ -117,6 +117,13 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     private static final int STATE_GROUP_9                  = 53;
     private static final int STATE_GROUP_10                 = 54;
 
+    private static final int STATE_TERMINAL                 = 55;
+    /** Parsing the terminal.normal element. */
+    private static final int STATE_TERMINAL_NORMAL          = 56;
+    /** Parsing the terminal.selected element. */
+    private static final int STATE_TERMINAL_SELECTED        = 57;
+
+
 
 
     // - Instance variables --------------------------------------------------------------
@@ -217,6 +224,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             state = STATE_SHELL_HISTORY;
         }
 
+        else if(qName.equals(ELEMENT_TERMINAL)) {
+            if(state != STATE_ROOT)
+                traceIllegalDeclaration(qName);
+            state = STATE_TERMINAL;
+        }
+
         // Volume label declaration.
         else if(qName.equals(ELEMENT_STATUS_BAR)) {
             if(state != STATE_ROOT)
@@ -282,6 +295,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 traceIllegalDeclaration(qName);
         }
 
+        else if(qName.equals(ELEMENT_TERMINAL)) {
+            if(state != STATE_ROOT)
+                traceIllegalDeclaration(qName);
+            state = STATE_TERMINAL;
+        }
+
         // Normal element declaration.
         else if(qName.equals(ELEMENT_NORMAL)) {
             if(state == STATE_SHELL)
@@ -292,6 +311,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_LOCATION_BAR_NORMAL;
             else if(state == STATE_SHELL_HISTORY)
                 state = STATE_SHELL_HISTORY_NORMAL;
+            else if(state == STATE_TERMINAL)
+                state = STATE_TERMINAL_NORMAL;
             else if(state == STATE_HIDDEN)
                 state = STATE_HIDDEN_NORMAL;
             else if(state == STATE_FOLDER)
@@ -326,6 +347,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_LOCATION_BAR_SELECTED;
             else if(state == STATE_SHELL_HISTORY)
                 state = STATE_SHELL_HISTORY_SELECTED;
+            else if(state == STATE_TERMINAL)
+                state = STATE_TERMINAL_SELECTED;
             else if(state == STATE_HIDDEN)
                 state = STATE_HIDDEN_SELECTED;
             else if(state == STATE_FOLDER)
@@ -365,6 +388,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 template.setFont(ThemeData.LOCATION_BAR_FONT, createFont(attributes));
             else if(state == STATE_SHELL_HISTORY)
                 template.setFont(ThemeData.SHELL_HISTORY_FONT, createFont(attributes));
+            else if(state == STATE_TERMINAL)
+                template.setFont(ThemeData.TERMINAL_FONT, createFont(attributes));
             else if(state == STATE_STATUS_BAR)
                 template.setFont(ThemeData.STATUS_BAR_FONT, createFont(attributes));
             else if(state == STATE_TABLE)
@@ -514,6 +539,11 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             else if(state == STATE_SHELL_HISTORY_SELECTED)
                 template.setColor(ThemeData.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR, createColor(attributes));
 
+            else if(state == STATE_TERMINAL_NORMAL)
+                template.setColor(ThemeData.TERMINAL_BACKGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_TERMINAL_SELECTED)
+                template.setColor(ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+
             else if(state == STATE_STATUS_BAR)
                 template.setColor(ThemeData.STATUS_BAR_BACKGROUND_COLOR, createColor(attributes));
             
@@ -604,6 +634,11 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 template.setColor(ThemeData.SHELL_HISTORY_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_SHELL_HISTORY_SELECTED)
                 template.setColor(ThemeData.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+
+            else if(state == STATE_TERMINAL_NORMAL)
+                template.setColor(ThemeData.TERMINAL_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_TERMINAL_SELECTED)
+                template.setColor(ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if(state == STATE_EDITOR_NORMAL)
                 template.setColor(ThemeData.EDITOR_FOREGROUND_COLOR, createColor(attributes));
@@ -697,6 +732,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         else if(qName.equals(ELEMENT_SHELL_HISTORY))
             state = STATE_ROOT;
 
+        else if(qName.equals(ELEMENT_TERMINAL))
+            state = STATE_ROOT;
+
+
         // Editor declaration.
         else if(qName.equals(ELEMENT_EDITOR))
             state = STATE_ROOT;
@@ -731,6 +770,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SHELL;
             else if(state == STATE_SHELL_HISTORY_NORMAL)
                 state = STATE_SHELL_HISTORY;
+            else if(state == STATE_TERMINAL_NORMAL)
+                state = STATE_TERMINAL;
             else if(state == STATE_HIDDEN_NORMAL)
                 state = STATE_HIDDEN;
             else if(state == STATE_FOLDER_NORMAL)
@@ -759,6 +800,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SHELL;
             else if(state == STATE_SHELL_HISTORY_SELECTED)
                 state = STATE_SHELL_HISTORY;
+            else if(state == STATE_TERMINAL_SELECTED)
+                state = STATE_TERMINAL;
             else if(state == STATE_HIDDEN_SELECTED)
                 state = STATE_HIDDEN;
             else if(state == STATE_FOLDER_SELECTED)

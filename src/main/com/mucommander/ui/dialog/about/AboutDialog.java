@@ -125,11 +125,8 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * Creates the panel that contains all of the about box's text.
      */
     private JScrollPane createCreditsPanel() {
-        JTextPane      text;
-        StyledDocument doc;
-
-        text = new JTextPane();
-        doc  = text.getStyledDocument();
+        JTextPane text = new JTextPane();
+        StyledDocument doc  = text.getStyledDocument();
 
         text.setBackground(ThemeManager.getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR));
 
@@ -137,7 +134,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         text.setEditable(false);
         try {
             // Team.
-            insertTitle(doc,          "The muCommander team");
+            insertTitle(doc,          "The trolCommander team");
 
             // Core developers.
             insertHeader(doc,         "Core developers");
@@ -230,6 +227,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertDetailedUrl(doc,    "RSyntaxTextArea",     "Modified BSD",                         "http://fifesoft.com/rsyntaxtextarea");
             insertDetailedUrl(doc,    "ICEpdf",              "Apache License",                       "http://www.icesoft.org/java/home.jsf");
             insertDetailedUrl(doc,    "image4j",             "LGPL",                                 "http://image4j.sourceforge.net");
+            insertDetailedUrl(doc,    "JediTerm",            "LGPL",                                 "https://github.com/JetBrains/jediterm");
 
             insertDetailedUrl(doc,    "Mark James' icons",   "Creative Commons Attribution License", "http://famfamfam.com");
             insertLineBreak(doc);
@@ -250,7 +248,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertTitle(doc,         "Version information");
 
             // VM information.
-            insertHeader(doc,         "muCommander");
+            insertHeader(doc,         "trolCommander");
             insertNormalString(doc,   "Version: " + RuntimeConstants.VERSION);
             insertNormalString(doc,   "Build date: " + getFormatedDate());
             insertLineBreak(doc);

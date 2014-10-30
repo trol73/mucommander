@@ -71,12 +71,13 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
     public static void setActionsFile(String path) throws FileNotFoundException {
-        AbstractFile file;
+        AbstractFile file = FileFactory.getFile(path);
 
-        if((file = FileFactory.getFile(path)) == null)
+        if (file == null) {
             setActionsFile(new File(path));
-        else
+        } else {
             setActionsFile(file);
+        }
     }
     
     /**
@@ -97,7 +98,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
     private static void setActionsFile(AbstractFile file) throws FileNotFoundException {
-        if(file.isBrowsable())
+        if (file.isBrowsable())
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
 
         actionsFile = file;
@@ -109,7 +110,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @throws IOException if an error occurred while locating the default actions file.
      */
     protected static AbstractFile getActionsFile() throws IOException {
-        if(actionsFile == null)
+        if (actionsFile == null)
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_ACTIONS_FILE_NAME);
         return actionsFile;
     }

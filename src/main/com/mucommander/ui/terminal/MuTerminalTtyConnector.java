@@ -21,7 +21,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jediterm.pty.PtyProcessTtyConnector;
 import com.jediterm.terminal.LoggingTtyConnector;
-import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.desktop.DesktopManager;
 import com.pty4j.PtyProcess;
 import com.pty4j.unix.Pty;
@@ -75,15 +78,18 @@ public class MuTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
     private static PtyProcess createPtyProcess(String directory) throws IOException {
         Map<String, String> envs = Maps.newHashMap(System.getenv());
         envs.put("TERM", "xterm-256color");
-        String[] command;
 
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                command = new String[]{"cmd.exe"};
-                break;
-            default:
-                command = new String[]{DesktopManager.getDefaultShellTerminal(), "--login"};
+        MuPreferencesAPI pref = MuConfigurations.getPreferences();
+        String cmd;
+        if (pref.getVariable(MuPreference.TERMINAL_USE_CUSTOM_SHELL, MuPreferences.DEFAULT_TERMINAL_USE_CUSTOM_SHELL)) {
+            cmd = pref.getVariable(MuPreference.TERMINAL_SHELL);
+        } else {
+            cmd = DesktopManager.getDefaultTerminalShellCommand();
         }
+
+        cmd = cmd.replaceAll("\t", " ").replaceAll(" +", " ");
+        String[] command = cmd.split(" ");
+
         if (Platform.isWindows()) {
             return new WinPtyProcess(command, PtyUtil.toStringArray(envs), directory);
         }
