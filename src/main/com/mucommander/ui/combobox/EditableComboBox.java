@@ -52,7 +52,7 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
     private JTextField textField;
 
     /** Contains all registered EditableComboBoxListener instances, stored as weak references */
-    private WeakHashMap<EditableComboBoxListener, Object> listeners = new WeakHashMap<EditableComboBoxListener, Object>();
+    private WeakHashMap<EditableComboBoxListener, Object> listeners = new WeakHashMap<>();
 
     /** Specifies whether the text field's contents is updated when an item is selected in the associated combo box */
     private boolean comboSelectionUpdatesTextField;
@@ -143,7 +143,7 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
      * @param textField the text field to be used as the combo box's editor. If null, a JTextField instance will be created and used.
      */
     private void init(JTextField textField) {
-        setRenderer(renderer = new ComboBoxCellRenderer<E>());
+        setRenderer(renderer = new ComboBoxCellRenderer<>());
         // Create a new JTextField if no text field was specified
         if(textField==null) {
             this.textField = new JTextField();

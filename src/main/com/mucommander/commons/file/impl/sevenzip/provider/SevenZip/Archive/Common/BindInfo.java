@@ -4,8 +4,8 @@ import com.mucommander.commons.file.impl.sevenzip.provider.Common.IntVector;
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.RecordVector;
 
 public class BindInfo {
-    public RecordVector<CoderStreamsInfo> Coders = new RecordVector<CoderStreamsInfo>();
-    public RecordVector<BindPair> BindPairs = new RecordVector<BindPair>();
+    public RecordVector<CoderStreamsInfo> Coders = new RecordVector<>();
+    public RecordVector<BindPair> BindPairs = new RecordVector<>();
     public IntVector InStreams = new IntVector();
     public IntVector OutStreams = new IntVector();
     

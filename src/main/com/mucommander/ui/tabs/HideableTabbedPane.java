@@ -54,10 +54,10 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	private static final Logger LOGGER = LoggerFactory.getLogger(HideableTabbedPane.class);
 
 	/* The tabs which are being displayed */
-	private TabsCollection<T> tabsCollection;
+	private TabsCollection<T> tabsCollection = new TabsCollection<>();;
 	/* The tabs display type (with/without tabs headers)
 	 * It is initialize as nullable so that it can be destroyed when it's replaced for the first time (see @{link tabAdded()})*/
-	private TabsViewer<T> tabsViewer = new NullableTabsViewer<T>();
+	private TabsViewer<T> tabsViewer = new NullableTabsViewer<>();
 	/* The factory that will be used to create the viewers for tabs with no headers */	
 	private TabsViewerFactory<T> tabsWithoutHeadersViewerFactory;
 	/* The factory that will be used to create the viewers for tabs with headers */	
@@ -68,7 +68,8 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	/**
 	 * Constructor
 	 *  
-	 * @param tabsDisplayFactory - factory of tabs-display
+	 * @param tabsWithoutHeadersViewerFactory - factory of tabs-display
+     * @param tabsWithHeadersViewerFactory - factory of tabs-display
 	 */
 	public HideableTabbedPane(TabsViewerFactory<T> tabsWithoutHeadersViewerFactory, TabsViewerFactory<T> tabsWithHeadersViewerFactory) {
 		setLayout(new BorderLayout());
@@ -76,8 +77,6 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		this.tabsWithoutHeadersViewerFactory = tabsWithoutHeadersViewerFactory;
 		this.tabsWithHeadersViewerFactory = tabsWithHeadersViewerFactory;
 
-		// Initialize the tabs collection
-		tabsCollection = new TabsCollection<T>();
 		// Register for tabs changes
 		tabsCollection.addTabsListener(this);
 

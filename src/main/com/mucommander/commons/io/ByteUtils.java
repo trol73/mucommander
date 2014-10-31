@@ -51,13 +51,11 @@ public class ByteUtils {
      * @return an hexadecimal string representation of the given byte array
      */
     public static String toHexString(byte bytes[]) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
-        int bytesLen = bytes.length;
-        String hexByte;
-        for(int i=0; i<bytesLen; i++) {
-            hexByte = Integer.toHexString(bytes[i] & 0xFF);
-            if(hexByte.length()==1)
+        for (byte aByte : bytes) {
+            String hexByte = Integer.toHexString(aByte & 0xFF);
+            if (hexByte.length() == 1)
                 sb.append('0');
             sb.append(hexByte);
         }

@@ -24,6 +24,7 @@ import com.mucommander.commons.file.icon.FileIconProvider;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -123,7 +124,7 @@ public class CustomFileIconProvider implements FileIconProvider {
      */
     private static void init() {
         // Map known file extensions to icon names
-        extensionMap = new Hashtable<String, String>();
+        extensionMap = new HashMap<>();
         for (String[] iconExt : ICON_EXTENSIONS) {
             String iconName = iconExt[0];
             for (int j = 1; j < iconExt.length; j++)

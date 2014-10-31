@@ -52,7 +52,7 @@ public class GrowlNotifier extends AbstractNotifier {
     private static boolean isRegistered;
 
     /** Dictionary keys for the different notification types */
-    private final static Map<NotificationType, String> NOTIFICATION_KEYS;
+    private final static Map<NotificationType, String> NOTIFICATION_KEYS = new Hashtable<>();
 
     /** Name of the application to be registered with Growl, as spelled in the .app */
     private final static String APP_NAME = "muCommander";
@@ -64,7 +64,6 @@ public class GrowlNotifier extends AbstractNotifier {
             "end tell";
 
     static {
-        NOTIFICATION_KEYS = new Hashtable<NotificationType, String>();
         NOTIFICATION_KEYS.put(NotificationType.JOB_COMPLETED, "progress_dialog.job_finished");
         NOTIFICATION_KEYS.put(NotificationType.JOB_ERROR, "progress_dialog.job_error");
     }

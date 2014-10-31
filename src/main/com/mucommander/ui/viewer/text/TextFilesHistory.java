@@ -116,8 +116,7 @@ public class TextFilesHistory {
 
         @Override
         public String toString() {
-            return new StringBuilder(fileName).append('=').append(scrollPosition).append(',').append(getLine()).append(',').append(getColumn()).
-                    append(',').append(getFileType()).append(',').append(getEncoding()).toString();
+            return fileName + '=' + scrollPosition + ',' + getLine() + ',' + getColumn() + ',' + getFileType() + ',' + getEncoding();
         }
     }
 

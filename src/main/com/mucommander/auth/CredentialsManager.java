@@ -21,10 +21,7 @@ package com.mucommander.auth;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,11 +59,11 @@ public class CredentialsManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsManager.class);
 	
     /** Contains volatile CredentialsMapping instances, lost when the application terminates */
-    private static List<CredentialsMapping> volatileCredentialMappings = new Vector<CredentialsMapping>();
+    private static List<CredentialsMapping> volatileCredentialMappings = new Vector<>();
 
     /** Contains persistent CredentialsMapping instances, stored to an XML file when the application
      * terminates, and loaded the next time the application is started */
-    private static AlteredVector<CredentialsMapping> persistentCredentialMappings = new AlteredVector<CredentialsMapping>();
+    private static AlteredVector<CredentialsMapping> persistentCredentialMappings = new AlteredVector<>();
 
     /** Singleton CredentialsManagerAuthenticator instance */
     private final static Authenticator AUTHENTICATOR = new CredentialsManagerAuthenticator();
@@ -323,12 +320,9 @@ public class CredentialsManager {
         location.setCredentials(credentialsMapping.getCredentials());
 
         FileURL realm = credentialsMapping.getRealm();
-        Enumeration<String> propertyKeys = realm.getPropertyNames();
-        String key;
-        while(propertyKeys.hasMoreElements()) {
-            key = propertyKeys.nextElement();
-
-            if(location.getProperty(key)==null)
+        Set<String> propertyKeys = realm.getPropertyNames();
+        for (String key : propertyKeys) {
+            if(location.getProperty(key) == null)
                 location.setProperty(key, realm.getProperty(key));
         }
     }
@@ -370,11 +364,8 @@ public class CredentialsManager {
      * @param matches the Vector where matching CredentialsMapping instances will be added
      */
     private static void findMatches(FileURL location, List<CredentialsMapping> credentials, List<CredentialsMapping> matches) {
-        FileURL tempRealm;
-
-        int nbEntries = credentials.size();
         for(CredentialsMapping tempCredentialsMapping: credentials) {
-            tempRealm = tempCredentialsMapping.getRealm();
+            FileURL tempRealm = tempCredentialsMapping.getRealm();
             if(location.schemeEquals(tempRealm)
                && location.portEquals(tempRealm)
                && location.hostEquals(tempRealm))
@@ -403,7 +394,7 @@ public class CredentialsManager {
 
         // Splits the provided location's path into an array of folder tokens (e.g. "/home/maxence" -> ["home","maxence"])
         String path = location.getPath();
-        List<String> pathTokensV = new Vector<String>();
+        List<String> pathTokensV = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(path, "/\\");
         while(st.hasMoreTokens()) {
             pathTokensV.add(st.nextToken());

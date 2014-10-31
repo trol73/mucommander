@@ -28,14 +28,18 @@ import com.jediterm.terminal.ui.TerminalSession;
 import com.jediterm.terminal.ui.TerminalWidget;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.commons.io.FileTransferException;
+import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
 import com.pty4j.PtyProcess;
+import com.pty4j.util.PtyUtil;
 
 import javax.swing.JComponent;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Oleg Trifonov
@@ -54,7 +58,11 @@ public class MuTerminal {
         super();
         this.mainFrame = mainFrame;
         this.settingsProvider = new TerminalSettingsProvider();
-
+        try {
+            prepareLibraries();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.ttyConnector = createTtyConnector(getCurrentFolder());
 
         BasicConfigurator.configureDefaultContext();
@@ -148,13 +156,13 @@ public class MuTerminal {
 //            e.printStackTrace();
 //        }
 
-        try {
+//        try {
 //System.out.println(getCurrentFolder());
-            PtyProcess.exec(new String[]{"cd", getCurrentFolder()});
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO
-        }
+//            PtyProcess.exec(new String[]{"cd", getCurrentFolder()});
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            // TODO
+//        }
 
     }
 
@@ -167,6 +175,43 @@ public class MuTerminal {
 
     public void updateTitle() {
         mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
+    }
+
+
+    private void prepareLibraries() throws IOException {
+        String jarPath = PtyUtil.getJarFolder();
+
+        switch (OsFamily.getCurrent()) {
+            case WINDOWS:
+                copyFile("win/x86/libwinpty.dll", jarPath);
+                copyFile("win/x86/winpty-agent.exe", jarPath);
+                break;
+            case MAC_OS_X:
+                copyFile("macosx/x86/libpty.dylib", jarPath);
+                copyFile("macosx/x86_64/libpty.dylib", jarPath);
+                break;
+            default:
+                copyFile("linux/x86/libpty.so", jarPath);
+                copyFile("linux/x86_64/libpty.so", jarPath);
+                break;
+        }
+    }
+
+    private void copyFile(String name, String jarPath) throws IOException {
+        copyFileFromJar('/' + name, jarPath + File.separatorChar + name);
+    }
+
+    private void copyFileFromJar(String src, String dest) throws IOException {
+        File fileDest = new File(dest);
+        if (fileDest.exists() && fileDest.length() > 0) {
+            return;
+        }
+        fileDest.getParentFile().mkdirs();
+        InputStream is = getClass().getResourceAsStream(src);
+        OutputStream os = new FileOutputStream(dest);
+        StreamUtils.copyStream(is, os);
+        is.close();
+        os.close();
     }
 
 }

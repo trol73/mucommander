@@ -41,7 +41,7 @@ import java.util.WeakHashMap;
  */
 public class SaneComboBox<E> extends JComboBox<E> {
 
-    private WeakHashMap<ComboBoxListener, Object> listeners = new WeakHashMap<ComboBoxListener, Object>();
+    private WeakHashMap<ComboBoxListener, Object> listeners = new WeakHashMap<>();
     private boolean ignoreActionEvent;
 
 

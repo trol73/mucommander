@@ -319,7 +319,7 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls() throws IOException {
-        return ls((FilenameFilter)null);
+        return ls(null);
     }
 
     @Override

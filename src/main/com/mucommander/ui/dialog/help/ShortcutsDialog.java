@@ -115,7 +115,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
 
     private Map<ActionCategory, LinkedList<String>> createCategoryToItsActionsWithShortcutsMap() {
         // Hashtable that maps actions-category to LinkedList of actions (Ids) from the category that have shortcuts assigned to them
-        Hashtable<ActionCategory, LinkedList<String>> categoryToItsActionsWithShortcutsIdsMap = new Hashtable<ActionCategory, LinkedList<String>>();
+        Map<ActionCategory, LinkedList<String>> categoryToItsActionsWithShortcutsIdsMap = new Hashtable<>();
 
         // Initialize empty LinkedList for each category
         for(ActionCategory category : ActionProperties.getActionCategories())
@@ -197,7 +197,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
     }
 
     private void addShortcutList(XAlignedComponentPanel compPanel, Map<String, String> actionsToShortcutsMap) {
-        List<String> vec = new Vector<String>(actionsToShortcutsMap.keySet());
+        List<String> vec = new ArrayList<>(actionsToShortcutsMap.keySet());
         Collections.sort(vec);
 
         for(String action : vec)

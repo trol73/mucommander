@@ -95,16 +95,16 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private FileSet files;
 
     /** a map of old file names used to check for name conflicts */
-    private HashMap<String, AbstractFile> oldNames = new HashMap<String, AbstractFile>();
+    private Map<String, AbstractFile> oldNames = new HashMap<>();
 
     /** a list of generated names */
-    private List<String> newNames = new ArrayList<String>();
+    private List<String> newNames = new ArrayList<>();
 
     /** a list of flags to block file rename */
-    private List<Boolean> blockNames = new ArrayList<Boolean>();
+    private List<Boolean> blockNames = new ArrayList<>();
     
     /** a list of parsed tokens */
-    private List<AbstractToken> tokens = new ArrayList<AbstractToken>();
+    private List<AbstractToken> tokens = new ArrayList<>();
 
 
 
@@ -227,13 +227,13 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         edtReplaceWith.getDocument().addDocumentListener(this);
 
         // upper/lower case
-        Vector<String> ulcase = new Vector<String>();
+        Vector<String> ulcase = new Vector<>();
         ulcase.add(Translator.get("batch_rename_dialog.no_change"));
         ulcase.add(Translator.get("batch_rename_dialog.lower_case"));
         ulcase.add(Translator.get("batch_rename_dialog.upper_case"));
         ulcase.add(Translator.get("batch_rename_dialog.first_upper"));
         ulcase.add(Translator.get("batch_rename_dialog.word"));
-        cbCase = new JComboBox<String>(ulcase);
+        cbCase = new JComboBox<>(ulcase);
         cbCase.addActionListener(this);
 
         // counter
@@ -245,20 +245,19 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         edtCounterStep.getDocument().addDocumentListener(this);
         edtCounterStep.setColumns(2);
 
-        Vector<String> digits = new Vector<String>();
+        Vector<String> digits = new Vector<>();
         String zeros = "0000";
         for (int i = 1; i <= 5; i++) {
             digits.add(zeros.substring(0, i - 1) + "1");
         }
-        cbCounterDigits = new JComboBox<String>(digits);
+        cbCounterDigits = new JComboBox<>(digits);
         cbCounterDigits.addActionListener(this);
 
         // add controls
         XBoxPanel pnlTop = new XBoxPanel();
         
         YBoxPanel pnl1 = new YBoxPanel();
-        pnl1.setBorder(BorderFactory.createTitledBorder(
-                Translator.get("batch_rename_dialog.mask")));
+        pnl1.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.mask")));
         pnl1.add(edtFileNameMask);
         
         JPanel pnl1Btns = new JPanel(new GridLayout(3, 2));
@@ -352,7 +351,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private void checkForDuplicates() {
         boolean duplicates = false;
         boolean oldNamesConflict = false;
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         for (int i=0; i<newNames.size(); i++) {
             String newName = newNames.get(i);
             AbstractFile file = files.get(i);

@@ -473,7 +473,7 @@ public class CharsetDetector {
     private static final List<CSRecognizerInfo> ALL_CS_RECOGNIZERS;
 
     static {
-        List<CSRecognizerInfo> list = new ArrayList<CSRecognizerInfo>();
+        List<CSRecognizerInfo> list = new ArrayList<>();
 
         list.add(new CSRecognizerInfo(new CharsetRecog_UTF8(), true));
         list.add(new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_16_BE(), true));
@@ -523,7 +523,7 @@ public class CharsetDetector {
      * @deprecated This API is ICU internal only.
      */
     public String[] getDetectableCharsets() {
-        List<String> csnames = new ArrayList<String>(ALL_CS_RECOGNIZERS.size());
+        List<String> csnames = new ArrayList<>(ALL_CS_RECOGNIZERS.size());
         for (int i = 0; i < ALL_CS_RECOGNIZERS.size(); i++) {
             CSRecognizerInfo rcinfo = ALL_CS_RECOGNIZERS.get(i);
             boolean active = (fEnabledRecognizers == null) ? rcinfo.isDefaultEnabled : fEnabledRecognizers[i];

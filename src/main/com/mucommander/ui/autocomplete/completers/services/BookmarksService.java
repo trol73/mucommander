@@ -43,7 +43,7 @@ public class BookmarksService implements CompletionService, BookmarkListener {
 	}
 	
 	public Vector<String> getPossibleCompletions(String path) {
-		Vector<String> result = new Vector<String>();
+		Vector<String> result = new Vector<>();
 		PrefixFilter filter = PrefixFilter.createPrefixFilter(path);
 		result.addAll(filter.filter(sortedBookmarkNames));
 		result.addAll(filter.filter(sortedBookmarkLocations)); 

@@ -238,7 +238,7 @@ public class ZipEntry implements Cloneable {
      * @param fields an array of extra fields
      */
     public void setExtraFields(ZipExtraField[] fields) {
-        extraFields = new Vector<ZipExtraField>();
+        extraFields = new Vector<>();
         for (ZipExtraField field : fields)
             extraFields.addElement(field);
     }
@@ -264,7 +264,7 @@ public class ZipEntry implements Cloneable {
      */
     public void addExtraField(ZipExtraField ze) {
         if (extraFields == null)
-            extraFields = new Vector<ZipExtraField>();
+            extraFields = new Vector<>();
 
         ZipShort type = ze.getHeaderId();
         for (int i=0, nbFields=extraFields.size(); i<nbFields; i++) {

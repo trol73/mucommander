@@ -29,6 +29,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -103,7 +105,7 @@ public class PreferredEncodingsDialog extends FocusDialog {
 
         YBoxPanel yPanel = new YBoxPanel();
 
-        checkboxes = new Vector<JCheckBox>();
+        checkboxes = new Vector<>();
         JCheckBox checkbox;
         for(String enc : Charset.availableCharsets().keySet()) {
             checkbox = new JCheckBox(enc);
@@ -143,13 +145,10 @@ public class PreferredEncodingsDialog extends FocusDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                JCheckBox checkbox;
-                int nbCheckboxes = checkboxes.size();
-                java.util.List<String> preferredEncodings = new Vector<String>();
+                List<String> preferredEncodings = new ArrayList<>();
 
-                for(int i=0; i<nbCheckboxes; i++) {
-                    checkbox = checkboxes.get(i);
-                    if(checkbox.isSelected())
+                for (JCheckBox checkbox : checkboxes) {
+                    if (checkbox.isSelected())
                         preferredEncodings.add(checkbox.getText());
                 }
 
@@ -163,11 +162,8 @@ public class PreferredEncodingsDialog extends FocusDialog {
      *
      * @param selectedEncodings list of encodings to select
      */
-    protected void selectCheckboxes(java.util.List<String> selectedEncodings) {
-        JCheckBox checkbox;
-        int nbCheckboxes = checkboxes.size();
-        for(int i=0; i<nbCheckboxes; i++) {
-            checkbox = checkboxes.get(i);
+    protected void selectCheckboxes(List<String> selectedEncodings) {
+        for (JCheckBox checkbox : checkboxes) {
             checkbox.setSelected(selectedEncodings.contains(checkbox.getText()));
         }
     }

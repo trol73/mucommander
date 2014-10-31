@@ -94,7 +94,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         this.credentials = CredentialsManager.getPersistentCredentialMappings();
 
         // Create the sortable credentials list panel
-        SortableListPanel<CredentialsMapping> listPanel = new SortableListPanel<CredentialsMapping>(credentials);
+        SortableListPanel<CredentialsMapping> listPanel = new SortableListPanel<>(credentials);
         this.credentialsList = listPanel.getDynamicList();
         this.lastSelectedItem = (CredentialsMapping) credentialsList.getSelectedValue();
 
@@ -216,9 +216,12 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         super.dispose();
 
         // Write credentials file to disk, only if changes were made
-        try {CredentialsManager.writeCredentials(false);}
-        // We should probably pop an error dialog here...
-        catch(Exception e) {}
+        try {
+            CredentialsManager.writeCredentials(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // We should probably pop an error dialog here...
+        }
     }
 
 

@@ -51,7 +51,7 @@ public class JobProgressMonitor implements FileJobListener {
 	private EventListenerList listenerList = new EventListenerList();
 	
 	/** A list of monitored jobs. */
-	private List<FileJob> jobs = new ArrayList<FileJob>();
+	private List<FileJob> jobs = new ArrayList<>();
 
 	/** An instance of this class */
 	private static final JobProgressMonitor instance = new JobProgressMonitor();

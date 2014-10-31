@@ -22,9 +22,7 @@ package com.mucommander.commons.file;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * <code>ClassLoader</code> implementation capable of loading classes from instances of {@link AbstractFile}.
@@ -49,7 +47,7 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     public AbstractFileClassLoader(ClassLoader parent) {
         super(parent);
-        files = new Vector<AbstractFile>();
+        files = new Vector<>();
     }
 
     /**
@@ -171,23 +169,21 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     protected Enumeration<URL> findResources(String name) {
-        Iterator<AbstractFile> iterator;   // Iterator on all available JAR files.
-        AbstractFile           file;       // AbstractFile describing each match.
-        Vector<URL>            resources;  // All resources that match 'name'.
-
-        // Initialisation.
-        iterator  = files.iterator();
-        resources = new Vector<URL>();
+        Iterator<AbstractFile> iterator = files.iterator(); // Iterator on all available JAR files.
+        Vector<URL> resources = new Vector<>();    // All resources that match 'name'.
 
         // Goes through all files in the classpath to find the resource.
         while(iterator.hasNext()) {
             try {
-                if((file = iterator.next().getChild(name)).exists())
+                AbstractFile file = iterator.next();
+                if (file.getChild(name).exists()) {
                     resources.add(file.getJavaNetURL());
+                }
+            } catch(IOException e) {
+
             }
-            catch(IOException e) {}
         }
-        return resources.elements();
+        return resources. elements();
     }
 
     /**
@@ -197,14 +193,8 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     protected String findLibrary(String name) {
-        AbstractFile file; // Path of the requested library.
-
-        // Tries to find the requested library.
-        if((file = findResourceAsFile(name)) == null)
-            return null;
-
-        // Retrieves its absolute path.
-        return file.getAbsolutePath();
+        AbstractFile file = findResourceAsFile(name); // Path of the requested library.
+        return  file == null ? null : file.getAbsolutePath();
     }
 
 
@@ -253,12 +243,13 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        AbstractFile file; // File containing the class' bytecode.
+        AbstractFile file = findResourceAsFile(name.replace('.', '/') + ".class"); // File containing the class' bytecode.
 
         // Tries to locate the specified class and, if found, load it.
-        if((file = findResourceAsFile(name.replace('.', '/') + ".class")) != null) {
-            try {return loadClass(name, file);}
-            catch(Exception e) {}
+        if (file != null) {
+            try {
+                return loadClass(name, file);
+            } catch(Exception e) {}
         }
         throw new ClassNotFoundException(name);
     }

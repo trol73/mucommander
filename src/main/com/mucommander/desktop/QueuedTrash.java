@@ -33,7 +33,7 @@ import java.util.Vector;
  * When {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)} is called, the file is added to a queue.
  * The file is not moved to the trash immediately: the trash will wait a period of {@link #QUEUE_PERIOD} milliseconds
  * for additional files to be added. If files were added during that period, the trash will wait another period and
- * so on. When no more files are added were added during the period, {@link #moveToTrash(java.util.Vector)} is called
+ * so on. When no more files are added were added during the period, {@link #moveToTrash(java.util.List)} is called
  * with the list of queued files to move to the trash.
  * </p>
  *
@@ -50,7 +50,7 @@ import java.util.Vector;
 public abstract class QueuedTrash extends AbstractTrash {
 
     /** Contains the files that are waiting to be moved to the trash */
-    private final static List<AbstractFile> queuedFiles = new Vector<AbstractFile>();
+    private final static List<AbstractFile> queuedFiles = new Vector<>();
 
     /** Use to synchronize access to the trash */
     protected final static Object moveToTrashLock = new Object();

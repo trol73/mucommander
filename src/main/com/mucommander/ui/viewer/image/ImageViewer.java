@@ -366,10 +366,7 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     @Override
     public String getTitle() {
-        return new StringBuilder(filesInDirectory.get(indexInDirectory).toString()).
-                //append(" - ").append(image.getWidth(null)).append("x").append(image.getHeight(null)).append(" - ").
-                //append((int) (zoomFactor * 100)).append("%").
-                toString();
+        return filesInDirectory.get(indexInDirectory).toString();
         //return file.getAbsolutePath()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
     }
 

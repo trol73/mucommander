@@ -10,8 +10,8 @@ import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Comm
 
 
 class Folder {
-    public RecordVector<CoderInfo> Coders = new RecordVector<CoderInfo>();
-    RecordVector<BindPair> BindPairs = new RecordVector<BindPair>();
+    public RecordVector<CoderInfo> Coders = new RecordVector<>();
+    RecordVector<BindPair> BindPairs = new RecordVector<>();
     IntVector PackStreams = new IntVector();
     LongVector UnPackSizes = new LongVector();
     int UnPackCRC;
@@ -52,8 +52,7 @@ class Folder {
       
     int GetNumOutStreams() {
         int result = 0;
-        for (int i = 0; i < Coders.size(); i++)
-            result += Coders.get(i).NumOutStreams;
+        for (CoderInfo Coder : Coders) result += Coder.NumOutStreams;
         return result;
     }
     

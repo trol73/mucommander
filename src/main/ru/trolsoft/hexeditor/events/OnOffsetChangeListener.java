@@ -18,7 +18,8 @@
 package ru.trolsoft.hexeditor.events;
 
 /**
- * Created by trol on 02/04/14.
+ * @author Oleg Trifonov
+ * Created on 02/04/14.
  */
 public interface OnOffsetChangeListener {
 

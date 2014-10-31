@@ -162,7 +162,7 @@ public class Launcher {
             this.name = "launcher." + name;
             this.helper = helper;
             this.depends = depends;
-            this.task = new FutureTask<Void>(this);
+            this.task = new FutureTask<>(this);
         }
 
         @Override
@@ -662,7 +662,7 @@ public class Launcher {
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
 
-            List<LauncherTask> tasks = new LinkedList<LauncherTask>();
+            List<LauncherTask> tasks = new LinkedList<>();
             tasks.add(taskLoadConfigs);
             tasks.add(taskStart);
             tasks.add(taskLoadIcons);

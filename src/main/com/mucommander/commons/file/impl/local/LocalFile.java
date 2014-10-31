@@ -31,8 +31,9 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -349,7 +350,7 @@ public class LocalFile extends ProtocolFile {
                     // respectively.
 
                     // Start by tokenizing the whole line
-                    Vector<String> tokenV = new Vector<String>();
+                    List<String> tokenV = new ArrayList<>();
                     if(line!=null) {
                         StringTokenizer st = new StringTokenizer(line);
                         while(st.hasMoreTokens())
@@ -365,7 +366,7 @@ public class LocalFile extends ProtocolFile {
 
                     // Find the last token starting with '/'
                     int pos = nbTokens-1;
-                    while(!tokenV.elementAt(pos).startsWith("/")) {
+                    while(!tokenV.get(pos).startsWith("/")) {
                         if(pos==0) {
                             // This shouldn't normally happen
                             LOGGER.warn("Failed to parse output of df -k {} line={}", absPath, line);
@@ -376,9 +377,9 @@ public class LocalFile extends ProtocolFile {
                     }
 
                     // '1-blocks' field (total space)
-                    dfInfo[0] = Long.parseLong(tokenV.elementAt(pos-4)) * 1024;
+                    dfInfo[0] = Long.parseLong(tokenV.get(pos - 4)) * 1024;
                     // 'Avail' field (free space)
-                    dfInfo[1] = Long.parseLong(tokenV.elementAt(pos-2)) * 1024;
+                    dfInfo[1] = Long.parseLong(tokenV.get(pos - 2)) * 1024;
                 }
 
 //                // Retrieves the total and free space information using the POSIX statvfs function
@@ -453,7 +454,7 @@ public class LocalFile extends ProtocolFile {
      * @return all local volumes
      */
     public static AbstractFile[] getVolumes() {
-        Vector<AbstractFile> volumesV = new Vector<AbstractFile>();
+        List<AbstractFile> volumesV = new ArrayList<>();
 
         // Add Mac OS X's /Volumes subfolders and not file roots ('/') since Volumes already contains a named link
         // (like 'Hard drive' or whatever silly name the user gave his primary hard disk) to /
@@ -490,17 +491,17 @@ public class LocalFile extends ProtocolFile {
      *
      * @param v the <code>Vector</code> to add root folders to
      */
-    private static void addJavaIoFileRoots(Vector<AbstractFile> v) {
+    private static void addJavaIoFileRoots(List<AbstractFile> v) {
         // Warning : No file operation should be performed on the resolved folders as under Win32, this would cause a
         // dialog to appear for removable drives such as A:\ if no disk is present.
         File fileRoots[] = File.listRoots();
 
-        int nbFolders = fileRoots.length;
-        for(int i=0; i<nbFolders; i++)
+        for (File fileRoot : fileRoots)
             try {
-                v.add(FileFactory.getFile(fileRoots[i].getAbsolutePath(), true));
+                v.add(FileFactory.getFile(fileRoot.getAbsolutePath(), true));
+            } catch (IOException e) {
+
             }
-            catch(IOException e) {}
     }
 
     /**
@@ -509,7 +510,7 @@ public class LocalFile extends ProtocolFile {
      *
      * @param v the <code>Vector</code> to add mount points to
      */
-    private static void addMountEntries(Vector<AbstractFile> v) {
+    private static void addMountEntries(List<AbstractFile> v) {
         BufferedReader br;
 
         br = null;
@@ -563,7 +564,7 @@ public class LocalFile extends ProtocolFile {
      *
      * @param v the <code>Vector</code> to add the volumes to
      */
-    private static void addMacOSXVolumes(Vector<AbstractFile> v) {
+    private static void addMacOSXVolumes(List<AbstractFile> v) {
         // /Volumes not resolved for some reason, giving up
         AbstractFile volumesFolder = FileFactory.getFile("/Volumes");
         if(volumesFolder==null)
@@ -573,16 +574,17 @@ public class LocalFile extends ProtocolFile {
         try {
             AbstractFile volumesFiles[] = volumesFolder.ls();
             int nbFiles = volumesFiles.length;
-            AbstractFile folder;
-            for(int i=0; i<nbFiles; i++)
-                if((folder=volumesFiles[i]).isDirectory()) {
+
+            for (AbstractFile folder : volumesFiles) {
+                if (folder.isDirectory()) {
                     // The primary hard drive (the one corresponding to '/') is listed under Volumes and should be
                     // returned as the first volume
-                    if(folder.getCanonicalPath().equals("/"))
-                        v.insertElementAt(folder, 0);
+                    if (folder.getCanonicalPath().equals("/"))
+                        v.add(0, folder);
                     else
                         v.add(folder);
                 }
+            }
         }
         catch(IOException e) {
             LOGGER.warn("Can't get /Volumes subfolders", e);
@@ -840,7 +842,7 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls() throws IOException {
-        return ls((FilenameFilter)null);
+        return ls(null);
     }
 
     @Override
@@ -850,7 +852,7 @@ public class LocalFile extends ProtocolFile {
     }
 	
     @Override
-    public void renameTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void renameTo(AbstractFile destFile) throws IOException {
         // Throw an exception if the file cannot be renamed to the specified destination.
         // Fail in some situations where java.io.File#renameTo() doesn't.
         // Note that java.io.File#renameTo()'s implementation is system-dependant, so it's always a good idea to

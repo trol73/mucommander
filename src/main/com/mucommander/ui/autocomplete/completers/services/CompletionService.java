@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.autocomplete.completers.services;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -40,7 +41,7 @@ public interface CompletionService {
 	 * @param path - a path.
 	 * @return a Vector of possible completions.
 	 */
-	public Vector<String> getPossibleCompletions(String path);
+	public List<String> getPossibleCompletions(String path);
 	
 	/**
 	 *  If the given completion match one of my suggested completions, return 

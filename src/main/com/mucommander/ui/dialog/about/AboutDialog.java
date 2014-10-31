@@ -519,12 +519,9 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * @param  text text to display in the label.
      * @return       a <code>JLabel</code> displaying the specified text using a bold font.
      */
-    private JLabel createBoldLabel(String text) {
-        JLabel label;
-        Font   font;
-
-        label = new JLabel(text);
-        font  = label.getFont();
+    private static JLabel createBoldLabel(String text) {
+        JLabel label = new JLabel(text);
+        Font font  = label.getFont();
         label.setFont(new Font(font.getFontName(), font.getStyle() | Font.BOLD, font.getSize()));
 
         return label;

@@ -119,12 +119,12 @@ public class CommandBarDialog extends CustomizeDialog {
     protected JPanel createCustomizationPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		
-		commandBarAvailableButtons   = new AlteredVector<JButton>();
-		commandBarButtons            = new AlteredVector<JButton>();
-		commandBarAlternateButtons   = new AlteredVector<JButton>();
+		commandBarAvailableButtons   = new AlteredVector<>();
+		commandBarButtons            = new AlteredVector<>();
+		commandBarAlternateButtons   = new AlteredVector<>();
 		
 		// a Set that contains all actions that are used by the command-bar (as regular or alternate buttons).
-		Set<String> usedActions = new HashSet<String>();
+		Set<String> usedActions = new HashSet<>();
 		usedActions.addAll(initCommandBarActionsList());
 		usedActions.addAll(initCommandBarAlternateActionsList());
 		initActionsPoolList(usedActions);
@@ -185,7 +185,7 @@ public class CommandBarDialog extends CustomizeDialog {
         for (String commandBarActionId : commandBarActionIds)
             commandBarButtons.add(CommandBarButtonForDisplay.create(commandBarActionId));
 		
-		commandBarButtonsList = new DynamicList<JButton>(commandBarButtons);
+		commandBarButtonsList = new DynamicList<>(commandBarButtons);
 		
 		// Set lists cells renderer
 		commandBarButtonsList.setCellRenderer(new CommandBarButtonListCellRenderer());
@@ -237,9 +237,7 @@ public class CommandBarDialog extends CustomizeDialog {
 					commandBarButtonsList.ensureIndexIsVisible(index);
 					commandBarButtonsList.repaint();
 					return true;
-				} catch (UnsupportedFlavorException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (UnsupportedFlavorException | IOException e) {
 					e.printStackTrace();
 				}
 				return false;
@@ -293,7 +291,7 @@ public class CommandBarDialog extends CustomizeDialog {
         for (String commandBarActionId : commandBarActionIds)
             commandBarAlternateButtons.add(CommandBarButtonForDisplay.create(commandBarActionId));
 		
-		commandBarAlternateButtonsList = new DynamicList<JButton>(commandBarAlternateButtons);
+		commandBarAlternateButtonsList = new DynamicList<>(commandBarAlternateButtons);
 		
 		// Set lists cells renderer
 		commandBarAlternateButtonsList.setCellRenderer(new CommandBarAlternativeButtonListRenderer());
@@ -349,9 +347,7 @@ public class CommandBarDialog extends CustomizeDialog {
 					commandBarAlternateButtonsList.ensureIndexIsVisible(index);
 					commandBarAlternateButtonsList.repaint();
 					return true;
-				} catch (UnsupportedFlavorException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (UnsupportedFlavorException | IOException e) {
 					e.printStackTrace();
 				}
 				return false;
@@ -375,7 +371,7 @@ public class CommandBarDialog extends CustomizeDialog {
 				insertInOrder(commandBarAvailableButtons, CommandBarButtonForDisplay.create(actionId));			
 		}
 
-		commandBarAvailableButtonsList = new DynamicHorizontalWrapList<JButton>(commandBarAvailableButtons, CommandBarButtonForDisplay.PREFERRED_SIZE.width, 6);
+		commandBarAvailableButtonsList = new DynamicHorizontalWrapList<>(commandBarAvailableButtons, CommandBarButtonForDisplay.PREFERRED_SIZE.width, 6);
 		
 		commandBarAvailableButtonsList.setCellRenderer(new AvailableButtonCellListRenderer());
 		commandBarAvailableButtonsList.setDragEnabled(true);
@@ -417,9 +413,7 @@ public class CommandBarDialog extends CustomizeDialog {
 					commandBarAvailableButtonsList.ensureIndexIsVisible(insertedIndex);
 					return true;
 				}
-				catch (UnsupportedFlavorException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				catch (UnsupportedFlavorException | IOException e) {
 					e.printStackTrace();
 				}
 				return false;

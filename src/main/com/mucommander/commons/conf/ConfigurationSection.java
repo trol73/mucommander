@@ -31,21 +31,9 @@ class ConfigurationSection {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Contains all the variables defined in the section. */
-    private final Map<String, String>               variables;
+    private final Map<String, String> variables= new HashMap<>();
     /** Contains all the subsections defined the section. */
-    private final Map<String, ConfigurationSection> sections;
-
-
-
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * Creates a new configuration section.
-     */
-    public ConfigurationSection() {
-        variables = new HashMap<String, String>();
-        sections  = new HashMap<String, ConfigurationSection>();
-    }
+    private final Map<String, ConfigurationSection> sections = new HashMap<>();
 
 
 

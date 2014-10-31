@@ -75,7 +75,7 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
     private final static Map<NotificationType, TrayIcon.MessageType> MESSAGE_TYPES;
 
     static {
-        MESSAGE_TYPES = new Hashtable<NotificationType, TrayIcon.MessageType>();
+        MESSAGE_TYPES = new Hashtable<>();
 
         MESSAGE_TYPES.put(NotificationType.JOB_COMPLETED, TrayIcon.MessageType.INFO);
         MESSAGE_TYPES.put(NotificationType.JOB_ERROR, TrayIcon.MessageType.ERROR);

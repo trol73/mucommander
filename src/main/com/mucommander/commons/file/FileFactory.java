@@ -20,11 +20,7 @@
 package com.mucommander.commons.file;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,19 +84,19 @@ public class FileFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileFactory.class);
 
     /** All registered protocol providers. */
-    private static Hashtable<String, ProtocolProvider> protocolProviders = new Hashtable<String, ProtocolProvider>();
+    private static Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
 
     /** Local file provider to avoid hashtable lookups (faster). */
     private static ProtocolProvider localFileProvider;
 
     /** Vector of registered ArchiveFormatMapping instances */
-    private static Vector<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<ArchiveFormatProvider>();
+    private static List<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<>();
 
     /** Array of registered FileProtocolMapping instances, for quicker access */
     private static ArchiveFormatProvider[] archiveFormatProviders;
 
     /** Contains a FilePool instance for each registered scheme */
-    private static final HashMap<String, FilePool> FILE_POOL_MAP = new HashMap<String, FilePool>();
+    private static final HashMap<String, FilePool> FILE_POOL_MAP = new HashMap<>();
 
     /** System temp directory */
     private static final AbstractFile TEMP_DIRECTORY;
@@ -272,7 +268,7 @@ public class FileFactory {
         int index = archiveFormatProvidersV.indexOf(provider);
 
         if(index!=-1) {
-            archiveFormatProvidersV.removeElementAt(index);
+            archiveFormatProvidersV.remove(index);
             updateArchiveFormatProviderArray();
         }
     }

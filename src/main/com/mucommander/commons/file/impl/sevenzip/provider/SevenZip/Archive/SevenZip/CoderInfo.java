@@ -6,7 +6,7 @@ class CoderInfo {
     
     int NumInStreams;
     int NumOutStreams;
-    public ObjectVector<AltCoderInfo> AltCoders = new com.mucommander.commons.file.impl.sevenzip.provider.Common.ObjectVector<AltCoderInfo>();
+    public ObjectVector<AltCoderInfo> AltCoders = new com.mucommander.commons.file.impl.sevenzip.provider.Common.ObjectVector<>();
     
     boolean IsSimpleCoder() { return (NumInStreams == 1) && (NumOutStreams == 1); }
     

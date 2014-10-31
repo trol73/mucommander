@@ -59,7 +59,7 @@ abstract class RPNConverter {
 			throws UnknownFunctionException, UnparsableExpressionException {
 		final Tokenizer tokenizer = new Tokenizer(variables.keySet(), customFunctions, operators);
 		final StringBuilder output = new StringBuilder(infix.length());
-		final Stack<Token> operatorStack = new Stack<Token>();
+		final Stack<Token> operatorStack = new Stack<>();
 		List<Token> tokens = tokenizer.getTokens(substituteUnaryOperators(infix, operators));
 		validateRPNExpression(tokens, operators);
 		for (final Token token : tokens) {

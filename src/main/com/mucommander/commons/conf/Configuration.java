@@ -1158,8 +1158,8 @@ public class Configuration {
          * Initialises the configuration building.
          */
         public void startConfiguration() {
-            sections     = new Stack<ConfigurationSection>();
-            sectionNames = new Stack<String>();
+            sections     = new Stack<>();
+            sectionNames = new Stack<>();
         }
 
         /**

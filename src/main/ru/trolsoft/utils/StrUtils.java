@@ -20,7 +20,8 @@ package ru.trolsoft.utils;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- * Created by trol on 03/04/14.
+ * @author Oleg Trifonov
+ * Created on 03/04/14.
  */
 public class StrUtils {
     private static final char[] HEX_CHAR_ARRAY = "0123456789ABCDEF".toCharArray();

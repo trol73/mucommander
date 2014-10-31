@@ -19,8 +19,9 @@
 package com.mucommander.ui.autocomplete.completers.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +57,8 @@ public abstract class FilesService implements CompletionService {
 	 */
 	protected abstract AbstractFile[] getFiles(AbstractFile directory) throws IOException;
 	
-	public Vector<String> getPossibleCompletions(String path) {
-		Vector<String> result = new Vector<String>();
+	public List<String> getPossibleCompletions(String path) {
+		List<String> result = new ArrayList<>();
 		int index = Math.max(path.lastIndexOf('\\'), path.lastIndexOf('/'));	
 		if (index != -1) {
 	        String currentDirectoryName = path.substring(0, index+1);
@@ -71,7 +72,7 @@ public abstract class FilesService implements CompletionService {
 						currentDirectoryFiles = getFiles(currentDirectory);
 					} catch (IOException e) {
                         LOGGER.debug("Caught exception", e);
-						return new Vector<String>();
+						return new ArrayList<>();
 					}
 		
 		        	int nbCurrentDirectoryFiles = currentDirectoryFiles.length;
@@ -96,13 +97,10 @@ public abstract class FilesService implements CompletionService {
 	}
 	
 	public String complete(String selectedCompletion) {
-		String result = null;
-       	int nbCachedFileNames = cachedDirectoryFileNames.length;
-        for (int i=0; i < nbCachedFileNames; i++)
-        	if (cachedDirectoryFileNames[i].equalsIgnoreCase(selectedCompletion)) {
-        		result = cachedDirectoryName + cachedDirectoryFileNames[i];
-        		break;
-        	}
-        return result;
+        for (String cachedDirectoryFileName : cachedDirectoryFileNames)
+            if (cachedDirectoryFileName.equalsIgnoreCase(selectedCompletion)) {
+                return cachedDirectoryName + cachedDirectoryFileName;
+            }
+        return null;
 	}
 }

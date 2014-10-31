@@ -32,9 +32,9 @@ import com.mucommander.ui.main.MainFrame;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 
 /**
@@ -140,11 +140,10 @@ public class SendMailJob extends TransferFileJob {
         // address is provided
         readWriteLine("MAIL FROM: "+fromAddress);
 		
-        List<String> recipients = new Vector<String>();
+        List<String> recipients = new ArrayList<>();
         recipientString = splitRecipientString(recipientString, recipients);
-        int nbRecipients = recipients.size();
-        for(int i=0; i<nbRecipients; i++)
-            readWriteLine("RCPT TO: <"+recipients.get(i)+">" );
+        for (String recipient : recipients)
+            readWriteLine("RCPT TO: <" + recipient + ">");
         readWriteLine("DATA");
         writeLine("MIME-Version: 1.0");
         writeLine("Subject: "+this.mailSubject);

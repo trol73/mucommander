@@ -18,8 +18,9 @@
 
 package com.mucommander.commons.file.impl.zip.provider;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.ZipException;
 
 /**
@@ -38,10 +39,9 @@ public class ExtraFieldUtils {
     /**
      * Static registry of known extra fields.
      */
-    private static Hashtable<ZipShort, Class<? extends ZipExtraField>> implementations;
+    private static Hashtable<ZipShort, Class<? extends ZipExtraField>> implementations = new Hashtable<>();
 
     static {
-        implementations = new Hashtable<ZipShort, Class<? extends ZipExtraField>>();
         register(AsiExtraField.class);
         register(JarMarker.class);
     }
@@ -93,7 +93,7 @@ public class ExtraFieldUtils {
      * @throws ZipException on error
      */
     public static ZipExtraField[] parse(byte[] data) throws ZipException {
-        Vector<ZipExtraField> v = new Vector<ZipExtraField>();
+        List<ZipExtraField> v = new ArrayList<>();
         int start = 0;
         while (start <= data.length - 4) {
             ZipShort headerId = new ZipShort(data, start);
@@ -105,11 +105,9 @@ public class ExtraFieldUtils {
             try {
                 ZipExtraField ze = createExtraField(headerId);
                 ze.parseFromLocalFileData(data, start + 4, length);
-                v.addElement(ze);
-            } catch (InstantiationException ie) {
+                v.add(ze);
+            } catch (InstantiationException | IllegalAccessException ie) {
                 throw new ZipException(ie.getMessage());
-            } catch (IllegalAccessException iae) {
-                throw new ZipException(iae.getMessage());
             }
             start += (length + 4);
         }
@@ -117,10 +115,7 @@ public class ExtraFieldUtils {
             throw new ZipException("data starting at " + start
                 + " is in unknown format");
         }
-
-        ZipExtraField[] result = new ZipExtraField[v.size()];
-        v.copyInto(result);
-        return result;
+        return v.toArray(new ZipExtraField[v.size()]);
     }
 
     /**

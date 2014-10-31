@@ -221,7 +221,7 @@ class InArchive extends Header {
         return HRESULT.S_FALSE;
     }
     
-    int SkeepData(long size)  throws IOException {
+    int SkeepData(long size) throws IOException {
         for (long i = 0; i < size; i++) {
             int temp = ReadByte();
         }
@@ -387,15 +387,15 @@ class InArchive extends Header {
     }
     
     int ReadFileNames(ObjectVector<FileItem> files)  throws IOException {
-        for(int i = 0; i < files.size(); i++) {
-            String name = new String();
-            for (;;) {
+        for (FileItem file : files) {
+            String name = "";
+            for (; ; ) {
                 char c = ReadWideCharLE();
                 if (c == '\0')
                     break;
                 name += c;
             }
-            files.get(i).name = name;
+            file.name = name;
         }
         return HRESULT.S_OK;
     }

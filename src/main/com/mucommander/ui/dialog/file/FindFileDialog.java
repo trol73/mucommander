@@ -79,7 +79,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private JCheckBox cbCaseSensitive;
     private JCheckBox cbIgnoreHidden;
 
-    private DefaultListModel<AbstractFile> listModel = new DefaultListModel<AbstractFile>();
+    private DefaultListModel<AbstractFile> listModel = new DefaultListModel<>();
     private JList<AbstractFile> list;
     protected JLabel lblTotal;
 

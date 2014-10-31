@@ -58,13 +58,11 @@ public class PrefixFilter {
 	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
 	public Vector<String> filter(String[] strings) {
-		Vector<String> result = new Vector<String>();
-		int nbString = strings.length;
-		for (int i=0; i<nbString; i++) {
-			String stringI = strings[i];
-			if (accept(stringI))
-				result.add(stringI);
-		}
+		Vector<String> result = new Vector<>();
+        for (String s : strings) {
+            if (accept(s))
+                result.add(s);
+        }
 		return result;
 	}
 	
@@ -75,7 +73,7 @@ public class PrefixFilter {
 	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
 	public Vector<String> filter(Vector<String> strings) {
-		Vector<String> result = new Vector<String>();
+		Vector<String> result = new Vector<>();
 
         for(String s : strings) {
 			if (accept(s))

@@ -24,13 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,11 +98,10 @@ public class Translator {
 
         // Determines if the list of available languages contains the language (case-insensitive)
         boolean containsLanguage = false;
-        int nbAvailableLanguages = availableLanguages.size();
-        for(int i=0; i<nbAvailableLanguages; i++) {
-            if(availableLanguages.get(i).equalsIgnoreCase(lang)) {
+        for (String availableLanguage : availableLanguages) {
+            if (availableLanguage.equalsIgnoreCase(lang)) {
                 containsLanguage = true;
-                lang = availableLanguages.get(i);   // Use the proper case variation
+                lang = availableLanguage;   // Use the proper case variation
                 break;
             }
         }
@@ -147,9 +140,9 @@ public class Translator {
      * @throws IOException thrown if an IO error occurs.
      */
     public static void loadDictionaryFile(String filePath) throws IOException {
-        availableLanguages = new Vector<String>();
-        dictionary         = new Hashtable<String, String>();
-        defaultDictionary  = new Hashtable<String, String>();
+        availableLanguages = new Vector<>();
+        dictionary         = new Hashtable<>();
+        defaultDictionary  = new Hashtable<>();
 
         BufferedReader br = new BufferedReader(new BOMReader(ResourceLoader.getResourceAsStream(filePath)));
         String line;
@@ -468,7 +461,7 @@ public class Translator {
         String lang;
         String text;
         StringTokenizer st;
-        Map<String, String> newLanguageEntries = new Hashtable<String, String>();
+        Map<String, String> newLanguageEntries = new HashMap<>();
         while ((line = newLanguageFileReader.readLine())!=null) {
             try {
                 if (!line.trim().startsWith("#") && !line.trim().equals("")) {

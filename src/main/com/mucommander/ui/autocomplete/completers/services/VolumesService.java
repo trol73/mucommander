@@ -22,6 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Vector;
  */
 
 public class VolumesService implements CompletionService {
-	private Vector<String> lastSuggestedCompletions = new Vector<String>();
+	private List<String> lastSuggestedCompletions = new Vector<>();
 	
 	public VolumesService() {}
 
@@ -41,7 +42,7 @@ public class VolumesService implements CompletionService {
      *
      * @return a sorted array of root folder names
      */
-	public Vector<String> getPossibleCompletions(String path) {
+	public List<String> getPossibleCompletions(String path) {
 		lastSuggestedCompletions.clear();
 		int index = Math.max(path.lastIndexOf('\\'), path.lastIndexOf('/'));
 		if (index == -1) {
@@ -57,14 +58,11 @@ public class VolumesService implements CompletionService {
 	}
 
 	public String complete(String selectedCompletion) {
-		String result = null;
-		int nbLastReturnedCompletions = lastSuggestedCompletions.size();
-		for (int i=0; i < nbLastReturnedCompletions; i++)
-			if (lastSuggestedCompletions.elementAt(i).equalsIgnoreCase(selectedCompletion)) {
-				result = lastSuggestedCompletions.elementAt(i);
-				break;
-			}
+        for (String lastSuggestedCompletion : lastSuggestedCompletions)
+            if (lastSuggestedCompletion.equalsIgnoreCase(selectedCompletion)) {
+                return lastSuggestedCompletion;
+            }
 		
-		return result;
+		return null;
 	}
 }

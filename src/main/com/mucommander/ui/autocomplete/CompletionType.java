@@ -45,7 +45,7 @@ public abstract class CompletionType {
 	protected AutocompleterTextComponent autocompletedtextComp;
     protected DocumentListener documentListener;
     protected JList list = new JList(); 
-    protected JPopupMenu popup = new JPopupMenu();
+    protected final JPopupMenu popup = new JPopupMenu();
     protected ShowingThread showingThread;
     
     // Constants:

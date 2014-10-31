@@ -64,7 +64,7 @@ public class ThemeManager {
     /** Path to the custom themes repository. */
     private static final String       CUSTOM_THEME_FOLDER              = "themes";
     /** List of all registered theme change listeners. */
-    private static final WeakHashMap<ThemeListener, Object>  listeners = new WeakHashMap<ThemeListener, Object>();
+    private static final WeakHashMap<ThemeListener, Object>  listeners = new WeakHashMap<>();
     /** List of all predefined theme names. */
     private static List<String> predefinedThemeNames;
     /** List of all predefined syntax highlight theme names. */
@@ -169,7 +169,7 @@ public class ThemeManager {
             try {
                 predefinedThemeNames = getThemeNames(ResourceLoader.getRootPackageAsFile(ThemeManager.class).getChild(PathUtils.removeLeadingSeparator(RuntimeConstants.THEMES_PATH, "/")));
             } catch (IOException e) {
-                predefinedThemeNames = new ArrayList<String>();
+                predefinedThemeNames = new ArrayList<>();
             }
         }
         return predefinedThemeNames.iterator();
@@ -183,7 +183,7 @@ public class ThemeManager {
             try {
                 predefinedSyntaxThemeNames = getThemeNames(ResourceLoader.getRootPackageAsFile(ThemeManager.class).getChild(PathUtils.removeLeadingSeparator(RuntimeConstants.TEXT_SYNTAX_THEMES_PATH, "/")));
             } catch (IOException e) {
-                predefinedSyntaxThemeNames = new ArrayList<String>();
+                predefinedSyntaxThemeNames = new ArrayList<>();
             }
         }
         return predefinedSyntaxThemeNames;
@@ -197,12 +197,12 @@ public class ThemeManager {
     private static List<String> getThemeNames(AbstractFile themeFolder) {
         try {
             AbstractFile[] files = themeFolder.ls(new ExtensionFilenameFilter(".xml"));
-            List<String> names = new ArrayList<String>();
+            List<String> names = new ArrayList<>();
             for (AbstractFile file : files)
                 names.add(getThemeName(file));
             return names;
         } catch(Exception e) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
 
@@ -210,7 +210,7 @@ public class ThemeManager {
         Iterator<String> iterator;
         String          name;
 
-        List<Theme> themes = new ArrayList<Theme>();
+        List<Theme> themes = new ArrayList<>();
 
         // Tries to load the user theme. If it's corrupt, uses an empty user theme.
         try {
@@ -257,7 +257,7 @@ public class ThemeManager {
         Vector<String>   themes;
         Iterator<String> iterator;
 
-        themes = new Vector<String>();
+        themes = new Vector<>();
 
         // Adds the user theme name.
         themes.add(Translator.get("theme.custom_theme"));

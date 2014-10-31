@@ -30,9 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -277,8 +275,7 @@ public class HTTPFile extends ProtocolFile {
         if(resolve && !fileResolved) {
             try {
                 resolveFile();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 LOGGER.info("Failed to resolve {}", url, e);
                 // file will be considered as resolved
             }
@@ -591,9 +588,9 @@ public class HTTPFile extends ProtocolFile {
 
             br = new BufferedReader(ir);
 
-            Vector<AbstractFile> children = new Vector<AbstractFile>();
+            List<AbstractFile> children = new ArrayList<>();
             // List that contains children URL, a TreeSet for fast (log(n)) search operations
-            TreeSet<String> childrenURL = new TreeSet<String>();
+            Set<String> childrenURL = new TreeSet<>();
             URL childURL;
             FileURL childFileURL;
             Credentials credentials = fileURL.getCredentials();
@@ -756,22 +753,18 @@ public class HTTPFile extends ProtocolFile {
             checkHTTPResponse(conn);
 
             // Read up to blockLen bytes
-            InputStream in = conn.getInputStream();
-            try {
+            try (InputStream in = conn.getInputStream()) {
                 int totalRead = 0;
                 int read;
-                while(totalRead<blockLen) {
-                    read = in.read(block, totalRead, blockLen-totalRead);
-                    if(read==-1)
+                while (totalRead < blockLen) {
+                    read = in.read(block, totalRead, blockLen - totalRead);
+                    if (read == -1)
                         break;
 
                     totalRead += read;
                 }
 
                 return totalRead;
-            }
-            finally {
-                in.close();
             }
         }
 

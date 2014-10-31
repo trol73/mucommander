@@ -20,7 +20,6 @@ package com.mucommander.ui.tabs;
 
 import java.awt.Component;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.event.ChangeListener;
@@ -105,19 +104,17 @@ public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 	@Override
 	public void removeDuplicateTabs() {
 		// a Set that will contain the tabs we've seen
-		Set<T> visitedTabs = new HashSet<T>();
+		Set<T> visitedTabs = new HashSet<>();
 		// a Set that will contain the tabs which are duplicated
-		Set<T> duplicatedTabs = new HashSet<T>(); 
+		Set<T> duplicatedTabs = new HashSet<>();
 		// The index of the selected tab
 		int selectedTabIndex = getSelectedTabIndex();
 
 		// add all duplicated tabs to the duplicatedTab Set
-		Iterator<T> existingTabsIterator = tabsCollection.iterator();
-		while (existingTabsIterator.hasNext()) {
-			T tab = existingTabsIterator.next();
-			if (!visitedTabs.add(tab))
-				duplicatedTabs.add(tab);
-		}
+        for (T tab : tabsCollection) {
+            if (!visitedTabs.add(tab))
+                duplicatedTabs.add(tab);
+        }
 
 		// remove all duplicated tabs which are identical to the selected tab without
 		// changing the tab selection

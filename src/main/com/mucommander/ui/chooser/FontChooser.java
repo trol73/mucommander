@@ -101,7 +101,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
         add(panel);
 
         // Font sizes.
-        sizes = new JComboBox<String>();
+        sizes = new JComboBox<>();
         for (int fontSize : FONT_SIZES)
             sizes.addItem(Integer.toString(fontSize));
         sizes.setSelectedItem(Integer.toString(selection.getSize()));

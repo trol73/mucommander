@@ -59,7 +59,7 @@ class ActionKeymapWriter extends ActionKeymapIO {
 	}
 	
 	void write() throws IOException {
-		Map<String, KeyStroke[]> combinedMapping = new Hashtable<String, KeyStroke[]>();
+		Map<String, KeyStroke[]> combinedMapping = new Hashtable<>();
 		Iterator<String> modifiedActionsIterator = ActionKeymap.getCustomizedActions();
 
 		while(modifiedActionsIterator.hasNext()) {

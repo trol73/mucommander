@@ -69,7 +69,7 @@ public class TabsQL extends QuickListWithIcons<FileTableTab> {
 	}
 
 	protected FileTableTab[] getData() {
-		List<FileTableTab> tabsList = new ArrayList<FileTableTab>();
+		List<FileTableTab> tabsList = new ArrayList<>();
 		Iterator<FileTableTab> tabsIterator = folderPanel.getTabs().iterator();
 		
 		while (tabsIterator.hasNext())

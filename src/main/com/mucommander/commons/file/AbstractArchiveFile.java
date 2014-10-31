@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Vector;
 import java.util.WeakHashMap;
 
@@ -111,7 +112,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
     protected void createEntriesTree() throws IOException, UnsupportedFileOperationException {
         // TODO: this method is not thread-safe and needs to be synchronized
         ArchiveEntryTree treeRoot = new ArchiveEntryTree();
-        archiveEntryFiles = new WeakHashMap<ArchiveEntry, AbstractArchiveEntryFile>();
+        archiveEntryFiles = new WeakHashMap<>();
 
         long start = System.currentTimeMillis();
         ArchiveEntryIterator entries = getEntryIterator();
@@ -239,7 +240,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         }
         // Use provided FilenameFilter and temporarily store created entry files that match the filter in a Vector
         else {
-            Vector<AbstractFile> filesV = new Vector<AbstractFile>();
+            List<AbstractFile> filesV = new Vector<>();
             for(int c=0; c<nbChildren; c++) {
                 ArchiveEntry entry = (ArchiveEntry)(((DefaultMutableTreeNode)treeNode.getChildAt(c)).getUserObject());
                 if(!filenameFilter.accept(entry.getName()))

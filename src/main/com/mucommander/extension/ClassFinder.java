@@ -82,7 +82,7 @@ public class ClassFinder {
     private List<Class<?>> find(String currentPackage, AbstractFile currentFile) throws IOException {
         AbstractFile[]   files;        // All subfolders or child class files of currentFile.
         Class<?>         currentClass; // Buffer for the current class.
-        List<Class<?>>   result = new Vector<Class<?>>();
+        List<Class<?>>   result = new Vector<>();
         
         // Analyses all subdirectories and class files.
         files = currentFile.ls(filter);
@@ -125,7 +125,7 @@ public class ClassFinder {
     public List<Class<?>> find(AbstractFile browsable, ClassFilter classFilter, ClassLoader classLoader) throws IOException {
         // Ignore non-browsable files.
         if(!browsable.isBrowsable())
-            return new Vector<Class<?>>();
+            return new Vector<>();
 
         // Initializes exploring.
         loader           = classLoader;

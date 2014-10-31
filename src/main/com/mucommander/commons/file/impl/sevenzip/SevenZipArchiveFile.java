@@ -144,7 +144,7 @@ public class SevenZipArchiveFile extends AbstractROArchiveFile {
         /**
          * Cache for opened file streams
          */
-        private Map<String, RandomAccessFile> openedRandomAccessFileList = new HashMap<String, RandomAccessFile>();
+        private Map<String, RandomAccessFile> openedRandomAccessFileList = new HashMap<>();
 
         /**
          * This method doesn't needed, if using with VolumedArchiveInStream

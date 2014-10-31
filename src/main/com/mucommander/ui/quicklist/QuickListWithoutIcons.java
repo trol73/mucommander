@@ -34,5 +34,5 @@ public abstract class QuickListWithoutIcons<T> extends QuickListWithDataList<T> 
 	}
 	
 	@Override
-    protected QuickListDataList<T> getList() { return new QuickListDataList<T>(nextFocusableComponent()); }
+    protected QuickListDataList<T> getList() { return new QuickListDataList<>(nextFocusableComponent()); }
 }
