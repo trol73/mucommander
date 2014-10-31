@@ -27,8 +27,8 @@ import com.mucommander.xml.XmlWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class provides a method to write persistent credentials contained by {@link CredentialsManager} to an XML file.
@@ -57,8 +57,7 @@ public class CredentialsWriter implements CredentialsConstants {
         Iterator<CredentialsMapping> iterator = CredentialsManager.getPersistentCredentialMappings().iterator();
         CredentialsMapping credentialsMapping;
         FileURL realm;
-        Enumeration<String> propertyKeys;
-        String name;
+        Set<String> propertyKeys;
 
         while(iterator.hasNext()) {
             credentialsMapping = iterator.next();
@@ -87,8 +86,7 @@ public class CredentialsWriter implements CredentialsConstants {
 
             // Write properties, each property is stored in a separate 'property' element
             propertyKeys = realm.getPropertyNames();
-            while(propertyKeys.hasMoreElements()) {
-                name = propertyKeys.nextElement();
+            for (String name : propertyKeys) {
                 attributes = new XmlAttributes();
                 attributes.add(ATTRIBUTE_NAME, name);
                 attributes.add(ATTRIBUTE_VALUE, realm.getProperty(name));
