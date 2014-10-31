@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
-import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.commons.file.FileFactory;
@@ -70,8 +69,8 @@ import javax.swing.SwingUtilities;
  * </p>
  * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
-public class Launcher {
-	private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+public class TrolCommander {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TrolCommander.class);
 	
     // - Class fields -----------------------------------------------------------
     // --------------------------------------------------------------------------
@@ -89,7 +88,7 @@ public class Launcher {
     /**
      * Prevents initialisation of the <code>Launcher</code>.
      */
-    private Launcher() {}
+    private TrolCommander() {}
 
 
     /**

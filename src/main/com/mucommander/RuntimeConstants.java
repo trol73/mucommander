@@ -54,7 +54,7 @@ public class RuntimeConstants {
     // - URLs ----------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Homepage URL. */
-    public static final String HOMEPAGE_URL       = "http://www.mucommander.com";
+    public static final String HOMEPAGE_URL       = "http://trolsoft.ru/en/soft/trolcommander";
     /** URL at which to download the latest version description. */
     public static final String VERSION_URL;
     /** URL of the muCommander forums. */

@@ -75,7 +75,7 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 				fireActiveTabChanged();
 			}
 		});
-	};
+	}
 
 	/**
 	 * Return the currently selected tab

@@ -17,11 +17,11 @@ public class TabbedPaneUICustomizer {
 	
 	public static void customizeTabbedPaneUI(JTabbedPane tabbedPane) {
 		TabbedPaneUI tabbedPaneUI = tabbedPane.getUI();
-		
-		if (tabbedPaneUI instanceof AquaTabbedPaneUI)
+
+        if (tabbedPaneUI instanceof AquaTabbedPaneContrastUI)
+            tabbedPane.setUI(new CompactAquaTabbedPaneContrastUI());
+        else if (tabbedPaneUI instanceof AquaTabbedPaneUI)
 			tabbedPane.setUI(new CompactAquaTabbedPaneUI());
-		else if (tabbedPaneUI instanceof AquaTabbedPaneContrastUI)
-			tabbedPane.setUI(new CompactAquaTabbedPaneContrastUI());
 	}
 	
 	private static class CompactAquaTabbedPaneUI extends AquaTabbedPaneUI {

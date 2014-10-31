@@ -26,7 +26,7 @@ public abstract class CustomFunction {
 	/**
 	 * create a new single value input CustomFunction with a set name
 	 * 
-	 * @param value
+	 * @param name
 	 *            the name of the function (e.g. foo)
 	 */
 	protected CustomFunction(String name) throws InvalidCustomFunctionException {
@@ -41,7 +41,7 @@ public abstract class CustomFunction {
 	/**
 	 * create a new single value input CustomFunction with a set name
 	 * 
-	 * @param value
+	 * @param name
 	 *            the name of the function (e.g. foo)
 	 */
 	protected CustomFunction(String name, int argumentCount) throws InvalidCustomFunctionException {

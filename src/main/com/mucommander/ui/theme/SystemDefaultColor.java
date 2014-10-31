@@ -178,17 +178,13 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
     // - PropertyChangeListener implementation -------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     public void propertyChange(PropertyChangeEvent evt) {
-        String name;
+        String name = evt.getPropertyName().toLowerCase();
 
-        name = evt.getPropertyName().toLowerCase();
-
-        if(name.equals("lookandfeel") || name.equalsIgnoreCase(property)) {
-            Color oldColor;
-
-            color    = null;
-            oldColor = color;
-            color    = getColor((ThemeData)null);
-            if(!color.equals(oldColor))
+        if (name.equals("lookandfeel") || name.equalsIgnoreCase(property)) {
+            color = null;
+            Color oldColor = color;
+            color = getColor((ThemeData)null);
+            if (!color.equals(oldColor))
                 notifyChange(color);
         }
     }

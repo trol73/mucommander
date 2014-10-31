@@ -175,7 +175,7 @@ public class DynamicList<E> extends JList<E> {
      *
      * <p>Any change made to the AlteredVector will be automatically reflected in the list, except for changes
      * made to the item instances themselves for which {@link #itemModified(int, boolean)} will need to
-     * be called explicitely.
+     * be called explicitly.
      *
      * @param items items to add to the list
      */

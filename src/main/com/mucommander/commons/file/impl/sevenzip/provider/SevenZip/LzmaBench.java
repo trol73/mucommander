@@ -21,7 +21,7 @@ public class LzmaBench
 				((A1 = 36969 * (A1 & 0xffff) + (A1 >>> 16)) << 16) ^
 				((A2 = 18000 * (A2 & 0xffff) + (A2 >>> 16)));
 		}
-	};
+	}
 	
 	static class CBitRandomGenerator
 	{
@@ -51,7 +51,7 @@ public class LzmaBench
 			NumBits = 32 - numBits;
 			return result;
 		}
-	};
+	}
 	
 	static class CBenchRandomGenerator
 	{
@@ -109,7 +109,7 @@ public class LzmaBench
 				}
 			}
 		}
-	};
+	}
 	
 	static class CrcOutStream extends java.io.OutputStream
 	{
@@ -135,7 +135,7 @@ public class LzmaBench
 		{
 			CRC.UpdateByte(b);
 		}
-	};
+	}
 
 	static class MyOutputStream extends java.io.OutputStream
 	{
@@ -165,7 +165,7 @@ public class LzmaBench
 		{
 			return _pos;
 		}
-	};
+	}
 
 	static class MyInputStream extends java.io.InputStream
 	{
@@ -190,7 +190,7 @@ public class LzmaBench
 				return -1;
 			return _buffer[_pos++] & 0xFF;
 		}
-	};
+	}
 	
 	static class CProgressInfo implements ICodeProgress
 	{
@@ -361,11 +361,10 @@ public class LzmaBench
 			{
 				inputCompressedStream.reset();
 				crcOutStream.Init();
-				
-				long outSize = kBufferSize;
-				long startTime = System.currentTimeMillis();
-				if (decoder.Code(inputCompressedStream, crcOutStream, outSize , null) != HRESULT.S_OK)
-					throw (new Exception("Decoding Error"));;
+
+                long startTime = System.currentTimeMillis();
+				if (decoder.Code(inputCompressedStream, crcOutStream, (long) kBufferSize, null) != HRESULT.S_OK)
+					throw (new Exception("Decoding Error"));
 				decodeTime = System.currentTimeMillis() - startTime;
 				if (crcOutStream.GetDigest() != crc.GetDigest())
 					throw (new Exception("CRC Error"));

@@ -54,7 +54,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	private static final Logger LOGGER = LoggerFactory.getLogger(HideableTabbedPane.class);
 
 	/* The tabs which are being displayed */
-	private TabsCollection<T> tabsCollection = new TabsCollection<>();;
+	private TabsCollection<T> tabsCollection = new TabsCollection<>();
 	/* The tabs display type (with/without tabs headers)
 	 * It is initialize as nullable so that it can be destroyed when it's replaced for the first time (see @{link tabAdded()})*/
 	private TabsViewer<T> tabsViewer = new NullableTabsViewer<>();

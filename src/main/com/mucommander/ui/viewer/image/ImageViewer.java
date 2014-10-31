@@ -633,9 +633,9 @@ class ImageViewer extends FileViewer implements ActionListener {
             pixelX = (int)(pixelX/zoomFactor);
             pixelY = (int)(pixelY/zoomFactor);
             int color = image.getRGB(pixelX, pixelY);
-            int r = (color >> 16) & 0xff;
-            int g = (color >> 8) & 0xff;
-            int b = (color) & 0xff;
+//            int r = (color >> 16) & 0xff;
+//            int g = (color >> 8) & 0xff;
+//            int b = (color) & 0xff;
             statusBar.setStatusMessage("XY: (" +pixelX + ", " + pixelY + ")  " + colorToRgbStr(color) + "  HTML: (" + colorToHexStr(color) + ")");
         }
 

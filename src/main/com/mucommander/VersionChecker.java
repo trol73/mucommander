@@ -172,7 +172,7 @@ public class VersionChecker extends DefaultHandler {
         if (latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
             // This ensures backward compatibility - if the remote version file does not contain
             // release date information, ignore it.
-            if ("".equals(releaseDate))
+            if (releaseDate.isEmpty())
                 return true;
 
             // Checks whether the remote release date is later than the current release date.

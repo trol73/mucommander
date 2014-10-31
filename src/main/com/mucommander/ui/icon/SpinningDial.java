@@ -361,9 +361,9 @@ public class SpinningDial extends AnimatedIcon {
             if((frames[currentFrame = getFrame()]) == null) {
                 // Initialises the frame.
                 // Note: getGraphicsConfiguration() returns null if the component has not yet been added to a container
-                GraphicsConfiguration gc = c.getGraphicsConfiguration();
+                GraphicsConfiguration gc = c != null ? c.getGraphicsConfiguration() : null;
                 Image frame;
-                if (c != null && gc != null)
+                if (gc != null)
                     frame = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
                 else
                     frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
