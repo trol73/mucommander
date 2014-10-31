@@ -191,9 +191,9 @@ public class MuLogging {
 	}
 
 	private static ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
-		ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<ILoggingEvent>();
+		ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
 
-		LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<ILoggingEvent>();
+		LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
 		encoder.setContext(loggerContext);
 	    encoder.setLayout(layout);
 	    encoder.start();

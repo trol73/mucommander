@@ -42,6 +42,6 @@ public class FileTableTabsWithoutHeadersViewerFactory implements TabsViewerFacto
 	 ***********************************/
 
 	public TabsViewer<FileTableTab> create(TabsCollection<FileTableTab> tabs) {
-		return new TabWithoutHeaderViewer<FileTableTab>(tabs, folderPanel.getFileTable().getAsUIComponent());
+		return new TabWithoutHeaderViewer<>(tabs, folderPanel.getFileTable().getAsUIComponent());
 	}
 }

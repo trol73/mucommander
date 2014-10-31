@@ -46,7 +46,7 @@ public class LocalLocationHistory {
 	private final static int HISTORY_CAPACITY = 100;
 
 	/** List of visited locations, ordered by last visit date */
-	private List<FileURL> history = new Vector<FileURL>(HISTORY_CAPACITY+1);
+	private List<FileURL> history = new Vector<>(HISTORY_CAPACITY+1);
 
 	/** Index of current folder in history */
 	private int historyIndex = -1;

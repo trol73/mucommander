@@ -6,7 +6,7 @@ import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Comm
 
 class BindInfoEx extends BindInfo {
     
-    RecordVector<MethodID> CoderMethodIDs = new RecordVector<MethodID>();
+    RecordVector<MethodID> CoderMethodIDs = new RecordVector<>();
     
     public void Clear() {
         super.Clear(); // CBindInfo::Clear();

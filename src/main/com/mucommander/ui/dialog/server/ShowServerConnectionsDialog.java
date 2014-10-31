@@ -69,7 +69,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
         connections = ConnectionPool.getConnectionHandlersSnapshot();
 
-        connectionList = new JList<String>(new AbstractListModel<String>() {
+        connectionList = new JList<>(new AbstractListModel<String>() {
             public int getSize() {
                 return connections.size();
             }

@@ -513,7 +513,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
         private static final int STROKE_WIDTH = 1;
 
-        private final List<Long> samples = new Vector<Long>(NB_SAMPLES_MAX);
+        private final List<Long> samples = new Vector<>(NB_SAMPLES_MAX);
 
         private Stroke lineStroke = new BasicStroke(STROKE_WIDTH);
 

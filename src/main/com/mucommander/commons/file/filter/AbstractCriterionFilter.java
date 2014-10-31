@@ -20,7 +20,8 @@ package com.mucommander.commons.file.filter;
 
 import com.mucommander.commons.file.AbstractFile;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <code>AbstractCriterionFilter</code> implements the bulk of the {@link CriterionFilter} interface, matching
@@ -96,18 +97,14 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return an array of accepted AbstractFile instances
      */
     public C[] filter(C values[]) {
-        Vector<C> filteredValuesV = new Vector<C>();
-        int nbvalues = values.length;
-        C value;
-        for(int i=0; i<nbvalues; i++) {
-            value = values[i];
-            if(accept(value))
+        List<C> filteredValuesV = new ArrayList<>();
+
+        for (C value : values) {
+            if (accept(value))
                 filteredValuesV.add(value);
         }
-
         C filteredValues[] = (C[]) new Object[filteredValuesV.size()];
-        filteredValuesV.toArray(filteredValues);
-        return filteredValues;
+        return filteredValuesV.toArray(filteredValues);
     }
 
     /**

@@ -86,7 +86,7 @@ public class SizeChooser extends JPanel {
         
         add(valueSpinner);
 
-        unitComboBox = new JComboBox<String>();
+        unitComboBox = new JComboBox<>();
         for(int i= SizeFormat.BYTE_UNIT; i<=SizeFormat.GIGABYTE_UNIT; i++)
             unitComboBox.addItem(SizeFormat.getUnitString(i, speedUnits));
         unitComboBox.setSelectedIndex(SizeFormat.KILOBYTE_UNIT);

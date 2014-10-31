@@ -32,7 +32,7 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
     // - Instance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Sections that have been passed through. */
-    private final Stack<ConfigurationSection> sections;
+    private final Stack<ConfigurationSection> sections = new Stack<>();
 
 
 
@@ -44,7 +44,6 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      */
     public BufferedConfigurationExplorer(ConfigurationSection root) {
         super(root);
-        sections = new Stack<ConfigurationSection>();
     }
 
 

@@ -52,7 +52,7 @@ public class BonjourDirectory implements ServiceListener {
     /** Does all the hard work */
     private static JmDNS jmDNS;
     /** List of discovered and currently active Bonjour services */
-    private static List<BonjourService> services = new Vector<BonjourService>();
+    private static List<BonjourService> services = new Vector<>();
 
     /** Known Bonjour/Zeroconf service types and their corresponding protocol */
     private final static String KNOWN_SERVICE_TYPES[][] = {

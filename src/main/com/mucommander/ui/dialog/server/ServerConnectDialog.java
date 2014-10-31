@@ -39,11 +39,14 @@ import com.mucommander.ui.main.MainFrame;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -61,13 +64,13 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     private ServerPanel currentServerPanel;
 
     private JTabbedPane tabbedPane;
-    private java.util.List<ServerPanel> serverPanels = new Vector<ServerPanel>();
+    private List<ServerPanel> serverPanels = new Vector<>();
 
     private JLabel urlLabel;
     private JCheckBox saveCredentialsCheckBox;
 
     // Dialog's width has to be at least 320
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(480,0);	
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(480,0);
 	
     private static Class<? extends ServerPanel> lastPanelClass = FTPPanel.class;
 

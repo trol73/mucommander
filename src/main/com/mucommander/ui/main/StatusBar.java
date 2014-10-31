@@ -115,7 +115,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     /** Caches volume info strings (free/total space) for a while, since this information is expensive to retrieve
      * (I/O bound). This map uses folders' volume path as its key. */
-    private static LRUCache<String, Long[]> volumeInfoCache = new FastLRUCache<String, Long[]>(VOLUME_INFO_CACHE_CAPACITY);
+    private static LRUCache<String, Long[]> volumeInfoCache = new FastLRUCache<>(VOLUME_INFO_CACHE_CAPACITY);
 	
     /** Icon that is displayed when folder is changing */
     public final static String WAITING_ICON = "waiting.png";

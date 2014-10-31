@@ -141,8 +141,8 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
             this.loginField = loginComboBox.getTextField();
 
             // Add credentials to the combo box's choices
-            for(int i=0; i<nbCredentials; i++)
-                loginComboBox.addItem(credentialsMappings[i].getCredentials().getLogin());
+            for (CredentialsMapping credentialsMapping : credentialsMappings)
+                loginComboBox.addItem(credentialsMapping.getCredentials().getLogin());
 
             loginComboBox.addEditableComboBoxListener(this);
 

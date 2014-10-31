@@ -48,7 +48,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /** Cache for the table's total width. */
     private int                                      widthCache = CACHE_OUT_OF_DATE;
     /** All available columns. */
-    private List<TableColumn>                        columns    = new Vector<TableColumn>(Column.values().length);
+    private List<TableColumn>                        columns    = new Vector<>(Column.values().length);
     /** Enabled state of each column. */
     private boolean[]     enabled = new boolean[Column.values().length];
     /** Visibility state of each column. */

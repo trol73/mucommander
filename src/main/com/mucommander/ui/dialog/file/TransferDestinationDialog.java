@@ -75,7 +75,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private FilePathField pathField;
     private SpinningDial spinningDial;
 
-    private JComboBox<String> fileExistsActionComboBox = new JComboBox<String>();
+    private JComboBox<String> fileExistsActionComboBox = new JComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
     private JButton okButton;

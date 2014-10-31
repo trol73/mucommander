@@ -1,6 +1,7 @@
 package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZip;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.ByteBuffer;
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.LimitedSequentialInStream;
@@ -45,7 +46,7 @@ class Decoder {
         _bindInfoExPrev = new BindInfoEx();
         
         _mixerCoder = null;
-        _decoders = new ObjectVector<Object>();
+        _decoders = new ObjectVector<>();
         
         // #ifndef EXCLUDE_COM -- LoadMethodMap();
     }
@@ -111,28 +112,26 @@ class Decoder {
             long startPos,
             LongVector packSizes, int packSizesOffset, // const UInt64 *packSizes,
             Folder folderInfo,
-            java.io.OutputStream outStream,
+            OutputStream outStream,
             com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.ICompressProgressInfo compressProgress // , // ICompressProgressInfo *compressProgress,
             // _ST_MODE boolean mtMode, int numThreads
             ) throws IOException {
         
         
-        ObjectVector<java.io.InputStream> inStreams = new ObjectVector<java.io.InputStream>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
+        ObjectVector<InputStream> inStreams = new ObjectVector<InputStream>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
         
         LockedInStream lockedInStream = new LockedInStream();
         lockedInStream.Init(inStream);
         
         for (int j = 0; j < folderInfo.PackStreams.size(); j++) {
             LockedSequentialInStreamImp lockedStreamImpSpec = new LockedSequentialInStreamImp();
-            java.io.InputStream lockedStreamImp = lockedStreamImpSpec;
             lockedStreamImpSpec.Init(lockedInStream, startPos);
             startPos += packSizes.get(j+packSizesOffset);
             
             LimitedSequentialInStream streamSpec = new LimitedSequentialInStream();
-            java.io.InputStream inStream2 = streamSpec;
-            streamSpec.SetStream(lockedStreamImp);
+            streamSpec.SetStream(lockedStreamImpSpec);
             streamSpec.Init(packSizes.get(j+packSizesOffset));
-            inStreams.add(inStream2);
+            inStreams.add(streamSpec);
         }
         
         int numCoders = folderInfo.Coders.size();
@@ -140,13 +139,8 @@ class Decoder {
         BindInfoEx bindInfo = new BindInfoEx();
         ConvertFolderItemInfoToBindInfo(folderInfo, bindInfo);
         boolean createNewCoders;
-        if (!_bindInfoExPrevIsDefined)
-            createNewCoders = true;
-        else
-            createNewCoders = !AreBindInfoExEqual(bindInfo, _bindInfoExPrev);
-        
-        
-        
+        createNewCoders = !_bindInfoExPrevIsDefined || !AreBindInfoExEqual(bindInfo, _bindInfoExPrev);
+
         if (createNewCoders) {
             int i;
             _decoders.clear();
@@ -274,7 +268,7 @@ class Decoder {
                         return HRESULT.E_NOTIMPL;
                     if (size > 0) {
                         boolean ret = setDecoderProperties.SetDecoderProperties2(properties.data() /* , size */ );
-                        if (ret == false) return HRESULT.E_FAIL;
+                        if (!ret) return HRESULT.E_FAIL;
                     }
                 } catch (ClassCastException e) {
                     // nothing to do
@@ -349,8 +343,7 @@ class Decoder {
         int [] temp_useless = new int [1]; // TBD
         int [] tmp1 = new int[1];
         bindInfo.FindOutStream(bindInfo.OutStreams.get(0), tmp1 /* mainCoder */ , temp_useless /* temp */);
-        int mainCoder = tmp1[0];
-        
+
         if (_multiThread) {
            // _mixerCoderMTSpec.SetProgressCoderIndex(mainCoder);
            throw new IOException("Multithreaded decoder is not implemented");
@@ -358,12 +351,12 @@ class Decoder {
         
         if (numCoders == 0)
             return 0;
-        RecordVector<java.io.InputStream> inStreamPointers = new RecordVector<java.io.InputStream>(); // CRecordVector<ISequentialInStream *>
+        RecordVector<InputStream> inStreamPointers = new RecordVector<>(); // CRecordVector<ISequentialInStream *>
         inStreamPointers.Reserve(inStreams.size());
         for (i = 0; i < inStreams.size(); i++)
             inStreamPointers.add(inStreams.get(i));
 
-        RecordVector<java.io.OutputStream> outStreamPointer = new RecordVector<java.io.OutputStream>();
+        RecordVector<OutputStream> outStreamPointer = new RecordVector<OutputStream>();
         outStreamPointer.add(outStream);
         return _mixerCoder.Code(
                 inStreamPointers, //&inStreamPointers.Front(),

@@ -27,8 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Parses entries contained in an ISO/NRG file.
@@ -48,8 +49,8 @@ import java.util.Vector;
  */
 class IsoParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(IsoParser.class);
-    public static Vector<IsoArchiveEntry> getEntries(byte[] buffer, RandomAccessInputStream rais, int sectSize, long sector_offset, long shiftOffset) throws Exception {
-        Vector<IsoArchiveEntry> entries = new Vector<IsoArchiveEntry>();
+    public static List<IsoArchiveEntry> getEntries(byte[] buffer, RandomAccessInputStream rais, int sectSize, long sector_offset, long shiftOffset) throws Exception {
+        List<IsoArchiveEntry> entries = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
         int start = 16;
@@ -97,7 +98,7 @@ class IsoParser {
      * @return the list of entries contained by the ISO file
      * @throws IOException if an I/O error occurs
      */
-    static Vector<IsoArchiveEntry> getEntries(AbstractFile file, RandomAccessInputStream rais) throws IOException {
+    static List<IsoArchiveEntry> getEntries(AbstractFile file, RandomAccessInputStream rais) throws IOException {
         byte[] buffer = BufferPool.getByteArray(IsoUtil.MODE1_2048);
 
         try {
@@ -147,7 +148,7 @@ class IsoParser {
         name.append((level == 0) ? new String(b, 0, len) : new String(b, 0, len, "UnicodeBigUnmarked"));
     }
 
-    public static todo parse_dir(todo todo_idr, String rootname, int extent, int len, RandomAccessInputStream rais, byte[] buffer, Vector<IsoArchiveEntry> entries, int sectSize, int level, long shiftOffset, long sector_offset, Calendar calendar) throws Exception {
+    public static todo parse_dir(todo todo_idr, String rootname, int extent, int len, RandomAccessInputStream rais, byte[] buffer, List<IsoArchiveEntry> entries, int sectSize, int level, long shiftOffset, long sector_offset, Calendar calendar) throws Exception {
         todo td;
         int i;
         isoDr idr;
@@ -206,7 +207,7 @@ class IsoParser {
                 boolean dir = false;
                 String n = name_buf.toString();
                 if (!(".".equals(n) || "..".equals(n))) {
-                    StringBuffer name = new StringBuffer(rootname);
+                    StringBuilder name = new StringBuilder(rootname);
                     name.append(n);
 
                     if (S_ISDIR(fstat_buf.st_mode)) {

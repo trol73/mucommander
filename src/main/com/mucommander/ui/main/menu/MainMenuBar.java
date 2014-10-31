@@ -21,9 +21,7 @@ package com.mucommander.ui.main.menu;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.WeakHashMap;
+import java.util.*;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
@@ -493,7 +491,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             // This WeakHashMap maps menu items to frame instances. It has to be a weakly referenced hash map
             // and not a regular hash map, since it will not (and cannot) be emptied when the menu has been deselected
             // and we really do not want this hash map to prevent the frames to be GCed 
-            windowMenuFrames = new WeakHashMap<JMenuItem, Frame>();
+            windowMenuFrames = new WeakHashMap<>();
             
             // Create a menu item for each of the MainFrame instances, that displays the MainFrame's path
             // and a keyboard accelerator to recall the frame (for the first 10 frames only).
@@ -510,7 +508,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
                 if (i < 10) {
                     recallWindowAction = ActionManager.getActionInstance(RECALL_WINDOW_ACTION_IDS[i], this.mainFrame);
                 } else {    // Else use the generic RecallWindowAction
-                    Hashtable<String, Object> actionProps = new Hashtable<String, Object>();
+                    Map<String, Object> actionProps = new HashMap<>();
                     // Specify the window number using the dedicated property
                     actionProps.put(RecallWindowAction.WINDOW_NUMBER_PROPERTY_KEY, ""+(i+1));
                     recallWindowAction = ActionManager.getActionInstance(new ActionParameters(RecallWindowAction.Descriptor.ACTION_ID, actionProps), this.mainFrame);

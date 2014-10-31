@@ -40,7 +40,7 @@ import com.mucommander.ui.main.tabs.ConfFileTableTab;
  */
 public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 
-	private List<MainFrame> mainFrames = new LinkedList<MainFrame>();
+	private List<MainFrame> mainFrames = new LinkedList<>();
 	
 	public CommandLineMainFrameBuilder(String[] folders) {
 		for(int i=0; i < folders.length; i += 2) {
@@ -54,7 +54,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 
 	@Override
 	public MainFrame[] build() {
-		return mainFrames.toArray(new MainFrame[0]);
+		return mainFrames.toArray(new MainFrame[mainFrames.size()]);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
      * - if it does not have a parent, use the default initial path for the frame.<br/>
      * </p>
      * @param  path  path to the folder we want to open in <code>frame</code>.
-     * @param  folderPanelType identifier of the panel we want to compute the path for (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType.LEFT} or
+     * @param  folderPanelType identifier of the panel we want to compute the path for (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
      *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
      * @return       our best shot at what was actually requested.
      */

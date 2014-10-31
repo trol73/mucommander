@@ -752,13 +752,13 @@ public class ThemeData {
     // - Registered colors & fonts -------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** All registered colors. */
-    private static final Map<Integer, DefaultColor> COLORS;
+    private static final Map<Integer, DefaultColor> COLORS = new Hashtable<>();
     /** All registered default colors. */
-    private static final Map<String, DefaultColor>  DEFAULT_COLORS;
+    private static final Map<String, DefaultColor>  DEFAULT_COLORS = new Hashtable<>();
     /** All registered fonts. */
-    private static final Map<Integer, DefaultFont>  FONTS;
+    private static final Map<Integer, DefaultFont>  FONTS = new Hashtable<>();
     /** All registered default fonts. */
-    private static final Map<String, DefaultFont>   DEFAULT_FONTS;
+    private static final Map<String, DefaultFont>   DEFAULT_FONTS = new Hashtable<>();
 
 
 
@@ -829,13 +829,6 @@ public class ThemeData {
 
     static {
         ComponentMapper mapper;
-
-        COLORS         = new Hashtable<Integer, DefaultColor>();
-        DEFAULT_COLORS = new Hashtable<String, DefaultColor>();
-        FONTS          = new Hashtable<Integer, DefaultFont>();
-        DEFAULT_FONTS  = new Hashtable<String, DefaultFont>();
-
-
 
         // - Default values registering --------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------

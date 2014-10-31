@@ -18,8 +18,9 @@
 
 package com.mucommander.ui.theme;
 
-import java.awt.*;
-import java.util.Vector;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a default value for a theme font.
@@ -37,18 +38,7 @@ public abstract class DefaultFont {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of fonts linked to this default value. */
-    private Vector<Integer> linkedFonts;
-
-
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * Creates a new instance of {@link DefaultFont}.
-     */
-    protected DefaultFont() {
-        linkedFonts = new Vector<Integer>();
-    }
+    private List<Integer> linkedFonts = new ArrayList<>();
 
 
 

@@ -213,7 +213,7 @@ public class CachedFile extends ProxyFile {
 
         if(file instanceof LocalFile) {
             try {
-                int ba = (Integer) mGetBooleanAttributes.invoke(fs, new Object[]{file.getUnderlyingFileObject()});
+                int ba = (Integer) mGetBooleanAttributes.invoke(fs, file.getUnderlyingFileObject());
 
                 isDirectory = (ba & BA_DIRECTORY)!=0;
                 isDirectorySet = true;

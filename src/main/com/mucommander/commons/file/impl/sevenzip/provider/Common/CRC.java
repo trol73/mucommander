@@ -37,7 +37,7 @@ public class CRC {
     }
     
     public int GetDigest() {
-        return _value ^ (-1);
+        return ~_value;
     }
     
     public void Update(byte[] data, int size) {
@@ -46,8 +46,7 @@ public class CRC {
     }
     
     public void Update(byte[] data) {
-        for (int i = 0; i < data.length; i++)
-            _value = Table[(_value ^ data[i]) & 0xFF] ^ (_value >>> 8);
+        for (byte aData : data) _value = Table[(_value ^ aData) & 0xFF] ^ (_value >>> 8);
     }
     
     public void Update(byte[] data, int offset, int size) {

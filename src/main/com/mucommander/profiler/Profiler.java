@@ -90,7 +90,7 @@ public class Profiler {
             return;
         }
         synchronized (timesDuration) {
-            TreeMap<String, Long> sortedMap = new TreeMap<String, Long>(new ValueComparator(timesDuration));
+            TreeMap<String, Long> sortedMap = new TreeMap<>(new ValueComparator(timesDuration));
             sortedMap.putAll(timesDuration);
             System.out.println(withSpaces("Name", 40) + "\t" + withSpaces("Total", 10) + "\t" + withSpaces("Count", 7) + "\t" + "Average");
             System.out.println(withSpaces("-----------", 40) + "\t" + withSpaces("--------", 10) + "\t" + withSpaces("-------", 7) + "\t" + "----------");

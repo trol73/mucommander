@@ -35,7 +35,7 @@ import java.util.Map;
 public class DirectoryCache {
     
     /** a map that holds cached folders */
-    private Map<AbstractFile, CachedDirectory> cache;
+    private Map<AbstractFile, CachedDirectory> cache = new HashMap<>();
     
     /** Comparator used to sort folders */
     private FileComparator sort;
@@ -54,7 +54,6 @@ public class DirectoryCache {
      */
     public DirectoryCache(FileFilter filter, FileComparator sort) {
         //this.cache = Collections.synchronizedMap(new HashMap());
-        this.cache = new HashMap<AbstractFile, CachedDirectory>();
         this.filter = filter;
         this.sort = sort;
     }

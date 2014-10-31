@@ -133,7 +133,7 @@ public class HexTable extends JTable {
 //        fireSelectionChangedEvent(prevSmallest, prevLargest);
     }
 
-    private static final int min(int x1, int x2, int x3, int x4) {
+    private static int min(int x1, int x2, int x3, int x4) {
         int min = x1 < x2 ? x1 : x2;
         if (x3 < min) {
             min = x3;
@@ -144,7 +144,7 @@ public class HexTable extends JTable {
         return min;
     }
 
-    private static final int max(int x1, int x2, int x3, int x4) {
+    private static int max(int x1, int x2, int x3, int x4) {
         int max = x1 > x2 ? x1 : x2;
         if (x3 > max) {
             max = x3;

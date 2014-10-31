@@ -58,7 +58,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     // The following constants are used to compute the proper position of a new MainFrame.
 
     /** MainFrame (main muCommander window) instances */
-    private List<MainFrame> mainFrames;
+    private List<MainFrame> mainFrames = new Vector<>();
     
     /** MainFrame currently being used (that has focus),
      * or last frame to have been used if muCommander doesn't have focus */	
@@ -93,8 +93,6 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * Creates a new instance of WindowManager.
      */
     private WindowManager() {
-    	mainFrames = new Vector<MainFrame>();
-
         // Notifies Swing that look&feels must be loaded as extensions.
         // This is necessary to ensure that look and feels placed in the extensions folder
         // are accessible.
@@ -159,8 +157,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * Creates a new MainFrame and makes it visible on the screen, on top of any other frames.
      *
      * @param mainFrameBuilder
-     * @return the newly created MainFrame.
-     */
+          */
     public static synchronized void createNewMainFrame(MainFrameBuilder mainFrameBuilder) {
         MainFrame[] newMainFrames = mainFrameBuilder.build();
 

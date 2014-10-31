@@ -98,7 +98,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     private static Map<AbstractFile, String> extendedNameCache;
     
     /** Caches drive icons */
-    private static Map<AbstractFile, Icon> iconCache = new Hashtable<AbstractFile, Icon>();
+    private static Map<AbstractFile, Icon> iconCache = new Hashtable<>();
     
 
     /** Filters out volumes from the list based on the exclude regexp defined in the configuration, null if the regexp
@@ -109,7 +109,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     static {
         if(OsFamily.WINDOWS.isCurrent()) {
             fileSystemView = FileSystemView.getFileSystemView();
-            extendedNameCache = new Hashtable<AbstractFile, String>();
+            extendedNameCache = new Hashtable<>();
         }
 
         try {
@@ -118,8 +118,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 volumeFilter = new RegexpPathFilter(excludeRegexp, true);
                 volumeFilter.setInverted(true);
             }
-        }
-        catch(PatternSyntaxException e) {
+        } catch(PatternSyntaxException e) {
             LOGGER.info("Invalid regexp for conf variable "+MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
@@ -298,8 +297,8 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         MuAction action;
         String volumeName;
 
-        boolean useExtendedDriveNames = fileSystemView!=null;
-        ArrayList<JMenuItem> itemsV = new ArrayList<JMenuItem>();
+        boolean useExtendedDriveNames = fileSystemView != null;
+        List<JMenuItem> itemsV = new ArrayList<>();
 
         for(int i=0; i<nbVolumes; i++) {
             action = new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), volumes[i]);
@@ -386,9 +385,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     private class RefreshDriveNamesAndIcons extends Thread {
         
         private JPopupMenu popupMenu;
-        private ArrayList<JMenuItem> items;
+        private List<JMenuItem> items;
 
-        public RefreshDriveNamesAndIcons(JPopupMenu popupMenu, ArrayList<JMenuItem> items) {
+        public RefreshDriveNamesAndIcons(JPopupMenu popupMenu, List<JMenuItem> items) {
             super("RefreshDriveNamesAndIcons");
             this.popupMenu = popupMenu;
             this.items = items;

@@ -130,7 +130,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
         
 
-        keyComboBox = new SaneComboBox<KeyChoice>();
+        keyComboBox = new SaneComboBox<>();
         keyComboBox.addItem(new KeyChoice(0, noneString));
         for (int keyChoice : KEY_CHOICES)
             addKeyChoice(keyChoice);
@@ -207,8 +207,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
 
         currentKeyStroke = KeyStroke.getKeyStroke(
-            ((KeyChoice)keyComboBox.getSelectedItem()).getKeyValue(),
-            modifiers
+            ((KeyChoice)keyComboBox.getSelectedItem()).getKeyValue(), modifiers
         );
     }
 

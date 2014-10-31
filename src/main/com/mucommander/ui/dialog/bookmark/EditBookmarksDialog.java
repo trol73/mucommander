@@ -96,7 +96,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         BookmarkManager.setFireEvents(false);
 
         // Create the sortable bookmarks list panel
-        SortableListPanel<Bookmark> listPanel = new SortableListPanel<Bookmark>(bookmarks);
+        SortableListPanel<Bookmark> listPanel = new SortableListPanel<>(bookmarks);
         this.bookmarkList = listPanel.getDynamicList();
 
         contentPane.add(listPanel, BorderLayout.CENTER);
@@ -326,9 +326,12 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         BookmarkManager.setFireEvents(true);
 
         // Write bookmarks file to disk, only if changes were made to bookmarks
-        try {BookmarkManager.writeBookmarks(false);}
-        // We should probably pop an error here.
-        catch(Exception e) {}
+        try {
+            BookmarkManager.writeBookmarks(false);
+        } catch(Exception e) {
+            // We should probably pop an error here.
+            e.printStackTrace();
+        }
     }
 
 	

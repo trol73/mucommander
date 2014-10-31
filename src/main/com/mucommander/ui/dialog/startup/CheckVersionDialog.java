@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -158,8 +159,8 @@ public class CheckVersionDialog extends QuestionDialog {
         // Set title
         setTitle(title);
 
-        List<Integer> actionsV = new Vector<Integer>();
-        List<String> labelsV = new Vector<String>();
+        List<Integer> actionsV = new ArrayList<>();
+        List<String> labelsV = new ArrayList<>();
 
         // 'OK' choice
         actionsV.add(OK_ACTION);

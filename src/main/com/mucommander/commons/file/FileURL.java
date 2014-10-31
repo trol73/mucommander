@@ -30,9 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * This class represents a Uniform Resource Locator (URL). The general format of a URL is as follows:
@@ -127,7 +125,7 @@ public class FileURL implements Cloneable {
     private String query;
 
     /** Properties, null if none have been set thus far */
-    private Hashtable<String, String> properties;
+    private Map<String, String> properties;
     /** Credentials (login and password parts), null if this URL has none */
     private Credentials credentials;
 
@@ -616,7 +614,7 @@ public class FileURL implements Cloneable {
 
                 // Copy properties to parent (if any)
                 if(properties!=null)
-                    parentURL.properties = new Hashtable<String, String>(properties);
+                    parentURL.properties = new Hashtable<>(properties);
 
                 return parentURL;
             }
@@ -703,7 +701,7 @@ public class FileURL implements Cloneable {
     public void setProperty(String name, String value) {
         // Create the property hashtable only when a property is set for the first time
         if(properties==null)
-            properties = new Hashtable<String, String>();
+            properties = new HashMap<>();
 
         if(value==null)
             properties.remove(name);
@@ -719,21 +717,8 @@ public class FileURL implements Cloneable {
      *
      * @return an <code>Enumeration</code> of all property names this FileURL contains
      */
-    public Enumeration<String> getPropertyNames() {
-        // Return an empty enumeration if the property hashtable is null
-        if(properties==null) {
-            return new Enumeration<String>() {
-                public boolean hasMoreElements() {
-                    return false;
-                }
-
-                public String nextElement() {
-                    throw new NoSuchElementException();
-                }
-            };
-        }
-
-        return properties.keys();
+    public Set<String> getPropertyNames() {
+        return properties == null ? new HashSet<String>() : properties.keySet();
     }
 
     /**
@@ -743,13 +728,12 @@ public class FileURL implements Cloneable {
      */
     public void importProperties(FileURL url) {
         // Slight optimization to avoid creating an enumeration if the FileURL doesn't have any property
-        if(url.properties==null)
+        if (url.properties == null) {
             return;
+        }
 
-        Enumeration<String> propertyKeys = url.getPropertyNames();
-        String key;
-        while(propertyKeys.hasMoreElements()) {
-            key = propertyKeys.nextElement();
+        Set<String> propertyKeys = url.getPropertyNames();
+        for (String key : propertyKeys) {
             setProperty(key, url.getProperty(key));
         }
     }
@@ -766,7 +750,7 @@ public class FileURL implements Cloneable {
      * @return a string representation of this <code>FileURL</code>
      */
     public String toString(boolean includeCredentials, boolean maskPassword) {
-        StringBuffer sb = new StringBuffer(scheme);
+        StringBuilder sb = new StringBuilder(scheme);
         sb.append("://");
 
         if (includeCredentials && credentials != null) {
@@ -1008,7 +992,7 @@ public class FileURL implements Cloneable {
 
         // Mutable fields
         if(properties!=null)    // Copy properties (if any)
-            clonedURL.properties = new Hashtable<String, String>(properties);
+            clonedURL.properties = new HashMap<>(properties);
 
         // Caches
         clonedURL.hashCode = hashCode;

@@ -23,6 +23,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.RandomAccessInputStream;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Vector;
  */
 class NrgParser extends IsoParser {
 
-    static Vector<IsoArchiveEntry> getEntries(byte[] buffer, AbstractFile file, RandomAccessInputStream rais) throws Exception {
+    static List<IsoArchiveEntry> getEntries(byte[] buffer, AbstractFile file, RandomAccessInputStream rais) throws Exception {
         int sectSize = IsoUtil.MODE1_2048;
 
         // sector shift : 0 most of the time
@@ -168,7 +169,7 @@ class NrgParser extends IsoParser {
 
             // fun : handle audio disc :)
             if (audioOnly) {
-                Vector<IsoArchiveEntry> entries = new Vector<IsoArchiveEntry>();
+                List<IsoArchiveEntry> entries = new Vector<>();
                 for (int k = 0; k < tracks; k++) {
                     entries.add(
                             new IsoArchiveEntry(

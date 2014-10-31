@@ -260,11 +260,11 @@ public class DesktopManager {
 
         // Makes sure we have a container for operations of the specified priority.
         if(operations[priority] == null)
-            operations[priority] = new Hashtable<String, List<DesktopOperation>>();
+            operations[priority] = new Hashtable<>();
 
         // Makes sure we have a container for operations of the specified type.
         if((container = operations[priority].get(type)) == null)
-            operations[priority].put(type, container = new Vector<DesktopOperation>());
+            operations[priority].put(type, container = new Vector<>());
 
         // Creates the requested entry.
         container.add(operation);

@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -53,7 +54,7 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
     private int lastHeight;
     private int lastLine;
     
-    private HashMap<String, FontMetrics> fonts;
+    private Map<String, FontMetrics> fonts;
     
     /**
 	 *	Create a line number component for a text component. This minimum
@@ -260,7 +261,7 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 		}
 		else { // We need to check all the attributes for font changes
 			if (fonts == null)
-				fonts = new HashMap<String, FontMetrics>();
+				fonts = new HashMap<>();
 
 			Element root = component.getDocument().getDefaultRootElement();
 			int index = root.getElementIndex( rowStartOffset );

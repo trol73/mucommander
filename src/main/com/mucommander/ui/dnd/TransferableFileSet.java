@@ -31,6 +31,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -300,7 +301,7 @@ public class TransferableFileSet implements Transferable {
     //////////////////////////
 
     public DataFlavor[] getTransferDataFlavors() {
-        List<DataFlavor> supportedDataFlavorsV = new Vector<DataFlavor>();
+        List<DataFlavor> supportedDataFlavorsV = new ArrayList<>();
 
         if(fileSetFlavorSupported)
             supportedDataFlavorsV.add(FILE_SET_DATA_FLAVOR);
@@ -344,7 +345,7 @@ public class TransferableFileSet implements Transferable {
         }
         // Return files stored in a java.util.Vector instance
         else if(dataFlavor.equals(DataFlavor.javaFileListFlavor) && javaFileListFlavorSupported) {
-            List<File> fileList = new Vector<File>(nbFiles);
+            List<File> fileList = new Vector<>(nbFiles);
 
             for(int i=0; i<nbFiles; i++) {
                 AbstractFile file = fileSet.elementAt(i);

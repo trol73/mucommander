@@ -39,7 +39,7 @@ class RPNExpression implements Calculable {
 				entry.setValue(values[i++]);
 			}
 		}
-		final Stack<Double> stack = new Stack<Double>();
+		final Stack<Double> stack = new Stack<>();
 		for (final Token t : tokens) {
 			((CalculationToken) t).mutateStackForCalculation(stack, variables);
 		}

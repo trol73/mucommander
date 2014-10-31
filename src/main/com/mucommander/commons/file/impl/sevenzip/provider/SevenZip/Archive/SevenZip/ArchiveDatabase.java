@@ -10,9 +10,9 @@ class ArchiveDatabase {
     public LongVector PackSizes = new LongVector();
     public BoolVector PackCRCsDefined = new BoolVector();
     public IntVector PackCRCs = new IntVector();
-    public ObjectVector<Folder> Folders = new ObjectVector<Folder>();
+    public ObjectVector<Folder> Folders = new ObjectVector<>();
     public IntVector NumUnPackStreamsVector = new IntVector();
-    public ObjectVector<FileItem> Files = new ObjectVector<FileItem>();
+    public ObjectVector<FileItem> Files = new ObjectVector<>();
     
     void Clear() {
         PackSizes.clear();

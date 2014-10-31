@@ -588,7 +588,7 @@ public class VSphereFile extends ProtocolFile implements
 	@Override
 	public AbstractFile[] ls() throws IOException,
 			UnsupportedFileOperationException {
-		List<GuestFileInfo> fileInfos = new ArrayList<GuestFileInfo>();
+		List<GuestFileInfo> fileInfos = new ArrayList<>();
 		int index = 0;
 		VsphereConnHandler connHandler = null;
 		try {
@@ -612,7 +612,7 @@ public class VSphereFile extends ProtocolFile implements
 			String parentPath = PathUtils.removeTrailingSeparator(fileURL
 					.getPath()) + SEPARATOR;
 
-			Collection<AbstractFile> res = new ArrayList<AbstractFile>();
+			Collection<AbstractFile> res = new ArrayList<>();
 			for (GuestFileInfo f : fileInfos) {
 				final String name = getFileName(f.getPath());
 				if (name.equals(".") || name.equals("..")) {
@@ -625,7 +625,7 @@ public class VSphereFile extends ProtocolFile implements
 				AbstractFile newFile = new VSphereFile(childURL, this, f);
 				res.add(newFile);
 			}
-			return res.toArray(new AbstractFile[0]);
+			return res.toArray(new AbstractFile[res.size()]);
 		} catch (FileFaultFaultMsg e) {
 			translateandLogException(e);
 		} catch (GuestOperationsFaultFaultMsg e) {

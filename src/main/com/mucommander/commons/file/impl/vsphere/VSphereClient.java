@@ -243,14 +243,14 @@ public class VSphereClient implements Closeable {
 		// PropertyFilterSpec is used to hold the ObjectSpec and
 		// PropertySpec for the call
 		PropertyFilterSpec pfSpec = new PropertyFilterSpec();
-		pfSpec.getPropSet().addAll(Arrays.asList(new PropertySpec[] { pSpec }));
-		pfSpec.getObjectSet().addAll(Arrays.asList(new ObjectSpec[] { oSpec }));
+		pfSpec.getPropSet().addAll(Arrays.asList(pSpec));
+		pfSpec.getObjectSet().addAll(Arrays.asList(oSpec));
 
 		// retrieveProperties() returns the properties
 		// selected from the PropertyFilterSpec
 		List<ObjectContent> ocs = vimPort.retrieveProperties(
 				serviceContent.getPropertyCollector(),
-				Arrays.asList(new PropertyFilterSpec[] { pfSpec }));
+				Arrays.asList(pfSpec));
 
 		// Return value, one object for each property specified
 		Object[] ret = new Object[properties.length];
@@ -296,10 +296,7 @@ public class VSphereClient implements Closeable {
 			sslsc.setSessionTimeout(0);
 			sc.init(null, trustAllCerts, null);
 			return sc;
-		} catch (KeyManagementException e) {
-
-			throw new IllegalStateException("SSL init problems", e);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			throw new IllegalStateException("SSL init problems", e);
 		}
 	}

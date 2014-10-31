@@ -65,7 +65,6 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
             } else if (id == KeyEvent.KEY_RELEASED) {
                 mainFrame.getCommandBar().keyReleased(e);
             }
-
         }
 
         e.consume();

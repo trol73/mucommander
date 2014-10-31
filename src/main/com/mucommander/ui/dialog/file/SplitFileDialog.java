@@ -129,7 +129,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 			"700 " + Translator.get("unit.mb")
 		};
 		edtSize = new JTextField();
-		EditableComboBox<String> cbSize = new EditableComboBox<String>(edtSize, sizes);
+		EditableComboBox<String> cbSize = new EditableComboBox<>(edtSize, sizes);
 		cbSize.setComboSelectionUpdatesTextField(true);
 		cbSize.setSelectedIndex(1);
 		edtSize.addKeyListener(new KeyAdapter() {

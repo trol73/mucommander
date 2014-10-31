@@ -140,9 +140,8 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         button.repaint();
 
         if(updatedPreviewComponents != null && previewColorPropertyName != null) {
-            int nbPreviewComponents = updatedPreviewComponents.size();
-            for(int i = 0; i < nbPreviewComponents; i++)
-                updatedPreviewComponents.get(i).putClientProperty(previewColorPropertyName, color);
+            for (JComponent updatedPreviewComponent : updatedPreviewComponents)
+                updatedPreviewComponent.putClientProperty(previewColorPropertyName, color);
         }
         
         if (initiatedByUser)

@@ -21,7 +21,8 @@ package com.mucommander.commons.file.filter;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -77,12 +78,9 @@ public abstract class AbstractFileFilter implements FileFilter {
     }
 
     public AbstractFile[] filter(AbstractFile files[]) {
-        Vector<AbstractFile> filteredFilesV = new Vector<AbstractFile>();
-        int nbFiles = files.length;
-        AbstractFile file;
-        for(int i=0; i<nbFiles; i++) {
-            file = files[i];
-            if(match(file))
+        List<AbstractFile> filteredFilesV = new ArrayList<>();
+        for (AbstractFile file : files) {
+            if (match(file))
                 filteredFilesV.add(file);
         }
 
@@ -101,9 +99,8 @@ public abstract class AbstractFileFilter implements FileFilter {
     }
 
     public boolean match(AbstractFile files[]) {
-        int nbFiles = files.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!match(files[i]))
+        for (AbstractFile file : files)
+            if (!match(file))
                 return false;
 
         return true;
@@ -119,9 +116,8 @@ public abstract class AbstractFileFilter implements FileFilter {
     }
 
     public boolean accept(AbstractFile files[]) {
-        int nbFiles = files.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!accept(files[i]))
+        for (AbstractFile file : files)
+            if (!accept(file))
                 return false;
 
         return true;
@@ -137,9 +133,8 @@ public abstract class AbstractFileFilter implements FileFilter {
     }
 
     public boolean reject(AbstractFile files[]) {
-        int nbFiles = files.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!reject(files[i]))
+        for (AbstractFile file : files)
+            if (!reject(file))
                 return false;
 
         return true;

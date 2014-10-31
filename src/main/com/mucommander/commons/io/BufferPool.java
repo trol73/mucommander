@@ -56,7 +56,7 @@ public class BufferPool {
     private static final Logger LOGGER = LoggerFactory.getLogger(BufferPool.class);
 
     /** List of BufferContainer instances that wraps available buffers */
-    private static Vector<BufferContainer> bufferContainers = new Vector<BufferContainer>();
+    private static Vector<BufferContainer> bufferContainers = new Vector<>();
 
     /** The initial default buffer size */
     public final static int INITIAL_DEFAULT_BUFFER_SIZE = 65536;

@@ -22,13 +22,13 @@ public class ExpressionBuilder {
 	 */
 	public static final String PROPERTY_UNARY_HIGH_PRECEDENCE = "exp4j.unary.precedence.high";
 
-	private final Map<String, Double> variables = new LinkedHashMap<String, Double>();
+	private final Map<String, Double> variables = new LinkedHashMap<>();
 
 	private final Map<String, CustomFunction> customFunctions;
 
 	private final Map<String, CustomOperator> builtInOperators;
 
-	private Map<String, CustomOperator> customOperators = new HashMap<String, CustomOperator>();
+	private Map<String, CustomOperator> customOperators = new HashMap<>();
 
 	private final List<Character> validOperatorSymbols;
 
@@ -108,7 +108,7 @@ public class ExpressionBuilder {
 				return Math.pow(values[0], values[1]);
 			}
 		};
-		Map<String, CustomOperator> operations = new HashMap<String, CustomOperator>();
+		Map<String, CustomOperator> operations = new HashMap<>();
 		operations.put("+", add);
 		operations.put("-", sub);
 		operations.put("*", mul);

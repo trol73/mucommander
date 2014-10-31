@@ -32,7 +32,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 /**
- * Created by trol on 08/01/14.
+ * @author Oleg Trifonov
+ * Created on 08/01/14.
  */
 public class TextArea extends RSyntaxTextArea implements DocumentListener {
 

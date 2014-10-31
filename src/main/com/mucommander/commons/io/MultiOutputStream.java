@@ -34,7 +34,7 @@ import java.util.Vector;
 public class MultiOutputStream extends OutputStream {
 
     /** Registered OutputStreams */
-    protected Vector<OutputStream> streams = new Vector<OutputStream>();
+    protected Vector<OutputStream> streams = new Vector<>();
 
     /**
      * Creates a new MultiOutputStream that initially contains no OutputStream. * Until one or more OutputStream is

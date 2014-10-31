@@ -35,9 +35,13 @@ import com.mucommander.ui.text.FileLabel;
 import com.mucommander.ui.text.FontUtils;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Font;
+import java.awt.Frame;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 
 /**
@@ -110,8 +114,8 @@ public class FileCollisionDialog extends QuestionDialog {
 
         // Init choices
 
-        java.util.List<String> choicesTextV = new Vector<String>();
-        java.util.List<Integer> choicesActionsV = new Vector<Integer>();
+        List<String> choicesTextV = new ArrayList<>();
+        List<Integer> choicesActionsV = new ArrayList<>();
 
         choicesTextV.add(CANCEL_TEXT);
         choicesActionsV.add(CANCEL_ACTION);

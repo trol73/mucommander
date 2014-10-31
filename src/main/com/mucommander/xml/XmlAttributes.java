@@ -37,20 +37,9 @@ public class XmlAttributes {
     // - Instance fields -------------------------------------------------
     // -------------------------------------------------------------------
     /** Contains the XML attributes. */
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = new Hashtable<>();
     /** Contains the XML attribute names in the order they were added */
-    private LinkedList<String> names;
-    
-
-    // - Initialization --------------------------------------------------
-    // -------------------------------------------------------------------
-    /**
-     * Builds a new, empty XmlAttributes instance.
-     */
-    public XmlAttributes() {
-    	attributes = new Hashtable<String, String>();
-    	names = new LinkedList<String>();
-    }
+    private LinkedList<String> names = new LinkedList<>();
 
 
     // - Content handling ------------------------------------------------

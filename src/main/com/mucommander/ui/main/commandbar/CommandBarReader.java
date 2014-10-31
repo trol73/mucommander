@@ -20,6 +20,7 @@ package com.mucommander.ui.main.commandbar;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -104,8 +105,8 @@ class CommandBarReader extends CommandBarIO {
     public void startDocument() {
     	LOGGER.trace(file.getAbsolutePath()+" parsing started");
 
-        actionsIdsV = new Vector<String>();
-        alternateActionsIdsV = new Vector<String>();
+        actionsIdsV = new ArrayList<>();
+        alternateActionsIdsV = new ArrayList<>();
         modifier = null;
     }
 

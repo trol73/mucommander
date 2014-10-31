@@ -1115,7 +1115,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         final int dirStringWidth = Math.max(dirStringWidth1, dirStringWidth2);
 
         remainingWidth = getSize().width - RESERVED_NAME_COLUMN_WIDTH;
-        columns        = respectSize ? new Enumerator<TableColumn>(getColumnModel().getColumns()) : getFileTableColumnModel().getAllColumns();
+        columns        = respectSize ? new Enumerator<>(getColumnModel().getColumns()) : getFileTableColumnModel().getAllColumns();
         nameColumn     = null;
 
         while(columns.hasNext()) {

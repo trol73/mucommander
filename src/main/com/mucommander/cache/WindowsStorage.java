@@ -69,7 +69,7 @@ public class WindowsStorage {
 
         @Override
         public String toString() {
-            return new StringBuilder().append(left).append(',').append(top).append(',').append(width).append(',').append(height).toString();
+            return String.valueOf(left) + ',' + top + ',' + width + ',' + height;
         }
 
         public void apply(Window window) {

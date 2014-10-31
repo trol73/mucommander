@@ -72,8 +72,10 @@ class ActionKeymapReader extends ActionKeymapIO {
     	try {SAXParserFactory.newInstance().newSAXParser().parse(in = new BackupInputStream(file), this);}
     	finally {
     		if(in!=null) {
-    			try { in.close(); }
-    			catch(IOException e) {}
+    			try {
+                    in.close();
+                } catch(IOException e) {
+                }
     		}
     	}
     }
@@ -156,8 +158,8 @@ class ActionKeymapReader extends ActionKeymapIO {
     public void startDocument() {
     	LOGGER.trace(file.getAbsolutePath()+" parsing started");
     	
-    	primaryActionsReadKeymap = new HashMap<String, KeyStroke>();
-    	alternateActionsReadKeymap = new HashMap<String, KeyStroke>();
+    	primaryActionsReadKeymap = new HashMap<>();
+    	alternateActionsReadKeymap = new HashMap<>();
     }
     
     @Override

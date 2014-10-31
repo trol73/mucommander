@@ -3,7 +3,7 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip;
 
 import java.text.DateFormat;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Vector;
 
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.IArchiveExtractCallback;
@@ -129,9 +129,8 @@ public class J7zip {
         
         int mode = -1;
         
-        Vector<String> listOfNames = new Vector<String>();
-        for (int i = 2;i < args.length ; i++)
-            listOfNames.add(args[i]);
+        Vector<String> listOfNames = new Vector<>();
+        listOfNames.addAll(Arrays.asList(args).subList(2, args.length));
         
         if (args[0].equals("l")) {
             mode = MODE_LISTING;
