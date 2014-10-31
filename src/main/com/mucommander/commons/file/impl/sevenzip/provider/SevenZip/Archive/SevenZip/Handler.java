@@ -107,7 +107,7 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
                 ArchiveDatabaseEx database = _database;
                 //#endif
                 
-                int folderIndex = database.FileIndexToFolderIndexMap.get(ref2Index);
+                int folderIndex = database.fileIndexToFolderIndexMap.get(ref2Index);
                 if (folderIndex == com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZip.InArchive.kNumNoIndex) {
                     extractFolderInfoVector.add( new ExtractFolderInfo(
                             // #ifdef _7Z_VOL
@@ -140,7 +140,7 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
                 ExtractFolderInfo efi = extractFolderInfoVector.Back();
                 
                 // const CFolderInfo &folderInfo = m_dam_Folders[folderIndex];
-                int startIndex = database.FolderStartFileIndex.get(folderIndex); // CNum
+                int startIndex = database.folderStartFileIndex.get(folderIndex); // CNum
                 for (int index = efi.ExtractStatuses.size();
                 index <= ref2Index - startIndex; index++) {
                     // UInt64 unPackSize = _database.Files[startIndex + index].UnPackSize;
@@ -186,7 +186,7 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
             if (efi.FileIndex != InArchive.kNumNoIndex)
                 startIndex = efi.FileIndex;
             else
-                startIndex = database.FolderStartFileIndex.get(efi.FolderIndex);
+                startIndex = database.folderStartFileIndex.get(efi.FolderIndex);
             
             
             int result = folderOutStream.Init(database,
@@ -213,7 +213,7 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
                     new LocalCompressProgressInfo();
             localCompressProgressSpec.Init(localProgressSpec, ICompressProgressInfo.INVALID , currentImportantTotalUnPacked);
             
-            int packStreamIndex = database.FolderStartPackStreamIndex.get(folderIndex); // CNum
+            int packStreamIndex = database.folderStartPackStreamIndex.get(folderIndex); // CNum
             long folderStartPackPos = database.GetFolderStreamPos(folderIndex, 0);
             
     /*
@@ -295,9 +295,9 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
     
     long getPackSize(int index2) {
         long packSize = 0;
-        int folderIndex = _database.FileIndexToFolderIndexMap.get(index2);
+        int folderIndex = _database.fileIndexToFolderIndexMap.get(index2);
         if (folderIndex != InArchive.kNumNoIndex) {
-            if (_database.FolderStartFileIndex.get(folderIndex) == index2)
+            if (_database.folderStartFileIndex.get(folderIndex) == index2)
                 packSize = _database.GetFolderFullPackSize(folderIndex);
         }
         return packSize;
@@ -328,7 +328,7 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
     String getMethods(int index2) {
         String ret = "";
         
-        int folderIndex = _database.FileIndexToFolderIndexMap.get(index2);
+        int folderIndex = _database.fileIndexToFolderIndexMap.get(index2);
         if (folderIndex != InArchive.kNumNoIndex) {
             Folder folderInfo = _database.Folders.get(folderIndex);
             String methodsString = "";

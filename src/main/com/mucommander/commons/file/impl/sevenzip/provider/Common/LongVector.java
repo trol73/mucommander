@@ -76,6 +76,7 @@ public class LongVector {
         int numMoved = elt - index - 1;
         if (numMoved > 0)
             System.arraycopy(elt, index+1, elt, index,numMoved);
+        // TODO WTF ?!
         
         // data[--elt] = null; // Let gc do its work
         

@@ -18,9 +18,9 @@ public class BCJ_x86_Decoder implements ICompressFilter {
     
     static final int [] kMaskToBitNumber = {0, 1, 2, 2, 3, 3, 3, 3};
     
-    static final boolean Test86MSByte(int b) { return ((b) == 0 || (b) == 0xFF); }
+    static boolean Test86MSByte(int b) { return ((b) == 0 || (b) == 0xFF); }
     
-    static final int x86_Convert(byte [] buffer, int endPos, int nowPos,
+    static int x86_Convert(byte [] buffer, int endPos, int nowPos,
             int [] prevMask, int [] prevPos, boolean encoding) {
         int bufferPos = 0;
         int limit;
@@ -53,9 +53,9 @@ public class BCJ_x86_Decoder implements ICompressFilter {
             if (Test86MSByte(b) && kMaskToAllowedStatus[(prevMask[0] >> 1) & 0x7] &&
                     (prevMask[0] >>> 1) < 0x10) {
                 int src =
-                        ((int)(b) << 24) |
-                        ((int)(buffer[bufferPos + 3] & 0xFF) << 16) |
-                        ((int)(buffer[bufferPos + 2] & 0xFF) << 8) |
+                        (b << 24) |
+                        ((buffer[bufferPos + 3] & 0xFF) << 16) |
+                        ((buffer[bufferPos + 2] & 0xFF) << 8) |
                         (buffer[bufferPos + 1] & 0xFF);
                 
                 int dest;
@@ -68,7 +68,7 @@ public class BCJ_x86_Decoder implements ICompressFilter {
                     if (prevMask[0] == 0)
                         break;
                     index = kMaskToBitNumber[prevMask[0] >>> 1];
-                    b = (int)((dest >> (24 - index * 8)) & 0xFF);
+                    b = ((dest >> (24 - index * 8)) & 0xFF);
                     if (!Test86MSByte(b))
                         break;
                     src = dest ^ ((1 << (32 - index * 8)) - 1);

@@ -48,26 +48,7 @@ public class IntVector {
     public boolean isEmpty() {
         return elt == 0;
     }
-    
-    public int Back() {
-        if (elt < 1)
-            throw new ArrayIndexOutOfBoundsException(0);
-        
-        return data[elt-1];
-    }
-    
-    public int Front() {
-        if (elt < 1)
-            throw new ArrayIndexOutOfBoundsException(0);
-        
-        return data[0];
-    }
-    
-    public void DeleteBack() {
-        // Delete(_size - 1);
-        remove(elt-1);
-    }
-    
+
     public int remove(int index) {
         if (index >= elt)
             throw new ArrayIndexOutOfBoundsException(index);
@@ -76,6 +57,7 @@ public class IntVector {
         int numMoved = elt - index - 1;
         if (numMoved > 0)
             System.arraycopy(elt, index+1, elt, index,numMoved);
+        // TODO WTF ?!
         
         // data[--elt] = null; // Let gc do its work
         

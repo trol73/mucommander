@@ -41,7 +41,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     private static GeneralPreferencesDialog singleton;
     /** Stores the components in the dialog that were changed and their current value is different 
      *  then their saved value at MuConfiguration **/
-    private Set<PrefComponent> modifiedComponents = new LinkedHashSet<>();;
+    private Set<PrefComponent> modifiedComponents = new LinkedHashSet<>();
 
 
     // - Dimensions -------------------------------------------------------------

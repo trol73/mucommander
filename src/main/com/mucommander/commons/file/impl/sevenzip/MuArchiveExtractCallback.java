@@ -81,7 +81,7 @@ public class MuArchiveExtractCallback implements IArchiveExtractCallback { // , 
 	            case IInArchive.NExtract_NAskMode_kSkip:
 	                PrintString("Skipping    ");
 	                break;
-	        };
+	        }
 	        System.out.println("here2");
 	        PrintString(_filePath);
 	        return HRESULT.S_OK;

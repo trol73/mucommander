@@ -2,41 +2,40 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Sev
 
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.IntVector;
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.LongVector;
-import com.mucommander.commons.file.impl.sevenzip.provider.Common.RecordVector;
 
 public class ArchiveDatabaseEx extends ArchiveDatabase {
     InArchiveInfo ArchiveInfo = new InArchiveInfo();
-    LongVector PackStreamStartPositions = new LongVector();
-    IntVector FolderStartPackStreamIndex = new IntVector();
+    LongVector packStreamStartPositions = new LongVector();
+    IntVector folderStartPackStreamIndex = new IntVector();
    
-    IntVector FolderStartFileIndex = new IntVector();
-    IntVector FileIndexToFolderIndexMap = new IntVector();
+    IntVector folderStartFileIndex = new IntVector();
+    IntVector fileIndexToFolderIndexMap = new IntVector();
     
     void Clear() {
         super.Clear();
         ArchiveInfo.Clear();
-        PackStreamStartPositions.clear();
-        FolderStartPackStreamIndex.clear();
-        FolderStartFileIndex.clear();
-        FileIndexToFolderIndexMap.clear();
+        packStreamStartPositions.clear();
+        folderStartPackStreamIndex.clear();
+        folderStartFileIndex.clear();
+        fileIndexToFolderIndexMap.clear();
     }
     
     void FillFolderStartPackStream() {
-        FolderStartPackStreamIndex.clear();
-        FolderStartPackStreamIndex.Reserve(Folders.size());
+        folderStartPackStreamIndex.clear();
+        folderStartPackStreamIndex.Reserve(Folders.size());
         int startPos = 0;
         for(int i = 0; i < Folders.size(); i++) {
-            FolderStartPackStreamIndex.add(startPos);
+            folderStartPackStreamIndex.add(startPos);
             startPos += Folders.get(i).PackStreams.size();
         }
     }
     
     void FillStartPos() {
-        PackStreamStartPositions.clear();
-        PackStreamStartPositions.Reserve(PackSizes.size());
+        packStreamStartPositions.clear();
+        packStreamStartPositions.Reserve(PackSizes.size());
         long startPos = 0;
         for(int i = 0; i < PackSizes.size(); i++) {
-            PackStreamStartPositions.add(startPos);
+            packStreamStartPositions.add(startPos);
             startPos += PackSizes.get(i);
         }
     }
@@ -48,7 +47,7 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
     }
     
     public long GetFolderFullPackSize(int folderIndex) {
-        int packStreamIndex = FolderStartPackStreamIndex.get(folderIndex);
+        int packStreamIndex = folderStartPackStreamIndex.get(folderIndex);
         Folder folder = Folders.get(folderIndex);
         long size = 0;
         for (int i = 0; i < folder.PackStreams.size(); i++)
@@ -58,10 +57,10 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
     
     
     void FillFolderStartFileIndex() throws java.io.IOException {
-        FolderStartFileIndex.clear();
-        FolderStartFileIndex.Reserve(Folders.size());
-        FileIndexToFolderIndexMap.clear();
-        FileIndexToFolderIndexMap.Reserve(Files.size());
+        folderStartFileIndex.clear();
+        folderStartFileIndex.Reserve(Folders.size());
+        fileIndexToFolderIndexMap.clear();
+        fileIndexToFolderIndexMap.Reserve(Files.size());
         
         int folderIndex = 0;
         int indexInFolder = 0;
@@ -69,7 +68,7 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
             FileItem file = Files.get(i);
             boolean emptyStream = !file.HasStream;
             if (emptyStream && indexInFolder == 0) {
-                FileIndexToFolderIndexMap.add(InArchive.kNumNoIndex);
+                fileIndexToFolderIndexMap.add(InArchive.kNumNoIndex);
                 continue;
             }
             if (indexInFolder == 0) {
@@ -78,13 +77,13 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
                 for (;;) {
                     if (folderIndex >= Folders.size())
                         throw new java.io.IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);
-                    FolderStartFileIndex.add(i); // check it
+                    folderStartFileIndex.add(i); // check it
                     if (NumUnPackStreamsVector.get(folderIndex) != 0)
                         break;
                     folderIndex++;
                 }
             }
-            FileIndexToFolderIndexMap.add(folderIndex);
+            fileIndexToFolderIndexMap.add(folderIndex);
             if (emptyStream)
                 continue;
             indexInFolder++;
@@ -97,7 +96,7 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
     
     public long GetFolderStreamPos(int folderIndex, int indexInFolder) {
         return ArchiveInfo.DataStartPosition +
-                PackStreamStartPositions.get(FolderStartPackStreamIndex.get(folderIndex) +
+                packStreamStartPositions.get(folderStartPackStreamIndex.get(folderIndex) +
                 indexInFolder);
     }
 }

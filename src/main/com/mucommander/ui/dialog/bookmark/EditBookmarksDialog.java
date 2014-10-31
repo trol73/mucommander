@@ -357,7 +357,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
             }
             else {      // Duplicate button
                 try {
-                    Bookmark currentBookmark = (Bookmark)bookmarkList.getSelectedValue();
+                    Bookmark currentBookmark = bookmarkList.getSelectedValue();
                     newBookmark = (Bookmark)currentBookmark.clone();
                     newBookmark.setName(getFreeNameVariation(currentBookmark.getName()));
                 }
@@ -378,7 +378,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
             // Dispose dialog first
             dispose();
             // Change active panel's folder
-            mainFrame.getActivePanel().tryChangeCurrentFolder(((Bookmark)bookmarkList.getSelectedValue()).getLocation());
+            mainFrame.getActivePanel().tryChangeCurrentFolder((bookmarkList.getSelectedValue()).getLocation());
         }
     }
 

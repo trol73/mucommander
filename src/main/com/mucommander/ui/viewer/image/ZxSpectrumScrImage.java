@@ -120,13 +120,13 @@ public class ZxSpectrumScrImage {
             // display address 010[L4][L3][R2][R1][R0][L2][L1][L0][C4][C3][C2][C1][C0]
             int line = y / 8;       // line number (0..23, 5 bits)
             int row = y % 8;        // pixel row in line (0..8, 3 bits)
-            final int lPatt = ((line & 0x18)<<8)|((line & 0x7)<<5);
-            final int rPatt = (row & 0x7)<<8;
+            final int lPart = ((line & 0x18)<<8)|((line & 0x7)<<5);
+            final int rPart = (row & 0x7)<<8;
             for (int x = 0; x < WIDTH; x++) {
                 int col = x / 8;    // column number (5 bits)
-                int cPatt = col & 0x1F;
+                int cPart = col & 0x1F;
                 int bit = 7 - (x % 8);
-                int address = (((0x4000 | lPatt) | rPatt) | cPatt) - 16384;
+                int address = (((0x4000 | lPart) | rPart) | cPart) - 16384;
                 int attrIndex = ((y/8)*32)+(x/8);
                 int inkIndex = ink[attrIndex];
                 int paperIndex = paper[attrIndex];

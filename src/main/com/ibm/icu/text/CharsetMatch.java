@@ -85,13 +85,13 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      * @stable ICU 3.4
      */
     public String getString(int maxLength) throws java.io.IOException {
-        String result = null;
+        String result;
         if (fInputStream != null) {
             StringBuilder sb = new StringBuilder();
             char[] buffer = new char[1024];
             Reader reader = getReader();
             int max = maxLength < 0? Integer.MAX_VALUE : maxLength;
-            int bytesRead = 0;
+            int bytesRead;
             
             while ((bytesRead = reader.read(buffer, 0, Math.min(max, 1024))) >= 0) {
                 sb.append(buffer, 0, bytesRead);

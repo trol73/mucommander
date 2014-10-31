@@ -30,7 +30,7 @@ import java.io.*;
 import java.util.WeakHashMap;
 
 /**
- * This class manages the boomark list and its parsing and storage as an XML file.
+ * This class manages the bookmark list and its parsing and storage as an XML file.
  * <p>
  * It monitors any changes made to the bookmarks and when changes are made, fires change events to registered
  * listeners.
@@ -48,7 +48,7 @@ public class BookmarkManager implements VectorChangeListener {
     private static final String DEFAULT_BOOKMARKS_FILE_NAME = "bookmarks.xml";
 
     /** Bookmark instances */
-    private static AlteredVector<Bookmark> bookmarks = new AlteredVector<Bookmark>();
+    private static AlteredVector<Bookmark> bookmarks = new AlteredVector<>();
 
     /** Contains all registered bookmark listeners, stored as weak references */
     private static final WeakHashMap<BookmarkListener, ?> listeners = new WeakHashMap<BookmarkListener, Object>();
@@ -171,13 +171,14 @@ public class BookmarkManager implements VectorChangeListener {
      * @throws Exception if an error occurs.
      */
     public static synchronized void loadBookmarks() throws Exception {
-        InputStream in;
+        InputStream in = null;
 
         // Parse the bookmarks file
-        in = null;
         isLoading = true;
-        try {readBookmarks(in = new BackupInputStream(getBookmarksFile()), new Loader());}
-        finally {
+        try {
+            in = new BackupInputStream(getBookmarksFile());
+            readBookmarks(in, new Loader());
+        } finally {
             if(in != null) {
                 try {in.close();}
                 catch(Exception e) {}

@@ -308,10 +308,8 @@ public class TarOutputStream extends FilterOutputStream {
             if ((assemLen + numToWrite) >= recordBuf.length) {
                 int aLen = recordBuf.length - assemLen;
 
-                System.arraycopy(assemBuf, 0, recordBuf, 0,
-                                 assemLen);
-                System.arraycopy(wBuf, wOffset, recordBuf,
-                                 assemLen, aLen);
+                System.arraycopy(assemBuf, 0, recordBuf, 0, assemLen);
+                System.arraycopy(wBuf, wOffset, recordBuf, assemLen, aLen);
                 buffer.writeRecord(recordBuf);
 
                 currBytes += recordBuf.length;
@@ -319,8 +317,7 @@ public class TarOutputStream extends FilterOutputStream {
                 numToWrite -= aLen;
                 assemLen = 0;
             } else {
-                System.arraycopy(wBuf, wOffset, assemBuf, assemLen,
-                                 numToWrite);
+                System.arraycopy(wBuf, wOffset, assemBuf, assemLen, numToWrite);
 
                 wOffset += numToWrite;
                 assemLen += numToWrite;

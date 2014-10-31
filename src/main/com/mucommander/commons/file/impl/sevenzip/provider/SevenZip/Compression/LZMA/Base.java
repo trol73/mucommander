@@ -7,12 +7,12 @@ public class Base
 	public static final int kNumRepDistances = 4;
 	public static final int kNumStates = 12;
 	
-	public static final int StateInit()
+	public static int StateInit()
 	{
 		return 0;
 	}
 	
-	public static final int StateUpdateChar(int index)
+	public static int StateUpdateChar(int index)
 	{
 		if (index < 4) 
 			return 0;
@@ -21,22 +21,22 @@ public class Base
 		return index - 6;
 	}
 	
-	public static final int StateUpdateMatch(int index)
+	public static int StateUpdateMatch(int index)
 	{
 		return (index < 7 ? 7 : 10); 
 	}
 
-	public static final int StateUpdateRep(int index)
+	public static int StateUpdateRep(int index)
 	{ 
 		return (index < 7 ? 8 : 11); 
 	}
 	
-	public static final int StateUpdateShortRep(int index)
+	public static int StateUpdateShortRep(int index)
 	{ 
 		return (index < 7 ? 9 : 11); 
 	}
 
-	public static final boolean StateIsCharState(int index)
+	public static boolean StateIsCharState(int index)
 	{ 
 		return index < 7; 
 	}
@@ -51,12 +51,12 @@ public class Base
 	
 	public static final int kMatchMinLen = 2;
 	
-	public static final int GetLenToPosState(int len)
+	public static int GetLenToPosState(int len)
 	{
 		len -= kMatchMinLen;
 		if (len < kNumLenToPosStates)
 			return len;
-		return (int)(kNumLenToPosStates - 1);
+		return kNumLenToPosStates - 1;
 	}
 	
 	public static final int kNumAlignBits = 4;
@@ -82,7 +82,6 @@ public class Base
 	public static final  int kNumHighLenBits = 8;
 	public static final  int kNumLowLenSymbols = 1 << kNumLowLenBits;
 	public static final  int kNumMidLenSymbols = 1 << kNumMidLenBits;
-	public static final  int kNumLenSymbols = kNumLowLenSymbols + kNumMidLenSymbols +
-			(1 << kNumHighLenBits);
+	public static final  int kNumLenSymbols = kNumLowLenSymbols + kNumMidLenSymbols + (1 << kNumHighLenBits);
 	public static final  int kMatchMaxLen = kMatchMinLen + kNumLenSymbols - 1;
 }

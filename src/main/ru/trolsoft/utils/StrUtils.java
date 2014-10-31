@@ -135,8 +135,8 @@ public class StrUtils {
      */
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            s.append(StrUtils.byteToHexStr(bytes[i]));
+        for (byte aByte : bytes) {
+            s.append(StrUtils.byteToHexStr(aByte));
             s.append(' ');
         }
         return s.toString();

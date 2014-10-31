@@ -20,7 +20,7 @@
 package com.mucommander.ui.macosx;
 
 import com.apple.eawt.*;
-import com.mucommander.Launcher;
+import com.mucommander.TrolCommander;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.ui.main.FolderPanel;
@@ -68,7 +68,7 @@ class EAWTHandler implements AboutHandler, PreferencesHandler, AppReOpenedListen
         // application is launched with a file to open, for instance when drag-n-dropping a file to the Dock icon
         // when muCommander is not started yet. In this case, this method is called while Launcher is still busy
         // launching the application (no mainframe exists yet).
-        Launcher.waitUntilLaunched();
+        TrolCommander.waitUntilLaunched();
         for (File f : openFilesEvent.getFiles()) {
             AbstractFile file = FileFactory.getFile(f.toString());
             FolderPanel activePanel = WindowManager.getCurrentMainFrame().getActivePanel();

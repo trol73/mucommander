@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  * This class represents a non-versioned family of operating system, like <code>Windows</code> or <code>Linux</code>. 
  * The current runtime instance is determined using the value of the <code>os.name</code> system property.
  *
- * @see OsFamilies
  * @see OsVersion
  * @author Maxence Bernard, Arik Hadas
  */

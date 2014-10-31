@@ -589,7 +589,7 @@
                 <j2se version="1.5+"/>
                 <jar  href="trolcommander.jar"/>
             </resources>
-            <applicationdesc main="com.mucommander.Launcher"/>
+            <applicationdesc main="com.mucommander.TrolCommander"/>
         </mkjnlp>
     </target>
 

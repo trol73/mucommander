@@ -734,9 +734,8 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public void copyStream(InputStream in, boolean append, long length)
-			throws FileTransferException {
-		if ((append == true) || (length == -1)) {
+	public void copyStream(InputStream in, boolean append, long length) throws FileTransferException {
+		if (append || length == -1) {
 			super.copyStream(in, append, length);
 		} else {
 			try {
@@ -812,8 +811,7 @@ public class VSphereFile extends ProtocolFile implements
 			super.close();
 			InputStream in = new FileInputStream(tmpFile);
 			try {
-				copyFileToRemote(fileName, in, this.tmpFile.length(),
-						connHandler, fileManager);
+				copyFileToRemote(fileName, in, this.tmpFile.length(), connHandler, fileManager);
 			} finally {
 				connHandler.releaseLock();
 				connHandler = null;
@@ -910,7 +908,7 @@ public class VSphereFile extends ProtocolFile implements
 			TaskInProgressFaultMsg {
 
 		GuestFileAttributes gfa = new GuestFileAttributes();
-		boolean override = true;
+		final boolean override = true;
 		String fileUploadUrl = connHandler
 				.getClient()
 				.getVimPort()
@@ -918,14 +916,12 @@ public class VSphereFile extends ProtocolFile implements
 						remotePathName, gfa, fileSize, override);
 
 		// replace * with the address of the server. see vsphere docs.
-		fileUploadUrl = fileUploadUrl.replace("*", connHandler.getClient()
-				.getServer());
+		fileUploadUrl = fileUploadUrl.replace("*", connHandler.getClient().getServer());
 		return fileUploadUrl;
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException,
-			UnsupportedFileOperationException {
+	public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -948,8 +944,7 @@ public class VSphereFile extends ProtocolFile implements
 
 	@Override
 	@UnsupportedFileOperation
-	public OutputStream getAppendOutputStream() throws IOException,
-			UnsupportedFileOperationException {
+	public OutputStream getAppendOutputStream() throws IOException,	UnsupportedFileOperationException {
 		throw new UnsupportedFileOperationException(FileOperation.WRITE_FILE);
 	}
 
@@ -991,17 +986,8 @@ public class VSphereFile extends ProtocolFile implements
 								getPathInVm());
 				isFile = isSymLink = false;
 			}
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
+		} catch (FileFaultFaultMsg | GuestOperationsFaultFaultMsg | InvalidStateFaultMsg | RuntimeFaultFaultMsg |
+                TaskInProgressFaultMsg | InvalidPropertyFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);

@@ -96,7 +96,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         // Create the sortable credentials list panel
         SortableListPanel<CredentialsMapping> listPanel = new SortableListPanel<>(credentials);
         this.credentialsList = listPanel.getDynamicList();
-        this.lastSelectedItem = (CredentialsMapping) credentialsList.getSelectedValue();
+        this.lastSelectedItem = credentialsList.getSelectedValue();
 
         contentPane.add(listPanel, BorderLayout.CENTER);
 
@@ -178,7 +178,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         if(!credentialsList.isSelectionEmpty() && credentials.size()>0) {
             componentsEnabled = true;
 
-            CredentialsMapping credentialsMapping = (CredentialsMapping) credentialsList.getSelectedValue();
+            CredentialsMapping credentialsMapping = credentialsList.getSelectedValue();
             Credentials credentials = credentialsMapping.getCredentials();
             loginValue = credentials.getLogin();
             passwordValue = credentials.getPassword();
@@ -204,7 +204,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
             credentials.setElementAt(new CredentialsMapping(new Credentials(loginField.getText(), new String(passwordField.getPassword())), lastSelectedItem.getRealm(), true), itemIndex);
         }
         
-        this.lastSelectedItem = (CredentialsMapping) credentialsList.getSelectedValue();
+        this.lastSelectedItem = credentialsList.getSelectedValue();
     }
 
 
@@ -244,7 +244,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
             // Dispose dialog first
             dispose();
             // Go to credentials' realm location
-            mainFrame.getActivePanel().tryChangeCurrentFolder(((CredentialsMapping)credentialsList.getSelectedValue()).getRealm());
+            mainFrame.getActivePanel().tryChangeCurrentFolder((credentialsList.getSelectedValue()).getRealm());
         }
     }
 

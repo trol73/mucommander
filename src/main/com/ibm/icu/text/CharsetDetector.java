@@ -344,7 +344,7 @@ public class CharsetDetector {
      *               it by removing what appears to be html markup.
      */
     private void MungeInput() {
-        int srci = 0;
+        int srci;
         int dsti = 0;
         byte b;
         boolean  inMarkup = false;
