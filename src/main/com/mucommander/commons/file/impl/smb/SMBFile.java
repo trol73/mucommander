@@ -109,7 +109,7 @@ import java.net.MalformedURLException;
                     // 2) any other SmbException -> this may happen if access to the file was denied for example, this
                     //    shouldn't prevent this SMBFile from being created.
 
-                    // 1) Create an AuthException out of the SmbAuthException and throw it
+                    // 1) create an AuthException out of the SmbAuthException and throw it
                     if(e instanceof SmbAuthException)
                         throw new AuthException(fileURL, e.getMessage());
 
@@ -488,7 +488,7 @@ import java.net.MalformedURLException;
                     nbSmbFilesToExclude++;
             }
 
-            // Create SMBFile by using SmbFile instance and sharing parent instance among children
+            // create SMBFile by using SmbFile instance and sharing parent instance among children
             AbstractFile children[] = new AbstractFile[nbSmbFiles-nbSmbFilesToExclude];
             FileURL childURL;
             SmbFile smbFile;

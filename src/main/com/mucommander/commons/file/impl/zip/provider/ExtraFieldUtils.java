@@ -67,7 +67,7 @@ public class ExtraFieldUtils {
     }
 
     /**
-     * Create an instance of the approriate ExtraField, falls back to
+     * create an instance of the approriate ExtraField, falls back to
      * {@link UnrecognizedExtraField UnrecognizedExtraField}.
      * @param headerId the header identifier
      * @return an instance of the appropiate ExtraField

@@ -81,7 +81,7 @@ public class CredentialsManager {
     /** True when changes were made after the credentials file was last saved */
     private static boolean saveNeeded;
 
-    /** Create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
+    /** create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
       * stores VectorChangeListener as weak references) */
     private static CredentialsManager singleton = new CredentialsManager();
 

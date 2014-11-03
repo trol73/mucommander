@@ -168,7 +168,7 @@ public class ConfigurationSectionTest {
 
         section = new ConfigurationSection();
 
-        // Create 10 variables.
+        // create 10 variables.
         for(int i = 0; i < 10; i++)
             section.setVariable("var" + i, "value");
 
@@ -350,7 +350,7 @@ public class ConfigurationSectionTest {
 
         section = new ConfigurationSection();
 
-        // Create 10 variables.
+        // create 10 variables.
         buffer = null;
         for(int i = 0; i < 10; i++)
             buffer = section.addSection("sect" + i);

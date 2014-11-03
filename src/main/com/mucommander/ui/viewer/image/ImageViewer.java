@@ -114,7 +114,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     	
     	setComponentToPresent(imageViewerImpl);
     	
-    	// Create Go menu
+    	// create Go menu
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
     	controlsMenu = MenuToolkit.addMenu(Translator.get("image_viewer.controls_menu"), menuMnemonicHelper, null);
     	
@@ -458,7 +458,7 @@ class ImageViewer extends FileViewer implements ActionListener {
 
 
     private static BufferedImage transcodeSVGDocument(AbstractFile file, float width, float height) throws IOException {
-        // Create a PNG transcoder.
+        // create a PNG transcoder.
         Transcoder t = new PNGTranscoder();
         // Set the transcoding hints.
         if (width > 0) {
@@ -469,11 +469,11 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
         t.addTranscodingHint(PNGTranscoder.KEY_XML_PARSER_VALIDATING, false);
 
-        // Create the transcoder input.
+        // create the transcoder input.
         TranscoderInput input = new TranscoderInput(file.getInputStream());
         ByteArrayOutputStream ostream = null;
         try {
-            // Create the transcoder output.
+            // create the transcoder output.
             ostream = new ByteArrayOutputStream();
             TranscoderOutput output = new TranscoderOutput(ostream);
 

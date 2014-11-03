@@ -40,7 +40,6 @@ import java.io.OutputStream;
  * the abstract methods defined in this class.</p>
  *
  * @see HDFSFile
- * @see S3File
  * @author Maxence Bernard
  */
 public abstract class HadoopFile extends ProtocolFile {

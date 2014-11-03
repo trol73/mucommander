@@ -168,7 +168,7 @@ public class ZipFile implements ZipConstants {
             raos.close();
         }
 
-        // Create a buffered output stream to improve write performance, as headers are written by small chunks
+        // create a buffered output stream to improve write performance, as headers are written by small chunks
         raos = new BufferedRandomOutputStream(file.getRandomAccessOutputStream(), WRITE_BUFFER_SIZE);
     }
 
@@ -465,7 +465,7 @@ public class ZipFile implements ZipConstants {
             entries.add(entry);
             nameMap.put(entry.getName(), entry);
 
-            // Create the ZipEntryOutputStream to write the entry's contents
+            // create the ZipEntryOutputStream to write the entry's contents
 
             // Use BufferPool to avoid excessive memory allocation and garbage collection.
             final byte[] deflaterBuf = BufferPool.getByteArray(DEFAULT_DEFLATER_BUFFER_SIZE);

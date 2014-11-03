@@ -182,7 +182,7 @@ public class LocalFile extends ProtocolFile {
             if(USES_ROOT_DRIVES)
                 path = path.substring(1, path.length());
             
-            // Create the java.io.File instance and throw an exception if the path is not absolute.
+            // create the java.io.File instance and throw an exception if the path is not absolute.
             file = new File(path);
             if(!file.isAbsolute())
                 throw new IOException();

@@ -120,7 +120,7 @@ public class CommandsPanel extends JPanel implements ActionListener, DocumentLis
             list.add(new CommandWrapper(cmd));
         }
         commands = new AlteredVector<>(list);
-        // Create the sortable commands list panel
+        // create the sortable commands list panel
         SortableListPanel<CommandWrapper> listPanel = new SortableListPanel<>(commands);
         commandsList = listPanel.getDynamicList();
         commandsList.addListSelectionListener(this);
@@ -226,7 +226,7 @@ public class CommandsPanel extends JPanel implements ActionListener, DocumentLis
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        // Create a new empty command / duplicate the currently selected command
+        // create a new empty command / duplicate the currently selected command
         if (source == btnNew || source == btnDuplicate) {
             parent.enableSave();
             Command newCommand;

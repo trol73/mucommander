@@ -105,7 +105,7 @@ public class UnpackJob extends AbstractCopyJob {
     protected void jobStarted() {
         super.jobStarted();
 
-        // Create the base destination folder if it doesn't exist yet
+        // create the base destination folder if it doesn't exist yet
         if (!baseDestFolder.exists()) {
             // Loop for retry
             do {
@@ -250,7 +250,7 @@ public class UnpackJob extends AbstractCopyJob {
                     relDestPath = relDestPath.replace("/", destSeparator);
                 }
 
-                // Create destination AbstractFile instance
+                // create destination AbstractFile instance
                 destFile = destFolder.getChild(relDestPath);
 
                 // Do nothing if the file is a symlink (skip file and return)
@@ -271,7 +271,7 @@ public class UnpackJob extends AbstractCopyJob {
 
                 // If the entry is a directory ...
                 if (entryFile.isDirectory()) {
-                    // Create the directory in the destination, if it doesn't already exist
+                    // create the directory in the destination, if it doesn't already exist
                     if (!(destFile.exists() && destFile.isDirectory())) {
                         // Loop for retry
                         do {
@@ -295,7 +295,7 @@ public class UnpackJob extends AbstractCopyJob {
                 }
                 // The entry is a regular file, copy it
                 else  {
-                    // Create the file's parent directory(s) if it doesn't already exist
+                    // create the file's parent directory(s) if it doesn't already exist
                     AbstractFile destParentFile = destFile.getParent();
                     if (!destParentFile.exists()) {
                         // Use mkdirs() instead of mkdir() to create any parent folder that doesn't exist yet

@@ -34,7 +34,7 @@ public class BufferOverflowException extends IOException {
 	private static final long serialVersionUID = -322401823167626048L;
 
 	/**
-	 * Create a new Exception
+	 * create a new Exception
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
@@ -43,7 +43,7 @@ public class BufferOverflowException extends IOException {
 	}
 
 	/**
-	 * Create a new Exception with the given message.
+	 * create a new Exception with the given message.
 	 *
 	 * @param msg Error message.
 	 *

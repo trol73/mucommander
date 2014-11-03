@@ -52,7 +52,7 @@ public class CustomDateFormat implements ConfigurationListener {
      * Forces static fields to be initialized
      */
     public static void init() {
-        // Create a singleton instance and keep it as a static member of this class.
+        // create a singleton instance and keep it as a static member of this class.
         // Not doing it so would cause the garbage collector to GC it as MuConfiguration holds
         // weak references of its listeners.
         singleton = new CustomDateFormat();

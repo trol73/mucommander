@@ -38,7 +38,7 @@ public abstract class CustomOperator {
 	final int operandCount;
 
 	/**
-	 * Create a new {@link CustomOperator} for two operands
+	 * create a new {@link CustomOperator} for two operands
 	 * 
 	 * @param symbol
 	 *            the symbol to be used in expressions to identify this operation
@@ -56,7 +56,7 @@ public abstract class CustomOperator {
 	}
 
 	/**
-	 * Create a new {@link CustomOperator}
+	 * create a new {@link CustomOperator}
 	 * 
 	 * @param symbol
 	 *            the symbol to be used in expressions to identify this operation
@@ -79,7 +79,7 @@ public abstract class CustomOperator {
 	}
 
 	/**
-	 * Create a left associative {@link CustomOperator} with precedence value of 1 that uses two operands
+	 * create a left associative {@link CustomOperator} with precedence value of 1 that uses two operands
 	 * 
 	 * @param symbol
 	 *            the {@link String} to use a symbol for this operation
@@ -93,7 +93,7 @@ public abstract class CustomOperator {
 	}
 
 	/**
-	 * Create a left associative {@link CustomOperator} for two operands
+	 * create a left associative {@link CustomOperator} for two operands
 	 * 
 	 * @param symbol
 	 *            the {@link String} to use a symbol for this operation

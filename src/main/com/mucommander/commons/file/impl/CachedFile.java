@@ -432,7 +432,7 @@ public class CachedFile extends ProxyFile {
     public AbstractFile getParent() {
         if(!getParentSet) {
             getParent = file.getParent();
-            // Create a CachedFile instance around the file if recursion is enabled
+            // create a CachedFile instance around the file if recursion is enabled
             if(recurseInstances && getParent!=null)
                 getParent = new CachedFile(getParent, true);
             getParentSet = true;
@@ -445,7 +445,7 @@ public class CachedFile extends ProxyFile {
     public AbstractFile getRoot() {
         if(!getRootSet) {
             getRoot = file.getRoot();
-            // Create a CachedFile instance around the file if recursion is enabled
+            // create a CachedFile instance around the file if recursion is enabled
             if(recurseInstances)
                 getRoot = new CachedFile(getRoot, true);
 
@@ -459,7 +459,7 @@ public class CachedFile extends ProxyFile {
     public AbstractFile getCanonicalFile() {
         if(!getCanonicalFileSet) {
             getCanonicalFile = file.getCanonicalFile();
-            // Create a CachedFile instance around the file if recursion is enabled
+            // create a CachedFile instance around the file if recursion is enabled
             if(recurseInstances) {
                 // AbstractFile#getCanonicalFile() may return 'this' if the file is not a symlink. In that case,
                 // no need to create a new CachedFile, simply use this one. 

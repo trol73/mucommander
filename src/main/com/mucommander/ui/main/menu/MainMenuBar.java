@@ -489,7 +489,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             // and we really do not want this hash map to prevent the frames to be GCed 
             windowMenuFrames = new WeakHashMap<>();
             
-            // Create a menu item for each of the MainFrame instances, that displays the MainFrame's path
+            // create a menu item for each of the MainFrame instances, that displays the MainFrame's path
             // and a keyboard accelerator to recall the frame (for the first 10 frames only).
             java.util.List<MainFrame> mainFrames = WindowManager.getMainFrames();
             MainFrame mainFrame;

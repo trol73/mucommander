@@ -168,7 +168,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
      * Creates a new StatusBar instance.
      */
     public StatusBar(MainFrame mainFrame) {
-        // Create and add status bar
+        // create and add status bar
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         this.mainFrame = mainFrame;

@@ -282,7 +282,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
             FileURL entryURL = (FileURL)archiveURL.clone();
             entryURL.setPath(addTrailingSeparator(archiveURL.getPath()) + entryPath);
 
-            // Create an RO and RW entry file, depending on whether this archive file is RO or RW
+            // create an RO and RW entry file, depending on whether this archive file is RO or RW
             entryFile = this instanceof AbstractRWArchiveFile
                 ?new RWArchiveEntryFile(
                   entryURL,

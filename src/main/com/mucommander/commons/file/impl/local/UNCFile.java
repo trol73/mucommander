@@ -93,7 +93,7 @@ public class UNCFile extends ProtocolFile {
         if(file==null) {
             absPath = SEPARATOR+SEPARATOR+fileURL.getHost()+fileURL.getPath().replace('/', '\\');    // Replace leading / char by \			
 
-            // Create the java.io.File instance and throw an exception if the path is not absolute.
+            // create the java.io.File instance and throw an exception if the path is not absolute.
             file = new File(absPath);
             if(!file.isAbsolute())
                 throw new IOException();

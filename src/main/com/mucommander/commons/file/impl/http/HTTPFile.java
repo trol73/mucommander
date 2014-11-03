@@ -626,7 +626,7 @@ public class HTTPFile extends ProtocolFile {
                             LOGGER.trace("creating child {} context={}", link, contextURL);
                             childURL = new URL(contextURL, link);
 
-                            // Create the child FileURL instance
+                            // create the child FileURL instance
                             childFileURL = FileURL.getFileURL(childURL.toExternalForm());
                             // Keep the parent's credentials (HTTP basic authentication), only if the host is the same.
                             // It would otherwise be unsafe.

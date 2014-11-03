@@ -96,7 +96,7 @@ public class Base64Table {
         if(table==null || table.length!=64)
             throw new IllegalArgumentException("Base64 table is not 64 bytes long");
 
-        // Create the decoding table and initialize all values to -1
+        // create the decoding table and initialize all values to -1
         this.decodingTable = new int[256];
         char c;
         for(c=0; c<256; c++)

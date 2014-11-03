@@ -144,7 +144,7 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
      */
     private void init(JTextField textField) {
         setRenderer(renderer = new ComboBoxCellRenderer<>());
-        // Create a new JTextField if no text field was specified
+        // create a new JTextField if no text field was specified
         if(textField==null) {
             this.textField = new JTextField();
         }

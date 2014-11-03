@@ -85,7 +85,7 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
     private void addButtons() {
     	setLayout(new GridLayout(0,actionIds.length));
     	
-    	// Create buttons and add them to this command bar
+    	// create buttons and add them to this command bar
         int nbButtons = actionIds.length;
         buttons = new CommandBarButton[nbButtons];
         for(int i=0; i<nbButtons; i++) {

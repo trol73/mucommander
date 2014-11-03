@@ -24,13 +24,13 @@ import com.mucommander.commons.file.AbstractFile;
  * <code>AttributeFileFilter</code> matches files which have a specific attribute set.
  * Here's a list of supported file attributes:
  * <ul>
- *   <li>{@link #DIRECTORY}</li>
- *   <li>{@link #FILE}</li>
- *   <li>{@link #BROWSABLE}</li>
- *   <li>{@link #ARCHIVE}</li>
- *   <li>{@link #SYMLINK}</li>
- *   <li>{@link #HIDDEN}</li>
- *   <li>{@link #ROOT}</li>
+ *   <li>{@link FileAttribute#DIRECTORY}</li>
+ *   <li>{@link FileAttribute#FILE}</li>
+ *   <li>{@link FileAttribute#BROWSABLE}</li>
+ *   <li>{@link FileAttribute#ARCHIVE}</li>
+ *   <li>{@link FileAttribute#SYMLINK}</li>
+ *   <li>{@link FileAttribute#HIDDEN}</li>
+ *   <li>{@link FileAttribute#ROOT}</li>
  * </ul>
  *
  * <p>Only one attribute can be matched at a time. To match several attributes, combine them using a

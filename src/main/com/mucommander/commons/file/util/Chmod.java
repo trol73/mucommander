@@ -79,7 +79,7 @@ public class Chmod {
      * @return true if the <code>chmod</code> command reported a success
      */
     public static boolean chmod(AbstractFile files[], String permissions) {
-        // Create the command token array
+        // create the command token array
         String[] tokens = new String[files.length+2];
         tokens[0] = "chmod";
         tokens[1] = permissions;

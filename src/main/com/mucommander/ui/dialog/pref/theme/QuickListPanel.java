@@ -240,7 +240,7 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
         itemConfigurationPanel.addSpace(10);
         itemConfigurationPanel.add(createItemColorsPanel(fontChooser1));
         
-        // Create the tabbed pane.
+        // create the tabbed pane.
         tabbedPane = new JTabbedPane();
         tabbedPane.add(Translator.get("theme_editor.header"), headerConfigurationPanel);
         tabbedPane.add(Translator.get("theme_editor.item"), itemConfigurationPanel);

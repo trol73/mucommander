@@ -275,7 +275,7 @@ public class MuSnapshot {
     }
 	
 	/**
-     * Returns the CONFIGURATION section corresponding to the specified {@link com.mucommander.ui.main.FoldersTreePanel},
+     * Returns the CONFIGURATION section corresponding to the specified {@link com.mucommander.ui.main.tree.FoldersTreePanel},
      * left or right one in the {@link com.mucommander.ui.main.MainFrame} at the given index.
      *
      * @param window index of MainFrame
@@ -323,7 +323,7 @@ public class MuSnapshot {
     }
     
     /**
-     * Returns the CONFIGURATION section that describes the sorting of the specified {@link com.mucommander.ui.main.FileTable},
+     * Returns the CONFIGURATION section that describes the sorting of the specified {@link com.mucommander.ui.main.table.FileTable},
      * left or right one in the {@link com.mucommander.ui.main.MainFrame} at the given index.
      * 
      * @param window index of MainFrame

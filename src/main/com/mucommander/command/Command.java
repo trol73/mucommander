@@ -404,9 +404,9 @@ public class Command implements Comparable<Command> {
     }
 
     public int compareTo(Command command) {
-        int buffer;
+        int buffer = getDisplayName().compareTo(command.getDisplayName());
 
-        if ((buffer = getDisplayName().compareTo(command.getDisplayName())) != 0)
+        if (buffer != 0)
             return buffer;
         if ((buffer = getAlias().compareTo(command.getAlias())) != 0)
             return buffer;

@@ -193,7 +193,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 
             FileURL serverURL = currentServerPanel.getServerURL();	// Can throw a MalformedURLException
 
-            // Create a CredentialsMapping instance and pass to Folder so that it uses it to connect to the folder and
+            // create a CredentialsMapping instance and pass to Folder so that it uses it to connect to the folder and
             // adds to CredentialsManager once the folder has been successfully changed
             Credentials credentials = serverURL.getCredentials();
             CredentialsMapping credentialsMapping;

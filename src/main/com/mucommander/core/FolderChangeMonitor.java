@@ -153,7 +153,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
 
         instances.add(this);
 		
-        // Create and start the monitor thread on first FolderChangeMonitor instance
+        // create and start the monitor thread on first FolderChangeMonitor instance
         if(monitorThread==null && checkPeriod>=0) {
             monitorThread = new Thread(this, getClass().getName());
             monitorThread.setDaemon(true);

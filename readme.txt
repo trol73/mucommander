@@ -5,11 +5,11 @@
 |_|_|_|___|_____|___|_|_|_|_|_|_|__,|_|_|___|___|_| 
 
 
-------------------
-muCommander v0.9.1
-------------------
+--------------------
+trolCommander v0.9.4
+--------------------
 
-muCommander is a lightweight, cross-platform file manager with a dual-pane interface.
+trolCommander is a lightweight, cross-platform file manager with a dual-pane interface.
 It runs on any operating system with Java support (Mac OS X, Windows, Linux, *BSD, Solaris...).
 
 Documentation can be found at http://trac.mucommander.com/ .
@@ -17,19 +17,19 @@ Documentation can be found at http://trac.mucommander.com/ .
 Please visit the muCommander forums (http://www.mucommander.com/forums) to ask questions, suggest features or
 report a bug. Your feedback is always welcome!
 
-Official website: http://www.mucommander.com
+Official website: http://trolsoft.ru/en/soft/trolcommander
 Copyright (C) 2002-2014 Maxence Bernard.
 
 
 Requirements
 ------------
 
-A Java Runtime Environment (JRE) 1.5 or later is required to run muCommander.
-Java 1.6 is recommended, you can download it at http://java.com.
+A Java Runtime Environment (JRE) 1.7 or later is required to run trolCommander.
+Java 1.8 is recommended, you can download it at http://java.com.
 
 Mac OS X users: your favorite OS already comes with a Java runtime so you're good to go!
 
-If you're having problems launching muCommander, make sure the JAVA_HOME environment variable points to the directory
+If you're having problems launching trolCommander, make sure the JAVA_HOME environment variable points to the directory
 where your Java runtime is installed.
 
 

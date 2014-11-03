@@ -24,9 +24,9 @@ public class ArchiveDatabaseEx extends ArchiveDatabase {
         folderStartPackStreamIndex.clear();
         folderStartPackStreamIndex.Reserve(Folders.size());
         int startPos = 0;
-        for(int i = 0; i < Folders.size(); i++) {
+        for (Folder Folder : Folders) {
             folderStartPackStreamIndex.add(startPos);
-            startPos += Folders.get(i).PackStreams.size();
+            startPos += Folder.PackStreams.size();
         }
     }
     

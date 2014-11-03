@@ -127,7 +127,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
 
         add(sp, BorderLayout.CENTER);
 
-        // Create tree renderer. We're not using default tree renderer, because
+        // create tree renderer. We're not using default tree renderer, because
         // AbstractFile.toString method returns full path, and we want to
         // display only a file name.
         FoldersTreeRenderer renderer = new FoldersTreeRenderer(tree);

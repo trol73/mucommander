@@ -28,11 +28,9 @@ import com.jediterm.terminal.ui.TerminalSession;
 import com.jediterm.terminal.ui.TerminalWidget;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.cache.WindowsStorage;
-import com.mucommander.commons.io.FileTransferException;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
-import com.pty4j.PtyProcess;
 import com.pty4j.util.PtyUtil;
 
 import javax.swing.JComponent;

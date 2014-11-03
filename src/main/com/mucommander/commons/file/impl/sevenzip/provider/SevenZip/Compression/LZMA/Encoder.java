@@ -3,8 +3,6 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression
 import java.io.IOException;
 
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.ICodeProgress;
-import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZ.BinTree;
-import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZMA.Base;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.BitTreeEncoder;
 
 public class Encoder
@@ -368,7 +366,7 @@ public class Encoder
 			int numHashBytes = 4;
 			if (_matchFinderType == EMatchFinderTypeBT2)
 				numHashBytes = 2;
-			bt.SetType(numHashBytes);
+			bt.setType(numHashBytes);
 			_matchFinder = bt;
 		}
 		_literalEncoder.Create(_numLiteralPosStateBits, _numLiteralContextBits);
@@ -437,8 +435,8 @@ public class Encoder
 		{
 			lenRes = _matchDistances[_numDistancePairs - 2];
 			if (lenRes == _numFastBytes)
-				lenRes += _matchFinder.GetMatchLen(lenRes - 1, _matchDistances[_numDistancePairs - 1],
-					Base.kMatchMaxLen - lenRes);
+				lenRes += _matchFinder.getMatchLen(lenRes - 1, _matchDistances[_numDistancePairs - 1],
+                        Base.kMatchMaxLen - lenRes);
 		}
 		_additionalOffset++;
 		return lenRes;
@@ -560,7 +558,7 @@ public class Encoder
 		}
 		numDistancePairs = _numDistancePairs;
 
-		int numAvailableBytes = _matchFinder.GetNumAvailableBytes() + 1;
+		int numAvailableBytes = _matchFinder.getNumAvailableBytes() + 1;
 		if (numAvailableBytes < 2)
 		{
 			backRes = -1;
@@ -574,7 +572,7 @@ public class Encoder
 		for (i = 0; i < Base.kNumRepDistances; i++)
 		{
 			reps[i] = _repDistances[i];
-			repLens[i] = _matchFinder.GetMatchLen(0 - 1, reps[i], Base.kMatchMaxLen);
+			repLens[i] = _matchFinder.getMatchLen(0 - 1, reps[i], Base.kMatchMaxLen);
 			if (repLens[i] > repLens[repMaxIndex])
 				repMaxIndex = i;
 		}
@@ -593,8 +591,8 @@ public class Encoder
 			return lenMain;
 		}
 
-		byte currentByte = _matchFinder.GetIndexByte(0 - 1);
-		byte matchByte = _matchFinder.GetIndexByte(0 - _repDistances[0] - 1 - 1);
+		byte currentByte = _matchFinder.getIndexByte(0 - 1);
+		byte matchByte = _matchFinder.getIndexByte(0 - _repDistances[0] - 1 - 1);
 
 		if (lenMain < 2 && currentByte != matchByte && repLens[repMaxIndex] < 2)
 		{
@@ -800,14 +798,14 @@ public class Encoder
 			_optimum[cur].Backs3 = reps[3];
 			int curPrice = _optimum[cur].Price;
 
-			currentByte = _matchFinder.GetIndexByte(0 - 1);
-			matchByte = _matchFinder.GetIndexByte(0 - reps[0] - 1 - 1);
+			currentByte = _matchFinder.getIndexByte(0 - 1);
+			matchByte = _matchFinder.getIndexByte(0 - reps[0] - 1 - 1);
 
 			posState = (position & _posStateMask);
 
 			int curAnd1Price = curPrice +
 				com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice0(_isMatch[(state << Base.kNumPosStatesBitsMax) + posState]) +
-				_literalEncoder.GetSubCoder(position, _matchFinder.GetIndexByte(0 - 2)).
+				_literalEncoder.GetSubCoder(position, _matchFinder.getIndexByte(0 - 2)).
 				GetPrice(!Base.StateIsCharState(state), matchByte, currentByte);
 
 			Optimal nextOptimum = _optimum[cur + 1];
@@ -837,7 +835,7 @@ public class Encoder
 				}
 			}
 
-			int numAvailableBytesFull = _matchFinder.GetNumAvailableBytes() + 1;
+			int numAvailableBytesFull = _matchFinder.getNumAvailableBytes() + 1;
 			numAvailableBytesFull = Math.min(kNumOpts - 1 - cur, numAvailableBytesFull);
 			numAvailableBytes = numAvailableBytesFull;
 
@@ -849,7 +847,7 @@ public class Encoder
 			{
 				// try Literal + rep0
 				int t = Math.min(numAvailableBytesFull - 1, _numFastBytes);
-				int lenTest2 = _matchFinder.GetMatchLen(0, reps[0], t);
+				int lenTest2 = _matchFinder.getMatchLen(0, reps[0], t);
 				if (lenTest2 >= 2)
 				{
 					int state2 = Base.StateUpdateChar(state);
@@ -881,7 +879,7 @@ public class Encoder
 
 			for (int repIndex = 0; repIndex < Base.kNumRepDistances; repIndex++)
 			{
-				int lenTest = _matchFinder.GetMatchLen(0 - 1, reps[repIndex], numAvailableBytes);
+				int lenTest = _matchFinder.getMatchLen(0 - 1, reps[repIndex], numAvailableBytes);
 				if (lenTest < 2)
 					continue;
 				int lenTestTemp = lenTest;
@@ -909,7 +907,7 @@ public class Encoder
 				if (lenTest < numAvailableBytesFull)
 				{
 					int t = Math.min(numAvailableBytesFull - 1 - lenTest, _numFastBytes);
-					int lenTest2 = _matchFinder.GetMatchLen(lenTest, reps[repIndex], t);
+					int lenTest2 = _matchFinder.getMatchLen(lenTest, reps[repIndex], t);
 					if (lenTest2 >= 2)
 					{
 						int state2 = Base.StateUpdateRep(state);
@@ -919,9 +917,9 @@ public class Encoder
 								repMatchPrice + GetRepPrice(repIndex, lenTest, state, posState) +
 								com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice0(_isMatch[(state2 << Base.kNumPosStatesBitsMax) + posStateNext]) +
 								_literalEncoder.GetSubCoder(position + lenTest,
-								_matchFinder.GetIndexByte(lenTest - 1 - 1)).GetPrice(true,
-								_matchFinder.GetIndexByte(lenTest - 1 - (reps[repIndex] + 1)),
-								_matchFinder.GetIndexByte(lenTest - 1));
+								_matchFinder.getIndexByte(lenTest - 1 - 1)).GetPrice(true,
+								_matchFinder.getIndexByte(lenTest - 1 - (reps[repIndex] + 1)),
+								_matchFinder.getIndexByte(lenTest - 1));
 						state2 = Base.StateUpdateChar(state2);
 						posStateNext = (position + lenTest + 1) & _posStateMask;
 						int nextMatchPrice = curAndLenCharPrice + com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice1(_isMatch[(state2 << Base.kNumPosStatesBitsMax) + posStateNext]);
@@ -984,7 +982,7 @@ public class Encoder
 						if (lenTest < numAvailableBytesFull)
 						{
 							int t = Math.min(numAvailableBytesFull - 1 - lenTest, _numFastBytes);
-							int lenTest2 = _matchFinder.GetMatchLen(lenTest, curBack, t);
+							int lenTest2 = _matchFinder.getMatchLen(lenTest, curBack, t);
 							if (lenTest2 >= 2)
 							{
 								int state2 = Base.StateUpdateMatch(state);
@@ -993,10 +991,10 @@ public class Encoder
 								int curAndLenCharPrice = curAndLenPrice +
 									com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice0(_isMatch[(state2 << Base.kNumPosStatesBitsMax) + posStateNext]) +
 									_literalEncoder.GetSubCoder(position + lenTest,
-									_matchFinder.GetIndexByte(lenTest - 1 - 1)).
+									_matchFinder.getIndexByte(lenTest - 1 - 1)).
 									GetPrice(true,
-									_matchFinder.GetIndexByte(lenTest - (curBack + 1) - 1),
-									_matchFinder.GetIndexByte(lenTest - 1));
+									_matchFinder.getIndexByte(lenTest - (curBack + 1) - 1),
+									_matchFinder.getIndexByte(lenTest - 1));
 								state2 = Base.StateUpdateChar(state2);
 								posStateNext = (position + lenTest + 1) & _posStateMask;
 								int nextMatchPrice = curAndLenCharPrice + com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice1(_isMatch[(state2 << Base.kNumPosStatesBitsMax) + posStateNext]);
@@ -1083,7 +1081,7 @@ public class Encoder
 		long progressPosValuePrev = nowPos64;
 		if (nowPos64 == 0)
 		{
-			if (_matchFinder.GetNumAvailableBytes() == 0)
+			if (_matchFinder.getNumAvailableBytes() == 0)
 			{
 				Flush((int)nowPos64);
 				return;
@@ -1093,13 +1091,13 @@ public class Encoder
 			int posState = (int)(nowPos64) & _posStateMask;
 			_rangeEncoder.Encode(_isMatch, (_state << Base.kNumPosStatesBitsMax) + posState, 0);
 			_state = Base.StateUpdateChar(_state);
-			byte curByte = _matchFinder.GetIndexByte(0 - _additionalOffset);
+			byte curByte = _matchFinder.getIndexByte(0 - _additionalOffset);
 			_literalEncoder.GetSubCoder((int)(nowPos64), _previousByte).Encode(_rangeEncoder, curByte);
 			_previousByte = curByte;
 			_additionalOffset--;
 			nowPos64++;
 		}
-		if (_matchFinder.GetNumAvailableBytes() == 0)
+		if (_matchFinder.getNumAvailableBytes() == 0)
 		{
 			Flush((int)nowPos64);
 			return;
@@ -1114,11 +1112,11 @@ public class Encoder
 			if (len == 1 && pos == -1)
 			{
 				_rangeEncoder.Encode(_isMatch, complexState, 0);
-				byte curByte = _matchFinder.GetIndexByte(-_additionalOffset);
+				byte curByte = _matchFinder.getIndexByte(-_additionalOffset);
 				LiteralEncoder.Encoder2 subCoder = _literalEncoder.GetSubCoder((int)nowPos64, _previousByte);
 				if (!Base.StateIsCharState(_state))
 				{
-					byte matchByte = _matchFinder.GetIndexByte((- _repDistances[0] - 1 - _additionalOffset));
+					byte matchByte = _matchFinder.getIndexByte((-_repDistances[0] - 1 - _additionalOffset));
 					subCoder.EncodeMatched(_rangeEncoder, matchByte, curByte);
 				}
 				else
@@ -1198,7 +1196,7 @@ public class Encoder
 					_repDistances[0] = distance;
 					_matchPriceCount++;
 				}
-				_previousByte = _matchFinder.GetIndexByte(len - 1 - _additionalOffset);
+				_previousByte = _matchFinder.getIndexByte(len - 1 - _additionalOffset);
 			}
 			_additionalOffset -= len;
 			nowPos64 += len;
@@ -1211,7 +1209,7 @@ public class Encoder
 					FillAlignPrices();
 				inSize[0] = nowPos64;
 				outSize[0] = _rangeEncoder.GetProcessedSizeAdd();
-				if (_matchFinder.GetNumAvailableBytes() == 0)
+				if (_matchFinder.getNumAvailableBytes() == 0)
 				{
 					Flush((int)nowPos64);
 					return;

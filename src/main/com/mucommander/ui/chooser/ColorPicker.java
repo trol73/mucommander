@@ -76,7 +76,7 @@ public class ColorPicker extends JButton implements ActionListener, AWTEventList
                 return;
 
             try {
-                // Create a java.awt.Robot operating on the screen device that contains the window this component is in.
+                // create a java.awt.Robot operating on the screen device that contains the window this component is in.
                 // Not sure what happens if the window spawns across 2 screens...
                 robot = new Robot(getTopLevelAncestor().getGraphicsConfiguration().getDevice());
             }

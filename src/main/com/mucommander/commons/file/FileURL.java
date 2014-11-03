@@ -699,7 +699,7 @@ public class FileURL implements Cloneable {
      * @see #getProperty(String)
      */
     public void setProperty(String name, String value) {
-        // Create the property hashtable only when a property is set for the first time
+        // create the property hashtable only when a property is set for the first time
         if(properties==null)
             properties = new HashMap<>();
 
@@ -977,7 +977,7 @@ public class FileURL implements Cloneable {
      */
     @Override
     public Object clone() {
-        // Create a new FileURL return it, instead of using Object.clone() which is probably way slower;
+        // create a new FileURL return it, instead of using Object.clone() which is probably way slower;
         // most FileURL fields are immutable and as such reused in cloned instance
         FileURL clonedURL = new FileURL(handler);
 

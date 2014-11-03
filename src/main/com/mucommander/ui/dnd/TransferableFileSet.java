@@ -92,7 +92,7 @@ public class TransferableFileSet implements Transferable {
     private static DataFlavor FILE_SET_DATA_FLAVOR;
 
     static {
-        // Create a single custom DataFlavor instance that designates the FileSet class to transfer data
+        // create a single custom DataFlavor instance that designates the FileSet class to transfer data
         try {
             FILE_SET_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType+";class="+FileSet.class.getName());
 	        TEXT_URI_FLAVOR =  new DataFlavor("text/uri-list;class="+String.class.getName());

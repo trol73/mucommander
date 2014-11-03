@@ -125,11 +125,11 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
                 iconImage = bi;
             }
 
-            // Create the tray icon and disable image auto-size which shouldn't be used anyway but just in case
+            // create the tray icon and disable image auto-size which shouldn't be used anyway but just in case
             trayIcon = new TrayIcon(iconImage);
             trayIcon.setImageAutoSize(false);
 
-            // Create the popup (AWT!) menu. Note there is no way with java.awt.Menu to know when the menu is selected
+            // create the popup (AWT!) menu. Note there is no way with java.awt.Menu to know when the menu is selected
             // and thus it makes it hard to have contextual menu items such as the list of open windows.
             PopupMenu menu = new PopupMenu();
             addMenuItem(menu, NewWindowAction.Descriptor.ACTION_ID);

@@ -54,7 +54,7 @@ public class AudioViewer extends FileViewer {
 
 
 //    private void play(String filename) {
-//        // Create a Xuggler container object
+//        // create a Xuggler container object
 //        IContainer container = IContainer.make();
 //
 //        // Open up the container

@@ -17,9 +17,9 @@ class ArchiveDatabase {
     void Clear() {
         PackSizes.clear();
         PackCRCsDefined.clear();
-        PackCRCs.clear();
+//        PackCRCs.clear();
         Folders.clear();
-        NumUnPackStreamsVector.clear();
+//        NumUnPackStreamsVector.clear();
         Files.clear();
     }
 }

@@ -93,7 +93,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         YBoxPanel mainPanel = new YBoxPanel();
         mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode?MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID)+" :"));
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         pathField = new FilePathField();
         pathField.addActionListener(this);
         mainPanel.add(pathField);

@@ -115,7 +115,7 @@ public class CopyJob extends AbstractCopyJob {
         // Determine filename in destination
         String destFileName = (isFileInBaseFolder && newName != null) ? newName : file.getName();
 
-        // Create destination AbstractFile instance
+        // create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
         if (destFile == null) {
             return false;
@@ -134,7 +134,7 @@ public class CopyJob extends AbstractCopyJob {
 
         // Copy directory recursively
         if (file.isDirectory()) {
-            // Create the folder in the destination folder if it doesn't exist
+            // create the folder in the destination folder if it doesn't exist
             if (!(destFile.exists() && destFile.isDirectory())) {
                 // Loop for retry
                 do {

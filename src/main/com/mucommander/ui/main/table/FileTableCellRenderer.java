@@ -77,7 +77,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
     	this.table = table;
         this.tableModel = table.getFileTableModel();
 
-        // Create a label for each column
+        // create a label for each column
         for (Column c : Column.values())
             this.cellLabels[c.ordinal()] = new CellLabel();
 
