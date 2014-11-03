@@ -156,7 +156,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         shellPanel.setLabelLeftAligned(true);
         shellPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.shell")));
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         customShellField = new PrefFilePathField(pref.getVariable(MuPreference.CUSTOM_SHELL, "")) {
 			public boolean hasChanged() {
 				return isEnabled() && !getText().equals(pref.getVariable(MuPreference.CUSTOM_SHELL));
@@ -185,7 +185,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
             }
         };
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         customExternalTerminalField = new PrefFilePathField(pref.getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL, "")) {
             public boolean hasChanged() {
                 return isEnabled() && !getText().equals(pref.getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL));
@@ -224,7 +224,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
             }
         };
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         customTerminalShellField = new PrefFilePathField(pref.getVariable(MuPreference.TERMINAL_SHELL, "")) {
             public boolean hasChanged() {
                 return isEnabled() && !getText().equals(pref.getVariable(MuPreference.TERMINAL_SHELL));

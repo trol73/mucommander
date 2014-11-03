@@ -82,7 +82,7 @@ public class SplashScreen extends JWindow {
         this.version = version;
         this.loadingMessage = loadingMessage;
 
-        // Create a custom font
+        // create a custom font
         this.customFont = new Font(FONT_NAME, FONT_STYLE, FONT_SIZE);
 
         // Resolve the URL of the splash logo image within the JAR file and create an ImageIcon

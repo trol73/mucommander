@@ -446,7 +446,7 @@ public class SFTPFile extends ProtocolFile {
             children[fileCount++] = FileFactory.getFile(childURL, this, new SFTPFileAttributes(childURL, file.getAttributes()));
         }
 
-        // Create new array of the exact file count
+        // create new array of the exact file count
         if(fileCount<nbFiles) {
             AbstractFile newChildren[] = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);

@@ -204,7 +204,7 @@ public class OSXTrash extends QueuedTrash {
             OutputStreamWriter tmpOut = null;
 
             try {
-                // Create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
+                // create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
                 // EOL characters. The file must NOT end with a trailing EOL.
                 int nbFiles = queuedFiles.size();
                 tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);

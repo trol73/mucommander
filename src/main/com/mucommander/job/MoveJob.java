@@ -98,7 +98,7 @@ public class MoveJob extends AbstractCopyJob {
        	else
             destFileName = originalName;
 		
-        // Create destination AbstractFile instance
+        // create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
         if (destFile == null)
             return false;

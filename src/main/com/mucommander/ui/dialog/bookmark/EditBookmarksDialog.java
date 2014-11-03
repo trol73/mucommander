@@ -95,7 +95,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         // typed in the name / location fields. Events will be resumed when this dialog is disposed
         BookmarkManager.setFireEvents(false);
 
-        // Create the sortable bookmarks list panel
+        // create the sortable bookmarks list panel
         SortableListPanel<Bookmark> listPanel = new SortableListPanel<>(bookmarks);
         this.bookmarkList = listPanel.getDynamicList();
 
@@ -109,7 +109,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         nameField.getDocument().addDocumentListener(this);
         compPanel.addRow(Translator.get("name")+":", nameField, 5);
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         this.locationField = new FilePathField();
         locationField.getDocument().addDocumentListener(this);
         compPanel.addRow(Translator.get("location")+":", locationField, 10);
@@ -238,7 +238,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         Bookmark selectedBookmark = bookmarks.elementAt(selectedIndex);
 
         if(currentBookmarkSave==null) {
-            // Create a clone of the current bookmark in order to cancel any modifications made to it if the dialog
+            // create a clone of the current bookmark in order to cancel any modifications made to it if the dialog
             // is cancelled.
             try {
                 currentBookmarkSave = (Bookmark)selectedBookmark.clone();
@@ -349,7 +349,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
             dispose();
         }
-        // Create a new empty bookmark / duplicate the currently selected bookmark
+        // create a new empty bookmark / duplicate the currently selected bookmark
         else if (source==newButton || source==duplicateButton) {
             Bookmark newBookmark;
             if(source==newButton) {

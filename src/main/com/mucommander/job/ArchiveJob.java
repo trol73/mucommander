@@ -89,7 +89,7 @@ public class ArchiveJob extends TransferFileJob {
         do {		// Loop for retry
             try {
                 if (file.isDirectory() && !file.isSymlink()) {
-                    // Create new directory entry in archive file
+                    // create new directory entry in archive file
                     archiver.createEntry(entryRelativePath, file);
 
                     // Recurse on files
@@ -109,7 +109,7 @@ public class ArchiveJob extends TransferFileJob {
                     // Synchronize this block to ensure that Archiver.close() is not closed while data is still being
                     // written to the archive OutputStream, this would cause ZipOutputStream to deadlock.
                     synchronized(ioLock) {
-                        // Create a new file entry in archive and copy the current file
+                        // create a new file entry in archive and copy the current file
                         StreamUtils.copyStream(in, archiver.createEntry(entryRelativePath, file));
                         in.close();
                     }

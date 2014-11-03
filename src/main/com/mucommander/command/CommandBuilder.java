@@ -44,7 +44,7 @@ package com.mucommander.command;
  *    }
  * }
  * </pre>
- * Passing an instance of <code>CommandPrinter</code> to {@link CommandManager#buildCommands(CommandBuilder)}
+ * Passing an instance of <code>CommandPrinter</code> to {@link CommandManager@buildCommands(CommandBuilder)}
  * will result in something like:
  * <pre>
  * Beginning command list building...
@@ -55,7 +55,7 @@ package com.mucommander.command;
  * </p>
  * @author Nicolas Rinaudo
  * @see    CommandReader
- * @see    CommandManager#buildCommands(CommandBuilder)
+ * @see    CommandManager@buildCommands(CommandBuilder)
  */
 public interface CommandBuilder {
     /**

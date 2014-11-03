@@ -59,7 +59,7 @@ class TarArchiver extends Archiver {
 
         boolean isDirectory = attributes.isDirectory();
 		
-        // Create the entry
+        // create the entry
         TarEntry entry = new TarEntry(normalizePath(entryPath, isDirectory));
         // Use provided file's size (required by TarOutputStream) and date
         long size = attributes.getSize();

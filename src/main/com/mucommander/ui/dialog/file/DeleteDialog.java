@@ -95,7 +95,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
 
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        // Create file details button and OK/cancel buttons and lay them out a single row
+        // create file details button and OK/cancel buttons and lay them out a single row
         deleteButton = new JButton(Translator.get("delete"));
         JButton cancelButton = new JButton(Translator.get("cancel"));
 

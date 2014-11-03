@@ -93,7 +93,7 @@ public abstract class QueuedTrash extends AbstractTrash {
             // Queue the given file
             queuedFiles.add(file);
 
-            // Create a new thread and start it if one isn't already running
+            // create a new thread and start it if one isn't already running
             if(moveToTrashThread ==null) {
                 moveToTrashThread = new MoveToTrashThread();
                 moveToTrashThread.start();

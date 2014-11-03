@@ -198,7 +198,7 @@ public class DynamicList<E> extends JList<E> {
             setSelectedIndex(0);
         }
 
-        // Create action instances
+        // create action instances
         this.moveUpAction = new MoveUpAction();
         this.moveDownAction = new MoveDownAction();
         this.removeAction = new RemoveAction();

@@ -4,8 +4,7 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression
 import java.io.IOException;
 
 
-public class BinTree extends InWindow
-{
+public class BinTree extends InWindow {
 	int _cyclicBufferPos;
 	int _cyclicBufferSize = 0;
 	int _matchMaxLen;
@@ -17,7 +16,7 @@ public class BinTree extends InWindow
 	int _hashMask;
 	int _hashSizeSum = 0;
 	
-	boolean HASH_ARRAY = true;
+	boolean hashArray = true;
 
 	static final int kHash2Size = 1 << 10;
 	static final int kHash3Size = 1 << 16;
@@ -31,10 +30,9 @@ public class BinTree extends InWindow
 	int kMinMatchCheck = 4;
 	int kFixHashSize = kHash2Size + kHash3Size;
 
-	public void SetType(int numHashBytes)
-	{
-		HASH_ARRAY = (numHashBytes > 2);
-		if (HASH_ARRAY)
+	public void setType(int numHashBytes) {
+		hashArray = (numHashBytes > 2);
+		if (hashArray)
 		{
 			kNumHashDirectBytes = 0;
 			kMinMatchCheck = 4;
@@ -57,14 +55,14 @@ public class BinTree extends InWindow
 		for (int i = 0; i < _hashSizeSum; i++)
 			_hash[i] = kEmptyHashValue;
 		_cyclicBufferPos = 0;
-		ReduceOffsets(-1);
+		reduceOffsets(-1);
 	}
 	
-	public void MovePos() throws IOException
+	public void movePos() throws IOException
 	{
 		if (++_cyclicBufferPos >= _cyclicBufferSize)
 			_cyclicBufferPos = 0;
-		super.MovePos();
+		super.movePos();
 		if (_pos == kMaxValForNormalize)
 			Normalize();
 	}
@@ -86,7 +84,7 @@ public class BinTree extends InWindow
 		int windowReservSize = (historySize + keepAddBufferBefore +
 				matchMaxLen + keepAddBufferAfter) / 2 + 256;
 		
-		super.Create(historySize + keepAddBufferBefore, matchMaxLen + keepAddBufferAfter, windowReservSize);
+		super.create(historySize + keepAddBufferBefore, matchMaxLen + keepAddBufferAfter, windowReservSize);
 		
 		_matchMaxLen = matchMaxLen;
 
@@ -96,7 +94,7 @@ public class BinTree extends InWindow
 
 		int hs = kBT2HashSize;
 
-		if (HASH_ARRAY)
+		if (hashArray)
 		{
 			hs = historySize - 1;
 			hs |= (hs >> 1);
@@ -125,7 +123,7 @@ public class BinTree extends InWindow
 			lenLimit = _streamPos - _pos;
 			if (lenLimit < kMinMatchCheck)
 			{
-				MovePos();
+				movePos();
 				return 0;
 			}
 		}
@@ -136,7 +134,7 @@ public class BinTree extends InWindow
 		int maxLen = kStartMaxLen; // to avoid items for len < hashSize;
 		int hashValue, hash2Value = 0, hash3Value = 0;
 		
-		if (HASH_ARRAY)
+		if (hashArray)
 		{
 			int temp = CrcTable[_bufferBase[cur] & 0xFF] ^ (_bufferBase[cur + 1] & 0xFF);
 			hash2Value = temp & (kHash2Size - 1);
@@ -148,7 +146,7 @@ public class BinTree extends InWindow
 			hashValue = ((_bufferBase[cur] & 0xFF) ^ ((_bufferBase[cur + 1] & 0xFF) << 8));
 
 		int curMatch = _hash[kFixHashSize + hashValue];
-		if (HASH_ARRAY)
+		if (hashArray)
 		{
 			int curMatch2 = _hash[hash2Value];
 			int curMatch3 = _hash[kHash3Offset + hash3Value];
@@ -245,7 +243,7 @@ public class BinTree extends InWindow
 				len0 = len;
 			}
 		}
-		MovePos();
+		movePos();
 		return offset;
 	}
 
@@ -261,7 +259,7 @@ public class BinTree extends InWindow
 				lenLimit = _streamPos - _pos;
 				if (lenLimit < kMinMatchCheck)
 				{
-					MovePos();
+					movePos();
 					continue;
 				}
 			}
@@ -271,7 +269,7 @@ public class BinTree extends InWindow
 			
 			int hashValue;
 
-			if (HASH_ARRAY)
+			if (hashArray)
 			{
 				int temp = CrcTable[_bufferBase[cur] & 0xFF] ^ (_bufferBase[cur + 1] & 0xFF);
 				int hash2Value = temp & (kHash2Size - 1);
@@ -336,7 +334,7 @@ public class BinTree extends InWindow
 					len0 = len;
 				}
 			}
-			MovePos();
+			movePos();
 		}
 		while (--num != 0);
 	}
@@ -359,7 +357,7 @@ public class BinTree extends InWindow
 		int subValue = _pos - _cyclicBufferSize;
 		NormalizeLinks(_son, _cyclicBufferSize * 2, subValue);
 		NormalizeLinks(_hash, _hashSizeSum, subValue);
-		ReduceOffsets(subValue);
+		reduceOffsets(subValue);
 	}
 	
 	public void SetCutValue(int cutValue) { _cutValue = cutValue; }

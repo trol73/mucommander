@@ -44,7 +44,7 @@ public class CopyFileBaseNamesAction extends SelectedFilesAction {
 
 	@Override
 	public void performAction(FileSet files) {
-        // Create a TransferableFileSet and make DataFlavour.stringFlavor (text) the only DataFlavour supported
+        // create a TransferableFileSet and make DataFlavour.stringFlavor (text) the only DataFlavour supported
         TransferableFileSet tfs = new TransferableFileSet(files);
 
         // Disable unwanted data flavors

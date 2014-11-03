@@ -140,7 +140,7 @@ public class FileFactory {
         // Set the default FileIconProvider instance
         defaultFileIconProvider = new SwingFileIconProvider();
 
-        // Create the temp directory folder
+        // create the temp directory folder
         TEMP_DIRECTORY = getFile(System.getProperty("java.io.tmpdir"));
     }
 
@@ -178,7 +178,7 @@ public class FileFactory {
     public static ProtocolProvider registerProtocol(String protocol, ProtocolProvider provider) {
         protocol = protocol.toLowerCase();
 
-        // Create raw and archive file pools
+        // create raw and archive file pools
         FILE_POOL_MAP.put(protocol, new FilePool());
 
         // Special case for local file provider.
@@ -470,7 +470,7 @@ public class FileFactory {
                 // Test if current file is an archive and if it is, create an archive entry file instead of a raw
                 // protocol file
                 if (currentFile == null || !currentFile.isArchive()) {
-                    // Create a fresh FileURL with the current path
+                    // create a fresh FileURL with the current path
                     FileURL clonedURL = (FileURL)fileURL.clone();
                     clonedURL.setPath(currentPath);
 
@@ -499,7 +499,7 @@ public class FileFactory {
             }
         }
 
-        // Create last file if it hasn't been already (if the last filename was not an archive), same routine as above
+        // create last file if it hasn't been already (if the last filename was not an archive), same routine as above
         // except that it doesn't wrap the file with an archive file
         if (!lastFileResolved) {
             // Note: DON'T strip out the trailing separator, as this would cause problems with root resources

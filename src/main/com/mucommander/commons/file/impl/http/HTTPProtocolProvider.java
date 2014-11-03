@@ -68,7 +68,7 @@ public class HTTPProtocolProvider implements ProtocolProvider {
 	private static void disableCertificateVerifications() throws Exception {
         // Todo: find a way to warn the user when the server cannot be trusted
 
-        // Create a custom X509 trust manager that does not validate certificate chains
+        // create a custom X509 trust manager that does not validate certificate chains
         TrustManager permissiveTrustManager = new X509TrustManager() {
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
@@ -85,7 +85,7 @@ public class HTTPProtocolProvider implements ProtocolProvider {
         sc.init(null, new TrustManager[]{permissiveTrustManager}, new SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
-        // Create and install a custom hostname verifier that allows hostname mismatches
+        // create and install a custom hostname verifier that allows hostname mismatches
         HostnameVerifier permissiveHostnameVerifier = new HostnameVerifier() {
            public boolean verify(String urlHostName, SSLSession session) {
                return true;

@@ -592,7 +592,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             children[fileCount++] = child;
         }
 
-        // Create new array of the exact file count
+        // create new array of the exact file count
         if(fileCount<nbFiles) {
             AbstractFile newChildren[] = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
@@ -778,7 +778,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         if(!isSymlink())
             return this;
 
-        // Create the canonical file instance and cache it
+        // create the canonical file instance and cache it
         if(canonicalFile==null) {
             // getLink() returns the raw symlink target which can either be an absolute or a relative path. If the path is
             // relative, preprend the absolute path of the symlink's parent folder.

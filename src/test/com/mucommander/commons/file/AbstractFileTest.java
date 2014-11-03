@@ -1113,7 +1113,7 @@ public abstract class AbstractFileTest {
 
         assert ioExceptionThrown;
 
-        // Create an empty directory and assert that ls() does not throw an IOException and returns a zero-length array
+        // create an empty directory and assert that ls() does not throw an IOException and returns a zero-length array
         tempFile.delete();
         tempFile.mkdir();
 
@@ -1121,7 +1121,7 @@ public abstract class AbstractFileTest {
         assert children != null;
         assert 0 == children.length;
 
-        // Create a child file and assert that this child (and only this child) is returned by ls(), and that the file exists
+        // create a child file and assert that this child (and only this child) is returned by ls(), and that the file exists
         AbstractFile child = tempFile.getChild("child");
         child.mkfile();
         children = tempFile.ls();

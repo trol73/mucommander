@@ -752,7 +752,7 @@ public abstract class FileJob implements Runnable {
         this.nbFiles = files.size();
         this.baseSourceFolder = files.getBaseFolder();
 
-        // Create CachedFile instances around the source files in order to cache the return value of frequently accessed
+        // create CachedFile instances around the source files in order to cache the return value of frequently accessed
         // methods. This eliminates some I/O, at the (small) cost of a bit more CPU and memory. Recursion is enabled
         // so that children and parents of the files are also cached.
         // Note: When cached methods are called, they no longer reflect changes in the underlying files. In particular,

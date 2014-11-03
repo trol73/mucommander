@@ -101,7 +101,7 @@ public class NFSFile extends ProtocolFile {
     protected NFSFile(FileURL fileURL) {
         super(fileURL);
 
-        // Create the NFS URL used by XFile.
+        // create the NFS URL used by XFile.
 
         // The general syntax for NFS URLs is : nfs://<host>:<port><url-path>, as specified by RFC 2054
         // Additionaly, XFile allows some special flags to be used in the port part of the URL to specify connection
@@ -137,7 +137,7 @@ public class NFSFile extends ProtocolFile {
         int port = fileURL.getPort();
         String portString = port==-1||port==2049?"":""+port;
 
-        // Create the XFile instance with the weird NFS url
+        // create the XFile instance with the weird NFS url
         this.file = new XFile("nfs://"+fileURL.getHost()+":"+portString+nfsVersion+nfsProtocol+"m"+"/"+fileURL.getPath());
 
         // Retrieve the absolute path from the FileURL and NOT from the XFile instance which will return those weird flags
@@ -409,7 +409,7 @@ public class NFSFile extends ProtocolFile {
             childURL = (FileURL)fileURL.clone();
             childURL.setPath(baseURLPath+names[i]);
 
-            // Create the child NFSFile using this file as a parent
+            // create the child NFSFile using this file as a parent
             children[i] = FileFactory.getFile(childURL, this);
         }
 

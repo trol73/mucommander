@@ -37,7 +37,7 @@ public class ExpressionBuilder {
 	private String expression;
 
 	/**
-	 * Create a new ExpressionBuilder
+	 * create a new ExpressionBuilder
 	 * 
 	 * @param expression
 	 *            the expression to evaluate 

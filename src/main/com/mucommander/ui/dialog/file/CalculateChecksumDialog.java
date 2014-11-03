@@ -87,7 +87,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         // Retrieve all MessageDigest instances and sort them by alphabetical order of their algorithm
 
-        // Create a TreeSet with a custom Comparator
+        // create a TreeSet with a custom Comparator
         SortedSet<MessageDigest> algorithmSortedSet = new TreeSet<>(new Comparator<MessageDigest>() {
                     public int compare(MessageDigest md1, MessageDigest md2) {
                         return md1.getAlgorithm().compareTo(md2.getAlgorithm());
@@ -124,7 +124,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         mainPanel.add(tempPanel);
         mainPanel.addSpace(10);
 
-        // Create the components that allow to choose where the checksum file should be created
+        // create the components that allow to choose where the checksum file should be created
 
         mainPanel.add(new JLabel(Translator.get("destination")+" :"));
         mainPanel.addSpace(5);
@@ -137,7 +137,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         tempPanel.add(specificLocationRadioButton, BorderLayout.WEST);
         specificLocationRadioButton.addItemListener(this);
         
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         specificLocationTextField = new FilePathField(getChecksumFilename(lastUsedAlgorithm));
         specificLocationTextField.setEnabled(false);
         tempPanel.add(specificLocationTextField, BorderLayout.CENTER);
@@ -150,7 +150,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         buttonGroup.add(tempLocationRadioButton);
         buttonGroup.add(specificLocationRadioButton);
 
-        // Create file details button and OK/cancel buttons and lay them out a single row
+        // create file details button and OK/cancel buttons and lay them out a single row
 
         JPanel fileDetailsPanel = createFileDetailsPanel();
 

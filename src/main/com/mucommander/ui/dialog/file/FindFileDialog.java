@@ -160,7 +160,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
         compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         this.edtFromDirectory = new FilePathField();
         this.edtFromDirectory.setText(currentFolder.toString());
         edtFromDirectory.getDocument().addDocumentListener(this);

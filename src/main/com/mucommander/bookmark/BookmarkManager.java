@@ -65,7 +65,7 @@ public class BookmarkManager implements VectorChangeListener {
     /** Last event pause timestamp */
     private static long lastEventPauseTime;
 
-    /** Create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
+    /** create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
      * stores VectorChangeListener as weak references) */
     private static BookmarkManager singleton = new BookmarkManager();
 

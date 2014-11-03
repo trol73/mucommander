@@ -117,7 +117,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         mainPanel = new YBoxPanel();
         mainPanel.add(new JLabel(labelText+" :"));
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         pathField = new FilePathField();
 
         JPanel borderPanel = new JPanel(new BorderLayout());
@@ -152,7 +152,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         getContentPane().add(mainPanel, BorderLayout.NORTH);
 
-        // Create file details button and OK/cancel buttons and lay them out a single row
+        // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
         okButton = new JButton(okText);

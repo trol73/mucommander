@@ -85,7 +85,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
         // Separate the actions according to their categories. 
         Map<ActionCategory, LinkedList<String>> categoryToItsActionsWithShortcutsIdsMap = createCategoryToItsActionsWithShortcutsMap();
 
-        //Create tab and panel for each category
+        //create tab and panel for each category
         for (ActionCategory category: categoryToItsActionsWithShortcutsIdsMap.keySet()) {
             // Get the list of actions from the above category which have shortcuts assigned to them
             LinkedList<String> categoryActionsWithShortcuts = categoryToItsActionsWithShortcutsIdsMap.get(category);
@@ -96,7 +96,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
                 addTopic(tabbedPane, ""+category, categoryActionsWithShortcuts.iterator());
         }
 
-        // Create tab for quick-search category 
+        // create tab for quick-search category
         addTopic(tabbedPane, Translator.get(QUICK_SEARCH_TITLE), QUICK_SEARCH_SHORTCUTS);
 
         contentPane.add(tabbedPane, BorderLayout.CENTER);

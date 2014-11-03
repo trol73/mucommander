@@ -237,7 +237,7 @@ public class TarBuffer {
      */
     private boolean readBlock() throws IOException {
         if (debug) {
-            System.err.println("ReadBlock: blkIdx = " + currBlkIdx);
+            System.err.println("readBlock: blkIdx = " + currBlkIdx);
         }
 
         if (inStream == null) {
@@ -288,7 +288,7 @@ public class TarBuffer {
 
             if (numBytes != blockSize) {
                 if (debug) {
-                    System.err.println("ReadBlock: INCOMPLETE READ "
+                    System.err.println("readBlock: INCOMPLETE READ "
                                        + numBytes + " of " + blockSize
                                        + " bytes read.");
                 }

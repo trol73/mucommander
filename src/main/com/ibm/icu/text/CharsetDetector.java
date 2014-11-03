@@ -566,7 +566,7 @@ public class CharsetDetector {
         }
 
         if (fEnabledRecognizers == null && !isDefaultVal) {
-            // Create an array storing the non default setting
+            // create an array storing the non default setting
             fEnabledRecognizers = new boolean[ALL_CS_RECOGNIZERS.size()];
 
             // Initialize the array with default info

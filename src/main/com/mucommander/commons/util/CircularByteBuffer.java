@@ -333,7 +333,7 @@ public class CircularByteBuffer {
 	}
 
 	/**
-	 * Create a new buffer with a default capacity.
+	 * create a new buffer with a default capacity.
 	 * Writing to a full buffer will block until space
 	 * is available rather than throw an exception.
 	 *
@@ -344,7 +344,7 @@ public class CircularByteBuffer {
 	}
 
 	/**
-	 * Create a new buffer with given capacity.
+	 * create a new buffer with given capacity.
 	 * Writing to a full buffer will block until space
 	 * is available rather than throw an exception.
 	 * <p>
@@ -365,7 +365,7 @@ public class CircularByteBuffer {
 	}
 
 	/**
-	 * Create a new buffer with a default capacity and
+	 * create a new buffer with a default capacity and
 	 * given blocking behavior.
 	 *
 	 * @param blockingWrite true writing to a full buffer should block
@@ -379,7 +379,7 @@ public class CircularByteBuffer {
 	}
 
 	/**
-	 * Create a new buffer with the given capacity and
+	 * create a new buffer with the given capacity and
 	 * blocking behavior.
 	 * <p>
 	 * Note that the buffer may reserve some bytes for

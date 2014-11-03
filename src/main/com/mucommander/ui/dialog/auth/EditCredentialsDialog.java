@@ -93,7 +93,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         // Retrieve persistent credentials list
         this.credentials = CredentialsManager.getPersistentCredentialMappings();
 
-        // Create the sortable credentials list panel
+        // create the sortable credentials list panel
         SortableListPanel<CredentialsMapping> listPanel = new SortableListPanel<>(credentials);
         this.credentialsList = listPanel.getDynamicList();
         this.lastSelectedItem = credentialsList.getSelectedValue();

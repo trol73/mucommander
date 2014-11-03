@@ -138,7 +138,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         XBoxPanel leftCustomFolderSpecifyingPanel = new XBoxPanel(5);
         leftCustomFolderSpecifyingPanel.setAlignmentX(LEFT_ALIGNMENT);
         
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         leftCustomFolderTextField = new PrefFilePathFieldWithDefaultValue(true);
         leftCustomFolderTextField.addKeyListener(this);
         leftCustomFolderSpecifyingPanel.add(leftCustomFolderTextField);
@@ -151,7 +151,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         XBoxPanel rightCustomFolderSpecifyingPanel = new XBoxPanel(5);
         rightCustomFolderSpecifyingPanel.setAlignmentX(LEFT_ALIGNMENT);
 
-        // Create a path field with auto-completion capabilities
+        // create a path field with auto-completion capabilities
         rightCustomFolderTextField = new PrefFilePathFieldWithDefaultValue(false);
         rightCustomFolderTextField.addKeyListener(this);
         rightCustomFolderSpecifyingPanel.add(rightCustomFolderTextField);

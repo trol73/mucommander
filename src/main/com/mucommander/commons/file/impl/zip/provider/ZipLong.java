@@ -35,7 +35,7 @@ public final class ZipLong implements Cloneable {
     private long value;
 
     /**
-     * Create instance from a number.
+     * create instance from a number.
      * @param value the long to store as a ZipLong
      */
     public ZipLong(long value) {
@@ -43,7 +43,7 @@ public final class ZipLong implements Cloneable {
     }
 
     /**
-     * Create instance from bytes.
+     * create instance from bytes.
      * @param bytes the bytes to store as a ZipLong
      */
     public ZipLong (byte[] bytes) {
@@ -51,7 +51,7 @@ public final class ZipLong implements Cloneable {
     }
 
     /**
-     * Create instance from the four bytes starting at offset.
+     * create instance from the four bytes starting at offset.
      * @param bytes the bytes to store as a ZipLong
      * @param offset the offset to start
      */

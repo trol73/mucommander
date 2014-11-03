@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 /**
- * This action brings up the 'Create symlink' dialog.
+ * This action brings up the 'create symlink' dialog.
  *
  * @author Oleg Trifonov
  */

@@ -169,7 +169,7 @@ public class MainFrame extends JFrame implements LocationListener {
         rightTable = rightFolderPanel.getFileTable();
         activeTable  = leftTable;
 
-        // Create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the
+        // create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the
         // preferences.
         // Note: Toolbar.setVisible() has to be called no matter if Toolbar is visible or not, in order for it to be
         // properly initialized
@@ -193,11 +193,11 @@ public class MainFrame extends JFrame implements LocationListener {
         leftFolderPanel.getLocationManager().addLocationListener(this);
         rightFolderPanel.getLocationManager().addLocationListener(this);
 
-        // Create menu bar (has to be created after toolbar)
+        // create menu bar (has to be created after toolbar)
         MainMenuBar menuBar = new MainMenuBar(this);
         setJMenuBar(menuBar);
 
-        // Create the split pane that separates folder panels and allows to resize how much space is allocated to the
+        // create the split pane that separates folder panels and allows to resize how much space is allocated to the
         // both of them. The split orientation is loaded from and saved to the preferences.
         // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
         // in JSplitPane which is anti-natural / confusing.

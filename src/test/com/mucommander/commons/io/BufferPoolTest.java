@@ -90,16 +90,16 @@ public class BufferPoolTest {
         int originalBufferCount = BufferPool.getBufferCount(factory);
         long originalPoolSize = BufferPool.getPoolSize();
 
-        // Create a new buffer with size=TEST_BUFFER_SIZE_1
+        // create a new buffer with size=TEST_BUFFER_SIZE_1
         Object buffer1 = BufferPool.getBuffer(factory, TEST_BUFFER_SIZE_1);
         assertBufferSize(buffer1, factory, TEST_BUFFER_SIZE_1);
 
-        // Create a new buffer with size=TEST_BUFFER_SIZE_1, assert that it is different from the first one
+        // create a new buffer with size=TEST_BUFFER_SIZE_1, assert that it is different from the first one
         Object buffer2 = BufferPool.getBuffer(factory, TEST_BUFFER_SIZE_1);
         assertBufferSize(buffer2, factory, TEST_BUFFER_SIZE_1);
         assert buffer2!=buffer1;
 
-        // Create a new buffer with size=TEST_BUFFER_SIZE_2
+        // create a new buffer with size=TEST_BUFFER_SIZE_2
         Object buffer3 = BufferPool.getBuffer(factory, TEST_BUFFER_SIZE_2);
         assertBufferSize(buffer3, factory, TEST_BUFFER_SIZE_2);
 

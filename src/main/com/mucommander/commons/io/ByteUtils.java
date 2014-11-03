@@ -34,7 +34,7 @@ public class ByteUtils {
      * @return the modified permission int
      */
     public static int setBit(int i, int bit, boolean enabled) {
-        if(enabled)
+        if (enabled)
             i |= bit;
         else
             i &= ~bit;

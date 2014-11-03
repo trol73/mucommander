@@ -1,16 +1,14 @@
                --------------------------------------------
-                   muCommander compilation instructions
+                   trolCommander compilation instructions
                --------------------------------------------
 
 1. Configuration
 
-  The first step to compiling muCommander is making sure all the proper
+  The first step to compiling trolCommander is making sure all the proper
 libraries and tools are installed.
 
   Pre-requesites are:
-- JDK 1.6 or greater
-  Event though muCommander runs on Java 1.5 or later, it takes advantage of
-  the 1.6 API and needs it in order to compile.
+- JDK 1.7 or greater
   This can be retrieved from http://java.sun.com/
 
 - Ant 1.6.5 or greater
@@ -34,38 +32,38 @@ libraries and tools are installed.
   It can be retrieved from http://p7zip.sourceforge.net/
   
   Once these tools have been installed, you might want / need to configure
-the muCommander build process.
+the trolCommander build process.
 This is done by copying ./build_template.properties to ./build.properties and
 editing it.
 
   The values that need to be set are:
 - 7za.executable (non-required)
   Path to the 7za executable.
-  This is used to compress muCommander's JAR file better than Java's ZIP
+  This is used to compress trolCommander's JAR file better than Java's ZIP
   implementation.
   If this property is not set, standard ZIP compression will be used.
 
 - store.path (non-required)
-  Password of the keystore file used to generate a signed muCommander JAR file.
+  Password of the keystore file used to generate a signed trolCommander JAR file.
   If this property is not set, you won't be able to generate signed JAR files.
   If you're not Maxence, you can safely ignore this property.
 
 - nsis.dir (non-required)
   Path to the NSIS installation directory.
-  This is used to generate a muCommander Win32 native setup.
+  This is used to generate a trolCommander Win32 native setup.
   If this property is not set, you won't be able to generate Win32 setups.
 
 - launch4j.dir (non-required)
   Path to the Launch4J installation directory.
-  This is used to generate a muCommander Win32 executable.
+  This is used to generate a trolCommander Win32 executable.
   If this property is not set, you won't be able to generate Win32 or portable
   releases.
 
 
 
-2. Compiling muCommander
+2. Compiling trolCommander
 
-  There are various ways of compiling muCommander. The most immediately
+  There are various ways of compiling trolCommander. The most immediately
 useful are:
 
 - ant
@@ -74,17 +72,17 @@ useful are:
 
 - ant jar
   This will compile all the modified Java files and store the binaries
-  in ./dist/mucommander_unobf.jar.
+  in ./dist/trolcommander_unobf.jar.
   This jar file is meant for debug, and running it will output a fair amount
   of tracing information.
 
 - ant obfuscate
   This will compile and obfuscate all the Java files and store
-  the binaries in ./dist/mucommander_obf.jar.
+  the binaries in ./dist/trolcommander_obf.jar.
 
 - ant compress
   This is identical to ant obfuscate, but will use 7za if it's available to
-  produce an even slimmer version of the JAR file in ./dist/mucommander.jar.
+  produce an even slimmer version of the JAR file in ./dist/trolcommander.jar.
   This JAR file is the one we use for release.
 
 - ant clean
@@ -96,33 +94,33 @@ useful are:
 
 - ant source
   Packages the sources and stores them in
-  ./dist/mucommander-<version>-src.tar.gz
+  ./dist/trolcommander-<version>-src.tar.gz
 
 - ant deb
-  Generates a Debian package in ./dist/mucommander_<version>_all.deb
+  Generates a Debian package in ./dist/trolcommander_<version>_all.deb
 
 - ant exe
-  Generates a Win32 executable version of muCommander in ./dist/muCommander.exe.
+  Generates a Win32 executable version of trolCommander in ./dist/trolCommander.exe.
 
 - ant portable
-  Generates the portable version of muCommander in
-  ./dist/mucommander-<version>-portable.tar.gz.
+  Generates the portable version of trolCommander in
+  ./dist/trolcommander-<version>-portable.tar.gz.
   The portable version is meant for 'roaming' usage, typically from a USB key.
 
 - ant setup-exe
-  Generates a Win32 executable setup in ./dist/mucommander-setup.exe
+  Generates a Win32 executable setup in ./dist/trolcommander-setup.exe
 
 - ant tgz
-  Generates a Unix release file and stores it in ./dist/mucommander.tar.gz
+  Generates a Unix release file and stores it in ./dist/trolcommander.tar.gz
 
 - ant jnlp
-  Generates a Webstart description file in ./dist/mucommander.jnlp
+  Generates a Webstart description file in ./dist/trolcommander.jnlp
 
 - ant sign
-  Generates a signed JAR file in ./dist/mucommander_signed.jar
+  Generates a signed JAR file in ./dist/trolcommander_signed.jar
 
 - ant app
-  Generates a Mac OS X application bundle in ./dist/muCommander.app.
+  Generates a Mac OS X application bundle in ./dist/trolCommander.app.
   Note that the application will only work if ran on an OS that has a chmod
   command.
 
@@ -134,4 +132,4 @@ useful are:
   Generates all known release files.
 
 - ant reports
-  Generates reports about various aspects of muCommander.
+  Generates reports about various aspects of trolCommander.

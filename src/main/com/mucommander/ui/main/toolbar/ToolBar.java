@@ -99,7 +99,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // get garbage-collected
         rolloverButtonAdapter = new RolloverButtonAdapter();
 
-        // Create buttons for each actions and add them to the toolbar
+        // create buttons for each actions and add them to the toolbar
         addButtons(ToolBarAttributes.getActions());
         
         ToolBarAttributes.addToolBarAttributesListener(this);

@@ -38,8 +38,7 @@ public class ClipboardSupport {
     public static Transferable getClipboardContents() {
         try {
             return getClipboard().getContents(null);
-        }
-        catch(IllegalStateException e) {
+        } catch(IllegalStateException e) {
             return null;
         }
     }
@@ -52,8 +51,7 @@ public class ClipboardSupport {
     public static void setClipboardContents(Transferable transferable) {
         try {
             getClipboard().setContents(transferable, null);
-        }
-        catch(IllegalStateException e) {}
+        } catch(IllegalStateException e) {}
     }
 
 

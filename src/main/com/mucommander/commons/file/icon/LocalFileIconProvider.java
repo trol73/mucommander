@@ -55,10 +55,10 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
             // to a registered archive format
             LocalFile tempFile = FileFactory.getTemporaryFile(nonLocalFile.getName(), false).getAncestor(LocalFile.class);
 
-            // Create a directory
+            // create a directory
             if(nonLocalFile.isDirectory())
                 tempFile.mkdir();
-            // Create a regular file
+            // create a regular file
             else
                 tempFile.getOutputStream().close();
 
@@ -87,7 +87,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
         // and then delete the file. This operation is I/O bound and thus expensive, so an LRU is used to cache
         // frequently-accessed file extensions.
         else {
-            // Create the temporary, local file
+            // create the temporary, local file
             LocalFile tempFile = createTempLocalFile(topFile);
             if(tempFile==null) {
                 // No temp file, no icon!

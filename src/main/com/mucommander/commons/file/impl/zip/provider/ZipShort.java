@@ -35,7 +35,7 @@ public final class ZipShort implements Cloneable {
     private int value;
 
     /**
-     * Create instance from a number.
+     * create instance from a number.
      * @param value the int to store as a ZipShort
      */
     public ZipShort (int value) {
@@ -43,7 +43,7 @@ public final class ZipShort implements Cloneable {
     }
 
     /**
-     * Create instance from bytes.
+     * create instance from bytes.
      * @param bytes the bytes to store as a ZipShort
      */
     public ZipShort (byte[] bytes) {
@@ -51,7 +51,7 @@ public final class ZipShort implements Cloneable {
     }
 
     /**
-     * Create instance from the two bytes starting at offset.
+     * create instance from the two bytes starting at offset.
      * @param bytes the bytes to store as a ZipShort
      * @param offset the offset to start
      */

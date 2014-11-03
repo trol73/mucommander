@@ -30,7 +30,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
 
     
     /**
-     * Create a java.io.Reader for reading the Unicode character data corresponding
+     * create a java.io.Reader for reading the Unicode character data corresponding
      * to the original byte data supplied to the Charset detect operation.
      * <p/>
      * CAUTION:  if the source of the byte data was an InputStream, a Reader
@@ -58,7 +58,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     }
 
     /**
-     * Create a Java String from Unicode character data corresponding
+     * create a Java String from Unicode character data corresponding
      * to the original byte data supplied to the Charset detect operation.
      *
      * @return a String created from the converted input data.
@@ -71,7 +71,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     }
 
     /**
-     * Create a Java String from Unicode character data corresponding
+     * create a Java String from Unicode character data corresponding
      * to the original byte data supplied to the Charset detect operation.
      * The length of the returned string is limited to the specified size;
      * the string will be trunctated to this length if necessary.  A limit value of

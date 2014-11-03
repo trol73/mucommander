@@ -1341,7 +1341,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     // Not checking for this would cause a single click on the inactive table's current row to trigger
                     // the filename/date/permission editor
                     if (hasFocus() && System.currentTimeMillis() - focusGainedTime > 100) {
-                        // Create a new thread and sleep long enough to ensure that this click was not the first of a double click
+                        // create a new thread and sleep long enough to ensure that this click was not the first of a double click
                         new Thread() {
                             @Override
                             public void run() {

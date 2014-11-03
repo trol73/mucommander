@@ -53,7 +53,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
         DefaultMutableTreeNode node = this;
         for(int d=1; d<=entryDepth; d++) {
             if(d==entryDepth && !entry.isDirectory()) {
-                // Create a leaf node for the entry
+                // create a leaf node for the entry
                 entry.setExists(true);      // the entry has to exist
                 node.add(new DefaultMutableTreeNode(entry, true));
                 break;
@@ -86,7 +86,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
             }
             else {
                 if(d==entryDepth) {
-                    // Create a leaf node for the entry
+                    // create a leaf node for the entry
                     entry.setExists(true);      // the entry has to exist
                     node.add(new DefaultMutableTreeNode(entry, true));
                 }

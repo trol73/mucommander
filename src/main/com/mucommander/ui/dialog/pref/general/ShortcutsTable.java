@@ -217,7 +217,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
     }
 
 	/**
-	 * Create thread that will cancel the editing state of the given TableCellEditor
+	 * create thread that will cancel the editing state of the given TableCellEditor
 	 * after CELL_EDITING_STATE_PERIOD time in which with no pressing was made.
 	 */
 	public void createCancelEditingStateThread(TableCellEditor cellEditor) {

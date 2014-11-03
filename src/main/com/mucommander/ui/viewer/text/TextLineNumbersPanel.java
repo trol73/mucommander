@@ -57,7 +57,7 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
     private Map<String, FontMetrics> fonts;
     
     /**
-	 *	Create a line number component for a text component. This minimum
+	 *	create a line number component for a text component. This minimum
 	 *  display width will be based on 3 digits.
 	 *
 	 *  @param component  the related text component
@@ -67,7 +67,7 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 	}
 
 	/**
-	 *	Create a line number component for a text component.
+	 *	create a line number component for a text component.
 	 *
 	 *  @param component  the related text component
 	 *  @param minimumDisplayDigits  the number of digits used to calculate

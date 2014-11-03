@@ -70,7 +70,7 @@ class ZipArchiver extends Archiver {
 
         boolean isDirectory = attributes.isDirectory();
 		
-        // Create the entry and use the provided file's date
+        // create the entry and use the provided file's date
         ZipEntry entry = new ZipEntry(normalizePath(entryPath, isDirectory));
         // Use provided file's size and date
         long size = attributes.getSize();

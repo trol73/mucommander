@@ -1,5 +1,6 @@
 package com.mucommander.commons.file.impl.sevenzip.provider.Common;
 
+// TODO remove it!
 public class IntVector {
     protected int[] data = new int[10];
     int capacityIncr = 10;

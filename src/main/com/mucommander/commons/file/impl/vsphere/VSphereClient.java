@@ -282,7 +282,7 @@ public class VSphereClient implements Closeable {
 	}
 
 	private javax.net.ssl.SSLContext getSSLContext() {
-		// Create a trust manager that does not validate certificate chains:
+		// create a trust manager that does not validate certificate chains:
 		javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
 		javax.net.ssl.TrustManager tm = new TrustAllTrustManager();
 		trustAllCerts[0] = tm;

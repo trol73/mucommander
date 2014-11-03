@@ -97,7 +97,7 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
 
         mainPanel.addSpace(15);
 
-        // Create file details button and OK/cancel buttons and lay them out a single row
+        // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
         okButton = new JButton(Translator.get("change"));

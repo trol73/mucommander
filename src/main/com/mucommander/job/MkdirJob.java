@@ -117,7 +117,7 @@ public class MkdirJob extends FileJob {
                     }
                 }
 
-                // Create file
+                // create file
                 if (mkfileMode) {
                     // Use mkfile
                     if (allocateSpace == -1) {
@@ -159,7 +159,7 @@ public class MkdirJob extends FileJob {
                         }
                     }
                 }
-                // Create directory
+                // create directory
                 else {
                     file.mkdir();
                 }

@@ -4,8 +4,7 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression
 
 import java.io.IOException;
 
-public class InWindow
-{
+public class InWindow {
 	public byte[] _bufferBase; // pointer to buffer with data
 	java.io.InputStream _stream;
 	int _posLimit;  // offset (from _buffer) of first byte when new block reading must be done
@@ -21,10 +20,9 @@ public class InWindow
 	int _keepSizeAfter;   // how many BYTEs must be kept buffer after _pos
 	public int _streamPos;   // offset (from _buffer) of first not read byte from Stream
 	
-	public void MoveBlock()
-	{
+	public void moveBlock() {
 		int offset = _bufferOffset + _pos - _keepSizeBefore;
-		// we need one additional byte, since MovePos moves on 1 byte.
+		// we need one additional byte, since movePos moves on 1 byte.
 		if (offset > 0)
 			offset--;
 
@@ -36,7 +34,7 @@ public class InWindow
 		_bufferOffset -= offset;
 	}
 	
-	public void ReadBlock() throws IOException
+	public void readBlock() throws IOException
 	{
 		if (_streamEndWasReached)
 			return;
@@ -62,16 +60,16 @@ public class InWindow
 		}
 	}
 	
-	void Free() { _bufferBase = null; }
+	void free() { _bufferBase = null; }
 	
-	public void Create(int keepSizeBefore, int keepSizeAfter, int keepSizeReserv)
+	public void create(int keepSizeBefore, int keepSizeAfter, int keepSizeReserv)
 	{
 		_keepSizeBefore = keepSizeBefore;
 		_keepSizeAfter = keepSizeAfter;
 		int blockSize = keepSizeBefore + keepSizeAfter + keepSizeReserv;
 		if (_bufferBase == null || _blockSize != blockSize)
 		{
-			Free();
+			free();
 			_blockSize = blockSize;
 			_bufferBase = new byte[_blockSize];
 		}
@@ -87,25 +85,25 @@ public class InWindow
 		_pos = 0;
 		_streamPos = 0;
 		_streamEndWasReached = false;
-		ReadBlock();
+		readBlock();
 	}
 	
-	public void MovePos() throws IOException
+	public void movePos() throws IOException
 	{
 		_pos++;
 		if (_pos > _posLimit)
 		{
 			int pointerToPostion = _bufferOffset + _pos;
 			if (pointerToPostion > _pointerToLastSafePosition)
-				MoveBlock();
-			ReadBlock();
+				moveBlock();
+			readBlock();
 		}
 	}
 	
-	public byte GetIndexByte(int index)	{ return _bufferBase[_bufferOffset + _pos + index]; }
+	public byte getIndexByte(int index)	{ return _bufferBase[_bufferOffset + _pos + index]; }
 	
 	// index + limit have not to exceed _keepSizeAfter;
-	public int GetMatchLen(int index, int distance, int limit)
+	public int getMatchLen(int index, int distance, int limit)
 	{
 		if (_streamEndWasReached)
 			if ((_pos + index) + limit > _streamPos)
@@ -119,9 +117,9 @@ public class InWindow
 		return i;
 	}
 	
-	public int GetNumAvailableBytes()	{ return _streamPos - _pos; }
+	public int getNumAvailableBytes()	{ return _streamPos - _pos; }
 	
-	public void ReduceOffsets(int subValue)
+	public void reduceOffsets(int subValue)
 	{
 		_bufferOffset += subValue;
 		_posLimit -= subValue;

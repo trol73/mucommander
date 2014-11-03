@@ -156,7 +156,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
 
         compPanel.addRow(Translator.get("login"), loginComponent, 5);
 
-        // Create password field
+        // create password field
         this.passwordField = new JPasswordField();
         passwordField.addActionListener(this);
         compPanel.addRow(Translator.get("password"), passwordField, 10);
@@ -273,7 +273,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
             for(int i=0; i<nbCredentials; i++) {
                 cm = credentialsMappings[i];
                 if(cm.getCredentials().equals(enteredCredentials, true)) {  // Comparison must be password-sensitive
-                    // Create a new CredentialsMapping instance in case the 'isPersistent' flag has changed.
+                    // create a new CredentialsMapping instance in case the 'isPersistent' flag has changed.
                     // (original credentials may have originally been added as 'volatile' and then made persistent by
                     // ticking the checkbox, or vice-versa)
                     selectedCredentialsMapping = new CredentialsMapping(cm.getCredentials(), cm.getRealm(), isPersistent);

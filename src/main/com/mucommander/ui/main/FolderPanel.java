@@ -135,13 +135,13 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
 
-        // Create and add drive button
+        // create and add drive button
         this.driveButton = new DrivePopupButton(this);
         c.weightx = 0;
         c.gridx = 0;        
         locationPanel.add(driveButton, c);
 
-        // Create location text field
+        // create location text field
         this.locationTextField = new LocationTextField(this);
 
         // Give location field all the remaining space until the PoupupsButton
@@ -165,12 +165,12 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
                 new RecentEditedQL(this)
         };
 
-        // Create the FileTable
+        // create the FileTable
         fileTable = new FileTable(mainFrame, this, conf);
 
         locationChanger = new LocationChanger(mainFrame, this, locationManager);
         
-        // Create the Tabs (Must be called after the fileTable was created and current folder was set)
+        // create the Tabs (Must be called after the fileTable was created and current folder was set)
         tabs = new FileTableTabs(mainFrame, this, initialTabs);
         
 		// Select the tab that was previously selected on last init

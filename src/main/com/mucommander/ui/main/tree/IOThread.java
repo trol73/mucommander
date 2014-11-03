@@ -59,7 +59,7 @@ public class IOThread extends Thread {
         
         while (!interrupted()) {
             lastActionTime = System.currentTimeMillis(); 
-            while (queue.size() > 0) {
+            while (!queue.isEmpty()) {
                 Runnable task = queue.remove(0);
                 try {
                     task.run();

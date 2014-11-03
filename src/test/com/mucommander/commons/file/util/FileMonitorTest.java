@@ -167,7 +167,7 @@ public class FileMonitorTest implements FileMonitorConstants {
     private void setUp(int attribute) throws IOException {
         // Retrieve a temporary AbstractFile instance that will be deleted on VM shutdown
         file = FileFactory.getTemporaryFile(getClass().getName(), true);
-        // Create the file
+        // create the file
         file.mkfile();
 
         // Waits until the file truly exists (I/O are usually asynchroneous)
@@ -176,7 +176,7 @@ public class FileMonitorTest implements FileMonitorConstants {
             catch(InterruptedException e) {}
         }
 
-        // Create the monitor, change listener and start monitoring file changes
+        // create the monitor, change listener and start monitoring file changes
         fileMonitor = new FileMonitor(file, attribute, POLL_PERIOD);
 
         fileChangeTracker = new FileChangeTracker();
