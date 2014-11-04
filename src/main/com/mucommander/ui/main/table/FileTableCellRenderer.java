@@ -193,8 +193,8 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             String text = (String)value;
             Color foregroundColor;
             if (matches || isSelected) {
-                int group = colorIndex == ThemeCache.MARKED ? -1 : FileGroupResolver.getInstance().resolve(file);
-                if (group >= 0 && !isSelected) {
+                int group = (selectedIndex == ThemeCache.SELECTED) ? -1 : FileGroupResolver.getInstance().resolve(file);
+                if (group >= 0 && colorIndex != ThemeCache.MARKED) {//!isSelected) {
                     foregroundColor = ThemeCache.groupColors[group];
                 } else {
                     foregroundColor = ThemeCache.foregroundColors[focusedIndex][selectedIndex][colorIndex];
