@@ -72,13 +72,11 @@ public class CommandAction extends MuAction {
     // -------------------------------------------------------------------------
     @Override
     public void performAction() {
-        FileSet selectedFiles;
-
         // Retrieves the current selection.
-        selectedFiles = mainFrame.getActiveTable().getSelectedFiles();
+        FileSet selectedFiles = mainFrame.getActiveTable().getSelectedFiles();
 
         // If no files are either selected or marked, aborts.
-        if (selectedFiles.size() == 0) {
+        if (selectedFiles.isEmpty() && command.hasSelectedFileKeyword()) {
             return;
         }
 
