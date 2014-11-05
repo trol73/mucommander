@@ -94,8 +94,8 @@ public class ShutdownHook extends Thread {
         
         // Save preferences
         // Don't need to save preferences on shutdown because it saves in Preferences edit dialog on Ok pressed
-//        try {MuConfigurations.savePreferences();}
-//        catch(Exception e) {LOGGER.warn("Failed to save configuration", e);}
+        try {MuConfigurations.savePreferences();}
+        catch(Exception e) {LOGGER.warn("Failed to save configuration", e);}
 
         // Save shell history
         try {ShellHistoryManager.writeHistory();}
