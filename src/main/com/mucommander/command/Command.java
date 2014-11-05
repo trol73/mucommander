@@ -335,6 +335,30 @@ public class Command implements Comparable<Command> {
     }
 
     /**
+     * Returns whether this command contains keywords referencing selected file.
+     * <p>
+     * Returns true if command contains keywords referencing selected file, e.g. $f,$n,$p,$e,$b.
+     * Returns false otherwise, e.g. $j, $xyz, etc.
+     * </p>
+     *
+     * @return whether this command contains keywords referencing selected file.
+     */
+    public synchronized boolean hasSelectedFileKeyword() {
+        String[] tokens = getTokens();
+        for (String token : tokens) {
+            if (token.length() >= 2 && token.charAt(0) == KEYWORD_HEADER) {
+                char ch2 = token.charAt(1);
+                if (ch2 == KEYWORD_PATH || ch2 == KEYWORD_NAME || ch2 == KEYWORD_EXTENSION || ch2 == KEYWORD_NAME_WITHOUT_EXTENSION ||
+                        ch2 == KEYWORD_PARENT) {
+                    return true;
+                }
+            }
+        }
+        // No token with file referencing keyword found
+        return false;
+    }
+
+    /**
      * Returns <code>true</code> if the specified character is a legal keyword.
      * @param  keyword character to check.
      * @return         <code>true</code> if the specified character is a legal keyword, <code>false</code> otherwise.
