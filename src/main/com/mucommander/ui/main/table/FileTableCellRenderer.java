@@ -24,7 +24,9 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,16 +213,15 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             // - truncate the text from the center and equally to the left and right sides, adding an ellipsis ('...')
             // where characters have been removed. This allows both the start and end of filename to be visible.
             // - set a tooltip text that will display the whole text when mouse is over the label
-// TODO table.getColumnModel().getColumn(columnIndex).getWidth()
-            if (table.getColumnModel().getColumn(columnIndex).getWidth() < label.getPreferredSize().getWidth()) {
+
+            final TableColumn tableColumn = table.getColumnModel().getColumn(columnIndex);
+            if (tableColumn.getWidth() < label.getPreferredSize().getWidth()) {
                 final int tl = text.length();
                 final int tl2 = tl/2;
                 String leftText = text.substring(0, tl2);
                 String rightText = text.substring(tl2, tl);
 
-                while (table.getColumnModel().getColumn(columnIndex).getWidth() < label.getPreferredSize().getWidth()
-                   && !leftText.isEmpty() && !rightText.isEmpty()) {    // Prevents against going out of bounds
-
+                while (tableColumn.getWidth() < label.getPreferredSize().getWidth() && !leftText.isEmpty() && !rightText.isEmpty()) {    // Prevents against going out of bounds
                     final int ltl = leftText.length();
                     final int rtl = rightText.length();
                     if (ltl > rtl) {

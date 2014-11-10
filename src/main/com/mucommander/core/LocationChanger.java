@@ -186,7 +186,7 @@ public class LocationChanger {
 			// Make sure a folder change is not already taking place. This can happen under rare but normal
 			// circumstances, if this method is called before the folder change thread has had the time to call
 			// MainFrame#setNoEventsMode.
-			if(changeFolderThread!=null) {
+			if (changeFolderThread != null) {
 				LOGGER.debug("A folder change is already taking place ("+changeFolderThread+"), returning null");
 				return null;
 			}
@@ -198,8 +198,9 @@ public class LocationChanger {
 			// a null value to be returned, which is particularly problematic during startup (would cause an NPE).
 			ChangeFolderThread thread = new ChangeFolderThread(folder, findWorkableFolder, changeLockedTab);
 
-			if(selectThisFileAfter!=null)
+			if (selectThisFileAfter != null) {
 				thread.selectThisFileAfter(selectThisFileAfter);
+			}
 			thread.start();
 
 			changeFolderThread = thread;
@@ -630,7 +631,7 @@ public class LocationChanger {
 			boolean guestCredentialsSelected = false;
 
 			AuthenticationType authenticationType = folderURL.getAuthenticationType();
-			if(credentialsMapping!=null) {
+			if (credentialsMapping != null) {
 				newCredentialsMapping = credentialsMapping;
 				CredentialsManager.authenticate(folderURL, newCredentialsMapping);
 			}
@@ -645,7 +646,7 @@ public class LocationChanger {
 				guestCredentialsSelected = authDialog.guestCredentialsSelected();
 
 				// User cancelled the authentication dialog, stop
-				if(newCredentialsMapping ==null)
+				if (newCredentialsMapping ==null)
 					userCancelled = true;
 				// Use the provided credentials and invalidate the folder AbstractFile instance (if any) so that
 				// it gets recreated with the new credentials
@@ -655,7 +656,7 @@ public class LocationChanger {
 				}
 			}
 
-			if(!userCancelled) {
+			if (!userCancelled) {
 				boolean canonicalPathFollowed = false;
 
 				do {
@@ -671,11 +672,11 @@ public class LocationChanger {
 						// - Thread was created using a FileURL, corresponding AbstractFile needs to be resolved
 
 						// Thread was created using a FileURL
-						if(folder==null) {
+						if (folder == null) {
 							AbstractFile file = FileFactory.getFile(folderURL, true);
 
 							synchronized(KILL_LOCK) {
-								if(killed) {
+								if (killed) {
 									LOGGER.debug("this thread has been killed, returning");
 									break;
 								}
@@ -686,7 +687,7 @@ public class LocationChanger {
 
 							// Popup an error dialog and abort folder change if the file could not be resolved
 							// or doesn't exist
-							if(file==null || !file.exists()) {
+							if (file == null || !file.exists()) {
 								// Restore default cursor
 								mainFrame.setCursor(Cursor.getDefaultCursor());
 
@@ -695,11 +696,11 @@ public class LocationChanger {
 							}
 
 							// File is a regular directory, all good
-							if(file.isDirectory()) {
+							if (file.isDirectory()) {
 								// Just continue
 							}
 							// File is a browsable file (Zip archive for instance) but not a directory : Browse or Download ? => ask the user
-							else if(file.isBrowsable()) {
+							else if (file.isBrowsable()) {
 								// If history already contains this file, do not ask the question again and assume
 								// the user wants to 'browse' the file. In particular, this prevent the 'Download or browse'
 								// dialog from popping up when going back or forward in history.
@@ -721,11 +722,11 @@ public class LocationChanger {
 
 									int ret = dialog.getActionValue();
 
-									if(ret==-1 || ret==CANCEL_ACTION)
+									if (ret==-1 || ret==CANCEL_ACTION)
 										break;
 
 									// Download file
-									if(ret==DOWNLOAD_ACTION) {
+									if (ret==DOWNLOAD_ACTION) {
 										showDownloadDialog(file);
 										break;
 									}
@@ -745,7 +746,7 @@ public class LocationChanger {
 							this.folder = file;
 						}
 						// Thread was created using an AbstractFile instance, check file existence
-						else if(!folder.exists()) {
+						else if (!folder.exists()) {
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
 							if(findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
@@ -773,7 +774,7 @@ public class LocationChanger {
 						// and resolved again. This happens only once at most, to avoid a potential infinite loop
 						// in the event that the absolute path still didn't match canonical one after the file is
 						// resolved again.
-						if(!canonicalPathFollowed && followCanonicalPath(folder)) {
+						if (!canonicalPathFollowed && followCanonicalPath(folder)) {
 							try {
 								// Recreate the FileURL using the file's canonical path
 								FileURL newURL = FileURL.getFileURL(folder.getCanonicalPath());
@@ -788,8 +789,7 @@ public class LocationChanger {
 
 								// Loop the resolve the file
 								continue;
-							}
-							catch(MalformedURLException e) {
+							} catch (MalformedURLException e) {
 								// In the unlikely event of the canonical path being malformed, the AbstractFile
 								// and FileURL instances are left untouched
 							}
@@ -838,7 +838,7 @@ public class LocationChanger {
 						// If new credentials were entered by the user, these can now be considered valid
 						// (folder was changed successfully), so we add them to the CredentialsManager.
 						// Do not add the credentials if guest credentials were selected by the user.
-						if(newCredentialsMapping!=null && !guestCredentialsSelected)
+						if (newCredentialsMapping != null && !guestCredentialsSelected)
 							CredentialsManager.addCredentials(newCredentialsMapping);
 
 						// All good !
