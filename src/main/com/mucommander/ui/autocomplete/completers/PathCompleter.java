@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.autocomplete.completers;
 
+import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.autocomplete.AutocompleterTextComponent;
 
 import java.util.Vector;
@@ -28,25 +29,39 @@ import java.util.Vector;
  * @author Arik Hadas, based on the code of Santhosh Kumar: http://www.jroller.com/santhosh/entry/file_path_autocompletion
  */
  
-public class PathCompleter extends Completer { 
-    
-	public PathCompleter(){  
+public class PathCompleter extends Completer {
+
+    private String currentLocation;
+
+	public PathCompleter() {
+        super();
 		registerService(ServiceFactory.getVolumesService());
 		registerService(ServiceFactory.getAllFilesService());
     }
  
 	@Override
     protected Vector<String> getUpdatedSuggestions(AutocompleterTextComponent component) {
-    	return getPossibleCompletionsFromServices(component.getText());
-    } 
+        String text = component.getText();
+        Vector<String> result = getPossibleCompletionsFromServices(text);
+        if (currentLocation != null) {
+            result.addAll(getPossibleCompletionsFromServices(currentLocation + text));
+        }
+        return result;
+    }
  
     @Override
     public void updateTextComponent(final String selected, AutocompleterTextComponent comp){
-        if(selected==null) 
+        if (selected == null) {
             return;
+        }
                                  
-        String location = tryToCompleteFromServices(selected);        
-        if (comp.isEnabled() && location != null)
-        	comp.setText(location);
+        String location = tryToCompleteFromServices(selected);
+        if (comp.isEnabled() && location != null) {
+            comp.setText(location);
+        }
+    }
+
+    public void setCurrentLocation(AbstractFile currentLocation) {
+        this.currentLocation = currentLocation.getAbsolutePath();
     }
 }

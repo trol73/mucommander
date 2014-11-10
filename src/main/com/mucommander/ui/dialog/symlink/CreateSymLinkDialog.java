@@ -18,6 +18,7 @@
 package com.mucommander.ui.dialog.symlink;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -103,18 +104,9 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk) {
-            createSymlink(edtName.getText(), edtTarget.getText());
+            SymLinkUtils.createSymlink(edtName.getText(), edtTarget.getText());
         }
         cancel();
     }
 
-    private void createSymlink(String link, String target) {
-        Path linkPath = FileSystems.getDefault().getPath(link, "");
-        Path targetPath = FileSystems.getDefault().getPath(target, "");
-        try {
-            Files.createSymbolicLink(linkPath, targetPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

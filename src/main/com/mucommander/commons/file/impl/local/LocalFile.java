@@ -31,6 +31,9 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -511,9 +514,8 @@ public class LocalFile extends ProtocolFile {
      * @param v the <code>Vector</code> to add mount points to
      */
     private static void addMountEntries(List<AbstractFile> v) {
-        BufferedReader br;
+        BufferedReader br = null;
 
-        br = null;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream("/proc/mounts")));
             StringTokenizer st;
@@ -609,19 +611,27 @@ public class LocalFile extends ProtocolFile {
         // At the moment symlinks under Windows (aka NTFS junction points) are not supported because java.io.File
         // knows nothing about them and there is no way to discriminate them. So there is no need to waste time
         // comparing canonical paths, just return false.
-        // Todo: add support for .lnk files (~hard links)
-        if(IS_WINDOWS)
+        // TODO: add support for .lnk files (~hard links)
+        if (IS_WINDOWS) {
             return false;
+        }
 
-        // Note: this value must not be cached as its value can change over time (canonical path can change)
+        // Check the case if we have a symbolic link with wrong target path
+        if (!file.isFile()) {
+            Path path = FileSystems.getDefault().getPath(getAbsolutePath(), "");
+            if (Files.isSymbolicLink(path)) {
+                return true;
+            }
+        }
+
+            // Note: this value must not be cached as its value can change over time (canonical path can change)
         AbstractFile parent = getParent();
         String canonPath = getCanonicalPath(false);
-        if(parent==null || canonPath==null)
+        if (parent == null || canonPath == null) {
             return false;
-        else {
-            String parentCanonPath = parent.getCanonicalPath(true);
-            return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
         }
+        String parentCanonPath = parent.getCanonicalPath(true);
+        return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
     }
 
     @Override
@@ -976,18 +986,18 @@ public class LocalFile extends ProtocolFile {
 //        if(IS_WINDOWS && guessFloppyDrive())
 //            return absPath;
 
+
         // Note: canonical path must not be cached as its resolution can change over time, for instance
         // if a file 'Test' is renamed to 'test' in the same folder, its canonical path would still be 'Test'
         // if it was resolved prior to the renaming and thus be recognized as a symbolic link
         try {
             String canonicalPath = file.getCanonicalPath();
             // Append separator for directories
-            if(isDirectory() && !canonicalPath.endsWith(SEPARATOR))
+            if (isDirectory() && !canonicalPath.endsWith(SEPARATOR))
                 canonicalPath = canonicalPath + SEPARATOR;
 
             return canonicalPath;
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return absPath;
         }
     }
