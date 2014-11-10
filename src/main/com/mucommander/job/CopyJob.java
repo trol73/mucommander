@@ -20,7 +20,11 @@
 package com.mucommander.job;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
+import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,6 +128,7 @@ public class CopyJob extends AbstractCopyJob {
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink()) {
+            copySymLink(file, destFile);
             return true;
         }
 
@@ -269,5 +274,10 @@ public class CopyJob extends AbstractCopyJob {
         return result;
     }
 
+
+    private void copySymLink(AbstractFile file, AbstractFile destFile) {
+        String targetPath = SymLinkUtils.getTargetPath(file);
+        SymLinkUtils.createSymlink(destFile, targetPath);
+    }
 
 }

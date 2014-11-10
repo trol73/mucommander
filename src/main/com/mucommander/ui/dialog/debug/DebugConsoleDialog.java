@@ -41,6 +41,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
 import com.mucommander.text.Translator;
@@ -66,7 +67,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     private JList<LoggingEvent> loggingEventsList = new JList<>();
 
     /** Allows the log level to be changed */
-    private JComboBox<LogLevel> levelComboBox = new JComboBox<>();
+    private JComboBox<LogLevel> levelComboBox = new MuComboBox<>();
 
     /** Closes the debug console when pressed */
     private JButton closeButton;

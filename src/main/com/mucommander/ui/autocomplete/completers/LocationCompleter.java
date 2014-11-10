@@ -45,11 +45,13 @@ public class LocationCompleter extends Completer {
  
     @Override
     public void updateTextComponent(final String selected, AutocompleterTextComponent comp){
-        if(selected==null) 
+        if (selected == null) {
             return;
+        }
         
         String location = tryToCompleteFromServices(selected);        
-        if (comp.isEnabled() && location != null)
-        	comp.setText(location);
+        if (comp.isEnabled() && location != null) {
+            comp.setText(location);
+        }
     }
 }

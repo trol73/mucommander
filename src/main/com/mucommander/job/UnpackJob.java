@@ -255,6 +255,9 @@ public class UnpackJob extends AbstractCopyJob {
 
                 // Do nothing if the file is a symlink (skip file and return)
                 if (entryFile.isSymlink()) {
+                    // TODO !!! implement me
+System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
+
                     return true;
                 }
 

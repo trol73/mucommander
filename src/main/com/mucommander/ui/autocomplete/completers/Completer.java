@@ -40,11 +40,8 @@ import java.util.Vector;
  */
 
 public abstract class Completer {
-	private Set<CompletionService> services;
-	
-	public Completer() {
-		services = new LinkedHashSet<>();
-	}
+	private Set<CompletionService> services = new LinkedHashSet<>();
+
 	
 	/**
 	 * This function gets an AutocompleterTextComponent and returns a Vector of suggestions for

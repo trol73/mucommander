@@ -734,7 +734,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final String getCanonicalPath(boolean appendSeparator) {
         String path = getCanonicalPath();
-        return appendSeparator?addTrailingSeparator(path): removeTrailingSeparator(path);
+        return appendSeparator ? addTrailingSeparator(path) : removeTrailingSeparator(path);
     }
 
 

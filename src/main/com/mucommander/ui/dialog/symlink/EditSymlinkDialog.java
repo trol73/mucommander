@@ -18,6 +18,7 @@
 package com.mucommander.ui.dialog.symlink;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -67,13 +68,13 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
         YBoxPanel yPanel = new YBoxPanel(10);
 
         edtTarget = new FilePathField();
+        edtTarget.setDefaultLocation(linkPath.getParent());
         String hint = String.format(Translator.get("symboliclinkeditor.target_file_edit"), linkPath.getBaseName())+ ':';
         yPanel.add(new JLabel(hint));
         yPanel.add(edtTarget);
 
-        edtTarget.setText(linkPath.getCanonicalPath());
+        edtTarget.setText(SymLinkUtils.getTargetPath(linkPath));
         edtTarget.addActionListener(this);
-
 
         yPanel.addSpace(10);
 
@@ -94,20 +95,11 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk || e.getSource() == edtTarget) {
-            editSymlink(linkPath.getAbsolutePath(), edtTarget.getText());
+            SymLinkUtils.editSymlink(linkPath, edtTarget.getText());
         }
         cancel();
     }
 
 
-    private void editSymlink(String link, String target) {
-        Path linkPath = FileSystems.getDefault().getPath(link, "");
-        Path targetPath = FileSystems.getDefault().getPath(target, "");
-        try {
-            Files.delete(linkPath);
-            Files.createSymbolicLink(linkPath, targetPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 }
