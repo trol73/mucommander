@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 
+import com.mucommander.commons.file.util.SymLinkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,7 +175,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         this.mainFrame = mainFrame;
 		
         selectedFilesLabel = new JLabel("");
-        dial               = new SpinningDial();
+        dial = new SpinningDial();
         add(selectedFilesLabel);
 
         add(Box.createHorizontalGlue());
@@ -233,9 +234,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
      */
     private void updateStatusInfo() {
         // No need to waste precious cycles if status bar is not visible
-        if(!isVisible())
+        if (!isVisible()) {
             return;
-
+        }
         updateSelectedFilesInfo();
         updateVolumeInfo();
     }
@@ -248,8 +249,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 //    public synchronized void updateSelectedFilesInfo() {
     public void updateSelectedFilesInfo() {
         // No need to waste precious cycles if status bar is not visible
-        if(!isVisible())
+        if (!isVisible()) {
             return;
+        }
 
         FileTable currentFileTable = mainFrame.getActiveTable();
 
@@ -264,31 +266,34 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         int fileCount = tableModel.getFileCount();
 
         // Update files info based on marked files if there are some, or currently selected file otherwise
-        int nbSelectedFiles;
-        if(nbMarkedFiles==0 && selectedFile!=null)
-            nbSelectedFiles = 1;
-        else
-            nbSelectedFiles = nbMarkedFiles;
+        int nbSelectedFiles = nbMarkedFiles == 0 && selectedFile != null ? 1 : nbMarkedFiles;
 
-        String filesInfo;
+        StringBuilder filesInfo = new StringBuilder();
 		
-        if(fileCount==0) {
-            // Set status bar to a space character, not an empty string
-            // otherwise it will disappear
-            filesInfo = " ";
-        }
-        else {
-            filesInfo = Translator.get("status_bar.selected_files", ""+nbSelectedFiles, ""+fileCount);
-			
-            if(nbMarkedFiles>0)
-                filesInfo += " - "+ SizeFormat.format(markedTotalSize, selectedFileSizeFormat);
+        if (fileCount == 0) {
+            // Set status bar to a space character, not an empty string otherwise it will disappear
+            filesInfo.append(' ');
+        } else {
+            filesInfo.append(Translator.get("status_bar.selected_files", String.valueOf(nbSelectedFiles), String.valueOf(fileCount)));
+
+            if (nbMarkedFiles > 0) {
+                filesInfo.append(" - ");
+                filesInfo.append(SizeFormat.format(markedTotalSize, selectedFileSizeFormat));
+            }
 	
-            if(selectedFile!=null)
-                filesInfo += " - "+selectedFile.getName();
+            if (selectedFile != null) {
+                filesInfo.append(" - ");
+                filesInfo.append(selectedFile.getName());
+                if (selectedFile.isSymlink()) {
+                    String target = SymLinkUtils.getTargetPath(selectedFile);
+                    filesInfo.append(" -> ");
+                    filesInfo.append(target);
+                }
+            }
         }		
 
         // Update label
-        setStatusInfo(filesInfo);
+        setStatusInfo(filesInfo.toString());
     }
 	
 	
@@ -297,8 +302,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
      */
     private synchronized void updateVolumeInfo() {
         // No need to waste precious cycles if status bar is not visible
-        if(!isVisible())
+        if (!isVisible()) {
             return;
+        }
 
         final AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         // Resolve the current folder's volume and use its path as a key for the volume info cache
@@ -306,11 +312,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         		currentFolder.getVolume().getAbsolutePath(true) : "";
 
         Long cachedVolumeInfo[] = volumeInfoCache.get(volumePath);
-        if(cachedVolumeInfo!=null) {
+        if (cachedVolumeInfo != null) {
             LOGGER.debug("Cache hit!");
             volumeSpaceLabel.setVolumeSpace(cachedVolumeInfo[0], cachedVolumeInfo[1]);
-        }
-        else {
+        } else {
             // Retrieves free and total volume space.
             // Perform volume info retrieval in a separate thread as this method may be called
             // by the event thread and it can take a while, we want to return as soon as possible
@@ -324,7 +329,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
                     // Folder is a local file and Java version is 1.5: call getVolumeInfo() instead of
                     // separate calls to getFreeSpace() and getTotalSpace() as it is twice as fast.
-                    if(currentFolder instanceof LocalFile && JavaVersion.JAVA_1_5.isCurrentOrLower()) {
+                    if (currentFolder instanceof LocalFile && JavaVersion.JAVA_1_5.isCurrentOrLower()) {
                         try {
                             long volumeInfo[] = ((LocalFile)currentFolder).getVolumeInfo();
                             volumeTotal = volumeInfo[0];
@@ -447,10 +452,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             // - MainFrame isn't changing folders
             // - MainFrame is active and in the foreground
             // Volume info update will potentially hit the LRU cache and not actually update volume info
-            if(isVisible() && !mainFrame.getNoEventsMode() && mainFrame.isForegroundActive())
+            if (isVisible() && !mainFrame.getNoEventsMode() && mainFrame.isForegroundActive())
                 updateVolumeInfo();
         }
-        while(autoUpdateThread!=null && mainFrame.isVisible());   // Stop when MainFrame is disposed
+        while (autoUpdateThread != null && mainFrame.isVisible());   // Stop when MainFrame is disposed
     }
     
 
