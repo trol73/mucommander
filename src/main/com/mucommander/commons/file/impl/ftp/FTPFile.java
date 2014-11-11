@@ -184,11 +184,10 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 return null;
 
             // Find the file in the parent folder's contents
-            int nbFiles = files.length;
             String wantedName = fileURL.getFilename();
-            for(int i=0; i<nbFiles; i++) {
-                if(files[i].getName().equalsIgnoreCase(wantedName))
-                    return files[i];
+            for (org.apache.commons.net.ftp.FTPFile file1 : files) {
+                if (file1.getName().equalsIgnoreCase(wantedName))
+                    return file1;
             }
 
             // File doesn't exists
@@ -572,23 +571,23 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         if(!parentPath.endsWith(SEPARATOR))
             parentPath += SEPARATOR;
 
-        for(int i=0; i<nbFiles; i++) {
-            if(files[i]==null)
+        for (org.apache.commons.net.ftp.FTPFile file1 : files) {
+            if (file1 == null)
                 continue;
 
-            childName = files[i].getName();
-            if(childName.equals(".") || childName.equals(".."))
+            childName = file1.getName();
+            if (childName.equals(".") || childName.equals(".."))
                 continue;
 
             // Note: properties and credentials are cloned for every children's url
-            childURL = (FileURL)fileURL.clone();
-            childURL.setPath(parentPath+childName);
+            childURL = (FileURL) fileURL.clone();
+            childURL.setPath(parentPath + childName);
 
             // Discard '.' and '..' files
-            if(childName.equals(".") || childName.equals(".."))
+            if (childName.equals(".") || childName.equals(".."))
                 continue;
 
-            child = FileFactory.getFile(childURL, this, files[i]);
+            child = FileFactory.getFile(childURL, this, file1);
             children[fileCount++] = child;
         }
 

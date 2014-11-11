@@ -118,7 +118,7 @@ class Decoder {
             ) throws IOException {
         
         
-        ObjectVector<InputStream> inStreams = new ObjectVector<InputStream>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
+        ObjectVector<InputStream> inStreams = new ObjectVector<>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
         
         LockedInStream lockedInStream = new LockedInStream();
         lockedInStream.Init(inStream);
@@ -356,7 +356,7 @@ class Decoder {
         for (i = 0; i < inStreams.size(); i++)
             inStreamPointers.add(inStreams.get(i));
 
-        RecordVector<OutputStream> outStreamPointer = new RecordVector<OutputStream>();
+        RecordVector<OutputStream> outStreamPointer = new RecordVector<>();
         outStreamPointer.add(outStream);
         return _mixerCoder.Code(
                 inStreamPointers, //&inStreamPointers.Front(),

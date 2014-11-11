@@ -239,12 +239,11 @@ public class TransferableFileSet implements Transferable {
             else if(transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 List<File> fileList = (List<File>)transferable.getTransferData(DataFlavor.javaFileListFlavor);
 
-                int nbFiles = fileList.size();
                 files = new FileSet();
-                for(int i=0; i<nbFiles; i++) {
-                    file = FileFactory.getFile(fileList.get(i).getAbsolutePath());
+                for (File aFileList : fileList) {
+                    file = FileFactory.getFile(aFileList.getAbsolutePath());
 
-                    if(file!=null)
+                    if (file != null)
                         files.add(file);
                 }
             }

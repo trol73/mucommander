@@ -152,20 +152,19 @@ public class XfceTrash extends QueuedTrash {
      */
     @Override
     protected boolean moveToTrash(List<AbstractFile> queuedFiles) {
-        int nbFiles = queuedFiles.size();
-        String fileInfoContent;
-        String trashFileName;
         boolean retVal = true;     // overall return value (if everything went OK or at least one file wasn't moved properly
-        
-        for(int i=0; i<nbFiles; i++) {
-            AbstractFile fileToDelete = queuedFiles.get(i);
+
+        for (AbstractFile fileToDelete : queuedFiles) {
+            String fileInfoContent;
+            String trashFileName;
+
             // generate content of info file and new filename
             try {
                 fileInfoContent = getFileInfoContent(fileToDelete);
                 trashFileName = getUniqueFilename(fileToDelete);
             } catch (IOException ex) {
                 LOGGER.debug("Failed to create filename for new trash item: " + fileToDelete.getName(), ex);
-                
+
                 // continue with other file (do not move file, because info file cannot be properly created
                 continue;
             }
@@ -183,18 +182,16 @@ public class XfceTrash extends QueuedTrash {
 
                 // continue with other file (do not move file, because info file wasn't properly created)
                 continue;
-            }
-            finally {
-                if(infoWriter!=null) {
+            } finally {
+                if (infoWriter != null) {
                     try {
                         infoWriter.close();
-                    }
-                    catch(IOException e) {
+                    } catch (IOException e) {
                         // Not much else to do
                     }
                 }
             }
-            
+
             try {
                 // rename original file
                 fileToDelete.renameTo(TRASH_FILES_SUBFOLDER.getChild(trashFileName));
@@ -206,7 +203,7 @@ public class XfceTrash extends QueuedTrash {
                 } catch (IOException ex1) {
                     // simply ignore
                 }
-                
+
                 retVal = false;
                 LOGGER.debug("Failed to move file to trash: " + trashFileName, ex);
             }
@@ -353,10 +350,11 @@ public class XfceTrash extends QueuedTrash {
         // find first empty filename in format filename_N.ext
         String filename;
         int count = 1;
-        while(true) {
+        while (true) {
             filename = rawName + "_" + count++;
-            if(extension!=null)
+            if (extension != null) {
                 filename += "." + extension;
+            }
 
             if(!TRASH_FILES_SUBFOLDER.getChild(filename).exists())
                 return filename;

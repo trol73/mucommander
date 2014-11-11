@@ -78,10 +78,10 @@ public class ToolBarWriter extends ToolBarIO {
 				rootElementAttributes.add(VERSION_ATTRIBUTE, RuntimeConstants.VERSION);
 
     			writer.startElement(ROOT_ELEMENT, rootElementAttributes, true);    			
-    			
-    			int nbToolBarActions = actionIds.length;
-    			for (int i=0; i<nbToolBarActions; ++i)
-    				write(actionIds[i]);
+
+				for (String actionId : actionIds) {
+					write(actionId);
+				}
 
     		} finally {
     			writer.endElement(ROOT_ELEMENT);

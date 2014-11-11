@@ -3,11 +3,13 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Sev
 
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.*;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Common.BindPair;
+import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Common.SequentialOutStreamImp2;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Common.StreamUtils;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.HRESULT;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.IInStream;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 
 class InArchive extends Header {
@@ -26,7 +28,7 @@ class InArchive extends Header {
     long _position;
     
     public InArchive() {
-        _inByteVector = new ObjectVector<InByte2>();
+        _inByteVector = new ObjectVector<>();
         _inByteBack = new InByte2();
     }
     
@@ -704,7 +706,7 @@ class InArchive extends Header {
         BoolVector packCRCsDefined = new BoolVector(); // CRecordVector<bool> packCRCsDefined;
         IntVector packCRCs = new IntVector(); // CRecordVector<UInt32> packCRCs;
         
-        ObjectVector<Folder> folders = new ObjectVector<Folder>();
+        ObjectVector<Folder> folders = new ObjectVector<>();
         
         IntVector numUnPackStreamsInFolders = new IntVector();
         LongVector unPackSizes = new LongVector();
@@ -728,8 +730,7 @@ class InArchive extends Header {
         Decoder decoder = new Decoder(false); // _ST_MODE
         
         long dataStartPos = baseOffset + dataOffset[0];
-        for(int i = 0; i < folders.size(); i++) {
-            Folder folder = folders.get(i); // const CFolder &folder = folders[i];
+        for (Folder folder : folders) {
             dataVector.add(new ByteBuffer());
             ByteBuffer data = dataVector.Back();
             long unPackSize = folder.GetUnPackSize();
@@ -737,21 +738,21 @@ class InArchive extends Header {
                 return HRESULT.E_FAIL;
             if (unPackSize > 0xFFFFFFFFL)
                 return HRESULT.E_FAIL;
-            data.SetCapacity((int)unPackSize);
-            
-            com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Common.SequentialOutStreamImp2 outStreamSpec = new com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Common.SequentialOutStreamImp2();
-            java.io.OutputStream outStream = outStreamSpec;
-            outStreamSpec.Init(data.data(), (int)unPackSize);
-            
+            data.SetCapacity((int) unPackSize);
+
+            SequentialOutStreamImp2 outStreamSpec = new SequentialOutStreamImp2();
+            OutputStream outStream = outStreamSpec;
+            outStreamSpec.Init(data.data(), (int) unPackSize);
+
             int result = decoder.Decode(_stream, dataStartPos,
-                    packSizes,packIndex,  // &packSizes[packIndex]
+                    packSizes, packIndex,  // &packSizes[packIndex]
                     folder, outStream, null
                     // _ST_MODE , false, 1
-                    );
+            );
             if (result != HRESULT.S_OK) return result;
-            
+
             if (folder.UnPackCRCDefined)
-                if (!CRC.VerifyDigest(folder.UnPackCRC, data.data(), (int)unPackSize))
+                if (!CRC.VerifyDigest(folder.UnPackCRC, data.data(), (int) unPackSize))
                     throw new IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);
             for (int j = 0; j < folder.PackStreams.size(); j++)
                 dataStartPos += packSizes.get(packIndex++);
@@ -817,7 +818,7 @@ class InArchive extends Header {
         StreamSwitch streamSwitch = new StreamSwitch();
         streamSwitch.Set(this, buffer2);
         
-        ObjectVector<ByteBuffer> dataVector = new ObjectVector<ByteBuffer>(); // CObjectVector<CByteBuffer> dataVector;
+        ObjectVector<ByteBuffer> dataVector = new ObjectVector<>(); // CObjectVector<CByteBuffer> dataVector;
         
         for (;;) {
             long type = ReadID();
@@ -857,7 +858,7 @@ class InArchive extends Header {
             type = ReadID();
         }
         
-        ObjectVector<ByteBuffer> dataVector = new ObjectVector<ByteBuffer>();
+        ObjectVector<ByteBuffer> dataVector = new ObjectVector<>();
         
         if (type == NID.kAdditionalStreamsInfo) {
             long [] ltmp = new long[1];

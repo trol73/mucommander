@@ -72,37 +72,28 @@ public class LzmaAlone
 		{
 			int pos = 0;
 			boolean switchMode = true;
-			for (int i = 0; i < args.length; i++)
-			{
-				String s = args[i];
+			for (String s : args) {
 				if (s.length() == 0)
 					return false;
-				if (switchMode)
-				{
-					if (s.compareTo("--") == 0)
-					{
+				if (switchMode) {
+					if (s.compareTo("--") == 0) {
 						switchMode = false;
 						continue;
 					}
-					if (s.charAt(0) == '-')
-					{
+					if (s.charAt(0) == '-') {
 						String sw = s.substring(1).toLowerCase();
 						if (sw.length() == 0)
 							return false;
-						try
-						{
+						try {
 							if (!ParseSwitch(sw))
 								return false;
-						}
-						catch (NumberFormatException e)
-						{
+						} catch (NumberFormatException e) {
 							return false;
 						}
 						continue;
 					}
 				}
-				if (pos == 0)
-				{
+				if (pos == 0) {
 					if (s.equalsIgnoreCase("e"))
 						Command = kEncode;
 					else if (s.equalsIgnoreCase("d"))
@@ -111,26 +102,18 @@ public class LzmaAlone
 						Command = kBenchmak;
 					else
 						return false;
-				}
-				else if(pos == 1)
-				{
-					if (Command == kBenchmak)
-					{
-						try
-						{
+				} else if (pos == 1) {
+					if (Command == kBenchmak) {
+						try {
 							NumBenchmarkPasses = Integer.parseInt(s);
 							if (NumBenchmarkPasses < 1)
 								return false;
-						}
-						catch (NumberFormatException e)
-						{
+						} catch (NumberFormatException e) {
 							return false;
 						}
-					}
-					else
+					} else
 						InFile = s;
-				}
-				else if(pos == 2)
+				} else if (pos == 2)
 					OutFile = s;
 				else
 					return false;

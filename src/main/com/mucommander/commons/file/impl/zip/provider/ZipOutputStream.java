@@ -68,7 +68,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
     protected byte[] deflaterBuf;
 
     /** List of zip entries written so far */
-    private Vector<ZipEntry> entries = new Vector<ZipEntry>();
+    private Vector<ZipEntry> entries;
 
     /** Count the bytes written to out */
     private long written = 0;
@@ -128,6 +128,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
 
         // Use BufferPool to avoid excessive memory allocation and garbage collection.
         deflaterBuf = BufferPool.getByteArray(DEFAULT_DEFLATER_BUFFER_SIZE);
+        entries = new Vector<ZipEntry>();
     }
 
 
