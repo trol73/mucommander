@@ -252,7 +252,7 @@ public class CredentialsManager {
      * @return a Vector of CredentialsMapping matching the given URL's scheme and host, best match at the first position
      */
     private static List<CredentialsMapping> getMatchingCredentialsV(FileURL location) {
-        List<CredentialsMapping> matchesV = new Vector<CredentialsMapping>();
+        List<CredentialsMapping> matchesV = new Vector<>();
 
         findMatches(location, volatileCredentialMappings, matchesV);
         findMatches(location, persistentCredentialMappings, matchesV);

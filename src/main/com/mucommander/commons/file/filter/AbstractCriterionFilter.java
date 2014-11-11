@@ -115,11 +115,11 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if all the values in the specified array were accepted
      */
     public boolean match(C values[]) {
-        int nbFiles = values.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!match(values[i]))
+        for (C value : values) {
+            if (!match(value)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
@@ -131,11 +131,11 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if all the values in the specified array were accepted
      */
     public boolean accept(C values[]) {
-        int nbFiles = values.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!accept(values[i]))
+        for (C value : values) {
+            if (!accept(value)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
@@ -147,11 +147,11 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if all the values in the specified array were rejected
      */
     public boolean reject(C values[]) {
-        int nbFiles = values.length;
-        for(int i=0; i<nbFiles; i++)
-            if(!reject(values[i]))
+        for (C value : values) {
+            if (!reject(value)) {
                 return false;
-
+            }
+        }
         return true;
     }
 

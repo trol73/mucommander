@@ -216,11 +216,10 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         if (var.equals(MuPreferences.TOOLBAR_ICON_SCALE)) {
             scaleFactor = event.getFloatValue();
             Component components[] = getComponents();
-            int nbComponents = components.length;
 
-            for(int i=0; i<nbComponents; i++) {
-                if(components[i] instanceof JButton) {
-                    setButtonIcon((JButton)components[i]);
+            for (Component component : components) {
+                if (component instanceof JButton) {
+                    setButtonIcon((JButton) component);
                 }
             }
         }
@@ -292,15 +291,16 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
             FileURL history[] = action instanceof GoBackAction?
                     mainFrame.getActivePanel().getFolderHistory().getBackFolders()
                     :mainFrame.getActivePanel().getFolderHistory().getForwardFolders();
-            int historyLen = history.length;        
 
             // If no back/forward folder, do not display popup menu
-            if(history.length==0)
+            if (history.length == 0) {
                 return null;
+            }
 
             JPopupMenu popupMenu = new JPopupMenu();
-            for(int i=0; i<historyLen; i++)
-                popupMenu.add(new OpenLocationAction(mainFrame, new Hashtable<String, Object>(), history[i]));
+            for (FileURL aHistory : history) {
+                popupMenu.add(new OpenLocationAction(mainFrame, new Hashtable<String, Object>(), aHistory));
+            }
 
             return popupMenu;
         }

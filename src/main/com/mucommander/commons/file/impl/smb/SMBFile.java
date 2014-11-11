@@ -482,9 +482,9 @@ import java.net.MalformedURLException;
             int nbSmbFiles = smbFiles.length;
             int nbSmbFilesToExclude = 0;
             int smbFileType;
-            for(int i=0; i<nbSmbFiles; i++) {
-                smbFileType = smbFiles[i].getType();
-                if(smbFileType==SmbFile.TYPE_PRINTER || smbFileType==SmbFile.TYPE_NAMED_PIPE || smbFileType==SmbFile.TYPE_COMM)
+            for (SmbFile smbFile1 : smbFiles) {
+                smbFileType = smbFile1.getType();
+                if (smbFileType == SmbFile.TYPE_PRINTER || smbFileType == SmbFile.TYPE_NAMED_PIPE || smbFileType == SmbFile.TYPE_COMM)
                     nbSmbFilesToExclude++;
             }
 
@@ -494,14 +494,14 @@ import java.net.MalformedURLException;
             SmbFile smbFile;
             int currentIndex = 0;
 
-            for(int i=0; i<nbSmbFiles; i++) {
-                smbFile = smbFiles[i];
+            for (SmbFile smbFile1 : smbFiles) {
+                smbFile = smbFile1;
                 smbFileType = smbFile.getType();
-                if(smbFileType==SmbFile.TYPE_PRINTER || smbFileType==SmbFile.TYPE_NAMED_PIPE || smbFileType==SmbFile.TYPE_COMM)
+                if (smbFileType == SmbFile.TYPE_PRINTER || smbFileType == SmbFile.TYPE_NAMED_PIPE || smbFileType == SmbFile.TYPE_COMM)
                     continue;
 
                 // Note: properties and credentials are cloned for every children's url
-                childURL = (FileURL)fileURL.clone();
+                childURL = (FileURL) fileURL.clone();
                 childURL.setHost(smbFile.getServer());
                 childURL.setPath(smbFile.getURL().getPath());
 

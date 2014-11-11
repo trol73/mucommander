@@ -134,7 +134,6 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     }
 
     public FolderChangeMonitor(FolderPanel folderPanel) {
-System.out.println("=> monitor");
         this.folderPanel = folderPanel;
 
         // Listen to folder changes to know when a folder is being / has been changed

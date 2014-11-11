@@ -585,7 +585,7 @@ public class TrolCommander {
     }
 
     private static class LauncherExecutor extends ThreadPoolExecutor {
-        private final Set<LauncherTask> runningTasks = new HashSet<LauncherTask>();
+        private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
 
         public LauncherExecutor(int cores) {
