@@ -18,19 +18,16 @@
 
 package com.mucommander;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.BookmarkManager;
-import com.mucommander.command.CommandManager;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
 import com.mucommander.ui.main.tree.TreeIOThreadManager;
-import com.mucommander.ui.theme.ThemeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The init method of this thread is called when the program shuts down, either because

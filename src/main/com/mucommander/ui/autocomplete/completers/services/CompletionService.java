@@ -19,7 +19,6 @@
 package com.mucommander.ui.autocomplete.completers.services;
 
 import java.util.List;
-import java.util.Vector;
 
 /**
  * CompletionService is used to handle completions according to certain criteria.

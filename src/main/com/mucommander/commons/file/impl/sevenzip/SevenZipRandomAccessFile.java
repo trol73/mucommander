@@ -19,7 +19,6 @@ package com.mucommander.commons.file.impl.sevenzip;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
-import com.mucommander.commons.file.UnsupportedFileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.io.StreamUtils;
 import net.sf.sevenzipjbinding.IInStream;

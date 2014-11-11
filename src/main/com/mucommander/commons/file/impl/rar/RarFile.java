@@ -17,18 +17,16 @@
  */
 package com.mucommander.commons.file.impl.rar;
 
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.rarfile.FileHeader;
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.UnsupportedFileOperationException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
-
-import com.github.junrar.Archive;
-import com.github.junrar.exception.RarException;
-import com.github.junrar.rarfile.FileHeader;
-import com.mucommander.commons.util.CircularByteBuffer;
 
 /**
  * 

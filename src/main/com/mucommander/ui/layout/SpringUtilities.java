@@ -31,9 +31,10 @@
 
 package com.mucommander.ui.layout;
 
-import javax.swing.*;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
 
 /**
  * A 1.4 file that provides utility methods for

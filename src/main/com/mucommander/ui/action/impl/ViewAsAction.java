@@ -22,10 +22,10 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.quicklist.RecentEditedQL;
 import com.mucommander.ui.main.quicklist.ViewAsQL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 

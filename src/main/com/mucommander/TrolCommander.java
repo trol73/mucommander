@@ -396,7 +396,7 @@ public class TrolCommander {
                 // doesn't throw an NoClassDefFoundException under platforms other than Mac OS X
                 try {
                     Class<?> osxIntegrationClass = Class.forName("com.mucommander.ui.macosx.OSXIntegration");
-                    Constructor<?> constructor   = osxIntegrationClass.getConstructor(new Class[]{});
+                    Constructor<?> constructor = osxIntegrationClass.getConstructor();
                     constructor.newInstance();
                 } catch(Exception e) {
                     LOGGER.debug("Exception thrown while initializing Mac OS X integration", e);

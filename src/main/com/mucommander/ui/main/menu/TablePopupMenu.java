@@ -22,8 +22,6 @@ package com.mucommander.ui.main.menu;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.action.impl.CreateSymlinkAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.popup.MuActionsPopupMenu;
 

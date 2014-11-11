@@ -1,7 +1,5 @@
 package de.congrace.exp4j;
 
-import java.text.DateFormatSymbols;
-import java.text.DecimalFormat;
 import java.util.Locale;
 
 public abstract class ExpressionUtil {

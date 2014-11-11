@@ -23,9 +23,9 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 import com.mucommander.ui.viewer.WarnUserException;
-import com.mucommander.ui.viewer.pdf.PdfViewer;
 
 /**
+ * @author Oleg Trifonov
  * Created on 04/08/14.
  */
 public class DjvuFactory implements ViewerFactory {

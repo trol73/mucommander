@@ -18,14 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
+import com.mucommander.ui.action.*;
+import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
-
-import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.main.MainFrame;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * Marks or unmarks the current selected file (current row) and advance current row to the next one,

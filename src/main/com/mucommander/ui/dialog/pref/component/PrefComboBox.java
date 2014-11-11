@@ -19,14 +19,10 @@
 package com.mucommander.ui.dialog.pref.component;
 
 import com.mucommander.ui.combobox.MuComboBox;
-import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
-import javax.swing.*;
-import java.awt.Container;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**

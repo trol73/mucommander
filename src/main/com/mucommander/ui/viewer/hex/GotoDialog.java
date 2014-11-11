@@ -24,7 +24,6 @@ import ru.trolsoft.ui.InputField;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.text.AbstractDocument;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Frame;

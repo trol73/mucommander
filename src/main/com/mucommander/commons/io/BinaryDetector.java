@@ -26,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.util.Arrays;
 
 /**
  * This class provides methods to determine whether some data is binary data or text data.

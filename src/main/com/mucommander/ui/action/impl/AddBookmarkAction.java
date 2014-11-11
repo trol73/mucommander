@@ -25,7 +25,6 @@ import javax.swing.KeyStroke;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.bookmark.AddBookmarkDialog;
 import com.mucommander.ui.main.MainFrame;
 

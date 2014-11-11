@@ -54,28 +54,28 @@ public class LookAndFeelFilter implements ClassFilter {
      * @return <code>true</code> if c is an available look and feel, <code>false</code> otherwise.
      */
     public boolean accept(Class<?> c) {
-        int            modifiers;   // Class' modifiers.
-        Constructor<?> constructor; // Public, no-arg constructor.
-        Class<?>       buffer;      // Used to explore c's ancestors.
-
         // Ignores inner classes.
         if(c.getDeclaringClass() != null)
             return false;
 
         // Makes sure the class is public and non abstract.
-        modifiers = c.getModifiers();
+        int modifiers = c.getModifiers();
         if(!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers))
             return false;
 
         // Makes sure the class has a public, no-arg constructor.
-        try {constructor = c.getDeclaredConstructor(new Class[0]);}
-        catch(Exception e) {return false;}
-        if(!Modifier.isPublic(constructor.getModifiers()))
+        Constructor<?> constructor; // Public, no-arg constructor.
+        try {
+            constructor = c.getDeclaredConstructor();
+        } catch(Exception e) {
+            return false;
+        }
+        if (!Modifier.isPublic(constructor.getModifiers()))
             return false;
 
         // Makes sure the class extends javax.swing.LookAndFeel and that if it does,
         // it's supported by the system.
-        buffer = c;
+        Class<?> buffer = c;
         while(buffer != null) {
             // c is a LookAndFeel, makes sure it's supported.
             if(buffer.equals(LookAndFeel.class)) {
