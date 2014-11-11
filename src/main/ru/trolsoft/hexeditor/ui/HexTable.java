@@ -3,11 +3,9 @@ package ru.trolsoft.hexeditor.ui;
 
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;

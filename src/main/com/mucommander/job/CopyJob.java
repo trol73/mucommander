@@ -20,9 +20,6 @@
 package com.mucommander.job;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.utils.ScanDirectoryThread;

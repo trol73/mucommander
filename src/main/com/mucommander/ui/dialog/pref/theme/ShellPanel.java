@@ -26,10 +26,7 @@ import com.mucommander.ui.combobox.EditableComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
 import com.mucommander.ui.layout.YBoxPanel;
-import com.mucommander.ui.theme.ColorChangedEvent;
-import com.mucommander.ui.theme.FontChangedEvent;
 import com.mucommander.ui.theme.ThemeData;
-import com.mucommander.ui.theme.ThemeListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -38,8 +35,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @author Nicolas Rinaudo, Maxence Bernard

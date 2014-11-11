@@ -18,18 +18,16 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.CalculateChecksumDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action invokes the {@link com.mucommander.ui.dialog.file.CalculateChecksumDialog} which allows to calculate

@@ -18,11 +18,6 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
 import com.mucommander.command.Command;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
@@ -30,11 +25,14 @@ import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
 import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.viewer.EditorRegistrar;
+
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+import java.util.Map;
 
 /**
  * Opens the current file in edit mode.

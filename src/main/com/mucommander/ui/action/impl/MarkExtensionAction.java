@@ -18,20 +18,18 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.AbstractFilenameFilter;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.FileTableModel;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * Action that marks / unmarks all files with a specific extension.

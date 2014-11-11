@@ -18,21 +18,19 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.helper.FocusRequester;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
+
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action allows to cycle backward through the current {@link FolderPanel}'s focusable components: file table,

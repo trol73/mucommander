@@ -18,15 +18,13 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action swaps both FileTable's current folders: the left table's current folder becomes the right table's one

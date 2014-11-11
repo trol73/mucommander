@@ -18,19 +18,17 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.PackDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action pops up the 'Pack files' dialog that allows to create an archive file with the currently marked files.

@@ -18,13 +18,12 @@
 
 package com.mucommander.ui.encoding;
 
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Vector;
-
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
 
 /**
  * This class allows to retrieve and set character encoding preferences. It is used by UI components that let the user

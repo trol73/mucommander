@@ -18,15 +18,13 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.FileSelectionDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action brings up the 'File selection' dialog which allows to unmark a group of files that match a specified expression.

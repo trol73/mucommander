@@ -19,7 +19,6 @@
 package com.mucommander.ui.viewer.hex;
 
 import com.jidesoft.hints.ListDataIntelliHints;
-import com.jidesoft.swing.AutoCompletion;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -27,7 +26,8 @@ import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import ru.trolsoft.ui.InputField;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;

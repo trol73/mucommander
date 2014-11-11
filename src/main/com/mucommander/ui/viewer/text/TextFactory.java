@@ -25,7 +25,6 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.viewer.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PushbackInputStream;
 
 /**

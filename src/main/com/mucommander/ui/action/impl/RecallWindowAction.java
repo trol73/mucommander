@@ -18,20 +18,17 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
+import com.mucommander.text.Translator;
 import com.mucommander.ui.action.*;
+import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.WindowManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.text.Translator;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.WindowManager;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Brings a {@link MainFrame} window to the front. This action operates on a specific window number specified in the

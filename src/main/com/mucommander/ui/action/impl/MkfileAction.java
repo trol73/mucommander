@@ -18,17 +18,15 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.file.MkdirDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action brings up the 'Make file' dialog which allows to create a new file in the currently active folder.

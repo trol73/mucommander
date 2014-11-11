@@ -18,14 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.util.Map;
 
 /**
  * This action locks/unlocks the currently selected {@link com.mucommander.ui.main.tabs.FileTableTab} depending on its

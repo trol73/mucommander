@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.util.Arrays;
 
 /**
  * This class allows to guess at an encoding in which an array of bytes is encoded. Detecting an encoding is by no means

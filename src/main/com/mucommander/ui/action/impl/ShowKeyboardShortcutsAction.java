@@ -18,14 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.dialog.help.ShortcutsDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.util.Map;
 
 /**
  * This action displays the 'Keyboard shortcuts' dialog that lists all available keyboard shortcuts sorted by topic.

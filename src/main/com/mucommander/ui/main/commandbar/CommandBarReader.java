@@ -18,25 +18,22 @@
 
 package com.mucommander.ui.main.commandbar;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.KeyStroke;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
+import com.mucommander.RuntimeConstants;
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.io.backup.BackupInputStream;
+import com.mucommander.ui.action.ActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.mucommander.RuntimeConstants;
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.io.backup.BackupInputStream;
-import com.mucommander.ui.action.ActionManager;
+import javax.swing.KeyStroke;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class parses the XML file describing the command bar's buttons and associated actions.

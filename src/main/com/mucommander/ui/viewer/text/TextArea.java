@@ -19,7 +19,6 @@ package com.mucommander.ui.viewer.text;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
-import org.fife.ui.rtextarea.RUndoManager;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -27,7 +26,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import javax.xml.soap.Text;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 

@@ -22,10 +22,10 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.icon.FileIconProvider;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import java.awt.Dimension;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**

@@ -21,10 +21,10 @@ package com.mucommander.ui.quicklist;
 import com.mucommander.ui.quicklist.item.QuickListDataList;
 import com.mucommander.ui.quicklist.item.QuickListDataModel;
 
-import javax.swing.*;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
 
 /**
  * FileTablePopupWithDataList is a FileTablePopup which contains FileTablePopupDataList.

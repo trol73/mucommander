@@ -18,15 +18,13 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.util.Map;
 
 /**
  * Opens the trash in the default file manager of the current OS/Desktop manager. This action is enabled only

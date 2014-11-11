@@ -18,19 +18,23 @@
 package ru.trolsoft.calculator;
 
 import com.mucommander.cache.TextHistory;
-import com.mucommander.profiler.Profiler;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
-import de.congrace.exp4j.*;
+import de.congrace.exp4j.CustomOperator;
+import de.congrace.exp4j.ExpressionBuilder;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.List;
 

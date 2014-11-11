@@ -28,7 +28,6 @@ import javax.swing.KeyStroke;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.helper.FocusRequester;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;

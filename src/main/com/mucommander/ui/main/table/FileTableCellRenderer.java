@@ -19,28 +19,21 @@
 
 package com.mucommander.ui.main.table;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.quicksearch.QuickSearch;
-import com.mucommander.ui.theme.ColorChangedEvent;
-import com.mucommander.ui.theme.FontChangedEvent;
-import com.mucommander.ui.theme.Theme;
-import com.mucommander.ui.theme.ThemeCache;
-import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.ui.theme.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 
 
 /**
