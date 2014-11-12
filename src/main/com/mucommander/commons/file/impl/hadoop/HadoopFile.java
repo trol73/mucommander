@@ -481,7 +481,7 @@ public abstract class HadoopFile extends ProtocolFile {
          * @param fileStatus FileStatus instance that contains the file attributes values to use
          */
         private void setAttributes(FileStatus fileStatus) {
-            setDirectory(fileStatus.isDir());
+            setDirectory(fileStatus.isDirectory());
             setDate(fileStatus.getModificationTime());
             setSize(fileStatus.getLen());
             setPermissions(new SimpleFilePermissions(
@@ -509,8 +509,7 @@ public abstract class HadoopFile extends ProtocolFile {
         public void updateAttributes() {
             try {
                 fetchAttributes();
-            }
-            catch(Exception e) {        // AuthException
+            } catch(Exception e) {        // AuthException
                 LOGGER.info("Failed to update attributes", e);
             }
         }

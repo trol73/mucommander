@@ -702,13 +702,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	        	cellLabels[i].setFont(newFont);
 	    }
 	    
-		public Component getTableCellRendererComponent(JTable table, Object value,
-	            boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-			DotBorderedCellLabel label;
-			int       columnId;
-			
-			columnId = convertColumnIndexToModel(vColIndex);
-			label = cellLabels[columnId];
+		public Component getTableCellRendererComponent(JTable table, Object value,  boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+			int columnId = convertColumnIndexToModel(vColIndex);
+			DotBorderedCellLabel label = cellLabels[columnId];
 			
 			// action's icon column: return ImageIcon instance
 			if(columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
