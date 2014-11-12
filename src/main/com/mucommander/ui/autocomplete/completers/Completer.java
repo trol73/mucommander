@@ -59,7 +59,7 @@ public abstract class Completer {
 	 * @param comp - text component
 	 * @return true if an auto-completion popup with the updated list should be shown, false otherwise.
 	 */
-    public boolean updateListData(final JList list, AutocompleterTextComponent comp) {
+    public boolean updateListData(final JList<String> list, AutocompleterTextComponent comp) {
     	list.setListData(getUpdatedSuggestions(comp));
 
     	if (list.getModel().getSize() == 1) {
@@ -70,7 +70,9 @@ public abstract class Completer {
 				// match the typed path - do not show an auto-completion popup.
 				if (typedFilename == null || typedFilename.equalsIgnoreCase((String) list.getModel().getElementAt(0)))
 					return false;
-			} catch (MalformedURLException e) { }
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
     	}
     	
     	return list.getModel().getSize() > 0;
@@ -123,10 +125,12 @@ public abstract class Completer {
 	 * from the registered services, otherwise the founded completion is returned.
 	 */
 	protected String tryToCompleteFromServices(String selectedString) {
-		String location = null;
-        for (CompletionService service : services)
-            if ((location = (service).complete(selectedString)) != null)
-                break;
-		return location;
+        for (CompletionService service : services) {
+			String location = (service).complete(selectedString);
+			if (location != null) {
+				return location;
+			}
+		}
+		return null;
 	}
 }

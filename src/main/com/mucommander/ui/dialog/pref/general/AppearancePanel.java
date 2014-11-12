@@ -273,7 +273,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         };
         lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
                 @Override
-                public Component getListCellRendererComponent(JList list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+                public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
                     JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     if (index < 0) {
                         return label;
@@ -384,7 +384,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         transparentIcon = new ImageIcon(new BufferedImage(lockIcon.getIconWidth(), lockIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB));
         themeComboBox.setRenderer(new BasicComboBoxRenderer<Theme>() {
                 @Override
-                public Component getListCellRendererComponent(JList list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
+                public Component getListCellRendererComponent(JList<? extends Theme> list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
                     JLabel label = (JLabel)super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
                     if(ThemeManager.isCurrentTheme(theme))
                         label.setText(theme.getName() +  " (" + Translator.get("theme.current") + ")");
@@ -494,7 +494,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @param defaultValue the default value for the icon scale factor if the configuration variable has no value
      * @return a combo box that allows to choose a size for a certain type of icon
      */
-    private PrefComboBox createIconSizeCombo(final MuPreference preference, float defaultValue) {
+    private PrefComboBox<String> createIconSizeCombo(final MuPreference preference, float defaultValue) {
     	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>(ICON_SIZES) {
 			public boolean hasChanged() {
 				return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(
