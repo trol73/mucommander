@@ -19,6 +19,7 @@
 package com.mucommander.ui.chooser;
 
 import com.mucommander.text.SizeFormat;
+import com.mucommander.ui.combobox.MuComboBox;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -86,7 +87,7 @@ public class SizeChooser extends JPanel {
         
         add(valueSpinner);
 
-        unitComboBox = new JComboBox<>();
+        unitComboBox = new MuComboBox<>();
         for(int i= SizeFormat.BYTE_UNIT; i<=SizeFormat.GIGABYTE_UNIT; i++)
             unitComboBox.addItem(SizeFormat.getUnitString(i, speedUnits));
         unitComboBox.setSelectedIndex(SizeFormat.KILOBYTE_UNIT);

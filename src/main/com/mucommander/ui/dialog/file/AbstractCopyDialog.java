@@ -61,7 +61,7 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
             endPosition = path.lastIndexOf('.');
 
             // Text is selected so that user can directly type and replace path
-            endPosition = endPosition>filenameStart?endPosition:path.length();
+            endPosition = endPosition > filenameStart ? endPosition : path.length();
         }
 
         return new PathFieldContent(path, filenameStart, endPosition);

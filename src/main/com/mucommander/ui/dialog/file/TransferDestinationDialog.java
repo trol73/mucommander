@@ -36,6 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import com.mucommander.ui.combobox.MuComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private FilePathField pathField;
     private SpinningDial spinningDial;
 
-    private JComboBox<String> fileExistsActionComboBox = new JComboBox<>();
+    private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
     private JButton okButton;

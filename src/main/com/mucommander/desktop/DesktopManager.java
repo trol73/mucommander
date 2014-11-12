@@ -22,10 +22,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,11 +117,11 @@ public class DesktopManager {
     /** All available desktop operations. */
     private static Map<String, List<DesktopOperation>>[] operations;
     /** All known desktops. */
-    private static Vector<DesktopAdapter>                desktops;
+    private static List<DesktopAdapter> desktops;
     /** Current desktop. */
-    private static DesktopAdapter                        desktop;
+    private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
-    private static TrashProvider                         trashProvider;
+    private static TrashProvider trashProvider;
 
 
 
@@ -143,7 +140,7 @@ public class DesktopManager {
     static {
         // - Adapters initialisation -------------------------------------
         // ---------------------------------------------------------------
-        desktops = new Vector<>();
+        desktops = new ArrayList<>();
 
         // The default desktop adapter must be registered first, as we only want to use
         // it if nothing else worked.
@@ -204,12 +201,10 @@ public class DesktopManager {
      * @throws DesktopInitialisationException if an error occured while initialising desktops.
      */
     public static void init(boolean install) throws DesktopInitialisationException {
-        DesktopAdapter current;
-
         // Browses desktop from the last registered to the first, to make sure that
         // custom desktop adapters are used before the default ones.
         for (int i = desktops.size() - 1; i >= 0; i--) {
-            current = desktops.elementAt(i);
+            DesktopAdapter current = desktops.get(i);
             if (current.isAvailable()) {
                 desktop = current;
                 LOGGER.debug("Using desktop: " + desktop);
@@ -229,7 +224,7 @@ public class DesktopManager {
      * </p>
      */
     private static void checkInit() {
-        if(desktop == null)
+        if (desktop == null)
             desktop = new DefaultDesktopAdapter();
     }
 
