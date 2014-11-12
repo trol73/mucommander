@@ -53,23 +53,20 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FINDER_COMMAND, CommandType.SYSTEM_COMMAND, FINDER_NAME, null));
+        } catch(CommandException e) {
+            throw new DesktopInitialisationException(e);
         }
-        catch(CommandException e) {throw new DesktopInitialisationException(e);}
     }
 
     @Override
     public boolean isLeftMouseButton(MouseEvent e) {
-        int modifiers;
-
-        modifiers = e.getModifiers();
+        int modifiers = e.getModifiers();
         return (modifiers & MouseEvent.BUTTON1_MASK) != 0 && !e.isControlDown();
     }
 
     @Override
     public boolean isRightMouseButton(MouseEvent e) {
-        int modifiers;
-
-        modifiers = e.getModifiers();
+        int modifiers = e.getModifiers();
         return (modifiers & MouseEvent.BUTTON3_MASK) != 0 || ((modifiers & MouseEvent.BUTTON1_MASK) != 0 && e.isControlDown());
     }
 
@@ -84,6 +81,6 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
         String extension = file.getExtension();
 
         // the isDirectory() test comes last as it is I/O bound
-        return extension!=null && extension.equalsIgnoreCase("app") && file.isDirectory();
+        return extension != null && extension.equalsIgnoreCase("app") && file.isDirectory();
     }
 }

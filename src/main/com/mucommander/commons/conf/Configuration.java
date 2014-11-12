@@ -461,12 +461,10 @@ public class Configuration {
      * @throws ConfigurationException if any error occurs.
      */
     private synchronized void build(ConfigurationBuilder builder, ConfigurationSection root) throws ConfigurationException {
-        Iterator<String>     enumeration; // Enumeration on the section's variables, then subsections.
         String               name;        // Name of the current variable, then section.
-        ConfigurationSection section;     // Current section.
 
         // Explores the section's variables.
-        enumeration = root.variableNames();
+        Iterator<String> enumeration = root.variableNames();        // Enumeration on the section's variables, then subsections.
         while(enumeration.hasNext())
             builder.addVariable(name = enumeration.next(), root.getVariable(name));
 
@@ -474,7 +472,7 @@ public class Configuration {
         enumeration = root.sectionNames();
         while(enumeration.hasNext()) {
             name    = enumeration.next();
-            section = root.getSection(name);
+            ConfigurationSection section = root.getSection(name);
 
             // We only go through subsections if contain either variables or subsections of their own.
             if(section.hasSections() || section.hasVariables()) {
@@ -528,11 +526,10 @@ public class Configuration {
      * @see          #getVariable(String,String)
      */
     public synchronized boolean setVariable(String name, String value) {
-        ConfigurationExplorer explorer; // Used to navigate to the variable's parent section.
-        String                buffer;   // Buffer for the variable's name trimmed of section information.
+        ConfigurationExplorer explorer = new ConfigurationExplorer(root); // Used to navigate to the variable's parent section.
 
         // Moves to the parent section.
-        buffer = moveToParent(explorer = new ConfigurationExplorer(root), name, true);
+        String buffer = moveToParent(explorer, name, true);   // Buffer for the variable's name trimmed of section information.
 
         // If the variable's value was actually modified, triggers an event.
         if(explorer.getSection().setVariable(buffer, value)) {

@@ -256,10 +256,8 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @return the look and feel panel.
      */
     private JPanel createLookAndFeelPanel() {
-        JPanel lnfPanel;
-
         // Creates the panel.
-        lnfPanel = new YBoxPanel();
+        JPanel lnfPanel = new YBoxPanel();
         lnfPanel.setAlignmentX(LEFT_ALIGNMENT);
         lnfPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.look_and_feel")));
 
@@ -267,7 +265,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lookAndFeelComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				int selectedIndex = getSelectedIndex();
-                if(selectedIndex<0)
+                if (selectedIndex < 0)
                     return false;                
 
                 return !lookAndFeels[selectedIndex].getClassName().equals(MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL));
@@ -441,17 +439,15 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     private void populateThemes(Theme currentTheme) {
-        Iterator<Theme>  themes;
-
         ignoreComboChanges = true;
 
         themeComboBox.removeAllItems();
-        themes = ThemeManager.availableThemes();
-        while(themes.hasNext())
+        Iterator<Theme> themes = ThemeManager.availableThemes();
+        while (themes.hasNext()) {
             themeComboBox.addItem(themes.next());
+        }
 
         ignoreComboChanges = false;
-
         themeComboBox.setSelectedItem(currentTheme);
     }
 
@@ -916,10 +912,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     private void insertTheme(Theme theme) {
-        int count;
         int i;
 
-        count = themeComboBox.getItemCount();
+        int count = themeComboBox.getItemCount();
         for(i = 0; i < count; i++) {
             if((themeComboBox.getItemAt(i)).getName().compareTo(theme.getName()) >= 0) {
                 themeComboBox.insertItemAt(theme, i);
