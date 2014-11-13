@@ -41,6 +41,7 @@ import com.mucommander.ui.layout.ProportionalSplitPane;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.menu.MainMenuBar;
+import com.mucommander.ui.main.statusbar.StatusBar;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.FileTableConfiguration;
@@ -807,7 +808,13 @@ public class MainFrame extends JFrame implements LocationListener {
 
 
     public void toggleTerminalPanel() {
-        showTerminalPanel(muTerminal == null || !muTerminal.getComponent().isVisible());
+        JComponent term = muTerminal != null ? muTerminal.getComponent() : null;
+
+        if (term != null && !term.hasFocus() && term.getParent().getParent() != null) {
+            muTerminal.getComponent().getComponent(0).requestFocus();
+        } else {
+            showTerminalPanel(muTerminal == null || !muTerminal.getComponent().isVisible());
+        }
     }
 
 
@@ -815,6 +822,18 @@ public class MainFrame extends JFrame implements LocationListener {
         showTerminalPanel(false);
         muTerminal = null;
         terminalSplitPane = null;
+    }
+
+
+    public void setTerminalPanelHeight(int height) {
+        if (height > terminalSplitPane.getHeight()) {
+            height = terminalSplitPane.getHeight();
+        }
+        terminalSplitPane.setDividerLocation(terminalSplitPane.getHeight() - height);
+    }
+
+    public int getTerminalPanelHeight() {
+        return terminalSplitPane.getHeight() - terminalSplitPane.getDividerLocation();
     }
 
 }

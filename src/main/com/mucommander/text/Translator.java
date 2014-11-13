@@ -140,9 +140,9 @@ public class Translator {
      * @throws IOException thrown if an IO error occurs.
      */
     public static void loadDictionaryFile(String filePath) throws IOException {
-        availableLanguages = new Vector<>();
-        dictionary         = new Hashtable<>();
-        defaultDictionary  = new Hashtable<>();
+        availableLanguages = new ArrayList<>();
+        dictionary         = new HashMap<>();
+        defaultDictionary  = new HashMap<>();
 
         BufferedReader br = new BufferedReader(new BOMReader(ResourceLoader.getResourceAsStream(filePath)));
         String line;
@@ -259,27 +259,26 @@ public class Translator {
      *
      * @param key key of the requested dictionary entry (case-insensitive)
      * @param paramValues array of parameters which will be used as values for variables.
-     * @return the localized text String for the given key expressd in the current language
+     * @return the localized text String for the given key expressed in the current language
      */
     public static String get(String key, String... paramValues) {
         // Returns the localized text
         String text = dictionary.get(key.toLowerCase());
 
-        if (text==null) {
+        if (text == null) {
             text = defaultDictionary.get(key.toLowerCase());
 
-            if(text==null) {
+            if (text == null) {
             	LOGGER.debug("No value for "+key+", returning key");
                 return key;
-            }
-            else {
+            } else {
             	LOGGER.debug("No value for "+key+" in language "+language+", using "+DEFAULT_LANGUAGE+" value");
                 // Don't return yet, parameters need to be replaced
             }
         }
 
         // Replace %1, %2 ... parameters by their value
-        if (paramValues!=null) {
+        if (paramValues != null) {
             int pos = -1;
             for(int i=0; i<paramValues.length; i++) {
                 while(++pos<text.length()-1 && (pos = text.indexOf("%"+(i+1), pos))!=-1)
@@ -289,13 +288,11 @@ public class Translator {
 
         // Replace $[key] occurrences by their value
         int pos = 0;
-        int pos2;
-        String variable;
 
-        while ((pos = text.indexOf("$[", pos))!=-1) {
-            pos2 = text.indexOf("]", pos+1);
-            variable = text.substring(pos+2, pos2);
-            text = text.substring(0, pos)+get(variable, paramValues)+text.substring(pos2+1, text.length());
+        while ((pos = text.indexOf("$[", pos)) >= 0) {
+            int pos2 = text.indexOf("]", pos+1);
+            String variable = text.substring(pos+2, pos2);
+            text = text.substring(0, pos) + get(variable, paramValues)+text.substring(pos2+1, text.length());
         }
 
         return text;

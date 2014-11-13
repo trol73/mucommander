@@ -24,6 +24,8 @@ import com.mucommander.ui.icon.IconManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 
 /**
@@ -96,6 +98,7 @@ public class SplashScreen extends JWindow {
         try {
             mediaTracker.waitForID(0);
         } catch(InterruptedException e) {
+            e.printStackTrace();
         }
 
         setContentPane(new JLabel(imageIcon));
@@ -146,8 +149,8 @@ public class SplashScreen extends JWindow {
 
         // Display version in the top right corner
         // Get FontRenderContext instance to calculate text width and height
-        java.awt.font.FontRenderContext fontRenderContext = ((Graphics2D)g).getFontRenderContext();
-        java.awt.geom.Rectangle2D textBounds = new java.awt.font.TextLayout(version, customFont, fontRenderContext).getBounds();
+        FontRenderContext fontRenderContext = ((Graphics2D)g).getFontRenderContext();
+        Rectangle2D textBounds = new java.awt.font.TextLayout(version, customFont, fontRenderContext).getBounds();
 
         textX = getWidth()-(int)textBounds.getWidth()-VERSION_MARGIN_X;
         textY = (int)textBounds.getHeight()+VERSION_MARGIN_Y;
