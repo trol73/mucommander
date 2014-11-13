@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.ui.main;
+package com.mucommander.ui.main.statusbar;
 
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
@@ -26,6 +26,7 @@ import com.mucommander.ui.action.impl.OpenTrashAction;
 import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.button.RolloverButtonAdapter;
 import com.mucommander.ui.icon.IconManager;
+import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,9 +44,6 @@ public class TrashPopupButton extends PopupButton {
 
     private MainFrame mainFrame;
 
-    /** Holds a reference to the RolloverButtonAdapter instance so that it doesn't get garbage-collected */
-    private RolloverButtonAdapter rolloverButtonAdapter;
-
     public TrashPopupButton(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
@@ -54,7 +52,7 @@ public class TrashPopupButton extends PopupButton {
 
         // Rollover-enable the button and hold a reference to the RolloverButtonAdapter instance so that it doesn't
         // get garbage-collected
-        rolloverButtonAdapter = new RolloverButtonAdapter();
+        RolloverButtonAdapter rolloverButtonAdapter = new RolloverButtonAdapter();
         RolloverButtonAdapter.setButtonDecoration(this);
         addMouseListener(rolloverButtonAdapter);
     }
@@ -64,20 +62,20 @@ public class TrashPopupButton extends PopupButton {
         JPopupMenu popupMenu = new JPopupMenu();
 
         AbstractTrash trash = DesktopManager.getTrash();
-        if(trash!=null) {
-            if(trash.canOpen())
+        if (trash != null) {
+            if (trash.canOpen()) {
                 popupMenu.add(ActionManager.getActionInstance(OpenTrashAction.Descriptor.ACTION_ID, mainFrame));
+            }
 
-            if(trash.canEmpty()) {
+            if (trash.canEmpty()) {
                 JMenuItem emptyTrashItem = new JMenuItem(ActionManager.getActionInstance(EmptyTrashAction.Descriptor.ACTION_ID, mainFrame));
 
                 // Retrieve the number of items that the trash contains, -1 if this information is not available.
                 int itemCount = trash.getItemCount();
-                if(itemCount==0) {
+                if (itemCount == 0) {
                     // Disable the 'empty trash' action if the trash contains no item
                     emptyTrashItem.setEnabled(false);
-                }
-                else if(itemCount>0) {
+                } else if (itemCount > 0) {
                     // Append the number of items to the menu item's label
                     emptyTrashItem.setText(emptyTrashItem.getText()+" ("+itemCount+")");
                 }

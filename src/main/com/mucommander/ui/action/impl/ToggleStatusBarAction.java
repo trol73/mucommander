@@ -24,13 +24,13 @@ import com.mucommander.conf.MuPreferences;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.StatusBar;
+import com.mucommander.ui.main.statusbar.StatusBar;
 
 import javax.swing.KeyStroke;
 import java.util.Map;
 
 /**
- * This action shows/hides the current MainFrame's {@link com.mucommander.ui.main.StatusBar} depending on its
+ * This action shows/hides the current MainFrame's {@link com.mucommander.ui.main.statusbar.StatusBar} depending on its
  * current visible state: if it is visible, hides it, if not shows it.
  *
  * <p>This action's label will be updated to reflect the current visible state.
