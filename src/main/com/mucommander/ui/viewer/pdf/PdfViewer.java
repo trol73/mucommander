@@ -69,11 +69,12 @@ public class PdfViewer extends FileViewer {
 
     @Override
     protected void saveStateOnClose() {
-
+        org.icepdf.core.util.Library.shutdownThreadPool();
     }
 
     @Override
     protected void restoreStateOnStartup() {
-
+        org.icepdf.core.util.Library.initializeThreadPool();
     }
+
 }

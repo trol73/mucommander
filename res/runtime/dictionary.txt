@@ -3759,7 +3759,7 @@ LocateSymlink.label:RU:Перейти к файлу ссылки
 EditCommands.label:EN:Edit commands
 EditCommands.label:RU:Редактирование команд
 
-EditCommands.group.view:EN:Viewier
+EditCommands.group.view:EN:Viewers
 EditCommands.group.view:RU:Программы просмотра
 
 EditCommands.group.edit:EN:Editors

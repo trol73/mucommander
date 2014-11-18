@@ -18,13 +18,17 @@
 package com.mucommander.job;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.util.FileSet;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.main.MainFrame;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import ru.trolsoft.utils.search.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -116,7 +120,8 @@ public class FindFileJob extends FileJob {
         }
     }
 
-    private boolean fileContainsString(AbstractFile f) {
+    private boolean fileContainsString0(AbstractFile f) {
+        //Profiler.start("check_old");
         if (fileContent == null || fileContent.isEmpty()) {
             return true;
         }
@@ -145,13 +150,39 @@ public class FindFileJob extends FileJob {
                 e.printStackTrace();
             }
         }
+        //Profiler.stop("check_old");
         return result;
+    }
+
+
+    private boolean fileContainsString(AbstractFile f) {
+        //Profiler.start("check_new");
+        if (fileContent == null || fileContent.isEmpty()) {
+            return true;
+        }
+        if (f.isDirectory()) {
+            return false;
+        }
+        String charset = "utf-8";
+        try {
+            SearchPattern searchPattern = caseSensitive ?
+                    new StringCaseSensitiveSearchPattern(fileContent, charset) :
+                    new StringCaseInsensitiveSearchPattern(fileContent, charset);
+            SearchSourceStream source = new InputStreamSource(f.getInputStream());
+            long pos = SearchUtils.indexOf(source, searchPattern);
+            //Profiler.stop("check_new");
+            return pos >= 0;
+        } catch (SearchException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
 
 
     public List<AbstractFile> getResults() {
+        Profiler.print();
         return list;
     }
 
