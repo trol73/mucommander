@@ -60,42 +60,37 @@
 # Languages #
 #############
 
-# List of available languages, must be declared before any other entry.
-# Language codes follow the ISO 639-1 standard, see
-# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for a list of codes.
-# The country code is appended to the language code for country-specific 
-# language variants, such as 'pt_BR' for Brazilian Portuguese.
-available_languages:EN,en_GB,FR,DE,ES,CS,zh_CN,zh_TW,PL,HU,RU,SL,RO,IT,KO,pt_BR,NL,SK,JA,SV,DA,UA,AR,BE,NB,TR,CA
-
 # Language names, in their respective language.
 # Confusingly enough, 'EN' language is used to declare those entries but that is normal.
-language.en:EN:English
-language.en_GB:EN:British English
-language.fr:EN:Français
-language.es:EN:Español
-language.de:EN:Deutsch
-language.cs:EN:Čeština
-language.zh_CN:EN:简体中文
-language.zh_TW:EN:繁體中文
-language.pl:EN:Polski
-language.hu:EN:Magyar
-language.ru:EN:Русский
-language.sl:EN:Slovenščina
-language.ro:EN:Română
-language.it:EN:Italiano
-language.ko:EN:한국어
-language.pt_BR:EN:Português brasileiro
-language.nl:EN:Nederlands
-language.sk:EN:Slovenčina
-language.ja:EN:日本語
-language.sv:EN:Svenska
-language.da:EN:Dansk
-language.ua:EN:Українська
-language.ar:EN:العربية
-language.be:EN:Беларуская
-language.nb:EN:Norsk bokmål
-language.tr:EN:Türkçe
-language.ca:EN:Català
+
+en-US:EN:English
+en-GB:EN:British English
+fr-FR:EN:Français
+es-ES:EN:Español
+de-DE:EN:Deutsch
+cs-CZ:EN:Čeština
+zh-CN:EN:简体中文
+zh-TW:EN:繁體中文
+pl-PL:EN:Polski
+hu-HU:EN:Magyar
+ru-RU:EN:Русский
+sl-SL:EN:Slovenščina
+ro-RO:EN:Română
+it-IT:EN:Italiano
+ko-KR:EN:한국어
+pt-BR:EN:Português brasileiro
+nl-NL:EN:Nederlands
+sk-SK:EN:Slovenčina
+ja-JP:EN:日本語
+sv-SV:EN:Svenska
+da-DA:EN:Dansk
+uk-UA:EN:Українська
+ar-SA:EN:العربية
+be-BY:EN:Беларуская
+no-NO:EN:Norsk bokmål
+tr-TR:EN:Türkçe
+ca-ES:EN:Català
+
 
 ###########
 # General #
