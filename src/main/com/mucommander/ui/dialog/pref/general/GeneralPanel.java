@@ -29,6 +29,8 @@ import java.awt.event.ItemListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -64,8 +66,8 @@ import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
 class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListener, DocumentListener {
 
     // Language
-    private String languages[];
-    private PrefComboBox<String> languageComboBox;
+    private List<Locale> languages;
+    private PrefComboBox<Locale> languageComboBox;
 	
     // Date/time format
     private PrefRadioButton time12RadioButton;
@@ -128,23 +130,24 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         JPanel languagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         languagePanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.language")));
         this.languages = Translator.getAvailableLanguages();
-        String currentLang = MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE);
-        String lang;
-        languageComboBox = new PrefComboBox<String>() {
+
+        Locale currentLang = Locale.forLanguageTag(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
+
+        languageComboBox = new PrefComboBox<Locale>() {
 			public boolean hasChanged() {
-				return !languages[getSelectedIndex()].equals(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
+				return !languages.get(getSelectedIndex()).equals(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
 			}
         };
 
-        // Use a custom combo box renderer to display language icons 
-        class LanguageComboBoxRenderer extends BasicComboBoxRenderer<String> {
+        // Use a custom combo box renderer to display language icons
+        class LanguageComboBoxRenderer extends BasicComboBoxRenderer<Locale> {
 
             @Override
-            public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<? extends Locale> list, Locale value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                label.setText(Translator.get("language."+value));
-                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value+".png"));
+                label.setText(Translator.get(value.toLanguageTag()));
+                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value.toLanguageTag()+".png"));
 
                 return label;
             }
@@ -152,17 +155,10 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         languageComboBox.setRenderer(new LanguageComboBoxRenderer());
 		
         // Add combo items and select current language (defaults to EN if current language can't be found)
-        int languageIndex = -1;
-        for(int i=0; i<languages.length; i++) {
-            lang = languages[i];
-            languageComboBox.addItem(lang);
-
-            if (lang.equalsIgnoreCase(currentLang))
-                languageIndex = i;
-            else if(languageIndex==-1 && lang.equalsIgnoreCase("en"))
-                languageIndex = i;
+        for (Locale language : languages) {
+            languageComboBox.addItem(language);
         }
-        languageComboBox.setSelectedIndex(languageIndex);
+        languageComboBox.setSelectedItem(currentLang);
 
         languagePanel.add(languageComboBox);
         mainPanel.add(languagePanel);
@@ -346,7 +342,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
     ///////////////////////
     @Override
     protected void commit() {
-    	MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, languages[languageComboBox.getSelectedIndex()]);
+    	MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, languageComboBox.getSelectedItem().toLanguageTag());
     	MuConfigurations.getPreferences().setVariable(MuPreference.DATE_FORMAT, getDateFormatString());
     	MuConfigurations.getPreferences().setVariable(MuPreference.DATE_SEPARATOR, dateSeparatorField.getText());
     	MuConfigurations.getPreferences().setVariable(MuPreference.TIME_FORMAT, getTimeFormatString());
