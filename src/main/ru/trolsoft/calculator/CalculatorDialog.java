@@ -182,7 +182,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         XBoxPanel buttonsPanel = new XBoxPanel();
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        btnClose = new JButton(Translator.get("Close"));
+        btnClose = new JButton(Translator.get("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);

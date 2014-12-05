@@ -236,22 +236,22 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         buttonsPanel.add(new JLabel(dial = new SpinningDial()));
         buttonsPanel.add(Box.createHorizontalGlue());
 
-        btnNewSearch = new JButton(Translator.get("Search"));
+        btnNewSearch = new JButton(Translator.get("search"));
         btnNewSearch.addActionListener(this);
         btnNewSearch.setMnemonic(mnemonicHelper.getMnemonic(btnNewSearch));
         buttonGroupPanel.add(btnNewSearch);
 
-        btnStop = new JButton(Translator.get("Stop"));
+        btnStop = new JButton(Translator.get("stop"));
         btnStop.addActionListener(this);
         btnStop.setMnemonic(mnemonicHelper.getMnemonic(btnStop));
         buttonGroupPanel.add(btnStop);
 
-        btnClean = new JButton(Translator.get("Clean"));
+        btnClean = new JButton(Translator.get("clean"));
         btnClean.addActionListener(this);
         btnClean.setMnemonic(mnemonicHelper.getMnemonic(btnClean));
         buttonGroupPanel.add(btnClean);
 
-        btnClose = new JButton(Translator.get("Close"));
+        btnClose = new JButton(Translator.get("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);

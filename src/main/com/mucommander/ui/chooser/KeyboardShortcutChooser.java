@@ -315,7 +315,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 
 
     public static void main(String args[]) throws IOException {
-        Translator.loadDictionaryFile();
+        Translator.init();
 
         JFrame frame = new JFrame();
 

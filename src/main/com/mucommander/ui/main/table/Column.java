@@ -31,13 +31,13 @@ import java.util.Map;
  */
 public enum Column {
 
-    EXTENSION(true, true, FileComparator.EXTENSION_CRITERION, "ToggleExtensionColumn", "SortByExtension"),
-    NAME(false, true, FileComparator.NAME_CRITERION, null, "SortByName"),
-    SIZE(true, true, FileComparator.SIZE_CRITERION, "ToggleSizeColumn", "SortBySize"),
-    DATE(true, true, FileComparator.DATE_CRITERION, "ToggleDateColumn", "SortByDate"),
-    PERMISSIONS(true, true, FileComparator.PERMISSIONS_CRITERION, "TogglePermissionsColumn", "SortByPermissions"),
-    OWNER(true, false, FileComparator.OWNER_CRITERION, "ToggleOwnerColumn", "SortByOwner"),
-    GROUP(true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
+    EXTENSION("extension", true, true, FileComparator.EXTENSION_CRITERION, "ToggleExtensionColumn", "SortByExtension"),
+    NAME("name", false, true, FileComparator.NAME_CRITERION, null, "SortByName"),
+    SIZE("size", true, true, FileComparator.SIZE_CRITERION, "ToggleSizeColumn", "SortBySize"),
+    DATE("date", true, true, FileComparator.DATE_CRITERION, "ToggleDateColumn", "SortByDate"),
+    PERMISSIONS("permissions", true, true, FileComparator.PERMISSIONS_CRITERION, "TogglePermissionsColumn", "SortByPermissions"),
+    OWNER("owner", true, false, FileComparator.OWNER_CRITERION, "ToggleOwnerColumn", "SortByOwner"),
+    GROUP("group", true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
 
     private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<Integer,Column>(){{
       for (Column column : Column.values()) {
@@ -55,8 +55,8 @@ public enum Column {
     private String toggleActionId;
     private String sortByActionId;
 
-    private Column(boolean hasMinimumWidth, boolean showByDefault, int fileComparatorCriterion, String toggleActionId, String sortByActionId) {
-        this.label = Translator.get(toString());
+    private Column(String labelId, boolean hasMinimumWidth, boolean showByDefault, int fileComparatorCriterion, String toggleActionId, String sortByActionId) {
+        this.label = Translator.get(labelId);
         this.minimumWidth = hasMinimumWidth?STANDARD_MINIMUM_WIDTH:0;
         this.showByDefault = showByDefault;
         this.fileComparatorCriterion = fileComparatorCriterion;

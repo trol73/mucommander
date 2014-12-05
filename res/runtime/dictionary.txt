@@ -16138,7 +16138,7 @@ prefs_dialog.themes:TR:Temalar
 prefs_dialog.themes:CA:Temes
 
 prefs_dialog.syntax_themes:EN:Editor syntax coloring Theme
-prefs_dialog.syntax_themes:Ru:Тема подсветки синтаксиса в редакторе
+prefs_dialog.syntax_themes:RU:Тема подсветки синтаксиса в редакторе
 
 prefs_dialog.import_theme:EN:Import theme
 prefs_dialog.import_theme:FR:Importer un thème
@@ -16880,7 +16880,7 @@ prefs_dialog.custom_shell:EN:Use custom command
 prefs_dialog.custom_shell:RU:Использовать указанную команду
 
 
-# Bonjour is a service discovery protocol : http://en.wikipedia.org/wiki/Bonjour_%28software%29
+# Bonjour is a service discovery protocol - http://en.wikipedia.org/wiki/Bonjour_%28software%29
 prefs_dialog.enable_bonjour_discovery:EN:Enable Bonjour services discovery
 prefs_dialog.enable_bonjour_discovery:FR:Activer la découverte des services Bonjour
 prefs_dialog.enable_bonjour_discovery:SL:Omogoči odkrivanje "Bonjour" storitev
@@ -18769,7 +18769,7 @@ tabs_quick_list.empty_message:TR:Sadece bir sekme görüntüleniyor
 #pack.error_on_file:PL:Błąd podczas kompresji %1
 #pack.error_on_file:HU:Hiba a tömörítés közben %1
 #pack.error_on_file:RU:Ошибка при архивации файла %1
-#pack.error_on_file:ZH_CN:压缩时发生错误 %1
+#pack.error_on_file:zh_CN:压缩时发生错误 %1
 #pack.error_on_file:SL:Napaka med stiskanjem %1
 #pack.error_on_file:AR:خطأ أثناء الضغط %1
 #pack.error_on_file:NB:Feil ved komprimering av %1
@@ -18784,7 +18784,7 @@ tabs_quick_list.empty_message:TR:Sadece bir sekme görüntüleniyor
 #pack_dialog.cannot_write:PL:Nie mogę utworzyć archiwum w katalogu docelowym
 #pack_dialog.cannot_write:HU:A célkönyvtárba nem lehetséges tömörített fájlt készíteni.
 #pack_dialog.cannot_write:RU:Невозможно создать архив в каталоге-получателе
-#pack_dialog.cannot_write:ZH_CN:无法在目的文件夹创建压缩文件
+#pack_dialog.cannot_write:zh_CN:无法在目的文件夹创建压缩文件
 #pack_dialog.cannot_write:SL:Ne morem ustvariti stisnjene datoteke v ciljni mapi.
 #pack_dialog.cannot_write:AR:لا يمكن إنشاء الملف في المجلد الوجهة.
 #pack_dialog.cannot_write:NB:Kunne ikke opprette fil i målmappe.
@@ -18799,7 +18799,7 @@ tabs_quick_list.empty_message:TR:Sadece bir sekme görüntüleniyor
 #unpack.unable_to_open_zip:PL:Nie mogę otworzyć archiwum %1.
 #unpack.unable_to_open_zip:HU:A Zip fájl megnyitása nem lehetséges %1.
 #unpack.unable_to_open_zip:RU:Не удается открыть архив %1.
-#unpack.unable_to_open_zip:ZH_CN:无法打开压缩文件 %1
+#unpack.unable_to_open_zip:zh_CN:无法打开压缩文件 %1
 #unpack.unable_to_open_zip:SL:Ne morem odpreti stisnjene datoteke %1.
 #unpack.unable_to_open_zip:AR:يمكن فتح الملف المضغوط %1.
 #unpack.unable_to_open_zip:NB:Kunne ikke åpne zip-fil %1.
@@ -18836,7 +18836,7 @@ tabs_quick_list.empty_message:TR:Sadece bir sekme görüntüleniyor
 #mkdir_dialog.title:PL:Utwórz katalog
 #mkdir_dialog.title:HU:új könyvtár
 #mkdir_dialog.title:RU:Создание каталога
-#mkdir_dialog.title:ZH_CN:新建文件夹
+#mkdir_dialog.title:zh_CN:新建文件夹
 #mkdir_dialog.title:SL:Nova mapa
 #mkdir_dialog.title:AR:إنشاء دليل
 #mkdir_dialog.title:NB:Neste mappe
