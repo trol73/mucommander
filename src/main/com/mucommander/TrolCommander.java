@@ -342,7 +342,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading dictionary...");
-            try {com.mucommander.text.Translator.loadDictionaryFile();}
+            try {Translator.init();}
             catch(Exception e) {helper.printError("Could not load dictionary", e, true);}
         }
     }

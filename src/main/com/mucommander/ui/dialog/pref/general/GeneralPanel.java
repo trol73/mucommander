@@ -146,8 +146,8 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
             public Component getListCellRendererComponent(JList<? extends Locale> list, Locale value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                label.setText(Translator.get(value.toLanguageTag()));
-                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value.toLanguageTag()+".png"));
+                label.setText(Translator.get("language." + value.toLanguageTag()));
+                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value.toLanguageTag() + ".png"));
 
                 return label;
             }
