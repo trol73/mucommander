@@ -51,6 +51,8 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         setHorizontalAlignment(CENTER);
         setRefreshInterval(1000*10);
         update();
+        setMinimumSize(new Dimension(80, 0));
+        setMaximumSize(new Dimension(80, 100));
         addMouseListener(this);
     }
 

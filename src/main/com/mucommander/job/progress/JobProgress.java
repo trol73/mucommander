@@ -70,9 +70,9 @@ public class JobProgress {
 	 *         <code>false</code> if only label has been updated.
 	 */
 	public boolean calcJobProgress(boolean fullUpdate) {
-		int jobState = job.getState();
+		FileJob.State jobState = job.getState();
 		jobPauseStartDate = job.getPauseStartDate();
-		if (jobState == FileJob.FINISHED || jobState == FileJob.INTERRUPTED) {
+		if (jobState == FileJob.State.FINISHED || jobState == FileJob.State.INTERRUPTED) {
 			jobStatusString = Translator.get("progress_dialog.job_finished");
 			// Job just finished, let's loop one more time to ensure that
 			// components (progress bar in particular)
@@ -85,7 +85,7 @@ public class JobProgress {
 			return false;
 		}
 		// Do not refresh progress information is job is paused, simply sleep
-		if (jobState == FileJob.PAUSED) {
+		if (jobState == FileJob.State.PAUSED) {
 			return false;
 		}
 		// Now is updated with current time, or job end date if job has finished

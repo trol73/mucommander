@@ -112,7 +112,7 @@ public class DeleteJob extends FileJob {
      */
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 
         // Delete files recursively, only if trash is not used.
@@ -127,7 +127,7 @@ public class DeleteJob extends FileJob {
                     // Delete each file in this folder
                     try {
                         AbstractFile subFiles[] = file.ls();
-                        for(int i=0; i<subFiles.length && getState()!=INTERRUPTED; i++) {
+                        for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                             // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                             nextFile(subFiles[i]);
                             processFile(subFiles[i], null);
@@ -148,7 +148,7 @@ public class DeleteJob extends FileJob {
             }
         }
         // Return now if the job was interrupted, so that we do not attempt to delete this folder
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 
         do {		// Loop for retry
@@ -156,8 +156,7 @@ public class DeleteJob extends FileJob {
                 deleteFile(file);
 
                 return true;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 LOGGER.debug("IOException caught", e);
 
                 ret = showErrorDialog(errorDialogTitle,

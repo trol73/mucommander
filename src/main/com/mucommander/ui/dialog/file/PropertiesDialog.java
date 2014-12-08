@@ -189,11 +189,11 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
     public void run() {
         dial.setAnimated(true);
-        while(repaintThread!=null && job.getState()!= FileJob.FINISHED) {
+        while(repaintThread!=null && job.getState()!= FileJob.State.FINISHED) {
             updateLabels();
 			
             try { Thread.sleep(REFRESH_RATE); }
-            catch(InterruptedException e) {}
+            catch(InterruptedException ignore) {}
         }
 
         // Updates button labels and stops spinning dial.

@@ -38,6 +38,7 @@ import javax.swing.SwingConstants;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.tasks.TaskPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     private HeapIndicator heapIndicator;
 
+    private TaskPanel taskPanel;
+
     /** Thread which auto updates volume info */
     private Thread autoUpdateThread;
 
@@ -154,10 +157,11 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
      * @param compactSize true to use a compact size format, false for full size in bytes
      */
     private static void setSelectedFileSizeFormat(boolean compactSize) {
-        if(compactSize)
+        if (compactSize) {
             selectedFileSizeFormat = SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT | SizeFormat.ROUND_TO_KB;
-        else
+        } else {
             selectedFileSizeFormat = SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG;
+        }
 
         selectedFileSizeFormat |= SizeFormat.INCLUDE_SPACE;
     }
@@ -177,6 +181,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         add(selectedFilesLabel);
 
         add(Box.createHorizontalGlue());
+
+        taskPanel = new TaskPanel();
+        add(taskPanel);
+        add(Box.createRigidArea(new Dimension(2, 0)));
 
         heapIndicator = new HeapIndicator();
         add(heapIndicator);
@@ -478,7 +486,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     public void selectedFileChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if(source==mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
             updateSelectedFilesInfo();
     }
 
@@ -576,11 +584,16 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     }
 
     public void colorChanged(ColorChangedEvent event) {
-        if(event.getColorId() == Theme.STATUS_BAR_FOREGROUND_COLOR) {
+        if (event.getColorId() == Theme.STATUS_BAR_FOREGROUND_COLOR) {
             selectedFilesLabel.setForeground(event.getColor());
             volumeSpaceLabel.setForeground(event.getColor());
             repaint();
         }
+    }
+
+
+    public TaskPanel getTaskPanel() {
+        return taskPanel;
     }
 
 }
