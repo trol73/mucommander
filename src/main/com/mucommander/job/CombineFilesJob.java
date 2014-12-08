@@ -66,7 +66,7 @@ public class CombineFilesJob extends AbstractCopyJob {
             findCRCFile(file);
         }
         
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
         
         try {

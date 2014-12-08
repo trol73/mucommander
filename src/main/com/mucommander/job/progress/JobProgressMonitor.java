@@ -226,8 +226,8 @@ public class JobProgressMonitor implements FileJobListener {
 	 * A {@link FileJobListener} implementation.
 	 * Removes a finished job after a small delay.
 	 */
-	public void jobStateChanged(final FileJob source, int oldState, int newState) {
-		if (newState==FileJob.FINISHED || newState==FileJob.INTERRUPTED) {
+	public void jobStateChanged(final FileJob source, FileJob.State oldState, FileJob.State newState) {
+		if (newState==FileJob.State.FINISHED || newState==FileJob.State.INTERRUPTED) {
 			ActionListener jobToRemove = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					removeJob(source);					

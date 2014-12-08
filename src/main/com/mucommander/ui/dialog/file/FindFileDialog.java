@@ -99,7 +99,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         @Override
         protected List<AbstractFile> doInBackground() throws Exception {
             btnNewSearch.setEnabled(false);
-            while (job != null && job.getState() != FileJob.FINISHED) {
+            while (job != null && job.getState() != FileJob.State.FINISHED) {
                 checkUpdates();
                 try {
                     Thread.sleep(REFRESH_RATE);

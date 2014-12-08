@@ -102,7 +102,7 @@ public class CopyJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if (getState() == INTERRUPTED) {
+        if (getState() == State.INTERRUPTED) {
             return false;
         }
         processedFilesCount++;
@@ -162,7 +162,7 @@ public class CopyJob extends AbstractCopyJob {
                     // for each file in folder...
                     AbstractFile subFiles[] = file.ls();
 //filesDiscovered(subFiles);
-                    for(int i=0; i<subFiles.length && getState()!=INTERRUPTED; i++) {
+                    for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(subFiles[i]);
                         processFile(subFiles[i], destFile);

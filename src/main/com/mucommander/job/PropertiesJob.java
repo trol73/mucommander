@@ -82,7 +82,7 @@ public class PropertiesJob extends FileJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 
         // If file is a directory, increase folder counter and recurse
@@ -91,7 +91,7 @@ public class PropertiesJob extends FileJob {
 
             try {
                 AbstractFile subFiles[] = file.ls();
-                for(int i=0; i<subFiles.length && getState()!=INTERRUPTED; i++) {
+                for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                     // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                     nextFile(subFiles[i]);
                     processFile(subFiles[i], null);

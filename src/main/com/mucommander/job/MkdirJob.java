@@ -89,7 +89,7 @@ public class MkdirJob extends FileJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted (although there is no way to stop the job at this time)
-        if (getState() == INTERRUPTED) {
+        if (getState() == State.INTERRUPTED) {
             return false;
         }
 
@@ -142,9 +142,8 @@ public class MkdirJob extends FileJob {
 
                                 try {
                                     long remaining = allocateSpace;
-                                    int nbWrite;
-                                    while(remaining > 0 && getState() != INTERRUPTED) {
-                                        nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
+                                    while(remaining > 0 && getState() != State.INTERRUPTED) {
+                                        int nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
                                         mkfileOut.write(buffer, 0, nbWrite);
                                         remaining -= nbWrite;
                                     }
@@ -175,7 +174,7 @@ public class MkdirJob extends FileJob {
             } catch (IOException e) {
                 // In mkfile mode, interrupting the job will close the OutputStream and cause an IOException to be
                 // thrown, this is normal behavior
-                if (mkfileMode && getState() == INTERRUPTED) {
+                if (mkfileMode && getState() == State.INTERRUPTED) {
                     return false;
                 }
 

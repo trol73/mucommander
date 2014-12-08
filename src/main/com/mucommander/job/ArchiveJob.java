@@ -79,7 +79,7 @@ public class ArchiveJob extends TransferFileJob {
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 
         String filePath = file.getAbsolutePath(false);
@@ -95,7 +95,7 @@ public class ArchiveJob extends TransferFileJob {
                     // Recurse on files
                     AbstractFile subFiles[] = file.ls();
                     boolean folderComplete = true;
-                    for(int i=0; i<subFiles.length && getState()!=INTERRUPTED; i++) {
+                    for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(subFiles[i]);
                         if(!processFile(subFiles[i], null))
@@ -121,14 +121,14 @@ public class ArchiveJob extends TransferFileJob {
                 // If job was interrupted by the user at the time when the exception occurred,
                 // it most likely means that the exception was caused by user cancellation.
                 // In this case, the exception should not be interpreted as an error.
-                if(getState()==INTERRUPTED)
+                if (getState() == State.INTERRUPTED)
                     return false;
 
                 LOGGER.debug("Caught IOException", e);
                 
                 int ret = showErrorDialog(Translator.get("pack_dialog.error_title"), Translator.get("error_while_transferring", file.getAbsolutePath()));
                 // Retry loops
-                if(ret==RETRY_ACTION) {
+                if (ret == RETRY_ACTION) {
                     // Reset processed bytes currentFileByteCounter
                     getCurrentFileByteCounter().reset();
 

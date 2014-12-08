@@ -34,6 +34,6 @@ public interface FileJobListener {
      * @param oldState the FileJob's state prior to the change, see FileJob's constant fields for possible values
      * @param newState the new FileJob's state, see FileJob's constant fields for possible values
      */
-    public abstract void jobStateChanged(FileJob source, int oldState, int newState);
+    public abstract void jobStateChanged(FileJob source, FileJob.State oldState, FileJob.State newState);
 
 }

@@ -81,7 +81,7 @@ public class MoveJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 		
         // Destination folder
@@ -176,7 +176,7 @@ public class MoveJob extends AbstractCopyJob {
                     boolean isFolderEmpty = true;
                     for (AbstractFile subFile : subFiles) {
                         // Return now if the job was interrupted, so that we do not attempt to delete this folder
-                        if (getState() == INTERRUPTED)
+                        if (getState() == State.INTERRUPTED)
                             return false;
 
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
@@ -213,7 +213,7 @@ public class MoveJob extends AbstractCopyJob {
             } while(true);
 
             // Return now if the job was interrupted, so that we do not attempt to delete this folder
-            if(getState()==INTERRUPTED)
+            if (getState() == State.INTERRUPTED)
                 return false;
 
             // finally, delete the empty folder
@@ -221,8 +221,7 @@ public class MoveJob extends AbstractCopyJob {
                 try  {
                     file.delete();
                     return true;
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_folder", file.getAbsolutePath()));
                     // Retry loops
                     if(ret==RETRY_ACTION)
@@ -237,20 +236,19 @@ public class MoveJob extends AbstractCopyJob {
 
             // if renameTo() was not supported or failed, or if it wasn't possible because of 'append',
             // try the hard way by copying the file first, and then deleting the source file.
-            if(tryCopyFile(file, destFile, append, errorDialogTitle) && getState()!=INTERRUPTED) {
+            if(tryCopyFile(file, destFile, append, errorDialogTitle) && getState() != State.INTERRUPTED) {
                 // Delete the source file
                 do {		// Loop for retry
                     try  {
                         file.delete();
                         // All OK
                         return true;
-                    }
-                    catch(IOException e) {
+                    } catch(IOException e) {
                         LOGGER.debug("IOException caught", e);
 
                         int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_file", file.getAbsolutePath()));
                         // Retry loops
-                        if(ret==RETRY_ACTION)
+                        if (ret==RETRY_ACTION)
                             continue;
                         // Cancel, skip or close dialog returns false
                         return false;

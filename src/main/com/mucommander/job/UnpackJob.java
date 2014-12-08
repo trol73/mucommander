@@ -138,7 +138,7 @@ public class UnpackJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if (getState() == INTERRUPTED) {
+        if (getState() == State.INTERRUPTED) {
             return false;
         }
 
@@ -153,7 +153,7 @@ public class UnpackJob extends AbstractCopyJob {
                     AbstractFile[] archiveFiles = getCurrentFile().ls();
 
                     // Recurse on zip's contents
-                    for(int j=0; j<archiveFiles.length && getState()!=INTERRUPTED; j++) {
+                    for(int j=0; j<archiveFiles.length && getState() != State.INTERRUPTED; j++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(archiveFiles[j]);
                         // Recurse
@@ -196,7 +196,7 @@ public class UnpackJob extends AbstractCopyJob {
         // Unpack the archive, copying entries one by one, in the iterator's order
         try {
             iterator = archiveFile.getEntryIterator();
-            while ((entry = iterator.nextEntry()) != null && getState() != INTERRUPTED) {
+            while ((entry = iterator.nextEntry()) != null && getState() != State.INTERRUPTED) {
                 entryPath = entry.getPath();
 
                 boolean processEntry = false;
@@ -391,7 +391,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
         try {
             ArchiveEntryIterator iterator = archiveFile.getEntryIterator();
             ArchiveEntry entry;
-            while ((entry = iterator.nextEntry()) != null && getState() != INTERRUPTED) {
+            while ((entry = iterator.nextEntry()) != null && getState() != State.INTERRUPTED) {
                 // check in directories
                 boolean addThisEntry = false;
                 if (selectedDirectories.size() > 0) {

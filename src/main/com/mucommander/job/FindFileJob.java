@@ -60,7 +60,7 @@ public class FindFileJob extends FileJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if (getState() == INTERRUPTED) {
+        if (getState() == State.INTERRUPTED) {
             return false;
         }
 
@@ -72,7 +72,7 @@ public class FindFileJob extends FileJob {
             }
             try {
                 AbstractFile subFiles[] = file.ls();
-                for (int i = 0; i < subFiles.length && getState() != INTERRUPTED; i++) {
+                for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                     if (ignoreHidden && file.isHidden()) {
                         continue;
                     }
@@ -92,7 +92,7 @@ public class FindFileJob extends FileJob {
         if (file.isArchive() && searchArchives) {
             try {
                 AbstractFile subFiles[] = file.ls();
-                for (int i = 0; i < subFiles.length && getState() != INTERRUPTED; i++) {
+                for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                     if (ignoreHidden && file.isHidden()) {
                         continue;
                     }

@@ -252,8 +252,9 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         // Listen to job state changes
         job.addFileJobListener(this);
 
-        if( job instanceof TransferFileJob)
-            this.transferFileJob = (TransferFileJob)job;
+        if (job instanceof TransferFileJob) {
+            this.transferFileJob = (TransferFileJob) job;
+        }
 
         initUI();
         
@@ -293,15 +294,15 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     // FileJobListener implementation //
     ////////////////////////////////////
 
-    public void jobStateChanged(FileJob source, int oldState, int newState) {
+    public void jobStateChanged(FileJob source, FileJob.State oldState, FileJob.State newState) {
         LOGGER.debug("currentThread="+Thread.currentThread()+" oldState="+oldState+" newState="+newState);
 
-        if(newState==FileJob.INTERRUPTED) {
+        if (newState==FileJob.State.INTERRUPTED) {
             // Stop repaint thread and dispose dialog
             stop();
             dispose();
         }
-        else if(newState==FileJob.FINISHED) {
+        else if(newState==FileJob.State.FINISHED) {
             //  Dispose dialog only if 'Close when finished option' is selected
             if(closeWhenFinishedCheckBox.isSelected()) {
                 // Stop repaint thread and dispose dialog
@@ -326,7 +327,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 }
             }
         }
-        else if(newState==FileJob.PAUSED) {
+        else if(newState==FileJob.State.PAUSED) {
             pauseResumeButton.setText(Translator.get("resume"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, RESUME_ICON));
 
@@ -336,7 +337,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             if(transferFileJob!=null)
                 updateCurrentSpeedLabel("N/A");
         }
-        else if(newState==FileJob.RUNNING) {
+        else if(newState==FileJob.State.RUNNING) {
             pauseResumeButton.setText(Translator.get("pause"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
 
@@ -416,9 +417,9 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         Object source = e.getSource();
 
         if (source==stopButton) {
-            int jobState = job.getState();
+            FileJob.State jobState = job.getState();
             // Case when 'Close when finished' isn't selected, stop button's action becomes 'Close'
-            if(jobState==FileJob.FINISHED || jobState==FileJob.INTERRUPTED)
+            if(jobState==FileJob.State.FINISHED || jobState == FileJob.State.INTERRUPTED)
                 dispose();
             else
                 job.interrupt();
@@ -428,7 +429,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
         else if(source==pauseResumeButton) {
             // Pause/resume job
-            job.setPaused(job.getState()!=FileJob.PAUSED);
+            job.setPaused(job.getState()!=FileJob.State.PAUSED);
         }
 //        else if(source==hideButton) {
 //            mainFrame.setState(Frame.ICONIFIED);
@@ -483,8 +484,8 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         stop();
 
         // Stop job if it isn't already
-        int jobState = job.getState();
-        if(!(jobState==FileJob.FINISHED || jobState==FileJob.INTERRUPTED))
+        FileJob.State jobState = job.getState();
+        if(!(jobState==FileJob.State.FINISHED || jobState == FileJob.State.INTERRUPTED))
             job.interrupt();
 
         // Remember 'advanced panel' expanded state

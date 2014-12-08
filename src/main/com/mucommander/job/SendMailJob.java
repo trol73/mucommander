@@ -252,14 +252,13 @@ public class SendMailJob extends TransferFileJob {
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return false;
 
         // Send file attachment
         try {
             sendAttachment(file);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             showErrorDialog(Translator.get("email.send_file_error", file.getName()));
             return false;
         }
@@ -301,19 +300,17 @@ public class SendMailJob extends TransferFileJob {
         // Open socket connection to the mail server, and say hello
         try {
             openConnection();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             showErrorDialog(Translator.get("email.server_unavailable", mailServer));
         }
 
-        if(getState()==INTERRUPTED)
+        if (getState() == State.INTERRUPTED)
             return;
 
         // Send mail body
         try {
             sendBody();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             showErrorDialog(Translator.get("email.connection_closed"));
         }
     }
