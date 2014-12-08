@@ -121,7 +121,7 @@ public class MuPreferences implements MuPreferencesAPI {
 	/** Encoding used to read the shell output. */
 	public static final String  SHELL_ENCODING                    = SHELL_SECTION + '.' + "encoding";
 	/** Whether or not shell encoding should be auto-detected. */
-	public static final String  AUTODETECT_SHELL_ENCODING         = SHELL_SECTION + '.' + "autodect_encoding";
+	public static final String  AUTODETECT_SHELL_ENCODING         = SHELL_SECTION + '.' + "autodetect_encoding";
 	/** Default shell encoding auto-detection behaviour. */
 	public static final boolean DEFAULT_AUTODETECT_SHELL_ENCODING = true;
 
@@ -400,7 +400,15 @@ public class MuPreferences implements MuPreferencesAPI {
     public static final String FILE_GROUP_9_MASK                  = FILE_GROUP_SECTION + ".files9";
     public static final String FILE_GROUP_10_MASK                 = FILE_GROUP_SECTION + ".files10";
 
-
+	// - Find file dialog ----------------------------------------------------
+	// -----------------------------------------------------------------------
+	public static final String FIND_FILE_SECTION				  = "find_file";
+	public static final String FIND_FILE_ENCODING                 = FIND_FILE_SECTION + ".encoding";
+	public static final String FIND_FILE_SUBDIRECTORIES           = FIND_FILE_SECTION + ".subdirectories";
+	public static final String FIND_FILE_ARCHIVES                 = FIND_FILE_SECTION + ".archives";
+	public static final String FIND_FILE_IGNORE_HIDDEN            = FIND_FILE_SECTION + ".ignore_hidden";
+	public static final String FIND_FILE_CASE_SENSITIVE           = FIND_FILE_SECTION + ".case_sensitive";
+	public static final String FIND_FILE_SEARCH_HEX               = FIND_FILE_SECTION + ".search_hex";
 	
 	private static final String ROOT_ELEMENT = "preferences";
 
@@ -410,13 +418,11 @@ public class MuPreferences implements MuPreferencesAPI {
 	
 	private String configurationVersion;
 
-    private final MuPreferencesFile muPreferencesFile;
-
 	/**
 	 * Prevents instantiation of this class from outside of this package.
 	 */
 	MuPreferences() {
-        muPreferencesFile = MuPreferencesFile.getPreferencesFile();
+		MuPreferencesFile muPreferencesFile = MuPreferencesFile.getPreferencesFile();
 
         configuration = new Configuration(muPreferencesFile, new VersionedXmlConfigurationReaderFactory(),
 				new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));

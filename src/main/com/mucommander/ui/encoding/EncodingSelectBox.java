@@ -24,6 +24,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.WeakHashMap;
 
 import javax.swing.JButton;
@@ -104,7 +105,7 @@ public class EncodingSelectBox extends JPanel {
                 String selectedEncoding = getSelectedEncoding();
 
                 Window owner = dialogOwner.getOwner();
-                if(owner instanceof Frame)
+                if (owner instanceof Frame)
                     new PreferredEncodingsDialog((Frame)owner).showDialog();
                 else
                     new PreferredEncodingsDialog((Dialog)owner).showDialog();
@@ -124,20 +125,20 @@ public class EncodingSelectBox extends JPanel {
      * @param selectEncoding the encoding that will be selected, <code>null</code> for the first one
      */
     protected void populateComboBox(String selectEncoding) {
-        java.util.List<String> encodings = EncodingPreferences.getPreferredEncodings();
+        List<String> encodings = EncodingPreferences.getPreferredEncodings();
 
         // Ignore the specified encoding if it is not in the list of preferred encodings
-        if(selectEncoding!=null && !encodings.contains(selectEncoding))
+        if (selectEncoding != null && !encodings.contains(selectEncoding))
             selectEncoding = null;
 
         // Add preferred encodings to the combo box
         int nbEncodings = encodings.size();
-        for(String encoding: encodings)
+        for (String encoding: encodings)
             comboBox.addItem(encoding);
 
         if (selectEncoding != null) {
             comboBox.setSelectedItem(selectEncoding);
-        } else if(nbEncodings>0) {
+        } else if (nbEncodings > 0) {
             comboBox.setSelectedItem(encodings.get(0));
         }
         currentEncoding = selectEncoding;
@@ -150,11 +151,7 @@ public class EncodingSelectBox extends JPanel {
      */
     public String getSelectedEncoding() {
         int index = comboBox.getSelectedIndex();
-
-        if(index==-1)
-            return null;
-
-        return comboBox.getItemAt(index);
+        return index < 0 ? null : comboBox.getItemAt(index);
     }
     
 
@@ -176,7 +173,7 @@ public class EncodingSelectBox extends JPanel {
 
     protected void fireEncodingListener(String oldEncoding, String newEncoding) {
         synchronized(listeners) {
-            for(EncodingListener listener : listeners.keySet())
+            for (EncodingListener listener : listeners.keySet())
                 listener.encodingChanged(this, oldEncoding, newEncoding);
         }
 

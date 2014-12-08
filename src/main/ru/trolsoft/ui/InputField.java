@@ -70,6 +70,12 @@ public class InputField extends JTextField implements DocumentListener {
         init();
     }
 
+    public InputField(FilterType filterType) {
+        super();
+        this.filterType = filterType;
+        init();
+    }
+
     private void init() {
         getDocument().addDocumentListener(this);
         this.textEncoding = DEFAULT_ENCODING;

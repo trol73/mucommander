@@ -28,15 +28,12 @@ import com.mucommander.ui.encoding.EncodingSelectBox;
  */
 public abstract class PrefEncodingSelectBox extends EncodingSelectBox implements PrefComponent {
 
-    // Prevents garbage collection
-    private EncodingListener listener;
-
     public PrefEncodingSelectBox(DialogOwner dialogOwner, String selectedEncoding) {
         super(dialogOwner, selectedEncoding);
     }
 
     public void addDialogListener(final PreferencesDialog dialog) {
-        listener = new EncodingListener() {
+        EncodingListener listener = new EncodingListener() {
             public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
                 dialog.componentChanged(PrefEncodingSelectBox.this);
             }

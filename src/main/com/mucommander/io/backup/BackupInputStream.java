@@ -70,14 +70,11 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
      * @exception IOException thrown if any IO related error occurs.
      */
     private static InputStream getInputStream(AbstractFile file) throws IOException {
-        AbstractFile backup;
-        FileURL test;
-
-        test = (FileURL)file.getURL().clone();
+        FileURL test = (FileURL)file.getURL().clone();
         test.setPath(test.getPath() + BACKUP_SUFFIX);
 
         // Checks whether the backup file is a better choice than the target one.
-        backup = FileFactory.getFile(test);
+        AbstractFile backup = FileFactory.getFile(test);
         if(backup != null && backup.exists() && (file.getSize() < backup.getSize()))
             return backup.getInputStream();
 
