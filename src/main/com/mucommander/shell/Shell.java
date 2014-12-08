@@ -158,17 +158,16 @@ public class Shell implements ConfigurationListener {
      * Extracts the shell command from configuration.
      */
     private static synchronized void setShellCommand() {
-        String   shellCommand;
-        String[] buffer;
+        String shellCommand;
 
         // Retrieves the configuration defined shell command.
-        if(MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
+        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
             shellCommand = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_SHELL, DesktopManager.getDefaultShell());
         else
             shellCommand = DesktopManager.getDefaultShell();
 
         // Splits the command into tokens, leaving room for the argument.
-        buffer = Command.getTokens(shellCommand);
+        String[] buffer = Command.getTokens(shellCommand);
         tokens = new String[buffer.length + 1];
         System.arraycopy(buffer, 0, tokens, 0, buffer.length);
 
@@ -181,7 +180,8 @@ public class Shell implements ConfigurationListener {
      * Reacts to configuration changes.
      */
     public void configurationChanged(ConfigurationEvent event) {
-        if(event.getVariable().startsWith(MuPreferences.SHELL_SECTION))
+        if (event.getVariable().startsWith(MuPreferences.SHELL_SECTION)) {
             setShellCommand();
+        }
     }
 }

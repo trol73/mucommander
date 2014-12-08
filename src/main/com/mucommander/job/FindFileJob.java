@@ -18,9 +18,7 @@
 package com.mucommander.job;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.main.MainFrame;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -31,7 +29,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Job for directory scanning
@@ -42,8 +39,8 @@ public class FindFileJob extends FileJob {
     private String fileContent;
     private boolean searchSubdirectories;
     private boolean searchArchives;
-    private boolean caseSensitive;
     private boolean ignoreHidden;
+    private SearchPattern searchPattern;
 
     private AbstractFileFilter fileFilter;
 
@@ -120,40 +117,6 @@ public class FindFileJob extends FileJob {
         }
     }
 
-    private boolean fileContainsString0(AbstractFile f) {
-        //Profiler.start("check_old");
-        if (fileContent == null || fileContent.isEmpty()) {
-            return true;
-        }
-        if (f.isDirectory()) {
-            return false;
-        }
-        Scanner in = null;
-        boolean result = false;
-        try {
-            in = new Scanner(f.getInputStream());
-            while (in.hasNextLine() && !result) {
-                String line = in.nextLine();
-                if (!caseSensitive) {
-                    line = line.toLowerCase();
-                }
-                result = line.contains(fileContent);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        //Profiler.stop("check_old");
-        return result;
-    }
-
 
     private boolean fileContainsString(AbstractFile f) {
         //Profiler.start("check_new");
@@ -163,11 +126,8 @@ public class FindFileJob extends FileJob {
         if (f.isDirectory()) {
             return false;
         }
-        String charset = "utf-8";
+
         try {
-            SearchPattern searchPattern = caseSensitive ?
-                    new StringCaseSensitiveSearchPattern(fileContent, charset) :
-                    new StringCaseInsensitiveSearchPattern(fileContent, charset);
             SearchSourceStream source = new InputStreamSource(f.getInputStream());
             long pos = SearchUtils.indexOf(source, searchPattern);
             //Profiler.stop("check_new");
@@ -182,7 +142,6 @@ public class FindFileJob extends FileJob {
 
 
     public List<AbstractFile> getResults() {
-        Profiler.print();
         return list;
     }
 
@@ -193,19 +152,30 @@ public class FindFileJob extends FileJob {
         setFiles(fs);
     }
 
-    public void setup(String fileMask, String fileContent, boolean searchSubdirs, boolean searchArchives, boolean caseSensitive, boolean ignoreHidden) {
+    public void setup(String fileMask, String fileContent, boolean searchSubdirs, boolean searchArchives, boolean caseSensitive, boolean ignoreHidden, String encoding, boolean hexMode, byte[] bytes) {
         fileMask = fileMask.trim();
         fileMask = fileMask.isEmpty() ? "*" : fileMask;
         this.fileContent = fileContent;
         this.searchSubdirectories = searchSubdirs;
         this.searchArchives = searchArchives;
-        this.caseSensitive = caseSensitive;
         this.ignoreHidden = ignoreHidden;
-
         fileFilter = new WildcardFileFilter(fileMask);
         if (!caseSensitive && fileContent != null) {
             this.fileContent = fileContent.toLowerCase();
         }
+
+        if (hexMode) {
+            searchPattern = new BytesSearchPattern(bytes);
+        } else {
+            try {
+                searchPattern = caseSensitive ?
+                        new StringCaseSensitiveSearchPattern(fileContent, encoding) :
+                        new StringCaseInsensitiveSearchPattern(fileContent, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

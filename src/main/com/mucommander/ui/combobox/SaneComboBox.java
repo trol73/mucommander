@@ -79,7 +79,7 @@ public class SaneComboBox<E> extends JComboBox<E> {
         addActionListener(new AbstractAction() {
             public void actionPerformed(ActionEvent actionEvent) {
                 // Filter out action events triggered by the add/insert/remove item methods
-                if(!ignoreActionEvent)
+                if (!ignoreActionEvent)
                     fireComboBoxSelectionChanged();
             }
         });
@@ -120,7 +120,7 @@ public class SaneComboBox<E> extends JComboBox<E> {
      */
     protected void fireComboBoxSelectionChanged() {
         // Iterate on all listeners
-        for(ComboBoxListener listener : listeners.keySet())
+        for (ComboBoxListener listener : listeners.keySet())
             listener.comboBoxSelectionChanged(this);
     }
 

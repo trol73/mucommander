@@ -78,7 +78,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     private PrefCheckBox bonjourDiscoveryCheckBox;
 
     /** Shell encoding auto-detect checkbox */
-    private PrefCheckBox shellEncodingautoDetectCheckbox;
+    private PrefCheckBox shellEncodingAutoDetectCheckbox;
 
     /** Shell encoding select box. */
     private PrefEncodingSelectBox shellEncodingSelectBox;
@@ -99,16 +99,16 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     private JPanel createShellEncodingPanel(PreferencesDialog parent) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-        shellEncodingautoDetectCheckbox = new PrefCheckBox(Translator.get("prefs_dialog.auto_detect_shell_encoding")) {
+        shellEncodingAutoDetectCheckbox = new PrefCheckBox(Translator.get("prefs_dialog.auto_detect_shell_encoding")) {
             public boolean hasChanged() {
                 return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.AUTODETECT_SHELL_ENCODING, MuPreferences.DEFAULT_AUTODETECT_SHELL_ENCODING);
             }
         };
         boolean autoDetect = MuConfigurations.getPreferences().getVariable(MuPreference.AUTODETECT_SHELL_ENCODING, MuPreferences.DEFAULT_AUTODETECT_SHELL_ENCODING);
-        shellEncodingautoDetectCheckbox.setSelected(autoDetect);
-        shellEncodingautoDetectCheckbox.addItemListener(this);
+        shellEncodingAutoDetectCheckbox.setSelected(autoDetect);
+        shellEncodingAutoDetectCheckbox.addItemListener(this);
 
-        panel.add(shellEncodingautoDetectCheckbox);
+        panel.add(shellEncodingAutoDetectCheckbox);
 
         shellEncodingSelectBox = new PrefEncodingSelectBox(new DialogOwner(parent), MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_ENCODING)) {
             public boolean hasChanged() {
@@ -313,7 +313,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     	quitConfirmationCheckBox.addDialogListener(parent);
         showSplashScreenCheckBox.addDialogListener(parent);
         bonjourDiscoveryCheckBox.addDialogListener(parent);
-        shellEncodingautoDetectCheckbox.addDialogListener(parent);
+        shellEncodingAutoDetectCheckbox.addDialogListener(parent);
         shellEncodingSelectBox.addDialogListener(parent);
         if (systemNotificationsCheckBox != null) {
             systemNotificationsCheckBox.addDialogListener(parent);
@@ -329,8 +329,8 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         Object source = e.getSource();
         if (source == useCustomShellRadioButton) {
             customShellField.setEnabled(useCustomShellRadioButton.isSelected());
-        } else if (source == shellEncodingautoDetectCheckbox) {
-            shellEncodingSelectBox.setEnabled(!shellEncodingautoDetectCheckbox.isSelected());
+        } else if (source == shellEncodingAutoDetectCheckbox) {
+            shellEncodingSelectBox.setEnabled(!shellEncodingAutoDetectCheckbox.isSelected());
         } else if (source == useCustomExternalTerminalRadioButton) {
             customExternalTerminalField.setEnabled(useCustomExternalTerminalRadioButton.isSelected());
         } else if (source == useCustomTerminalShellRadioButton) {
@@ -353,7 +353,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         pref.setVariable(MuPreference.CUSTOM_SHELL, customShellField.getText());
 
         // Saves the shell encoding data.
-        boolean isAutoDetect = shellEncodingautoDetectCheckbox.isSelected();
+        boolean isAutoDetect = shellEncodingAutoDetectCheckbox.isSelected();
         pref.setVariable(MuPreference.AUTODETECT_SHELL_ENCODING, isAutoDetect);
         if (!isAutoDetect) {
             pref.setVariable(MuPreference.SHELL_ENCODING, shellEncodingSelectBox.getSelectedEncoding());

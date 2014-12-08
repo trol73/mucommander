@@ -54,15 +54,15 @@ public class XAlignedComponentPanel extends JPanel {
     private JComponent firstComponent;
 
 
-    public final static int DEFAULT_XPACE = 5;
+    public final static int DEFAULT_XSPACE = 5;
 
 
     /**
-     * Creates an initially empty panel, using the default vertical space as defined by {@link #DEFAULT_XPACE} to
+     * Creates an initially empty panel, using the default vertical space as defined by {@link #DEFAULT_XSPACE} to
      * separate labels and components for all rows added later.
      */
     public XAlignedComponentPanel() {
-        this(DEFAULT_XPACE);
+        this(DEFAULT_XSPACE);
     }
 
 

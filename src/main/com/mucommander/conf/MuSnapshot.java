@@ -543,8 +543,7 @@ public class MuSnapshot {
 		
 		try {
 			screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		}
-		catch(HeadlessException e) {
+		} catch(HeadlessException e) {
 			LOGGER.debug("Could not fetch screen size: " + e.getMessage());
 		}
     }
@@ -592,7 +591,7 @@ public class MuSnapshot {
     	configuration.setVariable(WINDOWS_SELECTION, indexOfSelectedWindow);
     	
     	// Save attributes for each window
-    	for (int i=0; i<nbMainFrames; ++i)
+    	for (int i=0; i < nbMainFrames; ++i)
     		setFrameAttributes(mainFrames.get(i), i);
     	
     	if (screenSize != null) {
@@ -638,10 +637,11 @@ public class MuSnapshot {
     	List<FileURL> locations = GlobalLocationHistory.Instance().getHistory();
 
     	configuration.setVariable(getRecentLocationsCountVariable(), locations.size());
-    	
-    	Iterator<FileURL> iterator = locations.iterator();
-    	for (int i=0; iterator.hasNext(); ++i)
-    		configuration.setVariable(getRecentLocationVariable(i), iterator.next().toString());
+
+        int i = 0;
+        for (FileURL url : locations) {
+            configuration.setVariable(getRecentLocationVariable(i++), url.toString());
+        }
     }
 
     private void setTabsAttributes(int index, boolean isLeft, FileTableTabs tabs) {

@@ -777,20 +777,17 @@ public class Configuration {
      * @param explorer used to backtrack through the configuration tree.
      */
     private void prune(BufferedConfigurationExplorer explorer) {
-        ConfigurationSection current;
-        ConfigurationSection parent;
-
         // If we're at the root level, nothing to prune.
-        if(!explorer.hasSections())
+        if (!explorer.hasSections())
             return;
 
-        current = explorer.popSection();
+        ConfigurationSection current = explorer.popSection();
 
         // Look for branches to prune until we've either found a non-empty one
         // or reached the root of the three.
-        while(current.isEmpty() && current != root) {
+        while (current.isEmpty() && current != root) {
             // Gets the current section's parent and prune.
-            parent = explorer.hasSections() ? explorer.popSection() : root;
+            ConfigurationSection parent = explorer.hasSections() ? explorer.popSection() : root;
             parent.removeSection(current);
             current = parent;
         }
@@ -806,15 +803,15 @@ public class Configuration {
      * @return      the variable's old value, or <code>null</code> if it wasn't set.
      */
     public synchronized String removeVariable(String name) {
-        BufferedConfigurationExplorer explorer; // Used to navigate to the variable's parent section.
-        String                        buffer;   // Buffer for the variable's name trimmed of section information.
+        BufferedConfigurationExplorer explorer  = new BufferedConfigurationExplorer(root); // Used to navigate to the variable's parent section.
+        String buffer = moveToParent(explorer, name, false);   // Buffer for the variable's name trimmed of section information.
 
         // If the variable's 'path' doesn't exist, return null.
-        if((buffer = moveToParent(explorer = new BufferedConfigurationExplorer(root), name, false)) == null)
+        if (buffer == null)
             return null;
 
         // If the variable was actually set, triggers an event.
-        if((buffer = explorer.getSection().removeVariable(buffer)) != null) {
+        if ((buffer = explorer.getSection().removeVariable(buffer)) != null) {
             prune(explorer);
             triggerEvent(new ConfigurationEvent(this, name, null));
         }
@@ -925,16 +922,15 @@ public class Configuration {
      * @see                 #getVariable(String)
      */
     public synchronized String getVariable(String name, String defaultValue) {
-        ConfigurationExplorer explorer; // Used to navigate to the variable's parent section.
-        String                value;    // Buffer for the variable's value.
-        String                buffer;   // Buffer for the variable's name trimmed of section information.
+        ConfigurationExplorer explorer = new ConfigurationExplorer(root); // Used to navigate to the variable's parent section.
 
         // Navigates to the parent section. We do not have to check for null values here,
         // as the section will be created if it doesn't exist.
-        buffer = moveToParent(explorer = new ConfigurationExplorer(root), name, true);
+        String buffer = moveToParent(explorer, name, true);   // Buffer for the variable's name trimmed of section information.
 
         // If the variable isn't set, set it to defaultValue and triggers an event.
-        if((value = explorer.getSection().getVariable(buffer)) == null) {
+        String value = explorer.getSection().getVariable(buffer);       // Buffer for the variable's value.
+        if (value == null) {
             explorer.getSection().setVariable(buffer, defaultValue);
             triggerEvent(new ConfigurationEvent(this, name, defaultValue));
             return defaultValue;
@@ -957,9 +953,7 @@ public class Configuration {
      * @see                 #getListVariable(String,String)
      */
     public ValueList getVariable(String name, List<String> defaultValue, String separator) {
-        return ConfigurationSection.getListValue(getVariable(name,
-                                                             ConfigurationSection.getValue(defaultValue, separator)),
-                                                 separator);
+        return ConfigurationSection.getListValue(getVariable(name, ConfigurationSection.getValue(defaultValue, separator)), separator);
     }
 
     /**
@@ -1063,18 +1057,16 @@ public class Configuration {
      * @return        the name of the variable trimmed of section information, <code>null</code> if not found.
      */
     private String moveToParent(ConfigurationExplorer root, String name, boolean create) {
-        StringTokenizer parser; // Used to parse the variable's path.
-
         // Goes through each element of the path.
-        parser = new StringTokenizer(name, ".");
-        while(parser.hasMoreTokens()) {
+        StringTokenizer parser = new StringTokenizer(name, ".");
+        while (parser.hasMoreTokens()) {
             // If we've reached the variable's name, return it.
             name = parser.nextToken();
-            if(!parser.hasMoreTokens())
+            if (!parser.hasMoreTokens())
                 return name;
 
             // If we've reached a dead-end, return null.
-            if(!root.moveTo(name, create))
+            if (!root.moveTo(name, create))
                 return null;
         }
         return name;
@@ -1105,7 +1097,7 @@ public class Configuration {
      * @param event event to propagate.
      */
     private void triggerEvent(ConfigurationEvent event) {
-        for(ConfigurationListener listener : LISTENERS.keySet())
+        for (ConfigurationListener listener : LISTENERS.keySet())
             listener.configurationChanged(event);
     }
 
@@ -1199,12 +1191,14 @@ public class Configuration {
             try {
                 buffer = sections.pop();
                 sectionNames.pop();
+            }  catch(EmptyStackException e) {
+                throw new ConfigurationStructureException("Section " + name + " was already closed.");
             }
-            catch(EmptyStackException e) {throw new ConfigurationStructureException("Section " + name + " was already closed.");}
 
             // Makes sure we're closing the right section.
-            if(buffer.getSection(name) != currentSection)
+            if (buffer.getSection(name) != currentSection) {
                 throw new ConfigurationStructureException("Section " + name + " is not the currently opened section.");
+            }
             currentSection = buffer;
         }
 
@@ -1215,7 +1209,7 @@ public class Configuration {
          */
         public void addVariable(String name, String value) {
             // If the variable's value was modified, trigger an event.
-            if(currentSection.setVariable(name, value)) {
+            if (currentSection.setVariable(name, value)) {
                 if(sectionNames.empty())
                     triggerEvent(new ConfigurationEvent(Configuration.this, name, value));
                 else
