@@ -121,17 +121,13 @@ public class DialogToolkit {
      * @param window window to center on.
      */
     public static void centerOnWindow(Component c, Window window) {
-        Dimension screenSize;
-        int       x;
-        int       y;
+        int x = Math.max(0, window.getX() + (window.getWidth() - c.getWidth()) / 2);
+        int y = Math.max(0, window.getY() + (window.getHeight() - c.getHeight()) / 2);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int       buffer;
-
-        x          = Math.max(0, window.getX() + (window.getWidth() - c.getWidth()) / 2);
-        y          = Math.max(0, window.getY() + (window.getHeight() - c.getHeight()) / 2);
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        if((buffer = screenSize.width - (c.getWidth() + x)) < 0)
+        if ((buffer = screenSize.width - (c.getWidth() + x)) < 0)
             x += buffer;
-        if((buffer = screenSize.height - (c.getHeight() + y)) < 0)
+        if ((buffer = screenSize.height - (c.getHeight() + y)) < 0)
             y += buffer;
         c.setLocation(x, y);
     }
@@ -141,21 +137,21 @@ public class DialogToolkit {
      * Creates an OK/Cancel panel using the given buttons, and register the given listener for button actions.
      */
     public static JPanel createOKCancelPanel(JButton okButton, JButton cancelButton, JRootPane rootPane, ActionListener actionListener) {
-        return createButtonPanel(new JButton[]{okButton, cancelButton}, rootPane, actionListener);
+        return createButtonPanel(rootPane, actionListener, okButton, cancelButton);
     }
 
     /**
      * Creates an OK panel using the given button, and register the given listener for button actions.
      */
     public static JPanel createOKPanel(JButton okButton, JRootPane rootPane, ActionListener actionListener) {
-        return createButtonPanel(new JButton[]{okButton}, rootPane, actionListener);
+        return createButtonPanel(rootPane, actionListener, okButton);
     }
 
     /**
      * Creates a button panel using the given buttons, and register the given listener for button actions.
      * Buttons are disposed horizontally, aligned to the right.
      */
-    public static JPanel createButtonPanel(JButton buttons[], JRootPane rootPane, ActionListener actionListener) {
+    public static JPanel createButtonPanel(JRootPane rootPane, ActionListener actionListener, JButton ... buttons) {
         JPanel panel = new ButtonChoicePanel(buttons, 0, rootPane);
         
         MnemonicHelper mnemonicHelper = new MnemonicHelper();

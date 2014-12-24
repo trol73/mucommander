@@ -61,7 +61,7 @@ public abstract class PopupButton extends NonFocusableButton {
     /** 
      * Box-orientation constant used to specify the buttom-left oriented side of a box.
      */
-    public static final int BUTTOM_LEFT_ORIENTED = 5;
+    public static final int BOTTOM_LEFT_ORIENTED = 5;
 
 
     /**
@@ -91,10 +91,9 @@ public abstract class PopupButton extends NonFocusableButton {
      */
     @Override
     public void setAction(Action buttonClickedAction) {
-        if(buttonClickedAction==null) {
+        if (buttonClickedAction==null) {
             super.setAction(null);
-        }
-        else {
+        } else {
             // Pass a MuteProxyAction to JButton that does nothing when the action is performed.
             // We need this to keep the use the Action's properties but handle action events ourself.
             super.setAction(new MuteProxyAction(buttonClickedAction));
@@ -154,8 +153,8 @@ public abstract class PopupButton extends NonFocusableButton {
                 Dimension popupMenuSize = popupMenu.getPreferredSize();
 
                 popupMenu.show(PopupButton.this,
-                		popupMenuLocation==RIGHT?getWidth():popupMenuLocation==LEFT?-(int)popupMenuSize.getWidth():popupMenuLocation==BUTTOM_LEFT_ORIENTED?getWidth()-(int)popupMenuSize.getWidth():0,
-                        popupMenuLocation==BOTTOM?getHeight():popupMenuLocation==TOP?-(int)popupMenuSize.getHeight():popupMenuLocation==BUTTOM_LEFT_ORIENTED?getHeight():0
+                		popupMenuLocation==RIGHT?getWidth():popupMenuLocation==LEFT?-(int)popupMenuSize.getWidth():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getWidth()-(int)popupMenuSize.getWidth():0,
+                        popupMenuLocation==BOTTOM?getHeight():popupMenuLocation==TOP?-(int)popupMenuSize.getHeight():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getHeight():0
                 );
 
             }
@@ -200,13 +199,12 @@ public abstract class PopupButton extends NonFocusableButton {
         //////////////////////////////////
 
         public synchronized void mousePressed(MouseEvent mouseEvent) {
-            if(!isEnabled() || shouldIgnoreMouseEvent())    // Ignore event if button is disabled
+            if (!isEnabled() || shouldIgnoreMouseEvent())    // Ignore event if button is disabled
                 return;
 
             if (DesktopManager.isRightMouseButton(mouseEvent)) {
             	popupMenu();
-            }
-            else {
+            } else {
             	pressedTime = System.currentTimeMillis();
 
             	// Spawn a thread to check if mouse is still pressed in POPUP_DELAY ms. If that is the case, popup menu
@@ -216,16 +214,17 @@ public abstract class PopupButton extends NonFocusableButton {
         }
 
         public synchronized void mouseClicked(MouseEvent mouseEvent) {
-            if(!isEnabled() || shouldIgnoreMouseEvent())    // Ignore event if button is disabled
+            if (!isEnabled() || shouldIgnoreMouseEvent())    // Ignore event if button is disabled
                 return;
 
             // Indicate to Thread spawn by mousePressed that mouse is not pressed anymore
             pressedTime = 0;
 
-            if(buttonClickedAction !=null)    // Perform the action if there is one
+            if (buttonClickedAction != null) {   // Perform the action if there is one
                 buttonClickedAction.actionPerformed(new ActionEvent(PopupButton.this, ActionEvent.ACTION_PERFORMED, "clicked"));
-            else                // No action, popup menu
+            } else {               // No action, popup menu
                 popupMenu();
+            }
         }
 
         public synchronized void mouseReleased(MouseEvent mouseEvent) {
@@ -248,11 +247,11 @@ public abstract class PopupButton extends NonFocusableButton {
 
         public void run() {
                 try { Thread.sleep(POPUP_DELAY); }
-                catch(InterruptedException e) {}
+                catch(InterruptedException ignore) {}
 
                 synchronized(this) {
                     // Popup menu if a popup menu is not already being displayed and if mouse is still pressed
-                    if(!isPopupMenuVisible() && pressedTime!=0 && System.currentTimeMillis()-pressedTime>=POPUP_DELAY) {
+                    if (!isPopupMenuVisible() && pressedTime != 0 && System.currentTimeMillis()-pressedTime >= POPUP_DELAY) {
                         popupMenu();
                     }
                 }

@@ -17,14 +17,53 @@
  */
 package com.mucommander.ui.tasks;
 
+import com.mucommander.ui.button.NonFocusableButton;
+
+import javax.swing.Icon;
 import javax.swing.JLabel;
+import java.awt.Dimension;
+import java.awt.Insets;
 
 /**
  * @author Oleg Trifonov
  * Created on 08/12/14.
  */
-public class TaskWidget extends JLabel {
+public class TaskWidget extends NonFocusableButton {
+
+
     public TaskWidget() {
         super();
+        init();
+    }
+
+    public TaskWidget(String text) {
+        super(text);
+        init();
+    }
+
+    public TaskWidget(Icon icon) {
+        super(icon);
+        init();
+    }
+
+    public TaskWidget(String text, Icon icon) {
+        super(text, icon);
+        init();
+    }
+
+
+    private void init() {
+        setContentAreaFilled(false);
+        int height = new JLabel(getText()).getPreferredSize().height;
+        setPreferredSize(new Dimension(getPreferredSize().width, height));
+    }
+
+
+    /**
+     * Replace the default insets to be exactly (2,2,2,2).
+     */
+    @Override
+    public Insets getInsets() {
+        return new Insets(2, 2, 2, 2);
     }
 }

@@ -37,6 +37,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.tasks.TaskWidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,10 +80,16 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
-    private JButton okButton;
+    private final JButton okButton;
+    private final JButton okBackgroundButton;
 
     /** Background thread that is currently being executed, <code>null</code> if there is none. */
     private Thread thread;
+
+    /**
+     * Background mode flag, operation will be performed in background mode if true
+     */
+    protected boolean backgroundMode;
 
     // Dialog size constraints
     protected final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360,0);
@@ -157,13 +164,18 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
         okButton = new JButton(okText);
+        okBackgroundButton = new JButton("Background " + okText);
+
         // Prevent the dialog from being validated while the initial path is being set.
-        okButton.setEnabled(false);
+        setEnabledOkButtons(false);
+
         JButton cancelButton = new JButton(Translator.get("cancel"));
 
         YBoxPanel buttonsPanel = new YBoxPanel();
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createButtonPanel(getRootPane(), this, okButton, okBackgroundButton, cancelButton)
+        //        DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)
+        ));
         buttonsPanel.add(fileDetailsPanel);
 
         getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
@@ -282,8 +294,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             skipErrors = skipErrorsCheckBox.isSelected();
             verifyIntegrity = verifyIntegrityCheckBox.isSelected();
-        }
-        else {
+        } else {
             defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
             skipErrors = false;
             verifyIntegrity = false;
@@ -304,12 +315,12 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      */
     private void textUpdated() {
         synchronized(this) {
-            if(thread!=null && thread instanceof InitialPathRetriever) {
+            if (thread != null && thread instanceof InitialPathRetriever) {
                 // Interrupt InitialPathRetriever
                 interruptOngoingThread();
 
                 // Enable
-                okButton.setEnabled(true);
+                setEnabledOkButtons(true);
 
                 pathField.getDocument().removeDocumentListener(this);
             }
@@ -340,15 +351,24 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if(source == okButton) {
-            // Disable the OK button and path field while the current path is being resolved
-            okButton.setEnabled(false);
+        if (source == okButton || source == okBackgroundButton) {
+            backgroundMode = source == okBackgroundButton;
+
+            // Disable the OK buttons and path field while the current path is being resolved
+            setEnabledOkButtons(false);
             pathField.setEnabled(false);
+
+            if (backgroundMode) {
+                TaskWidget taskWidget = new TaskWidget();
+                taskWidget.setText(okButton.getText());
+                mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
+                mainFrame.getStatusBar().revalidate();
+                mainFrame.getStatusBar().repaint();
+            }
 
             // Start resolving the path
             startThread(new PathResolver());
-        }
-        else {              // Cancel button
+        } else {              // Cancel button
             dispose();
         }
     }
@@ -415,28 +435,26 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
                     public void run() {
                         spinningDial.setAnimated(false);
 
-                        if(!interrupted) {
+                        if (!interrupted) {
                             // Document change events are no longer needed
                             pathField.getDocument().removeDocumentListener(TransferDestinationDialog.this);
 
                             // Set the path field's text and selection 
                             pathFieldContent.feedToPathField(pathField);
 
-                            okButton.setEnabled(true);
+                            setEnabledOkButtons(true);
                         }
                     }
                 });
-            }
-            catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 LOGGER.trace("Interrupted", e);
-            }
-            catch(InvocationTargetException e) {
+            } catch (InvocationTargetException e) {
                 LOGGER.debug("Caught exception", e);
             }
 
             // Set the current thread to null
-            synchronized(TransferDestinationDialog.this) {
-                if(thread==this)        // This thread may have been interrupted already
+            synchronized (TransferDestinationDialog.this) {
+                if (thread == this)        // This thread may have been interrupted already
                     thread = null;
             }
         }
@@ -479,17 +497,15 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             // Perform UI tasks in the AWT event thread
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    if(interrupted) {
+                    if (interrupted) {
                         dispose();
-                    }
-                    else if(isValid) {
+                    } else if (isValid) {
                         dispose();
                         startJob(resolvedDest);
-                    }
-                    else {
+                    } else {
                         showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
                         // Re-enable the OK button and path field so that a new path can be entered
-                        okButton.setEnabled(true);
+                        setEnabledOkButtons(true);
                         pathField.setEnabled(true);
                     }
                 }
@@ -497,7 +513,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             // Set the current thread to null
             synchronized(TransferDestinationDialog.this) {
-                if(thread==this)        // This thread may have been interrupted already
+                if (thread == this)        // This thread may have been interrupted already
                     thread = null;
             }
         }
@@ -510,5 +526,11 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             super.interrupt();
             this.interrupted = true;
         }
+    }
+
+
+    protected void setEnabledOkButtons(boolean enabled) {
+        okButton.setEnabled(enabled);
+        okBackgroundButton.setEnabled(enabled);
     }
 }

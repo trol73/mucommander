@@ -34,9 +34,17 @@ public class TaskPanel extends JPanel {
 
     public void addTask(TaskWidget taskWidget) {
         add(taskWidget);
+        validate();
+        repaint();
+        getParent().revalidate();
+        getParent().repaint();
     }
 
     public void removeWidget(TaskWidget taskWidget) {
         remove(taskWidget);
+        validate();
+        repaint();
+        getParent().revalidate();
+        getParent().repaint();
     }
 }
