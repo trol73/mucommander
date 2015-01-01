@@ -91,7 +91,7 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
 
             startPosition  = fieldText.length();
 
-            if (!(file.isDirectory() && (destFile = FileFactory.getFile(fieldText+file.getName()))!=null && destFile.exists() && destFile.isDirectory())) {
+            if (!(file.isDirectory() && (destFile = FileFactory.getFile(fieldText+file.getName())) != null && destFile.exists() && destFile.isDirectory())) {
                 return selectDestinationFilename(file, fieldText + file.getName(), startPosition);
             } else {
                 endPosition = fieldText.length();

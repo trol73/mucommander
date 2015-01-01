@@ -24,6 +24,7 @@ import com.mucommander.ui.combobox.MuComboBox;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.WeakHashMap;
@@ -47,7 +48,7 @@ public class SizeChooser extends JPanel {
     private JComboBox<String> unitComboBox;
 
     /** Contains all registered listeners, stored as weak references */
-    private WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<ChangeListener, Object>();
+    private WeakHashMap<ChangeListener, ChangeListener> listeners = new WeakHashMap<>();
 
     /** Maximum value allowed by the spinner */
     private final static int MAX_SPINNER_VALUE = Integer.MAX_VALUE;
@@ -81,15 +82,17 @@ public class SizeChooser extends JPanel {
         if (editor instanceof JSpinner.DefaultEditor) {
             JTextField textField = ((JSpinner.DefaultEditor)editor).getTextField();
             int nbColumns = textField.getColumns();
-            if(nbColumns>MAX_SPINNER_COLUMNS )
-                textField.setColumns(MAX_SPINNER_COLUMNS );
+            if (nbColumns > MAX_SPINNER_COLUMNS ) {
+                textField.setColumns(MAX_SPINNER_COLUMNS);
+            }
+            textField.setMaximumSize(textField.getPreferredSize());
         }
-        
         add(valueSpinner);
 
         unitComboBox = new MuComboBox<>();
-        for(int i= SizeFormat.BYTE_UNIT; i<=SizeFormat.GIGABYTE_UNIT; i++)
+        for (int i = SizeFormat.BYTE_UNIT; i <= SizeFormat.GIGABYTE_UNIT; i++) {
             unitComboBox.addItem(SizeFormat.getUnitString(i, speedUnits));
+        }
         unitComboBox.setSelectedIndex(SizeFormat.KILOBYTE_UNIT);
         unitComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -98,6 +101,17 @@ public class SizeChooser extends JPanel {
         });
 
         add(unitComboBox);
+    }
+
+    @Override
+    public Dimension getSize() {
+        // the panel height can't be greater than the text editor height
+        Dimension d = super.getSize();
+        final int maxHeight = (int)valueSpinner.getEditor().getPreferredSize().getHeight();
+        if (d.getHeight() > maxHeight) {
+            d.height = maxHeight;
+        }
+        return d;
     }
 
     /**

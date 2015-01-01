@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.ui.tasks;
+package com.mucommander.ui.main.statusbar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -38,6 +38,7 @@ public class TaskPanel extends JPanel {
         repaint();
         getParent().revalidate();
         getParent().repaint();
+        taskWidget.taskPanel = this;
     }
 
     public void removeWidget(TaskWidget taskWidget) {

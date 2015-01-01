@@ -207,7 +207,7 @@ public class Translator {
             text = bundle.getString(key);
         } catch (Exception e) {
             text = key;
-            System.out.println("No value for " + key+" in language " + language + ", using English value");
+            System.out.println("No value for " + key +" in language " + language + ", using English value");
             LOGGER.debug("No value for " + key + " in language " + language + ", using English value");
         }
 

@@ -94,7 +94,7 @@ public class CollapseExpandButton extends ArrowButton implements ActionListener,
      */
     private void setExpandedState(boolean expanded, boolean packWindow) {
         comp.setVisible(expanded);
-        setArrowDirection(expanded ? DOWN_DIRECTION : RIGHT_DIRECTION);
+        setArrowDirection(expanded ? Direction.DOWN : Direction.RIGHT);
         this.expandedState = expanded;
 
         final Container tla = getTopLevelAncestor();
@@ -125,10 +125,11 @@ public class CollapseExpandButton extends ArrowButton implements ActionListener,
 
     public void keyPressed(KeyEvent keyEvent) {
         int keyCode = keyEvent.getKeyCode();
-        if(keyCode==KeyEvent.VK_RIGHT && !expandedState)
+        if (keyCode == KeyEvent.VK_RIGHT && !expandedState) {
             setExpandedState(true, true);
-        else if(keyCode==KeyEvent.VK_LEFT && expandedState)
+        } else if (keyCode == KeyEvent.VK_LEFT && expandedState) {
             setExpandedState(false, true);
+        }
     }
 
     public void keyReleased(KeyEvent keyEvent) {
