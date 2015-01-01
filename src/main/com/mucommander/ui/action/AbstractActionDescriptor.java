@@ -41,10 +41,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
 	
     public String getLabel() {
         String label = getStandardLabel();
-        if (label != null)
-        	return label;
-        // else, return the standard dictionary key for this action's label
-        return getLabelKey();
+        return label != null ? label : getLabelKey();
     }
 
     public ImageIcon getIcon() {
@@ -57,9 +54,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
     
     public String getDescription() {
     	String tooltip = getTooltip();
-    	if (tooltip == null)
-    		return getLabel();
-    	return tooltip;
+    	return tooltip == null ? getLabel() : tooltip;
     }
     
     /**
@@ -98,7 +93,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      */
     private String getStandardLabel() {
     	String labelKey = getLabelKey();
-        if(!Translator.hasValue(labelKey, true))
+        if (!Translator.hasValue(labelKey, true))
             return null;
 
         return Translator.get(labelKey);
@@ -112,13 +107,9 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      * @return the standard icon image corresponding to the specified MuAction, <code>null</code> if none was found
      */
     private static ImageIcon getStandardIcon(String actionId) {
-        String iconPath;
-
         // Look for an icon image file with the /action/<action id>.png path and use it if it exists
-        iconPath = getStandardIconPath(actionId);
-        if(ResourceLoader.getResourceAsURL(iconPath) == null)
-            return null;
-        return IconManager.getIcon(iconPath);
+        String iconPath = getStandardIconPath(actionId);
+        return ResourceLoader.getResourceAsURL(iconPath) == null ? null : IconManager.getIcon(iconPath);
     }
     
     /**
@@ -141,7 +132,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      */
     private static String getStandardTooltip(String actionId) {
         String tooltipKey = getStandardTooltipKey(actionId);
-        if(!Translator.hasValue(tooltipKey, true))
+        if (!Translator.hasValue(tooltipKey, true))
             return null;
 
         return Translator.get(tooltipKey);

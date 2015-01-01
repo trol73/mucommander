@@ -97,10 +97,6 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     private static final DecimalFormat FORMAT_DEC = new DecimalFormat("#.##################");
     private static final DecimalFormat FORMAT_EXP = new DecimalFormat("0.00000000000000E0000");
 
-    /**
-     < > <= >=	отношения	бинарный	10	слева направо
-     == !=	равенство/неравенство	бинарный	9	слева направо
-     */
 
     private static final CustomOperator OPERATORS[] = {
         OP_SHL, OP_SHR, OP_AND, OP_OR, OP_NOT, OP_XOR
@@ -138,9 +134,6 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         btnDec.setFont(buttonFont);
         this.edtDec = new JTextField();
         edtDec.setEditable(false);
-
-//FontMetrics fm = btnDec.getFontMetrics(buttonFont);
-//System.out.println(fm.stringWidth("DEC"));
 
 
         compPanel.addRow(btnDec, edtDec, 0);

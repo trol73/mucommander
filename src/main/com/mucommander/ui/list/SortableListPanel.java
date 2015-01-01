@@ -53,7 +53,7 @@ public class SortableListPanel<E> extends JPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
 
         // create 'Move item up' button
-        JButton moveButton = new ArrowButton(dynamicList.getMoveUpAction(), ArrowButton.UP_DIRECTION);
+        JButton moveButton = new ArrowButton(dynamicList.getMoveUpAction(), ArrowButton.Direction.UP);
         // Constrain the button's size which by default is huge under Windows/Java 1.5
         moveButton.setPreferredSize(new Dimension(19, 0));
 
@@ -64,7 +64,7 @@ public class SortableListPanel<E> extends JPanel {
         buttonPanel.add(moveButton);
 
         // create 'Move item down' button
-        moveButton = new ArrowButton(dynamicList.getMoveDownAction(), ArrowButton.DOWN_DIRECTION);
+        moveButton = new ArrowButton(dynamicList.getMoveDownAction(), ArrowButton.Direction.DOWN);
         // Constrain the button's size which by default is huge under Windows/Java 1.5
         moveButton.setPreferredSize(new Dimension(19, 0));
 

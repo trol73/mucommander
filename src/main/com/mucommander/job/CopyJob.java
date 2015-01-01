@@ -21,16 +21,12 @@ package com.mucommander.job;
 
 import java.io.IOException;
 
+import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.commons.file.AbstractArchiveFile;
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.AbstractRWArchiveFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -106,12 +102,18 @@ public class CopyJob extends AbstractCopyJob {
             return false;
         }
         processedFilesCount++;
-		
+
+//try { // delay for debug purposes
+//    Thread.sleep(1000);
+//} catch (InterruptedException e) {
+//    e.printStackTrace();
+//}
+
         // Destination folder
         AbstractFile destFolder = recurseParams == null ? baseDestFolder : (AbstractFile)recurseParams;
 		
         // Is current file in base folder ?
-        boolean isFileInBaseFolder = files.indexOf(file) >= 0;
+        boolean isFileInBaseFolder = files.contains(file);
 
         // Determine filename in destination
         String destFileName = (isFileInBaseFolder && newName != null) ? newName : file.getName();
@@ -162,7 +164,7 @@ public class CopyJob extends AbstractCopyJob {
                     // for each file in folder...
                     AbstractFile subFiles[] = file.ls();
 //filesDiscovered(subFiles);
-                    for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
+                    for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(subFiles[i]);
                         processFile(subFiles[i], destFile);
@@ -224,9 +226,9 @@ public class CopyJob extends AbstractCopyJob {
         if (archiveFile != null && archiveFile.isArchive() && archiveFile.isWritable())
             optimizeArchive((AbstractRWArchiveFile)archiveFile);
 
-        // If this job correponds to a 'local copy' of a single file and in the same directory,
+        // If this job corresponds to a 'local copy' of a single file and in the same directory,
         // select the copied file in the active table after this job has finished (and hasn't been cancelled)
-        if (files.size()==1 && newName != null && baseDestFolder.equalsCanonical(files.elementAt(0).getParent())) {
+        if (files.size() == 1 && newName != null && baseDestFolder.equalsCanonical(files.elementAt(0).getParent())) {
             // Resolve new file instance now that it exists: some remote files do not immediately update file attributes
             // after creation, we need to get an instance that reflects the newly created file attributes
             selectFileWhenFinished(FileFactory.getFile(baseDestFolder.getAbsolutePath(true)+newName));
@@ -258,7 +260,7 @@ public class CopyJob extends AbstractCopyJob {
     public float getTotalPercentDone() {
         if (scanDirectoryThread == null || !scanDirectoryThread.isCompleted()) {
             float result = super.getTotalPercentDone();
-            return  result > 5 ? 5 : result;
+            return result > 5 ? 5 : result;
         }
         float progressBySize = 1.0f*(getTotalByteCounter().getByteCount() + getTotalSkippedByteCounter().getByteCount()) / scanDirectoryThread.getTotalBytes();
         float progressByCount = 1.0f*(processedFilesCount-1) / scanDirectoryThread.getFilesCount();

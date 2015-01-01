@@ -37,7 +37,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.mucommander.ui.combobox.MuComboBox;
-import com.mucommander.ui.tasks.TaskWidget;
+import com.mucommander.ui.main.statusbar.TaskWidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,11 +68,24 @@ import com.mucommander.ui.text.FilePathField;
  * @author Maxence Bernard
  */
 public abstract class TransferDestinationDialog extends JobDialog implements ActionListener, DocumentListener {
+    /**
+     *
+     */
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransferDestinationDialog.class);
-	
+    /**
+     * Dialog size constraints
+     */
+    protected final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
+    /**
+     * Dialog width should not exceed 360, height is not an issue (always the same)
+     */
+    protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
+
+    private static boolean enableBackgroundMode;
+
+
     protected String errorDialogTitle;
     private boolean enableTransferOptions;
-
     private YBoxPanel mainPanel;
     private FilePathField pathField;
     private SpinningDial spinningDial;
@@ -80,8 +93,8 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
+    private JCheckBox cbBackgroundMode;
     private final JButton okButton;
-    private final JButton okBackgroundButton;
 
     /** Background thread that is currently being executed, <code>null</code> if there is none. */
     private Thread thread;
@@ -91,12 +104,13 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      */
     protected boolean backgroundMode;
 
-    // Dialog size constraints
-    protected final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360,0);
-    // Dialog width should not exceed 360, height is not an issue (always the same)
-    protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
+    /**
+     * for background operations
+     */
+    protected TaskWidget taskWidget;
 
-	
+
+
     private final static int DEFAULT_ACTIONS[] = {
         FileCollisionDialog.CANCEL_ACTION,
         FileCollisionDialog.SKIP_ACTION,
@@ -142,7 +156,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         if (enableTransferOptions) {
             // Combo box that allows the user to choose the default action when a file already exists in destination
-            mainPanel.add(new JLabel(Translator.get("destination_dialog.file_exists_action")+" :"));
+            mainPanel.add(new JLabel(Translator.get("destination_dialog.file_exists_action") + " :"));
             fileExistsActionComboBox.addItem(Translator.get("ask"));
             for (String s : DEFAULT_ACTIONS_TEXT) {
                 fileExistsActionComboBox.addItem(s);
@@ -155,6 +169,10 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             verifyIntegrityCheckBox = new JCheckBox(Translator.get("destination_dialog.verify_integrity"));
             mainPanel.add(verifyIntegrityCheckBox);
 
+            cbBackgroundMode = new JCheckBox(Translator.get("destination_dialog.background_mode"));
+            cbBackgroundMode.setSelected(enableBackgroundMode);
+            mainPanel.add(cbBackgroundMode);
+
             mainPanel.addSpace(10);
         }
 
@@ -164,7 +182,6 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
         okButton = new JButton(okText);
-        okBackgroundButton = new JButton("Background " + okText);
 
         // Prevent the dialog from being validated while the initial path is being set.
         setEnabledOkButtons(false);
@@ -173,7 +190,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         YBoxPanel buttonsPanel = new YBoxPanel();
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createButtonPanel(getRootPane(), this, okButton, okBackgroundButton, cancelButton)
+                DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
         //        DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)
         ));
         buttonsPanel.add(fileDetailsPanel);
@@ -242,7 +259,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      */
     private synchronized void interruptOngoingThread() {
         if (thread != null) {
-            LOGGER.trace("Calling interrupt() on "+thread);
+            LOGGER.trace("Calling interrupt() on " + thread);
             thread.interrupt();
             // Set the current thread to null
             thread = null;
@@ -267,7 +284,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * @return <code>true</code> if the given resolved destination is valid
      */
 	protected boolean isValidDestination(PathUtils.ResolvedDestination resolvedDest, String destPath) {
-        return (resolvedDest!=null && (files.size()==1 || resolvedDest.getDestinationType()==PathUtils.ResolvedDestination.EXISTING_FOLDER));
+        return (resolvedDest != null && (files.size() == 1 || resolvedDest.getDestinationType() == PathUtils.ResolvedDestination.EXISTING_FOLDER));
 	}
 
     /**
@@ -300,7 +317,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             verifyIntegrity = false;
         }
 
-        ProgressDialog progressDialog = new ProgressDialog(mainFrame, getProgressDialogTitle());
+        ProgressDialog progressDialog = new ProgressDialog(mainFrame, getProgressDialogTitle(), taskWidget);
         TransferFileJob job = createTransferFileJob(progressDialog, resolvedDest, defaultFileExistsAction);
 
         if (job != null) {
@@ -351,16 +368,17 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton || source == okBackgroundButton) {
-            backgroundMode = source == okBackgroundButton;
+        if (source == okButton) {
+            backgroundMode = cbBackgroundMode.isSelected();
+            enableBackgroundMode = backgroundMode;
 
             // Disable the OK buttons and path field while the current path is being resolved
             setEnabledOkButtons(false);
             pathField.setEnabled(false);
 
             if (backgroundMode) {
-                TaskWidget taskWidget = new TaskWidget();
-                taskWidget.setText(okButton.getText());
+                taskWidget = new TaskWidget();
+                //taskWidget.setText(okButton.getText());
                 mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
                 mainFrame.getStatusBar().revalidate();
                 mainFrame.getStatusBar().repaint();
@@ -513,8 +531,9 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             // Set the current thread to null
             synchronized(TransferDestinationDialog.this) {
-                if (thread == this)        // This thread may have been interrupted already
+                if (thread == this) {       // This thread may have been interrupted already
                     thread = null;
+                }
             }
         }
 
@@ -531,6 +550,5 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
     protected void setEnabledOkButtons(boolean enabled) {
         okButton.setEnabled(enabled);
-        okBackgroundButton.setEnabled(enabled);
     }
 }

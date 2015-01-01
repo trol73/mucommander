@@ -104,7 +104,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        refreshButton = new JButton(Translator.get(new RefreshAction.Descriptor().getLabel()));
+        refreshButton = new JButton(new RefreshAction.Descriptor().getLabel());
         refreshButton.addActionListener(this);
         buttonPanel.add(refreshButton);
 
