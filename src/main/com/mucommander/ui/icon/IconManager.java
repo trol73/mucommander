@@ -105,13 +105,12 @@ public class IconManager {
      */
     public static ImageIcon getIcon(String iconPath, float scaleFactor) {
         URL resourceURL = ResourceLoader.getResourceAsURL(iconPath);
-        if(resourceURL==null) {
-            LOGGER.debug("Warning: attempt to load non-existing icon: "+iconPath+" , icon missing ?");
+        if (resourceURL == null) {
+            LOGGER.debug("Warning: attempt to load non-existing icon: " + iconPath + " , icon missing ?");
             return null;
         }
-
         ImageIcon icon = new ImageIcon(resourceURL);
-        return scaleFactor==1.0f?icon:getScaledIcon(icon, scaleFactor);
+        return scaleFactor == 1.0f ? icon : getScaledIcon(icon, scaleFactor);
     }
 
     /**
@@ -130,8 +129,9 @@ public class IconManager {
      * @param scaleFactor the icon scale factor, <code>1.0f</code> to have the icon in its original size (no rescaling)
      */
     public static ImageIcon getScaledIcon(ImageIcon icon, float scaleFactor) {
-        if(scaleFactor==1.0f || icon==null)
+        if (scaleFactor == 1.0f || icon == null) {
             return icon;
+        }
 
         Image image = icon.getImage();
         return new ImageIcon(image.getScaledInstance((int)(scaleFactor*image.getWidth(null)), (int)(scaleFactor*image.getHeight(null)), Image.SCALE_AREA_AVERAGING));
@@ -180,24 +180,23 @@ public class IconManager {
         if (cache == null) {
             // No caching, simply create the icon
             icon = getIcon(iconSet.getFolder() + iconName);
-        }
-        else {
+        } else {
             // Look for the icon in the cache
             icon = cache.get(iconName);
-            if (icon==null) {
+            if (icon == null) {
                 // Icon is not in the cache, let's create it
                 icon = getIcon(iconSet.getFolder()+iconName);
                 // and add it to the cache if icon exists
-                if (icon!=null) {
+                if (icon != null) {
                     cache.put(iconName, icon);
                 }
             }
         }
 
-        if (icon == null)
+        if (icon == null) {
             return null;
-
-        return scaleFactor==1.0f ? icon:getScaledIcon(icon, scaleFactor);
+        }
+        return scaleFactor == 1.0f ? icon : getScaledIcon(icon, scaleFactor);
     }
 
 
@@ -219,8 +218,8 @@ public class IconManager {
      */
     public static ImageIcon getPaddedIcon(ImageIcon icon, Insets insets) {
         BufferedImage bi = new BufferedImage(
-                icon.getIconWidth()+insets.left+insets.right,
-                icon.getIconHeight()+insets.top+insets.bottom,
+                icon.getIconWidth() + insets.left + insets.right,
+                icon.getIconHeight() + insets.top + insets.bottom,
                 BufferedImage.TYPE_INT_ARGB);
 
         Graphics g = bi.getGraphics();
@@ -239,8 +238,9 @@ public class IconManager {
      * created and returned.
      */
     public static ImageIcon getImageIcon(Icon icon) {
-        if(icon instanceof ImageIcon)
-            return (ImageIcon)icon;
+        if (icon instanceof ImageIcon) {
+            return (ImageIcon) icon;
+        }
 
         BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         icon.paintIcon(null, bi.getGraphics(), 0, 0);
