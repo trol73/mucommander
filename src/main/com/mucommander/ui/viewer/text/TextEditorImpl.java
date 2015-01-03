@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
@@ -137,8 +138,7 @@ class TextEditorImpl implements ThemeListener {
 						Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
 						textArea.setFont(newFont);
 					}
-				}
-				else {
+				} else {
 					textArea.getParent().dispatchEvent(e);
 				}
 			}
@@ -155,8 +155,8 @@ class TextEditorImpl implements ThemeListener {
 		FindDialog dlgFind = new FindDialog(frame) {
             @Override
             protected void doSearch(String text) {
-                if (text != null && text.length() > 0) {
-                    searchString = getSearchString().toLowerCase();
+                if (text != null && !text.isEmpty()) {
+                    searchString = getSearchString();
 
                     if (!searchString.isEmpty()) {
                         search(0, true);
@@ -193,13 +193,15 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 	private void search(int startPos, boolean forward) {
-		if (searchString == null || searchString.length() == 0)
-			return;
+		if (searchString == null || searchString.isEmpty()) {
+            return;
+        }
 		int pos;
+        String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
 		if (forward) {
-			pos = getTextLC().indexOf(searchString, startPos);
+			pos = getTextLC().indexOf(ss, startPos);
 		} else {
-			pos = getTextLC().lastIndexOf(searchString, startPos);
+			pos = getTextLC().lastIndexOf(ss, startPos);
 		}
 		if (pos >= 0) {
 			textArea.select(pos, pos + searchString.length());
@@ -402,7 +404,7 @@ class TextEditorImpl implements ThemeListener {
             }
             getStatusBar().setStatusMessage(e.getLocalizedMessage());
         } catch (Exception e) {
-            getStatusBar().setStatusMessage("Error");
+            getStatusBar().setStatusMessage(Translator.get("error"));
         }
     }
 
