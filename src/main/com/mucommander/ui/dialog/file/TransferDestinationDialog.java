@@ -81,7 +81,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      */
     protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
 
-    private static boolean enableBackgroundMode;
+    protected static boolean enableBackgroundMode;
 
 
     protected String errorDialogTitle;
@@ -93,7 +93,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
-    private JCheckBox cbBackgroundMode;
+    protected JCheckBox cbBackgroundMode;
     private final JButton okButton;
 
     /** Background thread that is currently being executed, <code>null</code> if there is none. */
@@ -369,7 +369,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         Object source = e.getSource();
 
         if (source == okButton) {
-            backgroundMode = cbBackgroundMode.isSelected();
+            backgroundMode = cbBackgroundMode != null && cbBackgroundMode.isSelected();
             enableBackgroundMode = backgroundMode;
 
             // Disable the OK buttons and path field while the current path is being resolved
