@@ -117,9 +117,9 @@ public class TrolCommander {
      * Prints the specified startup message.
      */
     private static void printStartupMessage(String message) {
-        if(useSplash && splashScreen != null)
+        if (useSplash && splashScreen != null) {
             splashScreen.setLoadingMessage(message);
-
+        }
         LOGGER.trace(message);
     }
 
@@ -145,7 +145,7 @@ public class TrolCommander {
      * Checks whether a graphics environment is available and exit with an error otherwise.
      */
     private static void checkHeadless() {
-        if(GraphicsEnvironment.isHeadless()) {
+        if (GraphicsEnvironment.isHeadless()) {
             System.err.println("Error: no graphical environment detected.");
             System.exit(1);
         }

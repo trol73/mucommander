@@ -69,7 +69,7 @@ public class EditCommandsAction extends MuAction {
         }
 
         public ActionCategory getCategory() {
-            return ActionCategory.COMMANDS;
+            return ActionCategory.MISC;
         }
 
         public KeyStroke getDefaultAltKeyStroke() {

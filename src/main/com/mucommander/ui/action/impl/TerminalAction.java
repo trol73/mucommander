@@ -103,7 +103,7 @@ public class TerminalAction extends ParentFolderAction {
 
         public String getId() { return ACTION_ID; }
 
-        public ActionCategory getCategory() { return ActionCategory.COMMANDS; }
+        public ActionCategory getCategory() { return ActionCategory.MISC; }
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 

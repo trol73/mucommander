@@ -30,6 +30,7 @@ import com.mucommander.commons.file.util.ResourceLoader;
 import com.mucommander.commons.io.SilenceableOutputStream;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
+import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 
@@ -82,18 +84,20 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      */
     synchronized static void checkInit() {
         // This method is synchronized to ensure that the initialization happens only once
-        if(initialized)
+        if (initialized) {
             return;
-
-        if(OsFamily.MAC_OS_X.isCurrent())
+        }
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             fileChooser = new JFileChooser();
-        else
+        } else {
             fileSystemView = FileSystemView.getFileSystemView();
+        }
 
         // Loads the symlink overlay icon
         URL iconURL = ResourceLoader.getPackageResourceAsURL(SwingFileIconProviderImpl.class.getPackage(), SYMLINK_ICON_NAME);
-        if(iconURL==null)
-            throw new RuntimeException("Could not locate required symlink icon: "+SYMLINK_ICON_NAME);
+        if (iconURL == null) {
+            throw new RuntimeException("Could not locate required symlink icon: " + SYMLINK_ICON_NAME);
+        }
 
         SYMLINK_OVERLAY_ICON = new ImageIcon(iconURL);
 
@@ -111,7 +115,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      * @param javaIoFile the file for which to return an icon
      * @return an icon for the specified file, null in case of an unexpected error
      */
-    private static Icon getSwingIcon(java.io.File javaIoFile) {
+    private static Icon getSwingIcon(File javaIoFile) {
         try {
             if(fileSystemView!=null) {
                 // FileSystemView.getSystemIcon() will behave in the following way if the specified file doesn't exist
@@ -131,14 +135,13 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
             else {
                 return fileChooser.getIcon(javaIoFile);
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
             return null;
-        }
-        finally {
-            if(fileSystemView!=null)
+        } finally {
+            if (fileSystemView != null) {
                 errOut.setSilenced(false);
+            }
         }
     }
 
@@ -194,7 +197,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     public Icon lookupCache(AbstractFile file, Dimension preferredResolution) {
         // Under Mac OS X, return the icon of /Network for the root of remote (non-local) locations. 
         if(OsFamily.MAC_OS_X.isCurrent() && !FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot())
-            return getSwingIcon(new java.io.File("/Network"));
+            return getSwingIcon(new File("/Network"));
 
         // Look for an existing icon instance for the file's extension
         return (file.isDirectory()? directoryIconCache : fileIconCache).get(getCheckedExtension(file));
@@ -215,7 +218,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         checkInit();
 
         // Retrieve the icon using the Swing provider component
-        Icon icon = getSwingIcon((java.io.File)localFile.getUnderlyingFileObject());
+        Icon icon = getSwingIcon((File)localFile.getUnderlyingFileObject());
 
         // Add a symlink indication to the icon if:
         // - the original file is a symlink AND

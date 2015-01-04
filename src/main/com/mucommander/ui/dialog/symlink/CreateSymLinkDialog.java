@@ -80,7 +80,7 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
         yPanel.addSpace(10);
 
         yPanel.add(new JLabel(Translator.get("symboliclinkeditor.link_name") + ':'));
-        edtName = new JTextField();
+        edtName = new FilePathField();
         yPanel.add(edtName);
 
         contentPane.add(yPanel, BorderLayout.NORTH);
