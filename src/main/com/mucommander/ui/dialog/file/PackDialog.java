@@ -23,10 +23,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.archiver.Archiver;
@@ -73,8 +70,8 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
         int initialFormat = formats[0];		// this value will only be used if last format is not available
         int initialFormatIndex = 0;			// this value will only be used if last format is not available
-        for(int i=0; i<nbFormats; i++) {
-            if(formats[i]==lastFormat) {
+        for (int i = 0; i<nbFormats; i++) {
+            if (formats[i] == lastFormat) {
                 initialFormat = formats[i];
                 initialFormatIndex = i;
                 break;
@@ -106,6 +103,10 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
         commentArea = new JTextArea();
         commentArea.setRows(4);
         mainPanel.add(commentArea);
+
+        cbBackgroundMode = new JCheckBox(Translator.get("destination_dialog.background_mode"));
+        cbBackgroundMode.setSelected(enableBackgroundMode);
+        mainPanel.add(cbBackgroundMode);
     }
 	
 
@@ -121,13 +122,12 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
         // Computes the archive's default name:
         // - if it only contains one file, uses that file's name.
         // - if it contains more than one file, uses the FileSet's parent folder's name.
-        if(files.size() == 1) {
+        if (files.size() == 1) {
             file = files.elementAt(0);
             fileName = file.isDirectory() && !DesktopManager.isApplication(file)
                     ?file.getName()
                     :file.getNameWithoutExtension();
-        }
-        else {
+        } else {
             file = files.getBaseFolder();
             fileName = file.isRoot()?"":DesktopManager.isApplication(file)?file.getNameWithoutExtension():file.getName();
         }
@@ -155,8 +155,9 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
     @Override
     protected boolean isValidDestination(PathUtils.ResolvedDestination resolvedDest, String destPath) {
-        if(resolvedDest==null)
+        if (resolvedDest == null) {
             return false;
+        }
 
         int destType = resolvedDest.getDestinationType();
         return destType==PathUtils.ResolvedDestination.NEW_FILE || destType==PathUtils.ResolvedDestination.EXISTING_FILE;
@@ -177,20 +178,17 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
             String fileName = pathField.getText();  // Name of the destination archive file.
             String oldFormatExtension = Archiver.getFormatExtension(formats[lastFormatIndex]);	// Old/current format's extension
-            if(fileName.endsWith("." + oldFormatExtension)) {
-                int selectionStart;
-                int selectionEnd;
-
+            if (fileName.endsWith("." + oldFormatExtension)) {
                 // Saves the old selection.
-                selectionStart = pathField.getSelectionStart();
-                selectionEnd   = pathField.getSelectionEnd();
+                int selectionStart = pathField.getSelectionStart();
+                int selectionEnd   = pathField.getSelectionEnd();
 
                 // Computes the new file name.
                 fileName = fileName.substring(0, fileName.length() - oldFormatExtension.length()) +
                     Archiver.getFormatExtension(formats[newFormatIndex]);
 
                 // Makes sure that the selection stays somewhat coherent.
-                if(selectionEnd == pathField.getText().length())
+                if (selectionEnd == pathField.getText().length())
                     selectionEnd = fileName.length();
 
                 // Resets the file path field.
