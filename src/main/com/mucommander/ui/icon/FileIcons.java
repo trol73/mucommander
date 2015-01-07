@@ -121,16 +121,19 @@ public class FileIcons {
     public static Icon getFileIcon(AbstractFile file, Dimension iconDimension) {
         boolean systemIcon = false;
 
-        if(USE_SYSTEM_ICONS_ALWAYS.equals(systemIconsPolicy))
+        if (USE_SYSTEM_ICONS_ALWAYS.equals(systemIconsPolicy)) {
             systemIcon = true;
+        }
 
-        if(USE_SYSTEM_ICONS_APPLICATIONS.equals(systemIconsPolicy))
+        if (USE_SYSTEM_ICONS_APPLICATIONS.equals(systemIconsPolicy)) {
             systemIcon = com.mucommander.desktop.DesktopManager.isApplication(file);
+        }
 
-        if(systemIcon) {
+        if (systemIcon) {
             Icon icon = getSystemFileIcon(file, iconDimension);
-            if(icon!=null)
+            if (icon != null) {
                 return icon;
+            }
             // If the system icon could not be resolved, return a custom file icon
         }
 
@@ -200,11 +203,13 @@ public class FileIcons {
      */
     private static Icon getFileProviderIcon(FileIconProvider fip, AbstractFile file, Dimension iconDimension) {
         Icon icon = fip.getFileIcon(file, iconDimension);
-        if(icon==null)
+        if (icon == null) {
             return null;
+        }
 
-        if(iconDimension.width==icon.getIconWidth() && iconDimension.height==icon.getIconHeight())
+        if (iconDimension.width==icon.getIconWidth() && iconDimension.height==icon.getIconHeight()) {
             return icon;    // the icon already has the right dimension
+        }
 
         // Scale the icon to the target dimension
         ImageIcon imageIcon = IconManager.getImageIcon(icon);
@@ -276,9 +281,9 @@ public class FileIcons {
      * @throws IllegalArgumentException if factor is lower or equal to 0
      */
     public static void setScaleFactor(float factor) {
-        if(scaleFactor<=0)
-            throw new IllegalArgumentException("Scale factor must be greater than 0, ("+factor+")");
-
+        if (scaleFactor <= 0) {
+            throw new IllegalArgumentException("Scale factor must be greater than 0, (" + factor + ")");
+        }
         scaleFactor = factor;
         iconDimension = new Dimension((int)(BASE_ICON_DIMENSION *scaleFactor), (int)(BASE_ICON_DIMENSION*scaleFactor));
     }
@@ -303,6 +308,7 @@ public class FileIcons {
      * @param policy the new system icons policy to use
      */
     public static void setSystemIconsPolicy(String policy) {
+System.out.println("getSystemIconsPolicy " + policy);
         systemIconsPolicy = policy;
     }
 

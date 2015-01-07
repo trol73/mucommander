@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 import com.mucommander.profiler.Profiler;
+import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.utils.MuLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,9 +294,8 @@ public class TrolCommander {
             // Initialize the SwingFileIconProvider from the main thread, see method Javadoc for an explanation on why we do this now
             SwingFileIconProvider.forceInit();
             // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-            com.mucommander.ui.icon.FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE,
-                    MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
-            com.mucommander.ui.icon.FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
+            FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE, MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
+            FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
         }
     }
 
@@ -308,9 +308,9 @@ public class TrolCommander {
         void run() throws Exception {
             // Enable system notifications, only after MainFrame is created as SystemTrayNotifier needs to retrieve
             // a MainFrame instance
-            if(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS)) {
+            if (MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS)) {
                 printStartupMessage("Enabling system notifications...");
-                if(com.mucommander.ui.notifier.AbstractNotifier.isAvailable())
+                if (com.mucommander.ui.notifier.AbstractNotifier.isAvailable())
                     com.mucommander.ui.notifier.AbstractNotifier.getNotifier().setEnabled(true);
             }
 
@@ -652,7 +652,7 @@ public class TrolCommander {
             LauncherTask taskLoadCredentials = new LoadCredentialsTask(helper);
             LauncherTask taskInitCustomDataFormat = new InitCustomDateFormatTask(helper, taskLoadConfigs);
             LauncherTask taskRegisterActions = new LoadActionsTask(helper, taskLoadTheme);
-            LauncherTask taskLoadIcons = new LoadIconsTask(helper);
+            LauncherTask taskLoadIcons = new LoadIconsTask(helper, taskLoadConfigs);
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
             LauncherTask enableNotificationsTask = new EnableNotificationsTask(helper, taskRegisterActions);

@@ -109,7 +109,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** All icon sizes label. */
     private final static String ICON_SIZES[]                = {"100%", "125%", "150%", "175%", "200%", "300%"};
     /** All icon sizes scale factors. */
-    private final static float  ICON_SCALE_FACTORS[]        = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
+    private final static float ICON_SCALE_FACTORS[]        = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
 
 
 
@@ -157,11 +157,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** System icon combobox. */
     private PrefComboBox<String> useSystemFileIconsComboBox;
     /** Identifier of 'yes' actions in question dialogs. */
-    private final static int       YES_ACTION = 0;
+    private final static int YES_ACTION = 0;
     /** Identifier of 'no' actions in question dialogs. */
-    private final static int       NO_ACTION = 1;
+    private final static int NO_ACTION = 1;
     /** Identifier of 'cancel' actions in question dialogs. */
-    private final static int       CANCEL_ACTION = 2;
+    private final static int CANCEL_ACTION = 2;
     /** All known custom look and feels. */
     private List<String> customLookAndFeels;
 
@@ -220,34 +220,33 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         toolbarIconsSizeComboBox.addDialogListener(parent);
         commandBarIconsSizeComboBox.addDialogListener(parent);
         fileIconsSizeComboBox.addDialogListener(parent);
-        if(brushedMetalCheckBox!=null)
-        	brushedMetalCheckBox.addDialogListener(parent);
+        if (brushedMetalCheckBox != null) {
+            brushedMetalCheckBox.addDialogListener(parent);
+        }
     }
 
     /**
      * Populates the look&feel combo box with all available look&feels.
      */
     private void populateLookAndFeels() {
-        int    currentIndex;
-        String currentName;
-
         lookAndFeelComboBox.removeAllItems();
         initializeAvailableLookAndFeels();
 
         // Populates the combo box.
-        currentIndex = -1;
-        currentName  = UIManager.getLookAndFeel().getClass().getName();
-        for(int i = 0; i < lookAndFeels.length; i++) {
+        int currentIndex = -1;
+        String currentName = UIManager.getLookAndFeel().getClass().getName();
+        for (int i = 0; i < lookAndFeels.length; i++) {
             // Looks for the currently selected look&feel.
-            if(lookAndFeels[i].getClassName().equals(currentName))
+            if (lookAndFeels[i].getClassName().equals(currentName)) {
                 currentIndex = i;
-
+            }
             lookAndFeelComboBox.addItem(lookAndFeels[i].getName());
         }
 
         // Sets the initial selection.
-        if(currentIndex == -1)
+        if (currentIndex < 0) {
             currentIndex = 0;
+        }
         lookAndFeelComboBox.setSelectedIndex(currentIndex);
     }
 
@@ -265,9 +264,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lookAndFeelComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				int selectedIndex = getSelectedIndex();
-                if (selectedIndex < 0)
-                    return false;                
-
+                if (selectedIndex < 0) {
+                    return false;
+                }
                 return !lookAndFeels[selectedIndex].getClassName().equals(MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL));
 			}
         };
@@ -307,7 +306,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
         // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
         // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
             // 'Use brushed metal look' option
             brushedMetalCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.use_brushed_metal")) {
             	public boolean hasChanged() {
@@ -477,8 +476,8 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         useSystemFileIconsComboBox.addItem(Translator.get("prefs_dialog.use_system_file_icons.applications"));
         useSystemFileIconsComboBox.addItem(Translator.get("prefs_dialog.use_system_file_icons.always"));
         String systemIconsPolicy = FileIcons.getSystemIconsPolicy();
-        useSystemFileIconsComboBox.setSelectedIndex(FileIcons.USE_SYSTEM_ICONS_ALWAYS.equals(systemIconsPolicy)?2:FileIcons.USE_SYSTEM_ICONS_APPLICATIONS.equals(systemIconsPolicy)?1:0);
 
+        useSystemFileIconsComboBox.setSelectedIndex(FileIcons.USE_SYSTEM_ICONS_ALWAYS.equals(systemIconsPolicy) ? 2 : FileIcons.USE_SYSTEM_ICONS_APPLICATIONS.equals(systemIconsPolicy) ? 1 : 0);
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.use_system_file_icons")));
         panel.add(useSystemFileIconsComboBox);
@@ -521,13 +520,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     @Override
     protected void commit() {
         // Look and Feel
-        if(MuConfigurations.getPreferences().setVariable(MuPreference.LOOK_AND_FEEL, lookAndFeels[lookAndFeelComboBox.getSelectedIndex()].getClassName())) {
+        if (MuConfigurations.getPreferences().setVariable(MuPreference.LOOK_AND_FEEL, lookAndFeels[lookAndFeelComboBox.getSelectedIndex()].getClassName())) {
             resetLookAndFeelButtons();
             SwingUtilities.updateComponentTreeUI(parent);
         }
 
-        if(brushedMetalCheckBox!=null)
-            MuConfigurations.getPreferences().setVariable(MuPreference.USE_BRUSHED_METAL,  brushedMetalCheckBox.isSelected());
+        if (brushedMetalCheckBox != null) {
+            MuConfigurations.getPreferences().setVariable(MuPreference.USE_BRUSHED_METAL, brushedMetalCheckBox.isSelected());
+        }
 
         // Set ToolBar's icon size
         float scaleFactor = ICON_SCALE_FACTORS[toolbarIconsSizeComboBox.getSelectedIndex()];
@@ -544,14 +544,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         MuConfigurations.getPreferences().setVariable(MuPreference.TABLE_ICON_SCALE , scaleFactor);
 
         // Sets the current theme.
-        if (!ThemeManager.isCurrentTheme((Theme)themeComboBox.getSelectedItem())) {
-            ThemeManager.setCurrentTheme((Theme)themeComboBox.getSelectedItem());
-            resetThemeButtons((Theme)themeComboBox.getSelectedItem());
+        if (!ThemeManager.isCurrentTheme(themeComboBox.getSelectedItem())) {
+            ThemeManager.setCurrentTheme(themeComboBox.getSelectedItem());
+            resetThemeButtons(themeComboBox.getSelectedItem());
             themeComboBox.repaint();
         }
 
         // Sets the current syntax theme.
-        final String syntaxThemeName = (String)syntaxThemeComboBox.getSelectedItem();
+        final String syntaxThemeName = syntaxThemeComboBox.getSelectedItem();
         if (!ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(syntaxThemeName)) {
             ThemeManager.setCurrentSyntaxTheme(syntaxThemeName);
             syntaxThemeComboBox.repaint();
@@ -559,7 +559,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // Set system icons policy
         int comboIndex = useSystemFileIconsComboBox.getSelectedIndex();
-        String systemIconsPolicy = comboIndex==0?FileIcons.USE_SYSTEM_ICONS_NEVER:comboIndex==1?FileIcons.USE_SYSTEM_ICONS_APPLICATIONS:FileIcons.USE_SYSTEM_ICONS_ALWAYS;
+        String systemIconsPolicy = comboIndex == 0 ? FileIcons.USE_SYSTEM_ICONS_NEVER : comboIndex == 1 ? FileIcons.USE_SYSTEM_ICONS_APPLICATIONS : FileIcons.USE_SYSTEM_ICONS_ALWAYS;
         FileIcons.setSystemIconsPolicy(systemIconsPolicy);
         MuConfigurations.getPreferences().setVariable(MuPreference.USE_SYSTEM_FILE_ICONS, systemIconsPolicy);
     }

@@ -23,7 +23,7 @@ import java.util.*;
  * Created on 01/01/14.
  */
 public class Profiler {
-    public static final boolean ENABLED = false;
+    public static final boolean ENABLED = true;
 
     private static final Map<String, Long> timesStart = new HashMap<>();
     private static final Map<String, Long> timesDuration = new HashMap<>();
