@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="icepdf">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/runtime/icepdf" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/runtime/icepdf" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/runtime/icepdf" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/runtime/icepdf" recursive="false" type="SOURCES" />
+  </library>
+</component>
