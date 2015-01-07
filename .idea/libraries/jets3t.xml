@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jets3t">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runtime/jets3t/jets3t-0.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

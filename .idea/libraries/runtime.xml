@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="runtime">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/runtime" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/jide-oss-3.6.2-sources.jar!/" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/runtime" recursive="false" />
+  </library>
+</component>

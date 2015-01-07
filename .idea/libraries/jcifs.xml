@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jcifs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runtime/jcifs/jcifs-3.1.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

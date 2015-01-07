@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jmdns">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runtime/jmdns/jmdns-3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
