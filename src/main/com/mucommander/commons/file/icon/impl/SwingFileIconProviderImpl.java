@@ -19,6 +19,7 @@
 
 package com.mucommander.commons.file.icon.impl;
 
+import ch.randelshofer.quaqua.osx.OSXFile;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.icon.CacheableFileIconProvider;
@@ -88,7 +89,10 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
             return;
         }
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            fileChooser = new JFileChooser();
+            // try to use quaqua OSXFile
+            if (!OSXFile.canWorkWithAliases()) {
+                fileChooser = new JFileChooser();
+            }
         } else {
             fileSystemView = FileSystemView.getFileSystemView();
         }
@@ -107,7 +111,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         initialized = true;
     }
 
-
+static int cnt;
     /**
      * Returns an icon for the given <code>java.io.File</code> using the underlying Swing provider component,
      * <code>null</code> in case of an error.
@@ -115,9 +119,9 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      * @param javaIoFile the file for which to return an icon
      * @return an icon for the specified file, null in case of an unexpected error
      */
-    private static Icon getSwingIcon(File javaIoFile) {
+    private static Icon getSwingIcon(File javaIoFile, int preferredSize) {
         try {
-            if(fileSystemView!=null) {
+            if (fileSystemView != null) {
                 // FileSystemView.getSystemIcon() will behave in the following way if the specified file doesn't exist
                 // when the icon is requested:
                 //  - throw a NullPointerException (caused by a java.io.FileNotFoundException) => OK why not
@@ -129,13 +133,30 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
                 // So the workaround here is to catch exceptions and 'silence' System.err output during the call.
 
                 errOut.setSilenced(true);
-
+System.out.println("getSwingIcon 1: " + javaIoFile.getAbsolutePath());
                 return fileSystemView.getSystemIcon(javaIoFile);
-            }
-            else {
-                return fileChooser.getIcon(javaIoFile);
+            } else {
+Profiler.start("icon");
+                Icon icon;
+                if (fileChooser == null) {
+
+//                    OSXFile.nativeGetIconImage(javaIoFile.getPath(), preferredSize);
+//                    icon = null;
+                    icon = OSXFile.getIcon(javaIoFile, preferredSize);
+                } else {
+                    icon = fileChooser.getIcon(javaIoFile);
+                }
+Profiler.stop("icon");
+if ((++cnt % 10) == 0) {
+//    System.out.println(preferredSize + " => " + icon + " " + fileChooser + " " + OSXFile.canWorkWithAliases());
+    Profiler.print();
+    new Exception().printStackTrace();
+}
+                return icon;
+//System.out.println("getSwingIcon 2: " + javaIoFile.getAbsolutePath());
             }
         } catch(Exception e) {
+e.printStackTrace();
             LOGGER.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
             return null;
         } finally {
@@ -154,6 +175,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      * @return an icon symbolizing a symlink to the given target
      */
     private static ImageIcon getSymlinkIcon(Icon targetFileIcon) {
+System.out.println("getSymlinkIcon " + targetFileIcon);
         BufferedImage bi = new BufferedImage(targetFileIcon.getIconWidth(), targetFileIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 
         Graphics g = bi.getGraphics();
@@ -173,7 +195,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      */
     private static String getCheckedExtension(AbstractFile file) {
         String extension = file.getExtension();
-        return extension==null?"":extension;
+        return extension == null ? "" : extension;
     }
 
 
@@ -196,8 +218,9 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
 
     public Icon lookupCache(AbstractFile file, Dimension preferredResolution) {
         // Under Mac OS X, return the icon of /Network for the root of remote (non-local) locations. 
-        if(OsFamily.MAC_OS_X.isCurrent() && !FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot())
-            return getSwingIcon(new File("/Network"));
+        if (OsFamily.MAC_OS_X.isCurrent() && !FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
+            return getSwingIcon(new File("/Network"), preferredResolution.width);
+        }
 
         // Look for an existing icon instance for the file's extension
         return (file.isDirectory()? directoryIconCache : fileIconCache).get(getCheckedExtension(file));
@@ -205,7 +228,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
 
     public void addToCache(AbstractFile file, Icon icon, Dimension preferredResolution) {
         // Map the extension onto the given icon
-        (file.isDirectory()? directoryIconCache : fileIconCache).put(getCheckedExtension(file), icon);
+        (file.isDirectory() ? directoryIconCache : fileIconCache).put(getCheckedExtension(file), icon);
     }
 
     /**
@@ -218,7 +241,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         checkInit();
 
         // Retrieve the icon using the Swing provider component
-        Icon icon = getSwingIcon((File)localFile.getUnderlyingFileObject());
+        Icon icon = getSwingIcon((File)localFile.getUnderlyingFileObject(), preferredResolution.width);
 
         // Add a symlink indication to the icon if:
         // - the original file is a symlink AND
@@ -228,7 +251,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         //
         // Note that the symlink test is performed last because it is the most expensive.
         //
-        if((!(originalFile.getTopAncestor() instanceof LocalFile) || (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrent()))
+        if ((!(originalFile.getTopAncestor() instanceof LocalFile) || (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrent()))
                 && originalFile.isSymlink()) {
             icon = getSymlinkIcon(icon);
         }

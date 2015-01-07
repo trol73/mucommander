@@ -365,8 +365,10 @@ class TextEditorImpl implements ThemeListener {
             return FileType.PHP;
         } else if (str.startsWith("#!/usr/bin/python")) {
             return FileType.PYTHON;
-        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh")) {
+        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash")) {
             return FileType.UNIX_SHELL;
+        } else if (str.startsWith("<!DOCTYPE html PUBLIC \"")) {
+            return FileType.HTML;
         }
         return FileType.NONE;
     }
