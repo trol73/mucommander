@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 
 /**
  * Created on 08.01.15.
+ * @author Oleg Trifonov
  */
 public class FileUtils {
 
@@ -41,7 +42,6 @@ public class FileUtils {
     }
 
     public static void copyJarFile(String name, String jarPath) throws IOException {
-System.out.println("copy " + name + " -> " + jarPath);
         final String outFile = jarPath + File.separatorChar + name;
         if (!new File(outFile).exists()) {
             FileUtils.copyFileFromJar('/' + name, outFile);

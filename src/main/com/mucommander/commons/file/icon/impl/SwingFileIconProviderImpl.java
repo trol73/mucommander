@@ -79,7 +79,6 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
 
 
     private static void prepareQuaquaLibraries() {
-        System.out.println("prepare");
         String jarPath = FileUtils.getJarPath();
 
         try {
@@ -89,9 +88,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.setProperty("java.library.path", FileUtils.getJarPath() + File.pathSeparatorChar + System.getProperty("java.library.path"));
         OSXFile.setNativePath(FileUtils.getJarPath() + File.separator);
-//System.out.println(System.getProperty("java.library.path"));
     }
 
 

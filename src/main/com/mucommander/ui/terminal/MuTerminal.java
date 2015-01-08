@@ -161,7 +161,7 @@ public class MuTerminal {
 
 
     private void prepareLibraries() throws IOException {
-        String jarPath = FileUtils.getJarPath();//PtyUtil.getJarFolder();
+        String jarPath = FileUtils.getJarPath();
 
         switch (OsFamily.getCurrent()) {
             case WINDOWS:

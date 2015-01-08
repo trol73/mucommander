@@ -40,6 +40,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
+import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -541,6 +542,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         scaleFactor = ICON_SCALE_FACTORS[fileIconsSizeComboBox.getSelectedIndex()];
         // Set scale factor in FileIcons first so that it has the new value when ConfigurationListener instances call it
         FileIcons.setScaleFactor(scaleFactor);
+        FileIconsCache.getInstance().clear();
         MuConfigurations.getPreferences().setVariable(MuPreference.TABLE_ICON_SCALE , scaleFactor);
 
         // Sets the current theme.

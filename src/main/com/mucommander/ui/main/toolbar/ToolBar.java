@@ -107,14 +107,15 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
     
     private void addButtons(String[] actionIds) {
         for (String actionId : actionIds) {
-            if (actionId == null)
+            if (actionId == null) {
                 addSeparator(SEPARATOR_DIMENSION);
-            else {
+            } else {
                 // Get a MuAction instance
                 MuAction action = ActionManager.getActionInstance(actionId, mainFrame);
                 // Do not add buttons for actions that do not have an icon
-                if (action.getIcon() != null)
+                if (action.getIcon() != null) {
                     addButton(action);
+                }
             }
         }
 
@@ -124,23 +125,25 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
             boolean hasPrevious, hasNext;
 
             // Set the 'segment position' required for the 'segmented capsule' style  
-            for(int i=0; i<nbComponents; i++) {
+            for( int i = 0; i < nbComponents; i++) {
                 comp = getComponent(i);
-                if(!(comp instanceof JButton))
+                if (!(comp instanceof JButton)) {
                     continue;
+                }
 
                 hasPrevious = i!=0 && (getComponent(i-1) instanceof JButton);
                 hasNext = i!=nbComponents-1 && (getComponent(i+1) instanceof JButton);
 
                 String segmentPosition;
-                if(hasPrevious && hasNext)
+                if (hasPrevious && hasNext) {
                     segmentPosition = "middle";
-                else if(hasPrevious)
+                } else if (hasPrevious) {
                     segmentPosition = "last";
-                else if(hasNext)
+                } else if (hasNext) {
                     segmentPosition = "first";
-                else
+                } else {
                     segmentPosition = "only";
+                }
 
                 ((JButton)comp).putClientProperty("JButton.segmentPosition", segmentPosition);
              }
@@ -153,10 +156,11 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
     private void addButton(MuAction action) {
         JButton button;
 
-        if(action instanceof GoBackAction || action instanceof GoForwardAction)
+        if (action instanceof GoBackAction || action instanceof GoForwardAction) {
             button = new HistoryPopupButton(action);
-        else
+        } else {
             button = new NonFocusableButton(action);
+        }
 
         // Remove label
         button.setText(null);
@@ -164,15 +168,18 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // Add tooltip using the action's label and accelerator
         String toolTipText = action.getLabel();
         String acceleratorText = action.getAcceleratorText();
-        if(acceleratorText!=null)
-            toolTipText += " ("+acceleratorText+")";
+        if (acceleratorText != null) {
+            toolTipText += " (" + acceleratorText + ")";
+        }
         button.setToolTipText(toolTipText);
 
         // Sets the button icon, taking into account the icon scale factor
         setButtonIcon(button);
 
-        if(USE_MAC_OS_X_CLIENT_PROPERTIES) {
-            button.putClientProperty("JButton.buttonType", "segmentedTextured");
+        if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
+            if (button.getIcon() == null || button.getIcon().getIconHeight() <= 16) {
+                button.putClientProperty("JButton.buttonType", "segmentedTextured");
+            }
             button.setRolloverEnabled(true);
         }
         // On other platforms, use a custom rollover effect
@@ -194,8 +201,9 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // Note: the action's icon must not be changed and remain in its original, non-scaled size
         ImageIcon icon = IconManager.getScaledIcon((ImageIcon)button.getAction().getValue(Action.SMALL_ICON), scaleFactor);
 
-        if(!USE_MAC_OS_X_CLIENT_PROPERTIES)     // Add padding around the icon so the button feels less crowded
+        if (!USE_MAC_OS_X_CLIENT_PROPERTIES) {    // Add padding around the icon so the button feels less crowded
             icon = IconManager.getPaddedIcon(icon, new Insets(3, 4, 3, 4));
+        }
 
         button.setIcon(icon);
     }
@@ -234,7 +242,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         Object source = e.getSource();
 
         // Right clicking on the toolbar brings up a popup menu
-        if(source == this) {
+        if (source == this) {
             if (DesktopManager.isRightMouseButton(e)) {
                 //			if (e.isPopupTrigger()) {	// Doesn't work under Mac OS X (CTRL+click doesn't return true)
                 JPopupMenu popupMenu = new JPopupMenu();
@@ -247,7 +255,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        if(source instanceof JButton)
+        if (source instanceof JButton)
             ((JButton)source).setBorderPainted(true);
     }
 
