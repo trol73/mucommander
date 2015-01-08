@@ -111,8 +111,7 @@ public class SortInfo implements Cloneable {
     public SortInfo clone() {
         try {
             return (SortInfo)super.clone();
-        }
-        catch(CloneNotSupportedException e) {
+        } catch(CloneNotSupportedException e) {
             // Should never happen
             return null;
         }

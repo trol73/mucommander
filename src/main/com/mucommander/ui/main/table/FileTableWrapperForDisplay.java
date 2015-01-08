@@ -154,9 +154,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         // color.
         // Otherwise, repaint the table - if we were to skip that step, quicksearch
         // cancellation might result in a corrupt display.
-        if(newColor.equals(getViewport().getBackground()))
+        if (newColor.equals(getViewport().getBackground())) {
             fileTable.repaint();
-        else {
+        } else {
             fileTable.setBackground(newColor);
             getViewport().setBackground(newColor);
         }
@@ -183,8 +183,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         Border border;
         // Some (rather evil) look and feels will change borders outside of muCommander's control,
         // this check is necessary to ensure no exception is thrown.
-        if((border = getBorder()) instanceof MutableLineBorder)
-            ((MutableLineBorder)border).setLineColor(color);
+        if ((border = getBorder()) instanceof MutableLineBorder) {
+            ((MutableLineBorder) border).setLineColor(color);
+        }
     }
 	
 	// - Theme listening -------------------------------------------------------------

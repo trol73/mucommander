@@ -31,16 +31,15 @@ import com.mucommander.commons.file.util.ResourceLoader;
 import com.mucommander.commons.io.SilenceableOutputStream;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trolsoft.utils.FileUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -78,6 +77,25 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     protected static SilenceableOutputStream errOut;
 
 
+
+    private static void prepareQuaquaLibraries() {
+        System.out.println("prepare");
+        String jarPath = FileUtils.getJarPath();
+
+        try {
+            FileUtils.copyJarFile("libquaqua.jnilib", jarPath);
+            FileUtils.copyJarFile("libquaqua64.dylib", jarPath);
+            FileUtils.copyJarFile("libquaqua64.jnilib", jarPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        System.setProperty("java.library.path", FileUtils.getJarPath() + File.pathSeparatorChar + System.getProperty("java.library.path"));
+        OSXFile.setNativePath(FileUtils.getJarPath() + File.separator);
+//System.out.println(System.getProperty("java.library.path"));
+    }
+
+
+
     /**
      * Initializes the Swing object used to retrieve icons the first time this method is called, does nothing
      * subsequent calls.
@@ -90,6 +108,8 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         }
         if (OsFamily.MAC_OS_X.isCurrent()) {
             // try to use quaqua OSXFile
+            prepareQuaquaLibraries();
+            // use ugly JFileChooser if error
             if (!OSXFile.canWorkWithAliases()) {
                 fileChooser = new JFileChooser();
             }
@@ -106,12 +126,13 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         SYMLINK_OVERLAY_ICON = new ImageIcon(iconURL);
 
         // Replace stderr with a SilenceablePrintStream that can be 'silenced' when needed
-        System.setErr(new PrintStream(errOut = new SilenceableOutputStream(System.err, false), true));
+        errOut = new SilenceableOutputStream(System.err, false);
+        System.setErr(new PrintStream(errOut, true));
 
         initialized = true;
     }
 
-static int cnt;
+
     /**
      * Returns an icon for the given <code>java.io.File</code> using the underlying Swing provider component,
      * <code>null</code> in case of an error.
@@ -133,30 +154,15 @@ static int cnt;
                 // So the workaround here is to catch exceptions and 'silence' System.err output during the call.
 
                 errOut.setSilenced(true);
-System.out.println("getSwingIcon 1: " + javaIoFile.getAbsolutePath());
                 return fileSystemView.getSystemIcon(javaIoFile);
             } else {
-Profiler.start("icon");
-                Icon icon;
                 if (fileChooser == null) {
-
-//                    OSXFile.nativeGetIconImage(javaIoFile.getPath(), preferredSize);
-//                    icon = null;
-                    icon = OSXFile.getIcon(javaIoFile, preferredSize);
+                    return OSXFile.getIcon(javaIoFile, preferredSize);
                 } else {
-                    icon = fileChooser.getIcon(javaIoFile);
+                    return fileChooser.getIcon(javaIoFile);
                 }
-Profiler.stop("icon");
-if ((++cnt % 10) == 0) {
-//    System.out.println(preferredSize + " => " + icon + " " + fileChooser + " " + OSXFile.canWorkWithAliases());
-    Profiler.print();
-    new Exception().printStackTrace();
-}
-                return icon;
-//System.out.println("getSwingIcon 2: " + javaIoFile.getAbsolutePath());
             }
-        } catch(Exception e) {
-e.printStackTrace();
+        } catch (Exception e) {
             LOGGER.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
             return null;
         } finally {
@@ -175,7 +181,6 @@ e.printStackTrace();
      * @return an icon symbolizing a symlink to the given target
      */
     private static ImageIcon getSymlinkIcon(Icon targetFileIcon) {
-System.out.println("getSymlinkIcon " + targetFileIcon);
         BufferedImage bi = new BufferedImage(targetFileIcon.getIconWidth(), targetFileIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 
         Graphics g = bi.getGraphics();
