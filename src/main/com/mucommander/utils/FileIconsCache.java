@@ -25,6 +25,7 @@ import java.util.*;
 
 /**
  * Created on 07.01.15.
+ * @author Oleg trifonov
  *
  * Cache of system file icons
  */

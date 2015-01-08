@@ -18,13 +18,10 @@
 
 package com.mucommander.ui.main;
 
-import java.awt.Dimension;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.AbstractAction;
@@ -98,7 +95,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     private static Map<AbstractFile, String> extendedNameCache;
     
     /** Caches drive icons */
-    private static Map<AbstractFile, Icon> iconCache = new Hashtable<>();
+    private static Map<AbstractFile, Icon> iconCache = new HashMap<>();
     
 
     /** Filters out volumes from the list based on the exclude regexp defined in the configuration, null if the regexp
@@ -107,14 +104,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
 
     static {
-        if(OsFamily.WINDOWS.isCurrent()) {
+        if (OsFamily.WINDOWS.isCurrent()) {
             fileSystemView = FileSystemView.getFileSystemView();
-            extendedNameCache = new Hashtable<>();
+            extendedNameCache = new HashMap<>();
         }
 
         try {
             String excludeRegexp = MuConfigurations.getPreferences().getVariable(MuPreference.VOLUME_EXCLUDE_REGEXP);
-            if(excludeRegexp!=null) {
+            if (excludeRegexp != null) {
                 volumeFilter = new RegexpPathFilter(excludeRegexp, true);
                 volumeFilter.setInverted(true);
             }
@@ -146,14 +143,16 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         MuConfigurations.addPreferencesListener(this);
 
         // Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
-            setMargin(new Insets(6,8,6,8));
-            putClientProperty("JComponent.sizeVariant", "small");
-            putClientProperty("JButton.buttonType", "textured");
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+            //setMargin(new Insets(6,8,6,8));
+            //putClientProperty("JComponent.sizeVariant", "small");
+            //putClientProperty("JComponent.sizeVariant", "large");
+            //putClientProperty("JButton.buttonType", "textured");
         }
     }
 
-    /**
+
+   /**
      * Updates the button's label and icon to reflect the current folder and match one of the current volumes:
      * <<ul>
      *	<li>If the specified folder corresponds to a bookmark, the bookmark's name will be displayed
@@ -171,7 +170,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 //        String newToolTip = null;
 
         // First tries to find a bookmark matching the specified folder
-        java.util.List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
+        List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
 
         for (Bookmark b : bookmarks) {
             if (currentPath.equals(b.getLocation())) {
@@ -182,40 +181,41 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         }
 		
         // If no bookmark matched current folder
-        if(newLabel == null) {
+        if (newLabel == null) {
             String protocol = currentURL.getScheme();
             // Remote file, use the protocol's name
-            if(!protocol.equals(FileProtocols.FILE)) {
+            if (!protocol.equals(FileProtocols.FILE)) {
                 newLabel = protocol.toUpperCase();
             }
             // Local file, use volume's name 
             else {
                 // Patch for Windows UNC network paths (weakly characterized by having a host different from 'localhost'):
                 // display 'SMB' which is the underlying protocol
-                if(OsFamily.WINDOWS.isCurrent() && !FileURL.LOCALHOST.equals(currentURL.getHost())) {
+                if (OsFamily.WINDOWS.isCurrent() && !FileURL.LOCALHOST.equals(currentURL.getHost())) {
                     newLabel = "SMB";
-                }
-                else {
+                } else {
                     // getCanonicalPath() must be avoided under Windows for the following reasons:
                     // a) it is not necessary, Windows doesn't have symlinks
                     // b) it triggers the dreaded 'No disk in drive' error popup dialog.
                     // c) when network drives are present but not mounted (e.g. X:\ mapped onto an SMB share),
                     // getCanonicalPath which is I/O bound will take a looooong time to execute
 
-                    if(OsFamily.WINDOWS.isCurrent())
+                    if (OsFamily.WINDOWS.isCurrent()) {
                         currentPath = currentFolder.getAbsolutePath(false).toLowerCase();
-                    else
+                    } else {
                         currentPath = currentFolder.getCanonicalPath(false).toLowerCase();
+                    }
 
                     int bestLength = -1;
                     int bestIndex = 0;
                     String temp;
                     int len;
-                    for(int i=0; i< volumes.length; i++) {
-                        if(OsFamily.WINDOWS.isCurrent())
+                    for (int i=0; i< volumes.length; i++) {
+                        if (OsFamily.WINDOWS.isCurrent()) {
                             temp = volumes[i].getAbsolutePath(false).toLowerCase();
-                        else
+                        } else {
                             temp = volumes[i].getCanonicalPath(false).toLowerCase();
+                        }
 
                         len = temp.length();
                         if (currentPath.startsWith(temp) && len>bestLength) {
@@ -251,8 +251,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         // Note: fileSystemView.getSystemDisplayName(java.io.File) is unfortunately very very slow
         String name = fileSystemView.getSystemDisplayName((java.io.File)localFile.getUnderlyingFileObject());
 
-        if(name==null || name.equals(""))   // This happens for CD/DVD drives when they don't contain any disc
+        if (name == null || name.isEmpty()) {   // This happens for CD/DVD drives when they don't contain any disc
             return localFile.getName();
+        }
 
         return name;
     }
@@ -270,8 +271,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     public static AbstractFile[] getDisplayableVolumes() {
         AbstractFile[] volumes = LocalFile.getVolumes();
 
-        if(volumeFilter!=null)
+        if (volumeFilter != null) {
             return volumeFilter.filter(volumes);
+        }
 
         return volumes;
     }
@@ -343,8 +345,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), b));
                 setMnemonic(item, mnemonicHelper);
             }
-        }
-        else {
+        } else {
             // No bookmark : add a disabled menu item saying there is no bookmark
             popupMenu.add(Translator.get("bookmarks_menu.no_bookmark")).setEnabled(false);
         }
@@ -412,7 +413,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
                 // Set system icon for volumes, only if system icons are available on the current platform
                 final Icon icon = FileIcons.hasProperSystemIcons()?FileIcons.getSystemFileIcon(volumes[i]):null;
-                if (icon!=null) {
+                if (icon != null) {
                     iconCache.put(volumes[i], icon);
                 }
 
@@ -488,8 +489,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         // as bookmarks name can be as long as users want them to be.
         // Note: would be better to use JButton.setMaximumSize() but it doesn't seem to work
         Dimension d = super.getPreferredSize();
-        if(d.width > 160)
+        if (d.width > 160) {
             d.width = 160;
+        }
         return d;
     }
 
