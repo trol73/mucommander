@@ -196,8 +196,7 @@ public class StreamUtils {
             }
 
             return totalRead;
-        }
-        finally {
+        } finally {
             // Make the buffer available for further use
             BufferPool.releaseCharArray(buffer);
         }
@@ -231,9 +230,9 @@ public class StreamUtils {
         byte buffer[] = BufferPool.getByteArray(bufferSize);
 
         // Fill the buffer with the constant byte value, not necessary if the value is zero
-        if(value!=0) {
-            for(int i=0; i<bufferSize; i++)
-                buffer[i] = value;
+        if (value != 0) {
+            for(int i=0; i<bufferSize; i++) {
+                buffer[i] = value;}
         }
 
         try {
@@ -293,8 +292,7 @@ public class StreamUtils {
                 raos.write(buffer, 0, nbBytes);
                 remaining -= nbBytes;
             }
-        }
-        finally {
+        } finally {
             BufferPool.releaseByteArray(buffer);
         }
     }
@@ -355,16 +353,16 @@ public class StreamUtils {
      * @throws java.io.IOException if an I/O error occurs
      */
     public static void skipFully(InputStream in, long n) throws IOException {
-        if(n<=0)
+        if (n <= 0) {
             return;
-
+        }
         do {
             long nbSkipped = in.skip(n);
-            if (nbSkipped < 0)
+            if (nbSkipped < 0) {
                 throw new EOFException();
-
+            }
             n -= nbSkipped;
-        } while(n>0);
+        } while(n > 0);
     }
 
     /**
@@ -442,8 +440,7 @@ public class StreamUtils {
                 if(nbRead==-1)
                     break;
             }
-        }
-        finally {
+        } finally {
             BufferPool.releaseByteArray(buffer);
         }
     }

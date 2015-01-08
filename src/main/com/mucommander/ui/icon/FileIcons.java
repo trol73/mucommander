@@ -207,7 +207,7 @@ public class FileIcons {
             return null;
         }
 
-        if (iconDimension.width==icon.getIconWidth() && iconDimension.height==icon.getIconHeight()) {
+        if (iconDimension.width == icon.getIconWidth() && iconDimension.height == icon.getIconHeight()) {
             return icon;    // the icon already has the right dimension
         }
 
@@ -308,7 +308,6 @@ public class FileIcons {
      * @param policy the new system icons policy to use
      */
     public static void setSystemIconsPolicy(String policy) {
-System.out.println("getSystemIconsPolicy " + policy);
         systemIconsPolicy = policy;
     }
 

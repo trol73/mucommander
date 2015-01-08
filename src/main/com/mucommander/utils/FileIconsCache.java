@@ -21,11 +21,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.icon.FileIcons;
 
 import javax.swing.*;
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created on 07.01.15.
@@ -34,8 +30,31 @@ import java.util.Set;
  */
 public class FileIconsCache {
 
-    private final Map<AbstractFile, Icon> icons = new HashMap<>();
-    private final Set<Icon> iconsSet = new HashSet<>();
+    /**
+     * Default cache size
+     */
+    public static final int DEFAULT_SIZE = 100;
+
+    private final Map<String, Icon> icons = new HashMap<>();
+    private final LinkedList<String> files = new LinkedList<>();
+
+    private int size = DEFAULT_SIZE;
+
+
+    private static FileIconsCache instance;
+
+
+
+    public static FileIconsCache getInstance() {
+        if (instance == null) {
+            synchronized (FileIconsCache.class) {
+                if (instance == null) {
+                    instance = new FileIconsCache();
+                }
+            }
+        }
+        return instance;
+    }
 
     /**
      * Get icon from cache or get it from system and add to cache
@@ -43,11 +62,15 @@ public class FileIconsCache {
      * @return
      */
     public Icon getIcon(AbstractFile file) {
-        Icon result = icons.get(file);
+        String path = file.getAbsolutePath();
+        Icon result = icons.get(path);
         if (result != null) {
+            // move record to top
+            files.remove(path);
+            files.addFirst(path);
             return result;
         }
-        return addIcon(file);
+        return addIcon(file, path);
     }
 
 
@@ -63,29 +86,26 @@ public class FileIconsCache {
 
     /**
      * Loads icon and adds it to cache
-     * @param file
+     * @param path absolute path of file
      * @return loaded icon
      */
-    private Icon addIcon(AbstractFile file) {
+    private Icon addIcon(AbstractFile file, String path) {
         Icon icon = loadIcon(file);
+        icons.put(path, icon);
+        files.addFirst(path);
 
+        // remove oldest record if the cache is full
+        if (files.size() > size) {
+            icons.remove(files.removeLast());
+        }
 
         return icon;
     }
 
 
-    public static void main(String args[]) {
-        JFileChooser fileChooser = new JFileChooser();
-        FileIconsCache cache = new FileIconsCache();
-
-
-        cache.iconsSet.add(fileChooser.getIcon(new File("/Applications/")));
-        cache.iconsSet.add(fileChooser.getIcon(new File("/bin/bash")));
-        cache.iconsSet.add(fileChooser.getIcon(new File("/bin/cat")));
-        cache.iconsSet.add(fileChooser.getIcon(new File("/bin/cp")));
-
-        System.out.println(cache.iconsSet);
-
+    public void clear() {
+        icons.clear();
+        files.clear();
     }
 
 }
