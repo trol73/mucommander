@@ -144,7 +144,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
      */
     private ThemeReader(ThemeData t) {
         template = t;
-        state    = STATE_UNKNOWN;
+        state = STATE_UNKNOWN;
     }
 
     /**
@@ -153,7 +153,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
      * @param     template  template in which to store the data.
      * @exception Exception thrown if an error occured while reading the template.
      */
-    public static void read(InputStream in, ThemeData template) throws Exception {SAXParserFactory.newInstance().newSAXParser().parse(in, new ThemeReader(template));}
+    public static void read(InputStream in, ThemeData template) throws Exception {
+        SAXParserFactory.newInstance().newSAXParser().parse(in, new ThemeReader(template));
+    }
 
 
     // - XML interaction -----------------------------------------------------

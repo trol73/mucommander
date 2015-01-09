@@ -24,6 +24,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class manages keyboard associations with {@link MuAction} ids.
@@ -33,9 +34,9 @@ import java.util.Iterator;
 public class ActionKeymap {
 
     /** Maps action id onto Keystroke instances */
-    private static HashMap<String, KeyStroke> customPrimaryActionKeymap = new HashMap<>();
+    private static Map<String, KeyStroke> customPrimaryActionKeymap = new HashMap<>();
     /** Maps action id instances onto Keystroke instances */
-    private static HashMap<String, KeyStroke> customAlternateActionKeymap = new HashMap<>();
+    private static Map<String, KeyStroke> customAlternateActionKeymap = new HashMap<>();
     /** Maps Keystroke instances onto action id */
     private static AcceleratorMap acceleratorMap = new AcceleratorMap();
 
@@ -125,8 +126,8 @@ public class ActionKeymap {
      * @param primary - HashMap that maps action id to primary accelerator.
      * @param alternate - HashMap that maps action id to alternative accelerator.
      */
-    public static void registerActions(HashMap<String, KeyStroke> primary, HashMap<String, KeyStroke> alternate) {
-    	for(String actionId : primary.keySet()) {
+    public static void registerActions(Map<String, KeyStroke> primary, Map<String, KeyStroke> alternate) {
+    	for (String actionId : primary.keySet()) {
     		// Add the action/keystroke mapping
     		ActionKeymap.registerActionAccelerators(
     				actionId,
@@ -243,7 +244,7 @@ public class ActionKeymap {
      * Register accelerator of MuAction to JComponent with a condition that states when the action can be invoked.
      */
     private static void registerActionAccelerator(MuAction action, KeyStroke accelerator, JComponent comp, int condition) {
-    	if(accelerator != null) {
+    	if (accelerator != null) {
     		InputMap inputMap = comp.getInputMap(condition);
     		ActionMap actionMap = comp.getActionMap();
     		String actionId = action.getDescriptor().getId();
@@ -328,8 +329,9 @@ public class ActionKeymap {
      * Return true if the two KeyStrokes are equal, false otherwise.
      */
     private static boolean equals(Object first, Object second) {
-    	if (first == null)
-    		return second == null;
+    	if (first == null) {
+			return second == null;
+		}
     	return first.equals(second);
     }
 }

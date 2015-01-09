@@ -18,10 +18,7 @@
 
 package com.mucommander.commons.conf;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a section in the configuration tree.
@@ -31,7 +28,7 @@ class ConfigurationSection {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Contains all the variables defined in the section. */
-    private final Map<String, String> variables= new HashMap<>();
+    private final Map<String, String> variables = new HashMap<>();
     /** Contains all the subsections defined the section. */
     private final Map<String, ConfigurationSection> sections = new HashMap<>();
 
@@ -70,7 +67,7 @@ class ConfigurationSection {
      */
     public boolean setVariable(String name, String value) {
         // If the specified value is empty, deletes the variable.
-        if(value == null || value.trim().equals("")) {
+        if (value == null || value.trim().isEmpty()) {
             // If the variable wasn't set, we haven't changed its value.
             if(getVariable(name) == null)
                 return false;
@@ -81,21 +78,20 @@ class ConfigurationSection {
         }
 
         // Compares the variable's new and old values.
-        String buffer;
-        buffer = variables.put(name, value);
+        String buffer = variables.put(name, value);
         return buffer == null || !buffer.equals(value);
     }
 
     /**
-     * Returns an iterator on the names of the variables that are defined in the section.
+     * Returns an set on the names of the variables that are defined in the section.
      * <p>
      * Note that the order in which variable names are returned needs not be that in which they were added to the
      * section. Callers should not rely on the order being consistent over time.
      * </p>
      * @return an iterator on the names of the variables that are defined in the section.
      */
-    public Iterator<String> variableNames() {
-        return variables.keySet().iterator();
+    public Set<String> variableNames() {
+        return variables.keySet();
     }
 
     /**
@@ -251,14 +247,15 @@ class ConfigurationSection {
      * @return      the subsection with the specified name.
      */
     public ConfigurationSection addSection(String name) {
-        ConfigurationSection section;
+        ConfigurationSection section = getSection(name);
 
         // The section already exists, returns it.
-        if((section = getSection(name)) != null)
+        if (section != null) {
             return section;
-
+        }
         // Creates the new section.
-        sections.put(name, section = new ConfigurationSection());
+        section = new ConfigurationSection();
+        sections.put(name, section);
         return section;
     }
 
@@ -280,18 +277,13 @@ class ConfigurationSection {
      * @return         <code>true</code> if the specified section was removed, <code>false</code> if it didn't exist.
      */
     public boolean removeSection(ConfigurationSection section) {
-        String           name;
-        Iterator<String> sectionNames;
-
-        sectionNames = sectionNames();
+        Set<String> sectionNames = sectionNames();
 
         // Goes through each key / value pair and checks whether we've found the sectioon
         // we were looking for.
-        while(sectionNames.hasNext()) {
-            name = sectionNames.next();
-
+        for (String name : sectionNames) {
             // If we have, remove it and break.
-            if(getSection(name).equals(section)) {
+            if (getSection(name).equals(section)) {
                 removeSection(name);
                 return true;
             }
@@ -310,15 +302,15 @@ class ConfigurationSection {
     }
 
     /**
-     * Returns an enumeration on all of this section's subsections' names.
+     * Returns an set on all of this section's subsections' names.
      * <p>
      * Note that the order in which section names are returned needs not be that in which they were added to the
      * section. Callers should not rely on the order being consistent over time.
      * </p>
      * @return an enumeration on all of this section's subsections' names.
      */
-    public Iterator<String> sectionNames() {
-        return sections.keySet().iterator();
+    public Set<String> sectionNames() {
+        return sections.keySet();
     }
 
     /**

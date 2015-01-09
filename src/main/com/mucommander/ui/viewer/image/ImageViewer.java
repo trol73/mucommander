@@ -39,6 +39,7 @@ import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.helper.MenuToolkit;
@@ -192,7 +193,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         statusBar.setImageSize(imageWidth, imageHeight);
 
         this.zoomFactor = 1.0;
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screen = MuSnapshot.getScreenSize();
 
         double zoomFactorX = 1.0 * screen.width / imageWidth;
         double zoomFactorY = 1.0 * screen.height / imageHeight;
@@ -314,7 +315,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private void checkZoom() {
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension d = MuSnapshot.getScreenSize();
 		
         zoomInItem.setEnabled(zoomFactor<1.0 || (2*zoomFactor*image.getWidth(null) < d.width
                                                  && 2*zoomFactor*image.getHeight(null) < d.height));

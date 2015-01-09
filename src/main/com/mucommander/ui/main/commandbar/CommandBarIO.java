@@ -77,14 +77,12 @@ public abstract class CommandBarIO extends DefaultHandler {
      * This method must be called before instantiating CommandBar for the first time.
      */
     public static void loadCommandBar() throws Exception {
-
     	// Load user's file if exist
     	AbstractFile commandBarFile = getDescriptionFile();
-    	if(commandBarFile != null && commandBarFile.exists()) {
+    	if (commandBarFile != null && commandBarFile.exists()) {
     		CommandBarReader reader = new CommandBarReader(commandBarFile);
     		CommandBarAttributes.setAttributes(reader.getActionsRead(), reader.getAlternateActionsRead(), reader.getModifierRead());
-    	}
-    	else {
+    	} else {
     		CommandBarAttributes.restoreDefault();
     		LOGGER.debug(DEFAULT_COMMAND_BAR_FILE_NAME + " was not found, using defaults");
     	}
@@ -109,18 +107,18 @@ public abstract class CommandBarIO extends DefaultHandler {
         	if(commandBarFile != null && commandBarFile.exists()) {
         		LOGGER.info("Command bar use default settings, removing descriptor file");
         		commandBarFile.delete();
-        	}
-        	else
-        		LOGGER.debug("Command bar not modified, not saving");
-    	}
-    	else if (commandBarWriter != null) {
-    		if (wasCommandBarModified)
-    			commandBarWriter.write();
-    		else
-    			LOGGER.debug("Command bar not modified, not saving");
-    	}
-    	else
-    		LOGGER.warn("Could not save command bar. writer is null");
+        	} else {
+				LOGGER.debug("Command bar not modified, not saving");
+			}
+    	} else if (commandBarWriter != null) {
+    		if (wasCommandBarModified) {
+				commandBarWriter.write();
+			} else {
+				LOGGER.debug("Command bar not modified, not saving");
+			}
+    	} else {
+			LOGGER.warn("Could not save command bar. writer is null");
+		}
     }
 	
 	/**
@@ -130,12 +128,13 @@ public abstract class CommandBarIO extends DefaultHandler {
      * @throws FileNotFoundException if the specified file is not accessible.
      */
     public static void setDescriptionFile(String path) throws FileNotFoundException {
-        AbstractFile file;
+        AbstractFile file  = FileFactory.getFile(path);
 
-        if((file = FileFactory.getFile(path)) == null)
-            setDescriptionFile(new File(path));
-        else
-            setDescriptionFile(file);
+        if (file == null) {
+			setDescriptionFile(new File(path));
+		} else {
+			setDescriptionFile(file);
+		}
     }
 
     /**
@@ -144,7 +143,9 @@ public abstract class CommandBarIO extends DefaultHandler {
      * @param  file                  path to the command bar descriptor file
      * @throws FileNotFoundException if the specified file is not accessible.
      */
-    public static void setDescriptionFile(File file) throws FileNotFoundException {setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));}
+    public static void setDescriptionFile(File file) throws FileNotFoundException {
+		setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));
+	}
 
     /**
      * Sets the path to the command bar description file to be loaded when calling {@link #loadCommandBar()}.
@@ -154,14 +155,16 @@ public abstract class CommandBarIO extends DefaultHandler {
      */
     public static void setDescriptionFile(AbstractFile file) throws FileNotFoundException {
         // Makes sure file can be used as a commandbar description file.
-        if(file.isBrowsable())
-            throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+        if (file.isBrowsable()) {
+			throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+		}
         commandBarFile = file;
     }
 
     public static AbstractFile getDescriptionFile() throws IOException {
-        if(commandBarFile == null)
-            return PlatformManager.getPreferencesFolder().getChild(DEFAULT_COMMAND_BAR_FILE_NAME);
+        if (commandBarFile == null) {
+			return PlatformManager.getPreferencesFolder().getChild(DEFAULT_COMMAND_BAR_FILE_NAME);
+		}
         return commandBarFile;
     }
 }

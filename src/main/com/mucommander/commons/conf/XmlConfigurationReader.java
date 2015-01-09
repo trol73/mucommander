@@ -124,11 +124,16 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
      */
     public void read(Reader in, ConfigurationBuilder builder) throws IOException, ConfigurationException, ConfigurationFormatException {
         this.builder = builder;
-        locator      = null;
-        try {SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(in), this);}
-        catch(ParserConfigurationException e) {throw new ConfigurationException("Failed to create a SAX parser", e);}
-        catch(SAXParseException e) {throw new ConfigurationFormatException(e.getMessage(), e.getLineNumber(), e.getColumnNumber());}
-        catch(SAXException e) {throw new ConfigurationFormatException(e.getException() == null ? e : e.getException());}
+        locator = null;
+        try {
+            SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(in), this);
+        } catch (ParserConfigurationException e) {
+            throw new ConfigurationException("Failed to create a SAX parser", e);
+        } catch (SAXParseException e) {
+            throw new ConfigurationFormatException(e.getMessage(), e.getLineNumber(), e.getColumnNumber());
+        } catch (SAXException e) {
+            throw new ConfigurationFormatException(e.getException() == null ? e : e.getException());
+        }
     }
 
 
@@ -147,15 +152,19 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         depth++;
-        if(depth == 1)
+        if (depth == 1) {
             return;
+        }
 
-        if(itemName != null) {
-            try {builder.startSection(itemName);}
-            catch(Exception e) {throw new SAXParseException(e.getMessage(), locator, e);}
+        if (itemName != null) {
+            try {
+                builder.startSection(itemName);
+            } catch(Exception e) {
+                throw new SAXParseException(e.getMessage(), locator, e);
+            }
         }
         buffer.setLength(0);
-        itemName   = qName;
+        itemName = qName;
         isVariable = true;
     }
 
@@ -165,26 +174,31 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         depth--;
-        if(depth == 0)
+        if (depth == 0) {
             return;
+        }
 
         // If the current element doesn't have subsections, considers it to be a variable.
         if(isVariable) {
-            String value;
-
-            value = buffer.toString().trim();
+            String value = buffer.toString().trim();
 
             // Ignores empty values, otherwise notifies the builder of a new variable.
             if(!value.isEmpty()) {
-                try {builder.addVariable(qName, value);}
-                catch(Exception e) {throw new SAXParseException(e.getMessage(), locator, e);}
+                try {
+                    builder.addVariable(qName, value);
+                } catch(Exception e) {
+                    throw new SAXParseException(e.getMessage(), locator, e);
+                }
             }
         }
 
         // The current element is a container, closes it.
         else {
-            try {builder.endSection(qName);}
-            catch(Exception e) {throw new SAXParseException(e.getMessage(), locator, e);}
+            try {
+                builder.endSection(qName);
+            } catch(Exception e) {
+                throw new SAXParseException(e.getMessage(), locator, e);
+            }
         }
 
         isVariable = false;
@@ -196,8 +210,11 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
      */
     @Override
     public void startDocument() throws SAXException {
-        try {builder.startConfiguration();}
-        catch(Exception e) {throw new SAXParseException(e.getMessage(), locator, e);}
+        try {
+            builder.startConfiguration();
+        } catch(Exception e) {
+            throw new SAXParseException(e.getMessage(), locator, e);
+        }
     }
 
     /**
@@ -205,13 +222,18 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
      */
     @Override
     public void endDocument() throws SAXException {
-        try {builder.endConfiguration();}
-        catch(Exception e) {throw new SAXParseException(e.getMessage(), locator, e);}
+        try {
+            builder.endConfiguration();
+        } catch(Exception e) {
+            throw new SAXParseException(e.getMessage(), locator, e);
+        }
     }
 
     /**
      * This method is public as an implementation side effect and should never be called directly.
      */
     @Override
-    public void setDocumentLocator(Locator locator) {this.locator = locator;}
+    public void setDocumentLocator(Locator locator) {
+        this.locator = locator;
+    }
 }
