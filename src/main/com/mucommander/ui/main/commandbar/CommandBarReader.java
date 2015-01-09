@@ -64,11 +64,16 @@ class CommandBarReader extends CommandBarIO {
     	this.file = file;
     	
     	InputStream in = null;
-        try {SAXParserFactory.newInstance().newSAXParser().parse(in = new BackupInputStream(file), this);}
-        finally {
-            if(in!=null)
-                try { in.close(); }
-                catch(IOException e) {}
+        try {
+            in = new BackupInputStream(file);
+            SAXParserFactory.newInstance().newSAXParser().parse(in, this);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
     }
 

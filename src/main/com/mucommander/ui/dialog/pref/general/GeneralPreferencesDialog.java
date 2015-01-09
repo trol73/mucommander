@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
@@ -110,7 +111,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
         addPreferencesPanel(new MiscPanel(this),       MISC_ICON);
 
         // Sets the dialog's size.
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = MuSnapshot.getScreenSize();
         Dimension minimumSize = new Dimension(580, 300);
         Dimension maximumSize = new Dimension(screenSize);
         if (screenSize.getWidth() >= 1024 && screenSize.getHeight() > 700) {

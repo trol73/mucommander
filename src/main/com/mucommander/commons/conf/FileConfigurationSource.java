@@ -29,7 +29,7 @@ public class FileConfigurationSource implements ConfigurationSource {
     // - Instance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Path to the file on which to open input and output streams. */
-    private final File    file;
+    private final File file;
     /** File's charset. */
     private final Charset charset;
 
@@ -54,7 +54,7 @@ public class FileConfigurationSource implements ConfigurationSource {
      * @param charset charset in which the file is encoded.
      */
     public FileConfigurationSource(File file, Charset charset) {
-        this.file    = file;
+        this.file = file;
         this.charset = charset;
     }
 
@@ -122,7 +122,8 @@ public class FileConfigurationSource implements ConfigurationSource {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Reader getReader() throws IOException {
-        return new InputStreamReader(new FileInputStream(file), charset);
+        InputStream is = new FileInputStream(file);
+        return new BufferedReader(new InputStreamReader(is, charset));
     }
 
     @Override

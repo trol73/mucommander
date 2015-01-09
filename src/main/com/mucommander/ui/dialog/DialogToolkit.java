@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
+import com.mucommander.conf.MuSnapshot;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.helper.ScreenServices;
@@ -105,7 +106,7 @@ public class DialogToolkit {
      * Sets the given component's (JFrame, JDialog...) location to be centered on screen.
      */
     public static void centerOnScreen(Component c) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = MuSnapshot.getScreenSize();
         c.setLocation(screenSize.width/2 - c.getWidth()/2,
                     screenSize.height/2 - c.getHeight()/2);
     }

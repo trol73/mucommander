@@ -177,7 +177,9 @@ public class Configuration {
      * @see     #getSource()
      */
     public void setSource(ConfigurationSource s) {
-        synchronized(sourceLock) {source = s;}
+        synchronized(sourceLock) {
+            source = s;
+        }
     }
 
     /**
@@ -186,7 +188,9 @@ public class Configuration {
      * @see    #setSource(ConfigurationSource)
      */
     public ConfigurationSource getSource() {
-        synchronized(sourceLock) {return source;}
+        synchronized(sourceLock) {
+            return source;
+        }
     }
 
 
@@ -203,7 +207,9 @@ public class Configuration {
      * @see     #getReaderFactory()
      */
     public void setReaderFactory(ConfigurationReaderFactory f) {
-        synchronized(readerLock) {readerFactory = f;}
+        synchronized(readerLock) {
+            readerFactory = f;
+        }
     }
 
     /**
@@ -217,8 +223,9 @@ public class Configuration {
      */
     public ConfigurationReaderFactory getReaderFactory() {
         synchronized(readerLock) {
-            if(readerFactory == null)
+            if (readerFactory == null) {
                 return XmlConfigurationReader.FACTORY;
+            }
             return readerFactory;
         }
     }
@@ -237,7 +244,9 @@ public class Configuration {
      * @see     #getWriterFactory()
      */
     public void setWriterFactory(ConfigurationWriterFactory f) {
-        synchronized(writerLock) {writerFactory = f;}
+        synchronized(writerLock) {
+            writerFactory = f;
+        }
     }
 
     /**
@@ -251,8 +260,9 @@ public class Configuration {
      */
     public ConfigurationWriterFactory getWriterFactory() {
         synchronized(writerLock) {
-            if(writerFactory == null)
+            if (writerFactory == null) {
                 return XmlConfigurationWriter.FACTORY;
+            }
             return writerFactory;
         }
     }
@@ -337,21 +347,23 @@ public class Configuration {
      * @see                                    #read(Reader,ConfigurationReader)
      */
     public void read(ConfigurationReader reader) throws IOException, ConfigurationException {
-        Reader              in;     // Input stream on the configuration source.
-        ConfigurationSource source; // Configuration source.
-
-        in = null;
+        Reader in = null;     // Input stream on the configuration source.
+        ConfigurationSource source = getSource(); // Configuration source.
 
         // Makes sure the configuration source has been properly set.
-        if((source = getSource()) == null)
+        if (source == null) {
             throw new SourceConfigurationException("Configuration source hasn't been set.");
-
+        }
         // Reads the configuration data.
-        try {read(in = source.getReader(), reader);}
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {}
+        try {
+            in = source.getReader();
+            read(in, reader);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception ignore) {
+                }
             }
         }
     }
@@ -418,21 +430,22 @@ public class Configuration {
      * @see                                    #write()
      */
     public void write() throws IOException, ConfigurationException {
-        Writer              out;    // Where to write the configuration data.
-        ConfigurationSource source; // Configuration source.
-
-        out = null;
+        Writer out = null;    // Where to write the configuration data.
+        ConfigurationSource source = getSource(); // Configuration source.
 
         // Makes sure the source has been set.
-        if((source = getSource()) == null)
+        if (source == null) {
             throw new SourceConfigurationException("No configuration source has been set");
+        }
 
         // Writes the configuration data.
-        try {write(out = source.getWriter());}
-        finally {
-            if(out != null) {
-                try {out.close();}
-                catch(Exception e) {
+        try {
+            write(out = source.getWriter());
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch(Exception e) {
                     // Ignores errors here, nothing we can do about them.
                 }
             }
@@ -461,21 +474,19 @@ public class Configuration {
      * @throws ConfigurationException if any error occurs.
      */
     private synchronized void build(ConfigurationBuilder builder, ConfigurationSection root) throws ConfigurationException {
-        String               name;        // Name of the current variable, then section.
-
         // Explores the section's variables.
-        Iterator<String> enumeration = root.variableNames();        // Enumeration on the section's variables, then subsections.
-        while(enumeration.hasNext())
-            builder.addVariable(name = enumeration.next(), root.getVariable(name));
+        Set<String> variables = root.variableNames();        // Enumeration on the section's variables, then subsections.
+        for (String name : variables) {
+            builder.addVariable(name, root.getVariable(name));
+        }
 
         // Explores the section's subsections.
-        enumeration = root.sectionNames();
-        while(enumeration.hasNext()) {
-            name    = enumeration.next();
+        Set<String> sectionNames = root.sectionNames();
+        for (String name : sectionNames) {
             ConfigurationSection section = root.getSection(name);
 
             // We only go through subsections if contain either variables or subsections of their own.
-            if(section.hasSections() || section.hasVariables()) {
+            if (section.hasSections() || section.hasVariables()) {
                 builder.startSection(name);
                 build(builder, section);
                 builder.endSection(name);
@@ -1137,7 +1148,9 @@ public class Configuration {
          * Creates a new configuration loader.
          * @param root where to create the configuration in.
          */
-        public ConfigurationLoader(ConfigurationSection root) {currentSection = root;}
+        public ConfigurationLoader(ConfigurationSection root) {
+            currentSection = root;
+        }
 
 
 
@@ -1147,7 +1160,7 @@ public class Configuration {
          * Initialises the configuration building.
          */
         public void startConfiguration() {
-            sections     = new Stack<>();
+            sections = new Stack<>();
             sectionNames = new Stack<>();
         }
 
@@ -1157,9 +1170,9 @@ public class Configuration {
          */
         public void endConfiguration() throws ConfigurationException {
             // Makes sure currentSection is the root section.
-            if(!sections.empty())
+            if (!sections.empty())
                 throw new ConfigurationStructureException("Not all sections have been closed.");
-            sections     = null;
+            sections = null;
             sectionNames = null;
         }
 
@@ -1172,10 +1185,11 @@ public class Configuration {
 
             buffer = currentSection.addSection(name);
             sections.push(currentSection);
-            if(sectionNames.empty())
+            if (sectionNames.empty()) {
                 sectionNames.push(name + '.');
-            else
+            } else {
                 sectionNames.push(sectionNames.peek() + name + '.');
+            }
             currentSection = buffer;
         }
 
@@ -1210,10 +1224,11 @@ public class Configuration {
         public void addVariable(String name, String value) {
             // If the variable's value was modified, trigger an event.
             if (currentSection.setVariable(name, value)) {
-                if(sectionNames.empty())
+                if (sectionNames.empty()) {
                     triggerEvent(new ConfigurationEvent(Configuration.this, name, value));
-                else
+                } else {
                     triggerEvent(new ConfigurationEvent(Configuration.this, sectionNames.peek() + name, value));
+                }
             }
         }
     }

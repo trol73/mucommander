@@ -47,8 +47,9 @@ public class ValueList extends ArrayList<String> {
         StringTokenizer tokenizer;
 
         tokenizer = new StringTokenizer(data, separator);
-        while(tokenizer.hasMoreTokens())
+        while(tokenizer.hasMoreTokens()) {
             add(tokenizer.nextToken());
+        }
     }
 
 
@@ -142,18 +143,16 @@ public class ValueList extends ArrayList<String> {
      * @return           a string representation of the specified list.
      */
     public static String toString(List<?> data, String separator) {
-        StringBuilder buffer;
-        Iterator<?>   values;
-
-        buffer = new StringBuilder();
-        values = data.iterator();
+        StringBuilder buffer = new StringBuilder();
+        Iterator<?> values = data.iterator();
 
         // Deals with the first value separately.
-        if(values.hasNext())
+        if (values.hasNext()) {
             buffer.append(values.next().toString());
+        }
 
         // All subsequent values will be concatenated after a separator.
-        while(values.hasNext()) {
+        while (values.hasNext()) {
             buffer.append(separator);
             buffer.append(values.next().toString());
         }

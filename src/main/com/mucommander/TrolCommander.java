@@ -28,7 +28,9 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 import com.mucommander.profiler.Profiler;
+import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.icon.FileIcons;
+import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.utils.MuLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,6 +184,7 @@ public class TrolCommander {
                 helper.printFileError("Launcher getTask error for " + name + ": ", e);
             }
             Profiler.stop(name);
+            onFinish();
             return null;
         }
 
@@ -203,6 +206,10 @@ public class TrolCommander {
 
         public boolean isDone() {
             return task.isDone();
+        }
+
+        protected void onFinish() {
+
         }
 
         @Override
@@ -227,13 +234,22 @@ public class TrolCommander {
 
             // Load snapshot data before loading configuration as until version 0.9 the snapshot properties
             // were stored as preferences so when loading such preferences they could overload snapshot properties
-            try {MuConfigurations.loadSnapshot();}
-            catch(Exception e) {helper.printFileError("Could not load snapshot", e);}
-
+            try {
+                MuConfigurations.loadSnapshot();
+            } catch(Exception e) {
+                helper.printFileError("Could not load snapshot", e);
+            }
             // Configuration needs to be loaded before any sort of GUI creation is performed : under Mac OS X, if we're
             // to use the metal look, we need to know about it right about now.
-            try {MuConfigurations.loadPreferences();}
-            catch(Exception e) {helper.printFileError("Could not load configuration", e);}
+            try {
+                MuConfigurations.loadPreferences();
+            } catch(Exception e) {
+                helper.printFileError("Could not load configuration", e);
+            }
+
+            // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
+            FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE, MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
+            FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
         }
     }
 
@@ -256,18 +272,27 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading actions shortcuts...");
-            try {com.mucommander.ui.action.ActionKeymapIO.loadActionKeymap();}
-            catch(Exception e) {helper.printFileError("Could not load actions shortcuts", e);}
+            try {
+                ActionKeymapIO.loadActionKeymap();
+            } catch(Exception e) {
+                helper.printFileError("Could not load actions shortcuts", e);
+            }
 
             // Loads the ToolBar's description file
             printStartupMessage("Loading toolbar description...");
-            try {ToolBarIO.loadDescriptionFile();}
-            catch(Exception e) {helper.printFileError("Could not load toolbar description", e);}
+            try {
+                ToolBarIO.loadDescriptionFile();
+            } catch(Exception e) {
+                helper.printFileError("Could not load toolbar description", e);
+            }
 
             // Loads the CommandBar's description file
             printStartupMessage("Loading command bar description...");
-            try {CommandBarIO.loadCommandBar();}
-            catch(Exception e) {helper.printFileError("Could not load commandbar description", e);}
+            try {
+                CommandBarIO.loadCommandBar();
+            } catch(Exception e) {
+                helper.printFileError("Could not load commandbar description", e);
+            }
         }
     }
 
@@ -279,7 +304,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading theme...");
-            com.mucommander.ui.theme.ThemeManager.loadCurrentTheme();
+            ThemeManager.loadCurrentTheme();
         }
     }
 
@@ -293,9 +318,6 @@ public class TrolCommander {
             printStartupMessage("Loading icons...");
             // Initialize the SwingFileIconProvider from the main thread, see method Javadoc for an explanation on why we do this now
             SwingFileIconProvider.forceInit();
-            // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-            FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE, MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
-            FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
         }
     }
 
@@ -389,7 +411,7 @@ public class TrolCommander {
 
             // - MAC OS X specific init -----------------------------------
             // ------------------------------------------------------------
-            // If muCommander is running under Mac OS X (how lucky!), add some glue for the main menu bar and other OS X
+            // If trolCommander is running under Mac OS X (how lucky!), add some glue for the main menu bar and other OS X
             // specifics.
             if (OsFamily.MAC_OS_X.isCurrent()) {
                 // Use reflection to create an OSXIntegration instance so that ClassLoader
@@ -404,7 +426,7 @@ public class TrolCommander {
             }
 
 
-            // - muCommander boot -----------------------------------------
+            // - trolCommander boot -----------------------------------------
             // ------------------------------------------------------------
             // Adds all extensions to the classpath.
             try {
@@ -505,11 +527,13 @@ public class TrolCommander {
                 // There's really nothing we can do about this...
             }
 
-            try {com.mucommander.command.CommandManager.loadAssociations();}
-            catch(Exception e) {
+            try {
+                CommandManager.loadAssociations();
+            } catch(Exception e) {
                 helper.printFileError("Could not load custom associations", e);
             }
 
+            ActionManager.registerCommandsActions();
         }
     }
 
@@ -613,6 +637,7 @@ public class TrolCommander {
         public boolean execute(LauncherTask task, boolean force) {
             if (force || (runningTasks.size() < cores && task.isReadyForExecution())) {
                 super.execute(task.getTask());
+// System.out.println("Execute " + task + " " + task.depends.length + "  " + task.isReadyForExecution() + "      " + runningTasks);
                 runningTasks.add(task);
                 return true;
             }
@@ -627,7 +652,7 @@ public class TrolCommander {
     @SuppressWarnings({"unchecked"})
     public static void main(String args[]) throws IOException {
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "muCommander");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
         }
         Profiler.start("init");
         int processors = Runtime.getRuntime().availableProcessors();
@@ -651,8 +676,8 @@ public class TrolCommander {
             LauncherTask taskLoadBookmarks = new LoadBookmarksTask(helper);
             LauncherTask taskLoadCredentials = new LoadCredentialsTask(helper);
             LauncherTask taskInitCustomDataFormat = new InitCustomDateFormatTask(helper, taskLoadConfigs);
-            LauncherTask taskRegisterActions = new LoadActionsTask(helper, taskLoadTheme);
-            LauncherTask taskLoadIcons = new LoadIconsTask(helper, taskLoadConfigs);
+            LauncherTask taskRegisterActions = new LoadActionsTask(helper);      //new LoadActionsTask(helper, taskLoadTheme);
+            LauncherTask taskLoadIcons = new LoadIconsTask(helper);
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
             LauncherTask enableNotificationsTask = new EnableNotificationsTask(helper, taskRegisterActions);
@@ -682,25 +707,41 @@ public class TrolCommander {
             tasks.add(taskInitDesktop);
             tasks.add(taskDisposeSplash);
             tasks.add(taskShowSetupWindow);
+
+
             if (processors <= 1 ) {
                 for (LauncherTask t : tasks) {
                     t.run();
                 }
             } else {
-                while (tasks.size() > 0) {
+                while (!tasks.isEmpty()) {
+                    // execute tasks with ready dependencies
                     for (LauncherTask task : tasks) {
                         if (executor.execute(task, false) ) {
                             tasks.remove(task);
                             break;
                         }
                     }
+                    // TODO
                     if (executor.isFull()) {
                         try {
-                            Thread.sleep(1);
+                            Thread.sleep(5);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
+                        boolean found = false;
+                        for (LauncherTask task : tasks) {
+                            if (executor.execute(task, false) ) {
+                                tasks.remove(task);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            continue;
+                        }
+
                         LauncherTask t = tasks.get(0);
                         executor.execute(t, true);
                         tasks.remove(t);
@@ -713,8 +754,7 @@ public class TrolCommander {
                 }
             }
             System.out.println("finished");
-        }
-        catch(Throwable t) {
+        } catch(Throwable t) {
             // Startup failed, dispose the splash screen
             if (splashScreen != null) {
                 splashScreen.dispose();

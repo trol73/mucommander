@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.helper;
 
+import com.mucommander.conf.MuSnapshot;
+
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Insets;
@@ -62,11 +64,8 @@ public class ScreenServices {
      *              <code>false</code> otherwise.
      */
     public static boolean isInsideUsableScreen(Frame frame, int x, int y) {
-        Insets    screenInsets;
-        Dimension screenSize;
-
-        screenInsets = getScreenInsets(frame);
-        screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
+        Insets screenInsets = getScreenInsets(frame);
+        Dimension screenSize = MuSnapshot.getScreenSize();
 
         return (x < 0 || (x >= screenInsets.left && x < screenSize.width - screenInsets.right))
             && (y < 0 || (y >= screenInsets.top && y < screenSize.height - screenInsets.bottom));
@@ -80,11 +79,8 @@ public class ScreenServices {
      * @return the maximum dimensions for a full-screen window
      */
     public static Rectangle getFullScreenBounds(Window window) {
-        Toolkit   toolkit;
-        Dimension screenSize;
-
-        toolkit    = Toolkit.getDefaultToolkit();
-        screenSize = toolkit.getScreenSize();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
 
         Insets screenInsets = toolkit.getScreenInsets(window.getGraphicsConfiguration());
         return new Rectangle(screenInsets.left, screenInsets.top, screenSize.width-screenInsets.left-screenInsets.right, screenSize.height-screenInsets.top-screenInsets.bottom);

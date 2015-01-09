@@ -53,7 +53,7 @@ public class ActionManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
 	
     /** MuAction id -> factory map */
-    private static Map<String, ActionFactory> actionFactories = new Hashtable<>();
+    private static Map<String, ActionFactory> actionFactories = new HashMap<>();
     
     /** MainFrame -> MuAction map */
     private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
@@ -231,15 +231,17 @@ public class ActionManager {
         registerAction(new LocateSymlinkAction.Descriptor(),                new LocateSymlinkAction.Factory());
         registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
         registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
-
-    	// register "open with" commands as actions, to allow for keyboard shortcuts for them
-    	for (Command command : CommandManager.commands()) {
-    		if (command.getType() == CommandType.NORMAL_COMMAND) {
-    			ActionManager.registerAction(new CommandAction.Descriptor(command),
-    					                     new CommandAction.Factory(command));
-    		}
-    	}
     }
+
+	public static void registerCommandsActions() {
+		// register "open with" commands as actions, to allow for keyboard shortcuts for them
+		for (Command command : CommandManager.commands()) {
+			if (command.getType() == CommandType.NORMAL_COMMAND) {
+				ActionManager.registerAction(new CommandAction.Descriptor(command),
+						new CommandAction.Factory(command));
+			}
+		}
+	}
 
     /**
      * Registration method for MuActions.

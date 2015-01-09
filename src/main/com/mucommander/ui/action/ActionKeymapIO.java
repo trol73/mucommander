@@ -110,8 +110,9 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @throws IOException if an error occurred while locating the default actions file.
      */
     protected static AbstractFile getActionsFile() throws IOException {
-        if (actionsFile == null)
+        if (actionsFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_ACTIONS_FILE_NAME);
+        }
         return actionsFile;
     }
     
@@ -150,8 +151,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
     	if (actionKeymapFile != null && actionKeymapFile.exists()) {
     		ActionKeymapReader reader = new ActionKeymapReader(actionKeymapFile);
     		ActionKeymap.registerActions(reader.getPrimaryActionsKeymap(), reader.getAlternateActionsKeymap());
-    	}
-    	else {
+    	} else {
     		createEmptyFile();
     		LOGGER.debug(DEFAULT_ACTIONS_FILE_NAME + " was not found, created empty file");
     	}
