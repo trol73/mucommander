@@ -546,10 +546,11 @@ public abstract class FileJob implements Runnable {
         LOGGER.debug("called");
 
         // Send a system notification if a notifier is available and enabled
-        if(AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled())
+        if (AbstractNotifier.isAvailable() && AbstractNotifier.getNotifier().isEnabled()) {
             AbstractNotifier.getNotifier().displayBackgroundNotification(NotificationType.JOB_COMPLETED,
-                    getProgressDialog()==null?"":getProgressDialog().getTitle(),
+                    getProgressDialog() == null ? "" : getProgressDialog().getTitle(),
                     Translator.get("progress_dialog.job_finished"));
+        }
     }
 
 
@@ -640,10 +641,10 @@ public abstract class FileJob implements Runnable {
         }
         // Cancel or close dialog stops this job
         int userChoice = waitForUserResponse(dialog);
-        if (userChoice == -1 || userChoice == CANCEL_ACTION)
+        if (userChoice == -1 || userChoice == CANCEL_ACTION) {
             interrupt();
-        // Keep 'skip all' choice for further error and return SKIP_ACTION
-        else if (userChoice == SKIP_ALL_ACTION) {
+            // Keep 'skip all' choice for further error and return SKIP_ACTION
+        } else if (userChoice == SKIP_ALL_ACTION) {
             autoSkipErrors = true;
             return SKIP_ACTION;
         }
@@ -682,15 +683,17 @@ public abstract class FileJob implements Runnable {
     	FolderPanel activePanel = getMainFrame().getActivePanel();
     	FolderPanel inactivePanel = getMainFrame().getInactivePanel();
 
-        if(hasFolderChanged(inactivePanel.getCurrentFolder()))
-        	inactivePanel.tryRefreshCurrentFolder();
+        if (hasFolderChanged(inactivePanel.getCurrentFolder())) {
+            inactivePanel.tryRefreshCurrentFolder();
+        }
 
-        if(hasFolderChanged(activePanel.getCurrentFolder())) {
+        if (hasFolderChanged(activePanel.getCurrentFolder())) {
             // Select file specified by selectFileWhenFinished (if any) only if the file exists in the active table's folder
-            if(fileToSelect!=null && activePanel.getCurrentFolder().equalsCanonical(fileToSelect.getParent()) && fileToSelect.exists())
-            	activePanel.tryRefreshCurrentFolder(fileToSelect);
-            else
-            	activePanel.tryRefreshCurrentFolder();
+            if (fileToSelect != null && activePanel.getCurrentFolder().equalsCanonical(fileToSelect.getParent()) && fileToSelect.exists()) {
+                activePanel.tryRefreshCurrentFolder(fileToSelect);
+            } else {
+                activePanel.tryRefreshCurrentFolder();
+            }
         }
 
         // Repaint the status bar as marked files have changed
