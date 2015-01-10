@@ -196,8 +196,8 @@ class TextEditorImpl implements ThemeListener {
 		if (searchString == null || searchString.isEmpty()) {
             return;
         }
-		int pos;
         String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
+        int pos;
 		if (forward) {
 			pos = getTextLC().indexOf(ss, startPos);
 		} else {
@@ -218,6 +218,9 @@ class TextEditorImpl implements ThemeListener {
 					Toolkit.getDefaultToolkit().beep();
 				}
 			}.start();
+            if (getStatusBar() != null) {
+                getStatusBar().setStatusMessage(Translator.get("text_editor.text_not_found"));
+            }
 		}
 	}
 
