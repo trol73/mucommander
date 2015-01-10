@@ -182,7 +182,7 @@ public class MkdirJob extends FileJob {
 
                 int action = showErrorDialog(
                      Translator.get("error"),
-                     Translator.get(mkfileMode?"cannot_write_file":"cannot_create_folder", file.getAbsolutePath()),
+                     Translator.get(mkfileMode ? "cannot_write_file" : "cannot_create_folder", file.getAbsolutePath()),
                      new String[]{RETRY_TEXT, CANCEL_TEXT},
                      new int[]{RETRY_ACTION, CANCEL_ACTION}
                 );

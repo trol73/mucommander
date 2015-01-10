@@ -39,9 +39,9 @@ public class CreateSymlinkAction extends ParentFolderAction {
     public void performAction() {
         AbstractFile targetFile = mainFrame.getActiveTable().getSelectedFile();
         if (targetFile == null) {
-            targetFile = mainFrame.getInactiveTable().getFileTableModel().getFileAt(0).getParent();
+            targetFile = mainFrame.getActiveTable().getFileTableModel().getFileAt(0).getParent();
         }
-        AbstractFile linkPath = mainFrame.getActivePanel().getCurrentFolder();
+        AbstractFile linkPath = mainFrame.getInactivePanel().getCurrentFolder();
         new CreateSymLinkDialog(mainFrame, linkPath, targetFile).showDialog();
     }
 
