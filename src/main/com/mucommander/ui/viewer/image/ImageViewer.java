@@ -296,7 +296,7 @@ class ImageViewer extends FileViewer implements ActionListener {
                     int h = getFrame().getHeight();
                     getFrame().setSize(w, h-1);
                     getFrame().setSize(w, h);
-                } catch (Exception e) {
+                } catch (Exception ignore) {
                 }
             }
         };

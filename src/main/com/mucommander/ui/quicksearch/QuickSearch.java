@@ -337,7 +337,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         do {
             try {
                 Thread.sleep(100);
-            } catch(InterruptedException e) {
+            } catch(InterruptedException ignore) {
             }
 
             synchronized(this) {
