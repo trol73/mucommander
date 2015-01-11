@@ -34,7 +34,7 @@ public class FileIconsCache {
     /**
      * Default cache size
      */
-    public static final int DEFAULT_SIZE = 100;
+    public static final int DEFAULT_SIZE = 1000;
 
     private final Map<String, Icon> icons = new HashMap<>();
     private final LinkedList<String> files = new LinkedList<>();
@@ -99,7 +99,6 @@ public class FileIconsCache {
         if (files.size() > size) {
             icons.remove(files.removeLast());
         }
-
         return icon;
     }
 
