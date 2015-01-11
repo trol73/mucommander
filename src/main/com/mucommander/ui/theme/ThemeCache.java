@@ -28,6 +28,22 @@ import java.util.WeakHashMap;
  * @author Mariusz Jakubowski
  */
 public class ThemeCache implements ThemeListener {
+
+    public static final int NORMAL               = 0;
+    public static final int SELECTED             = 1;
+    public static final int ALTERNATE            = 2;
+    public static final int SECONDARY            = 3;
+
+    public static final int INACTIVE             = 0;
+    public static final int ACTIVE               = 1;
+
+    public static final int HIDDEN_FILE          = 0;
+    public static final int FOLDER               = 1;
+    public static final int ARCHIVE              = 2;
+    public static final int SYMLINK              = 3;
+    public static final int MARKED               = 4;
+    public static final int PLAIN_FILE           = 5;
+
     
     // - Color definitions -----------------------------------------------------------
     // -------------------------------------------------------------------------------
@@ -38,18 +54,6 @@ public class ThemeCache implements ThemeListener {
     public static Color       unmatchedBackground;
     public static Color       activeOutlineColor;
     public static Color       inactiveOutlineColor;
-    public static final int NORMAL               = 0;
-    public static final int SELECTED             = 1;
-    public static final int ALTERNATE            = 2;
-    public static final int SECONDARY            = 3;
-    public static final int INACTIVE             = 0;
-    public static final int ACTIVE               = 1;
-    public static final int HIDDEN_FILE          = 0;
-    public static final int FOLDER               = 1;
-    public static final int ARCHIVE              = 2;
-    public static final int SYMLINK              = 3;
-    public static final int MARKED               = 4;
-    public static final int PLAIN_FILE           = 5;
 
 
     // - Font definitions ------------------------------------------------------------

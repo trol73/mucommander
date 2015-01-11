@@ -30,7 +30,7 @@ import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
@@ -152,6 +152,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         // Plain file.
         return ThemeCache.PLAIN_FILE;
     }
+
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
         // Need to check that row index is not out of bounds because when the folder

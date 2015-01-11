@@ -53,7 +53,7 @@ import java.util.Map;
 public abstract class MuAction extends AbstractAction {
 
     /** The MainFrame associated with this MuAction */
-    protected MainFrame mainFrame;
+    protected final MainFrame mainFrame;
 
     /** if true, action events are ignored while the MainFrame is in 'no events mode'. Enabled by default. */
     private boolean honourNoEventsMode = true;
@@ -73,12 +73,12 @@ public abstract class MuAction extends AbstractAction {
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      * properties are specified.
      */
-    public MuAction(MainFrame mainFrame, Map<String,Object> properties) {
+    public MuAction(MainFrame mainFrame, Map<String, Object> properties) {
         this.mainFrame = mainFrame;
-        
         // Add properties to this Action.
-        for(String key : properties.keySet())
+        for (String key : properties.keySet()) {
             putValue(key, properties.get(key));
+        }
     }
 
     /**
@@ -220,11 +220,11 @@ public abstract class MuAction extends AbstractAction {
      */
     public boolean isAccelerator(KeyStroke keyStroke) {
         KeyStroke accelerator = getAccelerator();
-        if(accelerator!=null && acceleratorsEqual(accelerator, keyStroke))
+        if (accelerator != null && acceleratorsEqual(accelerator, keyStroke))
             return true;
 
         accelerator = getAlternateAccelerator();
-        return accelerator!=null && acceleratorsEqual(accelerator, keyStroke);
+        return accelerator != null && acceleratorsEqual(accelerator, keyStroke);
     }
 
 
@@ -237,14 +237,15 @@ public abstract class MuAction extends AbstractAction {
      */
     public String getAcceleratorText() {
         KeyStroke accelerator = getAccelerator();
-        if(accelerator==null)
+        if (accelerator == null) {
             return null;
+        }
 
         String text = KeyEvent.getKeyText(accelerator.getKeyCode());
         int modifiers = accelerator.getModifiers();
-        if(modifiers!=0)
-            text = KeyEvent.getKeyModifiersText(modifiers)+"+"+text;
-
+        if (modifiers != 0) {
+            text = KeyEvent.getKeyModifiersText(modifiers) + "+" + text;
+        }
         return text;
     }
 
@@ -368,16 +369,15 @@ public abstract class MuAction extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
         // Discard this event while in 'no events mode'
-        if(!(mainFrame.getNoEventsMode() && honourNoEventsMode())) {
-            if(performActionInSeparateThread()) {
+        if (!(mainFrame.getNoEventsMode() && honourNoEventsMode())) {
+            if (performActionInSeparateThread()) {
                 new Thread() {
                     @Override
                     public void run() {
                         performAction();
                     }
                 }.start();
-            }
-            else {
+            } else {
                 performAction();
             }
         }
