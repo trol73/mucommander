@@ -781,16 +781,18 @@ public class ThemeData {
 
     public static void registerColor(int id, String defaultColor) {
         DefaultColor color = DEFAULT_COLORS.get(defaultColor);
-        if (color == null)
+        if (color == null) {
             throw new IllegalArgumentException("Not a registered default color: " + defaultColor);
+        }
         registerColor(id, color);
     }
 
     public static void registerFont(int id, String defaultFont) {
         DefaultFont font = DEFAULT_FONTS.get(defaultFont);
 
-        if (font == null)
+        if (font == null) {
             throw new IllegalArgumentException("Not a registered default font: " + defaultFont);
+        }
         registerFont(id, font);
     }
 
@@ -811,109 +813,113 @@ public class ThemeData {
     }
 
     public static void registerColor(int id, DefaultColor color) {
-        Integer colorId;
-
-        colorId = id;
+        Integer colorId = id;
         COLORS.put(colorId, color);
         color.link(colorId);
     }
 
     public static void registerFont(int id, DefaultFont font) {
-        Integer fontId;
-
-        fontId = id;
+        Integer fontId = id;
         FONTS.put(fontId, font);
         font.link(fontId);
     }
 
 
     static {
-        ComponentMapper mapper;
-
         // - Default values registering --------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
-        mapper = new ComponentMapper() {
+        ComponentMapper mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new RTextArea();}};
-        registerDefaultFont(DEFAULT_TEXT_AREA_FONT,new SystemDefaultFont("TextArea.font", mapper));
-        registerDefaultColor(DEFAULT_TEXT_AREA_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextArea.foreground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_AREA_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "TextArea.background", mapper));
-        registerDefaultColor(DEFAULT_TEXT_AREA_SELECTION_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextArea.selectionForeground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_AREA_SELECTION_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextArea.selectionBackground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_AREA_CURRENT_BACKGROUND,
-                new SystemDefaultColor(SystemDefaultColor.CURRENT_LINE_BACKGROUND, "TextArea.currentBackground", mapper));
+            public JComponent getComponent() {
+                return new RTextArea();
+            }
+        };
+
+        registerDefaultFont(DEFAULT_TEXT_AREA_FONT, new SystemDefaultFont("TextArea.font", mapper) {
+            @Override
+            public Font getFont(ThemeData data) {
+                Font font = super.getFont(data);
+                if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                    Font menlo = new Font("Menlo", font.getStyle(), font.getSize());
+                    if (menlo != null) {
+                        return menlo;
+                    }
+                }
+                return font;
+            }
+        });
+        registerDefaultColor(DEFAULT_TEXT_AREA_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextArea.foreground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_AREA_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "TextArea.background", mapper));
+        registerDefaultColor(DEFAULT_TEXT_AREA_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextArea.selectionForeground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_AREA_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextArea.selectionBackground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_AREA_CURRENT_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.CURRENT_LINE_BACKGROUND, "TextArea.currentBackground", mapper));
 
 
         // Register TextField related default values.
         mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new JTextField();}};
-        registerDefaultFont(DEFAULT_TEXT_FIELD_FONT, new SystemDefaultFont("TextField.font", mapper));
-        registerDefaultColor(DEFAULT_TEXT_FIELD_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextField.foreground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_FIELD_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "TextField.background", mapper));
-        registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextField.selectionForeground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper));
-        registerDefaultColor(DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
-                                     Color color;
+            public JComponent getComponent() {
+                return new JTextField();
+            }
+        };
 
-                                     color = super.getColor(data);
-                                     return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
-                                 }
-                             });
+        registerDefaultFont(DEFAULT_TEXT_FIELD_FONT, new SystemDefaultFont("TextField.font", mapper));
+        registerDefaultColor(DEFAULT_TEXT_FIELD_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextField.foreground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_FIELD_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "TextField.background", mapper));
+        registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextField.selectionForeground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper));
+        registerDefaultColor(DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper) {
+            @Override
+            public Color getColor(ThemeData data) {
+                Color color = super.getColor(data);
+                return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
+            }
+        });
 
         // Register Table related default values.
         mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new JTable();}};
+            public JComponent getComponent() {
+                return new JTable();
+            }
+        };
+
         registerDefaultFont(DEFAULT_TABLE_FONT, new SystemDefaultFont("Table.font", mapper));
-        registerDefaultColor(DEFAULT_TABLE_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper));
-        registerDefaultColor(DEFAULT_TABLE_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper));
-        registerDefaultColor(DEFAULT_TABLE_SELECTION_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "Table.selectionForeground", mapper));
-        registerDefaultColor(DEFAULT_TABLE_SELECTION_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "Table.selectionBackground", mapper));
-        registerDefaultColor(DEFAULT_TABLE_UNMATCHED_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
-                                     return super.getColor(data).darker();
-                                 }
-                             });
-        registerDefaultColor(DEFAULT_TABLE_UNMATCHED_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
-                                     return super.getColor(data).darker();
-                                 }
-                             });
+        registerDefaultColor(DEFAULT_TABLE_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper));
+        registerDefaultColor(DEFAULT_TABLE_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper));
+        registerDefaultColor(DEFAULT_TABLE_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "Table.selectionForeground", mapper));
+        registerDefaultColor(DEFAULT_TABLE_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "Table.selectionBackground", mapper));
+        registerDefaultColor(DEFAULT_TABLE_UNMATCHED_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper) {
+            @Override
+            public Color getColor(ThemeData data) {
+                return super.getColor(data).darker();
+            }
+        });
+        registerDefaultColor(DEFAULT_TABLE_UNMATCHED_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper) {
+            @Override
+            public Color getColor(ThemeData data) {
+                return super.getColor(data).darker();
+            }
+        });
 
         // Menu header related default values.
         mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new JInternalFrame();}};
+            public JComponent getComponent() {
+                return new JInternalFrame();
+            }
+        };
         registerDefaultFont(DEFAULT_MENU_HEADER_FONT, new SystemDefaultFont("InternalFrame.font", mapper));
-        registerDefaultColor(DEFAULT_MENU_HEADER_BACKGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "InternalFrame.activeTitleBackground", mapper));
-        registerDefaultColor(DEFAULT_MENU_HEADER_FOREGROUND,
-                             new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "InternalFrame.activeTitleForeground", mapper));
+        registerDefaultColor(DEFAULT_MENU_HEADER_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "InternalFrame.activeTitleBackground", mapper));
+        registerDefaultColor(DEFAULT_MENU_HEADER_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "InternalFrame.activeTitleForeground", mapper));
 
         // Label related default values.
         mapper = new ComponentMapper() {
             @Override
-            public JComponent getComponent() {return new JLabel();}};
+            public JComponent getComponent() {
+                return new JLabel();
+            }
+        };
         registerDefaultFont(DEFAULT_LABEL_FONT, new SystemDefaultFont("Label.font", mapper));
 
         
