@@ -20,15 +20,17 @@
 package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.quicksearch.QuickSearch;
 import com.mucommander.ui.theme.*;
+import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
@@ -73,8 +75,9 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         this.tableModel = table.getFileTableModel();
 
         // create a label for each column
-        for (Column c : Column.values())
+        for (Column c : Column.values()) {
             this.cellLabels[c.ordinal()] = new CellLabel();
+        }
 
         // Set labels' font.
         setCellLabelsFont(ThemeCache.tableFont);
@@ -108,7 +111,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         // Set custom font
         for (Column c : Column.values()) {
             // No need to set extension label's font as this label renders only icons and no text
-            if(c == Column.EXTENSION) {
+            if (c == Column.EXTENSION) {
                 continue;
             }
 
@@ -150,17 +153,19 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         return ThemeCache.PLAIN_FILE;
     }
 
+
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
         // Need to check that row index is not out of bounds because when the folder
         // has just been changed, the JTable may try to repaint the old folder and
         // ask for a row index greater than the length if the old folder contained more files
-        if (rowIndex < 0 || rowIndex >= tableModel.getRowCount())
+        if (rowIndex < 0 || rowIndex >= tableModel.getRowCount()) {
             return null;
+        }
 
         // Sanity check.
         final AbstractFile file = tableModel.getCachedFileAtRow(rowIndex);
         if (file == null) {
-            LOGGER.debug("tableModel.getCachedFileAtRow("+ rowIndex +") RETURNED NULL !");
+            LOGGER.debug("tableModel.getCachedFileAtRow( "+ rowIndex + ") RETURNED NULL !");
             return null;
         }
 
@@ -180,8 +185,9 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         if (column == Column.EXTENSION) {
             // Set file icon (parent folder icon if '..' file)
             label.setIcon(rowIndex == 0 && tableModel.hasParentFolder()
-                    ?IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
-                    :FileIcons.getFileIcon(file));
+                    ? IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
+                    // : FileIcons.getFileIcon(file));
+                    : FileIconsCache.getInstance().getIcon(file));
         }
         // Any other column (name, date or size)
         else {
@@ -231,18 +237,22 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             }
             // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one
             // specified
-            else
+            else {
                 label.setToolTipText(null);
+            }
         }
 
         // Set background color depending on whether the row is selected or not, and whether the table has focus or not
         if (selectedIndex == ThemeCache.SELECTED) {
             label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.SELECTED], ThemeCache.backgroundColors[focusedIndex][ThemeCache.SECONDARY]);
         } else if (matches) {
-            if (table.hasFocus() && search.isActive())
-                label.setBackground(ThemeCache.backgroundColors[focusedIndex][ThemeCache.NORMAL]);
-            else
-                label.setBackground(ThemeCache.backgroundColors[focusedIndex][(rowIndex % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE]);
+            int matchesColorIndex;
+            if (table.hasFocus() && search.isActive()) {
+                matchesColorIndex = ThemeCache.NORMAL;
+            } else {
+                matchesColorIndex = (rowIndex % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE;
+            }
+            label.setBackground(ThemeCache.backgroundColors[focusedIndex][matchesColorIndex]);
         } else {
             label.setBackground(ThemeCache.unmatchedBackground);
         }
@@ -271,7 +281,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
      * Receives theme font changes notifications.
      */
     public void fontChanged(FontChangedEvent event) {
-        if(event.getFontId() == Theme.FILE_TABLE_FONT) {
+        if (event.getFontId() == Theme.FILE_TABLE_FONT) {
             setCellLabelsFont(ThemeCache.tableFont);
         }
     }

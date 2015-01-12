@@ -72,9 +72,9 @@ public abstract class ToolBarIO extends DefaultHandler {
         if (descriptionFile != null && descriptionFile.exists()) {
         	ToolBarReader reader = new ToolBarReader(descriptionFile);
         	ToolBarAttributes.setActions(reader.getActionsRead());
+        } else {
+            LOGGER.debug("User toolbar.xml was not found, using default toolbar");
         }
-        else
-        	LOGGER.debug("User toolbar.xml was not found, using default toolbar");
         
         toolBarWriter = ToolBarWriter.create();
     }
@@ -90,24 +90,26 @@ public abstract class ToolBarIO extends DefaultHandler {
     		if (toolBarFile != null && toolBarFile.exists()) {
     			LOGGER.info("Toolbar use default settings, removing descriptor file");
     			toolBarFile.delete();
-    		}
-    		else
-    			LOGGER.debug("Toolbar not modified, not saving");
-    	}
-    	else if (toolBarWriter != null) {
-    		if (wasToolBarModified)
-    			toolBarWriter.write();
-    		else
-    			LOGGER.debug("Toolbar not modified, not saving");
-    	}
-    	else
-    		LOGGER.warn("Could not save toolbar. writer is null");
+    		} else {
+                LOGGER.debug("Toolbar not modified, not saving");
+            }
+    	} else if (toolBarWriter != null) {
+    		if (wasToolBarModified) {
+                toolBarWriter.write();
+            } else {
+                LOGGER.debug("Toolbar not modified, not saving");
+            }
+    	} else {
+            LOGGER.warn("Could not save toolbar. writer is null");
+        }
     }
     
     /**
      * Mark that actions were modified and therefore should be saved.
      */
-    public static void setModified() { wasToolBarModified = true; }
+    public static void setModified() {
+        wasToolBarModified = true;
+    }
     
     /**
      * Sets the path to the toolbar description file to be loaded when calling {@link #loadDescriptionFile()}.
@@ -115,14 +117,16 @@ public abstract class ToolBarIO extends DefaultHandler {
      * @param file path to the toolbar descriptor file
      */
     public static void setDescriptionFile(AbstractFile file) throws FileNotFoundException {
-        if(file.isBrowsable())
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file);
+        }
         descriptionFile = file;
     }
 
     public static AbstractFile getDescriptionFile() throws IOException {
-        if(descriptionFile == null)
+        if (descriptionFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_TOOLBAR_FILE_NAME);
+        }
         return descriptionFile;
     }
     
@@ -132,12 +136,13 @@ public abstract class ToolBarIO extends DefaultHandler {
      * @param path path to the toolbar descriptor file
      */
     public static void setDescriptionFile(String path) throws FileNotFoundException {
-        AbstractFile file;
+        AbstractFile file = FileFactory.getFile(path);
 
-        if((file = FileFactory.getFile(path)) == null)
+        if (file == null) {
             setDescriptionFile(new File(path));
-        else
+        } else {
             setDescriptionFile(file);
+        }
     }
 
     /**
@@ -145,5 +150,7 @@ public abstract class ToolBarIO extends DefaultHandler {
      * By default, this file is {@link #DEFAULT_TOOLBAR_FILE_NAME} within the preferences folder.
      * @param file path to the toolbar descriptor file
      */
-    public static void setDescriptionFile(File file) throws FileNotFoundException {setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));}
+    public static void setDescriptionFile(File file) throws FileNotFoundException {
+        setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));
+    }
 }

@@ -82,7 +82,7 @@ public class FileTableModel extends AbstractTableModel {
     private static int sizeFormat;
 
     /** String used as size information for directories */
-    public final static String DIRECTORY_SIZE_STRING = "<DIR>";
+    public static final String DIRECTORY_SIZE_STRING = "<DIR>";
 
     /** String used as size information for directories that queued to size calculation */
     public static final String QUEUED_DIRECTORY_SIZE_STRING = "<...>";
@@ -117,10 +117,11 @@ public class FileTableModel extends AbstractTableModel {
      * @param compactSize true to use a compact size format, false for full size in bytes 
      */
     static void setSizeFormat(boolean compactSize) {
-        if (compactSize)
+        if (compactSize) {
             sizeFormat = SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT;// | SizeFormat.ROUND_TO_KB;
-        else
+        } else {
             sizeFormat = SizeFormat.DIGITS_FULL;
+        }
 
         sizeFormat |= SizeFormat.INCLUDE_SPACE;
     }
@@ -396,10 +397,12 @@ public class FileTableModel extends AbstractTableModel {
     public synchronized AbstractFile getFileAtRow(int rowIndex) {
         AbstractFile file = getCachedFileAtRow(rowIndex);
 	
-        if( file==null)
+        if (file == null) {
             return null;
-        if (file instanceof CachedFile)
-            return ((CachedFile)file).getProxiedFile();
+        }
+        if (file instanceof CachedFile) {
+            return ((CachedFile) file).getProxiedFile();
+        }
         return file;
     }
 	
@@ -413,8 +416,9 @@ public class FileTableModel extends AbstractTableModel {
     public synchronized AbstractFile[] getFiles() {
         int nbFiles = cachedFiles.length;
         AbstractFile[] files = new AbstractFile[nbFiles];
-        for (int i=0; i<nbFiles; i++)
-            files[i] = cachedFiles[i]==null?null:((CachedFile)cachedFiles[i]).getProxiedFile();
+        for (int i=0; i<nbFiles; i++) {
+            files[i] = cachedFiles[i] == null ? null : ((CachedFile) cachedFiles[i]).getProxiedFile();
+        }
 
         return files;
     }
@@ -466,7 +470,7 @@ public class FileTableModel extends AbstractTableModel {
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
-        if (fileIndex>=0 && fileIndex<fileArrayIndex.length) {
+        if (fileIndex >= 0 && fileIndex < fileArrayIndex.length) {
             return ((CachedFile)cachedFiles[fileArrayIndex[fileIndex]]).getProxiedFile();
         }
     	return null;
@@ -491,11 +495,11 @@ public class FileTableModel extends AbstractTableModel {
      * @return <code>true</code> if the given row is marked
      */
     public synchronized boolean isRowMarked(int row) {
-        if(row == 0 && parent != null) {
+        if (row == 0 && parent != null) {
             return false;
         }
 
-        return row < getRowCount() && rowMarked[fileArrayIndex[parent==null?row:row-1]];
+        return row < getRowCount() && rowMarked[fileArrayIndex[parent == null ? row : row-1]];
     }
 
 
@@ -507,10 +511,10 @@ public class FileTableModel extends AbstractTableModel {
      * @param marked <code>true</code> to mark the row, <code>false</code> to unmark it
      */
     public synchronized void setRowMarked(int row, boolean marked) {
-        if(row==0 && parent!=null)
+        if (row == 0 && parent != null)
             return;
 			
-        int rowIndex = parent==null?row:row-1;
+        int rowIndex = parent == null ? row : row-1;
 
         // Return if the row is already marked/unmarked
         final int fileIndex = fileArrayIndex[rowIndex];
@@ -535,17 +539,18 @@ public class FileTableModel extends AbstractTableModel {
         // Update :
         // - Combined size of marked files
         // - marked files FileSet
-        if(marked) {
+        if (marked) {
             // File size can equal -1 if not available, do not count that in total
-            if(fileSize>0)
+            if (fileSize > 0) {
                 markedTotalSize += fileSize;
+            }
 
             nbRowsMarked++;
-        }
-        else {
+        } else {
             // File size can equal -1 if not available, do not count that in total
-            if(fileSize>0)
+            if (fileSize > 0) {
                 markedTotalSize -= fileSize;
+            }
 
             nbRowsMarked--;
         }
@@ -564,11 +569,13 @@ public class FileTableModel extends AbstractTableModel {
      */
     public void setRangeMarked(int startRow, int endRow, boolean marked) {
         if (endRow >= startRow) {
-            for(int i = startRow; i <= endRow; i++)
+            for (int i = startRow; i <= endRow; i++) {
                 setRowMarked(i, marked);
+            }
         } else {
-            for(int i= startRow; i>= endRow; i--)
+            for (int i = startRow; i >= endRow; i--) {
                 setRowMarked(i, marked);
+            }
         }
     }
 
@@ -582,8 +589,9 @@ public class FileTableModel extends AbstractTableModel {
     public synchronized void setFileMarked(AbstractFile file, boolean marked) {
         int row = getFileRow(file);
 
-    	if (row!=-1)
+    	if (row >= 0) {
             setRowMarked(row, marked);
+        }
     }
 
 
@@ -595,9 +603,10 @@ public class FileTableModel extends AbstractTableModel {
      */
     public synchronized void setFilesMarked(FileFilter filter, boolean marked) {
         int nbFiles = getRowCount();
-        for(int i=parent==null?0:1; i<nbFiles; i++) {
-            if(filter.match(getCachedFileAtRow(i)))
+        for (int i = parent == null ? 0 : 1; i < nbFiles; i++) {
+            if (filter.match(getCachedFileAtRow(i))) {
                 setRowMarked(i, marked);
+            }
         }
     }
 
@@ -617,17 +626,17 @@ public class FileTableModel extends AbstractTableModel {
         FileSet markedFiles = new FileSet(currentFolder, nbRowsMarked);
         int nbRows = getRowCount();
 
-        if(parent==null) {
-            for(int i=0; i<nbRows; i++) {
-                if(rowMarked[fileArrayIndex[i]])
+        if (parent == null) {
+            for (int i=0; i<nbRows; i++) {
+                if (rowMarked[fileArrayIndex[i]]) {
                     markedFiles.add(getFileAtRow(i));
+                }
             }
-        }
-        else {
-            for(int i=1, iMinusOne=0; i<nbRows; i++) {
-                if(rowMarked[fileArrayIndex[iMinusOne]])
+        } else {
+            for (int i=1, iMinusOne=0; i<nbRows; i++) {
+                if (rowMarked[fileArrayIndex[iMinusOne]]) {
                     markedFiles.add(getFileAtRow(i));
-
+                }
                 iMinusOne = i;
             }
         }
@@ -723,7 +732,7 @@ public class FileTableModel extends AbstractTableModel {
             // Search backward from files[hi] until element is found that
             // is less than the pivot, or lo >= hi
             //while (compare(pivot, cachedFiles[fileArrayIndex[hi]])<=0 && lo < hi ) {
-            while (compare(pivotIndex, fileArrayIndex[hi])<=0 && lo < hi ) {
+            while (compare(pivotIndex, fileArrayIndex[hi]) <= 0 && lo < hi ) {
                 hi--;
             }
 
@@ -740,8 +749,7 @@ public class FileTableModel extends AbstractTableModel {
         fileArrayIndex[hi] = pivotIndex;
 
         // Recursive calls, elements files[lo0] to files[lo-1] are less than or
-        // equal to pivot, elements files[hi+1] to files[hi0] are greater than
-        // pivot.
+        // equal to pivot, elements files[hi+1] to files[hi0] are greater than pivot.
         sort(lo0, lo-1);
         sort(hi+1, hi0);
     }
@@ -776,13 +784,13 @@ public class FileTableModel extends AbstractTableModel {
         return fileArrayIndex.length + (parent==null?0:1);
     }
 
-		
+
     //	public Object getValueAt(int rowIndex, int columnIndex) {
     public synchronized Object getValueAt(int rowIndex, int columnIndex) {
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
-        if(rowIndex>=getRowCount()) {
+        if (rowIndex >= getRowCount()) {
             // Returning null will have JTable ignore this row
             return null;
         }
@@ -814,6 +822,8 @@ public class FileTableModel extends AbstractTableModel {
             fillOneCellCache(index, parent != null ? fileIndex + 1 : fileIndex);
             result = cellValuesCache[index][columnIndex];
         }
+        // TODO preload icons for all visible files
+
         return result;
     }
 
@@ -826,9 +836,9 @@ public class FileTableModel extends AbstractTableModel {
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         // Name column can temporarily be made editable by FileTable
         // but parent file '..' name should never be editable
-        if(Column.valueOf(columnIndex)==Column.NAME && (parent==null || rowIndex!=0))
+        if (Column.valueOf(columnIndex) == Column.NAME && (parent == null || rowIndex != 0)) {
             return nameColumnEditable;
-	
+        }
         return false;
     }
 
@@ -917,7 +927,7 @@ public class FileTableModel extends AbstractTableModel {
         if (calculateDirectorySizeWorker != null) {
             try {
                 calculateDirectorySizeWorker.cancel(true);
-            } catch (Exception e) { }
+            } catch (Exception ignore) { }
             calculateDirectorySizeWorker = null;
         }
         synchronized (this) {

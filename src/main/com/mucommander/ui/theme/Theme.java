@@ -101,8 +101,9 @@ public class Theme extends ThemeData {
 
         addThemeListener(listener);
         setType(type);
-        if(name != null)
+        if (name != null) {
             setName(name);
+        }
     }
 
 
@@ -155,10 +156,11 @@ public class Theme extends ThemeData {
     @Override
     public boolean setFont(int id, Font font) {
         // Makes sure we're not trying to modify a non-user theme.
-        if(type != Type.USER)
+        if (type != Type.USER) {
             throw new IllegalStateException("Trying to modify a non user theme.");
+        }
 
-        if(super.setFont(id, font)) {
+        if (super.setFont(id, font)) {
             // We're using getFont here to make sure that no event is propagated with a null value.
             triggerFontEvent(new FontChangedEvent(this, id, getFont(id)));
             return true;
@@ -180,10 +182,11 @@ public class Theme extends ThemeData {
     @Override
     public boolean setColor(int id, Color color) {
         // Makes sure we're not trying to modify a non-user theme.
-        if(type != Type.USER)
+        if (type != Type.USER) {
             throw new IllegalStateException("Trying to modify a non user theme.");
+        }
 
-        if(super.setColor(id, color)) {
+        if (super.setColor(id, color)) {
             // We're using getColor here to make sure that no event is propagated with a null value.
             triggerColorEvent(new ColorChangedEvent(this, id, getColor(id)));
             return true;
@@ -203,7 +206,7 @@ public class Theme extends ThemeData {
         checkType(type);
 
         this.type = type;
-        if(type == Type.USER) {
+        if (type == Type.USER) {
             setName(null);      // the name will be lazy loaded later after dictionaly loading
         }
     }
@@ -219,7 +222,7 @@ public class Theme extends ThemeData {
     // - Misc. ---------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     static void checkType(Type type) {
-        if(type != Type.USER && type != Type.PREDEFINED && type != Type.CUSTOM)
+        if (type != Type.USER && type != Type.PREDEFINED && type != Type.CUSTOM)
             throw new IllegalArgumentException("Illegal theme type: " + type);
     }
 
@@ -231,13 +234,15 @@ public class Theme extends ThemeData {
     private static void addThemeListener(ThemeListener listener) {listeners.put(listener, null);}
     private static void removeThemeListener(ThemeListener listener) {listeners.remove(listener);}
     private static void triggerFontEvent(FontChangedEvent event) {
-        for(ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet()) {
             listener.fontChanged(event);
+        }
     }
 
     private static void triggerColorEvent(ColorChangedEvent event) {
-        for(ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet()) {
             listener.colorChanged(event);
+        }
     }
 
     private class DefaultValuesListener implements ThemeListener {
@@ -248,13 +253,17 @@ public class Theme extends ThemeData {
         public void setTheme(Theme theme) {this.theme = theme;}
 
         public void colorChanged(ColorChangedEvent event) {
-            if(!theme.isColorSet(event.getColorId()))
-                Theme.triggerColorEvent(new ColorChangedEvent(theme, event.getColorId(), getColor(event.getColorId())));
+            if (!theme.isColorSet(event.getColorId())) {
+                int colorId = event.getColorId();
+                Theme.triggerColorEvent(new ColorChangedEvent(theme, colorId, getColor(colorId)));
+            }
         }
 
         public void fontChanged(FontChangedEvent event) {
-            if(!theme.isFontSet(event.getFontId()))
-                Theme.triggerFontEvent(new FontChangedEvent(theme, event.getFontId(), getFont(event.getFontId())));
+            if (!theme.isFontSet(event.getFontId())) {
+                int fontId = event.getFontId();
+                Theme.triggerFontEvent(new FontChangedEvent(theme, fontId, getFont(fontId)));
+            }
         }
     }
 }

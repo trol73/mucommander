@@ -23,7 +23,7 @@ import java.util.*;
  * Created on 01/01/14.
  */
 public class Profiler {
-    public static final boolean ENABLED = false;
+    public static final boolean ENABLED = true;
 
     private static final Map<String, Long> timesStart = new HashMap<>();
     private static final Map<String, Long> timesDuration = new HashMap<>();
@@ -107,7 +107,10 @@ public class Profiler {
                 }
                 long duration = timesDuration.get(name);
                 int count = callCount.get(name);
-                long avgDuration = duration/count;
+                String avgDuration = String.valueOf(duration/count);
+                if (avgDuration.equals("0") && duration != 0) {
+                    avgDuration = String.valueOf(1.0*duration/count);
+                }
                 System.out.println(withSpaces(name, 40) + "\t" + withSpaces(Long.toString(duration), 10) + "\t" + withSpaces(Integer.toString(count), 7) + "\t" + avgDuration);
             }
         }

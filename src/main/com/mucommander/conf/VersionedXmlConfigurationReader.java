@@ -55,7 +55,7 @@ public class VersionedXmlConfigurationReader extends XmlConfigurationReader {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
 
-        if(isRootElement) {
+        if (isRootElement) {
             version = attributes.getValue(MuPreferences.VERSION_ATTRIBUTE);
             isRootElement = false;
         }

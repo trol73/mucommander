@@ -28,9 +28,9 @@ public class FileTableConfiguration {
     /** Each column's enabled state. */
     private boolean[] enabled;
     /** Initial width of each column. */
-    private int[]     width;
+    private int[] width;
     /** Columns initial order. */
-    private int[]     order;
+    private int[] order;
 
 
 
@@ -42,8 +42,8 @@ public class FileTableConfiguration {
     public FileTableConfiguration() {
         int columnCount = Column.values().length;
         enabled = new boolean[columnCount];
-        width      = new int[columnCount];
-        order      = new int[columnCount];
+        width = new int[columnCount];
+        order = new int[columnCount];
     }
 
 

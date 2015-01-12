@@ -110,7 +110,7 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
 				rightTabs,
 				getInitialSelectedTab(FolderPanelType.RIGHT, index),
 				getFileTableConfiguration(FolderPanelType.RIGHT, index));
-		
+
 		// Retrieve last saved window bounds
 		Dimension screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
         int x      = MuConfigurations.getSnapshot().getIntegerVariable(MuSnapshot.getX(index));

@@ -27,6 +27,6 @@
     <orderEntry type="library" name="yanfs" level="project" />
     <orderEntry type="library" name="testng" level="project" />
     <orderEntry type="library" name="jediterm" level="project" />
+    <orderEntry type="library" name="quaqua" level="project" />
   </component>
 </module>
-

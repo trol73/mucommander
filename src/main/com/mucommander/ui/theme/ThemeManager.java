@@ -20,13 +20,7 @@ package com.mucommander.ui.theme;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
 import com.mucommander.commons.file.util.PathUtils;
@@ -847,10 +841,10 @@ public class ThemeManager {
      * @throws IOException if an I/O or syntax error occurs.
      */
     public static ThemeData readThemeData(InputStream in) throws Exception {
-        ThemeData data; // Buffer for the data.
+        ThemeData data = new ThemeData(); // Buffer for the data.
 
         // Reads the theme data.
-        ThemeReader.read(in, data = new ThemeData());
+        ThemeReader.read(in, data);
 
         return data;
     }
@@ -862,18 +856,18 @@ public class ThemeManager {
      * @throws Exception if an I/O or syntax error occurs.
      */
     public static ThemeData readThemeData(File file) throws Exception {
-        InputStream in; // InputStream on file.
-
-        in = null;
+        InputStream in = null; // InputStream on file.
 
         // Loads the theme data.
-        try {return readThemeData(in = new FileInputStream(file));}
-
-        // Cleanup.
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {
+        try {
+            in = new FileInputStream(file);
+            in = new BufferedInputStream(in);
+            return readThemeData(in);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception e) {
                     e.printStackTrace();
                 }
             }

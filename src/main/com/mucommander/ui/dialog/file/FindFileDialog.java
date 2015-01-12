@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * Copyright (C) 2013-2015 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,7 +246,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 if (file == null) {
                     return;
                 }
-                switch(e.getKeyCode()) {
+                switch (e.getKeyCode()) {
                     case KeyEvent.VK_F3:
                         ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
                         break;
@@ -263,6 +263,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
             }
 
         });
+        list.setCellRenderer(new FindFileResultRenderer());
         JScrollPane scrollPane = new JScrollPane(list);
         contentPane.add(scrollPane, BorderLayout.CENTER);
 

@@ -91,7 +91,7 @@ public abstract class PopupButton extends NonFocusableButton {
      */
     @Override
     public void setAction(Action buttonClickedAction) {
-        if (buttonClickedAction==null) {
+        if (buttonClickedAction == null) {
             super.setAction(null);
         } else {
             // Pass a MuteProxyAction to JButton that does nothing when the action is performed.
@@ -246,8 +246,9 @@ public abstract class PopupButton extends NonFocusableButton {
         /////////////////////////////
 
         public void run() {
-                try { Thread.sleep(POPUP_DELAY); }
-                catch(InterruptedException ignore) {}
+                try {
+                    Thread.sleep(POPUP_DELAY);
+                } catch(InterruptedException ignore) {}
 
                 synchronized(this) {
                     // Popup menu if a popup menu is not already being displayed and if mouse is still pressed

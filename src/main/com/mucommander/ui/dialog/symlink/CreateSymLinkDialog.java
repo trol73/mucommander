@@ -19,9 +19,11 @@ package com.mucommander.ui.dialog.symlink;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
+import com.mucommander.job.ui.UserInputHelper;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
+import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.text.FilePathField;
 
@@ -34,6 +36,9 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.FileAlreadyExistsException;
 
 /**
  * Created on 09/06/14.
@@ -55,6 +60,10 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     private final FilePathField edtTarget;
     private final JTextField edtName;
     private final JButton btnOk;
+
+
+    private static final int RETRY_ACTION = 1;
+    private static final int CANCEL_ACTION = 0;
 
 
 
@@ -102,7 +111,50 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk) {
-            SymLinkUtils.createSymlink(edtName.getText(), edtTarget.getText());
+            new Thread() {
+                @Override
+                public void run() {
+                    execute();
+                }
+            }.start();
+
+        } // btnOk
+    }
+
+
+    private void execute() {
+        QuestionDialog dialog = null;
+        final String targetPath = edtTarget.getText();
+        final String linkPath = edtName.getText();
+        String errorMessage;
+        while (true) {
+            try {
+                SymLinkUtils.createSymlink(linkPath, targetPath);
+                // success
+                break;
+            } catch (FileAlreadyExistsException e) {
+                errorMessage = Translator.get("cannot_write_symlink_already_exists", linkPath);
+            } catch (AccessDeniedException e) {
+                errorMessage = Translator.get("cannot_write_symlink_access_denied", linkPath);
+            } catch (IOException e) {
+                errorMessage = Translator.get("cannot_write_symlink", linkPath);
+            }
+
+            if (dialog == null) {
+                dialog = new QuestionDialog(mainFrame,
+                        Translator.get("error"),
+                        errorMessage,
+                        mainFrame,
+                        new String[] {Translator.get("retry"), Translator.get("cancel")},
+                        new int[] {RETRY_ACTION, CANCEL_ACTION},
+                        0);
+            }
+
+            UserInputHelper jobUserInput = new UserInputHelper(null, dialog);
+            int action = (Integer)jobUserInput.getUserInput();
+            if (action < 0 || action == CANCEL_ACTION) {
+                break;
+            }
         }
         cancel();
     }

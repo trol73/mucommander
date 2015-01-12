@@ -56,15 +56,13 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
             LocalFile tempFile = FileFactory.getTemporaryFile(nonLocalFile.getName(), false).getAncestor(LocalFile.class);
 
             // create a directory
-            if(nonLocalFile.isDirectory())
+            if (nonLocalFile.isDirectory()) {
                 tempFile.mkdir();
-            // create a regular file
-            else
+            } else {    // create a regular file
                 tempFile.getOutputStream().close();
-
+            }
             return tempFile;
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return null;
         }
     }
@@ -80,7 +78,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
         AbstractFile topFile = originalFile.getTopAncestor();
         Icon icon;
 
-        if(topFile instanceof LocalFile) {
+        if (topFile instanceof LocalFile) {
             icon = getLocalFileIcon((LocalFile)topFile, originalFile, preferredResolution);
         }
         // File is a remote file: create a temporary local file (or directory) with the same extension to grab the icon
@@ -89,7 +87,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
         else {
             // create the temporary, local file
             LocalFile tempFile = createTempLocalFile(topFile);
-            if(tempFile==null) {
+            if (tempFile == null) {
                 // No temp file, no icon!
                 return null;
             }
@@ -100,8 +98,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
             // Delete the temporary file
             try {
                 tempFile.delete();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Not much to do
             }
         }

@@ -61,8 +61,9 @@ public abstract class DefaultFont {
      * @param font new default font value.
      */
     protected void notifyChange(Font font) {
-        for(int i : linkedFonts)
+        for (int i : linkedFonts) {
             ThemeData.triggerFontEvent(i, font);
+        }
     }
 
 

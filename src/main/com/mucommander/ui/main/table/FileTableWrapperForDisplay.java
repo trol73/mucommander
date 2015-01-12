@@ -18,12 +18,9 @@
 
 package com.mucommander.ui.main.table;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.dnd.DropTarget;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -121,7 +118,35 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
                 }
             }
         });
-	}
+
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int rotation = e.getWheelRotation();
+
+                if (rotation > 0) {
+                    move(1);
+                } else {
+                    move(-1);
+                }
+            }
+
+            private void move(int move) {
+                Point pt = viewport.getViewPosition();
+                pt.y += move;
+
+                pt.y = Math.max(0, pt.y);
+                pt.y = Math.min(getMaxYExtent(), pt.y);
+
+                viewport.setViewPosition(pt);
+            }
+
+            private int getMaxYExtent() {
+                return viewport.getView().getHeight() - viewport.getHeight();
+            }
+        });
+
+    }
 
 	@Override
 	public void setVisible(boolean visible) {
@@ -154,9 +179,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         // color.
         // Otherwise, repaint the table - if we were to skip that step, quicksearch
         // cancellation might result in a corrupt display.
-        if(newColor.equals(getViewport().getBackground()))
+        if (newColor.equals(getViewport().getBackground())) {
             fileTable.repaint();
-        else {
+        } else {
             fileTable.setBackground(newColor);
             getViewport().setBackground(newColor);
         }
@@ -183,8 +208,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         Border border;
         // Some (rather evil) look and feels will change borders outside of muCommander's control,
         // this check is necessary to ensure no exception is thrown.
-        if((border = getBorder()) instanceof MutableLineBorder)
-            ((MutableLineBorder)border).setLineColor(color);
+        if ((border = getBorder()) instanceof MutableLineBorder) {
+            ((MutableLineBorder) border).setLineColor(color);
+        }
     }
 	
 	// - Theme listening -------------------------------------------------------------
