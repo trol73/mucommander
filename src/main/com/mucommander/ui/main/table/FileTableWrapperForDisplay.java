@@ -111,8 +111,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
                 }
                 // Right-click brings a contextual popup menu
                 else if (DesktopManager.isRightMouseButton(e)) {
-                    if(!fileTable.hasFocus())
+                    if (!fileTable.hasFocus()) {
                         fileTable.requestFocus();
+                    }
                     AbstractFile currentFolder = folderPanel.getCurrentFolder();
                     new TablePopupMenu(mainFrame, currentFolder, null, false, fileTable.getFileTableModel().getMarkedFiles()).show(FileTableWrapperForDisplay.this, e.getX(), e.getY());
                 }
@@ -133,8 +134,8 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 
             private void move(int move) {
                 Point pt = viewport.getViewPosition();
-                pt.y += move;
 
+                pt.y += move;
                 pt.y = Math.max(0, pt.y);
                 pt.y = Math.min(getMaxYExtent(), pt.y);
 
@@ -142,7 +143,8 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
             }
 
             private int getMaxYExtent() {
-                return viewport.getView().getHeight() - viewport.getHeight();
+                int result = viewport.getView().getHeight() - viewport.getHeight();
+                return result < 0 ? 0 : result;
             }
         });
 
@@ -150,8 +152,9 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 
 	@Override
 	public void setVisible(boolean visible) {
-		if (visible)
-			super.setVisible(true);
+		if (visible) {
+            super.setVisible(true);
+        }
 	}
 	
 	@Override
@@ -205,10 +208,10 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
     }
 	
 	private void setBorderColor(Color color) {
-        Border border;
+        Border border = getBorder();
         // Some (rather evil) look and feels will change borders outside of muCommander's control,
         // this check is necessary to ensure no exception is thrown.
-        if ((border = getBorder()) instanceof MutableLineBorder) {
+        if (border instanceof MutableLineBorder) {
             ((MutableLineBorder) border).setLineColor(color);
         }
     }
@@ -219,44 +222,45 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
      * Receives theme color changes notifications.
      */
     public void colorChanged(ColorChangedEvent event) {
-        switch(event.getColorId()) {
-        case Theme.FILE_TABLE_BORDER_COLOR:
-            borderColor = event.getColor();
-            if(fileTable.hasFocus()) {
-                setBorderColor(borderColor);
-                repaint();
-            }
-            break;
-        case Theme.FILE_TABLE_INACTIVE_BORDER_COLOR:
-            unfocusedBorderColor = event.getColor();
-            if(!fileTable.hasFocus()) {
-                setBorderColor(unfocusedBorderColor);
-                repaint();
-            }
-            break;
-        case Theme.FILE_TABLE_BACKGROUND_COLOR:
-            backgroundColor = event.getColor();
-            if(fileTable.hasFocus()) {
-                getViewport().setBackground(backgroundColor);
-                fileTable.setBackground(backgroundColor);
-            }
-            break;
-        case Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR:
-            unfocusedBackgroundColor = event.getColor();
-            if(!fileTable.hasFocus()) {
-                getViewport().setBackground(unfocusedBackgroundColor);
-                fileTable.setBackground(unfocusedBackgroundColor);
-            }
-            break;
+        switch (event.getColorId()) {
+            case Theme.FILE_TABLE_BORDER_COLOR:
+                borderColor = event.getColor();
+                if (fileTable.hasFocus()) {
+                    setBorderColor(borderColor);
+                    repaint();
+                }
+                break;
+            case Theme.FILE_TABLE_INACTIVE_BORDER_COLOR:
+                unfocusedBorderColor = event.getColor();
+                if (!fileTable.hasFocus()) {
+                    setBorderColor(unfocusedBorderColor);
+                    repaint();
+                }
+                break;
+            case Theme.FILE_TABLE_BACKGROUND_COLOR:
+                backgroundColor = event.getColor();
+                if (fileTable.hasFocus()) {
+                    getViewport().setBackground(backgroundColor);
+                    fileTable.setBackground(backgroundColor);
+                }
+                break;
+            case Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR:
+                unfocusedBackgroundColor = event.getColor();
+                if (!fileTable.hasFocus()) {
+                    getViewport().setBackground(unfocusedBackgroundColor);
+                    fileTable.setBackground(unfocusedBackgroundColor);
+                }
+                break;
 
-        case Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR:
-            unmatchedBackgroundColor = event.getColor();
-            break;
+            case Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR:
+                unmatchedBackgroundColor = event.getColor();
+                break;
         }
     }
 
     /**
      * Not used.
      */
-    public void fontChanged(FontChangedEvent event) {}
+    public void fontChanged(FontChangedEvent event) {
+    }
 }

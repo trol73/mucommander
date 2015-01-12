@@ -559,8 +559,11 @@ public class TrolCommander {
         void run() throws Exception {
             // Loads credentials
             printStartupMessage("Loading credentials...");
-            try {com.mucommander.auth.CredentialsManager.loadCredentials();}
-            catch(Exception e) {helper.printFileError("Could not load credentials", e);}
+            try {
+                CredentialsManager.loadCredentials();
+            } catch(Exception e) {
+                helper.printFileError("Could not load credentials", e);
+            }
         }
     }
 
