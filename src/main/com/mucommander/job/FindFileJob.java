@@ -63,9 +63,8 @@ public class FindFileJob extends FileJob {
         if (getState() == State.INTERRUPTED) {
             return false;
         }
-
         // If file is a directory, recurs
-        if (file.isDirectory() && !file.isSymlink()) {
+        if (file.isDirectory() && (!file.isSymlink() || file.equals(startDirectory))) {
             searchInFile(file);
             if (!searchSubdirectories && !file.equals(startDirectory)) {
                 return true;

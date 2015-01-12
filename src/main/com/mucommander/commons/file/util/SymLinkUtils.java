@@ -61,16 +61,18 @@ public class SymLinkUtils {
         }
     }
 
-    public static boolean createSymlink(String symLink, String target) {
+    /**
+     *
+     * @param symLink
+     * @param target
+     * @throws IOException
+     *      java.nio.file.AccessDeniedException
+     *      java.nio.file.FileAlreadyExistsException
+     */
+    public static void createSymlink(String symLink, String target) throws IOException {
         Path linkPath = FileSystems.getDefault().getPath(symLink, "");
         Path targetPath = FileSystems.getDefault().getPath(target, "");
-        try {
-            Files.createSymbolicLink(linkPath, targetPath);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Files.createSymbolicLink(linkPath, targetPath);
     }
 
     public static boolean editSymlink(AbstractFile symLink, String target) {

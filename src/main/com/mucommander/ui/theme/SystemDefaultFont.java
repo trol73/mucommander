@@ -75,15 +75,17 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
     @Override
     public Font getFont(ThemeData data) {
         // If the font hasn't been identified yet...
-        if(font == null)
+        if (font == null) {
             // ... try to retrieve it from the UIManager.
-            if((font = UIManager.getFont(property)) == null)
-                // If the current l&f didn't set the right propery, attempt to retrieve it from a component of the
-                // desired type.
-                if((font = mapper.getComponent().getFont()) == null)
+            font = UIManager.getFont(property);
+            if (font == null)
+                // If the current l&f didn't set the right property, attempt to retrieve it from a component of the desired type.
+                font = mapper.getComponent().getFont();
+                if (font == null) {
                     // If that failed, defaults to SansSerif (guaranteed to be supported by the VM).
                     font = Font.decode("SansSerif");
-
+                }
+        }
         return font;
     }
 
@@ -92,21 +94,18 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
     // - PropertyChangeListener implementation -------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     public void propertyChange(PropertyChangeEvent evt) {
-        String name;
-
-        // Monitors changes to both the global look & feel and the target property and react to them if necessary. 
-        name = evt.getPropertyName().toLowerCase();
-        if(name.equals("lookandfeel") || name.equalsIgnoreCase(property)) {
-            Font oldFont;
-
-            oldFont = font;
+        // Monitors changes to both the global look & feel and the target property and react to them if necessary.
+        String name = evt.getPropertyName().toLowerCase();
+        if (name.equals("lookandfeel") || name.equalsIgnoreCase(property)) {
+            Font oldFont = font;
 
             // We first set font to null to ensure that the value is refreshed.
-            font    = null;
-            font    = getFont(null);
+            font = null;
+            font = getFont(null);
 
-            if(!font.equals(oldFont))
+            if (!font.equals(oldFont)) {
                 notifyChange(font);
+            }
         }
     }
 }

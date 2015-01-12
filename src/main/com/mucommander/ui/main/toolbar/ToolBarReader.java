@@ -50,14 +50,17 @@ public class ToolBarReader extends ToolBarIO {
      * Starts parsing the XML description file.
      */
     ToolBarReader(AbstractFile descriptionFile) throws Exception {
-        InputStream in;
+        InputStream in = null;
 
-        in = null;
-        try {SAXParserFactory.newInstance().newSAXParser().parse(in = new BackupInputStream(descriptionFile), this);}
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(IOException e) {}
+        try {
+            in = new BackupInputStream(descriptionFile);
+            SAXParserFactory.newInstance().newSAXParser().parse(in, this);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(IOException ignore) {
+                }
             }
         }
     }

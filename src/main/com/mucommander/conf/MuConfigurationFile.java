@@ -68,27 +68,29 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      */
     private synchronized AbstractFile getConfigurationFile() throws IOException {
         if (configurationFile == null) {
-            return PlatformManager.getPreferencesFolder().getChild(DEFAULT_CONFIGURATION_FILE_NAME);
+            AbstractFile folder = PlatformManager.getPreferencesFolder();
+            return folder.getChild(DEFAULT_CONFIGURATION_FILE_NAME);
         }
         return configurationFile;
     }
 
     /**
      * Sets the path to the configuration file.
-     * @param  path                  path to the file that should be used for configuration storage.
+     * @param  path path to the file that should be used for configuration storage.
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(String path) throws FileNotFoundException {
         AbstractFile file = FileFactory.getFile(path);
-        if (file == null)
+        if (file == null) {
             setConfigurationFile(new File(path));
-        else
+        } else {
             setConfigurationFile(file);
+        }
     }
 
     /**
      * Sets the path to the configuration file.
-     * @param  file                  path to the file that should be used for configuration storage.
+     * @param  file path to the file that should be used for configuration storage.
      * @throws FileNotFoundException if the specified file is not a valid file.
      */
     private synchronized void setConfigurationFile(File file) throws FileNotFoundException {
@@ -102,8 +104,9 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      */
     private synchronized void setConfigurationFile(AbstractFile file) throws FileNotFoundException {
         // Makes sure file can be used as a configuration.
-        if (file.isBrowsable())
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+        }
 
         configurationFile = file;
     }
@@ -116,8 +119,11 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * Returns an input stream on the configuration file.
      * @return an input stream on the configuration file.
      */
+
     public synchronized Reader getReader() throws IOException {
-        return new InputStreamReader(new BackupInputStream(getConfigurationFile()), Charset.forName("utf-8"));
+        InputStream is = new BackupInputStream(getConfigurationFile());
+        Reader reader = new InputStreamReader(is, Charset.forName("utf-8"));
+        return new BufferedReader(reader);
     }
 
     /**
@@ -125,7 +131,9 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @return an output stream on the configuration file.
      */
     public synchronized Writer getWriter() throws IOException {
-        return new OutputStreamWriter(new BackupOutputStream(getConfigurationFile()), Charset.forName("utf-8"));
+        OutputStream os = new BackupOutputStream(getConfigurationFile());
+        Writer writer = new OutputStreamWriter(os, Charset.forName("utf-8"));
+        return new BufferedWriter(writer);
     }
     
 	public boolean isExists() throws IOException {

@@ -21,6 +21,7 @@ package com.mucommander.ui.action;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.KeyStroke;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,9 +47,9 @@ class ActionKeymapReader extends ActionKeymapIO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionKeymapReader.class);
 	
 	/** Maps action Class onto Keystroke instances*/
-    private HashMap<String, KeyStroke> primaryActionsReadKeymap;
+    private Map<String, KeyStroke> primaryActionsReadKeymap;
     /** Maps action Class instances onto Keystroke instances*/
-    private HashMap<String, KeyStroke> alternateActionsReadKeymap;
+    private Map<String, KeyStroke> alternateActionsReadKeymap;
 
     /** Parsed file */
     private AbstractFile file;
@@ -69,12 +70,14 @@ class ActionKeymapReader extends ActionKeymapIO {
     	this.file = file;
     	
     	InputStream in = null;
-    	try {SAXParserFactory.newInstance().newSAXParser().parse(in = new BackupInputStream(file), this);}
-    	finally {
-    		if(in!=null) {
+    	try {
+			in = new BackupInputStream(file);
+			SAXParserFactory.newInstance().newSAXParser().parse(in, this);
+		} finally {
+    		if (in != null) {
     			try {
                     in.close();
-                } catch(IOException e) {
+                } catch(IOException ignore) {
                 }
     		}
     	}
@@ -146,9 +149,13 @@ class ActionKeymapReader extends ActionKeymapIO {
     ///// getters /////
     ///////////////////
     
-    public HashMap<String, KeyStroke> getPrimaryActionsKeymap() {return primaryActionsReadKeymap;}
+    public Map<String, KeyStroke> getPrimaryActionsKeymap() {
+		return primaryActionsReadKeymap;
+	}
     
-    public HashMap<String, KeyStroke> getAlternateActionsKeymap() {return alternateActionsReadKeymap;}
+    public Map<String, KeyStroke> getAlternateActionsKeymap() {
+		return alternateActionsReadKeymap;
+	}
     
     ///////////////////////////////////
     // ContentHandler implementation //

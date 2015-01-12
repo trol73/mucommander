@@ -340,12 +340,14 @@ public class FileFactory {
      * @throws AuthException if additional authentication information is required to create the file
      */
     public static AbstractFile getFile(String absPath, boolean throwException) throws AuthException, IOException {
-        try {return getFile(absPath, null);}
-        catch(IOException e) {
+        try {
+            return getFile(absPath, null);
+        } catch(IOException e) {
             LOGGER.info("Caught an exception", e);
 
-            if(throwException)
+            if (throwException) {
                 throw e;
+            }
             return null;
         }
     }
@@ -372,8 +374,9 @@ public class FileFactory {
      * @return the created file or null if something went wrong during file creation
      */
     public static AbstractFile getFile(FileURL fileURL) {
-        try {return getFile(fileURL, null);}
-        catch(IOException e) {
+        try {
+            return getFile(fileURL, null);
+        } catch(IOException e) {
             LOGGER.info("Caught an exception", e);
             return null;
         }
@@ -388,12 +391,14 @@ public class FileFactory {
      * @throws java.io.IOException if something went wrong during file creation
      */
     public static AbstractFile getFile(FileURL fileURL, boolean throwException) throws IOException {
-        try {return getFile(fileURL, null);}
-        catch(IOException e) {
+        try {
+            return getFile(fileURL, null);
+        } catch(IOException e) {
             LOGGER.info("Caught an exception", e);
 
-            if(throwException)
+            if (throwException) {
                 throw e;
+            }
             return null;
         }
     }

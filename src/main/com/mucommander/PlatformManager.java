@@ -21,6 +21,7 @@ package com.mucommander;
 import java.io.File;
 import java.io.IOException;
 
+import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,21 +57,41 @@ public class PlatformManager {
      * @return the path to the default trolCommander preferences folder.
      */
     public static AbstractFile getDefaultPreferencesFolder() {
+        return FileFactory.getFile(getDefaultPreferencesFolderPath());
+    }
+
+    /**
+     * Returns the path to the default muCommander preferences folder.
+     * <p>
+     * This folder is:
+     * <ul>
+     *  <li><code>~/Library/Preferences/trolCommander/</code> under MAC OS X.</li>
+     *  <li><code>~/.trolcommander/</code> under all other OSes.</li>
+     * </ul>
+     * </p>
+     * <p>
+     * If the default preferences folder doesn't exist, this method will create it.
+     * </p>
+     * @return the path to the default trolCommander preferences folder.
+     */
+    public static String getDefaultPreferencesFolderPath() {
         File folder;
 
         // Mac OS X specific folder (~/Library/Preferences/trolCommander)
-        if(OsFamily.MAC_OS_X.isCurrent())
-            folder = new File(System.getProperty("user.home")+"/Library/Preferences/trolCommander");
-        // For all other platforms, use generic folder (~/.trolcommander)
-        else
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            folder = new File(System.getProperty("user.home") + "/Library/Preferences/trolCommander");
+            // For all other platforms, use generic folder (~/.trolcommander)
+        } else {
             folder = new File(System.getProperty("user.home"), "/.trolcommander");
+        }
 
         // Makes sure the folder exists.
-        if(!folder.exists())
-            if(!folder.mkdir())
+        if (!folder.exists()) {
+            if (!folder.mkdir()) {
                 LOGGER.warn("Could not create preference folder: " + folder.getAbsolutePath());
-
-        return FileFactory.getFile(folder.getAbsolutePath());
+            }
+        }
+        return folder.getAbsolutePath();
     }
 
     /**
@@ -89,9 +110,9 @@ public class PlatformManager {
      */
     public static AbstractFile getPreferencesFolder() {
         // If the preferences folder has been set, use it.
-        if(prefFolder != null)
+        if (prefFolder != null) {
             return prefFolder;
-
+        }
         return getDefaultPreferencesFolder();
     }
 
@@ -110,7 +131,7 @@ public class PlatformManager {
     public static void setPreferencesFolder(File folder) throws IOException {setPreferencesFolder(FileFactory.getFile(folder.getAbsolutePath()));}
 
     /**
-     * Sets the path to the folder in which trolCommande rwill look for its preferences.
+     * Sets the path to the folder in which trolCommander will look for its preferences.
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
@@ -122,12 +143,13 @@ public class PlatformManager {
      * @see                #setPreferencesFolder(AbstractFile)
      */
     public static void setPreferencesFolder(String path) throws IOException {
-        AbstractFile folder;
+        AbstractFile folder = FileFactory.getFile(path);
 
-        if((folder = FileFactory.getFile(path)) == null)
+        if (folder == null) {
             setPreferencesFolder(new File(path));
-        else
+        } else {
             setPreferencesFolder(folder);
+        }
     }
 
     /**
@@ -143,10 +165,11 @@ public class PlatformManager {
      * @see                #setPreferencesFolder(File)
      */
     public static void setPreferencesFolder(AbstractFile folder) throws IOException {
-        if(!folder.exists())
+        if (!folder.exists()) {
             folder.mkdir();
-        else if(!folder.isBrowsable())
+        } else if (!folder.isBrowsable()) {
             folder = folder.getParent();
+        }
         prefFolder = folder;
     }
 }

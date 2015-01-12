@@ -175,9 +175,7 @@ public class ExtensionManager {
      * @throws IOException if there was an error retrieving the default extensions folder.
      */
     private static AbstractFile getDefaultExtensionsFolder() throws IOException {
-        AbstractFile folder;
-
-        folder = PlatformManager.getPreferencesFolder().getChild(DEFAULT_EXTENSIONS_FOLDER_NAME);
+        AbstractFile folder = PlatformManager.getPreferencesFolder().getChild(DEFAULT_EXTENSIONS_FOLDER_NAME);
 
         // Makes sure the folder exists.
         if(!folder.exists())

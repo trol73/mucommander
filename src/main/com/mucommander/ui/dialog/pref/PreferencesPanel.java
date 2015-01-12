@@ -28,7 +28,7 @@ public abstract class PreferencesPanel extends JPanel {
     /** Preferences dialog that contains this panel. */
     protected PreferencesDialog parent;
     /** Panel's title. */
-    protected String            title;
+    protected String title;
 
     /**
      * Creates a new preferences panel.

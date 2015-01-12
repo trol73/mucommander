@@ -196,8 +196,8 @@ class TextEditorImpl implements ThemeListener {
 		if (searchString == null || searchString.isEmpty()) {
             return;
         }
-		int pos;
         String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
+        int pos;
 		if (forward) {
 			pos = getTextLC().indexOf(ss, startPos);
 		} else {
@@ -218,6 +218,9 @@ class TextEditorImpl implements ThemeListener {
 					Toolkit.getDefaultToolkit().beep();
 				}
 			}.start();
+            if (getStatusBar() != null) {
+                getStatusBar().setStatusMessage(Translator.get("text_editor.text_not_found"));
+            }
 		}
 	}
 
@@ -365,8 +368,10 @@ class TextEditorImpl implements ThemeListener {
             return FileType.PHP;
         } else if (str.startsWith("#!/usr/bin/python")) {
             return FileType.PYTHON;
-        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh")) {
+        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash")) {
             return FileType.UNIX_SHELL;
+        } else if (str.startsWith("<!DOCTYPE html PUBLIC \"")) {
+            return FileType.HTML;
         }
         return FileType.NONE;
     }

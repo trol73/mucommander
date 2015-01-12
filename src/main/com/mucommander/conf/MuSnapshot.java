@@ -182,7 +182,7 @@ public class MuSnapshot {
     private static final String TAB_TITLE                          = "title";
     
 	/** Cache the screen's size. this value isn't computed during the shutdown process since it cause a deadlock then */
-	private Dimension screenSize;
+	private static Dimension screenSize;
 	
 	public static String getSelectedWindow() {
 		return WINDOWS_SELECTION;
@@ -524,7 +524,7 @@ public class MuSnapshot {
      * @return the variable that holds a location contained in the global locations history at the given index
      */
     public static String getRecentLocationVariable(int index) {
-    	return getRecentLocationsSection()  + "." + LOCATION + "-" + index; 
+    	return getRecentLocationsSection() + "." + LOCATION + "-" + index;
     }
     
     private static final String ROOT_ELEMENT = "snapshot";
@@ -540,14 +540,30 @@ public class MuSnapshot {
     MuSnapshot() {
     	configuration = new Configuration(MuSnapshotFile.getSnapshotFile(), new VersionedXmlConfigurationReaderFactory(),
     			new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
-		
-		try {
-			screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		} catch(HeadlessException e) {
-			LOGGER.debug("Could not fetch screen size: " + e.getMessage());
-		}
     }
-    
+
+    /**
+     *
+     * @return
+     */
+    public static Dimension getScreenSize() {
+        if (screenSize != null) {
+            return screenSize;
+        }
+        synchronized (MuSnapshot.class) {
+            if (screenSize == null) {
+                // Getting DefaultToolkit and screen sizes
+                try {
+                    screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                } catch (HeadlessException e) {
+                    LOGGER.debug("Could not fetch screen size: " + e.getMessage());
+                }
+            }
+        }
+        return screenSize;
+    }
+
+
     /**
      * TODO: change this method such that it will return a more specific API
      */
@@ -594,7 +610,7 @@ public class MuSnapshot {
     	for (int i=0; i < nbMainFrames; ++i)
     		setFrameAttributes(mainFrames.get(i), i);
     	
-    	if (screenSize != null) {
+    	if (getScreenSize() != null) {
         	configuration.setVariable(MuSnapshot.SCREEN_WIDTH, screenSize.width);
         	configuration.setVariable(MuSnapshot.SCREEN_HEIGHT, screenSize.height);
         }
@@ -672,8 +688,8 @@ public class MuSnapshot {
     	configuration.setVariable(MuSnapshot.getFileTableSortOrderVariable(index, isLeft), table.getSortInfo().getAscendingOrder() ? MuSnapshot.SORT_ORDER_ASCENDING : MuSnapshot.SORT_ORDER_DESCENDING);
     	
     	// Loop on columns
-		for(Column c : Column.values()) {
-			if(c!=Column.NAME) {       // Skip the special name column (always enabled, width automatically calculated)
+		for (Column c : Column.values()) {
+			if (c != Column.NAME) {       // Skip the special name column (always enabled, width automatically calculated)
 				MuConfigurations.getSnapshot().setVariable(
 						MuSnapshot.getShowColumnVariable(index, c, isLeft),
 						table.isColumnEnabled(c)
