@@ -68,16 +68,17 @@ public class CustomDateFormat implements ConfigurationListener {
      * @return the given format string with '/' separator characters replaced by the given separator character.
      */
     public static String replaceDateSeparator(String dateFormatString, String separator) {
-        if(separator==null || separator.equals("/"))
+        if (separator == null || separator.equals("/")) {
             return dateFormatString;
+        }
 
         StringBuilder dateFormatStringSB = new StringBuilder();
         int pos1 = 0;
-        int pos2;
-        while((pos2=dateFormatString.indexOf('/', pos1))>-1) {
+        int pos2 = dateFormatString.indexOf('/', pos1);
+        while (pos2 >= 0) {
             dateFormatStringSB.append(dateFormatString.substring(pos1, pos2));
             dateFormatStringSB.append(separator);
-            pos1 = pos2+1;
+            pos1 = pos2 + 1;
         }
         dateFormatStringSB.append(dateFormatString.substring(pos1, dateFormatString.length()));
         return dateFormatStringSB.toString();

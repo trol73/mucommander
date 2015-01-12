@@ -311,7 +311,6 @@ class ImageViewer extends FileViewer implements ActionListener {
         imageViewerImpl.revalidate();
         //frame.pack();
         frame.getContentPane().repaint();
-
     }
 
     private void checkZoom() {

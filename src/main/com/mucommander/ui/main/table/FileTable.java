@@ -38,7 +38,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.apple.eawt.event.*;
 import com.mucommander.text.SizeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
