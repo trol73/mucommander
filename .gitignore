@@ -9,3 +9,5 @@ reports/*
 out/*
 .svn/*
 /bin/
+.idea/workspace.xml
+.idea/misc.xml
