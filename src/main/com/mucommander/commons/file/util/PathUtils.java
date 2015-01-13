@@ -55,12 +55,15 @@ public class PathUtils {
         private int type;
 
         /** Designates a folder, either a directory or archive, that exists on the filesystem. */
-        public final static int EXISTING_FOLDER = 0;
+        public static final int EXISTING_FOLDER = 0;
         /** Designates a regular file that exists on the filesystem. The file may be a browsable archive but that was
-         * refered to as a regular file, i.e. without a trailing separator character in the path. */
-        public final static int EXISTING_FILE = 1;
+         * referred to as a regular file, i.e. without a trailing separator character in the path. */
+        public static final int EXISTING_FILE = 1;
         /** Designates a new file that doesn't exist on the filesystem. The file's parent however does always exist. */
-        public final static int NEW_FILE = 2;
+        public static final int NEW_FILE = 2;
+
+        /** Designates a new directory that doesn't exist on the filesystem. The file's parent directory does not exist too. */
+        public static final int NEW_DIRECTORIES = 3;
 
         /**
          * Creates a new <code>ResolvedDestination</code> with the specified destination file and type.
@@ -128,7 +131,7 @@ public class PathUtils {
      * Resolves a destination path entered by the user and returns a {@link ResolvedDestination} object that
      * that contains a {@link AbstractFile} instance corresponding to the path and a type that describes the kind of
      * destination that was resolved. <code>null</code> is returned if the path is not a valid destination (see below)
-     * or could not be resolved, for example becuase of I/O or authentication error.
+     * or could not be resolved, for example because of I/O or authentication error.
      * <p>
      * The given path may be either absolute or relative to the specified base folder. If the base folder argument is
      * <code>null</code> and the path is relative, <code>null</code> will always be returned.
@@ -154,33 +157,34 @@ public class PathUtils {
      *
      * @param destPath the destination path to resolve
      * @param baseFolder the base folder used for relative paths, <code>null</code> to accept only absolute paths
+     * @param requireParentExists if parent directory must exists
      * @return the object that that contains a {@link AbstractFile} instance corresponding to the path and a type that
      * describes the kind of destination that was resolved
      */
-    public static ResolvedDestination resolveDestination(String destPath, AbstractFile baseFolder) {
-        AbstractFile destFile;
+    public static ResolvedDestination resolveDestination(String destPath, AbstractFile baseFolder, boolean requireParentExists) {
         FileURL destURL;
 
         // Try to resolve the path as a URL
         try {
             destURL = FileURL.getFileURL(destPath);
             // destPath is absolute
-        }
-        catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             // destPath is relative (or malformed)
 
             // Abort now if there is no base folder
-            if(baseFolder==null)
+            if (baseFolder == null) {
                 return null;
+            }
 
             String separator = baseFolder.getSeparator();
 
             // Start by cloning the base folder's URL, including credentials and properties
             FileURL baseFolderURL = baseFolder.getURL();
-            destURL  = (FileURL)baseFolderURL.clone();
+            destURL = (FileURL)baseFolderURL.clone();
             String basePath = destURL.getPath();
-            if(!destPath.equals(""))
-                destURL.setPath(basePath + (basePath.endsWith(separator)?"":separator) + destPath);
+            if (!destPath.isEmpty()) {
+                destURL.setPath(basePath + (basePath.endsWith(separator) ? "" : separator) + destPath);
+            }
 
             // At this point we have the proper URL, except that the path may contain '.', '..' or '~' tokens.
             // => parse the URL from scratch to have the SchemeParser canonize them.
@@ -190,34 +194,43 @@ public class PathUtils {
                 // such as '/' are properly parsed.
                 destURL.setCredentials(baseFolderURL.getCredentials());
                 destURL.importProperties(baseFolderURL);
-            }
-            catch(MalformedURLException e2) {
+            } catch (MalformedURLException e2) {
                 return null;
             }
         }
 
         // No point in going any further if the URL cannot be resolved into a file
-        destFile = FileFactory.getFile(destURL);
-        if(destFile ==null) {
+        AbstractFile destFile = FileFactory.getFile(destURL);
+        if (destFile == null) {
             LOGGER.info("could not resolve a file for {}", destURL);
             return null;
         }
 
         // Test if the destination file exists
         boolean destFileExists = destFile.exists();
-        if(destFileExists) {
+        if (destFileExists) {
             // Note: path to archives must end with a trailing separator character to refer to the archive as a folder,
             //  if they don't, they'll refer to the archive as a file.
-            if(destFile.isDirectory() || (destPath.endsWith(destFile.getSeparator()) && destFile.isBrowsable()))
+            if (destFile.isDirectory() || (destPath.endsWith(destFile.getSeparator()) && destFile.isBrowsable())) {
                 return new ResolvedDestination(destFile, ResolvedDestination.EXISTING_FOLDER, destFile);
+            }
         }
 
         // Test if the destination's parent exists, if not the path is not a valid destination
         AbstractFile destParent = destFile.getParent();
-        if(destParent==null || !destParent.exists())
+        if (!requireParentExists) {
+            return new ResolvedDestination(destFile, ResolvedDestination.NEW_DIRECTORIES, destParent);
+        }
+        if (destParent == null || !destParent.exists()) {
             return null;
+        }
 
-        return new ResolvedDestination(destFile, destFileExists?ResolvedDestination.EXISTING_FILE:ResolvedDestination.NEW_FILE, destParent);
+        return new ResolvedDestination(destFile, destFileExists ? ResolvedDestination.EXISTING_FILE : ResolvedDestination.NEW_FILE, destParent);
+    }
+
+
+    public static ResolvedDestination resolveDestination(String destPath, AbstractFile baseFolder) {
+        return resolveDestination(destPath, baseFolder, true);
     }
 
 
@@ -229,8 +242,9 @@ public class PathUtils {
      */
     public static String removeLeadingSeparator(String path) {
         char firstChar;
-        if(path.length()>0 && ((firstChar=path.charAt(0))=='/' || firstChar=='\\'))
+        if (!path.isEmpty() && ((firstChar=path.charAt(0)) == '/' || firstChar=='\\')) {
             return path.substring(1, path.length());
+        }
 
         return path;
     }
@@ -243,8 +257,9 @@ public class PathUtils {
      * @return the modified path, free of any leading separator
      */
     public static String removeLeadingSeparator(String path, String separator) {
-        if(path.startsWith(separator))
+        if (path.startsWith(separator)) {
             return path.substring(separator.length(), path.length());
+        }
 
         return path;
     }
@@ -258,8 +273,9 @@ public class PathUtils {
     public static String removeTrailingSeparator(String path) {
         char lastChar;
         int len = path.length();
-        if(len>0 && ((lastChar=path.charAt(len-1))=='/' || lastChar=='\\'))
-            return path.substring(0, len-1);
+        if (len > 0 && ((lastChar = path.charAt(len-1)) =='/' || lastChar=='\\')) {
+            return path.substring(0, len - 1);
+        }
 
         return path;
     }
@@ -272,8 +288,9 @@ public class PathUtils {
      * @return the modified path, free of any trailing separator
      */
     public static String removeTrailingSeparator(String path, String separator) {
-        if(path.endsWith(separator))
-            return path.substring(0, path.length()-separator.length());
+        if (path.endsWith(separator)) {
+            return path.substring(0, path.length() - separator.length());
+        }
 
         return path;
     }

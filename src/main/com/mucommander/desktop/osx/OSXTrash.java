@@ -57,12 +57,10 @@ public class OSXTrash extends QueuedTrash {
 	
     /** AppleScript that reveals the trash in Finder */
     private final static String REVEAL_TRASH_APPLESCRIPT =
-        "tell application \"Finder\" to open trash\n" +
-        "activate application \"Finder\"\n";
+        "tell application \"Finder\" to open trash\n" + "activate application \"Finder\"\n";
 
     /** AppleScript that counts and returns the number of items in Trash */
-    private final static String COUNT_TRASH_ITEMS_APPLESCRIPT =
-            "tell application \"Finder\" to return count of items in trash";
+    private final static String COUNT_TRASH_ITEMS_APPLESCRIPT = "tell application \"Finder\" to return count of items in trash";
 
     /** AppleScript that empties the trash */
     private final static String EMPTY_TRASH_APPLESCRIPT = "tell application \"Finder\" to empty trash";
@@ -122,8 +120,7 @@ public class OSXTrash extends QueuedTrash {
 
     @Override
     public boolean isTrashFile(AbstractFile file) {
-        return (file.getTopAncestor() instanceof LocalFile)
-            && (file.getAbsolutePath(true).indexOf("/.Trash/") != -1);
+        return (file.getTopAncestor() instanceof LocalFile) && (file.getAbsolutePath(true).contains("/.Trash/"));
     }
 
     /**
@@ -138,8 +135,7 @@ public class OSXTrash extends QueuedTrash {
 
         try {
             return Integer.parseInt(output.toString().trim());
-        }
-        catch(NumberFormatException e) {
+        } catch(NumberFormatException e) {
             LOGGER.debug("Caught an exception", e);
             return -1;
         }
@@ -186,16 +182,15 @@ public class OSXTrash extends QueuedTrash {
 
         // Simple script for AppleScript versions with Unicode support, i.e. that allows Unicode characters in the
         // script (AppleScript 2.0 / Mac OS X 10.5 or higher).
-        if(AppleScript.getScriptEncoding().equals(AppleScript.UTF8)) {
+        if (AppleScript.getScriptEncoding().equals(AppleScript.UTF8)) {
             int nbFiles = queuedFiles.size();
             appleScript = "tell application \"Finder\" to move {";
             for(int i=0; i<nbFiles; i++) {
                 appleScript += "posix file \""+queuedFiles.get(i).getAbsolutePath()+"\"";
-                if(i<nbFiles-1)
+                if (i < nbFiles-1)
                     appleScript += ", ";
             }
             appleScript += "} to the trash";
-
             return AppleScript.execute(appleScript, null);
         }
         // Script for AppleScript versions without Unicode support (AppleScript 1.10 / Mac OS X 10.4 or lower)
@@ -210,10 +205,11 @@ public class OSXTrash extends QueuedTrash {
                 tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);
                 tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), "utf-8");
 
-                for(int i=0; i<nbFiles; i++) {
+                for (int i=0; i<nbFiles; i++) {
                     tmpOut.write(queuedFiles.get(i).getAbsolutePath());
-                    if(i<nbFiles-1)
+                    if (i < nbFiles-1) {
                         tmpOut.write("\n");
+                    }
                 }
 
                 tmpOut.close();
@@ -228,20 +224,21 @@ public class OSXTrash extends QueuedTrash {
                 tmpFile.delete();
 
                 return success;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 LOGGER.debug("Caught IOException", e);
 
-                if(tmpOut!=null) {
-                    try { tmpOut.close(); }
-                    catch(IOException e1) {
+                if (tmpOut != null) {
+                    try {
+                        tmpOut.close();
+                    } catch(IOException e1) {
                         // There's not much we can do about it
                     }
                 }
 
-                if(tmpFile!=null) {
-                    try { tmpFile.delete(); }
-                    catch(IOException e2) {
+                if (tmpFile != null) {
+                    try {
+                        tmpFile.delete();
+                    } catch(IOException e2) {
                         // There's not much we can do about it
                     }
                 }

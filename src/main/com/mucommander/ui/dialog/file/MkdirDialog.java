@@ -71,10 +71,15 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
     private boolean mkfileMode;
 
-    // Dialog size constraints
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320,0);	
-    // Dialog width should not exceed 360, height is not an issue (always the same)
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400,10000);
+    /**
+     * Dialog size constraints
+     */
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320, 0);
+
+    /**
+     * Dialog width should not exceed 360, height is not an issue (always the same)
+     */
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
 
 
     /**
@@ -135,9 +140,9 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         String enteredPath = pathField.getText();
 
         // Resolves destination folder
-        PathUtils.ResolvedDestination resolvedDest = PathUtils.resolveDestination(enteredPath, mainFrame.getActivePanel().getCurrentFolder());
+        PathUtils.ResolvedDestination resolvedDest = PathUtils.resolveDestination(enteredPath, mainFrame.getActivePanel().getCurrentFolder(), false);
         // The path entered doesn't correspond to any existing folder
-        if (resolvedDest==null) {
+        if (resolvedDest == null) {
             InformationDialog.showErrorDialog(mainFrame, Translator.get("invalid_path", enteredPath));
             return;
         }

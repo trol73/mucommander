@@ -84,8 +84,9 @@ public class AppleScript {
      */
     public static boolean execute(String appleScript, StringBuilder outputBuffer) {
         // No point in going any further if the current OS is not Mac OS X
-        if(!OsFamily.MAC_OS_X.isCurrent())
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
             return false;
+        }
 
         LOGGER.debug("Executing AppleScript: "+appleScript);
 
@@ -101,7 +102,7 @@ public class AppleScript {
         OutputStreamWriter pout = null;
         try {
             // Execute the osascript command.
-            AbstractProcess process = ProcessRunner.execute(tokens, outputBuffer==null?null:new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding()));
+            AbstractProcess process = ProcessRunner.execute(tokens, outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding()));
 
             // Pipe the script to the osascript process.
             pout = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding());
@@ -113,22 +114,21 @@ public class AppleScript {
 
             LOGGER.debug("osascript returned code="+returnCode+", output="+ outputBuffer);
 
-            if(returnCode!=0) {
+            if (returnCode != 0) {
             	LOGGER.debug("osascript terminated abnormally");
                 return false;
             }
 
             return true;
-        }
-        catch(Exception e) {        // IOException, InterruptedException
+        } catch(Exception e) {        // IOException, InterruptedException
             // Shouldn't normally happen
         	LOGGER.debug("Unexcepted exception while executing AppleScript", e);
 
             try {
-                if(pout!=null)
+                if (pout != null) {
                     pout.close();
-            }
-            catch(IOException e1) {
+                }
+            } catch(IOException e1) {
                 // Can't do much about it
             }
 
