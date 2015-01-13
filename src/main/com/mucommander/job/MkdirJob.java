@@ -99,7 +99,7 @@ public class MkdirJob extends FileJob {
 
                 // Check for file collisions, i.e. if the file already exists in the destination
                 int collision = FileCollisionChecker.checkForCollision(null, file);
-                if (collision!=FileCollisionChecker.NO_COLLOSION) {
+                if (collision != FileCollisionChecker.NO_COLLOSION) {
                     // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
                     // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
                     int choice = waitForUserResponse(new FileCollisionDialog(getMainFrame(), getMainFrame(), collision, null, file, false, false));
@@ -117,50 +117,12 @@ public class MkdirJob extends FileJob {
                     }
                 }
 
-                // create file
                 if (mkfileMode) {
-                    // Use mkfile
-                    if (allocateSpace == -1) {
-                        file.mkfile();
-                    }
-                    // Allocate the requested number of bytes
-                    else {
-                        OutputStream mkfileOut = null;
-                        try {
-                            // using RandomAccessOutputStream if we can have one
-                            if (file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
-                                mkfileOut = file.getRandomAccessOutputStream();
-                                ((RandomAccessOutputStream)mkfileOut).setLength(allocateSpace);
-                            }
-                            // manually otherwise
-                            else {
-                                mkfileOut = file.getOutputStream();
-
-                                // Use BufferPool to avoid excessive memory allocation and garbage collection
-                                byte buffer[] = BufferPool.getByteArray();
-                                int bufferSize = buffer.length;
-
-                                try {
-                                    long remaining = allocateSpace;
-                                    while(remaining > 0 && getState() != State.INTERRUPTED) {
-                                        int nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
-                                        mkfileOut.write(buffer, 0, nbWrite);
-                                        remaining -= nbWrite;
-                                    }
-                                } finally {
-                                    BufferPool.releaseByteArray(buffer);
-                                }
-                            }
-                        } finally {
-                            if (mkfileOut != null)
-                                try { mkfileOut.close(); }
-                                catch(IOException e) {}
-                        }
-                    }
-                }
-                // create directory
-                else {
-                    file.mkdir();
+                    // create file
+                    mkFile(file);
+                } else {
+                    // create directory
+                    mkDir(file);
                 }
 
                 // Resolve new file instance now that it exists: remote files do not update file attributes after
@@ -193,8 +155,56 @@ public class MkdirJob extends FileJob {
                 // Cancel action
                 return false;		// Return Failure
             }    
+        } while(true);
+    }
+
+
+    private void mkFile(AbstractFile file) throws IOException {
+        // Use mkfile
+        if (allocateSpace == -1) {
+            file.mkfile();
         }
-        while(true);
+        // Allocate the requested number of bytes
+        else {
+            OutputStream mkfileOut = null;
+            try {
+                // using RandomAccessOutputStream if we can have one
+                if (file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
+                    mkfileOut = file.getRandomAccessOutputStream();
+                    ((RandomAccessOutputStream)mkfileOut).setLength(allocateSpace);
+                }
+                // manually otherwise
+                else {
+                    mkfileOut = file.getOutputStream();
+
+                    // Use BufferPool to avoid excessive memory allocation and garbage collection
+                    byte buffer[] = BufferPool.getByteArray();
+                    int bufferSize = buffer.length;
+
+                    try {
+                        long remaining = allocateSpace;
+                        while(remaining > 0 && getState() != State.INTERRUPTED) {
+                            int nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
+                            mkfileOut.write(buffer, 0, nbWrite);
+                            remaining -= nbWrite;
+                        }
+                    } finally {
+                        BufferPool.releaseByteArray(buffer);
+                    }
+                }
+            } finally {
+                if (mkfileOut != null)
+                    try {
+                        mkfileOut.close();
+                    } catch (IOException ignore) {
+                    }
+            }
+        }
+    }
+
+
+    private void mkDir(AbstractFile file) throws IOException {
+        file.mkdirs();
     }
 
     /**

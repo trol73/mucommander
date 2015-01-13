@@ -119,7 +119,7 @@ public class LocalFile extends ProtocolFile {
     public final static String SEPARATOR = File.separator;
 
     /** Are we running Windows ? */
-    private final static boolean IS_WINDOWS =  OsFamily.WINDOWS.isCurrent();
+    private final static boolean IS_WINDOWS = OsFamily.WINDOWS.isCurrent();
 
     /** True if the underlying local filesystem uses drives assigned to letters (e.g. A:\, C:\, ...) instead
      * of having single a root folder '/' */
@@ -857,8 +857,9 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public void mkdir() throws IOException {
-        if(!file.mkdir())
+        if (!file.mkdir()) {
             throw new IOException();
+        }
     }
 	
     @Override

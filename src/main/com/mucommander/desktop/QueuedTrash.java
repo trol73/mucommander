@@ -23,6 +23,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.WindowManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -50,7 +51,7 @@ import java.util.Vector;
 public abstract class QueuedTrash extends AbstractTrash {
 
     /** Contains the files that are waiting to be moved to the trash */
-    private final static List<AbstractFile> queuedFiles = new Vector<>();
+    private final static List<AbstractFile> queuedFiles = new ArrayList<>();
 
     /** Use to synchronize access to the trash */
     protected final static Object moveToTrashLock = new Object();
@@ -58,7 +59,7 @@ public abstract class QueuedTrash extends AbstractTrash {
     /** Thread that performs the actual job of moving files to the trash */
     protected static Thread moveToTrashThread;
 
-    /** Amount of time in millisecondes to wait for additional files before moving them to the trash */
+    /** Amount of time in milliseconds to wait for additional files before moving them to the trash */
     protected final static int QUEUE_PERIOD = 1000;
 
 
@@ -86,7 +87,7 @@ public abstract class QueuedTrash extends AbstractTrash {
      */
     @Override
     public boolean moveToTrash(AbstractFile file) {
-        if(!canMoveToTrash(file))
+        if (!canMoveToTrash(file))
             return false;
 
         synchronized(moveToTrashLock) {
@@ -106,12 +107,11 @@ public abstract class QueuedTrash extends AbstractTrash {
     @Override
     public void waitForPendingOperations() {
         synchronized(moveToTrashLock) {
-            if(moveToTrashThread!=null) {
+            if (moveToTrashThread != null) {
                 try {
                     // Wait until moveToTrashThread wakes this thread up
                     moveToTrashLock.wait();
-                }
-                catch(InterruptedException e) {
+                } catch(InterruptedException ignore) {
                 }
             }
         }
@@ -140,14 +140,14 @@ public abstract class QueuedTrash extends AbstractTrash {
 
                 try {
                     Thread.sleep(QUEUE_PERIOD);
+                } catch(InterruptedException ignore) {
                 }
-                catch(InterruptedException e) {}
-            }
-            while(queueSize!=queuedFiles.size());
+            } while(queueSize != queuedFiles.size());
 
             synchronized(moveToTrashLock) {     // Files can't be added to queue while files are moved to trash
-                if(!moveToTrash(queuedFiles))
+                if (!moveToTrash(queuedFiles)) {
                     InformationDialog.showErrorDialog(WindowManager.getCurrentMainFrame(), Translator.get("delete_dialog.move_to_trash.option"), Translator.get("delete_dialog.move_to_trash.failed"));
+                }
 
                 queuedFiles.clear();
                 // Wake up any thread waiting for this thread to be finished

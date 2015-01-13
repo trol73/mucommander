@@ -41,6 +41,7 @@ import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
+import com.mucommander.ui.theme.ThemeCache;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 import ru.trolsoft.ui.InputField;
@@ -264,6 +265,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
         });
         list.setCellRenderer(new FindFileResultRenderer());
+        list.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL]);
         JScrollPane scrollPane = new JScrollPane(list);
         contentPane.add(scrollPane, BorderLayout.CENTER);
 
