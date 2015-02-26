@@ -372,6 +372,8 @@ class TextEditorImpl implements ThemeListener {
             return FileType.UNIX_SHELL;
         } else if (str.startsWith("<!DOCTYPE html PUBLIC \"")) {
             return FileType.HTML;
+        } else if (str.startsWith("#!/usr/bin/ruby") || str.startsWith("#!/usr/bin/env ruby")) {
+            return FileType.RUBY;
         }
         return FileType.NONE;
     }
