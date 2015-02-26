@@ -151,7 +151,10 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     @Override
     protected void saveStateOnClose() {
-
+        // Run GC for big images
+        if (scaledImage != null && scaledImage.getWidth()*scaledImage.getHeight() > 1024*200) {
+            System.gc();
+        }
     }
 
     @Override
