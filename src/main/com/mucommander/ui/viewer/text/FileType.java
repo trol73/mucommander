@@ -32,7 +32,7 @@ public enum FileType {
     ACTIONSCRIPT("ActionScript", SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT, "*.as"),
     ASSEMBLER_X86("Assembler x86", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86, "*.asm,*.s"),
     BBCODE("BBCode", SyntaxConstants.SYNTAX_STYLE_BBCODE),
-    C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c"),
+    C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c,*.m"),
     CLOJURE("Clojure", SyntaxConstants.SYNTAX_STYLE_CLOJURE, "*.clj"),
     CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc,*.h"),
     CSHARP("C#", SyntaxConstants.SYNTAX_STYLE_CSHARP, "*.cs"),
