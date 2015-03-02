@@ -398,11 +398,11 @@ public class StreamUtils {
         if (len > 0) {
             do {
                 int nbRead = in.read(b, off + totalRead, len - totalRead);
-                if (nbRead < 0)
+                if (nbRead < 0) {
                     break;
+                }
                 totalRead += nbRead;
-            }
-            while (totalRead < len);
+            } while (totalRead < len);
         }
 
         return totalRead;
