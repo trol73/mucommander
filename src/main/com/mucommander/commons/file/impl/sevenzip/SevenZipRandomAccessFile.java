@@ -26,6 +26,7 @@ import net.sf.sevenzipjbinding.ISequentialInStream;
 import net.sf.sevenzipjbinding.SevenZipException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trolsoft.utils.StrUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,11 +96,15 @@ public class SevenZipRandomAccessFile implements IInStream, ISequentialInStream 
         byte[] buf = new byte[16];
         PushbackInputStream pushbackInputStream = file.getPushBackInputStream(buf.length);
         int read = StreamUtils.readUpTo(pushbackInputStream, buf);
-        if (!checkSignature(buf)) {
-            pushbackInputStream.close();
-            throw new IOException("Wrong 7zip signature");
+        // TODO sometimes reading from pushbackInputStream returns 0
+        if (read <= 0 && file.getSize() > 0) {
+            return file.getInputStream();
         }
         pushbackInputStream.unread(buf, 0, read);
+        if (!checkSignature(buf)) {
+            pushbackInputStream.close();
+            throw new IOException("Wrong 7zip signature " + StrUtils.bytesToHexStr(buf, 0, 3) + "  " + read);
+        }
         return pushbackInputStream;
     }
 
