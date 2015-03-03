@@ -53,7 +53,9 @@ public class AbstractFileClassLoader extends ClassLoader {
     /**
      * Creates a new <code>AbstractFileClassLoader</code> that uses the system classloader as a parent.
      */
-    public AbstractFileClassLoader() {this(ClassLoader.getSystemClassLoader());}
+    public AbstractFileClassLoader() {
+        this(ClassLoader.getSystemClassLoader());
+    }
 
 
 
@@ -69,12 +71,14 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     public void addFile(AbstractFile file) {
         // Makes sure the specified file is browsable.
-        if(!file.isBrowsable())
+        if (!file.isBrowsable()) {
             throw new IllegalArgumentException();
+        }
 
         // Only adds the file if it's not already there.
-        if(!contains(file))
+        if (!contains(file)) {
             files.add(file);
+        }
     }
 
     /**
@@ -100,19 +104,15 @@ public class AbstractFileClassLoader extends ClassLoader {
      * @return      an {@link AbstractFile} instance describing the requested resource if found, <code>null</code> otherwise.
      */
     private AbstractFile findResourceAsFile(String name) {
-        Iterator<AbstractFile> iterator; // Iterator on all classpath elements.
-        AbstractFile file;     // Current file.
-
-        iterator = files.iterator();
-        while(iterator.hasNext()) {
+        for (AbstractFile file : files) {
             try {
                 // If the requested resource could be found, returns it.
-                if((file = iterator.next().getChild(name)).exists())
+                if (file.getChild(name).exists()) {
                     return file;
-            }
+                }
+            } catch(IOException ignore) {}
             // Treats error as a simple 'resource not found' case and keeps looking for
             // one with the correct name that will load.
-            catch(IOException e) {}
         }
 
         // The requested resource wasn't found.
@@ -126,18 +126,19 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     public InputStream getResourceAsStream(String name) {
-        AbstractFile file; // File representing the resource.
-        InputStream  in;   // Input stream on the resource.
+        InputStream  in = getParent().getResourceAsStream(name);   // Input stream on the resource.
 
         // Tries the parent first, to respect the delegation model.
-        if((in = getParent().getResourceAsStream(name)) != null)
+        if (in != null) {
             return in;
+        }
 
-        // Tries to locate the resource in the extended classpath if it wasn't found
-        // in the parent.
-        if((file = findResourceAsFile(name)) != null) {
-            try {return file.getInputStream();}
-            catch(Exception e) {}
+        // Tries to locate the resource in the extended classpath if it wasn't found in the parent.
+        AbstractFile file = findResourceAsFile(name); // File representing the resource.
+        if (file != null) {
+            try {
+                return file.getInputStream();
+            } catch(Exception ignore) {}
         }
 
         // Couldn't find the resource.
@@ -151,15 +152,19 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     protected URL findResource(String name) {
-        AbstractFile file; // Path to the requested resource.
+        AbstractFile file = findResourceAsFile(name); // Path to the requested resource.
 
         // Tries to find the resource.
-        if((file = findResourceAsFile(name)) == null)
+        if (file == null) {
             return null;
+        }
 
         // Tries to retrieve an URL on the resource.
-        try {return file.getJavaNetURL();}
-        catch(Exception e) {return null;}
+        try {
+            return file.getJavaNetURL();
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -169,21 +174,16 @@ public class AbstractFileClassLoader extends ClassLoader {
      */
     @Override
     protected Enumeration<URL> findResources(String name) {
-        Iterator<AbstractFile> iterator = files.iterator(); // Iterator on all available JAR files.
         Vector<URL> resources = new Vector<>();    // All resources that match 'name'.
-
         // Goes through all files in the classpath to find the resource.
-        while(iterator.hasNext()) {
+        for (AbstractFile file : files) {
             try {
-                AbstractFile file = iterator.next();
                 if (file.getChild(name).exists()) {
                     resources.add(file.getJavaNetURL());
                 }
-            } catch(IOException e) {
-
-            }
+            } catch(IOException ignore) {}
         }
-        return resources. elements();
+        return resources.elements();
     }
 
     /**
@@ -194,7 +194,7 @@ public class AbstractFileClassLoader extends ClassLoader {
     @Override
     protected String findLibrary(String name) {
         AbstractFile file = findResourceAsFile(name); // Path of the requested library.
-        return  file == null ? null : file.getAbsolutePath();
+        return file == null ? null : file.getAbsolutePath();
     }
 
 
@@ -209,20 +209,17 @@ public class AbstractFileClassLoader extends ClassLoader {
      * @throws IOException if an error occurs.
      */
     private Class<?> loadClass(String name, AbstractFile file) throws IOException {
-        byte[]      buffer; // Buffer for the class' bytecode.
-        int         offset; // Current offset in buffer.
-        InputStream in;     // Stream on the class' bytecode.
-
         // Initialisation.
-        buffer = new byte[(int)file.getSize()];
-        offset = 0;
-        in     = null;
+        byte[] buffer = new byte[(int)file.getSize()];      // Buffer for the class' bytecode.
+        int offset = 0;                                     // Current offset in buffer.
+        InputStream in = null;                              // Stream on the class' bytecode.
 
         try {
             // Loads the content of file in buffer.
             in = file.getInputStream();
-            while(offset != buffer.length)
+            while (offset != buffer.length) {
                 offset += in.read(buffer, offset, buffer.length - offset);
+            }
 
             // Loads the class.
             return defineClass(name, buffer, 0, buffer.length);
@@ -230,7 +227,7 @@ public class AbstractFileClassLoader extends ClassLoader {
 
         // Frees resources.
         finally {
-            if(in != null)
+            if (in != null)
                 in.close();
         }                
     }
@@ -249,7 +246,7 @@ public class AbstractFileClassLoader extends ClassLoader {
         if (file != null) {
             try {
                 return loadClass(name, file);
-            } catch(Exception e) {}
+            } catch(Exception ignore) {}
         }
         throw new ClassNotFoundException(name);
     }
