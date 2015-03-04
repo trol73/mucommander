@@ -84,23 +84,20 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     private static long lastCreateTime;
     private static String lastCreateTitle;
-    private static Exception lastStacktrace;
-    
+
     public FocusDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, true);
         init(locationRelativeComp);
 
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
-            System.out.println("> " + title + ": " + dt);
-            if (dt < 1000) {
-                lastStacktrace.printStackTrace();
-                new Exception().printStackTrace();
+            // sometimes EventDispatchThread duplicates events that caused double windows
+            if (dt < 50) {
+                throw new RuntimeException("EventDispatchThread error");
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastStacktrace = new Exception();
     }
 
     public FocusDialog(Dialog owner, String title, Component locationRelativeComp) {
@@ -109,15 +106,13 @@ public class FocusDialog extends JDialog implements WindowListener {
 
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
-            System.out.println("> " + title + ": " + dt);
-            if (dt < 1000) {
-                lastStacktrace.printStackTrace();
-                new Exception().printStackTrace();
+            // sometimes EventDispatchThread duplicates events that caused double windows
+            if (dt < 50) {
+                throw new RuntimeException("EventDispatchThread error");
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastStacktrace = new Exception();
     }
 
     private void init(Component locationRelativeComp) {
