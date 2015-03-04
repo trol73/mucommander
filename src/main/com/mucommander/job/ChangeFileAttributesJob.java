@@ -68,7 +68,7 @@ public class ChangeFileAttributesJob extends FileJob {
         if (getState() == State.INTERRUPTED)
             return false;
 
-        if(recurseOnDirectories && file.isDirectory()) {
+        if (recurseOnDirectories && file.isDirectory()) {
             do {		// Loop for retries
                 try {
                     AbstractFile children[] = file.ls();
@@ -81,12 +81,11 @@ public class ChangeFileAttributesJob extends FileJob {
                     }
 
                     break;
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // Unable to open source file
                     int ret = showErrorDialog("", Translator.get("cannot_read_folder", file.getName()));
                     // Retry loops
-                    if(ret==RETRY_ACTION)
+                    if (ret == RETRY_ACTION)
                         continue;
                     // Cancel, skip or close dialog return false
                     return false;
@@ -95,29 +94,29 @@ public class ChangeFileAttributesJob extends FileJob {
             while(true);
         }
 
-        if(permissions!=-1) {
-            if(!file.isFileOperationSupported(FileOperation.CHANGE_PERMISSION))
+        if (permissions != -1) {
+            if (!file.isFileOperationSupported(FileOperation.CHANGE_PERMISSION)) {
                 return false;
+            }
 
             try {
                 file.changePermissions(permissions);
                 return true;
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 return false;
             }
         }
 
 //        if(date!=-1)
-        if(!file.isFileOperationSupported(FileOperation.CHANGE_DATE))
+        if (!file.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
             return false;
+        }
 
         try {
             file.changeDate(date);
             return true;
-        }
-        catch (IOException e) {
-            LOGGER.debug("failed to change the date of "+file, e);
+        } catch (IOException e) {
+            LOGGER.debug("failed to change the date of " + file, e);
             return false;
         }
     }

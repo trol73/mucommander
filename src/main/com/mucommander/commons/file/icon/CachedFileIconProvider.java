@@ -80,22 +80,19 @@ public class CachedFileIconProvider implements FileIconProvider {
      * is simply called on the <code>CacheableFileIconProvider</code> and its value returned.</p>
      */
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {
-        Icon icon;
         boolean isCacheable = cacheableFip.isCacheable(file, preferredResolution);
 
         // Look for the file icon in the provider's cache
-        if(isCacheable)
-            icon = cacheableFip.lookupCache(file, preferredResolution);
-        else
-            icon = null;
+        Icon icon = isCacheable ? cacheableFip.lookupCache(file, preferredResolution) : null;
 
         // Icon is not cacheable or isn't present in the cache, retrieve it from the provider
-        if(icon==null) {
+        if (icon == null) {
             icon = cacheableFip.getFileIcon(file, preferredResolution);
 
             // Cache the icon
-            if(isCacheable && icon!=null)
+            if (isCacheable && icon != null) {
                 cacheableFip.addToCache(file, icon, preferredResolution);
+            }
         }
 
         return icon;

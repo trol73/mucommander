@@ -22,6 +22,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.mucommander.commons.file.FilePermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ public class MkdirJob extends FileJob {
 
     private boolean mkfileMode;
     private long allocateSpace;
+    private boolean executable;
 
 
     /**
@@ -67,13 +69,15 @@ public class MkdirJob extends FileJob {
      * Creates a new MkdirJob which operates in 'mkfile' mode.
      *
      * @param allocateSpace number of bytes to allocate to the file, -1 for none (use AbstractFile#mkfile())
+     * @param executable set 'executable' attribute on unix-systems
      */
-    public MkdirJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet, long allocateSpace) {
+    public MkdirJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet, long allocateSpace, boolean executable) {
         super(progressDialog, mainFrame, fileSet);
 
         this.destFolder = fileSet.getBaseFolder();
         this.mkfileMode = true;
         this.allocateSpace = allocateSpace;
+        this.executable = executable;
 
         setAutoUnmark(false);
     }
@@ -149,8 +153,9 @@ public class MkdirJob extends FileJob {
                      new int[]{RETRY_ACTION, CANCEL_ACTION}
                 );
                 // Retry (loop)
-                if (action == RETRY_ACTION)
+                if (action == RETRY_ACTION) {
                     continue;
+                }
 				
                 // Cancel action
                 return false;		// Return Failure
@@ -199,6 +204,13 @@ public class MkdirJob extends FileJob {
                     } catch (IOException ignore) {
                     }
             }
+        }
+
+        // set 'executable' attribute
+        if (executable && file.isFileOperationSupported(FileOperation.CHANGE_PERMISSION)) {
+            try {
+                file.changePermissions(FilePermissions.DEFAULT_EXECUTABLE_PERMISSIONS);
+            } catch (IOException ignore) {}
         }
     }
 

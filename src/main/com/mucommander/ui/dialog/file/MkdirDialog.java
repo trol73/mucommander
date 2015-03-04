@@ -32,14 +32,18 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.MkdirJob;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
+import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.MkdirAction;
 import com.mucommander.ui.action.impl.MkfileAction;
 import com.mucommander.ui.chooser.SizeChooser;
@@ -49,6 +53,7 @@ import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
+import com.mucommander.ui.viewer.EditorRegistrar;
 
 
 /**
@@ -65,11 +70,15 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
     private JTextField pathField;
 
     private JCheckBox allocateSpaceCheckBox;
+    private JCheckBox openTextEditorCheckBox;
+    private JCheckBox makeExecutableCheckBox;
     private SizeChooser allocateSpaceChooser;
 
     private JButton okButton;
 
     private boolean mkfileMode;
+    private boolean autoExecutableSelect;
+    private static boolean openInTextEditor = true;
 
     /**
      * Dialog size constraints
@@ -96,7 +105,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         Container contentPane = getContentPane();
 
         YBoxPanel mainPanel = new YBoxPanel();
-        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode?MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID)+" :"));
+        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID)+" :"));
 
         // create a path field with auto-completion capabilities
         pathField = new FilePathField();
@@ -104,17 +113,52 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         mainPanel.add(pathField);
 
         if (mkfileMode) {
-            JPanel tempPanel = new JPanel(new BorderLayout());
+            JPanel allocPanel = new JPanel(new BorderLayout());
 
             allocateSpaceCheckBox = new JCheckBox(Translator.get("mkfile_dialog.allocate_space")+":", false);
             allocateSpaceCheckBox.addItemListener(this);
-            tempPanel.add(allocateSpaceCheckBox, BorderLayout.WEST);
+            allocPanel.add(allocateSpaceCheckBox, BorderLayout.WEST);
 
             allocateSpaceChooser = new SizeChooser(false);
             allocateSpaceChooser.setEnabled(false);
-            tempPanel.add(allocateSpaceChooser, BorderLayout.EAST);
+            allocPanel.add(allocateSpaceChooser, BorderLayout.EAST);
 
-            mainPanel.add(tempPanel);
+            mainPanel.add(allocPanel);
+
+            openTextEditorCheckBox = new JCheckBox(Translator.get("mkfile_dialog.open_in_editor"), false);
+            openTextEditorCheckBox.addItemListener(this);
+            openTextEditorCheckBox.setSelected(openInTextEditor);
+            mainPanel.add(openTextEditorCheckBox);
+
+            if (OsFamily.getCurrent().isUnixBased()) {
+                makeExecutableCheckBox = new JCheckBox(Translator.get("mkfile_dialog.make_executable"), false);
+                makeExecutableCheckBox.addItemListener(this);
+                mainPanel.add(makeExecutableCheckBox);
+
+                pathField.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        check();
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        check();
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        check();
+                    }
+
+                    private void check() {
+                        if (!autoExecutableSelect && pathField.getText().endsWith(".sh")) {
+                            makeExecutableCheckBox.setSelected(true);
+                            autoExecutableSelect = true;
+                        }
+                    }
+                });
+            }
         }
         
         mainPanel.addSpace(10);
@@ -165,7 +209,19 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
         MkdirJob job;
         if (mkfileMode) {
-            job = new MkdirJob(progressDialog, mainFrame, fileSet, allocateSpaceCheckBox.isSelected() ? allocateSpaceChooser.getValue() : -1);
+            long allocateSpace = allocateSpaceCheckBox.isSelected() ? allocateSpaceChooser.getValue() : -1;
+            boolean executable = makeExecutableCheckBox != null && makeExecutableCheckBox.isSelected();
+            openInTextEditor = openTextEditorCheckBox.isSelected();
+            job = new MkdirJob(progressDialog, mainFrame, fileSet, allocateSpace, executable) {
+                @Override
+                protected boolean processFile(AbstractFile file, Object recurseParams) {
+                    boolean result = super.processFile(file, recurseParams);
+                    if (result && openInTextEditor) {
+                        EditorRegistrar.createEditorFrame(mainFrame, file, EditAction.getStandardIcon(EditAction.class).getImage());
+                    }
+                    return result;
+                }
+            };
         } else {
             job = new MkdirJob(progressDialog, mainFrame, fileSet);
         }
@@ -195,5 +251,10 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
     public void itemStateChanged(ItemEvent e) {
         allocateSpaceChooser.setEnabled(allocateSpaceCheckBox.isSelected());
+        if (e.getItem() == allocateSpaceCheckBox && allocateSpaceCheckBox.isSelected()) {
+            openTextEditorCheckBox.setSelected(false);
+        } else if (e.getItem() == openTextEditorCheckBox && openTextEditorCheckBox.isSelected()) {
+            allocateSpaceCheckBox.setSelected(false);
+        }
     }
 }

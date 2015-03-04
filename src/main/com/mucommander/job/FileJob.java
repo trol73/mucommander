@@ -385,10 +385,11 @@ public abstract class FileJob implements Runnable {
      */
     public long getEffectiveJobTime() {
         // If job hasn't start yet, return 0
-        if(getStartDate()==0)
+        if (getStartDate() == 0) {
             return 0;
+        }
         
-        return (getEndDate()==0?System.currentTimeMillis():getEndDate())-getStartDate()-getPausedTime();
+        return (getEndDate() == 0 ? System.currentTimeMillis() : getEndDate())-getStartDate()-getPausedTime();
     }
 
     
@@ -417,8 +418,9 @@ public abstract class FileJob implements Runnable {
      */
     private void stop() {
         // Return if job has already been stopped
-        if (jobThread == null)
+        if (jobThread == null) {
             return;
+        }
 
 //        // Start by calling interrupt to have the thread return from any blocking I/O occurring in an interruptible
 //        // channel or selector.
@@ -437,7 +439,7 @@ public abstract class FileJob implements Runnable {
      */
     public void setPaused(boolean paused) {
         // Lock the pause lock while updating paused status
-        synchronized(pauseLock) {
+        synchronized (pauseLock) {
             // Resume job if it was paused
             if (!paused && getState() == State.PAUSED) {
                 // Calculate pause time
