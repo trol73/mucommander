@@ -563,10 +563,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         int bitShift = 0;
 
         PermissionBits mask = getChangeablePermissions();
-        for(int a=OTHER_ACCESS; a<=USER_ACCESS; a++) {
-            for(int p=EXECUTE_PERMISSION; p<=READ_PERMISSION; p=p<<1) {
-                if(mask.getBitValue(a, p))
-                    changePermission(a, p, (permissions & (1<<bitShift))!=0);
+        for (int a = OTHER_ACCESS; a <= USER_ACCESS; a++) {
+            for (int p = EXECUTE_PERMISSION; p <= READ_PERMISSION; p = p<<1) {
+                if (mask.getBitValue(a, p)) {
+                    changePermission(a, p, (permissions & (1 << bitShift)) != 0);
+                }
 
                 bitShift++;
             }

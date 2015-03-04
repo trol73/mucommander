@@ -48,6 +48,8 @@ public abstract interface FilePermissions extends PermissionBits {
      * are not available in the source: rwxr-xr-x (755 octal). All of the permission bits are marked as supported. */
     public final static FilePermissions DEFAULT_DIRECTORY_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
 
+    public final static FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
+
 
     /**
      * Returns the mask that indicates which permission bits are significant and should be taken into account.

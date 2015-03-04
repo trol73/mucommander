@@ -55,8 +55,8 @@ public class InternalEditAction extends AbstractViewerAction {
             getSelectedFileFilter()
         ));
 
-        ImageIcon icon;
-        if ((icon = getStandardIcon(EditAction.class)) != null) {
+        ImageIcon icon = getStandardIcon(EditAction.class);
+        if (icon != null) {
             setIcon(icon);
         }
     }
