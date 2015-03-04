@@ -62,7 +62,7 @@ public enum FileType {
     SCALA("Scala", SyntaxConstants.SYNTAX_STYLE_SCALA, "*.scala"),
     SQL("SQL", SyntaxConstants.SYNTAX_STYLE_SQL, "*.sql"),
     TCL("TCL", SyntaxConstants.SYNTAX_STYLE_TCL, "*.tcl"),
-    UNIX_SHELL("Unix Shell", SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL, "*.sh"),
+    UNIX_SHELL("Unix Shell", SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL, "*.sh,*.zsh"),
     VISUAL_BASIC("VisualBasic", SyntaxConstants.SYNTAX_STYLE_VISUAL_BASIC, "*.bas,*.vb"),
     WINDOWS_BATCH("Windows bath", SyntaxConstants.SYNTAX_STYLE_WINDOWS_BATCH, "*.bat,*.cmd"),
     XML("XML", SyntaxConstants.SYNTAX_STYLE_XML, "*.xml,Info.plist,*.jnlp,*.svg");
