@@ -34,7 +34,7 @@ public enum FileType {
     BBCODE("BBCode", SyntaxConstants.SYNTAX_STYLE_BBCODE),
     C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c,*.m"),
     CLOJURE("Clojure", SyntaxConstants.SYNTAX_STYLE_CLOJURE, "*.clj"),
-    CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc,*.h"),
+    CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc,*.h,*.ino"),
     CSHARP("C#", SyntaxConstants.SYNTAX_STYLE_CSHARP, "*.cs"),
     CSS("CSS", SyntaxConstants.SYNTAX_STYLE_CSS, "*.css"),
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
