@@ -77,8 +77,9 @@ class ImageViewer extends FileViewer implements ActionListener {
     private static final Cursor CURSOR_CROSS = new Cursor(Cursor.CROSSHAIR_CURSOR);
 
     private BufferedImage image;
-    private BufferedImage scaledImage;
+    //private BufferedImage scaledImage;
     private double zoomFactor;
+    private boolean vectorImage;
 	
     /** Menu bar */
     // Menus //
@@ -152,7 +153,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     protected void saveStateOnClose() {
         // Run GC for big images
-        if (scaledImage != null && scaledImage.getWidth()*scaledImage.getHeight() > 1024*200) {
+        if (image != null && image.getWidth()*image.getHeight() > 1024*200) {
             System.gc();
         }
     }
@@ -168,7 +169,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         statusBar.setFileSize(file.getSize());
         statusBar.setDateTime(file.getDate());
         int imageWidth, imageHeight;
-        this.scaledImage = null;
+
         final String ext = file.getExtension().toLowerCase();
         if ("scr".equals(ext) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
             this.image = ZxSpectrumScrImage.load(file.getInputStream());
@@ -189,6 +190,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             this.image = ImageIO.read(file.getInputStream());
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
+        vectorImage = "svg".equalsIgnoreCase(ext);
         imageWidth = image.getWidth();
         imageHeight = image.getHeight();
         this.hasTransparentPixels = image.getColorModel().hasAlpha();
@@ -266,19 +268,20 @@ class ImageViewer extends FileViewer implements ActionListener {
             AbstractFile file = filesInDirectory.get(indexInDirectory);
             if ("svg".equalsIgnoreCase(file.getExtension())) {
                 try {
-                    this.scaledImage = transcodeSVGDocument(file, scaledWidth, scaledHeight);
+                    this.image = transcodeSVGDocument(file, scaledWidth, scaledHeight);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else {
-                this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-                AffineTransform at = new AffineTransform();
-                at.scale(factor, factor);
-                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
+//            } else {
+//                this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+//                AffineTransform at = new AffineTransform();
+//                at.scale(factor, factor);
+//                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+//                this.scaledImage = scaleOp.filter(this.image, this.scaledImage);
+//                this.scaledImage = image;
             }
-        } else {
-            this.scaledImage = image;
+//        } else {
+//            this.scaledImage = image;
         }
 
         statusBar.setZoom(factor);
@@ -317,13 +320,16 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
     private void checkZoom() {
-        Dimension d = MuSnapshot.getScreenSize();
+//        Dimension d = MuSnapshot.getScreenSize();
 		
-        zoomInItem.setEnabled(zoomFactor<1.0 || (2*zoomFactor*image.getWidth(null) < d.width
-                                                 && 2*zoomFactor*image.getHeight(null) < d.height));
+//        zoomInItem.setEnabled(zoomFactor < 1.0 || (2*zoomFactor*image.getWidth(null) < d.width
+//                                                 && 2*zoomFactor*image.getHeight(null) < d.height));
+//
+//        zoomOutItem.setEnabled(zoomFactor > 1.0 || (zoomFactor / 2 * image.getWidth(null) > 160
+//                && zoomFactor / 2 * image.getHeight(null) > 120));
 
-        zoomOutItem.setEnabled(zoomFactor > 1.0 || (zoomFactor / 2 * image.getWidth(null) > 160
-                && zoomFactor / 2 * image.getHeight(null) > 120));
+        zoomInItem.setEnabled(zoomFactor < 8);
+        zoomOutItem.setEnabled( zoomFactor > 0.1);
     }
 
     private void checkNextPrev() {
@@ -498,6 +504,13 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
+    private int getScaledWidth() {
+        return vectorImage ? image.getWidth() : (int)(zoomFactor*image.getWidth());
+    }
+
+    private int getScaledHeight() {
+        return vectorImage ? image.getHeight() : (int)(zoomFactor*image.getHeight());
+    }
 
 
     private static final Color TRANSPARENT_COLOR_1 = new Color(0x666666);
@@ -525,56 +538,55 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         @Override
         public void paint(Graphics g) {
-            int width = getWidth();
-            int height = getHeight();
+            int frameWidth = getWidth();
+            int frameHeight = getHeight();
 
             g.setColor(backgroundColor);
-            g.fillRect(0, 0, width, height);
+            g.fillRect(0, 0, frameWidth, frameHeight);
 
-            if (scaledImage != null) {
-                final int imageWidth = scaledImage.getWidth();
-                final int imageHeight = scaledImage.getHeight();
-                final int x0 = Math.max(0, (width-imageWidth)/2);
-                final int y0 = Math.max(0, (height-imageHeight)/2);
-                if (hasTransparentPixels) {
-                    int cellW = imageWidth/TRANSPARENT_GRID_STEP;
-                    if (imageWidth % TRANSPARENT_GRID_STEP > 0) {
-                        cellW++;
-                    }
-                    int cellH = imageHeight/TRANSPARENT_GRID_STEP;
-                    if (imageHeight % TRANSPARENT_GRID_STEP > 0) {
-                        cellH++;
-                    }
-                    int x = x0;
-                    int w = TRANSPARENT_GRID_STEP;
-                    for (int cellX = 0; cellX < cellW; cellX++) {
-                        if (cellX == cellW-1) {
-                            w = (imageWidth % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageWidth % TRANSPARENT_GRID_STEP);
-                        }
-                        int y = y0;
-                        int h = TRANSPARENT_GRID_STEP;
-                        for (int cellY = 0; cellY < cellH; cellY++) {
-                            g.setColor((cellX + cellY) % 2 == 0 ? TRANSPARENT_COLOR_1 : TRANSPARENT_COLOR_2);
-                            if (cellY == cellH-1) {
-                                h = (imageHeight % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageHeight % TRANSPARENT_GRID_STEP);
-                            }
-                            g.fillRect(x, y, w, h);
-                            y += TRANSPARENT_GRID_STEP;
-                        }
-                        x += TRANSPARENT_GRID_STEP;
-                    }
+            final int imageWidth = getScaledWidth();
+            final int imageHeight = getScaledHeight();
+            final int x0 = Math.max(0, (frameWidth-imageWidth)/2);
+            final int y0 = Math.max(0, (frameHeight-imageHeight)/2);
+            if (hasTransparentPixels) {
+                int cellW = imageWidth/TRANSPARENT_GRID_STEP;
+                if (imageWidth % TRANSPARENT_GRID_STEP > 0) {
+                    cellW++;
                 }
+                int cellH = imageHeight/TRANSPARENT_GRID_STEP;
+                if (imageHeight % TRANSPARENT_GRID_STEP > 0) {
+                    cellH++;
+                }
+                int x = x0;
+                int w = TRANSPARENT_GRID_STEP;
+                for (int cellX = 0; cellX < cellW; cellX++) {
+                    if (cellX == cellW-1) {
+                        w = (imageWidth % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageWidth % TRANSPARENT_GRID_STEP);
+                    }
+                    int y = y0;
+                    int h = TRANSPARENT_GRID_STEP;
+                    for (int cellY = 0; cellY < cellH; cellY++) {
+                        g.setColor((cellX + cellY) % 2 == 0 ? TRANSPARENT_COLOR_1 : TRANSPARENT_COLOR_2);
+                        if (cellY == cellH-1) {
+                            h = (imageHeight % TRANSPARENT_GRID_STEP == 0) ? TRANSPARENT_GRID_STEP : (imageHeight % TRANSPARENT_GRID_STEP);
+                        }
+                        g.fillRect(x, y, w, h);
+                        y += TRANSPARENT_GRID_STEP;
+                    }
+                    x += TRANSPARENT_GRID_STEP;
+                }
+            }
+            if (vectorImage) {
+                g.drawImage(image, x0, y0, null);
+            } else {
+                g.drawImage(image, x0, y0, x0 + imageWidth, y0 + imageHeight, 0, 0, image.getWidth(), image.getHeight(), null, null);
 
-                g.drawImage(scaledImage, x0, y0, null);
             }
         }
         
         @Override
         public synchronized Dimension getPreferredSize() {
-            if (scaledImage == null) {
-                return new Dimension(0, 0);
-            }
-            return new Dimension(scaledImage.getWidth(), scaledImage.getHeight());
+            return image == null ? new Dimension(320, 200) : new Dimension(getScaledWidth(), getScaledHeight());
         }
     	
     	//////////////////////////////////
@@ -594,16 +606,16 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            if (scaledImage == null) {
+            if (image == null) {
                 return;
             }
             int x = e.getX();
             int y = e.getY();
 
-            final int imageOffsetX = Math.max(0, (imageViewerImpl.getWidth()-scaledImage.getWidth())/2);
-            final int imageOffsetY = Math.max(0, (imageViewerImpl.getHeight()-scaledImage.getHeight())/2);
+            final int imageOffsetX = Math.max(0, (imageViewerImpl.getWidth() - getScaledWidth())/2);
+            final int imageOffsetY = Math.max(0, (imageViewerImpl.getHeight() - getScaledHeight())/2);
 
-            boolean inImageArea = x >= imageOffsetX && y >= imageOffsetY && x < imageOffsetX + scaledImage.getWidth() && y < imageOffsetY + scaledImage.getHeight();
+            boolean inImageArea = x >= imageOffsetX && y >= imageOffsetY && x < imageOffsetX + getScaledWidth() && y < imageOffsetY + getScaledHeight();
             if (inImageArea) {
                 setFrameCursor(CURSOR_CROSS);
             } else {
@@ -614,14 +626,14 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (scaledImage == null) {
+            if (image == null) {
                 return;
             }
             int x = e.getX();
             int y = e.getY();
 
-            final int w = scaledImage.getWidth();
-            final int h = scaledImage.getHeight();
+            final int w = getScaledWidth();
+            final int h = getScaledHeight();
             final int imageOffsetX = Math.max(0, (imageViewerImpl.getWidth()-w)/2);
             final int imageOffsetY = Math.max(0, (imageViewerImpl.getHeight()-h)/2);
 
