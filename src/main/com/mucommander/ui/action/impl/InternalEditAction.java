@@ -23,6 +23,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
@@ -70,7 +71,7 @@ public class InternalEditAction extends AbstractViewerAction {
      */
     @Override
     protected void performInternalAction(AbstractFile file) {
-        if (file.isSymlink()) {
+        if (file.isSymlink() && file instanceof LocalFile) {
             new EditSymlinkDialog(mainFrame, file).showDialog();
         } else if (file.isDirectory()) {
             FileSet fileSet = new FileSet();

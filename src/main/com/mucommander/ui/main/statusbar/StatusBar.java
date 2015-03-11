@@ -280,7 +280,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             if (selectedFile != null) {
                 filesInfo.append(" - ");
                 filesInfo.append(selectedFile.getName());
-                if (selectedFile.isSymlink()) {
+                if (selectedFile.isSymlink() && selectedFile instanceof LocalFile) {
                     String target = SymLinkUtils.getTargetPath(selectedFile);
                     filesInfo.append(" -> ");
                     filesInfo.append(target);
