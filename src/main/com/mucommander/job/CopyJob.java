@@ -22,6 +22,7 @@ package com.mucommander.job;
 import java.io.IOException;
 
 import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
@@ -126,7 +127,7 @@ public class CopyJob extends AbstractCopyJob {
         currentDestFile = destFile;
 
         // Do nothing if file is a symlink (skip file and return)
-        if (file.isSymlink()) {
+        if (file.isSymlink() && file instanceof LocalFile) {
             copySymLink(file, destFile);
             return true;
         }
