@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -75,10 +77,14 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     /** Refreshes the list with the latest log records when pressed */
     private JButton refreshButton;
 
-    // Dialog size constraints
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600,400);
-    // Dialog width should not exceed 360, height is not an issue (always the same)
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(700,500);
+    /** Show threads tree */
+    private JButton threadsButton;
+
+    /** Dialog size constraints */
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600, 400);
+
+    /** Dialog width should not exceed 360, height is not an issue (always the same) */
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(700, 500);
 
     /**
      * Creates a new {@link DebugConsoleDialog} using the given {@link MainFrame} as a parent.
@@ -103,6 +109,10 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         southPanel.add(createComboPanel(), BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        threadsButton = new JButton(Translator.get("debug_console_dialog.threads"));
+        threadsButton.addActionListener(this);
+        buttonPanel.add(threadsButton);
 
         refreshButton = new JButton(new RefreshAction.Descriptor().getLabel());
         refreshButton.addActionListener(this);
@@ -132,8 +142,9 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         comboPanel.add(new JLabel(Translator.get("debug_console_dialog.level")+":"));
         LogLevel logLevel = MuLogging.getLogLevel();
 
-        for(LogLevel level:LogLevel.values())
+        for (LogLevel level:LogLevel.values()) {
             levelComboBox.addItem(level);
+        }
         		
         levelComboBox.setSelectedItem(logLevel);
         		
@@ -155,8 +166,9 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         final LogLevel currentLogLevel = MuLogging.getLogLevel();
         
         for (LoggingEvent record : records) {
-        	if (record.isLevelEqualOrHigherThan(currentLogLevel))
-        		listModel.addElement(record);
+        	if (record.isLevelEqualOrHigherThan(currentLogLevel)) {
+                listModel.addElement(record);
+            }
         }
 
         loggingEventsList.setModel(listModel);
@@ -185,14 +197,45 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if(source==refreshButton) {
+        if (source == refreshButton) {
             refreshLogRecords();
-        }
-        else if(source==closeButton) {
+        } else if (source == closeButton) {
             dispose();
+        } else if (source == threadsButton) {
+            // print threads
+            Map<Thread, StackTraceElement[]> stacktraces = Thread.getAllStackTraces();
+            DefaultListModel model = (DefaultListModel)loggingEventsList.getModel();
+            for (Thread t : stacktraces.keySet()) {
+
+                model.addElement(buildStringEvent(LogLevel.INFO, t.getName() + " (" + t.getState() + ")"));
+                StackTraceElement[] stackTraceElements = stacktraces.get(t);
+                for (StackTraceElement ste : stackTraceElements) {
+                    model.addElement(buildStringEvent(LogLevel.FINEST, "     " + ste));
+                }
+            }
         }
     }
 
+
+    private static LoggingEvent buildStringEvent(final LogLevel level, final String s) {
+        return new LoggingEvent() {
+
+            @Override
+            public boolean isLevelEqualOrHigherThan(LogLevel level) {
+                return true;
+            }
+
+            @Override
+            public LogLevel getLevel() {
+                return level;
+            }
+
+            @Override
+            public String toString() {
+                return s;
+            }
+        };
+    }
 
     /////////////////////////////////
     // ItemListener implementation //
@@ -201,7 +244,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     public void itemStateChanged(ItemEvent e) {
         // Refresh the log records displayed in the JList whenever the selected level has been changed.
         int selectedIndex = levelComboBox.getSelectedIndex();
-        if(selectedIndex!=-1) {
+        if (selectedIndex >= 0) {
             updateLogLevel();
             refreshLogRecords();
         }
@@ -219,8 +262,9 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if(value==null)
+            if (value == null) {
                 return null;
+            }
 
             // TODO: line-wrap log items when the text is too long to fit on a single line
             // A single-column JTable may be the easiest way to go, see:
