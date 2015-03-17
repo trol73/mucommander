@@ -23,6 +23,7 @@ import com.mucommander.cache.LRUCache;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.commons.runtime.JavaVersion;
@@ -280,7 +281,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             if (selectedFile != null) {
                 filesInfo.append(" - ");
                 filesInfo.append(selectedFile.getName());
-                if (selectedFile.isSymlink() && selectedFile instanceof LocalFile) {
+                if (selectedFile.isSymlink()  && selectedFile.getURL().getScheme().equals(FileProtocols.FILE)) {
                     String target = SymLinkUtils.getTargetPath(selectedFile);
                     filesInfo.append(" -> ");
                     filesInfo.append(target);
