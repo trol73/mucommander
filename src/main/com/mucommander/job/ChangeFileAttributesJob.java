@@ -81,17 +81,17 @@ public class ChangeFileAttributesJob extends FileJob {
                     }
 
                     break;
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // Unable to open source file
                     int ret = showErrorDialog("", Translator.get("cannot_read_folder", file.getName()));
                     // Retry loops
-                    if (ret == RETRY_ACTION)
+                    if (ret == RETRY_ACTION) {
                         continue;
+                    }
                     // Cancel, skip or close dialog return false
                     return false;
                 }
-            }
-            while(true);
+            } while(true);
         }
 
         if (permissions != -1) {
@@ -103,6 +103,7 @@ public class ChangeFileAttributesJob extends FileJob {
                 file.changePermissions(permissions);
                 return true;
             } catch (IOException e) {
+                e.printStackTrace();
                 return false;
             }
         }
