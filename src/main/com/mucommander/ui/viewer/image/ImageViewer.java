@@ -38,6 +38,7 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
@@ -187,7 +188,9 @@ class ImageViewer extends FileViewer implements ActionListener {
         } else if ("svg".equals(ext)) {
             this.image = transcodeSVGDocument(file, 0, 0);
         } else {
-            this.image = ImageIO.read(file.getInputStream());
+            InputStream is = file.getInputStream();
+            this.image = ImageIO.read(is);
+            is.close();
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
         vectorImage = "svg".equalsIgnoreCase(ext);
