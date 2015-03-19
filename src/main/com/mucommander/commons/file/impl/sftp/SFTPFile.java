@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class SFTPFile extends ProtocolFile {
     private static long attributeCachingPeriod = 60000;
 
     /** a SFTPConnectionHandlerFactory instance */
-    private final static SFTPConnectionHandlerFactory connHandlerFactory = new SFTPConnectionHandlerFactory();
+    private final static SFTPConnectionHandlerFactory CONN_HANDLER_FACTORY = new SFTPConnectionHandlerFactory();
 
     /** Name of the property that holds the path to a private key. This property is optional; if it is set, private key
      * authentication is used. */
@@ -134,7 +135,7 @@ public class SFTPFile extends ProtocolFile {
 
     private OutputStream getOutputStream(boolean append) throws IOException {
         // Retrieve a ConnectionHandler and lock it
-        final SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+        final SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
         try {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -237,7 +238,7 @@ public class SFTPFile extends ProtocolFile {
         SftpFile sftpFile = null;
         try {
             // Retrieve a ConnectionHandler and lock it
-            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -254,13 +255,17 @@ public class SFTPFile extends ProtocolFile {
         }
         finally {
             // Close SftpFile instance to release its handle
-            if(sftpFile!=null)
-                try {sftpFile.close();}
-                catch(IOException e) {}
+            if (sftpFile != null) {
+                try {
+                    sftpFile.close();
+                } catch (IOException ignore) {
+                }
+            }
 
             // Release the lock on the ConnectionHandler
-            if(connHandler!=null)
+            if (connHandler != null) {
                 connHandler.releaseLock();
+            }
         }
     }
 
@@ -376,7 +381,7 @@ public class SFTPFile extends ProtocolFile {
         SFTPConnectionHandler connHandler = null;
         try {
             // Retrieve a ConnectionHandler and lock it
-            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -394,8 +399,9 @@ public class SFTPFile extends ProtocolFile {
         }
         finally {
             // Release the lock on the ConnectionHandler if the OutputStream could not be created
-            if(connHandler!=null)
+            if (connHandler != null) {
                 connHandler.releaseLock();
+            }
         }
     }
 
@@ -403,7 +409,7 @@ public class SFTPFile extends ProtocolFile {
     @Override
     public AbstractFile[] ls() throws IOException {
         // Retrieve a ConnectionHandler and lock it
-        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
         List<SftpFile> files;
         try {
             // Makes sure the connection is started, if not starts it
@@ -413,8 +419,7 @@ public class SFTPFile extends ProtocolFile {
 
             // Use SftpClient.ls() rather than SftpChannel.listChildren() as it seems to be working better
             files = connHandler.sftpClient.ls(absPath);
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -422,7 +427,7 @@ public class SFTPFile extends ProtocolFile {
         int nbFiles = files.size();
 
         // File doesn't exist, return an empty file array
-        if(nbFiles==0)
+        if (nbFiles == 0)
             return new AbstractFile[] {};
 
         AbstractFile children[] = new AbstractFile[nbFiles];
@@ -447,7 +452,7 @@ public class SFTPFile extends ProtocolFile {
         }
 
         // create new array of the exact file count
-        if(fileCount<nbFiles) {
+        if (fileCount < nbFiles) {
             AbstractFile newChildren[] = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
             return newChildren;
@@ -460,7 +465,7 @@ public class SFTPFile extends ProtocolFile {
     @Override
     public void mkdir() throws IOException {
         // Retrieve a ConnectionHandler and lock it
-        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
         try {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -478,8 +483,7 @@ public class SFTPFile extends ProtocolFile {
             fileAttributes.setDirectory(true);
             fileAttributes.setDate(System.currentTimeMillis());
             fileAttributes.setSize(0);
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -498,14 +502,15 @@ public class SFTPFile extends ProtocolFile {
         // Retrieve a ConnectionHandler and lock it
         SFTPConnectionHandler connHandler = null;
         try {
-            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
 
             // SftpClient#rename() throws an IOException if the destination exists (instead of overwriting the file)
-            if(destFile.exists())
+            if (destFile.exists()) {
                 destFile.delete();
+            }
 
             // Will throw an IOException if the operation failed
             connHandler.sftpClient.rename(absPath, destFile.getURL().getPath());
@@ -520,7 +525,7 @@ public class SFTPFile extends ProtocolFile {
         }
         finally {
             // Release the lock on the ConnectionHandler
-            if(connHandler!=null)
+            if (connHandler != null)
                 connHandler.releaseLock();
         }
     }
@@ -591,7 +596,7 @@ public class SFTPFile extends ProtocolFile {
         // Retrieve a ConnectionHandler and lock it
         SFTPConnectionHandler connHandler = null;
         try {
-            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -610,7 +615,7 @@ public class SFTPFile extends ProtocolFile {
     @Override
     public InputStream getInputStream(long offset) throws IOException {
         // Retrieve a ConnectionHandler and lock it
-        final SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+        final SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
         try {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -641,15 +646,15 @@ public class SFTPFile extends ProtocolFile {
 
     @Override
     public String getCanonicalPath() {
-        if(isSymlink()) {
+        if (isSymlink()) {
             // Check if there is a previous value that hasn't expired yet
-            if(canonicalPath!=null && (System.currentTimeMillis()-canonicalPathFetchedTime<attributeCachingPeriod))
+            if (canonicalPath != null && (System.currentTimeMillis() - canonicalPathFetchedTime < attributeCachingPeriod))
                 return canonicalPath;
 
             SFTPConnectionHandler connHandler = null;
             try {
                 // Retrieve a ConnectionHandler and lock it
-                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 
                 // Makes sure the connection is started, if not starts it
                 connHandler.checkConnection();
@@ -657,10 +662,11 @@ public class SFTPFile extends ProtocolFile {
                 // getSymbolicLinkTarget returns the raw symlink target which can either be an absolute path or a
                 // relative path. If the path is relative preprend the absolute path of the symlink's parent folder.
                 String symlinkTargetPath = connHandler.sftpSubsystem.getSymbolicLinkTarget(fileURL.getPath());
-                if(!symlinkTargetPath.startsWith("/")) {
+                if (!symlinkTargetPath.startsWith("/")) {
                     String parentPath = fileURL.getParent().getPath();
-                    if(!parentPath.endsWith("/"))
+                    if (!parentPath.endsWith("/")) {
                         parentPath += "/";
+                    }
                     symlinkTargetPath = parentPath + symlinkTargetPath;
                 }
 
@@ -671,19 +677,49 @@ public class SFTPFile extends ProtocolFile {
                 canonicalPath = canonicalURL.toString(false);
                 canonicalPathFetchedTime = System.currentTimeMillis();
                 return canonicalPath;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Simply continue and return the absolute path
-            }
-            finally {
+            } finally {
                 // Release the lock on the ConnectionHandler
-                if(connHandler!=null)
+                if (connHandler != null) {
                     connHandler.releaseLock();
+                }
             }
         }
 
         // If this file is not a symlink, or the symlink target path could not be retrieved, return the absolute path
         return getAbsolutePath();
+    }
+
+    /**
+     * If the SFTPFile is a symbolic link, this method returns the name of the file being pointed to by the symbolic link.
+     * @return The file pointed to by the symbolic link (null if the FTPFile is not a symbolic link).
+     */
+    public String getLink() {
+        if (!isSymlink()) {
+            return null;
+        }
+        String symlinkTargetPath;
+        SFTPConnectionHandler connHandler = null;
+        // Retrieve a ConnectionHandler and lock it
+        try {
+            connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
+            // Makes sure the connection is started, if not starts it
+            connHandler.checkConnection();
+            // getSymbolicLinkTarget returns the raw symlink target which can either be an absolute path or a
+            // relative path. If the path is relative preprend the absolute path of the symlink's parent folder.
+            symlinkTargetPath = connHandler.sftpSubsystem.getSymbolicLinkTarget(fileURL.getPath());
+
+        } catch (IOException e) {
+            symlinkTargetPath = null;
+            e.printStackTrace();
+        } finally {
+            // Release the lock on the ConnectionHandler
+            if (connHandler != null) {
+                connHandler.releaseLock();
+            }
+        }
+        return symlinkTargetPath;
     }
 
 
@@ -741,7 +777,7 @@ public class SFTPFile extends ProtocolFile {
             SFTPConnectionHandler connHandler = null;
             try {
                 // Retrieve a ConnectionHandler and lock it
-                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(SFTPFile.connHandlerFactory, url, true);
+                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(SFTPFile.CONN_HANDLER_FACTORY, url, true);
 
                 // Makes sure the connection is started, if not starts it
                 connHandler.checkConnection();
@@ -887,7 +923,7 @@ public class SFTPFile extends ProtocolFile {
 //
 //            try {
 //                // Retrieve a ConnectionHandler and lock it
-//                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(connHandlerFactory, fileURL, true);
+//                connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
 //                // Makes sure the connection is started, if not starts it
 //                connHandler.checkConnection();
 //

@@ -92,16 +92,16 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         connectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Select the first connection in the list
-        boolean hasConnections = connections.size()>0;
-        if(hasConnections)
+        boolean hasConnections = !connections.isEmpty();
+        if (hasConnections) {
             connectionList.setSelectedIndex(0);
+        }
 
         contentPane.add(
                 new JScrollPane(connectionList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
 
         // Add buttons
-
         XBoxPanel buttonsPanel = new XBoxPanel();
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
@@ -110,8 +110,9 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         disconnectButton = new JButton(Translator.get("server_connections_dialog.disconnect"));
         disconnectButton.setMnemonic(mnemonicHelper.getMnemonic(disconnectButton));
         disconnectButton.setEnabled(hasConnections);
-        if(hasConnections)
+        if (hasConnections) {
             disconnectButton.addActionListener(this);
+        }
 
         buttonGroupPanel.add(disconnectButton);
 
@@ -119,8 +120,9 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         goToButton = new JButton(Translator.get("go_to"));
         goToButton.setMnemonic(mnemonicHelper.getMnemonic(goToButton));
         goToButton.setEnabled(hasConnections);
-        if(hasConnections)
+        if (hasConnections) {
             goToButton.addActionListener(this);
+        }
         buttonGroupPanel.add(goToButton);
 
         buttonsPanel.add(buttonGroupPanel);
@@ -155,10 +157,10 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         Object source = e.getSource();
 
         // Disconnects the selected connection
-        if(source==disconnectButton) {
+        if (source == disconnectButton) {
             int selectedIndex = connectionList.getSelectedIndex();
 
-            if(selectedIndex>=0 && selectedIndex<connections.size()) {
+            if (selectedIndex >= 0 && selectedIndex < connections.size()) {
                 final ConnectionHandler connHandler = connections.get(selectedIndex);
 
                 // Close connection in a separate thread as I/O can lock.
@@ -176,23 +178,21 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
                 connectionList.repaint();
 
                 // Disable contextual butons if there are no more connections
-                if(connections.size()==0) {
+                if (connections.isEmpty()) {
                     disconnectButton.setEnabled(false);
                     goToButton.setEnabled(false);
                 }
             }
-        }
-        // Goes to the selected connection
-        else if (source==goToButton)  {
+        } else if (source == goToButton)  {
+            // Goes to the selected connection
             // Dispose the dialog first
             dispose();
 
             int selectedIndex = connectionList.getSelectedIndex();
-            if(selectedIndex>=0 && selectedIndex<connections.size())
+            if (selectedIndex>=0 && selectedIndex<connections.size()) {
                 mainFrame.getActivePanel().tryChangeCurrentFolder(connections.get(selectedIndex).getRealm());
-        }
-        // Dispose the dialog
-        else if (source==closeButton)  {
+            }
+        } else if (source==closeButton)  {
             dispose();
         }
     }
