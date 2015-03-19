@@ -24,7 +24,10 @@ import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
+import com.mucommander.commons.file.impl.CachedFile;
+import com.mucommander.commons.file.impl.ftp.FTPFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
+import com.mucommander.commons.file.impl.sftp.SFTPFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.conf.MuConfigurations;
@@ -280,17 +283,37 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 	
             if (selectedFile != null) {
                 filesInfo.append(" - ");
-                filesInfo.append(selectedFile.getName());
-                if (selectedFile.isSymlink()  && selectedFile.getURL().getScheme().equals(FileProtocols.FILE)) {
-                    String target = SymLinkUtils.getTargetPath(selectedFile);
-                    filesInfo.append(" -> ");
-                    filesInfo.append(target);
+                filesInfo.append("<b>" + selectedFile.getName() + "</b>");
+                if (selectedFile.isSymlink()) {
+                    String target = getFileLink(selectedFile);
+                    if (target != null) {
+                        filesInfo.append(" -> ");
+                        filesInfo.append(target);
+                    }
                 }
             }
         }		
 
         // Update label
-        setStatusInfo(filesInfo.toString());
+        setStatusInfo("<html>" + filesInfo.toString());
+    }
+
+
+    private static String getFileLink(AbstractFile file) {
+        AbstractFile f;
+        if (file instanceof CachedFile) {
+            f = ((CachedFile)file).getProxiedFile();
+        } else {
+            f = file;
+        }
+        if (f instanceof LocalFile) {
+            return SymLinkUtils.getTargetPath(file);
+        } else if (f instanceof FTPFile) {
+            return ((FTPFile)f).getLink();
+        } else if (f instanceof SFTPFile) {
+            return ((SFTPFile)f).getLink();
+        }
+        return null;
     }
 	
 	
