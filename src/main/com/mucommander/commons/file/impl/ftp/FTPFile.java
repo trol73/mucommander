@@ -905,18 +905,15 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         private FTPInputStream(long skipBytes) throws IOException {
             super(null);
-
             try {
                 // Retrieve a ConnectionHandler and lock it
                 connHandler = (FTPConnectionHandler)ConnectionPool.getConnectionHandler(FTPFile.this, FTPFile.this.fileURL, true);
                 // Makes sure the connection is started, if not starts it
                 connHandler.checkConnection();
-
-                if(skipBytes>0) {
+                if (skipBytes > 0) {
                     // Resume transfer at the given offset
                     connHandler.ftpClient.setRestartOffset(skipBytes);
                 }
-
                 in = connHandler.ftpClient.retrieveFileStream(absPath);
                 if(in==null) {
                     if(skipBytes>0) {
@@ -925,9 +922,8 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                     }
                     throw new IOException();
                 }
-            }
-            catch(IOException e) {
-                if(connHandler!=null) {
+            } catch(IOException e) {
+                if (connHandler != null) {
                     // Checks if the IOException corresponds to a socket error and in that case, closes the connection
                     connHandler.checkSocketException(e);
 

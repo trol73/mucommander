@@ -81,11 +81,16 @@ public class ConnectionPool implements Runnable {
                 		}
                 	}
                     
-                    if(matchingConnHandlers==MAX_CONNECTIONS_PER_REALM) {
+                    if (matchingConnHandlers == MAX_CONNECTIONS_PER_REALM) {
                         LOGGER.info("Maximum number of connection per realm reached, waiting for one to be removed or released...");
                         try {
                             // Wait for a ConnectionHandler to be released or removed from the pool
-                            connectionHandlers.wait();      // relinquishes the lock on connectionHandlers
+                            final int timeout = 5000;
+                            long t0 = System.currentTimeMillis();
+                            connectionHandlers.wait(timeout);      // relinquishes the lock on connectionHandlers
+                            if (System.currentTimeMillis() - t0 > timeout) {
+                                throw new InterruptedIOException();
+                            }
                             break;
                         } catch(InterruptedException e) {
                             LOGGER.info("Interrupted while waiting on a connection for {}", url, e);

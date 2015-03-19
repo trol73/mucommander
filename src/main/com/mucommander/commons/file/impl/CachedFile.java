@@ -195,8 +195,9 @@ public class CachedFile extends ProxyFile {
      */
     private AbstractFile[] createCachedFiles(AbstractFile files[]) {
         int nbFiles = files.length;
-        for(int i=0; i<nbFiles; i++)
+        for (int i = 0; i < nbFiles; i++) {
             files[i] = new CachedFile(files[i], true);
+        }
 
         return files;
     }

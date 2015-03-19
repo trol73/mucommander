@@ -91,7 +91,9 @@ public class HexViewer extends FileViewer {
             if (statusBar != null) {
                 statusBar.setOffset(offset);
                 try {
-                    statusBar.setByteValue(byteBuffer.getByte(offset));
+                    if (byteBuffer.getFileSize() > 0) {
+                        statusBar.setByteValue(byteBuffer.getByte(offset));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
