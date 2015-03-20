@@ -109,11 +109,7 @@ public class SFTPFile extends ProtocolFile {
 //            throw new AuthException(fileURL);
 
         this.absPath = fileURL.getPath();
-
-        if(fileAttributes==null)
-            this.fileAttributes = new SFTPFileAttributes(fileURL);
-        else
-            this.fileAttributes = fileAttributes;
+        this.fileAttributes = fileAttributes==null ? new SFTPFileAttributes(fileURL) : fileAttributes;
     }
 
     /**
@@ -149,8 +145,7 @@ public class SFTPFile extends ProtocolFile {
                 // Update local attributes
                 if(!append)
                     fileAttributes.setSize(0);
-            }
-            else {
+            } else {
                 // Set new file permissions to 644 octal (420 dec): "rw-r--r--"
                 // Note: by default, permissions for files freshly created is 0 (not readable/writable/executable by anyone)!
                 FileAttributes atts = new FileAttributes();
@@ -184,8 +179,7 @@ public class SFTPFile extends ProtocolFile {
                     }
                 }
             );
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Release the lock on the ConnectionHandler if the OutputStream could not be created
             connHandler.releaseLock();
 
@@ -252,14 +246,12 @@ public class SFTPFile extends ProtocolFile {
             connHandler.sftpSubsystem.setAttributes(sftpFile, attributes);
             // Update local attribute copy
             fileAttributes.setDate(lastModified);
-        }
-        finally {
+        } finally {
             // Close SftpFile instance to release its handle
             if (sftpFile != null) {
                 try {
                     sftpFile.close();
-                } catch (IOException ignore) {
-                }
+                } catch (IOException ignore) {}
             }
 
             // Release the lock on the ConnectionHandler
@@ -386,10 +378,11 @@ public class SFTPFile extends ProtocolFile {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
 
-            if(isDirectory())
+            if (isDirectory()) {
                 connHandler.sftpSubsystem.removeDirectory(absPath);
-            else
+            } else {
                 connHandler.sftpSubsystem.removeFile(absPath);
+            }
 
             // Update local attributes
             fileAttributes.setExists(false);
@@ -431,21 +424,21 @@ public class SFTPFile extends ProtocolFile {
             return new AbstractFile[] {};
 
         AbstractFile children[] = new AbstractFile[nbFiles];
-        FileURL childURL;
-        String filename;
+
         int fileCount = 0;
         String parentPath = fileURL.getPath();
-        if(!parentPath .endsWith(SEPARATOR))
-            parentPath  += SEPARATOR;
+        if (!parentPath.endsWith(SEPARATOR)) {
+            parentPath += SEPARATOR;
+        }
 
         // Fill AbstractFile array and discard '.' and '..' files
         for (SftpFile file : files) {
-            filename = file.getFilename();
+            String filename = file.getFilename();
             // Discard '.' and '..' files, dunno why these are returned
             if (filename.equals(".") || filename.equals(".."))
                 continue;
 
-            childURL = (FileURL) fileURL.clone();
+            FileURL childURL = (FileURL) fileURL.clone();
             childURL.setPath(parentPath + filename);
 
             children[fileCount++] = FileFactory.getFile(childURL, this, new SFTPFileAttributes(childURL, file.getAttributes()));
@@ -792,18 +785,18 @@ public class SFTPFile extends ProtocolFile {
                 // Todo: try and fix for this in J2SSH
                 setAttributes(connHandler.sftpSubsystem.getAttributes(url.getPath()));
                 setExists(true);
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // File doesn't exist on the server
                 setExists(false);
 
                 // Rethrow AuthException
-                if(e instanceof AuthException)
-                    throw (AuthException)e;
+                if (e instanceof AuthException) {
+                    throw (AuthException) e;
+                }
             }
             finally {
                 // Release the lock on the ConnectionHandler
-                if(connHandler!=null)
+                if(connHandler != null)
                     connHandler.releaseLock();
             }
         }
@@ -863,8 +856,7 @@ public class SFTPFile extends ProtocolFile {
         public void updateAttributes() {
             try {
                 fetchAttributes();
-            }
-            catch(Exception e) {        // AuthException
+            } catch(Exception e) {        // AuthException
                 LOGGER.info("Failed to refresh attributes", e);
             }
         }

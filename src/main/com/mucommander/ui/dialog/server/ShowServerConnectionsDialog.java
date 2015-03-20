@@ -31,9 +31,13 @@ import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * This dialog shows a list of server connections and allows the user to close/disconnect them.
@@ -45,7 +49,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
     private MainFrame mainFrame;
 
     private JList connectionList;
-    private java.util.List<ConnectionHandler> connections;
+    private List<ConnectionHandler> connections;
 
     private JButton disconnectButton;
     private JButton goToButton;

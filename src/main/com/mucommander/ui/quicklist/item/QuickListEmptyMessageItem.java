@@ -53,7 +53,7 @@ public class QuickListEmptyMessageItem extends QuickListItem {
 		graphics.fillRect(0, 0, getWidth(), getHeight());
 
 		// draw message:		
-		graphics.setFont(FONT);
+		graphics.setFont(mFont);
 		graphics.setColor(foreground);
 		graphics.drawString(getText(), X_AXIS_OFFSET, (int) graphics.getFontMetrics().getLineMetrics(this.getText(), graphics).getHeight());
 	}

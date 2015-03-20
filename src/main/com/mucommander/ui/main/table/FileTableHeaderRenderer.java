@@ -73,8 +73,7 @@ public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
             if(fileTable.getSortInfo().getCriterion()==Column.valueOf(fileTable.convertColumnIndexToModel(column))) {
                 // This header is the currently selected one
                 label.setIcon(fileTable.getSortInfo().getAscendingOrder()? ASCENDING_ICON : DESCENDING_ICON);
-            }
-            else {
+            } else {
                 // The renderer component acts as a rubber-stamp, therefore the icon value needs to be set to null explicitely
                 // as it might still hold a previous value
                 label.setIcon(null);

@@ -106,6 +106,7 @@ interface ThemeXmlConstants {
     public static final String ELEMENT_ARCHIVE                       = "archive";
     public static final String ELEMENT_SYMLINK                       = "symlink";
     public static final String ELEMENT_MARKED                        = "marked";
+    public static final String ELEMENT_EXECUTABLE                    = "executable";
     public static final String ELEMENT_FILE                          = "file";
     public static final String ELEMENT_PROGRESS                      = "progress";
     public static final String ELEMENT_BORDER                        = "border";

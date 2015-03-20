@@ -133,10 +133,10 @@ public class FileURL implements Cloneable {
     private int hashCode;
 
     /** Default handler for schemes that do not have a specific handler */
-    private final static SchemeHandler DEFAULT_HANDLER = new DefaultSchemeHandler();
+    private static final SchemeHandler DEFAULT_HANDLER = new DefaultSchemeHandler();
 
     /** Maps schemes (String) onto SchemeHandler instances */
-    private final static Hashtable<String, SchemeHandler> handlers = new Hashtable<>();
+    private static final Map<String, SchemeHandler> handlers = new HashMap<>();
 
     /** String designating the localhost */
     public final static String LOCALHOST = "localhost";
@@ -322,8 +322,9 @@ public class FileURL implements Cloneable {
      * @return the filename extracted from the given path, <code>null</code> if the path doesn't contain any
      */
     public static String getFilenameFromPath(String path, String separator) {
-        if(path.equals("") || path.equals("/"))
+        if (path.isEmpty() || path.equals("/")) {
             return null;
+        }
 
         // Remove any trailing separator
         path = PathUtils.removeTrailingSeparator(path, separator);
@@ -334,8 +335,9 @@ public class FileURL implements Cloneable {
 
         // Extract filename
         int pos = path.lastIndexOf(separator);
-        if(pos==-1)
+        if (pos < 0) {
             return null;
+        }
 
         return path.substring(pos+1);
     }
@@ -591,7 +593,7 @@ public class FileURL implements Cloneable {
      */
     public FileURL getParent() {
         // If path equals '/', url has no parent
-        if(!(path.equals("/") || path.equals(""))) {
+        if(!(path.equals("/") || path.isEmpty())) {
             String separator = getPathSeparator();
 
             // Remove any trailing separator
@@ -599,7 +601,7 @@ public class FileURL implements Cloneable {
 
             // Resolve parent folder's path and reconstruct parent URL
             int lastSeparatorPos = parentPath.lastIndexOf(separator);
-            if(lastSeparatorPos!=-1) {
+            if (lastSeparatorPos >= 0) {
                 FileURL parentURL = new FileURL(handler);
 
                 parentURL.scheme = scheme;
@@ -613,8 +615,8 @@ public class FileURL implements Cloneable {
                 parentURL.credentials = credentials;
 
                 // Copy properties to parent (if any)
-                if(properties!=null)
-                    parentURL.properties = new Hashtable<>(properties);
+                if (properties != null)
+                    parentURL.properties = new HashMap<>(properties);
 
                 return parentURL;
             }
@@ -699,14 +701,16 @@ public class FileURL implements Cloneable {
      * @see #getProperty(String)
      */
     public void setProperty(String name, String value) {
-        // create the property hashtable only when a property is set for the first time
-        if(properties==null)
+        // create the property map only when a property is set for the first time
+        if (properties == null) {
             properties = new HashMap<>();
+        }
 
-        if(value==null)
+        if (value == null) {
             properties.remove(name);
-        else
+        } else {
             properties.put(name, value);
+        }
 
         urlModified();
     }
@@ -1061,7 +1065,7 @@ public class FileURL implements Cloneable {
      * so that <code>url1.equals(url2)</code> implies <code>url1.hashCode()==url2.hashCode()</code>.
      */
     public int hashCode() {
-        if(hashCode==0) {
+        if (hashCode==0) {
             String separator = handler.getPathSeparator();
 
             // #equals(Object) is trailing separator insensitive, so the hashCode must be trailing separator invariant

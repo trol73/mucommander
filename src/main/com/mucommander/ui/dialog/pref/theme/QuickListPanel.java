@@ -68,8 +68,9 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
     static {
         String sampleText = Translator.get("sample_text");
         sampleData = new String[10];
-        for(int i=0; i<sampleData.length; i++)
-            sampleData[i] = sampleText + " " + (i+1)+"   ";
+        for(int i=0; i<sampleData.length; i++) {
+            sampleData[i] = sampleText + " " + (i + 1) + "   ";
+        }
     }
 
     /** The list of items of the sample quick list */

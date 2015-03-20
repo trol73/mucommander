@@ -23,7 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class allows to share and reuse byte buffers to avoid excessive memory allocation and garbage collection.
@@ -56,7 +58,7 @@ public class BufferPool {
     private static final Logger LOGGER = LoggerFactory.getLogger(BufferPool.class);
 
     /** List of BufferContainer instances that wraps available buffers */
-    private static Vector<BufferContainer> bufferContainers = new Vector<>();
+    private static List<BufferContainer> bufferContainers = new ArrayList<>();
 
     /** The initial default buffer size */
     public final static int INITIAL_DEFAULT_BUFFER_SIZE = 65536;
@@ -213,18 +215,16 @@ public class BufferPool {
      * @return a buffer of the specified size
      */
     public static synchronized Object getBuffer(BufferFactory factory, int size) {
-        int nbBuffers = bufferContainers.size();
-        BufferContainer bufferContainer;
-        Object buffer;
-
         // Looks for a buffer container in the pool that matches the specified size and buffer class.
-        for(int i=0; i<nbBuffers; i++) {
-            bufferContainer = bufferContainers.elementAt(i);
-            buffer = bufferContainer.getBuffer();
+        Iterator<BufferContainer> it = bufferContainers.iterator();
+        while (it.hasNext()) {
+            BufferContainer bufferContainer = it.next();
+            Object buffer = bufferContainer.getBuffer();
 
             // Caution: mind the difference between BufferContainer#getLength() and BufferContainer#getSize()
-            if(bufferContainer.getLength()==size && (factory.matchesBufferClass(buffer.getClass()))) {
-                bufferContainers.removeElementAt(i);
+            if (bufferContainer.getLength() == size && (factory.matchesBufferClass(buffer.getClass()))) {
+                it.remove();
+                //bufferContainers.removeElementAt(i);
                 poolSize -= bufferContainer.getSize();
                 return buffer;
             }
@@ -372,14 +372,13 @@ public class BufferPool {
      * @return the number of buffers currently in the pool
      */
     public static int getBufferCount(BufferFactory factory) {
-        int count = 0;        
-        int nbBuffers = bufferContainers.size();
-        for(int i=0; i<nbBuffers; i++) {
-            if(factory.matchesBufferClass(bufferContainers.elementAt(i).getBuffer().getClass())) {
+        int count = 0;
+        for (BufferContainer bufferContainer : bufferContainers) {
+            if (factory.matchesBufferClass(bufferContainer.getBuffer().getClass())) {
                 count ++;
             }
-        }
 
+        }
         return count;
     }
 
