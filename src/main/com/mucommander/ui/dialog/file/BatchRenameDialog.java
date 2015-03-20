@@ -27,7 +27,6 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.BatchRenameAction;
 import com.mucommander.ui.dialog.FocusDialog;
-import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -93,7 +92,6 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private JLabel lblDuplicates;
     private TableColumn colBlock;
 
-    
     /** files to rename */
     private FileSet files;
 
@@ -396,19 +394,21 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                 try {
                     newName = newName.replaceAll(edtSearchFor.getText(), edtReplaceWith.getText());
                 } catch (Exception e) {
-                    String errorMessage = Translator.get("batch_rename_dialog.regexp_error");
-                    if (e instanceof PatternSyntaxException) {
-                        PatternSyntaxException pse = (PatternSyntaxException)e;
-                        errorMessage += ": " + pse.getPattern();
-                    }
-                    QuestionDialog dialog = new QuestionDialog(mainFrame,
-                            Translator.get("error"),
-                            errorMessage,
-                            mainFrame,
-                            new String[] {Translator.get("ok")},
-                            new int[] {0},
-                            0);
-                    dialog.showDialog();
+//                    if (!ignoreRegexpErrors) {
+//                        String errorMessage = Translator.get("batch_rename_dialog.regexp_error");
+//                        if (e instanceof PatternSyntaxException) {
+//                            PatternSyntaxException pse = (PatternSyntaxException) e;
+//                            errorMessage += ": " + pse.getPattern();
+//                        }
+//                        QuestionDialog dialog = new QuestionDialog(mainFrame,
+//                                Translator.get("error"),
+//                                errorMessage,
+//                                mainFrame,
+//                                new String[]{Translator.get("ok")},
+//                                new int[]{0},
+//                                0);
+//                        dialog.showDialog();
+//                    }
                 }
             } else {
                 newName = newName.replace(edtSearchFor.getText(), edtReplaceWith.getText());
@@ -601,10 +601,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         removeUnchangedFiles(false);
         // start rename job
         if (files.size() > 0) {
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame,
-                    Translator.get("progress_dialog.processing_files"));
-            BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame,
-                    files, newNames);
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame, files, newNames);
             progressDialog.start(job);
         }
     }
@@ -913,15 +911,9 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         @Override
         public String apply(AbstractFile file) {
             // split name & extension
-            String name;
             String oldName = file.getName();
             int dot = oldName.lastIndexOf('.');
-            if (dot >= 0) {
-                name = oldName.substring(0, dot);
-            } else {
-                name = oldName;
-            }
-
+            String name = dot >= 0 ? oldName.substring(0, dot) : oldName;
             return extractNamePart(name);
         }
 
@@ -938,8 +930,9 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             int currentEndIndex = endIndex;
             if (currentStartIndex < 0) {
                 currentStartIndex = targetLen + currentStartIndex + 1;
-                if (currentStartIndex < 1)
+                if (currentStartIndex < 1) {
                     currentStartIndex = 1;
+                }
             }
             if (currentEndIndex < 0)
                 currentEndIndex = targetLen + currentEndIndex + 1;
