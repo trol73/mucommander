@@ -358,9 +358,8 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     @Override
     public long getSize() {
-        if(isSymlink())
+        if (isSymlink())
             return ((org.apache.commons.net.ftp.FTPFile)getCanonicalFile().getUnderlyingFileObject()).getSize();
-
         return file.getSize();
     }
 
@@ -527,15 +526,13 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
             // Throw an IOException if server replied with an error
             connHandler.checkServerReply();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
             connHandler.checkSocketException(e);
 
             // Re-throw IOException
             throw e;
-        }
-        finally {
+        }finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -592,7 +589,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         }
 
         // create new array of the exact file count
-        if(fileCount<nbFiles) {
+        if (fileCount < nbFiles) {
             AbstractFile newChildren[] = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
             return newChildren;
@@ -675,7 +672,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
      * server-side.
      */
     @Override
-    public void changePermissions(int permissions) throws IOException, UnsupportedFileOperationException {
+    public void changePermissions(int permissions) throws IOException {
         FTPConnectionHandler connHandler = null;
         try {
             // Retrieve a ConnectionHandler and lock it
@@ -707,18 +704,18 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
                 throw new IOException();
             }
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
-            if(connHandler!=null)
+            if (connHandler != null) {
                 connHandler.checkSocketException(e);
+            }
 
             throw e;
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
-            if(connHandler!=null)
+            if (connHandler != null) {
                 connHandler.releaseLock();
+            }
         }
     }
 
