@@ -38,6 +38,7 @@ import com.mucommander.commons.io.FileTransferException;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.commons.runtime.OsFamily;
 
 /**
  * <code>AbstractFile</code> is the superclass of all files.
@@ -249,6 +250,16 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return true if this file is executable
      */
     public boolean isExecutable() {
+        if (OsFamily.WINDOWS.isCurrent()) {
+            if (isDirectory()) {
+                return false;
+            }
+            String ext = getExtension();
+            if (ext == null) {
+                return false;
+            }
+            return ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("com") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd");
+        }
         return !isDirectory() && getPermissions().getBitValue(USER_ACCESS, EXECUTE_PERMISSION);
     }
 
