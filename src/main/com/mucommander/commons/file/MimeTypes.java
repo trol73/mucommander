@@ -25,7 +25,7 @@ import com.mucommander.commons.file.util.ResourceLoader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
@@ -33,46 +33,42 @@ import java.util.StringTokenizer;
  *
  * @author Maxence Bernard
  */
-public class MimeTypes extends Hashtable<String, String> {
+public class MimeTypes extends HashMap<String, String> {
 
-    private final static MimeTypes mimeTypes = new MimeTypes();
+    private final static MimeTypes MIME_TYPES = new MimeTypes();
 
     /** Name of the 'mime.types' resource file located in the same package as this class */
     private static final String MIME_TYPES_RESOURCE_NAME = "mime.types";
 	
     private MimeTypes() {
-        BufferedReader br;
-
-        br = null;
+        BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
 
             String line;
-            StringTokenizer st;
-            String description;
 
-            while((line=br.readLine())!=null) {
+            while ((line=br.readLine())!=null) {
                 try {
-                    st = new StringTokenizer(line);
-                    description = st.nextToken();
+                    StringTokenizer st = new StringTokenizer(line);
+                    String description = st.nextToken();
 
-                    while(st.hasMoreTokens())
+                    while (st.hasMoreTokens()) {
                         put(st.nextToken(), description);
-                }
-                catch(Exception e) {
+                    }
+                } catch(Exception e) {
                     // If a line contains an error, catch the exception and go to the next line
                 }
             }
-        }
-        catch(IOException e) {}
+        } catch(IOException ignore) {}
         // Makes sure the stream is closed.
         // This might not be strictly necessary as streams on internal resources are a bit of an unknown,
         // but since the ClassLoader.getResourceAsStream documentation doesn't explicitly say that such
         // streams do not need closing, it's safer to assume they do.
         finally {
-            if(br != null) {
-                try {br.close();}
-                catch(IOException e) {}
+            if (br != null) {
+                try {
+                    br.close();
+                } catch(IOException ignore) {}
             }
         }
     }
@@ -83,15 +79,17 @@ public class MimeTypes extends Hashtable<String, String> {
      * if the type is unknown (unknown or no extension) or if the file is a folder.
      */
     public static String getMimeType(AbstractFile file) {
-        if(file.isDirectory())
+        if (file.isDirectory()) {
             return null;
+        }
         
         String name = file.getName();
         int pos = name.lastIndexOf('.');
-        if(pos==-1)
+        if (pos < 0) {
             return null;
+        }
 
-        return mimeTypes.get(name.substring(pos+1, name.length()).toLowerCase());
+        return MIME_TYPES.get(name.substring(pos+1, name.length()).toLowerCase());
     }
     
 }

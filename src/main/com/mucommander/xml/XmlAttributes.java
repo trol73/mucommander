@@ -18,10 +18,7 @@
 
 package com.mucommander.xml;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Container for XML attributes.
@@ -37,7 +34,7 @@ public class XmlAttributes {
     // - Instance fields -------------------------------------------------
     // -------------------------------------------------------------------
     /** Contains the XML attributes. */
-    private Map<String, String> attributes = new Hashtable<>();
+    private Map<String, String> attributes = new HashMap<>();
     /** Contains the XML attribute names in the order they were added */
     private LinkedList<String> names = new LinkedList<>();
 
