@@ -587,8 +587,7 @@ public class LocalFile extends ProtocolFile {
                         v.add(folder);
                 }
             }
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             LOGGER.warn("Can't get /Volumes subfolders", e);
         }
     }
@@ -658,8 +657,7 @@ public class LocalFile extends ProtocolFile {
     				if (findFileHandle.isValid()) {
     					attributes = findFileData.dwFileAttributes;
     				}
-    			} 
-    			finally {
+    			} finally {
     				if (findFileHandle != null && findFileHandle.isValid()) {
     					Kernel32.getInstance().FindClose(findFileHandle);	
     				}
@@ -1043,7 +1041,10 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public boolean isExecutable() {
-        return file.canExecute();
+        if (OsFamily.getCurrent().isUnixBased()) {
+            return !file.isDirectory() && file.canExecute();
+        }
+        return super.isExecutable();
     }
 
     /**
