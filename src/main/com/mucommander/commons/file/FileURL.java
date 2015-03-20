@@ -554,11 +554,13 @@ public class FileURL implements Cloneable {
      * @see #getPath()
      */
     public void setPath(String path) {
-        if(path==null || path.equals(""))
+        if (path == null || path.isEmpty()) {
             path = "/";
+        }
 
-        if(!path.startsWith("/"))
-            path = "/"+path;
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
 
         this.path = path;
         // Extract new filename from path
