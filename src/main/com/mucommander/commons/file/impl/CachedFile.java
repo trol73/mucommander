@@ -22,7 +22,6 @@ package com.mucommander.commons.file.impl;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
@@ -54,81 +53,74 @@ import java.lang.reflect.Method;
 public class CachedFile extends ProxyFile {
     private static final Logger LOGGER = LoggerFactory.getLogger(CachedFile.class);
 
+    // Used to access the java.io.FileSystem#getBooleanAttributes method
+    private static final boolean GET_FILE_ATTRIBUTES_AVAILABLE;
+    private static final Method M_GET_BOOLEAN_ATTRIBUTES;
+    private static final int BA_DIRECTORY, BA_EXISTS, BA_HIDDEN;
+    private static final Object FS;
+
+    // set-flags
+    private static final int SIZE_SET_MASK = 1;
+    private static final int DATE_SET_MASK = 1 << 1;
+    private static final int SYMLINK_SET_MASK = 1 << 2;
+    private static final int DIRECTORY_SET_MASK = 1 << 3;
+    private static final int ARCHIVE_SET_MASK = 1 << 4;
+    private static final int EXECUTABLE_SET_MASK = 1 << 5;
+    private static final int HIDDEN_SET_MASK = 1 << 6;
+    private static final int ABSOLUTE_PATH_SET_MASK = 1 << 7;
+    private static final int CANONICAL_PATH_SET_MASK = 1 << 8;
+    private static final int EXTENSION_SET_MASK = 1 << 9;
+    private static final int NAME_SET_MASK = 1 << 10;
+    private static final int FREE_SPACE_SET_MASK = 1 << 11;
+    private static final int TOTAL_SPACE_SET_MASK = 1 << 12;
+    private static final int EXISTS_SET_MASK = 1 << 13;
+    private static final int PERMISSIONS_SET_MASK = 1 << 14;
+    private static final int PERMISSIONS_STRING_SET_MASK = 1 << 15;
+    private static final int OWNER_SET_MASK = 1 << 16;
+    private static final int GROUP_SET_MASK = 1 << 17;
+    private static final int IS_ROOT_SET_MASK = 1 << 18;
+    private static final int PARENT_SET_MASK = 1 << 19;
+    private static final int GET_ROOT_SET_MASK = 1 << 20;
+    private static final int CANONICAL_FILE_SET_MASK = 1 << 21;
+
+    // boolean values
+    private static final int SYMLINK_VALUE_MASK = 1 << 22;
+    private static final int DIRECTORY_VALUE_MASK = 1 << 23;
+    private static final int ARCHIVE_VALUE_MASK = 1 << 24;
+    private static final int EXECUTABLE_VALUE_MASK = 1 << 25;
+    private static final int HIDDEN_VALUE_MASK = 1 << 26;
+    private static final int EXISTS_VALUE_MASK = 1 << 27;
+    private static final int IS_ROOT_VALUE_MASK = 1 << 28;
+
+    // others
     /** If true, AbstractFile instances returned by this class will be wrapped into CachedFile instances */
-    private boolean recurseInstances;
+    private static final int RECURSE_INSTANCES_MASK = 1 << 29;
+
+    /**
+     * All boolean values stored here as bits
+     */
+    private int bitmask;
 
     ///////////////////
     // Cached values //
     ///////////////////
-    
+
     private long getSize;
-    private boolean getSizeSet;
-
     private long getDate;
-    private boolean getDateSet;
-
-    private boolean isSymlink;
-    private boolean isSymlinkSet;
-
-    private boolean isDirectory;
-    private boolean isDirectorySet;
-
-    private boolean isArchive;
-    private boolean isArchiveSet;
-
-    private boolean isHidden;
-    private boolean isHiddenSet;
-
     private String getAbsolutePath;
-    private boolean getAbsolutePathSet;
-
     private String getCanonicalPath;
-    private boolean getCanonicalPathSet;
-
     private String getExtension;
-    private boolean getExtensionSet;
-
     private String getName;
-    private boolean getNameSet;
-
     private long getFreeSpace;
-    private boolean getFreeSpaceSet;
-
     private long getTotalSpace;
-    private boolean getTotalSpaceSet;
-
-    private boolean exists;
-    private boolean existsSet;
-
     private FilePermissions getPermissions;
-    private boolean getPermissionsSet;
-
     private String getPermissionsString;
-    private boolean getPermissionsStringSet;
-
     private String getOwner;
-    private boolean getOwnerSet;
-
     private String getGroup;
-    private boolean getGroupSet;
-
-    private boolean isRoot;
-    private boolean isRootSet;
-
     private AbstractFile getParent;
-    private boolean getParentSet;
-
     private AbstractFile getRoot;
-    private boolean getRootSet;
-
     private AbstractFile getCanonicalFile;
-    private boolean getCanonicalFileSet;
 
-    // Used to access the java.io.FileSystem#getBooleanAttributes method
-    private static boolean getFileAttributesAvailable;
-    private static Method mGetBooleanAttributes;
-    private static int BA_DIRECTORY, BA_EXISTS, BA_HIDDEN;
-    private static Object fs;
 
     static {
         // Exposes the java.io.FileSystem class which by default has package access, in order to use its
@@ -143,6 +135,10 @@ public class CachedFile extends ProxyFile {
         // This hack was made for Windows, but is now used for other platforms as well as it is necessarily faster than
         // retrieving file attributes individually.
 
+        boolean getFileAttributesAvailable;
+        Method mGetBooleanAttributes;
+        int baExists, baDirectory, baHidden;
+        Object fs;
         try {
             // Resolve FileSystem class, 'getBooleanAttributes' method and fields
             Class<?> cFile = File.class;
@@ -161,17 +157,28 @@ public class CachedFile extends ProxyFile {
             fBA_HIDDEN.setAccessible(true);
 
             // Retrieve constant field values once for all
-            BA_EXISTS = (Integer) fBA_EXISTS.get(null);
-            BA_DIRECTORY = (Integer) fBA_DIRECTORY.get(null);
-            BA_HIDDEN = (Integer) fBA_HIDDEN.get(null);
+            baExists = (Integer) fBA_EXISTS.get(null);
+            baDirectory = (Integer) fBA_DIRECTORY.get(null);
+            baHidden = (Integer) fBA_HIDDEN.get(null);
             fs = fFs.get(null);
 
             getFileAttributesAvailable = true;
             LOGGER.trace("Access to java.io.FileSystem granted");
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
+            getFileAttributesAvailable = false;
+            mGetBooleanAttributes = null;
+            baExists = 0;
+            baDirectory = 0;
+            baHidden = 0;
+            fs = null;
             LOGGER.info("Error while allowing access to java.io.FileSystem", e);
         }
+        GET_FILE_ATTRIBUTES_AVAILABLE = getFileAttributesAvailable;
+        M_GET_BOOLEAN_ATTRIBUTES = mGetBooleanAttributes;
+        BA_EXISTS = baExists;
+        BA_DIRECTORY = baDirectory;
+        BA_HIDDEN = baHidden;
+        FS = fs;
     }
 
 
@@ -185,8 +192,9 @@ public class CachedFile extends ProxyFile {
      */
     public CachedFile(AbstractFile file, boolean recursiveInstances) {
         super(file);
-
-        this.recurseInstances = recursiveInstances;
+        if (recursiveInstances) {
+            bitmask |= RECURSE_INSTANCES_MASK;
+        }
     }
 
 
@@ -207,25 +215,32 @@ public class CachedFile extends ProxyFile {
      * Pre-fetches values of {@link #isDirectory}, {@link #exists} and {@link #isHidden} for the given local file,
      * using the <code>java.io.FileSystem#getBooleanAttributes(java.io.File)</code> method.
      * The given {@link AbstractFile} must be a local file or a proxy to a local file ('file' protocol). This method
-     * must only be called if the {@link #getFileAttributesAvailable} field is <code>true</code>.
+     * must only be called if the {@link #GET_FILE_ATTRIBUTES_AVAILABLE} field is <code>true</code>.
      */
     private void getFileAttributes(AbstractFile file) {
         file = file.getTopAncestor();
 
-        if(file instanceof LocalFile) {
+        if (file instanceof LocalFile) {
             try {
-                int ba = (Integer) mGetBooleanAttributes.invoke(fs, file.getUnderlyingFileObject());
+                int ba = (Integer) M_GET_BOOLEAN_ATTRIBUTES.invoke(FS, file.getUnderlyingFileObject());
 
-                isDirectory = (ba & BA_DIRECTORY)!=0;
-                isDirectorySet = true;
-
-                exists = (ba & BA_EXISTS)!=0;
-                existsSet = true;
-
-                isHidden = (ba & BA_HIDDEN)!=0;
-                isHiddenSet = true;
-            }
-            catch(Exception e) {
+                if ((ba & BA_DIRECTORY) != 0) {
+                    bitmask |= DIRECTORY_VALUE_MASK;
+                } else {
+                    bitmask &= ~DIRECTORY_VALUE_MASK;
+                }
+                if ((ba & BA_EXISTS) != 0) {
+                    bitmask |= EXISTS_VALUE_MASK;
+                } else {
+                    bitmask &= ~EXISTS_VALUE_MASK;
+                }
+                if ((ba & BA_HIDDEN) != 0) {
+                    bitmask |= HIDDEN_VALUE_MASK;
+                } else {
+                    bitmask &= ~HIDDEN_VALUE_MASK;
+                }
+                bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
+            } catch(Exception e) {
                 LOGGER.info("Could not retrieve file attributes for {}", file, e);
             }
         }
@@ -238,278 +253,304 @@ public class CachedFile extends ProxyFile {
 
     @Override
     public long getSize() {
-        if(!getSizeSet) {
+        if ((bitmask & SIZE_SET_MASK) == 0) {
             getSize = file.getSize();
-            getSizeSet = true;
+            bitmask |= SIZE_SET_MASK;
         }
-
         return getSize;
     }
 
     @Override
     public long getDate() {
-        if(!getDateSet) {
+        if ((bitmask & DATE_SET_MASK) == 0) {
             getDate = file.getDate();
-            getDateSet = true;
+            bitmask |= DATE_SET_MASK;
         }
-
         return getDate;
     }
 
     @Override
     public boolean isSymlink() {
-        if(!isSymlinkSet) {
-            isSymlink = file.isSymlink();
-            isSymlinkSet = true;
+        if ((bitmask & SYMLINK_SET_MASK) == 0) {
+            if (file.isSymlink()) {
+                bitmask |= SYMLINK_VALUE_MASK;
+            } else {
+                bitmask &= ~SYMLINK_VALUE_MASK;
+            }
+            bitmask |= SYMLINK_SET_MASK;
         }
-
-        return isSymlink;
+        return (bitmask & SYMLINK_VALUE_MASK) != 0;
     }
 
     @Override
     public boolean isDirectory() {
-        if(!isDirectorySet && getFileAttributesAvailable && FileProtocols.FILE.equals(file.getURL().getScheme()))
-            getFileAttributes(file);
-        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
-
-        if(!isDirectorySet) {
-            isDirectory = file.isDirectory();
-            isDirectorySet = true;
+        if ((bitmask & DIRECTORY_SET_MASK) == 0) {
+            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
+                getFileAttributes(file);
+            }
+            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+            if ((bitmask & DIRECTORY_SET_MASK) == 0) {
+                if (file.isDirectory()) {
+                    bitmask |= DIRECTORY_VALUE_MASK;
+                } else {
+                    bitmask &= ~DIRECTORY_VALUE_MASK;
+                }
+                bitmask |= DIRECTORY_SET_MASK;
+            }
         }
-
-        return isDirectory;
+        return (bitmask & DIRECTORY_VALUE_MASK) != 0;
     }
 
     @Override
     public boolean isArchive() {
-        if(!isArchiveSet) {
-            isArchive = file.isArchive();
-            isArchiveSet = true;
+        if ((bitmask & ARCHIVE_SET_MASK) == 0) {
+            if (file.isArchive()) {
+                bitmask |= ARCHIVE_VALUE_MASK;
+            } else {
+                bitmask &= ~ARCHIVE_VALUE_MASK;
+            }
+            bitmask |= ARCHIVE_SET_MASK;
         }
-
-        return isArchive;
+        return (bitmask & ARCHIVE_VALUE_MASK) != 0;
     }
 
     @Override
     public boolean isHidden() {
-        if(!isHiddenSet && getFileAttributesAvailable && FileProtocols.FILE.equals(file.getURL().getScheme()))
-            getFileAttributes(file);
-        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
-
-        if(!isHiddenSet) {
-            isHidden = file.isHidden();
-            isHiddenSet = true;
+        if ((bitmask & HIDDEN_SET_MASK) == 0) {
+            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
+                getFileAttributes(file);
+            }
+            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+            if ((bitmask & HIDDEN_SET_MASK) == 0) {
+                if (file.isHidden()) {
+                    bitmask |= BA_HIDDEN;
+                } else {
+                    bitmask &= ~BA_HIDDEN;
+                }
+                bitmask |= HIDDEN_SET_MASK;
+            }
         }
+        return (bitmask & BA_HIDDEN) == 0;
+    }
 
-        return isHidden;
+    @Override
+    public boolean isExecutable() {
+        if ((bitmask & EXECUTABLE_SET_MASK) == 0) {
+            if (file.isExecutable()) {
+                bitmask |= EXECUTABLE_VALUE_MASK;
+            } else {
+                bitmask &= ~EXECUTABLE_VALUE_MASK;
+            }
+            bitmask |= EXECUTABLE_SET_MASK;
+        }
+        return (bitmask & EXECUTABLE_VALUE_MASK) != 0;
     }
 
     @Override
     public String getAbsolutePath() {
-        if(!getAbsolutePathSet) {
+        if ((bitmask & ABSOLUTE_PATH_SET_MASK) == 0) {
             getAbsolutePath = file.getAbsolutePath();
-            getAbsolutePathSet = true;
+            bitmask |= ABSOLUTE_PATH_SET_MASK;
         }
-
         return getAbsolutePath;
     }
 
     @Override
     public String getCanonicalPath() {
-        if(!getCanonicalPathSet) {
+        if ((bitmask & CANONICAL_PATH_SET_MASK) == 0) {
             getCanonicalPath = file.getCanonicalPath();
-            getCanonicalPathSet = true;
+            bitmask |= CANONICAL_PATH_SET_MASK;
         }
-
         return getCanonicalPath;
     }
 
     @Override
     public String getExtension() {
-        if(!getExtensionSet) {
+        if ((bitmask & EXTENSION_SET_MASK) == 0) {
             getExtension = file.getExtension();
-            getExtensionSet = true;
+            bitmask |= EXTENSION_SET_MASK;
         }
-
         return getExtension;
     }
 
     @Override
     public String getName() {
-        if(!getNameSet) {
+        if ((bitmask & NAME_SET_MASK) == 0) {
             getName = file.getName();
-            getNameSet = true;
+            bitmask |= NAME_SET_MASK;
         }
-
         return getName;
     }
 
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
-        if(!getFreeSpaceSet) {
+    public long getFreeSpace() throws IOException {
+        if ((bitmask & FREE_SPACE_SET_MASK) == 0) {
             getFreeSpace = file.getFreeSpace();
-            getFreeSpaceSet = true;
+            bitmask |= FREE_SPACE_SET_MASK;
         }
-
         return getFreeSpace;
     }
 
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
-        if(!getTotalSpaceSet) {
+    public long getTotalSpace() throws IOException {
+        if ((bitmask & TOTAL_SPACE_SET_MASK) == 0) {
             getTotalSpace = file.getTotalSpace();
-            getTotalSpaceSet = true;
+            bitmask |= TOTAL_SPACE_SET_MASK;
         }
-
         return getTotalSpace;
     }
 
     @Override
     public boolean exists() {
-        if(!existsSet && getFileAttributesAvailable && FileProtocols.FILE.equals(file.getURL().getScheme()))
-            getFileAttributes(file);
-        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
-
-        if(!existsSet) {
-            exists = file.exists();
-            existsSet = true;
+        if ((bitmask & EXISTS_SET_MASK) == 0) {
+            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
+                getFileAttributes(file);
+            }
+            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+            if ((bitmask & EXISTS_SET_MASK) != 0) {
+                if (file.exists()) {
+                    bitmask |= EXISTS_VALUE_MASK;
+                } else {
+                    bitmask &= ~EXISTS_VALUE_MASK;
+                }
+                bitmask |= EXISTS_SET_MASK;
+            }
         }
-
-        return exists;
+        return (bitmask & EXISTS_VALUE_MASK) != 0;
     }
 
     @Override
     public FilePermissions getPermissions() {
-        if(!getPermissionsSet) {
+        if ((bitmask & PERMISSIONS_SET_MASK) == 0) {
             getPermissions = file.getPermissions();
-            getPermissionsSet = true;
+            bitmask |= PERMISSIONS_SET_MASK;
         }
-
         return getPermissions;
     }
 
     @Override
     public String getPermissionsString() {
-        if(!getPermissionsStringSet) {
+        if ((bitmask & PERMISSIONS_STRING_SET_MASK) == 0) {
             getPermissionsString = file.getPermissionsString();
-            getPermissionsStringSet = true;
+            bitmask |= PERMISSIONS_STRING_SET_MASK;
         }
-
         return getPermissionsString;
     }
 
     @Override
     public String getOwner() {
-        if(!getOwnerSet) {
+        if ((bitmask & OWNER_SET_MASK) == 0) {
             getOwner = file.getOwner();
-            getOwnerSet = true;
+            bitmask |= OWNER_SET_MASK;
         }
-
         return getOwner;
     }
 
     @Override
     public String getGroup() {
-        if(!getGroupSet) {
+        if ((bitmask & GROUP_SET_MASK) == 0) {
             getGroup = file.getGroup();
-            getGroupSet = true;
+            bitmask |= GROUP_SET_MASK;
         }
-
         return getGroup;
     }
 
     @Override
     public boolean isRoot() {
-        if(!isRootSet) {
-            isRoot = file.isRoot();
-            isRootSet = true;
+        if ((bitmask & IS_ROOT_SET_MASK) == 0) {
+            if (file.isRoot()) {
+                bitmask |= IS_ROOT_VALUE_MASK;
+            } else {
+                bitmask &= ~IS_ROOT_VALUE_MASK;
+            }
+            bitmask |= IS_ROOT_SET_MASK;
         }
-
-        return isRoot;
+        return (bitmask & IS_ROOT_VALUE_MASK) != 0;
     }
 
 
     @Override
     public AbstractFile getParent() {
-        if(!getParentSet) {
+        if ((bitmask & PARENT_SET_MASK) == 0) {
             getParent = file.getParent();
             // create a CachedFile instance around the file if recursion is enabled
-            if(recurseInstances && getParent!=null)
+            if ((bitmask & RECURSE_INSTANCES_MASK) != 0 && getParent != null) {
                 getParent = new CachedFile(getParent, true);
-            getParentSet = true;
+            }
+            bitmask |= PARENT_SET_MASK;
         }
-
         return getParent;
     }
 
     @Override
     public AbstractFile getRoot() {
-        if(!getRootSet) {
+        if ((bitmask & GET_ROOT_SET_MASK) == 0) {
             getRoot = file.getRoot();
             // create a CachedFile instance around the file if recursion is enabled
-            if(recurseInstances)
+            if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
                 getRoot = new CachedFile(getRoot, true);
-
-            getRootSet = true;
+            }
+            bitmask |= GET_ROOT_SET_MASK;
         }
-
         return getRoot;
     }
 
     @Override
     public AbstractFile getCanonicalFile() {
-        if(!getCanonicalFileSet) {
+        if ((bitmask & CANONICAL_FILE_SET_MASK) == 0) {
             getCanonicalFile = file.getCanonicalFile();
             // create a CachedFile instance around the file if recursion is enabled
-            if(recurseInstances) {
+            if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
                 // AbstractFile#getCanonicalFile() may return 'this' if the file is not a symlink. In that case,
                 // no need to create a new CachedFile, simply use this one. 
-                if(getCanonicalFile==file)
+                if (getCanonicalFile == file) {
                     getCanonicalFile = this;
-                else
+                } else {
                     getCanonicalFile = new CachedFile(getCanonicalFile, true);
+                }
             }
-
-            getCanonicalFileSet = true;
+            bitmask |= CANONICAL_FILE_SET_MASK;
         }
-
         return getCanonicalFile;
     }
 
-    
+
     ////////////////////////////////////////////////
     // Overridden for recursion only (no caching) //
     ////////////////////////////////////////////////
 
     @Override
-    public AbstractFile[] ls() throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls() throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
         AbstractFile files[] = file.ls();
 
-        if(recurseInstances)
+        if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);
+        }
 
         return files;
     }
 
     @Override
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
         AbstractFile files[] = file.ls(filter);
 
-        if(recurseInstances)
+        if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);
+        }
 
         return files;
     }
 
     @Override
-    public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
         AbstractFile files[] = file.ls(filter);
 
-        if(recurseInstances)
+        if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);
+        }
 
         return files;
     }

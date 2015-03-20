@@ -42,24 +42,27 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
     // - Row identifiers ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
 
-    // TODO use enum
-    private static final int FOLDER      = 0;
-    private static final int PLAIN_FILE  = 1;
-    private static final int ARCHIVE     = 2;
-    private static final int HIDDEN_FILE = 3;
-    private static final int SYMLINK     = 4;
-    private static final int MARKED_FILE = 5;
+    private enum RowType {
+        FOLDER,
+        PLAIN_FILE,
+        ARCHIVE,
+        HIDDEN_FILE,
+        SYMLINK,
+        MARKED_FILE,
+        EXECUTABLE_FILE,
 
-    private static final int GROUP_1_FILE = 6;
-    private static final int GROUP_2_FILE = 7;
-    private static final int GROUP_3_FILE = 8;
-    private static final int GROUP_4_FILE = 9;
-    private static final int GROUP_5_FILE = 10;
-    private static final int GROUP_6_FILE = 11;
-    private static final int GROUP_7_FILE = 12;
-    private static final int GROUP_8_FILE = 13;
-    private static final int GROUP_9_FILE = 14;
-    private static final int GROUP_10_FILE = 15;
+        GROUP_1_FILE,
+        GROUP_2_FILE,
+        GROUP_3_FILE,
+        GROUP_4_FILE,
+        GROUP_5_FILE,
+        GROUP_6_FILE,
+        GROUP_7_FILE,
+        GROUP_8_FILE,
+        GROUP_9_FILE,
+        GROUP_10_FILE,
+    }
+
 
 
 
@@ -272,7 +275,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
         /**
          * Returns the foregorund color of the specified cell.
          */
-        private Color getForegroundColor(int row, boolean isSelected) {
+        private Color getForegroundColor(RowType row, boolean isSelected) {
             switch(row) {
                 // Folders.
                 case FOLDER:
@@ -321,6 +324,14 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
                                                                ThemeData.MARKED_FOREGROUND_COLOR);
                     return FilePreviewPanel.this.data.getColor(isSelected ? ThemeData.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR :
                                                            ThemeData.MARKED_INACTIVE_FOREGROUND_COLOR);
+
+                // Executable files.
+                case EXECUTABLE_FILE:
+                    if (FilePreviewPanel.this.isActive)
+                        return FilePreviewPanel.this.data.getColor(isSelected ? ThemeData.EXECUTABLE_SELECTED_FOREGROUND_COLOR :
+                                ThemeData.EXECUTABLE_FOREGROUND_COLOR);
+                    return FilePreviewPanel.this.data.getColor(isSelected ? ThemeData.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR :
+                            ThemeData.EXECUTABLE_INACTIVE_FOREGROUND_COLOR);
                 case GROUP_1_FILE:
                 case GROUP_2_FILE:
                 case GROUP_3_FILE:
@@ -331,7 +342,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
                 case GROUP_8_FILE:
                 case GROUP_9_FILE:
                 case GROUP_10_FILE:
-                    int group = row - GROUP_1_FILE;
+                    int group = row.ordinal() - RowType.GROUP_1_FILE.ordinal();
                         return FilePreviewPanel.this.data.getColor(ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group);
             }
 
@@ -343,16 +354,17 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
          * Returns the object used to render the specified cell.
          */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            RowType rowType = RowType.values()[row];
             CellLabel currentLabel;
 
             // Icon label foreground.
             if(column == 0) {
                 currentLabel = icon;
-                if(row == FOLDER)
+                if (rowType == RowType.FOLDER)
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FOLDER_ICON_NAME));
-                else if(row == ARCHIVE)
+                else if (rowType == RowType.ARCHIVE)
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.ARCHIVE_ICON_NAME));
-                else if(row == SYMLINK)
+                else if (rowType == RowType.SYMLINK)
                     currentLabel.setIcon(symlinkIcon);
                 else
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FILE_ICON_NAME));
@@ -362,7 +374,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
                 currentLabel = label;
                 currentLabel.setFont(data.getFont(ThemeData.FILE_TABLE_FONT));
                 currentLabel.setText((String)value);
-                currentLabel.setForeground(getForegroundColor(row, isSelected));
+                currentLabel.setForeground(getForegroundColor(rowType, isSelected));
             }
 
             // Foreground.

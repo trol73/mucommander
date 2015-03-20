@@ -306,7 +306,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public void changePermissions(int permissions) throws IOException, UnsupportedFileOperationException {
+    public void changePermissions(int permissions) throws IOException {
         file.changePermissions(permissions);
     }
 
@@ -336,7 +336,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public InputStream getInputStream(long offset) throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream(long offset) throws IOException {
         return file.getInputStream(offset);
     }
 
@@ -346,22 +346,22 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         return file.ls(filter);
     }
 
     @Override
-    public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         return file.ls(filter);
     }
 
     @Override
-    public void mkfile() throws IOException, UnsupportedFileOperationException {
+    public void mkfile() throws IOException {
         file.mkfile();
     }
 
     @Override
-    public void deleteRecursively() throws IOException, UnsupportedFileOperationException {
+    public void deleteRecursively() throws IOException {
         file.deleteRecursively();
     }
 

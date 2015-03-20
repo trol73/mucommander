@@ -149,6 +149,10 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         if (file.isBrowsable())
             return ThemeCache.ARCHIVE;
 
+        if (file.isExecutable()) {
+            return ThemeCache.EXECUTABLE;
+        }
+
         // Plain file.
         return ThemeCache.PLAIN_FILE;
     }

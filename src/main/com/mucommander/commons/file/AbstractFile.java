@@ -133,8 +133,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (name == null) {
             name = fileURL.getHost();
             // If host is null, return an empty string
-            if (name == null)
+            if (name == null) {
                 return "";
+            }
         }
 
         return name;
@@ -240,6 +241,15 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */	
     public boolean isHidden() {
         return getName().startsWith(".");
+    }
+
+    /**
+     * Returns <code>true</code> if this file is executable.
+     *
+     * @return true if this file is executable
+     */
+    public boolean isExecutable() {
+        return !isDirectory() && getPermissions().getBitValue(USER_ACCESS, EXECUTE_PERMISSION);
     }
 
 
@@ -464,8 +474,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 renameTo(destFile);
                 // Rename was a success, all done.
                 return;
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Fail silently
             }
         }
@@ -539,7 +548,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
-        return filter==null?ls():filter.filter(ls());
+        return filter == null ? ls() : filter.filter(ls());
     }
 
 
@@ -616,7 +625,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // Permissions go by triplets (rwx), there are 3 of them for respectively 'owner', 'group' and 'other' accesses.
         // The first one ('owner') will always be displayed, regardless of the permission bit mask. 'Group' and 'other'
         // will be displayed only if the permission mask contains information about them (at least one permission bit).
-        for(int a=USER_ACCESS; a>=OTHER_ACCESS; a--) {
+        for (int a=USER_ACCESS; a>=OTHER_ACCESS; a--) {
 
             if(a==USER_ACCESS || (supportedPerms & (7<<bitShift))!=0) {
                 for(int p=READ_PERMISSION; p>=EXECUTE_PERMISSION; p=p>>1) {

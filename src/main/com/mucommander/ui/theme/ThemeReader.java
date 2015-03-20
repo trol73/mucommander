@@ -38,7 +38,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThemeReader.class);
-	
+
+    // TODO ENUM !!!!!
     // - XML parser states ---------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Parsing hasn't started yet. */
@@ -88,40 +89,43 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     private static final int STATE_MARKED                   = 28;
     private static final int STATE_MARKED_NORMAL            = 29;
     private static final int STATE_MARKED_SELECTED          = 30;
-    private static final int STATE_FILE                     = 31;
-    private static final int STATE_FILE_NORMAL              = 32;
-    private static final int STATE_FILE_SELECTED            = 33;
-    private static final int STATE_TABLE_NORMAL             = 34;
-    private static final int STATE_TABLE_SELECTED           = 35;
-    private static final int STATE_TABLE_ALTERNATE          = 36;
-    private static final int STATE_TABLE_UNMATCHED          = 37;
+    private static final int STATE_EXECUTABLE               = 31;
+    private static final int STATE_EXECUTABLE_NORMAL        = 32;
+    private static final int STATE_EXECUTABLE_SELECTED      = 33;
+    private static final int STATE_FILE                     = 34;
+    private static final int STATE_FILE_NORMAL              = 35;
+    private static final int STATE_FILE_SELECTED            = 36;
+    private static final int STATE_TABLE_NORMAL             = 37;
+    private static final int STATE_TABLE_SELECTED           = 38;
+    private static final int STATE_TABLE_ALTERNATE          = 39;
+    private static final int STATE_TABLE_UNMATCHED          = 40;
     /** Parsing the quick list element. */
-    private static final int STATE_QUICK_LIST               = 38;
+    private static final int STATE_QUICK_LIST               = 41;
     /** Parsing the quick list header element. */
-    private static final int STATE_QUICK_LIST_HEADER        = 39;
+    private static final int STATE_QUICK_LIST_HEADER        = 42;
     /** Parsing the quick list item element. */
-    private static final int STATE_QUICK_LIST_ITEM          = 40;
-    private static final int STATE_QUICK_LIST_ITEM_NORMAL   = 41;
-    private static final int STATE_QUICK_LIST_ITEM_SELECTED = 42;
+    private static final int STATE_QUICK_LIST_ITEM          = 43;
+    private static final int STATE_QUICK_LIST_ITEM_NORMAL   = 44;
+    private static final int STATE_QUICK_LIST_ITEM_SELECTED = 45;
     /** Parsing the editor.selected element. */
-    private static final int STATE_EDITOR_CURRENT           = 43;
-    private static final int STATE_FILE_GROUP               = 44;
-    private static final int STATE_GROUP_1                  = 45;
-    private static final int STATE_GROUP_2                  = 46;
-    private static final int STATE_GROUP_3                  = 47;
-    private static final int STATE_GROUP_4                  = 48;
-    private static final int STATE_GROUP_5                  = 49;
-    private static final int STATE_GROUP_6                  = 50;
-    private static final int STATE_GROUP_7                  = 51;
-    private static final int STATE_GROUP_8                  = 52;
-    private static final int STATE_GROUP_9                  = 53;
-    private static final int STATE_GROUP_10                 = 54;
+    private static final int STATE_EDITOR_CURRENT           = 46;
+    private static final int STATE_FILE_GROUP               = 47;
+    private static final int STATE_GROUP_1                  = 48;
+    private static final int STATE_GROUP_2                  = 49;
+    private static final int STATE_GROUP_3                  = 50;
+    private static final int STATE_GROUP_4                  = 51;
+    private static final int STATE_GROUP_5                  = 52;
+    private static final int STATE_GROUP_6                  = 53;
+    private static final int STATE_GROUP_7                  = 54;
+    private static final int STATE_GROUP_8                  = 55;
+    private static final int STATE_GROUP_9                  = 56;
+    private static final int STATE_GROUP_10                 = 57;
 
-    private static final int STATE_TERMINAL                 = 55;
+    private static final int STATE_TERMINAL                 = 58;
     /** Parsing the terminal.normal element. */
-    private static final int STATE_TERMINAL_NORMAL          = 56;
+    private static final int STATE_TERMINAL_NORMAL          = 59;
     /** Parsing the terminal.selected element. */
-    private static final int STATE_TERMINAL_SELECTED        = 57;
+    private static final int STATE_TERMINAL_SELECTED        = 60;
 
 
 
@@ -131,6 +135,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     /** Theme template that is currently being built. */
     private ThemeData     template;
     /** Current state of the XML parser. */
+    // TODO !!! USE ENUM !!!!!
     private int           state;
     /** Used to ignore the content of an unknown tag. */
     private String        unknownElement;
@@ -269,6 +274,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             state = STATE_MARKED;
         }
 
+        else if(qName.equals(ELEMENT_EXECUTABLE)) {
+            if(state != STATE_TABLE)
+                traceIllegalDeclaration(qName);
+            state = STATE_EXECUTABLE;
+        }
+
         else if(qName.equals(ELEMENT_FILE)) {
             if(state != STATE_TABLE)
                 traceIllegalDeclaration(qName);
@@ -325,6 +336,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SYMLINK_NORMAL;
             else if(state == STATE_MARKED)
                 state = STATE_MARKED_NORMAL;
+            else if(state == STATE_EXECUTABLE)
+                state = STATE_EXECUTABLE_NORMAL;
             else if(state == STATE_FILE)
                 state = STATE_FILE_NORMAL;
             else if(state == STATE_TABLE)
@@ -361,6 +374,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SYMLINK_SELECTED;
             else if(state == STATE_MARKED)
                 state = STATE_MARKED_SELECTED;
+            else if(state == STATE_EXECUTABLE)
+                state = STATE_EXECUTABLE_SELECTED;
             else if(state == STATE_FILE)
                 state = STATE_FILE_SELECTED;
             else if(state == STATE_TABLE)
@@ -448,6 +463,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 template.setColor(ThemeData.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_MARKED_NORMAL)
                 template.setColor(ThemeData.MARKED_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_EXECUTABLE_NORMAL)
+                template.setColor(ThemeData.EXECUTABLE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_FILE_SELECTED)
                 template.setColor(ThemeData.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_FOLDER_SELECTED)
@@ -460,6 +477,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 template.setColor(ThemeData.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_MARKED_SELECTED)
                 template.setColor(ThemeData.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_EXECUTABLE_SELECTED)
+                template.setColor(ThemeData.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -622,6 +641,11 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             else if(state == STATE_MARKED_SELECTED)
                 template.setColor(ThemeData.MARKED_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
+            else if(state == STATE_EXECUTABLE_NORMAL)
+                template.setColor(ThemeData.EXECUTABLE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == STATE_EXECUTABLE_SELECTED)
+                template.setColor(ThemeData.EXECUTABLE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+
             else if(state == STATE_FILE_NORMAL)
                 template.setColor(ThemeData.FILE_FOREGROUND_COLOR, createColor(attributes));
             else if(state == STATE_FILE_SELECTED)
@@ -723,6 +747,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         else if(qName.equals(ELEMENT_MARKED))
             state = STATE_TABLE;
 
+        else if(qName.equals(ELEMENT_EXECUTABLE))
+            state = STATE_TABLE;
+
         else if(qName.equals(ELEMENT_FILE))
             state = STATE_TABLE;
 
@@ -784,6 +811,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SYMLINK;
             else if(state == STATE_MARKED_NORMAL)
                 state = STATE_MARKED;
+            else if(state == STATE_EXECUTABLE_NORMAL)
+                state = STATE_EXECUTABLE;
             else if(state == STATE_FILE_NORMAL)
                 state = STATE_FILE;
             else if(state == STATE_EDITOR_NORMAL)
@@ -814,6 +843,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 state = STATE_SYMLINK;
             else if(state == STATE_MARKED_SELECTED)
                 state = STATE_MARKED;
+            else if(state == STATE_EXECUTABLE_SELECTED)
+                state = STATE_EXECUTABLE;
             else if(state == STATE_FILE_SELECTED)
                 state = STATE_FILE;
             else if(state == STATE_EDITOR_SELECTED)

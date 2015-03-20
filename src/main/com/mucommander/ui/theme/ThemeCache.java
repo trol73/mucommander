@@ -42,7 +42,8 @@ public class ThemeCache implements ThemeListener {
     public static final int ARCHIVE              = 2;
     public static final int SYMLINK              = 3;
     public static final int MARKED               = 4;
-    public static final int PLAIN_FILE           = 5;
+    public static final int EXECUTABLE           = 5;
+    public static final int PLAIN_FILE           = 6;
 
     
     // - Color definitions -----------------------------------------------------------
@@ -66,7 +67,7 @@ public class ThemeCache implements ThemeListener {
     // - Initialisation --------------------------------------------------------------
     // -------------------------------------------------------------------------------
     static {
-        foregroundColors = new Color[2][2][6];
+        foregroundColors = new Color[2][2][7];
         backgroundColors = new Color[2][4];
         groupColors = new Color[10];
 
@@ -88,6 +89,7 @@ public class ThemeCache implements ThemeListener {
         foregroundColors[ACTIVE][NORMAL][ARCHIVE]         = ThemeManager.getCurrentColor(Theme.ARCHIVE_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][NORMAL][SYMLINK]         = ThemeManager.getCurrentColor(Theme.SYMLINK_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][NORMAL][MARKED]          = ThemeManager.getCurrentColor(Theme.MARKED_FOREGROUND_COLOR);
+        foregroundColors[ACTIVE][NORMAL][EXECUTABLE]      = ThemeManager.getCurrentColor(Theme.EXECUTABLE_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][NORMAL][PLAIN_FILE]      = ThemeManager.getCurrentColor(Theme.FILE_FOREGROUND_COLOR);
 
         // Normal unfocused foreground foregroundColors.
@@ -96,6 +98,7 @@ public class ThemeCache implements ThemeListener {
         foregroundColors[INACTIVE][NORMAL][ARCHIVE]        = ThemeManager.getCurrentColor(Theme.ARCHIVE_INACTIVE_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][NORMAL][SYMLINK]        = ThemeManager.getCurrentColor(Theme.SYMLINK_INACTIVE_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][NORMAL][MARKED]         = ThemeManager.getCurrentColor(Theme.MARKED_INACTIVE_FOREGROUND_COLOR);
+        foregroundColors[INACTIVE][NORMAL][EXECUTABLE]     = ThemeManager.getCurrentColor(Theme.EXECUTABLE_INACTIVE_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][NORMAL][PLAIN_FILE]     = ThemeManager.getCurrentColor(Theme.FILE_INACTIVE_FOREGROUND_COLOR);
 
         // Selected foreground foregroundColors.
@@ -104,6 +107,7 @@ public class ThemeCache implements ThemeListener {
         foregroundColors[ACTIVE][SELECTED][ARCHIVE]       = ThemeManager.getCurrentColor(Theme.ARCHIVE_SELECTED_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][SELECTED][SYMLINK]       = ThemeManager.getCurrentColor(Theme.SYMLINK_SELECTED_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][SELECTED][MARKED]        = ThemeManager.getCurrentColor(Theme.MARKED_SELECTED_FOREGROUND_COLOR);
+        foregroundColors[ACTIVE][SELECTED][EXECUTABLE]    = ThemeManager.getCurrentColor(Theme.EXECUTABLE_SELECTED_FOREGROUND_COLOR);
         foregroundColors[ACTIVE][SELECTED][PLAIN_FILE]    = ThemeManager.getCurrentColor(Theme.FILE_SELECTED_FOREGROUND_COLOR);
 
         // Selected unfocused foreground foregroundColors.
@@ -112,6 +116,7 @@ public class ThemeCache implements ThemeListener {
         foregroundColors[INACTIVE][SELECTED][ARCHIVE]      = ThemeManager.getCurrentColor(Theme.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][SELECTED][SYMLINK]      = ThemeManager.getCurrentColor(Theme.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][SELECTED][MARKED]       = ThemeManager.getCurrentColor(Theme.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR);
+        foregroundColors[INACTIVE][SELECTED][EXECUTABLE]   = ThemeManager.getCurrentColor(Theme.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR);
         foregroundColors[INACTIVE][SELECTED][PLAIN_FILE]   = ThemeManager.getCurrentColor(Theme.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR);
 
         unmatchedForeground                                = ThemeManager.getCurrentColor(Theme.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR);

@@ -96,8 +96,9 @@ public class SFTPPanel extends ServerPanel {
 
         JButton chooseFileButton = new JButton("...");
         // Mac OS X: small component size
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             chooseFileButton.putClientProperty("JComponent.sizeVariant", "small");
+        }
 
         chooseFileButton.addActionListener(new ActionListener() {
                 JFileChooser fc = new JFileChooser(System.getProperty("user.home") + System.getProperty("file.separator") + ".ssh");
@@ -126,11 +127,11 @@ public class SFTPPanel extends ServerPanel {
 
 
     private void updateValues() {
-        lastKeyPath = privateKeyPathField.getText();
-        lastServer = serverField.getText();
+        lastKeyPath = privateKeyPathField.getText().trim();
+        lastServer = serverField.getText().trim();
         lastUsername = usernameField.getText();
         lastPassword = new String(passwordField.getPassword());
-        lastInitialDir = initialDirField.getText();
+        lastInitialDir = initialDirField.getText().trim();
         lastPort = (Integer) portSpinner.getValue();
     }
 
@@ -142,15 +143,17 @@ public class SFTPPanel extends ServerPanel {
     @Override
     FileURL getServerURL() throws MalformedURLException {
         updateValues();
-        if(!lastInitialDir.startsWith("/"))
-            lastInitialDir = "/"+lastInitialDir;
+        if (!lastInitialDir.startsWith("/")) {
+            lastInitialDir = "/" + lastInitialDir;
+        }
 
         FileURL url = FileURL.getFileURL(FileProtocols.SFTP+"://"+lastServer+lastInitialDir);
 
         // Set credentials
         url.setCredentials(new Credentials(lastUsername, lastPassword));
-        if(!"".equals(lastKeyPath.trim()))
+        if (!lastKeyPath.isEmpty()) {
             url.setProperty(SFTPFile.PRIVATE_KEY_PATH_PROPERTY_NAME, lastKeyPath);
+        }
 
         // Set port
         url.setPort(lastPort);
@@ -167,8 +170,9 @@ public class SFTPPanel extends ServerPanel {
     public void dialogValidated() {
         // Commits the current spinner value in case it was being edited and 'enter' was pressed
         // (the spinner value would otherwise not be committed)
-        try { portSpinner.commitEdit(); }
-        catch(ParseException e) { }
+        try {
+            portSpinner.commitEdit();
+        } catch(ParseException ignore) { }
 
         updateValues();
     }

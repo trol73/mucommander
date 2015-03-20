@@ -1041,23 +1041,30 @@ public class LocalFile extends ProtocolFile {
         return file.isHidden();
     }
 
+    @Override
+    public boolean isExecutable() {
+        return file.canExecute();
+    }
+
     /**
      * Overridden to play nice with platforms that have root drives -- for those, the drive's root (e.g. <code>C:\</code>)
      * is returned instead of <code>/</code>.
      */
     @Override
     public AbstractFile getRoot() {
-        if(USES_ROOT_DRIVES) {
+        if (USES_ROOT_DRIVES) {
             Matcher matcher = DRIVE_ROOT_PATTERN.matcher(absPath+SEPARATOR);
 
             // Test if this file already is the root folder
-            if(matcher.matches())
+            if (matcher.matches()) {
                 return this;
+            }
 
             // Extract the drive from the path
             matcher.reset();
-            if(matcher.find())
+            if (matcher.find()) {
                 return FileFactory.getFile(matcher.group());
+            }
         }
 
         return super.getRoot();
@@ -1069,9 +1076,9 @@ public class LocalFile extends ProtocolFile {
      */
     @Override
     public boolean isRoot() {
-        if(USES_ROOT_DRIVES)
-            return DRIVE_ROOT_PATTERN.matcher(absPath+SEPARATOR).matches();
-
+        if (USES_ROOT_DRIVES) {
+            return DRIVE_ROOT_PATTERN.matcher(absPath + SEPARATOR).matches();
+        }
         return super.isRoot();
     }
 
@@ -1088,28 +1095,26 @@ public class LocalFile extends ProtocolFile {
         int bestDepth = -1;
         int bestMatch = -1;
         int depth;
-        AbstractFile volume;
-        String volumePath;
         String thisPath = getAbsolutePath(true);
 
-        for(int i=0; i<volumes.length; i++) {
-            volume = volumes[i];
-            volumePath = volume.getAbsolutePath(true);
+        for (int i=0; i < volumes.length; i++) {
+            AbstractFile volume = volumes[i];
+            String volumePath = volume.getAbsolutePath(true);
 
-            if(thisPath.equals(volumePath)) {
+            if (thisPath.equals(volumePath)) {
                 return this;
-            }
-            else if(thisPath.startsWith(volumePath)) {
+            } else if (thisPath.startsWith(volumePath)) {
                 depth = PathUtils.getDepth(volumePath, volume.getSeparator());
-                if(depth>bestDepth) {
+                if (depth > bestDepth) {
                     bestDepth = depth;
                     bestMatch = i;
                 }
             }
         }
 
-        if(bestMatch!=-1)
+        if (bestMatch != -1) {
             return volumes[bestMatch];
+        }
 
         // If no volume matched this file (shouldn't normally happen), return the root folder
         return getRoot();
@@ -1143,10 +1148,11 @@ public class LocalFile extends ProtocolFile {
                 bb.limit(1);
 
                 int nbRead = channel.read(bb);
-                if(nbRead<=0)
+                if (nbRead <= 0) {
                     return nbRead;
+                }
 
-                return 0xFF&bb.get(0);
+                return 0xFF & bb.get(0);
             }
         }
 
@@ -1327,7 +1333,7 @@ public class LocalFile extends ProtocolFile {
      */
     private static class LocalFilePermissions extends IndividualPermissionBits implements FilePermissions {
         
-        private java.io.File file;
+        private File file;
 
         // Permissions are limited to the user access type. Executable permission flag is only available under Java 1.6
         // and up.
@@ -1335,14 +1341,7 @@ public class LocalFile extends ProtocolFile {
         // read-write), but we return default values.
 
         /** Mask for supported permissions under Java 1.6 */
-        private static PermissionBits JAVA_1_6_PERMISSIONS = new GroupedPermissionBits(448);   // rwx------ (700 octal)
-
-        /** Mask for supported permissions under Java 1.5 */
-        private static PermissionBits JAVA_1_5_PERMISSIONS = new GroupedPermissionBits(384);   // rw------- (300 octal)
-
-        private final static PermissionBits MASK = JavaVersion.JAVA_1_6.isCurrentOrHigher()
-                ?JAVA_1_6_PERMISSIONS
-                :JAVA_1_5_PERMISSIONS;
+        private static final PermissionBits MASK = new GroupedPermissionBits(448);   // rwx------ (700 octal)
 
         private LocalFilePermissions(java.io.File file) {
             this.file = file;
@@ -1350,16 +1349,25 @@ public class LocalFile extends ProtocolFile {
 
         public boolean getBitValue(int access, int type) {
             // Only the 'user' permissions are supported
-            if(access!=USER_ACCESS)
+            if (access != USER_ACCESS) {
                 return false;
+            }
+            switch (type) {
+                case READ_PERMISSION:
+                    return file.canRead();
+                case WRITE_PERMISSION:
+                    return file.canWrite();
+                case EXECUTE_PERMISSION:
+                    return file.canExecute();
+            }
 
-            if(type==READ_PERMISSION)
-                return file.canRead();
-            else if(type==WRITE_PERMISSION)
-                return file.canWrite();
-            // Execute permission can only be retrieved under Java 1.6 and up
-            else if(type==EXECUTE_PERMISSION && JavaVersion.JAVA_1_6.isCurrentOrHigher())
-                return file.canExecute();
+//            if (type==READ_PERMISSION) {
+//                return file.canRead();
+//            }else if(type==WRITE_PERMISSION)
+//                return file.canWrite();
+//            // Execute permission can only be retrieved under Java 1.6 and up
+//            else if(type==EXECUTE_PERMISSION && JavaVersion.JAVA_1_6.isCurrentOrHigher())
+//                return file.canExecute();
 
             return false;
         }
@@ -1371,15 +1379,13 @@ public class LocalFile extends ProtocolFile {
         public int getIntValue() {
             int userPerms = 0;
 
-            if(getBitValue(USER_ACCESS, READ_PERMISSION))
+            if (getBitValue(USER_ACCESS, READ_PERMISSION)) {
                 userPerms |= READ_PERMISSION;
-
-            if(getBitValue(USER_ACCESS, WRITE_PERMISSION))
+            } if (getBitValue(USER_ACCESS, WRITE_PERMISSION)) {
                 userPerms |= WRITE_PERMISSION;
-
-            if(getBitValue(USER_ACCESS, EXECUTE_PERMISSION))
+            } if (getBitValue(USER_ACCESS, EXECUTE_PERMISSION)) {
                 userPerms |= EXECUTE_PERMISSION;
-
+            }
             return userPerms<<6;
         }
 
