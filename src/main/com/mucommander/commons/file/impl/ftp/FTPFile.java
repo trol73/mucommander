@@ -131,19 +131,17 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         this.absPath = fileURL.getPath();
 
-        if(file==null) {
+        if (file==null) {
             this.file = getFTPFile(fileURL);
             // If file doesn't exist (could not be resolved), create it
-            if(this.file==null) {
+            if (this.file==null) {
                 String name = fileURL.getFilename();    // Filename could potentially be null
                 this.file = createFTPFile(name==null?"":name, false);
                 this.fileExists = false;
-            }
-            else {
+            } else {
                 this.fileExists = true;
             }
-        }
-        else {
+        } else {
             this.file = file;
             this.fileExists = true;
         }
@@ -163,8 +161,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         // Parent is null, create '/' file
         if(parentURL==null) {
             return createFTPFile("/", true);
-        }
-        else {
+        } else {
             FTPConnectionHandler connHandler = (FTPConnectionHandler)ConnectionPool.getConnectionHandler(this, fileURL, true);
             org.apache.commons.net.ftp.FTPFile files[];
             try {
@@ -174,21 +171,22 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 // List files contained by this file's parent in order to retrieve the FTPFile instance corresponding
                 // to this file
                 files = listFiles(connHandler, parentURL.getPath());
-            }
-            finally {
+            } finally {
                 // Release the lock on the ConnectionHandler
                 connHandler.releaseLock();
             }
 
             // File doesn't exist
-            if(files==null || files.length==0)
+            if (files == null || files.length==0) {
                 return null;
+            }
 
             // Find the file in the parent folder's contents
             String wantedName = fileURL.getFilename();
             for (org.apache.commons.net.ftp.FTPFile file1 : files) {
-                if (file1.getName().equalsIgnoreCase(wantedName))
+                if (file1.getName().equalsIgnoreCase(wantedName)) {
                     return file1;
+                }
             }
 
             // File doesn't exists
@@ -255,8 +253,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         catch(org.apache.commons.net.ftp.parser.ParserInitializationException e) {
             LOGGER.info("ParserInitializationException caught", e);
             throw new IOException();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
             connHandler.checkSocketException(e);
 
@@ -342,8 +339,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
                 throw new IOException();
             }
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
             if(connHandler!=null)
                 connHandler.checkSocketException(e);
