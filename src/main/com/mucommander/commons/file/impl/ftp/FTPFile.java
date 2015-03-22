@@ -28,6 +28,7 @@ import com.mucommander.commons.io.ByteUtils;
 import com.mucommander.commons.io.FilteredOutputStream;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
+import com.mucommander.commons.util.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import org.apache.commons.net.ftp.FTPReply;
@@ -348,11 +349,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 connHandler.checkSocketException(e);
 
             throw e;
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
-            if(connHandler!=null)
+            if (connHandler != null) {
                 connHandler.releaseLock();
+            }
         }
     }
 
@@ -371,8 +372,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             if(parentFileURL!=null) {
                 try {
                     parent = FileFactory.getFile(parentFileURL, null, createFTPFile(parentFileURL.getFilename(), true));
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // No parent, that's all
                 }
             }
@@ -398,8 +398,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     @Override
     public FilePermissions getPermissions() {
-        if(isSymlink())
+        if (isSymlink()) {
             return getCanonicalFile().getAncestor(FTPFile.class).permissions;
+        }
 
         return permissions;
     }
@@ -423,8 +424,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             return ((FTPConnectionHandler)ConnectionPool.getConnectionHandler(this, fileURL, false)).chmodCommandSupported
                     ?PermissionBits.FULL_PERMISSION_BITS    // Full permission support (777 octal)
                     :PermissionBits.EMPTY_PERMISSION_BITS;  // Permissions can't be changed
-        }
-        catch(InterruptedIOException e) {
+        } catch(InterruptedIOException e) {
             // Should not happen in practice
             return PermissionBits.EMPTY_PERMISSION_BITS;  // Permissions can't be changed
         }
@@ -464,8 +464,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         // and return the value of isDirectory(). This clearly is the least effective solution at it requires issuing
         // one 'ls' command per symlink.
 
-        if (isSymlink())
-            return ((org.apache.commons.net.ftp.FTPFile)getCanonicalFile().getUnderlyingFileObject()).isDirectory();
+        if (isSymlink()) {
+            return ((org.apache.commons.net.ftp.FTPFile) getCanonicalFile().getUnderlyingFileObject()).isDirectory();
+        }
 
         return file.isDirectory();
     }
@@ -549,42 +550,40 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             connHandler.checkConnection();
 
             files = listFiles(connHandler, absPath);
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
 
-        if(files==null || files.length==0)
-            return new AbstractFile[] {};
+        if (files == null || files.length == 0) {
+            return new AbstractFile[]{};
+        }
 
         AbstractFile children[] = new AbstractFile[files.length];
-        AbstractFile child;
-        FileURL childURL;
-        String childName;
         int nbFiles = files.length;
         int fileCount = 0;
         String parentPath = fileURL.getPath();
-        if(!parentPath.endsWith(SEPARATOR))
+        if (!parentPath.endsWith(SEPARATOR)) {
             parentPath += SEPARATOR;
+        }
 
         for (org.apache.commons.net.ftp.FTPFile file1 : files) {
             if (file1 == null)
                 continue;
 
-            childName = file1.getName();
+            String childName = file1.getName();
             if (childName.equals(".") || childName.equals(".."))
                 continue;
 
             // Note: properties and credentials are cloned for every children's url
-            childURL = (FileURL) fileURL.clone();
+            FileURL childURL = (FileURL) fileURL.clone();
             childURL.setPath(parentPath + childName);
 
             // Discard '.' and '..' files
             if (childName.equals(".") || childName.equals(".."))
                 continue;
 
-            child = FileFactory.getFile(childURL, this, file1);
+            AbstractFile child = FileFactory.getFile(childURL, this, file1);
             children[fileCount++] = child;
         }
 
@@ -613,15 +612,13 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
             file.setType(org.apache.commons.net.ftp.FTPFile.DIRECTORY_TYPE);
             fileExists = true;
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
             connHandler.checkSocketException(e);
 
             // Re-throw IOException
             throw e;
-        }
-        finally {
+        }finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -1023,7 +1020,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         public void seek(final long offset) throws IOException {
             try {
                 in.close();
-            } catch(IOException e) {}
+            } catch(IOException ignore) {}
 
             in = new FTPInputStream(offset);
             this.offset = offset;
@@ -1055,8 +1052,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 else
                     out = connHandler.ftpClient.storeFileStream(absPath);   // Note: do NOT use storeUniqueFileStream which appends .1 if the file already exists and fails with proftpd
 
-                if(out==null)
+                if (out == null) {
                     throw new IOException();
+                }
             } catch(IOException e) {
                 if (connHandler != null) {
                     // Checks if the IOException corresponds to a socket error and in that case, closes the connection
@@ -1152,29 +1150,34 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
             // Use the encoding property if it is set
             this.encoding = location.getProperty(ENCODING_PROPERTY_NAME);
-            if(encoding==null || encoding.equals(""))
+            if (StringUtils.isNullOrBlank(encoding)) {
                 encoding = DEFAULT_ENCODING;
+            }
 
             // Use the property that controls the number of connection retries after a recoverable connection failure,
             // if the property is set
             String prop = location.getProperty(NB_CONNECTION_RETRIES_PROPERTY_NAME);
-            if(prop==null) {
+            if (prop==null) {
                 nbConnectionRetries = DEFAULT_NB_CONNECTION_RETRIES;
-            }
-            else {
-                try { nbConnectionRetries = Integer.parseInt(prop); }
-                catch(NumberFormatException e) { nbConnectionRetries = DEFAULT_NB_CONNECTION_RETRIES; }
+            } else {
+                try {
+                    nbConnectionRetries = Integer.parseInt(prop);
+                } catch(NumberFormatException e) {
+                    nbConnectionRetries = DEFAULT_NB_CONNECTION_RETRIES;
+                }
             }
 
             // Use the property that controls the connection retry delay after a recoverable connection failure,
             // if the property is set
             prop = location.getProperty(CONNECTION_RETRY_DELAY_PROPERTY_NAME);
-            if(prop==null) {
+            if (prop==null) {
                 connectionRetryDelay = DEFAULT_CONNECTION_RETRY_DELAY;
-            }
-            else {
-                try { connectionRetryDelay = Integer.parseInt(prop); }
-                catch(NumberFormatException e) { connectionRetryDelay = DEFAULT_CONNECTION_RETRY_DELAY; }
+            } else {
+                try {
+                    connectionRetryDelay = Integer.parseInt(prop);
+                } catch(NumberFormatException e) {
+                    connectionRetryDelay = DEFAULT_CONNECTION_RETRY_DELAY;
+                }
             }
 
             setKeepAlivePeriod(KEEP_ALIVE_PERIOD);
@@ -1204,7 +1207,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 closeConnection();
 
             // If not, throw an exception using the reply string
-            if(!FTPReply.isPositiveCompletion(replyCode)) {
+            if (!FTPReply.isPositiveCompletion(replyCode)) {
                 if(replyCode==FTPReply.BAD_COMMAND_SEQUENCE || replyCode==FTPReply.NEED_PASSWORD || replyCode==FTPReply.NOT_LOGGED_IN)
                     throwAuthException(ftpClient.getReplyString());
                 else
@@ -1303,8 +1306,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 	                }
 
 	                break;
-	            }
-	            catch(IOException e) {
+	            } catch(IOException e) {
                     // Attempt to retry if the connection failed, or if the server reply corresponds to a temporary error.
                     // Unlike 5xx errors which are permanent, 4xx errors are temporary and may be retried, quote from
                     // RFC 959: "The command was not accepted and the requested action did not take place, but the error
@@ -1368,12 +1370,14 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         public void closeConnection() {
             if(ftpClient!=null) {
                 // Try to logout, this may fail if the connection is broken
-                try { ftpClient.logout(); }
-                catch(IOException ignore) {}
+                try {
+                    ftpClient.logout();
+                } catch(IOException ignore) {}
 
                 // Close the socket connection
-                try { ftpClient.disconnect(); }
-                catch(IOException ignore) {}
+                try {
+                    ftpClient.disconnect();
+                } catch(IOException ignore) {}
 
                 ftpClient = null;
             }
