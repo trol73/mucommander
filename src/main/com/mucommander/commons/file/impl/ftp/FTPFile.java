@@ -145,7 +145,6 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             this.file = file;
             this.fileExists = true;
         }
-
         this.permissions = new FTPFilePermissions(this.file);
     }
 
@@ -522,6 +521,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             } else {
                 connHandler.ftpClient.deleteFile(absPath);
             }
+            fileExists = false; // need be false because the file can be get from cache pool
 
             // Throw an IOException if server replied with an error
             connHandler.checkServerReply();
