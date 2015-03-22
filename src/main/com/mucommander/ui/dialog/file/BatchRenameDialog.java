@@ -51,7 +51,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * Dialog used to set parameters for renaming multiple files.

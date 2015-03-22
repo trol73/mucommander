@@ -135,6 +135,8 @@ public class ActionManager {
     	registerAction(new OpenInBothPanelsAction.Descriptor(),             new OpenInBothPanelsAction.Factory());
     	registerAction(new OpenInNewTabAction.Descriptor(),					new OpenInNewTabAction.Factory());
     	registerAction(new OpenInOtherPanelAction.Descriptor(),             new OpenInOtherPanelAction.Factory());
+        registerAction(new OpenLeftInRightPanelAction.Descriptor(),         new OpenLeftInRightPanelAction.Factory());
+        registerAction(new OpenRightInLeftPanelAction.Descriptor(),         new OpenRightInLeftPanelAction.Factory());
 //    	registerAction(new OpenLocationAction.Descriptor(),          	    new OpenLocationAction.Factory());
     	registerAction(new OpenNativelyAction.Descriptor(),       		    new OpenNativelyAction.Factory());
     	registerAction(new OpenTrashAction.Descriptor(),           	        new OpenTrashAction.Factory());

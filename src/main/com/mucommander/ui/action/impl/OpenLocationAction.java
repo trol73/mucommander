@@ -145,13 +145,11 @@ public class OpenLocationAction extends ActiveTabAction {
     @Override
     public void performAction() {
         FolderPanel folderPanel = getFolderPanel();
-        if(url!=null) {
+        if (url != null) {
             folderPanel.tryChangeCurrentFolder(url);
-        }
-        else if(file!=null) {
+        } else if (file != null) {
             folderPanel.tryChangeCurrentFolder(file);
-        }
-        else if(path!=null) {
+        } else if (path != null) {
             folderPanel.tryChangeCurrentFolder(path);
         }
     }
