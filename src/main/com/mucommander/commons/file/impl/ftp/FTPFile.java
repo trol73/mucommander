@@ -136,7 +136,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // If file doesn't exist (could not be resolved), create it
             if (this.file==null) {
                 String name = fileURL.getFilename();    // Filename could potentially be null
-                this.file = createFTPFile(name==null?"":name, false);
+                this.file = createFTPFile(name == null ? "" : name, false);
                 this.fileExists = false;
             } else {
                 this.fileExists = true;
@@ -244,7 +244,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // Throw an IOException if server replied with an error
             connHandler.checkServerReply();
 
-            if(files==null)     // In some rare conditions (bug) this method can return null
+            if (files==null)     // In some rare conditions (bug) this method can return null
                 return new org.apache.commons.net.ftp.FTPFile[0];
 
             return files;
@@ -288,8 +288,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     @Override
     public long getDate() {
-        if(isSymlink())
-            return ((org.apache.commons.net.ftp.FTPFile)getCanonicalFile().getUnderlyingFileObject()).getTimestamp().getTimeInMillis();
+        if (isSymlink()) {
+            return ((org.apache.commons.net.ftp.FTPFile) getCanonicalFile().getUnderlyingFileObject()).getTimestamp().getTimeInMillis();
+        }
 
         return file.getTimestamp().getTimeInMillis();
     }
@@ -324,7 +325,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             boolean success = connHandler.ftpClient.sendSiteCommand("UTIME "+sdate+" "+absPath);
             LOGGER.info("server reply: {}", connHandler.ftpClient.getReplyString());
 
-            if(!success) {
+            if (!success) {
                 int replyCode = connHandler.ftpClient.getReplyCode();
 
                 // If server reported that the command is not supported, mark it in the ConnectionHandler so that
@@ -363,9 +364,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     @Override
     public AbstractFile getParent() {
-        if(!parentValSet) {
+        if (!parentValSet) {
             FileURL parentFileURL = this.fileURL.getParent();
-            if(parentFileURL!=null) {
+            if (parentFileURL != null) {
                 try {
                     parent = FileFactory.getFile(parentFileURL, null, createFTPFile(parentFileURL.getFilename(), true));
                 } catch(IOException e) {
@@ -516,10 +517,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
 
-            if(isDirectory())
+            if (isDirectory()) {
                 connHandler.ftpClient.removeDirectory(absPath);
-            else
+            } else {
                 connHandler.ftpClient.deleteFile(absPath);
+            }
 
             // Throw an IOException if server replied with an error
             connHandler.checkServerReply();
@@ -529,7 +531,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
             // Re-throw IOException
             throw e;
-        }finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -611,10 +613,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         } catch(IOException e) {
             // Checks if the IOException corresponds to a socket error and in that case, closes the connection
             connHandler.checkSocketException(e);
-
             // Re-throw IOException
             throw e;
-        }finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             connHandler.releaseLock();
         }
@@ -1193,21 +1194,23 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
          *
          * <p>If the reply is a positive one (not an error error), this method does nothing.
          */
-        private void checkServerReply() throws IOException, AuthException {
+        private void checkServerReply() throws IOException {
             // Check that connection went ok
             int replyCode = ftpClient.getReplyCode();
             LOGGER.trace("server reply="+ftpClient.getReplyString());
 
             // Close connection if the connection dropped prematurely so that isConnected() returns false
-            if(replyCode==FTPReply.SERVICE_NOT_AVAILABLE)
+            if (replyCode == FTPReply.SERVICE_NOT_AVAILABLE) {
                 closeConnection();
+            }
 
             // If not, throw an exception using the reply string
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                if(replyCode==FTPReply.BAD_COMMAND_SEQUENCE || replyCode==FTPReply.NEED_PASSWORD || replyCode==FTPReply.NOT_LOGGED_IN)
+                if (replyCode == FTPReply.BAD_COMMAND_SEQUENCE || replyCode == FTPReply.NEED_PASSWORD || replyCode == FTPReply.NOT_LOGGED_IN) {
                     throwAuthException(ftpClient.getReplyString());
-                else
+                } else {
                     throw new IOException(ftpClient.getReplyString());
+                }
             }
         }
 

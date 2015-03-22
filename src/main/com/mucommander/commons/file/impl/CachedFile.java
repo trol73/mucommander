@@ -407,7 +407,7 @@ public class CachedFile extends ProxyFile {
                 getFileAttributes(file);
             }
             // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
-            if ((bitmask & EXISTS_SET_MASK) != 0) {
+            if ((bitmask & EXISTS_SET_MASK) == 0) {
                 if (file.exists()) {
                     bitmask |= EXISTS_VALUE_MASK;
                 } else {

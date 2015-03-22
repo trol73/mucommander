@@ -337,7 +337,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      * @return an <code>InputStream</code> to read this file's contents, skipping the specified number of bytes
      */
-    public InputStream getInputStream(long offset) throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream(long offset) throws IOException {
         // Use a random access input stream when available
         if (isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
             RandomAccessInputStream rais = getRandomAccessInputStream();
@@ -515,7 +515,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public void mkfile() throws IOException, UnsupportedFileOperationException {
+    public void mkfile() throws IOException {
         if (exists()) {
             throw new IOException();
         }
@@ -539,7 +539,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         return filter==null?ls():filter.filter(ls());
     }
 
@@ -558,7 +558,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         return filter == null ? ls() : filter.filter(ls());
     }
 
@@ -579,7 +579,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public void changePermissions(int permissions) throws IOException, UnsupportedFileOperationException {
+    public void changePermissions(int permissions) throws IOException {
         int bitShift = 0;
 
         PermissionBits mask = getChangeablePermissions();
@@ -662,7 +662,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported 
      * or not implemented by the underlying filesystem.
      */
-    public void deleteRecursively() throws IOException, UnsupportedFileOperationException {
+    public void deleteRecursively() throws IOException {
         deleteRecursively(this);
     }
 
@@ -718,8 +718,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         String name = getName();
         int position = name.lastIndexOf('.');
 
-        if ((position <= 0) || (position == name.length() - 1))
+        if ((position <= 0) || (position == name.length() - 1)) {
             return name;
+        }
 
         return name.substring(0, position);
     }
@@ -809,8 +810,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws IOException in any of the cases listed above
      */
     public final AbstractFile getDirectChild(String filename) throws IOException {
-        if (filename.contains(getSeparator()))
+        if (filename.contains(getSeparator())) {
             throw new IOException();
+        }
 
         AbstractFile childFile = getChild(filename);
 
@@ -831,7 +833,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final void mkdir(String name) throws IOException, UnsupportedFileOperationException {
+    public final void mkdir(String name) throws IOException {
         getChild(name).mkdir();
     }
 
@@ -845,10 +847,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final void mkdirs() throws IOException, UnsupportedFileOperationException {
+    public final void mkdirs() throws IOException {
         AbstractFile parent = getParent();
-        if ((parent != null) && !parent.exists())
+        if (parent != null && !parent.exists()) {
             parent.mkdirs();
+        }
 
         mkdir();
     }
@@ -864,7 +867,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final void mkfile(String name) throws IOException, UnsupportedFileOperationException {
+    public final void mkfile(String name) throws IOException {
         getChild(name).mkfile();
     }
 
@@ -920,8 +923,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final AbstractFile getTopAncestor() {
         AbstractFile topAncestor = this;
-        while (topAncestor.hasAncestor())
+        while (topAncestor.hasAncestor()) {
             topAncestor = topAncestor.getAncestor();
+        }
 
         return topAncestor;
     }
@@ -952,13 +956,13 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         AbstractFile lastAncestor;
 
         do {
-            if (abstractFileClass.isAssignableFrom(ancestor.getClass()))
+            if (abstractFileClass.isAssignableFrom(ancestor.getClass())) {
                 return true;
+            }
 
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        }
-        while(lastAncestor!=ancestor);
+        } while(lastAncestor != ancestor);
 
         return false;
     }
@@ -989,10 +993,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return the parent {@link AbstractArchiveFile} that contains this file
      */
     public final AbstractArchiveFile getParentArchive() {
-        if (hasAncestor(AbstractArchiveFile.class))
+        if (hasAncestor(AbstractArchiveFile.class)) {
             return getAncestor(AbstractArchiveFile.class);
-        else if(hasAncestor(AbstractArchiveEntryFile.class))
+        } else if (hasAncestor(AbstractArchiveEntryFile.class)) {
             return getAncestor(AbstractArchiveEntryFile.class).getArchiveFile();
+        }
 
         return null;
     }
@@ -1048,7 +1053,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final String calculateChecksum(String algorithm) throws IOException, NoSuchAlgorithmException, UnsupportedFileOperationException {
+    public final String calculateChecksum(String algorithm) throws IOException, NoSuchAlgorithmException {
         return calculateChecksum(MessageDigest.getInstance(algorithm));
     }
 
@@ -1067,7 +1072,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final String calculateChecksum(MessageDigest messageDigest) throws IOException, UnsupportedFileOperationException {
+    public final String calculateChecksum(MessageDigest messageDigest) throws IOException {
         InputStream in = getInputStream();
 
         try {
@@ -1175,7 +1180,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * know the reason.
      * @see #checkCopyPrerequisites(AbstractFile, boolean)
      */
-    protected final void checkCopyRemotelyPrerequisites(AbstractFile destFile, boolean allowCaseVariations, boolean allowDifferentHosts) throws IOException, FileTransferException {
+    protected final void checkCopyRemotelyPrerequisites(AbstractFile destFile, boolean allowCaseVariations, boolean allowDifferentHosts) throws IOException {
         if(!fileURL.schemeEquals(fileURL)
         || !destFile.getTopAncestor().getClass().equals(getTopAncestor().getClass())
         || (!allowDifferentHosts && !destFile.getURL().hostEquals(fileURL)))
@@ -1203,7 +1208,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * know the reason.
      * @see #checkCopyPrerequisites(AbstractFile, boolean)
      */
-    protected final void checkRenamePrerequisites(AbstractFile destFile, boolean allowCaseVariations, boolean allowDifferentHosts) throws IOException, FileTransferException {
+    protected final void checkRenamePrerequisites(AbstractFile destFile, boolean allowCaseVariations, boolean allowDifferentHosts) throws IOException {
         checkCopyRemotelyPrerequisites(destFile, allowCaseVariations, allowDifferentHosts);
     }
 
@@ -1275,11 +1280,12 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    protected final void deleteRecursively(AbstractFile file) throws IOException, UnsupportedFileOperationException {
+    protected final void deleteRecursively(AbstractFile file) throws IOException {
         if (file.isDirectory() && !file.isSymlink()) {
             AbstractFile children[] = file.ls();
-            for (AbstractFile child : children)
+            for (AbstractFile child : children) {
                 deleteRecursively(child);
+            }
         }
 
         file.delete();
@@ -1294,7 +1300,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final void changePermissions(FilePermissions permissions) throws IOException, UnsupportedFileOperationException {
+    public final void changePermissions(FilePermissions permissions) throws IOException {
         changePermissions(permissions.getIntValue());
     }
 
@@ -1309,7 +1315,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    public final void importPermissions(AbstractFile sourceFile) throws IOException, UnsupportedFileOperationException {
+    public final void importPermissions(AbstractFile sourceFile) throws IOException {
         importPermissions(sourceFile,isDirectory()
                 ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS
                 : FilePermissions.DEFAULT_FILE_PERMISSIONS);
@@ -1330,7 +1336,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      * @see SimpleFilePermissions#padPermissions(FilePermissions, FilePermissions)
      */
-    public final void importPermissions(AbstractFile sourceFile, FilePermissions defaultPermissions) throws IOException, UnsupportedFileOperationException {
+    public final void importPermissions(AbstractFile sourceFile, FilePermissions defaultPermissions) throws IOException {
         changePermissions(SimpleFilePermissions.padPermissions(sourceFile.getPermissions(), defaultPermissions).getIntValue());
     }
 
@@ -1522,7 +1528,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void changeDate(long lastModified) throws IOException, UnsupportedFileOperationException;
+    public abstract void changeDate(long lastModified) throws IOException;
 
     /**
      * Returns this file's size in bytes, <code>0</code> if this file doesn't exist, <code>-1</code> if the size is
@@ -1589,7 +1595,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or is not implemented.
      * @see #getChangeablePermissions()
      */
-    public abstract void changePermission(int access, int permission, boolean enabled) throws IOException, UnsupportedFileOperationException;
+    public abstract void changePermission(int access, int permission, boolean enabled) throws IOException;
 
     /**
      * Returns information about the owner of this file. The kind of information that is returned is implementation-dependant.
@@ -1688,7 +1694,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract AbstractFile[] ls() throws IOException, UnsupportedFileOperationException;
+    public abstract AbstractFile[] ls() throws IOException;
 
     /**
      * Creates this file as a directory. This method will fail (throw an <code>IOException</code>) if this file
@@ -1703,7 +1709,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void mkdir() throws IOException, UnsupportedFileOperationException;
+    public abstract void mkdir() throws IOException;
 
     /**
      * Returns an <code>InputStream</code> to read the contents of this file.
@@ -1725,7 +1731,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract InputStream getInputStream() throws IOException, UnsupportedFileOperationException;
+    public abstract InputStream getInputStream() throws IOException;
 
     /**
      * Returns an <code>OutputStream</code> to write the contents of this file, overwriting the existing contents, if any.
@@ -1749,7 +1755,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException;
+    public abstract OutputStream getOutputStream() throws IOException;
 
     /**
      * Returns an <code>OutputStream</code> to write the contents of this file, appending the existing contents, if any.
@@ -1773,7 +1779,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract OutputStream getAppendOutputStream() throws IOException, UnsupportedFileOperationException;
+    public abstract OutputStream getAppendOutputStream() throws IOException;
 
     /**
      * Returns a {@link RandomAccessInputStream} to read the contents of this file with random access.
@@ -1795,7 +1801,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract RandomAccessInputStream getRandomAccessInputStream() throws IOException, UnsupportedFileOperationException;
+    public abstract RandomAccessInputStream getRandomAccessInputStream() throws IOException;
 
     /**
      * Returns a {@link RandomAccessOutputStream} to write the contents of this file with random access.
@@ -1817,7 +1823,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract RandomAccessOutputStream getRandomAccessOutputStream() throws IOException, UnsupportedFileOperationException;
+    public abstract RandomAccessOutputStream getRandomAccessOutputStream() throws IOException;
 
     /**
      * Deletes this file and this file only (does not recurse on folders).
@@ -1837,7 +1843,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void delete() throws IOException, UnsupportedFileOperationException;
+    public abstract void delete() throws IOException;
 
     /**
      * Renames this file to a specified destination file, overwriting the destination if it exists. If this file is a
@@ -1864,7 +1870,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void renameTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException;
+    public abstract void renameTo(AbstractFile destFile) throws IOException;
 
     /**
      * Remotely copies this file to a specified destination file, overwriting the destination if it exists.
@@ -1894,7 +1900,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void copyRemotelyTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException;
+    public abstract void copyRemotelyTo(AbstractFile destFile) throws IOException;
 
     /**
      * Returns the free space (in bytes) on the disk/volume where this file is, <code>-1</code> if this information is
@@ -1910,7 +1916,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract long getFreeSpace() throws IOException, UnsupportedFileOperationException;
+    public abstract long getFreeSpace() throws IOException;
 
     /**
      * Returns the total space (in bytes) of the disk/volume where this file is.
@@ -1924,7 +1930,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract long getTotalSpace() throws IOException, UnsupportedFileOperationException;
+    public abstract long getTotalSpace() throws IOException;
 
     /**
      * Returns the file Object of the underlying API providing access to the filesystem. The returned Object may expose
