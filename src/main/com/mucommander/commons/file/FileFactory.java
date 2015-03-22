@@ -537,8 +537,9 @@ public class FileFactory {
         // Special case for local files to avoid provider hashtable lookup and other unnecessary checks
         // (for performance reasons)
         if (scheme.equals(FileProtocols.FILE)) {
-            if (localFileProvider == null)
+            if (localFileProvider == null) {
                 throw new IOException("Unknown file protocol: " + scheme);
+            }
 
             return localFileProvider.getFile(fileURL, instantiationParams);
 
