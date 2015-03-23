@@ -1164,13 +1164,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     @Override
     public void doLayout() {
-        if(!autoSizeColumnsEnabled) {
-            if (getTableHeader().getResizingColumn() != null)
+        if (!autoSizeColumnsEnabled) {
+            if (getTableHeader().getResizingColumn() != null) {
                 super.doLayout();
-            else if (!getFileTableColumnModel().wereColumnSizesSet())
+            } else if (!getFileTableColumnModel().wereColumnSizesSet()) {
                 doAutoLayout(false);
-            else
+            } else {
                 doStaticLayout();
+            }
         } else {    // Custom layout
             doAutoLayout(true);
         }
@@ -1178,7 +1179,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // Ensures that current row is visible (within current viewport), and if not adjusts viewport to center it
         Rectangle visibleRect = getVisibleRect();
         final Rectangle cellRect = getCellRect(currentRow, 0, false);
-        if (cellRect.y<visibleRect.y || cellRect.y+getRowHeight()>visibleRect.y+visibleRect.height) {
+        if (cellRect.y < visibleRect.y || cellRect.y + getRowHeight( ) >visibleRect.y + visibleRect.height) {
             if (scrollpaneWrapper != null) {
                 // At this point JViewport is not yet aware of the new FileTable dimensions, calling setViewPosition
                 // would not work. Instead, SwingUtilities.invokeLater is used to delay the call after all pending

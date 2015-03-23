@@ -335,7 +335,6 @@ public class FileTableModel extends AbstractTableModel {
             sizeValue = SizeFormat.format(file.getSize(), sizeFormat);
         }
         cell[Column.SIZE.ordinal()-1] = sizeValue;
-
         cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(new Date(file.getDate()));
         cell[Column.PERMISSIONS.ordinal()-1] = file.getPermissionsString();
         cell[Column.OWNER.ordinal()-1] = file.getOwner();
@@ -354,17 +353,20 @@ public class FileTableModel extends AbstractTableModel {
      * @return a CachedFile instance of the file located at the given row index
      */
     public synchronized AbstractFile getCachedFileAtRow(int rowIndex) {
-        if (rowIndex == 0 && parent != null)
+        if (rowIndex == 0 && parent != null) {
             return parent;
+        }
 		
-        if (parent != null)
+        if (parent != null) {
             rowIndex--;
+        }
 		
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
-        if (rowIndex >= 0 && rowIndex < fileArrayIndex.length)
+        if (rowIndex >= 0 && rowIndex < fileArrayIndex.length) {
             return cachedFiles[fileArrayIndex[rowIndex]];
+        }
         return null;
     }
 

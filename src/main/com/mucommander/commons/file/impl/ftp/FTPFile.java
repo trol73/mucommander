@@ -131,10 +131,10 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         this.absPath = fileURL.getPath();
 
-        if (file==null) {
+        if (file == null) {
             this.file = getFTPFile(fileURL);
             // If file doesn't exist (could not be resolved), create it
-            if (this.file==null) {
+            if (this.file == null) {
                 String name = fileURL.getFilename();    // Filename could potentially be null
                 this.file = createFTPFile(name == null ? "" : name, false);
                 this.fileExists = false;
@@ -182,9 +182,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
             // Find the file in the parent folder's contents
             String wantedName = fileURL.getFilename();
-            for (org.apache.commons.net.ftp.FTPFile file1 : files) {
-                if (file1.getName().equalsIgnoreCase(wantedName)) {
-                    return file1;
+            for (org.apache.commons.net.ftp.FTPFile f : files) {
+                if (f.getName().equalsIgnoreCase(wantedName)) {
+                    return f;
                 }
             }
 
@@ -1051,10 +1051,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 // Makes sure the connection is started, if not starts it
                 connHandler.checkConnection();
 
-                if(append)
+                if (append) {
                     out = connHandler.ftpClient.appendFileStream(absPath);
-                else
+                } else {
                     out = connHandler.ftpClient.storeFileStream(absPath);   // Note: do NOT use storeUniqueFileStream which appends .1 if the file already exists and fails with proftpd
+                }
 
                 if (out == null) {
                     throw new IOException();
@@ -1079,7 +1080,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             if (isClosed) {
                 return;
             }
-
+            // we need to refresh the file after update
+            // otherwise the file size for archives will be show incorrect etc.
+            FTPFile.this.file = getFTPFile(getURL());
             isClosed = true;
 
             try {

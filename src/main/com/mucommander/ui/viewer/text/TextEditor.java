@@ -30,6 +30,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import com.mucommander.commons.file.impl.CachedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,8 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
 
     public TextEditor() {
-    	textViewerDelegate = new TextViewer(textEditorImpl = new TextEditorImpl(true, getStatusBar())) {
+        textEditorImpl = new TextEditorImpl(true, getStatusBar());
+    	textViewerDelegate = new TextViewer(textEditorImpl) {
     		
     		@Override
     		protected void setComponentToPresent(JComponent component) {
@@ -157,8 +159,9 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             write(out);
         } finally {
             if (out != null) {
-                try {out.close();}
-                catch(IOException e) {
+                try {
+                    out.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                     // Ignored
                 }
