@@ -126,7 +126,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 
     private static int getColorIndex(int row, AbstractFile file, FileTableModel tableModel) {
         // Parent directory.
-        if (row==0 && tableModel.hasParentFolder())
+        if (row == 0 && tableModel.hasParentFolder())
             return ThemeCache.FOLDER;
 
         // Marked file.
@@ -169,7 +169,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         // Sanity check.
         final AbstractFile file = tableModel.getCachedFileAtRow(rowIndex);
         if (file == null) {
-            LOGGER.debug("tableModel.getCachedFileAtRow( "+ rowIndex + ") RETURNED NULL !");
+            LOGGER.debug("tableModel.getCachedFileAtRow( " + rowIndex + ") RETURNED NULL !");
             return null;
         }
 
@@ -192,9 +192,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
                     ? IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
                     // : FileIcons.getFileIcon(file));
                     : FileIconsCache.getInstance().getIcon(file));
-        }
-        // Any other column (name, date or size)
-        else {
+        } else {    // Any other column (name, date or size)
             String text = (String)value;
             Color foregroundColor;
             if (matches || isSelected) {
@@ -238,10 +236,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 
                 // Set the tool tip
                 label.setToolTipText(text);
-            }
-            // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one
-            // specified
-            else {
+            } else {    // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
                 label.setToolTipText(null);
             }
         }

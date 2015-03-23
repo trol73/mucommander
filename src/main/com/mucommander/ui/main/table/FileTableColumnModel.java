@@ -207,7 +207,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private synchronized int getInternalIndex(int index) {
         // Looks for the visible column of index 'index'.
         int visibleIndex = -1;
-        for(int i = 0; i < visibility.length; i++) {
+        for (int i = 0; i < visibility.length; i++) {
             TableColumn column = columns.get(i);
             if (visibility[column.getModelIndex()]) {
                 if (++visibleIndex == index) {
