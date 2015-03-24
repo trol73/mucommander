@@ -213,6 +213,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         toggleTreeItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleTreeAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         /* TODO branch toggleBranchView = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleBranchViewAction.class, mainFrame), menuItemMnemonicHelper); */
 
+        MenuToolkit.addMenuItem(viewMenu, ActionManager.getActionInstance(ShowFoldersSizeAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+
         viewMenu.add(new JSeparator());
         ButtonGroup buttonGroup = new ButtonGroup();
         for (Column c : Column.values()) {

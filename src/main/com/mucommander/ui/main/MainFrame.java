@@ -627,8 +627,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * @return <code>true</code> if this MainFrame is active, or is an ancestor of a Window that is currently active
      */
     public boolean isAncestorOfActiveWindow() {
-        if(isActive())
+        if (isActive()) {
             return true;
+        }
 
         for (Window w : getOwnedWindows()) {
             if (w.isActive()) {
@@ -647,12 +648,14 @@ public class MainFrame extends JFrame implements LocationListener {
         String title = activeTable.getFolderPanel().getCurrentFolder().getAbsolutePath();
 
 	// Add the application name to window title on all OSs except MAC
-        if (!OsFamily.MAC_OS_X.isCurrent())
-        	title += " - muCommander";
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
+            title += " - trolCommander";
+        }
 
-        java.util.List<MainFrame> mainFrames = WindowManager.getMainFrames();
-        if(mainFrames.size()>1)
-            title += " ["+(mainFrames.indexOf(this)+1)+"]";
+        List<MainFrame> mainFrames = WindowManager.getMainFrames();
+        if (mainFrames.size() > 1) {
+            title += " [" + (mainFrames.indexOf(this) + 1) + "]";
+        }
         setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
@@ -660,7 +663,7 @@ public class MainFrame extends JFrame implements LocationListener {
             // Displays the document icon in the window title bar, works only for local files
             AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
             Object javaIoFile;
-            if(currentFolder.getURL().getScheme().equals(FileProtocols.FILE)) {
+            if (currentFolder.getURL().getScheme().equals(FileProtocols.FILE)) {
                 // If the current folder is an archive entry, display the archive file, this is the closest we can get
                 // with a java.io.File
                 if(currentFolder.hasAncestor(AbstractArchiveEntryFile.class))

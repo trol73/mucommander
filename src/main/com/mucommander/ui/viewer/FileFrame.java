@@ -81,8 +81,8 @@ public abstract class FileFrame extends JFrame {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
                 try {
                     filePresenter.open(file);
-                } catch (Throwable t) {
-                    t.printStackTrace();
+                } finally {
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
                 }
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
             }
