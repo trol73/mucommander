@@ -940,8 +940,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void updateColumnsVisibility() {
         FileTableColumnModel columnModel = getFileTableColumnModel();
 
-        for(Column c : Column.values())
+        for (Column c : Column.values()) {
             columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
+        }
     }
 
     /**
@@ -1327,7 +1328,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
                     int labelWidth = fm.stringWidth((String) tableModel.getValueAt(row, column.ordinal()));
                     int columnX = (int) getTableHeader().getHeaderRect(viewColumn).getX();
-                    if (clickX<columnX+CellLabel.CELL_BORDER_WIDTH || clickX>columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH)
+                    if (clickX < columnX+CellLabel.CELL_BORDER_WIDTH || clickX > columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH)
                         return;
 
                     // The following test ensures that this mouse click is not the one that gave the focus to this table.
@@ -1587,8 +1588,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     @Override
                     public void keyPressed(KeyEvent e) {
                         int keyCode = e.getKeyCode();
-                        if(keyCode == KeyEvent.VK_ESCAPE)
+                        if (keyCode == KeyEvent.VK_ESCAPE) {
                             cancelCellEditing();
+                        }
                     }
                 }
             );

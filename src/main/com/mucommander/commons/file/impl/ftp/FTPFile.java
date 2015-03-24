@@ -29,6 +29,7 @@ import com.mucommander.commons.io.FilteredOutputStream;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.util.StringUtils;
+import com.mucommander.core.FolderChangeMonitor;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import org.apache.commons.net.ftp.FTPReply;
@@ -961,7 +962,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 // An 'abort' command should be issued to the server before closing if the transfer is not finished yet.
                 // Currently in that case (transfer not finished) the whole connection has to be re-established (bad!).
                 // FTPClient#abort() is difficult to use to say the least. This post gives some insight: http://mail-archives.apache.org/mod_mbox/commons-user/200604.mbox/%3c78A73ABD8DB470439179DB682EA990B3025B87DF@mtlex02.NEXXLINK.INT%3e
-            } catch(IOException e) {
+            } catch (IOException e) {
                 LOGGER.info("exception in completePendingCommands()", e);
 
                 // Checks if the IOException corresponds to a socket error and in that case, closes the connection
@@ -1083,6 +1084,8 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // we need to refresh the file after update
             // otherwise the file size for archives will be show incorrect etc.
             FTPFile.this.file = getFTPFile(getURL());
+            // force to refresh folder pane with this file
+            FolderChangeMonitor.addFileToRefresh(getAbsolutePath());
             isClosed = true;
 
             try {
