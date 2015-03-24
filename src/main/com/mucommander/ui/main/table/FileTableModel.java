@@ -871,6 +871,8 @@ public class FileTableModel extends AbstractTableModel {
         }
     }
 
+
+
     /**
      * Takes a first ask for queue and starts calculation worker
      * @param table

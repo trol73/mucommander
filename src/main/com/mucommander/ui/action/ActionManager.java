@@ -233,6 +233,7 @@ public class ActionManager {
         registerAction(new LocateSymlinkAction.Descriptor(),                new LocateSymlinkAction.Factory());
         registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
         registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
+        registerAction(new ShowFoldersSizeAction.Descriptor(),              new ShowFoldersSizeAction.Factory());
     }
 
 	public static void registerCommandsActions() {
@@ -345,8 +346,7 @@ public class ActionManager {
         // Looks for an existing MuAction instance used by the specified MainFrame
         if (mainFrameActions.containsKey(actionParameters)) {
         	return mainFrameActions.get(actionParameters).getAction();
-        }
-        else {
+        } else {
             String actionId = actionParameters.getActionId();
 
             // Looks for the action's factory

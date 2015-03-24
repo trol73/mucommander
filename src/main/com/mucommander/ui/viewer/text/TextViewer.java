@@ -147,8 +147,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
             loadDocument(in, encoding, documentListener);
         } finally {
             if (in != null) {
-                try {in.close();}
-                catch (IOException e) {
+                try {
+                    in.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                     // Nothing to do here.
                 }
@@ -213,7 +214,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
     protected void saveStateOnClose() {
         saveState(getVerticalScrollBar());
         try {
-            getCurrentFile().closePushbackInputStream();
+            AbstractFile currentFile = getCurrentFile();
+            if (currentFile != null) {
+                currentFile.closePushbackInputStream();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
