@@ -92,7 +92,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 50) {
+            if (dt < 100) {
                 throw new RuntimeException("EventDispatchThread error");
             }
         }
@@ -107,7 +107,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 50) {
+            if (dt < 100) {
                 throw new RuntimeException("EventDispatchThread error");
             }
         }

@@ -59,7 +59,7 @@ public class ActionManager {
     private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
     
     /** Pattern to resolve the action ID from action class path */
-    private final static Pattern pattern = Pattern.compile(".*\\.(.*)?Action");
+    private final static Pattern PATTERN = Pattern.compile(".*\\.(.*)?Action");
 
     public static void registerActions() {
     	registerAction(new AddBookmarkAction.Descriptor(),                  new AddBookmarkAction.Factory());
@@ -275,7 +275,7 @@ public class ActionManager {
     	if (actionClassPath == null)
     		return null;
     	
-    	Matcher matcher = pattern.matcher(actionClassPath);
+    	Matcher matcher = PATTERN.matcher(actionClassPath);
     	return matcher.matches() ? 
     			matcher.group(1)
     			: actionClassPath;

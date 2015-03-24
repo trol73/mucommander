@@ -40,9 +40,9 @@ public class ActionProperties {
 	private static TreeSet<ActionCategory> actionCategories = new TreeSet<>();
 
 	/* Maps action id -> primary shortcut */
-	private static HashMap<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<>();
+	private static Map<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<>();
 	/* Maps action id -> alternative shortcut */
-	private static HashMap<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
+	private static Map<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
 	/* Maps shortcut -> action id */
 	private static AcceleratorMap defaultAcceleratorMap = new AcceleratorMap();
 	
@@ -59,8 +59,9 @@ public class ActionProperties {
 		
 		// Add the category in the descriptor to the categories pool
 		ActionCategory category = actionDescriptor.getCategory();
-		if (category != null)
-			actionCategories.add(category);
+		if (category != null) {
+            actionCategories.add(category);
+        }
 		
 		// Add the shortcuts in the descriptor to the default keymap
 		KeyStroke defaultActionKeyStroke = actionDescriptor.getDefaultKeyStroke();
