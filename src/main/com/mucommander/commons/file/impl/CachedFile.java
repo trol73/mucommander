@@ -323,14 +323,14 @@ public class CachedFile extends ProxyFile {
             // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & HIDDEN_SET_MASK) == 0) {
                 if (file.isHidden()) {
-                    bitmask |= BA_HIDDEN;
+                    bitmask |= HIDDEN_VALUE_MASK;
                 } else {
-                    bitmask &= ~BA_HIDDEN;
+                    bitmask &= ~HIDDEN_VALUE_MASK;
                 }
                 bitmask |= HIDDEN_SET_MASK;
             }
         }
-        return (bitmask & BA_HIDDEN) == 0;
+        return (bitmask & HIDDEN_VALUE_MASK) != 0;
     }
 
     @Override
