@@ -134,7 +134,7 @@ public class ConfigurationSectionTest {
         if(count == 0) {
             assert !section.hasVariables();
             assert section.isEmpty();
-            assert !section.variableNames().hasNext();
+            assert section.variableNames().isEmpty();
         }
 
         // Makes sure that the section contains exactly var1, var2..., var<count>.
@@ -152,9 +152,9 @@ public class ConfigurationSectionTest {
                 expectedNames.add("var" + i);
 
             // Makes sure that we can remove all of the section's variables, and that none remains afterward.
-            names = section.variableNames();
-            while(names.hasNext())
-                assert expectedNames.remove(names.next());
+            for (String s : section.variableNames()) {
+                assert expectedNames.remove(s);
+            }
             assert expectedNames.isEmpty();
         }
     }
@@ -318,7 +318,7 @@ public class ConfigurationSectionTest {
         if(count == 0) {
             assert !section.hasSections();
             assert section.isEmpty();
-            assert !section.sectionNames().hasNext();
+            assert section.sectionNames().isEmpty();
         }
 
         // Makes sure that the section contains exactly sect1, sect2..., sect<count>.
@@ -336,9 +336,9 @@ public class ConfigurationSectionTest {
                 expectedNames.add("sect" + i);
 
             // Makes sure that we can remove all of the section's sub-sections, and that none remains afterward.
-            names = section.sectionNames();
-            while(names.hasNext())
-                assert expectedNames.remove(names.next());
+            for (String s : section.sectionNames()) {
+                assert expectedNames.remove(s);
+            }
             assert expectedNames.isEmpty();
         }
     }
