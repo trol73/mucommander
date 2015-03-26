@@ -508,10 +508,16 @@ class ImageViewer extends FileViewer implements ActionListener {
 
 
     private int getScaledWidth() {
+        if (image == null) {
+            return 0;
+        }
         return vectorImage ? image.getWidth() : (int)(zoomFactor*image.getWidth());
     }
 
     private int getScaledHeight() {
+        if (image == null) {
+            return 0;
+        }
         return vectorImage ? image.getHeight() : (int)(zoomFactor*image.getHeight());
     }
 
@@ -579,11 +585,12 @@ class ImageViewer extends FileViewer implements ActionListener {
                     x += TRANSPARENT_GRID_STEP;
                 }
             }
-            if (vectorImage) {
-                g.drawImage(image, x0, y0, null);
-            } else {
-                g.drawImage(image, x0, y0, x0 + imageWidth, y0 + imageHeight, 0, 0, image.getWidth(), image.getHeight(), null, null);
-
+            if (image != null) {
+                if (vectorImage) {
+                    g.drawImage(image, x0, y0, null);
+                } else {
+                    g.drawImage(image, x0, y0, x0 + imageWidth, y0 + imageHeight, 0, 0, image.getWidth(), image.getHeight(), null, null);
+                }
             }
         }
         

@@ -687,10 +687,22 @@
         <echo>Creating obfuscated JAR file...</echo>
         <mkdir dir="${reports.proguard}"/>
         <taskdef resource="proguard/ant/task.properties" classpathref="lib.tools"/>
-        <proguard overloadaggressively="false" ignorewarnings="true" optimize="false" shrink="true" obfuscate="false"
-                  printmapping="${reports.proguard}/mapping.txt" printusage="${reports.proguard}/usage.txt"
-                  printseeds="${reports.proguard}/seeds.txt" allowaccessmodification="false" repackageclasses=""
-                  skipnonpubliclibraryclasses="true" target="${source.version}">
+        <proguard 
+			overloadaggressively="false" 
+			ignorewarnings="true" 
+			optimize="false" 
+			shrink="true" 
+			obfuscate="false"
+               allowaccessmodification="false" 
+               skipnonpubliclibraryclasses="false" 
+               printmapping="${reports.proguard}/mapping.txt" 
+               printusage="${reports.proguard}/usage.txt"
+               printseeds="${reports.proguard}/seeds.txt" 
+               repackageclasses=""
+               target="${source.version}"
+               verbose="true"
+               preverify="true"
+               >
             <injar  name="${jar.normal}"/>
             <outjar name="${jar.obf}"/>
 
@@ -748,11 +760,11 @@
                 <constructor name="*"/>
             </keep>
             <!-- Don't obfuscate Classes that use JNA.                                                               -->
-			<keep extends="com.sun.jna.**">
+            <keep extends="com.sun.jna.**">
 				<field name="*"/>
 				<method name="*"/>
 				<constructor name="*"/>
-			</keep>
+            </keep>
 			<!-- Don't obfuscate the VMWare Infrastructure library.                                                  -->
 			<keep name="com.vmware.vim25.**">
 				<field name="*"/>
@@ -802,6 +814,31 @@
 					name="valueOf"
 					parameters="java.lang.String" />
 			</keepclassmembers>
+			<keep name="com.sshtools.j2ssh.sftp.**">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
+
+<!--			
+
+			<keepclassmembers name="org.apache.batik.ext.swing.DoubleDocument" allowobfuscation="false" allowoptimization="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keepclassmembers>		
+			<keep name="org.apache.batik.ext.swing.DoubleDocument" allowobfuscation="false" allowoptimization="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
+			
+
+					  com.sshtools.j2ssh.sftp.SftpSubsystemClient"
+                           com.sshtools.j2ssh.sftp.SshFxpSymlink	
+					  com.sshtools.j2ssh.sftp.SshFxpLStat.class
+-->
+
         </proguard>
     </target>
 
