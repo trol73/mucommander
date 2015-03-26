@@ -79,8 +79,9 @@ class SFTPConnectionHandler extends ConnectionHandler {
             final Credentials credentials = getCredentials();
 
             // Throw an AuthException if no auth information, required for SSH
-            if(credentials ==null)
+            if (credentials == null) {
                 throwAuthException("Login and password required");  // Todo: localize this entry
+            }
 
             LOGGER.trace("creating SshClient");
 
@@ -89,8 +90,9 @@ class SFTPConnectionHandler extends ConnectionHandler {
 
             // Override default port (22) if a custom port was specified in the URL
             int port = realm.getPort();
-            if(port==-1)
+            if (port == -1) {
                 port = 22;
+            }
 
             // Connect to server, no host key verification
             sshClient.connect(realm.getHost(), port, new IgnoreHostKeyVerification());
@@ -99,8 +101,9 @@ class SFTPConnectionHandler extends ConnectionHandler {
             // Some SSH servers support the 'password' auth method (e.g. OpenSSH on Debian unstable), some don't
             // and only support the 'keyboard-interactive' method.
             List<String> authMethods = sshClient.getAvailableAuthMethods(credentials.getLogin());
-            if(authMethods==null)   // this can happen
+            if (authMethods == null) {  // this can happen
                 throw new IOException();
+            }
 
             LOGGER.info("getAvailableAuthMethods()={}", sshClient.getAvailableAuthMethods(credentials.getLogin()));
 
@@ -176,8 +179,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                     throwAuthException("Login or password rejected");   // Todo: localize this entry
 
                 LOGGER.info("authentication complete, authResult={}", authResult);
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 if(e instanceof AuthException)
                     throw e;
 
@@ -185,17 +187,16 @@ class SFTPConnectionHandler extends ConnectionHandler {
                 throwAuthException(e.getMessage());
             }
 
-
             // Init SFTP connections
             sftpClient = sshClient.openSftpClient();
             sftpSubsystem = sshClient.openSftpChannel();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             LOGGER.info("IOException thrown while starting connection", e);
 
             // Disconnect if something went wrong
-            if(sshClient!=null && sshClient.isConnected())
+            if (sshClient != null && sshClient.isConnected()) {
                 sshClient.disconnect();
+            }
 
             sshClient = null;
             sftpClient = null;
@@ -217,18 +218,25 @@ class SFTPConnectionHandler extends ConnectionHandler {
 
     @Override
     public synchronized void closeConnection() {
-        if(sftpClient!=null) {
-            try { sftpClient.quit(); }
-            catch(IOException e) { LOGGER.info("IOException caught while calling sftpClient.quit()", e); }
+        if (sftpClient != null) {
+            try {
+                sftpClient.quit();
+            } catch(IOException e) {
+                LOGGER.info("IOException caught while calling sftpClient.quit()", e);
+            }
         }
 
-        if(sftpSubsystem !=null) {
-            try { sftpSubsystem.close(); }
-            catch(IOException e) { LOGGER.info("IOException caught while calling sftpChannel.close ()"); }
+        if (sftpSubsystem != null) {
+            try {
+                sftpSubsystem.close();
+            } catch(IOException e) {
+                LOGGER.info("IOException caught while calling sftpChannel.close ()");
+            }
         }
 
-        if(sshClient!=null)
+        if (sshClient != null) {
             sshClient.disconnect();
+        }
     }
 
 
@@ -237,4 +245,5 @@ class SFTPConnectionHandler extends ConnectionHandler {
         // No-op, keep alive is not available and shouldn't really be necessary, SSH servers such as OpenSSH usually
         // maintain connections open without limit.
     }
+
 }
