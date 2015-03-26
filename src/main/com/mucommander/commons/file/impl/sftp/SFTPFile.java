@@ -160,7 +160,7 @@ public class SFTPFile extends ProtocolFile {
 
             return new CounterOutputStream(
                 // Custom SftpFileOutputStream constructor, not part of the official J2SSH API
-                new SftpFileOutputStream(sftpFile, append?getSize():0) {
+                new SftpFileOutputStream(sftpFile, append ? getSize() : 0L) {
                     @Override
                     public void close() throws IOException {
                         // SftpFileOutputStream.close() closes the open SftpFile file handle
@@ -515,8 +515,7 @@ public class SFTPFile extends ProtocolFile {
             fileAttributes.setExists(false);
             fileAttributes.setDirectory(false);
             fileAttributes.setSize(0);
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler
             if (connHandler != null)
                 connHandler.releaseLock();
@@ -627,8 +626,7 @@ public class SFTPFile extends ProtocolFile {
                         connHandler.releaseLock();
                 }
             };
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             // Release the lock on the ConnectionHandler if the InputStream could not be created
             connHandler.releaseLock();
 
