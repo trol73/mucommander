@@ -70,18 +70,9 @@ public class CustomDateFormat implements ConfigurationListener {
     public static String replaceDateSeparator(String dateFormatString, String separator) {
         if (separator == null || separator.equals("/")) {
             return dateFormatString;
+        } else {
+        	  return dateFormatString.replace("/",separator);
         }
-
-        StringBuilder dateFormatStringSB = new StringBuilder();
-        int pos1 = 0;
-        int pos2 = dateFormatString.indexOf('/', pos1);
-        while (pos2 >= 0) {
-            dateFormatStringSB.append(dateFormatString.substring(pos1, pos2));
-            dateFormatStringSB.append(separator);
-            pos1 = pos2 + 1;
-        }
-        dateFormatStringSB.append(dateFormatString.substring(pos1, dateFormatString.length()));
-        return dateFormatStringSB.toString();
     }
 
 
