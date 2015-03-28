@@ -18,6 +18,9 @@
 
 package com.mucommander.desktop.gnome;
 
+import java.awt.Toolkit;
+import java.lang.reflect.Field;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +55,15 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
 
     @Override
     public void init(boolean install) throws DesktopInitialisationException {
+        // Workaround for JDK issue
+        try {
+    	    Toolkit xToolkit = Toolkit.getDefaultToolkit();
+          Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
+          awtAppClassNameField.setAccessible(true);
+          awtAppClassNameField.set(xToolkit, "trolCommander");
+        } catch (Exception ge) {
+        	// Just ignore
+        }
         // Initialises trash management.
         DesktopManager.setTrashProvider(new GnomeTrashProvider());
         
