@@ -28,7 +28,7 @@ import java.io.OutputStream;
  * In addition to the read-only operations defined by {@link com.mucommander.commons.file.AbstractArchiveFile}, it provides
  * abstract methods for adding and deleting entries from the archive.
  *
- * The {@link #isWritable()} method impletemented by this class always returns <code>true</code>. However,
+ * The {@link #isWritable()} method implemented by this class always returns <code>true</code>. However,
  * write operations may not always be available depending on the underlying file (e.g. if random file access is
  * required). In that case, {@link #isWritable ()} should be overridden to return <code>true</code> only when
  * write operations are available.
@@ -95,7 +95,7 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
     public abstract void deleteEntry(ArchiveEntry entry) throws IOException, UnsupportedFileOperationException;
 
     /**
-     * Updates the specified entry in the archive with the attributes containted in the {@link ArchiveEntry} object.
+     * Updates the specified entry in the archive with the attributes contained in the {@link ArchiveEntry} object.
      * Throws an <code>IOException</code> if the entry doesn't exist in the archive or if an I/O error occurs.
      *
      * <p>This methods can be used to update the entry's date and permissions for instance.</p>

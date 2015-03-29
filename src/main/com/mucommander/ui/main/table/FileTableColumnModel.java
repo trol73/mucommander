@@ -35,7 +35,7 @@ import java.util.*;
 public class FileTableColumnModel implements TableColumnModel, PropertyChangeListener {
     // - Class constants -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
-    /** If {@link #widthCache} is set to this, it needs to be recalulated. */
+    /** If {@link #widthCache} is set to this, it needs to be recalculated. */
     private static final int CACHE_OUT_OF_DATE = -1;
     /** Even though we're not using column selection, the table API forces us to return this instance or will crash. */
     private static final ListSelectionModel SELECTION_MODEL = new DefaultListSelectionModel();

@@ -33,7 +33,7 @@ import java.util.zip.GZIPOutputStream;
 
 
 /**
- * Archiver is an abstract class that represents a generic file archiver and abstracts the underlying
+ * Achiever is an abstract class that represents a generic file archiver and abstracts the underlying
  * compression method and specifics of the format.
  *
  * <p>Subclasses implement specific archive formats (Zip, Tar...) but cannot be instantiated directly.
@@ -115,9 +115,9 @@ public abstract class Archiver {
 
     /** The underlying stream this archiver is writing to */
     protected OutputStream out;
-    /** Archive format of this Archiver */
+    /** Archive format of this Achiever */
     protected int format;
-    /** Archive format's name of this Archiver */
+    /** Archive format's name of this Achiever */
     protected String formatName;
 	
 	
@@ -242,14 +242,14 @@ public abstract class Archiver {
                     file.delete();
                 
                 out = new BufferedRandomOutputStream(file.getRandomAccessOutputStream());
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Fall back to a regular OutputStream
             }
         }
 
-        if(out==null)
+        if (out == null) {
             out = new BufferedOutputStream(file.getOutputStream());
+        }
 
         return getArchiver(out, format);
     }
