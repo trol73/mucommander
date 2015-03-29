@@ -673,7 +673,7 @@ public class TrolCommander {
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
             LauncherTask taskLoadTheme = new LoadThemesTask(helper, taskShowSplash);
             LauncherTask taskInitDesktop = new InitDesktopTask(helper, taskLoadConfigs);
-            LauncherTask taskLoadDict = new LoadDictTask(helper);
+            LauncherTask taskLoadDict = new LoadDictTask(helper, taskLoadConfigs);
             LauncherTask taskConfigureFs = new ConfigureFsTask(helper);
             LauncherTask taskLoadCustomCommands = new LoadCustomCommands(helper);
             LauncherTask taskLoadBookmarks = new LoadBookmarksTask(helper);
