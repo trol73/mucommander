@@ -36,9 +36,7 @@ public class ConfigurationSectionTest {
      */
     @DataProvider(name = "removeVariable")
     public Iterator<Object[]> removeVariableCases() {
-        List<Object[]> data;
-
-        data = new ArrayList<Object[]>();
+        List<Object[]> data = new ArrayList<Object[]>();
 
         data.add(new Object[] {"value"});
         data.add(new Object[] {""});
@@ -53,9 +51,7 @@ public class ConfigurationSectionTest {
      */
     @Test(dataProvider = "setVariable")
     public void testRemoveVariable(String value) {
-        ConfigurationSection section;
-
-        section = new ConfigurationSection();
+        ConfigurationSection section = new ConfigurationSection();
 
         assert section.setVariable("var", value);
         assertVariable(section, "var", value);
@@ -73,9 +69,7 @@ public class ConfigurationSectionTest {
      */
     @DataProvider(name = "setVariable")
     public Iterator<Object[]> setVariableCases() {
-        List<Object[]> data;
-
-        data = new ArrayList<Object[]>();
+        List<Object[]> data = new ArrayList<Object[]>();
 
         data.add(new Object[] {"value", "other", true});
         data.add(new Object[] {"value", "value", false});
@@ -109,9 +103,7 @@ public class ConfigurationSectionTest {
      */
     @Test(dataProvider = "setVariable")
     public void testSetVariable(String first, String second, boolean expected) {
-        ConfigurationSection section;
-
-        section = new ConfigurationSection();
+        ConfigurationSection section = new ConfigurationSection();
 
         assert section.setVariable("var", first);
         assertVariable(section, "var", first);
@@ -134,13 +126,13 @@ public class ConfigurationSectionTest {
         if(count == 0) {
             assert !section.hasVariables();
             assert section.isEmpty();
-            assert !section.variableNames().hasNext();
+            assert section.variableNames().isEmpty();
         }
 
         // Makes sure that the section contains exactly var1, var2..., var<count>.
         // We have to go through a set here: the order in which we'll iterate over the variable names is unreliable.
         else {
-            Iterator<String> names;
+            Set<String> names;
             Set<String>      expectedNames;
 
             assert section.hasVariables();
@@ -153,8 +145,9 @@ public class ConfigurationSectionTest {
 
             // Makes sure that we can remove all of the section's variables, and that none remains afterward.
             names = section.variableNames();
-            while(names.hasNext())
-                assert expectedNames.remove(names.next());
+            for (String name : names) {
+                assert expectedNames.remove(name);
+            }
             assert expectedNames.isEmpty();
         }
     }
@@ -164,9 +157,7 @@ public class ConfigurationSectionTest {
      */
     @Test
     public void testVariableNames() {
-        ConfigurationSection section;
-
-        section = new ConfigurationSection();
+        ConfigurationSection section = new ConfigurationSection();
 
         // create 10 variables.
         for(int i = 0; i < 10; i++)
@@ -197,9 +188,7 @@ public class ConfigurationSectionTest {
      */
     @Test
     public void testLists() {
-        ValueList list;
-
-        list = new ValueList("1,2,3,4", ",");
+        ValueList list = new ValueList("1,2,3,4", ",");
         assert ConfigurationSection.getListValue("1,2,3,4", ",").equals(list);
         assert ConfigurationSection.getValue(list, ",").equals("1,2,3,4");
     }
@@ -281,13 +270,10 @@ public class ConfigurationSectionTest {
      */
     @Test
     public void testSections() {
-        ConfigurationSection section;
-        ConfigurationSection buffer;
-
-        section = new ConfigurationSection();
+        ConfigurationSection section = new ConfigurationSection();
 
         // Makes sure we can add a section.
-        buffer = section.addSection("sect");
+        ConfigurationSection buffer = section.addSection("sect");
         assert buffer != null;
         assert section.hasSections();
 
@@ -318,40 +304,36 @@ public class ConfigurationSectionTest {
         if(count == 0) {
             assert !section.hasSections();
             assert section.isEmpty();
-            assert !section.sectionNames().hasNext();
+            assert section.sectionNames().isEmpty();
         }
 
         // Makes sure that the section contains exactly sect1, sect2..., sect<count>.
         // We have to go through a set here: the order in which we'll iterate over the variable names is unreliable.
         else {
-            Iterator<String> names;
-            Set<String>      expectedNames;
-
             assert section.hasSections();
             assert !section.isEmpty();
 
             // Populates a set will all the expected variable names.
-            expectedNames = new HashSet<String>(count);
+            Set<String> expectedNames = new HashSet<String>(count);
             for(int i = 0; i < count; i++)
                 expectedNames.add("sect" + i);
 
             // Makes sure that we can remove all of the section's sub-sections, and that none remains afterward.
-            names = section.sectionNames();
-            while(names.hasNext())
-                assert expectedNames.remove(names.next());
+            Set<String> names = section.sectionNames();
+            for (String name : names) {
+                assert expectedNames.remove(name);
+            }
+
             assert expectedNames.isEmpty();
         }
     }
 
     @Test
     public void testSectionNames() {
-        ConfigurationSection section;
-        ConfigurationSection buffer;
-
-        section = new ConfigurationSection();
+        ConfigurationSection section = new ConfigurationSection();
 
         // create 10 variables.
-        buffer = null;
+        ConfigurationSection buffer = null;
         for(int i = 0; i < 10; i++)
             buffer = section.addSection("sect" + i);
         assertSectionNames(section, 10);

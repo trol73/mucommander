@@ -74,7 +74,7 @@ public class ProgressTextField extends JTextField {
      * @param color new progress color.
      */
     public void setProgressColor(Color color) {
-        if(color != null && progressColor != null && !color.equals(progressColor)) {
+        if (color != null && progressColor != null && !color.equals(progressColor)) {
             progressColor = color;
             repaint();
         }
@@ -87,7 +87,7 @@ public class ProgressTextField extends JTextField {
     public void paint(Graphics g) {
         super.paint(g);
 
-        if(progressValue>0) {
+        if (progressValue > 0) {
             g.setColor(progressColor);
             g.fillRect(0, 0, (int)(getWidth()*progressValue/(float)100), getHeight());
         }

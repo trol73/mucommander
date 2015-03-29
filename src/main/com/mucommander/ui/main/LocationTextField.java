@@ -71,8 +71,9 @@ public class LocationTextField extends ProgressTextField implements LocationList
     private static Pattern windowsTrailingSpacePattern;
 
     static {
-        if(OsFamily.WINDOWS.isCurrent())
+        if (OsFamily.WINDOWS.isCurrent()) {
             windowsTrailingSpacePattern = Pattern.compile("[ ]+[\\\\]*$");
+        }
     }
 
 
@@ -182,7 +183,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
             	// For network files with FILE scheme display the URL in UNC format
             	else {
             		locationText = "\\\\" + folderURL.getHost() + folderURL.getPath().replace('/', '\\');
-            		if(!locationText.endsWith(UNCFile.SEPARATOR))
+            		if (!locationText.endsWith(UNCFile.SEPARATOR))
                         locationText += UNCFile.SEPARATOR;
             	}
             }
@@ -232,7 +233,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
         // Note that Win32 doesn't allow creating files with trailing spaces (in Explorer, command prompt...), but
         // those files can still be manually crafted and thus exist on one's hard drive.
         // Mucommander should in theory be able to access such files without any problem but this hasn't been tested.
-        if (OsFamily.WINDOWS.isCurrent() && location.indexOf(":\\")==1) {
+        if (OsFamily.WINDOWS.isCurrent() && location.indexOf(":\\") == 1) {
             // Looks for trailing spaces and if some 
             Matcher matcher = windowsTrailingSpacePattern.matcher(location);
             if (matcher.find())
