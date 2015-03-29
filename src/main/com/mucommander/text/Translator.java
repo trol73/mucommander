@@ -153,6 +153,7 @@ public class Translator {
         // Set preferred language in configuration file
         MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, locale.toLanguageTag());
 
+        Translator.language = locale;
         LOGGER.debug("Current language has been set to " + Translator.language);
     }
 
