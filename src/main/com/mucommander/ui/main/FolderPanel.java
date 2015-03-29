@@ -80,7 +80,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
 	/** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
 
-    private MainFrame  mainFrame;
+    private MainFrame mainFrame;
 
     private LocationManager locationManager = new LocationManager(this);
 
@@ -152,18 +152,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         locationPanel.add(locationTextField, c);
 
         add(locationPanel, BorderLayout.NORTH);
-
-        // Initialize quick lists
-    	fileTablePopups = new QuickList[] {
-    			new ParentFoldersQL(this),
-    			new RecentLocationsQL(this),
-    			new RecentExecutedFilesQL(this),
-    			new BookmarksQL(this),
-    			new RootFoldersQL(this),
-                new TabsQL(this),
-                new RecentViewedQL(this),
-                new RecentEditedQL(this)
-        };
 
         // create the FileTable
         fileTable = new FileTable(mainFrame, this, conf);
@@ -411,10 +399,11 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile children[], AbstractFile fileToSelect, boolean changeLockedTab) {
     		// Change the current folder in the table and select the given file if not null
-    		if (fileToSelect == null)
-    			fileTable.setCurrentFolder(folder, children);
-    		else
-    			fileTable.setCurrentFolder(folder, children, fileToSelect);
+    		if (fileToSelect == null) {
+                fileTable.setCurrentFolder(folder, children);
+            } else {
+                fileTable.setCurrentFolder(folder, children, fileToSelect);
+            }
     }
 
     /**
@@ -423,6 +412,19 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      * @param index - index of the FileTablePopup in fileTablePopups.
      */
     public void showQuickList(int index) {
+        if (fileTablePopups == null) {
+            // Initialize quick lists
+            fileTablePopups = new QuickList[] {
+                    new ParentFoldersQL(this),
+                    new RecentLocationsQL(this),
+                    new RecentExecutedFilesQL(this),
+                    new BookmarksQL(this),
+                    new RootFoldersQL(this),
+                    new TabsQL(this),
+                    new RecentViewedQL(this),
+                    new RecentEditedQL(this)
+            };
+        }
     	fileTablePopups[index].show();
     }
     

@@ -33,9 +33,16 @@ public class ScanDirectoryThread extends Thread {
     private long executionTime;
     private long filesCount;
     private boolean interrupted;
+    private final boolean calcSize;
 
     public ScanDirectoryThread(FileSet files) {
         this.files = files;
+        this.calcSize = true;
+    }
+
+    public ScanDirectoryThread(FileSet files, boolean calcSize) {
+        this.files = files;
+        this.calcSize = calcSize;
     }
 
     @Override
@@ -45,7 +52,9 @@ public class ScanDirectoryThread extends Thread {
             if (interrupted) {
                 break;
             }
-            processFile(file);
+            try {
+                processFile(file);
+            } catch (Throwable ignore) {}
         }
         completed = true;
         executionTime = System.currentTimeMillis() - executionTime;
@@ -73,7 +82,9 @@ public class ScanDirectoryThread extends Thread {
                 e.printStackTrace();
             }
         } else {
-            totalBytes += file.getSize();
+            if (calcSize) {
+                totalBytes += file.getSize();
+            }
         }
     }
 

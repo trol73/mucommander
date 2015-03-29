@@ -81,6 +81,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private JTextField edtCounterStep;
     private JComboBox<String> cbCounterDigits;
     private JComboBox<String> cbCase;
+    private JCheckBox cbRegExp;
     private RenameTableModel tableModel;
     private AbstractAction actRemove;
     private JButton btnName;
@@ -90,7 +91,6 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private JLabel lblDuplicates;
     private TableColumn colBlock;
 
-    
     /** files to rename */
     private FileSet files;
 
@@ -236,6 +236,10 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         cbCase = new JComboBox<>(ulcase);
         cbCase.addActionListener(this);
 
+        // Regexp
+        cbRegExp = new JCheckBox();
+        cbRegExp.addActionListener(this);
+
         // counter
         edtCounterStart = new JTextField("1");
         edtCounterStart.getDocument().addDocumentListener(this);
@@ -287,25 +291,18 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         pnlTop.add(pnl1);
         
         XAlignedComponentPanel pnl2 = new XAlignedComponentPanel(5);
-        pnl2.setBorder(BorderFactory.createTitledBorder(Translator
-                .get("batch_rename_dialog.search_replace")));
-        pnl2.addRow(Translator.get("batch_rename_dialog.search_for"),
-                edtSearchFor, 5);
-        pnl2.addRow(Translator.get("batch_rename_dialog.replace_with"),
-                edtReplaceWith, 5);
-        pnl2.addRow(Translator.get("batch_rename_dialog.upper_lower_case"),
-                cbCase, 5);
+        pnl2.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.search_replace")));
+        pnl2.addRow(Translator.get("batch_rename_dialog.search_for"), edtSearchFor, 5);
+        pnl2.addRow(Translator.get("batch_rename_dialog.replace_with"),  edtReplaceWith, 5);
+        pnl2.addRow(Translator.get("batch_rename_dialog.upper_lower_case"), cbCase, 5);
+        pnl2.addRow(Translator.get("batch_rename_dialog.regexp"), cbRegExp, 5);
         pnlTop.add(pnl2);
 
         XAlignedComponentPanel pnl3 = new XAlignedComponentPanel(5);
-        pnl3.setBorder(BorderFactory.createTitledBorder(Translator
-                .get("batch_rename_dialog.counter") + " [C]"));
-        pnl3.addRow(Translator.get("batch_rename_dialog.start_at"),
-                edtCounterStart, 5);
-        pnl3.addRow(Translator.get("batch_rename_dialog.step_by"),
-                edtCounterStep, 5);
-        pnl3.addRow(Translator.get("batch_rename_dialog.format"),
-                cbCounterDigits, 5);
+        pnl3.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.counter") + " [C]"));
+        pnl3.addRow(Translator.get("batch_rename_dialog.start_at"), edtCounterStart, 5);
+        pnl3.addRow(Translator.get("batch_rename_dialog.step_by"), edtCounterStep, 5);
+        pnl3.addRow(Translator.get("batch_rename_dialog.format"), cbCounterDigits, 5);
         pnlTop.add(pnl3);
 
         return pnlTop;
@@ -391,9 +388,30 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         String newName = applyPattern(file);
 
         // search & replace
-        if (edtSearchFor.getText().length() > 0) {
-            newName = newName.replace(edtSearchFor.getText(), edtReplaceWith
-                    .getText());
+        if (!edtSearchFor.getText().isEmpty()) {
+            if (cbRegExp.isSelected()) {
+                try {
+                    newName = newName.replaceAll(edtSearchFor.getText(), edtReplaceWith.getText());
+                } catch (Exception e) {
+//                    if (!ignoreRegexpErrors) {
+//                        String errorMessage = Translator.get("batch_rename_dialog.regexp_error");
+//                        if (e instanceof PatternSyntaxException) {
+//                            PatternSyntaxException pse = (PatternSyntaxException) e;
+//                            errorMessage += ": " + pse.getPattern();
+//                        }
+//                        QuestionDialog dialog = new QuestionDialog(mainFrame,
+//                                Translator.get("error"),
+//                                errorMessage,
+//                                mainFrame,
+//                                new String[]{Translator.get("ok")},
+//                                new int[]{0},
+//                                0);
+//                        dialog.showDialog();
+//                    }
+                }
+            } else {
+                newName = newName.replace(edtSearchFor.getText(), edtReplaceWith.getText());
+            }
         }
 
         // remove trailing dot
@@ -420,8 +438,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             }
         }
         checkForDuplicates();
-        tableModel.fireTableChanged(new TableModelEvent(tableModel, 0, 
-                newNames.size(), 1, TableModelEvent.UPDATE));
+        tableModel.fireTableChanged(new TableModelEvent(tableModel, 0, newNames.size(), 1, TableModelEvent.UPDATE));
     }
     
     /**
@@ -583,10 +600,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         removeUnchangedFiles(false);
         // start rename job
         if (files.size() > 0) {
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame,
-                    Translator.get("progress_dialog.processing_files"));
-            BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame,
-                    files, newNames);
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame, files, newNames);
             progressDialog.start(job);
         }
     }
@@ -628,6 +643,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                 }
             }
         } else if (source == cbCase) {
+            generateNewNames();
+        } else if (source == cbRegExp) {
             generateNewNames();
         } else if (source == cbCounterDigits) {
             generateNewNames();
@@ -681,12 +698,12 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         public Object getValueAt(int rowIndex, int columnIndex) {
             AbstractFile f = files.get(rowIndex);
             switch (columnIndex) {
-            case COL_ORIG_NAME:
-                return f.getName();
-            case COL_CHANGED_NAME:
-                return newNames.get(rowIndex);
-            case COL_CHANGE_BLOCK:
-                return blockNames.get(rowIndex);
+                case COL_ORIG_NAME:
+                    return f.getName();
+                case COL_CHANGED_NAME:
+                    return newNames.get(rowIndex);
+                case COL_CHANGE_BLOCK:
+                    return blockNames.get(rowIndex);
             }
             return null;
         }
@@ -882,26 +899,20 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             startIndex = getInt(0);
             char sep = getChar();
             switch (sep) {
-            case '-':
-                endIndex = getInt(999); // default - to the end
-                break;
-            case ',':
-                charCount = getInt(0);
+                case '-':
+                    endIndex = getInt(999); // default - to the end
+                    break;
+                case ',':
+                    charCount = getInt(0);
             }
         }
 
         @Override
         public String apply(AbstractFile file) {
             // split name & extension
-            String name;
             String oldName = file.getName();
             int dot = oldName.lastIndexOf('.');
-            if (dot >= 0) {
-                name = oldName.substring(0, dot);
-            } else {
-                name = oldName;
-            }
-
+            String name = dot >= 0 ? oldName.substring(0, dot) : oldName;
             return extractNamePart(name);
         }
 
@@ -918,8 +929,9 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             int currentEndIndex = endIndex;
             if (currentStartIndex < 0) {
                 currentStartIndex = targetLen + currentStartIndex + 1;
-                if (currentStartIndex < 1)
+                if (currentStartIndex < 1) {
                     currentStartIndex = 1;
+                }
             }
             if (currentEndIndex < 0)
                 currentEndIndex = targetLen + currentEndIndex + 1;

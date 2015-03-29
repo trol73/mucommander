@@ -36,7 +36,7 @@ public class QuickListHeaderItem extends QuickListItem {
 	protected Color foreground;
 	protected Color background;
 	protected Color secondaryBackground;
-	
+
 	public QuickListHeaderItem(String text) {
 	   super(text);
 	   foreground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR);
@@ -49,8 +49,7 @@ public class QuickListHeaderItem extends QuickListItem {
     protected final void paintComponent(Graphics g) {
 		Graphics2D graphics = (Graphics2D) g;
 	
-		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		// paint background image	
 		graphics.drawImage(getBackgroundImage(getWidth(), getHeight(),
@@ -58,18 +57,16 @@ public class QuickListHeaderItem extends QuickListItem {
 				0, 0, null);
 
 		// draw text:
-		graphics.setFont(FONT);
+		graphics.setFont(mFont);
 		graphics.setColor(foreground);
 		graphics.drawString(getText(), X_AXIS_OFFSET, (int) graphics.getFontMetrics().getLineMetrics(this.getText(), graphics).getHeight());
 	}
 	
-	private BufferedImage getBackgroundImage(int width, int height, 
-			Graphics2D graphics, Color leftColor, Color rightColor) {
-		
+	private BufferedImage getBackgroundImage(int width, int height, Graphics2D graphics, Color leftColor, Color rightColor) {
 		//clear previous painting:
 		graphics.setColor(Color.white);
 		graphics.fillRect(0, 0, width, height);
-		
+
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -94,14 +91,18 @@ public class QuickListHeaderItem extends QuickListItem {
 	
 	@Override
     public void colorChanged(ColorChangedEvent event) {
-		if (event.getColorId() == ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR)
-			background = event.getColor();
+        switch (event.getColorId()) {
+            case ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR:
+                background = event.getColor();
+                break;
+            case ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR:
+                foreground = event.getColor();
+                break;
+            case ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR:
+                secondaryBackground = event.getColor();
+                break;
 
-		else if (event.getColorId() == ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR)
-			foreground = event.getColor();
-		
-		else if (event.getColorId() == ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR)
-			secondaryBackground = event.getColor();
+        }
 	}
 	
 	@Override

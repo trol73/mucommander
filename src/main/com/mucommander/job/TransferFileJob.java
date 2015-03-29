@@ -158,7 +158,7 @@ public abstract class TransferFileJob extends FileJob {
                 // Try to open InputStream
                 try  {
                     long destFileSize = destFile.getSize();
-                    if(append && destFileSize!=-1) {
+                    if (append && destFileSize > 0) {
                         in = sourceFile.getInputStream(destFileSize);
                         // Do not calculate checksum, as it needs to be calculated on the whole file
 
@@ -214,7 +214,7 @@ public abstract class TransferFileJob extends FileJob {
         }
 
         // Under Mac OS X only, preserving the file type and creator
-        if(OsFamily.MAC_OS_X.isCurrent()
+        if (OsFamily.MAC_OS_X.isCurrent()
             && sourceFile.hasAncestor(LocalFile.class)
             && destFile.hasAncestor(LocalFile.class)) {
 
@@ -235,18 +235,16 @@ public abstract class TransferFileJob extends FileJob {
             // Indicate that integrity is being checked, the value is reset when the next file starts
             isCheckingIntegrity = true;
 
-            if(in!=null && (in instanceof ChecksumInputStream)) {
+            if (in != null && (in instanceof ChecksumInputStream)) {
                 // The file was copied with a ChecksumInputStream, the checksum is already calculated, simply
                 // retrieve it
                 sourceChecksum = ((ChecksumInputStream)in).getChecksumString();
-            }
-            else {
+            } else {
                 // The file was copied using AbstractFile#copyRemotelyTo(), or the transfer was resumed:
                 // we have to calculate the source file's checksum from scratch.
                 try {
                     sourceChecksum = calculateChecksum(sourceFile);
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     throw new FileTransferException(FileTransferException.READING_SOURCE);
                 }
             }
@@ -256,15 +254,14 @@ public abstract class TransferFileJob extends FileJob {
             // Calculate the destination file's checksum
             try {
                 destinationChecksum = calculateChecksum(destFile);
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 throw new FileTransferException(FileTransferException.READING_DESTINATION);
             }
 
             LOGGER.debug("Destination checksum= "+destinationChecksum);
 
             // Compare both checksums and throw an exception if they don't match
-            if(!sourceChecksum.equals(destinationChecksum)) {
+            if (!sourceChecksum.equals(destinationChecksum)) {
                 throw new FileTransferException(FileTransferException.CHECKSUM_MISMATCH);
             }
         }
@@ -275,8 +272,7 @@ public abstract class TransferFileJob extends FileJob {
         InputStream in = setCurrentInputStream(file.getInputStream());
         try {
             return AbstractFile.calculateChecksum(in, MessageDigest.getInstance(CHECKSUM_VERIFICATION_ALGORITHM));
-        }
-        finally {
+        } finally {
             closeCurrentInputStream();
         }
     }
@@ -305,8 +301,9 @@ public abstract class TransferFileJob extends FileJob {
                 // the IOException was caused by the stream being closed as a result of the user interruption.
                 // If that is the case, the exception should not be interpreted as an error.
                 // Same goes if the current file was skipped.
-                if (getState() == State.INTERRUPTED || wasCurrentFileSkipped())
+                if (getState() == State.INTERRUPTED || wasCurrentFileSkipped()) {
                     return false;
+                }
 
                 // Print the exception's stack trace
                 LOGGER.debug("Copy failed", e);
@@ -387,8 +384,7 @@ public abstract class TransferFileJob extends FileJob {
     protected synchronized InputStream setCurrentInputStream(InputStream in) {
         if(tlin==null) {
             tlin = new ThroughputLimitInputStream(new CounterInputStream(in, currentFileByteCounter), throughputLimit);
-        }
-        else {
+        } else {
             tlin.setUnderlyingInputStream(new CounterInputStream(in, currentFileByteCounter));
         }
 
@@ -403,7 +399,7 @@ public abstract class TransferFileJob extends FileJob {
             try {
                 tlin.close();
             } catch(IOException e) {
-
+                e.printStackTrace();
             }
         }
     }
@@ -454,8 +450,9 @@ public abstract class TransferFileJob extends FileJob {
         }
 
         // Resume job if currently paused 
-        if (getState() == State.PAUSED)
+        if (getState() == State.PAUSED) {
             setPaused(false);
+        }
     }
 
     /**
@@ -475,10 +472,7 @@ public abstract class TransferFileJob extends FileJob {
      */
     public float getFilePercentDone() {
         long currentFileSize = getCurrentFileSize();
-        if(currentFileSize<=0)
-            return 0;
-        else
-            return getCurrentFileByteCounter().getByteCount()/(float)currentFileSize;
+        return currentFileSize <= 0 ? 0 : getCurrentFileByteCounter().getByteCount()/(float)currentFileSize;
     }
 
     /**
@@ -547,8 +541,9 @@ public abstract class TransferFileJob extends FileJob {
         this.throughputLimit = bytesPerSecond<=0?-1:bytesPerSecond;
 
         synchronized(this) {
-            if (getState() != State.PAUSED && tlin !=null)
+            if (getState() != State.PAUSED && tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
+            }
         }
     }
 
@@ -575,7 +570,7 @@ public abstract class TransferFileJob extends FileJob {
         super.jobStopped();
 
         synchronized(this) {
-            if(tlin !=null) {
+            if (tlin !=null) {
                 LOGGER.debug("closing current InputStream "+ tlin);
 
                 closeCurrentInputStream();
@@ -609,8 +604,9 @@ public abstract class TransferFileJob extends FileJob {
 
         synchronized(this) {
             // Restore previous throughput limit (if any, -1 by default)
-            if(tlin !=null)
+            if (tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
+            }
         }
     }
 

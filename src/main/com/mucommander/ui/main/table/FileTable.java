@@ -940,8 +940,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void updateColumnsVisibility() {
         FileTableColumnModel columnModel = getFileTableColumnModel();
 
-        for(Column c : Column.values())
+        for (Column c : Column.values()) {
             columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
+        }
     }
 
     /**
@@ -1164,13 +1165,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     @Override
     public void doLayout() {
-        if(!autoSizeColumnsEnabled) {
-            if (getTableHeader().getResizingColumn() != null)
+        if (!autoSizeColumnsEnabled) {
+            if (getTableHeader().getResizingColumn() != null) {
                 super.doLayout();
-            else if (!getFileTableColumnModel().wereColumnSizesSet())
+            } else if (!getFileTableColumnModel().wereColumnSizesSet()) {
                 doAutoLayout(false);
-            else
+            } else {
                 doStaticLayout();
+            }
         } else {    // Custom layout
             doAutoLayout(true);
         }
@@ -1178,7 +1180,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // Ensures that current row is visible (within current viewport), and if not adjusts viewport to center it
         Rectangle visibleRect = getVisibleRect();
         final Rectangle cellRect = getCellRect(currentRow, 0, false);
-        if (cellRect.y<visibleRect.y || cellRect.y+getRowHeight()>visibleRect.y+visibleRect.height) {
+        if (cellRect.y < visibleRect.y || cellRect.y + getRowHeight( ) >visibleRect.y + visibleRect.height) {
             if (scrollpaneWrapper != null) {
                 // At this point JViewport is not yet aware of the new FileTable dimensions, calling setViewPosition
                 // would not work. Instead, SwingUtilities.invokeLater is used to delay the call after all pending
@@ -1326,7 +1328,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
                     int labelWidth = fm.stringWidth((String) tableModel.getValueAt(row, column.ordinal()));
                     int columnX = (int) getTableHeader().getHeaderRect(viewColumn).getX();
-                    if (clickX<columnX+CellLabel.CELL_BORDER_WIDTH || clickX>columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH)
+                    if (clickX < columnX+CellLabel.CELL_BORDER_WIDTH || clickX > columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH)
                         return;
 
                     // The following test ensures that this mouse click is not the one that gave the focus to this table.
@@ -1586,8 +1588,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     @Override
                     public void keyPressed(KeyEvent e) {
                         int keyCode = e.getKeyCode();
-                        if(keyCode == KeyEvent.VK_ESCAPE)
+                        if (keyCode == KeyEvent.VK_ESCAPE) {
                             cancelCellEditing();
+                        }
                     }
                 }
             );

@@ -90,7 +90,7 @@ public class ThemeData {
      * by an instance of theme data by looping from 0 to this color.
      * </p>
      */
-    public static final int COLOR_COUNT = 83;
+    public static final int COLOR_COUNT = 87;
 
 
 
@@ -706,6 +706,40 @@ public class ThemeData {
     public static final int TERMINAL_SELECTED_FOREGROUND_COLOR = 81;
     public static final int TERMINAL_SELECTED_BACKGROUND_COLOR = 82;
 
+    /**
+     * Color used to paint plain files text in the folder panels.
+     * <p>
+     * This defaults to the current <code>JTable</code> foreground color.
+     * </p>
+     */
+    public static final int EXECUTABLE_FOREGROUND_COLOR = 83;
+
+    /**
+     * Color used to paint plain files text in the folder panels when they don't have the focus.
+     * <p>
+     * This behaves in exactly the same fashion as {@link #FILE_FOREGROUND_COLOR}, and defaults
+     * to the same value.
+     * </p>
+     */
+    public static final int EXECUTABLE_INACTIVE_FOREGROUND_COLOR = 84;
+
+    /**
+     * Color used to paint selected plain files text in the folder panels.
+     * <p>
+     * This defaults to the current <code>JTable</code> selection foreground color.
+     * </p>
+     */
+    public static final int EXECUTABLE_SELECTED_FOREGROUND_COLOR = 85;
+
+    /**
+     * Color used to paint selected plain files text in the folder panels when they don't have the focus.
+     * <p>
+     * This behaves in exactly the same fashion as {@link #FILE_SELECTED_FOREGROUND_COLOR}, and defaults
+     * to the same value.
+     * </p>
+     */
+    public static final int EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR = 86;
+
 
 
     // - Default fonts -------------------------------------------------------------------------------------------------
@@ -974,6 +1008,12 @@ public class ThemeData {
         registerColor(MARKED_INACTIVE_FOREGROUND_COLOR,                        Color.RED);
         registerColor(MARKED_SELECTED_FOREGROUND_COLOR,                        Color.RED);
         registerColor(MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR,               Color.RED);
+
+        registerColor(EXECUTABLE_FOREGROUND_COLOR,                             Color.GREEN);
+        registerColor(EXECUTABLE_INACTIVE_FOREGROUND_COLOR,                    Color.GREEN);
+        registerColor(EXECUTABLE_SELECTED_FOREGROUND_COLOR,                    Color.GREEN);
+        registerColor(EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR,           Color.GREEN);
+
         registerColor(FILE_TABLE_BORDER_COLOR,                                 Color.GRAY);
         registerColor(FILE_TABLE_INACTIVE_BORDER_COLOR,                        Color.GRAY);
         registerColor(FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR,          FILE_TABLE_SELECTED_BACKGROUND_COLOR);

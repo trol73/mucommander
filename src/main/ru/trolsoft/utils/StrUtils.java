@@ -38,7 +38,11 @@ public class StrUtils {
      */
     public static String dwordToHexStr(long val) {
         String result = Long.toHexString(val);
-        return STRING_OF_ZERO[8-result.length()] + result;
+        int len = result.length();
+        if (len > 8) {
+            return result;
+        }
+        return STRING_OF_ZERO[8-len] + result;
     }
 
 

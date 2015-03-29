@@ -46,7 +46,7 @@ public class CopyJob extends AbstractCopyJob {
      * The value can be used by subclasses that override processFile should they need to work on the destination file. */
     protected AbstractFile currentDestFile;
 
-    protected ScanDirectoryThread scanDirectoryThread;
+    protected final ScanDirectoryThread scanDirectoryThread;
 
     /** Processed files counter */
     protected long processedFilesCount;
@@ -251,10 +251,10 @@ public class CopyJob extends AbstractCopyJob {
 
     @Override
     public void interrupt() {
-        super.interrupt();
         if (scanDirectoryThread != null) {
             scanDirectoryThread.interrupt();
         }
+        super.interrupt();
     }
 
     @Override
