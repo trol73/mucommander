@@ -37,7 +37,7 @@ package com.mucommander.commons.conf;
  */
 public interface ConfigurationBuilder {
     /**
-     * Receives notification at the begining of the configuration.
+     * Receives notification at the beginning of the configuration.
      * <p>
      * This method will only be invoked once, before any other method in this interface.
      * </p>

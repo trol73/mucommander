@@ -163,7 +163,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 	}
 	
 	/**
-     * Dims the scrollpane's background, called by {@link com.mucommander.ui.main.table.FileTable.QuickSearch} when a quick search is started.
+     * Dims the scrollpane's background, called by {@link com.mucommander.ui.quicksearch.QuickSearch} when a quick search is started.
      */
     public void dimBackground() {
         fileTable.setBackground(unmatchedBackgroundColor);
@@ -172,7 +172,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 
     /**
      * Stops dimming the scrollpane's background (returns to a normal background color), called by
-     * {@link com.mucommander.ui.main.table.FileTable.QuickSearch} when a quick search is over.
+     * {@link com.mucommander.ui.quicksearch.QuickSearch} when a quick search is over.
      */
     public void undimBackground() {
         // Identifies the new background color.

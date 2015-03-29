@@ -141,7 +141,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private JButton      deleteThemeButton;
     /** Used to display the currently selected theme's type. */
     private JLabel       typeLabel;
-    /** Whether or not to ignore theme comobox related events. */
+    /** Whether or not to ignore theme combobox related events. */
     private boolean      ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
     private AbstractFile lastSelectedFolder;

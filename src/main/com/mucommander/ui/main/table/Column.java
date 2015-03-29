@@ -40,9 +40,9 @@ public enum Column {
     GROUP("group", true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
 
     private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<Integer,Column>(){{
-      for (Column column : Column.values()) {
-        put(column.ordinal(), column);
-      }
+        for (Column column : Column.values()) {
+            put(column.ordinal(), column);
+        }
     }};
 
     /** Standard minimum column width */
@@ -55,7 +55,7 @@ public enum Column {
     private String toggleActionId;
     private String sortByActionId;
 
-    private Column(String labelId, boolean hasMinimumWidth, boolean showByDefault, int fileComparatorCriterion, String toggleActionId, String sortByActionId) {
+    Column(String labelId, boolean hasMinimumWidth, boolean showByDefault, int fileComparatorCriterion, String toggleActionId, String sortByActionId) {
         this.label = Translator.get(labelId);
         this.minimumWidth = hasMinimumWidth?STANDARD_MINIMUM_WIDTH:0;
         this.showByDefault = showByDefault;

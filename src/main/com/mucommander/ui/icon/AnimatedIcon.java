@@ -36,7 +36,7 @@ import java.util.Set;
  * </p>
  * @author twall, Nicolas Rinaudo
  */
-public abstract class   AnimatedIcon implements Icon {
+public abstract class AnimatedIcon implements Icon {
     // - Default values ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Default number of frames per animation. */

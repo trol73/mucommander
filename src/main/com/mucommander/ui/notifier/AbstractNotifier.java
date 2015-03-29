@@ -37,7 +37,7 @@ import com.mucommander.ui.main.WindowManager;
  * the application is not visible (in the background).
  * </p>
  * <p>
- * The notifier instance returnd by {@link #getNotifier()} is platform-dependent. At this time, two notifier
+ * The notifier instance returned by {@link #getNotifier()} is platform-dependent. At this time, two notifier
  * implementations are available:
  * <ul>
  *  <li>{@link GrowlNotifier}: for Mac OS X, requires Growl to be installed
