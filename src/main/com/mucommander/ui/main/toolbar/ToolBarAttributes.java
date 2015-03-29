@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.main.toolbar;
 
+import java.util.Map;
 import java.util.WeakHashMap;
 
 import com.mucommander.ui.action.impl.AddBookmarkAction;
@@ -57,7 +58,7 @@ public class ToolBarAttributes {
     private static boolean useDefaultActions = true;
     
     /** Contains all registered toolbar-attributes listeners, stored as weak references */
-    private final static WeakHashMap<ToolBarAttributesListener, ?> listeners = new WeakHashMap<ToolBarAttributesListener, Object>();
+    private static final Map<ToolBarAttributesListener, ?> listeners = new WeakHashMap<ToolBarAttributesListener, Object>();
     
     /** Default command bar actions: Class instances or null to signify a separator */
     private final static String[] DEFAULT_TOOLBAR_ACTIONS = new String[] {
@@ -106,14 +107,17 @@ public class ToolBarAttributes {
         int start = 0;
         int end = actions.length;
 
-        while(start<end && actions[start]==null)
+        while (start < end && actions[start] == null) {
             start++;
+        }
 
-        if(start==end)
+        if (start == end) {
             return new String[]{};
+        }
 
-        while(end>start && actions[end-1]==null)
+        while (end > start && actions[end-1] == null) {
             end--;
+        }
 
         int newLen = end-start;
         String newActions[] = new String[newLen];
@@ -140,24 +144,29 @@ public class ToolBarAttributes {
      * @return true if the default attributes are used, false otherwise.
      */
     public static boolean areDefaultAttributes() {
-    	if (useDefaultActions)
-    		return true;
+    	if (useDefaultActions) {
+            return true;
+        }
     		
     	int nbActions = actionIds.length;
     	
-    	if (nbActions != DEFAULT_TOOLBAR_ACTIONS.length)
-    		return false;
+    	if (nbActions != DEFAULT_TOOLBAR_ACTIONS.length) {
+            return false;
+        }
     	
-    	for (int i=0; i<nbActions; ++i)
-    		if (!equals(actionIds[i], DEFAULT_TOOLBAR_ACTIONS[i]))
-    			return false;
+    	for (int i=0; i<nbActions; ++i) {
+            if (!equals(actionIds[i], DEFAULT_TOOLBAR_ACTIONS[i])) {
+                return false;
+            }
+        }
     	
     	return true;
     }
     
     private static boolean equals(Object action1, Object action2) {
-    	if (action1 == null)
-    		return action2 == null;
+    	if (action1 == null) {
+            return action2 == null;
+        }
     	return action1.equals(action2);
     }
     
@@ -183,7 +192,7 @@ public class ToolBarAttributes {
     
     public static void fireActionsChanged() {
     	synchronized(listeners) {
-            for(ToolBarAttributesListener listener : listeners.keySet())
+            for (ToolBarAttributesListener listener : listeners.keySet())
                 listener.toolBarActionsChanged();
         }
     }
