@@ -20,6 +20,7 @@ package com.mucommander.core;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -82,7 +83,10 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     /** Number of checks in current folder */
     private int nbSamples = 0;
 
-	
+    /**
+     * If not null then refresh folder that contains this files
+     */
+    private static final List<String> forceRefreshFilePath = new ArrayList<>();
     //////////////////////
     // Static variables //
     //////////////////////
@@ -158,10 +162,12 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         }
     }
 
-long t0 = System.currentTimeMillis();
+
     public void run() {
         // TODO: it would be more efficient to use a wait/notify scheme rather than sleeping. 
         // It would also allow folders to be checked immediately upon certain conditions such as a window becoming activated.
+
+        int needToClearRefreshQueueCounter = 0;
         while (monitorThread != null) {
 			
             // Sleep for a while
@@ -175,6 +181,15 @@ long t0 = System.currentTimeMillis();
             try {
                 for (FolderChangeMonitor instance : instances) {
                     checkForMonitor(instance);
+                }
+                // clean up the refresh queue if it doesn't empty a "long" time
+                if (needToClearRefreshQueueCounter > 10) {
+                    needToClearRefreshQueueCounter = 0;
+                    synchronized (forceRefreshFilePath) {
+                        forceRefreshFilePath.clear();
+                    }
+                } else if (!forceRefreshFilePath.isEmpty()) {
+                    needToClearRefreshQueueCounter++;
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -225,8 +240,9 @@ long t0 = System.currentTimeMillis();
         this.paused = paused;
 
         // Check folder for changes immediately as setPaused(false) is often called after a FileJob
-        if(!paused)
+        if (!paused) {
             this.waitBeforeCheckTime = 0;
+        }
     }
 	
 	
@@ -263,7 +279,7 @@ long t0 = System.currentTimeMillis();
         // Check folder's date
         long date = currentFolder.getDate();
 
-        totalCheckTime += System.currentTimeMillis()-timeStamp;
+        totalCheckTime += System.currentTimeMillis() - timeStamp;
         nbSamples++;
 		
         // Has date changed ?
@@ -274,6 +290,19 @@ long t0 = System.currentTimeMillis();
 			
             // Try and refresh current folder in a separate thread as to not lock monitor thread
             folderPanel.tryRefreshCurrentFolder();
+        }
+
+        if (!forceRefreshFilePath.isEmpty()) {
+            synchronized (forceRefreshFilePath) {
+                String folderPath = currentFolder.getAbsolutePath();
+                for (String path : forceRefreshFilePath) {
+                    if (path.startsWith(folderPath)) {
+                        forceRefreshFilePath.remove(path);
+                        folderPanel.tryRefreshCurrentFolder();
+                        break;
+                    }
+                }
+            }
         }
 		
         return false;
@@ -324,6 +353,16 @@ long t0 = System.currentTimeMillis();
         // Remove the MainFrame from the list of monitored instances
         instances.remove(this);
         LOGGER.debug("nbInstances="+instances.size());
-    }	
+    }
+
+    /**
+     * Force to refresh folder that contains this file
+     * @param path
+     */
+    public static void addFileToRefresh(String path) {
+        synchronized (forceRefreshFilePath) {
+            forceRefreshFilePath.add(path);
+        }
+    }
 	
 }

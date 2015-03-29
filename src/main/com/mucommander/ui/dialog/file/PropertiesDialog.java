@@ -74,8 +74,8 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     private JButton okCancelButton;
 
     // Dialog width is constrained to 320, height is not an issue (always the same)
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360,0);
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(450,10000);	
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 800);
 
     /** How often should progress information be refreshed (in ms) */
     private final static int REFRESH_RATE = 500;

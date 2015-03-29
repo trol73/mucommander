@@ -99,11 +99,11 @@ public class Translator {
             // Try to match language with the system's language, only if the system's language
             // has values in dictionary, otherwise use default language (English).
             Locale defaultLocale = Locale.getDefault();
-            LOGGER.info("Language not set in preferences, trying to match system's language ("+defaultLocale+")");
+            LOGGER.info("Language not set in preferences, trying to match system's language (" + defaultLocale + ")");
             return defaultLocale;
         }
 
-        LOGGER.info("Using language set in preferences: "+localeNameFromConf);
+        LOGGER.info("Using language set in preferences: " + localeNameFromConf);
         switch (localeNameFromConf) {
             // for backward compatibility
             case "EN": return Locale.forLanguageTag("en-US");
@@ -153,7 +153,7 @@ public class Translator {
         // Set preferred language in configuration file
         MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, locale.toLanguageTag());
 
-        LOGGER.debug("Current language has been set to "+Translator.language);
+        LOGGER.debug("Current language has been set to " + Translator.language);
     }
 
     /**
@@ -172,7 +172,7 @@ public class Translator {
      *
      * @return an array of language codes.
      */
-    public static List<Locale>  getAvailableLanguages() {
+    public static List<Locale> getAvailableLanguages() {
         return availableLanguages;
     }
 

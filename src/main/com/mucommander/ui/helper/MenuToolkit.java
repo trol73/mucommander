@@ -156,12 +156,13 @@ public class MenuToolkit {
     
 
     private static JMenuItem addMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper, boolean createCheckBoxMenuItem) {
-        JMenuItem menuItem = createCheckBoxMenuItem?new JCheckBoxMenuItem(action):new JMenuItem(action);
+        JMenuItem menuItem = createCheckBoxMenuItem ? new JCheckBoxMenuItem(action) : new JMenuItem(action);
 
         if (mnemonicHelper != null) {
             char mnemonic = mnemonicHelper.getMnemonic(action.getLabel());
-            if (mnemonic != 0)
+            if (mnemonic != 0) {
                 menuItem.setMnemonic(mnemonic);
+            }
         }
 
         // If the provided action has an icon, it would by default get displayed in the menu item.

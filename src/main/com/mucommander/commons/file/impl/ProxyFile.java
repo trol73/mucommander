@@ -92,7 +92,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void changeDate(long lastModified) throws IOException {
         file.changeDate(lastModified);
     }
 
@@ -117,7 +117,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public void changePermission(int access, int permission, boolean enabled) throws IOException, UnsupportedFileOperationException {
+    public void changePermission(int access, int permission, boolean enabled) throws IOException {
         file.changePermission(access, permission, enabled);
     }
 
@@ -157,62 +157,62 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public AbstractFile[] ls() throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls() throws IOException {
         return file.ls();
     }
 
     @Override
-    public void mkdir() throws IOException, UnsupportedFileOperationException {
+    public void mkdir() throws IOException {
         file.mkdir();
     }
 
     @Override
-    public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream() throws IOException {
         return file.getInputStream();
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
+    public OutputStream getOutputStream() throws IOException {
         return file.getOutputStream();
     }
 
     @Override
-    public OutputStream getAppendOutputStream() throws IOException, UnsupportedFileOperationException {
+    public OutputStream getAppendOutputStream() throws IOException {
         return file.getAppendOutputStream();
     }
 
     @Override
-    public RandomAccessInputStream getRandomAccessInputStream() throws IOException, UnsupportedFileOperationException {
+    public RandomAccessInputStream getRandomAccessInputStream() throws IOException {
         return file.getRandomAccessInputStream();
     }
 
     @Override
-    public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException, UnsupportedFileOperationException {
+    public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException {
         return file.getRandomAccessOutputStream();
     }
 
     @Override
-    public void delete() throws IOException, UnsupportedFileOperationException {
+    public void delete() throws IOException {
         file.delete();
     }
 
     @Override
-    public void copyRemotelyTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void copyRemotelyTo(AbstractFile destFile) throws IOException {
         file.copyRemotelyTo(destFile);
     }
 
     @Override
-    public void renameTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void renameTo(AbstractFile destFile) throws IOException {
         file.renameTo(destFile);
     }
 
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+    public long getFreeSpace() throws IOException {
         return file.getFreeSpace();
     }
 
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+    public long getTotalSpace() throws IOException {
         return file.getTotalSpace();
     }
 
@@ -233,10 +233,10 @@ public abstract class ProxyFile extends AbstractFile {
         // If the method corresponding to the file operation has been overridden by this class (a ProxyFile subclass),
         // check the presence of the UnsupportedFileOperation annotation in this class.
         try {
-            if(!thisClass.getMethod(opMethod.getName(), opMethod.getParameterTypes()).getDeclaringClass().equals(ProxyFile.class))
+            if (!thisClass.getMethod(opMethod.getName(), opMethod.getParameterTypes()).getDeclaringClass().equals(ProxyFile.class)) {
                 return AbstractFile.isFileOperationSupported(op, thisClass);
-        }
-        catch(Exception e) {
+            }
+        } catch(Exception e) {
             // Should never happen, unless AbstractFile method signatures have changed and FileOperation has not been updated
             LOGGER.warn("Exception caught, this should not have happened", e);
         }
@@ -306,7 +306,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public void changePermissions(int permissions) throws IOException, UnsupportedFileOperationException {
+    public void changePermissions(int permissions) throws IOException {
         file.changePermissions(permissions);
     }
 
@@ -336,7 +336,7 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public InputStream getInputStream(long offset) throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream(long offset) throws IOException {
         return file.getInputStream(offset);
     }
 
@@ -346,22 +346,22 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         return file.ls(filter);
     }
 
     @Override
-    public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         return file.ls(filter);
     }
 
     @Override
-    public void mkfile() throws IOException, UnsupportedFileOperationException {
+    public void mkfile() throws IOException {
         file.mkfile();
     }
 
     @Override
-    public void deleteRecursively() throws IOException, UnsupportedFileOperationException {
+    public void deleteRecursively() throws IOException {
         file.deleteRecursively();
     }
 

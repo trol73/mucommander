@@ -445,8 +445,9 @@ public class FileFactory {
             // Note: FileURL#equals(Object) and #hashCode() take into account credentials and properties and are
             // trailing slash insensitive (e.g. '/root' and '/root/' URLS are one and the same)
             AbstractFile file = filePool.get(fileURL);
-            if (file != null)
+            if (file != null) {
                 return file;
+            }
         }
 
         String filePath = fileURL.getPath();
@@ -537,8 +538,9 @@ public class FileFactory {
         // Special case for local files to avoid provider hashtable lookup and other unnecessary checks
         // (for performance reasons)
         if (scheme.equals(FileProtocols.FILE)) {
-            if (localFileProvider == null)
+            if (localFileProvider == null) {
                 throw new IOException("Unknown file protocol: " + scheme);
+            }
 
             return localFileProvider.getFile(fileURL, instantiationParams);
 

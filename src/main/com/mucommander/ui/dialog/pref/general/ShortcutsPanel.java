@@ -18,20 +18,22 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
+import com.mucommander.commons.util.StringUtils;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
 import com.mucommander.text.Translator;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionKeymapIO;
-import com.mucommander.ui.action.ActionProperties;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
+import com.mucommander.ui.text.KeyStrokeUtils;
+import com.mucommander.ui.theme.ThemeCache;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.Locale;
 
 /**
  * 'Shortcuts' preferences panel.
@@ -77,7 +79,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 	public ShortcutsPanel(PreferencesDialog parent) {
 		super(parent, Translator.get("shortcuts_panel" + ".title"));
 		initUI();
-		setPreferredSize(new Dimension(0,0));
+		setPreferredSize(new Dimension(0, 0));
 		
 		shortcutsTable.addDialogListener(parent);
 	}
@@ -139,7 +141,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
 		
-		RemoveButton removeButton = new RemoveButton();	
+		RemoveButton removeButton = new RemoveButton();
 		
 		final JButton restoreDefaultButton = new JButton();
 		restoreDefaultButton.setAction(new AbstractAction(Translator.get("shortcuts_panel" + ".restore_defaults")) {
@@ -178,37 +180,126 @@ public class ShortcutsPanel extends PreferencesPanel {
 	    combo.setSelectedIndex(0);
 		
 		panel.add(combo);
-
         panel.add(new JLabel(Translator.get("shortcuts_panel.search") + ":"));
 
-        final JTextField text = new JTextField(16);
-        text.getDocument().addDocumentListener(new DocumentListener() {
+        final JTextField searchText = new JTextField(16);
+        panel.add(searchText);
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateFilter();
+        JTextField shortcutText = new JTextField(15);
+        resetShortcutFilterText(shortcutText);
+        shortcutText.setHorizontalAlignment(JTextField.CENTER);
+        shortcutText.setEditable(false);
+        shortcutText.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][ThemeCache.SELECTED]);
+        shortcutText.setForeground(ThemeCache.foregroundColors[ThemeCache.ACTIVE][ThemeCache.SELECTED][ThemeCache.PLAIN_FILE]);
+        // It is required to disable the traversal keys in order to support keys combination that include the TAB key
+        setFocusTraversalKeysEnabled(false);
+        panel.add(shortcutText);
+
+        addCategoryFilter(searchText, combo, shortcutText);
+        addSearchTextFilter(searchText, combo, shortcutText);
+        addShortcutFilter(shortcutText);
+
+
+        return panel;
+	}
+
+    private void resetShortcutFilterText(JTextField shortcutText) {
+        shortcutText.setText(Translator.get("shortcuts_table.type_in_a_shortcut"));
+    }
+
+    private void addShortcutFilter(final JTextField shortcutText) {
+        shortcutText.addKeyListener(new KeyListener() {
+            public void keyPressed(KeyEvent keyEvent) {
+                int keyCode = keyEvent.getKeyCode();
+                if (keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_ALT || keyCode == KeyEvent.VK_META) {
+                    return;
+                }
+
+                final KeyStroke pressedKeyStroke = KeyStroke.getKeyStrokeForEvent(keyEvent);
+
+                shortcutText.setText(KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(pressedKeyStroke));
+                updateFilter(pressedKeyStroke);
+                keyEvent.consume();
             }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateFilter();
-            }
+            public void keyReleased(KeyEvent e) {e.consume();}
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateFilter();
-            }
+   			public void keyTyped(KeyEvent e) {e.consume();}
+        });
+    }
 
-            private void updateFilter() {
-                filter.setText(text.getText());
-                shortcutsTable.updateModel(filter);
-                tooltipBar.showDefaultMessage();
+    private void resetShortcutFilterWhenFocusGained(JComponent componentGainingFocus, final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, final JTextField shortcutText) {
+        componentGainingFocus.addFocusListener(new FocusListener() {
+            @Override
+            public void focusLost(FocusEvent e) {}
+            @Override
+            public void focusGained(FocusEvent e) {
+                updateFilter(searchText, categoryCombo, shortcutText);
             }
         });
-        panel.add(text);
-		
-		return panel;
-	}
+    }
+
+
+    private void addCategoryFilter(final JTextField searchText, final JComboBox<ActionCategory> combo, final JTextField shortcutText) {
+        combo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateFilter(searchText, combo, shortcutText);
+            }
+        });
+        resetShortcutFilterWhenFocusGained(combo, searchText, combo, shortcutText);
+    }
+
+
+    private void addSearchTextFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, final JTextField shortcutText) {
+        searchText.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFilter(searchText, categoryCombo, shortcutText);
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFilter(searchText, categoryCombo, shortcutText);
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+
+        resetShortcutFilterWhenFocusGained(searchText, searchText, categoryCombo, shortcutText);
+    }
+
+    private void updateFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, JTextField shortcutText) {
+        final ActionCategory selectedActionCategory = (ActionCategory) categoryCombo.getSelectedItem();
+        final String filterText = searchText.getText();
+
+        shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
+            Locale currentLang = Locale.forLanguageTag(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
+            @Override
+            public boolean accept(String actionId) {
+                return selectedActionCategory.contains(actionId) && (
+                    StringUtils.isNullOrBlank(filterText)
+                    || StringUtils.containsIgnoreCase(ActionProperties.getActionLabel(actionId), filterText, currentLang)
+                    || StringUtils.containsIgnoreCase(ActionProperties.getActionTooltip(actionId), filterText, currentLang)
+                    // also search for id's to find typical english computer terms even in non english languages
+                    || StringUtils.containsIgnoreCase(ActionProperties.getActionLabelKey(actionId), filterText, currentLang)
+                    || StringUtils.containsIgnoreCase(actionId, filterText, currentLang));
+            }
+        });
+        resetShortcutFilterText(shortcutText);
+        tooltipBar.showDefaultMessage();
+    }
+
+   	private void updateFilter(final KeyStroke pressedKeyStroke) {
+        shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
+            @Override
+            public boolean accept(String actionId) {
+                KeyStroke accelerator = ActionKeymap.getAccelerator(actionId);
+                KeyStroke alternateAccelerator = ActionKeymap.getAlternateAccelerator(actionId);
+                return pressedKeyStroke.equals(accelerator) || pressedKeyStroke.equals(alternateAccelerator);
+            }
+        });
+    }
+
 	
 	///////////////////////
     // PrefPanel methods //

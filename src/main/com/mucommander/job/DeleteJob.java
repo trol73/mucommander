@@ -21,6 +21,7 @@ package com.mucommander.job;
 
 import java.io.IOException;
 
+import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,11 @@ public class DeleteJob extends FileJob {
     /** True when an archive is being optimized */
     private boolean isOptimizingArchive;
 
+    protected ScanDirectoryThread scanDirectoryThread;
+
+    /** Processed files counter */
+    protected long processedFilesCount;
+
 
     /**
      * Creates a new DeleteJob without starting it.
@@ -79,8 +85,12 @@ public class DeleteJob extends FileJob {
         this.errorDialogTitle = Translator.get("delete_dialog.error_title");
 
         this.moveToTrash = moveToTrash;
-        if(moveToTrash)
+        if (moveToTrash) {
             trash = DesktopManager.getTrash();
+        }
+
+        scanDirectoryThread = new ScanDirectoryThread(files, false);
+        scanDirectoryThread.start();
     }
 
     /**
@@ -91,10 +101,11 @@ public class DeleteJob extends FileJob {
      * @throws IOException if an error occurred while deleting the file
      */
     private void deleteFile(AbstractFile file) throws IOException {
-        if(moveToTrash)
+        if (moveToTrash) {
             trash.moveToTrash(file);
-        else
+        } else {
             file.delete();
+        }
     }
 
 
@@ -112,8 +123,10 @@ public class DeleteJob extends FileJob {
      */
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if (getState() == State.INTERRUPTED)
+        if (getState() == State.INTERRUPTED) {
             return false;
+        }
+        processedFilesCount++;
 
         // Delete files recursively, only if trash is not used.
         int ret;
@@ -163,8 +176,9 @@ public class DeleteJob extends FileJob {
                                       Translator.get(file.isDirectory()?"cannot_delete_folder":"cannot_delete_file", file.getName())
                                       );
                 // Retry loops
-                if(ret==RETRY_ACTION)
+                if (ret == RETRY_ACTION) {
                     continue;
+                }
                 // Cancel, skip or close dialog returns false
                 return false;
             }
@@ -186,8 +200,9 @@ public class DeleteJob extends FileJob {
     protected void jobStopped() {
         super.jobStopped();
 
-        if(moveToTrash)
+        if (moveToTrash) {
             trash.waitForPendingOperations();
+        }
     }
 
     @Override
@@ -206,10 +221,10 @@ public class DeleteJob extends FileJob {
                     archiveToOptimize.optimizeArchive();
 
                     break;
-                }
-                catch(IOException e) {
-                    if(showErrorDialog(errorDialogTitle, Translator.get("error_while_optimizing_archive", archiveFile.getName()))==RETRY_ACTION)
+                } catch(IOException e) {
+                    if (showErrorDialog(errorDialogTitle, Translator.get("error_while_optimizing_archive", archiveFile.getName()))==RETRY_ACTION) {
                         continue;
+                    }
 
                     break;
                 }
@@ -221,9 +236,33 @@ public class DeleteJob extends FileJob {
 
     @Override
     public String getStatusString() {
-        if(isOptimizingArchive)
+        if (isOptimizingArchive) {
             return Translator.get("optimizing_archive", archiveToOptimize.getName());
+        }
 
         return Translator.get("delete.deleting_file", getCurrentFilename());
+    }
+
+    @Override
+    public void interrupt() {
+        super.interrupt();
+        if (scanDirectoryThread != null) {
+            scanDirectoryThread.interrupt();
+        }
+    }
+
+    @Override
+    public float getTotalPercentDone() {
+        if (scanDirectoryThread == null || !scanDirectoryThread.isCompleted()) {
+            float result = super.getTotalPercentDone();
+            return result > 15 ? 15 : result;
+        }
+        float result = 1.0f*(processedFilesCount-1) / scanDirectoryThread.getFilesCount();
+        if (result < 0) {
+            result = 0;
+        } else if (result > 1) {
+            result = 1;
+        }
+        return result;
     }
 }

@@ -36,7 +36,7 @@ abstract class QuickListItem extends JMenuItem implements ThemeListener {
 	
 	protected static final int X_AXIS_OFFSET = 5;
 	
-	protected Font FONT;
+	protected Font mFont;
 	protected Dimension dimension;
 	
 	public QuickListItem(String text) {
@@ -48,7 +48,7 @@ abstract class QuickListItem extends JMenuItem implements ThemeListener {
 	
 	@Override
     public void setFont(Font font) {
-		FONT = font;
+		mFont = font;
 		dimension = new Dimension((int) Math.ceil(getFontMetrics(font).stringWidth(getText()) * 1.1), (int) (font.getSize() * 1.5));
 		setPreferredSize(dimension);
 		setSize(dimension);

@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.main.statusbar;
 
-import com.mucommander.ui.button.NonFocusableButton;
 import com.mucommander.ui.dialog.FocusDialog;
 
 import javax.swing.*;

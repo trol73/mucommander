@@ -22,6 +22,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,12 @@ public class ArchiveJob extends TransferFileJob {
     /** Lock to avoid Archiver.close() to be called while data is being written */
     private final Object ioLock = new Object();
 
+    protected final ScanDirectoryThread scanDirectoryThread;
+
+    /** Processed files counter */
+    protected long processedFilesCount;
+
+
 
     public ArchiveJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFile, int archiveFormat, String archiveComment) {
         super(progressDialog, mainFrame, files);
@@ -70,6 +77,9 @@ public class ArchiveJob extends TransferFileJob {
         this.archiveComment = archiveComment;
 
         this.baseFolderPath = getBaseSourceFolder().getAbsolutePath(false);
+
+        scanDirectoryThread = new ScanDirectoryThread(files);
+        scanDirectoryThread.start();
     }
 
 
@@ -79,8 +89,9 @@ public class ArchiveJob extends TransferFileJob {
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if (getState() == State.INTERRUPTED)
+        if (getState() == State.INTERRUPTED) {
             return false;
+        }
 
         String filePath = file.getAbsolutePath(false);
         String entryRelativePath = filePath.substring(baseFolderPath.length()+1, filePath.length());
@@ -95,16 +106,16 @@ public class ArchiveJob extends TransferFileJob {
                     // Recurse on files
                     AbstractFile subFiles[] = file.ls();
                     boolean folderComplete = true;
-                    for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
+                    for (int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(subFiles[i]);
-                        if(!processFile(subFiles[i], null))
+                        if (!processFile(subFiles[i], null)) {
                             folderComplete = false;
+                        }
                     }
 					
                     return folderComplete;
-                }
-                else {
+                } else {
                     InputStream in = setCurrentInputStream(file.getInputStream());
                     // Synchronize this block to ensure that Archiver.close() is not closed while data is still being
                     // written to the archive OutputStream, this would cause ZipOutputStream to deadlock.
@@ -115,9 +126,7 @@ public class ArchiveJob extends TransferFileJob {
                     }
                     return true;
                 }
-            }
-            // Catch Exception rather than IOException as ZipOutputStream has been seen throwing NullPointerException
-            catch(Exception e) {
+            } catch (Exception e) {  // Catch Exception rather than IOException as ZipOutputStream has been seen throwing NullPointerException
                 // If job was interrupted by the user at the time when the exception occurred,
                 // it most likely means that the exception was caused by user cancellation.
                 // In this case, the exception should not be interpreted as an error.
@@ -160,17 +169,16 @@ public class ArchiveJob extends TransferFileJob {
 
         // Check for file collisions, i.e. if the file already exists in the destination
         int collision = FileCollisionChecker.checkForCollision(null, destFile);
-        if(collision!=FileCollisionChecker.NO_COLLOSION) {
+        if (collision!=FileCollisionChecker.NO_COLLOSION) {
             // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
             // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
             int choice = waitForUserResponse(new FileCollisionDialog(getProgressDialog(), getMainFrame(), collision, null, destFile, false, false));
 
             // Overwrite file
-            if (choice== FileCollisionDialog.OVERWRITE_ACTION) {
+            if (choice == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Do nothing, simply continue and file will be overwritten
-            }
-            // 'Cancel' or close dialog interrupts the job
-            else {
+            } else {
+                // 'Cancel' or close dialog interrupts the job
                 interrupt();
                 return;
             }
@@ -184,8 +192,7 @@ public class ArchiveJob extends TransferFileJob {
                 this.archiver.setComment(archiveComment);
 
                 break;
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 int choice = showErrorDialog(Translator.get("pack_dialog.error_title"),
                                              Translator.get("cannot_write_file", destFile.getName()),
                                              new String[] {CANCEL_TEXT, RETRY_TEXT},
@@ -193,8 +200,9 @@ public class ArchiveJob extends TransferFileJob {
                                              );
 
                 // Retry loops
-                if(choice == RETRY_ACTION)
+                if (choice == RETRY_ACTION) {
                     continue;
+                }
 
                 // 'Cancel' or close dialog interrupts the job
                 interrupt();
@@ -216,9 +224,10 @@ public class ArchiveJob extends TransferFileJob {
         // written to the archive OutputStream, this would cause ZipOutputStream to deadlock.
         synchronized(ioLock) {
             // Try to close the archiver which in turns closes the archive OutputStream and underlying file OutputStream
-            if(archiver!=null) {
-                try { archiver.close(); }
-                catch(IOException e) {}
+            if (archiver!=null) {
+                try {
+                    archiver.close();
+                } catch(IOException ignore) {}
             }
         }
     }
@@ -226,5 +235,32 @@ public class ArchiveJob extends TransferFileJob {
     @Override
     public String getStatusString() {
         return Translator.get("pack_dialog.packing_file", getCurrentFilename());
+    }
+
+
+    @Override
+    public void interrupt() {
+        if (scanDirectoryThread != null) {
+            scanDirectoryThread.interrupt();
+        }
+        super.interrupt();
+    }
+
+
+    @Override
+    public float getTotalPercentDone() {
+        if (scanDirectoryThread == null || !scanDirectoryThread.isCompleted()) {
+            float result = super.getTotalPercentDone();
+            return result > 5 ? 5 : result;
+        }
+        float progressBySize = 1.0f*(getTotalByteCounter().getByteCount() + getTotalSkippedByteCounter().getByteCount()) / scanDirectoryThread.getTotalBytes();
+        float progressByCount = 1.0f*(processedFilesCount-1) / scanDirectoryThread.getFilesCount();
+        float result = (progressBySize * 8 + progressByCount * 2) / 10;
+        if (result < 0) {
+            result = 0;
+        } else if (result > 1) {
+            result = 1;
+        }
+        return result;
     }
 }

@@ -49,9 +49,7 @@ class ThemeWriter implements ThemeXmlConstants {
      * @throws IOException thrown if any IO related error occurs.
      */
     public static void write(ThemeData theme, OutputStream stream) throws IOException {
-        XmlWriter out;
-
-        out = new XmlWriter(stream);
+        XmlWriter out = new XmlWriter(stream);
         out.startElement(ELEMENT_ROOT);
         out.println();
 
@@ -207,6 +205,25 @@ class ThemeWriter implements ThemeXmlConstants {
             out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.MARKED_SELECTED_FOREGROUND_COLOR)));
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_MARKED);
+
+        // Executable files.
+        out.startElement(ELEMENT_EXECUTABLE);
+        out.println();
+        out.startElement(ELEMENT_NORMAL);
+        out.println();
+        if(theme.isColorSet(Theme.EXECUTABLE_FOREGROUND_COLOR))
+            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_INACTIVE_FOREGROUND_COLOR)));
+        if(theme.isColorSet(Theme.EXECUTABLE_FOREGROUND_COLOR))
+            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_FOREGROUND_COLOR)));
+        out.endElement(ELEMENT_NORMAL);
+        out.startElement(ELEMENT_SELECTED);
+        out.println();
+        if(theme.isColorSet(Theme.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR))
+            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR)));
+        if(theme.isColorSet(Theme.EXECUTABLE_SELECTED_FOREGROUND_COLOR))
+            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_SELECTED_FOREGROUND_COLOR)));
+        out.endElement(ELEMENT_SELECTED);
+        out.endElement(ELEMENT_EXECUTABLE);
 
         // Plain files.
         out.startElement(ELEMENT_FILE);
@@ -485,9 +502,7 @@ class ThemeWriter implements ThemeXmlConstants {
      * @return      the XML attributes describing the specified font.
      */
     private static XmlAttributes getFontAttributes(Font font) {
-        XmlAttributes attributes; // Stores the font's description.
-
-        attributes = new XmlAttributes();
+        XmlAttributes attributes = new XmlAttributes(); // Stores the font's description.
 
         // Font family and size.
         attributes.add(ATTRIBUTE_FAMILY, font.getFamily());
@@ -508,10 +523,7 @@ class ThemeWriter implements ThemeXmlConstants {
      * @return       the XML attributes describing the specified color.
      */
     private static XmlAttributes getColorAttributes(Color color) {
-        XmlAttributes attributes; // Stores the color's description.
-        StringBuilder buffer;     // Used to build the color's string representation.
-
-        buffer = new StringBuilder();
+        StringBuilder buffer = new StringBuilder(); // Used to build the color's string representation.
 
         // Red component.
         if(color.getRed() < 16)
@@ -529,7 +541,7 @@ class ThemeWriter implements ThemeXmlConstants {
         buffer.append(Integer.toString(color.getBlue(), 16));
 
         // Builds the XML attributes.
-        attributes = new XmlAttributes();
+        XmlAttributes attributes = new XmlAttributes(); // Stores the color's description.
         attributes.add(ATTRIBUTE_COLOR, buffer.toString());
 
         if(color.getAlpha() != 255) {

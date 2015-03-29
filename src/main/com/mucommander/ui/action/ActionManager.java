@@ -59,7 +59,7 @@ public class ActionManager {
     private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
     
     /** Pattern to resolve the action ID from action class path */
-    private final static Pattern pattern = Pattern.compile(".*\\.(.*)?Action");
+    private final static Pattern PATTERN = Pattern.compile(".*\\.(.*)?Action");
 
     public static void registerActions() {
     	registerAction(new AddBookmarkAction.Descriptor(),                  new AddBookmarkAction.Factory());
@@ -135,6 +135,8 @@ public class ActionManager {
     	registerAction(new OpenInBothPanelsAction.Descriptor(),             new OpenInBothPanelsAction.Factory());
     	registerAction(new OpenInNewTabAction.Descriptor(),					new OpenInNewTabAction.Factory());
     	registerAction(new OpenInOtherPanelAction.Descriptor(),             new OpenInOtherPanelAction.Factory());
+        registerAction(new OpenLeftInRightPanelAction.Descriptor(),         new OpenLeftInRightPanelAction.Factory());
+        registerAction(new OpenRightInLeftPanelAction.Descriptor(),         new OpenRightInLeftPanelAction.Factory());
 //    	registerAction(new OpenLocationAction.Descriptor(),          	    new OpenLocationAction.Factory());
     	registerAction(new OpenNativelyAction.Descriptor(),       		    new OpenNativelyAction.Factory());
     	registerAction(new OpenTrashAction.Descriptor(),           	        new OpenTrashAction.Factory());
@@ -231,6 +233,7 @@ public class ActionManager {
         registerAction(new LocateSymlinkAction.Descriptor(),                new LocateSymlinkAction.Factory());
         registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
         registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
+        registerAction(new ShowFoldersSizeAction.Descriptor(),              new ShowFoldersSizeAction.Factory());
     }
 
 	public static void registerCommandsActions() {
@@ -273,7 +276,7 @@ public class ActionManager {
     	if (actionClassPath == null)
     		return null;
     	
-    	Matcher matcher = pattern.matcher(actionClassPath);
+    	Matcher matcher = PATTERN.matcher(actionClassPath);
     	return matcher.matches() ? 
     			matcher.group(1)
     			: actionClassPath;
@@ -343,8 +346,7 @@ public class ActionManager {
         // Looks for an existing MuAction instance used by the specified MainFrame
         if (mainFrameActions.containsKey(actionParameters)) {
         	return mainFrameActions.get(actionParameters).getAction();
-        }
-        else {
+        } else {
             String actionId = actionParameters.getActionId();
 
             // Looks for the action's factory
