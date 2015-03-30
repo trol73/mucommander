@@ -232,4 +232,13 @@ public class WindowsStorage {
         return PlatformManager.getPreferencesFolder().getChild(STORAGE_FILE_NAME);
     }
 
+
+    public void clear() {
+        if (records != null) {
+            records.clear();
+        }
+        records = null;
+        instance = null;
+    }
+
 }
