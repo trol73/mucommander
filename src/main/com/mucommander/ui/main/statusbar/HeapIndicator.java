@@ -18,9 +18,12 @@
 
 package com.mucommander.ui.main.statusbar;
 
+import com.mucommander.cache.TextHistory;
+import com.mucommander.cache.WindowsStorage;
 import com.mucommander.ui.theme.ColorChangedEvent;
 import com.mucommander.ui.theme.FontChangedEvent;
 import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.utils.FileIconsCache;
 
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -146,6 +149,9 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        TextHistory.getInstance().clear();
+        WindowsStorage.getInstance().clear();
+        FileIconsCache.getInstance().clear();
         System.gc();
         update();
     }

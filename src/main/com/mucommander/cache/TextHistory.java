@@ -146,4 +146,10 @@ public class TextHistory {
     private static synchronized AbstractFile getHistoryFile(Type type) throws IOException {
         return PlatformManager.getPreferencesFolder().getChild(type.fileName);
     }
+
+
+    public void clear() {
+        history.clear();
+        instance = null;
+    }
 }

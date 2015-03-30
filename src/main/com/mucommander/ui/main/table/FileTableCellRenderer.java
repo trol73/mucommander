@@ -126,34 +126,34 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 
     private static int getColorIndex(int row, AbstractFile file, FileTableModel tableModel) {
         // Parent directory.
-        if (row == 0 && tableModel.hasParentFolder())
+        if (row == 0 && tableModel.hasParentFolder()) {
             return ThemeCache.FOLDER;
-
-        // Marked file.
-        if (tableModel.isRowMarked(row))
+        }
+        // Marked file
+        if (tableModel.isRowMarked(row)) {
             return ThemeCache.MARKED;
-
-        // Symlink.
-        if (file.isSymlink())
+        }
+        // Symlink
+        if (file.isSymlink()) {
             return ThemeCache.SYMLINK;
-
-        // Hidden file.
-        if (file.isHidden())
+        }
+        // Hidden file
+        if (file.isHidden()) {
             return ThemeCache.HIDDEN_FILE;
-
-        // Directory.
-        if (file.isDirectory())
+        }
+        // Directory
+        if (file.isDirectory()) {
             return ThemeCache.FOLDER;
-
-        // Archive.
-        if (file.isBrowsable())
+        }
+        // Archive
+        if (file.isBrowsable()) {
             return ThemeCache.ARCHIVE;
-
+        }
+        // Executable
         if (file.isExecutable()) {
             return ThemeCache.EXECUTABLE;
         }
-
-        // Plain file.
+        // Plain file
         return ThemeCache.PLAIN_FILE;
     }
 

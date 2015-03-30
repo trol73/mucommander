@@ -110,4 +110,6 @@ public class CopyDialog extends AbstractCopyDialog {
     protected String getProgressDialogTitle() {
         return Translator.get("copy_dialog.copying");
     }
+
+
 }

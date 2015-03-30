@@ -38,11 +38,13 @@ public class ScanDirectoryThread extends Thread {
     public ScanDirectoryThread(FileSet files) {
         this.files = files;
         this.calcSize = true;
+        setName("ScanDirectoryThread " + files.getBaseFolder());
     }
 
     public ScanDirectoryThread(FileSet files, boolean calcSize) {
         this.files = files;
         this.calcSize = calcSize;
+        setName("ScanDirectoryThread " + files.getBaseFolder());
     }
 
     @Override

@@ -316,11 +316,9 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
             }
 
             return true;
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             showErrorDialog(errorDialogTitle, Translator.get("cannot_read_file", archiveFile.getName()));
-        }
-        finally {
+        }finally {
             // The ArchiveEntryIterator must be closed when finished
             if (iterator != null) {
                 try {
