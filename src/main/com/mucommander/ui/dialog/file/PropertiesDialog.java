@@ -70,6 +70,8 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 	
     private JLabel counterLabel;
     private JLabel sizeLabel;
+    private JLabel ownerLabel;
+    private JLabel groupLabel;
 
     private JButton okCancelButton;
 
@@ -100,8 +102,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         AbstractFile singleFile = isSingleFile?files.elementAt(0):null;
         if(isSingleFile) {
             icon = FileIcons.getFileIcon(singleFile, ICON_DIMENSION);
-        }
-        else {
+        } else {
             ImageIcon imageIcon = IconManager.getIcon(IconManager.IconSet.COMMON, "many_files.png");
             icon = IconManager.getScaledIcon(imageIcon, (float)ICON_DIMENSION.getWidth()/imageIcon.getIconWidth());
         }
@@ -126,10 +127,23 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         sizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         sizePanel.add(sizeLabel = new JLabel(""));
         sizePanel.add(new JLabel(dial = new SpinningDial()));
-        labelPanel.addRow(Translator.get("size")+":", sizePanel, 6);
+        labelPanel.addRow(Translator.get("size") + ":", sizePanel, 6);
+        if (isSingleFile) {
+            if (singleFile.canGetOwner()) {
+                String owner = singleFile.getOwner();
+                if (owner != null) {
+                    labelPanel.addRow(Translator.get("owner") + ":", new JLabel(owner), 6);
+                }
+            }
+            if (singleFile.canGetGroup()) {
+                String group = singleFile.getGroup();
+                if (group != null) {
+                    labelPanel.addRow(Translator.get("group") + ":", new JLabel(group), 6);
+                }
+            }
+        }
 
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher()
-        && isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher() && isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
             String comment = OSXFileUtils.getSpotlightComment(singleFile);
             JLabel commentLabel = new JLabel(Translator.get("comment")+":");
             commentLabel.setAlignmentY(JLabel.TOP_ALIGNMENT);
@@ -192,8 +206,9 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         while(repaintThread!=null && job.getState()!= FileJob.State.FINISHED) {
             updateLabels();
 			
-            try { Thread.sleep(REFRESH_RATE); }
-            catch(InterruptedException ignore) {}
+            try {
+                Thread.sleep(REFRESH_RATE);
+            } catch(InterruptedException ignore) {}
         }
 
         // Updates button labels and stops spinning dial.
@@ -208,8 +223,9 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     ////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==okCancelButton)
+        if (e.getSource() == okCancelButton) {
             dispose();
+        }
     }
 
 

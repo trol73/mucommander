@@ -56,8 +56,9 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
     public SyncedFileAttributes(long ttl, boolean updateAttributesNow) {
         setTtl(ttl);    // also sets the expiration date
 
-       if(updateAttributesNow)
-            checkForExpiration(true);   // force attributes update
+       if (updateAttributesNow) {
+           checkForExpiration(true);   // force attributes update
+       }
     }
 
     /**
@@ -110,10 +111,7 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
      * values have been manually updated using the setter methods.
      */
     public void updateExpirationDate() {
-        setExpirationDate(
-            ttl<0
-                ?Long.MAX_VALUE
-                :System.currentTimeMillis()+getTtl());
+        setExpirationDate(ttl < 0 ? Long.MAX_VALUE : System.currentTimeMillis() + getTtl());
     }
 
     /**
@@ -155,7 +153,7 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
      * @param forceUpdate if true, attributes will systematically be updated, without checking the expiration date
      */
     protected void checkForExpiration(boolean forceUpdate) {
-        if(forceUpdate || hasExpired()) {
+        if (forceUpdate || hasExpired()) {
             // After this method is called, hasExpired() returns false so that implementations of updateAttributes()
             // can query attribute getters without entering a loop of death.
             setUpdating(true);
