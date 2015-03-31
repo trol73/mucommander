@@ -337,8 +337,12 @@ public class FileTableModel extends AbstractTableModel {
         cell[Column.SIZE.ordinal()-1] = sizeValue;
         cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(new Date(file.getDate()));
         cell[Column.PERMISSIONS.ordinal()-1] = file.getPermissionsString();
-        cell[Column.OWNER.ordinal()-1] = file.getOwner();
-        cell[Column.GROUP.ordinal()-1] = file.getGroup();
+        if (file.canGetOwner()) {
+            cell[Column.OWNER.ordinal() - 1] = file.getOwner();
+        }
+        if (file.canGetGroup()) {
+            cell[Column.GROUP.ordinal() - 1] = file.getGroup();
+        }
     }
 	
 	

@@ -783,7 +783,7 @@ public class SFTPFile extends ProtocolFile {
                 // Todo: try and fix for this in J2SSH
                 setAttributes(connHandler.sftpSubsystem.getAttributes(url.getPath()));
                 setExists(true);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // File doesn't exist on the server
                 setExists(false);
 
@@ -794,8 +794,9 @@ public class SFTPFile extends ProtocolFile {
             }
             finally {
                 // Release the lock on the ConnectionHandler
-                if(connHandler != null)
+                if (connHandler != null) {
                     connHandler.releaseLock();
+                }
             }
         }
 

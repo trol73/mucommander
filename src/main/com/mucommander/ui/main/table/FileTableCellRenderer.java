@@ -20,7 +20,6 @@
 package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
@@ -45,7 +44,7 @@ import java.awt.Font;
  * as a rubber-stamp for rendering all cells in the table;  it renders the first cell,
  * changes the contents of that cell renderer, shifts the origin to the new location, re-draws it, and so on.</p>
  *
- * <p>This <code>TableCellRender</code> is written from scratch instead of overridding <code>DefaultTableCellRender</code>
+ * <p>This <code>TableCellRender</code> is written from scratch instead of overriding <code>DefaultTableCellRender</code>
  * to provide a more efficient (and more specialized) implementation: each column is rendered using a dedicated 
  * {@link com.mucommander.ui.main.table.CellLabel CellLabel} which takes into account the column's specificities.
  * Having a dedicated for each column avoids calling the label's <code>set</code> methods (alignment, border, font...) 
