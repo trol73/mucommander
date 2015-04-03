@@ -48,9 +48,9 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
     };
 
     private final static String WARNING_LEVEL_LABELS[] = {
-        Translator.get("theme_editor.free_space.ok"),
-        Translator.get("theme_editor.free_space.warning"),
-        Translator.get("theme_editor.free_space.critical")
+        "theme_editor.free_space.ok",
+        "theme_editor.free_space.warning",
+        "theme_editor.free_space.critical"
     };
 
     private final static int VOLUME_INFO_SIZE_FORMAT    = SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT | SizeFormat.INCLUDE_SPACE | SizeFormat.ROUND_TO_KB;
