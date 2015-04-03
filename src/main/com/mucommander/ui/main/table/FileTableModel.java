@@ -443,8 +443,7 @@ public class FileTableModel extends AbstractTableModel {
             return 0;
         }
 
-        // Use dichotomic binary search rather than a dumb linear search since file array is sorted,
-        // complexity is reduced to O(log n) instead of O(n^2)
+        // Use dichotomic binary search rather than a dumb linear search since file array is sorted, complexity is reduced to O(log n) instead of O(n^2)
         int left = parent == null ? 0 : 1;
         int right = getRowCount()-1;
         FileComparator fc = createFileComparator(sortInfo);
@@ -771,7 +770,7 @@ public class FileTableModel extends AbstractTableModel {
 
 
     //////////////////////////////////////////
-    // Overriden AbstractTableModel methods //
+    // Overridden AbstractTableModel methods //
     //////////////////////////////////////////
 	
     public int getColumnCount() {

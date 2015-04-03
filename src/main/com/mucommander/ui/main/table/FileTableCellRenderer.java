@@ -61,7 +61,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileTableCellRenderer.class);
 
     private static final String DOTS = "...";
-	
+
     private FileTable table;
     private FileTableModel tableModel;
 
@@ -102,7 +102,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
         return ThemeCache.tableFont;
     }
 
-	
+
     /**
      * Sets CellLabels' font to the current one.
      */

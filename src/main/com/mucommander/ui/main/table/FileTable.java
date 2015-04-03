@@ -39,6 +39,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import com.mucommander.text.SizeFormat;
+import com.mucommander.ui.action.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,10 +63,6 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.MuAction;
-import com.mucommander.ui.action.impl.MarkNextRowAction;
-import com.mucommander.ui.action.impl.MarkPreviousRowAction;
-import com.mucommander.ui.action.impl.MarkSelectedFileAction;
-import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.dialog.file.AbstractCopyDialog;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -1351,9 +1348,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                                         if (!isEditing()) {
                                             editCurrentFilename();
                                         }
-                                    } else if(column == Column.DATE) {
+                                    } else if (column == Column.DATE) {
                                         ActionManager.performAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID, mainFrame);
-                                    } else if(column == Column.PERMISSIONS) {
+                                    } else if (column == Column.PERMISSIONS) {
                                         if (getSelectedFile().getChangeablePermissions().getIntValue() != 0) {
                                             ActionManager.performAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID, mainFrame);
                                         }
@@ -1368,8 +1365,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             else if (doubleClickCounter == 2) { // Note: user can double-click multiple times
                 this.lastDoubleClickTimestamp = System.currentTimeMillis();
                 ActionManager.performAction(e.isShiftDown()
-                        ?com.mucommander.ui.action.impl.OpenNativelyAction.Descriptor.ACTION_ID
-                        :com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID
+                        ? OpenNativelyAction.Descriptor.ACTION_ID
+                        : OpenAction.Descriptor.ACTION_ID
                     , mainFrame);
             }
 
@@ -1771,7 +1768,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	            findMatch(0, true, true);
 	        }
 	        // Escape immediately cancels the quick search
-	        else if(keyCode==KeyEvent.VK_ESCAPE && !keyHasModifiers) {
+	        else if (keyCode==KeyEvent.VK_ESCAPE && !keyHasModifiers) {
 	            stop();
 	        }
 	        // Up/Down jumps to previous/next match
@@ -1807,12 +1804,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
 	            // Find the row that best matches the new search string and select it
 	            findMatch(0, true, true);
-	        }
-	        else {
+	        } else {
 	            // Test if the typed key combination corresponds to a registered action.
 	            // If that's the case, the quick search is canceled and the action is performed.
 	            String muActionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStrokeForEvent(e));
-	            if(muActionId!=null) {
+	            if (muActionId != null) {
 	                // Consume the key event otherwise it would be fired again on the FileTable
 	                // (or any other KeyListener on this FileTable)
 	                e.consume();
@@ -1846,7 +1842,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Receives theme font changes notifications.
      */
     public void fontChanged(FontChangedEvent event) {
-        if(event.getFontId() == Theme.FILE_TABLE_FONT) {
+        if (event.getFontId() == Theme.FILE_TABLE_FONT) {
             // Changes filename editor's font
             filenameEditor.filenameField.setFont(event.getFont());
 
@@ -1892,11 +1888,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
                 // The column corresponding to the current 'sort by' criterion may have become invisible.
                 // If that is the case, change the criterion to NAME. 
-                if(!columnModel.isColumnVisible(sortInfo.getCriterion())) {
+                if (!columnModel.isColumnVisible(sortInfo.getCriterion())) {
                     sortInfo.setCriterion(Column.NAME);
 
                     // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
-                    if(usesTableHeaderRenderingProperties()) {
+                    if (usesTableHeaderRenderingProperties()) {
                         setTableHeaderRenderingProperties();
                     }
                 }
@@ -1928,17 +1924,18 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     // Restore previously marked files
                     int nbMarkedFiles = markedFiles.size();
                     int fileRow;
-                    for(int i  =0; i < nbMarkedFiles; i++) {
+                    for(int i = 0; i < nbMarkedFiles; i++) {
                         fileRow = tableModel.getFileRow(markedFiles.elementAt(i));
-                        if(fileRow != -1)
+                        if (fileRow != -1) {
                             tableModel.setRowMarked(fileRow, true);
+                        }
                     }
                     // Notify registered listeners that currently marked files have changed on this FileTable
                     fireMarkedFilesChangedEvent();
                 }
 
                 resizeAndRepaint();
-            } catch(Throwable e) {
+            } catch (Throwable e) {
                 // While no such thing should happen, we want to make absolutely sure no exception
                 // is propagated to the AWT event dispatch thread.
                 LOGGER.warn("Caught exception while changing folder, this should not happen!", e);
