@@ -389,8 +389,7 @@ public class SFTPFile extends ProtocolFile {
             fileAttributes.setDirectory(false);
             fileAttributes.setSymlink(false);
             fileAttributes.setSize(0);
-        }
-        finally {
+        } finally {
             // Release the lock on the ConnectionHandler if the OutputStream could not be created
             if (connHandler != null) {
                 connHandler.releaseLock();
