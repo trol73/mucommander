@@ -157,7 +157,9 @@ public class TextMenuHelper {
         } else if(source == findPreviousItem) {
             textEditorImpl.findPrevious();
         } else if(source == toggleLineWrapItem) {
-            toggleLineWrapItem.setSelected(!toggleLineWrapItem.isSelected());
+            if (e.getWhen() == 0) {  
+              toggleLineWrapItem.setSelected(!toggleLineWrapItem.isSelected());
+            }
             textViewerDelegate.wrapLines(toggleLineWrapItem.isSelected());
         } else if(source == toggleLineNumbersItem) {
             textViewerDelegate.showLineNumbers(toggleLineNumbersItem.isSelected());
