@@ -19,6 +19,8 @@
 
 package com.mucommander.ui.main.table;
 
+import com.mucommander.ui.main.table.views.full.FileTableCellRenderer;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -59,25 +61,29 @@ public class CellLabel extends JLabel {
     /** Empty border to give more space around cells */
     private static final Border CELL_BORDER = new EmptyBorder(CELL_BORDER_HEIGHT, CELL_BORDER_WIDTH, CELL_BORDER_HEIGHT, CELL_BORDER_WIDTH);
 
+    private static final Stroke DASHED_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1,1}, 0);
+    private static final String DOTS = "...";
+
 
 
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Last text set by the setText method */
-    protected String    lastText;
+    protected String lastText;
     /** Last icon set by the setIcon method */
     protected ImageIcon lastIcon;
     /** Last tooltip text set by the setToolTipText method */
-    protected String    lastTooltip;
+    protected String lastTooltip;
     /** Last foreground color set by the setForeground method */
-    protected Color     lastForegroundColor;
+    protected Color lastForegroundColor;
     /** Last background color set by the setBackground method */
-    protected Color     lastBackgroundColor;
+    protected Color lastBackgroundColor;
     /** Outline color (top and bottom). */
-    protected Color     outlineColor;
+    protected Color outlineColor;
     /** Gradient color for the background. */
-    protected Color     gradientColor;
+    protected Color gradientColor;
 
+    protected boolean hasSeparatorLine;
 
 
     // - Initialisation ------------------------------------------------------------------
@@ -85,7 +91,9 @@ public class CellLabel extends JLabel {
     /**
      * Creates a new blank CellLabel.
      */
-    public CellLabel() {setBorder(CELL_BORDER);}
+    public CellLabel() {
+        setBorder(CELL_BORDER);
+    }
 
 
     // - Color changing ------------------------------------------------------------------
@@ -98,7 +106,7 @@ public class CellLabel extends JLabel {
      */
     @Override
     public void setForeground(Color c) {
-        if((c != null && !c.equals(lastForegroundColor)) || (lastForegroundColor != null && !lastForegroundColor.equals(c))) {
+        if ((c != null && !c.equals(lastForegroundColor)) || (lastForegroundColor != null && !lastForegroundColor.equals(c))) {
             super.setForeground(c); 
             lastForegroundColor = c;
         }
@@ -138,7 +146,9 @@ public class CellLabel extends JLabel {
      * Sets the label outline color.
      * @param c the new background's color for this label
      */
-    public void setOutline(Color c) {outlineColor = c;}
+    public void setOutline(Color c) {
+        outlineColor = c;
+    }
 
 
 
@@ -188,6 +198,42 @@ public class CellLabel extends JLabel {
     }
 
 
+    public void setupText(String text, int maxWidth) {
+        setText(text);
+
+        // If label's width is larger than the column width:
+        // - truncate the text from the center and equally to the left and right sides, adding an ellipsis ('...')
+        // where characters have been removed. This allows both the start and end of filename to be visible.
+        // - set a tooltip text that will display the whole text when mouse is over the label
+
+        //final TableColumn tableColumn = table.getColumnModel().getColumn(columnIndex);
+        if (maxWidth < getPreferredSize().getWidth()) {
+            final int tl = text.length();
+            final int tl2 = tl/2;
+            String leftText = text.substring(0, tl2);
+            String rightText = text.substring(tl2, tl);
+
+            while (maxWidth < getPreferredSize().getWidth() && !leftText.isEmpty() && !rightText.isEmpty()) {    // Prevents against going out of bounds
+                final int ltl = leftText.length();
+                final int rtl = rightText.length();
+                if (ltl > rtl) {
+                    leftText = leftText.substring(0, ltl - 1);
+                } else {
+                    rightText = rightText.substring(1, rtl);
+                }
+
+                setText(leftText + DOTS + rightText);
+            }
+
+            // Set the tool tip
+            setToolTipText(text);
+        } else {    // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
+            setToolTipText(null);
+        }
+
+    }
+
+
 
     // - Painting ------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -208,6 +254,7 @@ public class CellLabel extends JLabel {
             Paint oldPaint = g2.getPaint(); // Previous Paint affected to g.
 
             // Paints the gradient background.
+            // TODO avoid object creation in paint methods
             g2.setPaint(new GradientPaint(0, 0, lastBackgroundColor, 0, getHeight(), gradientColor, false));
             if (doOutline) {
                 g2.fillRect(0, 1, getWidth(), getHeight() - 2);
@@ -225,6 +272,13 @@ public class CellLabel extends JLabel {
         // If necessary, paints the outline color.
         if (doOutline) {
             paintOutline(g);
+        }
+        if (hasSeparatorLine) {
+            int w = getWidth()-1;
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.setColor(Color.GRAY);
+            g2d.setStroke(DASHED_STROKE);
+            g2d.drawLine(w, 0, w, getHeight());
         }
     }	
 
@@ -262,7 +316,7 @@ public class CellLabel extends JLabel {
 
             // The label does not need to be opaque if it has an opaque parent component
             // of the same background color.
-            return !((back != null) && (p != null) && back.equals(p.getBackground()) && p.isOpaque());
+            return !(back != null && p != null && back.equals(p.getBackground()) && p.isOpaque());
         }
 
         // We must consider the label not to be opaque, otherwise the gradient would be overpainted by
@@ -310,4 +364,8 @@ public class CellLabel extends JLabel {
      */
     @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) { }
+
+    public void setHasSeparator(boolean hasSeparator) {
+        this.hasSeparatorLine = hasSeparator;
+    }
 }

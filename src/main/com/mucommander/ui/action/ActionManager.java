@@ -234,14 +234,16 @@ public class ActionManager {
         registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
         registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
         registerAction(new ShowFoldersSizeAction.Descriptor(),              new ShowFoldersSizeAction.Factory());
+		registerAction(new ToggleTableViewModeFullAction.Descriptor(),      new ToggleTableViewModeFullAction.Factory());
+		registerAction(new ToggleTableViewModeCompactAction.Descriptor(),   new ToggleTableViewModeCompactAction.Factory());
+		registerAction(new ToggleTableViewModeShortAction.Descriptor(),     new ToggleTableViewModeShortAction.Factory());
     }
 
 	public static void registerCommandsActions() {
 		// register "open with" commands as actions, to allow for keyboard shortcuts for them
 		for (Command command : CommandManager.commands()) {
 			if (command.getType() == CommandType.NORMAL_COMMAND) {
-				ActionManager.registerAction(new CommandAction.Descriptor(command),
-						new CommandAction.Factory(command));
+				ActionManager.registerAction(new CommandAction.Descriptor(command), new CommandAction.Factory(command));
 			}
 		}
 	}

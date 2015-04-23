@@ -58,7 +58,7 @@ import com.mucommander.ui.dnd.FileDragSourceListener;
 import com.mucommander.ui.dnd.FileDropTargetListener;
 import com.mucommander.ui.event.LocationManager;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableConfiguration;
+import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.tabs.FileTableTab;
 import com.mucommander.ui.main.tabs.FileTableTabs;
@@ -398,12 +398,12 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      * the currently selected tab although it's locked (used when switching tabs)
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile children[], AbstractFile fileToSelect, boolean changeLockedTab) {
-    		// Change the current folder in the table and select the given file if not null
-    		if (fileToSelect == null) {
-                fileTable.setCurrentFolder(folder, children);
-            } else {
-                fileTable.setCurrentFolder(folder, children, fileToSelect);
-            }
+        // Change the current folder in the table and select the given file if not null
+        if (fileToSelect == null) {
+            fileTable.setCurrentFolder(folder, children);
+        } else {
+            fileTable.setCurrentFolder(folder, children, fileToSelect);
+        }
     }
 
     /**
@@ -440,11 +440,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      * @return a width of a folders tree
      */
     public int getTreeWidth() {
-        if (!treeVisible) {
-            return oldTreeWidth;
-        } else {
-        	return treeSplitPane.getDividerLocation();
-        }
+        return treeVisible ? treeSplitPane.getDividerLocation() : oldTreeWidth;
     }
 
     /**

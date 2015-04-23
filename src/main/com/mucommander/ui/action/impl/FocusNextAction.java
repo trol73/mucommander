@@ -53,8 +53,9 @@ public class FocusNextAction extends MuAction {
         Component focusOwner = mainFrame.getFocusOwner();
 
         // Abort if the focus is not in the MainFrame this action is tied to
-        if(focusOwner==null)
+        if (focusOwner == null) {
             return;
+        }
 
         FolderPanel folderPanel = mainFrame.getActivePanel();
         FileTable fileTable = folderPanel.getFileTable();
@@ -63,14 +64,15 @@ public class FocusNextAction extends MuAction {
 
         // Request focus on the 'next' component, the cycle order being from left to right, top to bottom.
         Component nextComponent;
-        if(focusOwner==locationField)
-            nextComponent = folderPanel.isTreeVisible()?tree:fileTable;
-        else if(focusOwner==tree)
+        if (focusOwner == locationField) {
+            nextComponent = folderPanel.isTreeVisible() ? tree : fileTable;
+        } else if (focusOwner == tree) {
             nextComponent = fileTable;
-        else if(focusOwner==fileTable)
+        } else if(focusOwner == fileTable) {
             nextComponent = locationField;
-        else
+        } else {
             return;
+        }
 
         FocusRequester.requestFocusInWindow(nextComponent);
     }

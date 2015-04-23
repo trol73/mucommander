@@ -57,7 +57,7 @@ public class RenameAction extends SelectedFileAction {
         AbstractFile selectedFile = activeTable.getSelectedFile(false);
 
         // Trigger in-table editing only if a file other than parent folder '..' is selected
-        if(selectedFile!=null) {
+        if (selectedFile != null) {
             // Trigger in-table renaming
             activeTable.editCurrentFilename();
         }

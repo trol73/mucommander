@@ -17,39 +17,33 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.views.full.FileTableModel;
+import com.mucommander.ui.main.table.views.TableViewMode;
 
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
  * @author Oleg Trifonov
- * Created on 24/03/15.
+ * Created on 15/04/15.
  */
-public class ShowFoldersSizeAction extends ParentFolderAction {
+public class ToggleTableViewModeShortAction extends MuAction {
 
-    public ShowFoldersSizeAction(MainFrame mainFrame, Map<String, Object> properties) {
+    /**
+     * Creates a new <code>ToggleTableViewModeShortAction</code>
+     *
+     * @param mainFrame  the MainFrame to associate with this new MuAction
+     * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
+     */
+    public ToggleTableViewModeShortAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
-    protected void toggleEnabledState() {
-
-    }
-
-    @Override
     public void performAction() {
-        FileTable activeTable = mainFrame.getActiveTable();
-        FileTableModel fileTableModel = (FileTableModel)activeTable.getModel();
-        for (AbstractFile file : fileTableModel.getFiles()) {
-            if (file.isDirectory()) {
-                fileTableModel.startDirectorySizeCalculation(activeTable, file);
-            }
-        }
+        getMainFrame().getActiveTable().setViewMode(TableViewMode.SHORT);
     }
 
     @Override
@@ -62,12 +56,13 @@ public class ShowFoldersSizeAction extends ParentFolderAction {
     public static class Factory implements ActionFactory {
 
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-            return new ShowFoldersSizeAction(mainFrame, properties);
+            return new ToggleTableViewModeShortAction(mainFrame, properties);
         }
     }
 
+
     public static class Descriptor extends AbstractActionDescriptor {
-        public static final String ACTION_ID = "ShowFoldersSize";
+        public static final String ACTION_ID = "ToggleTableViewModeShort";
 
         public String getId() { return ACTION_ID; }
 
@@ -76,8 +71,7 @@ public class ShowFoldersSizeAction extends ParentFolderAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() {
-            return null;
+            return KeyStroke.getKeyStroke(KeyEvent.VK_3, KeyEvent.CTRL_DOWN_MASK);
         }
     }
-
 }

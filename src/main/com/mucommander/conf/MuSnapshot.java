@@ -363,7 +363,7 @@ public class MuSnapshot {
      * {@link com.mucommander.ui.main.table.FileTable} at the {@link com.mucommander.ui.main.MainFrame} in the given index.
      *
      * @param window index of MainFrame
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param left true for the left FileTable, false for the right one
      * @return the CONFIGURATION section corresponding to the specified FileTable
      */
@@ -376,7 +376,7 @@ public class MuSnapshot {
      * {@link com.mucommander.ui.main.table.FileTable} at the {@link com.mucommander.ui.main.MainFrame} in the given index.
      *
      * @param window index of MainFrame
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param left true for the left FileTable, false for the right one
      * @return the variable that controls the visibility of the specified column
      */
@@ -389,7 +389,7 @@ public class MuSnapshot {
      * {@link com.mucommander.ui.main.table.FileTable} at the {@link com.mucommander.ui.main.MainFrame} in the given index.
      *
      * @param window index of MainFrame
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param left true for the left FileTable, false for the right one
      * @return the variable that holds the width of the specified column
      */
@@ -402,7 +402,7 @@ public class MuSnapshot {
      * {@link com.mucommander.ui.main.table.FileTable} at the {@link com.mucommander.ui.main.MainFrame} in the given index.
      *
      * @param window index of MainFrame
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param left true for the left FileTable, false for the right one
      * @return the variable that holds the position of the specified column
      */

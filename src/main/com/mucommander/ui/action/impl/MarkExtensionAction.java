@@ -25,7 +25,7 @@ import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -110,16 +110,15 @@ public class MarkExtensionAction extends MuAction {
      * @return <code>true</code> if the action must compare string in a case-sensitive fashion, <code>false</code> otherwise.
      */
     private boolean isCaseSensitive() {
-        Object o;
+        Object o = getValue(CASE_SENSITIVE_PROPERTY_KEY);
 
         // If the action hasn't been configured, defaults to false.
-        if((o = getValue(CASE_SENSITIVE_PROPERTY_KEY)) == null)
+        if (o == null) {
             return false;
+        }
 
         // Returns the configured value if it's a string, false otherwise.
-        if(o instanceof String)
-            return o.equals("true");
-        return false;
+        return o instanceof String && o.equals("true");
     }
 
 
@@ -138,28 +137,32 @@ public class MarkExtensionAction extends MuAction {
      * @return      the IMAGE_FILTER that should be applied by this action.
      */
     private FilenameFilter getFilter(AbstractFile file) {
-        String                  ext;
-        ExtensionFilenameFilter filter;
+        String ext = getExtension();
 
         // If no extension has been configured, analyse the current selection.
-        if((ext = getExtension()) == null) {
+        if (ext == null) {
 
             // If there is no current selection, abort.
-            if(file == null)
+            if (file == null) {
                 return null;
+            }
 
             // If the current file doesn't have an extension, return a filename IMAGE_FILTER that
             // match null extensions.
-            if((ext = file.getExtension()) == null)
+            ext = file.getExtension();
+            if (ext == null) {
                 return new AbstractFilenameFilter() {
-                    public boolean accept(String name) {return AbstractFile.getExtension(name) == null;}
+                    public boolean accept(String name) {
+                        return AbstractFile.getExtension(name) == null;
+                    }
                 };
+            }
         }
 
         // At this point, ext contains the extension that should be matched.
-        filter = new ExtensionFilenameFilter("." + ext);
+        ExtensionFilenameFilter filter = new ExtensionFilenameFilter("." + ext);
 
-        // Initialises the IMAGE_FILTER's case-sensitivy depending on the action's propeties.
+        // Initialises the IMAGE_FILTER's case-sensitive depending on the action's properties.
         filter.setCaseSensitive(isCaseSensitive());
 
         return filter;
@@ -170,24 +173,22 @@ public class MarkExtensionAction extends MuAction {
      */
     @Override
     public void performAction() {
-        FileTable      fileTable;
-        FileTableModel tableModel;
-        FilenameFilter filter;
-        int            rowCount;
-        boolean        mark;
-
         // Initialization. Aborts if there is no selected file.
-        fileTable  = mainFrame.getActiveTable();
-        if((filter = getFilter(fileTable.getSelectedFile(false, true))) == null)
+        FileTable fileTable  = mainFrame.getActiveTable();
+        FilenameFilter filter = getFilter(fileTable.getSelectedFile(false, true));
+        if (filter == null) {
             return;
-        tableModel = fileTable.getFileTableModel();
-        rowCount   = tableModel.getRowCount();
-        mark       = !tableModel.isRowMarked(fileTable.getSelectedRow());
+        }
+        BaseFileTableModel tableModel = fileTable.getFileTableModel();
+        int filesCount = tableModel.getFilesCount();
+        boolean mark = !tableModel.isFileMarked(fileTable.getSelectedFileIndex());
 
         // Goes through all files in the active table, marking all that match 'IMAGE_FILTER'.
-        for(int i = tableModel.getFirstMarkableRow(); i < rowCount; i++)
-            if(filter.accept(tableModel.getCachedFileAtRow(i)))
-                tableModel.setRowMarked(i, mark);
+        for(int i = tableModel.getFirstMarkableIndex(); i < filesCount; i++) {
+            if (filter.accept(tableModel.getCachedFileAt(i))) {
+                tableModel.setFileMarked(i, mark);
+            }
+        }
         fileTable.repaint();
 
         // Notify registered listeners that currently marked files have changed on the FileTable

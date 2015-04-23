@@ -17,24 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.ui.main.table;
+package com.mucommander.ui.main.table.views.full;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
+import com.mucommander.ui.main.table.CellLabel;
+import com.mucommander.ui.main.table.Column;
+import com.mucommander.ui.main.table.FileGroupResolver;
+import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.views.BaseCellRenderer;
 import com.mucommander.ui.quicksearch.QuickSearch;
 import com.mucommander.ui.theme.*;
 import com.mucommander.utils.FileIconsCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
 
 /**
@@ -57,21 +58,12 @@ import java.awt.Font;
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileTableCellRenderer.class);
-
-    private static final String DOTS = "...";
-
-    private FileTable table;
-    private FileTableModel tableModel;
-
-    /** Custom JLabel that render specific column cells */
-    private CellLabel[] cellLabels = new CellLabel[Column.values().length];
-
+public class FileTableCellRenderer extends BaseCellRenderer {
 
     public FileTableCellRenderer(FileTable table) {
-    	this.table = table;
-        this.tableModel = table.getFileTableModel();
+        super(table);
+
+        this.cellLabels = new CellLabel[Column.values().length];
 
         // create a label for each column
         for (Column c : Column.values()) {
@@ -95,99 +87,45 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
     }
 
 
-    /**
-     * Returns the font used to render all table cells.
-     */
-    public static Font getCellFont() {
-        return ThemeCache.tableFont;
-    }
-
-
-    /**
-     * Sets CellLabels' font to the current one.
-     */
-    private void setCellLabelsFont(Font newFont) {
-        // Set custom font
-        for (Column c : Column.values()) {
-            // No need to set extension label's font as this label renders only icons and no text
-            if (c == Column.EXTENSION) {
-                continue;
-            }
-
-            cellLabels[c.ordinal()].setFont(newFont);
-        }
-    }
-
 
     ///////////////////////////////
     // TableCellRenderer methods //
     ///////////////////////////////
 
-    private static int getColorIndex(int row, AbstractFile file, FileTableModel tableModel) {
-        // Parent directory.
-        if (row == 0 && tableModel.hasParentFolder()) {
-            return ThemeCache.FOLDER;
-        }
-        // Marked file
-        if (tableModel.isRowMarked(row)) {
-            return ThemeCache.MARKED;
-        }
-        // Symlink
-        if (file.isSymlink()) {
-            return ThemeCache.SYMLINK;
-        }
-        // Hidden file
-        if (file.isHidden()) {
-            return ThemeCache.HIDDEN_FILE;
-        }
-        // Directory
-        if (file.isDirectory()) {
-            return ThemeCache.FOLDER;
-        }
-        // Archive
-        if (file.isBrowsable()) {
-            return ThemeCache.ARCHIVE;
-        }
-        // Executable
-        if (file.isExecutable()) {
-            return ThemeCache.EXECUTABLE;
-        }
-        // Plain file
-        return ThemeCache.PLAIN_FILE;
-    }
 
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
         // Need to check that row index is not out of bounds because when the folder
         // has just been changed, the JTable may try to repaint the old folder and
         // ask for a row index greater than the length if the old folder contained more files
-        if (rowIndex < 0 || rowIndex >= tableModel.getRowCount()) {
+        if (row < 0 || row >= tableModel.getRowCount()) {
             return null;
         }
 
         // Sanity check.
-        final AbstractFile file = tableModel.getCachedFileAtRow(rowIndex);
+        final AbstractFile file = tableModel.getCachedFileAt(row, col);
         if (file == null) {
-            LOGGER.debug("tableModel.getCachedFileAtRow( " + rowIndex + ") RETURNED NULL !");
+            debug("tableModel.getCachedFileAtRow( " + row + ") RETURNED NULL !");
             return null;
         }
 
         final QuickSearch search = this.table.getQuickSearch();
-        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.table.getFileNameAtRow(rowIndex));
+
+        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(((FileTableModel)this.tableModel).getFileNameAt(row));
 
         // Retrieves the various indexes of the colors to apply.
         // Selection only applies when the table is the active one
         final int selectedIndex =  (isSelected && ((FileTable)table).isActiveTable()) ? ThemeCache.SELECTED : ThemeCache.NORMAL;
         final int focusedIndex = table.hasFocus() ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
-        final int colorIndex = getColorIndex(rowIndex, file, tableModel);
+        final int colorIndex = getFileColorIndex(row, file, tableModel);
 
-        final Column column = Column.valueOf(table.convertColumnIndexToModel(columnIndex));
+        final Column column = Column.valueOf(table.convertColumnIndexToModel(col));
         final CellLabel label = cellLabels[column.ordinal()];
 
         // Extension/icon column: return ImageIcon instance
         if (column == Column.EXTENSION) {
             // Set file icon (parent folder icon if '..' file)
-            label.setIcon(rowIndex == 0 && tableModel.hasParentFolder()
+            label.setIcon(row == 0 && tableModel.hasParentFolder()
                     ? IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
                     // : FileIcons.getFileIcon(file));
                     : FileIconsCache.getInstance().getIcon(file));
@@ -196,7 +134,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             Color foregroundColor;
             if (matches || isSelected) {
                 int group = (selectedIndex == ThemeCache.SELECTED) ? -1 : FileGroupResolver.getInstance().resolve(file);
-                if (group >= 0 && colorIndex != ThemeCache.MARKED) {//!isSelected) {
+                if (group >= 0 && colorIndex != ThemeCache.MARKED) {
                     foregroundColor = ThemeCache.groupColors[group];
                 } else {
                     foregroundColor = ThemeCache.foregroundColors[focusedIndex][selectedIndex][colorIndex];
@@ -207,13 +145,16 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             label.setForeground(foregroundColor);
 
             // Set the label's text, before calculating it width
-            label.setText(text);
+
+//            label.setText(text);
+            final TableColumn tableColumn = table.getColumnModel().getColumn(col);
+            label.setupText(text, tableColumn.getWidth());
 
             // If label's width is larger than the column width:
             // - truncate the text from the center and equally to the left and right sides, adding an ellipsis ('...')
             // where characters have been removed. This allows both the start and end of filename to be visible.
             // - set a tooltip text that will display the whole text when mouse is over the label
-
+/*
             final TableColumn tableColumn = table.getColumnModel().getColumn(columnIndex);
             if (tableColumn.getWidth() < label.getPreferredSize().getWidth()) {
                 final int tl = text.length();
@@ -238,6 +179,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             } else {    // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
                 label.setToolTipText(null);
             }
+*/
         }
 
         // Set background color depending on whether the row is selected or not, and whether the table has focus or not
@@ -248,7 +190,7 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
             if (table.hasFocus() && search.isActive()) {
                 matchesColorIndex = ThemeCache.NORMAL;
             } else {
-                matchesColorIndex = (rowIndex % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE;
+                matchesColorIndex = (row % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE;
             }
             label.setBackground(ThemeCache.backgroundColors[focusedIndex][matchesColorIndex]);
         } else {
@@ -266,21 +208,4 @@ public class FileTableCellRenderer implements TableCellRenderer, ThemeListener {
 
 
 
-    // - Theme listening -------------------------------------------------------------
-    // -------------------------------------------------------------------------------
-    /**
-     * Receives theme color changes notifications.
-     */
-    public void colorChanged(ColorChangedEvent event) {
-        table.repaint();
-    }
-
-    /**
-     * Receives theme font changes notifications.
-     */
-    public void fontChanged(FontChangedEvent event) {
-        if (event.getFontId() == Theme.FILE_TABLE_FONT) {
-            setCellLabelsFont(ThemeCache.tableFont);
-        }
-    }
 }

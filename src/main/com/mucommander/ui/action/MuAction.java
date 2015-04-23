@@ -67,7 +67,7 @@ public abstract class MuAction extends AbstractAction {
     
     /**
      * Creates a new <code>MuAction</code> associated with the specified {@link MainFrame}. The properties contained by
-     * the given {@link Hashtable} are used to initialize this action's property map.
+     * the given {@link Map} are used to initialize this action's property map.
      *
      * @param mainFrame the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial

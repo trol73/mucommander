@@ -23,7 +23,6 @@ import com.mucommander.cache.LRUCache;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.ftp.FTPFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
@@ -45,7 +44,7 @@ import com.mucommander.ui.icon.SpinningDial;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 import com.mucommander.ui.theme.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,8 +132,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             public synchronized void configurationChanged(ConfigurationEvent event) {
                 String var = event.getVariable();
 
-                if (var.equals(MuPreferences.DISPLAY_COMPACT_FILE_SIZE))
+                if (var.equals(MuPreferences.DISPLAY_COMPACT_FILE_SIZE)) {
                     setSelectedFileSizeFormat(event.getBooleanValue());
+                }
             }
         };
         MuConfigurations.addPreferencesListener(CONFIGURATION_ADAPTER);
@@ -257,7 +257,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         // Currently select file, can be null
         AbstractFile selectedFile = currentFileTable.getSelectedFile(false, true);
-        FileTableModel tableModel = currentFileTable.getFileTableModel();
+        BaseFileTableModel tableModel = currentFileTable.getFileTableModel();
         // Number of marked files, can be 0
         int nbMarkedFiles = tableModel.getNbMarkedFiles();
         // Combined size of marked files, 0 if no file has been marked
@@ -283,7 +283,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 	
             if (selectedFile != null) {
                 filesInfo.append(" - ");
-                filesInfo.append("<b>" + selectedFile.getName() + "</b>");
+                filesInfo.append("<b>");
+                filesInfo.append(selectedFile.getName());
+                filesInfo.append("</b>");
                 if (selectedFile.isSymlink()) {
                     String target = getFileLink(selectedFile);
                     if (target != null) {

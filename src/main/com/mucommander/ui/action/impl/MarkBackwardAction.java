@@ -46,11 +46,13 @@ public abstract class MarkBackwardAction extends MuAction {
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
 
-        int currentRow = fileTable.getSelectedRow();
-        int endRow = Math.max(0, currentRow-getRowDecrement()+1);
+        int currentFileIndex = fileTable.getSelectedFileIndex();
+        int endIndex = Math.max(0, currentFileIndex-getRowDecrement()+1);
+//        int currentRow = fileTable.getSelectedRow();
+//        int endRow = Math.max(0, currentRow-getRowDecrement()+1);
 
-        fileTable.setRangeMarked(currentRow, endRow, !fileTable.getFileTableModel().isRowMarked(currentRow));
-        fileTable.selectRow(Math.max(0, endRow-1));
+        fileTable.setRangeMarked(currentFileIndex, endIndex, !fileTable.getFileTableModel().isFileMarked(currentFileIndex));
+        fileTable.selectFile(Math.max(0, endIndex - 1));
     }
 
 

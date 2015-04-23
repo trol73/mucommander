@@ -46,12 +46,14 @@ public abstract class MarkForwardAction extends MuAction {
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
 
-        int currentRow = fileTable.getSelectedRow();
-        int lastRow = fileTable.getRowCount()-1;
-        int endRow = Math.min(lastRow, currentRow+getRowIncrement()-1);
+        int currentFileIndex = fileTable.getSelectedFileIndex();
+        int lastIndex = fileTable.getFilesCount()-1;
+//        int currentRow = fileTable.getSelectedRow();
+//        int lastRow = fileTable.getRowCount()-1;
+        int endIndex = Math.min(lastIndex, currentFileIndex + getRowIncrement() - 1);
 
-        fileTable.setRangeMarked(currentRow, endRow, !fileTable.getFileTableModel().isRowMarked(currentRow));
-        fileTable.selectRow(Math.min(lastRow, endRow+1));
+        fileTable.setRangeMarked(currentFileIndex, endIndex, !fileTable.getFileTableModel().isFileMarked(currentFileIndex));
+        fileTable.selectFile(Math.min(lastIndex, endIndex + 1));
     }
 
 

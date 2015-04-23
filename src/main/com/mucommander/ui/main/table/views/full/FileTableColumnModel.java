@@ -16,7 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.ui.main.table;
+package com.mucommander.ui.main.table.views.full;
+
+import com.mucommander.ui.main.table.Column;
+import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.FileTableHeaderRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -135,7 +139,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     /**
      * Returns <code>true</code> if the specified column is enabled.
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @return true if the column is enabled, false if disabled.
      */
     public synchronized boolean isColumnEnabled(Column column) {
@@ -144,7 +148,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     /**
      * Sets the specified column's enabled state.
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param enabled true to enable the column, false to disable it.
      */
     public synchronized void setColumnEnabled(Column column, boolean enabled) {
@@ -157,10 +161,10 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     /**
      * Sets the specified column's visibility state.
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param visible whether the column should be visible or not.
      */
-    synchronized void setColumnVisible(Column column, boolean visible) {
+    public synchronized void setColumnVisible(Column column, boolean visible) {
         // Ignores calls that won't actually change anything.
         int columnVal = column.ordinal();
         if (visibility[columnVal] != visible) {
@@ -181,7 +185,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     /**
      * Returns <code>true</code> if the specified column is visible.
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @return <code>true</code> if the specified column is visible, <code>false</code> otherwise.
      */
     public synchronized boolean isColumnVisible(Column column) {
@@ -192,13 +196,17 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * Adds the specified column to the model.
      * @param column column to add to the model.
      */
-    public void addColumn(TableColumn column) {setColumnVisible(Column.valueOf(column.getModelIndex()), true);}
+    public void addColumn(TableColumn column) {
+        setColumnVisible(Column.valueOf(column.getModelIndex()), true);
+    }
 
     /**
      * Removes the specified column from the model.
      * @param column column to remove from the model.
      */
-    public void removeColumn(TableColumn column) {setColumnVisible(Column.valueOf(column.getModelIndex()), false);}
+    public void removeColumn(TableColumn column) {
+        setColumnVisible(Column.valueOf(column.getModelIndex()), false);
+    }
 
 
 
@@ -224,7 +232,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @param  index index of the column in the model.
      * @return       the requested column.
      */
-    public synchronized TableColumn getColumn(int index) {return columns.get(getInternalIndex(index));}
+    public synchronized TableColumn getColumn(int index) {
+        return columns.get(getInternalIndex(index));
+    }
 
     public synchronized TableColumn getColumnFromId(int id) {return columns.get(id);}
 
@@ -274,7 +284,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         triggerColumnMoved(new TableColumnModelEvent(this, from, to));
     }
 
-    public int getColumnIndex(Object identifier) {return 0;}
+    public int getColumnIndex(Object identifier) {
+        return 0;
+    }
 
 
 
@@ -285,6 +297,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @param  x position of the column to look for.
      * @return  the index of the column at the specified position, <code>-1</code> if not found.
      */
+    @Override
     public int getColumnIndexAtX(int x) {
         int count = getColumnCount();
         for (int i = 0; i < count; i++) {
@@ -323,7 +336,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      */
     public void propertyChange(PropertyChangeEvent event) {
         String name = event.getPropertyName();
-        if (name.equals("width")) {
+        if ("width".equals(name)) {
             columnSizesSet = true;
             widthCache = CACHE_OUT_OF_DATE;
             // Notifies the table that columns width have changed and that it should repaint itself.
@@ -331,7 +344,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         }
     }
 
-    boolean wereColumnSizesSet() {
+    public boolean wereColumnSizesSet() {
         return columnSizesSet;
     }
 
@@ -344,6 +357,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * Returns 0.
      * @return 0.
      */
+    @Override
     public int getColumnMargin() {
         return 0;
     }
@@ -351,6 +365,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /**
      * Ignored.
      */
+    @Override
     public void setColumnMargin(int margin) {}
 
 
@@ -431,6 +446,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * Returns <code>0</code>.
      * @return <code>0</code>.
      */
+    @Override
     public int getSelectedColumnCount() {
         return 0;
     }
@@ -439,6 +455,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * Returns an integer array of size 0.
      * @return an integer array of size 0.
      */
+    @Override
     public int[] getSelectedColumns() {
         return new int[0];
     }

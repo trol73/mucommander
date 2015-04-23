@@ -22,7 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -35,22 +35,22 @@ import java.util.Map;
  */
 public class InvertSelectionAction extends MuAction {
 
-    public InvertSelectionAction(MainFrame mainFrame, Map<String,Object> properties) {
+    public InvertSelectionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
-        FileTableModel tableModel = fileTable.getFileTableModel();
+        BaseFileTableModel tableModel = fileTable.getFileTableModel();
 
         // Starts at 1 if current folder is not root so that '..' is not marked
-        AbstractFile file;
-        int nbRows = tableModel.getRowCount();
-        for(int i=tableModel.getFirstMarkableRow(); i<nbRows; i++) {
-            file = tableModel.getFileAtRow(i);
-            if(!file.isDirectory())
-                tableModel.setRowMarked(i, !tableModel.isRowMarked(i));
+        int nbFiles = fileTable.getFilesCount();
+        for (int i = 0; i < nbFiles; i++) {
+            AbstractFile file = tableModel.getFileAt(i);
+            if (!file.isDirectory()) {
+                tableModel.setFileMarked(i, !tableModel.isFileMarked(i));
+            }
         }
         fileTable.repaint();
 

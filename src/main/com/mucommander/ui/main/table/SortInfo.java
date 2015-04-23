@@ -59,9 +59,9 @@ public class SortInfo implements Cloneable {
     /**
      * Sets the column to be used as a criterion to sort the table.
      *
-     * @param criterion the column to be used as a criterion to sort the table, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param criterion the column to be used as a criterion to sort the table, see {@link Column} for possible values
      */
-    void setCriterion(Column criterion) {
+    public void setCriterion(Column criterion) {
         this.criterion = criterion;
     }
 
@@ -79,7 +79,7 @@ public class SortInfo implements Cloneable {
      *
      * @param ascending true if the current sort order is ascending, false if it is descending
      */
-    void setAscendingOrder(boolean ascending) {
+    public void setAscendingOrder(boolean ascending) {
         this.ascendingOrder = ascending;
     }
 
@@ -98,7 +98,7 @@ public class SortInfo implements Cloneable {
      *
      * @param showFoldersFirst true if folders are sorted and displayed before regular files, false if they are mixed with regular files and sorted altogether
      */
-    void setFoldersFirst(boolean showFoldersFirst) {
+    public void setFoldersFirst(boolean showFoldersFirst) {
         this.showFoldersFirst = showFoldersFirst;
     }
 

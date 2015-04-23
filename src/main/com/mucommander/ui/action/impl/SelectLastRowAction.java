@@ -40,7 +40,7 @@ public class SelectLastRowAction extends MuAction {
     @Override
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
-        fileTable.selectRow(fileTable.getFileTableModel().getRowCount()-1);
+        fileTable.selectFile(fileTable.getFilesCount()-1);
     }
 
 	@Override
