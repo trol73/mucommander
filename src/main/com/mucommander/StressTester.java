@@ -75,7 +75,7 @@ public class StressTester implements Runnable, ActionListener {
                 AbstractFile children[] = currentFolder.ls();
                 // 1 in 3 chance to go up if folder has children
                 if(children.length==0 || (random.nextInt(3)==0 && parentFolder!=null)) {
-                    fileTable.selectRow(0);
+                    fileTable.selectFile(0);
                     ActionManager.performAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID, mainFrame);
                 }
                 else {

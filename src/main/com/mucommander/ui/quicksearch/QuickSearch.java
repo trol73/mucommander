@@ -174,18 +174,18 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 	/**
      * Finds a match (if any) for the current quick search string and selects the corresponding row.
      *
-     * @param startRow first row to be tested
+     * @param startIndex first row to be tested
      * @param descending specifies whether rows should be tested in ascending or descending order
      * @param findBestMatch if <code>true</code>, all rows will be tested in the specified order, looking for the best match. If not, it will stop to the first match (not necessarily the best).
      */
-    protected void findMatch(int startRow, boolean descending, boolean findBestMatch) {
-        LOGGER.trace("startRow="+startRow+" descending="+descending+" findMatch="+findBestMatch);
+    protected void findMatch(int startIndex, boolean descending, boolean findBestMatch) {
+        LOGGER.trace("startRow="+startIndex+" descending="+descending+" findMatch="+findBestMatch);
 
         // If search string is empty, update status bar without any icon and return
         if (searchString.isEmpty()) {
             searchStringBecameEmpty(searchString);
         } else {
-        	int bestMatch = getBestMatch(startRow, descending, findBestMatch);
+        	int bestMatch = getBestMatch(startIndex, descending, findBestMatch);
 
             if (bestMatch >= 0) {
                 matchFound(bestMatch, searchString);
@@ -195,14 +195,14 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         }
     }
 	
-	private int getBestMatch(int startRow, boolean descending, boolean findBestMatch) {
+	private int getBestMatch(int startIndex, boolean descending, boolean findBestMatch) {
     	String searchStringLC = searchString.toLowerCase();
     	int searchStringLen = searchString.length();
         int startsWithCaseMatch = -1;
         int startsWithNoCaseMatch = -1;
         int containsCaseMatch = -1;
         int containsNoCaseMatch = -1;
-        int nbRows = getNumOfItems();
+        int nbFiles = getNumOfItems();
 
         // Iterate on rows and look the first strings to match one of the following tests,
         // in the following order of importance :
@@ -210,18 +210,20 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
         // - search string matches the beginning of the string with a different case
         // - string contains search string with the same case
         // - string contains search string with a different case
-        for (int i = startRow; descending?i<nbRows:i>=0; i=descending?i+1:i-1) {
+        for (int i = startIndex; descending ? i < nbFiles : i >= 0; i = descending ? i+1 : i-1) {
             // if findBestMatch was not specified, stop to the first match
-            if (!findBestMatch && (startsWithCaseMatch!=-1 || startsWithNoCaseMatch!=-1 || containsCaseMatch!=-1 || containsNoCaseMatch!=-1))
+            if (!findBestMatch && (startsWithCaseMatch != -1 || startsWithNoCaseMatch != -1 || containsCaseMatch != -1 || containsNoCaseMatch != -1)) {
                 break;
+            }
 
             String item = getItemString(i);
             int itemLen = item.length();
 
             // No need to compare strings if quick search string is longer than compared string,
             // they won't match
-            if (itemLen<searchStringLen)
+            if (itemLen < searchStringLen) {
                 continue;
+            }
 
             // Compare quick search string against
             if (item.startsWith(searchString)) {
@@ -242,11 +244,11 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 
             // No need to check if the compared string contains search string if both size are equal,
             // in the case startsWith test yields the same result
-            if (itemLen==searchStringLen)
+            if (itemLen == searchStringLen)
                 continue;
 
             // If we already have a match on this test case, let's skip to the next string
-            if (containsCaseMatch!=-1)
+            if (containsCaseMatch != -1)
                 continue;
 
             if (item.contains(searchString)) {
@@ -256,7 +258,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
             }
 
             // If we already have a match on this test case, let's skip to the next string
-            if (containsNoCaseMatch!=-1)
+            if (containsNoCaseMatch != -1)
                 continue;
 
             if (itemLC.contains(searchStringLC)) {
@@ -345,8 +347,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
                     stop();
                 }
             }
-        }
-        while(timeoutThread != null);
+        } while(timeoutThread != null);
     }
 
     ///////////////////////////////

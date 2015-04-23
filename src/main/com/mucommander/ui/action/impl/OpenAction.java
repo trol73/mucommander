@@ -93,19 +93,20 @@ public class OpenAction extends MuAction {
     			InformationDialog.showErrorDialog(mainFrame, Translator.get("cannot_open_cyclic_symlink"));
     			return;
     		}
-    	}
-    	else
-    		resolvedFile = file;
+    	} else {
+			resolvedFile = file;
+		}
 
         // Opens browsable files in the destination FolderPanel.
-        if(resolvedFile.isBrowsable()) {
+        if (resolvedFile.isBrowsable()) {
         	resolvedFile = MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS) ? resolvedFile : file;
 
         	FileTableTabs tabs = destination.getTabs();
-        	if (tabs.getCurrentTab().isLocked())
-        		tabs.add(resolvedFile);
-        	else
-        		destination.tryChangeCurrentFolder(resolvedFile);
+        	if (tabs.getCurrentTab().isLocked()) {
+				tabs.add(resolvedFile);
+			} else {
+				destination.tryChangeCurrentFolder(resolvedFile);
+			}
         }
 
         // Opens local files using their native associations.
@@ -113,8 +114,7 @@ public class OpenAction extends MuAction {
             try {
             	DesktopManager.open(resolvedFile);
             	RecentExecutedFilesQL.addFile(resolvedFile);
-    		}
-            catch(IOException e) {
+    		} catch (IOException e) {
                 InformationDialog.showErrorDialog(mainFrame);
             }
         }
@@ -132,12 +132,11 @@ public class OpenAction extends MuAction {
     }
 
     private AbstractFile resolveSymlink(AbstractFile file, Set<AbstractFile> visitedFiles) {
-    	if (visitedFiles.contains(file))
-    		return null;
-    	else {
-    		visitedFiles.add(file);
-    		return file.isSymlink() ? resolveSymlink(file.getCanonicalFile(), visitedFiles) : file;
-    	}
+    	if (visitedFiles.contains(file)) {
+			return null;
+		}
+		visitedFiles.add(file);
+    	return file.isSymlink() ? resolveSymlink(file.getCanonicalFile(), visitedFiles) : file;
     }
 
     /**
@@ -145,16 +144,15 @@ public class OpenAction extends MuAction {
      */
     @Override
     public void performAction() {
-        AbstractFile file;
-
-        // Retrieves the currently selected file, aborts if none.
-        // Note: a CachedFile instance is retrieved to avoid blocking the event thread.
-        if((file = mainFrame.getActiveTable().getSelectedFile(true, true)) == null)
-            return;
+		// Retrieves the currently selected file, aborts if none.
+		// Note: a CachedFile instance is retrieved to avoid blocking the event thread.
+		AbstractFile file  = mainFrame.getActiveTable().getSelectedFile(true, true);
+        if (file == null) {
+			return;
+		}
 
         // Opens the currently selected file.
         open(file, mainFrame.getActivePanel());
-
     }
 
 	@Override

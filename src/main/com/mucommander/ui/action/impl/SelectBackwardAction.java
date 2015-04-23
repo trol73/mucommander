@@ -43,8 +43,8 @@ public abstract class SelectBackwardAction extends MuAction {
     @Override
     public void performAction() {
         FileTable activeTable = mainFrame.getActiveTable();
-
-        activeTable.selectRow(Math.max(activeTable.getSelectedRow()-getRowDecrement(), 0));
+        int newFileIndex = Math.max(activeTable.getSelectedFileIndex() - getRowDecrement(), 0);
+        activeTable.selectFile(newFileIndex);
     }
 
 

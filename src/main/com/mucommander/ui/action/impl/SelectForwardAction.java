@@ -43,8 +43,8 @@ public abstract class SelectForwardAction extends MuAction {
     @Override
     public void performAction() {
         FileTable activeTable = mainFrame.getActiveTable();
-
-        activeTable.selectRow(Math.min(activeTable.getSelectedRow()+getRowIncrement(), activeTable.getRowCount()-1));
+        int newFileIndex = Math.min(activeTable.getSelectedFileIndex() + getRowIncrement(), activeTable.getFilesCount() - 1);
+        activeTable.selectFile(newFileIndex);
     }
 
 

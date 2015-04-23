@@ -28,13 +28,13 @@ else
 fi
 
 CURRENT_DIR=`dirname "$MUCOMMANDER_SH"`
-MUCOMMANDER_JAR=$CURRENT_DIR/mucommander.jar
+MUCOMMANDER_JAR=$CURRENT_DIR/trolcommander.jar
 
 if [ ! -f $MUCOMMANDER_JAR ]
 then
-    echo "Error: cannot find file mucommander.jar in directory $CURRENT_DIR"
+    echo "Error: cannot find file trolcommander.jar in directory $CURRENT_DIR"
     exit 1
 fi
 
-# Starts mucommander.
+# Starts trolcommander.
 $JAVA $JAVA_ARGS -DGNOME_DESKTOP_SESSION_ID=$GNOME_DESKTOP_SESSION_ID -DKDE_FULL_SESSION=$KDE_FULL_SESSION -DKDE_SESSION_VERSION=$KDE_SESSION_VERSION -jar $MUCOMMANDER_JAR $MUCOMMANDER_ARGS $@

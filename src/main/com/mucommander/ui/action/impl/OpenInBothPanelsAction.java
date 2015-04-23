@@ -24,7 +24,7 @@ import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -99,46 +99,49 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
      */
     @Override
     public void performAction() {
-        Thread       openThread;
-        AbstractFile selectedFile;
         AbstractFile otherFile = null;
 
         // Retrieves the current selection, aborts if none (should not normally happen).
-        if((selectedFile = mainFrame.getActiveTable().getSelectedFile(true, true)) == null || !selectedFile.isBrowsable())
+        AbstractFile selectedFile = mainFrame.getActiveTable().getSelectedFile(true, true);
+        if (selectedFile == null || !selectedFile.isBrowsable()) {
             return;
+        }
 
         try {
-            FileTableModel otherTableModel = mainFrame.getInactiveTable().getFileTableModel();
+            BaseFileTableModel otherTableModel = mainFrame.getInactiveTable().getFileTableModel();
 
-            if(mainFrame.getActiveTable().isParentFolderSelected()) {
+            if (mainFrame.getActiveTable().isParentFolderSelected()) {
                 otherFile = otherTableModel.getParentFolder();
-            }
-            else {
+            } else {
                 // Look for a file in the other table with the same name as the selected one (case insensitive)
                 int fileCount = otherTableModel.getFileCount();
                 String targetFilename = selectedFile.getName();
-                for(int i=otherTableModel.getFirstMarkableRow(); i<fileCount; i++) {
-                    otherFile = otherTableModel.getCachedFileAtRow(i);
-                    if(otherFile.getName().equalsIgnoreCase(targetFilename))
+                for (int i = 0; i < fileCount; i++) {
+                    otherFile = otherTableModel.getCachedFileAt(i);
+                    if (otherFile.getName().equalsIgnoreCase(targetFilename)) {
                         break;
+                    }
 
-                    if(i==fileCount-1)
+                    if (i == fileCount-1) {
                         otherFile = null;
+                    }
                 }
             }
+        } catch (Exception e) {
+            otherFile = null;
         }
-        catch(Exception e) {otherFile = null;}
 
         // Opens 'file' in the active panel.
-        openThread = mainFrame.getActivePanel().tryChangeCurrentFolder(selectedFile);
+        Thread openThread = mainFrame.getActivePanel().tryChangeCurrentFolder(selectedFile);
 
         // Opens 'otherFile' (if any) in the inactive panel.
-        if(otherFile != null) {
+        if (otherFile != null) {
             // Waits for the previous folder change to be finished.
-            if(openThread != null) {
-                while(openThread.isAlive()) {
-                    try {openThread.join();}
-                    catch(InterruptedException e) {}
+            if (openThread != null) {
+                while (openThread.isAlive()) {
+                    try {
+                        openThread.join();
+                    } catch(InterruptedException ignore) {}
                 }
             }
             mainFrame.getInactivePanel().tryChangeCurrentFolder(otherFile);

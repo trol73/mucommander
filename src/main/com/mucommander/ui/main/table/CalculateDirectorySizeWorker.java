@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * Copyright (C) 2013-2015 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,27 @@
 package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.SwingWorker;
 import java.io.IOException;
 import java.util.List;
 
 /**
+ * @author Oleg Trifonov
  * Created on 09/01/14.
  */
 public class CalculateDirectorySizeWorker extends SwingWorker<Long, Long> {
     /** Refresh rate in milliseconds  */
     private static final long REFRESH_RATE_MS = 300;
 
-    private final FileTableModel fileTableModel;
+    private final BaseFileTableModel fileTableModel;
     private final AbstractFile path;
     private final FileTable table;
     private long size;
     private long lastRefreshTime;
 
-    public CalculateDirectorySizeWorker(FileTableModel fileTableModel, FileTable table, AbstractFile path) {
+    public CalculateDirectorySizeWorker(BaseFileTableModel fileTableModel, FileTable table, AbstractFile path) {
         this.fileTableModel = fileTableModel;
         this.table = table;
         this.path = path;

@@ -53,8 +53,9 @@ public class FocusPreviousAction extends MuAction {
         Component focusOwner = mainFrame.getFocusOwner();
 
         // Abort if the focus is not in the MainFrame this action is tied to
-        if(focusOwner==null)
+        if (focusOwner == null) {
             return;
+        }
 
         FolderPanel folderPanel = mainFrame.getActivePanel();
         FileTable fileTable = folderPanel.getFileTable();
@@ -63,14 +64,15 @@ public class FocusPreviousAction extends MuAction {
 
         // Request focus on the 'previous' component, the cycle order being from right to left, bottom to top.
         Component previousComponent;
-        if(focusOwner==fileTable)
-            previousComponent = folderPanel.isTreeVisible()?tree:locationField;
-        else if(focusOwner==tree)
+        if (focusOwner == fileTable) {
+            previousComponent = folderPanel.isTreeVisible() ? tree : locationField;
+        } else if (focusOwner == tree) {
             previousComponent = locationField;
-        else if(focusOwner==locationField)
+        } else if(focusOwner == locationField) {
             previousComponent = fileTable;
-        else
+        } else {
             return;
+        }
 
         FocusRequester.requestFocusInWindow(previousComponent);
     }

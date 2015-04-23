@@ -23,16 +23,7 @@ import java.awt.event.*;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -40,6 +31,17 @@ import javax.swing.table.TableColumnModel;
 
 import com.mucommander.text.SizeFormat;
 import com.mucommander.ui.action.impl.*;
+import com.mucommander.ui.main.table.views.BaseCellRenderer;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
+import com.mucommander.ui.main.table.views.TableViewMode;
+import com.mucommander.ui.main.table.views.compact.CompactFileTableColumnModel;
+import com.mucommander.ui.main.table.views.compact.CompactFileTableModel;
+import com.mucommander.ui.main.table.views.full.FileTableCellRenderer;
+import com.mucommander.ui.main.table.views.full.FileTableColumnModel;
+import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
+import com.mucommander.ui.main.table.views.full.FileTableModel;
+import com.mucommander.ui.theme.*;
+import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,11 +76,6 @@ import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.menu.TablePopupMenu;
 import com.mucommander.ui.quicksearch.QuickSearch;
-import com.mucommander.ui.theme.ColorChangedEvent;
-import com.mucommander.ui.theme.FontChangedEvent;
-import com.mucommander.ui.theme.Theme;
-import com.mucommander.ui.theme.ThemeListener;
-import com.mucommander.ui.theme.ThemeManager;
 
 
 /**
@@ -90,7 +87,7 @@ import com.mucommander.ui.theme.ThemeManager;
  */
 public class FileTable extends JTable implements MouseListener, MouseMotionListener, KeyListener,
                                                  ActivePanelListener, ConfigurationListener, ThemeListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileTable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileTable.class);
 	
     // - Column sizes --------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -100,6 +97,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private final static int MIN_COLUMN_AUTO_WIDTH = 20;
 
     private static final int MAX_ROWS_FOR_AUTO_LAYOUT_CALCULATION = 50;
+    private static final Dimension INTERCELL_SPACING = new Dimension(0, 0);
 
 
     // - Containers ----------------------------------------------------------------------
@@ -113,9 +111,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     // - UI components -------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** TableModel instance used by this JTable to get cells' values */
-    private FileTableModel tableModel;
+    private BaseFileTableModel tableModel;
     /** TableCellRender instance used by this JTable to render cells */
-    private FileTableCellRenderer cellRenderer;
+    private BaseCellRenderer cellRenderer;
     /** CellEditor used to edit filenames when clicked */
     private FilenameEditor filenameEditor;
 
@@ -125,12 +123,17 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** Row currently selected */
     private int currentRow;
 
+    /** Column currently selected */
+    private int currentColumn;
+
     // Used when right button is pressed and mouse is dragged
     private boolean markOnRightClick;
     private int lastDraggedRow = -1;
+    private int lastDraggedCol = -1;
 
     // Used by shift+Click
     private int lastRow;
+    private int lastColumn;
 
     /** Allows to detect repeated key strokes of mark key (space/insert) */
     private boolean markKeyRepeated;
@@ -150,7 +153,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private QuickSearch<AbstractFile> quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
-    private WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<TableSelectionListener, Object>();
+    private WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
 
     /** True when this table is the current or last active table in the MainFrame */
     private boolean isActiveTable;
@@ -177,10 +180,21 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** Table that shows the user to refresh if the location doesn't exist */
     private DefaultOverlayable overlayTable;
 
-    public FileTable(MainFrame mainFrame, FolderPanel folderPanel, FileTableConfiguration conf) {
-        super(new FileTableModel(), new FileTableColumnModel(conf));
+    private TableViewMode viewMode;
 
-        tableModel = (FileTableModel)getModel();
+    private FileTableConfiguration conf;
+
+    /**
+     * Number of visible rows on table. Calculated on layout and used to compact/short model
+     */
+    private int pageSize;
+
+
+    public FileTable(MainFrame mainFrame, FolderPanel folderPanel, FileTableConfiguration conf) {
+        super(new FileTableModel(), new FileTableColumnModel(conf));    // TODO !!!
+//super(new CompactFileTableModel(2, 20), new CompactFileTableColumnModel(2, conf));    // TODO !!!
+        this.conf = conf;
+        tableModel = (BaseFileTableModel)getModel();
         tableModel.setSortInfo(sortInfo);
 
         ThemeManager.addCurrentThemeListener(this);
@@ -197,15 +211,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         inputMap.setParent(null);
 
         // Initializes the table.
-        cellRenderer = new FileTableCellRenderer(this);
-        filenameEditor = new FilenameEditor(new JTextField());
-        getColumnModel().getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
-        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setTableHeader(new FileTableHeader(this));
         setShowGrid(false);
-        setIntercellSpacing(new Dimension(0, 0));
-        setRowHeight();
-        setAutoSizeColumnsEnabled(MuConfigurations.getPreferences().getVariable(MuPreference.AUTO_SIZE_COLUMNS, MuPreferences.DEFAULT_AUTO_SIZE_COLUMNS));
+        setIntercellSpacing(INTERCELL_SPACING);
+        filenameEditor = new FilenameEditor(new JTextField());
+
+        setViewMode(TableViewMode.FULL);     // TODO !!!!!!
+        setTableHeader(new FileTableHeader(this));
 
         // Initializes event listening.
         addMouseListener(this);
@@ -220,7 +231,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         if (usesTableHeaderRenderingProperties()) {
             setTableHeaderRenderingProperties();
         }
-        
+
         // Initialize a wrapper of presentation adjustments for the file-table
         scrollpaneWrapper = new FileTableWrapperForDisplay(this, folderPanel, mainFrame);
 
@@ -230,8 +241,71 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             @Override
             public void focusGained(FocusEvent e) {
                 overlayTable.repaint();
+            }
+        });
+    }
+
+
+    /**
+     *
+     * @param mode - FULL, COMPACT or SHORT
+     */
+    public synchronized void setViewMode(TableViewMode mode) {
+        if (this.viewMode == mode) {
+            return;
+        }
+        final boolean fromConstructor = this.viewMode == null;
+        final int selectedFileIndex = fromConstructor ? 0 : getSelectedFileIndex();
+
+        this.viewMode = mode;
+        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        BaseFileTableModel oldModel = (BaseFileTableModel)getModel();
+        switch (mode) {
+            case FULL:
+                if (!fromConstructor) {
+                    setModel(new FileTableModel());
+                    setColumnModel(new FileTableColumnModel(conf));
                 }
-            });
+                getColumnModel().getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
+                setAutoSizeColumnsEnabled(MuConfigurations.getPreferences().getVariable(MuPreference.AUTO_SIZE_COLUMNS, MuPreferences.DEFAULT_AUTO_SIZE_COLUMNS));
+                break;
+
+            case COMPACT:
+            case SHORT:
+                if (!fromConstructor) {
+                    setModel(new CompactFileTableModel(mode.getColumnsCount(), pageSize > 0 ? pageSize : 10));
+                    setColumnModel(new CompactFileTableColumnModel(mode.getColumnsCount(), conf));
+                }
+                int columnWidth = getWidth()/mode.getColumnsCount();
+                for (int col = 0; col < mode.getColumnsCount(); col++) {
+                    TableColumn column = getColumnModel().getColumn(col);
+                    column.setCellEditor(filenameEditor);
+                    column.setWidth(columnWidth);
+                }
+                break;
+        }
+        setRowHeight();
+        BaseFileTableModel newModel = (BaseFileTableModel)getModel();
+        newModel.setupFromModel(oldModel);
+        tableModel = newModel;
+        cellRenderer = mode.createCellRenderer(this);
+        tableModel.setSortInfo(sortInfo);
+        if (!fromConstructor) {
+            doLayout();
+            try {
+                selectFile(selectedFileIndex);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        invalidate();
+
+        // TODO restore header selection
+    }
+
+
+    public TableViewMode getViewMode() {
+        return viewMode;
     }
 
     private DefaultOverlayable createOverlayableTable() {
@@ -265,9 +339,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         };
     }
     
-    public String getFileNameAtRow(int index) {
-    	return (index==0 && tableModel.hasParentFolder()) ? ".." : tableModel.getFileAtRow(index).getName();
-    }
 
     /**
      * Returns the FileTable as a UI component for display purpose.
@@ -288,28 +359,29 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * returns <code>false</code>.
      */
     private void setTableHeaderRenderingProperties() {
-        if (usesTableHeaderRenderingProperties()) {
-            JTableHeader tableHeader = getTableHeader();
-            if (tableHeader == null)
-                return;
-
-            boolean isActiveTable = isActiveTable();
-
-            // Highlights the selected column
-            tableHeader.putClientProperty("JTableHeader.selectedColumn", isActiveTable
-                    ? convertColumnIndexToView(sortInfo.getCriterion().ordinal())
-                    :null);
-
-            // Displays an ascending/descending arrow
-            tableHeader.putClientProperty("JTableHeader.sortDirection", isActiveTable
-                    ? sortInfo.getAscendingOrder()?"ascending":"decending"      // decending is mispelled but this is OK
-                    :null);
-
-            // Note: if this table is not currently active, properties are cleared to remove the highlighting effect.
-            // However, clearing the properties does not yield the desired behavior as it does not restore the table
-            // header back to normal. This looks like a bug in Apple's implementation.
-
+        if (!usesTableHeaderRenderingProperties()) {
+            return;
         }
+        JTableHeader tableHeader = getTableHeader();
+        if (tableHeader == null) {
+            return;
+        }
+
+        boolean isActiveTable = isActiveTable();
+
+        // Highlights the selected column
+        tableHeader.putClientProperty("JTableHeader.selectedColumn", isActiveTable
+                ? convertColumnIndexToView(sortInfo.getCriterion().ordinal())
+                : null);
+
+        // Displays an ascending/descending arrow
+        tableHeader.putClientProperty("JTableHeader.sortDirection", isActiveTable
+                ? sortInfo.getAscendingOrder()?"ascending":"decending"      // descending is misspelled but this is OK
+                : null);
+
+        // Note: if this table is not currently active, properties are cleared to remove the highlighting effect.
+        // However, clearing the properties does not yield the desired behavior as it does not restore the table
+        // header back to normal. This looks like a bug in Apple's implementation.
     }
     
     /**
@@ -345,7 +417,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @return true if the current platform is capable of indicating the sort criterion and sort order on the table
      * headers by setting client properties.
      */
-    static boolean usesTableHeaderRenderingProperties() {
+    public static boolean usesTableHeaderRenderingProperties() {
         return OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
     }
 
@@ -380,7 +452,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * @return this table's model cast as a FileTableModel
      */
-    public FileTableModel getFileTableModel() {
+    public BaseFileTableModel getFileTableModel() {
         return tableModel;
     }
 
@@ -439,7 +511,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         if (tableModel.getRowCount() == 0 || (!includeParentFolder && isParentFolderSelected())) {
             return null;
         }
-        return returnCachedFile ? tableModel.getCachedFileAtRow(currentRow) : tableModel.getFileAtRow(currentRow);
+        return returnCachedFile ? tableModel.getCachedFileAt(currentRow, currentColumn) : tableModel.getFileAt(currentRow, currentColumn);
     }
 
 
@@ -467,17 +539,18 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @return true if the currently selected row/file is the parent folder '..'
      */
     public boolean isParentFolderSelected() {
-        return currentRow == 0 && tableModel.hasParentFolder();
+        int currentFileIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+        return currentFileIndex == 0 && tableModel.hasParentFolder();
     }
 
     /**
-     * Returns <code>true</code> if the given row is the parent folder '..' .
+     * Returns <code>true</code> if the given file index is the parent folder '..' .
      *
-     * @param row index of the row to test
+     * @param index index of the row to test
      * @return true if the given row is the parent folder '..'
      */
-    public boolean isParentFolder(int row) {
-        return row == 0 && tableModel.hasParentFolder();
+    public boolean isParentFolder(int index) {
+        return index == 0 && tableModel.hasParentFolder();
     }
 
     /**
@@ -524,20 +597,21 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         quickSearch.stop();
 
         AbstractFile currentFolder = folderPanel.getCurrentFolder();
-
         // If we're refreshing the current folder, save the current selection and marked files
         // in order to restore them properly.
         FileSet markedFiles  = null;
         if (currentFolder != null && folder.equalsCanonical(currentFolder)) {
             markedFiles = tableModel.getMarkedFiles();
-            if (fileToSelect == null)
+            if (fileToSelect == null) {
                 fileToSelect = getSelectedFile();
+            }
         }
 
         // If we're navigating to the current folder's parent, we select the current folder.
-        else if(fileToSelect == null) {
-            if (tableModel.hasParentFolder() && folder.equals(tableModel.getParentFolder()))
+        else if (fileToSelect == null) {
+            if (tableModel.hasParentFolder() && folder.equals(tableModel.getParentFolder())) {
                 fileToSelect = currentFolder;
+            }
         }
 
         // Changes the current folder in the swing thread to make sure that repaints cannot
@@ -556,7 +630,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     // FolderChangeThread will call notify when done
                     folderChangeThread.wait();
                     break;
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     // will keep looping
                 }
             }
@@ -626,34 +700,50 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @return true if success
      */
     public boolean selectFile(AbstractFile file) {
-        int row = tableModel.getFileRow(file);
-
-        if (row >= 0) {
-            selectRow(row);
+        int index = tableModel.getFileIndex(file);
+//System.out.println("selectFile " + file);
+        if (index >= 0) {
+            selectFile(index);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
 
     /**
      * Makes the given row the currently selected one.
      *
-     * @param row index of the row to select
+     * @param index index of the row to select for full model or index of file for compact model
      */
-    public void selectRow(int row) {
-        changeSelection(row, 0, false, false);
+    public void selectFile(int index) {
+        if (index < 0) {
+            index = 0;
+        }
+        if (viewMode == TableViewMode.FULL) {
+            changeSelection(index, 0, false, false);
+        } else {
+            CompactFileTableModel compactModel = (CompactFileTableModel)getModel();
+            final int cols = compactModel.getColumnCount();
+            final int rows = compactModel.getRowCount();
+            if (index < rows*cols) {
+                compactModel.setOffset(0);
+                changeSelection(index % rows, index / rows, false, false);
+            } else {
+                compactModel.setOffset((index / (rows * cols)) * rows * cols);
+                int index0 = index % (rows*cols);
+                changeSelection(index0 % rows, index0 / rows, false, false);
+            }
+        }
     }
 
     /**
-     * Equivalent to calling {@link #setRowMarked(int, boolean, boolean)} with <code>repaint</code> enabled.
+     * Equivalent to calling {@link #setFileMarked(int, boolean, boolean)} with <code>repaint</code> enabled.
      *
-     * @param row index of the row to mark/unmark
-     * @param marked true to mark the row, false to unmark it
+     * @param index index of the file to mark/unmark
+     * @param marked true to mark the file, false to unmark it
      */
-    public void setRowMarked(int row, boolean marked) {
-        setRowMarked(row, marked, true);
+    public void setFileMarked(int index, boolean marked) {
+        setFileMarked(index, marked, true);
     }
 
     /**
@@ -663,18 +753,19 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * <p>This method has no effect if the row corresponds to the parent folder row '..' .</p>
      *
-     * @param row index of the row to mark/unmark
-     * @param marked true to mark the row, false to unmark it
+     * @param index index of the file to mark/unmark
+     * @param marked true to mark the file, false to unmark it
      * @param repaint true to repaint the row after it has been marked/unmarked
      */
-    public void setRowMarked(int row, boolean marked, boolean repaint) {
-        if (isParentFolder(row)) {
+    public void setFileMarked(int index, boolean marked, boolean repaint) {
+        if (isParentFolder(index)) {
             return;
         }
 
-        tableModel.setRowMarked(row, marked);
+        tableModel.setFileMarked(index, marked);
         
         if (repaint) {
+            int row = tableModel.getFileRow(index);
             repaintRow(row);
         }
 
@@ -702,10 +793,10 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param repaint true to repaint the file's row after it has been marked/unmarked
      */
     public void setFileMarked(AbstractFile file, boolean marked, boolean repaint) {
-        int row = tableModel.getFileRow(file);
+        int index = tableModel.getFileIndex(file);
 
-        if (row >= 0) {
-            setRowMarked(row, marked, repaint);
+        if (index >= 0) {
+            setFileMarked(index, marked, repaint);
         }
     }
 
@@ -724,19 +815,20 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @see MarkSelectedFileAction
      */
     public void markSelectedFile() {
-        // Avoids repeated mark/unmark on last row: return if last row has already been marked/unmarked
-        // by repeated mark key strokes
-        if (markKeyRepeated && lastRowMarked)
+        // Avoids repeated mark/unmark on last row: return if last row has already been marked/unmarked by repeated mark key strokes
+        if (markKeyRepeated && lastRowMarked) {
             return;
+        }
 
+        final int fileIndex = getFileTableModel().getFileIndexAt(currentRow, currentColumn);
         // Don't mark '..' file but select next row
         if (!isParentFolderSelected()) {
-            setRowMarked(currentRow, !tableModel.isRowMarked(currentRow));
+            setFileMarked(fileIndex, !tableModel.isFileMarked(currentRow, currentColumn));
         }
 
         // Changes selected item to the next one
-        if (currentRow != tableModel.getRowCount()-1) {
-            selectRow(currentRow+1);
+        if (fileIndex < tableModel.getFilesCount()-1) {
+            selectFile(fileIndex + 1);
         } else if (!lastRowMarked) {
             // Need an explicit repaint to repaint the last row since select row is not called
             repaintRow(currentRow);
@@ -754,13 +846,19 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Marks or unmarks a range of rows, delimited by the provided start row index and end row index (inclusive).
      * End row index can be lower, greater or equals to the start row.
      *
-     * @param startRow index of the first row to repaint
-     * @param endRow index of the last row to mark, can be lower, greater or equals to startRow
+     * @param start index of the first file to repaint
+     * @param end index of the last file to mark, can be lower, greater or equals to startRow
      * @param marked if true, the rows will be marked, unmarked otherwise
      */
-    public void setRangeMarked(int startRow, int endRow, boolean marked) {
-        tableModel.setRangeMarked(startRow, endRow, marked);
-        repaintRange(startRow, endRow);
+    public void setRangeMarked(int start, int end, boolean marked) {
+        tableModel.setRangeMarked(start, end, marked);
+        int startRow = tableModel.getFileRow(start);
+        int endRow = tableModel.getFileRow(end);
+        if (viewMode == TableViewMode.FULL) {
+            repaintRange(startRow, endRow);
+        } else {
+            repaintRange(0, tableModel.getRowCount()-1);
+        }
         fireMarkedFilesChangedEvent();
     }
 
@@ -771,7 +869,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param row the row to repaint
      */
     private void repaintRow(int row) {
-        repaint(0, row*getRowHeight(), getWidth(), rowHeight);
+        repaint(0, row * getRowHeight(), getWidth(), rowHeight);
     }
 
     /**
@@ -802,14 +900,15 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * order will be ignored if the corresponding column is not currently visible, but the 'folders first' value will
      * still be taken into account.
      *
-     * @param criterion the sort criterion, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param criterion the sort criterion, see {@link Column} for possible values
      * @param ascending true for ascending order, false for descending order
      * @param foldersFirst if true, folders are displayed before regular files. If false, files are mixed with directories.
      */
     public void sortBy(Column criterion, boolean ascending, boolean foldersFirst) {
         // If we're not changing the current sort values, abort.
-        if (criterion == sortInfo.getCriterion() && ascending == sortInfo.getAscendingOrder() && foldersFirst == sortInfo.getFoldersFirst())
+        if (criterion == sortInfo.getCriterion() && ascending == sortInfo.getAscendingOrder() && foldersFirst == sortInfo.getFoldersFirst()) {
             return;
+        }
 
         sortInfo.setFoldersFirst(foldersFirst);
 
@@ -845,7 +944,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Sorts this FileTable by the given sort criterion and order. The column corresponding to the specified criterion
      * has to be visible when this method is called. If it isn't, this method won't have any effect.
      *
-     * @param criterion the sort criterion, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param criterion the sort criterion, see {@link Column} for possible values
      * @param ascending true for ascending order, false for descending order
      */
     public void sortBy(Column criterion, boolean ascending) {
@@ -856,7 +955,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Sorts this FileTable by the given sort criterion. If the criterion is already the current one, the sort order
      * (ascending or descending) will be reversed.
      *
-     * @param criterion the sort criterion, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param criterion the sort criterion, see {@link Column} for possible values
      */
     public void sortBy(Column criterion) {
         if (criterion == sortInfo.getCriterion()) {
@@ -871,19 +970,38 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Convenience method that returns this table's <code>javax.swing.table.TableColumnModel</code> cast as a
      * {@link FileTableColumnModel}.
      *
+     * This methods return not null for full table view mode
+     *
      * @return this table's TableColumnModel cast as a FileTableColumnModel
      */
     public FileTableColumnModel getFileTableColumnModel() {
-        return (FileTableColumnModel)getColumnModel();
+        return getColumnModel() instanceof FileTableColumnModel ? (FileTableColumnModel)getColumnModel() : null;
+    }
+
+    /**
+     * Convenience method that returns this table's <code>javax.swing.table.TableColumnModel</code> cast as a
+     * {@link CompactFileTableColumnModel}.
+     *
+     * This methods return not null for compact table view mode
+     *
+     * @return this table's TableColumnModel cast as a CompactFileTableColumnModel
+     */
+    public CompactFileTableColumnModel getCompactFileTableColumnModel() {
+        return getColumnModel() instanceof CompactFileTableColumnModel ? (CompactFileTableColumnModel)getColumnModel() : null;
     }
 
     @Override
     public void setColumnModel(TableColumnModel columnModel) {
         // super.setColumnModel() must be called BEFORE the methods below
         super.setColumnModel(columnModel);
-
         if (filenameEditor != null) {
-            columnModel.getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
+            if (viewMode == TableViewMode.FULL) {
+                columnModel.getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
+            } else {
+                for (int i = 0; i < columnModel.getColumnCount(); i++) {
+                    columnModel.getColumn(i).setCellEditor(filenameEditor);
+                }
+            }
         }
 
         // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
@@ -895,11 +1013,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /**
      * Returns <code>true</code> if the specified column is currently visible.
      *
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @return true if the specified column is currently visible
      */
     public boolean isColumnVisible(Column column) {
-        return getFileTableColumnModel().isColumnVisible(column);
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        return fileTableColumnModel == null || fileTableColumnModel.isColumnVisible(column);
     }
 
     /**
@@ -908,7 +1027,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * of supplying this information.
      * Note that the return value does not take into account the column's current enabled state.
      *
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @return true if the given column can be displayed given the current folder
      */
     public boolean isColumnDisplayable(Column column) {
@@ -921,13 +1040,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
 
         // The Owner and Group columns are displayable only if current folder has this information
-        if (column == Column.OWNER) {
-            return file.canGetOwner();
-        } else if(column == Column.GROUP) {
-            return file.canGetGroup();
+        switch (column) {
+            case OWNER:
+                return file.canGetOwner();
+            case GROUP:
+                return file.canGetGroup();
+            default:
+                return true;
         }
-
-        return true;
     }
 
     /**
@@ -936,20 +1056,23 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public void updateColumnsVisibility() {
         FileTableColumnModel columnModel = getFileTableColumnModel();
-
-        for (Column c : Column.values()) {
-            columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
+        if (columnModel != null) {
+            // Full mode
+            for (Column c : Column.values()) {
+                columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
+            }
         }
     }
 
     /**
      * Returns <code>true</code> if the specified column is enabled.
      *
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @return true if the specified column is enabled
      */
     public boolean isColumnEnabled(Column column) {
-        return getFileTableColumnModel().isColumnEnabled(column);
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        return fileTableColumnModel == null || fileTableColumnModel.isColumnEnabled(column);
     }
 
     /**
@@ -961,11 +1084,15 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * column is disabled, the sort criterion will be reset to {@link Column#NAME} to prevent the table from being
      * sorted by an invisible column/criterion.</p>
      *
-     * @param column column, see {@link com.mucommander.ui.main.table.Column} for possible values
+     * @param column column, see {@link Column} for possible values
      * @param enabled true to enable the column, false to disable it.
      */
     public void setColumnEnabled(Column column, boolean enabled) {
         FileTableColumnModel columnModel = getFileTableColumnModel();
+        if (columnModel == null) {
+            return;
+        }
+        // Full view mode
         columnModel.setColumnEnabled(column, enabled);
 
         // Update the visibility of the column
@@ -979,7 +1106,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
     public int getColumnPosition(Column column) {
-        return getFileTableColumnModel().getColumnPosition(column.ordinal());
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        if (fileTableColumnModel == null) {
+            return 0;
+        }
+        return fileTableColumnModel.getColumnPosition(column.ordinal());
     }
 
     /**
@@ -1016,9 +1147,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // // Adjust row height to match filename editor's height
         // setRowHeight(row, (int)filenameEditor.filenameField.getPreferredSize().getHeight());
         // Starts editing clicked cell's name column
-        editCellAt(currentRow, convertColumnIndexToView(Column.NAME.ordinal()));
+        if (viewMode == TableViewMode.FULL) {
+            editCellAt(currentRow, convertColumnIndexToView(Column.NAME.ordinal()));
+        } else {
+            editCellAt(currentRow, currentColumn);
+        }
+
         // Saves current/editing row in the filename editor and requests focus on the text field
-        filenameEditor.notifyEditingRow(currentRow);
+        filenameEditor.notifyEditing(currentRow, currentColumn);
         // Disable editing
         tableModel.setNameColumnEditable(false);
     }
@@ -1030,7 +1166,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     private void sortTable() {
         // Save currently selected file
-        AbstractFile selectedFile = tableModel.getFileAtRow(currentRow);
+        AbstractFile selectedFile = tableModel.getFileAt(currentRow, currentColumn);
 
         // Sort table, doesn't affect marked files
         tableModel.sortRows();
@@ -1074,8 +1210,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Notifies all registered listeners that the currently selected file has changed on this FileTable.
      */
     public void fireSelectedFileChangedEvent() {
-        for(TableSelectionListener listener : tableSelectionListeners.keySet())
+        for (TableSelectionListener listener : tableSelectionListeners.keySet()) {
             listener.selectedFileChanged(this);
+        }
     }
 
     /**
@@ -1094,11 +1231,22 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private void doAutoLayout(boolean respectSize) {
         final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
         final int dirStringWidth1 = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
-        final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024*1024*555, FileTableModel.getSizeFormat())); // some big value with big string-length
+        final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024 * 1024 * 555, FileTableModel.getSizeFormat())); // some big value with big string-length
         final int dirStringWidth = Math.max(dirStringWidth1, dirStringWidth2);
 
+        pageSize = getParent().getSize().height / getRowHeight();
+
         int remainingWidth = getSize().width - RESERVED_NAME_COLUMN_WIDTH;
-        Iterator<TableColumn> columns = respectSize ? new Enumerator<>(getColumnModel().getColumns()) : getFileTableColumnModel().getAllColumns();
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        if (fileTableColumnModel == null) {
+            respectSize = false;
+        }
+
+        // Calculate columns width in full view mode
+        if (viewMode != TableViewMode.FULL) {
+            return;
+        }
+        Iterator<TableColumn> columns = respectSize ? new Enumerator<>(getColumnModel().getColumns()) : fileTableColumnModel.getAllColumns();
         TableColumn nameColumn = null;
 
         while (columns.hasNext()) {
@@ -1120,7 +1268,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                             break;
                         }
                         String val = (String)getModel().getValueAt(rowNum, column.getModelIndex());
-                        boolean isDirectorySize = c == Column.SIZE && val.equals(FileTableModel.DIRECTORY_SIZE_STRING);
+                        boolean isDirectorySize = c == Column.SIZE && FileTableModel.DIRECTORY_SIZE_STRING.equals(val);
                         int stringWidth = val == null ? 0 : isDirectorySize ? dirStringWidth : fm.stringWidth(val);
                         columnWidth = Math.max(columnWidth, stringWidth);
                     }
@@ -1139,13 +1287,57 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 }
             }
         }
-        nameColumn.setWidth(remainingWidth + RESERVED_NAME_COLUMN_WIDTH);
+        if (nameColumn != null) {
+            nameColumn.setWidth(remainingWidth + RESERVED_NAME_COLUMN_WIDTH);
+        }
     }
 
     private void doStaticLayout() {
+        final int width = getSize().width;
+
+        pageSize = getParent().getSize().height / getRowHeight();
+
+        // If ve have compact layout type then just use average column width
+        if (getFileTableColumnModel() == null) {
+            int columns = getColumnModel().getColumnCount();
+            int columnWidth = width / getColumnModel().getColumnCount();
+            for (int i = 0; i < columns; i++) {
+                getColumnModel().getColumn(i).setWidth(columnWidth);
+            }
+
+            // update model if need
+            BaseFileTableModel model = getFileTableModel();
+            if (model instanceof CompactFileTableModel) {
+                CompactFileTableModel compactModel = (CompactFileTableModel)model;
+                if (compactModel.getVisibleRows() != pageSize) {
+                    compactModel.setVisibleRows(pageSize);
+                    SwingUtilities.invokeLater(this::invalidate);
+                }
+            }
+
+            final AbstractFile selectedFile = getSelectedFile();
+            ((CompactFileTableModel) getModel()).setVisibleRows(pageSize);
+
+            // Need to restore file selection
+            SwingUtilities.invokeLater(() -> {
+                if (selectedFile == null && getParent() != null) {
+                    try {
+                        selectFile(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    selectFile(selectedFile);
+                }
+            });
+
+            invalidate();
+            return;
+        }
+
+        // Calculate columns width for full panel view type
         TableColumn nameColumn;
 
-        int width = getSize().width;
         if (width - getColumnModel().getTotalColumnWidth() == 0) {
             return;
         }
@@ -1162,10 +1354,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     @Override
     public void doLayout() {
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
         if (!autoSizeColumnsEnabled) {
             if (getTableHeader().getResizingColumn() != null) {
                 super.doLayout();
-            } else if (!getFileTableColumnModel().wereColumnSizesSet()) {
+            } else if (fileTableColumnModel != null && !fileTableColumnModel.wereColumnSizesSet()) {
                 doAutoLayout(false);
             } else {
                 doStaticLayout();
@@ -1224,21 +1417,22 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * to registered listeners. 
      */
     @Override
-    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+    public void changeSelection(int row, int column, boolean toggle, boolean extend) {
         // For shift+click
         lastRow = currentRow;
-        currentRow = rowIndex;
+        lastColumn = currentColumn;
+        currentRow = row;
+        currentColumn = column;
 
-        super.changeSelection(rowIndex, columnIndex, toggle, extend);
+        super.changeSelection(row, column, toggle, extend);
 
-        // If row changed
-        if (currentRow != lastRow) {
+        // If file changed
+        if (currentRow != lastRow || (currentColumn != lastColumn && viewMode != TableViewMode.FULL)) {
             // Update selection changed timestamp
             selectionChangedTimestamp = System.currentTimeMillis();
             // notify registered TableSelectionListener instances that the currently selected file has changed
             fireSelectedFileChangedEvent();
         }
-
         //		// Don't refresh status bar if up, down, space or insert key is pressed (repeated key strokes).
         //		// Status bar will be refreshed whenever the key is released.
         //		// We need this limit because refreshing status bar takes time.
@@ -1285,8 +1479,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     public void mouseClicked(MouseEvent e) {
         // Discard mouse events while in 'no events mode'
-        if (mainFrame.getNoEventsMode())
+        if (mainFrame.getNoEventsMode()) {
             return;
+        }
 
         Object source = e.getSource();
 
@@ -1313,20 +1508,30 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             // - 'date' label triggers the change date dialog
             // - 'permissions' label triggers the change permissions dialog, only if permissions can be changed
             // Timestamp check is used to make sure that this mouse click did not trigger current row selection
-            if ((doubleClickCounter == 1) && (System.currentTimeMillis() - selectionChangedTimestamp) > EDIT_NAME_CLICK_DELAY) {
+            if (doubleClickCounter == 1 && (System.currentTimeMillis() - selectionChangedTimestamp) > EDIT_NAME_CLICK_DELAY) {
                 int clickX = e.getX();
                 Point p = new Point(clickX, e.getY());
                 final int row = rowAtPoint(p);
                 final int viewColumn = columnAtPoint(p);
-                final Column column = Column.valueOf(convertColumnIndexToModel(viewColumn));
+
+                final Column column = viewMode == TableViewMode.FULL ? Column.valueOf(convertColumnIndexToModel(viewColumn)) : null;
+                final boolean isNameColumn = column == null || column == Column.NAME;
+                final boolean isDateColumn = column == Column.DATE;
+                final boolean isPermissionColumn = column == Column.PERMISSIONS;
                 // Test if the clicked row is current row, if column is name column, and if current row is not '..' file
-                if (row == currentRow && !isParentFolderSelected() && (column == Column.NAME || column == Column.DATE || column == Column.PERMISSIONS)) {
+                if (row == currentRow && !isParentFolderSelected() && (isNameColumn || isDateColumn || isPermissionColumn)) {
                     // Test if clicked point is inside the label and abort if not
                     FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
-                    int labelWidth = fm.stringWidth((String) tableModel.getValueAt(row, column.ordinal()));
+                    int labelWidth;
+                    if (column != null) {
+                        labelWidth = fm.stringWidth((String) tableModel.getValueAt(row, column.ordinal()));
+                    } else {
+                        labelWidth = fm.stringWidth((String) tableModel.getValueAt(row, viewColumn));
+                    }
                     int columnX = (int) getTableHeader().getHeaderRect(viewColumn).getX();
-                    if (clickX < columnX+CellLabel.CELL_BORDER_WIDTH || clickX > columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH)
+                    if (clickX < columnX+CellLabel.CELL_BORDER_WIDTH || clickX > columnX+labelWidth+CellLabel.CELL_BORDER_WIDTH) {
                         return;
+                    }
 
                     // The following test ensures that this mouse click is not the one that gave the focus to this table.
                     // Not checking for this would cause a single click on the inactive table's current row to trigger
@@ -1344,13 +1549,13 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                                 // - current row changed
                                 // - isEditing() is true which could happen if multiple clicks were made
                                 if ((System.currentTimeMillis() - lastDoubleClickTimestamp) > 1000 && row == currentRow) {
-                                    if (column == Column.NAME) {
+                                    if (isNameColumn) {
                                         if (!isEditing()) {
                                             editCurrentFilename();
                                         }
-                                    } else if (column == Column.DATE) {
+                                    } else if (isDateColumn) {
                                         ActionManager.performAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID, mainFrame);
-                                    } else if (column == Column.PERMISSIONS) {
+                                    } else if (isPermissionColumn) {
                                         if (getSelectedFile().getChangeablePermissions().getIntValue() != 0) {
                                             ActionManager.performAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID, mainFrame);
                                         }
@@ -1394,13 +1599,17 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             // Find the row that was right-clicked
             int x = e.getX();
             int y = e.getY();
-            int clickedRow = rowAtPoint(new Point(x,y));
+            Point point = new Point(x, y);
+            int clickedRow = rowAtPoint(point);
+            int clickedCol = columnAtPoint(point);
+
             // Does the row correspond to the parent '..' folder ? 
-            boolean parentFolderClicked = clickedRow==0 && tableModel.hasParentFolder();
+            boolean parentFolderClicked = clickedRow == 0 && tableModel.hasParentFolder();
 
             // Select clicked row if it is not selected already
             if (currentRow != clickedRow) {
-                selectRow(clickedRow);
+                int index = tableModel.getFileIndexAt(clickedRow, clickedCol);
+                selectFile(index);
             }
 
             // Request focus on this FileTable is focus is somewhere else
@@ -1409,24 +1618,28 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             }
 
             // Popup menu where the user right-clicked
-            new TablePopupMenu(mainFrame, folderPanel.getCurrentFolder(), parentFolderClicked?null:tableModel.getFileAtRow(clickedRow), parentFolderClicked, tableModel.getMarkedFiles()).show(this, x, y);
+            new TablePopupMenu(mainFrame, folderPanel.getCurrentFolder(), parentFolderClicked?null:tableModel.getFileAt(clickedRow, clickedCol), parentFolderClicked, tableModel.getMarkedFiles()).show(this, x, y);
         }
         // Middle-click on a row marks or unmarks it
         // Control left-click also works
         else if (DesktopManager.isMiddleMouseButton(e)) {
             // Used by mouseDragged
             lastDraggedRow = rowAtPoint(e.getPoint());
-            markOnRightClick = !tableModel.isRowMarked(lastDraggedRow);
+            lastDraggedCol = columnAtPoint(e.getPoint());
+            markOnRightClick = !tableModel.isFileMarked(lastDraggedRow, lastDraggedCol);
 
-            setRowMarked(lastDraggedRow, markOnRightClick);
-        } else if(DesktopManager.isLeftMouseButton(e)) {
+            int lastDraggedFile = tableModel.getFileIndexAt(lastDraggedRow, lastDraggedCol);
+            setFileMarked(lastDraggedFile, markOnRightClick);
+        } else if (DesktopManager.isLeftMouseButton(e)) {
             if (e.isShiftDown()) {
                 // Marks a group of rows, from last current row to clicked row (current row)
-                setRangeMarked(currentRow, lastRow, !tableModel.isRowMarked(currentRow));
+                setRangeMarked(currentRow, lastRow, !tableModel.isFileMarked(currentRow, currentColumn));
             } else if (e.isControlDown()) {
-                // Marks the clicked row
+                // Marks the clicked file
                 int rowNum = rowAtPoint(e.getPoint());
-                setRowMarked(rowNum, !tableModel.isRowMarked(rowNum));
+                int colNum = columnAtPoint(e.getPoint());
+                int index = tableModel.getFileIndexAt(rowNum, colNum);
+                setFileMarked(index, !tableModel.isFileMarked(rowNum, colNum));
             }
         }
     }
@@ -1446,16 +1659,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
         // Marks or unmarks every row that was between the last mouseDragged point
         // and the current one
-        if (DesktopManager.isMiddleMouseButton(e) && lastDraggedRow!=-1) {
+        if (DesktopManager.isMiddleMouseButton(e) && lastDraggedRow >= 0) {
             int draggedRow = rowAtPoint(e.getPoint());
-
             // Mouse was dragged outside of the FileTable
             if (draggedRow < 0) {
                 return;
             }
 
             setRangeMarked(lastDraggedRow, draggedRow, markOnRightClick);
-
             lastDraggedRow = draggedRow;
         }
     }
@@ -1470,6 +1681,24 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /////////////////////////
 
     public void keyPressed(KeyEvent e) {
+        // Handle Left/Right keys for compact modes
+        if (viewMode != TableViewMode.FULL) {
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if (getSelectedFileIndex() > 0) {
+                    int newFileIndex = Math.max(getSelectedFileIndex() - getRowCount(), 0);
+                    selectFile(newFileIndex);
+                    //repaintRow(getSelectedRow());
+                    repaint(0, 0, getWidth(), getHeight());
+                    e.consume();
+                }
+            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                int newFileIndex = Math.min(getSelectedFileIndex() + getRowCount(), getFilesCount() - 1);
+                selectFile(newFileIndex);
+                //repaintRow(getSelectedRow());
+                repaint(0, 0, getWidth(), getHeight());
+                e.consume();
+            }
+        }
     }
 
     public void keyTyped(KeyEvent e) {
@@ -1508,6 +1737,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             focusLost();
         }
     }
+
+
 
 
     ///////////////////////////////////
@@ -1567,6 +1798,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
         /** Row that is currently being edited */
         private int editingRow;
+        /** Column that is currently being edited */
+        private int editingCol;
 
         /**
          * Creates a new FilenameEditor instance.
@@ -1580,8 +1813,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             filenameField.setFont(FileTableCellRenderer.getCellFont());
             textField.addKeyListener(
                 new KeyAdapter() {
-                    // Cancel editing when escape key pressed, this is unfortunately not DefaultCellEditor's
-                    // default behavior
+                    // Cancel editing when escape key pressed, this is unfortunately not DefaultCellEditor's default behavior
                     @Override
                     public void keyPressed(KeyEvent e) {
                         int keyCode = e.getKeyCode();
@@ -1591,20 +1823,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     }
                 }
             );
-            textField.addActionListener(new ActionListener() {
-            	
-                public void actionPerformed(ActionEvent e) {
-                    rename();
-                }
-            });
+            textField.addActionListener(e -> rename());
             textField.addFocusListener(new FocusListener() {
-				
+
 				public void focusLost(FocusEvent e) {
 					cancelCellEditing();
 					FileTable.this.repaint();
 				}
-				
-				
+
 				public void focusGained(FocusEvent e) {}
 			});
         }
@@ -1615,7 +1841,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
          */
         private void rename() {
             String newName = filenameField.getText();
-            AbstractFile fileToRename = tableModel.getFileAtRow(editingRow);
+            AbstractFile fileToRename = tableModel.getFileAt(editingRow, editingCol);
 
             if (!newName.equals(fileToRename.getName())) {
                 AbstractFile current;
@@ -1648,17 +1874,38 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
          * its extension to make it easier to rename.
          *
          * @param row row which is being edited
+         * @param col column which is being edited
          * @see AbstractCopyDialog#selectDestinationFilename(AbstractFile, String, int)
          */
-        public void notifyEditingRow(int row) {
+        public void notifyEditing(int row, int col) {
             // The editing row has to be saved as it could change after row editing has been started
             this.editingRow = row;
+            this.editingCol = col;
 
-            AbstractFile file = tableModel.getFileAtRow(editingRow);
+            AbstractFile file = tableModel.getFileAt(editingRow, editingCol);
             AbstractCopyDialog.selectDestinationFilename(file, file.getName(), 0).feedToPathField(filenameField);
 
             // Request focus on text field
             filenameField.requestFocus();
+        }
+
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            Component result = super.getTableCellEditorComponent(table, value, isSelected, row, column);
+            if (viewMode != TableViewMode.FULL) {
+                JPanel panel = new JPanel(new BorderLayout());
+                panel.add(result, BorderLayout.CENTER);
+                final AbstractFile file = tableModel.getFileAt(row, column);
+                CellLabel lblIcon = new CellLabel();
+                lblIcon.setIcon(FileIconsCache.getInstance().getIcon(file));
+                lblIcon.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][(row % 2 == 0) ? ThemeCache.NORMAL : ThemeCache.ALTERNATE]);
+                panel.setBackground(lblIcon.getBackground());
+                //lblIcon.setHasSeparator(column < tableModel.getColumnCount() - 1);
+                panel.add(lblIcon, BorderLayout.WEST);
+                return panel;
+            }
+            return result;
         }
     }
 
@@ -1689,12 +1936,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 		
 		@Override
 		protected int getNumOfItems() {
-			return tableModel.getRowCount();
+			return tableModel.getFilesCount();
 		}
 
 		@Override
 		protected String getItemString(int index) {
-            return getFileNameAtRow(index);
+            return tableModel.getFileNameAt(index);
 		}
 
 		@Override
@@ -1703,10 +1950,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 		}
 
 		@Override
-		protected void matchFound(int row, String searchString) {
+		protected void matchFound(int index, String searchString) {
 			// Select best match's row
-            if (row != currentRow) {
-                selectRow(row);
+            int currentFileIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+            if (index != currentFileIndex) {
+                selectFile(index);
                 //centerRow();
             }
 
@@ -1756,7 +2004,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	        boolean keyHasModifiers = (e.getModifiersEx() & (KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK | KeyEvent.META_DOWN_MASK)) != 0;
 
 	        // Backspace removes the last character of the search string
-	        if (keyCode==KeyEvent.VK_BACK_SPACE && !keyHasModifiers) {
+	        if (keyCode == KeyEvent.VK_BACK_SPACE && !keyHasModifiers) {
 	            // Search string is empty already
 	            if (isSearchStringEmpty()) {
                     return;
@@ -1773,33 +2021,37 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	        }
 	        // Up/Down jumps to previous/next match
 	        // Shift+Up/Shift+Down marks currently selected file and jumps to previous/next match
-	        else if((keyCode==KeyEvent.VK_UP || keyCode==KeyEvent.VK_DOWN) && !keyHasModifiers) {
+	        else if ((keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN) && !keyHasModifiers) {
 	            // Find the first row before/after the current row that matches the search string
-	            boolean down = keyCode==KeyEvent.VK_DOWN;
-	            findMatch(currentRow + (down ? 1 : -1), down, false);
+	            boolean down = keyCode == KeyEvent.VK_DOWN;
+                int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+	            findMatch(currentIndex + (down ? 1 : -1), down, false);
 	        }
 	        // MarkSelectedFileAction and MarkNextRowAction mark the current row and moves to the next match
-	        else if(ActionManager.getActionInstance(MarkSelectedFileAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))
+	        else if (ActionManager.getActionInstance(MarkSelectedFileAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))
 	             || ActionManager.getActionInstance(MarkNextRowAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))) {
 
-	            if(!isParentFolderSelected())  // Don't mark/unmark the '..' file
-	                setRowMarked(currentRow, !tableModel.isRowMarked(currentRow));
+                int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+	            if (!isParentFolderSelected()) { // Don't mark/unmark the '..' file
+                    setFileMarked(currentIndex, !tableModel.isFileMarked(currentRow, currentColumn));
+                }
 
 	            // Find the first the next row that matches the search string
-	            findMatch(currentRow+1, true, false);
+	            findMatch(currentIndex+1, true, false);
 	        }
 	        // MarkPreviousRowAction marks the current row and moves to the previous match
-	        else if(ActionManager.getActionInstance(MarkPreviousRowAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))) {
-
-	            if(!isParentFolderSelected())  // Don't mark/unmark the '..' file
-	                setRowMarked(currentRow, !tableModel.isRowMarked(currentRow));
+	        else if (ActionManager.getActionInstance(MarkPreviousRowAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))) {
+                int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+	            if (!isParentFolderSelected()) { // Don't mark/unmark the '..' file
+                    setFileMarked(currentIndex, !tableModel.isFileMarked(currentRow, currentColumn));
+                }
 
 	            // Find the first the previous row that matches the search string
-	            findMatch(currentRow-1, false, false);
+	            findMatch(currentIndex-1, false, false);
 	        }
 	        // If no modifier other than Shift is pressed and the typed character is not a control character (space is ok)
 	        // and a valid Unicode character, add it to the current search string
-	        else if(isValidQuickSearchInput(e)) {
+	        else if (isValidQuickSearchInput(e)) {
 	            appendCharacterToSearchString(keyChar);
 
 	            // Find the row that best matches the new search string and select it
@@ -1828,6 +2080,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	        setLastSearchStringChange(System.currentTimeMillis());
 	    }
     }
+
     // End of QuickSearch class
 
 
@@ -1852,11 +2105,16 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
     public FileTableConfiguration getConfiguration() {
-        return getFileTableColumnModel().getConfiguration();
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        return fileTableColumnModel == null ? null : fileTableColumnModel.getConfiguration();
     }
 
     public int getColumnWidth(Column column) {
-        return getFileTableColumnModel().getColumnFromId(column.ordinal()).getWidth();
+        FileTableColumnModel fileTableColumnModel = getFileTableColumnModel();
+        if (fileTableColumnModel != null) {
+            return fileTableColumnModel.getColumnFromId(column.ordinal()).getWidth();
+        }
+        return getCompactFileTableColumnModel().getColumn(0).getWidth();
     }
 
     /**
@@ -1875,6 +2133,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             this.children     = children;
             this.markedFiles  = markedFiles;
             this.selectedFile = selectedFile;
+            setName(getClass().getName());
         }
 
         public void run() {
@@ -1888,7 +2147,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
                 // The column corresponding to the current 'sort by' criterion may have become invisible.
                 // If that is the case, change the criterion to NAME. 
-                if (!columnModel.isColumnVisible(sortInfo.getCriterion())) {
+                if (columnModel != null && !columnModel.isColumnVisible(sortInfo.getCriterion())) {
                     sortInfo.setCriterion(Column.NAME);
 
                     // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
@@ -1902,38 +2161,37 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 tableModel.sortRows();
 
                 // Computes the index of the new row selection.
-                int rowToSelect;
+                int indexToSelect;
+                int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
                 if (selectedFile != null) {
                     // Tries to find the index of the file to select. If it cannot be found (the file might not
                     // exist anymore, for example), use the closest possible row.
-                    if ((rowToSelect = tableModel.getFileRow(selectedFile)) == -1) {
-                        int rowCount = tableModel.getRowCount();
-                        rowToSelect = currentRow < rowCount ? currentRow : rowCount - 1;
+                    indexToSelect = tableModel.getFileIndex(selectedFile);
+                    if (indexToSelect < 0) {
+                        int filesCount = tableModel.getFilesCount();
+                        indexToSelect = currentIndex < filesCount ? currentIndex : filesCount - 1;
                     }
-                }
-                // If no file was marked as needing to be selected, selects the first line.
-                else {
-                    rowToSelect = 0;
+                } else {
+                    // If no file was marked as needing to be selected, selects the first line.
+                    indexToSelect = 0;
                 }
 
-                selectRow(currentRow = rowToSelect);
+                selectFile(indexToSelect);
                 fireSelectedFileChangedEvent();
 
                 // Restore previously marked files (if any / current folder hasn't changed)
                 if (markedFiles != null) {
                     // Restore previously marked files
                     int nbMarkedFiles = markedFiles.size();
-                    int fileRow;
                     for(int i = 0; i < nbMarkedFiles; i++) {
-                        fileRow = tableModel.getFileRow(markedFiles.elementAt(i));
-                        if (fileRow != -1) {
-                            tableModel.setRowMarked(fileRow, true);
+                        int fileIndex = tableModel.getFileIndex(markedFiles.elementAt(i));
+                        if (fileIndex != -1) {
+                            tableModel.setFileMarked(fileIndex, true);
                         }
                     }
                     // Notify registered listeners that currently marked files have changed on this FileTable
                     fireMarkedFilesChangedEvent();
                 }
-
                 resizeAndRepaint();
             } catch (Throwable e) {
                 // While no such thing should happen, we want to make absolutely sure no exception
@@ -1951,5 +2209,25 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void updateSelectedFilesStatusbar() {
         mainFrame.getStatusBar().updateSelectedFilesInfo();
     }
+
+
+    /**
+     * For full view mode returns current row, for compact mode returns current file index
+     * @return full selected file index (that equals to selected row for full view mode)
+     */
+    public int getSelectedFileIndex() {
+        if (viewMode == TableViewMode.FULL) {
+            return getSelectedRow();
+        } else {
+            CompactFileTableModel model = (CompactFileTableModel)getModel();
+            return getSelectedRow() + getSelectedColumn() * getRowCount() + model.getOffset();
+        }
+    }
+
+
+    public int getFilesCount() {
+        return ((BaseFileTableModel)getModel()).getFilesCount();
+    }
+
 
 }

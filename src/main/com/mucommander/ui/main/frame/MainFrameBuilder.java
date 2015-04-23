@@ -36,7 +36,7 @@ import com.mucommander.conf.MuSnapshot;
 import com.mucommander.ui.main.FolderPanel.FolderPanelType;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
-import com.mucommander.ui.main.table.FileTableConfiguration;
+import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 
 /**
  * 

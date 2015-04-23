@@ -44,7 +44,7 @@ import com.mucommander.ui.main.menu.MainMenuBar;
 import com.mucommander.ui.main.statusbar.StatusBar;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableConfiguration;
+import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;

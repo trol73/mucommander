@@ -88,7 +88,8 @@ public class UnpackJob extends AbstractCopyJob {
      * @param selectedEntries entries to be unpacked
      * @param baseArchiveDepth depth of the folder in which the top entries are located. 0 is the highest depth (archive's root folder)
      */
-    public UnpackJob(ProgressDialog progressDialog, MainFrame mainFrame, AbstractArchiveFile archiveFile, int baseArchiveDepth, AbstractFile destFolder, String newName, int fileExistsAction, List<ArchiveEntry> selectedEntries) {
+    public UnpackJob(ProgressDialog progressDialog, MainFrame mainFrame, AbstractArchiveFile archiveFile, int baseArchiveDepth,
+                     AbstractFile destFolder, String newName, int fileExistsAction, List<ArchiveEntry> selectedEntries) {
         super(progressDialog, mainFrame, new FileSet(archiveFile.getParent(), archiveFile), destFolder, newName, fileExistsAction);
 
         this.errorDialogTitle = Translator.get("unpack_dialog.error_title");
@@ -175,8 +176,9 @@ public class UnpackJob extends AbstractCopyJob {
         }
 
         // Abort if the file is neither an archive file nor a directory
-        if (!file.isArchive())
+        if (!file.isArchive()) {
             return false;
+        }
 
         // 'Cast' the file as an archive file
         AbstractArchiveFile archiveFile = file.getAncestor(AbstractArchiveFile.class);
@@ -238,7 +240,7 @@ public class UnpackJob extends AbstractCopyJob {
                 nextFile(entryFile);
 
                 // Figure out the destination file's path, relatively to the base destination folder
-                relDestPath = baseArchiveDepth==0
+                relDestPath = baseArchiveDepth == 0
                         ?entry.getPath()
                         :PathUtils.removeLeadingFragments(entry.getPath(), "/", baseArchiveDepth);
 
@@ -318,7 +320,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
             return true;
         } catch (IOException e) {
             showErrorDialog(errorDialogTitle, Translator.get("cannot_read_file", archiveFile.getName()));
-        }finally {
+        } finally {
             // The ArchiveEntryIterator must be closed when finished
             if (iterator != null) {
                 try {
@@ -360,7 +362,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
 
     @Override
     public String getStatusString() {
-        if(isCheckingIntegrity() || !preparingFinished) {
+        if (isCheckingIntegrity() || !preparingFinished) {
             return super.getStatusString();
         }
 
@@ -378,11 +380,14 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
         // get all directoires
         List<String> selectedDirectories = new ArrayList<>();
         List<ArchiveEntry> fileEntries = new ArrayList<>();
-        for (ArchiveEntry entry : selectedEntries) {
-            if (entry.isDirectory()) {
-                selectedDirectories.add(entry.getPath());
-            } else {
-                fileEntries.add(entry);
+
+        if (selectedEntries != null) {
+            for (ArchiveEntry entry : selectedEntries) {
+                if (entry.isDirectory()) {
+                    selectedDirectories.add(entry.getPath());
+                } else {
+                    fileEntries.add(entry);
+                }
             }
         }
 
@@ -392,23 +397,28 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
             while ((entry = iterator.nextEntry()) != null && getState() != State.INTERRUPTED) {
                 // check in directories
                 boolean addThisEntry = false;
-                if (selectedDirectories.size() > 0) {
-                    String path = entry.getPath();
-                    for (String dir : selectedDirectories) {
-                        if (path.startsWith(dir)) {
-                            addThisEntry = true;
-                            break;
+                if (selectedEntries != null) {
+                    if (!selectedDirectories.isEmpty()) {
+                        String path = entry.getPath();
+                        for (String dir : selectedDirectories) {
+                            if (path.startsWith(dir)) {
+                                addThisEntry = true;
+                                break;
+                            }
                         }
-                    }
-                } // directories
-                if (!addThisEntry && selectedEntries.size() > 0) {
-                    for (ArchiveEntry selEntry : selectedEntries) {
-                        if (entry == selEntry) {
-                            addThisEntry = true;
-                            break;
+                    } // directories
+                    if (!addThisEntry && !selectedEntries.isEmpty()) {
+                        for (ArchiveEntry selEntry : selectedEntries) {
+                            if (entry == selEntry) {
+                                addThisEntry = true;
+                                break;
+                            }
                         }
-                    }
-                } // entries
+                    } // entries
+                } else {
+                    addThisEntry = true;
+                }
+
                 if (addThisEntry) {
                     totalFilesSize += entry.getSize();
                     totalFilesCount++;
@@ -425,7 +435,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
     public float getTotalPercentDone() {
         if (totalFilesSize == 0) {
             float result = super.getTotalPercentDone();
-            return  result > 5 ? 5 : result;
+            return result > 5 ? 5 : result;
         }
         float progressBySize = 1.0f*processedFilesSize / totalFilesSize;
         float progressByCount = 1.0f*(processedFilesCount-1) / totalFilesCount;

@@ -22,7 +22,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -48,11 +48,12 @@ public class MarkAllAction extends MuAction {
     @Override
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
-        FileTableModel tableModel = fileTable.getFileTableModel();
+        BaseFileTableModel tableModel = fileTable.getFileTableModel();
 
-        int nbRows = tableModel.getRowCount();
-        for(int i=tableModel.getFirstMarkableRow(); i<nbRows; i++)
-            tableModel.setRowMarked(i, mark);
+        int nbFiles = tableModel.getFilesCount();
+        for (int i=tableModel.getFirstMarkableIndex(); i < nbFiles; i++) {
+            tableModel.setFileMarked(i, mark);
+        }
         fileTable.repaint();
 
         // Notify registered listeners that currently marked files have changed on the FileTable

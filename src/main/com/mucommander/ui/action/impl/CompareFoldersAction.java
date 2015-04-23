@@ -23,7 +23,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.FileTableModel;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -45,8 +45,8 @@ public class CompareFoldersAction extends MuAction {
         FileTable leftTable = mainFrame.getLeftPanel().getFileTable();
         FileTable rightTable = mainFrame.getRightPanel().getFileTable();
 
-        FileTableModel leftTableModel = leftTable.getFileTableModel();
-        FileTableModel rightTableModel = rightTable.getFileTableModel();
+        BaseFileTableModel leftTableModel = leftTable.getFileTableModel();
+        BaseFileTableModel rightTableModel = rightTable.getFileTableModel();
 
         int nbFilesLeft = leftTableModel.getFileCount();
         int nbFilesRight = rightTableModel.getFileCount();
@@ -65,7 +65,7 @@ public class CompareFoldersAction extends MuAction {
                     fileIndex = j;
                     break;
                 }
-            if (fileIndex==-1 || rightTableModel.getFileAt(fileIndex).getDate()<tempFile.getDate()) {
+            if (fileIndex < 0 || rightTableModel.getFileAt(fileIndex).getDate()<tempFile.getDate()) {
                 leftTableModel.setFileMarked(tempFile, true);
                 leftTable.repaint();
             }
