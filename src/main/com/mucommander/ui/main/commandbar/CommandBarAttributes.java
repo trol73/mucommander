@@ -71,7 +71,7 @@ public class CommandBarAttributes {
     private static KeyStroke DEFAULT_MODIFIER = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
     
     /** Contains all registered command-bar attributes listeners, stored as weak references */
-    private static final WeakHashMap<CommandBarAttributesListener, ?> listeners = new WeakHashMap<CommandBarAttributesListener, Object>();
+    private static final WeakHashMap<CommandBarAttributesListener, ?> listeners = new WeakHashMap<>();
 
     /**
      * This method restore the default command-bar attributes.
@@ -86,7 +86,7 @@ public class CommandBarAttributes {
             if (key1.getModifiers() != 0) {
                 String id2 = DEFAULT_ALTERNATE_ACTION_IDS[i];
                 KeyStroke key2 = ActionKeymap.getAccelerator(id2);
-                if (key2.getModifiers() == 0) {
+                if (key2 == null || key2.getModifiers() == 0) {
                     // swap keys
                     if (defaultActions == null) {
                         defaultActions = Arrays.copyOf(DEFAULT_ACTION_IDS, DEFAULT_ACTION_IDS.length);
@@ -136,8 +136,9 @@ public class CommandBarAttributes {
     }
     
     private static boolean equals(Object action1, Object action2) {
-    	if (action1 == null)
-    		return action2 == null;
+    	if (action1 == null) {
+            return action2 == null;
+        }
     	return action1.equals(action2);
     }
     
@@ -153,6 +154,7 @@ public class CommandBarAttributes {
      * @param modifier           command-bar modifier.
      */
     public static void setAttributes(String[] actionIds, String[] alternateActionIds, KeyStroke modifier) {
+System.out.println("!!! setAttributes " + actionIds);
     	CommandBarAttributes.actionIds = actionIds;
     	CommandBarAttributes.alternateActionIds = alternateActionIds;
     	CommandBarAttributes.modifier = modifier;
@@ -163,11 +165,17 @@ public class CommandBarAttributes {
     /// getters ///
     ///////////////
     
-    public static String[] getActions() {return actionIds;}
+    public static String[] getActions() {
+        return actionIds;
+    }
     
-    public static String[] getAlternateActions() {return alternateActionIds;}
+    public static String[] getAlternateActions() {
+        return alternateActionIds;
+    }
     
-    public static KeyStroke getModifier() {return modifier;}
+    public static KeyStroke getModifier() {
+        return modifier;
+    }
     
     
     // - Listeners -------------------------------------------------------------
