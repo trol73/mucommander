@@ -15,6 +15,8 @@
     <property name="src.main"             location="${src}/main"/>
     <!-- Main resources directory.                                                                                   -->
     <property name="res"                  location="res"/>
+
+    <property name="res.jar"              location="${res}/jar/services"/>
     <!-- Ivy resources directory.                                                                                    -->
     <property name="res.ivy"              location="${res}/ivy"/>
     <!-- Ivy jar file.                                                                                               -->
@@ -86,7 +88,7 @@
     <!-- Where to store the Win32 executable.                                                                        -->
     <property name="dist.exe"             value="${dist}/trolCommander.exe"/>
     <!-- Where to store the OS X executable.                  														 -->
-    <property name="dist.app.name.short"  value="trolCommander"/>                                                       
+    <property name="dist.app.name.short"  value="HadoopCommander"/>                                                       
     <property name="dist.app.name"        value="${dist.app.name.short}.app"/>
     <property name="dist.app"             value="${dist}/${dist.app.name}"/>
     <!-- Ivy dependencies retrieval pattern.                                                                         -->
@@ -270,7 +272,7 @@
 	    <bundleapp 
 	        outputdirectory="${dist}" 
 	        name="${dist.app.name.short}" 
-	        displayname="trolCommander" 
+	        displayname="HadoopCommander" 
 	        identifier="com.mucommander.trolCommander" 
 	        shortversion="${app.version}"
 	        applicationCategory="public.app-category.developer-tools"
@@ -278,7 +280,7 @@
 	    	copyright="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"
 	    	icon="${res.package}/osx/icon.icns" >
 	        <classpath file="${dist.jar}" />
-	    	<option value="-Xmx128m"/>
+	    	<option value="-Xmx1024m"/>
 	    	<option value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader" />
 	    	<option value="-Dcom.apple.smallTabs=true" />
 	    	<option value="-Dcom.apple.hwaccel" />
@@ -286,7 +288,8 @@
 	    	<option value="-Dfile.encoding=UTF-8"/>   
 	    	
 			<!-- Bundle the JRE with the App Package -->
-			<!--<runtime dir="${env.JAVA_HOME}" />-->
+			<runtime dir="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home" />
+			<option value="-Xdock:icon=Contents/Resources/${bundle.icon}"/>
 	    	
 	    </bundleapp>
     	
@@ -714,6 +717,11 @@
 
             <keepattribute name="exceptions"/>
 
+            <keep name="org.apache.hadoop.**">
+                <field name="*"/>
+                <method name="*"/>
+                <constructor name="*"/>
+            </keep>
             <!-- Action API uses reflection.                                                                         -->
             <keepclasseswithmembers extends="com.mucommander.ui.action.MuAction">
                 <constructor access="public" name="*"/>
@@ -888,6 +896,7 @@
                 <attribute name="Build-Date"             value="${DSTAMP}"/>
                 <attribute name="Build-URL"              value="${version.url}"/>
             </manifest>
+            <metainf dir="${res.jar}"/>
         </jar>
     </target>
 

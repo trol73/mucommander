@@ -119,7 +119,15 @@ public class HDFSFile extends HadoopFile {
         // TODO: for some reason, setting the group has no effect: files are still created with the default supergroup
         //conf.setStrings(UnixUserGroupInformation.UGI_PROPERTY_NAME, getUsername(url), getGroup(url));
 
-        return FileSystem.get(URI.create(realm.toString(false)), conf);
+        if (url.containsCredentials()) {
+            try {
+                return FileSystem.get(URI.create(realm.toString(false)), conf, url.getCredentials().getLogin());
+            } catch (InterruptedException e) {
+                throw new IOException(e.getMessage());
+            }
+        } else {
+            return FileSystem.get(URI.create(realm.toString(false)), conf);
+        }
     }
 
     @Override
