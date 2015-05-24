@@ -83,12 +83,12 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
      * actions array must be initialized before this function is called.
      */
     private void addButtons() {
-    	setLayout(new GridLayout(0,actionIds.length));
+    	setLayout(new GridLayout(0, actionIds.length));
     	
     	// create buttons and add them to this command bar
         int nbButtons = actionIds.length;
         buttons = new CommandBarButton[nbButtons];
-        for(int i=0; i<nbButtons; i++) {
+        for (int i=0; i<nbButtons; i++) {
         	buttons[i] = CommandBarButton.create(actionIds[i], mainFrame);
         	buttons[i].addMouseListener(this);
             add(buttons[i]);
@@ -108,8 +108,9 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
             this.modifierDown = on;
 
             int nbButtons = buttons.length;
-            for (int i=0; i<nbButtons; i++)
-                buttons[i].setButtonAction(on && alternateActionIds[i]!=null?alternateActionIds[i]:actionIds[i], mainFrame);
+            for (int i=0; i<nbButtons; i++) {
+                buttons[i].setButtonAction(on && alternateActionIds[i] != null ? alternateActionIds[i] : actionIds[i], mainFrame);
+            }
         }
     }
 
@@ -125,8 +126,9 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
 
     public void keyReleased(KeyEvent e) {
         // Display regular actions when the modifier key is released
-        if (e.getKeyCode() == modifier.getKeyCode())
+        if (e.getKeyCode() == modifier.getKeyCode()) {
             setAlternateActionsMode(false);
+        }
     }
 
     public void keyTyped(KeyEvent e) {

@@ -256,6 +256,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
         final boolean fromConstructor = this.viewMode == null;
         final int selectedFileIndex = fromConstructor ? 0 : getSelectedFileIndex();
+        final SortInfo sortInfo = getSortInfo();
 
         this.viewMode = mode;
         getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -300,6 +301,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
         invalidate();
 
+//        sortBy(Column.NAME);
+
+        //sortBy(sortInfo);
+        sortBy(sortInfo.getCriterion());
+        sortBy(sortInfo.getCriterion(), sortInfo.getAscendingOrder());
         // TODO restore header selection
     }
 
