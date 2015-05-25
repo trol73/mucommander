@@ -224,16 +224,6 @@ public abstract class HadoopFile extends ProtocolFile {
     }
 
     @Override
-    public boolean canGetReplication() {
-        return true;
-    }
-
-    @Override
-    public boolean canGetBlocksize() {
-        return true;
-    }
-
-    @Override
     public short getReplication() {
         return fileAttributes.getReplication();
     }
@@ -300,6 +290,15 @@ public abstract class HadoopFile extends ProtocolFile {
     }
 
     @Override
+    public void changeReplication(short replication) throws IOException {
+        // Note: setTimes seems to fail on HDFS directories.
+        fs.setReplication(path, replication);
+
+        // Update local attributes
+        fileAttributes.setReplication(replication);
+    }
+
+    @Override
     public void changePermission(int access, int permission, boolean enabled) throws IOException {
         changePermissions(ByteUtils.setBit(getPermissions().getIntValue(), (permission << (access*3)), enabled));
     }
@@ -358,9 +357,8 @@ public abstract class HadoopFile extends ProtocolFile {
      * @throws UnsupportedFileOperationException, always
      */
     @Override
-    @UnsupportedFileOperation
-    public long getFreeSpace() throws UnsupportedFileOperationException {
-        throw new UnsupportedFileOperationException(FileOperation.GET_FREE_SPACE);
+    public long getFreeSpace() throws IOException {
+        return fs.getStatus().getRemaining();
     }
 
     /**
@@ -369,9 +367,8 @@ public abstract class HadoopFile extends ProtocolFile {
      * @throws UnsupportedFileOperationException, always
      */
     @Override
-    @UnsupportedFileOperation
-    public long getTotalSpace() throws UnsupportedFileOperationException {
-        throw new UnsupportedFileOperationException(FileOperation.GET_TOTAL_SPACE);
+    public long getTotalSpace() throws IOException {
+        return fs.getStatus().getCapacity();
     }
 
 

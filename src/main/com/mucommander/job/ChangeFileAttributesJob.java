@@ -40,6 +40,7 @@ public class ChangeFileAttributesJob extends FileJob {
 
     private int permissions = -1;
     private long date = -1;
+    private short replication = -1;
 
 
     public ChangeFileAttributesJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, int permissions, boolean recurseOnDirectories) {
@@ -57,6 +58,12 @@ public class ChangeFileAttributesJob extends FileJob {
         this.recurseOnDirectories = recurseOnDirectories;
     }
 
+    public ChangeFileAttributesJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, short replication, boolean recurseOnDirectories) {
+        super(progressDialog, mainFrame, files);
+
+        this.replication = replication;
+        this.recurseOnDirectories = recurseOnDirectories;
+    }
 
     ////////////////////////////
     // FileJob implementation //
@@ -108,16 +115,33 @@ public class ChangeFileAttributesJob extends FileJob {
             }
         }
 
-//        if(date!=-1)
-        if (!file.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+        if(date != -1) {
+            if (!file.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+                return false;
+            }
+
+            try {
+                file.changeDate(date);
+                return true;
+            } catch (IOException e) {
+                LOGGER.debug("failed to change the date of " + file, e);
+                return false;
+            }
+        }
+
+        /*if (!file.canGetReplication()) {
+            return false;
+        }*/
+        if (!file.isFileOperationSupported(FileOperation.CHANGE_REPLICATION)) {
             return false;
         }
 
+        LOGGER.error("replication:"+replication);
         try {
-            file.changeDate(date);
+            file.changeReplication(replication);
             return true;
         } catch (IOException e) {
-            LOGGER.debug("failed to change the date of " + file, e);
+            LOGGER.debug("failed to change the replication of " + file, e);
             return false;
         }
     }

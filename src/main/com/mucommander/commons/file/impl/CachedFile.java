@@ -514,16 +514,7 @@ public class CachedFile extends ProxyFile {
         return getCanonicalFile;
     }
 
-    @Override
-    public boolean canGetReplication() {
-        return file.canGetReplication();
-    }
-
-    @Override
-    public boolean canGetBlocksize() {
-        return file.canGetBlocksize();
-    }
-
+    /*
     @Override
     public short getReplication() {
         return file.getReplication();
@@ -532,7 +523,7 @@ public class CachedFile extends ProxyFile {
     @Override
     public long getBlocksize() {
         return file.getBlocksize();
-    }
+    }*/
 
     ////////////////////////////////////////////////
     // Overridden for recursion only (no caching) //

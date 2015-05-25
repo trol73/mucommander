@@ -383,22 +383,17 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     @Override
-    public boolean canGetReplication() {
-        return false;
+    public short getReplication() throws UnsupportedFileOperationException {
+        return file.getReplication();
     }
 
     @Override
-    public short getReplication() {
-        return 0;
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        return file.getBlocksize();
     }
 
     @Override
-    public boolean canGetBlocksize() {
-        return false;
-    }
-
-    @Override
-    public long getBlocksize() {
-        return 0;
+    public void changeReplication(short replication) throws IOException {
+        file.changeReplication(replication);
     }
 }

@@ -35,6 +35,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileOperation;
+import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.OSXFileUtils;
@@ -142,13 +144,23 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                     labelPanel.addRow(Translator.get("group") + ":", new JLabel(group), 6);
                 }
             }
-            if (singleFile.canGetReplication()) {
-                short replication = singleFile.getReplication();
-                labelPanel.addRow(Translator.get("replication") + ":", new JLabel(Short.toString(replication)), 6);
+            if (singleFile.isFileOperationSupported(FileOperation.GET_REPLICATION)) {
+                short replication = 0;
+                try {
+                    replication = singleFile.getReplication();
+                    labelPanel.addRow(Translator.get("replication") + ":", new JLabel(Short.toString(replication)), 6);
+                } catch (UnsupportedFileOperationException e) {
+                    e.printStackTrace();
+                }
             }
-            if (singleFile.canGetBlocksize()) {
-                long blocksize = singleFile.getBlocksize();
-                labelPanel.addRow(Translator.get("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
+            if (singleFile.isFileOperationSupported(FileOperation.GET_BLOCKSIZE)) {
+                long blocksize = 0;
+                try {
+                    blocksize = singleFile.getBlocksize();
+                    labelPanel.addRow(Translator.get("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
+                } catch (UnsupportedFileOperationException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

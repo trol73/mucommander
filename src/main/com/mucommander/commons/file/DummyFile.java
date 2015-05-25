@@ -22,6 +22,7 @@ package com.mucommander.commons.file;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -327,23 +328,21 @@ public class DummyFile extends AbstractFile {
     }
 
     @Override
-    public boolean canGetReplication() {
-        return false;
+    @UnsupportedFileOperation
+    public short getReplication() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_REPLICATION);
     }
 
     @Override
-    public boolean canGetBlocksize() {
-        return false;
+    @UnsupportedFileOperation
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_BLOCKSIZE);
     }
 
     @Override
-    public short getReplication() {
-        return 0;
-    }
-
-    @Override
-    public long getBlocksize() {
-        return 0;
+    @UnsupportedFileOperation
+    public void changeReplication(short replication) throws IOException {
+        throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
     }
 
 }
