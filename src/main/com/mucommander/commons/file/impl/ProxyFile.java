@@ -381,4 +381,24 @@ public abstract class ProxyFile extends AbstractFile {
     public String toString() {
         return file.toString();
     }
+
+    @Override
+    public boolean canGetReplication() {
+        return false;
+    }
+
+    @Override
+    public short getReplication() {
+        return 0;
+    }
+
+    @Override
+    public boolean canGetBlocksize() {
+        return false;
+    }
+
+    @Override
+    public long getBlocksize() {
+        return 0;
+    }
 }

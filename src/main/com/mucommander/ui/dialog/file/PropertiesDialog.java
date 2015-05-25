@@ -56,6 +56,7 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FileLabel;
 import com.mucommander.ui.text.MultiLineLabel;
+import com.mucommander.utils.Convert;
 
 /**
  * This dialog shows properties of a file or a group of files : number of files, file kind,
@@ -140,6 +141,14 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                 if (group != null) {
                     labelPanel.addRow(Translator.get("group") + ":", new JLabel(group), 6);
                 }
+            }
+            if (singleFile.canGetReplication()) {
+                short replication = singleFile.getReplication();
+                labelPanel.addRow(Translator.get("replication") + ":", new JLabel(Short.toString(replication)), 6);
+            }
+            if (singleFile.canGetBlocksize()) {
+                long blocksize = singleFile.getBlocksize();
+                labelPanel.addRow(Translator.get("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
             }
         }
 

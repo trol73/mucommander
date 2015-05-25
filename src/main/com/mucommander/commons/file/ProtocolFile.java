@@ -46,4 +46,24 @@ public abstract class ProtocolFile extends AbstractFile {
     public boolean isArchive() {
         return false;
     }
+
+    @Override
+    public boolean canGetReplication() {
+        return false;
+    }
+
+    @Override
+    public boolean canGetBlocksize() {
+        return false;
+    }
+
+    @Override
+    public short getReplication() {
+        return 0;
+    }
+
+    @Override
+    public long getBlocksize() {
+        return 0;
+    }
 }

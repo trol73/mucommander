@@ -176,4 +176,25 @@ class NullableFile extends AbstractFile {
 	@Override
 	public void setParent(AbstractFile arg0) {
 	}
+
+	@Override
+	public boolean canGetReplication() {
+		return false;
+	}
+
+	@Override
+	public boolean canGetBlocksize() {
+		return false;
+	}
+
+	@Override
+	public short getReplication() {
+		return 0;
+	}
+
+	@Override
+	public long getBlocksize() {
+		return 0;
+	}
+
 }

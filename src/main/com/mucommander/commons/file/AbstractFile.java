@@ -1609,12 +1609,54 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public abstract String getOwner();
 
     /**
+     * Returns <code>true</code> if this file implementation is able to return some information about file replication, not
+     * necessarily for all files or this file in particular but at least for some of them. In other words, a
+     * <code>true</code> return value doesn't mean that {@link #getReplication()} will necessarily return a non-null value,
+     * but rather that there is a chance that it does.
+     *
+     * @return true if this file implementation is able to return information about file owners  
+     */
+    public abstract boolean canGetReplication();
+
+    /**
+     * Returns information about the owner of this file. The kind of information that is returned is implementation-dependant.
+     * It may typically be a username (e.g. 'bob') or a user ID (e.g. '501').
+     * If the owner information is not available to the <code>AbstractFile</code> implementation (cannot be retrieved or
+     * the filesystem doesn't have any notion of owner) or not available for this particular file, <code>null</code>
+     * will be returned.
+     *
+     * @return information about the owner of this file
+     */
+    public abstract short getReplication();
+
+    /**
      * Returns <code>true</code> if this file implementation is able to return some information about file owners, not
      * necessarily for all files or this file in particular but at least for some of them. In other words, a
      * <code>true</code> return value doesn't mean that {@link #getOwner()} will necessarily return a non-null value,
      * but rather that there is a chance that it does.
      *
-     * @return true if this file implementation is able to return information about file owners  
+     * @return true if this file implementation is able to return information about file owners
+     */
+    public abstract boolean canGetBlocksize();
+
+    /**
+     * Returns information about the owner of this file. The kind of information that is returned is implementation-dependant.
+     * It may typically be a username (e.g. 'bob') or a user ID (e.g. '501').
+     * If the owner information is not available to the <code>AbstractFile</code> implementation (cannot be retrieved or
+     * the filesystem doesn't have any notion of owner) or not available for this particular file, <code>null</code>
+     * will be returned.
+     *
+     * @return information about the owner of this file
+     */
+    public abstract long getBlocksize();
+
+    /**
+     * Returns <code>true</code> if this file implementation is able to return some information about file owners, not
+     * necessarily for all files or this file in particular but at least for some of them. In other words, a
+     * <code>true</code> return value doesn't mean that {@link #getOwner()} will necessarily return a non-null value,
+     * but rather that there is a chance that it does.
+     *
+     * @return true if this file implementation is able to return information about file owners
      */
     public abstract boolean canGetOwner();
 

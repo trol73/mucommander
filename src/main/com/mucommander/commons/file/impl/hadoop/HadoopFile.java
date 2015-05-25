@@ -223,6 +223,25 @@ public abstract class HadoopFile extends ProtocolFile {
         return true;
     }
 
+    @Override
+    public boolean canGetReplication() {
+        return true;
+    }
+
+    @Override
+    public boolean canGetBlocksize() {
+        return true;
+    }
+
+    @Override
+    public short getReplication() {
+        return fileAttributes.getReplication();
+    }
+
+    @Override
+    public long getBlocksize() {
+        return fileAttributes.getBlocksize();
+    }
 
     // Supported file operations
 
@@ -489,6 +508,8 @@ public abstract class HadoopFile extends ProtocolFile {
             ));
             setOwner(fileStatus.getOwner());
             setGroup(fileStatus.getGroup());
+            setReplication(fileStatus.getReplication());
+            setBlocksize(fileStatus.getBlockSize());
         }
 
         /**

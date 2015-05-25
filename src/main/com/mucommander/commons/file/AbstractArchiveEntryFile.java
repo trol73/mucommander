@@ -390,4 +390,25 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
     public AbstractFile getVolume() {
         return archiveFile.getVolume();
     }
+
+    @Override
+    public boolean canGetReplication() {
+        return false;
+    }
+
+    @Override
+    public boolean canGetBlocksize() {
+        return false;
+    }
+
+    @Override
+    public short getReplication() {
+        return 0;
+    }
+
+    @Override
+    public long getBlocksize() {
+        return 0;
+    }
+
 }
