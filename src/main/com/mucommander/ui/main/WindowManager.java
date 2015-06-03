@@ -42,6 +42,7 @@ import com.mucommander.conf.MuPreferences;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.frame.MainFrameBuilder;
+import com.mucommander.ui.helper.FocusRequester;
 
 /**
  * Window Manager is responsible for creating, disposing, switching,
@@ -362,8 +363,10 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
 
         // Test if there is at least one MainFrame still showing
-        if(mainFrames.size()>0)
+        if(mainFrames.size()>0) {
+            FocusRequester.requestFocus(currentMainFrame);
             return;
+        }
 
         // Test if there is at least one window (viewer, editor...) still showing
         Frame frames[] = Frame.getFrames();

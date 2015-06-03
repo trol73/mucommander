@@ -166,6 +166,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         WindowsStorage.getInstance().put(this, storageSuffix);
         saveState();
         super.dispose();
+        FocusRequester.requestFocus(getOwner());
     }
 
     /**
