@@ -19,7 +19,9 @@ package com.mucommander.job;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
+import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import ru.trolsoft.utils.search.*;
@@ -158,7 +160,13 @@ public class FindFileJob extends FileJob {
         this.searchSubdirectories = searchSubdirs;
         this.searchArchives = searchArchives;
         this.ignoreHidden = ignoreHidden;
-        fileFilter = new WildcardFileFilter(fileMask);
+        IOCase filterCase;
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X || OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            filterCase = IOCase.INSENSITIVE;
+        } else {
+            filterCase = IOCase.SENSITIVE;
+        }
+        fileFilter = new WildcardFileFilter(fileMask, filterCase);
         if (!caseSensitive && fileContent != null) {
             this.fileContent = fileContent.toLowerCase();
         }
