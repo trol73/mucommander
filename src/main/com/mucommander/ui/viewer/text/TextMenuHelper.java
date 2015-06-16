@@ -21,6 +21,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
+import ru.trolsoft.calculator.CalculatorDialog;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -55,6 +56,7 @@ public class TextMenuHelper {
     private JMenuItem gotoLineItem;
     private JMenuItem toggleLineWrapItem;
     private JMenuItem toggleLineNumbersItem;
+    private JMenuItem viewMenuCalculator;
     private JMenuItem formatItem;
 
     public TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
@@ -98,6 +100,8 @@ public class TextMenuHelper {
         toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_numbers"), menuItemMnemonicHelper, null, actionListener);
         toggleLineNumbersItem.setSelected(lineNumbers);
 
+        viewMenu.addSeparator();
+        viewMenuCalculator = MenuToolkit.addMenuItem(viewMenu, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
         viewMenu.addSeparator();
         viewMenuSyntax = new JMenu(Translator.get("text_editor.syntax"));
 
@@ -171,6 +175,8 @@ public class TextMenuHelper {
             textEditorImpl.redo();
         } else if (source == formatItem) {
             textEditorImpl.formatCode();
+        } else if (source == viewMenuCalculator) {
+            new CalculatorDialog(textEditorImpl.frame).showDialog();
         } else {
             return false;
         }

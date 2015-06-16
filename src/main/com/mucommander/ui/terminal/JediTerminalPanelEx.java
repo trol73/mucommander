@@ -26,9 +26,11 @@ import com.mucommander.ui.action.impl.TerminalPanelAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.commandbar.CommandBarAttributes;
 import org.jetbrains.annotations.NotNull;
+import ru.trolsoft.calculator.CalculatorDialog;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 /**
@@ -52,6 +54,14 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
     @Override
     public void processKeyEvent(KeyEvent e) {
         final int id = e.getID();
+
+//        if (e.getModifiers() == InputEvent.ALT_MASK && e.getKeyCode() == KeyEvent.VK_C) {
+//            if (id == KeyEvent.KEY_RELEASED) {
+//                new CalculatorDialog(mainFrame).showDialog();
+//            }
+//            e.consume();
+//            return;
+//        }
 
         if (id == KeyEvent.KEY_PRESSED) {
             String actionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false));
@@ -86,12 +96,12 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
             myKeyListener.keyTyped(e);
         }
 
-        if (e.getKeyCode() == CommandBarAttributes.getModifier().getKeyCode()) {
-            if (id == KeyEvent.KEY_PRESSED) {
-                mainFrame.getCommandBar().keyPressed(e);
-            } else if (id == KeyEvent.KEY_RELEASED) {
-                mainFrame.getCommandBar().keyReleased(e);
+        if (e.getModifiers() == InputEvent.ALT_MASK && e.getKeyCode() == KeyEvent.VK_C) {
+            if (id == KeyEvent.KEY_RELEASED) {
+                new CalculatorDialog(mainFrame).showDialog();
             }
+            e.consume();
+            return;
         }
 
         e.consume();

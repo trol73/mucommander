@@ -203,7 +203,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
 
             long valLong = Math.round(res);
             boolean isDecimal = valLong == res;
-            edtDec.setText(isDecimal ? Long.toString(valLong) : FORMAT_DEC.format(res));
+            edtDec.setText(isDecimal ? Long.toString(valLong) : FORMAT_DEC.format(res).replace(',', '.'));
             edtHex.setText(Long.toHexString(valLong));
             edtOct.setText(Long.toOctalString(valLong));
             edtBin.setText(Long.toBinaryString(valLong));

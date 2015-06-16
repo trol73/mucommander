@@ -53,7 +53,7 @@ class TextEditorImpl implements ThemeListener {
 
 	private String searchString;
 
-	private JFrame frame;
+	JFrame frame;
 
     private TextArea textArea;
 

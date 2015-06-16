@@ -57,6 +57,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.views.TableViewMode;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
@@ -212,9 +213,27 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         viewMenu.add(new JSeparator());
 
         tableModeMenu = MenuToolkit.addMenu(Translator.get("view_menu.table_mode"), null, this);
+
         tableModeItems[0] = MenuToolkit.addCheckBoxMenuItem(tableModeMenu, ActionManager.getActionInstance(ToggleTableViewModeFullAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper2);
         tableModeItems[1] = MenuToolkit.addCheckBoxMenuItem(tableModeMenu, ActionManager.getActionInstance(ToggleTableViewModeCompactAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper2);
         tableModeItems[2] = MenuToolkit.addCheckBoxMenuItem(tableModeMenu, ActionManager.getActionInstance(ToggleTableViewModeShortAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper2);
+        ButtonGroup groupViewMode = new ButtonGroup();
+        for (JCheckBoxMenuItem checkBoxMenuItem : tableModeItems) {
+            groupViewMode.add(checkBoxMenuItem);
+        }
+        tableModeMenu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                int mode = mainFrame.getActiveTable().getViewMode().ordinal();
+                tableModeItems[mode].setSelected(true);
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) { }
+
+            @Override
+            public void menuCanceled(MenuEvent e) { }
+        });
         viewMenu.add(tableModeMenu);
         viewMenu.add(new JSeparator());
 
