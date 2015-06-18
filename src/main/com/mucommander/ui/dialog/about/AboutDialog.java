@@ -108,11 +108,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         setResizable(false);
 
         // Makes sure the scroll pane is properly initialized.
-        SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    textPanel.getViewport().setViewPosition(new Point(0,0));
-                }
-            });
+        SwingUtilities.invokeLater(() -> textPanel.getViewport().setViewPosition(new Point(0, 0)));
 
         pack();
 
@@ -157,6 +153,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertNormalString(doc,   "Alexander Yerenkow");
             insertNormalString(doc,   "Johann Schmitz");
             insertNormalString(doc,   "Oleg Trifonov");
+            insertNormalString(doc,   "Ondřej Zima");
             insertLineBreak(doc);
 
             // QA
@@ -309,7 +306,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 	}
 
 	private JLabel createCopyright() {
-		return new JLabel("©" + RuntimeConstants.COPYRIGHT+ " Maxence Bernard");
+		return new JLabel("©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov");
 	}
 
 	private JLabel createAppString() {

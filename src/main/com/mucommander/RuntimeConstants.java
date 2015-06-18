@@ -139,7 +139,7 @@ public class RuntimeConstants {
             COPYRIGHT    = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
 
         }
-        APP_STRING = "muCommander v" + VERSION;
+        APP_STRING = "trolFCommander v" + VERSION;
     }
 
     /**
