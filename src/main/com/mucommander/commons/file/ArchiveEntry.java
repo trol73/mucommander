@@ -94,13 +94,11 @@ public class ArchiveEntry extends SimpleFileAttributes {
         String path = getPath();
         int len = path.length();
         // Remove trailing '/' if any
-        if(path.charAt(len-1)=='/')
+        if (path.charAt(len-1) == '/')
             path = path.substring(0, --len);
 
         int lastSlash = path.lastIndexOf('/');
-        return lastSlash==-1?
-          path:
-          path.substring(lastSlash+1, len);
+        return lastSlash == -1 ? path : path.substring(lastSlash+1, len);
     }
 
     /**
@@ -138,8 +136,9 @@ public class ArchiveEntry extends SimpleFileAttributes {
     @Override
     public FilePermissions getPermissions() {
         FilePermissions permissions = super.getPermissions();
-        if(permissions==null)
-            return isDirectory()?FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS:FilePermissions.DEFAULT_FILE_PERMISSIONS;
+        if (permissions == null) {
+            return isDirectory() ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS : FilePermissions.DEFAULT_FILE_PERMISSIONS;
+        }
 
         return permissions;
     }
@@ -177,7 +176,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
      * so that <code>url1.equals(url2)</code> implies <code>url1.hashCode()==url2.hashCode()</code>.
      */
     public int hashCode() {
-        if(hashCode!=0)         // Return any previously computed hashCode. Note that setPath invalidates the hashCode.
+        if (hashCode != 0)         // Return any previously computed hashCode. Note that setPath invalidates the hashCode.
             return hashCode;
 
         String path = getPath();
@@ -188,5 +187,10 @@ public class ArchiveEntry extends SimpleFileAttributes {
                 :path.hashCode();
 
         return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return " ArchiveEntry(" + entryObject + ")";
     }
 }

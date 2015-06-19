@@ -70,18 +70,19 @@ public class CopyDialog extends AbstractCopyDialog {
         AbstractFile baseFolder = files.getBaseFolder();
         AbstractArchiveFile parentArchiveFile = baseFolder.getParentArchive();
         TransferFileJob job;
-        String newName = resolvedDest.getDestinationType()==PathUtils.ResolvedDestination.EXISTING_FOLDER?null:resolvedDest.getDestinationFile().getName();
+        String newName = resolvedDest.getDestinationType() == PathUtils.ResolvedDestination.EXISTING_FOLDER ? null:resolvedDest.getDestinationFile().getName();
 
         // If the source files are located inside an archive, use UnpackJob instead of CopyJob to unpack archives in
         // their natural order (more efficient)
         if (parentArchiveFile != null) {
             // Add all selected archive entries to a vector
-            int nbFiles = files.size();
+            //int nbFiles = files.size();
             List<ArchiveEntry> selectedEntries = new ArrayList<>();
-            for(int i = 0; i < nbFiles; i++) {
-                selectedEntries.add((ArchiveEntry)files.elementAt(i).getAncestor(AbstractArchiveEntryFile.class).getUnderlyingFileObject());
+            for (AbstractFile file : files) {
+                System.out.println(": " + file.getAbsolutePath() + " => " + file.getAncestor(AbstractArchiveEntryFile.class) + " ==> " + file.getAncestor(AbstractArchiveEntryFile.class).getUnderlyingFileObject());
+                //selectedEntries.add((ArchiveEntry)file.getAncestor(AbstractArchiveEntryFile.class).getUnderlyingFileObject());
+                selectedEntries.add((ArchiveEntry)file.getAncestor(AbstractArchiveEntryFile.class).getUnderlyingFileObject());
             }
-
             job = new UnpackJob(
                 progressDialog,
                 mainFrame,

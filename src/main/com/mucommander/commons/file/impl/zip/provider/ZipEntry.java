@@ -590,12 +590,13 @@ public class ZipEntry implements Cloneable {
         int count = 0;
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (ch <= 0x7f)
+            if (ch <= 0x7f) {
                 count++;
-            else if (ch <= 0x7ff)
+            } else if (ch <= 0x7ff) {
                 count += 2;
-            else
+            } else {
                 count += 3;
+            }
         }
         return count;
     }
@@ -625,8 +626,9 @@ public class ZipEntry implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         ZipEntry ze = (ZipEntry)super.clone();
 
-        if(extraFields!=null)
-            ze.extraFields = (Vector<ZipExtraField>)extraFields.clone();
+        if (extraFields != null) {
+            ze.extraFields = (Vector<ZipExtraField>) extraFields.clone();
+        }
 
         return ze;
     }
@@ -648,5 +650,11 @@ public class ZipEntry implements Cloneable {
      */
     public boolean equals(Object o) {
         return (o instanceof ZipEntry) && ((ZipEntry) o).getName().equals(getName());
+    }
+
+
+    @Override
+    public String toString() {
+        return "ZipEntry (" + name + ")";
     }
 }

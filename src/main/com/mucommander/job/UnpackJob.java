@@ -224,12 +224,16 @@ public class UnpackJob extends AbstractCopyJob {
                             selectedEntries.remove(i);
                             break;
                         }
+
+                        else {
+                        }
                     }
                 }
 
                 if (!processEntry) {
                     continue;
                 }
+
                 processedFilesCount++;
                 processedFilesSize += entry.getSize();
 

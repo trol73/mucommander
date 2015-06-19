@@ -21,6 +21,8 @@ package com.mucommander.cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 /**
  * An abstract LRU cache.
  *
@@ -109,7 +111,7 @@ public abstract class LRUCache<K, V> {
      * <ul>
      * <li>the given key doesn't exist
      * <li>the cached value corresponding to the key has expired
-     * <ul></p>
+     * </ul></p>
      *
      * @param key the cached item's key
      * @return the cached value corresponding to the specified key, or <code>null</code> if a value could not
@@ -122,9 +124,9 @@ public abstract class LRUCache<K, V> {
      *
      * <p>If the cache's capacity has been reached (cache is full):
      * <ul>
-     * <li>any object with a past expiration date will be removed<li>
+     * <li>any object with a past expiration date will be removed<
      * <li>if no expired item could be removed, the least recently used item will be removed
-     * <ul></p>
+     * </ul></p>
      *
      * @param key the key for the object to store
      * @param value the value to cache
@@ -204,10 +206,10 @@ public abstract class LRUCache<K, V> {
         // Stress test to see if everything looks OK after a few thousand iterations
         int capacity = 1000;
         cache = new FastLRUCache<>(capacity);
-        java.util.Random random = new java.util.Random();
-        for(int i=0; i<100000; i++) {
+        Random random = new Random();
+        for (int i=0; i<100000; i++) {
             // 50% chance to add a new element with a random value and expiration date (50% chance for no expiration date)
-            if(cache.size()==0 || random.nextBoolean()) {
+            if (cache.size()==0 || random.nextBoolean()) {
                 //				System.out.println("cache.add()");				
                 cache.add(random.nextInt(capacity), random.nextInt(), random.nextBoolean()?-1:random.nextInt(10));
             }
@@ -220,8 +222,7 @@ public abstract class LRUCache<K, V> {
             try {
                 // Test the cache for corruption
                 cache.testCorruption();
-            }
-            catch(RuntimeException e) {
+            } catch(RuntimeException e) {
                 LOGGER.debug("Cache corrupted after "+i+" iterations, cache state="+cache);
                 return;
             }

@@ -910,7 +910,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        } while(lastAncestor!=ancestor);
+        } while(lastAncestor != ancestor);
 
         return null;
     }

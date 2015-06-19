@@ -91,10 +91,12 @@ public class FileSet extends Vector<AbstractFile> {
      * @param files the files to add to this FileSet.
      */
     public void addAll(AbstractFile[] files) {
-        if(files==null)
+        if (files == null) {
             return;
+        }
 
-        for (AbstractFile file : files)
+        for (AbstractFile file : files) {
             add(file);
+        }
     }
 }

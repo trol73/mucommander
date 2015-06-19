@@ -21,6 +21,7 @@ import com.jidesoft.hints.ListDataIntelliHints;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferencesAPI;
@@ -92,6 +93,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private DefaultListModel<AbstractFile> listModel = new DefaultListModel<>();
     private JList<AbstractFile> list;
     protected JLabel lblTotal;
+
+    private AbstractFile startDirectory;
 
     private ListDataIntelliHints textHints, hexHints;
 
@@ -260,6 +263,18 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                         mainFrame.getActivePanel().tryChangeCurrentFolder(file.getParent(), file, false);
                         break;
 
+                    case KeyEvent.VK_F5:
+                        new CopyDialog(mainFrame, getSelectedFiles()).showDialog();
+                        break;
+
+                    case KeyEvent.VK_F6:
+                        new MoveDialog(mainFrame, getSelectedFiles()).showDialog();
+                        break;
+
+                    case KeyEvent.VK_F8:
+                        new DeleteDialog(mainFrame, getSelectedFiles(), false).showDialog();
+                        break;
+
                 }
             }
 
@@ -353,7 +368,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         showProgress(true);
         clearResults();
         job = new FindFileJob(mainFrame);
-        job.setStartDirectory(FileFactory.getFile(edtFromDirectory.getText()));
+        startDirectory = FileFactory.getFile(edtFromDirectory.getText());
+        job.setStartDirectory(startDirectory);
         job.setup(edtFileName.getText(), edtText.getText(), cbSearchSubdirectories.isSelected(), cbSearchArchives.isSelected(),
                 cbCaseSensitive.isSelected(), cbIgnoreHidden.isSelected(), cbEncoding.getSelectedItem().toString(),
                 cbSearchHex.isSelected(), cbSearchHex.isSelected() ? edtText.getBytes() : null);
@@ -413,6 +429,17 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
             return null;
         }
         return listModel.get(index);
+    }
+
+
+    private FileSet getSelectedFiles() {
+        FileSet files = new FileSet(startDirectory);
+        int[] selectedIx = list.getSelectedIndices();
+        for (int aSelectedIx : selectedIx) {
+            AbstractFile file = listModel.get(aSelectedIx);
+            files.add(file);
+        }
+        return files;
     }
 
 
