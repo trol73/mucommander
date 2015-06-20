@@ -105,7 +105,6 @@ public class FocusRequester implements Runnable {
             MainFrame mainFrame = (MainFrame)c;
             mainFrame.getActiveTable().requestFocus();
         }
-        System.out.println("> " + requestFocusInWindow + " : : " + c);
 
         LOGGER.debug("focus requested on " + (c.getClass().getName()));
 
