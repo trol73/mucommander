@@ -23,6 +23,7 @@ import java.awt.Component;
 
 import javax.swing.SwingUtilities;
 
+import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class FocusRequester implements Runnable {
      * @see java.awt.Component#requestFocus()
      */
     public static synchronized void requestFocus(Component c) {
-        if(c==null) {
+        if (c == null) {
             LOGGER.debug(">>>>>>>>>>>>>>>>>> Component is null, returning!");
             
             return;
@@ -79,7 +80,7 @@ public class FocusRequester implements Runnable {
      * @see java.awt.Component#requestFocusInWindow()
      */
     public static synchronized void requestFocusInWindow(Component c) {
-        if(c==null) {
+        if (c == null) {
             LOGGER.debug(">>>>>>>>>>>>>>>>>> Component is null, returning!");
 
             return;
@@ -95,12 +96,18 @@ public class FocusRequester implements Runnable {
     
     public void run() {
         // Request focus on the component
-        if(requestFocusInWindow)
+        if (requestFocusInWindow) {
             c.requestFocusInWindow();
-        else
+        } else {
             c.requestFocus();
+        }
+        if (c instanceof MainFrame) {
+            MainFrame mainFrame = (MainFrame)c;
+            mainFrame.getActiveTable().requestFocus();
+        }
+        System.out.println("> " + requestFocusInWindow + " : : " + c);
 
-        LOGGER.debug("focus requested on "+(c.getClass().getName()));
+        LOGGER.debug("focus requested on " + (c.getClass().getName()));
 
         this.c = null;
     }

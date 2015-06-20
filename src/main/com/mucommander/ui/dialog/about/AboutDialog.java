@@ -130,7 +130,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         text.setEditable(false);
         try {
             // Team.
-            insertTitle(doc,          "The trolCommander team");
+            insertTitle(doc,          "The muCommander team");
 
             // Core developers.
             insertHeader(doc,         "Core developers");
@@ -291,23 +291,21 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 				return new Insets(10, 10, 0, 10);
 			}
 		}.add(new FluentPanel(new BorderLayout())
-                  .add(new JLabel(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png")),
-                	   BorderLayout.NORTH)
-                  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createAppString()),
-  				       BorderLayout.CENTER)
-  				  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createCopyright()),
-  				       BorderLayout.SOUTH),
+                  .add(new JLabel(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png")), BorderLayout.NORTH)
+                  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createAppString()), BorderLayout.CENTER)
+  				  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createCopyright()), BorderLayout.SOUTH),
+
               BorderLayout.NORTH)
 		 .add(new FluentPanel(new BorderLayout())
-                  .add(createHomeComponent(), BorderLayout.NORTH)
-                  .add(createLicenseButton(), BorderLayout.CENTER)
-                  .add(createOkButton(), BorderLayout.SOUTH),
-		      BorderLayout.SOUTH);
+                         .add(createHomeComponent(), BorderLayout.NORTH)
+                         .add(createLicenseButton(), BorderLayout.CENTER)
+                         .add(createOkButton(), BorderLayout.SOUTH),
+                 BorderLayout.SOUTH);
 	}
 
-	private JLabel createCopyright() {
-		return new JLabel("©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov");
-	}
+    private JLabel createCopyright() {
+        return new JLabel("<html>©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov<br/>Based on <b>muCommander</b><br>© 2002 - 2013 Maxence Bernard</br>");
+    }
 
 	private JLabel createAppString() {
 		return createBoldLabel(RuntimeConstants.APP_STRING);
