@@ -329,7 +329,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             stop();
             stopBackground();
             dispose();
-        } else if(newState == State.FINISHED) {
+        } else if (newState == State.FINISHED) {
             stopBackground();
             //  Dispose dialog only if 'Close when finished option' is selected
             if (closeWhenFinishedCheckBox.isSelected()) {

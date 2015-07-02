@@ -137,7 +137,7 @@ public abstract class FileJob implements Runnable {
         INTERRUPTED,
 
         /** Indicates that this job has naturally finished (i.e. without being interrupted), this is a permanent state */
-        FINISHED;
+        FINISHED
         }
 
 
@@ -145,7 +145,7 @@ public abstract class FileJob implements Runnable {
     private State jobState = State.NOT_STARTED;
 
     /** List of registered FileJobListener stored as weak references */
-    private WeakHashMap<FileJobListener, ?> listeners = new WeakHashMap<FileJobListener, Object>();
+    private WeakHashMap<FileJobListener, ?> listeners = new WeakHashMap<>();
     
     /** Information about this job progress */
     private JobProgress jobProgress;

@@ -318,6 +318,9 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         }
 
         ProgressDialog progressDialog = new ProgressDialog(mainFrame, getProgressDialogTitle(), taskWidget);
+        if (getReturnFocusTo() != null) {
+            progressDialog.returnFocusTo(getReturnFocusTo());
+        }
         TransferFileJob job = createTransferFileJob(progressDialog, resolvedDest, defaultFileExistsAction);
 
         if (job != null) {

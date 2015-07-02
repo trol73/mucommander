@@ -82,7 +82,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         // - the base folder can be moved to the trash (the eligibility conditions should be the same as the files to-be-deleted)
         AbstractTrash trash = DesktopManager.getTrash();
         AbstractFile baseFolder = files.getBaseFolder();
-        if(trash!=null && !baseFolder.isArchive() && !trash.isTrashFile(baseFolder) && trash.canMoveToTrash(baseFolder)) {
+        if (trash != null && !baseFolder.isArchive() && !trash.isTrashFile(baseFolder) && trash.canMoveToTrash(baseFolder)) {
             moveToTrash = !deletePermanently;
 
             moveToTrashCheckBox = new JCheckBox(Translator.get("delete_dialog.move_to_trash.option"), moveToTrash);
@@ -104,8 +104,9 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
 
         mainPanel.add(fileDetailsPanel);
 
-        if(moveToTrashCheckBox!=null)
+        if (moveToTrashCheckBox != null) {
             mainPanel.add(moveToTrashCheckBox);
+        }
 
         getContentPane().add(mainPanel);
 
@@ -153,9 +154,12 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         // Start by disposing this dialog
         dispose();
 
-        if(e.getSource()==deleteButton) {
+        if (e.getSource() == deleteButton) {
             // Starts deleting files
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("delete_dialog.deleting"));
+            if (getReturnFocusTo() != null) {
+                progressDialog.returnFocusTo(getReturnFocusTo());
+            }
             DeleteJob deleteJob = new DeleteJob(progressDialog, mainFrame, files, moveToTrash);
             progressDialog.start(deleteJob);
         }

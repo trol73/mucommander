@@ -271,10 +271,10 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertNormalString(doc,   "Language: " + locale.getLanguage());
             insertNormalString(doc,   "Country: " + locale.getCountry());
             insertNormalString(doc,   "Encoding: " + System.getProperty("file.encoding"));
-        } catch(Exception e) {}
+        } catch(Exception ignore) {}
 
         textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textPanel.getViewport().setPreferredSize(new Dimension((int)text.getPreferredSize().getWidth(), 300));
+        textPanel.getViewport().setPreferredSize(new Dimension((int)text.getPreferredSize().getWidth(), 350));
 
         return textPanel;
     }
@@ -304,7 +304,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 	}
 
     private JLabel createCopyright() {
-        return new JLabel("<html>©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov<br/>Based on <b>muCommander</b><br>© 2002 - 2013 Maxence Bernard</br>");
+        return new JLabel("<html>©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov<p/><br/>Based on <b>muCommander</b><br>© 2002 - 2013 Maxence Bernard</br>");
     }
 
 	private JLabel createAppString() {

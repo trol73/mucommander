@@ -206,12 +206,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         cbSearchHex.setSelected(prefs.getVariable(MuPreference.FIND_FILE_SEARCH_HEX, false));
         cbEncoding.setSelectedItem(prefs.getVariable(MuPreference.FIND_FILE_ENCODING, "UTF-8"));
 
-        cbSearchHex.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setHexMode(cbSearchHex.isSelected());
-            }
-        });
+        cbSearchHex.addActionListener(e -> setHexMode(cbSearchHex.isSelected()));
         setHexMode(cbSearchHex.isSelected());
 
         gridPanel.add(cbSearchSubdirectories);
@@ -252,11 +247,13 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 }
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_F3:
-                        ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
+                        ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
+                                .returnFocusTo(getFocusOwner());
                         break;
 
                     case KeyEvent.VK_F4:
-                        EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage());
+                        EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
+                                .returnFocusTo(getFocusOwner());
                         break;
 
                     case KeyEvent.VK_SPACE:
@@ -264,15 +261,15 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                         break;
 
                     case KeyEvent.VK_F5:
-                        new CopyDialog(mainFrame, getSelectedFiles()).showDialog();
+                        new CopyDialog(mainFrame, getSelectedFiles()).returnFocusTo(getFocusOwner()).showDialog();
                         break;
 
                     case KeyEvent.VK_F6:
-                        new MoveDialog(mainFrame, getSelectedFiles()).showDialog();
+                        new MoveDialog(mainFrame, getSelectedFiles()).returnFocusTo(getFocusOwner()).showDialog();
                         break;
 
                     case KeyEvent.VK_F8:
-                        new DeleteDialog(mainFrame, getSelectedFiles(), false).showDialog();
+                        new DeleteDialog(mainFrame, getSelectedFiles(), false).returnFocusTo(getFocusOwner()).showDialog();
                         break;
 
                 }

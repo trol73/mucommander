@@ -36,6 +36,8 @@ public abstract class FileFrame extends JFrame {
 	
 	// The main frame from which this frame was initiated
 	private MainFrame mainFrame;
+
+    private Component returnFocusTo;
 	
 	FileFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
 		this.mainFrame = mainFrame;
@@ -182,6 +184,19 @@ public abstract class FileFrame extends JFrame {
         filePresenter.saveStateOnClose();
         WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
         super.dispose();
+        if (returnFocusTo != null) {
+            FocusRequester.requestFocus(returnFocusTo);
+        }
+    }
+
+    public FileFrame returnFocusTo(Component returnFocusTo) {
+        this.returnFocusTo = returnFocusTo;
+        return this;
+    }
+
+
+    public Component getReturnFocusTo() {
+        return returnFocusTo;
     }
 
 
@@ -194,4 +209,5 @@ public abstract class FileFrame extends JFrame {
     protected abstract String getGenericErrorDialogMessage();
     
     protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
+
 }
