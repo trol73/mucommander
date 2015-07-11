@@ -3,7 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/depends/jediterm" vcs="Git" />
   </component>
 </project>
-
