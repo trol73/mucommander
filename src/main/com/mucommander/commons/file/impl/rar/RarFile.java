@@ -40,11 +40,8 @@ public class RarFile {
 
     public RarFile(AbstractFile file) throws IOException, UnsupportedFileOperationException, RarException {
         this.file = file;
-    	InputStream fileIn = file.getInputStream();
-        try {
+        try (InputStream fileIn = file.getInputStream()) {
             archive = new Archive(new File(file.getPath()));
-        } finally {
-            fileIn.close();
         }
     }
 

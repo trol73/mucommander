@@ -237,6 +237,15 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     }
 
     /**
+     * Returns the actual number of files the current folder contains, not including the parent '..' file (if any).
+     *
+     * @return the actual number of files the current folder contains, not including the parent '..' file (if any)
+     */
+    public synchronized int getFileCountWithoutParent() {
+        return cachedFiles.length;
+    }
+
+    /**
      * Returns the current folder's children. The returned array contains {@link AbstractFile} instances, and not
      * CachedFile instances contrary to {@link #getCachedFiles()}.
      *
