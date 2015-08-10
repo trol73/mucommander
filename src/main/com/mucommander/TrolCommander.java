@@ -275,6 +275,7 @@ public class TrolCommander {
             try {
                 ActionKeymapIO.loadActionKeymap();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load actions shortcuts", e);
             }
 
@@ -283,6 +284,7 @@ public class TrolCommander {
             try {
                 ToolBarIO.loadDescriptionFile();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load toolbar description", e);
             }
 
@@ -291,6 +293,7 @@ public class TrolCommander {
             try {
                 CommandBarIO.loadCommandBar();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load commandbar description", e);
             }
         }

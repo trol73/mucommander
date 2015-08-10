@@ -83,7 +83,8 @@ public class CommandBarAttributes {
         for (int i = 0; i < DEFAULT_ACTION_IDS.length; i++) {
             String id1 = DEFAULT_ACTION_IDS[i];
             KeyStroke key1 = ActionKeymap.getAccelerator(id1);
-            if (key1.getModifiers() != 0) {
+
+            if (key1 != null && key1.getModifiers() != 0) {
                 String id2 = DEFAULT_ALTERNATE_ACTION_IDS[i];
                 KeyStroke key2 = ActionKeymap.getAccelerator(id2);
                 if (key2 == null || key2.getModifiers() == 0) {
@@ -154,7 +155,6 @@ public class CommandBarAttributes {
      * @param modifier           command-bar modifier.
      */
     public static void setAttributes(String[] actionIds, String[] alternateActionIds, KeyStroke modifier) {
-System.out.println("!!! setAttributes " + actionIds);
     	CommandBarAttributes.actionIds = actionIds;
     	CommandBarAttributes.alternateActionIds = alternateActionIds;
     	CommandBarAttributes.modifier = modifier;
