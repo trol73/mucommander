@@ -24,8 +24,6 @@ import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -72,11 +70,7 @@ public abstract class ServerPanel extends XAlignedComponentPanel {
         spinner.setEditor(editor);
 
         // Any changes made to the spinner will update the URL label
-        spinner.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e) {
-                dialog.updateURLLabel();
-            }
-        });
+        spinner.addChangeListener(e -> dialog.updateURLLabel());
 
         return spinner;
     }

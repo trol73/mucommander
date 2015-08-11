@@ -38,8 +38,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.*;
 
 /**
@@ -121,28 +119,20 @@ class TextEditorImpl implements ThemeListener {
 
 		textArea.setWrapStyleWord(true);
 
-		textArea.addMouseWheelListener(new MouseWheelListener() {
-
-			/**
-			 * Mouse events bubble up until finding a component with a relative listener.
-			 * That's why in case we get an event that needs to initiate its default behavior,
-			 * we just bubble it up to the parent component of the JTextArea.  
-			 */
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
-				if (isCtrlPressed) {
-					Font currentFont = textArea.getFont();
-					int currentFontSize = currentFont.getSize();
-					boolean rotationUp = e.getWheelRotation() < 0;
-					if ((!rotationUp && currentFontSize > 1) || rotationUp) {
-						Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
-						textArea.setFont(newFont);
-					}
-				} else {
-					textArea.getParent().dispatchEvent(e);
-				}
-			}
-		});
+		textArea.addMouseWheelListener(e -> {
+            boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+            if (isCtrlPressed) {
+                Font currentFont = textArea.getFont();
+                int currentFontSize = currentFont.getSize();
+                boolean rotationUp = e.getWheelRotation() < 0;
+                if ((!rotationUp && currentFontSize > 1) || rotationUp) {
+                    Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
+                    textArea.setFont(newFont);
+                }
+            } else {
+                textArea.getParent().dispatchEvent(e);
+            }
+        });
 
         textArea.addCaretListener(caretListener);
     }

@@ -162,8 +162,7 @@ public class OldSevenZipArchiveFile extends AbstractROArchiveFile {
     	
 		final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
         new Thread(
-            new Runnable() {
-                public void run() {
+                () -> {
                     MuArchiveExtractCallback extractCallbackSpec = new MuArchiveExtractCallback(cbb.getOutputStream(), entry.getPath());
                     extractCallbackSpec.Init(sevenZipFile);
                     try {
@@ -172,7 +171,6 @@ public class OldSevenZipArchiveFile extends AbstractROArchiveFile {
                         e.printStackTrace();
                     }
                 }
-            }
         ).start();
 		  
         return cbb.getInputStream();

@@ -94,9 +94,7 @@ public class SevenZipArchiveFile extends AbstractROArchiveFile {
                 try {
                     final ISevenZipInArchive sevenZipFile = openSevenZipFile();
                     sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
-                } catch (SevenZipException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (SevenZipException | IOException e) {
                     e.printStackTrace();
                 } finally {
                     if (inArchive != null) {
@@ -233,17 +231,15 @@ public class SevenZipArchiveFile extends AbstractROArchiveFile {
             if (skipExtraction || extractAskMode != ExtractAskMode.EXTRACT) {
                 return null;
             }
-            return new ISequentialOutStream() {
-                public int write(byte[] data) throws SevenZipException {
-                    hash ^= Arrays.hashCode(data);
-                    size += data.length;
-                    try {
-                        os.write(data);
-                    } catch (IOException e) {
-                        throw new SevenZipException(e);
-                    }
-                    return data.length; // Return amount of proceed data
+            return data -> {
+                hash ^= Arrays.hashCode(data);
+                size += data.length;
+                try {
+                    os.write(data);
+                } catch (IOException e) {
+                    throw new SevenZipException(e);
                 }
+                return data.length; // Return amount of proceed data
             };
         }
 

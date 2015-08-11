@@ -33,11 +33,11 @@ package com.mucommander.commons.file;
 public interface PermissionAccesses {
 
     /** Designates the 'other' permission access. */
-    public int OTHER_ACCESS = 0;
+    int OTHER_ACCESS = 0;
 
     /** Designates the 'group' permission access. */
-    public int GROUP_ACCESS = 1;
+    int GROUP_ACCESS = 1;
 
     /** Designates the 'user' permission access. */
-    public int USER_ACCESS = 2;
+    int USER_ACCESS = 2;
 }

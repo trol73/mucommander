@@ -23,5 +23,5 @@ package com.mucommander.ui.chooser;
  */
 public interface ColorChangeListener {
 
-    public abstract void colorChanged(ColorChangeEvent event);
+    void colorChanged(ColorChangeEvent event);
 }

@@ -124,43 +124,46 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
      */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if(qName.equals(ELEMENT_BOOKMARK)) {
-            if(bookmarkName == null || bookmarkLocation == null) {
-                LOGGER.info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
-                return;
-            }
-
-            try {builder.addBookmark(bookmarkName, bookmarkLocation);}
-            catch(BookmarkException e) {throw new SAXException(e);}
-        }
-        else if(qName.equals(ELEMENT_NAME)) {
-            bookmarkName = characters.toString().trim();
-        }
-        else if(qName.equals(ELEMENT_LOCATION)) {
-            bookmarkLocation = characters.toString().trim();
-        }
-        // Note: url element has been deprecated in 0.8 beta3 but is still checked against for upward compatibility.
-        else if(qName.equals(ELEMENT_URL)) {
-            // Until early 0.8 beta3 nightly builds, credentials were stored directly in the bookmark's url.
-            // Now bookmark locations are free of credentials, these are stored in a dedicated credentials file where
-            // the password is encrypted.
-            try {
-                FileURL url = FileURL.getFileURL(characters.toString().trim());
-                Credentials credentials = url.getCredentials();
-
-                // If the URL contains credentials, import them into CredentialsManager and remove credentials
-                // from the bookmark's location
-                if(credentials!=null) {
-                    CredentialsManager.addCredentials(new CredentialsMapping(credentials, url, true));
-                    bookmarkLocation = url.toString(false);
+        switch (qName) {
+            case ELEMENT_BOOKMARK:
+                if (bookmarkName == null || bookmarkLocation == null) {
+                    LOGGER.info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
+                    return;
                 }
-                else {
+
+                try {
+                    builder.addBookmark(bookmarkName, bookmarkLocation);
+                } catch (BookmarkException e) {
+                    throw new SAXException(e);
+                }
+                break;
+            case ELEMENT_NAME:
+                bookmarkName = characters.toString().trim();
+                break;
+            case ELEMENT_LOCATION:
+                bookmarkLocation = characters.toString().trim();
+                break;
+            // Note: url element has been deprecated in 0.8 beta3 but is still checked against for upward compatibility.
+            case ELEMENT_URL:
+                // Until early 0.8 beta3 nightly builds, credentials were stored directly in the bookmark's url.
+                // Now bookmark locations are free of credentials, these are stored in a dedicated credentials file where
+                // the password is encrypted.
+                try {
+                    FileURL url = FileURL.getFileURL(characters.toString().trim());
+                    Credentials credentials = url.getCredentials();
+
+                    // If the URL contains credentials, import them into CredentialsManager and remove credentials
+                    // from the bookmark's location
+                    if (credentials != null) {
+                        CredentialsManager.addCredentials(new CredentialsMapping(credentials, url, true));
+                        bookmarkLocation = url.toString(false);
+                    } else {
+                        bookmarkLocation = characters.toString().trim();
+                    }
+                } catch (MalformedURLException e) {
                     bookmarkLocation = characters.toString().trim();
                 }
-            }
-            catch(MalformedURLException e) {
-                bookmarkLocation = characters.toString().trim();
-            }
+                break;
         }
     }
 }

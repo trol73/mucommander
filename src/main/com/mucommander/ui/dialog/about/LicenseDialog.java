@@ -131,7 +131,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
         getRootPane().setDefaultButton(okButton);
 
         // Makes sure the scroll pane is initialises on its first line.
-        SwingUtilities.invokeLater(new Runnable() {public void run() {licensePanel.getViewport().setViewPosition(new Point(0,0));}});
+        SwingUtilities.invokeLater(() -> licensePanel.getViewport().setViewPosition(new Point(0,0)));
         pack();
     }
 
@@ -160,11 +160,11 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
         }
         catch(Exception e) {
             LOGGER.warn("Failed to read license file", e);
-        }
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {}
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception ignore) {}
             }
         }
         return text.toString();
@@ -178,7 +178,8 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * If the event originates from the OK button, closes the window.
      */
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == okButton)
+        if (e.getSource() == okButton) {
             dispose();
+        }
     }
 }

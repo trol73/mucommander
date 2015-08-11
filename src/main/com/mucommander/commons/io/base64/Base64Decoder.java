@@ -52,23 +52,19 @@ public abstract class Base64Decoder {
     public static byte[] decodeAsBytes(String s, Base64Table table) throws IOException {
         byte[] b = s.getBytes();
 
-        if(b.length%4 != 0) {
+        if (b.length % 4 != 0) {
             // Base64 encoded data must come in a multiple of 4 bytes, throw an IOException if it's not the case
             throw new IOException("Byte array length is not a multiple of 4");
         }
 
-        Base64InputStream bin = new Base64InputStream(new ByteArrayInputStream(b), table);
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int i;
 
-        try {
-            while((i=bin.read())!=-1)
+        try (Base64InputStream bin = new Base64InputStream(new ByteArrayInputStream(b), table)) {
+            while ((i = bin.read()) != -1) {
                 bout.write(i);
-
+            }
             return bout.toByteArray();
-        }
-        finally {
-            bin.close();
         }
     }
 
@@ -84,19 +80,15 @@ public abstract class Base64Decoder {
      * @throws UnsupportedEncodingException if the specified encoding is not supported by the Java runtime
      * @throws java.io.IOException if the given String isn't properly Base64-encoded
      */
-    public static String decode(String s, String encoding, Base64Table table) throws UnsupportedEncodingException, IOException {
-        InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(decodeAsBytes(s, table)), encoding);
-        StringBuffer sb = new StringBuffer();
+    public static String decode(String s, String encoding, Base64Table table) throws IOException {
+        StringBuilder sb = new StringBuilder();
         int i;
 
-        try {
-            while((i=isr.read())!=-1)
-                sb.append((char)i);
-
+        try (InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(decodeAsBytes(s, table)), encoding)) {
+            while ((i = isr.read()) != -1) {
+                sb.append((char) i);
+            }
             return sb.toString();
-        }
-        finally {
-            isr.close();
         }
     }
 

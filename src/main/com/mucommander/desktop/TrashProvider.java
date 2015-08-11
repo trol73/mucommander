@@ -35,6 +35,6 @@ public interface TrashProvider {
      * 
      * @return a trash instance
      */
-    public AbstractTrash getTrash();
+    AbstractTrash getTrash();
 
 }

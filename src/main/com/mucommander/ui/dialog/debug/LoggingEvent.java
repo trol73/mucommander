@@ -33,12 +33,12 @@ public interface LoggingEvent {
 	 * @param level logging event level
 	 * @return true if the logging event's level is equal or higher than the given level, false otherwise
 	 */
-    public boolean isLevelEqualOrHigherThan(LogLevel level);
+    boolean isLevelEqualOrHigherThan(LogLevel level);
     
     /**
      * Return the logging event's level.
      * 
      * @return the logging event's level
      */
-    public LogLevel getLevel();
+    LogLevel getLevel();
 }

@@ -3,7 +3,7 @@ package com.mucommander.commons.file.impl.sevenzip.provider.SevenZip;
 import com.mucommander.commons.file.impl.sevenzip.provider.Common.RecordVector;
 
 public interface ICompressCoder2 {
-    public int Code(
+    int Code(
             RecordVector<java.io.InputStream>  inStreams,
             Object useless1, // const UInt64 ** /* inSizes */,
             int numInStreams,
@@ -12,5 +12,5 @@ public interface ICompressCoder2 {
             int numOutStreams,
             ICompressProgressInfo progress) throws java.io.IOException;
     
-    public void close() throws java.io.IOException ; // destructor
+    void close() throws java.io.IOException ; // destructor
 }

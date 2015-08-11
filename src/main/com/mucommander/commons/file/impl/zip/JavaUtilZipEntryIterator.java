@@ -88,8 +88,7 @@ public class JavaUtilZipEntryIterator implements ArchiveEntryIterator  {
             // is not UTF-8 as expected (ZipInputStream always expects UTF-8). The more general Exception is caught
             // (just to be safe) and an IOException thrown.
             throw new IOException();
-        }
-        catch(Error e) {
+        } catch(Error e) {
             // ZipInputStream#getNextEntry() will throw a java.lang.InternalError ("invalid compression method")
             // if the compression method is different from DEFLATED or STORED (happens with IMPLODED for example).
             throw new IOException();

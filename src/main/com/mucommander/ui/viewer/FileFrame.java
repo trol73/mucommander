@@ -69,16 +69,13 @@ public abstract class FileFrame extends JFrame {
             @Override
             public void initTargetComponent() throws Exception {
                 // key dispatcher for Esc detection
-                final KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
-                    @Override
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                            cancel();
-                            setVisible(false);
-                            dispose();
-                        }
-                        return false;
+                final KeyEventDispatcher keyEventDispatcher = e -> {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        cancel();
+                        setVisible(false);
+                        dispose();
                     }
+                    return false;
                 };
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
                 try {

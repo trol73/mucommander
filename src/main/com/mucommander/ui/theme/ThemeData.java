@@ -779,7 +779,7 @@ public class ThemeData {
     // - Listeners -----------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Listeners on the default font and colors. */
-    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<ThemeListener, Object>();
+    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
 
 
 
@@ -1158,7 +1158,7 @@ public class ThemeData {
      * not all of them. It is up to callers to deal with these issues.
      * </p>
      * <p>
-     * Values overwritting is done through the use of the current instance's {@link #setColor(int,Color)}
+     * Values overwriting is done through the use of the current instance's {@link #setColor(int,Color)}
      * and {@link #setFont(int,Font)} methods. This allows subclasses to plug their own code here. A good
      * example of that is {@link Theme}, which will automatically trigger font and color events when
      * importing data.
@@ -1418,7 +1418,7 @@ public class ThemeData {
     /**
      * Checks whether the current color and the specified one are different from one another.
      * <p>
-     * This is a convenience method, and is stricly equivalent to calling
+     * This is a convenience method, and is strictly equivalent to calling
      * <code>{@link #isColorDifferent(int,Color,boolean) isColorDifferent(}id, color, false)</code>.
      * </p>
      * @param  id   identifier of the color to check.

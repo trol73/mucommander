@@ -31,7 +31,7 @@ public interface ProcessListener {
      * <code>processError</code> will be made past this call.
      * @param returnValue the value returned by the process (return code).
      */
-    public void processDied(int returnValue);
+    void processDied(int returnValue);
 
     /**
      * This method is called whenever the process sends data to its output streams (stdout or stderr).
@@ -41,7 +41,7 @@ public interface ProcessListener {
      * </p>
      * @param output contains the encoded process output.
      */
-    public void processOutput(String output);
+    void processOutput(String output);
 
     /**
      * This method is called whenever the process sends data to its output streams (stdout or stderr).
@@ -53,5 +53,5 @@ public interface ProcessListener {
      * @param offset offset in buffer at which the process' output starts.
      * @param length length of the process' output in buffer.
      */
-    public void processOutput(byte[] buffer, int offset, int length);
+    void processOutput(byte[] buffer, int offset, int length);
 }

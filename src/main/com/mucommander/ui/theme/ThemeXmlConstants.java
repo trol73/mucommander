@@ -26,25 +26,25 @@ interface ThemeXmlConstants {
     // - Main elements -------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** XML theme file root element. */
-    public static final String ELEMENT_ROOT                 = "theme";
+    String ELEMENT_ROOT                 = "theme";
     /** File table description element. */
-    public static final String ELEMENT_TABLE                = "file_table";
+    String ELEMENT_TABLE                = "file_table";
     /** Shell description element. */
-    public static final String ELEMENT_SHELL                = "shell";
+    String ELEMENT_SHELL                = "shell";
     /** File editor description element. */
-    public static final String ELEMENT_EDITOR               = "editor";
+    String ELEMENT_EDITOR               = "editor";
     /** Location bar description element. */
-    public static final String ELEMENT_LOCATION_BAR         = "location_bar";
+    String ELEMENT_LOCATION_BAR         = "location_bar";
     /** Shell history description element. */
-    public static final String ELEMENT_SHELL_HISTORY        = "shell_history";
+    String ELEMENT_SHELL_HISTORY        = "shell_history";
     /** Volume label description element. */
-    public static final String ELEMENT_STATUS_BAR           = "status_bar";
+    String ELEMENT_STATUS_BAR           = "status_bar";
     /** Quick list label description element. */
-    public static final String ELEMENT_QUICK_LIST           = "quick_list";
+    String ELEMENT_QUICK_LIST           = "quick_list";
 
-    public static final String ELEMENT_FILE_GROUPS          = "file_groups";
-    public static final String ELEMENT_GROUP                = "group";
-    public static final String ELEMENT_TERMINAL             = "terminal";
+    String ELEMENT_FILE_GROUPS          = "file_groups";
+    String ELEMENT_GROUP                = "group";
+    String ELEMENT_TERMINAL             = "terminal";
 
 
 
@@ -52,70 +52,70 @@ interface ThemeXmlConstants {
     // - Status element ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Item normal state description element. */
-    public static final String ELEMENT_NORMAL               = "normal";
+    String ELEMENT_NORMAL               = "normal";
     /** Item selected state description element. */
-    public static final String ELEMENT_SELECTED             = "selected";
+    String ELEMENT_SELECTED             = "selected";
     /** Item alternate state description element. */
-    public static final String ELEMENT_ALTERNATE            = "alternate";
+    String ELEMENT_ALTERNATE            = "alternate";
     /** Item unmatched state description element. */
-    public static final String ELEMENT_UNMATCHED            = "unmatched";
+    String ELEMENT_UNMATCHED            = "unmatched";
     /** Item current line state description element. */
-    public static final String ELEMENT_CURRENT               = "current";
+    String ELEMENT_CURRENT               = "current";
     
     
     
     // - Quick list element ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Quick list header state description element. */
-    public static final String ELEMENT_HEADER               = "header";
+    String ELEMENT_HEADER               = "header";
     /** Quick list item state description element. */
-    public static final String ELEMENT_ITEM		            = "item";
+    String ELEMENT_ITEM		            = "item";
 
 
 
     // - Font element --------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Font description element. */
-    public static final String ELEMENT_FONT                 = "font";
+    String ELEMENT_FONT                 = "font";
     /** Font family attribute. */
-    public static final String ATTRIBUTE_FAMILY             = "family";
+    String ATTRIBUTE_FAMILY             = "family";
     /** Font size attribute. */
-    public static final String ATTRIBUTE_SIZE               = "size";
+    String ATTRIBUTE_SIZE               = "size";
     /** Font bold attribute. */
-    public static final String ATTRIBUTE_BOLD               = "bold";
+    String ATTRIBUTE_BOLD               = "bold";
     /** Font italic attribute. */
-    public static final String ATTRIBUTE_ITALIC             = "italic";
+    String ATTRIBUTE_ITALIC             = "italic";
     /** <i>true</i> value. */
-    public static final String VALUE_TRUE                   = "true";
+    String VALUE_TRUE                   = "true";
     /** <i>false</i> value. */
-    public static final String VALUE_FALSE                  = "false";
+    String VALUE_FALSE                  = "false";
 
 
 
 
     // - Color elements ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
-    public static final String ELEMENT_INACTIVE_BACKGROUND           = "inactive_background";
-    public static final String ELEMENT_INACTIVE_SECONDARY_BACKGROUND = "inactive_secondary_background";
-    public static final String ELEMENT_INACTIVE_FOREGROUND           = "inactive_foreground";
-    public static final String ELEMENT_BACKGROUND                    = "background";
-    public static final String ELEMENT_SECONDARY_BACKGROUND          = "secondary_background";
-    public static final String ELEMENT_FOREGROUND                    = "foreground";
-    public static final String ELEMENT_HIDDEN                        = "hidden";
-    public static final String ELEMENT_FOLDER                        = "folder";
-    public static final String ELEMENT_ARCHIVE                       = "archive";
-    public static final String ELEMENT_SYMLINK                       = "symlink";
-    public static final String ELEMENT_MARKED                        = "marked";
-    public static final String ELEMENT_EXECUTABLE                    = "executable";
-    public static final String ELEMENT_FILE                          = "file";
-    public static final String ELEMENT_PROGRESS                      = "progress";
-    public static final String ELEMENT_BORDER                        = "border";
-    public static final String ELEMENT_INACTIVE_BORDER               = "inactive_border";
-    public static final String ELEMENT_OUTLINE                       = "outline";
-    public static final String ELEMENT_INACTIVE_OUTLINE              = "inactive_outline";
-    public static final String ELEMENT_OK                            = "ok";
-    public static final String ELEMENT_WARNING                       = "warning";
-    public static final String ELEMENT_CRITICAL                      = "critical";
-    public static final String ATTRIBUTE_COLOR                       = "color";
-    public static final String ATTRIBUTE_ALPHA                       = "alpha";
+    String ELEMENT_INACTIVE_BACKGROUND           = "inactive_background";
+    String ELEMENT_INACTIVE_SECONDARY_BACKGROUND = "inactive_secondary_background";
+    String ELEMENT_INACTIVE_FOREGROUND           = "inactive_foreground";
+    String ELEMENT_BACKGROUND                    = "background";
+    String ELEMENT_SECONDARY_BACKGROUND          = "secondary_background";
+    String ELEMENT_FOREGROUND                    = "foreground";
+    String ELEMENT_HIDDEN                        = "hidden";
+    String ELEMENT_FOLDER                        = "folder";
+    String ELEMENT_ARCHIVE                       = "archive";
+    String ELEMENT_SYMLINK                       = "symlink";
+    String ELEMENT_MARKED                        = "marked";
+    String ELEMENT_EXECUTABLE                    = "executable";
+    String ELEMENT_FILE                          = "file";
+    String ELEMENT_PROGRESS                      = "progress";
+    String ELEMENT_BORDER                        = "border";
+    String ELEMENT_INACTIVE_BORDER               = "inactive_border";
+    String ELEMENT_OUTLINE                       = "outline";
+    String ELEMENT_INACTIVE_OUTLINE              = "inactive_outline";
+    String ELEMENT_OK                            = "ok";
+    String ELEMENT_WARNING                       = "warning";
+    String ELEMENT_CRITICAL                      = "critical";
+    String ATTRIBUTE_COLOR                       = "color";
+    String ATTRIBUTE_ALPHA                       = "alpha";
 }

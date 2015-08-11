@@ -31,11 +31,11 @@ package com.mucommander.commons.file;
 public interface PermissionTypes {
 
     /** Designates the 'execute' permission. */
-    public int EXECUTE_PERMISSION = 1;
+    int EXECUTE_PERMISSION = 1;
 
     /** Designates the 'write' permission. */
-    public int WRITE_PERMISSION = 2;
+    int WRITE_PERMISSION = 2;
 
     /** Designates the 'read' permission. */
-    public int READ_PERMISSION = 4;
+    int READ_PERMISSION = 4;
 }

@@ -82,7 +82,7 @@ public class ShellHistoryManager {
      */
     static {
         history   = new String[MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_HISTORY_SIZE, MuPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
-        listeners = new WeakHashMap<ShellHistoryListener, Object>();
+        listeners = new WeakHashMap<>();
     }
 
 
@@ -234,8 +234,9 @@ public class ShellHistoryManager {
      * @see                #setHistoryFile(AbstractFile)
      */
     public static AbstractFile getHistoryFile() throws IOException {
-        if(historyFile == null)
+        if (historyFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_HISTORY_FILE_NAME);
+        }
         return historyFile;
     }
 

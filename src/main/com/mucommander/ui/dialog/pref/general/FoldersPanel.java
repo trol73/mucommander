@@ -333,7 +333,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     ////////////////////////////////
 
     /**
-     * Catches key events to automagically select custom folder radio button if it was not already selected.
+     * Catches key events to automatically select custom folder radio button if it was not already selected.
      */
     public void keyTyped(KeyEvent e) {
         Object source = e.getSource();

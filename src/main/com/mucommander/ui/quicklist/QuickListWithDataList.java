@@ -93,11 +93,7 @@ public abstract class QuickListWithDataList<T> extends QuickList implements KeyL
 	protected void getFocus() {
 		// to overcome #552 (right recentQL not focused) both must be used:
 		// invokeLater and requestFocus (requestFocusInWindow is not sufficient)
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				dataList.requestFocus();
-			}
-		});
+		SwingUtilities.invokeLater(dataList::requestFocus);
 	}
 	
 	/**

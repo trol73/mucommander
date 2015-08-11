@@ -57,15 +57,11 @@ class CommandBarWriter extends CommandBarIO {
 		String[] commandBarAlterativeActionIds = CommandBarAttributes.getAlternateActions();
 		KeyStroke commandBarModifier = CommandBarAttributes.getModifier();
 
-		BackupOutputStream bos = new BackupOutputStream(getDescriptionFile());
-
-		try {
+		try (BackupOutputStream bos = new BackupOutputStream(getDescriptionFile())) {
 			new Writer(bos).write(commandBarActionIds, commandBarAlterativeActionIds, commandBarModifier);
 			wasCommandBarModified = false;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LOGGER.debug("Caught exception", e);
-		} finally {
-			bos.close();
 		}
 	}
 	

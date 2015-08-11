@@ -169,12 +169,10 @@ public class ShortcutsPanel extends PreferencesPanel {
             combo.addItem(category);
         }
 	    
-	    combo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-                filter.setActionCategory((ActionCategory)combo.getSelectedItem());
-				shortcutsTable.updateModel(filter);
-				tooltipBar.showDefaultMessage();
-			}
+	    combo.addActionListener(e -> {
+			filter.setActionCategory((ActionCategory)combo.getSelectedItem());
+            shortcutsTable.updateModel(filter);
+            tooltipBar.showDefaultMessage();
         });
 
 	    combo.setSelectedIndex(0);
@@ -241,11 +239,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 
 
     private void addCategoryFilter(final JTextField searchText, final JComboBox<ActionCategory> combo, final JTextField shortcutText) {
-        combo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateFilter(searchText, combo, shortcutText);
-            }
-        });
+        combo.addActionListener(e -> updateFilter(searchText, combo, shortcutText));
         resetShortcutFilterWhenFocusGained(combo, searchText, combo, shortcutText);
     }
 

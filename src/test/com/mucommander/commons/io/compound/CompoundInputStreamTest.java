@@ -49,9 +49,10 @@ public class CompoundInputStreamTest {
     private final static String TEST_FLATTENED_STRINGS;
     
     static {
-        StringBuffer sb = new StringBuffer();
-        for (String testString : TEST_STRINGS)
+        StringBuilder sb = new StringBuilder();
+        for (String testString : TEST_STRINGS) {
             sb.append(testString);
+        }
 
         TEST_FLATTENED_STRINGS = sb.toString();
     }
@@ -63,7 +64,7 @@ public class CompoundInputStreamTest {
      * @return a test InputStream iterator.
      */
     private static Iterator<ByteArrayInputStream> getTestInputStreamIterator() {
-        Vector<ByteArrayInputStream> v = new Vector<ByteArrayInputStream>();
+        Vector<ByteArrayInputStream> v = new Vector<>();
 
         for (String testString : TEST_STRINGS) 
             v.add(new ByteArrayInputStream(testString.getBytes()));

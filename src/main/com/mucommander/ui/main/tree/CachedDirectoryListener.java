@@ -29,8 +29,8 @@ import java.util.EventListener;
  */
 public interface CachedDirectoryListener extends EventListener {
    
-    public void cachingStarted(AbstractFile parent);
+    void cachingStarted(AbstractFile parent);
     
-    public void cachingEnded(AbstractFile parent);
+    void cachingEnded(AbstractFile parent);
 
 }

@@ -29,8 +29,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.fife.ui.StatusBar;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,27 +60,19 @@ public class HtmlViewer extends FileViewer {
         try {
             final JFXPanel jfxPanel = new JFXPanel();
             setComponentToPresent(jfxPanel);
-            getViewport().addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    if (webView != null) {
-                        int w = getViewport().getWidth();
-                        int h = getViewport().getHeight();
-                        webView.setMinWidth(w);
-                        webView.setMaxWidth(w);
-                        webView.setMinHeight(h);
-                        webView.setMaxHeight(h);
-                    }
+            getViewport().addChangeListener(e -> {
+                if (webView != null) {
+                    int w = getViewport().getWidth();
+                    int h = getViewport().getHeight();
+                    webView.setMinWidth(w);
+                    webView.setMaxWidth(w);
+                    webView.setMinHeight(h);
+                    webView.setMaxHeight(h);
                 }
             });
 
             Platform.setImplicitExit(false);
-            Platform.runLater(new Runnable() { // this will run initFX as JavaFX-Thread
-                @Override
-                public void run() {
-                    initFX(jfxPanel);
-                }
-            });
+            Platform.runLater(() -> initFX(jfxPanel));
         } catch (Throwable e) {
             e.printStackTrace();
         }

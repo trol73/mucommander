@@ -120,12 +120,9 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         if (postponedCaretPosition >= 0) {
             final int pos = postponedCaretPosition;
             postponedCaretPosition = -1;
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    setCaretPosition(pos);
-                    forceCurrentLineHighlightRepaint();
-                }
+            SwingUtilities.invokeLater(() -> {
+                setCaretPosition(pos);
+                forceCurrentLineHighlightRepaint();
             });
         }
     }

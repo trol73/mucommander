@@ -128,7 +128,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
 
         // Use BufferPool to avoid excessive memory allocation and garbage collection.
         deflaterBuf = BufferPool.getByteArray(DEFAULT_DEFLATER_BUFFER_SIZE);
-        entries = new Vector<ZipEntry>();
+        entries = new Vector<>();
     }
 
 

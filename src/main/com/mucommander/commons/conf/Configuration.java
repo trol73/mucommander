@@ -97,7 +97,7 @@ public class Configuration {
     /** Holds the content of the configuration file. */
     private final ConfigurationSection                         root = new ConfigurationSection();
     /** Contains all registered configuration LISTENERS, stored as weak references. */
-    private final WeakHashMap<ConfigurationListener, ?> LISTENERS = new WeakHashMap<ConfigurationListener, Object>();
+    private final WeakHashMap<ConfigurationListener, ?> LISTENERS = new WeakHashMap<>();
 
 
 

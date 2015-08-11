@@ -262,7 +262,7 @@ public class CommandManager implements CommandBuilder {
         LOGGER.debug("Registering '" + command.getCommand() + "' as '" + command.getAlias() + "'");
         final String alias = command.getAlias();
         if (!commands.containsKey(alias)) {
-            commands.put(alias, new ArrayList<Command>());
+            commands.put(alias, new ArrayList<>());
         }
         commands.get(alias).add(command);
         if (mark) {

@@ -619,7 +619,7 @@ public class TrolCommander {
         private final int cores;
 
         public LauncherExecutor(int cores) {
-            super(cores, cores, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+            super(cores, cores, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
             this.cores = cores;
         }
 
@@ -793,16 +793,14 @@ public class TrolCommander {
 
         // Check for newer version unless it was disabled
         if (MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    try {
-                        VersionChecker versionChecker = VersionChecker.getInstance();
-                        if (versionChecker.isNewVersionAvailable()) {
-                            new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    VersionChecker versionChecker = VersionChecker.getInstance();
+                    if (versionChecker.isNewVersionAvailable()) {
+                        new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
         }

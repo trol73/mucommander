@@ -142,19 +142,17 @@ class SFTPConnectionHandler extends ConnectionHandler {
                 kbi.setUsername(credentials.getLogin());
 
                 // Fake keyboard password input
-                kbi.setKBIRequestHandler(new KBIRequestHandler() {
-                    public void showPrompts(String name, String instruction, KBIPrompt[] prompts) {
-                        // Workaround for what seems to be a bug in J2SSH: this method is called twice, first time
-                        // with a valid KBIPrompt array, second time with null
-                        if(prompts==null) {
-                            LOGGER.trace("prompts is null!");
-                            return;
-                        }
+                kbi.setKBIRequestHandler((name, instruction, prompts) -> {
+                    // Workaround for what seems to be a bug in J2SSH: this method is called twice, first time
+                    // with a valid KBIPrompt array, second time with null
+                    if (prompts==null) {
+                        LOGGER.trace("prompts is null!");
+                        return;
+                    }
 
-                        for(int i=0; i<prompts.length; i++) {
-                            LOGGER.trace("prompts[{}]={}", i, prompts[i].getPrompt());
-                            prompts[i].setResponse(credentials.getPassword());
-                        }
+                    for (int i=0; i<prompts.length; i++) {
+                        LOGGER.trace("prompts[{}]={}", i, prompts[i].getPrompt());
+                        prompts[i].setResponse(credentials.getPassword());
                     }
                 });
 

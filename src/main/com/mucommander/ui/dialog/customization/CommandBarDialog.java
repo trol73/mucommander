@@ -73,15 +73,13 @@ public class CommandBarDialog extends CustomizeDialog {
 	private static final Color JBUTTON_BACKGROUND_COLOR = UIManager.getColor("button.background");
 	
 	/** Comparator for buttons according to their text */
-	private static final Comparator<JButton> BUTTONS_COMPARATOR = new Comparator<JButton>() {
-		public int compare(JButton b1, JButton b2) {
-			if (b1.getText() == null)
-				return 1;
-			if (b2.getText() == null)
-				return -1;
-			return b1.getText().compareTo(b2.getText());
-		}
-	};
+	private static final Comparator<JButton> BUTTONS_COMPARATOR = (b1, b2) -> {
+        if (b1.getText() == null)
+            return 1;
+        if (b2.getText() == null)
+            return -1;
+        return b1.getText().compareTo(b2.getText());
+    };
 	
 	/**
 	 * Constructor

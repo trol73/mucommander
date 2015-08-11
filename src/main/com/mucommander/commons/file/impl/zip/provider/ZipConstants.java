@@ -31,33 +31,33 @@ public interface ZipConstants {
     /**
      * DEFLATED compression method
      */
-    public static final int DEFLATED = java.util.zip.ZipEntry.DEFLATED;
+    int DEFLATED = java.util.zip.ZipEntry.DEFLATED;
 
     /**
      * STORED compression method (raw storage, no compression)
      */
-    public static final int STORED = java.util.zip.ZipEntry.STORED;
+    int STORED = java.util.zip.ZipEntry.STORED;
 
     /**
      * Default compression level for DEFLATED compression
      */
-    public static final int DEFAULT_DEFLATER_COMPRESSION = Deflater.DEFAULT_COMPRESSION;
+    int DEFAULT_DEFLATER_COMPRESSION = Deflater.DEFAULT_COMPRESSION;
 
     /**
      * Default size of the buffer used by Deflater.
      */
     // /!\ For some unknown reason, using a larger buffer *hurts* performance.
-    public static final int DEFAULT_DEFLATER_BUFFER_SIZE = 512;
+    int DEFAULT_DEFLATER_BUFFER_SIZE = 512;
 
     /**
      * Maximum size of a Zip32 entry or a Zip32 file as a whole, i.e. (2^32)-1.
      * */
-    public static final long MAX_ZIP32_SIZE = 4294967295l;
+    long MAX_ZIP32_SIZE = 4294967295l;
 
     /**
      * Size of write buffers
      */
-    final static int WRITE_BUFFER_SIZE = 65536;
+    int WRITE_BUFFER_SIZE = 65536;
 
     /**
      * UTF-8 encoding String

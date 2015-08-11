@@ -46,7 +46,7 @@ import com.mucommander.ui.notifier.NotificationType;
  * The class extending FileJob is required to give some information about the status of the job that
  * will be used to display visual indications of the job's progress.
  * <p>
- * The actual processing is performed in a separate thread. A FileJob needs to be started explicitely using
+ * The actual processing is performed in a separate thread. A FileJob needs to be started explicitly using
  * {@link #start()}. The lifecycle of a FileJob is as follows:<br>
  * <br>
  * <pre>
@@ -352,7 +352,7 @@ public abstract class FileJob implements Runnable {
     }
     
     /**
-     * Sets the timestamp in miliseconds when this job is paused.
+     * Sets the timestamp in milliseconds when this job is paused.
      */
     private void setPauseStartDate() {
         this.pauseStartDate = System.currentTimeMillis();
@@ -379,9 +379,9 @@ public abstract class FileJob implements Runnable {
 
 
     /**
-     * Returns the number of milliseconds this job effectively spent processing files, exclusing any pause time.
+     * Returns the number of milliseconds this job effectively spent processing files, excluding any pause time.
      *
-     * @return the number of milliseconds this job effectively spent processing files, exclusing any pause time
+     * @return the number of milliseconds this job effectively spent processing files, excluding any pause time
      */
     public long getEffectiveJobTime() {
         // If job hasn't start yet, return 0
@@ -540,7 +540,7 @@ public abstract class FileJob implements Runnable {
      * (without any call to {@link #interrupt()}).
      *
      * <p>The call happens after the last call to {@link #processFile(AbstractFile,Object)} is made.
-     * This method implementation does nothing but it can be overriden by subclasses to properly complete the job.</p>
+     * This method implementation does nothing but it can be overridden by subclasses to properly complete the job.</p>
 	 
      * <p>Note that this method will NOT be called if a call to {@link #interrupt()} was made before all files were processed.</p>
      */
@@ -559,7 +559,7 @@ public abstract class FileJob implements Runnable {
     /**
      * This method is called when this job has been paused, either by the user, or by the job when asking for user input.
      * 
-     * <p>This method implementation does nothing but it can be overriden by subclasses to do whatever is needed
+     * <p>This method implementation does nothing but it can be overridden by subclasses to do whatever is needed
      * when the job has been paused.
      */
     protected void jobPaused() {
@@ -570,7 +570,7 @@ public abstract class FileJob implements Runnable {
     /**
      * This method is called when this job has been resumed after being paused.
      *
-     * <p>This method implementation does nothing but it can be overriden by subclasses to do whatever is needed
+     * <p>This method implementation does nothing but it can be overridden by subclasses to do whatever is needed
      * when the job has returned from pause.
      */
     protected void jobResumed() {
@@ -581,7 +581,7 @@ public abstract class FileJob implements Runnable {
     /**
      * This method is called when this job has been stopped. The call happens after all calls to {@link #processFile(AbstractFile,Object)} and
      * {@link #jobCompleted()}.
-     * This method implementation does nothing but it can be overriden by subclasses to properly terminate the job.
+     * This method implementation does nothing but it can be overridden by subclasses to properly terminate the job.
      * This is where you want to close any opened connections.
      *
      * <p>Note that unlike {@link #jobCompleted()} this method is always called, whether the job has been completed (all
@@ -884,7 +884,7 @@ public abstract class FileJob implements Runnable {
      * @param file the file or folder to process
      * @param recurseParams array of parameters which can be used when calling this method recursively, contains <code>null</code> when called by {@link #run()}
      *
-     * @return <code>true</code> if the operation was sucessful
+     * @return <code>true</code> if the operation was successful
      */
     protected abstract boolean processFile(AbstractFile file, Object recurseParams);
 

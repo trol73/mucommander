@@ -26,9 +26,7 @@ import com.mucommander.text.SizeFormat;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.SplitFileAction;
-import com.mucommander.ui.combobox.ComboBoxListener;
 import com.mucommander.ui.combobox.EditableComboBox;
-import com.mucommander.ui.combobox.SaneComboBox;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.XBoxPanel;
@@ -36,8 +34,6 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -138,31 +134,25 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 				updatePartsNumber();
 			}
 		});
-		cbSize.addComboBoxListener(new ComboBoxListener() {			
-			public void comboBoxSelectionChanged(SaneComboBox source) {
-				updatePartsNumber();				
-			}
-		});
+		cbSize.addComboBoxListener(source -> updatePartsNumber());
 		pnlSize.add(cbSize);
 		pnlSize.addSpace(10);
 		pnlSize.add(new JLabel(Translator.get("split_file_dialog.parts") + ":"));
 		pnlSize.addSpace(5);
 		spnParts = new JSpinner(new SpinnerNumberModel(1, 1,
                 file.getSize(), 1));
-		spnParts.addChangeListener(new ChangeListener() {			
-			public void stateChanged(ChangeEvent e) {
-				if (!edtChange) {
-					long parts = ((Number)spnParts.getValue()).longValue();
-					long newsize = file.getSize() / parts;
-					if (file.getSize() % parts != 0) {
-						newsize++;
-					}
-					if (getBytes() != newsize) {
-						edtSize.setText(Long.toString(newsize));
-					}
-				}
-			}
-		});   
+		spnParts.addChangeListener(e -> {
+            if (!edtChange) {
+                long parts = ((Number)spnParts.getValue()).longValue();
+                long newsize = file.getSize() / parts;
+                if (file.getSize() % parts != 0) {
+                    newsize++;
+                }
+                if (getBytes() != newsize) {
+                    edtSize.setText(Long.toString(newsize));
+                }
+            }
+        });
 		pnlSize.add(spnParts);
         pnlMain.addRow(Translator.get("split_file_dialog.part_size") + ":", pnlSize, 0);
         

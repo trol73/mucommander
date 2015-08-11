@@ -81,21 +81,18 @@ public class BonjourDirectory implements ServiceListener {
      * @param enabled whether Bonjour services discovery should be enabled.
      */
     public static void setActive(boolean enabled) {
-        if(enabled && jmDNS==null) {
+        if (enabled && jmDNS==null) {
             // Start JmDNS
             try {
                 jmDNS = JmDNS.create();
 
                 // Listens to service events for known service types
-                int nbServices = KNOWN_SERVICE_TYPES.length;
-                for(int i=0; i<nbServices; i++)
-                    jmDNS.addServiceListener(KNOWN_SERVICE_TYPES[i][0], instance);
-            }
-            catch(IOException e) {
+                for (String[] KNOWN_SERVICE_TYPE : KNOWN_SERVICE_TYPES)
+                    jmDNS.addServiceListener(KNOWN_SERVICE_TYPE[0], instance);
+            } catch(IOException e) {
             	LOGGER.warn("Could not instantiate jmDNS, Bonjour not enabled", e);
             }
-        }
-        else if(!enabled && jmDNS!=null) {
+        } else if(!enabled && jmDNS != null) {
             // Shutdown JmDNS
             jmDNS.close();
             services.clear();
@@ -108,7 +105,7 @@ public class BonjourDirectory implements ServiceListener {
      * @return <code>true</code> if Bonjour services discovery is currently running, <code>false</code> otherwise.
      */
     public static boolean isActive() {
-        return jmDNS!=null;
+        return jmDNS != null;
     }
 
 
@@ -134,15 +131,13 @@ public class BonjourDirectory implements ServiceListener {
     private static BonjourService createBonjourService(ServiceInfo serviceInfo) {
         try {
             String type = serviceInfo.getType();
-            int nbServices = KNOWN_SERVICE_TYPES.length;
             // Looks for the file protocol corresponding to the service type
-            for(int i=0; i<nbServices; i++) {
-                if(KNOWN_SERVICE_TYPES[i][0].equals(type)) {
-                    return new BonjourService(serviceInfo.getName(), FileURL.getFileURL(serviceInfo.getURL(KNOWN_SERVICE_TYPES[i][1])), serviceInfo.getQualifiedName());
+            for (String[] KNOWN_SERVICE_TYPE : KNOWN_SERVICE_TYPES) {
+                if (KNOWN_SERVICE_TYPE[0].equals(type)) {
+                    return new BonjourService(serviceInfo.getName(), FileURL.getFileURL(serviceInfo.getURL(KNOWN_SERVICE_TYPE[1])), serviceInfo.getQualifiedName());
                 }
             }
-        }
-        catch(MalformedURLException e) {
+        } catch(MalformedURLException e) {
             // Null will be returned
         }
 

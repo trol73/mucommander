@@ -303,7 +303,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<JMenuItem> itemsV = new ArrayList<>();
 
         for(int i=0; i<nbVolumes; i++) {
-            action = new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), volumes[i]);
+            action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), volumes[i]);
             volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -342,7 +342,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
             for (Bookmark b : bookmarks) {
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), b));
+                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new Hashtable<>(), b));
                 setMnemonic(item, mnemonicHelper);
             }
         } else {
@@ -354,7 +354,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Add 'Network shares' shortcut
         if(FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            action = new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
+            action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
@@ -363,7 +363,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         setMnemonic(popupMenu.add(new BonjourMenu() {
             @Override
             public MuAction getMenuItemAction(BonjourService bs) {
-                return new CustomOpenLocationAction(mainFrame, new Hashtable<String, Object>(), bs);
+                return new CustomOpenLocationAction(mainFrame, new Hashtable<>(), bs);
             }
         }) , mnemonicHelper);
         popupMenu.add(new JSeparator());
@@ -417,25 +417,21 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     iconCache.put(volumes[i], icon);
                 }
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        if (useExtendedDriveNames) {
-                            item.setText(extendedNameFinal);
-                        }
-                        if (icon!=null) {
-                            item.setIcon(icon);
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    if (useExtendedDriveNames) {
+                        item.setText(extendedNameFinal);
+                    }
+                    if (icon!=null) {
+                        item.setIcon(icon);
                     }
                 });
                 
             }
 
             // Re-calculate the popup menu's dimensions
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    popupMenu.invalidate();
-                    popupMenu.pack();
-                }
+            SwingUtilities.invokeLater(() -> {
+                popupMenu.invalidate();
+                popupMenu.pack();
             });
         }
         

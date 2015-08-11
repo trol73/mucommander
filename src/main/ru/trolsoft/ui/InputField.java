@@ -127,16 +127,13 @@ public class InputField extends JTextField implements DocumentListener {
         }
         filtering = true;
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                String input = getText().toUpperCase();
-                String filtered = filterInput(input, maxLength);
-                setText(filtered);
-                updateAssignedFields();
-                onChange();
-                filtering = false;
-            }
+        EventQueue.invokeLater(() -> {
+            String input = getText().toUpperCase();
+            String filtered = filterInput(input, maxLength);
+            setText(filtered);
+            updateAssignedFields();
+            onChange();
+            filtering = false;
         });
     }
 

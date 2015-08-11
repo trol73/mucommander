@@ -33,9 +33,7 @@ public class CommandlineInterpreter {
 	private static void calculateExpression(String string) {
 		try {
 			System.out.println(new ExpressionBuilder(string).build().calculate());
-		} catch (UnparsableExpressionException e) {
-			e.printStackTrace();
-		} catch (UnknownFunctionException e) {
+		} catch (UnparsableExpressionException | UnknownFunctionException e) {
 			e.printStackTrace();
 		}
 	}

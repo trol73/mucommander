@@ -23,8 +23,6 @@ import com.mucommander.ui.dialog.DialogOwner;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.WeakHashMap;
 
 /**
@@ -39,7 +37,7 @@ import java.util.WeakHashMap;
 public class EncodingMenu extends JMenu {
 
     /** Contains all registered encoding listeners, stored as weak references */
-    protected final WeakHashMap<EncodingListener, ?> listeners = new WeakHashMap<EncodingListener, Object>();
+    protected final WeakHashMap<EncodingListener, ?> listeners = new WeakHashMap<>();
 
     /** the dialog/frame that owns this component */
     protected DialogOwner dialogOwner;
@@ -97,14 +95,12 @@ public class EncodingMenu extends JMenu {
                 item.setSelected(true);
 
             // Listen to checkbox actions
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String oldEncoding = selectedEncoding;
-                    selectedEncoding = ((JCheckBoxMenuItem)e.getSource()).getText();
-                    if(!oldEncoding.equals(selectedEncoding)) {
-                        // Notify listeners of the new encoding
-                        fireEncodingListener(oldEncoding, EncodingMenu.this.selectedEncoding);
-                    }
+            item.addActionListener(e -> {
+                String oldEncoding = selectedEncoding;
+                selectedEncoding = ((JCheckBoxMenuItem)e.getSource()).getText();
+                if (!oldEncoding.equals(selectedEncoding)) {
+                    // Notify listeners of the new encoding
+                    fireEncodingListener(oldEncoding, EncodingMenu.this.selectedEncoding);
                 }
             });
 
@@ -116,17 +112,16 @@ public class EncodingMenu extends JMenu {
 
         // 'Customize' menu item
         JMenuItem customizeItem = new JMenuItem(Translator.get("customize")+"...");
-        customizeItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Window owner = dialogOwner.getOwner();
-                if(owner instanceof Frame)
-                    new PreferredEncodingsDialog((Frame)owner).showDialog();
-                else
-                    new PreferredEncodingsDialog((Dialog)owner).showDialog();
-
-                removeAll();
-                populateMenu();
+        customizeItem.addActionListener(e -> {
+            Window owner = dialogOwner.getOwner();
+            if (owner instanceof Frame) {
+                new PreferredEncodingsDialog((Frame) owner).showDialog();
+            } else {
+                new PreferredEncodingsDialog((Dialog) owner).showDialog();
             }
+
+            removeAll();
+            populateMenu();
         });
         add(customizeItem);
     }

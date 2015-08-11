@@ -244,16 +244,23 @@ public class VersionChecker extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // Checks whether we know the tag and updates the current state.
-        if(qName.equals(VERSION_ELEMENT))
-            state = STATE_VERSION;
-        else if(qName.equals(DOWNLOAD_URL_ELEMENT))
-            state = STATE_DOWNLOAD_URL;
-        else if(qName.equals(JAR_URL_ELEMENT))
-            state = STATE_JAR_URL;
-        else if(qName.equals(DATE_ELEMENT))
-            state = STATE_DATE;
-        else
-            state = STATE_UNKNOWN;
+        switch (qName) {
+            case VERSION_ELEMENT:
+                state = STATE_VERSION;
+                break;
+            case DOWNLOAD_URL_ELEMENT:
+                state = STATE_DOWNLOAD_URL;
+                break;
+            case JAR_URL_ELEMENT:
+                state = STATE_JAR_URL;
+                break;
+            case DATE_ELEMENT:
+                state = STATE_DATE;
+                break;
+            default:
+                state = STATE_UNKNOWN;
+                break;
+        }
     }
 
     /**

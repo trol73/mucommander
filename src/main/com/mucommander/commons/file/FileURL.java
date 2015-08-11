@@ -724,7 +724,7 @@ public class FileURL implements Cloneable {
      * @return an <code>Enumeration</code> of all property names this FileURL contains
      */
     public Set<String> getPropertyNames() {
-        return properties == null ? new HashSet<String>() : properties.keySet();
+        return properties == null ? new HashSet<>() : properties.keySet();
     }
 
     /**

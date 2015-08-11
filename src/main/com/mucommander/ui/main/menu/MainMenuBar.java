@@ -57,7 +57,6 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
-import com.mucommander.ui.main.table.views.TableViewMode;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
@@ -477,7 +476,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
             AbstractFile volumes[] = LocalFile.getVolumes();
             for (AbstractFile volume : volumes) {
-                goMenu.add(new OpenLocationAction(mainFrame, new Hashtable<String, Object>(), volume));
+                goMenu.add(new OpenLocationAction(mainFrame, new Hashtable<>(), volume));
             }
         } else if(source == bookmarksMenu) {
             // Remove any previous bookmarks menu items from menu

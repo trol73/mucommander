@@ -51,15 +51,12 @@ public class ToolBarWriter extends ToolBarIO {
 	
 	void write() throws IOException {
 		String[] actionIds = ToolBarAttributes.getActions();
-		
-		BackupOutputStream bos = new BackupOutputStream(getDescriptionFile());
-		try {
+
+		try (BackupOutputStream bos = new BackupOutputStream(getDescriptionFile())) {
 			new Writer(bos).write(actionIds);
 			wasToolBarModified = false;
 		} catch (Exception e) {
 			LOGGER.debug("Caught exception", e);
-		} finally {
-			bos.close();
 		}
 	}
 	

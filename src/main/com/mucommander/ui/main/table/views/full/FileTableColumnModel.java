@@ -48,7 +48,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** All registered listeners. */
-    private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<TableColumnModelListener, Object>();
+    private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<>();
     /** Cache for the table's total width. */
     private int widthCache = CACHE_OUT_OF_DATE;
     /** All available columns. */

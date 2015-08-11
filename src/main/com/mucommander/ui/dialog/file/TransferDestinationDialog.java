@@ -452,19 +452,17 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             // Perform UI tasks in the AWT event thread
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        spinningDial.setAnimated(false);
+                SwingUtilities.invokeAndWait(() -> {
+                    spinningDial.setAnimated(false);
 
-                        if (!interrupted) {
-                            // Document change events are no longer needed
-                            pathField.getDocument().removeDocumentListener(TransferDestinationDialog.this);
+                    if (!interrupted) {
+                        // Document change events are no longer needed
+                        pathField.getDocument().removeDocumentListener(TransferDestinationDialog.this);
 
-                            // Set the path field's text and selection 
-                            pathFieldContent.feedToPathField(pathField);
+                        // Set the path field's text and selection
+                        pathFieldContent.feedToPathField(pathField);
 
-                            setEnabledOkButtons(true);
-                        }
+                        setEnabledOkButtons(true);
                     }
                 });
             } catch (InterruptedException e) {
@@ -516,19 +514,17 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             final boolean isValid = isValidDestination(resolvedDest, destPath);
 
             // Perform UI tasks in the AWT event thread
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (interrupted) {
-                        dispose();
-                    } else if (isValid) {
-                        dispose();
-                        startJob(resolvedDest);
-                    } else {
-                        showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
-                        // Re-enable the OK button and path field so that a new path can be entered
-                        setEnabledOkButtons(true);
-                        pathField.setEnabled(true);
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (interrupted) {
+                    dispose();
+                } else if (isValid) {
+                    dispose();
+                    startJob(resolvedDest);
+                } else {
+                    showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
+                    // Re-enable the OK button and path field so that a new path can be entered
+                    setEnabledOkButtons(true);
+                    pathField.setEnabled(true);
                 }
             });
 

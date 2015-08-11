@@ -27,26 +27,26 @@ public interface AssociationBuilder {
      * Notifies the builder that association building is about to start.
      * @throws CommandException if an error occurs.
      */
-    public void startBuilding() throws CommandException;
+    void startBuilding() throws CommandException;
 
     /**
      * Notifies the builder that association building is finished.
      * @throws CommandException if an error occurs.
      */
-    public void endBuilding() throws CommandException;
+    void endBuilding() throws CommandException;
 
     /**
      * Notifies the builder that a new association declaration is starting.
      * @param  command          command to call when the association is matched.
      * @throws CommandException if an error occurs.
      */
-    public void startAssociation(String command) throws CommandException;
+    void startAssociation(String command) throws CommandException;
 
     /**
      * Notifies the builder that the current association declaration is finished.
      * @throws CommandException if an error ocurs.
      */
-    public void endAssociation() throws CommandException;
+    void endAssociation() throws CommandException;
 
     /**
      * Adds a mask to the current association.
@@ -54,40 +54,40 @@ public interface AssociationBuilder {
      * @param  isCaseSensitive  whether the regular expression is case sensitive.
      * @throws CommandException if an error occurs.
      */
-    public void setMask(String mask, boolean isCaseSensitive) throws CommandException;
+    void setMask(String mask, boolean isCaseSensitive) throws CommandException;
 
     /**
      * Adds a <i>symlink</i> IMAGE_FILTER on the current association.
      * @param  isSymlink        whether symbolic links must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */
-    public void setIsSymlink(boolean isSymlink) throws CommandException;
+    void setIsSymlink(boolean isSymlink) throws CommandException;
 
     /**
      * Adds a <i>hidden</i> IMAGE_FILTER on the current association.
      * @param  isHidden         whether hidden files must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */
-    public void setIsHidden(boolean isHidden) throws CommandException;
+    void setIsHidden(boolean isHidden) throws CommandException;
 
     /**
      * Adds a <i>readable</i> IMAGE_FILTER on the current association.
      * @param  isReadable       whether readable files must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */
-    public void setIsReadable(boolean isReadable) throws CommandException;
+    void setIsReadable(boolean isReadable) throws CommandException;
 
     /**
      * Adds a <i>writable</i> IMAGE_FILTER on the current association.
      * @param  isWritable       whether writable files must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */
-    public void setIsWritable(boolean isWritable) throws CommandException;
+    void setIsWritable(boolean isWritable) throws CommandException;
 
     /**
      * Adds a <i>executable</i> IMAGE_FILTER on the current association.
      * @param  isExecutable     whether executable files must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */
-    public void setIsExecutable(boolean isExecutable) throws CommandException;
+    void setIsExecutable(boolean isExecutable) throws CommandException;
 }

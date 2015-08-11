@@ -42,5 +42,5 @@ public interface FileChangeListener extends FileMonitorConstants {
      * @param file the AbstractFile for which an attribute change has been detected
      * @param changedAttributes a set of attributes that have changed, see FileMonitor constant fields for possible values 
      */
-    public void fileChanged(AbstractFile file, int changedAttributes);
+    void fileChanged(AbstractFile file, int changedAttributes);
 }

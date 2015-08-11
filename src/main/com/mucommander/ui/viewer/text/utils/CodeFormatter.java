@@ -93,9 +93,7 @@ public class CodeFormatter {
             throw new RuntimeException(e);
         } catch (SAXParseException e) {
             throw new CodeFormatException(e.getMessage(), e.getLineNumber(), e.getColumnNumber(), e);
-        } catch (SAXException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }

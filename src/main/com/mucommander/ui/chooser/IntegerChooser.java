@@ -62,7 +62,7 @@ public class IntegerChooser extends JPanel implements ChangeListener {
         super();
 
         // Initialises the listeners.
-        listeners = new WeakHashMap<ChangeListener, Object>();
+        listeners = new WeakHashMap<>();
 
         // Creates the components.
         slider  = new JSlider(JSlider.HORIZONTAL, min, max, initialValue);

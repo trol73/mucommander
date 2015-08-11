@@ -1073,12 +1073,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public final String calculateChecksum(MessageDigest messageDigest) throws IOException {
-        InputStream in = getInputStream();
-
-        try {
+        try (InputStream in = getInputStream()) {
             return calculateChecksum(in, messageDigest);
-        } finally {
-            in.close();
         }
     }
 

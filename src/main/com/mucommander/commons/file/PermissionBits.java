@@ -44,16 +44,16 @@ package com.mucommander.commons.file;
 public interface PermissionBits {
 
     /** read/write/execute permissions set for user/group/other (777 octal) */
-    public int FULL_PERMISSION_INT = 511;
+    int FULL_PERMISSION_INT = 511;
 
     /** read/write/execute permissions set for user/group/other (777 octal) */
-    public PermissionBits FULL_PERMISSION_BITS = new GroupedPermissionBits(FULL_PERMISSION_INT);
+    PermissionBits FULL_PERMISSION_BITS = new GroupedPermissionBits(FULL_PERMISSION_INT);
 
     /** read/write/execute permissions cleared for user/group/other (0) */
-    public int EMPTY_PERMISSION_INT = 0;
+    int EMPTY_PERMISSION_INT = 0;
 
     /** read/write/execute permissions cleared for user/group/other (0) */
-    public PermissionBits EMPTY_PERMISSION_BITS = new GroupedPermissionBits(EMPTY_PERMISSION_INT);
+    PermissionBits EMPTY_PERMISSION_BITS = new GroupedPermissionBits(EMPTY_PERMISSION_INT);
 
     
     //////////////////////
@@ -67,7 +67,7 @@ public interface PermissionBits {
      *
      * @return the value of all the permission bits (9 in total) in a UNIX-style permission int
      */
-    public abstract int getIntValue();
+    int getIntValue();
 
     /**
      * Returns the value of a specific permission bit: <code>true</code> if the permission is set, <code>false</code>
@@ -77,5 +77,5 @@ public interface PermissionBits {
      * @param type one of the values defined in {@link com.mucommander.commons.file.PermissionTypes}
      * @return <code>true</code> if the permission is set, <code>false</code> if it isn't
      */
-    public abstract boolean getBitValue(int access, int type);
+    boolean getBitValue(int access, int type);
 }

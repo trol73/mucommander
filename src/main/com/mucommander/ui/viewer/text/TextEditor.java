@@ -30,7 +30,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.mucommander.commons.file.impl.CachedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

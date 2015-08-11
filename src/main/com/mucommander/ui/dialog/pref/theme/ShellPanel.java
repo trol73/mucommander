@@ -29,8 +29,6 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.theme.ThemeData;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
@@ -136,16 +134,13 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
                 createConfigurationPanel(ThemeData.TERMINAL_FONT, ThemeData.TERMINAL_FOREGROUND_COLOR, ThemeData.TERMINAL_BACKGROUND_COLOR,
                         ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR, ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR, shellPreview));
 
-        tabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setBackgroundColors();
-                setForegroundColors();
-                boolean shellMode = tabbedPane.getSelectedIndex() < 2;
-                historyPreview.setVisible(shellMode);
-                lblRun.setVisible(shellMode);
-                lblOutput.setVisible(shellMode);
-            }
+        tabbedPane.addChangeListener(e -> {
+            setBackgroundColors();
+            setForegroundColors();
+            boolean shellMode = tabbedPane.getSelectedIndex() < 2;
+            historyPreview.setVisible(shellMode);
+            lblRun.setVisible(shellMode);
+            lblOutput.setVisible(shellMode);
         });
 
         JPanel mainPanel = new JPanel(new BorderLayout());

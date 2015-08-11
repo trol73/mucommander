@@ -752,7 +752,7 @@ class InArchive extends Header {
             if (result != HRESULT.S_OK) return result;
 
             if (folder.UnPackCRCDefined)
-                if (!CRC.VerifyDigest(folder.UnPackCRC, data.data(), (int) unPackSize))
+                if (!CRC.verifyDigest(folder.UnPackCRC, data.data(), (int) unPackSize))
                     throw new IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);
             for (int j = 0; j < folder.PackStreams.size(); j++)
                 dataStartPos += packSizes.get(packIndex++);
@@ -787,13 +787,13 @@ class InArchive extends Header {
   #endif
  */
         
-        crc.UpdateUInt64(nextHeaderOffset);
-        crc.UpdateUInt64(nextHeaderSize);
-        crc.UpdateUInt32(nextHeaderCRC);
+        crc.updateUInt64(nextHeaderOffset);
+        crc.updateUInt64(nextHeaderSize);
+        crc.updateUInt32(nextHeaderCRC);
         
         database.ArchiveInfo.StartPositionAfterHeader = _position;
         
-        if (crc.GetDigest() != crcFromArchive)
+        if (crc.getDigest() != crcFromArchive)
             throw new IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);
         
         if (nextHeaderSize == 0)
@@ -812,7 +812,7 @@ class InArchive extends Header {
         if (realProcessedSize != (int)nextHeaderSize)
             throw new IOException("Unexpected End Of Archive"); // throw CInArchiveException(CInArchiveException::kUnexpectedEndOfArchive);
         
-        if (!CRC.VerifyDigest(nextHeaderCRC, buffer2.data(), (int)nextHeaderSize))
+        if (!CRC.verifyDigest(nextHeaderCRC, buffer2.data(), (int) nextHeaderSize))
             throw new IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);
         
         StreamSwitch streamSwitch = new StreamSwitch();

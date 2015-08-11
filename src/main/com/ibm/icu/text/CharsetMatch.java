@@ -108,7 +108,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
              * be used to open a charset (e.g. IBM424_rtl). The ending '_rtl' or 'ltr'
              * should be stripped off before creating the string.
              */
-            int startSuffix = name.indexOf("_rtl") < 0 ? name.indexOf("_ltr") : name.indexOf("_rtl");
+            int startSuffix = !name.contains("_rtl") ? name.indexOf("_ltr") : name.indexOf("_rtl");
             if (startSuffix > 0) {
                 name = name.substring(0, startSuffix);
             }

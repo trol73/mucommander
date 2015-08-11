@@ -34,5 +34,5 @@ public interface EncodingListener {
      * @param oldEncoding previously selected encoding
      * @param newEncoding newly selected encoding
      */
-    public void encodingChanged(Object source, String oldEncoding, String newEncoding);
+    void encodingChanged(Object source, String oldEncoding, String newEncoding);
 }

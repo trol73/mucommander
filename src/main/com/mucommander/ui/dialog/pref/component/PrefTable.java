@@ -21,7 +21,6 @@ package com.mucommander.ui.dialog.pref.component;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -59,17 +58,14 @@ public abstract class PrefTable extends JTable implements PrefComponent {
 	}
 
 	public void addDialogListener(final PreferencesDialog dialog) {
-		getModel().addTableModelListener(dialogListener = new TableModelListener() {			
-			public void tableChanged(TableModelEvent e) {
-				dialog.componentChanged(PrefTable.this);
-			}
-		});
+		getModel().addTableModelListener(dialogListener = e -> dialog.componentChanged(PrefTable.this));
 	}
 	
 	@Override
     public void setModel(TableModel model) {
-		if (dialogListener != null)
+		if (dialogListener != null) {
 			model.addTableModelListener(dialogListener);
+		}
 		super.setModel(model);
 	}
 }

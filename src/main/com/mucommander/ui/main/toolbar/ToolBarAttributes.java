@@ -58,7 +58,7 @@ public class ToolBarAttributes {
     private static boolean useDefaultActions = true;
     
     /** Contains all registered toolbar-attributes listeners, stored as weak references */
-    private static final Map<ToolBarAttributesListener, ?> listeners = new WeakHashMap<ToolBarAttributesListener, Object>();
+    private static final Map<ToolBarAttributesListener, ?> listeners = new WeakHashMap<>();
     
     /** Default command bar actions: Class instances or null to signify a separator */
     private final static String[] DEFAULT_TOOLBAR_ACTIONS = new String[] {

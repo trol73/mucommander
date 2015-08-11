@@ -3,8 +3,7 @@ package com.mucommander.commons.file.impl.sevenzip.provider.Common;
 public class CRC {
     static public int[] Table = new int[256];
     
-    static
-    {
+    static {
         for (int i = 0; i < 256; i++) {
             int r = i;
             for (int j = 0; j < 8; j++)
@@ -22,21 +21,21 @@ public class CRC {
         _value = -1;
     }
     
-    public void UpdateByte(int b) {
+    public void updateByte(int b) {
         _value = Table[(_value ^ b) & 0xFF] ^ (_value >>> 8);
     }
     
-    public void UpdateUInt32(int v) {
+    public void updateUInt32(int v) {
         for (int i = 0; i < 4; i++)
-            UpdateByte((v >> (8 * i)) & 0xFF );
+            updateByte((v >> (8 * i)) & 0xFF);
     }
     
-    public void UpdateUInt64(long v) {
+    public void updateUInt64(long v) {
         for (int i = 0; i < 8; i++)
-            UpdateByte((int)((v >> (8 * i))) & 0xFF);
+            updateByte((int) ((v >> (8 * i))) & 0xFF);
     }
     
-    public int GetDigest() {
+    public int getDigest() {
         return ~_value;
     }
     
@@ -54,13 +53,13 @@ public class CRC {
             _value = Table[(_value ^ data[offset + i]) & 0xFF] ^ (_value >>> 8);
     }
     
-    public static int CalculateDigest(byte [] data, int size) {
+    public static int calculateDigest(byte[] data, int size) {
         CRC crc = new CRC();
         crc.Update(data, size);
-        return crc.GetDigest();
+        return crc.getDigest();
     }
     
-    static public boolean VerifyDigest(int digest, byte [] data, int size) {
-        return (CalculateDigest(data, size) == digest);
+    static public boolean verifyDigest(int digest, byte[] data, int size) {
+        return (calculateDigest(data, size) == digest);
     }
 }

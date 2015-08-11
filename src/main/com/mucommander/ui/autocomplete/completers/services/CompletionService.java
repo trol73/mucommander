@@ -40,7 +40,7 @@ public interface CompletionService {
 	 * @param path - a path.
 	 * @return a Vector of possible completions.
 	 */
-	public List<String> getPossibleCompletions(String path);
+	List<String> getPossibleCompletions(String path);
 	
 	/**
 	 *  If the given completion match one of my suggested completions, return 
@@ -49,5 +49,5 @@ public interface CompletionService {
 	 * @param selectedCompletion - string that represent a completion.
 	 * @return a path if the given completion was suggested by this service, null otherwise. 
 	 */
-	public String complete(String selectedCompletion);
+	String complete(String selectedCompletion);
 }

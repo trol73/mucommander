@@ -62,18 +62,16 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
     };
 
     /** Comparator of actions according to their labels */
-    private static final Comparator<String> ACTIONS_COMPARATOR = new Comparator<String>() {
-        public int compare(String id1, String id2) {
-            String label1 = ActionProperties.getActionLabel(id1);
-            if (label1 == null)
-                return 1;
+    private static final Comparator<String> ACTIONS_COMPARATOR = (id1, id2) -> {
+        String label1 = ActionProperties.getActionLabel(id1);
+        if (label1 == null)
+            return 1;
 
-            String label2 = ActionProperties.getActionLabel(id2);
-            if (label2 == null)
-                return -1;
+        String label2 = ActionProperties.getActionLabel(id2);
+        if (label2 == null)
+            return -1;
 
-            return label1.compareTo(label2);
-        }
+        return label1.compareTo(label2);
     };
 
     public ShortcutsDialog(MainFrame mainFrame) {
@@ -119,7 +117,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
 
         // Initialize empty LinkedList for each category
         for(ActionCategory category : ActionProperties.getActionCategories())
-            categoryToItsActionsWithShortcutsIdsMap.put(category, new LinkedList<String>());
+            categoryToItsActionsWithShortcutsIdsMap.put(category, new LinkedList<>());
 
         // Go over all action ids
         Iterator<String> actionIds = ActionManager.getActionIds();

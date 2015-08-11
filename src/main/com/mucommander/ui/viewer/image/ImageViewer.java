@@ -21,8 +21,6 @@ package com.mucommander.ui.viewer.image;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +36,6 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
@@ -298,15 +295,13 @@ class ImageViewer extends FileViewer implements ActionListener {
             return;
         }
         mouseMovementIssueFixed = true;
-        Runnable task = new Runnable() {
-            public void run() {
-                try {
-                    int w = getFrame().getWidth();
-                    int h = getFrame().getHeight();
-                    getFrame().setSize(w, h-1);
-                    getFrame().setSize(w, h);
-                } catch (Exception ignore) {
-                }
+        Runnable task = () -> {
+            try {
+                int w = getFrame().getWidth();
+                int h = getFrame().getHeight();
+                getFrame().setSize(w, h-1);
+                getFrame().setSize(w, h);
+            } catch (Exception ignore) {
             }
         };
         Executors.newSingleThreadScheduledExecutor().schedule(task, 1000, TimeUnit.MILLISECONDS);

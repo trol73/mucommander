@@ -27,5 +27,5 @@ public interface CommandBarAttributesListener {
 	/**
      * This method is invoked when command-bar's actions\alternate actions\modifier have been modified.
      */
-    public void commandBarAttributeChanged();
+    void commandBarAttributeChanged();
 }

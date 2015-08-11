@@ -75,7 +75,7 @@ public final class Credentials {
      */
     public String getMaskedPassword() {
         int passwordLength = password.length();
-        StringBuffer maskedPasswordSb = new StringBuffer(passwordLength);
+        StringBuilder maskedPasswordSb = new StringBuilder(passwordLength);
         for(int i=0; i<passwordLength; i++)
             maskedPasswordSb.append('*');
 

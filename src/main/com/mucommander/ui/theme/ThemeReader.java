@@ -39,7 +39,7 @@ import org.xml.sax.helpers.DefaultHandler;
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThemeReader.class);
 
-    private static enum State {
+    private enum State {
         /** Parsing hasn't started yet. */
         UNKNOWN,
         /** Parsing the root element. */

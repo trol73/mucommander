@@ -245,14 +245,12 @@ public abstract class AnimatedIcon implements Icon {
      */
     protected synchronized void repaint() {
         // If the component list is empty, we can stop the timer.
-        if(components.isEmpty())
+        if (components.isEmpty()) {
             timer.stop();
-
-        // Repaints all pending components.
-        else {
-            for(TrackedComponent comp : components)
+        } else {    // Repaints all pending components.
+            for (TrackedComponent comp : components) {
                 comp.repaint();
-
+            }
             components.clear();
         }
     }

@@ -80,7 +80,7 @@ public abstract class AbstractFileTest {
      */
     @BeforeMethod
     public void setUp() throws IOException {
-        filesToDelete = new Vector<AbstractFile>();
+        filesToDelete = new Vector<>();
 
         tempFile = getTemporaryFile();
         deleteWhenFinished(tempFile);   // this file will be automatically deleted when the test is over
@@ -204,8 +204,7 @@ public abstract class AbstractFileTest {
     protected void sleep(long timeMs) {
         try {
             Thread.sleep(timeMs);
-        }
-        catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             // Should not happen, and even if it did, it's no big deal as the test that called this method will most
             // likely fail
         }
@@ -275,13 +274,9 @@ public abstract class AbstractFileTest {
      * @throws NoSuchAlgorithmException should not happen
      */
     protected String calculateMd5(AbstractFile file) throws IOException, NoSuchAlgorithmException {
-        InputStream in = file.getInputStream();
 
-        try {
+        try (InputStream in = file.getInputStream()) {
             return calculateMd5(in);
-        }
-        finally {
-            in.close();
         }
     }
 
@@ -539,7 +534,7 @@ public abstract class AbstractFileTest {
                 if(canSetPermission) {
                     for(boolean enabled=true; ;) {
                         tempFile.changePermission(a, p, enabled);
-                        tempFile.changePermissions(enabled?bitMask:(0777&~bitMask));
+                        tempFile.changePermissions(enabled?bitMask:(0777 & ~bitMask));
 
                         if(canGetPermission) {
                             assert tempFile.getPermissions().getBitValue(a, p)==enabled: "permission bit ("+a+", "+p+") should be "+enabled;

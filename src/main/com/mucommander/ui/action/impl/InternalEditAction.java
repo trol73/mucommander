@@ -24,8 +24,6 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
-import com.mucommander.commons.file.impl.CachedFile;
-import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;

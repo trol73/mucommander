@@ -75,7 +75,7 @@ public interface DesktopOperation {
      * </p>
      * @return the operation's name.
      */
-    public String getName();
+    String getName();
 
     /**
      * Checks whether the operation is available.
@@ -92,7 +92,7 @@ public interface DesktopOperation {
      * @return <code>true</code> if the operation is available, <code>false</code> otherwise.
      * @see    #canExecute(Object[])
      */
-    public boolean isAvailable();
+    boolean isAvailable();
 
     /**
      * Checks whether an operation is supported for the specified parameters.
@@ -124,7 +124,7 @@ public interface DesktopOperation {
      * @param  target parameters to check.
      * @return        <code>true</code> if the operation can be executed with the specified parameters, <code>false</code> otherwise.
      */
-    public boolean canExecute(Object[] target);
+    boolean canExecute(Object[] target);
 
     /**
      * Executes the operation on the specified parameters.
@@ -136,5 +136,5 @@ public interface DesktopOperation {
      * @throws IOException                   if an error occurs.
      * @throws UnsupportedOperationException if the operation is not supported for the specified parameters.
      */
-    public void execute(Object[] target) throws IOException, UnsupportedOperationException;
+    void execute(Object[] target) throws IOException, UnsupportedOperationException;
 }

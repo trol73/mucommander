@@ -120,7 +120,7 @@ public class LzmaBench
 		}
 		public int GetDigest()
 		{ 
-			return CRC.GetDigest(); 
+			return CRC.getDigest();
 		}
 		public void write(byte[] b)
 		{
@@ -132,7 +132,7 @@ public class LzmaBench
 		}
 		public void write(int b)
 		{
-			CRC.UpdateByte(b);
+			CRC.updateByte(b);
 		}
 	}
 
@@ -365,7 +365,7 @@ public class LzmaBench
 				if (decoder.Code(inputCompressedStream, crcOutStream, (long) kBufferSize, null) != HRESULT.S_OK)
 					throw (new Exception("Decoding Error"));
 				decodeTime = System.currentTimeMillis() - startTime;
-				if (crcOutStream.GetDigest() != crc.GetDigest())
+				if (crcOutStream.GetDigest() != crc.getDigest())
 					throw (new Exception("CRC Error"));
 			}
 			long benchSize = kBufferSize - progressInfo.InSize;

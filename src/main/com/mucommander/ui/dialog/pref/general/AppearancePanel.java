@@ -374,7 +374,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // Creates the theme combo box.
         themeComboBox = new PrefComboBox<Theme>() {
 			public boolean hasChanged() {
-				return !ThemeManager.isCurrentTheme((Theme) getSelectedItem());
+				return !ThemeManager.isCurrentTheme(getSelectedItem());
 			}
         };
         themeComboBox.addActionListener(this);
@@ -423,7 +423,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         syntaxThemeComboBox = new PrefComboBox<String>(ThemeManager.predefinedSyntaxThemeNames()) {
             @Override
             public boolean hasChanged() {
-                String selectedTheme = (String)getSelectedItem();
+                String selectedTheme = getSelectedItem();
                 return !ThemeManager.getCurrentSyntaxThemeName().equalsIgnoreCase(selectedTheme);
             }
         };
@@ -1030,7 +1030,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     public void actionPerformed(ActionEvent e) {
         Theme theme;
 
-        theme = (Theme)themeComboBox.getSelectedItem();
+        theme = themeComboBox.getSelectedItem();
 
         // Theme combobox selection changed.
         if(e.getSource() == themeComboBox)

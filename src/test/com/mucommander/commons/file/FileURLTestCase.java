@@ -65,7 +65,7 @@ public abstract class FileURLTestCase {
      */
     protected FileURL getURL(String login, String password, String host, int port, String path, String query) throws MalformedURLException {
         String scheme = getScheme();
-        StringBuffer sb = new StringBuffer(scheme+"://");
+        StringBuilder sb = new StringBuilder(scheme+"://");
 
         if(host!=null) {
             if(login!=null) {
