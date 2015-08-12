@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
@@ -55,7 +56,7 @@ class TextEditorImpl implements ThemeListener {
 
     private TextArea textArea;
 
-    private GotoLineDialog dlgGoto;
+    //private GotoLineDialog dlgGoto;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -336,7 +337,8 @@ class TextEditorImpl implements ThemeListener {
         int readBytes;
         try {
             PushbackInputStream is = file.getPushBackInputStream(256);
-            readBytes = StreamUtils.readUpTo(is, bytes);
+            BOMInputStream bomIs = new BOMInputStream(is);
+            readBytes = StreamUtils.readUpTo(bomIs, bytes);
             is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
             e.printStackTrace();
