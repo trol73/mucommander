@@ -61,7 +61,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
     private JRadioButton userRadioButton;
 
     private JTextField loginField;
-    private EditableComboBox loginComboBox;
+    private EditableComboBox<String> loginComboBox;
 
     private JPasswordField passwordField;
 
@@ -137,12 +137,13 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
         JComponent loginComponent;
         if(nbCredentials>0) {
             // Editable combo box
-            loginComboBox = new EditableComboBox();
+            loginComboBox = new EditableComboBox<>();
             this.loginField = loginComboBox.getTextField();
 
             // Add credentials to the combo box's choices
-            for (CredentialsMapping credentialsMapping : credentialsMappings)
+            for (CredentialsMapping credentialsMapping : credentialsMappings) {
                 loginComboBox.addItem(credentialsMapping.getCredentials().getLogin());
+            }
 
             loginComboBox.addEditableComboBoxListener(this);
 

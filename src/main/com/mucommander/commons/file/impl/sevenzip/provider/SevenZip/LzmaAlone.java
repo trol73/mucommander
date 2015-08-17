@@ -116,7 +116,7 @@ public class LzmaAlone
 				else
 					return false;
 				pos++;
-				continue;
+				//continue;
 			}
 			return true;
 		}

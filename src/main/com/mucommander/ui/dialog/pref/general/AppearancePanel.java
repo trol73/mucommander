@@ -264,12 +264,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // Creates the look and feel combo box.
         lookAndFeelComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
-				int selectedIndex = getSelectedIndex();
-                if (selectedIndex < 0) {
-                    return false;
-                }
-                return !lookAndFeels[selectedIndex].getClassName().equals(MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL));
-			}
+                String lnf = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
+                int selectedIndex = getSelectedIndex();
+                return selectedIndex >= 0 && !lookAndFeels[selectedIndex].getClassName().equals(lnf);
+            }
         };
         lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
                 @Override

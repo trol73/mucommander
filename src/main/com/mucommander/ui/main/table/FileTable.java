@@ -129,11 +129,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     // Used when right button is pressed and mouse is dragged
     private boolean markOnRightClick;
     private int lastDraggedRow = -1;
-    private int lastDraggedCol = -1;
 
     // Used by shift+Click
     private int lastRow;
-    private int lastColumn;
 
     /** Allows to detect repeated key strokes of mark key (space/insert) */
     private boolean markKeyRepeated;
@@ -1424,7 +1422,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void changeSelection(int row, int column, boolean toggle, boolean extend) {
         // For shift+click
         lastRow = currentRow;
-        lastColumn = currentColumn;
+        int lastColumn = currentColumn;
         currentRow = row;
         currentColumn = column;
 
@@ -1629,7 +1627,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         else if (DesktopManager.isMiddleMouseButton(e)) {
             // Used by mouseDragged
             lastDraggedRow = rowAtPoint(e.getPoint());
-            lastDraggedCol = columnAtPoint(e.getPoint());
+            int lastDraggedCol = columnAtPoint(e.getPoint());
             markOnRightClick = !tableModel.isFileMarked(lastDraggedRow, lastDraggedCol);
 
             int lastDraggedFile = tableModel.getFileIndexAt(lastDraggedRow, lastDraggedCol);

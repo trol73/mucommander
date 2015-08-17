@@ -46,7 +46,7 @@ public abstract class PopupButton extends NonFocusableButton {
     /** Custom action performed when the button is clicked. If null, popup menu will be displayed when mouse is clicked */
     private Action buttonClickedAction;
 
-    /* Timestamp when popup menu was closed */
+    /** Timestamp when popup menu was closed */
     private long popupMenuClosedTime;
 
     /** Non-null while popup menu is visible */
@@ -189,7 +189,7 @@ public abstract class PopupButton extends NonFocusableButton {
         /** Returns true to indicate that a mouse event should currently be ignored because the popup menu
          * is visible, or was closed recently (less than POPUP_DELAY ms ago) */
         private boolean shouldIgnoreMouseEvent() {
-            return isPopupMenuVisible() || System.currentTimeMillis()- popupMenuClosedTime<POPUP_DELAY;
+            return isPopupMenuVisible() || System.currentTimeMillis() - popupMenuClosedTime<POPUP_DELAY;
         }
 
         //////////////////////////////////
@@ -244,16 +244,16 @@ public abstract class PopupButton extends NonFocusableButton {
         /////////////////////////////
 
         public void run() {
-                try {
-                    Thread.sleep(POPUP_DELAY);
-                } catch(InterruptedException ignore) {}
+            try {
+                Thread.sleep(POPUP_DELAY);
+            } catch(InterruptedException ignore) {}
 
-                synchronized(this) {
-                    // Popup menu if a popup menu is not already being displayed and if mouse is still pressed
-                    if (!isPopupMenuVisible() && pressedTime != 0 && System.currentTimeMillis()-pressedTime >= POPUP_DELAY) {
-                        popupMenu();
-                    }
+            synchronized(this) {
+                // Popup menu if a popup menu is not already being displayed and if mouse is still pressed
+                if (!isPopupMenuVisible() && pressedTime != 0 && System.currentTimeMillis()-pressedTime >= POPUP_DELAY) {
+                    popupMenu();
                 }
+            }
         }
     }
 }

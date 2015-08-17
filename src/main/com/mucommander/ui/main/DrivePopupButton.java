@@ -24,14 +24,10 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +46,6 @@ import com.mucommander.commons.file.filter.PathFilter;
 import com.mucommander.commons.file.filter.RegexpPathFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
@@ -143,12 +138,12 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         MuConfigurations.addPreferencesListener(this);
 
         // Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        //if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             //setMargin(new Insets(6,8,6,8));
             //putClientProperty("JComponent.sizeVariant", "small");
             //putClientProperty("JComponent.sizeVariant", "large");
             //putClientProperty("JButton.buttonType", "textured");
-        }
+        //}
     }
 
 
@@ -210,7 +205,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     int bestIndex = 0;
                     String temp;
                     int len;
-                    for (int i=0; i< volumes.length; i++) {
+                    for (int i = 0; i < volumes.length; i++) {
                         if (OsFamily.WINDOWS.isCurrent()) {
                             temp = volumes[i].getAbsolutePath(false).toLowerCase();
                         } else {
@@ -297,19 +292,18 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         MnemonicHelper mnemonicHelper = new MnemonicHelper();   // Provides mnemonics and ensures uniqueness
         JMenuItem item;
         MuAction action;
-        String volumeName;
 
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 
-        for(int i=0; i<nbVolumes; i++) {
+        for(int i = 0; i < nbVolumes; i++) {
             action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), volumes[i]);
-            volumeName = volumes[i].getName();
+            String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
             // volume's path, to disambiguate
-            for(int j=0; j<nbVolumes; j++) {
-                if(j!=i && volumes[j].getName().equalsIgnoreCase(volumeName)) {
+            for (int j = 0; j < nbVolumes; j++) {
+                if (j != i && volumes[j].getName().equalsIgnoreCase(volumeName)) {
                     action.setLabel(volumes[i].getAbsolutePath());
                     break;
                 }
@@ -320,15 +314,16 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
             // Set icon from cache
             Icon icon = iconCache.get(volumes[i]);
-            if (icon!=null) {
+            if (icon != null) {
                 item.setIcon(icon);
             }
 
-            if(useExtendedDriveNames) {
+            if (useExtendedDriveNames) {
                 // Use the last known value (if any) while we update it in a separate thread
                 String previousExtendedName = extendedNameCache.get(volumes[i]);
-                if(previousExtendedName!=null)
+                if (previousExtendedName != null) {
                     item.setText(previousExtendedName);
+                }
 
             }
             itemsV.add(item);   // JMenu offers no way to retrieve a particular JMenuItem, so we have to keep them
@@ -342,7 +337,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
             for (Bookmark b : bookmarks) {
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new Hashtable<>(), b));
+                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new HashMap<>(), b));
+                String location = b.getLocation();
+                if (!location.contains("://")) {
+                    Image icon = FileIconsCache.getInstance().getImageIcon(FileFactory.getFile(b.getLocation()));
+                    item.setIcon(new ImageIcon(icon));
+                } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
+                    item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
+                }
                 setMnemonic(item, mnemonicHelper);
             }
         } else {
@@ -353,7 +355,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         popupMenu.add(new JSeparator());
 
         // Add 'Network shares' shortcut
-        if(FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
+        if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
             action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);

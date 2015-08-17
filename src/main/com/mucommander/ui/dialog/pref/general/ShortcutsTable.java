@@ -705,7 +705,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			DotBorderedCellLabel label = cellLabels[columnId];
 			
 			// action's icon column: return ImageIcon instance
-			if(columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
+			if (columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
 				Pair<ImageIcon, String> description = (Pair<ImageIcon, String>) value;
 				label.setIcon(description.first);
 				label.setText(description.second);

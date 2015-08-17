@@ -36,11 +36,11 @@ public class AudioFactory implements ViewerFactory {
 
     @Override
     public boolean canViewFile(AbstractFile file) throws WarnUserException {
-if (1==1) return false;     // TODO
-        if (file.isDirectory()) {
-            return false;
-        }
-        return AUDIO_FILTER.accept(file);
+        return false;
+//        if (file.isDirectory()) {
+//            return false;
+//        }
+//        return AUDIO_FILTER.accept(file);
     }
 
     @Override

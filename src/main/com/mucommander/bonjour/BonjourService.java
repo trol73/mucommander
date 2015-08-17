@@ -96,10 +96,8 @@ public class BonjourService {
      * Returns <code>true</code> if the given Object is a BonjourService instance with the same fully qualified name.
      */
     public boolean equals(Object o) {
-        if(!(o instanceof BonjourService))
-            return false;
+        return o instanceof BonjourService && fullyQualifiedName.equals(((BonjourService) o).fullyQualifiedName);
 
-        return fullyQualifiedName.equals(((BonjourService)o).fullyQualifiedName);
     }
 
 

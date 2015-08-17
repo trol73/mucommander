@@ -23,7 +23,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -39,6 +39,7 @@ import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
+import com.mucommander.core.LocalLocationHistory;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.MuAction;
@@ -121,18 +122,16 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
             int nbComponents = getComponentCount();
-            Component comp;
-            boolean hasPrevious, hasNext;
 
             // Set the 'segment position' required for the 'segmented capsule' style  
             for( int i = 0; i < nbComponents; i++) {
-                comp = getComponent(i);
+                Component comp = getComponent(i);
                 if (!(comp instanceof JButton)) {
                     continue;
                 }
 
-                hasPrevious = i!=0 && (getComponent(i-1) instanceof JButton);
-                hasNext = i!=nbComponents-1 && (getComponent(i+1) instanceof JButton);
+                boolean hasPrevious = i != 0 && (getComponent(i-1) instanceof JButton);
+                boolean hasNext = i != nbComponents-1 && (getComponent(i+1) instanceof JButton);
 
                 String segmentPosition;
                 if (hasPrevious && hasNext) {
@@ -255,14 +254,16 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        if (source instanceof JButton)
-            ((JButton)source).setBorderPainted(true);
+        if (source instanceof JButton) {
+            ((JButton) source).setBorderPainted(true);
+        }
     }
 
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
-        if(source instanceof JButton)
-            ((JButton)source).setBorderPainted(false);
+        if (source instanceof JButton) {
+            ((JButton) source).setBorderPainted(false);
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -296,9 +297,8 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         @Override
         public JPopupMenu getPopupMenu() {
-            FileURL history[] = action instanceof GoBackAction?
-                    mainFrame.getActivePanel().getFolderHistory().getBackFolders()
-                    :mainFrame.getActivePanel().getFolderHistory().getForwardFolders();
+            LocalLocationHistory locationHistory = mainFrame.getActivePanel().getFolderHistory();
+            FileURL history[] = action instanceof GoBackAction ? locationHistory.getBackFolders() : locationHistory.getForwardFolders();
 
             // If no back/forward folder, do not display popup menu
             if (history.length == 0) {
@@ -306,8 +306,8 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
             }
 
             JPopupMenu popupMenu = new JPopupMenu();
-            for (FileURL aHistory : history) {
-                popupMenu.add(new OpenLocationAction(mainFrame, new Hashtable<>(), aHistory));
+            for (FileURL url : history) {
+                popupMenu.add(new OpenLocationAction(mainFrame, new HashMap<>(), url));
             }
 
             return popupMenu;

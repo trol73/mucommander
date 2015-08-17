@@ -18,17 +18,24 @@
 
 package com.mucommander.ui.action.impl;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 import com.mucommander.bonjour.BonjourService;
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.impl.BatchRenameAction.Descriptor;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.FileIconsCache;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  * This action opens a specified location in the current active FileTable. The location can be designated by either a
@@ -48,18 +55,23 @@ public class OpenLocationAction extends ActiveTabAction {
      * (with credentials stripped out) as label.
      */
     public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, FileURL url) {
-        this(mainFrame, properties, url, url.getScheme().equals(FileProtocols.FILE)?url.getPath():url.toString(false));
+        this(mainFrame, properties, url, url.getScheme().equals(FileProtocols.FILE) ? url.getPath() : url.toString(false));
     }
 
     /**
      * Creates a new OpenLocationAction instance using the provided FileURL and label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, FileURL url, String label) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url, String label) {
         super(mainFrame, properties);
 
         this.url = url;
         setLabel(label);
-        setToolTipText(url.getScheme().equals(FileProtocols.FILE)?url.getPath():url.toString(false));
+        boolean isLocalFile = url.getScheme().equals(FileProtocols.FILE);
+        if (isLocalFile) {
+            Image icon = FileIconsCache.getInstance().getImageIcon(FileFactory.getFile(url));
+            setIcon(new ImageIcon(icon));
+        }
+        setToolTipText(isLocalFile ? url.getPath() : url.toString(false));
     }
 
 

@@ -364,7 +364,7 @@ public class CommandBarDialog extends CustomizeDialog {
 		Iterator<String> actionIds = ActionManager.getActionIds();
 		while(actionIds.hasNext()) {
             String actionId = actionIds.next();
-            // Filter out actions that are currently used in the command bar, and those that are parameterized
+            // Filter out actions that are currently used in the command bar, and those that are parametrized
 			if (!usedActions.contains(actionId) && !ActionProperties.getActionDescriptor(actionId).isParameterized())
 				insertInOrder(commandBarAvailableButtons, CommandBarButtonForDisplay.create(actionId));			
 		}
@@ -382,8 +382,9 @@ public class CommandBarDialog extends CustomizeDialog {
 			
 			@Override
 			public Transferable createTransferable(JComponent c) {
-				if (c instanceof JList)
+				if (c instanceof JList) {
 					return new TransferableButton((JButton) ((JList) c).getSelectedValue());
+				}
 				return null;
 			}
 			
