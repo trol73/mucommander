@@ -119,8 +119,9 @@ public class HTTPFile extends ProtocolFile {
         super(fileURL);
 
         String scheme = fileURL.getScheme().toLowerCase();
-        if((!scheme.equals(FileProtocols.HTTP) && !scheme.equals(FileProtocols.HTTPS)) || fileURL.getHost()==null)
+        if ((!scheme.equals(FileProtocols.HTTP) && !scheme.equals(FileProtocols.HTTPS)) || fileURL.getHost() == null) {
             throw new IOException();
+        }
 
         this.url = url;
 
@@ -133,11 +134,10 @@ public class HTTPFile extends ProtocolFile {
         //  - URL's path has no filename (e.g. http://www.mucommander.com/) or path ends with '/' (e.g. http://www.mucommander.com/download/)
         //  - URL has a query part (works most of the time, must not always)
         //  - URL has an extension that registered with an HTML/XHTML mime type
-        if((filename==null || fileURL.getPath().endsWith("/") || fileURL.getQuery()!=null || ((mimeType=MimeTypes.getMimeType(this))!=null && isParsableMimeType(mimeType)))) {
+        if ((filename == null || fileURL.getPath().endsWith("/") || fileURL.getQuery()!=null || ((mimeType=MimeTypes.getMimeType(this))!=null && isParsableMimeType(mimeType)))) {
             attributes.setDirectory(true);
             resolve = false;
-        }
-        else {
+        } else {
             resolve = true;
         }
     }
@@ -192,10 +192,11 @@ public class HTTPFile extends ProtocolFile {
 
             // Resolve date: use last-modified header, if not set use date header, and if still not set use System.currentTimeMillis
             long date = conn.getLastModified();
-            if(date==0) {
+            if (date == 0) {
                 date = conn.getDate();
-                if(date==0)
+                if (date == 0) {
                     date = System.currentTimeMillis();
+                }
             }
             attributes.setDate(date);
 
@@ -209,11 +210,9 @@ public class HTTPFile extends ProtocolFile {
 
             // File was successfully resolved on the remote HTTP server and thus exists
             attributes.setExists(true);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             LOGGER.info("Failed to resolve file {}", url, e);
-        }
-        finally {
+        } finally {
             // Mark the file as resolved, even if the request failed
             fileResolved = true;
         }
@@ -235,7 +234,7 @@ public class HTTPFile extends ProtocolFile {
 
         // If credentials are contained in this HTTPFile's FileURL, use them for Basic HTTP Authentication
         Credentials credentials = fileURL.getCredentials();
-        if(credentials!=null)
+        if (credentials != null)
             conn.setRequestProperty(
                 "Authorization",
                 "Basic "+ Base64Encoder.encode(credentials.getLogin()+":"+credentials.getPassword())
@@ -264,15 +263,17 @@ public class HTTPFile extends ProtocolFile {
         LOGGER.info("response code = {}", responseCode);
 
         // If we got a 401 (Unauthorized) response, throw an AuthException to ask for credentials
-        if(responseCode==401)
+        if (responseCode == 401) {
             throw new AuthException(fileURL, conn.getResponseMessage());
+        }
 
-        if(responseCode<200 || responseCode>=400)
+        if (responseCode < 200 || responseCode >= 400) {
             throw new IOException(conn.getResponseMessage());
+        }
     }
 
     private void checkResolveFile() {
-        if(resolve && !fileResolved) {
+        if (resolve && !fileResolved) {
             try {
                 resolveFile();
             } catch(IOException e) {
@@ -314,13 +315,9 @@ public class HTTPFile extends ProtocolFile {
 	
     @Override
     public AbstractFile getParent() {
-        if(!parentValSet) {
+        if (!parentValSet) {
             FileURL parentURL = fileURL.getParent();
-            if(parentURL==null)
-                this.parent = null;
-            else {
-                this.parent = FileFactory.getFile(parentURL);
-            }
+            this.parent = parentURL == null ? null : FileFactory.getFile(parentURL);
             this.parentValSet = true;
         }
 		
@@ -336,10 +333,11 @@ public class HTTPFile extends ProtocolFile {
 
     @Override
     public boolean exists() {
-        if(!fileResolved) {
+        if (!fileResolved) {
             // Note: file will only be resolved once, even if the request failed
-            try { resolveFile(); }
-            catch(IOException e) {}
+            try {
+                resolveFile();
+            } catch(IOException ignore) {}
         }
 
         return attributes.exists();
@@ -561,7 +559,7 @@ public class HTTPFile extends ProtocolFile {
 
             // Retrieve content type and throw an IOException if doesn't correspond to a parsable type (HTML/XHTML)
             String contentType = conn.getContentType();
-            if(contentType==null || !isParsableMimeType(contentType))
+            if (contentType==null || !isParsableMimeType(contentType))
                 throw new IOException("Document cannot be parsed (not HTML or XHTML)");  // Todo: localize this message
 			
             int pos;

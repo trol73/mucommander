@@ -117,6 +117,7 @@ public abstract class TransferFileJob extends FileJob {
             copyFile(sourceFile, destFile, append);
             destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
         }
     }
@@ -297,6 +298,7 @@ public abstract class TransferFileJob extends FileJob {
                 }
                 return true;
             } catch(FileTransferException e) {
+                e.printStackTrace();
                 // If the job was interrupted by the user at the time the exception occurred, it most likely means that
                 // the IOException was caused by the stream being closed as a result of the user interruption.
                 // If that is the case, the exception should not be interpreted as an error.

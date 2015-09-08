@@ -385,7 +385,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         OutputStream out;
 
         try {
-            out = append?getAppendOutputStream():getOutputStream();
+            out = append ? getAppendOutputStream() : getOutputStream();
         } catch(IOException e) {
             // TODO: re-throw UnsupportedFileOperationException ? 
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);

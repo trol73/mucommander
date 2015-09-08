@@ -97,6 +97,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private AbstractFile startDirectory;
 
     private ListDataIntelliHints textHints, hexHints;
+    private UpdateRunner updateRunner;
 
     private class UpdateRunner extends SwingWorker<List<AbstractFile>, AbstractFile> {
 
@@ -373,7 +374,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         updateResultLabel();
         job.start();
         updateButtons();
-        new UpdateRunner().execute();
+        updateRunner = new UpdateRunner();
+        updateRunner.execute();
     }
 
     private void clearResults() {
@@ -460,5 +462,18 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         prefs.setVariable(MuPreference.FIND_FILE_ENCODING, cbEncoding.getSelectedItem().toString());
 
         super.cancel();
+    }
+
+
+    @Override
+    public void dispose() {
+        if (updateRunner != null) {
+            try {
+                updateRunner.cancel(true);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+        super.dispose();
     }
 }

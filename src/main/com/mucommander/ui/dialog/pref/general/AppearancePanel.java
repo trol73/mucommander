@@ -87,15 +87,15 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** All available look&feels. */
     private UIManager.LookAndFeelInfo lookAndFeels[];
     /** 'Use brushed metal look' checkbox */
-    private PrefCheckBox              brushedMetalCheckBox;
+    private PrefCheckBox brushedMetalCheckBox;
     /** Triggers look and feel importing. */
-    private JButton                   importLookAndFeelButton;
+    private JButton importLookAndFeelButton;
     /** Triggers look and feel deletion. */
-    private JButton                   deleteLookAndFeelButton;
+    private JButton deleteLookAndFeelButton;
     /** Used to notify the user that the system is working. */
-    private SpinningDial              dial;
+    private SpinningDial dial;
     /** File from which to import looks and feels. */
-    private AbstractFile              lookAndFeelLibrary;
+    private AbstractFile lookAndFeelLibrary;
 
 
 
@@ -128,21 +128,21 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Lists all available themes. */
     private PrefComboBox<Theme> themeComboBox;
     /** Triggers the theme editor. */
-    private JButton      editThemeButton;
+    private JButton editThemeButton;
     /** Triggers the theme duplication dialog. */
-    private JButton      duplicateThemeButton;
+    private JButton duplicateThemeButton;
     /** Triggers the theme import dialog. */
-    private JButton      importThemeButton;
+    private JButton importThemeButton;
     /** Triggers the theme export dialog. */
-    private JButton      exportThemeButton;
+    private JButton exportThemeButton;
     /** Triggers the theme rename dialog. */
-    private JButton      renameThemeButton;
+    private JButton renameThemeButton;
     /** Triggers the theme delete dialog. */
-    private JButton      deleteThemeButton;
+    private JButton deleteThemeButton;
     /** Used to display the currently selected theme's type. */
-    private JLabel       typeLabel;
+    private JLabel typeLabel;
     /** Whether or not to ignore theme combobox related events. */
-    private boolean      ignoreComboChanges;
+    private boolean ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
     private AbstractFile lastSelectedFolder;
 
@@ -459,14 +459,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 			public boolean hasChanged() {
 				String systemIconsPolicy;
 				switch(useSystemFileIconsComboBox.getSelectedIndex()) {
-				case 0:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
-					break;
-				case 1:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
-					break;
-				default:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
+                    case 0:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
+                        break;
+                    case 1:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
+                        break;
+                    default:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
 				}
 				return !systemIconsPolicy.equals(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
 			}
@@ -836,8 +836,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     private void resetThemeButtons(Theme theme) {
-        if (ignoreComboChanges)
+        if (ignoreComboChanges) {
             return;
+        }
 
         setTypeLabel(theme);
 
@@ -897,8 +898,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private void editTheme(Theme theme) {
         // If the edited theme was modified, we must re-populate the list.
-        if(new ThemeEditorDialog(parent, theme).editTheme())
+        if (new ThemeEditorDialog(parent, theme).editTheme()) {
             populateThemes(ThemeManager.getCurrentTheme());
+        }
     }
 
     /**
@@ -915,7 +917,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         int i;
 
         int count = themeComboBox.getItemCount();
-        for(i = 0; i < count; i++) {
+        for (i = 0; i < count; i++) {
             if((themeComboBox.getItemAt(i)).getName().compareTo(theme.getName()) >= 0) {
                 themeComboBox.insertItemAt(theme, i);
                 break;
@@ -931,29 +933,26 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Imports a new theme in muCommander.
      */
     private void importTheme() {
-        JFileChooser chooser; // Used to select the theme to import.
-        AbstractFile         file;    // Path to the theme to import.
-
         // Initialises the file chooser.
-        chooser = createFileChooser();
+        JFileChooser chooser = createFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.addChoosableFileFilter(new ExtensionFileFilter("xml", Translator.get("prefs_dialog.xml_file")));
         chooser.setDialogTitle(Translator.get("prefs_dialog.import_theme"));
         chooser.setDialogType(JFileChooser.OPEN_DIALOG);
 
-        if(chooser.showDialog(parent, Translator.get("prefs_dialog.import")) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showDialog(parent, Translator.get("prefs_dialog.import")) == JFileChooser.APPROVE_OPTION) {
             // Makes sure the file actually exists - JFileChooser apparently doesn't enforce that properly in all look&feels.
-            file               = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
+            AbstractFile file = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
             lastSelectedFolder = file.getParent();
-            if(!file.exists()) {
+            if (!file.exists()) {
                 InformationDialog.showErrorDialog(this, Translator.get("this_file_does_not_exist", file.getName()));
                 return;
             }
 
             // Imports the theme and makes sure it appears in the combobox.
-            try {insertTheme(ThemeManager.importTheme((java.io.File)file.getUnderlyingFileObject()));}
-            // Notifies the user that something went wrong.
-            catch(Exception ex) {
+            try {
+                insertTheme(ThemeManager.importTheme((java.io.File)file.getUnderlyingFileObject()));
+            } catch(Exception ex) { // Notifies the user that something went wrong.
                 InformationDialog.showErrorDialog(this, Translator.get("prefs_dialog.error_in_import", file.getName()));
             }
         }
@@ -969,7 +968,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         chooser.addChoosableFileFilter(new ExtensionFileFilter("xml", Translator.get("prefs_dialog.xml_file")));
 
         chooser.setDialogTitle(Translator.get("prefs_dialog.export_theme", theme.getName()));
-        if(chooser.showDialog(parent, Translator.get("prefs_dialog.export")) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showDialog(parent, Translator.get("prefs_dialog.export")) == JFileChooser.APPROVE_OPTION) {
 
             AbstractFile file = FileFactory.getFile(chooser.getSelectedFile().getAbsolutePath());
             lastSelectedFolder = file.getParent();
@@ -980,7 +979,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     file = lastSelectedFolder.getDirectChild(file.getName()+".xml");
 
                 int collision = FileCollisionChecker.checkForCollision(null, file);
-                if(collision!=FileCollisionChecker.NO_COLLOSION) {
+                if (collision != FileCollisionChecker.NO_COLLOSION) {
                     // Do not offer the multiple files mode options such as 'skip' and 'apply to all'
                     int action = new FileCollisionDialog(parent, parent, collision, null, file, false, false).getActionValue();
 
@@ -997,11 +996,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
                 // If it was exported to the custom themes folder, reload the theme combobox to reflect the
                 // changes.
-                if(lastSelectedFolder.equals(ThemeManager.getCustomThemesFolder()))
+                if (lastSelectedFolder.equals(ThemeManager.getCustomThemesFolder())) {
                     populateThemes(theme);
-            }
-            // Notifies users of errors.
-            catch(Exception exception) {
+                }
+            } catch(Exception exception) { // Notifies users of errors.
                 InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", file.getName()));
             }
         }
@@ -1011,8 +1009,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Duplicates the specified theme.
      */
     private void duplicateTheme(Theme theme) {
-        try {insertTheme(ThemeManager.duplicateTheme(theme));}
-        catch(Exception e) {
+        try {
+            insertTheme(ThemeManager.duplicateTheme(theme));
+        } catch(Exception e) {
             InformationDialog.showErrorDialog(this);
         }
     }
@@ -1026,9 +1025,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Called when a button is pressed.
      */
     public void actionPerformed(ActionEvent e) {
-        Theme theme;
-
-        theme = themeComboBox.getSelectedItem();
+        Theme theme = themeComboBox.getSelectedItem();
 
         // Theme combobox selection changed.
         if(e.getSource() == themeComboBox)
@@ -1099,8 +1096,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         @Override
         public boolean accept(java.io.File file) {
             // Directories are always displayed.
-            if (file.isDirectory())
+            if (file.isDirectory()) {
                 return true;
+            }
 
             // If the file has an extension, and it matches .xml, return true.
             // Otherwise, return false.
