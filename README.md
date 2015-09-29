@@ -1,8 +1,7 @@
 trolcommander
 =============
 
-![Build Status](https://travis-ci.org/raisercostin/mucommander.svg?branch=develop)](https://travis-ci.org/raisercostin/mucommander)
-
+[![Build Status](https://travis-ci.org/raisercostin/mucommander.svg?branch=master)](https://travis-ci.org/raisercostin/mucommander)
 
 Fork of muCommander file manager
 
