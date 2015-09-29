@@ -60,4 +60,6 @@ public abstract class AbstractROArchiveFile extends AbstractArchiveFile {
     public final boolean isWritable() {
         return false;
     }
+
+
 }

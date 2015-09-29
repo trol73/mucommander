@@ -114,6 +114,21 @@ public enum FileOperation {
     GET_FREE_SPACE,
 
     /**
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     */
+    GET_BLOCKSIZE,
+
+    /**
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     */
+    GET_REPLICATION,
+
+    /**
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     */
+    CHANGE_REPLICATION,
+
+    /**
      * Represents a 'get total space' operation, as specified by {@link AbstractFile#getTotalSpace()}.
      */
     GET_TOTAL_SPACE;
@@ -152,6 +167,15 @@ public enum FileOperation {
 
                 case CHANGE_DATE:
                     return c.getMethod("changeDate", Long.TYPE);
+
+                case GET_BLOCKSIZE:
+                    return c.getMethod("getBlocksize");
+
+                case GET_REPLICATION:
+                    return c.getMethod("getReplication");
+
+                case CHANGE_REPLICATION:
+                    return c.getMethod("changeReplication", Short.TYPE);
 
                 case CHANGE_PERMISSION:
                     return c.getMethod("changePermission", Integer.TYPE, Integer.TYPE, Boolean.TYPE);

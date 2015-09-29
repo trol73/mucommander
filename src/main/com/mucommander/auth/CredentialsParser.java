@@ -107,22 +107,22 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
 
         switch (qName) {
             case ELEMENT_CREDENTIALS:
-                // Reset parsing variables
-                url = null;
-                urlProperties = null;
-                login = null;
-                password = null;
+            // Reset parsing variables
+            url = null;
+            urlProperties = null;
+            login = null;
+            password = null;
                 break;
-            // Property element (properties will be set when credentials element ends
+        // Property element (properties will be set when credentials element ends
             case ELEMENT_PROPERTY:
                 if (urlProperties == null)
-                    urlProperties = new Hashtable<>();
-                urlProperties.put(attributes.getValue(ATTRIBUTE_NAME), attributes.getValue(ATTRIBUTE_VALUE));
+                urlProperties = new Hashtable<>();
+            urlProperties.put(attributes.getValue(ATTRIBUTE_NAME), attributes.getValue(ATTRIBUTE_VALUE));
                 break;
-            // Root element, the 'encryption' attribute specifies which encoding was used to encrypt passwords
+        // Root element, the 'encryption' attribute specifies which encoding was used to encrypt passwords
             case ELEMENT_ROOT:
-                encryptionMethod = attributes.getValue("encryption");
-                version = attributes.getValue(ATTRIBUTE_VERSION);
+            encryptionMethod = attributes.getValue("encryption");
+            version = attributes.getValue(ATTRIBUTE_VERSION);
                 break;
         }
     }
@@ -133,38 +133,38 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
             case ELEMENT_CREDENTIALS:
                 if (url == null || login == null || password == null) {
                     LOGGER.info("Missing value, credentials ignored: url=" + url + " login=" + login);
-                    return;
-                }
+                return;
+            }
 
-                // Copy properties into FileURL instance (if any)
+            // Copy properties into FileURL instance (if any)
                 if (urlProperties != null) {
                     for (String key : urlProperties.keySet())
-                        url.setProperty(key, urlProperties.get(key));
-                }
+                    url.setProperty(key, urlProperties.get(key));
+            }
 
-                // Decrypt password
+            // Decrypt password
                 try {
                     password = XORCipher.decryptXORBase64(password);
                 } catch (IOException e) {
                     LOGGER.info("Password could not be decrypted: " + password + ", credentials will be ignored");
-                    return;
-                }
+                return;
+            }
 
-                // Add credentials to persistent credentials list
-                CredentialsManager.getPersistentCredentialMappings().add(new CredentialsMapping(new Credentials(login, password), url, true));
+            // Add credentials to persistent credentials list
+            CredentialsManager.getPersistentCredentialMappings().add(new CredentialsMapping(new Credentials(login, password), url, true));
                 break;
             case ELEMENT_URL:
                 try {
                     url = FileURL.getFileURL(characters.toString().trim());
                 } catch (MalformedURLException e) {
                     LOGGER.info("Malformed URL: " + characters + ", location will be ignored");
-                }
+        }
                 break;
             case ELEMENT_LOGIN:
-                login = characters.toString().trim();
+            login = characters.toString().trim();
                 break;
             case ELEMENT_PASSWORD:
-                password = characters.toString().trim();
+            password = characters.toString().trim();
                 break;
         }
     }

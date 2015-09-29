@@ -149,12 +149,12 @@ public abstract class PopupButton extends NonFocusableButton {
         // weird repaint issue will arise under Windows at least (Note: this method can be executed by a thread other
         // than the event thread).
         SwingUtilities.invokeLater(() -> {
-            Dimension popupMenuSize = popupMenu.getPreferredSize();
+                Dimension popupMenuSize = popupMenu.getPreferredSize();
 
-            popupMenu.show(PopupButton.this,
-                    popupMenuLocation==RIGHT?getWidth():popupMenuLocation==LEFT?-(int)popupMenuSize.getWidth():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getWidth()-(int)popupMenuSize.getWidth():0,
-                    popupMenuLocation==BOTTOM?getHeight():popupMenuLocation==TOP?-(int)popupMenuSize.getHeight():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getHeight():0
-            );
+                popupMenu.show(PopupButton.this,
+                		popupMenuLocation==RIGHT?getWidth():popupMenuLocation==LEFT?-(int)popupMenuSize.getWidth():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getWidth()-(int)popupMenuSize.getWidth():0,
+                        popupMenuLocation==BOTTOM?getHeight():popupMenuLocation==TOP?-(int)popupMenuSize.getHeight():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getHeight():0
+                );
 
         });
 
@@ -222,7 +222,7 @@ public abstract class PopupButton extends NonFocusableButton {
                 buttonClickedAction.actionPerformed(new ActionEvent(PopupButton.this, ActionEvent.ACTION_PERFORMED, "clicked"));
             } else {               // No action, popup menu
                 popupMenu();
-            }
+        }
         }
 
         public synchronized void mouseReleased(MouseEvent mouseEvent) {
@@ -244,16 +244,16 @@ public abstract class PopupButton extends NonFocusableButton {
         /////////////////////////////
 
         public void run() {
-            try {
-                Thread.sleep(POPUP_DELAY);
-            } catch(InterruptedException ignore) {}
+                try {
+                    Thread.sleep(POPUP_DELAY);
+                } catch(InterruptedException ignore) {}
 
-            synchronized(this) {
-                // Popup menu if a popup menu is not already being displayed and if mouse is still pressed
-                if (!isPopupMenuVisible() && pressedTime != 0 && System.currentTimeMillis()-pressedTime >= POPUP_DELAY) {
-                    popupMenu();
+                synchronized(this) {
+                    // Popup menu if a popup menu is not already being displayed and if mouse is still pressed
+                    if (!isPopupMenuVisible() && pressedTime != 0 && System.currentTimeMillis()-pressedTime >= POPUP_DELAY) {
+                        popupMenu();
+                    }
                 }
-            }
         }
     }
 }

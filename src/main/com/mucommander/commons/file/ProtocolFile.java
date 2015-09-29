@@ -19,6 +19,8 @@
 
 package com.mucommander.commons.file;
 
+import java.io.IOException;
+
 /**
  * Super class of all file protocol implementations (by opposition to {@link AbstractArchiveFile archive file} 
  * implementations).
@@ -46,4 +48,30 @@ public abstract class ProtocolFile extends AbstractFile {
     public boolean isArchive() {
         return false;
     }
+
+    /*@Override
+    public boolean canGetReplication() {
+        return false;
+    }
+
+    @Override
+    public boolean canGetBlocksize() {
+        return false;
+    }
+
+    @Override
+    public short getReplication() {
+        return 0;
+    }
+
+    @Override
+    public long getBlocksize() {
+        return 0;
+    }
+
+    @Override
+    public void changeReplication(short replication) throws IOException {
+
+    }*/
+
 }

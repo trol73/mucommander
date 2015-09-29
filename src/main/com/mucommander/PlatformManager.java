@@ -21,6 +21,7 @@ package com.mucommander;
 import java.io.File;
 import java.io.IOException;
 
+import com.mucommander.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

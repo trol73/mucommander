@@ -68,6 +68,7 @@ public class ActionManager {
     	registerAction(new BringAllToFrontAction.Descriptor(),              new BringAllToFrontAction.Factory());
     	registerAction(new CalculateChecksumAction.Descriptor(),            new CalculateChecksumAction.Factory());
     	registerAction(new ChangeDateAction.Descriptor(),                   new ChangeDateAction.Factory());
+		registerAction(new ChangeReplicationAction.Descriptor(),            new ChangeReplicationAction.Factory());
     	registerAction(new ChangeLocationAction.Descriptor(),               new ChangeLocationAction.Factory());
     	registerAction(new ChangePermissionsAction.Descriptor(),            new ChangePermissionsAction.Factory());
     	registerAction(new CheckForUpdatesAction.Descriptor(),              new CheckForUpdatesAction.Factory());

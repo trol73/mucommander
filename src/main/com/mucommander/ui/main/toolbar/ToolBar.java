@@ -116,8 +116,8 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
                 // Do not add buttons for actions that do not have an icon
                 if (action != null && action.getIcon() != null) {
                     addButton(action);
-                }
             }
+        }
         }
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
@@ -177,7 +177,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
             if (button.getIcon() == null || button.getIcon().getIconHeight() <= 16) {
-                button.putClientProperty("JButton.buttonType", "segmentedTextured");
+            button.putClientProperty("JButton.buttonType", "segmentedTextured");
             }
             button.setRolloverEnabled(true);
         }

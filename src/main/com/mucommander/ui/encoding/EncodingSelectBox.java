@@ -79,13 +79,13 @@ public class EncodingSelectBox extends JPanel {
         populateComboBox(selectedEncoding);
 
         comboBox.addActionListener(e -> {
-            String oldEncoding = currentEncoding;
-            currentEncoding = (String)comboBox.getSelectedItem();
+                String oldEncoding = currentEncoding;
+                currentEncoding = (String)comboBox.getSelectedItem();
 
             if (currentEncoding == null || !currentEncoding.equals(oldEncoding)) {
-                // Notify listeners of the new encoding
-                fireEncodingListener(oldEncoding, EncodingSelectBox.this.currentEncoding);
-            }
+                    // Notify listeners of the new encoding
+                    fireEncodingListener(oldEncoding, EncodingSelectBox.this.currentEncoding);
+                }
         });
 
         add(comboBox, BorderLayout.CENTER);
@@ -99,14 +99,14 @@ public class EncodingSelectBox extends JPanel {
 
         customizeButton.addActionListener(e -> {
             String selectedEncoding1 = getSelectedEncoding();
-            Window owner = dialogOwner.getOwner();
+                Window owner = dialogOwner.getOwner();
             if (owner instanceof Frame) {
                 new PreferredEncodingsDialog((Frame) owner).showDialog();
             } else {
                 new PreferredEncodingsDialog((Dialog) owner).showDialog();
             }
 
-            comboBox.removeAllItems();
+                comboBox.removeAllItems();
             populateComboBox(selectedEncoding1);
         });
 

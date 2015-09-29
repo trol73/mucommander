@@ -80,7 +80,7 @@ import static com.mucommander.job.FileJob.State;
  */
 public class ProgressDialog extends FocusDialog implements ActionListener, ItemListener, ChangeListener, FileJobListener, JobProgressListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProgressDialog.class);
-
+	
     // Button icons
     private final static String RESUME_ICON = "resume.png";
     private final static String PAUSE_ICON = "pause.png";
@@ -284,11 +284,11 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         JobProgressMonitor.getInstance().addJobProgressListener(this);
 
         if (taskWidget == null) {
-            showDialog();
+        showDialog();
         } else {
             firstTimeActivated = false;
             this.job.start();
-        }
+    }
     }
 
 
@@ -362,7 +362,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             
             if (transferFileJob != null) {
                 updateCurrentSpeedLabel("N/A");
-            }
+        }
         } else if (newState == State.RUNNING) {
             pauseResumeButton.setText(Translator.get("pause"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
@@ -465,7 +465,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
                 mainFrame.getStatusBar().revalidate();
                 mainFrame.getStatusBar().repaint();
-            }
+        }
             taskWidget.setVisible(true);
             setVisible(false);
         }
@@ -529,7 +529,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
         // Remember 'advanced panel' expanded state
         if (collapseExpandButton != null) {
-            MuConfigurations.getPreferences().setVariable(MuPreference.PROGRESS_DIALOG_EXPANDED, collapseExpandButton.getExpandedState());
+        	MuConfigurations.getPreferences().setVariable(MuPreference.PROGRESS_DIALOG_EXPANDED, collapseExpandButton.getExpandedState());
         }
 
         // Remember 'close window when finished' option state

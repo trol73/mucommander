@@ -87,15 +87,15 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** All available look&feels. */
     private UIManager.LookAndFeelInfo lookAndFeels[];
     /** 'Use brushed metal look' checkbox */
-    private PrefCheckBox brushedMetalCheckBox;
+    private PrefCheckBox              brushedMetalCheckBox;
     /** Triggers look and feel importing. */
-    private JButton importLookAndFeelButton;
+    private JButton                   importLookAndFeelButton;
     /** Triggers look and feel deletion. */
-    private JButton deleteLookAndFeelButton;
+    private JButton                   deleteLookAndFeelButton;
     /** Used to notify the user that the system is working. */
-    private SpinningDial dial;
+    private SpinningDial              dial;
     /** File from which to import looks and feels. */
-    private AbstractFile lookAndFeelLibrary;
+    private AbstractFile              lookAndFeelLibrary;
 
 
 
@@ -110,7 +110,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** All icon sizes label. */
     private final static String ICON_SIZES[]                = {"100%", "125%", "150%", "175%", "200%", "300%"};
     /** All icon sizes scale factors. */
-    private final static float ICON_SCALE_FACTORS[]        = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
+    private final static float  ICON_SCALE_FACTORS[]        = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
 
 
 
@@ -128,21 +128,21 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Lists all available themes. */
     private PrefComboBox<Theme> themeComboBox;
     /** Triggers the theme editor. */
-    private JButton editThemeButton;
+    private JButton      editThemeButton;
     /** Triggers the theme duplication dialog. */
-    private JButton duplicateThemeButton;
+    private JButton      duplicateThemeButton;
     /** Triggers the theme import dialog. */
-    private JButton importThemeButton;
+    private JButton      importThemeButton;
     /** Triggers the theme export dialog. */
-    private JButton exportThemeButton;
+    private JButton      exportThemeButton;
     /** Triggers the theme rename dialog. */
-    private JButton renameThemeButton;
+    private JButton      renameThemeButton;
     /** Triggers the theme delete dialog. */
-    private JButton deleteThemeButton;
+    private JButton      deleteThemeButton;
     /** Used to display the currently selected theme's type. */
-    private JLabel typeLabel;
+    private JLabel       typeLabel;
     /** Whether or not to ignore theme combobox related events. */
-    private boolean ignoreComboChanges;
+    private boolean      ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
     private AbstractFile lastSelectedFolder;
 
@@ -158,11 +158,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** System icon combobox. */
     private PrefComboBox<String> useSystemFileIconsComboBox;
     /** Identifier of 'yes' actions in question dialogs. */
-    private final static int YES_ACTION = 0;
+    private final static int       YES_ACTION = 0;
     /** Identifier of 'no' actions in question dialogs. */
-    private final static int NO_ACTION = 1;
+    private final static int       NO_ACTION = 1;
     /** Identifier of 'cancel' actions in question dialogs. */
-    private final static int CANCEL_ACTION = 2;
+    private final static int       CANCEL_ACTION = 2;
     /** All known custom look and feels. */
     private List<String> customLookAndFeels;
 
@@ -222,8 +222,8 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         commandBarIconsSizeComboBox.addDialogListener(parent);
         fileIconsSizeComboBox.addDialogListener(parent);
         if (brushedMetalCheckBox != null) {
-            brushedMetalCheckBox.addDialogListener(parent);
-        }
+        	brushedMetalCheckBox.addDialogListener(parent);
+    }
     }
 
     /**
@@ -265,10 +265,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lookAndFeelComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
                 String lnf = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
-                int selectedIndex = getSelectedIndex();
+				int selectedIndex = getSelectedIndex();
                 return selectedIndex >= 0 && !lookAndFeels[selectedIndex].getClassName().equals(lnf);
-            }
-        };
+                }
+			};
         lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
                 @Override
                 public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -459,14 +459,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 			public boolean hasChanged() {
 				String systemIconsPolicy;
 				switch(useSystemFileIconsComboBox.getSelectedIndex()) {
-                    case 0:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
-                        break;
-                    case 1:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
-                        break;
-                    default:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
+				case 0:
+					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
+					break;
+				case 1:
+					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
+					break;
+				default:
+					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
 				}
 				return !systemIconsPolicy.equals(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
 			}
@@ -525,7 +525,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         }
 
         if (brushedMetalCheckBox != null) {
-            MuConfigurations.getPreferences().setVariable(MuPreference.USE_BRUSHED_METAL, brushedMetalCheckBox.isSelected());
+            MuConfigurations.getPreferences().setVariable(MuPreference.USE_BRUSHED_METAL,  brushedMetalCheckBox.isSelected());
         }
 
         // Set ToolBar's icon size
@@ -900,7 +900,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // If the edited theme was modified, we must re-populate the list.
         if (new ThemeEditorDialog(parent, theme).editTheme()) {
             populateThemes(ThemeManager.getCurrentTheme());
-        }
+    }
     }
 
     /**
@@ -998,7 +998,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                 // changes.
                 if (lastSelectedFolder.equals(ThemeManager.getCustomThemesFolder())) {
                     populateThemes(theme);
-                }
+            }
             } catch(Exception exception) { // Notifies users of errors.
                 InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", file.getName()));
             }

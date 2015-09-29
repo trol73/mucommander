@@ -35,6 +35,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileOperation;
+import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.OSXFileUtils;
@@ -56,6 +58,7 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FileLabel;
 import com.mucommander.ui.text.MultiLineLabel;
+import com.mucommander.utils.Convert;
 
 /**
  * This dialog shows properties of a file or a group of files : number of files, file kind,
@@ -139,6 +142,24 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                 String group = singleFile.getGroup();
                 if (group != null) {
                     labelPanel.addRow(Translator.get("group") + ":", new JLabel(group), 6);
+                }
+            }
+            if (singleFile.isFileOperationSupported(FileOperation.GET_REPLICATION)) {
+                short replication = 0;
+                try {
+                    replication = singleFile.getReplication();
+                    labelPanel.addRow(Translator.get("replication") + ":", new JLabel(Short.toString(replication)), 6);
+                } catch (UnsupportedFileOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (singleFile.isFileOperationSupported(FileOperation.GET_BLOCKSIZE)) {
+                long blocksize = 0;
+                try {
+                    blocksize = singleFile.getBlocksize();
+                    labelPanel.addRow(Translator.get("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
+                } catch (UnsupportedFileOperationException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -225,7 +246,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okCancelButton) {
             dispose();
-        }
+    }
     }
 
 

@@ -79,7 +79,7 @@ public class TrolCommander {
     // --------------------------------------------------------------------------
     private static SplashScreen  splashScreen;
     /** Whether or not to display the splashscreen. */
-    private static boolean useSplash;
+    private static boolean       useSplash;
     /** true while the application is launching, false after it has finished launching */
     public static boolean isLaunching = true;
     /** Launch lock. */
@@ -794,14 +794,14 @@ public class TrolCommander {
         // Check for newer version unless it was disabled
         if (MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
             SwingUtilities.invokeLater(() -> {
-                try {
-                    VersionChecker versionChecker = VersionChecker.getInstance();
-                    if (versionChecker.isNewVersionAvailable()) {
-                        new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
+                    try {
+                        VersionChecker versionChecker = VersionChecker.getInstance();
+                        if (versionChecker.isNewVersionAvailable()) {
+                            new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             });
         }
         Profiler.stop("init");

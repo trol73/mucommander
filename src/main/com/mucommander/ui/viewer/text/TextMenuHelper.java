@@ -162,7 +162,7 @@ public class TextMenuHelper {
             textEditorImpl.findPrevious();
         } else if(source == toggleLineWrapItem) {
             if (e.getWhen() == 0) {  
-              toggleLineWrapItem.setSelected(!toggleLineWrapItem.isSelected());
+            toggleLineWrapItem.setSelected(!toggleLineWrapItem.isSelected());
             }
             textViewerDelegate.wrapLines(toggleLineWrapItem.isSelected());
         } else if(source == toggleLineNumbersItem) {

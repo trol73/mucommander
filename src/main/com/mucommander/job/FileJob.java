@@ -115,7 +115,7 @@ public abstract class FileJob implements Runnable {
     private AbstractFile fileToSelect;
 
     public enum State {
-
+    
         /**
          * Indicates that this job has not started yet, this is a temporary state
          */
@@ -136,7 +136,7 @@ public abstract class FileJob implements Runnable {
          */
         INTERRUPTED,
 
-        /** Indicates that this job has naturally finished (i.e. without being interrupted), this is a permanent state */
+    /** Indicates that this job has naturally finished (i.e. without being interrupted), this is a permanent state */
         FINISHED
         }
 
@@ -400,9 +400,9 @@ public abstract class FileJob implements Runnable {
         switch (getState()) {
             case INTERRUPTED:
             case FINISHED:
-                return;
+            return;
             case PAUSED:
-                setPaused(false);
+            setPaused(false);
                 break;
         }
         // Set state before calling stop() so that state is INTERRUPTED when jobStopped() is called
@@ -552,7 +552,7 @@ public abstract class FileJob implements Runnable {
             AbstractNotifier.getNotifier().displayBackgroundNotification(NotificationType.JOB_COMPLETED,
                     getProgressDialog() == null ? "" : getProgressDialog().getTitle(),
                     Translator.get("progress_dialog.job_finished"));
-        }
+    }
     }
 
 
@@ -625,27 +625,27 @@ public abstract class FileJob implements Runnable {
 
         QuestionDialog dialog;
         if (getProgressDialog() == null) {
-            dialog = new QuestionDialog(getMainFrame(),
-                    title,
-                    message,
-                    getMainFrame(),
-                    actionTexts,
-                    actionValues,
-                    0);
+            dialog = new QuestionDialog(getMainFrame(), 
+                                        title,
+                                        message,
+                                        getMainFrame(),
+                                        actionTexts,
+                                        actionValues,
+                                        0);
         } else {
-            dialog = new QuestionDialog(getProgressDialog(),
-                    title,
-                    message,
-                    getMainFrame(),
-                    actionTexts,
-                    actionValues,
-                    0);
+            dialog = new QuestionDialog(getProgressDialog(), 
+                                        title,
+                                        message,
+                                        getMainFrame(),
+                                        actionTexts,
+                                        actionValues,
+                                        0);
         }
         // Cancel or close dialog stops this job
         int userChoice = waitForUserResponse(dialog);
         if (userChoice == -1 || userChoice == CANCEL_ACTION) {
             interrupt();
-            // Keep 'skip all' choice for further error and return SKIP_ACTION
+        // Keep 'skip all' choice for further error and return SKIP_ACTION
         } else if (userChoice == SKIP_ALL_ACTION) {
             autoSkipErrors = true;
             return SKIP_ACTION;
@@ -686,16 +686,16 @@ public abstract class FileJob implements Runnable {
     	FolderPanel inactivePanel = getMainFrame().getInactivePanel();
 
         if (hasFolderChanged(inactivePanel.getCurrentFolder())) {
-            inactivePanel.tryRefreshCurrentFolder();
+        	inactivePanel.tryRefreshCurrentFolder();
         }
 
         if (hasFolderChanged(activePanel.getCurrentFolder())) {
             // Select file specified by selectFileWhenFinished (if any) only if the file exists in the active table's folder
             if (fileToSelect != null && activePanel.getCurrentFolder().equalsCanonical(fileToSelect.getParent()) && fileToSelect.exists()) {
-                activePanel.tryRefreshCurrentFolder(fileToSelect);
+            	activePanel.tryRefreshCurrentFolder(fileToSelect);
             } else {
-                activePanel.tryRefreshCurrentFolder();
-            }
+            	activePanel.tryRefreshCurrentFolder();
+        }
         }
 
         // Repaint the status bar as marked files have changed

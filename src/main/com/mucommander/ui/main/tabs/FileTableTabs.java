@@ -69,7 +69,7 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	@Override
 	protected void show(final int tabIndex) {
 		folderPanel.tryChangeCurrentFolderInternal(getTab(tabIndex).getLocation(), this::fireActiveTabChanged);
-	}
+			}
 
 	/**
 	 * Return the currently selected tab

@@ -75,11 +75,11 @@ public class CommandManager implements CommandBuilder {
     /** All known file associations. */
     private static final List<CommandAssociation> associations = new ArrayList<>();
     /** Path to the custom association file, <code>null</code> if the default one should be used. */
-    private static AbstractFile associationFile;
+    private static       AbstractFile             associationFile;
     /** Whether the associations were modified since the last time they were saved. */
-    private static boolean wereAssociationsModified;
+    private static       boolean                  wereAssociationsModified;
     /** Default name of the association XML file. */
-    public  static final String DEFAULT_ASSOCIATION_FILE_NAME = "associations.xml";
+    public  static final String                   DEFAULT_ASSOCIATION_FILE_NAME = "associations.xml";
 
 
 
@@ -92,11 +92,11 @@ public class CommandManager implements CommandBuilder {
     /** All known commands. */
     private static Map<String, List<Command>> commands = new HashMap<>();
     /** Path to the custom commands XML file, <code>null</code> if the default one should be used. */
-    private static AbstractFile commandsFile;
+    private static       AbstractFile         commandsFile;
     /** Whether the custom commands have been modified since the last time they were saved. */
-    private static boolean wereCommandsModified;
+    private static       boolean              wereCommandsModified;
     /** Default command used when no other command is found for a specific file type. */
-    private static Command defaultCommand;
+    private static       Command              defaultCommand;
 
 
 
@@ -267,7 +267,7 @@ public class CommandManager implements CommandBuilder {
         commands.get(alias).add(command);
         if (mark) {
             wereCommandsModified = true;
-        }
+    }
 //        Command oldCommand = commands.put(command.getAlias(), command);
 //        if (mark && !command.equals(oldCommand)) {
 //            wereCommandsModified = true;
@@ -346,8 +346,8 @@ public class CommandManager implements CommandBuilder {
         	// Goes through all the registered commands.
         	for (Command command : commands()) {
                 if (type == null || command.getType() == type) {
-                    builder.addCommand(command);
-                }
+                builder.addCommand(command);
+        }
             }
         } finally {
             builder.endBuilding();
@@ -364,13 +364,13 @@ public class CommandManager implements CommandBuilder {
             AttributeFileFilter attributeFilter = (AttributeFileFilter)filter;
 
             switch (attributeFilter.getAttribute()) {
-                case HIDDEN:
-                    builder.setIsHidden(!attributeFilter.isInverted());
-                    break;
+            case HIDDEN:
+                builder.setIsHidden(!attributeFilter.isInverted());
+                break;
 
-                case SYMLINK:
-                    builder.setIsSymlink(!attributeFilter.isInverted());
-                    break;
+            case SYMLINK:
+                builder.setIsSymlink(!attributeFilter.isInverted());
+                break;
             }
         } else if (filter instanceof PermissionsFileFilter) {
             PermissionsFileFilter permissionFilter = (PermissionsFileFilter)filter;
@@ -419,7 +419,7 @@ public class CommandManager implements CommandBuilder {
                     Iterator<FileFilter> filters = ((ChainedFileFilter)filter).getFileFilterIterator();
                     while (filters.hasNext()) {
                         buildFilter(filters.next(), builder);
-                    }
+                }
                 } else {
                     buildFilter(filter, builder);
                 }
@@ -567,23 +567,23 @@ public class CommandManager implements CommandBuilder {
             LOGGER.debug("Custom file associations not modified, skip saving.");
             return;
         }
-        LOGGER.debug("Writing associations to file: " + getAssociationFile());
+            LOGGER.debug("Writing associations to file: " + getAssociationFile());
 
-        // Writes the associations.
+            // Writes the associations.
         BackupOutputStream out = null;
-        try {
-            buildAssociations(new AssociationWriter(out = new BackupOutputStream(getAssociationFile())));
-            wereAssociationsModified = false;
+            try {
+                buildAssociations(new AssociationWriter(out = new BackupOutputStream(getAssociationFile())));
+                wereAssociationsModified = false;
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch(Exception e) {
-                    // Ignores this.
+                        // Ignores this.
+                    }
                 }
             }
         }
-    }
 
 
 
@@ -631,7 +631,7 @@ public class CommandManager implements CommandBuilder {
             setCommandFile(new File(path));
         } else {
             setCommandFile(file);
-        }
+    }
     }
         
 
@@ -688,24 +688,24 @@ public class CommandManager implements CommandBuilder {
             LOGGER.debug("Custom commands not modified, skip saving.");
             return;
         }
-        LOGGER.debug("Writing custom commands to file: " + getCommandFile());
+            LOGGER.debug("Writing custom commands to file: " + getCommandFile());
 
-        // Writes the commands.
+            // Writes the commands.
         BackupOutputStream out = null;
-        try {
+            try {
             out = new BackupOutputStream(getCommandFile());
             buildCommands(new CommandWriter(out), CommandType.NORMAL_COMMAND);
-            wereCommandsModified = false;
+                wereCommandsModified = false;
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch(Exception e) {
-                    // Ignores this.
+                        // Ignores this.
+                    }
                 }
             }
         }
-    }
 
     /**
      * Loads the custom commands XML File.

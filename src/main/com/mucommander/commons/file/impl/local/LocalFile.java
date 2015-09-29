@@ -122,7 +122,7 @@ public class LocalFile extends ProtocolFile {
     public final static String SEPARATOR = File.separator;
 
     /** Are we running Windows ? */
-    private final static boolean IS_WINDOWS = OsFamily.WINDOWS.isCurrent();
+    private final static boolean IS_WINDOWS =  OsFamily.WINDOWS.isCurrent();
 
     /** True if the underlying local filesystem uses drives assigned to letters (e.g. A:\, C:\, ...) instead
      * of having single a root folder '/' */
@@ -208,7 +208,7 @@ public class LocalFile extends ProtocolFile {
             // Remove the leading '/' for Windows-like paths
             if (USES_ROOT_DRIVES) {
                 absPath = absPath.substring(1, absPath.length());
-            }
+        }
         }
 
         this.file = file;
@@ -590,8 +590,8 @@ public class LocalFile extends ProtocolFile {
                         v.add(0, folder);
                     } else {
                         v.add(folder);
-                    }
                 }
+        }
             }
         } catch(IOException e) {
             LOGGER.warn("Can't get /Volumes subfolders", e);
@@ -629,15 +629,15 @@ public class LocalFile extends ProtocolFile {
             }
         }
 
-            // Note: this value must not be cached as its value can change over time (canonical path can change)
+        // Note: this value must not be cached as its value can change over time (canonical path can change)
         AbstractFile parent = getParent();
         String canonPath = getCanonicalPath(false);
         if (parent == null || canonPath == null) {
             return false;
         }
-        String parentCanonPath = parent.getCanonicalPath(true);
-        return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
-    }
+            String parentCanonPath = parent.getCanonicalPath(true);
+            return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
+        }
 
     @Override
     public boolean isSystem() {
@@ -690,7 +690,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!file.setLastModified(lastModified)) {
             throw new IOException();
-        }
+    }
     }
 		
     @Override
@@ -752,7 +752,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!success) {
             throw new IOException();
-        }
+    }
     }
 
     /**
@@ -767,8 +767,8 @@ public class LocalFile extends ProtocolFile {
             return attr.owner().getName();
         } catch (IOException | UnsupportedOperationException e) {
             e.printStackTrace();
-            return null;
-        }
+        return null;
+    }
     }
 
     /**
@@ -792,8 +792,8 @@ public class LocalFile extends ProtocolFile {
             return attr.group().getName();
         } catch (IOException | UnsupportedOperationException e) {
             e.printStackTrace();
-            return null;
-        }
+        return null;
+    }
     }
 
     /**
@@ -873,7 +873,7 @@ public class LocalFile extends ProtocolFile {
 		
         if (!ret) {
             throw new IOException();
-        }
+    }
     }
 
 
@@ -886,7 +886,7 @@ public class LocalFile extends ProtocolFile {
     public void mkdir() throws IOException {
         if (!file.mkdir()) {
             throw new IOException();
-        }
+    }
     }
 	
     @Override
@@ -928,7 +928,7 @@ public class LocalFile extends ProtocolFile {
                 if (destFile.exists()) {
                     if (!destJavaIoFile.delete()) {
                         throw new IOException();
-                    }
+            }
                 }
             }
             // Windows NT: Kernel32's MoveFileEx can be used, if the Kernel32 DLL is available.
@@ -950,7 +950,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!file.renameTo(destJavaIoFile)) {
             throw new IOException();
-        }
+    }
     }
 
     @Override
@@ -984,6 +984,23 @@ public class LocalFile extends ProtocolFile {
         throw new UnsupportedFileOperationException(FileOperation.COPY_REMOTELY);
     }
 
+    @Override
+    @UnsupportedFileOperation
+    public short getReplication() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_REPLICATION);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_BLOCKSIZE);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public void changeReplication(short replication) throws IOException {
+        throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
+    }
 
     ////////////////////////
     // Overridden methods //
@@ -1103,7 +1120,7 @@ public class LocalFile extends ProtocolFile {
             matcher.reset();
             if (matcher.find()) {
                 return FileFactory.getFile(matcher.group());
-            }
+        }
         }
 
         return super.getRoot();
@@ -1394,11 +1411,11 @@ public class LocalFile extends ProtocolFile {
             }
             switch (type) {
                 case READ_PERMISSION:
-                    return file.canRead();
+                return file.canRead();
                 case WRITE_PERMISSION:
-                    return file.canWrite();
+                return file.canWrite();
                 case EXECUTE_PERMISSION:
-                    return file.canExecute();
+                return file.canExecute();
             }
 
 //            if (type==READ_PERMISSION) {

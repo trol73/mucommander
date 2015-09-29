@@ -8,5 +8,13 @@ dist/*
 reports/*
 out/*
 .svn/*
+.idea/*
 /bin/
+.idea/
+docs/
 .idea/workspace.xml
+target/
+.settings/
+.idea/
+.classpath
+.project

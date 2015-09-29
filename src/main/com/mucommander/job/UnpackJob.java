@@ -226,8 +226,8 @@ public class UnpackJob extends AbstractCopyJob {
                         }
 
                         else {
-                        }
                     }
+                }
                 }
 
                 if (!processEntry) {
