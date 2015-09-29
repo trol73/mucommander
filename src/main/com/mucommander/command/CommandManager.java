@@ -231,7 +231,7 @@ public class CommandManager implements CommandBuilder {
      * @param file file to check
      * @return true if file corresponds to command filemask
      */
-    private static boolean checkFileMask(Command cmd, AbstractFile file) {
+    public static boolean checkFileMask(Command cmd, AbstractFile file) {
         String fileMask = cmd.getFileMask();
         if (fileMask == null || fileMask.isEmpty()) {
             return false;

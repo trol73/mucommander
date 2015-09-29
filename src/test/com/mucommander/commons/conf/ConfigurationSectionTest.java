@@ -311,8 +311,6 @@ public class ConfigurationSectionTest {
             assert !section.isEmpty();
 
             // Populates a set will all the expected variable names.
-            expectedNames = new HashSet<String>(count);
-            Set<String> expectedNames = new HashSet<String>(count);
             Set<String> expectedNames = new HashSet<>(count);
             for(int i = 0; i < count; i++)
                 expectedNames.add("sect" + i);

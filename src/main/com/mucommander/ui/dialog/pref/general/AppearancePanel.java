@@ -268,8 +268,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 				int selectedIndex = getSelectedIndex();
                 return selectedIndex >= 0 && !lookAndFeels[selectedIndex].getClassName().equals(lnf);
                 }
-			}
-        };
+			};
         lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
                 @Override
                 public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {

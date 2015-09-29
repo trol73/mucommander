@@ -96,7 +96,6 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
             	LOGGER.debug("Error while retrieving double-click interval from gconftool", e);
                 multiClickInterval = super.getMultiClickInterval();
             }
-		} catch (CommandException e) {
         }
         catch (CommandException e) {
             throw new DesktopInitialisationException(e);

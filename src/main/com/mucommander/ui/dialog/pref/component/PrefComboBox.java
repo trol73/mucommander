@@ -56,11 +56,6 @@ public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefCompo
 	
 	public void addDialogListener(final PreferencesDialog dialog) {
 		addItemListener(e -> dialog.componentChanged(PrefComboBox.this));
-
-			public void itemStateChanged(ItemEvent e) {
-				dialog.componentChanged(PrefComboBox.this);
-			}
-		});		
 	}
 
     @Override

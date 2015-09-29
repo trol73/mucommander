@@ -122,18 +122,18 @@ public class ChangeFileAttributesJob extends FileJob {
 
         try {
             file.changeDate(date);
-            return true;
             } catch (IOException e) {
                 LOGGER.debug("failed to change the date of " + file, e);
                 return false;
             }
-        }
+        
 
         /*if (!file.canGetReplication()) {
             return false;
         }*/
         if (!file.isFileOperationSupported(FileOperation.CHANGE_REPLICATION)) {
             return false;
+        }
 
         LOGGER.error("replication:"+replication);
         try {
