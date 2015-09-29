@@ -223,6 +223,15 @@ public abstract class HadoopFile extends ProtocolFile {
         return true;
     }
 
+    @Override
+    public short getReplication() {
+        return fileAttributes.getReplication();
+    }
+
+    @Override
+    public long getBlocksize() {
+        return fileAttributes.getBlocksize();
+    }
 
     // Supported file operations
 
@@ -278,6 +287,15 @@ public abstract class HadoopFile extends ProtocolFile {
 
         // Update local attributes
         fileAttributes.setDate(lastModified);
+    }
+
+    @Override
+    public void changeReplication(short replication) throws IOException {
+        // Note: setTimes seems to fail on HDFS directories.
+        fs.setReplication(path, replication);
+
+        // Update local attributes
+        fileAttributes.setReplication(replication);
     }
 
     @Override
@@ -339,9 +357,8 @@ public abstract class HadoopFile extends ProtocolFile {
      * @throws UnsupportedFileOperationException, always
      */
     @Override
-    @UnsupportedFileOperation
-    public long getFreeSpace() throws UnsupportedFileOperationException {
-        throw new UnsupportedFileOperationException(FileOperation.GET_FREE_SPACE);
+    public long getFreeSpace() throws IOException {
+        return fs.getStatus().getRemaining();
     }
 
     /**
@@ -350,9 +367,8 @@ public abstract class HadoopFile extends ProtocolFile {
      * @throws UnsupportedFileOperationException, always
      */
     @Override
-    @UnsupportedFileOperation
-    public long getTotalSpace() throws UnsupportedFileOperationException {
-        throw new UnsupportedFileOperationException(FileOperation.GET_TOTAL_SPACE);
+    public long getTotalSpace() throws IOException {
+        return fs.getStatus().getCapacity();
     }
 
 
@@ -489,6 +505,8 @@ public abstract class HadoopFile extends ProtocolFile {
             ));
             setOwner(fileStatus.getOwner());
             setGroup(fileStatus.getGroup());
+            setReplication(fileStatus.getReplication());
+            setBlocksize(fileStatus.getBlockSize());
         }
 
         /**

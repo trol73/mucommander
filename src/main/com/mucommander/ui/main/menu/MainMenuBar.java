@@ -165,6 +165,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(CalculateChecksumAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(ChangePermissionsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(ChangeDateAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(ChangeReplicationAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
         // Under Mac OS X, 'Preferences' already appears in the application (muCommander) menu, do not display it again
         if (!OsFamily.MAC_OS_X.isCurrent()) {
@@ -490,7 +491,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             if (!bookmarks.isEmpty()) {
                 for (Bookmark bookmark : bookmarks) {
                     MenuToolkit.addMenuItem(bookmarksMenu, new OpenLocationAction(mainFrame, new HashMap<>(), bookmark), null);
-                }
+            }
             } else {
                 // Show 'No bookmark' as a disabled menu item instead showing nothing
                 JMenuItem noBookmarkItem = MenuToolkit.addMenuItem(bookmarksMenu, Translator.get("bookmarks_menu.no_bookmark"), null, null, null);

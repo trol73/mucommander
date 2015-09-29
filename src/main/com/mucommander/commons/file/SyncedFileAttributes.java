@@ -255,6 +255,26 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
         return super.getGroup();
     }
 
+    /**
+     * Overridden to trigger attributes update if the expiration date has been reached.
+     */
+    @Override
+    public short getReplication() {
+        checkForExpiration(false);
+
+        return super.getReplication();
+    }
+
+    /**
+     * Overridden to trigger attributes update if the expiration date has been reached.
+     */
+    @Override
+    public long getBlocksize() {
+        checkForExpiration(false);
+
+        return super.getBlocksize();
+    }
+
 
     //////////////////////
     // Abstract methods //

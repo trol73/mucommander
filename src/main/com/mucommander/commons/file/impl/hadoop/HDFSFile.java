@@ -62,7 +62,7 @@ public class HDFSFile extends HadoopFile {
 //            // Should never happen but default to a reasonable value if it does
 //            DEFAULT_USERNAME = System.getProperty("user.name");
 //        }
-        DEFAULT_USERNAME = System.getProperty("user.name");
+            DEFAULT_USERNAME = System.getProperty("user.name");
         DEFAULT_GROUP = DEFAULT_CONFIGURATION.get("dfs.permissions.supergroup", "supergroup");
     }
 
@@ -119,7 +119,15 @@ public class HDFSFile extends HadoopFile {
         // TODO: for some reason, setting the group has no effect: files are still created with the default supergroup
         //conf.setStrings(UnixUserGroupInformation.UGI_PROPERTY_NAME, getUsername(url), getGroup(url));
 
+        if (url.containsCredentials()) {
+            try {
+                return FileSystem.get(URI.create(realm.toString(false)), conf, url.getCredentials().getLogin());
+            } catch (InterruptedException e) {
+                throw new IOException(e);
+            }
+        } else {
         return FileSystem.get(URI.create(realm.toString(false)), conf);
+    }
     }
 
     @Override

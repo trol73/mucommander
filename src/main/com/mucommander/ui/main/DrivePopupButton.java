@@ -144,10 +144,10 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             //putClientProperty("JComponent.sizeVariant", "large");
             //putClientProperty("JButton.buttonType", "textured");
         //}
-    }
+        }
 
 
-   /**
+    /**
      * Updates the button's label and icon to reflect the current folder and match one of the current volumes:
      * <<ul>
      *	<li>If the specified folder corresponds to a bookmark, the bookmark's name will be displayed
@@ -420,20 +420,20 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 }
 
                 SwingUtilities.invokeLater(() -> {
-                    if (useExtendedDriveNames) {
-                        item.setText(extendedNameFinal);
-                    }
-                    if (icon!=null) {
-                        item.setIcon(icon);
-                    }
+                        if (useExtendedDriveNames) {
+                            item.setText(extendedNameFinal);
+                        }
+                        if (icon!=null) {
+                            item.setIcon(icon);
+                        }
                 });
                 
             }
 
             // Re-calculate the popup menu's dimensions
             SwingUtilities.invokeLater(() -> {
-                popupMenu.invalidate();
-                popupMenu.pack();
+                    popupMenu.invalidate();
+                    popupMenu.pack();
             });
         }
         

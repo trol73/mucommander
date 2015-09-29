@@ -83,7 +83,7 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
      * actions array must be initialized before this function is called.
      */
     private void addButtons() {
-        setLayout(new GridLayout(0, actionIds.length));
+    	setLayout(new GridLayout(0, actionIds.length));
     	
     	// create buttons and add them to this command bar
         int nbButtons = actionIds.length;
@@ -123,14 +123,14 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
         // Display alternate actions when the modifier key is pressed
         if (e.getKeyCode() == modifier.getKeyCode()) {
             setAlternateActionsMode(true);
-        }
+    }
     }
 
     public void keyReleased(KeyEvent e) {
         // Display regular actions when the modifier key is released
         if (e.getKeyCode() == modifier.getKeyCode()) {
             setAlternateActionsMode(false);
-        }
+    }
     }
 
     public void keyTyped(KeyEvent e) {

@@ -103,6 +103,8 @@ public class MainFrame extends JFrame implements LocationListener {
 
     private JPanel insetsPane;
 
+    private JPanel insetsPane;
+
     /**
      * Sets the window icon, using the best method (Java 1.6's Window#setIconImages when available, Window#setIconImage
      * otherwise) and icon resolution(s) (OS-dependent).

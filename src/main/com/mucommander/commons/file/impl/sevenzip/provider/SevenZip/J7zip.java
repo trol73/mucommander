@@ -131,19 +131,19 @@ public class J7zip {
         
         Vector<String> listOfNames = new Vector<>();
         listOfNames.addAll(Arrays.asList(args).subList(2, args.length));
-
+        
         switch (args[0]) {
             case "l":
-                mode = MODE_LISTING;
+            mode = MODE_LISTING;
                 break;
             case "t":
-                mode = MODE_TESTING;
+            mode = MODE_TESTING;
                 break;
             case "x":
-                mode = MODE_EXTRACT;
+            mode = MODE_EXTRACT;
                 break;
             default:
-                PrintHelp();
+            PrintHelp();
                 return;
         }
         

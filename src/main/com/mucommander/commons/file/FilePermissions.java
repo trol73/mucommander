@@ -50,6 +50,8 @@ public abstract interface FilePermissions extends PermissionBits {
 
     FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
 
+    public final static FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
+
 
     /**
      * Returns the mask that indicates which permission bits are significant and should be taken into account.

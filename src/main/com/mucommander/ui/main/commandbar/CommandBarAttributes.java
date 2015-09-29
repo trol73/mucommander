@@ -59,7 +59,7 @@ public class CommandBarAttributes {
     {
         TerminalPanelAction.Descriptor.ACTION_ID,
         ViewAsAction.Descriptor.ACTION_ID,
-    	null,
+        null,
     	LocalCopyAction.Descriptor.ACTION_ID,
     	RenameAction.Descriptor.ACTION_ID,
     	MkfileAction.Descriptor.ACTION_ID,
@@ -138,7 +138,7 @@ public class CommandBarAttributes {
     
     private static boolean equals(Object action1, Object action2) {
     	if (action1 == null) {
-            return action2 == null;
+    		return action2 == null;
         }
     	return action1.equals(action2);
     }
@@ -155,6 +155,7 @@ public class CommandBarAttributes {
      * @param modifier           command-bar modifier.
      */
     public static void setAttributes(String[] actionIds, String[] alternateActionIds, KeyStroke modifier) {
+System.out.println("!!! setAttributes " + actionIds);
     	CommandBarAttributes.actionIds = actionIds;
     	CommandBarAttributes.alternateActionIds = alternateActionIds;
     	CommandBarAttributes.modifier = modifier;

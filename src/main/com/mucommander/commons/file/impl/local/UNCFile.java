@@ -415,6 +415,24 @@ public class UNCFile extends ProtocolFile {
         throw new UnsupportedFileOperationException(FileOperation.COPY_REMOTELY);
     }
 
+    @Override
+    @UnsupportedFileOperation
+    public short getReplication() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_REPLICATION);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_BLOCKSIZE);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public void changeReplication(short replication) throws IOException {
+        throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
+    }
+
 
     ////////////////////////
     // Overridden methods //

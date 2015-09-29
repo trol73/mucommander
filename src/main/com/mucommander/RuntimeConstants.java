@@ -92,7 +92,7 @@ public class RuntimeConstants {
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes attributes = null; // JAR file's manifest's attributes.
+        Attributes  attributes = null; // JAR file's manifest's attributes.
         InputStream in = null;
         try {
             if((in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) != null) {

@@ -89,6 +89,8 @@ public class SizeChooser extends JPanel {
         }
         unitComboBox.setSelectedIndex(SizeFormat.KILOBYTE_UNIT);
         unitComboBox.addItemListener(e -> fireChangeEvent());
+            }
+        });
 
         add(unitComboBox);
     }

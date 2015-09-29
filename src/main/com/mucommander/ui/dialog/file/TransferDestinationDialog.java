@@ -80,7 +80,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * Dialog width should not exceed 360, height is not an issue (always the same)
      */
     protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
-
+	
     protected static boolean enableBackgroundMode;
 
 
@@ -110,7 +110,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     protected TaskWidget taskWidget;
 
 
-
+	
     private final static int DEFAULT_ACTIONS[] = {
         FileCollisionDialog.CANCEL_ACTION,
         FileCollisionDialog.SKIP_ACTION,
@@ -453,17 +453,17 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             // Perform UI tasks in the AWT event thread
             try {
                 SwingUtilities.invokeAndWait(() -> {
-                    spinningDial.setAnimated(false);
+                        spinningDial.setAnimated(false);
 
-                    if (!interrupted) {
-                        // Document change events are no longer needed
-                        pathField.getDocument().removeDocumentListener(TransferDestinationDialog.this);
+                        if (!interrupted) {
+                            // Document change events are no longer needed
+                            pathField.getDocument().removeDocumentListener(TransferDestinationDialog.this);
 
-                        // Set the path field's text and selection
-                        pathFieldContent.feedToPathField(pathField);
+                            // Set the path field's text and selection 
+                            pathFieldContent.feedToPathField(pathField);
 
-                        setEnabledOkButtons(true);
-                    }
+                            setEnabledOkButtons(true);
+                        }
                 });
             } catch (InterruptedException e) {
                 LOGGER.trace("Interrupted", e);
@@ -515,25 +515,25 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             // Perform UI tasks in the AWT event thread
             SwingUtilities.invokeLater(() -> {
-                if (interrupted) {
-                    dispose();
-                } else if (isValid) {
-                    dispose();
-                    startJob(resolvedDest);
-                } else {
-                    showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
-                    // Re-enable the OK button and path field so that a new path can be entered
-                    setEnabledOkButtons(true);
-                    pathField.setEnabled(true);
-                }
+                    if (interrupted) {
+                        dispose();
+                    } else if (isValid) {
+                        dispose();
+                        startJob(resolvedDest);
+                    } else {
+                        showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
+                        // Re-enable the OK button and path field so that a new path can be entered
+                        setEnabledOkButtons(true);
+                        pathField.setEnabled(true);
+                    }
             });
 
             // Set the current thread to null
             synchronized(TransferDestinationDialog.this) {
                 if (thread == this) {       // This thread may have been interrupted already
                     thread = null;
-                }
             }
+        }
         }
 
         /**
