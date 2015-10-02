@@ -133,7 +133,7 @@ public class SizeFormat {
         if(size < KB_1) {
             if(roundToKb) {
                 // Note: ROUND_TO_KB must have precedence over DIGITS_FULL
-                digitsString = size == 0 ? " 0" : "1";
+                digitsString = size == 0 ? "0" : "1";
                 unitString = noUnit ? "" : KB;
             }
             else {
