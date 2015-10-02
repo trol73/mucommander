@@ -19,3 +19,4 @@ target/
 .classpath
 .project
 test-output/
+.DS_Store
