@@ -18,3 +18,5 @@ target/
 .idea/
 .classpath
 .project
+test-output/
+.DS_Store

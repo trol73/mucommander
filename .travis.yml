@@ -1,14 +1,8 @@
 cache:
   directories:
-    - $HOME/.m2/repository
-   - $HOME/.ivy2
+    - $HOME/.m2
 
 language: java
 
-script: 
-  - mvn compile test:compile
-  - mvn test
-
- jdk:
+jdk:
   - oraclejdk8
-#  - openjdk7
