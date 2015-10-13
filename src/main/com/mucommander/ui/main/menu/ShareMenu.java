@@ -38,7 +38,7 @@ public class ShareMenu extends JMenu {
      */
     private synchronized void populate() {
 
-        Set<String> extensions = new HashSet();
+        Set<String> extensions = new HashSet<>();
         
         if(clickedFile != null){
             markedFiles.add(clickedFile);

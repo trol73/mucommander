@@ -28,7 +28,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import org.raisercostin.jedi.Locations;
-import scala.Function1;
 import scala.runtime.AbstractFunction1;
 
 /**

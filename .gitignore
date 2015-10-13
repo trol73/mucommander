@@ -42,7 +42,6 @@ eggs
 Gemfile.lock
 git.properties
 ivy*jar
-lib
 logs
 out/
 out/*

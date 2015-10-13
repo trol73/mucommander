@@ -1,6 +1,5 @@
 package com.mucommander.search;
 
-import com.google.common.io.Closeables;
 import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
@@ -82,7 +81,10 @@ public class SearchTask extends SwingWorker<Boolean, String> {
             indexWriter.rollback();
             throw ex;
         } finally {
-            Closeables.closeQuietly(indexWriter);
+            // TODO use autoclosable
+            try {
+                indexWriter.close();
+            } catch (IOException ignore) {}
         }
     }
 
@@ -118,7 +120,10 @@ public class SearchTask extends SwingWorker<Boolean, String> {
             }
             throw ex;
         } finally {
-            Closeables.closeQuietly(writer);
+            // TODO use autoclosable
+            try {
+                writer.close();
+            } catch (IOException ignore) {}
         }
     }
 
@@ -173,7 +178,10 @@ public class SearchTask extends SwingWorker<Boolean, String> {
                 }
             }
         } finally {
-            Closeables.closeQuietly(indexReader);
+            // TODO use autoclosable
+            try {
+                indexReader.close();
+            } catch (Exception ignore) {}
         }
     }
 
