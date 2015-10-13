@@ -64,6 +64,7 @@ public enum MakeFileAction {
     public void performAction() {
         new MakeDirectoryFileDialog(mainFrame, true).showDialog();
     }
+
     @Override
     public ActionDescriptor getDescriptor() {
         return new Descriptor();
@@ -84,6 +85,6 @@ public enum MakeFileAction {
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_DOWN_MASK); }
     }
 }

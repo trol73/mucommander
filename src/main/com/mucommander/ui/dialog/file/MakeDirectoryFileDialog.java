@@ -103,7 +103,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
      * @param mkfileMode if true, the dialog will operate in 'mkfile' mode, if false in 'mkdir' mode
      */
     public MakeDirectoryFileDialog(MainFrame mainFrame, boolean mkfileMode) {
-        super(mainFrame, ActionManager.getActionInstance(mkfileMode?MakeFileAction.$.ACTION_ID:MakeDirectoryAction.$.ACTION_ID,mainFrame).getLabel(), mainFrame);
+        super(mainFrame, ActionManager.getActionInstance(mkfileMode ? MakeFileAction.$.ACTION_ID : MakeDirectoryAction.$.ACTION_ID, mainFrame).getLabel(), mainFrame);
         this.mainFrame = mainFrame;
         this.mkfileMode = mkfileMode;
         setStorageSuffix(mkfileMode ? "file" : "dir");
@@ -111,7 +111,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         Container contentPane = getContentPane();
 
         YBoxPanel mainPanel = new YBoxPanel();
-        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MakeFileAction.$.ACTION_ID:MakeDirectoryAction.$.ACTION_ID)+" :"));
+        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MakeFileAction.$.ACTION_ID : MakeDirectoryAction.$.ACTION_ID)+" :"));
 
         // Create a path field with auto-completion capabilities
         pathField = new FilePathField();

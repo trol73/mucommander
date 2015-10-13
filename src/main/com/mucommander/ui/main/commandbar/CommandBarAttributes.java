@@ -59,7 +59,7 @@ public class CommandBarAttributes {
     {
         TerminalPanelAction.Descriptor.ACTION_ID,
         ViewAsAction.Descriptor.ACTION_ID,
-        MakeFileAction.$.ACTION_ID,
+        null,//MakeFileAction.$.ACTION_ID,
     	LocalCopyAction.Descriptor.ACTION_ID,
     	RenameAction.Descriptor.ACTION_ID,
     	MakeFileAction.$.ACTION_ID,
