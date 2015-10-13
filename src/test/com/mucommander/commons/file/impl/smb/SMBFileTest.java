@@ -23,7 +23,7 @@ import com.mucommander.commons.file.AbstractFileTest;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
 import org.testng.annotations.BeforeClass;
-
+import org.testng.annotations.Test;
 import java.io.IOException;
 
 /**
@@ -32,6 +32,7 @@ import java.io.IOException;
  *
  * @author Maxence Bernard
  */
+@Test
 public class SMBFileTest extends AbstractFileTest {
 
     /** The system property that holds the URI to the temporary SMB folder */
@@ -48,10 +49,9 @@ public class SMBFileTest extends AbstractFileTest {
         // Turn off attribute caching completely, otherwise tests will fail
         SMBFile.setAttributeCachingPeriod(0);
     }
-
-    @BeforeClass
+    @BeforeClass()
     public static void setupTemporaryFolder() {
-        tempFolder = FileFactory.getFile(System.getProperty(TEMP_FOLDER_PROPERTY));
+        tempFolder = getTemporaryFolder(TEMP_FOLDER_PROPERTY);
     }
 
 

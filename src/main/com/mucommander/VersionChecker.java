@@ -134,7 +134,7 @@ public class VersionChecker extends DefaultHandler {
     public static VersionChecker getInstance() throws Exception {
         VersionChecker instance;
 
-        LOGGER.debug("Opening connection to " + RuntimeConstants.VERSION_URL);
+        LOGGER.info("Opening connection to " + RuntimeConstants.VERSION_URL);
 
         // Parses the remote XML file using UTF-8 encoding.
         try(InputStream in = FileFactory.getFile(RuntimeConstants.VERSION_URL).getInputStream()){

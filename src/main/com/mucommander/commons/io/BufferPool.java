@@ -329,7 +329,8 @@ public class BufferPool {
         long bufferSize = bufferContainer.getSize();        // size in bytes (!= length)
 
         if(maxPoolSize!=-1 && poolSize+bufferSize>maxPoolSize) {
-            LOGGER.info("Warning: maximum pool size reached, buffer not added to the pool: {}", buffer);
+            LOGGER.info("Warning: maximum pool size reached, buffer not added to the pool of type {}. Enable trace to get the buffer.", buffer.getClass());
+            LOGGER.trace("Warning: maximum pool size reached, buffer not added to the pool of type {} : {}", buffer.getClass(), buffer);
             return false;
         }
 
@@ -658,4 +659,9 @@ public class BufferPool {
             return CharBuffer.class;
         }
     }
+
+	public static synchronized void releaseAll() {
+		bufferContainers.clear();
+		poolSize = 0;
+	}
 }

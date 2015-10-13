@@ -25,16 +25,20 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.local.LocalFile;
@@ -71,13 +75,20 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     private Thread repaintThread;
     private SpinningDial dial;
 	
+	private JTextField textfield;
     private JLabel counterLabel;
     private JLabel sizeLabel;
     private JLabel ownerLabel;
     private JLabel groupLabel;
+	private JLabel lastMod;
+	private JLabel createtime;
+	private JLabel lastacces;
+	AbstractFile file;
+	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     private JButton okCancelButton;
-
+	private String newName;
+	private JTextField edtNewName;
     // Dialog width is constrained to 320, height is not an issue (always the same)
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 800);
@@ -118,6 +129,13 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
         XAlignedComponentPanel labelPanel = new XAlignedComponentPanel(10);
 
+		// Name of file for renaming
+		file = files.elementAt(0);
+		textfield = new JTextField();
+		labelPanel.addRow("Name" + ":", textfield, 6);
+		textfield.setText(file.getName());
+		textfield.addActionListener(this);
+		textfield.setEditable(true);
         // Contents (set later)
         counterLabel = new JLabel("");
         labelPanel.addRow(Translator.get("properties_dialog.contents")+":", counterLabel, 6);
@@ -131,6 +149,15 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         sizePanel.add(sizeLabel = new JLabel(""));
         sizePanel.add(new JLabel(dial = new SpinningDial()));
         labelPanel.addRow(Translator.get("size") + ":", sizePanel, 6);
+
+		// more information
+		lastMod = new JLabel("");
+		labelPanel.addRow("Last Modified" + ":", lastMod, 6);
+		createtime = new JLabel("");
+		labelPanel.addRow("Created" + ":", createtime, 6);
+		lastacces = new JLabel("");
+		labelPanel.addRow("Last Accessed" + ":", lastacces, 6);
+
         if (isSingleFile) {
             if (singleFile.canGetOwner()) {
                 String owner = singleFile.getOwner();
@@ -205,9 +232,48 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         sizeLabel.setText(SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE| SizeFormat.ROUND_TO_KB) +
 			  " (" + SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE) + ")");
 
+		
+		//adding last modification time and date
+		lastMod.setText(sdf.format(file.getDate()));
+
+
+		
+//		BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getAbsolutePath())),
+//				BasicFileAttributes.class);
+//		createtime.setText(attr.creationTime().toString());
+//
+//		lastacces.setText(attr.lastAccessTime().toString());
+
+		lastacces.setText("coming soon");
+		createtime.setText("coming soon");
         counterLabel.repaint(REFRESH_RATE);
         sizeLabel.repaint(REFRESH_RATE);
     }
+
+		protected AbstractFile createDestinationFile(AbstractFile destFolder,
+			String destFileName) {
+		AbstractFile destFile;
+		do { // Loop for retry
+			try {
+				destFile = destFolder.getDirectChild(destFileName);
+				break;
+			} catch (IOException e) {
+		
+			}
+		} while (true);
+		return destFile;
+	}
+	public static void renamefile(AbstractFile destFile, String newName){
+
+		AbstractFile destination = FileFactory.getFile(destFile.getParent()+"/"+newName);
+		
+		try {
+			destFile.moveTo(destination);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 
 
     public void start() {
@@ -245,8 +311,12 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okCancelButton) {
+renamefile(file,textfield.getText());
+			 //failer her kan ikke rename file.
+} else {
+		
+		}
             dispose();
-    }
     }
 
 

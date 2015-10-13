@@ -23,10 +23,11 @@ import com.mucommander.commons.io.*;
 import com.mucommander.commons.io.security.MuProvider;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.StringUtils;
+import com.mucommander.test.Assumes;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -89,7 +90,13 @@ public abstract class AbstractFileTest {
         random = new Random(0);
     }
 
-    /**
+    public static AbstractFile getTemporaryFolder(String propertyName) {
+        String property = System.getProperty(propertyName);
+        Assumes.assumeThat("Temporary folder referenced by property ["+propertyName+"] is configured", property!=null);
+		AbstractFile tempFolder = FileFactory.getFile(property);
+		return tempFolder;
+    }
+	/**
      * Cleans up test files after each test execution so as to leave the filesystem in the same state as it was
      * before the test. In particular, all files registered with {@link #deleteWhenFinished(AbstractFile)} are
      * deleted if they exist.

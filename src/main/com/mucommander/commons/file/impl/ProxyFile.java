@@ -27,10 +27,10 @@ import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PushbackInputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -395,5 +395,17 @@ public abstract class ProxyFile extends AbstractFile {
     @Override
     public void changeReplication(short replication) throws IOException {
         file.changeReplication(replication);
+    }
+    @Override
+    public boolean isExecutable() {
+    	return file.isExecutable();
+    }
+    @Override
+    public PushbackInputStream getPushBackInputStream(int bufferSize) throws IOException {
+    	return file.getPushBackInputStream(bufferSize);
+    }
+    @Override
+    public void closePushbackInputStream() throws IOException {
+    	file.closePushbackInputStream();
     }
 }
