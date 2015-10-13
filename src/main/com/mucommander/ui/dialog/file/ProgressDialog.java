@@ -97,21 +97,21 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
 
     private JLabel currentFileLabel;
-    private JLabel totalTransferredLabel;
+    protected JLabel totalTransferredLabel;
 
     private JProgressBar totalProgressBar;
-    private JProgressBar currentFileProgressBar;
+    protected JProgressBar currentFileProgressBar;
 
-    private JLabel currentSpeedLabel;
+    protected JLabel currentSpeedLabel;
     private JCheckBox limitSpeedCheckBox;
     private SizeChooser speedChooser;
     private JLabel elapsedTimeLabel;
 
     private SpeedGraph speedGraph;
 
-    private CollapseExpandButton collapseExpandButton;
+    protected CollapseExpandButton collapseExpandButton;
     private ButtonChoicePanel buttonsChoicePanel;
-    private JButton pauseResumeButton;
+    protected JButton pauseResumeButton;
     private JButton skipButton;
     private JButton stopButton;
     private JButton backgroundButton;
