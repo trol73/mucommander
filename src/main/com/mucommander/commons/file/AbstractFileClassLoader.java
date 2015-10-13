@@ -32,7 +32,9 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 public class AbstractFileClassLoader extends ClassLoader {
-	private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
+
+    private final static org.slf4j.Logger LOGGER = null;//org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
+
 	
     // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
@@ -113,7 +115,9 @@ public class AbstractFileClassLoader extends ClassLoader {
                     return file;
                 }
             } catch(IOException ignore) {
-            	logger.info("");
+                if (LOGGER != null) {
+                    LOGGER.info("");
+                }
             }
             // Treats error as a simple 'resource not found' case and keeps looking for
             // one with the correct name that will load.
@@ -143,7 +147,9 @@ public class AbstractFileClassLoader extends ClassLoader {
             try {
                 return file.getInputStream();
             } catch(Exception e) {
-            	logger.info("",e);
+                if (LOGGER != null) {
+                    LOGGER.info("", e);
+                }
             }
         }
 
@@ -188,7 +194,9 @@ public class AbstractFileClassLoader extends ClassLoader {
                     resources.add(file.getJavaNetURL());
                 }
             } catch(IOException e) {
-            	logger.info("",e);
+                if (LOGGER != null) {
+                    LOGGER.info("", e);
+                }
             }
         }
         return resources.elements();
@@ -255,7 +263,9 @@ public class AbstractFileClassLoader extends ClassLoader {
             try {
                 return loadClass(name, file);
             } catch(IOException e) {
-            	logger.info("",e);
+                if (LOGGER != null) {
+                    LOGGER.info("", e);
+                }
             }
         }
         throw new ClassNotFoundException(name);
