@@ -23,7 +23,6 @@ import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.SimpleFilePermissions;
 import com.mucommander.commons.file.impl.zip.provider.ZipEntry;
 import com.mucommander.commons.file.impl.zip.provider.ZipOutputStream;
-
 import java.io.IOException;
 import java.io.OutputStream;
 //import java.util.zip.ZipEntry;
@@ -70,7 +69,7 @@ class ZipArchiver extends Archiver {
 
         boolean isDirectory = attributes.isDirectory();
 		
-        // create the entry and use the provided file's date
+        // Create the entry and use the provided file's date
         ZipEntry entry = new ZipEntry(normalizePath(entryPath, isDirectory));
         // Use provided file's size and date
         long size = attributes.getSize();
@@ -97,4 +96,7 @@ class ZipArchiver extends Archiver {
     public void close() throws IOException {
         zos.close();
     }
+    
+    @Override
+    public void postProcess() throws IOException {}
 }

@@ -20,13 +20,14 @@ package com.mucommander;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
+import org.raisercostin.jedi.ClassPathInputLocation;
+import org.raisercostin.jedi.Locations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.util.ResourceLoader;
 
 /**
@@ -95,6 +96,12 @@ public class RuntimeConstants {
         Attributes  attributes = null; // JAR file's manifest's attributes.
         InputStream in = null;
         try {
+        	ClassPathInputLocation a = Locations.classpath("META-INF/MANIFEST.MF");
+        	ClassPathInputLocation a2 = Locations.classpath(RuntimeConstants.class.getName().replace('.','/')+".class").parent().parent().parent().child("META-INF/MANIFEST.MF");
+            URL b = RuntimeConstants.class.getClassLoader().getResource("META-INF/MANIFEST.MF");
+        	System.out.println(a);
+        	System.out.println(a2);
+        	System.out.println(b);
             if((in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) != null) {
                 Manifest manifest;
 

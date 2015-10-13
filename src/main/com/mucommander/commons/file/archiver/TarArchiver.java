@@ -91,4 +91,7 @@ class TarArchiver extends Archiver {
 		
         tos.close();
     }
+    
+    @Override
+    public void postProcess() throws IOException {}
 }

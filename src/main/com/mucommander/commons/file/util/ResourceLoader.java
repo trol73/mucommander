@@ -202,7 +202,7 @@ public class ResourceLoader {
      * @return an InputStream that allows to read the resource, or <code>null</code> if the resource couldn't be located
      */
     public static InputStream getPackageResourceAsStream(Package ppackage, String name, ClassLoader classLoader, AbstractFile rootPackageFile) {
-        return ResourceLoader.getResourceAsStream(getRelativePackagePath(ppackage)+"/"+name, classLoader, rootPackageFile);
+        return getResourceAsStream(getRelativePackagePath(ppackage)+"/"+name, classLoader, rootPackageFile);
     }
 
     /**

@@ -34,6 +34,7 @@ import java.lang.reflect.Modifier;
  *
  * @author Maxence Bernard
  */
+@Test
 public class ProxyFileTest extends AbstractFileTest {
 
     ////////////////////////////////////

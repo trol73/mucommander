@@ -32,6 +32,8 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 public class AbstractFileClassLoader extends ClassLoader {
+	private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
+	
     // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** All abstract files in which to look for classes and resources. */
@@ -110,7 +112,9 @@ public class AbstractFileClassLoader extends ClassLoader {
                 if (file.getChild(name).exists()) {
                     return file;
                 }
-            } catch(IOException ignore) {}
+            } catch(IOException ignore) {
+            	logger.info("");
+            }
             // Treats error as a simple 'resource not found' case and keeps looking for
             // one with the correct name that will load.
         }
@@ -138,7 +142,9 @@ public class AbstractFileClassLoader extends ClassLoader {
         if (file != null) {
             try {
                 return file.getInputStream();
-            } catch(Exception ignore) {}
+            } catch(Exception e) {
+            	logger.info("",e);
+            }
         }
 
         // Couldn't find the resource.
@@ -181,7 +187,9 @@ public class AbstractFileClassLoader extends ClassLoader {
                 if (file.getChild(name).exists()) {
                     resources.add(file.getJavaNetURL());
                 }
-            } catch(IOException ignore) {}
+            } catch(IOException e) {
+            	logger.info("",e);
+            }
         }
         return resources.elements();
     }
@@ -246,7 +254,9 @@ public class AbstractFileClassLoader extends ClassLoader {
         if (file != null) {
             try {
                 return loadClass(name, file);
-            } catch(Exception ignore) {}
+            } catch(IOException e) {
+            	logger.info("",e);
+            }
         }
         throw new ClassNotFoundException(name);
     }

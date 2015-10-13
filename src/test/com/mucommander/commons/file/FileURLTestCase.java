@@ -18,7 +18,10 @@
 
 package com.mucommander.commons.file;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.mucommander.commons.runtime.OsFamily;
 
 import java.net.MalformedURLException;
 
@@ -99,20 +102,20 @@ public abstract class FileURLTestCase {
 
         FileURL url = FileURL.getFileURL(sb.toString());
 
-        assert scheme.equals(url.getScheme());
+        Assert.assertEquals(scheme,url.getScheme());
 
         if(host!=null) {
             if(login!=null) {
-                assert login.equals(url.getLogin());
+                Assert.assertEquals(login,url.getLogin());
                 assert url.containsCredentials();
 
                 if(password!=null)
-                    assert password.equals(url.getPassword());
+                    Assert.assertEquals(password,url.getPassword());
 
-                assert new Credentials(login, password).equals(url.getCredentials(), true);
+                Assert.assertTrue(new Credentials(login, password).equals(url.getCredentials(), true));
             }
 
-            assert host.equals(url.getHost());
+            Assert.assertEquals(host,url.getHost());
             assert port == url.getPort();
         }
 
@@ -123,13 +126,13 @@ public abstract class FileURLTestCase {
         else if(query == null)
             assert url.getQuery() == null;
         else
-            assert query.equals(url.getQuery());
+            Assert.assertEquals(query,url.getQuery());
 
         assertPathEquals(path, url);
 
         // Test the URL's string representation
-        assert url.equals(FileURL.getFileURL(url.toString(true, false)));
-        assert url.equals(FileURL.getFileURL(url.toString(false, false)), false, false);
+        Assert.assertTrue(url.equals(FileURL.getFileURL(url.toString(true, false))));
+        Assert.assertTrue(url.equals(FileURL.getFileURL(url.toString(false, false)), false, false));
 
         return url;
     }
@@ -194,8 +197,8 @@ public abstract class FileURLTestCase {
      * @param url2 second url to test
      */
     protected void assertEquals(FileURL url1, FileURL url2) {
-        assert url1.equals(url2);
-        assert url2.equals(url1);
+        Assert.assertEquals(url1,url2);
+        Assert.assertEquals(url2,url1);
         assert url1.hashCode()==url2.hashCode();
     }
 
@@ -212,8 +215,8 @@ public abstract class FileURLTestCase {
      * FileURL for them to be equal
      */
     protected void assertEquals(FileURL url1, FileURL url2, boolean compareCredentials, boolean compareProperties) {
-        assert url1.equals(url2, compareCredentials, compareProperties);
-        assert url2.equals(url1, compareCredentials, compareProperties);
+        Assert.assertTrue(url1.equals(url2, compareCredentials, compareProperties));
+        Assert.assertTrue(url2.equals(url1, compareCredentials, compareProperties));
 
         // Compare hash codes only if both flags are true.
         if(compareCredentials && compareProperties)
@@ -227,8 +230,8 @@ public abstract class FileURLTestCase {
      * @param url2 second url to test
      */
     protected void assertNotEquals(FileURL url1, FileURL url2) {
-        assert !url1.equals(url2);
-        assert !url2.equals(url1);
+        Assert.assertNotEquals(url1,url2);
+        Assert.assertNotEquals(url2,url1);
     }
 
     /**
@@ -242,8 +245,8 @@ public abstract class FileURLTestCase {
      * FileURL for them to be equal
      */
     protected void assertNotEquals(FileURL url1, FileURL url2, boolean compareCredentials, boolean compareProperties) {
-        assert !url1.equals(url2, compareCredentials, compareProperties);
-        assert !url2.equals(url1, compareCredentials, compareProperties);
+        Assert.assertTrue(!url1.equals(url2, compareCredentials, compareProperties));
+        Assert.assertTrue(!url2.equals(url1, compareCredentials, compareProperties));
     }
 
     /**
@@ -253,7 +256,7 @@ public abstract class FileURLTestCase {
      * @param url URL to test
      */
     protected void assertPathEquals(String expectedPath, FileURL url) {
-        assert expectedPath.equals(url.getPath());
+        Assert.assertEquals(expectedPath,url.getPath());
     }
 
 
@@ -301,8 +304,8 @@ public abstract class FileURLTestCase {
             assert url.getHandler().getGuestCredentials() == null;
         }
         else {
-            assert expectedGuestCredentials.equals(url.getGuestCredentials());
-            assert expectedGuestCredentials.equals(url.getHandler().getGuestCredentials());
+            Assert.assertEquals(expectedGuestCredentials,url.getGuestCredentials());
+            Assert.assertEquals(expectedGuestCredentials,url.getHandler().getGuestCredentials());
         }
     }
 
@@ -320,8 +323,8 @@ public abstract class FileURLTestCase {
         FileURL url = getRootURL();
         AuthenticationType expectedAuthenticationType = getAuthenticationType();
 
-        assert expectedAuthenticationType.equals(url.getAuthenticationType());
-        assert expectedAuthenticationType.equals(url.getHandler().getAuthenticationType());
+        Assert.assertEquals(expectedAuthenticationType,url.getAuthenticationType());
+        Assert.assertEquals(expectedAuthenticationType,url.getHandler().getAuthenticationType());
 
         assert expectedAuthenticationType==AuthenticationType.NO_AUTHENTICATION
                 || expectedAuthenticationType==AuthenticationType.AUTHENTICATION_REQUIRED
@@ -344,8 +347,8 @@ public abstract class FileURLTestCase {
 
         // Assert that the path separator values returned by the FileURL and its handler match the expected one
         // and are consistent
-        assert expectedPathSeparator.equals(url.getPathSeparator());
-        assert expectedPathSeparator.equals(url.getHandler().getPathSeparator());
+        Assert.assertEquals(expectedPathSeparator,url.getPathSeparator());
+        Assert.assertEquals(expectedPathSeparator,url.getHandler().getPathSeparator());
     }
 
 
@@ -377,7 +380,7 @@ public abstract class FileURLTestCase {
         String query = url.getQuery();
 
         if(isQueryParsed()) {
-            assert "query&param=value".equals(query);
+            Assert.assertEquals("query&param=value",query);
         }
         else {
             assert query == null;
@@ -399,23 +402,23 @@ public abstract class FileURLTestCase {
 
         // Test path and filename
         assertPathEquals(getSchemePath("/path/"), parentURL);
-        assert "path".equals(parentURL.getFilename());
+        Assert.assertEquals("path",parentURL.getFilename());
 
         // Assert that schemes, hosts and ports match
-        assert url.getScheme().equals(parentURL.getScheme());
-        assert url.getHost().equals(parentURL.getHost());
+        Assert.assertEquals(url.getScheme(),parentURL.getScheme());
+        Assert.assertEquals(url.getHost(),parentURL.getHost());
         assert url.getPort() == parentURL.getPort();
 
         // Assert that credentials match
-        assert url.getCredentials().equals(parentURL.getCredentials());
-        assert url.getLogin().equals(parentURL.getLogin());
-        assert url.getPassword().equals(parentURL.getPassword());
+        Assert.assertEquals(url.getCredentials(),parentURL.getCredentials());
+        Assert.assertEquals(url.getLogin(),parentURL.getLogin());
+        Assert.assertEquals(url.getPassword(),parentURL.getPassword());
 
         // Assert that the sample property is in the parent URL
-        assert "value".equals(parentURL.getProperty("key"));
+        Assert.assertEquals("value",parentURL.getProperty("key"));
 
         // Assert that handlers match
-        assert url.getHandler().equals(parentURL.getHandler());
+        Assert.assertEquals(url.getHandler(),parentURL.getHandler());
 
         // Assert that the query part is null
         assert parentURL.getQuery() == null;
@@ -473,12 +476,12 @@ public abstract class FileURLTestCase {
 
         url.setCredentials(new Credentials(urlDecodedString, urlDecodedString));
         String urlRep = url.getScheme()+"://"+urlEncodedString+":"+urlEncodedString+"@";
-        assert urlRep.equals(url.toString(true, false));
+        Assert.assertEquals(urlRep,url.toString(true, false));
 
         url = FileURL.getFileURL(urlRep);
         Credentials credentials = url.getCredentials();
-        assert credentials.getLogin().equals(urlDecodedString);
-        assert credentials.getPassword().equals(urlDecodedString);
+        Assert.assertEquals(credentials.getLogin(),urlDecodedString);
+        Assert.assertEquals(credentials.getPassword(),urlDecodedString);
     }
 
     /**
@@ -505,14 +508,14 @@ public abstract class FileURLTestCase {
         url.setQuery(query);
         url.setProperty("name", "value");
 
-        assert scheme.equals(url.getScheme());
-        assert credentials.equals(url.getCredentials(), true);
-        assert host.equals(url.getHost());
+        Assert.assertEquals(scheme,url.getScheme());
+        Assert.assertTrue(credentials.equals(url.getCredentials(), true));
+        Assert.assertEquals(host,url.getHost());
         assert port == url.getPort();
-        assert path.equals(url.getPath());
-        assert query.equals(url.getQuery());
-        assert "to".equals(url.getFilename());
-        assert "value".equals(url.getProperty("name"));
+        Assert.assertEquals(path,url.getPath());
+        Assert.assertEquals(query,url.getQuery());
+        Assert.assertEquals("to",url.getFilename());
+        Assert.assertEquals("value",url.getProperty("name"));
 
         // Test null values
 
@@ -523,26 +526,26 @@ public abstract class FileURLTestCase {
         url.setQuery(null);
         url.setProperty("name", null);
 
-        assert scheme.equals(url.getScheme());
+        Assert.assertEquals(scheme,url.getScheme());
         assert url.getCredentials() == null;
         assert !url.containsCredentials();
         assert url.getHost() == null;
         assert -1 == url.getPort();
-        assert "/".equals(url.getPath());
+        Assert.assertEquals("/",url.getPath());
         assert url.getQuery() == null;
         assert url.getFilename() == null;
         assert url.getProperty("name") == null;
-        assert (scheme+"://").equals(url.toString(true, false));
+        Assert.assertEquals((scheme+"://"),url.toString(true, false));
 
         // Path cannot be null, the path is supposed to be "/" if a null or empty value is specified
         url.setPath(null);
-        assert "/".equals(url.getPath());
+        Assert.assertEquals("/",url.getPath());
         url.setPath("");
-        assert "/".equals(url.getPath());
+        Assert.assertEquals("/",url.getPath());
 
         // Path must always start with a leading '/', if the specified does not then a '/' is automatically added
         url.setPath("path/to");
-        assert "/path/to".equals(url.getPath());
+        Assert.assertEquals("/path/to",url.getPath());
     }
 
     /**
@@ -552,13 +555,13 @@ public abstract class FileURLTestCase {
      */
     @Test
     public void testFilename() throws MalformedURLException {
-        assert "file".equals(getURL("/path/to/file").getFilename());
-        assert "file".equals(getURL("/path/to/file/").getFilename());
-        assert "path".equals(getURL("/path").getFilename());
-        assert "path".equals(getURL("/path/").getFilename());
+        Assert.assertEquals("file",getURL("/path/to/file").getFilename());
+        Assert.assertEquals("file",getURL("/path/to/file/").getFilename());
+        Assert.assertEquals("path",getURL("/path").getFilename());
+        Assert.assertEquals("path",getURL("/path/").getFilename());
         assert getRootURL().getFilename() == null : "/";
 
-        assert (isQueryParsed()?"file":"file?param=value").equals(getURL(null, null, null, -1, "/path/to/file", "param=value").getFilename());
+        Assert.assertEquals((isQueryParsed()?"file":"file?param=value"),getURL(null, null, null, -1, "/path/to/file", "param=value").getFilename());
     }
 
     /**
@@ -572,16 +575,16 @@ public abstract class FileURLTestCase {
         String path = getSchemePath("/path");
         String urlString = getScheme()+"://host:10000"+path+"?query";
 
-        assert urlString.equals(url.toString());
-        assert urlString.equals(url.toString(false));
-        assert urlString.equals(url.toString(false, false));
+        Assert.assertEquals(urlString,url.toString());
+        Assert.assertEquals(urlString,url.toString(false));
+        Assert.assertEquals(urlString,url.toString(false, false));
 
         urlString = getScheme()+"://login:password@host:10000"+path+"?query";
-        assert urlString.equals(url.toString(true));
-        assert urlString.equals(url.toString(true, false));
+        Assert.assertEquals(urlString,url.toString(true));
+        Assert.assertEquals(urlString,url.toString(true, false));
 
         urlString = getScheme()+"://login:********@host:10000"+path+"?query";
-        assert urlString.equals(url.toString(true, true));
+        Assert.assertEquals(urlString,url.toString(true, true));
     }
 
 
@@ -623,9 +626,11 @@ public abstract class FileURLTestCase {
         assertEquals(url1, url2, true, true);
 
         // Assert that the path comparison is case-sensitive
+        if(OsFamily.getCurrent().isCaseSensitiveFilesystem()){
         url1.setPath(url1.getPath().toUpperCase());
         assertNotEquals(url1, url2);
         assertNotEquals(url1, url2, true, true);
+        }
 
         // Make both URLs equal again
         url1.setPath(url2.getPath());
@@ -704,13 +709,13 @@ public abstract class FileURLTestCase {
         assertEquals(url, clonedURL);
 
         // Assert that both URL's string representations (with credentials) are equal
-        assert url.toString(true).equals(clonedURL.toString(true));
+        Assert.assertEquals(url.toString(true),clonedURL.toString(true));
 
         // Assert that both instances are not one and the same
         assert url!=clonedURL;
 
         // Assert that the property has survived the cloning
-        assert "value".equals(clonedURL.getProperty("name"));
+        Assert.assertEquals("value",clonedURL.getProperty("name"));
     }
 
     /**

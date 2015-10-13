@@ -18,6 +18,8 @@
 
 package com.mucommander;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.shell.ShellHistoryManager;
@@ -30,6 +32,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO;
  * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
 public class LauncherCmdHelper {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TrolCommander.class);
 
     /**
      * Whether or not to display verbose error messages.
@@ -315,10 +318,12 @@ public class LauncherCmdHelper {
      * Prints an error message.
      */
     private static void printError(String msg, boolean quit) {
-        System.err.println(msg);
         if (quit) {
+        	LOGGER.error(msg);
             System.err.println("See mucommander --help for more information.");
             System.exit(1);
+        }else{
+        	LOGGER.warn(msg);        	
         }
     }
 

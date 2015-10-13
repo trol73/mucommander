@@ -35,7 +35,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -104,7 +110,7 @@ import com.sun.jna.ptr.LongByReference;
  * @author Maxence Bernard
  */
 public class LocalFile extends ProtocolFile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalFile.class);
+	private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(LocalFile.class);
     private static final boolean IS_UNIX_BASED = OsFamily.getCurrent().isUnixBased();
 
     protected File file;
@@ -284,7 +290,7 @@ public class LocalFile extends ProtocolFile {
                         dfInfo[1] = freeSpaceLBR.getValue();
                     }
                     else {
-                        LOGGER.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
+                        logger.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
                     }
                 }
                 // Otherwise, parse the output of 'dir "filePath"' command to retrieve free space information, if
@@ -368,7 +374,7 @@ public class LocalFile extends ProtocolFile {
                     int nbTokens = tokenV.size();
                     if(nbTokens<6) {
                         // This shouldn't normally happen
-                        LOGGER.warn("Failed to parse output of df -k {} line={}", absPath, line);
+                    	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
                         return dfInfo;
                     }
 
@@ -377,7 +383,7 @@ public class LocalFile extends ProtocolFile {
                     while(!tokenV.get(pos).startsWith("/")) {
                         if(pos==0) {
                             // This shouldn't normally happen
-                            LOGGER.warn("Failed to parse output of df -k {} line={}", absPath, line);
+                        	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
                             return dfInfo;
                         }
 
@@ -554,7 +560,7 @@ public class LocalFile extends ProtocolFile {
             }
         }
         catch(Exception e) {
-            LOGGER.warn("Error parsing /proc/mounts entries", e);
+        	logger.warn("Error parsing /proc/mounts entries", e);
         }
         finally {
             if(br != null) {
@@ -594,7 +600,7 @@ public class LocalFile extends ProtocolFile {
         }
             }
         } catch(IOException e) {
-            LOGGER.warn("Can't get /Volumes subfolders", e);
+        	logger.warn("Can't get /Volumes subfolders", e);
         }
     }
 
@@ -754,22 +760,36 @@ public class LocalFile extends ProtocolFile {
             throw new IOException();
     }
     }
-
-    /**
-     *
-     * @return file owner
-     */
-    @Override
-    public String getOwner() {
-        Path path = Paths.get(file.toURI());
-        try {
-            PosixFileAttributes attr = Files.readAttributes(path, PosixFileAttributes.class);
-            return attr.owner().getName();
-        } catch (IOException | UnsupportedOperationException e) {
-            e.printStackTrace();
-        return null;
-    }
-    }
+//    private String getOwnerPosix() {
+//        Path path = Paths.get(file.toURI());
+//        try {
+//            PosixFileAttributes attr = Files.readAttributes(path, PosixFileAttributes.class);
+//            return attr.owner().getName();
+//        } catch (IOException | UnsupportedOperationException e) {
+//            e.printStackTrace();
+//        return null;
+//    }
+//    }
+	@Override
+	public String getOwner() {
+		try {
+			Path path = Paths.get(file.toURI());
+			if (Files.exists(path)) {
+				FileOwnerAttributeView ownerAttributeView = Files.getFileAttributeView(path,
+						FileOwnerAttributeView.class);
+				UserPrincipal owner = ownerAttributeView.getOwner();
+				return owner.getName();
+				// PosixFileAttributes attr = Files.readAttributes(path,
+				// PosixFileAttributes.class);
+				// return attr.owner().getName();
+			} else {
+				return null;
+			}
+		} catch (IOException | UnsupportedOperationException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
     /**
      * Always returns <code>true</code> for unix-based systems
@@ -780,21 +800,40 @@ public class LocalFile extends ProtocolFile {
     }
 
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getGroup() {
-        Path path = Paths.get(file.toURI());
-        try {
-            PosixFileAttributes attr = Files.readAttributes(path, PosixFileAttributes.class);
-            return attr.group().getName();
-        } catch (IOException | UnsupportedOperationException e) {
-            e.printStackTrace();
-        return null;
-    }
-    }
+	@Override
+	public String getGroup() {
+			Path path = Paths.get(file.toURI());
+			if (Files.exists(path)) {
+				try {
+					PosixFileAttributes attr = Files.readAttributes(path, PosixFileAttributes.class);
+					return attr.group().getName();
+				}catch(UnsupportedOperationException e){
+					logger.debug("File "+file.getAbsolutePath()+" doesn't have an owner: "+e.getMessage()+". Enable trace to see the exception.");
+					logger.trace("File "+file.getAbsolutePath()+" doesn't have an owner: "+e.getMessage()+".",e);
+					return null;
+				} catch (IOException e) {
+					logger.warn("Error for ["+file.getAbsolutePath()+"]",e);
+					// DosFileAttributeView dos = Files.getFileAttributeView(
+					// path, DosFileAttributeView.class);
+//					AclFileAttributeView aclFileAttributes = Files.getFileAttributeView(path,
+//							AclFileAttributeView.class);
+//
+//					for (AclEntry aclEntry : aclFileAttributes.getAcl()) {
+//						System.out.println(aclEntry.principal() + ":");
+//						System.out.println(aclEntry.permissions() + "\n");
+//					}
+					return null;
+				}
+
+			} else {
+				return null;
+			}
+//		} catch (UnsupportedOperationException e) {
+//			logger.warn("Error for ["+file.getAbsolutePath()+"]",e);
+//			e.printStackTrace();
+//			return null;
+//		}
+	}
 
     /**
      * Always returns <code>true</code> for unit based systems

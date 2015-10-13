@@ -117,7 +117,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         // Loads the symlink overlay icon
         URL iconURL = ResourceLoader.getPackageResourceAsURL(SwingFileIconProviderImpl.class.getPackage(), SYMLINK_ICON_NAME);
         if (iconURL == null) {
-            throw new RuntimeException("Could not locate required symlink icon: " + SYMLINK_ICON_NAME);
+            throw new RuntimeException("Could not locate required symlink icon: "+SwingFileIconProviderImpl.class.getPackage()+"/" + SYMLINK_ICON_NAME);
         }
 
         SYMLINK_OVERLAY_ICON = new ImageIcon(iconURL);

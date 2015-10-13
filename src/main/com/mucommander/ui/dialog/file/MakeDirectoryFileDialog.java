@@ -22,11 +22,11 @@ package com.mucommander.ui.dialog.file;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -34,18 +34,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.job.MkdirJob;
+import com.mucommander.job.MakeDirectoryFileJob;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;
-import com.mucommander.ui.action.impl.MkdirAction;
-import com.mucommander.ui.action.impl.MkfileAction;
+import com.mucommander.ui.action.impl.MakeFileAction;
+import com.mucommander.ui.action.impl.MakeDirectoryAction;
 import com.mucommander.ui.chooser.SizeChooser;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -59,11 +58,11 @@ import com.mucommander.ui.viewer.EditorRegistrar;
 /**
  * Dialog invoked when the user wants to create a new folder or an empty file in the current folder.
  *
- * @see MkdirAction
+ * @see MakeDirectoryAction
  * @see MkfileAction
  * @author Maxence Bernard
  */
-public class MkdirDialog extends FocusDialog implements ActionListener, ItemListener {
+public class MakeDirectoryFileDialog extends FocusDialog implements ActionListener, ItemListener {
 
     private MainFrame mainFrame;
 	
@@ -90,14 +89,21 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
      */
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
 
+    private JCheckBox convertWhiteSpaceCheckBox;
+    /**
+     * As a developer, it is annoy to meet with Folder name that contains whitespace
+     * 
+     */
+    private String oldDirName;
+
 
     /**
      * Creates a new Mkdir/Mkfile dialog.
      *
      * @param mkfileMode if true, the dialog will operate in 'mkfile' mode, if false in 'mkdir' mode
      */
-    public MkdirDialog(MainFrame mainFrame, boolean mkfileMode) {
-        super(mainFrame, ActionManager.getActionInstance(mkfileMode?MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID,mainFrame).getLabel(), mainFrame);
+    public MakeDirectoryFileDialog(MainFrame mainFrame, boolean mkfileMode) {
+        super(mainFrame, ActionManager.getActionInstance(mkfileMode?MakeFileAction.$.ACTION_ID:MakeDirectoryAction.$.ACTION_ID,mainFrame).getLabel(), mainFrame);
         this.mainFrame = mainFrame;
         this.mkfileMode = mkfileMode;
         setStorageSuffix(mkfileMode ? "file" : "dir");
@@ -105,11 +111,25 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         Container contentPane = getContentPane();
 
         YBoxPanel mainPanel = new YBoxPanel();
-        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MkfileAction.Descriptor.ACTION_ID:MkdirAction.Descriptor.ACTION_ID)+" :"));
+        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MakeFileAction.$.ACTION_ID:MakeDirectoryAction.$.ACTION_ID)+" :"));
 
-        // create a path field with auto-completion capabilities
+        // Create a path field with auto-completion capabilities
         pathField = new FilePathField();
         pathField.addActionListener(this);
+
+        // Sets the initial selection.
+        AbstractFile currentFile;
+        if((currentFile = mainFrame.getActiveTable().getSelectedFile()) != null) {
+            String initialValue;
+            if(mkfileMode) {
+                if((initialValue = currentFile.getName()) != null)
+                    pathField.setText(initialValue);
+            }
+            else if((initialValue = currentFile.getNameWithoutExtension()) != null)
+                pathField.setText(initialValue);
+        }
+        pathField.setSelectionStart(0);
+        pathField.setSelectionEnd(pathField.getText().length());
         mainPanel.add(pathField);
 
         if (mkfileMode) {
@@ -159,7 +179,25 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
                     }
                 });
             }
-        }
+        } else {
+            JPanel convertWhitespacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            convertWhitespacePanel.add(new JLabel(Translator.get("mkfile_dialog.convert_whitespace")));
+            this.convertWhiteSpaceCheckBox = new JCheckBox();
+            convertWhiteSpaceCheckBox.addItemListener(new ItemListener() {
+    			@Override
+    			public void itemStateChanged(ItemEvent arg0) {
+    				if (convertWhiteSpaceCheckBox.isSelected()) {
+    					oldDirName = pathField.getText();
+    					pathField.setText(oldDirName.replaceAll(" ", "_"));
+    				} else {
+    					pathField.setText(oldDirName);
+    				}
+    			}
+            	
+            });
+            convertWhitespacePanel.add(convertWhiteSpaceCheckBox);
+            mainPanel.add(convertWhitespacePanel);
+       }
         
         mainPanel.addSpace(10);
         contentPane.add(mainPanel, BorderLayout.NORTH);
@@ -178,7 +216,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
 
     /**
-     * Starts an {@link com.mucommander.job.MkdirJob}. This method is trigged by the 'OK' button or the return key.
+     * Starts an {@link com.mucommander.job.MakeDirectoryFileJob}. This method is trigged by the 'OK' button or the return key.
      */
     public void startJob() {
         String enteredPath = pathField.getText();
@@ -198,7 +236,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
             return;
         }
 
-        // Don't check for existing regular files, MkdirJob will take of it and popup a FileCollisionDialog 
+        // Don't check for existing regular files, MakeDirectoryFileJob will take of it and popup a FileCollisionDialog 
         AbstractFile destFile = resolvedDest.getDestinationFile();
 
         FileSet fileSet = new FileSet(destFile.getParent());
@@ -207,12 +245,12 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
 
         ProgressDialog progressDialog = new ProgressDialog(mainFrame, getTitle());
 
-        MkdirJob job;
+        MakeDirectoryFileJob job;
         if (mkfileMode) {
             long allocateSpace = allocateSpaceCheckBox.isSelected() ? allocateSpaceChooser.getValue() : -1;
             boolean executable = makeExecutableCheckBox != null && makeExecutableCheckBox.isSelected();
             openInTextEditor = openTextEditorCheckBox.isSelected();
-            job = new MkdirJob(progressDialog, mainFrame, fileSet, allocateSpace, executable) {
+            job = new MakeDirectoryFileJob(progressDialog, mainFrame, fileSet, allocateSpace, executable) {
                 @Override
                 protected boolean processFile(AbstractFile file, Object recurseParams) {
                     boolean result = super.processFile(file, recurseParams);
@@ -223,7 +261,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
                 }
             };
         } else {
-            job = new MkdirJob(progressDialog, mainFrame, fileSet);
+            job = new MakeDirectoryFileJob(progressDialog, mainFrame, fileSet);
         }
 
         progressDialog.start(job);
@@ -239,7 +277,7 @@ public class MkdirDialog extends FocusDialog implements ActionListener, ItemList
         dispose();
 		
         // OK Button
-        if (source == okButton || source == pathField) {
+        if(source == okButton || source == pathField) {
             startJob();
         }
     }

@@ -18,19 +18,26 @@
 
 package com.mucommander.ui.action;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.WeakHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * ActionManager provides methods to retrieve {@link MuAction} instances and invoke them. It keeps track of all the
@@ -126,8 +133,9 @@ public class ActionManager {
     	registerAction(new MaximizeWindowAction.Descriptor(),               new MaximizeWindowAction.Factory());
     	registerAction(new CombineFilesAction.Descriptor(),            		new CombineFilesAction.Factory());
     	registerAction(new MinimizeWindowAction.Descriptor(),               new MinimizeWindowAction.Factory());
-    	registerAction(new MkdirAction.Descriptor(),           			    new MkdirAction.Factory());
-    	registerAction(new MkfileAction.Descriptor(),		                new MkfileAction.Factory());
+    	//autoregistered
+    	//registerAction(MakeDirectoryAction.factory);//Descriptor(),           			    new MakeDirectoryAction.Factory());
+    	//registerAction(MakeFileAction.factory());//new MkfileAction.Descriptor(),		                new MkfileAction.Factory());
     	registerAction(new MoveAction.Descriptor(),		                    new MoveAction.Factory());
     	registerAction(new MoveTabToOtherPanelAction.Descriptor(),			new MoveTabToOtherPanelAction.Factory());
     	registerAction(new NewWindowAction.Descriptor(),     		        new NewWindowAction.Factory());
@@ -325,6 +333,9 @@ public class ActionManager {
         return getActionInstance(new ActionParameters(actionId), mainFrame);
     }
 
+    public static Optional<MuAction> getActionInstance2(ActionParameters actionParameters, MainFrame mainFrame) {
+    	return Optional.ofNullable(getActionInstance(actionParameters,mainFrame));
+    }
     /**
      * Returns an instance of the MuAction class denoted by the given ActionParameters and for the
      * specified MainFrame. If an existing instance corresponding to the same ActionParameters and MainFrame is found,
@@ -355,8 +366,9 @@ public class ActionManager {
             // Looks for the action's factory
             ActionFactory actionFactory = actionFactories.get(actionId);
             if(actionFactory == null) {
-            	LOGGER.debug("couldn't initiate action: " + actionId + ", its factory wasn't found");
-            	return null;
+//            	LOGGER.debug("couldn't initiate action: " + actionId + ", its factory wasn't found");
+//            	return null;
+            	throw new IllegalStateException("couldn't initiate action: " + actionId + ", its factory wasn't found");
             }
 
             Map<String,Object> properties = actionParameters.getInitProperties();

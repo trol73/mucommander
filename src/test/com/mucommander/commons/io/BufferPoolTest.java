@@ -18,6 +18,8 @@
 
 package com.mucommander.commons.io;
 
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -30,6 +32,10 @@ public class BufferPoolTest {
     public final static int TEST_BUFFER_SIZE_1 = 27;
     public final static int TEST_BUFFER_SIZE_2 = 28;
     public final static int TEST_MAX_POOL_SIZE = 1000;
+    @BeforeClass
+    public void setup() throws Exception {
+    	BufferPool.releaseAll();
+    }
 
     /**
      * Tests <code>BufferPool</code> with byte array (<code>byte[]</code>) buffers.
@@ -88,6 +94,7 @@ public class BufferPoolTest {
     public void testBuffer(BufferPool.BufferFactory factory) {
         // Number of array buffers before we started the test
         int originalBufferCount = BufferPool.getBufferCount(factory);
+        Assert.assertEquals(originalBufferCount,0);
         long originalPoolSize = BufferPool.getPoolSize();
 
         // create a new buffer with size=TEST_BUFFER_SIZE_1
@@ -166,7 +173,7 @@ public class BufferPoolTest {
 
         Object extraBuffer = BufferPool.getBuffer(factory, TEST_BUFFER_SIZE_1);
 
-        assert originalPoolSize == BufferPool.getPoolSize();
+        Assert.assertEquals(originalPoolSize,BufferPool.getPoolSize());
         long lastPoolSize = originalPoolSize;
         long newPoolSize;
         for(int i=0; i<nbBuffers; i++) {

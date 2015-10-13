@@ -43,8 +43,8 @@ import com.mucommander.ui.main.MainFrame;
  *
  * @author Maxence Bernard
  */
-public class MkdirJob extends FileJob {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MkdirJob.class);
+public class MakeDirectoryFileJob extends FileJob {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MakeDirectoryFileJob.class);
 	
     private AbstractFile destFolder;
 
@@ -54,9 +54,9 @@ public class MkdirJob extends FileJob {
 
 
     /**
-     * Creates a new MkdirJob which operates in 'mkdir' mode.
+     * Creates a new MakeDirectoryFileJob which operates in 'mkdir' mode.
      */
-    public MkdirJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet) {
+    public MakeDirectoryFileJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet) {
         super(progressDialog, mainFrame, fileSet);
 
         this.destFolder = fileSet.getBaseFolder();
@@ -66,12 +66,12 @@ public class MkdirJob extends FileJob {
     }
 
     /**
-     * Creates a new MkdirJob which operates in 'mkfile' mode.
+     * Creates a new MakeDirectoryFileJob which operates in 'mkfile' mode.
      *
      * @param allocateSpace number of bytes to allocate to the file, -1 for none (use AbstractFile#mkfile())
      * @param executable set 'executable' attribute on unix-systems
      */
-    public MkdirJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet, long allocateSpace, boolean executable) {
+    public MakeDirectoryFileJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet, long allocateSpace, boolean executable) {
         super(progressDialog, mainFrame, fileSet);
 
         this.destFolder = fileSet.getBaseFolder();

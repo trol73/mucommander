@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public enum OsFamily {
 	/** Windows */
-    WINDOWS("Windows"),
+    WINDOWS("Windows",false),
     /** Mac OS X */
     MAC_OS_X("Mac OS X"),
     /** Linux */
@@ -55,6 +55,8 @@ public enum OsFamily {
 
     /** The String representation of this RuntimeProperty, set at creation time */
     protected final String stringRepresentation;
+    
+    private final boolean isCaseSensitiveFilesystem;
 
     /** Holds the OsFamily of the current runtime environment  */
     private static OsFamily currentValue;
@@ -71,7 +73,12 @@ public enum OsFamily {
 
     
     OsFamily(String stringRepresentation) {
+    	this(stringRepresentation,true);
+    }
+    
+    OsFamily(String stringRepresentation, boolean isCaseSensitiveFilesystem) {
     	this.stringRepresentation = stringRepresentation;
+    	this.isCaseSensitiveFilesystem = isCaseSensitiveFilesystem;
     }
 
 
@@ -187,4 +194,9 @@ public enum OsFamily {
     public String toString() {
         return stringRepresentation;
     }
+
+
+	public boolean isCaseSensitiveFilesystem() {
+		return isCaseSensitiveFilesystem;
+	}
 }
