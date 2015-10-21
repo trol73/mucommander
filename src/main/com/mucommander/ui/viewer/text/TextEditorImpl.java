@@ -73,7 +73,7 @@ class TextEditorImpl implements ThemeListener {
     };
 
 
-    ////////////////////
+	////////////////////
 	// Initialization //
 	////////////////////
 
@@ -121,22 +121,22 @@ class TextEditorImpl implements ThemeListener {
 		textArea.setWrapStyleWord(true);
 
 		textArea.addMouseWheelListener(e -> {
-            boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
-            if (isCtrlPressed) {
-                Font currentFont = textArea.getFont();
-                int currentFontSize = currentFont.getSize();
-                boolean rotationUp = e.getWheelRotation() < 0;
-                if ((!rotationUp && currentFontSize > 1) || rotationUp) {
-                    Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
-                    textArea.setFont(newFont);
-                }
-            } else {
-                textArea.getParent().dispatchEvent(e);
-            }
-        });
+				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+				if (isCtrlPressed) {
+					Font currentFont = textArea.getFont();
+					int currentFontSize = currentFont.getSize();
+					boolean rotationUp = e.getWheelRotation() < 0;
+					if ((!rotationUp && currentFontSize > 1) || rotationUp) {
+						Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
+						textArea.setFont(newFont);
+					}
+				} else {
+					textArea.getParent().dispatchEvent(e);
+				}
+		});
 
         textArea.addCaretListener(caretListener);
-    }
+	}
 
 	/////////////////
 	// Search code //
@@ -185,10 +185,10 @@ class TextEditorImpl implements ThemeListener {
 
 	private void search(int startPos, boolean forward) {
 		if (searchString == null || searchString.isEmpty()) {
-            return;
+			return;
         }
         String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
-        int pos;
+		int pos;
 		if (forward) {
 			pos = getTextLC().indexOf(ss, startPos);
 		} else {
@@ -211,8 +211,8 @@ class TextEditorImpl implements ThemeListener {
 			}.start();
             if (getStatusBar() != null) {
                 getStatusBar().setStatusMessage(Translator.get("text_editor.text_not_found"));
-            }
 		}
+	}
 	}
 
 	public boolean isWrap() {

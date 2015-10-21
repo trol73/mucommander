@@ -88,7 +88,7 @@ public class FocusDialog extends JDialog implements WindowListener {
      * Saved to restore focus
      */
     private Component ownerFocusedComponent;
-
+    
     public FocusDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, true);
         init(locationRelativeComp);

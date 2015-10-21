@@ -117,8 +117,12 @@ public class FileFactory {
         registerProtocol(FileProtocols.FTP, new com.mucommander.commons.file.impl.ftp.FTPProtocolProvider());
         registerProtocol(FileProtocols.NFS, new com.mucommander.commons.file.impl.nfs.NFSProtocolProvider());
         registerProtocol(FileProtocols.SFTP, new com.mucommander.commons.file.impl.sftp.SFTPProtocolProvider());
+        registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
+        //registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
+        registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
+        registerProtocol(FileProtocols.WEBDAV, new com.mucommander.commons.file.impl.webdav.WebDAVProvider());
+        registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
     }
-
 
     public static void registerProtocolArchives() {
         // Register built-in archive file formats, order for TarArchiveFile and GzipArchiveFile/Bzip2ArchiveFile is important:

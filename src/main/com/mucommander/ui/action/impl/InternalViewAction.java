@@ -24,6 +24,7 @@ import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
+import com.mucommander.ui.main.table.views.full.FileTableModel;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 
 import javax.swing.ImageIcon;

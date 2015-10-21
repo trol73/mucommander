@@ -293,7 +293,7 @@ public class DefaultSchemeParser implements SchemeParser {
             // Canonize path: factor out '.' and '..' and replace '~' by the replacement string (if any)
             fileURL.setPath(pathCanonizer.canonize(path));
 
-            LOGGER.info("Warning: path should not be empty, url={}", url);
+            LOGGER.debug("Warning: path should not be empty, url={}", url);
 
             // Parse query part (if any)
             if(questionMarkPos!=-1)

@@ -157,7 +157,7 @@ public class JobProgressMonitor implements FileJobListener {
     	// ensure that this method is called in EDT
     	if (!SwingUtilities.isEventDispatchThread()) {
     		SwingUtilities.invokeLater(() -> addJob(job));
-    	}
+    			}
 
     	jobs.add(job);
     	int idx = jobs.size() - 1;
@@ -179,7 +179,7 @@ public class JobProgressMonitor implements FileJobListener {
     	// ensure that this method is called in EDT
     	if (!SwingUtilities.isEventDispatchThread()) {
     		SwingUtilities.invokeLater(() -> removeJob(job));
-    	}
+    			}
 
     	int idx = jobs.indexOf(job);
 		if (idx != -1) {

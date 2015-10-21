@@ -51,6 +51,12 @@ public class SimpleFileAttributes implements MutableFileAttributes {
     /** Group attribute */
     private String group;
 
+    /** Replication attribute */
+    private short replication = 1;
+
+    /** BlockSize attribute */
+    private long blocksize = 0;
+
     /**
      * Creates a new SimpleFileAttributes instance with unspecified/null attribute values.
      */
@@ -143,4 +149,21 @@ public class SimpleFileAttributes implements MutableFileAttributes {
     public void setGroup(String group) {
         this.group = group;
     }
+
+    public short getReplication() {
+        return replication;
+    }
+
+    public void setReplication(short replication) {
+        this.replication = replication;
+    }
+
+    public long getBlocksize() {
+        return blocksize;
+    }
+
+    public void setBlocksize(long blocksize) {
+        this.blocksize = blocksize;
+    }
+
 }

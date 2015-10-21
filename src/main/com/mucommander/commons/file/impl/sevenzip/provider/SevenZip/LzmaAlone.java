@@ -59,8 +59,8 @@ public class LzmaAlone
 						matchFinder = 2;
 						break;
 					default:
-						return false;
-				}
+					return false;
+			}
 			} else {
 				return false;
 			}
@@ -113,7 +113,7 @@ public class LzmaAlone
 						inFile = s;
 				} else if (pos == 2)
 					outFile = s;
-				else
+					else
 					return false;
 				pos++;
 				//continue;
@@ -121,6 +121,7 @@ public class LzmaAlone
 			return true;
 		}
 	}
+
 	
 	
 	static void PrintHelp()

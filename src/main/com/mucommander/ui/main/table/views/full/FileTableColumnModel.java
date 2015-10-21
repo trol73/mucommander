@@ -40,9 +40,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     // - Class constants -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** If {@link #widthCache} is set to this, it needs to be recalculated. */
-    private static final int CACHE_OUT_OF_DATE = -1;
+    private static final int                CACHE_OUT_OF_DATE = -1;
     /** Even though we're not using column selection, the table API forces us to return this instance or will crash. */
-    private static final ListSelectionModel SELECTION_MODEL = new DefaultListSelectionModel();
+    private static final ListSelectionModel SELECTION_MODEL   = new DefaultListSelectionModel();
 
 
     // - Instance fields -----------------------------------------------------------------
@@ -50,17 +50,17 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /** All registered listeners. */
     private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<>();
     /** Cache for the table's total width. */
-    private int widthCache = CACHE_OUT_OF_DATE;
+    private int                                      widthCache = CACHE_OUT_OF_DATE;
     /** All available columns. */
     private final List<TableColumn> columns = new ArrayList<>(Column.values().length);
     /** Enabled state of each column. */
-    private boolean[] enabled = new boolean[Column.values().length];
+    private boolean[]     enabled = new boolean[Column.values().length];
     /** Visibility state of each column. */
-    private boolean[] visibility = new boolean[Column.values().length];
+    private boolean[]     visibility = new boolean[Column.values().length];
     /** Cache for the number of available columns. */
-    private int countCache;
+    private int           countCache;
     /** Whether the column sizes were set already. */
-    private boolean columnSizesSet;
+    private boolean       columnSizesSet;
 
 
 
@@ -102,7 +102,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             } else {
                 if ((enabled[columnIndex] = conf.isEnabled(c))) {
                     countCache++;
-                }
+            }
             }
             column.setMinWidth(c.getMinimumColumnWidth());
 
@@ -172,11 +172,11 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             widthCache = CACHE_OUT_OF_DATE;
 
             if (visible) {
-                // Adds the column.
+            // Adds the column.
                 countCache++;
                 triggerColumnAdded(new TableColumnModelEvent(this, columnVal, columnVal));
             } else {
-                // Removes the column.
+            // Removes the column.
                 countCache--;
                 triggerColumnRemoved(new TableColumnModelEvent(this, columnVal, columnVal));
             }
@@ -220,7 +220,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             if (visibility[column.getModelIndex()]) {
                 if (++visibleIndex == index) {
                     return i;
-                }
+        }
             }
         }
         // Index doesn't exist.
@@ -276,7 +276,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             columns.add(column);
         } else {
             // Otherwise, finds the column's internal index and inserts it there.
-            index = getInternalIndex(to);
+            index  = getInternalIndex(to);
             columns.add(index, column);
         }
 
@@ -295,7 +295,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /**
      * Returns the index of the column at the specified position.
      * @param  x position of the column to look for.
-     * @return  the index of the column at the specified position, <code>-1</code> if not found.
+     * @return   the index of the column at the specified position, <code>-1</code> if not found.
      */
     @Override
     public int getColumnIndexAtX(int x) {
@@ -303,7 +303,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         for (int i = 0; i < count; i++) {
             x = x - getColumn(i).getWidth();
             if (x < 0) {
-                return i;
+            return i;
             }
         }
         return -1;
@@ -328,7 +328,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         widthCache = 0;
         while (elements.hasMoreElements()) {
             widthCache += elements.nextElement().getWidth();
-        }
+    }
     }
 
     /**
@@ -337,10 +337,10 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     public void propertyChange(PropertyChangeEvent event) {
         String name = event.getPropertyName();
         if ("width".equals(name)) {
-            columnSizesSet = true;
+                columnSizesSet = true;
             widthCache = CACHE_OUT_OF_DATE;
-            // Notifies the table that columns width have changed and that it should repaint itself.
-            triggerColumnMarginChanged(new ChangeEvent(this));
+                // Notifies the table that columns width have changed and that it should repaint itself.
+                triggerColumnMarginChanged(new ChangeEvent(this));
         }
     }
 
@@ -395,7 +395,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnAdded(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnAdded(event);
-        }
+    }
     }
 
     /**
@@ -405,7 +405,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnMarginChanged(ChangeEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnMarginChanged(event);
-        }
+    }
     }
 
     /**
@@ -415,7 +415,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnMoved(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnMoved(event);
-        }
+    }
     }
 
     /**
@@ -425,7 +425,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnRemoved(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnRemoved(event);
-        }
+    }
     }
 
 
@@ -530,8 +530,8 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 TableColumn column = columns.get(nextIndex);
                 if (visibility[column.getModelIndex()]) {
                     break;
-                }
             }
+        }
         }
 
 
@@ -619,7 +619,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 }
                 if (id1 == id2) {
                     return 0;
-                }
+            }
             }
             return 1;
         }

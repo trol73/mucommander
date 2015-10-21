@@ -121,7 +121,7 @@ public abstract class TransferFileJob extends FileJob {
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
         }
     }
-
+	
 	
     /**
      * Copies the given source file to the specified destination file, optionally resuming the operation.
@@ -172,7 +172,7 @@ public abstract class TransferFileJob extends FileJob {
                         in = sourceFile.getInputStream();
                         if (integrityCheckEnabled) {
                             in = new ChecksumInputStream(in, MessageDigest.getInstance(CHECKSUM_VERIFICATION_ALGORITHM));
-                        }
+                    }
                     }
 
                     setCurrentInputStream(in);
@@ -294,7 +294,7 @@ public abstract class TransferFileJob extends FileJob {
                 if (overwriteReadonly) {
                     copyToReadonlyFile(sourceFile, destFile, append);
                 } else {
-                    copyFile(sourceFile, destFile, append);
+                copyFile(sourceFile, destFile, append);
                 }
                 return true;
             } catch(FileTransferException e) {
@@ -329,7 +329,7 @@ public abstract class TransferFileJob extends FileJob {
                                 choice = showErrorDialog(errorDialogTitle, Translator.get("overwrite_readonly_file", destFile.getName()), actionTexts, actionValues);
                             }
                         } else {
-                            choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
+                        choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
                         }
                         break;
                     // Source and destination files are identical
@@ -454,7 +454,7 @@ public abstract class TransferFileJob extends FileJob {
         // Resume job if currently paused 
         if (getState() == State.PAUSED) {
             setPaused(false);
-        }
+    }
     }
 
     /**
@@ -545,8 +545,8 @@ public abstract class TransferFileJob extends FileJob {
         synchronized(this) {
             if (getState() != State.PAUSED && tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
-            }
         }
+    }
     }
 
     /**
@@ -608,8 +608,8 @@ public abstract class TransferFileJob extends FileJob {
             // Restore previous throughput limit (if any, -1 by default)
             if (tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
-            }
         }
+    }
     }
 
 

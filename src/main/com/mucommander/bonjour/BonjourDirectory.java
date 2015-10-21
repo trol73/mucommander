@@ -94,7 +94,12 @@ public class BonjourDirectory implements ServiceListener {
             }
         } else if(!enabled && jmDNS != null) {
             // Shutdown JmDNS
-            jmDNS.close();
+            try {
+				jmDNS.close();
+                if (1==0) throw new IOException();  // FIXME looks like that different versions of Bonjour library have different Bonjour.close() method  - with declared IOException and without it
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
             services.clear();
             jmDNS = null;
         }

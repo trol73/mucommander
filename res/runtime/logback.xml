@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- default logger can be found at http://www.playframework.com/documentation/2.1.1/SettingsLogger You can translate a log4j 
+	property configuration file to logback here: http://logback.qos.ch/translator/ -->
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<!-- <configuration debug="true"> -->
+<!-- log for standalone app -->
+<configuration debug="false">
+	<appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%4relative %5p [%-17thread] - %-200msg - %d %logger{30} \(%file:%line\)%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="DEV_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- Support multiple-JVM writing to the same log file -->
+		<prudent>true</prudent>
+		<!--See http://logback.qos.ch/manual/appenders.html#RollingFileAppender -->
+		<!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy -->
+		<!--for further documentation -->
+		<File>target/trolCommander.log</File>
+		<encoder>
+			<pattern>%4relative %5p [%-17thread] - %-200msg - %d %logger{30} \(%file:%line\)%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>target/trolCommander.log.%d{yyyy-MM-dd}</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="CONSOLE_APPENDER" />
+		<appender-ref ref="DEV_APPENDER" />
+	</root>
+	<logger name="ch.qos.logback" level="WARN" />
+	<logger name="com.mucommander" level="INFO" />
+</configuration>

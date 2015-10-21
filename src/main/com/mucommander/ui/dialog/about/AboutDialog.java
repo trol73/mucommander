@@ -130,7 +130,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         text.setEditable(false);
         try {
             // Team.
-            insertTitle(doc,          "The muCommander team");
+            insertTitle(doc,          "The trolCommander team");
 
             // Core developers.
             insertHeader(doc,         "Core developers");

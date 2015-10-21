@@ -23,10 +23,10 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractFileClassLoader;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
+import javax.swing.UIManager;
 
 /**
  * Manages muCommander's extensions.
@@ -92,7 +92,9 @@ public class ExtensionManager {
 
         // Otherwise, use a new instance of AbstractFileClassLoader.
         else
-            loader = new AbstractFileClassLoader();
+            loader = new AbstractFileClassLoader(ExtensionManager.class.getClassLoader());
+//        
+//        UIManager.put("ClassLoader", loader);
     }
 
     /**

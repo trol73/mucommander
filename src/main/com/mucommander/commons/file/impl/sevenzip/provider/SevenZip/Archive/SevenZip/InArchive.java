@@ -217,7 +217,7 @@ class InArchive extends Header {
         return HRESULT.S_FALSE;
     }
     
-    int SkeepData(long size) throws IOException {
+    int SkeepData(long size)  throws IOException {
         for (long i = 0; i < size; i++) {
             int temp = ReadByte();
         }
@@ -739,18 +739,18 @@ class InArchive extends Header {
             if (unPackSize > 0xFFFFFFFFL)
                 return HRESULT.E_FAIL;
             data.SetCapacity((int) unPackSize);
-
+            
             SequentialOutStreamImp2 outStreamSpec = new SequentialOutStreamImp2();
             OutputStream outStream = outStreamSpec;
             outStreamSpec.Init(data.data(), (int) unPackSize);
-
+            
             int result = decoder.Decode(_stream, dataStartPos,
                     packSizes, packIndex,  // &packSizes[packIndex]
                     folder, outStream, null
                     // _ST_MODE , false, 1
-            );
+                    );
             if (result != HRESULT.S_OK) return result;
-
+            
             if (folder.UnPackCRCDefined)
                 if (!CRC.verifyDigest(folder.UnPackCRC, data.data(), (int) unPackSize))
                     throw new IOException("Incorrect Header"); // CInArchiveException(CInArchiveException::kIncorrectHeader);

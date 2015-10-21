@@ -91,7 +91,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     	textViewerDelegate.loadDocument(in, encoding, documentListener);
         if (getStatusBar() != null) {
             getStatusBar().setEncoding(encoding);
-        }
+    }
     }
     
     private void write(OutputStream out) throws IOException {
@@ -127,12 +127,12 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     protected void saveStateOnClose() {
         textViewerDelegate.saveState(getVerticalScrollBar());
         if (getCurrentFile() != null) { // possible if loading was interrupted by Esc
-            try {
-                getCurrentFile().closePushbackInputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            getCurrentFile().closePushbackInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
     }
 
     @Override
@@ -259,7 +259,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
     	if (!askSave()) {
-            return;         // Abort if the file could not be saved
+    		return;         // Abort if the file could not be saved
         }
 
         // Store caret and scrollbar position before change

@@ -159,4 +159,22 @@ public class S3Root extends S3File {
     public void renameTo(AbstractFile destFile) throws UnsupportedFileOperationException {
         throw new UnsupportedFileOperationException(FileOperation.RENAME);
     }
+    @Override
+    @UnsupportedFileOperation
+    public short getReplication() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_REPLICATION);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        throw new UnsupportedFileOperationException(FileOperation.GET_BLOCKSIZE);
+    }
+
+    @Override
+    @UnsupportedFileOperation
+    public void changeReplication(short replication) throws IOException {
+        throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
+    }
+
 }

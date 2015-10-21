@@ -725,7 +725,7 @@ public class FileURL implements Cloneable {
      */
     public Set<String> getPropertyNames() {
         return properties == null ? new HashSet<>() : properties.keySet();
-    }
+        }
 
     /**
      * Copy the properties of the given FileURL into this FileURL.

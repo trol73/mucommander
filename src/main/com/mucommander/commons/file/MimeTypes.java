@@ -21,12 +21,14 @@
 package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.util.ResourceLoader;
-
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import org.raisercostin.jedi.Locations;
+import scala.runtime.AbstractFunction1;
 
 /**
  * This Hashtable maps file extensions to their mime type.
@@ -41,36 +43,45 @@ public class MimeTypes extends HashMap<String, String> {
     private static final String MIME_TYPES_RESOURCE_NAME = "mime.types";
 	
     private MimeTypes() {
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
+		Locations.classpath(MimeTypes.class.getPackage().getName().replace('.', '/')).usingInputStream(
+				new AbstractFunction1<InputStream, String>() {
+					@Override
+					public String apply(InputStream arg0) {
+						BufferedReader br = null;
+						try {
+							br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(
+									MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
 
-            String line;
+							String line;
 
-            while ((line=br.readLine())!=null) {
-                try {
-                    StringTokenizer st = new StringTokenizer(line);
-                    String description = st.nextToken();
+							while ((line = br.readLine()) != null) {
+								try {
+									StringTokenizer st = new StringTokenizer(line);
+									String description = st.nextToken();
 
-                    while (st.hasMoreTokens()) {
-                        put(st.nextToken(), description);
-                    }
-                } catch(Exception e) {
-                    // If a line contains an error, catch the exception and go to the next line
-                }
-            }
-        } catch(IOException ignore) {}
+									while (st.hasMoreTokens()) {
+										put(st.nextToken(), description);
+									}
+								} catch (Exception e) {
+									// If a line contains an error, catch the exception and go to the next line
+								}
+							}
+						} catch (IOException ignore) {
+						} finally {
+							if (br != null) {
+								try {
+									br.close();
+								} catch (IOException ignore) {
+								}
+							}
+						}
+						return "";
+					}
+				});
         // Makes sure the stream is closed.
         // This might not be strictly necessary as streams on internal resources are a bit of an unknown,
         // but since the ClassLoader.getResourceAsStream documentation doesn't explicitly say that such
         // streams do not need closing, it's safer to assume they do.
-        finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch(IOException ignore) {}
-            }
-        }
     }
 
 	

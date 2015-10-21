@@ -36,6 +36,7 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
@@ -143,7 +144,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     protected StatusBar getStatusBar() {
         if (statusBar == null) {
-            statusBar = new StatusBar();
+        statusBar = new StatusBar();
         }
         return statusBar;
     }
@@ -296,13 +297,13 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
         mouseMovementIssueFixed = true;
         Runnable task = () -> {
-            try {
-                int w = getFrame().getWidth();
-                int h = getFrame().getHeight();
-                getFrame().setSize(w, h-1);
-                getFrame().setSize(w, h);
-            } catch (Exception ignore) {
-            }
+                try {
+                    int w = getFrame().getWidth();
+                    int h = getFrame().getHeight();
+                    getFrame().setSize(w, h-1);
+                    getFrame().setSize(w, h);
+                } catch (Exception ignore) {
+                }
         };
         Executors.newSingleThreadScheduledExecutor().schedule(task, 1000, TimeUnit.MILLISECONDS);
     }
@@ -526,7 +527,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     private class ImageViewerImpl extends JPanel implements MouseMotionListener, MouseListener, ThemeListener {
 
     	private Color backgroundColor;
-
+    	
 
     	
     	ImageViewerImpl() {

@@ -399,7 +399,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         @Override
         public void run() {
             final boolean useExtendedDriveNames = fileSystemView != null;
-            for (int i=0; i<items.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
                 final JMenuItem item = items.get(i);
 
                 String extendedName = null;
