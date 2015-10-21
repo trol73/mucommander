@@ -30,7 +30,8 @@ import java.io.File;
 public enum FileType {
     NONE("None", SyntaxConstants.SYNTAX_STYLE_NONE),
     ACTIONSCRIPT("ActionScript", SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT, "*.as"),
-    ASSEMBLER_X86("Assembler x86", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86, "*.asm,*.s"),
+    ASSEMBLER_X86("Assembler x86", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86, "*.asm"),
+    ASSEMBLER_AVR("Assembler AVR", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR, "*.lss,*.s"),
     BBCODE("BBCode", SyntaxConstants.SYNTAX_STYLE_BBCODE),
     C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c,*.m"),
     CLOJURE("Clojure", SyntaxConstants.SYNTAX_STYLE_CLOJURE, "*.clj"),

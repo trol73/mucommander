@@ -62,4 +62,7 @@ public interface FileProtocols {
     /** Protocol for files served by a web server using vSphere. */
     String VSPHERE   = "vsphere";
 
+    /** Protocol for files on android devices. */
+    String ADB       = "adb";
+
 }

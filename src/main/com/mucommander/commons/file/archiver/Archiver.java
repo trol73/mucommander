@@ -156,7 +156,7 @@ public abstract class Archiver {
 	
 	
     /**
-     * Returns the name of the archive format used by this Archiver.
+     * @return the name of the archive format used by this Archiver.
      */
     public String getFormatName() {
         return FORMAT_NAMES[this.format];
@@ -164,7 +164,8 @@ public abstract class Archiver {
 
 	
     /**
-     * Returns true if the format used by this Archiver can store more than one entry.
+     * Checks if the format used by this Archiver can store more than one entry.
+     * @return true if the format used by this Archiver can store more than one entry.
      */
     public boolean supportsManyFiles() {
         return formatSupportsManyFiles(this.format);
@@ -172,7 +173,8 @@ public abstract class Archiver {
 
 
     /**
-     * Returns true if the format used by this Archiver can store an optional comment.
+     * Checks if the format used by this Archiver can store an optional comment.
+     * @return true if the format used by this Archiver can store an optional comment.
      */
     public boolean supportsComment() {
         return formatSupportsComment(this.format);
@@ -205,7 +207,7 @@ public abstract class Archiver {
         entryPath = entryPath.replace('\\', '/');
 		
         // If entry is a directory, make sure the path contains a trailing / 
-        if(isDirectory && !entryPath.endsWith("/"))
+        if (isDirectory && !entryPath.endsWith("/"))
             entryPath += "/";
 		
         return entryPath;
@@ -234,15 +236,15 @@ public abstract class Archiver {
     public static Archiver getArchiver(AbstractFile file, int format) throws IOException, UnsupportedFileOperationException {
         OutputStream out = null;
 
-        if(file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
+        if (file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
             try {
                 // Important: if the file exists, it has to be overwritten as AbstractFile#getRandomAccessOutputStream()
                 // does NOT overwrite the file. This fixes bug #30.
-                if(file.exists())
+                if (file.exists()) {
                     file.delete();
-                
+                }
                 out = new BufferedRandomOutputStream(file.getRandomAccessOutputStream());
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Fall back to a regular OutputStream
             }
         }

@@ -203,16 +203,16 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
                     int bestLength = -1;
                     int bestIndex = 0;
-                    String temp;
-                    int len;
                     for (int i = 0; i < volumes.length; i++) {
+                        String temp;
                         if (OsFamily.WINDOWS.isCurrent()) {
-                            temp = volumes[i].getAbsolutePath(false).toLowerCase();
+                            temp = volumes[i].getAbsolutePath(false);
                         } else {
-                            temp = volumes[i].getCanonicalPath(false).toLowerCase();
+                            temp = volumes[i].getCanonicalPath(false);
                         }
+                        temp = temp.toLowerCase();
 
-                        len = temp.length();
+                        int len = temp.length();
                         if (currentPath.startsWith(temp) && len>bestLength) {
                             bestIndex = i;
                             bestLength = len;
@@ -296,8 +296,8 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 
-        for(int i = 0; i < nbVolumes; i++) {
-            action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), volumes[i]);
+        for (int i = 0; i < nbVolumes; i++) {
+            action = new CustomOpenLocationAction(mainFrame, new HashMap<>(), volumes[i]);
             String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -356,7 +356,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Add 'Network shares' shortcut
         if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            action = new CustomOpenLocationAction(mainFrame, new Hashtable<>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
+            action = new CustomOpenLocationAction(mainFrame, new HashMap<>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
@@ -365,7 +365,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         setMnemonic(popupMenu.add(new BonjourMenu() {
             @Override
             public MuAction getMenuItemAction(BonjourService bs) {
-                return new CustomOpenLocationAction(mainFrame, new Hashtable<>(), bs);
+                return new CustomOpenLocationAction(mainFrame, new HashMap<>(), bs);
             }
         }) , mnemonicHelper);
         popupMenu.add(new JSeparator());
@@ -398,8 +398,8 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         
         @Override
         public void run() {
-            final boolean useExtendedDriveNames = fileSystemView!=null;
-            for(int i=0; i<items.size(); i++) {
+            final boolean useExtendedDriveNames = fileSystemView != null;
+            for (int i=0; i<items.size(); i++) {
                 final JMenuItem item = items.get(i);
 
                 String extendedName = null;
@@ -472,8 +472,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         String var = event.getVariable();
 
         // Update the button's icon if the system file icons policy has changed
-        if (var.equals(MuPreferences.USE_SYSTEM_FILE_ICONS))
+        if (var.equals(MuPreferences.USE_SYSTEM_FILE_ICONS)) {
             updateButton();
+        }
     }
 
 

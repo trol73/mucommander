@@ -80,10 +80,11 @@ import java.net.MalformedURLException;
     protected SMBFile(FileURL fileURL, SmbFile smbFile) throws IOException {
         super(fileURL);
 
-        if(!fileURL.containsCredentials())
+        if (!fileURL.containsCredentials()) {
             throw new AuthException(fileURL, "Authentication required");
+        }
 
-        if(smbFile==null) {
+        if (smbFile == null) {
             while(true) {
                 file = createSmbFile(fileURL);
 
@@ -102,8 +103,7 @@ import java.net.MalformedURLException;
                     }
 
                     break;
-                }
-                catch(SmbException e) {
+                } catch(SmbException e) {
                     // SmbFile.isDirectory() threw an exception. We distinguish 2 types of SmbException:
                     // 1) SmbAuthException, caused by a credentials problem -> turn it into an AuthException and throw it
                     // 2) any other SmbException -> this may happen if access to the file was denied for example, this
@@ -117,8 +117,7 @@ import java.net.MalformedURLException;
                     break;
                 }
             }
-        }
-        else {                      // The private constructor was called directly
+        } else {                      // The private constructor was called directly
             file = smbFile;
         }
 
@@ -143,11 +142,10 @@ import java.net.MalformedURLException;
         String login = credentials.getLogin();
         String domain;
         int domainStart = login.indexOf(";");
-        if(domainStart!=-1) {
+        if (domainStart != -1) {
             domain = login.substring(0, domainStart);
             login = login.substring(domainStart+1, login.length());
-        }
-        else {
+        } else {
             domain = null;
         }
 
@@ -172,20 +170,18 @@ import java.net.MalformedURLException;
             String path = file.getURL().getPath();
             boolean endsWithSeparator = path.endsWith("/");
 
-            if(directory) {
-                if(!endsWithSeparator) {
+            if (directory) {
+                if (!endsWithSeparator) {
                     fileURL.setPath(path+"/");
                     file = createSmbFile(fileURL);
                 }
-            }
-            else {
-                if(endsWithSeparator) {
+            } else {
+                if (endsWithSeparator) {
                     fileURL.setPath(removeTrailingSeparator(path));
                     file = createSmbFile(fileURL);
                 }
             }
-        }
-        catch(MalformedURLException e) {
+        } catch(MalformedURLException e) {
             // This should never happen. If some reason wicked reason it ever did, SmbFile would just not be changed.
         }
     }

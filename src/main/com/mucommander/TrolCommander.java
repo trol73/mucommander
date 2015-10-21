@@ -497,6 +497,7 @@ public class TrolCommander {
             // the servers to decide whether to show them.
             FTPProtocolProvider.setForceHiddenFilesListing(MuConfigurations.getPreferences().getVariable(MuPreference.LIST_HIDDEN_FILES, MuPreferences.DEFAULT_LIST_HIDDEN_FILES));
 
+//            FileFactory.registerProtocolFile();
             // Use CredentialsManager for file URL authentication
             FileFactory.setDefaultAuthenticator(CredentialsManager.getAuthenticator());
 
@@ -614,6 +615,42 @@ public class TrolCommander {
         }
     }
 
+
+    private static class RegisterNetworkProtocolsTask extends LauncherTask {
+        RegisterNetworkProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_network", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolNetworks();
+        }
+    }
+
+
+    private static class RegisterArchiveProtocolsTask extends LauncherTask {
+        RegisterArchiveProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_archive", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolArchives();
+        }
+    }
+
+
+    private static class RegisterOtherProtocolsTask extends LauncherTask {
+        RegisterOtherProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_other", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolOthers();
+        }
+    }
+
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
@@ -664,6 +701,7 @@ public class TrolCommander {
         int processors = Runtime.getRuntime().availableProcessors();
         System.out.println("Processors: " + processors);
         //ExecutorService executor = Executors.newFixedThreadPool(processors < 2 ? 2 : processors);
+
         LauncherExecutor executor = new LauncherExecutor(processors <= 0 ? 1 : processors);
         try {
             // Initialises fields.
@@ -691,6 +729,9 @@ public class TrolCommander {
             LauncherTask taskShowSetupWindow = new ShowSetupWindowTask(helper, taskLoadConfigs);
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
+            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
+            LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
+            LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
             tasks.add(taskLoadConfigs);
@@ -713,7 +754,10 @@ public class TrolCommander {
             tasks.add(taskInitDesktop);
             tasks.add(taskDisposeSplash);
             tasks.add(taskShowSetupWindow);
-
+            tasks.add(taskRegisterArchives);
+            tasks.add(taskRegisterNetwork);
+            tasks.add(taskRegisterOtherProtocols);
+//System.out.println("Execute tasks");
 
             if (processors <= 1 ) {
                 for (LauncherTask t : tasks) {
