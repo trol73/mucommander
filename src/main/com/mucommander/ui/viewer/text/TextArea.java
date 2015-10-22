@@ -269,4 +269,19 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         setLineSeparator(separator, true);
     }
 
+
+    public String getLineStr(int line) {
+        try {
+            int posStart = getLineStartOffset(line - 1);
+            int posEnd = getLineEndOffset(line - 1);
+            int len = posEnd - posStart;
+            if (len > 2048) {
+                return null;
+            }
+            return getDocument().getText(posStart, len);
+        } catch (Exception ignore) {
+            return null;
+        }
+    }
+
 }

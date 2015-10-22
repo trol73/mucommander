@@ -67,10 +67,51 @@ class TextEditorImpl implements ThemeListener {
         @Override
         public void caretUpdate(CaretEvent e) {
             if (statusBar != null) {
-                statusBar.setPosition(textArea.getLine(), textArea.getColumn());
+                int line = textArea.getLine();
+                int col = textArea.getColumn();
+                statusBar.setPosition(line, col);
+
+                // check if we have 6-digit hex-word on cursor (color)
+                String str = textArea.getLineStr(line);
+                if (str == null || str.length() < 6 || col >= str.length()) {
+                    return;
+                }
+                char ch = str.charAt(col);
+                if (isHexDigit(ch)) {
+                    String word = "" + ch;
+                    for (int pos = col-1; pos >= 0; pos--) {
+                        char c = str.charAt(pos);
+                        if (isHexDigit(c)) {
+                            word = c + word;
+                        } else {
+                            break;
+                        }
+                    }
+                    for (int pos = col+1; pos < str.length(); pos++) {
+                        char c = str.charAt(pos);
+                        if (isHexDigit(c)) {
+                            word = word + c;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (word.length() == 6) {
+                        statusBar.setColor(Integer.parseInt(word, 16));
+                    } else {
+                        statusBar.setColor(-1);
+                    }
+                } else {
+                    statusBar.setColor(-1);
+                }
+
             }
         }
     };
+
+
+    private static boolean isHexDigit(char ch) {
+        return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
+    }
 
 
 	////////////////////
@@ -79,7 +120,7 @@ class TextEditorImpl implements ThemeListener {
 
 	public TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
-		initTextArea(isEditable);
+        initTextArea(isEditable);
         this.statusBar = statusBar;
 
 		// Listen to theme changes to update the text area if it is visible

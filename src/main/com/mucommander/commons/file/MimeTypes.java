@@ -21,86 +21,75 @@
 package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.util.ResourceLoader;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.StringTokenizer;
-import org.raisercostin.jedi.Locations;
-import scala.runtime.AbstractFunction1;
 
 /**
  * This Hashtable maps file extensions to their mime type.
  *
  * @author Maxence Bernard
  */
-public class MimeTypes extends HashMap<String, String> {
+public class MimeTypes extends Hashtable<String, String> {
 
-    private final static MimeTypes MIME_TYPES = new MimeTypes();
+	private final static MimeTypes MIME_TYPES = new MimeTypes();
 
-    /** Name of the 'mime.types' resource file located in the same package as this class */
-    private static final String MIME_TYPES_RESOURCE_NAME = "mime.types";
-	
-    private MimeTypes() {
-		Locations.classpath(MimeTypes.class.getPackage().getName().replace('.', '/')).usingInputStream(
-				new AbstractFunction1<InputStream, String>() {
-					@Override
-					public String apply(InputStream arg0) {
-						BufferedReader br = null;
-						try {
-							br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(
-									MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
+	/** Name of the 'mime.types' resource file located in the same package as this class */
+	private static final String MIME_TYPES_RESOURCE_NAME = "mime.types";
 
-							String line;
+	private MimeTypes() {
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
 
-							while ((line = br.readLine()) != null) {
-								try {
-									StringTokenizer st = new StringTokenizer(line);
-									String description = st.nextToken();
+			String line;
+			StringTokenizer st;
+			String description;
 
-									while (st.hasMoreTokens()) {
-										put(st.nextToken(), description);
-									}
-								} catch (Exception e) {
-									// If a line contains an error, catch the exception and go to the next line
-								}
-							}
-						} catch (IOException ignore) {
-						} finally {
-							if (br != null) {
-								try {
-									br.close();
-								} catch (IOException ignore) {
-								}
-							}
-						}
-						return "";
-					}
-				});
-        // Makes sure the stream is closed.
-        // This might not be strictly necessary as streams on internal resources are a bit of an unknown,
-        // but since the ClassLoader.getResourceAsStream documentation doesn't explicitly say that such
-        // streams do not need closing, it's safer to assume they do.
-    }
+			while ((line=br.readLine())!=null) {
+				try {
+					st = new StringTokenizer(line);
+					description = st.nextToken();
 
-	
-    /**
-     * Returns the MIME type of the given file (determined by the file extension), <code>null</code>
-     * if the type is unknown (unknown or no extension) or if the file is a folder.
-     */
-    public static String getMimeType(AbstractFile file) {
-        if (file.isDirectory()) {
-            return null;
-        }
-        
-        String name = file.getName();
-        int pos = name.lastIndexOf('.');
-        if (pos < 0) {
-            return null;
-        }
+					while(st.hasMoreTokens())
+						put(st.nextToken(), description);
+				} catch(Exception e) {
+					// If a line contains an error, catch the exception and go to the next line
+				}
+			}
+		} catch(IOException ignore) {}
+		// Makes sure the stream is closed.
+		// This might not be strictly necessary as streams on internal resources are a bit of an unknown,
+		// but since the ClassLoader.getResourceAsStream documentation doesn't explicitly say that such
+		// streams do not need closing, it's safer to assume they do.
+		finally {
+			if (br != null) {
+				try {br.close();}
+				catch(IOException ignore) {}
+			}
+		}
+	}
 
-        return MIME_TYPES.get(name.substring(pos+1, name.length()).toLowerCase());
-    }
-    
+
+	/**
+	 * Returns the MIME type of the given file (determined by the file extension), <code>null</code>
+	 * if the type is unknown (unknown or no extension) or if the file is a folder.
+	 */
+	public static String getMimeType(AbstractFile file) {
+		if (file.isDirectory()) {
+			return null;
+		}
+
+		String name = file.getName();
+		int pos = name.lastIndexOf('.');
+		if (pos < 0) {
+			return null;
+		}
+
+		return MIME_TYPES.get(name.substring(pos+1, name.length()).toLowerCase());
+	}
+
 }

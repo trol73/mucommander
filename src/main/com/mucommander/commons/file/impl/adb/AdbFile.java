@@ -92,6 +92,11 @@ public class AdbFile extends ProtocolFile {
     }
 
     @Override
+    public void changeReplication(short replication) throws IOException {
+
+    }
+
+    @Override
     public long getSize() {
         return remoteFile.getSize();
     }
@@ -129,6 +134,16 @@ public class AdbFile extends ProtocolFile {
     @Override
     public String getOwner() {
         return null;
+    }
+
+    @Override
+    public short getReplication() throws UnsupportedFileOperationException {
+        return 0;
+    }
+
+    @Override
+    public long getBlocksize() throws UnsupportedFileOperationException {
+        return 0;
     }
 
     @Override

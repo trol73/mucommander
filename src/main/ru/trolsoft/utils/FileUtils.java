@@ -20,8 +20,6 @@ package ru.trolsoft.utils;
 import com.mucommander.commons.io.StreamUtils;
 import java.io.*;
 import java.net.URISyntaxException;
-import org.raisercostin.jedi.FileLocation;
-import org.raisercostin.jedi.Locations;
 
 /**
  * Created on 08.01.15.
@@ -51,16 +49,13 @@ public class FileUtils {
 
 
     public static String getJarPath() {
-//        try {
-        	FileLocation loc = Locations.file(System.getProperty("user.home")).child(".trolcommander").child("var");
-        	loc.mkdirIfNecessary();
-            //return new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-        	//return new File(loc.absolute());
-        	return loc.absolute();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
+        try {
+            return new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
 }
