@@ -5,17 +5,17 @@ import java.io.IOException;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.IInStream;
 
 public interface IInArchive {
-    public final static int NExtract_NAskMode_kExtract = 0;
-    public final static int NExtract_NAskMode_kTest = 1;
-    public final static int NExtract_NAskMode_kSkip = 2;
+    int NExtract_NAskMode_kExtract = 0;
+    int NExtract_NAskMode_kTest = 1;
+    int NExtract_NAskMode_kSkip = 2;
     
-    public final static int NExtract_NOperationResult_kOK = 0;
-    public final static int NExtract_NOperationResult_kUnSupportedMethod = 1;
-    public final static int NExtract_NOperationResult_kDataError = 2;
-    public final static int NExtract_NOperationResult_kCRCError = 3;
+    int NExtract_NOperationResult_kOK = 0;
+    int NExtract_NOperationResult_kUnSupportedMethod = 1;
+    int NExtract_NOperationResult_kDataError = 2;
+    int NExtract_NOperationResult_kCRCError = 3;
     
     // Static-SFX (for Linux) can be big.
-    public final long kMaxCheckStartPosition = 1 << 22;
+    long kMaxCheckStartPosition = 1 << 22;
     
     SevenZipEntry getEntry(int index);
     

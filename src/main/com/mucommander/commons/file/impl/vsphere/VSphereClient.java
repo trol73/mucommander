@@ -29,7 +29,6 @@ import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 import javax.xml.ws.BindingProvider;
 
 import org.slf4j.Logger;
@@ -170,18 +169,10 @@ public class VSphereClient implements Closeable {
 	}
 
 	private void doTrust() {
-		HostnameVerifier hv = new HostnameVerifier() {
-			@Override
-			public boolean verify(String urlHostName, SSLSession session) {
-				return true;
-			}
-		};
+		HostnameVerifier hv = (urlHostName, session) -> true;
 		try {
 			trustAllHttpsCertificates();
-		} catch (KeyManagementException e) {
-
-			throw new IllegalStateException("SSL init problems", e);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			throw new IllegalStateException("SSL init problems", e);
 		}
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
@@ -313,14 +304,12 @@ public class VSphereClient implements Closeable {
 		public void checkServerTrusted(
 				java.security.cert.X509Certificate[] certs, String authType)
 				throws java.security.cert.CertificateException {
-			return;
 		}
 
 		@Override
 		public void checkClientTrusted(
 				java.security.cert.X509Certificate[] certs, String authType)
 				throws java.security.cert.CertificateException {
-			return;
 		}
 	}
 
@@ -329,7 +318,6 @@ public class VSphereClient implements Closeable {
 	}
 
 	public ServiceContent getServiceContent() {
-
 		return this.serviceContent;
 	}
 

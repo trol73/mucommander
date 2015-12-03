@@ -39,7 +39,7 @@ public class LocationManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocationManager.class);
 
     /** Contains all registered location listeners, stored as weak references */
-    private WeakHashMap<LocationListener, ?> locationListeners = new WeakHashMap<LocationListener, Object>();
+    private WeakHashMap<LocationListener, ?> locationListeners = new WeakHashMap<>();
 
     /** The FolderPanel instance this LocationManager manages location events for */
     private FolderPanel folderPanel;

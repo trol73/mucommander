@@ -120,12 +120,9 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         if (postponedCaretPosition >= 0) {
             final int pos = postponedCaretPosition;
             postponedCaretPosition = -1;
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    setCaretPosition(pos);
-                    forceCurrentLineHighlightRepaint();
-                }
+            SwingUtilities.invokeLater(() -> {
+                setCaretPosition(pos);
+                forceCurrentLineHighlightRepaint();
             });
         }
     }
@@ -270,6 +267,21 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      */
     public void setLineSeparator(String separator) {
         setLineSeparator(separator, true);
+    }
+
+
+    public String getLineStr(int line) {
+        try {
+            int posStart = getLineStartOffset(line - 1);
+            int posEnd = getLineEndOffset(line - 1);
+            int len = posEnd - posStart;
+            if (len > 2048) {
+                return null;
+            }
+            return getDocument().getText(posStart, len);
+        } catch (Exception ignore) {
+            return null;
+        }
     }
 
 }

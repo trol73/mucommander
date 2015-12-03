@@ -81,7 +81,7 @@ public class FindFileJob extends FileJob {
                     nextFile(subFiles[i]);
                     processFile(subFiles[i], null);
                 }
-            } catch(IOException e) {
+            } catch(Throwable e) {
                 // Should we tell the user?
             }
         } else { // If not, increase file counter and bytes total
@@ -101,7 +101,7 @@ public class FindFileJob extends FileJob {
                     nextFile(subFiles[i]);
                     processFile(subFiles[i], null);
                 }
-            } catch(IOException e) {
+            } catch(Throwable e) {
                 // Should we tell the user?
             }
         }
@@ -136,8 +136,8 @@ public class FindFileJob extends FileJob {
         } catch (SearchException | IOException e) {
             e.printStackTrace();
             return false;
-        }
-    }
+                }
+            }
 
 
 

@@ -21,8 +21,6 @@ package com.mucommander.ui.dialog.pref.component;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * @author Arik Hadas
@@ -34,11 +32,6 @@ public abstract class PrefRadioButton extends JRadioButton implements PrefCompon
 	}
 	
 	public void addDialogListener(final PreferencesDialog dialog) {
-		addItemListener(new ItemListener() {
-
-			public void itemStateChanged(ItemEvent e) {
-				dialog.componentChanged(PrefRadioButton.this);
-			}
-		});		
+		addItemListener(e -> dialog.componentChanged(PrefRadioButton.this));
 	}
 }

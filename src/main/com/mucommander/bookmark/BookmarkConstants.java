@@ -25,21 +25,21 @@ package com.mucommander.bookmark;
 interface BookmarkConstants {
 
     /** Root element */
-    static final String ELEMENT_ROOT      = "bookmarks";
+    String ELEMENT_ROOT      = "bookmarks";
 
     /** Name of the root element's attribute containing the muCommander version that was used to create the bookmarks file */
-    static final String ATTRIBUTE_VERSION = "version";
+    String ATTRIBUTE_VERSION = "version";
 
     /** Element describing one of the bookmarks in the list */
-    static final String ELEMENT_BOOKMARK  = "bookmark";
+    String ELEMENT_BOOKMARK  = "bookmark";
 
     /** Bookmark name */
-    static final String ELEMENT_NAME      = "name";
+    String ELEMENT_NAME      = "name";
 
     /** Bookmark location */
-    static final String ELEMENT_LOCATION  = "location";
+    String ELEMENT_LOCATION  = "location";
 
     /** Bookmark URL: was used up until 0.8 beta3 nightly builds and replaced by 'location' element. Kept
      * for upward compatibility */
-    static final String ELEMENT_URL       = "url";
+    String ELEMENT_URL       = "url";
 }

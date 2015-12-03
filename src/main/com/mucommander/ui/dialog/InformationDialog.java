@@ -26,8 +26,6 @@ import com.mucommander.ui.text.FontUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -197,11 +195,7 @@ public class InformationDialog {
         mainPanel.addSpace(10);
 
         JButton okButton = new JButton(Translator.get("ok"));
-        JPanel okPanel = DialogToolkit.createOKPanel(okButton, dialog.getRootPane(), new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        });
+        JPanel okPanel = DialogToolkit.createOKPanel(okButton, dialog.getRootPane(), e -> dialog.dispose());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));

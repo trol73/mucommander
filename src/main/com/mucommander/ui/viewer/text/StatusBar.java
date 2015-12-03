@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * Copyright (C) 2013-2015 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,34 @@ import org.fife.ui.StatusBarPanel;
 
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 
 /**
  *
- * Created by trol on 25/09/14.
+ * @author Oleg Trifonov
+ * Created on 25/09/14.
  */
 public class StatusBar extends org.fife.ui.StatusBar {
 
+    private StatusBarPanel panelColor;
     private StatusBarPanel panelPosition;
     private StatusBarPanel panelEncoding;
     private StatusBarPanel panelSyntax;
 
+    private JLabel lblColor;
     private JLabel lblPosition;
     private JLabel lblEncoding;
     private JLabel lblSyntax;
 
+    private int color = -1;
+
 
     public StatusBar() {
         super("");
+
+        lblColor = new JLabel("          ");
+        panelColor = new StatusBarPanel(new BorderLayout(), lblColor);
 
         lblPosition = new JLabel();
         panelPosition = new StatusBarPanel(new BorderLayout(), lblPosition);
@@ -57,9 +66,20 @@ public class StatusBar extends org.fife.ui.StatusBar {
         c.weightx = 0.0;
         addStatusBarComponent(panelPosition, c);
         c.weightx = 0.0;
+        addStatusBarComponent(panelColor, c);
+        c.weightx = 0.0;
         addStatusBarComponent(panelSyntax, c);
         c.weightx = 0.0;
         addStatusBarComponent(panelEncoding, c);
+    }
+
+    public void setColor(int color) {
+        if (this.color == color) {
+            return;
+        }
+        this.color = color;
+        panelColor.setVisible(color >= 0);
+        panelColor.setBackground(new Color(color));
     }
 
     public void setPosition(int line, int column) {

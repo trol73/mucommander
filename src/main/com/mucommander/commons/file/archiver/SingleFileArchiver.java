@@ -62,4 +62,7 @@ class SingleFileArchiver extends Archiver {
     public void close() throws IOException {
         out.close();
     }
+
+    @Override
+    public void postProcess() throws IOException {}
 }

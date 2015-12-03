@@ -50,8 +50,8 @@ public class AbstractContainsFilter extends AbstractStringCriterionFilter {
 
     public boolean accept(String value) {
         if(isCaseSensitive())
-            return value.indexOf(s)!=-1;
+            return value.contains(s);
 
-        return value.toLowerCase().indexOf(s.toLowerCase())!=-1;
+        return value.toLowerCase().contains(s.toLowerCase());
     }
 }

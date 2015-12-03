@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
+import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
@@ -38,8 +39,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.*;
 
 /**
@@ -57,7 +56,7 @@ class TextEditorImpl implements ThemeListener {
 
     private TextArea textArea;
 
-    private GotoLineDialog dlgGoto;
+    //private GotoLineDialog dlgGoto;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -68,19 +67,60 @@ class TextEditorImpl implements ThemeListener {
         @Override
         public void caretUpdate(CaretEvent e) {
             if (statusBar != null) {
-                statusBar.setPosition(textArea.getLine(), textArea.getColumn());
+                int line = textArea.getLine();
+                int col = textArea.getColumn();
+                statusBar.setPosition(line, col);
+
+                // check if we have 6-digit hex-word on cursor (color)
+                String str = textArea.getLineStr(line);
+                if (str == null || str.length() < 6 || col >= str.length()) {
+                    return;
+                }
+                char ch = str.charAt(col);
+                if (isHexDigit(ch)) {
+                    String word = "" + ch;
+                    for (int pos = col-1; pos >= 0; pos--) {
+                        char c = str.charAt(pos);
+                        if (isHexDigit(c)) {
+                            word = c + word;
+                        } else {
+                            break;
+                        }
+                    }
+                    for (int pos = col+1; pos < str.length(); pos++) {
+                        char c = str.charAt(pos);
+                        if (isHexDigit(c)) {
+                            word = word + c;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (word.length() == 6) {
+                        statusBar.setColor(Integer.parseInt(word, 16));
+                    } else {
+                        statusBar.setColor(-1);
+                    }
+                } else {
+                    statusBar.setColor(-1);
+                }
+
             }
         }
     };
 
 
-    ////////////////////
+    private static boolean isHexDigit(char ch) {
+        return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
+    }
+
+
+	////////////////////
 	// Initialization //
 	////////////////////
 
 	public TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
-		initTextArea(isEditable);
+        initTextArea(isEditable);
         this.statusBar = statusBar;
 
 		// Listen to theme changes to update the text area if it is visible
@@ -121,14 +161,7 @@ class TextEditorImpl implements ThemeListener {
 
 		textArea.setWrapStyleWord(true);
 
-		textArea.addMouseWheelListener(new MouseWheelListener() {
-
-			/**
-			 * Mouse events bubble up until finding a component with a relative listener.
-			 * That's why in case we get an event that needs to initiate its default behavior,
-			 * we just bubble it up to the parent component of the JTextArea.  
-			 */
-			public void mouseWheelMoved(MouseWheelEvent e) {
+		textArea.addMouseWheelListener(e -> {
 				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
 				if (isCtrlPressed) {
 					Font currentFont = textArea.getFont();
@@ -141,11 +174,10 @@ class TextEditorImpl implements ThemeListener {
 				} else {
 					textArea.getParent().dispatchEvent(e);
 				}
-			}
 		});
 
         textArea.addCaretListener(caretListener);
-    }
+	}
 
 	/////////////////
 	// Search code //
@@ -194,10 +226,10 @@ class TextEditorImpl implements ThemeListener {
 
 	private void search(int startPos, boolean forward) {
 		if (searchString == null || searchString.isEmpty()) {
-            return;
+			return;
         }
         String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
-        int pos;
+		int pos;
 		if (forward) {
 			pos = getTextLC().indexOf(ss, startPos);
 		} else {
@@ -220,8 +252,8 @@ class TextEditorImpl implements ThemeListener {
 			}.start();
             if (getStatusBar() != null) {
                 getStatusBar().setStatusMessage(Translator.get("text_editor.text_not_found"));
-            }
 		}
+	}
 	}
 
 	public boolean isWrap() {
@@ -346,7 +378,8 @@ class TextEditorImpl implements ThemeListener {
         int readBytes;
         try {
             PushbackInputStream is = file.getPushBackInputStream(256);
-            readBytes = StreamUtils.readUpTo(is, bytes);
+            BOMInputStream bomIs = new BOMInputStream(is);
+            readBytes = StreamUtils.readUpTo(bomIs, bytes);
             is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
             e.printStackTrace();

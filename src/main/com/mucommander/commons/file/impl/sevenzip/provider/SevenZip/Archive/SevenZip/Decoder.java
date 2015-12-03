@@ -101,11 +101,7 @@ class Decoder {
         for (i = 0; i < a1.CoderMethodIDs.size(); i++)
             if (a1.CoderMethodIDs.get(i) != a2.CoderMethodIDs.get(i))
                 return false;
-        if (a1.InStreams.size() != a2.InStreams.size())
-            return false;
-        if (a1.OutStreams.size() != a2.OutStreams.size())
-            return false;
-        return true;
+        return a1.InStreams.size() == a2.InStreams.size() && a1.OutStreams.size() == a2.OutStreams.size();
     }
     
     int Decode(com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.IInStream inStream,

@@ -73,15 +73,13 @@ public class CommandBarDialog extends CustomizeDialog {
 	private static final Color JBUTTON_BACKGROUND_COLOR = UIManager.getColor("button.background");
 	
 	/** Comparator for buttons according to their text */
-	private static final Comparator<JButton> BUTTONS_COMPARATOR = new Comparator<JButton>() {
-		public int compare(JButton b1, JButton b2) {
-			if (b1.getText() == null)
-				return 1;
-			if (b2.getText() == null)
-				return -1;
-			return b1.getText().compareTo(b2.getText());
-		}
-	};
+	private static final Comparator<JButton> BUTTONS_COMPARATOR = (b1, b2) -> {
+        if (b1.getText() == null)
+            return 1;
+        if (b2.getText() == null)
+            return -1;
+        return b1.getText().compareTo(b2.getText());
+    };
 	
 	/**
 	 * Constructor
@@ -366,7 +364,7 @@ public class CommandBarDialog extends CustomizeDialog {
 		Iterator<String> actionIds = ActionManager.getActionIds();
 		while(actionIds.hasNext()) {
             String actionId = actionIds.next();
-            // Filter out actions that are currently used in the command bar, and those that are parameterized
+            // Filter out actions that are currently used in the command bar, and those that are parametrized
 			if (!usedActions.contains(actionId) && !ActionProperties.getActionDescriptor(actionId).isParameterized())
 				insertInOrder(commandBarAvailableButtons, CommandBarButtonForDisplay.create(actionId));			
 		}
@@ -384,8 +382,9 @@ public class CommandBarDialog extends CustomizeDialog {
 			
 			@Override
 			public Transferable createTransferable(JComponent c) {
-				if (c instanceof JList)
+				if (c instanceof JList) {
 					return new TransferableButton((JButton) ((JList) c).getSelectedValue());
+				}
 				return null;
 			}
 			

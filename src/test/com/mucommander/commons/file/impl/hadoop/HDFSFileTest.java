@@ -22,13 +22,15 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractFileTest;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
+import com.mucommander.test.Assumes;
 import org.testng.annotations.BeforeClass;
-
+import org.testng.annotations.Test;
 import java.io.IOException;
 
 /**
  * @author Maxence Bernard
  */
+@Test
 public class HDFSFileTest extends AbstractFileTest {
 
     /** The system property that holds the URI to the temporary HDFS folder */
@@ -39,7 +41,8 @@ public class HDFSFileTest extends AbstractFileTest {
 
     @BeforeClass
     public static void setupTemporaryFolder() {
-        tempFolder = FileFactory.getFile(System.getProperty(TEMP_FOLDER_PROPERTY));
+        //tempFolder = FileFactory.getFile("hdfs://emoroozv@hbase01dev/user/emorozov");
+		tempFolder = getTemporaryFolder(TEMP_FOLDER_PROPERTY);
     }
 
 

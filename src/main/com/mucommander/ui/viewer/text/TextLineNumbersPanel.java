@@ -39,7 +39,7 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 	
 	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
 	
-	public static enum ALIGNMENT{ LEFT, CENTER, RIGHT }
+	public enum ALIGNMENT{ LEFT, CENTER, RIGHT }
 	
 	// Text component this TextTextLineNumber component is in sync with
 	private JTextComponent component;
@@ -313,26 +313,23 @@ public class TextLineNumbersPanel extends JPanel implements CaretListener, Docum
 	private void documentChanged() {
 		//  Preferred size of the component has not been updated at the time
 		//  the DocumentEvent is fired
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			public void run() {
-                int preferredHeight;
-                try {
-        		    preferredHeight = component.getPreferredSize().height;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-				//  Document change has caused a change in the number of lines.
-				//  Repaint to reflect the new line numbers
-        		if (lastHeight != preferredHeight) {
-        			setPreferredWidth();
-        			repaint();
-        			lastHeight = preferredHeight;
-        		}
+		SwingUtilities.invokeLater(() -> {
+			int preferredHeight;
+			try {
+				preferredHeight = component.getPreferredSize().height;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
 			}
-		});
+
+            //  Document change has caused a change in the number of lines.
+            //  Repaint to reflect the new line numbers
+            if (lastHeight != preferredHeight) {
+                setPreferredWidth();
+                repaint();
+                lastHeight = preferredHeight;
+            }
+        });
 	}
 	
 	//////////////////////////////////

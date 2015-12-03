@@ -58,7 +58,7 @@ public class ToolBarAttributes {
     private static boolean useDefaultActions = true;
     
     /** Contains all registered toolbar-attributes listeners, stored as weak references */
-    private static final Map<ToolBarAttributesListener, ?> listeners = new WeakHashMap<ToolBarAttributesListener, Object>();
+    private static final Map<ToolBarAttributesListener, ?> listeners = new WeakHashMap<>();
     
     /** Default command bar actions: Class instances or null to signify a separator */
     private final static String[] DEFAULT_TOOLBAR_ACTIONS = new String[] {
@@ -145,18 +145,18 @@ public class ToolBarAttributes {
      */
     public static boolean areDefaultAttributes() {
     	if (useDefaultActions) {
-            return true;
+    		return true;
         }
     		
     	int nbActions = actionIds.length;
     	
     	if (nbActions != DEFAULT_TOOLBAR_ACTIONS.length) {
-            return false;
+    		return false;
         }
     	
     	for (int i=0; i<nbActions; ++i) {
             if (!equals(actionIds[i], DEFAULT_TOOLBAR_ACTIONS[i])) {
-                return false;
+    			return false;
             }
         }
     	
@@ -165,7 +165,7 @@ public class ToolBarAttributes {
     
     private static boolean equals(Object action1, Object action2) {
     	if (action1 == null) {
-            return action2 == null;
+    		return action2 == null;
         }
     	return action1.equals(action2);
     }

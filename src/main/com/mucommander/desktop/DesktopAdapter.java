@@ -57,7 +57,7 @@ public interface DesktopAdapter {
      * Checks whether or not the desktop is available on the current platform.
      * @return <code>true</code> if the desktop is available on the current platform, <code>false</code> otherwise.
      */
-    public boolean isAvailable();
+    boolean isAvailable();
 
     /**
      * Initialises this desktop.
@@ -76,7 +76,7 @@ public interface DesktopAdapter {
      * @param  install                        <code>true</code> if this is the application's first boot, <code>false</code> otherwise.
      * @throws DesktopInitialisationException if any error occurs.
      */
-    public void init(boolean install) throws DesktopInitialisationException;
+    void init(boolean install) throws DesktopInitialisationException;
 
 
 
@@ -94,7 +94,7 @@ public interface DesktopAdapter {
      * @see      #isRightMouseButton(MouseEvent)
      * @see      #isMiddleMouseButton(MouseEvent)
      */
-    public boolean isLeftMouseButton(MouseEvent e);
+    boolean isLeftMouseButton(MouseEvent e);
 
     /**
      * Checks whether the specified <code>MouseEvent</code> is a left-click for this destop.
@@ -108,7 +108,7 @@ public interface DesktopAdapter {
      * @see      #isMiddleMouseButton(MouseEvent)
      * @see      #isLeftMouseButton(MouseEvent)
      */
-    public boolean isRightMouseButton(MouseEvent e);
+    boolean isRightMouseButton(MouseEvent e);
 
     /**
      * Checks whether the specified <code>MouseEvent</code> is a left-click for this destop.
@@ -122,7 +122,7 @@ public interface DesktopAdapter {
      * @see      #isRightMouseButton(MouseEvent)
      * @see      #isLeftMouseButton(MouseEvent)
      */
-    public boolean isMiddleMouseButton(MouseEvent e);
+    boolean isMiddleMouseButton(MouseEvent e);
 
     /**
      * Returns the maximum interval in milliseconds between mouse clicks for them to be considered as 'multi-clicks'
@@ -130,7 +130,7 @@ public interface DesktopAdapter {
      * which may or may not correspond to the one Java uses for double-clicks.
      * @return the maximum interval in milliseconds between mouse clicks for them to be considered as 'multi-clicks'.
      */
-    public int getMultiClickInterval();
+    int getMultiClickInterval();
 
 
     // - Misc. -----------------------------------------------------------
@@ -143,9 +143,9 @@ public interface DesktopAdapter {
      * </p>
      * @return the command used to start shell processes.
      */
-    public String getDefaultShell();
+    String getDefaultShell();
 
-    public String getDefaultTerminalShellCommand();
+    String getDefaultTerminalShellCommand();
 
     /**
      * Returns <code>true</code> if the given file is an application file. What an application file actually is
@@ -156,5 +156,5 @@ public interface DesktopAdapter {
      * @param file the file to test
      * @return <code>true</code> if the given file is an application file
      */
-    public boolean isApplication(AbstractFile file);
+    boolean isApplication(AbstractFile file);
 }

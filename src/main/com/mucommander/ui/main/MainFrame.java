@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements LocationListener {
     private boolean foregroundActive;
 
     /** Contains all registered ActivePanelListener instances, stored as weak references */
-    private WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<ActivePanelListener, Object>();
+    private WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<>();
 
     private JPanel insetsPane;
 

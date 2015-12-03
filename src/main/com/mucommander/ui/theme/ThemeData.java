@@ -774,12 +774,12 @@ public class ThemeData {
     public static final String DEFAULT_LABEL_FONT                      = "Label.font";
     public static final String DEFAULT_TABLE_FONT                      = "Table.font";
     public static final String DEFAULT_MENU_HEADER_FONT                = "MenuHeader.font";
-    
+
 
     // - Listeners -----------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Listeners on the default font and colors. */
-    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<ThemeListener, Object>();
+    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
 
 
 
@@ -903,12 +903,12 @@ public class ThemeData {
         registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextField.selectionForeground", mapper));
         registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper));
         registerDefaultColor(DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper) {
-            @Override
-            public Color getColor(ThemeData data) {
+                                 @Override
+                                 public Color getColor(ThemeData data) {
                 Color color = super.getColor(data);
-                return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
-            }
-        });
+                                     return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
+                                 }
+                             });
 
         // Register Table related default values.
         mapper = new ComponentMapper() {
@@ -924,17 +924,17 @@ public class ThemeData {
         registerDefaultColor(DEFAULT_TABLE_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "Table.selectionForeground", mapper));
         registerDefaultColor(DEFAULT_TABLE_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "Table.selectionBackground", mapper));
         registerDefaultColor(DEFAULT_TABLE_UNMATCHED_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper) {
-            @Override
-            public Color getColor(ThemeData data) {
-                return super.getColor(data).darker();
-            }
-        });
+                                 @Override
+                                 public Color getColor(ThemeData data) {
+                                     return super.getColor(data).darker();
+                                 }
+                             });
         registerDefaultColor(DEFAULT_TABLE_UNMATCHED_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper) {
-            @Override
-            public Color getColor(ThemeData data) {
-                return super.getColor(data).darker();
-            }
-        });
+                                 @Override
+                                 public Color getColor(ThemeData data) {
+                                     return super.getColor(data).darker();
+                                 }
+                             });
 
         // Menu header related default values.
         mapper = new ComponentMapper() {
@@ -1158,7 +1158,7 @@ public class ThemeData {
      * not all of them. It is up to callers to deal with these issues.
      * </p>
      * <p>
-     * Values overwritting is done through the use of the current instance's {@link #setColor(int,Color)}
+     * Values overwriting is done through the use of the current instance's {@link #setColor(int,Color)}
      * and {@link #setFont(int,Font)} methods. This allows subclasses to plug their own code here. A good
      * example of that is {@link Theme}, which will automatically trigger font and color events when
      * importing data.
@@ -1174,7 +1174,7 @@ public class ThemeData {
         // Imports the theme's fonts.
         for (int i = 0; i < FONT_COUNT; i++) {
             setFont(i, data.fonts[i]);
-        }
+    }
     }
 
 
@@ -1206,12 +1206,12 @@ public class ThemeData {
             triggerColorEvent(id, color);
         } else {
             switch (id) {
-                case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-                case FILE_TABLE_SELECTED_OUTLINE_COLOR:
-                case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-                case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
-                    triggerColorEvent(id, color);
-            }
+        case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+        case FILE_TABLE_SELECTED_OUTLINE_COLOR:
+        case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+        case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
+            triggerColorEvent(id, color);
+        }
         }
 
         return buffer;
@@ -1418,7 +1418,7 @@ public class ThemeData {
     /**
      * Checks whether the current color and the specified one are different from one another.
      * <p>
-     * This is a convenience method, and is stricly equivalent to calling
+     * This is a convenience method, and is strictly equivalent to calling
      * <code>{@link #isColorDifferent(int,Color,boolean) isColorDifferent(}id, color, false)</code>.
      * </p>
      * @param  id   identifier of the color to check.
@@ -1521,7 +1521,7 @@ public class ThemeData {
         // Dispatches it.
         for (ThemeListener listener : listeners.keySet()) {
             listener.colorChanged(event);
-        }
+    }
     }
 
 
@@ -1536,7 +1536,7 @@ public class ThemeData {
     private static void checkColorIdentifier(int id) {
         if (id < 0 || id >= COLOR_COUNT) {
             throw new IllegalArgumentException("Illegal color identifier: " + id);
-        }
+    }
     }
 
     /**
@@ -1547,7 +1547,7 @@ public class ThemeData {
     private static void checkFontIdentifier(int id) {
         if (id < 0 || id >= FONT_COUNT) {
             throw new IllegalArgumentException("Illegal font identifier: " + id);
-        }
+    }
     }
 
     private static Font createDefaultTerminalFont() {

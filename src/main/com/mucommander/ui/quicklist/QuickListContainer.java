@@ -28,11 +28,11 @@ import java.awt.Point;
  */
 public interface QuickListContainer {
 	
-	public Point calcQuickListPosition(Dimension dim);
+	Point calcQuickListPosition(Dimension dim);
 	
-	public Component containerComponent();
+	Component containerComponent();
 	
-	public Component nextFocusableComponent();
+	Component nextFocusableComponent();
 	
-	public int getWidth();
+	int getWidth();
 }

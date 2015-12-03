@@ -123,7 +123,7 @@ class KdeTrash extends QueuedTrash {
     @Override
     public boolean isTrashFile(AbstractFile file) {
         return (file.getTopAncestor() instanceof LocalFile)
-            && (file.getAbsolutePath(true).indexOf("/.local/share/Trash/") != -1);
+            && (file.getAbsolutePath(true).contains("/.local/share/Trash/"));
     }
 
     /**

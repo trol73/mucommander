@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -89,18 +88,15 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         // Retrieve all MessageDigest instances and sort them by alphabetical order of their algorithm
 
         // create a TreeSet with a custom Comparator
-        SortedSet<MessageDigest> algorithmSortedSet = new TreeSet<>(new Comparator<MessageDigest>() {
-                    public int compare(MessageDigest md1, MessageDigest md2) {
+        SortedSet<MessageDigest> algorithmSortedSet = new TreeSet<>((md1, md2) -> {
                         return md1.getAlgorithm().compareTo(md2.getAlgorithm());
-                    }
                 });
 
         // Add all MessageDigest to the TreeSet
-        for(String algo : Security.getAlgorithms("MessageDigest")) {
+        for (String algo : Security.getAlgorithms("MessageDigest")) {
             try {
                 algorithmSortedSet.add(MessageDigest.getInstance(algo));
-            }
-            catch(NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException e) {
                 // Should never happen and if it ever does, the digest will simply be discarded
             }
         }
@@ -110,8 +106,9 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         algorithmSortedSet.toArray(messageDigests);
 
         // Add the sorted list of algorithms to a combo box to let the user choose one
-        for (MessageDigest messageDigest : messageDigests)
+        for (MessageDigest messageDigest : messageDigests) {
             algorithmComboBox.addItem(messageDigest.getAlgorithm());
+        }
 
         // Select the last used algorithm (if any), or the default algorithm
         algorithmComboBox.setSelectedItem(lastUsedAlgorithm);
@@ -207,11 +204,12 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         algorithm = algorithm.toUpperCase();
 
-        if(algorithm.equals("SHA"))
-            return "SHA1SUMS";
+        if (algorithm.equals("SHA")) {
+            return "SHA1SUMS";}
 
-        if(algorithm.equals("CRC32"))
-            return (files.size()==1?files.elementAt(0):files.getBaseFolder()).getName()+".sfv";
+        if (algorithm.equals("CRC32")) {
+            return (files.size() == 1 ? files.elementAt(0) : files.getBaseFolder()).getName() + ".sfv";
+        }
 
         return algorithm.replace("-", "")+"SUMS";
     }

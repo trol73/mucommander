@@ -93,7 +93,7 @@ public interface Shell32API extends StdCallLibrary {
     /**
      * This structure contains information that the SHFileOperation function uses to perform file operations.
      */
-    public static class SHFILEOPSTRUCT extends Structure {
+    class SHFILEOPSTRUCT extends Structure {
 
         /** Window handle to the dialog box to display information about the status of the file operation. */
         public WinNT.HANDLE hwnd;
@@ -127,7 +127,7 @@ public interface Shell32API extends StdCallLibrary {
          * @return the encoded path
          */
         public String encodePaths(String[] paths) {
-            StringBuffer encodedPaths = new StringBuffer();
+            StringBuilder encodedPaths = new StringBuilder();
             for (String path : paths) {
                 encodedPaths.append(path);
                 encodedPaths.append('\0');
@@ -191,7 +191,7 @@ public interface Shell32API extends StdCallLibrary {
     /**
      * Contains the size and item count information retrieved by the SHQueryRecycleBin function.
      */
-    public static class SHQUERYRBINFO extends Structure {
+    class SHQUERYRBINFO extends Structure {
 
         /** The size of the structure, in bytes. This member must be filled in prior to calling SHQueryRecycleBin. */
         public int cbSize = 20;     // 1 DWORD + 2 DWORDLONG = 4 + 2*8 = 20 bytes

@@ -37,6 +37,8 @@ public abstract class FileFrame extends JFrame {
 	// The main frame from which this frame was initiated
 	private MainFrame mainFrame;
 	
+    private Component returnFocusTo;
+	
 	FileFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
 		this.mainFrame = mainFrame;
 
@@ -67,20 +69,17 @@ public abstract class FileFrame extends JFrame {
             @Override
             public void initTargetComponent() throws Exception {
                 // key dispatcher for Esc detection
-                final KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
-                    @Override
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                            cancel();
-                            setVisible(false);
-                            dispose();
-                        }
-                        return false;
+                final KeyEventDispatcher keyEventDispatcher = e -> {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        cancel();
+                        setVisible(false);
+                        dispose();
                     }
+                    return false;
                 };
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
                 try {
-                    filePresenter.open(file);
+                filePresenter.open(file);
                 } finally {
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
                 }
@@ -182,6 +181,19 @@ public abstract class FileFrame extends JFrame {
         filePresenter.saveStateOnClose();
         WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
         super.dispose();
+        if (returnFocusTo != null) {
+            FocusRequester.requestFocus(returnFocusTo);
+    }
+    }
+
+    public FileFrame returnFocusTo(Component returnFocusTo) {
+        this.returnFocusTo = returnFocusTo;
+        return this;
+    }
+
+
+    public Component getReturnFocusTo() {
+        return returnFocusTo;
     }
 
 
@@ -194,4 +206,5 @@ public abstract class FileFrame extends JFrame {
     protected abstract String getGenericErrorDialogMessage();
     
     protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
+
 }

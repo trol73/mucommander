@@ -6,7 +6,6 @@ import java.io.IOException;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.HRESULT;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.ICompressProgressInfo;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZ.OutWindow;
-import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZMA.Base;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.BitTreeDecoder;
 
 
@@ -171,7 +170,7 @@ public class Decoder
         return true;
     }
     
-    boolean SetLcLpPb(int lc, int lp, int pb) {
+    boolean setLcLpPb(int lc, int lp, int pb) {
         if (lc > Base.kNumLitContextBitsMax || lp > 4 || pb > Base.kNumPosStatesBitsMax)
             return false;
         m_LiteralDecoder.Create(lp, lc);
@@ -484,9 +483,7 @@ public class Decoder
         int pb = remainder / 5;
         int dictionarySize = 0;
         for (int i = 0; i < 4; i++)
-            dictionarySize += ((int)(properties[1 + i]) & 0xFF) << (i * 8);
-        if (!SetLcLpPb(lc, lp, pb))
-            return false;
-        return SetDictionarySize(dictionarySize);
+            dictionarySize += ((int) (properties[1 + i]) & 0xFF) << (i * 8);
+        return setLcLpPb(lc, lp, pb) && SetDictionarySize(dictionarySize);
     }
 }

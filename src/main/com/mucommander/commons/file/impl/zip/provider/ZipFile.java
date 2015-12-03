@@ -162,8 +162,8 @@ public class ZipFile implements ZipConstants {
      * @throws IOException if an error occured while opening the zip file for random read access.
      * @throws UnsupportedFileOperationException if a required operation is not supported by the underlying filesystem.
      */
-    private void openWrite() throws IOException, UnsupportedFileOperationException {
-        if(raos!=null) {
+    private void openWrite() throws IOException {
+        if (raos != null) {
             LOGGER.info("Warning: an existing RandomAccessOutputStream was found, closing it now");
             raos.close();
         }
@@ -302,7 +302,7 @@ public class ZipFile implements ZipConstants {
      * zip file. In this case, the resulting zip file will be smaller.</p>
      *
      * <p>Note that 'fragmented' zip files are perfectly valid zip files, any zip parser should be able to cope with
-     * such files.<p>
+     * such files.</p>
      *
      * <p>The underlying {@link AbstractFile} must have random write access. If not, an <code>IOException</code> will be
      * thrown.</p>
@@ -418,13 +418,15 @@ public class ZipFile implements ZipConstants {
             // All good, remove the deleted entry from the lists
             entries.removeElementAt(entryIndex);
             nameMap.remove(ze.getName());
-        }
-        finally {
-            try { closeRead(); }
-            catch(IOException e) {}
-
-            try { closeWrite(); }
-            catch(IOException e) {}
+        } finally {
+            try {
+                closeRead();
+            } catch(IOException ignore) {
+            }
+            try {
+                closeWrite();
+            } catch(IOException ignore) {
+            }
         }
     }
 
@@ -541,7 +543,7 @@ public class ZipFile implements ZipConstants {
      * @throws IOException if an I/O error occurred
      * @throws UnsupportedFileOperationException if a required operation is not supported by the underlying filesystem.
      */
-    public void updateEntry(ZipEntry entry) throws IOException, UnsupportedFileOperationException {
+    public void updateEntry(ZipEntry entry) throws IOException {
         try {
             // Open the zip file for write
             openWrite();
@@ -569,8 +571,7 @@ public class ZipFile implements ZipConstants {
             // Update 'external attributes' for permissions
             raos.seek(entryInfo.centralHeaderOffset+38);
             raos.write(ZipLong.getBytes(entry.getExternalAttributes(), zipBuffer.longBuffer));
-        }
-        finally {
+        } finally {
             closeWrite();
         }
 
@@ -590,7 +591,7 @@ public class ZipFile implements ZipConstants {
      * @throws IOException if an I/O error occurred
      * @throws UnsupportedFileOperationException if a required operation is not supported by the underlying filesystem.
      */
-    public void defragment() throws IOException, UnsupportedFileOperationException {
+    public void defragment() throws IOException {
         int nbEntries = entries.size();
         if(nbEntries==0)
             return;
@@ -681,11 +682,13 @@ public class ZipFile implements ZipConstants {
             }
         }
         finally {
-            try { closeRead(); }
-            catch(IOException e) {}
+            try {
+                closeRead();
+            } catch(IOException ignore) {}
 
-            try { closeWrite(); }
-            catch(IOException e) {}
+            try {
+                closeWrite();
+            } catch(IOException ignore) {}
         }
     }
 
@@ -757,7 +760,7 @@ public class ZipFile implements ZipConstants {
      * @throws IOException if an I/O error occurred
      * @throws ZipException if this file is not a valid Zip file
      */
-    private void parseCentralDirectory() throws IOException, ZipException {
+    private void parseCentralDirectory() throws IOException {
 
         positionAtCentralDirectory();
 
@@ -792,11 +795,11 @@ public class ZipFile implements ZipConstants {
 
             if(isUTF8) {
                 entryInfo.encoding = UTF_8;
-                LOGGER.info("Entry declared as UTF-8");
+                LOGGER.debug("Entry declared as UTF-8");
             }
             else if(defaultEncodingSet) {
                 entryInfo.encoding = defaultEncoding;
-                LOGGER.info("Using default encoding: "+defaultEncoding);
+                LOGGER.debug("Using default encoding: "+defaultEncoding);
             }
             else {
 //                FileLogger.finest("Encoding will be detected later");
@@ -1012,7 +1015,7 @@ public class ZipFile implements ZipConstants {
      * @throws ZipException if the end of central directory signature could not be found. This can be interpreted as the
      * underlying file not being a Zip file
      */
-    private void positionAtCentralDirectory() throws IOException, ZipException {
+    private void positionAtCentralDirectory() throws IOException {
         long length = rais.getLength();
         if(length<MIN_EOCD_SIZE)
             throw new ZipException("Invalid Zip file (too small)");

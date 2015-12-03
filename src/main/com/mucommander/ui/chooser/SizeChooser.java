@@ -25,8 +25,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.WeakHashMap;
 
 /**
@@ -69,11 +67,7 @@ public class SizeChooser extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         valueSpinner = new JSpinner(new SpinnerNumberModel(0, 0, MAX_SPINNER_VALUE, SPINNER_STEP));
-        valueSpinner.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                fireChangeEvent();
-            }
-        });
+        valueSpinner.addChangeListener(e -> fireChangeEvent());
 
         // Limit the number of columns of the spinner's JTextField to a reasonable amount.
         // By default, the text field has as many columns as needed to fit the spinner maximum value.
@@ -94,12 +88,7 @@ public class SizeChooser extends JPanel {
             unitComboBox.addItem(SizeFormat.getUnitString(i, speedUnits));
         }
         unitComboBox.setSelectedIndex(SizeFormat.KILOBYTE_UNIT);
-        unitComboBox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                fireChangeEvent();
-            }
-        });
-
+        unitComboBox.addItemListener(e -> fireChangeEvent());
         add(unitComboBox);
     }
 

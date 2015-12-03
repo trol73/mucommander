@@ -35,7 +35,7 @@ public interface TableSelectionListener {
      *
      * @param source the {@link com.mucommander.ui.main.table.FileTable} instance on which the file selection has changed
      */
-    public void selectedFileChanged(FileTable source);
+    void selectedFileChanged(FileTable source);
 
 
     /**
@@ -43,5 +43,5 @@ public interface TableSelectionListener {
      *
      * @param source the {@link com.mucommander.ui.main.table.FileTable} instance on which the files marked have changed
      */
-    public void markedFilesChanged(FileTable source);
+    void markedFilesChanged(FileTable source);
 }

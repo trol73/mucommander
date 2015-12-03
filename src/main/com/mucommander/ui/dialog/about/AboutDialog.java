@@ -271,10 +271,10 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertNormalString(doc,   "Language: " + locale.getLanguage());
             insertNormalString(doc,   "Country: " + locale.getCountry());
             insertNormalString(doc,   "Encoding: " + System.getProperty("file.encoding"));
-        } catch(Exception e) {}
+        } catch(Exception ignore) {}
 
         textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textPanel.getViewport().setPreferredSize(new Dimension((int)text.getPreferredSize().getWidth(), 300));
+        textPanel.getViewport().setPreferredSize(new Dimension((int)text.getPreferredSize().getWidth(), 350));
 
         return textPanel;
     }
@@ -291,23 +291,21 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 				return new Insets(10, 10, 0, 10);
 			}
 		}.add(new FluentPanel(new BorderLayout())
-                  .add(new JLabel(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png")),
-                	   BorderLayout.NORTH)
-                  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createAppString()),
-  				       BorderLayout.CENTER)
-  				  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createCopyright()),
-  				       BorderLayout.SOUTH),
+                  .add(new JLabel(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon128_24.png")), BorderLayout.NORTH)
+                  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createAppString()), BorderLayout.CENTER)
+  				  .add(new FluentPanel(new FlowLayout(FlowLayout.CENTER)).add(createCopyright()), BorderLayout.SOUTH),
+
               BorderLayout.NORTH)
 		 .add(new FluentPanel(new BorderLayout())
-                  .add(createHomeComponent(), BorderLayout.NORTH)
-                  .add(createLicenseButton(), BorderLayout.CENTER)
-                  .add(createOkButton(), BorderLayout.SOUTH),
-		      BorderLayout.SOUTH);
+                         .add(createHomeComponent(), BorderLayout.NORTH)
+                         .add(createLicenseButton(), BorderLayout.CENTER)
+                         .add(createOkButton(), BorderLayout.SOUTH),
+                 BorderLayout.SOUTH);
 	}
 
-	private JLabel createCopyright() {
-		return new JLabel("©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov");
-	}
+    private JLabel createCopyright() {
+        return new JLabel("<html>©" + RuntimeConstants.COPYRIGHT+ " Oleg Trifonov<p/><br/>Based on <b>muCommander</b><br>© 2002 - 2013 Maxence Bernard</br>");
+    }
 
 	private JLabel createAppString() {
 		return createBoldLabel(RuntimeConstants.APP_STRING);

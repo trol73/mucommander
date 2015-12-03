@@ -40,7 +40,7 @@ import java.beans.PropertyChangeListener;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
-    private JTextArea shellPreview;
+    private JTextArea        shellPreview;
     private JTabbedPane tabbedPane;
     private EditableComboBox<String> historyPreview;
     private JLabel lblRun, lblOutput;
@@ -122,7 +122,7 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
     private void initUI() {
         setLayout(new BorderLayout());
 
-        tabbedPane = new JTabbedPane();
+        tabbedPane   = new JTabbedPane();
         JPanel previewPanel = createPreviewPanel();
 
         tabbedPane.add(Translator.get("theme_editor.shell_tab"),
@@ -136,16 +136,13 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
                 createConfigurationPanel(ThemeData.TERMINAL_FONT, ThemeData.TERMINAL_FOREGROUND_COLOR, ThemeData.TERMINAL_BACKGROUND_COLOR,
                         ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR, ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR, shellPreview));
 
-        tabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setBackgroundColors();
-                setForegroundColors();
-                boolean shellMode = tabbedPane.getSelectedIndex() < 2;
-                historyPreview.setVisible(shellMode);
-                lblRun.setVisible(shellMode);
-                lblOutput.setVisible(shellMode);
-            }
+        tabbedPane.addChangeListener(e -> {
+            setBackgroundColors();
+            setForegroundColors();
+            boolean shellMode = tabbedPane.getSelectedIndex() < 2;
+            historyPreview.setVisible(shellMode);
+            lblRun.setVisible(shellMode);
+            lblOutput.setVisible(shellMode);
         });
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -176,7 +173,7 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
         if (event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
             setBackgroundColors();
 
-            // Foreground color changed.
+        // Foreground color changed.
         else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
             setForegroundColors();
     }
@@ -184,25 +181,25 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
     private void setBackgroundColors() {
         boolean shellMode = tabbedPane.getSelectedIndex() < 2;
         if (shellMode) {
-            shellPreview.setBackground(themeData.getColor(ThemeData.SHELL_BACKGROUND_COLOR));
-            shellPreview.setSelectionColor(themeData.getColor(ThemeData.SHELL_SELECTED_BACKGROUND_COLOR));
-            historyPreview.setBackground(themeData.getColor(ThemeData.SHELL_HISTORY_BACKGROUND_COLOR));
-            historyPreview.setSelectionBackground(themeData.getColor(ThemeData.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR));
+        shellPreview.setBackground(themeData.getColor(ThemeData.SHELL_BACKGROUND_COLOR));
+        shellPreview.setSelectionColor(themeData.getColor(ThemeData.SHELL_SELECTED_BACKGROUND_COLOR));
+        historyPreview.setBackground(themeData.getColor(ThemeData.SHELL_HISTORY_BACKGROUND_COLOR));
+        historyPreview.setSelectionBackground(themeData.getColor(ThemeData.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR));
         } else {
             shellPreview.setBackground(themeData.getColor(ThemeData.TERMINAL_BACKGROUND_COLOR));
             shellPreview.setSelectionColor(themeData.getColor(ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR));
-        }
+    }
 
     }
 
     private void setForegroundColors() {
         boolean shellMode = tabbedPane.getSelectedIndex() < 2;
         if (shellMode) {
-            shellPreview.setForeground(themeData.getColor(ThemeData.SHELL_FOREGROUND_COLOR));
-            shellPreview.setSelectedTextColor(themeData.getColor(ThemeData.SHELL_SELECTED_FOREGROUND_COLOR));
-            shellPreview.setCaretColor(themeData.getColor(ThemeData.SHELL_FOREGROUND_COLOR));
-            historyPreview.setForeground(themeData.getColor(ThemeData.SHELL_HISTORY_FOREGROUND_COLOR));
-            historyPreview.setSelectionForeground(themeData.getColor(ThemeData.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR));
+        shellPreview.setForeground(themeData.getColor(ThemeData.SHELL_FOREGROUND_COLOR));
+        shellPreview.setSelectedTextColor(themeData.getColor(ThemeData.SHELL_SELECTED_FOREGROUND_COLOR));
+        shellPreview.setCaretColor(themeData.getColor(ThemeData.SHELL_FOREGROUND_COLOR));
+        historyPreview.setForeground(themeData.getColor(ThemeData.SHELL_HISTORY_FOREGROUND_COLOR));
+        historyPreview.setSelectionForeground(themeData.getColor(ThemeData.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR));
         } else {
             shellPreview.setForeground(themeData.getColor(ThemeData.TERMINAL_FOREGROUND_COLOR));
             shellPreview.setSelectedTextColor(themeData.getColor(ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR));

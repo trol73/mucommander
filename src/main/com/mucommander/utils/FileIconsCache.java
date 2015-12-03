@@ -21,6 +21,8 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.icon.FileIcons;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 /**
@@ -72,6 +74,25 @@ public class FileIconsCache {
             return result;
         }
         return addIcon(file, path);
+    }
+
+
+    public Image getImageIcon(AbstractFile file) {
+        Icon icon = getIcon(file);
+        if (icon instanceof ImageIcon) {
+            return ((ImageIcon)icon).getImage();
+        } else {
+            int w = icon.getIconWidth();
+            int h = icon.getIconHeight();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gd = ge.getDefaultScreenDevice();
+            GraphicsConfiguration gc = gd.getDefaultConfiguration();
+            BufferedImage image = gc.createCompatibleImage(w, h);
+            Graphics2D g = image.createGraphics();
+            icon.paintIcon(null, g, 0, 0);
+            g.dispose();
+            return image;
+        }
     }
 
 

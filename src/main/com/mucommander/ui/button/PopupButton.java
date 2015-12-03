@@ -46,7 +46,7 @@ public abstract class PopupButton extends NonFocusableButton {
     /** Custom action performed when the button is clicked. If null, popup menu will be displayed when mouse is clicked */
     private Action buttonClickedAction;
 
-    /* Timestamp when popup menu was closed */
+    /** Timestamp when popup menu was closed */
     private long popupMenuClosedTime;
 
     /** Non-null while popup menu is visible */
@@ -148,8 +148,7 @@ public abstract class PopupButton extends NonFocusableButton {
         // Popup up the menu underneath under this button. This has to be executed by the event thread, otherwise some
         // weird repaint issue will arise under Windows at least (Note: this method can be executed by a thread other
         // than the event thread).
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+        SwingUtilities.invokeLater(() -> {
                 Dimension popupMenuSize = popupMenu.getPreferredSize();
 
                 popupMenu.show(PopupButton.this,
@@ -157,7 +156,6 @@ public abstract class PopupButton extends NonFocusableButton {
                         popupMenuLocation==BOTTOM?getHeight():popupMenuLocation==TOP?-(int)popupMenuSize.getHeight():popupMenuLocation== BOTTOM_LEFT_ORIENTED ?getHeight():0
                 );
 
-            }
         });
 
         // Leave the button selected (shows that button has focus) while the popup menu is visible
@@ -191,7 +189,7 @@ public abstract class PopupButton extends NonFocusableButton {
         /** Returns true to indicate that a mouse event should currently be ignored because the popup menu
          * is visible, or was closed recently (less than POPUP_DELAY ms ago) */
         private boolean shouldIgnoreMouseEvent() {
-            return isPopupMenuVisible() || System.currentTimeMillis()- popupMenuClosedTime<POPUP_DELAY;
+            return isPopupMenuVisible() || System.currentTimeMillis() - popupMenuClosedTime<POPUP_DELAY;
         }
 
         //////////////////////////////////
@@ -224,7 +222,7 @@ public abstract class PopupButton extends NonFocusableButton {
                 buttonClickedAction.actionPerformed(new ActionEvent(PopupButton.this, ActionEvent.ACTION_PERFORMED, "clicked"));
             } else {               // No action, popup menu
                 popupMenu();
-            }
+        }
         }
 
         public synchronized void mouseReleased(MouseEvent mouseEvent) {

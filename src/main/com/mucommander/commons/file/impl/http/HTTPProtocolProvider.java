@@ -86,12 +86,7 @@ public class HTTPProtocolProvider implements ProtocolProvider {
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
         // create and install a custom hostname verifier that allows hostname mismatches
-        HostnameVerifier permissiveHostnameVerifier = new HostnameVerifier() {
-           public boolean verify(String urlHostName, SSLSession session) {
-               return true;
-           }
-
-        };
+        HostnameVerifier permissiveHostnameVerifier = (urlHostName, session) -> true;
        HttpsURLConnection.setDefaultHostnameVerifier(permissiveHostnameVerifier);
     }
     

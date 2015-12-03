@@ -61,7 +61,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     /** Index array */
     protected int fileArrayIndex[];
-
+	
     /** The current folder */
     protected AbstractFile currentFolder;
 
@@ -112,7 +112,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     static {
         // Initialize the size column format based on the configuration
         setSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
     }
 
 
@@ -161,7 +161,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     /**
      * Sets the SizeFormat format used to create the size column's string.
      *
-     * @param compactSize true to use a compact size format, false for full size in bytes
+     * @param compactSize true to use a compact size format, false for full size in bytes 
      */
     public static void setSizeFormat(boolean compactSize) {
         if (compactSize) {
@@ -234,6 +234,15 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      */
     public synchronized int getFileCount() {
         return cachedFiles.length + (parent != null ? 1 : 0);
+    }
+
+    /**
+     * Returns the actual number of files the current folder contains, not including the parent '..' file (if any).
+     *
+     * @return the actual number of files the current folder contains, not including the parent '..' file (if any)
+     */
+    public synchronized int getFileCountWithoutParent() {
+        return cachedFiles.length;
     }
 
     /**
@@ -407,7 +416,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
             // Pre-fetch the attributes that are used by the table renderer and some actions.
             if (needPrefetch) {
-                prefetchCachedFileAttributes(file);
+            prefetchCachedFileAttributes(file);
             }
 
             cachedFiles[i] = file;
@@ -434,7 +443,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      */
     public synchronized long getCurrentFolderDateSnapshot() {
         return currentFolderDateSnapshot;
-    }
+        }
 
     /**
      * Returns <code>true</code> if the current folder has a parent.
@@ -463,7 +472,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public int getFirstMarkableIndex() {
         return parent == null ? 0 : 1;
     }
-
+	
     /**
      * Marks/unmarks the given row range, delimited by the provided start row index and end row index (inclusive).
      * End row may be less, greater or equal to the start row.
@@ -482,8 +491,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
                 setFileMarked(i, marked);
             }
         }
-    }
-
+        }
+		
 
     /**
      * Marks/Unmarks the given file.
@@ -496,8 +505,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
         if (index >= 0) {
             setFileMarked(index, marked);
-        }
-    }
+                    }
+                        }
 
 
     /**
@@ -511,9 +520,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         for (int i = parent == null ? 0 : 1; i < nbFiles; i++) {
             if (filter.match(getCachedFileAt(i))) {
                 setFileMarked(i, marked);
+                    }
+                }
             }
-        }
-    }
 
 
     /**
@@ -548,12 +557,12 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
         return markedFiles;
     }
-
-
+	
+	
     /**
      * Returns a CachedFile instance of the file located at the given row index.
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
-     *
+     * 
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
      * {@link #getFilesCount() getFilesCount()}.</p>
      *
@@ -566,11 +575,11 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
         if (parent != null) {
             if (index == 0) {
-                return parent;
+            return parent;
             }
             index--;
         }
-
+		
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
@@ -600,7 +609,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
 
     /**
-     * Returns the file located at the given row index.
+     * Returns the file located at the given row index. 
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
      *
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
@@ -612,16 +621,16 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      */
     public synchronized AbstractFile getFileAt(int row, int col) {
         AbstractFile file = getCachedFileAt(row, col);
-
+	
         if (file == null) {
             return null;
         }
         if (file instanceof CachedFile) {
             return ((CachedFile) file).getProxiedFile();
         }
-        return file;
+            return file;
     }
-
+	
 
     /**
      * Returns the index of the row where the given file is located, <code>-1<code> if the file is not in the
@@ -651,13 +660,13 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
                 right = mid - 1;
             } else {
                 left = mid+1;
-            }
         }
-
+        }
+		
         return -1;
     }
 
-
+	
 
 
     /**
@@ -699,7 +708,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         }
     }
 
-
+	
     /**
      * Makes the name column temporarily editable. This method should only be called by FileTable.
      *
@@ -757,10 +766,10 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
             // File size can equal -1 if not available, do not count that in total
             if (fileSize > 0) {
                 markedTotalSize -= fileSize;
-            }
+        }
 
             nbFilesMarked--;
-        }
+    }
 
         fileMarked[fileIndex] = marked;
     }
@@ -776,7 +785,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         return nbFilesMarked;
     }
 
-
+	
     /**
      * Returns the combined size of marked files. This number consists of two parts:
      * 1) pre-calculated size of files so calling this method is much faster
@@ -826,7 +835,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         AbstractFile nextFile;
         synchronized (calculateSizeQueue) {
             nextFile = calculateSizeQueue.isEmpty() ? null : calculateSizeQueue.remove(0);
-        }
+            }
         if (nextFile == null) {
             calculateDirectorySizeWorker = null;
             table.getParent().setCursor(Cursor.getDefaultCursor());

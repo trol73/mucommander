@@ -84,10 +84,13 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
      */
     public static void read(InputStream in, AssociationBuilder b) throws IOException, CommandException {
         b.startBuilding();
-        try {SAXParserFactory.newInstance().newSAXParser().parse(in, new AssociationReader(b));}
-        catch(ParserConfigurationException e) {throw new CommandException(e);}
-        catch(SAXException e) {throw new CommandException(e);}
-        finally {b.endBuilding();}
+        try {
+            SAXParserFactory.newInstance().newSAXParser().parse(in, new AssociationReader(b));
+        } catch(ParserConfigurationException | SAXException e) {
+            throw new CommandException(e);
+        } finally {
+            b.endBuilding();
+        }
     }
 
 
@@ -113,44 +116,47 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
                 }
             }
             else {
-                if(qName.equals(ELEMENT_MASK)) {
-                    String caseSensitive;
+                switch (qName) {
+                    case ELEMENT_MASK:
+                        String caseSensitive;
 
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    if((caseSensitive = attributes.getValue(ATTRIBUTE_CASE_SENSITIVE)) != null)
-                        builder.setMask(buffer, caseSensitive.equals(VALUE_TRUE));
-                    else
-                        builder.setMask(buffer, true);
-                }
-                else if(qName.equals(ELEMENT_IS_HIDDEN)) {
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    builder.setIsHidden(buffer.equals(VALUE_TRUE));
-                }
-                else if(qName.equals(ELEMENT_IS_SYMLINK)) {
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    builder.setIsSymlink(buffer.equals(VALUE_TRUE));
-                }
-                else if(qName.equals(ELEMENT_IS_READABLE)) {
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    builder.setIsReadable(buffer.equals(VALUE_TRUE));
-                }
-                else if(qName.equals(ELEMENT_IS_WRITABLE)) {
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    builder.setIsWritable(buffer.equals(VALUE_TRUE));
-                }
-                else if(qName.equals(ELEMENT_IS_EXECUTABLE)) {
-                    if((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
-                        return;
-                    builder.setIsExecutable(buffer.equals(VALUE_TRUE));
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        if ((caseSensitive = attributes.getValue(ATTRIBUTE_CASE_SENSITIVE)) != null)
+                            builder.setMask(buffer, caseSensitive.equals(VALUE_TRUE));
+                        else
+                            builder.setMask(buffer, true);
+                        break;
+                    case ELEMENT_IS_HIDDEN:
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        builder.setIsHidden(buffer.equals(VALUE_TRUE));
+                        break;
+                    case ELEMENT_IS_SYMLINK:
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        builder.setIsSymlink(buffer.equals(VALUE_TRUE));
+                        break;
+                    case ELEMENT_IS_READABLE:
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        builder.setIsReadable(buffer.equals(VALUE_TRUE));
+                        break;
+                    case ELEMENT_IS_WRITABLE:
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        builder.setIsWritable(buffer.equals(VALUE_TRUE));
+                        break;
+                    case ELEMENT_IS_EXECUTABLE:
+                        if ((buffer = attributes.getValue(ATTRIBUTE_VALUE)) == null)
+                            return;
+                        builder.setIsExecutable(buffer.equals(VALUE_TRUE));
+                        break;
                 }
             }
+        } catch(CommandException e) {
+            throw new SAXException(e);
         }
-        catch(CommandException e) {throw new SAXException(e);}
     }
 
     /**

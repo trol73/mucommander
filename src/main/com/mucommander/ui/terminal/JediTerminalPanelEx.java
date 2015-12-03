@@ -24,12 +24,10 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.impl.TerminalPanelAction;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.main.commandbar.CommandBarAttributes;
 import org.jetbrains.annotations.NotNull;
 import ru.trolsoft.calculator.CalculatorDialog;
 
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 

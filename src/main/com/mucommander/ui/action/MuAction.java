@@ -25,7 +25,6 @@ import com.mucommander.ui.main.MainFrame;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**

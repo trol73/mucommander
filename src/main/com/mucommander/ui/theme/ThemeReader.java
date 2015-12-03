@@ -38,39 +38,39 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThemeReader.class);
-
-    private static enum State {
-        /** Parsing hasn't started yet. */
+	
+    private enum State {
+    /** Parsing hasn't started yet. */
         UNKNOWN,
-        /** Parsing the root element. */
+    /** Parsing the root element. */
         ROOT,
-        /** Parsing the table element.*/
+    /** Parsing the table element.*/
         TABLE,
-        /** Parsing the shell element. */
+    /** Parsing the shell element. */
         SHELL,
-        /** Parsing the editor element. */
+    /** Parsing the editor element. */
         EDITOR,
-        /** Parsing the location bar element. */
+    /** Parsing the location bar element. */
         LOCATION_BAR,
-        /** Parsing the shell.normal element. */
+    /** Parsing the shell.normal element. */
         SHELL_NORMAL,
-        /** Parsing the shell.selected element. */
+    /** Parsing the shell.selected element. */
         SHELL_SELECTED,
-        /** Parsing the editor.normal element. */
+    /** Parsing the editor.normal element. */
         EDITOR_NORMAL,
-        /** Parsing the location bar.normal element. */
+    /** Parsing the location bar.normal element. */
         LOCATION_BAR_NORMAL,
-        /** Parsing the editor.selected element. */
+    /** Parsing the editor.selected element. */
         EDITOR_SELECTED,
-        /** Parsing the location bar.selected element. */
+    /** Parsing the location bar.selected element. */
         LOCATION_BAR_SELECTED,
-        /** Parsing the shell_history element. */
+    /** Parsing the shell_history element. */
         SHELL_HISTORY,
-        /** Parsing the shell_history.normal element. */
+    /** Parsing the shell_history.normal element. */
         SHELL_HISTORY_NORMAL,
-        /** Parsing the shell_history.selected element. */
+    /** Parsing the shell_history.selected element. */
         SHELL_HISTORY_SELECTED,
-        /** Parsing the volume_label element. */
+    /** Parsing the volume_label element. */
         STATUS_BAR,
         HIDDEN,
         HIDDEN_NORMAL,
@@ -97,15 +97,15 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         TABLE_SELECTED,
         TABLE_ALTERNATE,
         TABLE_UNMATCHED,
-        /** Parsing the quick list element. */
+    /** Parsing the quick list element. */
         QUICK_LIST,
-        /** Parsing the quick list header element. */
+    /** Parsing the quick list header element. */
         QUICK_LIST_HEADER,
-        /** Parsing the quick list item element. */
+    /** Parsing the quick list item element. */
         QUICK_LIST_ITEM,
         QUICK_LIST_ITEM_NORMAL,
         QUICK_LIST_ITEM_SELECTED,
-        /** Parsing the editor.selected element. */
+    /** Parsing the editor.selected element. */
         EDITOR_CURRENT,
         FILE_GROUP,
         GROUP_1,
@@ -302,7 +302,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 traceIllegalDeclaration(qName);
             state = State.LOCATION_BAR;
         }
-
+        
         // Quick list declaration.
         else if(qName.equals(ELEMENT_QUICK_LIST)) {
             if(state != State.ROOT)
@@ -377,7 +377,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
                 traceIllegalDeclaration(qName);
             state = State.TABLE_ALTERNATE;
         }
-
+        
         // Header declaration.
         else if(qName.equals(ELEMENT_HEADER)) {
         	if(state == State.QUICK_LIST)
@@ -385,7 +385,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             else
                 traceIllegalDeclaration(qName);
         }
-
+        
         // Item declaration.
         else if(qName.equals(ELEMENT_ITEM)) {
         	if(state == State.QUICK_LIST)
@@ -653,7 +653,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 
             else if(state == State.STATUS_BAR)
                 template.setColor(ThemeData.STATUS_BAR_BACKGROUND_COLOR, createColor(attributes));
-
+            
             else if(state == State.QUICK_LIST_HEADER)
             	template.setColor(ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR, createColor(attributes));
             else if(state == State.QUICK_LIST_ITEM_NORMAL)

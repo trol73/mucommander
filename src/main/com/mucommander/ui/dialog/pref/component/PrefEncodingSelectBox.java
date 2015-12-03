@@ -33,11 +33,7 @@ public abstract class PrefEncodingSelectBox extends EncodingSelectBox implements
     }
 
     public void addDialogListener(final PreferencesDialog dialog) {
-        EncodingListener listener = new EncodingListener() {
-            public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
-                dialog.componentChanged(PrefEncodingSelectBox.this);
-            }
-        };
+        EncodingListener listener = (source, oldEncoding, newEncoding) -> dialog.componentChanged(PrefEncodingSelectBox.this);
         addEncodingListener(listener);
     }
 }

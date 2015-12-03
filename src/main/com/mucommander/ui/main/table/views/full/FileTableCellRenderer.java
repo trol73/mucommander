@@ -111,7 +111,7 @@ public class FileTableCellRenderer extends BaseCellRenderer {
 
         final QuickSearch search = this.table.getQuickSearch();
 
-        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(((FileTableModel)this.tableModel).getFileNameAt(row));
+        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.tableModel.getFileNameAt(row));
 
         // Retrieves the various indexes of the colors to apply.
         // Selection only applies when the table is the active one

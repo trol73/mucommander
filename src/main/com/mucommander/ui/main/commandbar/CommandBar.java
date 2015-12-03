@@ -101,8 +101,9 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
      */
     public void setAlternateActionsMode(boolean on) {
         // Do nothing if command bar is not currently visible
-        if (!isVisible())
+        if (!isVisible()) {
             return;
+        }
 
         if (this.modifierDown != on) {
             this.modifierDown = on;
@@ -120,15 +121,16 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
 
     public void keyPressed(KeyEvent e) {
         // Display alternate actions when the modifier key is pressed
-        if(e.getKeyCode() == modifier.getKeyCode())
+        if (e.getKeyCode() == modifier.getKeyCode()) {
             setAlternateActionsMode(true);
+    }
     }
 
     public void keyReleased(KeyEvent e) {
         // Display regular actions when the modifier key is released
         if (e.getKeyCode() == modifier.getKeyCode()) {
             setAlternateActionsMode(false);
-        }
+    }
     }
 
     public void keyTyped(KeyEvent e) {

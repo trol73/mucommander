@@ -125,17 +125,15 @@ class FolderOutStream extends java.io.OutputStream {
 
                 if (_filePos == fileSize) {
                     boolean digestsAreEqual;
-                    if (fileInfo.IsFileCRCDefined)
-                        digestsAreEqual = (fileInfo.FileCRC == _outStreamWithHashSpec.GetCRC());
-                    else
-                        digestsAreEqual = true;
+                    digestsAreEqual = !fileInfo.IsFileCRCDefined || (fileInfo.FileCRC == _outStreamWithHashSpec.GetCRC());
 
                     int res = _extractCallback.SetOperationResult(
                             digestsAreEqual ?
-                                IInArchive.NExtract_NOperationResult_kOK :
-                                IInArchive.NExtract_NOperationResult_kCRCError);
-                    if (res != HRESULT.S_OK) throw new java.io.IOException("_extractCallback.SetOperationResult : " + res); // return res;
-                    
+                                    IInArchive.NExtract_NOperationResult_kOK :
+                                    IInArchive.NExtract_NOperationResult_kCRCError);
+                    if (res != HRESULT.S_OK)
+                        throw new java.io.IOException("_extractCallback.SetOperationResult : " + res); // return res;
+
                     _outStreamWithHashSpec.ReleaseStream();
                     _fileIsOpen = false;
                     _currentIndex++;

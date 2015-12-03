@@ -11,65 +11,63 @@ public class LzmaAlone
 		public int Command = -1;
 		public int NumBenchmarkPasses = 10;
 		
-		public int DictionarySize = 1 << 23;
-		public boolean DictionarySizeIsDefined = false;
+		public int dictionarySize = 1 << 23;
+		public boolean dictionarySizeIsDefined = false;
 		
 		public int Lc = 3;
 		public int Lp = 0;
 		public int Pb = 2;
 		
-		public int Fb = 128;
-		public boolean FbIsDefined = false;
+		public int fb = 128;
+		public boolean fbIsDefined = false;
 		
 		public boolean Eos = false;
 		
-		public int Algorithm = 2;
-		public int MatchFinder = 1;
+		public int algorithm = 2;
+		public int matchFinder = 1;
 		
-		public String InFile;
-		public String OutFile;
+		public String inFile;
+		public String outFile;
 		
-		boolean ParseSwitch(String s)
-		{
-			if (s.startsWith("d"))
-			{
-				DictionarySize = 1 << Integer.parseInt(s.substring(1));
-				DictionarySizeIsDefined = true;
-			}
-			else if (s.startsWith("fb"))
-			{
-				Fb = Integer.parseInt(s.substring(2));
-				FbIsDefined = true;
-			}
-			else if (s.startsWith("a"))
-				Algorithm = Integer.parseInt(s.substring(1));
-			else if (s.startsWith("lc"))
+		boolean ParseSwitch(String s) {
+			if (s.startsWith("d")) {
+				dictionarySize = 1 << Integer.parseInt(s.substring(1));
+				dictionarySizeIsDefined = true;
+			} else if (s.startsWith("fb")) {
+				fb = Integer.parseInt(s.substring(2));
+				fbIsDefined = true;
+			} else if (s.startsWith("a")) {
+				algorithm = Integer.parseInt(s.substring(1));
+			} else if (s.startsWith("lc")) {
 				Lc = Integer.parseInt(s.substring(2));
-			else if (s.startsWith("lp"))
+			} else if (s.startsWith("lp")) {
 				Lp = Integer.parseInt(s.substring(2));
-			else if (s.startsWith("pb"))
+			} else if (s.startsWith("pb")) {
 				Pb = Integer.parseInt(s.substring(2));
-			else if (s.startsWith("eos"))
+			} else if (s.startsWith("eos")) {
 				Eos = true;
-			else if (s.startsWith("mf"))
-			{
+			} else if (s.startsWith("mf")) {
 				String mfs = s.substring(2);
-				if (mfs.equals("bt2"))
-					MatchFinder = 0;
-				else if (mfs.equals("bt4"))
-					MatchFinder = 1;
-				else if (mfs.equals("bt4b"))
-					MatchFinder = 2;
-				else
+				switch (mfs) {
+					case "bt2":
+						matchFinder = 0;
+						break;
+					case "bt4":
+						matchFinder = 1;
+						break;
+					case "bt4b":
+						matchFinder = 2;
+						break;
+					default:
 					return false;
 			}
-			else
+			} else {
 				return false;
+			}
 			return true;
 		}
 		
-		public boolean Parse(String[] args) throws Exception
-		{
+		public boolean Parse(String[] args) throws Exception {
 			int pos = 0;
 			boolean switchMode = true;
 			for (String s : args) {
@@ -112,17 +110,18 @@ public class LzmaAlone
 							return false;
 						}
 					} else
-						InFile = s;
+						inFile = s;
 				} else if (pos == 2)
-					OutFile = s;
-				else
+					outFile = s;
+					else
 					return false;
 				pos++;
-				continue;
+				//continue;
 			}
 			return true;
 		}
 	}
+
 	
 	
 	static void PrintHelp()
@@ -164,16 +163,16 @@ public class LzmaAlone
 		if (params.Command == CommandLine.kBenchmak)
 		{
 			int dictionary = (1 << 21);
-			if (params.DictionarySizeIsDefined)
-				dictionary = params.DictionarySize;
-			if (params.MatchFinder > 1)
+			if (params.dictionarySizeIsDefined)
+				dictionary = params.dictionarySize;
+			if (params.matchFinder > 1)
 				throw new Exception("Unsupported match finder");
 			com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.LzmaBench.LzmaBenchmark(params.NumBenchmarkPasses, dictionary);
 		}
 		else if (params.Command == CommandLine.kEncode || params.Command == CommandLine.kDecode)
 		{
-			java.io.File inFile = new java.io.File(params.InFile);
-			java.io.File outFile = new java.io.File(params.OutFile);
+			java.io.File inFile = new java.io.File(params.inFile);
+			java.io.File outFile = new java.io.File(params.outFile);
 			
 			java.io.BufferedInputStream inStream  = new java.io.BufferedInputStream(new java.io.FileInputStream(inFile));
 			java.io.BufferedOutputStream outStream = new java.io.BufferedOutputStream(new java.io.FileOutputStream(outFile));
@@ -184,13 +183,13 @@ public class LzmaAlone
 			if (params.Command == CommandLine.kEncode)
 			{
 				com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZMA.Encoder encoder = new com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.LZMA.Encoder();
-				if (!encoder.SetAlgorithm(params.Algorithm))
+				if (!encoder.SetAlgorithm(params.algorithm))
 					throw new Exception("Incorrect compression mode");
-				if (!encoder.SetDictionarySize(params.DictionarySize))
+				if (!encoder.SetDictionarySize(params.dictionarySize))
 					throw new Exception("Incorrect dictionary size");
-				if (!encoder.SeNumFastBytes(params.Fb))
+				if (!encoder.SeNumFastBytes(params.fb))
 					throw new Exception("Incorrect -fb value");
-				if (!encoder.SetMatchFinder(params.MatchFinder))
+				if (!encoder.SetMatchFinder(params.matchFinder))
 					throw new Exception("Incorrect -mf value");
 				if (!encoder.SetLcLpPb(params.Lc, params.Lp, params.Pb))
 					throw new Exception("Incorrect -lc or -lp or -pb value");
@@ -231,6 +230,5 @@ public class LzmaAlone
 		}
 		else
 			throw new Exception("Incorrect command");
-		return;
 	}
 }

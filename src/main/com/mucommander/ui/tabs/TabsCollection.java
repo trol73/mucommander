@@ -37,7 +37,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
 	private List<T> collection = new ArrayList<>();
 	
 	/** Listeners that were registered to be notified when tabs are added/removed/updated */
-	private WeakHashMap<TabsEventListener, ?> tabsListeners = new WeakHashMap<TabsEventListener, Object>();
+	private WeakHashMap<TabsEventListener, ?> tabsListeners = new WeakHashMap<>();
 	
 	/**
 	 * Empty constructor

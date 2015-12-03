@@ -84,15 +84,22 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     private static long lastCreateTime;
     private static String lastCreateTitle;
-
+    /**
+     * Saved to restore focus
+     */
+    private Component ownerFocusedComponent;
+    
     public FocusDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, true);
         init(locationRelativeComp);
+        if (owner != null) {
+            ownerFocusedComponent = owner.getFocusOwner();
+        }
 
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 150) {
+            if (dt < 250) {
                 throw new RuntimeException("EventDispatchThread error");
             }
         }
@@ -103,11 +110,14 @@ public class FocusDialog extends JDialog implements WindowListener {
     public FocusDialog(Dialog owner, String title, Component locationRelativeComp) {
         super(owner, title, true);
         init(locationRelativeComp);
+        if (owner != null) {
+            ownerFocusedComponent = owner.getFocusOwner();
+        }
 
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 100) {
+            if (dt < 250) {
                 throw new RuntimeException("EventDispatchThread error");
             }
         }
@@ -145,14 +155,14 @@ public class FocusDialog extends JDialog implements WindowListener {
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
         }
 
-        // Under Windows, Alt+F4 automagically disposes the dialog, nothing to do
+        // Under Windows, Alt+F4 automatically disposes the dialog, nothing to do
     }
 
     /**
      * Method called when the user has canceled through the escape key.
      * <p>
      * This method is equivalent to a call to {@link #dispose()}. It's meant to be
-     * overriden by those implementations of <code>FocusDialog</code> that need to init
+     * overridden by those implementations of <code>FocusDialog</code> that need to init
      * code before canceling the dialog.
      * </p>
      */
@@ -166,7 +176,7 @@ public class FocusDialog extends JDialog implements WindowListener {
         WindowsStorage.getInstance().put(this, storageSuffix);
         saveState();
         super.dispose();
-        FocusRequester.requestFocus(getOwner());
+        FocusRequester.requestFocus(ownerFocusedComponent != null ? ownerFocusedComponent : getOwner());
     }
 
     /**
@@ -314,5 +324,14 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     public void setStoreSizes(boolean storeSizes) {
         this.storeSizes = storeSizes;
+    }
+
+    public FocusDialog returnFocusTo(Component c) {
+        this.ownerFocusedComponent = c;
+        return this;
+    }
+
+    public Component getReturnFocusTo() {
+        return ownerFocusedComponent;
     }
 }

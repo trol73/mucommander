@@ -94,7 +94,8 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         totalMem = Runtime.getRuntime().totalMemory();
         usedMem = totalMem - Runtime.getRuntime().freeMemory();
         int percent = (int)(100*usedMem/totalMem);
-        setText(" " + bytesToMb(usedMem) + " MB ");
+        //setText(" " + bytesToMb(usedMem) + " MB ");
+        setText(" " + bytesToMb(totalMem) + " MB ");
         setToolTipText("Memory used " + bytesToMb(usedMem) + "MB  from " + bytesToMb(totalMem) + "MB  " + percent + "%");
     }
 

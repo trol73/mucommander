@@ -18,6 +18,8 @@
 
 package com.mucommander;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.shell.ShellHistoryManager;
@@ -30,6 +32,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO;
  * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
 public class LauncherCmdHelper {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TrolCommander.class);
 
     /**
      * Whether or not to display verbose error messages.
@@ -133,127 +136,181 @@ public class LauncherCmdHelper {
     public void parseArgs() {
         // - Command line parsing -------------------------------------
         // ------------------------------------------------------------
-        for(index = 0; index < args.length; index++) {
+        label:
+        for (index = 0; index < args.length; index++) {
             // Print version.
-            if(args[index].equals("-v") || args[index].equals("--version"))
-                printVersion();
+            switch (args[index]) {
+                case "-v":
+                case "--version":
+                    printVersion();
+                    break;
 
                 // Print help.
-            else if(args[index].equals("-h") || args[index].equals("--help"))
-                printUsage();
+                case "-h":
+                case "--help":
+                    printUsage();
+                    break;
 
                 // Associations handling.
-            else if(args[index].equals("-a") || args[index].equals("--assoc")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {com.mucommander.command.CommandManager.setAssociationFile(args[++index]);}
-                catch(Exception e) {printError("Could not set association files", e, fatalWarnings);}
-            }
+                case "-a":
+                case "--assoc":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        com.mucommander.command.CommandManager.setAssociationFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set association files", e, fatalWarnings);
+                    }
+                    break;
 
-            // Custom commands handling.
-            else if(args[index].equals("-f") || args[index].equals("--commands")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {com.mucommander.command.CommandManager.setCommandFile(args[++index]);}
-                catch(Exception e) {printError("Could not set commands file", e, fatalWarnings);}
-            }
+                // Custom commands handling.
+                case "-f":
+                case "--commands":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        com.mucommander.command.CommandManager.setCommandFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set commands file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Bookmarks handling.
-            else if(args[index].equals("-b") || args[index].equals("--bookmarks")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {com.mucommander.bookmark.BookmarkManager.setBookmarksFile(args[++index]);}
-                catch(Exception e) {printError("Could not set bookmarks file", e, fatalWarnings);}
-            }
+                // Bookmarks handling.
+                case "-b":
+                case "--bookmarks":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        com.mucommander.bookmark.BookmarkManager.setBookmarksFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set bookmarks file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Configuration handling.
-            else if(args[index].equals("-c") || args[index].equals("--configuration")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {
-                    MuConfigurations.setPreferencesFile(args[++index]);}
-                catch(Exception e) {printError("Could not set configuration file", e, fatalWarnings);}
-            }
+                // Configuration handling.
+                case "-c":
+                case "--configuration":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        MuConfigurations.setPreferencesFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set configuration file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Shell history.
-            else if(args[index].equals("-s") || args[index].equals("--shell-history")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {
-                    ShellHistoryManager.setHistoryFile(args[++index]);}
-                catch(Exception e) {printError("Could not set shell history file", e, fatalWarnings);}
-            }
+                // Shell history.
+                case "-s":
+                case "--shell-history":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        ShellHistoryManager.setHistoryFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set shell history file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Keymap file.
-            else if(args[index].equals("-k") || args[index].equals("--keymap")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {com.mucommander.ui.action.ActionKeymapIO.setActionsFile(args[++index]);}
-                catch(Exception e) {printError("Could not set keymap file", e, fatalWarnings);}
-            }
+                // Keymap file.
+                case "-k":
+                case "--keymap":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        com.mucommander.ui.action.ActionKeymapIO.setActionsFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set keymap file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Toolbar file.
-            else if(args[index].equals("-t") || args[index].equals("--toolbar")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {
-                    ToolBarIO.setDescriptionFile(args[++index]);}
-                catch(Exception e) {printError("Could not set keymap file", e, fatalWarnings);}
-            }
+                // Toolbar file.
+                case "-t":
+                case "--toolbar":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        ToolBarIO.setDescriptionFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set keymap file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Commandbar file.
-            else if(args[index].equals("-C") || args[index].equals("--commandbar")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {
-                    CommandBarIO.setDescriptionFile(args[++index]);}
-                catch(Exception e) {printError("Could not set commandbar description file", e, fatalWarnings);}
-            }
+                // Commandbar file.
+                case "-C":
+                case "--commandbar":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        CommandBarIO.setDescriptionFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set commandbar description file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Credentials file.
-            else if(args[index].equals("-U") || args[index].equals("--credentials")) {
-                if(index >= args.length - 1)
-                    printError("Missing FILE parameter to " + args[index], null, true);
-                try {com.mucommander.auth.CredentialsManager.setCredentialsFile(args[++index]);}
-                catch(Exception e) {printError("Could not set credentials file", e, fatalWarnings);}
-            }
+                // Credentials file.
+                case "-U":
+                case "--credentials":
+                    if (index >= args.length - 1)
+                        printError("Missing FILE parameter to " + args[index], null, true);
+                    try {
+                        com.mucommander.auth.CredentialsManager.setCredentialsFile(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set credentials file", e, fatalWarnings);
+                    }
+                    break;
 
-            // Preference folder.
-            else if((args[index].equals("-p") || args[index].equals("--preferences"))) {
-                if(index >= args.length - 1)
-                    printError("Missing FOLDER parameter to " + args[index], null, true);
-                try {PlatformManager.setPreferencesFolder(args[++index]);}
-                catch(Exception e) {printError("Could not set preferences folder", e, fatalWarnings);}
-            }
+                // Preference folder.
+                case "-p":
+                case "--preferences":
+                    if (index >= args.length - 1)
+                        printError("Missing FOLDER parameter to " + args[index], null, true);
+                    try {
+                        PlatformManager.setPreferencesFolder(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set preferences folder", e, fatalWarnings);
+                    }
+                    break;
 
-            // Extensions folder.
-            else if((args[index].equals("-e") || args[index].equals("--extensions"))) {
-                if(index >= args.length - 1)
-                    printError("Missing FOLDER parameter to " + args[index], null, true);
-                try {
-                    ExtensionManager.setExtensionsFolder(args[++index]);}
-                catch(Exception e) {printError("Could not set extensions folder", e, fatalWarnings);}
-            }
+                // Extensions folder.
+                case "-e":
+                case "--extensions":
+                    if (index >= args.length - 1)
+                        printError("Missing FOLDER parameter to " + args[index], null, true);
+                    try {
+                        ExtensionManager.setExtensionsFolder(args[++index]);
+                    } catch (Exception e) {
+                        printError("Could not set extensions folder", e, fatalWarnings);
+                    }
+                    break;
 
-            // Ignore warnings.
-            else if(args[index].equals("-index") || args[index].equals("--ignore-warnings"))
-                fatalWarnings = false;
+                // Ignore warnings.
+                case "-index":
+                case "--ignore-warnings":
+                    fatalWarnings = false;
+                    break;
 
                 // Fail on warnings.
-            else if(args[index].equals("-w") || args[index].equals("--fail-on-warnings"))
-                fatalWarnings = true;
+                case "-w":
+                case "--fail-on-warnings":
+                    fatalWarnings = true;
+                    break;
 
                 // Silent mode.
-            else if(args[index].equals("-S") || args[index].equals("--silent"))
-                verbose = false;
+                case "-S":
+                case "--silent":
+                    verbose = false;
+                    break;
 
                 // Verbose mode.
-            else if(args[index].equals("-V") || args[index].equals("--verbose"))
-                verbose = true;
+                case "-V":
+                case "--verbose":
+                    verbose = true;
+                    break;
 
                 // Illegal argument.
-            else
-                break;
+                default:
+                    break label;
+            }
         }
     }
 
@@ -261,10 +318,12 @@ public class LauncherCmdHelper {
      * Prints an error message.
      */
     private static void printError(String msg, boolean quit) {
-        System.err.println(msg);
-        if(quit) {
+        if (quit) {
+        	LOGGER.error(msg);
             System.err.println("See mucommander --help for more information.");
             System.exit(1);
+        }else{
+        	LOGGER.warn(msg);        	
         }
     }
 
@@ -275,7 +334,7 @@ public class LauncherCmdHelper {
         StringBuilder error;
 
         error = createErrorMessage(msg, exception, quit);
-        if(!quit)
+        if (!quit)
             error.append(". Using default values.");
 
         printError(error.toString(), quit);

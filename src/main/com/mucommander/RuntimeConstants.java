@@ -23,10 +23,8 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.util.ResourceLoader;
 
 /**
@@ -92,7 +90,7 @@ public class RuntimeConstants {
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes attributes = null; // JAR file's manifest's attributes.
+        Attributes  attributes = null; // JAR file's manifest's attributes.
         InputStream in = null;
         try {
             if((in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) != null) {
@@ -116,11 +114,11 @@ public class RuntimeConstants {
                 }
             }
         }
-        
+
         // No MANIFEST.MF found, use default values.
         if (attributes == null) {
             VERSION = "?";
-            COPYRIGHT    = "2002-" + Calendar.getInstance().get(Calendar.YEAR);
+            COPYRIGHT    = "2013-" + Calendar.getInstance().get(Calendar.YEAR);
             // We use a date that we are sure is later than the latest version to trigger the version checker.
             // After all, the JAR appears to be corrupt and should be upgraded.
             BUILD_DATE = DEFAULT_RELEASE_DATE;
@@ -138,7 +136,7 @@ public class RuntimeConstants {
             COPYRIGHT    = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
 
         }
-        APP_STRING = "trolFCommander v" + VERSION;
+        APP_STRING = "trolCommander v" + VERSION;
     }
 
     /**

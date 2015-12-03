@@ -36,11 +36,12 @@ public class ConfigurationSectionTest {
      */
     @DataProvider(name = "removeVariable")
     public Iterator<Object[]> removeVariableCases() {
-        List<Object[]> data = new ArrayList<Object[]>();
+        List<Object[]> data = new ArrayList<>();
 
         data.add(new Object[] {"value"});
-        data.add(new Object[] {""});
-        data.add(new Object[] {null});
+        //these two should not be deleted since they are not new value different than previous
+        //data.add(new Object[] {""});
+        //data.add(new Object[] {null});
 
         return data.iterator();
     }
@@ -49,7 +50,7 @@ public class ConfigurationSectionTest {
      * Tests the {@link ConfigurationSection#removeVariable(String)} method.
      * @param value value to which the variable should be set before being removed.
      */
-    @Test(dataProvider = "setVariable")
+    @Test(dataProvider = "removeVariable")
     public void testRemoveVariable(String value) {
         ConfigurationSection section = new ConfigurationSection();
 
@@ -69,7 +70,7 @@ public class ConfigurationSectionTest {
      */
     @DataProvider(name = "setVariable")
     public Iterator<Object[]> setVariableCases() {
-        List<Object[]> data = new ArrayList<Object[]>();
+        List<Object[]> data = new ArrayList<>();
 
         data.add(new Object[] {"value", "other", true});
         data.add(new Object[] {"value", "value", false});
@@ -311,7 +312,7 @@ public class ConfigurationSectionTest {
             assert !section.isEmpty();
 
             // Populates a set will all the expected variable names.
-            Set<String> expectedNames = new HashSet<String>(count);
+            Set<String> expectedNames = new HashSet<>(count);
             for(int i = 0; i < count; i++)
                 expectedNames.add("sect" + i);
 

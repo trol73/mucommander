@@ -81,7 +81,7 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
 
         // Initializes the transformer factory.
         factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
-        factory.setAttribute("indent-number", 4);
+        //factory.setAttribute("indent-number", 4);
 
         // Creates a new transformer.
         try {transformer = factory.newTransformerHandler();}

@@ -23,7 +23,7 @@ import com.mucommander.commons.file.AbstractFileTest;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
 import org.testng.annotations.BeforeClass;
-
+import org.testng.annotations.Test;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -33,6 +33,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Maxence Bernard
  */
+@Test
 public class SFTPFileTest extends AbstractFileTest {
 
     /** The system property that holds the URI to the temporary SFTP folder */
@@ -47,10 +48,9 @@ public class SFTPFileTest extends AbstractFileTest {
         // annotations which we don't use for java 1.4 backward compatibility.
 //        SFTPFile.setAttributeCachingPeriod(5000);
     }
-
-    @BeforeClass
+    @BeforeClass()
     public static void setupTemporaryFolder() {
-        tempFolder = FileFactory.getFile(System.getProperty(TEMP_FOLDER_PROPERTY));
+        tempFolder = getTemporaryFolder(TEMP_FOLDER_PROPERTY);
     }
 
 

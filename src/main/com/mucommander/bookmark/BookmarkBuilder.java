@@ -27,7 +27,7 @@ public interface BookmarkBuilder {
      * Notifies the builder that the bookmark list is starting.
      * @throws BookmarkException if an error occurs.
      */
-    public void startBookmarks() throws BookmarkException;
+    void startBookmarks() throws BookmarkException;
 
     /**
      * Notifies the builder of a new bookmark in the list.
@@ -35,11 +35,11 @@ public interface BookmarkBuilder {
      * @param  location          bookmark's location.
      * @throws BookmarkException if an error occurs.
      */
-    public void addBookmark(String name, String location) throws BookmarkException;
+    void addBookmark(String name, String location) throws BookmarkException;
 
     /**
      * Notifies the builder that the bookmark list is finished.
      * @throws BookmarkException if an error occurs.
      */
-    public void endBookmarks() throws BookmarkException;
+    void endBookmarks() throws BookmarkException;
 }

@@ -104,7 +104,7 @@ public class CachedFile extends ProxyFile {
     ///////////////////
     // Cached values //
     ///////////////////
-
+    
     private long getSize;
     private long getDate;
     private String getAbsolutePath;
@@ -238,7 +238,7 @@ public class CachedFile extends ProxyFile {
                     bitmask |= HIDDEN_VALUE_MASK;
                 } else {
                     bitmask &= ~HIDDEN_VALUE_MASK;
-                }
+            }
                 bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
             } catch(Exception e) {
                 LOGGER.info("Could not retrieve file attributes for {}", file, e);
@@ -286,9 +286,9 @@ public class CachedFile extends ProxyFile {
     public boolean isDirectory() {
         if ((bitmask & DIRECTORY_SET_MASK) == 0) {
             if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-                getFileAttributes(file);
+            getFileAttributes(file);
             }
-            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & DIRECTORY_SET_MASK) == 0) {
                 if (file.isDirectory()) {
                     bitmask |= DIRECTORY_VALUE_MASK;
@@ -318,9 +318,9 @@ public class CachedFile extends ProxyFile {
     public boolean isHidden() {
         if ((bitmask & HIDDEN_SET_MASK) == 0) {
             if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-                getFileAttributes(file);
+            getFileAttributes(file);
             }
-            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & HIDDEN_SET_MASK) == 0) {
                 if (file.isHidden()) {
                     bitmask |= HIDDEN_VALUE_MASK;
@@ -404,9 +404,9 @@ public class CachedFile extends ProxyFile {
     public boolean exists() {
         if ((bitmask & EXISTS_SET_MASK) == 0) {
             if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-                getFileAttributes(file);
+            getFileAttributes(file);
             }
-            // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
+        // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & EXISTS_SET_MASK) == 0) {
                 if (file.exists()) {
                     bitmask |= EXISTS_VALUE_MASK;
@@ -507,14 +507,24 @@ public class CachedFile extends ProxyFile {
                     getCanonicalFile = this;
                 } else {
                     getCanonicalFile = new CachedFile(getCanonicalFile, true);
-                }
+            }
             }
             bitmask |= CANONICAL_FILE_SET_MASK;
         }
         return getCanonicalFile;
     }
 
+    /*
+    @Override
+    public short getReplication() {
+        return file.getReplication();
+    }
 
+    @Override
+    public long getBlocksize() {
+        return file.getBlocksize();
+    }*/
+    
     ////////////////////////////////////////////////
     // Overridden for recursion only (no caching) //
     ////////////////////////////////////////////////

@@ -37,7 +37,7 @@ public interface JobProgressListener extends EventListener {
 	 * @param source a job added
 	 * @param idx index of a job in a job queue
 	 */
-	public void jobAdded(FileJob source, int idx);
+	void jobAdded(FileJob source, int idx);
 	
 	/**
      * Called when a new job has finished and has been removed from the queue.
@@ -45,7 +45,7 @@ public interface JobProgressListener extends EventListener {
 	 * @param source a job removed
 	 * @param idx index of a job in a job queue
 	 */
-	public void jobRemoved(FileJob source, int idx);
+	void jobRemoved(FileJob source, int idx);
 
 	/**
      * Called when the progress of the specified FileJob has been updated.
@@ -55,6 +55,6 @@ public interface JobProgressListener extends EventListener {
      * @param fullUpdate if false indicates that only file label has been updated
      * @see JobProgress#calcJobProgress
      */
-	public void jobProgress(FileJob source, int idx, boolean fullUpdate);
+	void jobProgress(FileJob source, int idx, boolean fullUpdate);
 	
 }

@@ -147,17 +147,19 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         // performance reason, we can end with an expired cached value so we need
         // to check this
         Long expirationDateL = (Long)value[1];
-        if(expirationDateL!=null && System.currentTimeMillis()> expirationDateL) {
+        if (expirationDateL != null && System.currentTimeMillis() > expirationDateL) {
             // Value has expired, let's remove it
-            if(UPDATE_CACHE_COUNTERS)
-                nbMisses++;	// Increase cache miss counter
+            if (UPDATE_CACHE_COUNTERS) {
+                nbMisses++;    // Increase cache miss counter
+            }
             cacheMap.remove(key);
             return null;
         }
 			
 
-        if(UPDATE_CACHE_COUNTERS)
-            nbHits++;	// Increase cache hit counter
+        if (UPDATE_CACHE_COUNTERS) {
+            nbHits++;    // Increase cache hit counter
+        }
 
         return (V)value[0];
     }

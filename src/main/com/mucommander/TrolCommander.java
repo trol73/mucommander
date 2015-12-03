@@ -275,6 +275,7 @@ public class TrolCommander {
             try {
                 ActionKeymapIO.loadActionKeymap();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load actions shortcuts", e);
             }
 
@@ -283,6 +284,7 @@ public class TrolCommander {
             try {
                 ToolBarIO.loadDescriptionFile();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load toolbar description", e);
             }
 
@@ -291,6 +293,7 @@ public class TrolCommander {
             try {
                 CommandBarIO.loadCommandBar();
             } catch(Exception e) {
+                e.printStackTrace();
                 helper.printFileError("Could not load commandbar description", e);
             }
         }
@@ -494,6 +497,7 @@ public class TrolCommander {
             // the servers to decide whether to show them.
             FTPProtocolProvider.setForceHiddenFilesListing(MuConfigurations.getPreferences().getVariable(MuPreference.LIST_HIDDEN_FILES, MuPreferences.DEFAULT_LIST_HIDDEN_FILES));
 
+//            FileFactory.registerProtocolFile();
             // Use CredentialsManager for file URL authentication
             FileFactory.setDefaultAuthenticator(CredentialsManager.getAuthenticator());
 
@@ -611,12 +615,48 @@ public class TrolCommander {
         }
     }
 
+
+    private static class RegisterNetworkProtocolsTask extends LauncherTask {
+        RegisterNetworkProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_network", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolNetworks();
+        }
+    }
+
+
+    private static class RegisterArchiveProtocolsTask extends LauncherTask {
+        RegisterArchiveProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_archive", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolArchives();
+        }
+    }
+
+
+    private static class RegisterOtherProtocolsTask extends LauncherTask {
+        RegisterOtherProtocolsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("protocols_other", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FileFactory.registerProtocolOthers();
+        }
+    }
+
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
 
         public LauncherExecutor(int cores) {
-            super(cores, cores, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+            super(cores, cores, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
             this.cores = cores;
         }
 
@@ -661,6 +701,7 @@ public class TrolCommander {
         int processors = Runtime.getRuntime().availableProcessors();
         System.out.println("Processors: " + processors);
         //ExecutorService executor = Executors.newFixedThreadPool(processors < 2 ? 2 : processors);
+
         LauncherExecutor executor = new LauncherExecutor(processors <= 0 ? 1 : processors);
         try {
             // Initialises fields.
@@ -688,6 +729,9 @@ public class TrolCommander {
             LauncherTask taskShowSetupWindow = new ShowSetupWindowTask(helper, taskLoadConfigs);
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
+            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
+            LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
+            LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
             tasks.add(taskLoadConfigs);
@@ -710,7 +754,10 @@ public class TrolCommander {
             tasks.add(taskInitDesktop);
             tasks.add(taskDisposeSplash);
             tasks.add(taskShowSetupWindow);
-
+            tasks.add(taskRegisterArchives);
+            tasks.add(taskRegisterNetwork);
+            tasks.add(taskRegisterOtherProtocols);
+//System.out.println("Execute tasks");
 
             if (processors <= 1 ) {
                 for (LauncherTask t : tasks) {
@@ -790,16 +837,14 @@ public class TrolCommander {
 
         // Check for newer version unless it was disabled
         if (MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    try {
-                        VersionChecker versionChecker = VersionChecker.getInstance();
-                        if (versionChecker.isNewVersionAvailable()) {
-                            new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    VersionChecker versionChecker = VersionChecker.getInstance();
+                    if (versionChecker.isNewVersionAvailable()) {
+                        new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
         }

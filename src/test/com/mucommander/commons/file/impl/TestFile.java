@@ -26,7 +26,7 @@ import java.net.MalformedURLException;
 
 /**
  * TestFile is an {@link AbstractFile} that is used in unit tests.
- * This is an implementation of virtual file. Several methods are overriden to
+ * This is an implementation of virtual file. Several methods are overridden to
  * return data passed in constructor.
  * @author Mariusz Jakubowski
  *

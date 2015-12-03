@@ -22,8 +22,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractFileTest;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
+import com.mucommander.test.Assumes;
 import org.testng.annotations.BeforeClass;
-
+import org.testng.annotations.Test;
 import java.io.IOException;
 
 /**
@@ -32,6 +33,7 @@ import java.io.IOException;
  *
  * @author Maxence Bernard
  */
+@Test
 public class S3FileTest extends AbstractFileTest {
 
     /** The system property that holds the URI to the temporary S3 folder */
@@ -39,10 +41,9 @@ public class S3FileTest extends AbstractFileTest {
 
     /** Base temporary folder */
     private static AbstractFile tempFolder;
-
-    @BeforeClass
+    @BeforeClass()
     public static void setupTemporaryFolder() {
-        tempFolder = FileFactory.getFile(System.getProperty(TEMP_FOLDER_PROPERTY));
+        tempFolder = getTemporaryFolder(TEMP_FOLDER_PROPERTY);
     }
 
 

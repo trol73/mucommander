@@ -61,24 +61,24 @@ interface AssociationsXmlConstants {
     // - XML elements ----------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Root element. */
-    public static final String ELEMENT_ROOT          = "associations";
+    String ELEMENT_ROOT          = "associations";
     /** Custom association definition element. */
-    public static final String ELEMENT_ASSOCIATION   = "association";
-    public static final String ELEMENT_MASK          = "filename";
-    public static final String ELEMENT_IS_SYMLINK    = "symlink";
-    public static final String ELEMENT_IS_HIDDEN     = "hidden";
-    public static final String ELEMENT_IS_READABLE   = "readable";
-    public static final String ELEMENT_IS_WRITABLE   = "writable";
-    public static final String ELEMENT_IS_EXECUTABLE = "executable";
+    String ELEMENT_ASSOCIATION   = "association";
+    String ELEMENT_MASK          = "filename";
+    String ELEMENT_IS_SYMLINK    = "symlink";
+    String ELEMENT_IS_HIDDEN     = "hidden";
+    String ELEMENT_IS_READABLE   = "readable";
+    String ELEMENT_IS_WRITABLE   = "writable";
+    String ELEMENT_IS_EXECUTABLE = "executable";
 
 
 
     // - Custom association structure ------------------------------------------
     // -------------------------------------------------------------------------
     /** Name of the attribute containing the alias of the command to execute in this association. */
-    public static final String ATTRIBUTE_COMMAND        = "command";
-    public static final String ATTRIBUTE_VALUE          = "value";
-    public static final String ATTRIBUTE_CASE_SENSITIVE = "case_sensitive";
-    public static final String VALUE_TRUE               = "true";
-    public static final String VALUE_FALSE              = "false";
+    String ATTRIBUTE_COMMAND        = "command";
+    String ATTRIBUTE_VALUE          = "value";
+    String ATTRIBUTE_CASE_SENSITIVE = "case_sensitive";
+    String VALUE_TRUE               = "true";
+    String VALUE_FALSE              = "false";
 }

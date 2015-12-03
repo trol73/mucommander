@@ -35,9 +35,8 @@ public class CoderInfo {
         sizes.clear();
         sizePointers.clear();
         for(int i = 0; i < numItems; i++) {
-            if (srcSizes == null || srcSizes.get(i) == -1)  // TBD null => -1
-            {
-                sizes.add(new Long(0));
+            if (srcSizes == null || srcSizes.get(i) == -1) { // TBD null => -1
+                sizes.add((long) 0);
                 sizePointers.add(-1);
             } else {
                 sizes.add(srcSizes.get(i)); // sizes.Add(*srcSizes[i]);

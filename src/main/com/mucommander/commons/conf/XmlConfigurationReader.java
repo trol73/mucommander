@@ -96,11 +96,7 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        FACTORY = new ConfigurationReaderFactory<XmlConfigurationReader>() {
-            public XmlConfigurationReader getReaderInstance() throws ReaderConfigurationException {
-                return new XmlConfigurationReader();
-            }
-        };
+        FACTORY = XmlConfigurationReader::new;
     }
 
     /**
@@ -122,7 +118,7 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
      * @throws ConfigurationFormatException if a configuration file format occurs.
      * @throws ConfigurationException       if a non-specific error occurs.
      */
-    public void read(Reader in, ConfigurationBuilder builder) throws IOException, ConfigurationException, ConfigurationFormatException {
+    public void read(Reader in, ConfigurationBuilder builder) throws IOException, ConfigurationException {
         this.builder = builder;
         locator = null;
         try {

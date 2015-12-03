@@ -24,5 +24,5 @@ package com.mucommander.job.ui;
  *
  */
 public interface DialogResult {
-    public Object getUserInput();
+    Object getUserInput();
 }

@@ -47,14 +47,11 @@ class ActionKeymapWriter extends ActionKeymapIO {
 	ActionKeymapWriter() {}
 	
 	public void create() throws IOException {
-		BackupOutputStream bos = new BackupOutputStream(getActionsFile());
 
-		try {
+		try (BackupOutputStream bos = new BackupOutputStream(getActionsFile())) {
 			new Writer(bos).writeKeyMap(null);
 		} catch (Exception e) {
 			LOGGER.debug("Caught exception", e);
-		} finally {
-			bos.close();
 		}
 	}
 	
@@ -70,16 +67,12 @@ class ActionKeymapWriter extends ActionKeymapIO {
 
 			combinedMapping.put(actionId, keyStrokes);
 		}
-		
-		BackupOutputStream bos = new BackupOutputStream(getActionsFile());
 
-		try {
+		try (BackupOutputStream bos = new BackupOutputStream(getActionsFile())) {
 			new Writer(bos).writeKeyMap(combinedMapping);
 			wereActionsModified = false;
 		} catch (Exception e) {
 			LOGGER.debug("Caught exception", e);
-		} finally {
-			bos.close();
 		}
 	}
 	

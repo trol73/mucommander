@@ -70,7 +70,7 @@ public class ZipEntry implements Cloneable {
     protected long externalAttributes = 0;
 
     /** List of extra fields, as ZipEntraField instances */
-    protected Vector<ZipExtraField> extraFields = null;
+    protected Vector<ZipExtraField> extraFields;
 
     /** Contains info about how this entry is stored in the zip file */
     protected ZipEntryInfo entryInfo;

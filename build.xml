@@ -15,6 +15,8 @@
     <property name="src.main"             location="${src}/main"/>
     <!-- Main resources directory.                                                                                   -->
     <property name="res"                  location="res"/>
+
+    <property name="res.jar"              location="${res}/jar/services"/>
     <!-- Ivy resources directory.                                                                                    -->
     <property name="res.ivy"              location="${res}/ivy"/>
     <!-- Ivy jar file.                                                                                               -->
@@ -85,7 +87,7 @@
     <property name="dist.jar.signed"      location="${dist}/trolcommander_signed.jar"/>
     <!-- Where to store the Win32 executable.                                                                        -->
     <property name="dist.exe"             value="${dist}/trolCommander.exe"/>
-    <!-- Where to store the OS X executable.                  														 -->
+    <!-- Where to store the OS X executable.                                                                         -->
     <property name="dist.app.name.short"  value="trolCommander"/>                                                       
     <property name="dist.app.name"        value="${dist.app.name.short}.app"/>
     <property name="dist.app"             value="${dist}/${dist.app.name}"/>
@@ -295,7 +297,7 @@
     	                <replacevalue><![CDATA[<key>NSHighResolutionCapable</key><true/></dict>]]></replacevalue>    	                
     	</replace>
     	
-	</target>
+    </target>
 
 
     <!-- = Win32 packaging ========================================================================================= -->
@@ -714,6 +716,11 @@
 
             <keepattribute name="exceptions"/>
 
+            <keep name="org.apache.hadoop.**">
+                <field name="*"/>
+                <method name="*"/>
+                <constructor name="*"/>
+            </keep>
             <!-- Action API uses reflection.                                                                         -->
             <keepclasseswithmembers extends="com.mucommander.ui.action.MuAction">
                 <constructor access="public" name="*"/>
@@ -760,11 +767,11 @@
                 <constructor name="*"/>
             </keep>
             <!-- Don't obfuscate Classes that use JNA.                                                               -->
-            <keep extends="com.sun.jna.**">
+			<keep extends="com.sun.jna.**">
 				<field name="*"/>
 				<method name="*"/>
 				<constructor name="*"/>
-            </keep>
+			</keep>
 			<!-- Don't obfuscate the VMWare Infrastructure library.                                                  -->
 			<keep name="com.vmware.vim25.**">
 				<field name="*"/>
@@ -870,7 +877,7 @@
             <arg value="-n"/>
         </exec>
           -->
-    	
+
 
         <echo>Creating JAR file...</echo>
         <property name="version.url" value="${url.version}"/>
@@ -888,6 +895,7 @@
                 <attribute name="Build-Date"             value="${DSTAMP}"/>
                 <attribute name="Build-URL"              value="${version.url}"/>
             </manifest>
+            <metainf dir="${res.jar}"/>
         </jar>
     </target>
 

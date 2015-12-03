@@ -69,25 +69,24 @@ public class ProcessRunner {
      * @throws IOException      thrown if any error occurs while creating the process.
      */
     public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory, ProcessListener listener, String encoding) throws IOException {
-        AbstractProcess process;
-
         // If currentDirectory is null, use the VM's current directory.
-        if(currentDirectory == null) {
+        if (currentDirectory == null) {
             currentDirectory = FileFactory.getFile(System.getProperty("user.dir"), true);
-        }
-        else {
-            // If currentDirectory is not on a local filesytem, use the user's home.
-            if(!currentDirectory.hasAncestor(LocalFile.class)) {
+        } else {
+            // If currentDirectory is not on a local filesystem, use the user's home.
+            if (!currentDirectory.hasAncestor(LocalFile.class)) {
                 currentDirectory = FileFactory.getFile(System.getProperty("user.home"), true);
             }
             // If currentDirectory is not a directory (e.g. an archive entry)
             else {
-                while(currentDirectory!=null && !currentDirectory.isDirectory())
+                while (currentDirectory != null && !currentDirectory.isDirectory()) {
                     currentDirectory = currentDirectory.getParent();
+                }
 
                 // This shouldn't normally happen
-                if(currentDirectory==null)
+                if (currentDirectory == null) {
                     currentDirectory = FileFactory.getFile(System.getProperty("user.dir"), true);
+                }
             }
         }
 
@@ -96,7 +95,7 @@ public class ProcessRunner {
 //            listener = new DebugProcessListener(tokens);
 
         // Starts the process.
-        process = new LocalProcess(tokens, (java.io.File)currentDirectory.getUnderlyingFileObject());
+        AbstractProcess process = new LocalProcess(tokens, (java.io.File)currentDirectory.getUnderlyingFileObject());
         process.startMonitoring(listener, encoding);
 
         return process;
@@ -217,12 +216,9 @@ public class ProcessRunner {
      * @throws IOException      thrown if an error happens while starting the process.
      */
     public static AbstractProcess execute(String command, AbstractFile currentDirectory, ProcessListener listener, String encoding) throws IOException {
-        StringTokenizer parser; // Used to parse the command.
-        String[]        tokens; // Tokens that make up the command.
-
         // Initialisation.
-        parser = new StringTokenizer(command);
-        tokens = new String[parser.countTokens()];
+        StringTokenizer parser = new StringTokenizer(command);      // Used to parse the command.
+        String[] tokens = new String[parser.countTokens()];         // Tokens that make up the command.
 
         // Breaks command into tokens.
         for(int i = 0; i < tokens.length; i++) {

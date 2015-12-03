@@ -47,7 +47,7 @@ public class OutStreamWithCRC extends java.io.OutputStream {
         return _size;
     }
     public int GetCRC()  {
-        return _crc.GetDigest();
+        return _crc.getDigest();
     }
     public void InitCRC() {
         _crc.Init();

@@ -372,7 +372,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
                  }
               }
              
-             return (it.done == false);
+             return !it.done;
          }
          
          /**
@@ -508,7 +508,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
                  }
              }
                  
-             return (it.done == false);
+             return !it.done;
          }
          
          static int [] commonChars = 

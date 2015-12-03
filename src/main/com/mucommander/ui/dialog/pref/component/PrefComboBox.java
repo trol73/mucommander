@@ -21,8 +21,6 @@ package com.mucommander.ui.dialog.pref.component;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 /**
@@ -57,12 +55,7 @@ public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefCompo
     }
 	
 	public void addDialogListener(final PreferencesDialog dialog) {
-		addItemListener(new ItemListener() {
-
-			public void itemStateChanged(ItemEvent e) {
-				dialog.componentChanged(PrefComboBox.this);
-			}
-		});		
+		addItemListener(e -> dialog.componentChanged(PrefComboBox.this));
 	}
 
     @Override

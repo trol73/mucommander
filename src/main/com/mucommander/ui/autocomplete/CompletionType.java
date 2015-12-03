@@ -105,7 +105,7 @@ public abstract class CompletionType {
 	    	if (miliseconds > 0) {
 				try {
 					Thread.sleep(miliseconds);
-				} catch (InterruptedException e1) { }
+				} catch (InterruptedException ignore) { }
 	    	}
 	    }
 		
@@ -165,7 +165,7 @@ public abstract class CompletionType {
      * @param list - Auto-completion popup's list.
      * @return true if the list was updated successfully, false otherwise. 
      */
-    protected boolean updateListData(JList list) {
+    protected boolean updateListData(JList<String> list) {
     	return completer.updateListData(list, autocompletedtextComp);
     }
  

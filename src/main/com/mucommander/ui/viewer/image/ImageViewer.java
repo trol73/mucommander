@@ -21,8 +21,6 @@ package com.mucommander.ui.viewer.image;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -146,7 +144,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     protected StatusBar getStatusBar() {
         if (statusBar == null) {
-            statusBar = new StatusBar();
+        statusBar = new StatusBar();
         }
         return statusBar;
     }
@@ -298,8 +296,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             return;
         }
         mouseMovementIssueFixed = true;
-        Runnable task = new Runnable() {
-            public void run() {
+        Runnable task = () -> {
                 try {
                     int w = getFrame().getWidth();
                     int h = getFrame().getHeight();
@@ -307,7 +304,6 @@ class ImageViewer extends FileViewer implements ActionListener {
                     getFrame().setSize(w, h);
                 } catch (Exception ignore) {
                 }
-            }
         };
         Executors.newSingleThreadScheduledExecutor().schedule(task, 1000, TimeUnit.MILLISECONDS);
     }
@@ -531,7 +527,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     private class ImageViewerImpl extends JPanel implements MouseMotionListener, MouseListener, ThemeListener {
 
     	private Color backgroundColor;
-
+    	
 
     	
     	ImageViewerImpl() {

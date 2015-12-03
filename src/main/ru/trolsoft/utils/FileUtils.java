@@ -18,7 +18,6 @@
 package ru.trolsoft.utils;
 
 import com.mucommander.commons.io.StreamUtils;
-
 import java.io.*;
 import java.net.URISyntaxException;
 
@@ -57,5 +56,6 @@ public class FileUtils {
             return null;
         }
     }
+
 
 }

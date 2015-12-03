@@ -63,7 +63,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	/* The factory that will be used to create the viewers for tabs with headers */	
 	private TabsViewerFactory<T> tabsWithHeadersViewerFactory;
 	/* Contains all registered active tab change listeners, stored as weak references */
-    private WeakHashMap<ActiveTabListener, ?> activeTabChangedListener = new WeakHashMap<ActiveTabListener, Object>();
+    private WeakHashMap<ActiveTabListener, ?> activeTabChangedListener = new WeakHashMap<>();
 
 	/**
 	 * Constructor
@@ -350,10 +350,6 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		if (selectedIndex != -1)
 			show(selectedIndex);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				tabsViewer.requestFocus();
-			}
-		});
+		SwingUtilities.invokeLater(tabsViewer::requestFocus);
 	}
 }

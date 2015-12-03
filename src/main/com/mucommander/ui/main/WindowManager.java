@@ -30,6 +30,8 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.mucommander.ui.dialog.FocusDialog;
+import com.mucommander.ui.viewer.FileFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -340,8 +342,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         LOGGER.trace("called");
 
         Object source = e.getSource();
-
-        if(source instanceof MainFrame) {
+        if (source instanceof MainFrame) {
             // Remove disposed MainFrame from the MainFrame list
             int frameIndex = mainFrames.indexOf(source);
 
@@ -351,30 +352,40 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             // Window titles show window number only if there is more than one window.
             // So if there is only one window left, we update first window's title so that it removes window number (#1).
             int nbFrames = mainFrames.size();
-            if(nbFrames==1) {
+            if (nbFrames == 1) {
                 mainFrames.get(0).updateWindowTitle();
-            }
-            else {
-                if(frameIndex!=-1) {
-                    for(int i=frameIndex; i<nbFrames; i++)
+            } else {
+                if (frameIndex != -1) {
+                    for (int i = frameIndex; i < nbFrames; i++) {
                         mainFrames.get(i).updateWindowTitle();
+                    }
                 }
+            }
+        } else if (source instanceof FileFrame) {
+            FileFrame fileFrame = (FileFrame)source;
+            if (fileFrame.getReturnFocusTo() != null) {
+                return;
+            }
+        } else if (source instanceof FocusDialog) {
+            FocusDialog focusDialog = (FocusDialog)source;
+            if (focusDialog.getReturnFocusTo() != null) {
+                return;
             }
         }
 
         // Test if there is at least one MainFrame still showing
-        if(mainFrames.size()>0) {
+        if (!mainFrames.isEmpty()) {
             FocusRequester.requestFocus(currentMainFrame);
             return;
         }
 
         // Test if there is at least one window (viewer, editor...) still showing
         Frame frames[] = Frame.getFrames();
+
         int nbFrames = frames.length;
-        Frame frame;
-        for(int i=0; i<nbFrames; i++) {
-            frame = frames[i];
-            if(frame.isShowing()) {
+        for (int i = 0; i<nbFrames; i++) {
+            Frame frame = frames[i];
+            if (frame.isShowing()) {
                 LOGGER.debug("found active frame#"+i);
                 return;
             }

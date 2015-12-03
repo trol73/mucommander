@@ -49,7 +49,7 @@ public class CommandBarAttributes {
     	EditAction.Descriptor.ACTION_ID,
     	CopyAction.Descriptor.ACTION_ID,
     	MoveAction.Descriptor.ACTION_ID,
-    	MkdirAction.Descriptor.ACTION_ID,
+    	MakeDirectoryAction.$.ACTION_ID,
     	DeleteAction.Descriptor.ACTION_ID,
     	RefreshAction.Descriptor.ACTION_ID,
     	CloseWindowAction.Descriptor.ACTION_ID
@@ -59,10 +59,10 @@ public class CommandBarAttributes {
     {
         TerminalPanelAction.Descriptor.ACTION_ID,
         ViewAsAction.Descriptor.ACTION_ID,
-    	null,
+        null,//MakeFileAction.$.ACTION_ID,
     	LocalCopyAction.Descriptor.ACTION_ID,
     	RenameAction.Descriptor.ACTION_ID,
-    	MkfileAction.Descriptor.ACTION_ID,
+    	MakeFileAction.$.ACTION_ID,
     	PermanentDeleteAction.Descriptor.ACTION_ID,
     	null,
     	null
@@ -83,7 +83,8 @@ public class CommandBarAttributes {
         for (int i = 0; i < DEFAULT_ACTION_IDS.length; i++) {
             String id1 = DEFAULT_ACTION_IDS[i];
             KeyStroke key1 = ActionKeymap.getAccelerator(id1);
-            if (key1.getModifiers() != 0) {
+
+            if (key1 != null && key1.getModifiers() != 0) {
                 String id2 = DEFAULT_ALTERNATE_ACTION_IDS[i];
                 KeyStroke key2 = ActionKeymap.getAccelerator(id2);
                 if (key2 == null || key2.getModifiers() == 0) {
@@ -137,7 +138,7 @@ public class CommandBarAttributes {
     
     private static boolean equals(Object action1, Object action2) {
     	if (action1 == null) {
-            return action2 == null;
+    		return action2 == null;
         }
     	return action1.equals(action2);
     }
@@ -154,7 +155,7 @@ public class CommandBarAttributes {
      * @param modifier           command-bar modifier.
      */
     public static void setAttributes(String[] actionIds, String[] alternateActionIds, KeyStroke modifier) {
-System.out.println("!!! setAttributes " + actionIds);
+//System.out.println("!!! setAttributes " + actionIds);
     	CommandBarAttributes.actionIds = actionIds;
     	CommandBarAttributes.alternateActionIds = alternateActionIds;
     	CommandBarAttributes.modifier = modifier;

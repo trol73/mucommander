@@ -52,25 +52,25 @@ interface CommandsXmlConstants {
     // - XML elements ----------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Root element. */
-    public static final String ELEMENT_ROOT     = "commands";
+    String ELEMENT_ROOT     = "commands";
     /** Custom command definition element. */
-    public static final String ELEMENT_COMMAND  = "command";
+    String ELEMENT_COMMAND  = "command";
 
 
 
     // - Custom command structure ----------------------------------------------
     // -------------------------------------------------------------------------
     /** Name of the attribute containing a command's display name. */
-    public static final String ATTRIBUTE_DISPLAY = "display";
+    String ATTRIBUTE_DISPLAY = "display";
     /** Name of the attribute containing a command's alias. */
-    public static final String ATTRIBUTE_ALIAS   = "alias";
+    String ATTRIBUTE_ALIAS   = "alias";
     /** Name of the attribute containing a command's value. */
-    public static final String ATTRIBUTE_VALUE   = "value";
-    public static final String ATTRIBUTE_FILEMASK   = "filemask";
+    String ATTRIBUTE_VALUE   = "value";
+    String ATTRIBUTE_FILEMASK   = "filemask";
     /** Name of the attribute containing a command's type. */
-    public static final String ATTRIBUTE_TYPE    = "type";
+    String ATTRIBUTE_TYPE    = "type";
     /** Describes <i>system</i> commands. */
-    public static final String VALUE_SYSTEM      = "system";
+    String VALUE_SYSTEM      = "system";
     /** Describes <i>invisible</i> commands. */
-    public static final String VALUE_INVISIBLE   = "invisible";
+    String VALUE_INVISIBLE   = "invisible";
 }

@@ -94,19 +94,17 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	private ShortcutsTableData data;
 
 	/** Comparator of actions according to their labels */
-	private static final Comparator<String> ACTIONS_COMPARATOR = new Comparator<String>() {
-		public int compare(String id1, String id2) {
-			String label1 = ActionProperties.getActionLabel(id1);
-			if (label1 == null)
-				return 1;
-			
-			String label2 = ActionProperties.getActionLabel(id2);
-			if (label2 == null)
-				return -1;
-			
-			return label1.compareTo(label2);
-		}
-	};
+	private static final Comparator<String> ACTIONS_COMPARATOR = (id1, id2) -> {
+        String label1 = ActionProperties.getActionLabel(id1);
+        if (label1 == null)
+            return 1;
+
+        String label2 = ActionProperties.getActionLabel(id2);
+        if (label2 == null)
+            return -1;
+
+        return label1.compareTo(label2);
+    };
 	
 	/** Last selected row in the table */
 	private int lastSelectedRow = -1;
@@ -370,7 +368,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
         public void run() {
         	try {
 				Thread.sleep(CELL_EDITING_STATE_PERIOD);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException ignore) {}
 			
 			if (!stopped && cellEditor != null)
 				cellEditor.stopCellEditing();
@@ -707,7 +705,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			DotBorderedCellLabel label = cellLabels[columnId];
 			
 			// action's icon column: return ImageIcon instance
-			if(columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
+			if (columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
 				Pair<ImageIcon, String> description = (Pair<ImageIcon, String>) value;
 				label.setIcon(description.first);
 				label.setText(description.second);

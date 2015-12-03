@@ -54,21 +54,21 @@ public interface Kernel32API extends StdCallLibrary {
     ///////////////////////////
 
     /** Use the system default, which is to display all error dialog boxes. */
-    public int SEM_DEFAULT = 0;
+    int SEM_DEFAULT = 0;
     /** The system does not display the critical-error-handler message box. Instead, the system sends the error to the
      *  calling process. */
-    public int SEM_FAILCRITICALERRORS = 0x0001;
+    int SEM_FAILCRITICALERRORS = 0x0001;
     /** The system automatically fixes memory alignment faults and makes them invisible to the application. It does this
      *  for the calling process and any descendant processes. This feature is only supported by certain processor
      *  architectures. For more information, see the Remarks sections. After this value is set for a process, subsequent
      *  attempts to clear the value are ignored. */
-    public int SEM_NOALIGNMENTFAULTEXCEPT = 0x0004;
+    int SEM_NOALIGNMENTFAULTEXCEPT = 0x0004;
     /** The system does not display the general-protection-fault message box. This flag should only be set by debugging
      *  applications that handle general protection (GP) faults themselves with an exception handler. */
-    public int SEM_NOGPFAULTERRORBOX = 0x0002;
+    int SEM_NOGPFAULTERRORBOX = 0x0002;
     /** The system does not display a message box when it fails to find a file. Instead, the error is returned to the
      *  calling process. */
-    public int SEM_NOOPENFILEERRORBOX = 0x8000;
+    int SEM_NOOPENFILEERRORBOX = 0x8000;
 
     /**
      * Controls whether the system will handle the specified types of serious errors or whether the process will handle
@@ -128,25 +128,25 @@ public interface Kernel32API extends StdCallLibrary {
     ///////////////////////////
 
     /** The drive type cannot be determined. */
-    public final static int DRIVE_UNKNOWN = 0;
+    int DRIVE_UNKNOWN = 0;
 
     /** The root path is invalid; for example, there is no volume is mounted at the path. */
-    public final static int DRIVE_NO_ROOT_DIR = 1;
+    int DRIVE_NO_ROOT_DIR = 1;
 
     /** The drive has removable media; for example, a floppy drive, thumb drive, or flash card reader. */
-    public final static int DRIVE_REMOVABLE = 2;
+    int DRIVE_REMOVABLE = 2;
 
     /** The drive has fixed media; for example, a hard drive or flash drive. */
-    public final static int DRIVE_FIXED = 3;
+    int DRIVE_FIXED = 3;
 
     /** The drive is a remote (network) drive. */
-    public final static int DRIVE_REMOTE = 4;
+    int DRIVE_REMOTE = 4;
 
     /** The drive is a CD-ROM drive. */
-    public final static int DRIVE_CDROM = 5;
+    int DRIVE_CDROM = 5;
 
     /** The drive is a RAM disk. */
-    public final static int DRIVE_RAMDISK = 6;
+    int DRIVE_RAMDISK = 6;
 
     /**
      * Determines whether a disk drive is a removable, fixed, CD-ROM, RAM disk, or network drive.
@@ -164,12 +164,12 @@ public interface Kernel32API extends StdCallLibrary {
 
     /** If a file named lpNewFileName exists, the function replaces its contents with the contents of the
      * lpExistingFileName file. This value cannot be used if lpNewFileName or lpExistingFileName names a directory. */
-    public final static int MOVEFILE_REPLACE_EXISTING = 1;
+    int MOVEFILE_REPLACE_EXISTING = 1;
 
     /** If the file is to be moved to a different volume, the function simulates the move by using the CopyFile and
      * DeleteFile functions.<br/>
      * This value cannot be used with MOVEFILE_DELAY_UNTIL_REBOOT. */
-    public final static int MOVEFILE_COPY_ALLOWED = 2;
+    int MOVEFILE_COPY_ALLOWED = 2;
 
     /** The system does not move the file until the operating system is restarted. The system moves the file immediately
      * after AUTOCHK is executed, but before creating any paging files. Consequently, this parameter enables the
@@ -179,20 +179,20 @@ public interface Kernel32API extends StdCallLibrary {
      * This value cannot be used with MOVEFILE_COPY_ALLOWED.<br/>
      * <b>Windows 2000</b>:  If you specify the MOVEFILE_DELAY_UNTIL_REBOOT flag for dwFlags, you cannot also prepend
      * the filename that is specified by lpExistingFileName with "\\?". */
-    public final static int MOVEFILE_DELAY_UNTIL_REBOOT = 4;
+    int MOVEFILE_DELAY_UNTIL_REBOOT = 4;
 
     /** The function does not return until the file is actually moved on the disk.<br/>
      * Setting this value guarantees that a move performed as a copy and delete operation is flushed to disk before the
      * function returns. The flush occurs at the end of the copy operation.<br/>
      * This value has no effect if MOVEFILE_DELAY_UNTIL_REBOOT is set. */
-    public final static int MOVEFILE_WRITE_THROUGH = 8;
+    int MOVEFILE_WRITE_THROUGH = 8;
 
     /** Reserved for future use. */
-    public final static int MOVEFILE_CREATE_HARDLINK = 16;
+    int MOVEFILE_CREATE_HARDLINK = 16;
 
     /** The function fails if the source file is a link source, but the file cannot be tracked after the move.
      * This situation can occur if the destination is a volume formatted with the FAT file system. */
-    public final static int MOVEFILE_FAIL_IF_NOT_TRACKABLE = 32;
+    int MOVEFILE_FAIL_IF_NOT_TRACKABLE = 32;
 
     /**
      * Moves an existing file or directory, including its children, with various move options.
@@ -217,50 +217,50 @@ public interface Kernel32API extends StdCallLibrary {
     ///////////////////////////////////
 
     /** The file system preserves the case of file names when it places a name on disk. */
-    public final static int FILE_CASE_PRESERVED_NAMES = 0x00000002;
+    int FILE_CASE_PRESERVED_NAMES = 0x00000002;
 
     /** The file system supports case-sensitive file names. */
-    public final static int FILE_CASE_SENSITIVE_SEARCH = 0x00000001;
+    int FILE_CASE_SENSITIVE_SEARCH = 0x00000001;
 
     /** The file system supports file-based compression. */
-    public final static int FILE_FILE_COMPRESSION = 0x00000010;
+    int FILE_FILE_COMPRESSION = 0x00000010;
 
     /** The file system supports named streams. */
-    public final static int FILE_NAMED_STREAMS = 0x00040000;
+    int FILE_NAMED_STREAMS = 0x00040000;
 
     /** The file system preserves and enforces access control lists (ACL). For example, the NTFS file system preserves
      * and enforces ACLs, and the FAT file system does not. */
-    public final static int FILE_PERSISTENT_ACLS = 0x00000008;
+    int FILE_PERSISTENT_ACLS = 0x00000008;
 
     /** The specified volume is read-only. Windows 2000:  This value is not supported.*/
-    public final static int FILE_READ_ONLY_VOLUME = 0x00080000;
+    int FILE_READ_ONLY_VOLUME = 0x00080000;
 
     /** The volume supports a single sequential write. */
-    public final static int FILE_SEQUENTIAL_WRITE_ONCE = 0x00100000;
+    int FILE_SEQUENTIAL_WRITE_ONCE = 0x00100000;
 
     /** The file system supports the Encrypted File System (EFS). */
-    public final static int FILE_SUPPORTS_ENCRYPTION = 0x00020000;
+    int FILE_SUPPORTS_ENCRYPTION = 0x00020000;
 
     /** The file system supports object identifiers. */
-    public final static int FILE_SUPPORTS_OBJECT_IDS = 0x00010000;
+    int FILE_SUPPORTS_OBJECT_IDS = 0x00010000;
 
     /** The file system supports re-parse points. */
-    public final static int FILE_SUPPORTS_REPARSE_POINTS = 0x00000080;
+    int FILE_SUPPORTS_REPARSE_POINTS = 0x00000080;
 
     /** The file system supports sparse files. */
-    public final static int FILE_SUPPORTS_SPARSE_FILES = 0x00000040;
+    int FILE_SUPPORTS_SPARSE_FILES = 0x00000040;
 
     /** The volume supports transactions. */
-    public final static int FILE_SUPPORTS_TRANSACTIONS = 0x00200000;
+    int FILE_SUPPORTS_TRANSACTIONS = 0x00200000;
 
     /** The file system supports Unicode in file names as they appear on disk. */
-    public final static int FILE_UNICODE_ON_DISK = 0x00000004;
+    int FILE_UNICODE_ON_DISK = 0x00000004;
 
     /** The specified volume is a compressed volume, for example, a DoubleSpace volume. */
-    public final static int FILE_VOLUME_IS_COMPRESSED = 0x00008000;
+    int FILE_VOLUME_IS_COMPRESSED = 0x00008000;
 
     /** The file system supports disk quotas. */
-    public final static int FILE_VOLUME_QUOTAS = 0x00000020;
+    int FILE_VOLUME_QUOTAS = 0x00000020;
 
     /**
      * Retrieves information about the file system and volume associated with the specified root directory.
@@ -310,10 +310,10 @@ public interface Kernel32API extends StdCallLibrary {
     ////////////////////////////////
 
     /** Failed to retrieve file attributes  */
-    public final static int INVALID_FILE_ATTRIBUTES = -1;
+    int INVALID_FILE_ATTRIBUTES = -1;
 
     /** A file or directory that the operating system uses a part of, or uses exclusively. */
-    public final static int FILE_ATTRIBUTE_SYSTEM =  0x00000004;
+    int FILE_ATTRIBUTE_SYSTEM =  0x00000004;
 
     /**
      * Retrieves file system attributes for a specified file or directory.
@@ -328,14 +328,14 @@ public interface Kernel32API extends StdCallLibrary {
     // FindFirstFile function //
     ////////////////////////////
     /** Alias class for W32API.HANDLE. */
-    public final class FindFileHandle extends WinNT.HANDLE {
+    final class FindFileHandle extends WinNT.HANDLE {
     	public boolean isValid() {
     		return this != WinNT.INVALID_HANDLE_VALUE;
     	}
     }
 
     /** Contains information about the file that is found by the FindFirstFile, FindFirstFileEx, or FindNextFile function. */
-    public class WIN32_FIND_DATA extends Structure {
+    class WIN32_FIND_DATA extends Structure {
     	/** The file attributes of a file. */
     	public int dwFileAttributes;
     	/** A FILETIME structure that specifies when a file or directory was created. */

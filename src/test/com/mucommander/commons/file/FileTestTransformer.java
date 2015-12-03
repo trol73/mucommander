@@ -83,7 +83,7 @@ public class FileTestTransformer implements IMethodInterceptor {
         List<IMethodInstance> out;
         String value;
 
-        out = new ArrayList<IMethodInstance>();
+        out = new ArrayList<>();
         for(IMethodInstance method: methods) {
             Class aClass;
 

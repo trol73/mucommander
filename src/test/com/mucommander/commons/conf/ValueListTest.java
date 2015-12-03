@@ -35,7 +35,7 @@ public class ValueListTest {
     private static Vector<Integer> createIntegerData() {
         Vector<Integer> data;
 
-        data = new Vector<Integer>();
+        data = new Vector<>();
         for(int i = 1; i < 8; i++)
             data.add(i);
         return data;
@@ -47,7 +47,7 @@ public class ValueListTest {
     private static Vector<Float> createFloatData() {
         Vector<Float> data;
 
-        data = new Vector<Float>();
+        data = new Vector<>();
         for(int i = 1; i < 8; i++)
             data.add(new Float(i + 0.5));
         return data;
@@ -59,7 +59,7 @@ public class ValueListTest {
     private static Vector<Boolean> createBooleanData() {
         Vector<Boolean> data;
 
-        data = new Vector<Boolean>();
+        data = new Vector<>();
         for(int i = 0; i < 7; i++)
             data.add(i % 2 == 0);
         return data;
@@ -202,7 +202,7 @@ public class ValueListTest {
     public void testListValues() {
         Vector<String>    data;
 
-        data = new Vector<String>();
+        data = new Vector<>();
         data.add(ValueList.toString(createIntegerData(), ";"));
         data.add(ValueList.toString(createIntegerData(), ";"));
         data.add(ValueList.toString(createIntegerData(), ";"));

@@ -96,7 +96,7 @@ public class FileFactory {
     private static ArchiveFormatProvider[] archiveFormatProviders;
 
     /** Contains a FilePool instance for each registered scheme */
-    private static final HashMap<String, FilePool> FILE_POOL_MAP = new HashMap<>();
+    private static final Map<String, FilePool> FILE_POOL_MAP = new HashMap<>();
 
     /** System temp directory */
     private static final AbstractFile TEMP_DIRECTORY;
@@ -107,24 +107,24 @@ public class FileFactory {
     /** Default authenticator, used when none is specified */
     private static Authenticator defaultAuthenticator;
 
-    static {
-        // Register built-in file protocols.
+
+    public static void registerProtocolNetworks() {
         ProtocolProvider protocolProvider;
-        registerProtocol(FileProtocols.FILE, new LocalProtocolProvider());
+
         registerProtocol(FileProtocols.SMB, new com.mucommander.commons.file.impl.smb.SMBProtocolProvider());
-        registerProtocol(FileProtocols.HTTP, protocolProvider = new com.mucommander.commons.file.impl.http.HTTPProtocolProvider());
+        registerProtocol(FileProtocols.HTTP, protocolProvider = new com.mucommander.commons.file.impl.http.HTTPProtocolProvider()); // !!! очень долго грузится
         registerProtocol(FileProtocols.HTTPS, protocolProvider);
         registerProtocol(FileProtocols.FTP, new com.mucommander.commons.file.impl.ftp.FTPProtocolProvider());
         registerProtocol(FileProtocols.NFS, new com.mucommander.commons.file.impl.nfs.NFSProtocolProvider());
         registerProtocol(FileProtocols.SFTP, new com.mucommander.commons.file.impl.sftp.SFTPProtocolProvider());
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            // Hadoop requires Java 1.6
-            registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
-//            registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
-        }
+        registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
+        //registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
         registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
+        registerProtocol(FileProtocols.WEBDAV, new com.mucommander.commons.file.impl.webdav.WebDAVProvider());
         registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
+    }
 
+    public static void registerProtocolArchives() {
         // Register built-in archive file formats, order for TarArchiveFile and GzipArchiveFile/Bzip2ArchiveFile is important:
         // TarArchiveFile must match 'tar.gz'/'tar.bz2' files before GzipArchiveFile/Bzip2ArchiveFile does.
         registerArchiveFormat(new com.mucommander.commons.file.impl.zip.ZipFormatProvider());
@@ -136,6 +136,24 @@ public class FileFactory {
         registerArchiveFormat(new com.mucommander.commons.file.impl.lst.LstFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.rar.RarFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.sevenzip.SevenZipFormatProvider());
+    }
+
+
+    public static void registerProtocolOthers() {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+            // Hadoop requires Java 1.6
+            registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
+//            registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
+        }
+        registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
+        registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
+
+        // TODO !!! check that adb installed
+        registerProtocol(FileProtocols.ADB, new com.mucommander.commons.file.impl.adb.AdbProtocolProvider());
+    }
+
+    static {
+        registerProtocol(FileProtocols.FILE, new LocalProtocolProvider());
 
         // Set the default FileIconProvider instance
         defaultFileIconProvider = new SwingFileIconProvider();
@@ -179,12 +197,15 @@ public class FileFactory {
         protocol = protocol.toLowerCase();
 
         // create raw and archive file pools
-        FILE_POOL_MAP.put(protocol, new FilePool());
+        synchronized (FILE_POOL_MAP) {
+            FILE_POOL_MAP.put(protocol, new FilePool());
+        }
 
         // Special case for local file provider.
         // Note that the local file provider is also added to the provider hashtable.
-        if(protocol.equals(FileProtocols.FILE))
+        if (protocol.equals(FileProtocols.FILE)) {
             localFileProvider = provider;
+        }
 
         return protocolProviders.put(protocol, provider);
     }
@@ -199,11 +220,14 @@ public class FileFactory {
         protocol = protocol.toLowerCase();
 
         // Remove raw and archive file pools
-        FILE_POOL_MAP.remove(protocol);
+        synchronized (FILE_POOL_MAP) {
+            FILE_POOL_MAP.remove(protocol);
+        }
 
         // Special case for local file provider
-        if(protocol.equals(FileProtocols.FILE))
+        if (protocol.equals(FileProtocols.FILE)) {
             localFileProvider = null;
+        }
 
         return protocolProviders.remove(protocol);
     }
@@ -290,8 +314,9 @@ public class FileFactory {
      * @return the first <code>ArchiveFormatProvider</code> that matches the specified filename, <code>null</code> if there is none
      */
     public static ArchiveFormatProvider getArchiveFormatProvider(String filename) {
-        if(filename == null)
+        if (filename == null || archiveFormatProviders == null) {
             return null;
+        }
 
         for (ArchiveFormatProvider provider : archiveFormatProviders) {
             if (provider.getFilenameFilter().accept(filename))

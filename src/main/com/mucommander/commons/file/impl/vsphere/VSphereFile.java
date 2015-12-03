@@ -809,13 +809,12 @@ public class VSphereFile extends ProtocolFile implements
 				return;
 			}
 			super.close();
-			InputStream in = new FileInputStream(tmpFile);
-			try {
+			try (InputStream in = new FileInputStream(tmpFile)) {
 				copyFileToRemote(fileName, in, this.tmpFile.length(), connHandler, fileManager);
 			} finally {
 				connHandler.releaseLock();
 				connHandler = null;
-				in.close();
+
 				tmpFile.delete();
 			}
 		}
@@ -864,16 +863,11 @@ public class VSphereFile extends ProtocolFile implements
 		}
 	}
 
-	private void sendFile(InputStream in, URLConnection conn)
-			throws IOException {
+	private void sendFile(InputStream in, URLConnection conn) throws IOException {
 		conn.connect();
 
-		OutputStream out = conn.getOutputStream();
-		try {
+		try (OutputStream out = conn.getOutputStream()) {
 			StreamUtils.copyStream(in, out, IO_BUFFER_SIZE);
-
-		} finally {
-			out.close();
 		}
 	}
 
@@ -1069,6 +1063,24 @@ public class VSphereFile extends ProtocolFile implements
 
 		throw new UnsupportedFileOperationException(
 				FileOperation.GET_TOTAL_SPACE);
+	}
+
+	@Override
+	@UnsupportedFileOperation
+	public short getReplication() throws UnsupportedFileOperationException {
+		throw new UnsupportedFileOperationException(FileOperation.GET_REPLICATION);
+	}
+
+	@Override
+	@UnsupportedFileOperation
+	public long getBlocksize() throws UnsupportedFileOperationException {
+		throw new UnsupportedFileOperationException(FileOperation.GET_BLOCKSIZE);
+	}
+
+	@Override
+	@UnsupportedFileOperation
+	public void changeReplication(short replication) throws IOException {
+		throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
 	}
 
 	@Override

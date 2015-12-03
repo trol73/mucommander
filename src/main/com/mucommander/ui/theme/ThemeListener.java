@@ -26,10 +26,10 @@ public interface ThemeListener {
     /**
      * Notifies the listener that a color has been changed.
      */
-    public void colorChanged(ColorChangedEvent event);
+    void colorChanged(ColorChangedEvent event);
 
     /**
      * Notifies the listener that a font has been changed.
      */
-    public void fontChanged(FontChangedEvent event);
+    void fontChanged(FontChangedEvent event);
 }

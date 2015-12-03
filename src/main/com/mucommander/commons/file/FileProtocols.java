@@ -27,39 +27,42 @@ package com.mucommander.commons.file;
 public interface FileProtocols {
 
     /** Protocol for local or locally mounted files. */
-    public final static String FILE      = "file";
+    String FILE      = "file";
 
     /** Protocol for files served by an FTP server. */
-    public final static String FTP       = "ftp";
+    String FTP       = "ftp";
 
     /** Protocol for files served by a web server using HTTP. */
-    public final static String HTTP      = "http";
+    String HTTP      = "http";
 
     /** Protocol for files served by an HDFS (Hadoop distributed filesystem) cluster. */
-    public final static String HDFS      = "hdfs";
+    String HDFS      = "hdfs";
 
     /** Protocol for files served by a web server using HTTPS. */
-    public final static String HTTPS     = "https";
+    String HTTPS     = "https";
 
     /** Protocol for files served by an NFS server. */
-    public final static String NFS       = "nfs";
+    String NFS       = "nfs";
 
     /** Protocol for files served by an Amazon S3 (or protocol-compatible) server. */
-    public final static String S3        = "s3";
+    String S3        = "s3";
 
     /** Protocol for files served by an SFTP server (not to be confused with FTPS or SCP). */
-    public final static String SFTP      = "sftp";
+    String SFTP      = "sftp";
 
     /** Protocol for files served by a SMB/CIFS server. */
-    public final static String SMB       = "smb";
+    String SMB       = "smb";
 
     /** Protocol for files served by a web server using Webdav/HTTP. */
-    public final static String WEBDAV    = "webdav";
+    String WEBDAV    = "webdav";
 
     /** Protocol for files served by a web server using Webdav/HTTPS. */
-    public final static String WEBDAVS   = "webdavs";
+    String WEBDAVS   = "webdavs";
     
     /** Protocol for files served by a web server using vSphere. */
-    public final static String VSPHERE   = "vsphere";
+    String VSPHERE   = "vsphere";
+
+    /** Protocol for files on android devices. */
+    String ADB       = "adb";
 
 }

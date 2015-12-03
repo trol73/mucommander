@@ -141,7 +141,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
 		
-		RemoveButton removeButton = new RemoveButton();
+		RemoveButton removeButton = new RemoveButton();	
 		
 		final JButton restoreDefaultButton = new JButton();
 		restoreDefaultButton.setAction(new AbstractAction(Translator.get("shortcuts_panel" + ".restore_defaults")) {
@@ -169,12 +169,10 @@ public class ShortcutsPanel extends PreferencesPanel {
             combo.addItem(category);
         }
 	    
-	    combo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+	    combo.addActionListener(e -> {
                 filter.setActionCategory((ActionCategory)combo.getSelectedItem());
 				shortcutsTable.updateModel(filter);
 				tooltipBar.showDefaultMessage();
-			}
         });
 
 	    combo.setSelectedIndex(0);
@@ -241,13 +239,9 @@ public class ShortcutsPanel extends PreferencesPanel {
 
 
     private void addCategoryFilter(final JTextField searchText, final JComboBox<ActionCategory> combo, final JTextField shortcutText) {
-        combo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateFilter(searchText, combo, shortcutText);
-            }
-        });
+        combo.addActionListener(e -> updateFilter(searchText, combo, shortcutText));
         resetShortcutFilterWhenFocusGained(combo, searchText, combo, shortcutText);
-    }
+            }
 
 
     private void addSearchTextFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, final JTextField shortcutText) {
@@ -266,7 +260,7 @@ public class ShortcutsPanel extends PreferencesPanel {
         });
 
         resetShortcutFilterWhenFocusGained(searchText, searchText, categoryCombo, shortcutText);
-    }
+            }
 
     private void updateFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, JTextField shortcutText) {
         final ActionCategory selectedActionCategory = (ActionCategory) categoryCombo.getSelectedItem();
@@ -286,8 +280,8 @@ public class ShortcutsPanel extends PreferencesPanel {
             }
         });
         resetShortcutFilterText(shortcutText);
-        tooltipBar.showDefaultMessage();
-    }
+                tooltipBar.showDefaultMessage();
+            }
 
    	private void updateFilter(final KeyStroke pressedKeyStroke) {
         shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
@@ -299,7 +293,7 @@ public class ShortcutsPanel extends PreferencesPanel {
             }
         });
     }
-
+		
 	
 	///////////////////////
     // PrefPanel methods //

@@ -48,7 +48,7 @@ public class CompoundReaderTest {
     private final static String TEST_FLATTENED_STRINGS;
 
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String testString : TEST_STRINGS)
             sb.append(testString);
 
@@ -62,7 +62,7 @@ public class CompoundReaderTest {
      * @return a test Reader iterator.
      */
     private static Iterator<StringReader> getTestReaderIterator() {
-        Vector<StringReader> v = new Vector<StringReader>();
+        Vector<StringReader> v = new Vector<>();
 
         for (String testString : TEST_STRINGS)
             v.add(new StringReader(testString));
@@ -71,7 +71,7 @@ public class CompoundReaderTest {
     }
 
     private String copyReader(Reader reader) throws IOException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int c;
         while((c=reader.read())!=-1)
             sb.append((char)c);

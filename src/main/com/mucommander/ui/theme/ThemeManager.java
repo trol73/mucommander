@@ -240,9 +240,7 @@ public class ThemeManager {
         }
 
         // Sorts the themes by name.
-        Collections.sort(themes, new Comparator<Theme>() {
-                public int compare(Theme t1, Theme t2) {return (t1.getName()).compareTo(t2.getName());}
-            });
+        Collections.sort(themes, (t1, t2) -> (t1.getName()).compareTo(t2.getName()));
 
         return themes;
     }
@@ -266,8 +264,7 @@ public class ThemeManager {
             iterator = customThemeNames();
             while(iterator.hasNext())
                 themes.add(iterator.next());
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.debug("Failed to load custom theme names", e);
         }
 
@@ -1180,12 +1177,14 @@ public class ThemeManager {
      * @return       a valid theme type identifier.
      */
     private static Theme.Type getThemeTypeFromLabel(String label) {
-        if(label.equals(MuPreferences.THEME_USER))
-            return Theme.Type.USER;
-        else if(label.equals(MuPreferences.THEME_PREDEFINED))
-            return Theme.Type.PREDEFINED;
-        else if(label.equals(MuPreferences.THEME_CUSTOM))
-            return Theme.Type.CUSTOM;
+        switch (label) {
+            case MuPreferences.THEME_USER:
+                return Theme.Type.USER;
+            case MuPreferences.THEME_PREDEFINED:
+                return Theme.Type.PREDEFINED;
+            case MuPreferences.THEME_CUSTOM:
+                return Theme.Type.CUSTOM;
+        }
         throw new IllegalStateException("Unknown theme type: " + label);
     }
 

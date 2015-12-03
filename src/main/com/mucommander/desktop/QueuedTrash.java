@@ -25,7 +25,6 @@ import com.mucommander.ui.main.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * QueuedTrash is an {@link AbstractTrash} which moves files to the trash asynchroneously.

@@ -19,7 +19,6 @@
 package com.mucommander.ui.dialog.pref.general;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

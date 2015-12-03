@@ -37,5 +37,5 @@ public interface ActivePanelListener {
      *
      * @param folderPanel the new active FolderPanel.
      */
-    public void activePanelChanged(FolderPanel folderPanel);
+    void activePanelChanged(FolderPanel folderPanel);
 }

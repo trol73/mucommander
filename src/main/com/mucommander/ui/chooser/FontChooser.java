@@ -57,7 +57,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     /** Currently selected font. */
     private Font        font;
     /** List of all registered state change listeners. */
-    private WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<ChangeListener, Object>();
+    private WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
 
 
     // - Initialisation ---------------------------------------------------------

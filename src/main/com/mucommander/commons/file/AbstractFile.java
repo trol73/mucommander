@@ -39,6 +39,7 @@ import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.runtime.OsFamily;
+import org.apache.commons.net.imap.IMAPClient;
 
 /**
  * <code>AbstractFile</code> is the superclass of all files.
@@ -136,7 +137,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             // If host is null, return an empty string
             if (name == null) {
                 return "";
-            }
+        }
         }
 
         return name;
@@ -385,7 +386,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         OutputStream out;
 
         try {
-            out = append?getAppendOutputStream():getOutputStream();
+            out = append ? getAppendOutputStream() : getOutputStream();
         } catch(IOException e) {
             // TODO: re-throw UnsupportedFileOperationException ? 
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
@@ -1073,12 +1074,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public final String calculateChecksum(MessageDigest messageDigest) throws IOException {
-        InputStream in = getInputStream();
-
-        try {
+        try (InputStream in = getInputStream()) {
             return calculateChecksum(in, messageDigest);
-        } finally {
-            in.close();
         }
     }
 
@@ -1285,7 +1282,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             AbstractFile children[] = file.ls();
             for (AbstractFile child : children) {
                 deleteRecursively(child);
-            }
+        }
         }
 
         file.delete();
@@ -1530,6 +1527,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public abstract void changeDate(long lastModified) throws IOException;
 
+    public abstract void changeReplication(short replication) throws IOException;
     /**
      * Returns this file's size in bytes, <code>0</code> if this file doesn't exist, <code>-1</code> if the size is
      * undetermined.
@@ -1607,6 +1605,30 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return information about the owner of this file
      */
     public abstract String getOwner();
+
+
+    /**
+     * Returns information about the owner of this file. The kind of information that is returned is implementation-dependant.
+     * It may typically be a username (e.g. 'bob') or a user ID (e.g. '501').
+     * If the owner information is not available to the <code>AbstractFile</code> implementation (cannot be retrieved or
+     * the filesystem doesn't have any notion of owner) or not available for this particular file, <code>null</code>
+     * will be returned.
+     *
+     * @return information about the owner of this file
+     */
+    public abstract short getReplication() throws UnsupportedFileOperationException;
+
+
+    /**
+     * Returns information about the owner of this file. The kind of information that is returned is implementation-dependant.
+     * It may typically be a username (e.g. 'bob') or a user ID (e.g. '501').
+     * If the owner information is not available to the <code>AbstractFile</code> implementation (cannot be retrieved or
+     * the filesystem doesn't have any notion of owner) or not available for this particular file, <code>null</code>
+     * will be returned.
+     *
+     * @return information about the owner of this file
+     */
+    public abstract long getBlocksize() throws UnsupportedFileOperationException;
 
     /**
      * Returns <code>true</code> if this file implementation is able to return some information about file owners, not

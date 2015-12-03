@@ -94,7 +94,9 @@ public abstract class CommandBarIO extends DefaultHandler {
     /**
      * Mark that actions were modified and therefore should be saved.
      */
-    public static void setModified() { wasCommandBarModified = true; }
+    public static void setModified() {
+		wasCommandBarModified = true;
+	}
     
     /**
      * Writes the current command bar to the user's command bar file.

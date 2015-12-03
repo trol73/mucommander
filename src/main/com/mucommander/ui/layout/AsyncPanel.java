@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.layout;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.icon.SpinningDial;
 
@@ -69,6 +70,10 @@ public abstract class AsyncPanel extends JPanel {
             setBorder(new EmptyBorder(0, 0, 0, 0));
             add(targetComponent, BorderLayout.CENTER);
             updateLayout();
+            // Force update viewer/editor window on Windows 8.1
+            if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+                setSize(getSize());
+            }
         }
     }
 

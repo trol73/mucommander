@@ -75,7 +75,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
     private boolean isInitialized;
 
     /** Registered FileChangeListener instances, stored as weak references */
-    private WeakHashMap<FileChangeListener, ?> listeners = new WeakHashMap<FileChangeListener, Object>();
+    private WeakHashMap<FileChangeListener, ?> listeners = new WeakHashMap<>();
 
 
     /**

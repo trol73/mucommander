@@ -263,7 +263,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         // Combined size of marked files, 0 if no file has been marked
         long markedTotalSize = tableModel.getTotalMarkedSize();
         // number of files in folder
-        int fileCount = tableModel.getFileCount();
+        int fileCount = tableModel.getFileCountWithoutParent();
 
         // Update files info based on marked files if there are some, or currently selected file otherwise
         int nbSelectedFiles = nbMarkedFiles == 0 && selectedFile != null ? 1 : nbMarkedFiles;

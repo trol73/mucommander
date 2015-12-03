@@ -273,7 +273,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
         }
 
         /**
-         * Returns the foregorund color of the specified cell.
+         * Returns the foreground color of the specified cell.
          */
         private Color getForegroundColor(RowType row, boolean isSelected) {
             switch(row) {
