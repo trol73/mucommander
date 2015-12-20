@@ -44,8 +44,8 @@ TODO
 	- generic binary - trolcommander.jar
 	- portable - trolcommander-0_9_6-portable.tar.gz
 	- windows - trolcommander-0_9_6-setup.exe
-	- linux - trolcommander-0_9_6.app.tar.gz
-	- osx - trolcommander_0.9.6_all.deb
+	- linux - trolcommander_0.9.6_all.deb
+	- osx - trolcommander-0_9_6.app.tar.gz
 - compare files
 - compare folders
 - add proxy support
