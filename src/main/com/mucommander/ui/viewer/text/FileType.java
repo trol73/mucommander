@@ -57,7 +57,7 @@ public enum FileType {
     PERL("Perl", SyntaxConstants.SYNTAX_STYLE_PERL, "*.pl"),
     PHP("PHP", SyntaxConstants.SYNTAX_STYLE_PHP, "*.php"),
     PROPERTIES_FILE("Properties file", SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE, "*.properties,*.prop"),
-    PYTHON("Python", SyntaxConstants.SYNTAX_STYLE_PYTHON, "*.py"),
+    PYTHON("Python", SyntaxConstants.SYNTAX_STYLE_PYTHON, "*.py,make.builder"),
     RUBY("Ruby", SyntaxConstants.SYNTAX_STYLE_RUBY, "*.rb"),
     SAS("SAS", SyntaxConstants.SYNTAX_STYLE_SAS, "*.sas"),
     SCALA("Scala", SyntaxConstants.SYNTAX_STYLE_SCALA, "*.scala"),

@@ -19,8 +19,6 @@
 
 package com.mucommander.commons.file;
 
-import java.io.IOException;
-
 /**
  * Super class of all file protocol implementations (by opposition to {@link AbstractArchiveFile archive file} 
  * implementations).

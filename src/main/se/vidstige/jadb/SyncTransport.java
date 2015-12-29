@@ -21,7 +21,10 @@ public class SyncTransport {
         input = inputStream;
     }
     public void send(String syncCommand, String name) throws IOException {
-        if (syncCommand.length() != 4) throw new IllegalArgumentException("sync commands must have length 4");
+//System.out.println("SEND " + syncCommand + " " + name);
+        if (syncCommand.length() != 4) {
+            throw new IllegalArgumentException("sync commands must have length 4");
+        }
         output.writeBytes(syncCommand);
         output.writeInt(Integer.reverseBytes(name.length()));
         output.writeBytes(name);
@@ -34,14 +37,13 @@ public class SyncTransport {
 
     public void verifyStatus() throws IOException, JadbException {
         String status = readString(4);
+//System.out.println("STATUS " + status);
         int length = readInt();
-        if ("FAIL".equals(status))
-        {
+        if ("FAIL".equals(status)) {
             String error = readString(length);
             throw new JadbException(error);
         }
-        if (!"OKAY".equals(status))
-        {
+        if (!"OKAY".equals(status)) {
             throw new JadbException("Unknown error: " + status);
         }
     }
@@ -64,7 +66,9 @@ public class SyncTransport {
         int nameLength = readInt();
         String name = readString(nameLength);
 
-        if (!"DENT".equals(id)) return RemoteFileRecord.DONE;
+        if (!"DENT".equals(id)) {
+            return RemoteFileRecord.DONE;
+        }
         return new RemoteFileRecord(name, mode, size, time);
     }
 
@@ -76,12 +80,14 @@ public class SyncTransport {
 
     private int readChunk(byte[] buffer) throws IOException, JadbException {
         String id = readString(4);
+//System.out.println("id = " + id);
         int n = readInt();
-        if ("FAIL".equals(id))
-        {
+        if ("FAIL".equals(id)) {
             throw new JadbException(readString(n));
         }
-        if (!"DATA".equals(id)) return -1;
+        if (!"DATA".equals(id)) {
+            return -1;
+        }
         input.readFully(buffer, 0, n);
         return n;
     }

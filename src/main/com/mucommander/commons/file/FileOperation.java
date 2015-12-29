@@ -200,8 +200,7 @@ public enum FileOperation {
                     LOGGER.warn("this line should not have been executed");
                     return null;
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             // Should never happen, unless method signatures have changed and this method hasn't been updated.
             LOGGER.warn("this line should not have been executed", e);
             return null;

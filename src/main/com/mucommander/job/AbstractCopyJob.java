@@ -91,12 +91,12 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             try {
                 destFile = destFolder.getDirectChild(destFileName);
                 break;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Destination file couldn't be instantiated
 
                 int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFileName));
                 // Retry loops
-                if (ret==RETRY_ACTION) {
+                if (ret == RETRY_ACTION) {
                     continue;
                 }
                 // Cancel or close dialog return false
@@ -212,7 +212,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 archiveToOptimize = rwArchiveFile;
                 archiveToOptimize.optimizeArchive();
                 break;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 if(showErrorDialog(errorDialogTitle, Translator.get("error_while_optimizing_archive", rwArchiveFile.getName()))==RETRY_ACTION)
                     continue;
 

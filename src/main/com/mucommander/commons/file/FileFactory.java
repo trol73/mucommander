@@ -291,7 +291,7 @@ public class FileFactory {
     public static void unregisterArchiveFormat(ArchiveFormatProvider provider) {
         int index = archiveFormatProvidersV.indexOf(provider);
 
-        if(index!=-1) {
+        if (index != -1) {
             archiveFormatProvidersV.remove(index);
             updateArchiveFormatProviderArray();
         }

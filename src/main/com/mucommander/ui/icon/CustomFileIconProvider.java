@@ -67,6 +67,9 @@ public class CustomFileIconProvider implements FileIconProvider {
     /** Icon for the not accessible remote locations */
     public final static String DISCONNECTED_ICON_NAME = "disconnect.png";
 
+    /** Icon for android ADB FS locations */
+    public final static String ANDROID_ICON_NAME = "android.png";
+
     /** Icon for not accessible files (used for quick-lists) **/
     public final static String NOT_ACCESSIBLE_FILE = "not_accessible.png";
 
@@ -151,13 +154,15 @@ public class CustomFileIconProvider implements FileIconProvider {
 
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {
         // Call init, if not done already
-        if(!initialized)
+        if (!initialized) {
             init();
+        }
 
         // If file is a symlink, get the linked file's icon and paint a semi-transparent symbolic icon on top of it
         boolean isSymlink = file.isSymlink();
-        if(isSymlink)
+        if (isSymlink) {
             file = file.getCanonicalFile();
+        }
 
         ImageIcon icon;
         // Retrieve the file's extension, null if the file has no extension
@@ -165,48 +170,51 @@ public class CustomFileIconProvider implements FileIconProvider {
 
         if (!file.exists()) {
         	icon = IconManager.getIcon(IconManager.IconSet.FILE, DISCONNECTED_ICON_NAME);
+        } else if (FileProtocols.ADB.equals(file.getURL().getScheme()) && file.isRoot()) {
+            icon = IconManager.getIcon(IconManager.IconSet.FILE, ANDROID_ICON_NAME);
         }
         // Special icon for the root of remote (non-local) locations
-        else if(!FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
+        else if (!FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
             icon = IconManager.getIcon(IconManager.IconSet.FILE, NETWORK_ICON_NAME);
         }
         // If file is a directory, use folder icon. One exception is made for 'app' extension under MAC OS
-        else if(file.isDirectory()) {
+        else if (file.isDirectory()) {
             // Mac OS X application are directories with the .app extension and have a dedicated icon
-            if(fileExtension!=null && fileExtension.equals("app"))
+            if (fileExtension != null && fileExtension.equals("app"))
                 icon = IconManager.getIcon(IconManager.IconSet.FILE, MAC_OS_X_APP_ICON_NAME);
-            // Default folder icon
+                // Default folder icon
             else
                 icon = IconManager.getIcon(IconManager.IconSet.FILE, FOLDER_ICON_NAME);
         }
         // If the file is browsable (supported archive or other), use an icon symbolizing an archive
-        else if(file.isBrowsable()) {
+        else if (file.isBrowsable()) {
             icon = IconManager.getIcon(IconManager.IconSet.FILE, ARCHIVE_ICON_NAME);
         }
         // Regular file icon
         else {
             // Determine if the file's extension has an associated icon
-            if(fileExtension==null)
+            if (fileExtension == null)
                 // File has no extension, use default file icon
                 icon = IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
             else {
                 // Compare extension against lower-cased extensions
                 String iconName = extensionMap.get(fileExtension.toLowerCase());
-                if(iconName==null)	// No icon associated to extension, use default file icon
+                if (iconName == null)    // No icon associated to extension, use default file icon
                     icon = IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
                 else {
                     // Retrieves the cached (or freshly loaded if not in cache already) ImageIcon instance corresponding to the icon's name
                     icon = IconManager.getIcon(IconManager.IconSet.FILE, iconName);
                     // Returned IconImage should never be null, but if it is (icon file missing), return default file icon
-                    if(icon==null)
+                    if (icon == null)
                         return IconManager.getIcon(IconManager.IconSet.FILE, FILE_ICON_NAME);
                 }
             }
         }
 
         // If file is a symlink, paint a semi-transparent symbolic icon over the linked file's icon
-        if(isSymlink)
+        if (isSymlink) {
             return getSymlinkIcon(icon);
+        }
 
         return icon;
     }

@@ -21,7 +21,9 @@ package com.mucommander.commons.file.icon;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
+import com.mucommander.ui.icon.IconManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +64,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
                 tempFile.getOutputStream().close();
             }
             return tempFile;
-        } catch(IOException e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -98,7 +100,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
             // Delete the temporary file
             try {
                 tempFile.delete();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Not much to do
             }
         }

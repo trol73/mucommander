@@ -137,7 +137,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             // If host is null, return an empty string
             if (name == null) {
                 return "";
-        }
+            }
         }
 
         return name;
@@ -256,10 +256,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 return false;
             }
             String ext = getExtension();
-            if (ext == null) {
-                return false;
-            }
-            return ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("com") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd");
+            return ext != null && (ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("com") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd"));
         }
         return !isDirectory() && getPermissions().getBitValue(USER_ACCESS, EXECUTE_PERMISSION);
     }
@@ -387,7 +384,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         try {
             out = append ? getAppendOutputStream() : getOutputStream();
-        } catch(IOException e) {
+        } catch (IOException e) {
             // TODO: re-throw UnsupportedFileOperationException ? 
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
         }
@@ -541,7 +538,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public AbstractFile[] ls(FileFilter filter) throws IOException {
-        return filter==null?ls():filter.filter(ls());
+        return filter == null ? ls() : filter.filter(ls());
     }
 
 

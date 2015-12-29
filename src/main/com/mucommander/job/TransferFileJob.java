@@ -25,6 +25,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.impl.adb.AdbFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,11 +181,21 @@ public abstract class TransferFileJob extends FileJob {
                     LOGGER.debug("IOException caught, throwing FileTransferException", e);
                     throw new FileTransferException(FileTransferException.OPENING_SOURCE);
                 }
-
+                if (destFile instanceof AdbFile) {
+                    AdbFile adbFile = (AdbFile)destFile;
+                    try {
+                        adbFile.pullFrom(sourceFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new FileTransferException(FileTransferException.WRITING_DESTINATION);
+                    }
+                    System.out.println(sourceFile.getClass().getName());
+                    System.out.println(sourceFile + " -> " + destFile);
+                    return;
+                }
                 // Copy source stream to destination file
                 destFile.copyStream(tlin, append, inLength);
-            }
-            finally {
+            } finally {
                 // This block will always be executed, even if an exception
                 // was thrown in the catch block
 

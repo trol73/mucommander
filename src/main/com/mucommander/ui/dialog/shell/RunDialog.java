@@ -214,7 +214,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    if(currentProcess!=null) {
+                    if (currentProcess != null) {
                         processInput.close();
                         currentProcess.destroy();
                     }
@@ -236,7 +236,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
     public void processDied(int retValue) {
         LOGGER.debug("process exit, return value= "+retValue);
         currentProcess = null;
-        if(processInput!=null) {
+        if (processInput != null) {
             processInput.close();
             processInput = null;
         }
@@ -276,21 +276,22 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      */
     public void keyPressed(KeyEvent event) {
         // Only handle keyPressed events when a process is running.
-        if(currentProcess != null) {
+        if (currentProcess == null) {
+            return;
+        }
 
-            // Ignores VK_ESCAPE events, as their behavior is a bit strange: they register
-            // as a printable character, and reacting to their being typed apparently consumes
-            // the event - preventing the dialog from being closed.
-            if(event.getKeyCode() != KeyEvent.VK_ESCAPE) {
-                char character;
+        // Ignores VK_ESCAPE events, as their behavior is a bit strange: they register
+        // as a printable character, and reacting to their being typed apparently consumes
+        // the event - preventing the dialog from being closed.
+        if (event.getKeyCode() != KeyEvent.VK_ESCAPE) {
+            char character = event.getKeyChar();
 
-                // Only printable key typed are passed to the shell.
-                if((character = event.getKeyChar()) != KeyEvent.CHAR_UNDEFINED) {
-                    processInput.print(character);
-                    addToTextArea(String.valueOf(character));
-                }
-                event.consume();
+            // Only printable key typed are passed to the shell.
+            if (character != KeyEvent.CHAR_UNDEFINED) {
+                processInput.print(character);
+                addToTextArea(String.valueOf(character));
             }
+            event.consume();
         }
     }
 
@@ -316,29 +317,26 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         Object source = e.getSource();
 
         // 'Clear shell history' has been pressed, clear shell history.
-        if(source == clearButton) {
+        if (source == clearButton) {
             ShellHistoryManager.clear();
 
             // Sets the new focus depending on whether a process is currently running or not.
-            if(currentProcess == null) {
+            if (currentProcess == null) {
                 inputCombo.requestFocus();
                 outputTextArea.setText("");
-            }
-            else {
+            } else {
                 outputTextArea.requestFocus();
                 outputTextArea.getCaret().setVisible(true);
             }
         }
 
         // 'Run / stop' button has been pressed.
-        else if(source == runStopButton) {
+        else if (source == runStopButton) {
 
             // If we're not running a process, start a new one.
-            if(currentProcess == null)
+            if (currentProcess == null) {
                 runCommand(inputCombo.getCommand());
-
-            // If we're running a process, kill it.
-            else {
+            } else {    // If we're running a process, kill it.
                 processInput.close();
                 currentProcess.destroy();
                 this.currentProcess = null;
@@ -347,9 +345,10 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         }
 
         // Cancel button disposes the dialog and kills the process
-        else if(source == cancelButton) {
-            if(currentProcess != null)
+        else if (source == cancelButton) {
+            if (currentProcess != null) {
                 currentProcess.destroy();
+            }
             dispose();
         }
     }
@@ -405,8 +404,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
             // Repaints the dialog.
             repaint();
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             // Notifies the user that an error occured and resets to normal state.
             addToTextArea(Translator.get("generic_error"));
             switchToRunState();

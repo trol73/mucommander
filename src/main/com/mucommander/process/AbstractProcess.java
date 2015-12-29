@@ -68,14 +68,14 @@ public abstract class AbstractProcess {
                 // Closes the process' streams.
             	LOGGER.debug("Destroying process...");
                 stdoutMonitor.stopMonitoring();
-                if(stderrMonitor != null)
+                if (stderrMonitor != null) {
                     stderrMonitor.stopMonitoring();
+                }
 
                 // Destroys the process.
                 try {
                     destroyProcess();
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                 	LOGGER.debug("IOException caught", e);
                 }
             }
@@ -89,7 +89,7 @@ public abstract class AbstractProcess {
      */
     final void startMonitoring(ProcessListener listener, String encoding) throws IOException {
         // Only monitors stdout if the process uses merged streams.
-        if(usesMergedStreams()) {
+        if (usesMergedStreams()) {
         	LOGGER.debug("Starting process merged output monitor...");
             new Thread(stdoutMonitor = new ProcessOutputMonitor(getInputStream(), encoding, listener, this), "Process stdout/stderr monitor").start();
         }

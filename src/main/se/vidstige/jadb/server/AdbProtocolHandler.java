@@ -28,8 +28,7 @@ class AdbProtocolHandler implements Runnable {
     }
 
 	@Override
-	public void run()
-	{
+	public void run() {
         try{
             runServer();
         } catch (IOException e) {
@@ -42,8 +41,7 @@ class AdbProtocolHandler implements Runnable {
         DataInput input = new DataInputStream(socket.getInputStream());
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
-        while (true)
-        {
+        while (true) {
             byte[] buffer = new byte[4];
             input.readFully(buffer);
             String encodedLength = new String(buffer, Charset.forName("utf-8"));
@@ -60,14 +58,11 @@ class AdbProtocolHandler implements Runnable {
                 if ("host:version".equals(command)) {
                     output.writeBytes("OKAY");
                     send(output, String.format("%04x", responder.getVersion()));
-                }
-                else if ("host:transport-any".equals(command))
-                {
+                } else if ("host:transport-any".equals(command)) {
                     // TODO: Check so that exactly one device is selected.
                     selected = responder.getDevices().get(0);
                     output.writeBytes("OKAY");
-                }
-                else if ("host:devices".equals(command)) {
+                } else if ("host:devices".equals(command)) {
                     ByteArrayOutputStream tmp = new ByteArrayOutputStream();
                     DataOutputStream writer = new DataOutputStream(tmp);
                     for (AdbDeviceResponder d : responder.getDevices())
@@ -76,26 +71,19 @@ class AdbProtocolHandler implements Runnable {
                     }
                     output.writeBytes("OKAY");
                     send(output, new String(tmp.toByteArray(), Charset.forName("utf-8")));
-                }
-                else if (command.startsWith("host:transport:"))
-                {
+                } else if (command.startsWith("host:transport:")) {
                     String serial = command.substring("host:transport:".length());
                     selected = findDevice(serial);
                     output.writeBytes("OKAY");
-                }
-                else if ("sync:".equals(command)) {
+                } else if ("sync:".equals(command)) {
                     output.writeBytes("OKAY");
-                    try
-                    {
+                    try {
                         sync(output, input);
-                    }
-                    catch (JadbException e) { // sync response with a different type of fail message
+                    } catch (JadbException e) { // sync response with a different type of fail message
                         SyncTransport sync = new SyncTransport(output, input);
                         sync.send("FAIL", e.getMessage());
                     }
-                }
-                else
-                {
+                } else {
                     throw new ProtocolException("Unknown command: " + command);
                 }
             } catch (ProtocolException e) {

@@ -99,7 +99,9 @@ public class Shell implements ConfigurationListener {
      * @return                  the resulting process.
      * @exception IOException   thrown if any error occurs while trying to init the command.
      */
-    public static AbstractProcess execute(String command, AbstractFile currentFolder) throws IOException {return execute(command, currentFolder, null);}
+    public static AbstractProcess execute(String command, AbstractFile currentFolder) throws IOException {
+        return execute(command, currentFolder, null);
+    }
 
     /**
      * Executes the specified command in the specified folder.
@@ -118,8 +120,6 @@ public class Shell implements ConfigurationListener {
      * @exception IOException   thrown if any error occurs while trying to init the command.
      */
     public static synchronized AbstractProcess execute(String command, AbstractFile currentFolder, ProcessListener listener) throws IOException {
-        String[] commandTokens;
-
         LOGGER.debug("Executing " + command);
 
         // Adds the command to history.
@@ -128,7 +128,8 @@ public class Shell implements ConfigurationListener {
         // Builds the shell command.
         // Local files use the configuration defined shell. Remote files
         // will execute the command as-is.
-        if (currentFolder.hasAncestor(LocalFile.class)) {
+        String[] commandTokens;
+        if (currentFolder == null || currentFolder.hasAncestor(LocalFile.class)) {
             tokens[tokens.length - 1] = command;
             commandTokens = tokens;
         } else {
@@ -138,9 +139,9 @@ public class Shell implements ConfigurationListener {
 
         // Starts the process.
         if (autoDetectEncoding) {
-            if(listener == null)
+            if (listener == null) {
                 listener = new ShellEncodingListener();
-            else {
+            } else {
                 ProcessListenerList listeners = new ProcessListenerList();
                 listeners.add(listener);
                 listeners.add(new ShellEncodingListener());

@@ -90,26 +90,25 @@ class ProcessOutputMonitor implements Runnable {
      * Empties the content of the stream and notifies the listener.
      */
     public void run() {
-        byte[] buffer; // Where to store the stream's output.
-        int    read;   // Number of bytes read in the last read operation.
-
-        buffer = new byte[512];
+        int read;   // Number of bytes read in the last read operation.
+        byte[] buffer = new byte[512];  // Where to store the stream's output.
 
         // Reads the content of the stream.
         try {
-            while(monitor && ((read = in.read(buffer, 0, buffer.length)) != -1)) {
-                if(listener != null) {
+            while (monitor && ((read = in.read(buffer, 0, buffer.length)) != -1)) {
+                if (listener != null) {
                     listener.processOutput(buffer, 0, read);
-                    if(encoding == null)
+                    if (encoding == null) {
                         listener.processOutput(new String(buffer, 0, read));
-                    else
+                    } else {
                         listener.processOutput(new String(buffer, 0, read, encoding));
+                    }
                 }
             }
         }
         // Ignore this exception: either there's nothing we can do about it anyway,
         // or it's 'normal' (the process has been killed).
-        catch(IOException e) {
+        catch (IOException e) {
             LOGGER.debug("IOException thrown while monitoring process", e);
         }
 
@@ -117,24 +116,26 @@ class ProcessOutputMonitor implements Runnable {
 
         // Closes the stream.
         try {
-	    if(in != null)
-		in.close();
-	}
-        catch(IOException e) {
+	        if (in != null) {
+                in.close();
+            }
+	    } catch(IOException e) {
             LOGGER.debug("IOException thrown while closing process stream", e);
         }
 
         // If a process was set, perform 'cleanup' tasks.
-        if(process != null) {
+        if (process != null) {
             // Waits for the process to die.
-            try {process.waitFor();}
-            catch(Exception e) {
+            try {
+                process.waitFor();
+            } catch(Exception e) {
                 LOGGER.debug("Caught Exception while waiting for process "+process, e);
             }
             // If this process is still being monitored, notifies its
             // listener that it has exited.
-            if(monitor && (listener != null))
+            if (monitor && (listener != null)) {
                 listener.processDied(process.exitValue());
+            }
         }
     }
 
@@ -146,12 +147,13 @@ class ProcessOutputMonitor implements Runnable {
      * </p>
      */
     public void stopMonitoring() {
-	// Closes the input stream.
-	try {in.close();}
-	catch(Exception e) {}
+        // Closes the input stream.
+        try {
+            in.close();
+        } catch(Exception ignore) {}
 
-	// Notifies the main thread that it should stop monitoring the stream.
-	in      = null;
-	monitor = false;
+        // Notifies the main thread that it should stop monitoring the stream.
+        in = null;
+        monitor = false;
     }
 }

@@ -16,28 +16,23 @@ public class JadbDevice {
 
     static JadbDevice createAny(Transport transport) { return new JadbDevice(transport); }
 
-    private JadbDevice(Transport transport)
-    {
+    private JadbDevice(Transport transport) {
         serial = null;
         this.transport = transport;
     }
 
     private void ensureTransportIsSelected() throws IOException, JadbException {
-        if (!selected)
-        {
+        if (!selected) {
             selectTransport();
             selected = true;
         }
     }
 
     private void selectTransport() throws IOException, JadbException {
-        if (serial == null)
-        {
+        if (serial == null) {
             transport.send("host:transport-any");
             transport.verifyResponse();
-        }
-        else
-        {
+        } else {
             transport.send("host:transport:" + serial);
             transport.verifyResponse();
 
@@ -60,8 +55,7 @@ public class JadbDevice {
         ensureTransportIsSelected();
 
 		StringBuilder shellLine = new StringBuilder(command);
-		for (String arg : args)
-		{
+		for (String arg : args)	{
 			shellLine.append(" ");
 			// TODO: throw if arg contains double quote
 			// TODO: quote arg if it contains space
@@ -76,8 +70,7 @@ public class JadbDevice {
         sync.send("LIST", remotePath);
 
         List<RemoteFile> result = new ArrayList<RemoteFile>();
-        for (RemoteFileRecord dent = sync.readDirectoryEntry(); dent != RemoteFileRecord.DONE; dent = sync.readDirectoryEntry())
-        {
+        for (RemoteFileRecord dent = sync.readDirectoryEntry(); dent != RemoteFileRecord.DONE; dent = sync.readDirectoryEntry()) {
             result.add(dent);
         }
         return result;
@@ -89,9 +82,13 @@ public class JadbDevice {
     }
 
     public void push(InputStream source, long lastModified, int mode, RemoteFile remote) throws IOException, JadbException {
+        push(source, lastModified, mode, remote.getPath());
+    }
+
+    public void push(InputStream source, long lastModified, int mode, String remotePath) throws IOException, JadbException {
         ensureTransportIsSelected();
         SyncTransport sync  = transport.startSync();
-        sync.send("SEND", remote.getPath() + "," + Integer.toString(mode));
+        sync.send("SEND", remotePath + "," + Integer.toString(mode));
 
         sync.sendStream(source);
 
@@ -106,9 +103,13 @@ public class JadbDevice {
 	}
 
     public void pull(RemoteFile remote, OutputStream destination) throws IOException, JadbException {
+        pull(remote.getPath(), destination);
+    }
+
+    public void pull(String remoteFilePath, OutputStream destination) throws IOException, JadbException {
         ensureTransportIsSelected();
         SyncTransport sync = transport.startSync();
-        sync.send("RECV", remote.getPath());
+        sync.send("RECV", remoteFilePath);
 
         sync.readChunksTo(destination);
     }
@@ -123,6 +124,14 @@ public class JadbDevice {
 		transport.send(command);
         transport.verifyResponse();
 	}
+
+    public void delete(String remotePath) throws IOException, JadbException {
+        executeShell("rm", remotePath);
+    }
+
+    public void deleteDir(String remotePath) throws IOException, JadbException {
+        executeShell("rmdir", remotePath);
+    }
 	
 	@Override
 	public String toString()
@@ -140,18 +149,23 @@ public class JadbDevice {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null) {
+            return false;
+        }
+		if (getClass() != obj.getClass()) {
+            return false;
+        }
 		JadbDevice other = (JadbDevice) obj;
 		if (serial == null) {
-			if (other.serial != null)
-				return false;
-		} else if (!serial.equals(other.serial))
-			return false;
+			if (other.serial != null) {
+                return false;
+            }
+		} else if (!serial.equals(other.serial)) {
+            return false;
+        }
 		return true;
 	}
 }

@@ -14,13 +14,11 @@ public class JadbConnection {
 	
 	private final Transport main;
 	
-	public JadbConnection() throws IOException
-	{
+	public JadbConnection() throws IOException {
 		this("localhost", DEFAULTPORT);
 	}
 	
-	public JadbConnection(String host, int port) throws IOException
-	{
+	public JadbConnection(String host, int port) throws IOException	{
 		this.host = host;
 		this.port = port;
 				
@@ -36,21 +34,20 @@ public class JadbConnection {
 		main.verifyResponse();
 	}
 
-	public List<JadbDevice> getDevices() throws IOException, JadbException
-	{
+	public List<JadbDevice> getDevices() throws IOException, JadbException {
 		Transport devices = createTransport();
 		
 		devices.send("host:devices");
 		devices.verifyResponse();
 		String body = devices.readString();
+
 		return parseDevices(body);
 	}
 
 	private List<JadbDevice> parseDevices(String body) {
 		String[] lines = body.split("\n");
 		ArrayList<JadbDevice> devices = new ArrayList<JadbDevice>(lines.length);
-		for (String line : lines)
-		{
+		for (String line : lines) {
 			String[] parts = line.split("\t");
             if (parts.length > 1) {
 			    devices.add(new JadbDevice(parts[0], parts[1], main));

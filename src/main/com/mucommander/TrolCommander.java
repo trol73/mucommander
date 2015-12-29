@@ -697,7 +697,15 @@ public class TrolCommander {
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
         }
+
         Profiler.start("init");
+
+        String lang = System.getProperty("user.language");
+        String country = System.getProperty("user.country");
+        if ("tr".equalsIgnoreCase(lang) || "tr".equalsIgnoreCase(country)) {
+            throw new RuntimeException("Unsupported");
+        }
+
         int processors = Runtime.getRuntime().availableProcessors();
         System.out.println("Processors: " + processors);
         //ExecutorService executor = Executors.newFixedThreadPool(processors < 2 ? 2 : processors);
