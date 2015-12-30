@@ -2,6 +2,7 @@ package se.vidstige.jadb;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JadbDevice {
@@ -35,7 +36,6 @@ public class JadbDevice {
         } else {
             transport.send("host:transport:" + serial);
             transport.verifyResponse();
-
         }
     }
 

@@ -40,6 +40,9 @@ public class AdbFile extends ProtocolFile {
     private final RemoteFile remoteFile;
     private List<RemoteFile> childs;
     private AbstractFile parent;
+    private JadbConnection jadbConnection;
+
+    private static FileURL lastModifiedPath;        // FIXME that's a bad way to detect directory changes
 
     /**
      * Creates a new file instance with the given URL.
@@ -58,13 +61,11 @@ public class AdbFile extends ProtocolFile {
             String path = url.getPath();
             if (path.isEmpty() || "\\".equals(path)) {
                 path = "/";
-                System.out.println("root path");
             }
 
             try {
                 List<RemoteFile> files = device.list(path);
                 childs = new ArrayList<>();
-                //System.out.println("Files : " + files);
                 for (RemoteFile rf : files) {
                     if (".".equals(rf.getPath())) {
                         remoteFile = rf;
@@ -75,9 +76,9 @@ public class AdbFile extends ProtocolFile {
             } catch (JadbException e) {
                 e.printStackTrace();
             }
+            closeConnection();
         } else {
             if (remoteFile.isDirectory()) {
-//                System.out.println(">" + childs.size());
                 rebuildChildrenList(url);
             }
         }
@@ -85,12 +86,10 @@ public class AdbFile extends ProtocolFile {
     }
 
     private void rebuildChildrenList(FileURL url) throws IOException {
-        //System.out.println("DIR " + remoteFile.getPath());
         try {
             JadbDevice device = getDevice(url);
             List<RemoteFile> files = device.list("/" + url.getPath());
             childs = new ArrayList<>();
-            //System.out.println("Files : " + files);
             for (RemoteFile rf : files) {
                 if (!".".equals(rf.getPath())) {
                     childs.add(rf);
@@ -99,14 +98,15 @@ public class AdbFile extends ProtocolFile {
         } catch (JadbException e) {
             e.printStackTrace();
         }
-        System.out.println("rebuildChildsList " + getAbsolutePath() + " " + childs.size());
+        closeConnection();
     }
 
     JadbDevice getDevice(FileURL url) throws IOException {
-        JadbConnection connection = new JadbConnection();
+        closeConnection();
+        jadbConnection = new JadbConnection();
         JadbDevice device = null;
         try {
-            List<JadbDevice> devices = connection.getDevices();
+            List<JadbDevice> devices = jadbConnection.getDevices();
             final String host = url.getHost();
             for (JadbDevice dev : devices) {
                 if (dev.getSerial().equalsIgnoreCase(host)) {
@@ -118,6 +118,13 @@ public class AdbFile extends ProtocolFile {
             e.printStackTrace();
         }
         return device;
+    }
+
+    void closeConnection() throws IOException {
+        if (jadbConnection != null) {
+            jadbConnection.close();
+            jadbConnection = null;
+        }
     }
 
 
@@ -249,12 +256,15 @@ public class AdbFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls() throws IOException {
+        if (getURL().equals(lastModifiedPath)) {
+            rebuildChildrenList(lastModifiedPath);
+            lastModifiedPath = null;
+        }
         if (childs == null) {
             return null;
         }
         AbstractFile[] result = new AbstractFile[childs.size()-1];  // skip ".."
         int index = 0;
-System.out.println("LS " + getAbsolutePath() + "   " + childs.size());
         for (RemoteFile rf : childs) {
             if ("..".equals(rf.getName())) {
                 continue;
@@ -264,7 +274,6 @@ System.out.println("LS " + getAbsolutePath() + "   " + childs.size());
             adbFile.parent = this;
             result[index++] = adbFile;
         }
-//    System.out.println("ls " + Arrays.toString(result));
         return result;
     }
 
@@ -301,8 +310,8 @@ System.out.println("LS " + getAbsolutePath() + "   " + childs.size());
     @Override
     public void delete() throws IOException {
         JadbDevice device = getDevice(getURL());
-System.out.println("delete " + getAbsolutePath());
         if (device == null) {
+            closeConnection();
             throw new IOException("file not found: " + getURL());
         }
         try {
@@ -312,11 +321,20 @@ System.out.println("delete " + getAbsolutePath());
                 device.delete(getURL().getPath());
             }
         } catch (JadbException e) {
+            closeConnection();
             e.printStackTrace();
             throw new IOException(e);
         }
+        // TODO    doesn't work without this delay    FIXME
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        closeConnection();
         if (getParent() instanceof AdbFile) {
             AdbFile parent = (AdbFile)getParent();
+            lastModifiedPath = parent.getURL();
             parent.rebuildChildrenList(parent.getURL());
         }
     }
@@ -355,6 +373,7 @@ System.out.println("delete " + getAbsolutePath());
     public void pushTo(AbstractFile destFile) throws IOException {
         JadbDevice device = getDevice(getURL());
         if (device == null) {
+            closeConnection();
             throw new IOException("file not found: " + getURL());
         }
         try {
@@ -362,11 +381,13 @@ System.out.println("delete " + getAbsolutePath());
         } catch (JadbException e) {
             throw new IOException(e);
         }
+        closeConnection();
     }
 
     public void pullFrom(AbstractFile sourceFile) throws IOException {
         JadbDevice device = getDevice(getURL());
         if (device == null) {
+            closeConnection();
             throw new IOException("file not found: " + getURL());
         }
         long lastModified = sourceFile.getDate();
@@ -374,11 +395,19 @@ System.out.println("delete " + getAbsolutePath());
         try {
             device.push(sourceFile.getInputStream(), lastModified, mode, getURL().getPath());
         } catch (JadbException e) {
+            closeConnection();
             e.printStackTrace();
             throw new IOException(e);
         }
+        closeConnection();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (getParent() instanceof AdbFile) {
             AdbFile parent = (AdbFile)getParent();
+            lastModifiedPath = parent.getURL();
             parent.rebuildChildrenList(parent.getURL());
         }
     }

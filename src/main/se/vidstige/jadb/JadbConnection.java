@@ -40,6 +40,7 @@ public class JadbConnection {
 		devices.send("host:devices");
 		devices.verifyResponse();
 		String body = devices.readString();
+		devices.close();
 
 		return parseDevices(body);
 	}

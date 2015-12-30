@@ -31,8 +31,6 @@ public class AdbInputStream extends InputStream {
 
     private static final long MAX_CACHED_SIZE = 10*1024*1024;
 
-private static int count = 0;
-
     private final ByteArrayOutputStream bos;
     private InputStream is;
     private final File tempFile;
@@ -40,7 +38,7 @@ private static int count = 0;
     public AdbInputStream(AdbFile file) throws IOException {
         this.bos = file.getSize() <= MAX_CACHED_SIZE ? new ByteArrayOutputStream() : null;
         this.tempFile = bos == null ? File.createTempFile(file.getName(), ""+System.currentTimeMillis() + "-" + new Random().nextInt(0xffff)) : null;
-count++;
+
         JadbDevice device = file.getDevice(file.getURL());
         if (device == null) {
             throw new IOException("file not found: " + file.getURL());
@@ -53,7 +51,6 @@ count++;
                 throw new IOException(e);
             }
         } else {
-System.out.println("temp file path: " + tempFile.getAbsolutePath());
             try {
                 device.pull(file.getURL().getPath(), new FileOutputStream(tempFile));
             } catch (JadbException e) {
@@ -61,8 +58,6 @@ System.out.println("temp file path: " + tempFile.getAbsolutePath());
                 throw new IOException(e);
             }
         }
-
-System.out.println(">input streams for ADB: " + count);
     }
 
     @Override
@@ -93,8 +88,6 @@ System.out.println(">input streams for ADB: " + count);
         if (tempFile != null) {
             tempFile.delete();
         }
-        count--;
-        System.out.println("<input streams for ADB: " + count);
     }
 
 }

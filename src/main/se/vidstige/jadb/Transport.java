@@ -3,11 +3,14 @@ package se.vidstige.jadb;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 class Transport {
 
 	private final OutputStream outputStream;
 	private final InputStream inputStream;
+
 
 	private Transport(OutputStream outputStream, InputStream inputStream) {
 		this.outputStream = outputStream;
@@ -27,7 +30,12 @@ class Transport {
 	public void verifyResponse() throws IOException, JadbException  {
 		String response = readString(4);
 		if (!"OKAY".equals(response)) {
-            String error = readString();
+			String error;
+			try {
+				error = readString();
+			} catch (Exception e) {
+				error = response;
+			}
             throw new JadbException("command failed: " + error);
         }
 	}
