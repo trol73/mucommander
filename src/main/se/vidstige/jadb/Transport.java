@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Transport {
+	private static final boolean DEBUG = true;
 
 	private final OutputStream outputStream;
 	private final InputStream inputStream;
@@ -52,7 +53,11 @@ class Transport {
 	}
 	
 	public void send(String command) throws IOException {
+		if (DEBUG) {
+			log("command " + command);
+		}
 		OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+		// TODO UTF-8
 		writer.write(getCommandLength(command));
 		writer.write(command);
 		writer.flush();
@@ -68,4 +73,8 @@ class Transport {
         inputStream.close();
         outputStream.close();
     }
+
+	private static void log(String s) {
+		System.out.println("ADB::" + s);
+	}
 }
