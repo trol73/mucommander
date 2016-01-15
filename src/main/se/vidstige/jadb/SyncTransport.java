@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
  */
 public class SyncTransport {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private final DataOutput output;
     private final DataInput input;

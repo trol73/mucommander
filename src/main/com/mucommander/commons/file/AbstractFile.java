@@ -39,7 +39,6 @@ import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.runtime.OsFamily;
-import org.apache.commons.net.imap.IMAPClient;
 
 /**
  * <code>AbstractFile</code> is the superclass of all files.
@@ -704,9 +703,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * <p>A filename has an extension if and only if:<br/>
      * - it contains at least one <code>.</code> character<br/>
-     * - the last <code>.</code> is not the last character of the filename<br/>
-     * - the last <code>.</code> is not the first character of the filename<br/>
-     * If this file has no extension, its full name is returned.</p>
+     * - the last <code>.</code> is not the last character of the filename<br>
+     * - the last <code>.</code> is not the first character of the filename<br>
+     * If this file has no extension, its full name is returned.
      *
      * @return this file's name, without its extension.
      * @see    #getName()
@@ -1391,14 +1390,15 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * @return the file's base name - without its extension, if the filename doesn't have an extension returns the filename as received
      */
-    public String getBaseName() { 
-    	String fileName = getName(); 
-    	int lastDotPos = fileName.lastIndexOf('.');
+    public String getBaseName() {
+        String fileName = getName();
+        int lastDotPos = fileName.lastIndexOf('.');
     	 
-         if(lastDotPos<=0 || lastDotPos==fileName.length()-1)
-             return fileName;
+        if (lastDotPos <= 0 || lastDotPos == fileName.length()-1) {
+            return fileName;
+        }
          
-         return fileName.substring(0, lastDotPos);
+        return fileName.substring(0, lastDotPos);
     }
     
     /**
@@ -1973,7 +1973,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * This method used for the file viewer and editor etc. to prevent multiple re-opening of files (and archives).
      *
      * @param bufferSize minimum size of buffer for <code>PushbackInputStream</code>.
-     * @return
+     * @return he stream which can be re-used for file reading
      * @throws IOException
      */
     public PushbackInputStream getPushBackInputStream(final int bufferSize) throws IOException {

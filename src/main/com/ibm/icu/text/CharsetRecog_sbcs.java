@@ -434,7 +434,7 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
                     lang = ngl.fLang;
                 }
             }
-            return bestConfidenceSoFar <= 0 ? null : new CharsetMatch(det, this, bestConfidenceSoFar, name, lang);
+            return bestConfidenceSoFar <= 0 ? null : new CharsetMatch(det, bestConfidenceSoFar, name, lang);
         }
 
             
@@ -529,7 +529,7 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
                     lang = ngl.fLang;
                 }
             }
-            return bestConfidenceSoFar <= 0 ? null : new CharsetMatch(det, this, bestConfidenceSoFar, name, lang);
+            return bestConfidenceSoFar <= 0 ? null : new CharsetMatch(det, bestConfidenceSoFar, name, lang);
         }
 
         public String getName()
@@ -729,12 +729,11 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
         {
             String name = det.fC1Bytes ?  "windows-1253" : "ISO-8859-7";
             int confidence = match(det, ngrams, byteMap);
-            return confidence == 0 ? null : new CharsetMatch(det, this, confidence, name, "el");
+            return confidence == 0 ? null : new CharsetMatch(det, confidence, name, "el");
         }
     }
     
-    abstract static class CharsetRecog_8859_8 extends CharsetRecog_sbcs
-    {
+    abstract static class CharsetRecog_8859_8 extends CharsetRecog_sbcs {
         protected static byte[] byteMap = {
             (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, 
             (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, (byte) 0x20, 
@@ -795,11 +794,10 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
             return "he";
         }
         
-        public CharsetMatch match(CharsetDetector det)
-        {
+        public CharsetMatch match(CharsetDetector det) {
             String name = det.fC1Bytes ? "windows-1255" : "ISO-8859-8-I";
             int confidence = match(det, ngrams, byteMap);
-            return confidence == 0 ? null : new CharsetMatch(det, this, confidence, name, "he");
+            return confidence == 0 ? null : new CharsetMatch(det, confidence, name, "he");
         }
     }
     
@@ -821,7 +819,7 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
         {
             String name = det.fC1Bytes ? "windows-1255" : "ISO-8859-8";
             int confidence = match(det, ngrams, byteMap);
-            return confidence == 0 ? null : new CharsetMatch(det, this, confidence, name, "he");
+            return confidence == 0 ? null : new CharsetMatch(det, confidence, name, "he");
 
         }
     }
@@ -887,7 +885,7 @@ abstract class CharsetRecog_sbcs extends CharsetRecognizer {
         {
             String name = det.fC1Bytes ? "windows-1254" : "ISO-8859-9";
             int confidence = match(det, ngrams, byteMap);
-            return confidence == 0 ? null : new CharsetMatch(det, this, confidence, name, "tr");
+            return confidence == 0 ? null : new CharsetMatch(det, confidence, name, "tr");
         }
     }
     

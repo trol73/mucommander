@@ -18,15 +18,15 @@ public class RemoteFile {
     }
 
     public int getSize() {
-        throw new NotImplementedException();
+        throw new RuntimeException("not implemented");
     }
 
     public long getLastModified() {
-        throw new NotImplementedException();
+        throw new RuntimeException("not implemented");
     }
 
     public boolean isDirectory() {
-        throw new NotImplementedException();
+        throw new RuntimeException("not implemented");
     }
 
     public String getPath() {

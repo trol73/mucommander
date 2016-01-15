@@ -703,8 +703,7 @@
                repackageclasses=""
                target="${source.version}"
                verbose="true"
-               preverify="true"
-               >
+               preverify="true">
             <injar  name="${jar.normal}"/>
             <outjar name="${jar.obf}"/>
 

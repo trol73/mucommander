@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Transport {
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private final OutputStream outputStream;
 	private final InputStream inputStream;
@@ -48,16 +48,21 @@ class Transport {
         return new String(responseBuffer, Charset.forName("utf-8"));
 	}
 
-	public String getCommandLength(String command) {
-		return String.format("%04x", command.length());
+	private String getCommandLength(String command) throws IOException {
+		//int len = command.length();
+		try {
+			int len = command.getBytes("utf-8").length;
+			return String.format("%04x", len);
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("can't get command length", e);
+		}
 	}
 	
 	public void send(String command) throws IOException {
 		if (DEBUG) {
 			log("command " + command);
 		}
-		OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-		// TODO UTF-8
+		OutputStreamWriter writer = new OutputStreamWriter(outputStream, "utf-8");
 		writer.write(getCommandLength(command));
 		writer.write(command);
 		writer.flush();

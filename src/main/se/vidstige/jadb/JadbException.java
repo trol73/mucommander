@@ -6,6 +6,11 @@ public class JadbException extends Exception {
 
 	public JadbException(String message) {
 		super(message);
+
+	}
+
+	public JadbException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

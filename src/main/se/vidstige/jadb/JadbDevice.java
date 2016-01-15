@@ -52,13 +52,16 @@ public class JadbDevice {
 	}
 
 	public void executeShell(String command, String ... args) throws IOException, JadbException {
-        ensureTransportIsSelected();
+		ensureTransportIsSelected();
 
 		StringBuilder shellLine = new StringBuilder(command);
 		for (String arg : args)	{
 			shellLine.append(" ");
+			// quote arg if it contains space
+			if (arg.contains(" ")) {
+				arg = arg.replace(" ", "\\ ");
+			}
 			// TODO: throw if arg contains double quote
-			// TODO: quote arg if it contains space
 			shellLine.append(arg);	
 		}
 		send("shell:" + shellLine.toString());
@@ -132,6 +135,14 @@ public class JadbDevice {
     public void deleteDir(String remotePath) throws IOException, JadbException {
         executeShell("rmdir", remotePath);
     }
+
+	public void makeDir(String path) throws IOException, JadbException {
+		executeShell("mkdir", path);
+	}
+
+	public void rename(String from, String to) throws IOException, JadbException {
+		executeShell("mv", from, to);
+	}
 	
 	@Override
 	public String toString()

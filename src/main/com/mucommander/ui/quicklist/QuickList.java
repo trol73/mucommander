@@ -45,7 +45,9 @@ import com.mucommander.ui.quicklist.item.QuickListHeaderItem;
  */
 
 public abstract class QuickList extends JPopupMenu implements FocusListener {
+
 	private static final int PADDING = 2;
+
 	protected QuickListHeaderItem headerMenuItem;
 	private List<Component> items = new ArrayList<>();
 	private QuickListContainer container;
@@ -70,9 +72,9 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 	 */
 	protected abstract boolean prepareForShowing(QuickListContainer container);
 
-    @SuppressWarnings("deprecated")
+@SuppressWarnings("deprecated")
 	public void show() {
-        
+
 		if (prepareForShowing(container)) {
 			// Note: the actual popup menu's size is not known at this stage so we use the component's preferred size
 	        Dimension dim = getPreferredSize();
