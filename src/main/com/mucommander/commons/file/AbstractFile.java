@@ -902,9 +902,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         AbstractFile lastAncestor;
 
         do {
-            if (abstractFileClass.isAssignableFrom(ancestor.getClass()))
+            if (abstractFileClass.isAssignableFrom(ancestor.getClass())) {
                 return (T) ancestor;
-
+            }
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
         } while(lastAncestor != ancestor);
@@ -956,10 +956,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             if (abstractFileClass.isAssignableFrom(ancestor.getClass())) {
                 return true;
             }
-
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        } while(lastAncestor != ancestor);
+        } while (lastAncestor != ancestor);
 
         return false;
     }
@@ -1104,8 +1103,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // Remove trailing slash if path is not '/' or trailing backslash if path does not end with ':\'
         // (Reminder: C: is C's current folder, while C:\ is C's root)
         String separator = getSeparator();
-        if(path.endsWith(separator)
-           && !((separator.equals("/") && path.length()==1) || (separator.equals("\\") && path.charAt(path.length()-2)==':')))
+        if (path.endsWith(separator)
+           && !((separator.equals("/") && path.length() == 1) || (separator.equals("\\") && path.charAt(path.length()-2)==':')))
             path = path.substring(0, path.length()-1);
         return path;
     }
@@ -1131,26 +1130,26 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         // Throw an exception of a specific kind if the source and destination files refer to the same file
         boolean filesEqual = this.equalsCanonical(destFile);
-        if(filesEqual) {
+        if (filesEqual) {
             // If case variations are allowed and the destination filename is a case variation of the source,
             // do not throw an exception.
-            if(allowCaseVariations) {
+            if (allowCaseVariations) {
                 String sourceFileName = getName();
                 String destFileName = destFile.getName();
-                if(sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName))
+                if (sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName))
                     isAllowedCaseVariation = true;
             }
 
-            if(!isAllowedCaseVariation)
+            if (!isAllowedCaseVariation)
                 throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
         }
 
         // Throw an exception if source is a parent of destination
-        if(!filesEqual && isParentOf(destFile))      // Note: isParentOf(destFile) returns true if both files are equal
+        if (!filesEqual && isParentOf(destFile))      // Note: isParentOf(destFile) returns true if both files are equal
             throw new FileTransferException(FileTransferException.SOURCE_PARENT_OF_DESTINATION);
 
         // Throw an exception if the source file does not exist
-        if(!exists())
+        if (!exists())
             throw new FileTransferException(FileTransferException.FILE_NOT_FOUND);
     }
 
@@ -1174,9 +1173,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #checkCopyPrerequisites(AbstractFile, boolean)
      */
     protected final void checkCopyRemotelyPrerequisites(AbstractFile destFile, boolean allowCaseVariations, boolean allowDifferentHosts) throws IOException {
-        if(!fileURL.schemeEquals(fileURL)
-        || !destFile.getTopAncestor().getClass().equals(getTopAncestor().getClass())
-        || (!allowDifferentHosts && !destFile.getURL().hostEquals(fileURL)))
+        if (!fileURL.schemeEquals(fileURL)
+            || !destFile.getTopAncestor().getClass().equals(getTopAncestor().getClass())
+            || (!allowDifferentHosts && !destFile.getURL().hostEquals(fileURL)))
             throw new IOException();
 
         checkCopyPrerequisites(destFile, allowCaseVariations);
@@ -1278,7 +1277,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             AbstractFile children[] = file.ls();
             for (AbstractFile child : children) {
                 deleteRecursively(child);
-        }
+            }
         }
 
         file.delete();
@@ -1373,8 +1372,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         int lastDotPos = filename.lastIndexOf('.');
 
         int len;
-        if(lastDotPos<=0 || lastDotPos==(len=filename.length())-1)
+        if (lastDotPos <= 0 || lastDotPos==(len=filename.length())-1) {
             return null;
+        }
 
         return filename.substring(lastDotPos+1, len);
     }
@@ -1383,9 +1383,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     /**
      * Returns the given filename without its extension (base name). if the filename doesn't have an extension, returns the filename as received
      *
-     * <p>A filename has an extension if and only if:<br/>
-     * - it contains at least one <code>.</code> character<br/>
-     * - the last <code>.</code> is not the last character of the filename<br/>
+     * <p>A filename has an extension if and only if:<br>
+     * - it contains at least one <code>.</code> character<br>
+     * - the last <code>.</code> is not the last character of the filename<br>
      * - the last <code>.</code> is not the first character of the filename</p>
      *
      * @return the file's base name - without its extension, if the filename doesn't have an extension returns the filename as received
@@ -1445,8 +1445,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #equalsCanonical(Object)
      */
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof AbstractFile))
+        if (o == null || !(o instanceof AbstractFile)) {
             return false;
+        }
 
         return getURL().equals(((AbstractFile)o).getURL(), true, true);
     }
@@ -1471,8 +1472,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #equals(Object)
      */
     public boolean equalsCanonical(Object o) {
-        if(o==null || !(o instanceof AbstractFile))
+        if (o == null || !(o instanceof AbstractFile)) {
             return false;
+        }
 
         // TODO: resolve hostnames ?
 
@@ -1612,6 +1614,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * will be returned.
      *
      * @return information about the owner of this file
+     * @throws UnsupportedFileOperationException
      */
     public abstract short getReplication() throws UnsupportedFileOperationException;
 
@@ -1624,6 +1627,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * will be returned.
      *
      * @return information about the owner of this file
+     * @throws UnsupportedFileOperationException
      */
     public abstract long getBlocksize() throws UnsupportedFileOperationException;
 
@@ -1763,11 +1767,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *   <li>this file cannot be written</li>
      *   <li>an I/O error occurs</li>
      * </ul>
-     * </p>
      *
      * <p>This {@link FileOperation#WRITE_FILE file operation} may or may not be supported by the underlying filesystem
      * -- {@link #isFileOperationSupported(FileOperation)} can be called to find out if it is. If the operation isn't
-     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.</p>
+     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.
      *
      * @return an <code>OuputStream</code> to write the contents of this file
      * @throws IOException in any of the cases listed above
@@ -1787,11 +1790,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *   <li>this file cannot be written</li>
      *   <li>an I/O error occurs</li>
      * </ul>
-     * </p>
      *
      * <p>This {@link FileOperation#APPEND_FILE file operation} may or may not be supported by the underlying filesystem
      * -- {@link #isFileOperationSupported(FileOperation)} can be called to find out if it is. If the operation isn't
-     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.</p>
+     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.
      *
      * @return an <code>OuputStream</code> to write the contents of this file
      * @throws IOException in any of the cases listed above
@@ -1835,7 +1837,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * <p>This {@link FileOperation#RANDOM_WRITE_FILE file operation} may or may not be supported by the underlying filesystem
      * -- {@link #isFileOperationSupported(FileOperation)} can be called to find out if it is. If the operation isn't
-     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.</p>
+     * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.
      *
      * @return a <code>RandomAccessOutputStream</code> to write the contents of this file with random access
      * @throws IOException in any of the cases listed above
@@ -1957,7 +1959,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * returned Object type may change over time, if the underlying API used to provide access to the filesystem
      * changes, so this method should be used only as a last resort.
      *
-     * <p>If the implemented filesystem has no such Object, <code>null</code> is returned.</p>
+     * <p>If the implemented filesystem has no such Object, <code>null</code> is returned.
      *
      * @return the file Object of the underlying API providing access to the filesystem, <code>null</code> if there
      * is none
