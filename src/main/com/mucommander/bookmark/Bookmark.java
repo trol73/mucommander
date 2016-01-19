@@ -22,14 +22,14 @@ package com.mucommander.bookmark;
 /**
  * Represents a bookmark.
  * <p>Bookmarks are simple name/location pairs:
- *   <ul>
- *     <li>The name is a String describing the bookmark.</li>
- *     <li>
- *       The location should designate a path or file URL. The designated location may not exist or may not even be
- *       a valid path or URL, so it is up to classes that call {@link #getLocation()} to deal with it appropriately.
- *     </li>
- *   </ul>
- * </p>
+ * <ul>
+ *   <li>The name is a String describing the bookmark.</li>
+ *   <li>
+ *     The location should designate a path or file URL. The designated location may not exist or may not even be
+ *     a valid path or URL, so it is up to classes that call {@link #getLocation()} to deal with it appropriately.
+ *   </li>
+ * </ul>
+ *
  * @author Maxence Bernard
  */
 public class Bookmark implements Cloneable {

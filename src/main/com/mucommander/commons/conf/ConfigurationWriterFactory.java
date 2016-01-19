@@ -30,7 +30,7 @@ import java.io.Writer;
  *    public ConfigurationWriter getWriterInstance() {return new MyWriter();}
  * }
  * </pre>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public abstract class ConfigurationWriterFactory<T extends ConfigurationBuilder> {
@@ -67,7 +67,7 @@ public abstract class ConfigurationWriterFactory<T extends ConfigurationBuilder>
      * Creates an instance of {@link ConfigurationBuilder}.
      * <p>
      * The returned builder instance will serialize configuration events to the specified writer.
-     * </p>
+     *
      * @param  out                          where to write the configuration data.
      * @return                              an instance of {@link ConfigurationBuilder}.
      * @throws WriterConfigurationException if the factory wasn't properly configured.

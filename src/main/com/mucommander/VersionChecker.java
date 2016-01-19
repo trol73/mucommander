@@ -56,7 +56,7 @@ import com.mucommander.commons.file.FileFactory;
  *    }
  * catch(Exception e) {System.err.println("An error occured.");}
  * </pre>
- * </p>
+ *
  * <p>
  * muCommander is considered up to date if:<br>
  * - the {@link com.mucommander.RuntimeConstants#VERSION local version} is
@@ -68,7 +68,7 @@ import com.mucommander.commons.file.FileFactory;
  * versions of the current release, and those might be updated almost daily. Comparing dates
  * makes it possible to automate the whole process without having to worry about out version
  * numbers growing silly.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class VersionChecker extends DefaultHandler {
@@ -200,7 +200,7 @@ public class VersionChecker extends DefaultHandler {
      * Returns the date at which the latest version of muCommander has been released.
      * <p>
      * The date format is YYYYMMDD.
-     * </p>
+     *
      * @return the date at which the latest version of muCommander has been released.
      */
     public String getReleaseDate() {return releaseDate;}

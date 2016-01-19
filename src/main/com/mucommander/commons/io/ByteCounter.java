@@ -58,6 +58,7 @@ public class ByteCounter {
 
     /**
      * Return the number of bytes which have been accounted for.
+     * @return the number of bytes which have been accounted for
      */
     public synchronized long getByteCount() {
         if (addedCounter != null) {

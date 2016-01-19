@@ -29,11 +29,11 @@ import java.util.Random;
  * <p>An LRU (Least Recently Used) cache can contain a fixed number of items (the capacity). When capacity is reached,
  * the least recently used is removed. Each object retrieved with the {@link #get(Object) get()} method
  * makes the requested item the most recently used one. Similarly, each object inserted using the 
- * {@link #add(Object, Object) add()} method makes the added item the most recently used one.</p>
+ * {@link #add(Object, Object) add()} method makes the added item the most recently used one.
  *
  * <p>This LRUCache provides an optional feature : the ability to assign a time-to-live for each or part of the
  * items added. When the time-to-live of an item expires, the item is automatically removed from the cache and won't
- * be returned by the {@link #get(Object) get()} method anymore.</p>
+ * be returned by the {@link #get(Object) get()} method anymore.
  *
  * <p><b>Implementation note:</b> checking for expired items can be an expensive operation so it doesn't have
  * to be done as soon as the item has expired, the expired items can live a bit longer in the cache if necessary.
@@ -42,7 +42,7 @@ import java.util.Random;
  * <li>as soon as an item has expired, it cannot be returned by {@link #get(Object) get()}.
  * <li>when cache capacity is reached (cache is full) and a new item needs to be added, any expired item must be 
  * immediately removed. This prevents least recently used items from being removed unnecessarily.
- * </ul></p>
+ * </ul>
  *
  * @author Maxence Bernard
  */
@@ -73,6 +73,7 @@ public abstract class LRUCache<K, V> {
 
     /**
      * Returns the maximum number of items this cache can contain.
+     * @return the maximum number of items this cache can contain
      */
     public int getCapacity() {
         return capacity;
@@ -111,7 +112,7 @@ public abstract class LRUCache<K, V> {
      * <ul>
      * <li>the given key doesn't exist
      * <li>the cached value corresponding to the key has expired
-     * </ul></p>
+     * </ul>
      *
      * @param key the cached item's key
      * @return the cached value corresponding to the specified key, or <code>null</code> if a value could not
@@ -126,7 +127,7 @@ public abstract class LRUCache<K, V> {
      * <ul>
      * <li>any object with a past expiration date will be removed<
      * <li>if no expired item could be removed, the least recently used item will be removed
-     * </ul></p>
+     * </ul>
      *
      * @param key the key for the object to store
      * @param value the value to cache
@@ -154,6 +155,8 @@ public abstract class LRUCache<K, V> {
      * Returns the current size of this cache, i.e. the number of cached elements it contains.
      * <br><b>Note: </b>Some items that have expired and have not yet been removed might be accounted for
      * in the returned size.
+     *
+     * @return the current size of this cache
      */
     public abstract int size();
 

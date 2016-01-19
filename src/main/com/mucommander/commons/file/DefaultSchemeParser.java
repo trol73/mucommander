@@ -32,7 +32,7 @@ import java.net.URLDecoder;
  * can be turned on or off in the constructor, allowing this parser to be used with most schemes.
  *
  * <p>This parser can not only parse URLs but also local absolute paths and UNC paths. Upon parsing, these paths are
- * turned into equivalent, fully qualified URLs.</p>
+ * turned into equivalent, fully qualified URLs.
  *
  * <h3>Local paths</h3>
  * <p>
@@ -46,7 +46,6 @@ import java.net.URLDecoder;
  *  <li>Under a Unix-style OS (Linux, Mac OS X, Solaris...), <code>C:\Windows\System32\</code> will be parsed and turned
  * into a FileURL whose path separator is "\" and representation <code>file://localhost/C:\Windows\System32\</code></li>
  * </ul>
- * </p>
  *
  * <h3>UNC paths</h3>
  * <p>
@@ -59,7 +58,6 @@ import java.net.URLDecoder;
  *  <li>On any other kind of OS, <code>\\Server\Volume\File</code> will be turned into a FileURL whose string
  * representation is <code>smb://Server/Volume/File</code></li>
  * </ul>
- * </p>
  *
  * @see PathCanonizer
  * @author Maxence Bernard

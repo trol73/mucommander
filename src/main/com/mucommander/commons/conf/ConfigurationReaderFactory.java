@@ -28,7 +28,7 @@ package com.mucommander.commons.conf;
  *    public ConfigurationReader getReaderInstance() {return new MyReader();}
  * }
  * </pre>
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    ConfigurationReader
  */

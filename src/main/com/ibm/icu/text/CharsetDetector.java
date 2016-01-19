@@ -22,17 +22,16 @@ import java.util.List;
  * The result of the detection operation is a list of possibly matching
  * charsets, or, for simple use, you can just ask for a Java Reader that
  * will will work over the input data.
- * <p/>
+ * <p>
  * Character set detection is at best an imprecise operation.  The detection
  * process will attempt to identify the charset that best matches the characteristics
  * of the byte data, but the process is partly statistical in nature, and
  * the results can not be guaranteed to always be correct.
- * <p/>
+ * <p>
  * For best accuracy in charset detection, the input data should be primarily
  * in a single language, and a minimum of a few hundred bytes worth of plain text
  * in the language are needed.  The detection process will attempt to
  * ignore html or xml style markup that could otherwise obscure the content.
- * <p/>
  *
  * stable ICU 3.4
  */
@@ -105,8 +104,8 @@ public class CharsetDetector {
      * @param in the input text of unknown encoding
      * 
      * @return This CharsetDetector
-	  *
-	  * @throws IOException
+     *
+	 * @throws IOException if an I/O error occurs.
      *
      */
     public CharsetDetector setText(InputStream in) throws IOException {
@@ -222,8 +221,8 @@ public class CharsetDetector {
      *
      * @param declaredEncoding  A declared encoding for the data, if available,
      *           or null or an empty string if none is available.
-	  *
-	  * @return Reader to access the converted input data
+     *
+	 * @return Reader to access the converted input data
      *
      */
     public Reader getReader(InputStream in, String declaredEncoding) {
@@ -256,8 +255,8 @@ public class CharsetDetector {
      *
      * @param declaredEncoding  A declared encoding for the data, if available,
      *           or null or an empty string if none is available.
-	  *
-	  * @return
+     *
+	 * @return a String containing the converted input data
      *
      */
     public String getString(byte[] in, String declaredEncoding) {

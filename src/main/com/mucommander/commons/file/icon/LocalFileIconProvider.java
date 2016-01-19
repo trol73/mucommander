@@ -21,9 +21,7 @@ package com.mucommander.commons.file.icon;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.ui.icon.IconManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +35,7 @@ import java.io.IOException;
  * requests for local file icons to {@link #getLocalFileIcon(com.mucommander.commons.file.impl.local.LocalFile, com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.
  * On the other hand, requests for non-local file icons are transformed to local ones, by creating a local temporary
  * file with the same name (best effort) and extension (guaranteed) as the non-local file, and passes on the file
- * to {@link #getLocalFileIcon(com.mucommander.commons.file.impl.local.LocalFile, com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.</p>
+ * to {@link #getLocalFileIcon(com.mucommander.commons.file.impl.local.LocalFile, com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.
  *
  * @author Maxence Bernard
  */
@@ -121,10 +119,10 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
      * <p>The specified <code>Dimension</code> is used as a hint at the preferred icon's resolution; there is
      * absolutely no guarantee that the returned <code>Icon</code> will indeed have this resolution. This dimension is
      * only used to choose between different resolutions should more than one resolution be available, and return the
-     * one that most closely matches the specified one.<br/>
+     * one that most closely matches the specified one.<br>
      * This method is not expected to perform any rescaling (either up or down), returned resolutions should only be
      * 'native' icon resolutions. For example, if this provider is able to create icons both in 16x16 and 32x32
-     * resolutions, and a 48x48 resolution is preferred, the 32x32 resolution should be favored for the returned icon.</p>
+     * resolutions, and a 48x48 resolution is preferred, the 32x32 resolution should be favored for the returned icon.
      *
      * @param localFile the LocalFile instance for which an icon is requested
      * @param originalFile the AbstractFile for which an icon was originally requested

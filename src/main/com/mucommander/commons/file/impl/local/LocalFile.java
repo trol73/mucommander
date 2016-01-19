@@ -35,10 +35,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.AclEntry;
-import java.nio.file.attribute.AclFileAttributeView;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.DosFileAttributeView;
 import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.UserPrincipal;
@@ -47,9 +43,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
@@ -191,8 +184,9 @@ public class LocalFile extends ProtocolFile {
             String path = fileURL.getPath();
 
             // Remove the leading '/' for Windows-like paths
-            if(USES_ROOT_DRIVES)
+            if (USES_ROOT_DRIVES) {
                 path = path.substring(1, path.length());
+            }
             
             // create the java.io.File instance and throw an exception if the path is not absolute.
             file = new File(path);
@@ -214,7 +208,7 @@ public class LocalFile extends ProtocolFile {
             // Remove the leading '/' for Windows-like paths
             if (USES_ROOT_DRIVES) {
                 absPath = absPath.substring(1, absPath.length());
-        }
+            }
         }
 
         this.file = file;
@@ -234,10 +228,7 @@ public class LocalFile extends ProtocolFile {
      */
     public static AbstractFile getUserHome() {
         String userHomePath = System.getProperty("user.home");
-        if(userHomePath==null)
-            return null;
-
-        return FileFactory.getFile(userHomePath);
+        return userHomePath == null ? null : FileFactory.getFile(userHomePath);
     }
 
     /**
@@ -252,7 +243,7 @@ public class LocalFile extends ProtocolFile {
      */
     public long[] getVolumeInfo() throws IOException {
         // Under Java 1.6 and up, use the (new) java.io.File methods
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             return new long[] {
                 getTotalSpace(),
                 getFreeSpace()
@@ -403,9 +394,9 @@ public class LocalFile extends ProtocolFile {
 //                    dfInfo[1] = struct.f_bfree * (long)struct.f_frsize;
 //                }
             }
-        }
-        finally {
-            if(br!=null)
+        } finally {
+            // TODO use autoclose
+            if (br!=null)
                 try { br.close(); } catch(IOException e) {}
         }
 
@@ -446,9 +437,7 @@ public class LocalFile extends ProtocolFile {
      * @return <code>true</code> if the underlying local filesystem uses drives assigned to letters
      */
     public static boolean hasRootDrives() {
-        return IS_WINDOWS
-            || OsFamily.OS_2.isCurrent()
-            || "\\".equals(SEPARATOR);
+        return IS_WINDOWS || OsFamily.OS_2.isCurrent() || "\\".equals(SEPARATOR);
     }
 
 
@@ -472,10 +461,9 @@ public class LocalFile extends ProtocolFile {
 
         // Add Mac OS X's /Volumes subfolders and not file roots ('/') since Volumes already contains a named link
         // (like 'Hard drive' or whatever silly name the user gave his primary hard disk) to /
-        if(OsFamily.MAC_OS_X.isCurrent()) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             addMacOSXVolumes(volumesV);
-        }
-        else {
+        } else {
             // Add java.io.File's root folders
             addJavaIoFileRoots(volumesV);
 
@@ -486,8 +474,9 @@ public class LocalFile extends ProtocolFile {
 
         // Add home folder, if it is not already present in the list
         AbstractFile homeFolder = getUserHome();
-        if(!(homeFolder==null || volumesV.contains(homeFolder)))
+        if (!(homeFolder == null || volumesV.contains(homeFolder))) {
             volumesV.add(homeFolder);
+        }
 
         AbstractFile volumes[] = new AbstractFile[volumesV.size()];
         volumesV.toArray(volumes);
@@ -529,21 +518,18 @@ public class LocalFile extends ProtocolFile {
 
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream("/proc/mounts")));
-            StringTokenizer st;
             String line;
-            AbstractFile file;
-            String mountPoint, fsType;
-            boolean knownFS;
+
             // read each line in file and parse it
             while ((line=br.readLine())!=null) {
                 line = line.trim();
                 // split line into tokens separated by " \t\n\r\f"
                 // tokens are: device, mount_point, fs_type, attributes, fs_freq, fs_passno
-                st = new StringTokenizer(line);
+                StringTokenizer st = new StringTokenizer(line);
                 st.nextToken();
-                mountPoint = st.nextToken().replace("\\040", " ");
-                fsType = st.nextToken();
-                knownFS = false;
+                String mountPoint = st.nextToken().replace("\\040", " ");
+                String fsType = st.nextToken();
+                boolean knownFS = false;
                 for (String fs : KNOWN_UNIX_FS) {
                     if (fs.equals(fsType)) {
                         // this is really known physical FS
@@ -553,21 +539,20 @@ public class LocalFile extends ProtocolFile {
                 }
 
                 if (knownFS) {
-                    file = FileFactory.getFile(mountPoint);
-                    if(file!=null && !v.contains(file))
+                    AbstractFile file = FileFactory.getFile(mountPoint);
+                    if (file != null && !v.contains(file)) {
                         v.add(file);
+                    }
                 }
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
         	logger.warn("Error parsing /proc/mounts entries", e);
-        }
-        finally {
-            if(br != null) {
+        } finally {
+            // TODO use autoclose
+            if (br != null) {
                 try {
                     br.close();
-                }
-                catch(IOException e) {}
+                } catch(IOException e) {}
             }
         }
     }
@@ -596,8 +581,8 @@ public class LocalFile extends ProtocolFile {
                         v.add(0, folder);
                     } else {
                         v.add(folder);
+                    }
                 }
-        }
             }
         } catch(IOException e) {
         	logger.warn("Can't get /Volumes subfolders", e);
@@ -659,7 +644,7 @@ public class LocalFile extends ProtocolFile {
 
     		// if GetFileAttributes() fails we try FindFirstFile() as fallback
     		// such a case would be pagefile.sys
-    		if(attributes == Kernel32API.INVALID_FILE_ATTRIBUTES) {
+    		if (attributes == Kernel32API.INVALID_FILE_ATTRIBUTES) {
     			Kernel32API.FindFileHandle findFileHandle = null;
     			Kernel32API.WIN32_FIND_DATA findFileData = new Kernel32API.WIN32_FIND_DATA();        		
 
@@ -696,7 +681,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!file.setLastModified(lastModified)) {
             throw new IOException();
-    }
+        }
     }
 		
     @Override
@@ -758,7 +743,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!success) {
             throw new IOException();
-    }
+        }
     }
 //    private String getOwnerPosix() {
 //        Path path = Paths.get(file.toURI());
@@ -1111,12 +1096,11 @@ public class LocalFile extends ProtocolFile {
 
         int nbFiles = files.length;
         AbstractFile children[] = new AbstractFile[nbFiles];
-        FileURL childURL;
 
         for(int i=0; i<nbFiles; i++) {
             // Clone the FileURL of this file and set the child's path, this is more efficient than creating a new
             // FileURL instance from scratch.
-            childURL = (FileURL)fileURL.clone();
+            FileURL childURL = (FileURL)fileURL.clone();
 
 			childURL.setPath(absPath+SEPARATOR+files[i].getName());
 
@@ -1159,7 +1143,7 @@ public class LocalFile extends ProtocolFile {
             matcher.reset();
             if (matcher.find()) {
                 return FileFactory.getFile(matcher.group());
-        }
+            }
         }
 
         return super.getRoot();
@@ -1189,7 +1173,7 @@ public class LocalFile extends ProtocolFile {
         // If this file is itself a volume, return it.
         int bestDepth = -1;
         int bestMatch = -1;
-        int depth;
+
         String thisPath = getAbsolutePath(true);
 
         for (int i=0; i < volumes.length; i++) {
@@ -1199,7 +1183,7 @@ public class LocalFile extends ProtocolFile {
             if (thisPath.equals(volumePath)) {
                 return this;
             } else if (thisPath.startsWith(volumePath)) {
-                depth = PathUtils.getDepth(volumePath, volume.getSeparator());
+                int depth = PathUtils.getDepth(volumePath, volume.getSeparator());
                 if (depth > bestDepth) {
                     bestDepth = depth;
                     bestMatch = i;
@@ -1383,18 +1367,18 @@ public class LocalFile extends ProtocolFile {
         public void setLength(long newLength) throws IOException {
             long currentLength = getLength();
 
-            if(newLength==currentLength)
+            if (newLength == currentLength) {
                 return;
+            }
 
             long currentPos = channel.position();
 
-            if(newLength<currentLength) {
+            if (newLength<currentLength) {
                 // Truncate the file and position the offset to the new EOF if it was beyond
                 channel.truncate(newLength);
                 if(currentPos>newLength)
                     channel.position(newLength);
-            }
-            else {
+            } else {
                 // Expand the file by positionning the offset at the new EOF and writing a byte, and reposition the
                 // offset to where it was
                 channel.position(newLength-1);      // Note: newLength cannot be 0

@@ -28,9 +28,9 @@ import java.util.*;
  * A <code>Configuration</code> instance's main goal is to act as a configuration data repository.
  * Once created, it can be used to {@link #getVariable(String) retrieve}, {@link #removeVariable(String) delete}
  * and {@link #setVariable(String,String) set} configuration variables.
- * </p>
- * <p>
+ *
  * <h3>Naming conventions</h3>
+ * <p>
  * Configuration variable names follow the same convention as Java System properties: a serie of strings
  * separated by periods. By convention, all but the last string are called configuration sections, while
  * the last one is the variable's name. When we refer to a variable's fully qualified name, we're talking
@@ -38,9 +38,9 @@ import java.util.*;
  * For example, <code>startup_folder.right.last_folder</code> is interpreted as a variable called
  * <code>last_folder</code> contained in a section called <code>right</code>, itself contained in
  * another section called <code>startup_folder</code>.<br>
- * </p>
- * <p>
+ *
  * <h3>Variable types</h3>
+ * <p>
  * While the <code>com.mucommander.commons.conf</code> really only handles one type of variables, strings, it offers
  * tools to cast them as primitive Java types (int, long, float, double, boolean). This is done through the use
  * of the various primitive types' class implementation <code>parseXXX</code> method.<br>
@@ -54,16 +54,16 @@ import java.util.*;
  *   <li>Double: <code>0</code></li>
  *   <li>Boolean: <code>false</code></li>
  * </ul>
- * </p>
- * <p>
+ *
  * <h3>Configuration file format</h3>
+ * <p>
  * By default, configuration data is assumed to be in the standard muCommander file format (described in
  * {@link XmlConfigurationReader}). However, application writers can modify that to any format they want
  * through the {@link #setReaderFactory(ConfigurationReaderFactory) setReaderFactory} and
  * {@link #setWriterFactory(ConfigurationWriterFactory) setWriterFactory} methods.
- * </p>
- * <p>
+ *
  * <h3>Configuration data location</h3>
+ * <p>
  * While <code>Configuration</code> provides read and write methods that accept streams as parameters, it's
  * also possible to set the data source once and for all and let the API deal with the details. This can
  * be achieved through the {@link #setSource(ConfigurationSource) setSource} method.<br>
@@ -71,9 +71,9 @@ import java.util.*;
  * common case of configuration sources, a local configuration file.<br>
  * For application writers who wish to be able to retrieve configuration files through a variety of file systems,
  * we suggest creating a source using the <code>com.mucommander.file</code> API.
- * </p>
- * <p>
+ *
  * <h3>Monitoring configuration changes</h3>
+ * <p>
  * Classes that need to monitor the state of the configuration in order, for example, to react to changes
  * dynamically rather than wait for an application reboot can implement the {@link ConfigurationListener}
  * interface and register themselves through
@@ -82,7 +82,7 @@ import java.util.*;
  * Note that LISTENERS are stored as weak references, meaning that application writers must ensure that they keep
  * direct references to the listener instances they register if they do not want them to be garbaged collected
  * out of existence randomly.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class Configuration {
@@ -120,11 +120,9 @@ public class Configuration {
      * <p>
      * The resulting instance will use default {@link XmlConfigurationReader readers} and
      * {@link XmlConfigurationWriter writers}.
-     * </p>
      * <p>
      * Note that until the {@link #setSource(ConfigurationSource) setSource} method has been
      * invoked, calls to read or write methods without a stream parameter will fail.
-     * </p>
      */
     public Configuration() {
     }
@@ -134,7 +132,7 @@ public class Configuration {
      * <p>
      * The resulting instance will use the default {@link XmlConfigurationReader readers} and
      * {@link XmlConfigurationWriter writers}.
-     * </p>
+     *
      * @param source where the resulting instance will look for its configuration data.
      */
     public Configuration(ConfigurationSource source) {
@@ -146,7 +144,7 @@ public class Configuration {
      * <p>
      * Note that until the {@link #setSource(ConfigurationSource) setSource} method has been
      * invoked, calls to read or write methods without a stream parameter will fail.
-     * </p>
+     *
      * @param reader factory for configuration readers.
      * @param writer factory for configuration writers.
      */
@@ -202,7 +200,7 @@ public class Configuration {
      * <p>
      * In order to reset the configuration to its default reader factory, application writers can call this method
      * with a <code>null</code> parameter.
-     * </p>
+     *
      * @param f factory that will be used to create reader instances.
      * @see     #getReaderFactory()
      */
@@ -217,7 +215,7 @@ public class Configuration {
      * <p>
      * By default, this method will return an {@link XmlConfigurationReader XML reader} factory.
      * This can be modified by calling {@link #setReaderFactory(ConfigurationReaderFactory) setReaderFactory}.
-     * </p>
+     *
      * @return the factory that is being used to create reader instances.
      * @see    #setReaderFactory(ConfigurationReaderFactory)
      */
@@ -239,7 +237,7 @@ public class Configuration {
      * <p>
      * In order to reset the configuration to its default writer factory, application writers can call
      * this method will a <code>null</code> parameter.
-     * </p>
+     *
      * @param f factory that will be used to create writer instances.
      * @see     #getWriterFactory()
      */
@@ -254,7 +252,7 @@ public class Configuration {
      * <p>
      * By default, this method will return an {@link XmlConfigurationWriter} factory. However, this
      * can be modified by calling {@link #setWriterFactory(ConfigurationWriterFactory) setWriterFactory}.
-     * </p>
+     *
      * @return the factory that is being used to create writer instances.
      * @see    #setWriterFactory(ConfigurationWriterFactory)
      */
@@ -292,7 +290,7 @@ public class Configuration {
      * <p>
      * This method will use the configuration reader set by {@link #setReaderFactory(ConfigurationReaderFactory)} if any,
      * or an {@link XmlConfigurationReader} instance if not.
-     * </p>
+     *
      * @param  in                              where to read the configuration from.
      * @throws ConfigurationException          if a configuration error occurs.
      * @throws ConfigurationFormatException    if a syntax error occurs in the configuration data.
@@ -315,7 +313,7 @@ public class Configuration {
      * <p>
      * This method will use the configuration reader set by {@link #setReaderFactory(ConfigurationReaderFactory)} if any,
      * or an {@link XmlConfigurationReader} instance if not.
-     * </p>
+     *
      * @param  in                              where to read the configuration from.
      * @throws ConfigurationException          if a configuration error occurs.
      * @throws ConfigurationFormatException    if a syntax error occurs in the configuration data.
@@ -335,7 +333,7 @@ public class Configuration {
      * <p>
      * This method will use the input stream provided by {@link #setSource(ConfigurationSource)} if any, or
      * fail otherwise.
-     * </p>
+     *
      * @param  reader                          reader that will be used to interpret the content of <code>in</code>.
      * @throws IOException                     if an I/O error occurs.
      * @throws ConfigurationException          if a configuration error occurs.
@@ -374,11 +372,11 @@ public class Configuration {
      * If a reader has been specified through {@link #setReaderFactory(ConfigurationReaderFactory)}, it
      * will be used to analyse the configuration. Otherwise, an {@link XmlConfigurationReader}
      * instance will be used.
-     * </p>
+     *
      * <p>
      * If a configuration source has been specified through {@link #setSource(ConfigurationSource)}, it will be
      * used. Otherwise, this method will fail.
-     * </p>
+     *
      * @throws IOException                     if an I/O error occurs.
      * @throws ConfigurationException          if a configuration error occurs.
      * @throws SourceConfigurationException    if no {@link ConfigurationSource} hasn't been set.
@@ -402,7 +400,7 @@ public class Configuration {
      * Writes the configuration to the specified {@link Writer}.
      * <p>
      * This method will use {@link #getWriterFactory()} to create instances of configuration writer.
-     * </p>
+     *
      * @param out                              where to write the configuration to.
      * @throws ConfigurationException          if any error occurs.
      * @throws ConfigurationFormatException    if a syntax error occurs in the configuration data.
@@ -420,7 +418,7 @@ public class Configuration {
      * <p>
      * If a configuration source was specified through {@link #setSource(ConfigurationSource)}, it will be used
      * to open an output stream. Otherwise, this method will fail.
-     * </p>
+     *
      * @throws ConfigurationException          if any error occurs.
      * @throws SourceConfigurationException    if no {@link ConfigurationSource} has been set.
      * @throws ConfigurationFormatException    if a syntax error occurs in the configuration data.
@@ -503,7 +501,7 @@ public class Configuration {
      * <p>
      * At the end of this call, <code>fromVar</code> will have been deleted. Note that if <code>fromVar</code> doesn't
      * exist, but <code>toVar</code> does, <code>toVar</code> will be deleted.
-     * </p>
+     *
      * <p>
      * This method might trigger as many as two {@link ConfigurationEvent events}:
      * <ul>
@@ -511,7 +509,7 @@ public class Configuration {
      *  <li>One when <code>toVar</code> is set.</li>
      * </ul>
      * The removal event will always be triggered first.
-     * </p>
+     *
      * @param fromVar fully qualified name of the variable to rename.
      * @param toVar   fully qualified name of the variable that will receive <code>fromVar</code>'s value.
      */
@@ -524,11 +522,11 @@ public class Configuration {
      * <p>
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. Note that this doesn't
      * mean the call failed, but that <code>name</code>'s value was already equal to <code>value</code>.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -556,11 +554,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not a
      * way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -578,11 +576,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not a
      * way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed to all
      * LISTENERS.
-     * </p>
+     *
      * @param  name      fully qualified name of the variable to set.
      * @param  value     new value for the variable.
      * @param  separator string used to separate each element of the list.
@@ -601,11 +599,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not
      * a way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -621,11 +619,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not a
      * way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -643,11 +641,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not a
      * way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -665,11 +663,11 @@ public class Configuration {
      * This method will return <code>false</code> if it didn't modify <code>name</code>'s value. This, however, is not a
      * way of indicating that the call failed: <code>false</code> is only ever returned if the previous value is equal
      * to the new value.
-     * </p>
+     *
      * <p>
      * If the value of the specified variable is actually modified, an {@link ConfigurationEvent event} will be passed
      * to all LISTENERS.
-     * </p>
+     *
      * @param  name  fully qualified name of the variable to set.
      * @param  value new value for the variable.
      * @return       <code>true</code> if this call resulted in a modification of the variable's value,
@@ -809,7 +807,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>null</code> if it wasn't set.
      */
@@ -835,7 +833,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @param  separator character used to split the variable's value into a list.
      * @return      the variable's old value, or <code>null</code> if it wasn't set.
@@ -849,7 +847,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>0</code> if it wasn't set.
      */
@@ -862,7 +860,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>0</code> if it wasn't set.
      */
@@ -875,7 +873,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>0</code> if it wasn't set.
      */
@@ -888,7 +886,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>0</code> if it wasn't set.
      */
@@ -901,7 +899,7 @@ public class Configuration {
      * <p>
      * If the variable was set, a configuration {@link ConfigurationEvent event} will be passed to
      * all registered LISTENERS.
-     * </p>
+     *
      * @param  name name of the variable to remove.
      * @return      the variable's old value, or <code>false</code> if it wasn't set.
      */
@@ -910,7 +908,7 @@ public class Configuration {
     }
 
     /**
-     * Remove all variables & sub-sections under the root section 
+     * Remove all variables and sub-sections under the root section
      */
     public void clear() {
 		root.clear();
@@ -925,7 +923,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name         name of the variable to retrieve.
      * @param  defaultValue value to use if <code>name</code> is not set.
      * @return              the specified variable's value.
@@ -955,7 +953,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name         name of the variable to retrieve.
      * @param  defaultValue value to use if variable <code>name</code> is not set.
      * @param  separator    separator to use for <code>defaultValue</code> if variable <code>name</code> is not set.
@@ -973,7 +971,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name                  name of the variable to retrieve.
      * @param  defaultValue          value to use if <code>name</code> is not set.
      * @return                       the specified variable's value.
@@ -991,7 +989,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name                  name of the variable to retrieve.
      * @param  defaultValue          value to use if <code>name</code> is not set.
      * @return                       the specified variable's value.
@@ -1009,7 +1007,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name                  name of the variable to retrieve.
      * @param  defaultValue          value to use if <code>name</code> is not set.
      * @return                       the specified variable's value.
@@ -1027,7 +1025,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name                  name of the variable to retrieve.
      * @param  defaultValue          value to use if <code>name</code> is not set.
      * @return                       the specified variable's value.
@@ -1044,7 +1042,7 @@ public class Configuration {
      * If the variable isn't set, this method will set it to <code>defaultValue</code> before
      * returning it. If this happens, a configuration {@link ConfigurationEvent event} will
      * be sent to all registered LISTENERS.
-     * </p>
+     *
      * @param  name                  name of the variable to retrieve.
      * @param  defaultValue          value to use if <code>name</code> is not set.
      * @return                       the specified variable's value.

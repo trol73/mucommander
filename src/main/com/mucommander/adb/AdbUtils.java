@@ -60,8 +60,9 @@ public class AdbUtils {
 
     /**
      *
-     * @param serial
-     * @return
+     * @param serial the device serial number
+     *
+     * @return device name (or null if unknown)
      */
     public static String getDeviceName(String serial) {
         if (lastDeviceNames == null || !lastDeviceNames.containsKey(serial)) {

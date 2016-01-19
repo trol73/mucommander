@@ -25,12 +25,12 @@ package com.mucommander.command;
  * generate a list of commands - from instances loaded in memory or from a file, for example.
  * Implementing <code>CommandBuilder</code> allows classes to query these lists regardless of
  * their source.
- * </p>
+ *
  * <p>
  * Instances of <code>CommandBuilder</code> can rely on their methods to be called in the proper order,
  * and on both their {@link #startBuilding()} and {@link #endBuilding()} methods to be called. Classes that
  * interact with such instances must make sure this contract is respected.
- * </p>
+ *
  * <p>
  * A (fairly useless) implementation might look like:
  * <pre>
@@ -52,7 +52,7 @@ package com.mucommander.command;
  * - creating command 'open -a Safari $f' with alias 'openURL'
  * Done.
  * </pre>
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    CommandReader
  * @see    CommandManager@buildCommands(CommandBuilder)

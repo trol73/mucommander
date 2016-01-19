@@ -206,16 +206,18 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * @throws UnsupportedFileOperationException if {@link FileOperation#READ_FILE} operations are not supported by the
      * underlying file protocol.
      */
-    protected AbstractFile[] ls(AbstractArchiveEntryFile entryFile, FilenameFilter filenameFilter, FileFilter fileFilter) throws IOException, UnsupportedFileOperationException {
+    protected AbstractFile[] ls(AbstractArchiveEntryFile entryFile, FilenameFilter filenameFilter, FileFilter fileFilter) throws IOException {
         // Make sure the entries tree is created and up-to-date
         checkEntriesTree();        
 
-        if(!entryFile.isBrowsable())
+        if (!entryFile.isBrowsable()) {
             throw new IOException();
+        }
 
         DefaultMutableTreeNode matchNode = entryTreeRoot.findEntryNode(entryFile.getEntry().getPath());
-        if(matchNode==null)
+        if (matchNode == null) {
             throw new IOException();
+        }
 
         return ls(matchNode, entryFile, filenameFilter, fileFilter);
     }
@@ -226,7 +228,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * @throws UnsupportedFileOperationException if {@link FileOperation#READ_FILE} operations are not supported by the
      * underlying file protocol.
      */
-    private AbstractFile[] ls(DefaultMutableTreeNode treeNode, AbstractFile parentFile, FilenameFilter filenameFilter, FileFilter fileFilter) throws IOException, UnsupportedFileOperationException {
+    private AbstractFile[] ls(DefaultMutableTreeNode treeNode, AbstractFile parentFile, FilenameFilter filenameFilter, FileFilter fileFilter) throws IOException {
         AbstractFile files[];
         int nbChildren = treeNode.getChildCount();
 
@@ -491,7 +493,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
     @Override
     public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
         // Delegate to the ancestor if this file isn't actually an archive
-        if(!isArchive())
+        if (!isArchive())
             return super.ls(filter);
 
         // Make sure the entries tree is created and up-to-date
@@ -511,10 +513,11 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * underlying file protocol.
      */
     @Override
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         // Delegate to the ancestor if this file isn't actually an archive
-        if(!isArchive())
+        if (!isArchive()) {
             return super.ls(filter);
+        }
 
         // Make sure the entries tree is created and up-to-date
         checkEntriesTree();

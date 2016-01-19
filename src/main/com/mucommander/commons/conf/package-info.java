@@ -8,7 +8,6 @@
  * <li><code>section</code> and <code>subsection</code> are both sections.</li>
  * <li><code>name</code> is the variable's name.</li>
  * </ul>
- * </p>
  * <p>
  * Configuration data is stored in instances of {@link com.mucommander.commons.conf.Configuration}, which offers a set
  * of methods manipulate variables:
@@ -38,18 +37,17 @@
  * value.
  * </li>
  * </ul>
- * </p>
  * <h3>Loading and storing configuration</h3>
  * <p>
  * The <code>com.mucommander.commons.conf</code> package offers various ways of loading and storing configuration.<br>
- * The most obvious way is by using the {@link com.mucommander.commons.conf.Configuration#read(InputStream) read} and
- * {@link com.mucommander.commons.conf.Configuration#write(OutputStream) write} methods, but this has the disadvantage
+ * The most obvious way is by using the {@link com.mucommander.commons.conf.Configuration#read(java.io.Reader) read} and
+ * {@link com.mucommander.commons.conf.Configuration#write(java.io.Writer)) write} methods, but this has the disadvantage
  * of forcing application writers to manage streams themselves.<br>
  * The preferred method is to create a dedicated {@link com.mucommander.commons.conf.ConfigurationSource} class and
  * register it through {@link com.mucommander.commons.conf.Configuration#setSource(ConfigurationSource) setSource}.
  * This allows an instance of {@link com.mucommander.commons.conf.Configuration} to know how to read from and write to
  * its configuration file (or socket or any other medium that provides input and output streams).
- * </p>
+ *
  * <h3>Changing the default configuration format</h3>
  * <p>
  * The default configuration format is described in {@link com.mucommander.commons.conf.XmlConfigurationReader}.
@@ -70,7 +68,7 @@
  * {@link com.mucommander.commons.conf.Configuration#setReaderFactory(ConfigurationReaderFactory) setReaderFactory}.
  * </li>
  * </ul>
- * </p>
+ *
  * <h3>Listening to the configuration</h3>
  * <p>
  * Classes that need to be notified when the configuration has changed can do so by:
@@ -82,6 +80,5 @@
  * addConfigurationLister}.
  * </li>
  * </ul>
- * </p>
  */
 package com.mucommander.commons.conf;

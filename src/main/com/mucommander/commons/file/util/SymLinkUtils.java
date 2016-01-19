@@ -63,9 +63,9 @@ public class SymLinkUtils {
 
     /**
      *
-     * @param symLink
-     * @param target
-     * @throws IOException
+     * @param symLink symlink path
+     * @param target target file/directory path
+     * @throws IOException if an I/O error occurs.
      *      java.nio.file.AccessDeniedException
      *      java.nio.file.FileAlreadyExistsException
      */

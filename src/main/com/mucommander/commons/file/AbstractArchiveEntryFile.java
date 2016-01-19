@@ -50,7 +50,6 @@ import java.io.OutputStream;
  *   <li>{@link ROArchiveEntryFile}: represents an entry inside a read-only archive</li>
  *   <li>{@link RWArchiveEntryFile}: represents an entry inside a {@link AbstractArchiveFile#isWritable() read-write} archive</li>
  * </ul>
- * </p>
  *
  * @see AbstractArchiveFile
  * @see ArchiveEntry

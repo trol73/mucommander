@@ -62,8 +62,10 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *
      * @return a String created from the converted input data.
      *
+     * @throws IOException if an IO error occurs.
+     *
      */
-    public String getString()  throws java.io.IOException {
+    public String getString()  throws IOException {
         return getString(-1);
 
     }
@@ -80,8 +82,10 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *                  unlimited length.
      * @return a String created from the converted input data.
      *
+     * @throws IOException if an IO error occurs.
+     *
      */
-    public String getString(int maxLength) throws java.io.IOException {
+    public String getString(int maxLength) throws IOException {
         String result;
         if (fInputStream != null) {
             StringBuilder sb = new StringBuilder();
