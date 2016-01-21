@@ -199,7 +199,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * Note that the returned file may or may not exist, for example if this file is a symlink to a file that doesn't 
      * exist.
      *
-     * @return an <code>AbstractFile representing the canonical path of this file, or this if the absolute and canonical
+     * @return an <code>AbstractFile</code> representing the canonical path of this file, or this if the absolute and canonical
      * path of this file are identical.
      */
     public AbstractFile getCanonicalFile() {
@@ -325,7 +325,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * For this reason, file implementations that do not provide random read access may want to override this method
      * if a more efficient implementation can be provided.
      *
-     * @param offset the offset in bytes from the beginning of the file, must be >0
+     * @param offset the offset in bytes from the beginning of the file, must be not negative
      * @throws IOException if this file cannot be read or is a folder.
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
@@ -789,7 +789,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *  <li>if the filename contains one or several path separator (the file would not be a direct child)</li>
      *  <li>if the child file could not be instantiated</li>
      * </ul>
-     * This method never returns <<code>null</code>.
+     * This method never returns <code>null</code>.
      *
      * <p>Although {@link #getChild} can be used to retrieve a direct child file, this method should be favored because
      * it allows to use this file instance as the parent of the returned child file.

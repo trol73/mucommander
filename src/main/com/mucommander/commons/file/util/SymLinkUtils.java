@@ -32,8 +32,8 @@ public class SymLinkUtils {
 
     /**
      * Returns symbolic link target value
-     * @param symLink
-     * @return
+     * @param symLink symbolic link path
+     * @return symbolic link target path
      */
     public static String getTargetPath(AbstractFile symLink) {
         Path path = FileSystems.getDefault().getPath(symLink.getAbsolutePath(), "");

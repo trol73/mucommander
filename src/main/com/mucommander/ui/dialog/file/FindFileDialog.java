@@ -108,9 +108,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 checkUpdates();
                 try {
                     Thread.sleep(REFRESH_RATE);
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
+                } catch(InterruptedException ignore) {}
             }
             checkUpdates();
             job = null;
@@ -127,6 +125,9 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         @Override
         protected void process(List<AbstractFile> chunks) {
             for (AbstractFile f : chunks) {
+                if (isCancelled()) {
+                    break;
+                }
                 listModel.addElement(f);
                 updateResultLabel();
             }
@@ -447,7 +448,6 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     }
 
 
-
     @Override
     public void cancel() {
         if (job != null) {
@@ -467,6 +467,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
     @Override
     public void dispose() {
+        super.dispose();
         if (updateRunner != null) {
             try {
                 updateRunner.cancel(true);
@@ -474,6 +475,10 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 t.printStackTrace();
             }
         }
-        super.dispose();
+        clearResults();
+        updateRunner = null;
+        listModel = null;
+        job = null;
+        list = null;
     }
 }

@@ -47,7 +47,6 @@ import java.util.List;
  *   </ul>
  *   <br/>
  *   This class uses {@link com.mucommander.ui.macosx.AppleScript} to interact with the trash.
- * </p>
  *
  * @see OSXTrashProvider
  * @author Maxence Bernard
@@ -164,7 +163,7 @@ public class OSXTrash extends QueuedTrash {
      *
      * <p>The thread starts by waiting {@link OSXTrash#QUEUE_PERIOD} milliseconds before moving them to give additional
      * files a chance to be queued and regrouped as a single AppleScript call. If some files were queued during
-     * that period, the thread will wait an additional {@link OSXTrash#QUEUE_PERIOD}, and so on.<p>
+     * that period, the thread will wait an additional {@link OSXTrash#QUEUE_PERIOD}, and so on.
      *
      * <p>There are several reasons for doing that instead of executing an AppleScript synchroneously for each file
      * passed to {@link OSXTrash#moveToTrash(com.mucommander.commons.file.AbstractFile)} :
@@ -224,13 +223,13 @@ public class OSXTrash extends QueuedTrash {
                 tmpFile.delete();
 
                 return success;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 LOGGER.debug("Caught IOException", e);
 
                 if (tmpOut != null) {
                     try {
                         tmpOut.close();
-                    } catch(IOException e1) {
+                    } catch (IOException e1) {
                         // There's not much we can do about it
                     }
                 }
@@ -238,7 +237,7 @@ public class OSXTrash extends QueuedTrash {
                 if (tmpFile != null) {
                     try {
                         tmpFile.delete();
-                    } catch(IOException e2) {
+                    } catch (IOException e2) {
                         // There's not much we can do about it
                     }
                 }

@@ -65,6 +65,7 @@ public class CounterOutputStream extends OutputStream {
 
     /**
      * Returns the ByteCounter that holds the number of bytes that have been written to this OutputStream.
+     * @return the ByteCounter that holds the number of bytes that have been written to this OutputStream
      */
     public ByteCounter getCounter() {
         return this.counter;

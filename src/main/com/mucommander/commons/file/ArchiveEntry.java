@@ -27,7 +27,7 @@ import com.mucommander.commons.file.util.PathUtils;
  * and allows to encapsulate the entry object of a 3rd party library.
  *
  * <p><b>Important</b>: the path of archive entries must use the '/' character as a path delimiter, and be relative
- * to the archive's root, i.e. must not start with a leading '/'.</p>
+ * to the archive's root, i.e. must not start with a leading '/'.
  *
  * @author Maxence Bernard 
  */

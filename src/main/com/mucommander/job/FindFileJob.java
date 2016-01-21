@@ -136,8 +136,8 @@ public class FindFileJob extends FileJob {
         } catch (SearchException | IOException e) {
             e.printStackTrace();
             return false;
-                }
-            }
+        }
+    }
 
 
 

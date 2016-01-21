@@ -315,7 +315,7 @@ public class CharsetDetector {
     
     /**
      * Enable filtering of input text. If filtering is enabled,
-     * text within angle brackets ("<" and ">") will be removed
+     * text within angle brackets ("&lt;" and "&gt;") will be removed
      * before detection.
      * 
      * @param filter <code>true</code> to enable input text filtering.

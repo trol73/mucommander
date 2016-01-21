@@ -65,6 +65,7 @@ public abstract class LRUCache<K, V> {
 
     /**
      * Creates an initially empty LRUCache with the specified maximum capacity.
+     * @param capacity initial capacity (he maximum number of items this cache can contain)
      */
     public LRUCache(int capacity) {
         this.capacity = capacity;
@@ -125,8 +126,8 @@ public abstract class LRUCache<K, V> {
      *
      * <p>If the cache's capacity has been reached (cache is full):
      * <ul>
-     * <li>any object with a past expiration date will be removed<
-     * <li>if no expired item could be removed, the least recently used item will be removed
+     * <li>any object with a past expiration date will be removed</li>
+     * <li>if no expired item could be removed, the least recently used item will be removed</li>
      * </ul>
      *
      * @param key the key for the object to store
@@ -139,6 +140,8 @@ public abstract class LRUCache<K, V> {
 
     /**
      * Convenience method, equivalent to add(key, value, -1).
+     * @param key key
+     * @param value value
      */
     public synchronized void add(K key, V value) {
         add(key, value, -1);

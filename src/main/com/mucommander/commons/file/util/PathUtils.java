@@ -137,7 +137,7 @@ public class PathUtils {
      * <code>null</code> and the path is relative, <code>null</code> will always be returned.
      * The path may contain '.', '..' and '~' tokens which will be left for the corresponding
      * {@link com.mucommander.commons.file.SchemeParser} to canonize.
-     * </p>
+     *
      * <p>
      * The path may refer to the following listed destination types. In all cases, the destination's parent folder must
      * exist, if it doesn't <code>null</code> will always be returned. For example, <code>/non_existing_folder/file</code>
@@ -153,7 +153,6 @@ public class PathUtils {
      * character. If they don't, they're considered as denoting a regular file. For example,
      * <code>/existing_folder/existing_archive.zip/</code> refers to the archive as a folder where as
      * <code>/existing_folder/existing_archive.zip</code> refers to the archive as a regular file.
-     * </p>
      *
      * @param destPath the destination path to resolve
      * @param baseFolder the base folder used for relative paths, <code>null</code> to accept only absolute paths
@@ -304,7 +303,6 @@ public class PathUtils {
      * If any of the two specified paths is <code>null</code>, then the other one must also be <code>null</code> for
      * this method to return <code>true</code>. The given <code>separator</code> must never be <code>null</code> or
      * a {@link NullPointerException} will be thrown.
-     * </p>
      *
      * @param path1 first path to test
      * @param path2 second path to test
@@ -313,21 +311,24 @@ public class PathUtils {
      * @return <code>true</code> if both paths are equal
      */
     public static boolean pathEquals(String path1, String path2, String separator) {
-        if(path1==null)
-            return path2==null;
+        if (path1 == null) {
+            return path2 == null;
+        }
 
-        if(path2==null)
-            return path1==null;
+        if (path2 == null) {
+            return false;
+        }
         
-        if(path1.equals(path2))
+        if (path1.equals(path2)) {
             return true;
+        }
 
         int len1 = path1.length();
         int len2 = path2.length();
         int separatorLen = separator.length();
 
         // If the difference between the 2 strings is just a trailing path separator, we consider the paths as equal
-        if(Math.abs(len1-len2)==separatorLen && (len1>len2 ? path1.startsWith(path2) : path2.startsWith(path1))) {
+        if (Math.abs(len1-len2)==separatorLen && (len1>len2 ? path1.startsWith(path2) : path2.startsWith(path1))) {
             String diff = len1>len2 ? path1.substring(len1-separatorLen) : path2.substring(len2-separatorLen);
             return separator.equals(diff);
         }
@@ -376,14 +377,16 @@ public class PathUtils {
     public static String removeLeadingFragments(String path, String separator, int nbFragments) {
         path = removeLeadingSeparator(path, separator);
 
-        if(nbFragments==0)
+        if (nbFragments == 0) {
             return path;
+        }
 
-        int pos=-1;
-        for(int i=0; i<nbFragments && (pos=path.indexOf(separator, pos+1))!=-1; i++);
+        int pos = -1;
+        for (int i = 0; i < nbFragments && (pos=path.indexOf(separator, pos+1)) >= 0; i++);
 
-        if(pos==-1 || pos==path.length()-1)
+        if (pos < 0 || pos == path.length()-1) {
             return "";
+        }
 
         return path.substring(pos+1, path.length());
     }
@@ -416,17 +419,19 @@ public class PathUtils {
      * @return the depth of the given path
      */
     public static int getDepth(String path, String separator) {
-        if(path.equals("") || path.equals(separator))
+        if (path.isEmpty() || path.equals(separator)) {
             return 0;
+        }
 
+        int pos = path.startsWith(separator) ? 1 : 0;
         int depth = 1;
-        int pos = path.startsWith(separator)?1:0;
-
-        while ((pos=path.indexOf(separator, pos+1))!=-1)
+        while ((pos=path.indexOf(separator, pos+1)) >= 0) {
             depth++;
+        }
 
-        if(path.endsWith(separator))
+        if (path.endsWith(separator)) {
             depth--;
+        }
 
         return depth;
     }

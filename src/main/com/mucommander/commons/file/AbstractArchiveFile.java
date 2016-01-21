@@ -49,26 +49,25 @@ import java.util.WeakHashMap;
  * </ul>
  * When implementing a new archive file/format, either <code>AbstractROArchiveFile</code> or <code>AbstractRWArchiveFile</code>
  * should be subclassed, but not this class.
- * </p>
  *
  * <p>The first time one of the <code>ls()</code> methods is called to list the archive's contents,
  * {@link #getEntryIterator()} is called to retrieve a list of *all* the entries contained by the archive, not only the
  * ones at the top level but also the ones nested one of several levels below. Using this list of entries, it creates
  * a tree to map the structure of the archive and list the content of any particular directory within the archive.
  * This tree is recreated (<code>getEntryIterator()</code> is called again) only if the archive file has changed, i.e.
- * if its date has changed since the tree was created.</p>
+ * if its date has changed since the tree was created.
  *
  * <p>Files returned by the <code>ls()</code> are {@link AbstractArchiveEntryFile} instances which use an {@link ArchiveEntry}
  * object to retrieve the entry's attributes. In turn, these <code>AbstractArchiveEntryFile</code> instances query the
  * associated <code>AbstractArchiveFile</code> to list their content.
  * <br>From an implementation perspective, one only needs to deal with {@link ArchiveEntry} instances, all the nuts
- * and bolts are taken care of by this class.</p>
+ * and bolts are taken care of by this class.
  *
  * <p>Note that an instance of <code>AbstractArchiveFile</code> may or may not actually be an archive:
  * {@link #isArchive()} returns <code>true</code> only if the file currently exists and is not a directory. The value
  * returned by {@link #isArchive()} may change over time as the file is modified. When an
  * <code>AbstractArchiveFile</code> is not currently an archive, it acts just as a 'normal' file and delegates
- * <code>ls()</code> methods to the underlying {@link AbstractFile}</p>
+ * <code>ls()</code> methods to the underlying {@link AbstractFile}
  *
  * @see com.mucommander.commons.file.FileFactory
  * @see com.mucommander.commons.file.ArchiveFormatProvider
@@ -326,7 +325,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * else an <code>IOException</code> will be thrown.
      *
      * <p>Important note: the given path's separator character must be '/' and the path must be relative to the
-     * archive's root, i.e. not start with a leading '/', otherwise the entry will not be found.</p>
+     * archive's root, i.e. not start with a leading '/', otherwise the entry will not be found.
      *
      * @param entryPath path to an entry within this archive
      * @return an AbstractFile that corresponds to the given entry path
@@ -397,7 +396,6 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * <p>
      * This method is called the first time one of the <code>ls()</code> is called. It will not be called anymore,
      * unless the file's date has changed since the last time one of the <code>ls()</code> methods was called.
-     * </p>
      *
      * @return an iterator of {@link ArchiveEntry} that iterates through all the entries of this archive
      * @throws IOException if an error occurred while reading the archive, either because the archive is corrupt or
@@ -436,7 +434,6 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * proxied archive file (which may not always be available).
      * Therefore, this method should be used to test if an <code>AbstractArchiveFile</code> is writable, rather than
      * testing if it is an instance of <code>AbstractRWArchiveFile</code>.
-     * </p>
      *
      * @return <code>true</code> if this archive is writable, i.e. is capable of adding and deleting entries from
      * the underlying archive file.
