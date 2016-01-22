@@ -89,8 +89,7 @@ public abstract class FileTableTab implements Tab {
 	}
 
 	private String createDisplayableTitleFromLocation(FileURL location) {
-		boolean local = location.getHost().equals(FileURL.LOCALHOST);
-
+		boolean local = FileURL.LOCALHOST.equals(location.getHost());
 		return getHostRepresentation(location.getHost(), local) + getFilenameRepresentation(location.getFilename(), local);
 	}
 
@@ -100,7 +99,7 @@ public abstract class FileTableTab implements Tab {
 
 	private String getFilenameRepresentation(String filename, boolean local) {
 		// Under for OSes with 'root drives' (Windows, OS/2), remove the leading '/' character
-		if(local && LocalFile.hasRootDrives() && filename != null)
+		if (local && LocalFile.hasRootDrives() && filename != null)
 			return PathUtils.removeLeadingSeparator(filename, "/");
 		// Under other OSes, if the filename is empty return "/"
 		else
