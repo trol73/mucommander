@@ -88,6 +88,7 @@ public class FocusDialog extends JDialog implements WindowListener {
      * Saved to restore focus
      */
     private Component ownerFocusedComponent;
+
     
     public FocusDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, true);
@@ -95,11 +96,11 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (owner != null) {
             ownerFocusedComponent = owner.getFocusOwner();
         }
-
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
             if (dt < 250) {
+                dispose();
                 throw new RuntimeException("EventDispatchThread error");
             }
         }
@@ -118,6 +119,7 @@ public class FocusDialog extends JDialog implements WindowListener {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
             if (dt < 250) {
+                dispose();
                 throw new RuntimeException("EventDispatchThread error");
             }
         }
@@ -141,8 +143,9 @@ public class FocusDialog extends JDialog implements WindowListener {
         ActionMap actionMap = contentPane.getActionMap();
         AbstractAction disposeAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e){
-                if (keyboardDisposalEnabled)
+                if (keyboardDisposalEnabled) {
                     cancel();
+                }
             }
         };
 	
@@ -173,8 +176,12 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     @Override
     public void dispose() {
-        WindowsStorage.getInstance().put(this, storageSuffix);
-        saveState();
+        try {
+            WindowsStorage.getInstance().put(this, storageSuffix);
+            saveState();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
         super.dispose();
         FocusRequester.requestFocus(ownerFocusedComponent != null ? ownerFocusedComponent : getOwner());
     }
