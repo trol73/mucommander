@@ -222,7 +222,7 @@ public abstract class PopupButton extends NonFocusableButton {
                 buttonClickedAction.actionPerformed(new ActionEvent(PopupButton.this, ActionEvent.ACTION_PERFORMED, "clicked"));
             } else {               // No action, popup menu
                 popupMenu();
-        }
+            }
         }
 
         public synchronized void mouseReleased(MouseEvent mouseEvent) {
