@@ -1,0 +1,98 @@
+/*
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2016 Oleg Trifonov
+ *
+ * muCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * muCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.mucommander.ui.action.impl;
+
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileOperation;
+import com.mucommander.commons.file.filter.AbstractFileFilter;
+import com.mucommander.commons.file.filter.AndFileFilter;
+import com.mucommander.commons.file.filter.FileOperationFilter;
+import com.mucommander.commons.file.util.FileSet;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.shell.Shell;
+import com.mucommander.ui.action.*;
+import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * Created on 01/02/16.
+ * @author Oleg Trifonov
+ */
+public class CompareFilesAction extends SelectedFilesAction {
+
+    public CompareFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
+        super(mainFrame, properties);
+        setSelectedFileFilter(new AndFileFilter(
+            new FileOperationFilter(FileOperation.READ_FILE),
+            new AbstractFileFilter() {
+                @Override
+                public boolean accept(AbstractFile file) {
+                    if (supported()) {
+                        AbstractFile leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile();
+                        AbstractFile rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile();
+                        return leftFile != null && !leftFile.isDirectory() && rightFile != null && !rightFile.isDirectory();
+                    }
+                    return false;
+                }
+            }
+        ));
+    }
+
+    @Override
+    public void performAction(FileSet files) {
+        try {
+            String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath();
+            String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath();
+            Shell.execute("opendiff " + leftFile + " " + rightFile, null, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean supported() {
+        return OsFamily.getCurrent() == OsFamily.MAC_OS_X && new File("/usr/bin/opendiff").exists();
+    }
+
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
+
+    public static class Factory implements ActionFactory {
+
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new CompareFilesAction(mainFrame, properties);
+        }
+    }
+
+    public static class Descriptor extends AbstractActionDescriptor {
+        public static final String ACTION_ID = "CompareFiles";
+
+        public String getId() { return ACTION_ID; }
+
+        public ActionCategory getCategory() { return ActionCategory.FILES; }
+
+        public KeyStroke getDefaultAltKeyStroke() { return null; }
+
+        public KeyStroke getDefaultKeyStroke() { return null; }
+    }
+}

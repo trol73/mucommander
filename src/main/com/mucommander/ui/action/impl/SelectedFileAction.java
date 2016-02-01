@@ -64,8 +64,9 @@ public abstract class SelectedFileAction extends FileAction {
         AbstractFile selectedFile = fileTable.getSelectedFile(false, true);
         boolean enable = selectedFile!=null;
 
-        if(enable && filter!=null)
+        if (enable && filter != null) {
             enable = filter.match(selectedFile);
+        }
 
         return enable;
     }

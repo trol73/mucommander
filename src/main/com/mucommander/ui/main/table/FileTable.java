@@ -187,6 +187,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     private int pageSize;
 
+    /**
+     * Sometimes cursor gets "sticky". These variables used to detect this situation and fix it
+     */
+    private int lastSelectedRow, lastSelectedCol, lastSelectedEqCnt;
+
+
 
     public FileTable(MainFrame mainFrame, FolderPanel folderPanel, FileTableConfiguration conf) {
         super(new FileTableModel(), new FileTableColumnModel(conf));    // TODO !!!
@@ -1409,7 +1415,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         return super.processKeyBinding(ks, ke, condition, pressed);
     }
 
-
     /**
      * Overrides the changeSelection method from JTable to track the current selected row (the one that has focus)
      * and fire a {@link com.mucommander.ui.event.TableSelectionListener#selectedFileChanged(FileTable)} event
@@ -1425,6 +1430,47 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
         super.changeSelection(row, column, toggle, extend);
 
+        // Sometimes cursor gets "sticky".
+        // Here we detect this case and fix it by generating RuntimeException
+        if (getSelectedRow() == lastSelectedRow && getSelectedColumn() == lastSelectedCol) {
+            lastSelectedEqCnt++;
+
+            if (lastSelectedEqCnt == 10) {
+                System.out.println("Sticky cursor!");
+                throw new RuntimeException();
+               /*
+                 at com.mucommander.ui.main.table.FileTable.changeSelection(FileTable.java:1432)
+                 at javax.swing.plaf.basic.BasicTableUI$Handler.mouseDragged(BasicTableUI.java:1253)
+                 at javax.swing.plaf.basic.BasicTableUI$MouseInputHandler.mouseDragged(BasicTableUI.java:818)
+                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
+                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
+                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
+                 at java.awt.Component.processMouseMotionEvent(Component.java:6573)
+                 at javax.swing.JComponent.superProcessMouseMotionEvent(JComponent.java:3348)
+                 at javax.swing.Autoscroller.actionPerformed(Autoscroller.java:176)
+                 at javax.swing.Timer.fireActionPerformed(Timer.java:313)
+                 at javax.swing.Timer$DoPostEvent.run(Timer.java:245)
+                 at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
+                 at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:749)
+                 at java.awt.EventQueue.access$500(EventQueue.java:97)
+                 at java.awt.EventQueue$3.run(EventQueue.java:702)
+                 at java.awt.EventQueue$3.run(EventQueue.java:696)
+                 at java.security.AccessController.doPrivileged(Native Method)
+                 at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)
+                 at java.awt.EventQueue.dispatchEvent(EventQueue.java:719)
+                 at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+                 at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+                 at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+                 at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+                 at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+                 at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+               */
+            }
+        } else {
+            lastSelectedEqCnt = 0;
+            lastSelectedRow = row;
+            lastSelectedCol = column;
+        }
         // If file changed
         if (currentRow != lastRow || (currentColumn != lastColumn && viewMode != TableViewMode.FULL)) {
             // Update selection changed timestamp

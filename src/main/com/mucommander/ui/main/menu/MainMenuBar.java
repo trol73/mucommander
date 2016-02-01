@@ -341,6 +341,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
             ejectDrivesMenu = MenuToolkit.addMenu(Translator.get("eject_menu"), menuMnemonicHelper, this);
             toolsMenu.add(ejectDrivesMenu);
+
+            MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(CompareFilesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         }
         toolsMenu.add(new JSeparator());
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(EditCommandsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
@@ -490,13 +492,20 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             ejectDrivesMenu.removeAll();
 
             AbstractFile[] volumes = LocalFile.getVolumes();
+            boolean empty = true;
             for (AbstractFile volume : volumes) {
                 if (volume != null && !volume.isSymlink() && !volume.getPath().toLowerCase().startsWith("/users/")) {
                     MenuToolkit.addMenuItem(ejectDrivesMenu, volume.getName(), null, null, event -> {
                         EjectDriveAction.eject(volume);
                         mainFrame.tryRefreshCurrentFolders();
                     });
+                    empty = false;
                 }
+            }
+            if (empty) {
+                JMenuItem menuItem = new JMenuItem(Translator.get("eject.no_mounted_devices"));
+                menuItem.setEnabled(false);
+                ejectDrivesMenu.add(menuItem);
             }
         } else if (source == bookmarksMenu) {
             // Remove any previous bookmarks menu items from menu

@@ -80,9 +80,9 @@ public class LocalLocationHistory {
 		//  - it doesn't look like a removable media drive (cd/dvd/floppy), especially in order to prevent
 		// Java from triggering that dreaded 'Drive not ready' popup.
 		LOGGER.trace("folder="+folderURL);
-		if(folderURL.getScheme().equals(FileProtocols.FILE)) {
+		if (folderURL.getScheme().equals(FileProtocols.FILE)) {
 			AbstractFile folder = FileFactory.getFile(folderURL);
-			if (folder.isDirectory() && (folder instanceof LocalFile) && !((LocalFile)folder.getRoot()).guessRemovableDrive()) {
+			if (folder instanceof LocalFile && folder.isDirectory() && !((LocalFile)folder.getRoot()).guessRemovableDrive()) {
 				this.lastRecallableFolder = folder.getAbsolutePath();
 				LOGGER.trace("lastRecallableFolder= "+lastRecallableFolder);
 			}
@@ -95,12 +95,12 @@ public class LocalLocationHistory {
 		historyIndex++;
 
 		// Delete 'forward' history items if any
-		for(int i=historyIndex; i<historySize; i++) {
+		for (int i=historyIndex; i<historySize; i++) {
 			history.remove(historyIndex);
 		}
 
 		// If capacity is reached, remove first folder
-		if(history.size()>=HISTORY_CAPACITY) {
+		if (history.size() >= HISTORY_CAPACITY) {
 			history.remove(0);
 			historyIndex--;
 		}
@@ -114,8 +114,9 @@ public class LocalLocationHistory {
 	 * Does nothing if there is no previous folder in history. 
 	 */
 	public synchronized void goBack() {
-		if (historyIndex==0)
+		if (historyIndex == 0) {
 			return;
+		}
 
 		folderPanel.tryChangeCurrentFolder(history.get(--historyIndex));
 	}
@@ -125,8 +126,9 @@ public class LocalLocationHistory {
 	 * Does nothing if there is no next folder in history. 
 	 */
 	public synchronized void goForward() {
-		if (historyIndex==history.size()-1)
+		if (historyIndex == history.size() - 1) {
 			return;
+		}
 
 		folderPanel.tryChangeCurrentFolder(history.get(++historyIndex));
 	}
@@ -152,15 +154,17 @@ public class LocalLocationHistory {
 	 * currently isn't any 'back' folder in history, but may never be null.
 	 */
 	public FileURL[] getBackFolders() {
-		if(!hasBackFolder())
+		if (!hasBackFolder()) {
 			return new FileURL[0];
+		}
 
 		int backLen = historyIndex;
 		FileURL urls[] = new FileURL[backLen];
 
 		int cur = 0;
-		for(int i=historyIndex-1; i>=0; i--)
+		for (int i = historyIndex-1; i >= 0; i--) {
 			urls[cur++] = history.get(i);
+		}
 
 		return urls;
 	}
@@ -187,6 +191,8 @@ public class LocalLocationHistory {
 	/**
 	 * Returns true if the folder history contains the given FileURL, either as a back or forward folder, or as the
 	 * current folder.
+	 *
+	 * @return true if history contains this url
 	 */
 	public boolean historyContains(FileURL folderURL) {
 		return history.contains(folderURL);
