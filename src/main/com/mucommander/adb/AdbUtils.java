@@ -60,6 +60,20 @@ public class AdbUtils {
 
     /**
      *
+     * @return true if adb found
+     */
+    public static boolean checkAdb() {
+        AbstractProcess process = null;
+        try {
+            process = Shell.execute("adb devices -l", null, null);
+            return process.waitFor() == 0;
+        } catch (IOException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    /**
+     *
      * @param serial the device serial number
      *
      * @return device name (or null if unknown)

@@ -79,7 +79,7 @@ public abstract class FileFrame extends JFrame {
                 };
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
                 try {
-                filePresenter.open(file);
+                    filePresenter.open(file);
                 } finally {
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
                 }
@@ -183,7 +183,7 @@ public abstract class FileFrame extends JFrame {
         super.dispose();
         if (returnFocusTo != null) {
             FocusRequester.requestFocus(returnFocusTo);
-    }
+        }
     }
 
     public FileFrame returnFocusTo(Component returnFocusTo) {

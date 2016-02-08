@@ -375,8 +375,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             }), mnemonicHelper);
         }
 
-        List<String> androidDevices = AdbUtils.getDevices();
-        if (androidDevices != null) {
+        if (AdbUtils.checkAdb()) {
             setMnemonic(popupMenu.add(new AndroidMenu() {
                 @Override
                 public MuAction getMenuItemAction(String deviceSerial) {
@@ -390,6 +389,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 }
             }), mnemonicHelper);
         }
+
         popupMenu.add(new JSeparator());
 
         // Add 'connect to server' shortcuts
@@ -401,6 +401,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         return popupMenu;
     }
+
+
+
     
     /**
      *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as

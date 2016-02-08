@@ -64,6 +64,8 @@ public enum OsVersion implements ComparableRuntimeProperty {
 	WINDOWS_7("Windows 7"),
 	/** Windows 8 */
 	WINDOWS_8("Windows 8"),
+    /** Windows 10 */
+    WINDOWS_10("Windows 10"),
 
 
 	///////////////////////
@@ -185,10 +187,10 @@ public enum OsVersion implements ComparableRuntimeProperty {
                 return WINDOWS_8;
 
             // Newer version we don't know of yet, assume latest supported OS version
-            return WINDOWS_8;
+            return WINDOWS_10;
         }
         // Mac OS X versions
-        if (osFamily==OsFamily.MAC_OS_X) {
+        if (osFamily == OsFamily.MAC_OS_X) {
             if (osVersionProp.startsWith("10.10"))
                 return MAC_OS_X_10_10;
 
@@ -243,19 +245,19 @@ public enum OsVersion implements ComparableRuntimeProperty {
     //////////////////////////////////////////////
 
     public boolean isCurrentOrLower() {
-		return currentValue.compareTo(this)<=0;
+		return currentValue.compareTo(this) <= 0;
 	}
 
 	public boolean isCurrentLower() {
-		return currentValue.compareTo(this)<0;
+		return currentValue.compareTo(this) < 0;
 	}
 
 	public boolean isCurrentOrHigher() {
-		return currentValue.compareTo(this)>=0;
+		return currentValue.compareTo(this) >= 0;
 	}
 
 	public boolean isCurrentHigher() {
-		return currentValue.compareTo(this)>0;
+		return currentValue.compareTo(this) > 0;
 	}
 
     ////////////////////////
