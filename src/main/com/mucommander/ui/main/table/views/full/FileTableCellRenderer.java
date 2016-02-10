@@ -92,7 +92,7 @@ public class FileTableCellRenderer extends BaseCellRenderer {
     // TableCellRenderer methods //
     ///////////////////////////////
 
-
+    static int cnt;
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
         // Need to check that row index is not out of bounds because when the folder
@@ -108,6 +108,7 @@ public class FileTableCellRenderer extends BaseCellRenderer {
             debug("tableModel.getCachedFileAtRow( " + row + ") RETURNED NULL !");
             return null;
         }
+        boolean isCalculatedSizeDir = file.isDirectory() && tableModel.getCurrentCalculatedSizeDirectory() == file;
 
         final QuickSearch search = this.table.getQuickSearch();
 
@@ -121,6 +122,12 @@ public class FileTableCellRenderer extends BaseCellRenderer {
 
         final Column column = Column.valueOf(table.convertColumnIndexToModel(col));
         final CellLabel label = cellLabels[column.ordinal()];
+
+        if (isCalculatedSizeDir && column == Column.NAME) {
+            label.setProgressValue(cnt++);
+        } else {
+            label.setProgressValue(0);
+        }
 
         // Extension/icon column: return ImageIcon instance
         if (column == Column.EXTENSION) {

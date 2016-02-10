@@ -22,6 +22,7 @@ package com.mucommander.commons.file;
 import java.io.IOException;
 import java.util.*;
 
+import com.mucommander.commons.file.impl.avrdude.AvrdudeProtocolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,6 +151,7 @@ public class FileFactory {
 
         // TODO !!! check that adb installed
         registerProtocol(FileProtocols.ADB, new com.mucommander.commons.file.impl.adb.AdbProtocolProvider());
+        registerProtocol(FileProtocols.AVRDUDE, new AvrdudeProtocolProvider());
     }
 
     static {

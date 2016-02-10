@@ -710,12 +710,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public boolean selectFile(AbstractFile file) {
         int index = tableModel.getFileIndex(file);
-//System.out.println("selectFile " + file);
         if (index >= 0) {
             selectFile(index);
             return true;
         }
-            return false;
+        return false;
     }
 
 
@@ -1016,7 +1015,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
         if (usesTableHeaderRenderingProperties()) {
             setTableHeaderRenderingProperties();
-    }
+        }
     }
 
     /**
@@ -1051,9 +1050,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // The Owner and Group columns are displayable only if current folder has this information
         switch (column) {
             case OWNER:
-            return file.canGetOwner();
+                return file.canGetOwner();
             case GROUP:
-            return file.canGetGroup();
+                return file.canGetGroup();
             default:
                 return true;
         }
@@ -1068,8 +1067,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         if (columnModel != null) {
             // Full mode
             for (Column c : Column.values()) {
-            columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
-    }
+                columnModel.setColumnVisible(c, columnModel.isColumnEnabled(c) && isColumnDisplayable(c));
+            }
         }
     }
 
@@ -1241,7 +1240,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
         final int dirStringWidth1 = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
         final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024 * 1024 * 555, FileTableModel.getSizeFormat())); // some big value with big string-length
-        final int dirStringWidth = Math.max(dirStringWidth1, dirStringWidth2);
+        final int dirStringWidth3 = fm.stringWidth(SizeFormat.format(1016 * 1024, FileTableModel.getSizeFormat())); // some other big value with big string-length
+        final int dirStringWidth = Math.max(Math.max(dirStringWidth1, dirStringWidth2), dirStringWidth3);
+
 
         pageSize = getParent().getSize().height / getRowHeight();
 
@@ -1277,7 +1278,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                             break;
                         }
                         String val = (String)getModel().getValueAt(rowNum, column.getModelIndex());
-                        boolean isDirectorySize = c == Column.SIZE && FileTableModel.DIRECTORY_SIZE_STRING.equals(val);
+                        boolean isDirectorySize = c == Column.SIZE;// && FileTableModel.DIRECTORY_SIZE_STRING.equals(val);
                         int stringWidth = val == null ? 0 : isDirectorySize ? dirStringWidth : fm.stringWidth(val);
                         columnWidth = Math.max(columnWidth, stringWidth);
                     }

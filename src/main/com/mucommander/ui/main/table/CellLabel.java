@@ -85,6 +85,8 @@ public class CellLabel extends JLabel {
 
     protected boolean hasSeparatorLine;
 
+    private int progressValue;
+
 
     // - Initialisation ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -176,7 +178,7 @@ public class CellLabel extends JLabel {
      * @param icon the new icon this label will display
      */
     public void setIcon(ImageIcon icon) {
-        if (icon!=lastIcon) {
+        if (icon != lastIcon) {
             super.setIcon(icon);
             lastIcon = icon;
         }
@@ -280,6 +282,26 @@ public class CellLabel extends JLabel {
             g2d.setStroke(DASHED_STROKE);
             g2d.drawLine(w, 0, w, getHeight());
         }
+        // TODO improve it
+        if (progressValue > 0) {
+            int w = getWidth();
+            int h = getHeight();
+            int a = -progressValue*20 % 360;
+            int r = h - 4;
+            if (r % 2 != 0) {
+                r--;
+            }
+            g.setColor(lastForegroundColor);
+            g.fillArc(w - r, 2, r, r, a+100, 200);
+            g.setColor(lastBackgroundColor);
+            int r2 = r/2;
+            if (r2 % 2 != 0) {
+                r2++;
+            }
+            int d = (r - r2) / 2;
+            g.fillOval(w - r + d, 2 + d, r2, r2);
+            //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
+        }
     }	
 
     protected void paintOutline(Graphics g) {
@@ -368,4 +390,9 @@ public class CellLabel extends JLabel {
     public void setHasSeparator(boolean hasSeparator) {
         this.hasSeparatorLine = hasSeparator;
     }
+
+    public void setProgressValue(int progressValue) {
+        this.progressValue = progressValue;
+    }
+
 }

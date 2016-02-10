@@ -178,12 +178,16 @@ public abstract class FileFrame extends JFrame {
 
     @Override
     public void dispose() {
-        filePresenter.saveStateOnClose();
-        WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
+        try {
+            filePresenter.saveStateOnClose();
+            WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
+        } catch (Throwable ignore) {}
         super.dispose();
-        if (returnFocusTo != null) {
-            FocusRequester.requestFocus(returnFocusTo);
-        }
+        try {
+            if (returnFocusTo != null) {
+                FocusRequester.requestFocus(returnFocusTo);
+            }
+        } catch (Throwable ignore) {}
     }
 
     public FileFrame returnFocusTo(Component returnFocusTo) {

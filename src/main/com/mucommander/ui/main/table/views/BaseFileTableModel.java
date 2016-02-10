@@ -923,4 +923,12 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 //    }
 
 
+    public AbstractFile getCurrentCalculatedSizeDirectory() {
+        if (calculateDirectorySizeWorker != null) {
+            return calculateDirectorySizeWorker.getFile();
+        }
+        return null;
+    }
+
+
 }
