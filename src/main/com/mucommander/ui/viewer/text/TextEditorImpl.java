@@ -50,7 +50,7 @@ class TextEditorImpl implements ThemeListener {
 
     private static final Insets INSETS = new Insets(4, 3, 4, 3);
 
-	private String searchString;
+	String searchString;
 
 	JFrame frame;
 

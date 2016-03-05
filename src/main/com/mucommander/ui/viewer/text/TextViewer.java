@@ -314,4 +314,15 @@ public class TextViewer extends FileViewer implements EncodingListener {
     public TextFilesHistory.FileRecord getHistoryRecord() {
         return historyRecord;
     }
+
+
+    @Override
+    public void setSearchedText(String searchedText) {
+        textEditorImpl.searchString = searchedText;
+    }
+
+
+    @Override
+    public void setSearchedBytes(byte[] searchedBytes) {
+    }
 }

@@ -91,7 +91,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     	textViewerDelegate.loadDocument(in, encoding, documentListener);
         if (getStatusBar() != null) {
             getStatusBar().setEncoding(encoding);
-    }
+        }
     }
     
     private void write(OutputStream out) throws IOException {
@@ -278,10 +278,19 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
             textArea.gotoLine(line, column);
             getViewport().setViewPosition(new java.awt.Point(horizontalPos, verticalPos));
             setSaveNeeded(false);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}
     }
 
 
+    @Override
+    public void setSearchedText(String searchedText) {
+        textEditorImpl.searchString = searchedText;
+    }
+
+
+    @Override
+    public void setSearchedBytes(byte[] searchedBytes) {
+    }
 }
