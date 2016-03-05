@@ -52,7 +52,7 @@ abstract class KdeDesktopAdapter extends DefaultDesktopAdapter {
             String execCommand = getBaseCommand()+" exec $f";
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  execCommand, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   execCommand, CommandType.SYSTEM_COMMAND, null, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, execCommand, CommandType.SYSTEM_COMMAND, null, getFileManagerName()));
+            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, execCommand, CommandType.SYSTEM_COMMAND, getFileManagerName(), null));
         }
         catch(CommandException e) {throw new DesktopInitialisationException(e);}
 
