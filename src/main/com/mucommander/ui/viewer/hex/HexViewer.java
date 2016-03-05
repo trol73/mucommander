@@ -38,6 +38,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Hex dump viewer
@@ -246,5 +247,22 @@ public class HexViewer extends FileViewer {
             }
         };
         dlgGoto.showDialog();
+    }
+
+
+    @Override
+    public void setSearchedText(String searchedText) {
+        try {
+            lastSearchBytes = searchedText.getBytes(encoding);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setSearchedBytes(byte[] searchedBytes) {
+        if (searchedBytes != null) {
+            lastSearchBytes = searchedBytes;
+        }
     }
 }
