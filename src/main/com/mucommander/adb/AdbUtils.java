@@ -63,7 +63,7 @@ public class AdbUtils {
      * @return true if adb found
      */
     public static boolean checkAdb() {
-        AbstractProcess process = null;
+        AbstractProcess process;
         try {
             process = Shell.execute("adb devices -l", null, null);
             return process.waitFor() == 0;

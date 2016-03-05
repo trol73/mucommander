@@ -73,8 +73,8 @@ public class TextHistory {
 
     public void add(Type type, String s, boolean save) {
         LinkedList<String> list = getList(type);
-        boolean alreadyInList = list.contains(s);
-        if (alreadyInList) {
+        boolean alreadyFirstInList = list.indexOf(s) == 0;
+        if (alreadyFirstInList) {
             list.remove(s);
         }
         if (s.trim().isEmpty()) {
@@ -85,7 +85,7 @@ public class TextHistory {
             list.removeLast();
         }
         // save only if new record was added
-        if (!alreadyInList && save) {
+        if (!alreadyFirstInList && save) {
             save(type);
         }
     }
