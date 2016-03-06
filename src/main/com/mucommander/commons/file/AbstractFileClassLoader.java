@@ -111,8 +111,9 @@ public class AbstractFileClassLoader extends ClassLoader {
         for (AbstractFile file : files) {
             try {
                 // If the requested resource could be found, returns it.
-                if (file.getChild(name).exists()) {
-                    return file;
+                final AbstractFile child = file.getChild(name);
+                if (child.exists()) {
+                    return child;
                 }
             } catch(IOException ignore) {
                 if (LOGGER != null) {
