@@ -22,6 +22,7 @@ package com.mucommander.commons.file;
 import java.io.IOException;
 import java.util.*;
 
+import com.mucommander.commons.file.impl.avrdude.AvrdudeProtocolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ import com.mucommander.commons.runtime.OsFamily;
  * an implementation of {@link AbstractFile} that handles that protocol and register it to <code>FileFactory</code>.
  * This registration requires an implementation of {@link ProtocolProvider}, an instance of which will be passed to
  * {@link #registerProtocol(String,ProtocolProvider) registerProtocol}.
- * </p>
+ *
  * <p>
  * Built-in file protocols are:
  * <ul>
@@ -56,14 +57,14 @@ import com.mucommander.commons.runtime.OsFamily;
  *   <li>{@link FileProtocols#NFS NFS}.</li>
  *   <li>{@link FileProtocols#SMB SMB}.</li>
  * </ul>
- * </p>
+ *
  * <h3>Archive formats</h3>
  * <p>
  * In order to allow the <code>com.mucommander.commons.file</code> API to access new archive formats, developers must create
  * an implementation of {@link AbstractArchiveFile} that handles that format and register it to <code>FileFactory</code>.
  * This registration requires an implementation of {@link ArchiveFormatProvider}, an instance of which will be passed to
  * {@link #registerArchiveFormat(ArchiveFormatProvider)}.
- * </p>
+ *
  * <p>
  * Built-in file file formats are:
  * <ul>
@@ -77,7 +78,7 @@ import com.mucommander.commons.runtime.OsFamily;
  *   <li><code>RAR</code>, registered to rar files.</li>
  *   <li><code>SEVENZIP</code>, registered to 7z files.</li>
  * </ul>
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class FileFactory {
@@ -150,6 +151,7 @@ public class FileFactory {
 
         // TODO !!! check that adb installed
         registerProtocol(FileProtocols.ADB, new com.mucommander.commons.file.impl.adb.AdbProtocolProvider());
+        registerProtocol(FileProtocols.AVRDUDE, new AvrdudeProtocolProvider());
     }
 
     static {
@@ -175,19 +177,18 @@ public class FileFactory {
      * <p>
      * If a {@link ProtocolProvider} was already registered to the specified protocol, it will automatically be
      * unregistered.
-     * </p>
+     *
      * <p>
      * The <code>protocol</code> argument is expected to be the protocol identifier, without the trailing <code>://</code>.
      * For example, the identifier of the HTTP protocol would be <code>http</code>. This parameter's case is irrelevant,
      * as it will be stored in all lower-case.
-     * </p>
+     *
      * <p>
      * After this call, the various {@link #getFile(String) getFile} methods will be able to resolve files using the
      * specified protocol.
-     * </p>
+     *
      * <p>
      * Built-in file protocols are listed in {@link FileProtocols}.
-     * </p>
      *
      * @param  protocol identifier of the protocol to register.
      * @param  provider object used to create instances of files using the specified protocol.
@@ -258,7 +259,7 @@ public class FileFactory {
      *
      * <p>All objects returned by the iterator's <code>nextElement()</code> method will be string instances. These can
      * then be passed to {@link #getProtocolProvider(String) getProtocolProvider} to retrieve the associated
-     * {@link ProtocolProvider}.</p>
+     * {@link ProtocolProvider}.
      *
      * @return an iterator on all known protocol names.
      */
@@ -283,7 +284,6 @@ public class FileFactory {
      * {@link #getArchiveFormatProvider(String)} with a known archive filename to retrieve the provider instance.
      * For example, <code>FileFactory.unregisterArchiveFormat(FileFactory.getArchiveFormatProvider("file.zip"))</code>
      * will unregister the (first, if any) Zip provider.
-     * </p>
      *
      * @param provider the <code>ArchiveFormatProvider</code> to unregister.
      * @see #getArchiveFormatProvider(String)
@@ -291,7 +291,7 @@ public class FileFactory {
     public static void unregisterArchiveFormat(ArchiveFormatProvider provider) {
         int index = archiveFormatProvidersV.indexOf(provider);
 
-        if(index!=-1) {
+        if (index != -1) {
             archiveFormatProvidersV.remove(index);
             updateArchiveFormatProviderArray();
         }
@@ -338,7 +338,7 @@ public class FileFactory {
     /**
      * Returns an instance of AbstractFile for the given absolute path.
      *
-     * <p>This method does not throw any IOException but returns <code>null</code> if the file could not be created.</p>
+     * <p>This method does not throw any IOException but returns <code>null</code> if the file could not be created.
      *
      * @param absPath the absolute path to the file
      * @return <code>null</code> if the given path is not absolute or incorrect (doesn't correspond to any file) or
@@ -356,7 +356,7 @@ public class FileFactory {
     /**
      * Returns an instance of AbstractFile for the given absolute path.
      *
-     * <p>This method does not throw any IOException but returns <code>null</code> if the file could not be created.</p>
+     * <p>This method does not throw any IOException but returns <code>null</code> if the file could not be created.
      *
      * @param absPath the absolute path to the file
      * @param throwException if set to <code>true</code>, an IOException will be thrown if something went wrong during file creation
@@ -615,7 +615,7 @@ public class FileFactory {
      * extension will however always be preserved.
      *
      * <p>The returned file may be a {@link LocalFile} or a {@link AbstractArchiveFile} if the extension corresponds
-     * to a registered archive format.</p>
+     * to a registered archive format.
      *
      * @param desiredFilename the desired filename for the temporary file. If a file with this name already exists
      * in the temp directory, the filename's prefix (name without extension) will be appended an ID, but the filename's
@@ -687,7 +687,6 @@ public class FileFactory {
      * {@link AbstractFile#isArchive()}. An {@link AbstractArchiveFile} instance that is not currently an archive 
      * (either non-existent or a directory) will behave as a regular (non-archive) file. This allows file instances to
      * go from being an archive to not being an archive (and vice-versa), without having to re-resolve the file.
-     * </p>
      */
     public static AbstractFile wrapArchive(AbstractFile file) throws IOException {
         String filename = file.getName();
@@ -713,7 +712,7 @@ public class FileFactory {
      * platform-dependent and as such may vary across platforms.
      *
      * <p>It is noteworthy that the provider returned by this method is used by {@link com.mucommander.commons.file.AbstractFile#getIcon()}
-     * to create and return the icon.</p>
+     * to create and return the icon.
      *
      * @return the default FileIconProvider implementation
      */
@@ -725,7 +724,7 @@ public class FileFactory {
      * Sets the default {@link com.mucommander.commons.file.icon.FileIconProvider} implementation.
      *
      * <p>It is noteworthy that the provider returned by this method is used by {@link com.mucommander.commons.file.AbstractFile#getIcon()}
-      * to create and return the icon.</p>
+      * to create and return the icon.
       *
      * @param fip the new value for the default FileIconProvider
      */

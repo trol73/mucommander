@@ -50,10 +50,9 @@ public class PlatformManager {
      *  <li><code>~/Library/Preferences/trolCommander/</code> under MAC OS X.</li>
      *  <li><code>~/.trolcommander/</code> under all other OSes.</li>
      * </ul>
-     * </p>
      * <p>
      * If the default preferences folder doesn't exist, this method will create it.
-     * </p>
+     *
      * @return the path to the default trolCommander preferences folder.
      */
     public static AbstractFile getDefaultPreferencesFolder() {
@@ -68,10 +67,9 @@ public class PlatformManager {
      *  <li><code>~/Library/Preferences/trolCommander/</code> under MAC OS X.</li>
      *  <li><code>~/.trolcommander/</code> under all other OSes.</li>
      * </ul>
-     * </p>
      * <p>
      * If the default preferences folder doesn't exist, this method will create it.
-     * </p>
+     *
      * @return the path to the default trolCommander preferences folder.
      */
     public static String getDefaultPreferencesFolderPath() {
@@ -99,12 +97,11 @@ public class PlatformManager {
      * <p>
      * All modules that save user data to a file should do so in a file located in
      * the folder returned by this method.
-     * </p>
      * <p>
      * The value returned by this method can be set through {@link #setPreferencesFolder(File)}.
      * Otherwise, the {@link #getDefaultPreferencesFolder() default preference folder} will be
      * used.
-     * </p>
+     *
      * @return the path to the user's preference folder.
      * @see    #setPreferencesFolder(AbstractFile)
      */
@@ -121,7 +118,7 @@ public class PlatformManager {
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
-     * </p>
+     *
      * @param  folder      path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()
@@ -135,7 +132,7 @@ public class PlatformManager {
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
-     * </p>
+     *
      * @param  path        path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()
@@ -157,7 +154,7 @@ public class PlatformManager {
      * <p>
      * If <code>folder</code> is a file, its parent folder will be used instead. If it doesn't exist,
      * this method will create it.
-     * </p>
+     *
      * @param  folder      path to the folder in which trolCommander will look for its preferences.
      * @throws IOException if an IO error occurs.
      * @see                #getPreferencesFolder()

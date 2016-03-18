@@ -27,6 +27,7 @@ import javax.swing.ImageIcon;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.icon.FileIconProvider;
+import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.runtime.OsFamily;
 
 /**
@@ -127,6 +128,9 @@ public class FileIcons {
 
         if (USE_SYSTEM_ICONS_APPLICATIONS.equals(systemIconsPolicy)) {
             systemIcon = com.mucommander.desktop.DesktopManager.isApplication(file);
+        }
+        if (file instanceof AdbFile && file.isRoot()) {
+            return IconManager.getIcon(IconManager.IconSet.FILE, "android.png");
         }
 
         if (systemIcon) {

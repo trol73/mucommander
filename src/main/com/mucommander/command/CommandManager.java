@@ -517,6 +517,7 @@ public class CommandManager implements CommandBuilder {
      * Its format is described {@link AssociationsXmlConstants here}.
      * </p>
      * @throws IOException if an IO error occurs.
+     * @throws CommandException thrown when errors occur while building custom commands
      * @see                #writeAssociations()
      * @see                #getAssociationFile()
      * @see                #setAssociationFile(String)
@@ -534,6 +535,7 @@ public class CommandManager implements CommandBuilder {
         } finally {
             wereAssociationsModified = false;
             // Makes sure the input stream is closed.
+            // TODO use autoclosable
             if (in != null) {
                 try {
                     in.close();

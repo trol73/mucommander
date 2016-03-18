@@ -95,6 +95,7 @@ public class SFTPFile extends ProtocolFile {
 
     /**
      * Creates a new instance of SFTPFile and initializes the SSH/SFTP connection to the server.
+     * @throws IOException
      */
     protected SFTPFile(FileURL fileURL) throws IOException {
         this(fileURL, null);

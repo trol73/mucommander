@@ -330,8 +330,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         final AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         // Resolve the current folder's volume and use its path as a key for the volume info cache
-        final String volumePath = currentFolder.exists() ?
-        		currentFolder.getVolume().getAbsolutePath(true) : "";
+        final String volumePath = currentFolder.exists() ? currentFolder.getVolume().getAbsolutePath(true) : "";
 
         Long cachedVolumeInfo[] = volumeInfoCache.get(volumePath);
         if (cachedVolumeInfo != null) {
@@ -356,19 +355,24 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                             long volumeInfo[] = ((LocalFile)currentFolder).getVolumeInfo();
                             volumeTotal = volumeInfo[0];
                             volumeFree = volumeInfo[1];
-                        }
-                        catch(IOException e) {
+                        } catch (IOException e) {
                             volumeTotal = -1;
                             volumeFree = -1;
                         }
                     }
                     // Java 1.6 and up or any other file type
                     else {
-                        try { volumeFree = currentFolder.getFreeSpace(); }
-                        catch(IOException e) { volumeFree = -1; }
+                        try {
+                            volumeFree = currentFolder.getFreeSpace();
+                        } catch(IOException e) {
+                            volumeFree = -1;
+                        }
 
-                        try { volumeTotal = currentFolder.getTotalSpace(); }
-                        catch(IOException e) { volumeTotal = -1; }
+                        try {
+                            volumeTotal = currentFolder.getTotalSpace();
+                        } catch(IOException e) {
+                            volumeTotal = -1;
+                        }
                     }
 
 // For testing the free space indicator 
@@ -441,14 +445,13 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
      */
     @Override
     public void setVisible(boolean visible) {
-        if(visible) {
+        if (visible) {
             // Start auto-update thread
             startAutoUpdate();
             super.setVisible(true);
             // Update status bar info
             updateStatusInfo();
-        }
-        else {
+        } else {
             // Stop auto-update thread
             this.autoUpdateThread = null;
             super.setVisible(false);
@@ -476,10 +479,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             // - MainFrame isn't changing folders
             // - MainFrame is active and in the foreground
             // Volume info update will potentially hit the LRU cache and not actually update volume info
-            if (isVisible() && !mainFrame.getNoEventsMode() && mainFrame.isForegroundActive())
+            if (isVisible() && !mainFrame.getNoEventsMode() && mainFrame.isForegroundActive()) {
                 updateVolumeInfo();
-        }
-        while (autoUpdateThread != null && mainFrame.isVisible());   // Stop when MainFrame is disposed
+            }
+        } while (autoUpdateThread != null && mainFrame.isVisible());   // Stop when MainFrame is disposed
     }
     
 
@@ -504,7 +507,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     public void markedFilesChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if(source==mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if(source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
             updateSelectedFilesInfo();
     }
 
@@ -541,8 +544,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 	
     public void mouseClicked(MouseEvent e) {
         // Discard mouse events while in 'no events mode'
-        if(mainFrame.getNoEventsMode())
+        if (mainFrame.getNoEventsMode()) {
             return;
+        }
 
         // Right clicking on the toolbar brings up a popup menu that allows the user to hide this status bar
         if (DesktopManager.isRightMouseButton(e)) {
@@ -551,6 +555,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             popupMenu.add(ActionManager.getActionInstance(com.mucommander.ui.action.impl.ToggleStatusBarAction.Descriptor.ACTION_ID, mainFrame));
             popupMenu.show(this, e.getX(), e.getY());
             popupMenu.setVisible(true);
+        }
+        if (e.getSource() == volumeSpaceLabel) {
+            volumeInfoCache.clearAll();
+            updateVolumeInfo();
         }
     }
 

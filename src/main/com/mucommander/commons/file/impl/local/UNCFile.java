@@ -86,17 +86,19 @@ public class UNCFile extends ProtocolFile {
     /**
      * Creates a new instance of UNCFile, using the given {@link File} if not <code>null</code>, creating a new
      * {@link File} instance otherwise.
+     * @throws IOException if an I/O error occurs.
      */
     protected UNCFile(FileURL fileURL, File file) throws IOException {
         super(fileURL);
 
-        if(file==null) {
+        if (file == null) {
             absPath = SEPARATOR+SEPARATOR+fileURL.getHost()+fileURL.getPath().replace('/', '\\');    // Replace leading / char by \			
 
             // create the java.io.File instance and throw an exception if the path is not absolute.
             file = new File(absPath);
-            if(!file.isAbsolute())
+            if (!file.isAbsolute()) {
                 throw new IOException();
+            }
         }
         // the java.io.File instance was created by ls(), no need to re-create it or call the costly File#getAbsolutePath()
         else {
@@ -104,8 +106,9 @@ public class UNCFile extends ProtocolFile {
         }
 		
 		// Remove the trailing separator if present
-        if(absPath.endsWith(SEPARATOR))
-            absPath = absPath.substring(0, absPath.length()-1);
+        if (absPath.endsWith(SEPARATOR)) {
+            absPath = absPath.substring(0, absPath.length() - 1);
+        }
 
         this.file = file;
         this.permissions = new UNCFilePermissions(file);
@@ -262,6 +265,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public InputStream getInputStream() throws IOException {
@@ -272,6 +276,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public OutputStream getOutputStream() throws IOException {
@@ -282,6 +287,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public OutputStream getAppendOutputStream() throws IOException {
@@ -292,6 +298,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public RandomAccessInputStream getRandomAccessInputStream() throws IOException {
@@ -302,6 +309,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException {
@@ -310,10 +318,9 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public void delete() throws IOException {
-        boolean ret = file.delete();
-		
-        if(!ret)
+        if (!file.delete()) {
             throw new IOException();
+        }
     }
 
 
@@ -547,7 +554,7 @@ public class UNCFile extends ProtocolFile {
 	
     /**
      * Overridden to return the local volume on which this file is located. The returned volume is one of the volumes
-     * returned by {@link #getVolumes()}.
+     * returned by {@link LocalFile#getVolumes()}.
      */
     @Override
     public AbstractFile getVolume() {
@@ -558,18 +565,16 @@ public class UNCFile extends ProtocolFile {
         int bestDepth = -1;
         int bestMatch = -1;
         int depth;
-        AbstractFile volume;
-        String volumePath;
+
         String thisPath = getAbsolutePath(true);
 
-        for(int i=0; i<volumes.length; i++) {
-            volume = volumes[i];
-            volumePath = volume.getAbsolutePath(true);
+        for (int i=0; i<volumes.length; i++) {
+            AbstractFile volume = volumes[i];
+            String volumePath = volume.getAbsolutePath(true);
 
-            if(thisPath.equals(volumePath)) {
+            if (thisPath.equals(volumePath)) {
                 return this;
-            }
-            else if(thisPath.startsWith(volumePath)) {
+            } else if(thisPath.startsWith(volumePath)) {
                 depth = PathUtils.getDepth(volumePath, volume.getSeparator());
                 if(depth>bestDepth) {
                     bestDepth = depth;
@@ -578,8 +583,9 @@ public class UNCFile extends ProtocolFile {
             }
         }
 
-        if(bestMatch!=-1)
+        if (bestMatch >= 0) {
             return volumes[bestMatch];
+        }
 
         // If no volume matched this file (shouldn't normally happen), return the root folder
         return getRoot();
@@ -598,7 +604,7 @@ public class UNCFile extends ProtocolFile {
      */
     public long[] getVolumeInfo() throws IOException {
         // Under Java 1.6 and up, use the (new) java.io.File methods
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             return new long[] {
                 getTotalSpace(),
                 getFreeSpace()
@@ -623,7 +629,7 @@ public class UNCFile extends ProtocolFile {
 
         try {
                 // Use the Kernel32 DLL if it is available
-                if(Kernel32.isAvailable()) {
+                if (Kernel32.isAvailable()) {
                     // Retrieves the total and free space information using the GetDiskFreeSpaceEx function of the
                     // Kernel32 API.
                     LongByReference totalSpaceLBR = new LongByReference();

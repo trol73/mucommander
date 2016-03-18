@@ -224,9 +224,14 @@ public abstract class Archiver {
     /**
      * Normalizes the entry path, that is :
      * <ul>
-     * <li>replace any \ character occurrence by / as this usually is the default separator for archive files
-     * <li>if the entry is a directory, add a trailing slash to the path if it doesn't have one already 
+     *   <li>replace any \ character occurrence by / as this usually is the default separator for archive files
+     *   <li>if the entry is a directory, add a trailing slash to the path if it doesn't have one already
      * </ul>
+     *
+     * @param entryPath
+	  * @param isDirectory
+	  *
+	  * @return normalized path
      */
     protected String normalizePath(String entryPath, boolean isDirectory) {
         // Replace any \ character by /
@@ -342,7 +347,7 @@ public abstract class Archiver {
      */
     protected static OutputStream createBzip2OutputStream(OutputStream out) throws IOException {
         // Writes the 2 magic bytes 'BZ', as required by CBZip2OutputStream. A quote from CBZip2OutputStream's Javadoc:
-        // "Attention: The caller is resonsible to write the two BZip2 magic bytes "BZ" to the specified stream
+        // "Attention: The caller is responsible to write the two BZip2 magic bytes "BZ" to the specified stream
         // prior to calling this constructor."
 
         out.write('B');
@@ -400,7 +405,7 @@ public abstract class Archiver {
      * @param format an archive format	 
      */
     public static boolean formatSupportsComment(int format) {
-        return format==ZIP_FORMAT;
+        return format == ZIP_FORMAT;
     }
 	
 	

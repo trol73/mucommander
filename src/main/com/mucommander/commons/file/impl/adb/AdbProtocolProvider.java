@@ -32,8 +32,4 @@ public class AdbProtocolProvider implements ProtocolProvider {
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
         return new AdbFile(url);
     }
-
-
-//adb://device_name/file
-
 }

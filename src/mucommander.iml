@@ -31,5 +31,6 @@
     <orderEntry type="library" name="testng" level="project" />
     <orderEntry type="library" name="jediterm" level="project" />
     <orderEntry type="library" name="quaqua" level="project" />
+    <orderEntry type="library" name="java-iso-tools" level="project" />
   </component>
 </module>

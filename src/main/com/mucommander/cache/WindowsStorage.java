@@ -23,6 +23,7 @@ import com.mucommander.commons.file.AbstractFile;
 
 import java.awt.Window;
 import java.io.*;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class WindowsStorage {
 
     private static final String STORAGE_FILE_NAME = "windows.list";
 
-    private static WindowsStorage instance;
+    private static WeakReference<WindowsStorage> instance;
 
     private Map<String, Record> records;
 
@@ -83,10 +84,12 @@ public class WindowsStorage {
     }
 
     public static WindowsStorage getInstance() {
-        if (instance == null) {
-            instance = new WindowsStorage();
+        WindowsStorage windowsStorage = instance != null ? instance.get() : null;
+        if (windowsStorage == null) {
+            windowsStorage = new WindowsStorage();
+            instance = new WeakReference<>(windowsStorage);
         }
-        return instance;
+        return windowsStorage;
     }
 
     public Record get(String key) {
@@ -135,7 +138,6 @@ public class WindowsStorage {
             return true;
         }
         return false;
-
     }
 
 

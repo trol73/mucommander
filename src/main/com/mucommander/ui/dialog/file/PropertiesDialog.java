@@ -114,7 +114,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         Icon icon;
         boolean isSingleFile = files.size()==1;
         AbstractFile singleFile = isSingleFile?files.elementAt(0):null;
-        if(isSingleFile) {
+        if (isSingleFile) {
             icon = FileIcons.getFileIcon(singleFile, ICON_DIMENSION);
         } else {
             ImageIcon imageIcon = IconManager.getIcon(IconManager.IconSet.COMMON, "many_files.png");

@@ -37,7 +37,6 @@ import java.util.List;
  *     {@link CommandType#INVISIBLE_COMMAND invisible} (invisible and mutable) or {@link CommandType#NORMAL_COMMAND} (visible and mutable).
  *   </li>
  * </ul>
- * </p>
  * <p>
  * The basic command syntax is fairly simple:
  * <ul>
@@ -46,7 +45,6 @@ import java.util.List;
  *  <li>Non-escaped space characters are used as token separators.</li>
  * </ul>
  * It is important to remember that <code>"</code> characters are <b>not</b> removed from the resulting tokens.
- * </p>
  * <p>
  * It's also possible to include keywords in a command:
  * <ul>
@@ -57,16 +55,14 @@ import java.util.List;
  *  <li><code>$p</code> is replaced by a file's parent's path.</li>
  *  <li><code>$j</code> is replaced by the path of the folder in which the JVM was started.</li>
  * </ul>
- * </p>
  * <p>
  * Once a <code>Command</code> instance has been retrieved, execution tokens can be retrieved through the
  * {@link #getTokens(AbstractFile)} method. This will return a tokenized version of the command and replace any
  * keyword by the corresponding file value . It's also possible to skip keyword replacement through the {@link #getTokens()} method.
- * </p>
  * <p>
  * A command's executable tokens are typically meant to be used with {@link com.mucommander.process.ProcessRunner#execute(String[],AbstractFile)}
  * in order to generate instances of {@link com.mucommander.process.AbstractProcess}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    CommandManager
  * @see    com.mucommander.process.ProcessRunner
@@ -130,7 +126,7 @@ public class Command implements Comparable<Command> {
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>{@link Command(String,String,CommandType,String) Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null)</code>.
-     * </p>
+     *
      * @param alias   alias of the command.
      * @param command command that will be executed.
      */
@@ -143,7 +139,7 @@ public class Command implements Comparable<Command> {
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>{@link Command(String,String,int,String) Command(}alias, command, type, null)</code>.
-     * </p>
+     *
      * @param alias   alias of the command.
      * @param command command that will be executed.
      * @param type    type of the command.
@@ -339,7 +335,6 @@ public class Command implements Comparable<Command> {
      * <p>
      * Returns true if command contains keywords referencing selected file, e.g. $f,$n,$p,$e,$b.
      * Returns false otherwise, e.g. $j, $xyz, etc.
-     * </p>
      *
      * @return whether this command contains keywords referencing selected file.
      */
@@ -467,7 +462,7 @@ public class Command implements Comparable<Command> {
      * Returns the command's display name.
      * <p>
      * If it hasn't been set, returns this command's alias.
-     * </p>
+     *
      * @return the command's display name.
      */
     public synchronized String getDisplayName() {

@@ -31,8 +31,8 @@ import java.util.WeakHashMap;
  * <li>one or more elements has been removed
  * <li>an element has been changed
  * </ul>
- * </p>
- * <p>It is however not aware of modifications that are made to the contained objects themselves.</p>
+ *
+ * <p>It is however not aware of modifications that are made to the contained objects themselves.
  *
  * @author Maxence Bernard
  */
@@ -63,7 +63,7 @@ public class AlteredVector<E> extends Vector<E> {
      * Adds the specified VectorChangeListener to the list of registered listeners.
      *
      * <p>Listeners are stored as weak references so {@link #removeVectorChangeListener(VectorChangeListener)}
-     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.</p>
+     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.
      *
      * @param listener the VectorChangeListener to add to the list of registered listeners.
      * @see            #removeVectorChangeListener(VectorChangeListener)
@@ -90,8 +90,9 @@ public class AlteredVector<E> extends Vector<E> {
      * @param nbAdded number of elements added
      */
     private void fireElementsAddedEvent(int startIndex, int nbAdded) {
-        for(VectorChangeListener listener : listeners.keySet())
+        for (VectorChangeListener listener : listeners.keySet()) {
             listener.elementsAdded(startIndex, nbAdded);
+        }
     }
 
     /**

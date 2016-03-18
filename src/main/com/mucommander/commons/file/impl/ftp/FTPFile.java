@@ -706,7 +706,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             boolean success = connHandler.ftpClient.sendSiteCommand("CHMOD "+Integer.toOctalString(permissions)+" "+absPath);
             LOGGER.info("server reply: {}", connHandler.ftpClient.getReplyString());
 
-            if(!success) {
+            if (!success) {
                 int replyCode = connHandler.ftpClient.getReplyCode();
 
                 // If server reported that the command is not supported, mark it in the ConnectionHandler so that
@@ -794,7 +794,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         // create the canonical file instance and cache it
         if (canonicalFile == null) {
             // getLink() returns the raw symlink target which can either be an absolute or a relative path. If the path is
-            // relative, preprend the absolute path of the symlink's parent folder.
+            // relative, prepared the absolute path of the symlink's parent folder.
             String symlinkTargetPath = file.getLink();
             if (!symlinkTargetPath.startsWith("/")) {
                 String parentPath = fileURL.getParent().getPath();
@@ -1251,7 +1251,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
          * All IOException raised by FTPClient should be checked by this method so that socket errors are properly detected.
          */
         private void checkSocketException(IOException e) {
-            if(((e instanceof FTPConnectionClosedException) || (e instanceof SocketException) || (e instanceof SocketTimeoutException)) && isConnected()) {
+            if (((e instanceof FTPConnectionClosedException) || (e instanceof SocketException) || (e instanceof SocketTimeoutException)) && isConnected()) {
                 LOGGER.info("socket exception detected, closing connection", e);
                 closeConnection();
             }
@@ -1344,7 +1344,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                     // RFC 959: "The command was not accepted and the requested action did not take place, but the error
                     // condition is temporary and the action may be requested again."
 	                int replyCode = ftpClient.getReplyCode();
-                    if(!ftpClient.isConnected() || FTPReply.isNegativeTransient(replyCode)) {
+                    if (!ftpClient.isConnected() || FTPReply.isNegativeTransient(replyCode)) {
                         LOGGER.info((!ftpClient.isConnected()?"Connection error":"Temporary server error ("+replyCode+")")+", retries left="+retriesLeft, e);
 
                         // Retry to connect, if we have at least an attempt left
@@ -1372,8 +1372,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                     // Re-throw the exception
                     throw e;
 	            }
-            }
-            while(true);
+            } while(true);
         }
 
 
@@ -1444,25 +1443,26 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         public boolean getBitValue(int access, int type) {
             int fAccess;
-            int fPermission;
-
-            if (access==USER_ACCESS)
+            if (access == USER_ACCESS) {
                 fAccess = org.apache.commons.net.ftp.FTPFile.USER_ACCESS;
-            else if (access==GROUP_ACCESS)
+            } else if (access == GROUP_ACCESS) {
                 fAccess = org.apache.commons.net.ftp.FTPFile.GROUP_ACCESS;
-            else if (access==OTHER_ACCESS)
+            } else if (access == OTHER_ACCESS) {
                 fAccess = org.apache.commons.net.ftp.FTPFile.WORLD_ACCESS;
-            else
+            } else {
                 return false;
+            }
 
-            if (type==READ_PERMISSION)
+            int fPermission;
+            if (type == READ_PERMISSION) {
                 fPermission = org.apache.commons.net.ftp.FTPFile.READ_PERMISSION;
-            else if (type==WRITE_PERMISSION)
+            } else if (type == WRITE_PERMISSION) {
                 fPermission = org.apache.commons.net.ftp.FTPFile.WRITE_PERMISSION;
-            else if (type==EXECUTE_PERMISSION)
+            } else if (type == EXECUTE_PERMISSION) {
                 fPermission = org.apache.commons.net.ftp.FTPFile.EXECUTE_PERMISSION;
-            else
+            } else {
                 return false;
+            }
 
             return file.hasPermission(fAccess, fPermission);
         }

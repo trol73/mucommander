@@ -357,7 +357,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
 
     /**
      * Force to refresh folder that contains this file
-     * @param path
+     * @param path path to file
      */
     public static void addFileToRefresh(String path) {
         synchronized (forceRefreshFilePath) {

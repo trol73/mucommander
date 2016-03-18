@@ -44,7 +44,7 @@ import java.io.Reader;
  *     will be excluded from section names.
  *   </li>
  * </ul>
- * </p>
+ *
  * <p>
  * For example:
  * <pre>
@@ -64,7 +64,7 @@ import java.io.Reader;
  *   <li>A variable called <code>some.section.var1</code> will be created with a value of <code>value1</code>.</li>
  *   <li>A variable called <code>some.section.var2</code> will be created with a value of <code>value2</code>.</li>
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    XmlConfigurationWriter
  */

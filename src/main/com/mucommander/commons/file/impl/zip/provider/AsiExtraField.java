@@ -39,16 +39,16 @@ import java.util.zip.ZipException;
  *         (var.)        variable        symbolic link filename
  * </pre>
  * taken from appnote.iz (Info-ZIP note, 981119) found at <a
- * href="ftp://ftp.uu.net/pub/archiving/zip/doc/">ftp://ftp.uu.net/pub/archiving/zip/doc/</a></p>
+ * href="ftp://ftp.uu.net/pub/archiving/zip/doc/">ftp://ftp.uu.net/pub/archiving/zip/doc/</a>
  *
  * <p>Short is two bytes and Long is four bytes in big endian byte and
- * word order, device numbers are currently not supported.</p>
+ * word order, device numbers are currently not supported.
  *
  * <p>--------------------------------------------------------------------------------------------------------------<br>
  * <br>
  * This class is based off the <code>org.apache.tools.zip</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.0 of Ant.</p>
+ * file. It was forked at version 1.7.0 of Ant.
  * 
  * @author Apache Ant, Maxence Bernard
  */
@@ -71,7 +71,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
     /**
      * File this entry points to, if it is a symbolic link.
      *
-     * <p>empty string - if entry is not a symbolic link.</p>
+     * <p>empty string - if entry is not a symbolic link.
      */
     private String link = "";
     /**

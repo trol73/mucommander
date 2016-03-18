@@ -71,8 +71,7 @@ public class StreamUtils {
         byte buffer[] = BufferPool.getByteArray(bufferSize);
         try {
             return copyStream(in, out, buffer, length);
-        }
-        finally {
+        } finally {
             // Make the buffer available for further use
             BufferPool.releaseByteArray(buffer);
         }

@@ -51,7 +51,6 @@ import com.mucommander.io.backup.BackupOutputStream;
  * application is started.</li>
  *  <li>volatile credentials: lost when the application terminates.</li>
  * </ul>
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -123,12 +122,13 @@ public class CredentialsManager {
      * @throws FileNotFoundException if <code>path</code> is not available.
      */
     public static void setCredentialsFile(String path) throws FileNotFoundException {
-        AbstractFile file;
+        AbstractFile file = FileFactory.getFile(path);
 
-        if((file = FileFactory.getFile(path)) == null)
+        if (file == null) {
             setCredentialsFile(new File(path));
-        else
+        } else {
             setCredentialsFile(file);
+        }
     }
 
     /**
@@ -148,8 +148,9 @@ public class CredentialsManager {
      * @throws FileNotFoundException if <code>path</code> is not available.
      */
     public static void setCredentialsFile(AbstractFile file) throws FileNotFoundException {
-        if(file.isBrowsable())
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file);
+        }
         credentialsFile = file;
     }
 
@@ -160,14 +161,14 @@ public class CredentialsManager {
      */
     public static void loadCredentials() throws Exception {
         AbstractFile credentialsFile = getCredentialsFile();
-        if(credentialsFile.exists()) {
+        if (credentialsFile.exists()) {
         	LOGGER.debug("Found credentials file: "+credentialsFile.getAbsolutePath());
             // Parse the credentials file
             new CredentialsParser().parse(credentialsFile);
             LOGGER.debug("Credentials file loaded.");
+        } else {
+            LOGGER.debug("No credentials file found at " + credentialsFile.getAbsolutePath());
         }
-        else
-        	LOGGER.debug("No credentials file found at "+credentialsFile.getAbsolutePath());
     }
 
     /**
@@ -180,8 +181,9 @@ public class CredentialsManager {
      */
     public static void writeCredentials(boolean forceWrite) throws IOException {
         // Write credentials file only if changes were made to persistent entries since last write, or if write is forced
-        if(!(forceWrite || saveNeeded))
+        if (!(forceWrite || saveNeeded)) {
             return;
+        }
 
         BackupOutputStream out = null;
         try {
@@ -190,9 +192,11 @@ public class CredentialsManager {
             saveNeeded = false;
         }
         finally {
-            if(out != null) {
-                try {out.close();}
-                catch(Exception e) {}
+            if (out != null) {
+                // TODO autoclosable
+                try {
+                    out.close();
+                } catch(Exception e) {}
             }
         }
 
@@ -200,10 +204,11 @@ public class CredentialsManager {
         // 'group' and 'other'.
         boolean fileSecured = !OsFamily.getCurrent().isUnixBased() || Chmod.chmod(credentialsFile, 0600);     // rw-------
 
-        if(fileSecured)
-        	LOGGER.debug("Credentials file saved successfully.");
-        else
-        	LOGGER.warn("Credentials file could not be chmod!");
+        if (fileSecured) {
+            LOGGER.debug("Credentials file saved successfully.");
+        } else {
+            LOGGER.warn("Credentials file could not be chmod!");
+        }
     }
 
 
@@ -252,14 +257,14 @@ public class CredentialsManager {
      * @return a Vector of CredentialsMapping matching the given URL's scheme and host, best match at the first position
      */
     private static List<CredentialsMapping> getMatchingCredentialsV(FileURL location) {
-        List<CredentialsMapping> matchesV = new Vector<>();
+        List<CredentialsMapping> matchesV = new ArrayList<>();
 
         findMatches(location, volatileCredentialMappings, matchesV);
         findMatches(location, persistentCredentialMappings, matchesV);
 
         // Find the best match and move it at the first position in the vector
         int bestMatchIndex = getBestMatchIndex(location, matchesV);
-        if(bestMatchIndex!=-1) {
+        if (bestMatchIndex >= 0) {
             matchesV.add(0, matchesV.remove(bestMatchIndex));
         }
 
@@ -282,8 +287,9 @@ public class CredentialsManager {
     public static void addCredentials(CredentialsMapping credentialsMapping) {
 
         // Do not add if the credentials are empty
-        if(credentialsMapping.getCredentials().isEmpty())
+        if (credentialsMapping.getCredentials().isEmpty()) {
             return;
+        }
 
         boolean persist = credentialsMapping.isPersistent();
 
@@ -291,12 +297,11 @@ public class CredentialsManager {
         LOGGER.trace("before, persistentCredentials="+ persistentCredentialMappings);
         LOGGER.trace("before, volatileCredentials="+ volatileCredentialMappings);
 
-        if(persist) {
-            replaceVectorElement(persistentCredentialMappings, credentialsMapping);
+        if (persist) {
+            replaceListElement(persistentCredentialMappings, credentialsMapping);
             volatileCredentialMappings.remove(credentialsMapping);
-        }
-        else {
-            replaceVectorElement(volatileCredentialMappings, credentialsMapping);
+        } else {
+            replaceListElement(volatileCredentialMappings, credentialsMapping);
             persistentCredentialMappings.removeElement(credentialsMapping);
         }
 
@@ -322,8 +327,9 @@ public class CredentialsManager {
         FileURL realm = credentialsMapping.getRealm();
         Set<String> propertyKeys = realm.getPropertyNames();
         for (String key : propertyKeys) {
-            if(location.getProperty(key) == null)
+            if (location.getProperty(key) == null) {
                 location.setProperty(key, realm.getProperty(key));
+            }
         }
     }
 
@@ -343,10 +349,9 @@ public class CredentialsManager {
     	LOGGER.trace("called, fileURL="+ location +" containsCredentials="+ location.containsCredentials());
 
         CredentialsMapping creds[] = getMatchingCredentials(location);
-        if(creds.length>0) {
+        if (creds.length > 0) {
             authenticate(location, creds[0]);
-        }
-        else {
+        } else {
             Credentials guestCredentials = location.getGuestCredentials();
             if(guestCredentials!=null) {
                 authenticate(location, new CredentialsMapping(guestCredentials, location.getRealm(), false));
@@ -364,12 +369,11 @@ public class CredentialsManager {
      * @param matches the Vector where matching CredentialsMapping instances will be added
      */
     private static void findMatches(FileURL location, List<CredentialsMapping> credentials, List<CredentialsMapping> matches) {
-        for(CredentialsMapping tempCredentialsMapping: credentials) {
+        for (CredentialsMapping tempCredentialsMapping: credentials) {
             FileURL tempRealm = tempCredentialsMapping.getRealm();
-            if(location.schemeEquals(tempRealm)
-               && location.portEquals(tempRealm)
-               && location.hostEquals(tempRealm))
+            if (location.schemeEquals(tempRealm) && location.portEquals(tempRealm) && location.hostEquals(tempRealm)) {
                 matches.add(tempCredentialsMapping);
+            }
         }
 
         LOGGER.trace("returning matches="+matches);
@@ -389,8 +393,9 @@ public class CredentialsManager {
      * @return the CredentialsMapping instance that best matches the given location, -1 if the given matches Vector is empty.
      */
     private static int getBestMatchIndex(FileURL location, List<CredentialsMapping> matches) {
-        if(matches.size()==0)
+        if (matches.isEmpty()) {
             return -1;
+        }
 
         // Splits the provided location's path into an array of folder tokens (e.g. "/home/maxence" -> ["home","maxence"])
         String path = location.getPath();
@@ -412,14 +417,15 @@ public class CredentialsManager {
 
         // Compares the location's path against all the one of all CredentialsMapping instances
         int nbMatches = matches.size();
-        for(int i=0; i<nbMatches; i++) {
+        for (int i=0; i<nbMatches; i++) {
             tempCredentialsMapping = matches.get(i);
             tempURL = tempCredentialsMapping.getRealm();
             tempPath = tempURL.getPath();
 
             // We found a perfect match (same path), it can't get any better than this, return the CredentialsMapping' index
-            if(tempPath.equalsIgnoreCase(path))
+            if (tempPath.equalsIgnoreCase(path)) {
                 return i;
+            }
 
             // Split the current CredentialsMapping' location into folder tokens and count the ones that match
             // the target location's tokens.
@@ -428,11 +434,12 @@ public class CredentialsManager {
             // /var/log and /usr -> nbMatchingToken = 0
             st = new StringTokenizer(tempPath, "/\\");
             nbMatchingToken = 0;
-            for(int j=0; j<nbTokens && st.hasMoreTokens(); j++) {
-                if(st.nextToken().equalsIgnoreCase(pathTokens[nbMatchingToken]))
+            for (int j=0; j<nbTokens && st.hasMoreTokens(); j++) {
+                if (st.nextToken().equalsIgnoreCase(pathTokens[nbMatchingToken])) {
                     nbMatchingToken++;
-                else
+                } else {
                     break;
+                }
             }
 
             if (nbMatchingToken>maxTokens) {
@@ -451,15 +458,16 @@ public class CredentialsManager {
      * Replaces any object that's equal to the given one in the <code>Vector</code>, preserving its position. If the
      * vector contains no such object, it is added to the end of the vector.
      *
-     * @param vector the <code>Vector</code> to replace/add the object to
+     * @param list the <code>List</code> to replace/add the object to
      * @param o the object to replace/add
      */
-    private static void replaceVectorElement(List<CredentialsMapping> vector, CredentialsMapping o) {
-        int index = vector.indexOf(o);
-        if(index==-1)
-            vector.add(o);
-        else
-            vector.set(index, o);
+    private static void replaceListElement(List<CredentialsMapping> list, CredentialsMapping o) {
+        int index = list.indexOf(o);
+        if (index < 0) {
+            list.add(o);
+        } else {
+            list.set(index, o);
+        }
     }
 
     /**
@@ -498,7 +506,6 @@ public class CredentialsManager {
      * @author Maxence Bernard
      */
     private static class CredentialsManagerAuthenticator implements Authenticator {
-
         public void authenticate(FileURL fileURL) {
             CredentialsManager.authenticateImplicit(fileURL);
         }

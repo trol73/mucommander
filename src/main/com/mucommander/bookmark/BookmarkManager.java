@@ -94,7 +94,7 @@ public class BookmarkManager implements VectorChangeListener {
      */
     public static synchronized void buildBookmarks(BookmarkBuilder builder) throws BookmarkException {
         builder.startBookmarks();
-        for(Bookmark bookmark : bookmarks) {
+        for (Bookmark bookmark : bookmarks) {
             builder.addBookmark(bookmark.getName(), bookmark.getLocation());
         }
         builder.endBookmarks();
@@ -115,8 +115,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @throws IOException if there was a problem locating the default bookmarks file.
      */
     public static synchronized AbstractFile getBookmarksFile() throws IOException {
-        if(bookmarksFile == null)
+        if (bookmarksFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_BOOKMARKS_FILE_NAME);
+        }
         return bookmarksFile;
     }
 
@@ -130,12 +131,13 @@ public class BookmarkManager implements VectorChangeListener {
      * @see       #getBookmarksFile()
      */
     public static void setBookmarksFile(String path) throws FileNotFoundException {
-        AbstractFile file;
+        AbstractFile file = FileFactory.getFile(path);
 
-        if((file = FileFactory.getFile(path)) == null)
+        if (file == null) {
             setBookmarksFile(new File(path));
-        else
+        } else {
             setBookmarksFile(file);
+        }
     }
 
     /**
@@ -157,8 +159,9 @@ public class BookmarkManager implements VectorChangeListener {
      */
 
     public static synchronized void setBookmarksFile(AbstractFile file) throws FileNotFoundException {
-        if(file.isBrowsable())
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+        }
         bookmarksFile = file;
     }
 
@@ -179,9 +182,10 @@ public class BookmarkManager implements VectorChangeListener {
             in = new BackupInputStream(getBookmarksFile());
             readBookmarks(in, new Loader());
         } finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {}
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception ignore) {}
             }
             isLoading = false;
         }
@@ -222,20 +226,19 @@ public class BookmarkManager implements VectorChangeListener {
      * @throws BookmarkException if an error occurs.
      */
     public static synchronized void writeBookmarks(boolean forceWrite) throws IOException, BookmarkException {
-        OutputStream out;
-
         // Write bookmarks file only if changes were made to the bookmarks since last write, or if write is forced.
-        if(!(forceWrite || saveNeeded))
+        if (!(forceWrite || saveNeeded)) {
             return;
-        out = null;
+        }
+        OutputStream out = null;
         try {
             buildBookmarks(getBookmarkWriter(out = new BackupOutputStream(getBookmarksFile())));
             saveNeeded = false;
-        }
-        finally {
-            if(out != null) {
-                try {out.close();}
-                catch(Exception e) {}
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch(Exception ignore) {}
             }
         }
     }
@@ -270,14 +273,11 @@ public class BookmarkManager implements VectorChangeListener {
      * @return a Bookmark instance with the given name, null if none was found
      */
     public static synchronized Bookmark getBookmark(String name) {
-        int nbBookmarks = bookmarks.size();
-        Bookmark b;
-        for(int i=0; i<nbBookmarks; i++) {
-            b = bookmarks.elementAt(i);
-            if(b.getName().equalsIgnoreCase(name))
+        for (Bookmark b : bookmarks) {
+            if (b.getName().equalsIgnoreCase(name)) {
                 return b;
+            }
         }
-
         return null;
     }
 
@@ -301,7 +301,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @param listener the BookmarkListener to add to the list of registered listeners.
      * @see   #removeBookmarkListener(BookmarkListener)
      */
-    public static void addBookmarkListener(BookmarkListener listener) {synchronized(listeners) {listeners.put(listener, null);}}
+    public static void addBookmarkListener(BookmarkListener listener) {
+        synchronized(listeners) {listeners.put(listener, null);}
+    }
 
     /**
      * Removes the specified BookmarkListener from the list of registered listeners.
@@ -309,7 +311,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @param listener the BookmarkListener to remove from the list of registered listeners.
      * @see   #addBookmarkListener(BookmarkListener)
      */
-    public static void removeBookmarkListener(BookmarkListener listener) {synchronized(listeners) {listeners.remove(listener);}}
+    public static void removeBookmarkListener(BookmarkListener listener) {
+        synchronized(listeners) {listeners.remove(listener);}
+    }
 
     /**
      * Notifies all the registered bookmark listeners of a bookmark change. This can be :
@@ -321,19 +325,22 @@ public class BookmarkManager implements VectorChangeListener {
      */
     public static void fireBookmarksChanged() {
         // Bookmarks file will need to be saved
-        if(!isLoading)
+        if (!isLoading) {
             saveNeeded = true;
+        }
 
         lastBookmarkChangeTime = System.currentTimeMillis();
 
         // Do not fire event if events are currently disabled
-        if(!fireEvents)
+        if (!fireEvents) {
             return;
+        }
 
         synchronized(listeners) {
             // Iterate on all listeners
-            for(BookmarkListener listener : listeners.keySet())
+            for (BookmarkListener listener : listeners.keySet()) {
                 listener.bookmarksChanged();
+            }
         }
     }
 
@@ -341,21 +348,20 @@ public class BookmarkManager implements VectorChangeListener {
      * Specifies whether bookmark events should be fired when a change in the bookmarks is detected. This allows
      * to temporarily suspend events firing when a lot of them are made, for example when editing the bookmarks list.
      *
-     * <p>If true is speicified, any subsequent calls to fireBookmarksChanged will be ignored, until this method is
+     * <p>If true is specified, any subsequent calls to fireBookmarksChanged will be ignored, until this method is
      * called again with false.</p>
      * @param b whether to fire events.
      */
     public static synchronized void setFireEvents(boolean b) {
-        if(b) {
+        if (b) {
             // Fire a bookmarks changed event if bookmarks were modified during event pause
-            if(!fireEvents && lastBookmarkChangeTime >= lastEventPauseTime) {
+            if (!fireEvents && lastBookmarkChangeTime >= lastEventPauseTime) {
                 fireEvents = true;
                 fireBookmarksChanged();
             }
-        }
-        else {
+        } else {
             // Remember pause start time
-            if(fireEvents) {
+            if (fireEvents) {
                 fireEvents = false;
                 lastEventPauseTime = System.currentTimeMillis();
             }

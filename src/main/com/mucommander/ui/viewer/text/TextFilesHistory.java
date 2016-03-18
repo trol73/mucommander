@@ -23,6 +23,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileURL;
 
 import java.io.*;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,10 @@ public class TextFilesHistory {
 
     private static final int MAX_NUMBER_OF_RECORDS = 500;
 
+
+    private static WeakReference<TextFilesHistory> instance;
+
+    private List<FileRecord> records = new ArrayList<>();
 
     public static class FileRecord {
         private String fileName;
@@ -54,7 +59,7 @@ public class TextFilesHistory {
             this.fileName = fileName;
         }
 
-        public void update(int firstLine, int line, int column,  FileType fileType, String encoding) {
+        public void update(int firstLine, int line, int column, FileType fileType, String encoding) {
             setScrollPosition(firstLine);
             setLine(line);
             setColumn(column);
@@ -117,20 +122,17 @@ public class TextFilesHistory {
     }
 
 
-    private static TextFilesHistory instance;
-
-
-    private List<FileRecord> records = new ArrayList<>();
-
     public static TextFilesHistory getInstance() {
-        if (instance == null) {
-            instance = new TextFilesHistory();
+        TextFilesHistory textFilesHistory = instance == null ? null : instance.get();
+        if (textFilesHistory == null) {
+            textFilesHistory = new TextFilesHistory();
+            instance = new WeakReference<>(textFilesHistory);
             try {
-                instance.load();
-            } catch (IOException e) {
+                textFilesHistory.load();
+            } catch (IOException ignore) {
             }
         }
-        return instance;
+        return textFilesHistory;
     }
 
     // - History file access --------------------------------------------------
@@ -148,17 +150,17 @@ public class TextFilesHistory {
     }
 
 
-    public void load() throws IOException {
+    private void load() throws IOException {
         load(getHistoryFile());
     }
 
-    public void load(AbstractFile file) throws IOException {
+    private void load(AbstractFile file) throws IOException {
         BufferedReader reader = null;
         records.clear();
         try {
             reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             String line;
-            while( (line = reader.readLine() ) != null) {
+            while ((line = reader.readLine() ) != null) {
                 if (line.isEmpty() || line.startsWith("#")) {
                     continue;
                 }
@@ -246,7 +248,7 @@ public class TextFilesHistory {
     }
 
 
-    public void updateRecord(FileRecord record) {
+    public TextFilesHistory updateRecord(FileRecord record) {
         int index = findRecord(record.fileName);
         if (index >= 0) {
             records.remove(index);
@@ -255,6 +257,7 @@ public class TextFilesHistory {
         while (records.size() > MAX_NUMBER_OF_RECORDS) {
             records.remove(records.size()-1);
         }
+        return this;
     }
 
 

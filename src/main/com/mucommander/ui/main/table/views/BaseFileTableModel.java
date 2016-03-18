@@ -410,13 +410,13 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         // in the case of local files the lazy initialization will be enough
         boolean needPrefetch = nbFiles > 0 && !(children[0] instanceof LocalFile);
 
-        for (int i=0; i < nbFiles; i++) {
+        for (int i = 0; i < nbFiles; i++) {
             AbstractFile child = children[i];
             AbstractFile file = child instanceof CachedFile ? child : new CachedFile(child, true);
 
             // Pre-fetch the attributes that are used by the table renderer and some actions.
             if (needPrefetch) {
-            prefetchCachedFileAttributes(file);
+                prefetchCachedFileAttributes(file);
             }
 
             cachedFiles[i] = file;
@@ -491,7 +491,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
                 setFileMarked(i, marked);
             }
         }
-        }
+    }
 		
 
     /**
@@ -505,8 +505,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
         if (index >= 0) {
             setFileMarked(index, marked);
-                    }
-                        }
+        }
+    }
 
 
     /**
@@ -520,9 +520,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         for (int i = parent == null ? 0 : 1; i < nbFiles; i++) {
             if (filter.match(getCachedFileAt(i))) {
                 setFileMarked(i, marked);
-                    }
-                }
             }
+        }
+    }
 
 
     /**
@@ -921,6 +921,14 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 //    public void setFirstVisibleRow(int row) {
 //        this.firstVisibleRow = row;
 //    }
+
+
+    public AbstractFile getCurrentCalculatedSizeDirectory() {
+        if (calculateDirectorySizeWorker != null) {
+            return calculateDirectorySizeWorker.getFile();
+        }
+        return null;
+    }
 
 
 }

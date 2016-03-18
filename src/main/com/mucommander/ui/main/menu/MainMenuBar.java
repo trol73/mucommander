@@ -98,6 +98,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private JMenu bookmarksMenu;
     private int bookmarksOffset;  // Index of the first bookmark menu item
 
+    private JMenu ejectDrivesMenu;
+
     // Window menu
     private JMenu windowMenu;
     private int windowOffset; // Index of the first window menu item
@@ -336,6 +338,12 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(FindFileAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(CalculatorAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(RunCommandAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            ejectDrivesMenu = MenuToolkit.addMenu(Translator.get("eject_menu"), menuMnemonicHelper, this);
+            toolsMenu.add(ejectDrivesMenu);
+
+            MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(CompareFilesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        }
         toolsMenu.add(new JSeparator());
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(EditCommandsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
@@ -443,7 +451,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     public void menuSelected(MenuEvent e) {
         Object source = e.getSource();
 
-        if( source == viewMenu) {
+        if (source == viewMenu) {
             FileTable activeTable = mainFrame.getActiveTable();
 
             // Select the 'sort by' criterion currently in use in the active table
@@ -478,7 +486,28 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             for (AbstractFile volume : volumes) {
                 goMenu.add(new OpenLocationAction(mainFrame, new Hashtable<>(), volume));
             }
-        } else if(source == bookmarksMenu) {
+        } else if (source == ejectDrivesMenu) {
+            // Remove any previous drives menu items from menu
+            // as there might have changed since menu was last selected
+            ejectDrivesMenu.removeAll();
+
+            AbstractFile[] volumes = LocalFile.getVolumes();
+            boolean empty = true;
+            for (AbstractFile volume : volumes) {
+                if (volume != null && !volume.isSymlink() && !volume.getPath().toLowerCase().startsWith("/users/")) {
+                    MenuToolkit.addMenuItem(ejectDrivesMenu, volume.getName(), null, null, event -> {
+                        EjectDriveAction.eject(volume);
+                        mainFrame.tryRefreshCurrentFolders();
+                    });
+                    empty = false;
+                }
+            }
+            if (empty) {
+                JMenuItem menuItem = new JMenuItem(Translator.get("eject.no_mounted_devices"));
+                menuItem.setEnabled(false);
+                ejectDrivesMenu.add(menuItem);
+            }
+        } else if (source == bookmarksMenu) {
             // Remove any previous bookmarks menu items from menu
             // as bookmarks might have changed since menu was last selected
             for (int i=bookmarksMenu.getItemCount(); i>bookmarksOffset; i--) {
@@ -490,7 +519,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             if (!bookmarks.isEmpty()) {
                 for (Bookmark bookmark : bookmarks) {
                     MenuToolkit.addMenuItem(bookmarksMenu, new OpenLocationAction(mainFrame, new HashMap<>(), bookmark), null);
-            }
+                }
             } else {
                 // Show 'No bookmark' as a disabled menu item instead showing nothing
                 JMenuItem noBookmarkItem = MenuToolkit.addMenuItem(bookmarksMenu, Translator.get("bookmarks_menu.no_bookmark"), null, null, null);
@@ -636,4 +665,6 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             new ThemeEditorDialog(mainFrame, ThemeManager.getCurrentTheme()).editTheme();
         }
     }
+
+
 }

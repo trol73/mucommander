@@ -33,7 +33,7 @@ import java.io.PushbackInputStream;
  * and should not be trusted for anything critical.
  *
  * <p>The {@link #RECOMMENDED_BYTE_SIZE} field indicates how many bytes should be provided for the detector to be
- * confident enough.</p>
+ * confident enough.
  *
  * @see com.mucommander.commons.io.EncodingDetector
  * @author Maxence Bernard
@@ -116,7 +116,6 @@ public class BinaryDetector {
      * stream will not be closed and will not be repositionned after the bytes have been read. It is up to the calling
      * method to use the <code>InputStream#mark()</code> and <code>InputStream#reset()</code> methods (if supported)
      * or reopen the stream if needed.
-     * </p>
      *
      * @param in the stream to analyze
      * @return true if BinaryDetector thinks that the specified data is binary

@@ -240,7 +240,9 @@ public class ProcessRunner {
      * @return                  the generated process.
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory, ProcessListener listener) throws IOException {return execute(tokens, currentDirectory, listener, null);}
+    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory, ProcessListener listener) throws IOException {
+        return execute(tokens, currentDirectory, listener, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.

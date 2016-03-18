@@ -22,6 +22,7 @@ import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.AbstractFile;
 
 import java.io.*;
+import java.lang.ref.WeakReference;
 import java.util.*;
 
 /**
@@ -38,19 +39,21 @@ public class TextHistory {
         CALCULATOR("calculator.history");
 
         private final String fileName;
-        private Type(String fileName) {
+        Type(String fileName) {
             this.fileName = fileName;
         }
     }
     private final Map<Type, LinkedList<String>> history = new HashMap<>();
 
-    private static TextHistory instance;
+    private static WeakReference<TextHistory> instance;
 
     public static TextHistory getInstance() {
-        if (instance == null) {
-            instance = new TextHistory();
+        TextHistory textHistory = instance != null ? instance.get() : null;
+        if (textHistory == null) {
+            textHistory = new TextHistory();
+            instance = new WeakReference<>(textHistory);
         }
-        return instance;
+        return textHistory;
     }
 
 
@@ -70,8 +73,8 @@ public class TextHistory {
 
     public void add(Type type, String s, boolean save) {
         LinkedList<String> list = getList(type);
-        boolean alreadyInList = list.contains(s);
-        if (alreadyInList) {
+        boolean alreadyFirstInList = list.indexOf(s) == 0;
+        if (alreadyFirstInList) {
             list.remove(s);
         }
         if (s.trim().isEmpty()) {
@@ -82,7 +85,7 @@ public class TextHistory {
             list.removeLast();
         }
         // save only if new record was added
-        if (!alreadyInList && save) {
+        if (!alreadyFirstInList && save) {
             save(type);
         }
     }

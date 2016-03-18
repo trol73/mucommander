@@ -32,7 +32,7 @@ import java.net.URLDecoder;
  * can be turned on or off in the constructor, allowing this parser to be used with most schemes.
  *
  * <p>This parser can not only parse URLs but also local absolute paths and UNC paths. Upon parsing, these paths are
- * turned into equivalent, fully qualified URLs.</p>
+ * turned into equivalent, fully qualified URLs.
  *
  * <h3>Local paths</h3>
  * <p>
@@ -46,7 +46,6 @@ import java.net.URLDecoder;
  *  <li>Under a Unix-style OS (Linux, Mac OS X, Solaris...), <code>C:\Windows\System32\</code> will be parsed and turned
  * into a FileURL whose path separator is "\" and representation <code>file://localhost/C:\Windows\System32\</code></li>
  * </ul>
- * </p>
  *
  * <h3>UNC paths</h3>
  * <p>
@@ -59,7 +58,6 @@ import java.net.URLDecoder;
  *  <li>On any other kind of OS, <code>\\Server\Volume\File</code> will be turned into a FileURL whose string
  * representation is <code>smb://Server/Volume/File</code></li>
  * </ul>
- * </p>
  *
  * @see PathCanonizer
  * @author Maxence Bernard
@@ -165,16 +163,16 @@ public class DefaultSchemeParser implements SchemeParser {
                 // - '/' and OS doesn't use root drives (Unix-style path)
                 // - a drive letter and OS uses root drives (Windows-style) [support both C:\ and C:/ style]
                 // - a ~ character (refers to the user home folder)
-                if((!LocalFile.USES_ROOT_DRIVES && url.startsWith("/")) || url.startsWith("~")) {
+                if ((!LocalFile.USES_ROOT_DRIVES && url.startsWith("/")) || url.startsWith("~")) {
                     handleLocalFilePath(url, fileURL);
 
                     // All done, return
                     return;
-                }
-                else if (LocalFile.USES_ROOT_DRIVES && (url.indexOf(":\\")==1 || url.indexOf(":/")==1)) {
+                } else if (LocalFile.USES_ROOT_DRIVES && (url.indexOf(":\\")==1 || url.indexOf(":/")==1)) {
                     // Turn forward slash-separated paths into their backslash-separated counterparts.
-                    if(url.charAt(2)=='/')
+                    if (url.charAt(2) == '/') {
                         url = url.replace('/', '\\');
+                    }
 
                     handleLocalFilePath(url, fileURL);
 
@@ -187,8 +185,8 @@ public class DefaultSchemeParser implements SchemeParser {
                 //   LocalProtocolProvider will translate it back into an UNC network path
                 // - under other OS, conveniently transform it into smb://hostname/path to be nice with folks
                 //   who've spent too much time using Windows
-                else if(url.startsWith("\\\\") && urlLen>2) {
-                    if(OsFamily.WINDOWS.isCurrent()) {
+                else if (url.startsWith("\\\\") && urlLen > 2) {
+                    if (OsFamily.WINDOWS.isCurrent()) {
                         pos = url.indexOf('\\', 2);
                         url = FileProtocols.FILE+"://"+ 
                 				(pos==-1?url.substring(2):url.substring(2, pos)+"/"+(pos==urlLen-1?"":url.substring(pos+1)));
@@ -205,9 +203,7 @@ public class DefaultSchemeParser implements SchemeParser {
 
                     // Update URL's length
                     urlLen = url.length();
-                }
-                // This doesn't look like a valid path, throw an MalformedURLException
-                else {
+                } else { // This doesn't look like a valid path, throw an MalformedURLException
                     throw new MalformedURLException("Path not absolute or malformed: "+url);
                 }
             }
@@ -224,9 +220,9 @@ public class DefaultSchemeParser implements SchemeParser {
             // The question mark character (if any) marks the beginning of the query part, only if it should be parsed.
             int questionMarkPos = parseQuery?url.indexOf('?', pos):-1;
             int hostEndPos;         // Contains the position of the beginning of the path/query part
-            if(separatorPos!=-1)    // Separator is necessarily before question mark
+            if(separatorPos != -1)    // Separator is necessarily before question mark
                 hostEndPos = separatorPos;
-            else if(questionMarkPos !=-1)
+            else if (questionMarkPos != -1)
                 hostEndPos = questionMarkPos;
             else
                 hostEndPos = urlLen;
@@ -241,17 +237,18 @@ public class DefaultSchemeParser implements SchemeParser {
             int atPos = authority.lastIndexOf('@');
             int colonPos;
             // Filenames may contain @ chars, so atPos must be lower than next separator's position (if any)
-            if(atPos!=-1 && (separatorPos==-1 || atPos<separatorPos)) {
+            if (atPos != -1 && (separatorPos == -1 || atPos < separatorPos)) {
                 colonPos = authority.indexOf(':');
-                String login = URLDecoder.decode(authority.substring(0, colonPos==-1?atPos:colonPos), "UTF-8");
+                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), "UTF-8");
                 String password;
-                if(colonPos!=-1)
+                if (colonPos != -1)
                     password = URLDecoder.decode(authority.substring(colonPos+1, atPos), "UTF-8");
                 else
                     password = null;
 
-                if(!"".equals(login) || !(password==null || "".equals(password)))
+                if (!login.isEmpty() || !(password == null || password.isEmpty())) {
                     fileURL.setCredentials(new Credentials(login, password));
+                }
 
                 // Advance string index
                 pos = atPos+1;
@@ -261,24 +258,23 @@ public class DefaultSchemeParser implements SchemeParser {
             colonPos = authority.indexOf(':', pos);
 
             String host;
-            if(colonPos!=-1) {
+            if (colonPos != -1) {
                 host = authority.substring(pos, colonPos);
                 String portString = authority.substring(colonPos+1);
-                if(!portString.equals("")) {        // Tolerate an empty port part (e.g. http://mucommander.com:/)
+                if (!portString.isEmpty()) {        // Tolerate an empty port part (e.g. http://mucommander.com:/)
                     try {
                         fileURL.setPort(Integer.parseInt(portString));
-                    }
-                    catch(NumberFormatException e) {
+                    } catch(NumberFormatException e) {
                         throw new MalformedURLException("URL contains an invalid port");
                     }
                 }
-            }
-            else {
+            } else {
                 host = authority.substring(pos);
             }
 
-            if(host.equals(""))
+            if (host.isEmpty()) {
                 host = null;
+            }
 
             fileURL.setHost(host);
 
@@ -287,8 +283,9 @@ public class DefaultSchemeParser implements SchemeParser {
             String path = url.substring(pos, questionMarkPos==-1?urlLen:questionMarkPos);
 
             // Empty path means '/'
-            if(path.equals(""))
+            if (path.isEmpty()) {
                 path = "/";
+            }
 
             // Canonize path: factor out '.' and '..' and replace '~' by the replacement string (if any)
             fileURL.setPath(pathCanonizer.canonize(path));
@@ -296,13 +293,11 @@ public class DefaultSchemeParser implements SchemeParser {
             LOGGER.debug("Warning: path should not be empty, url={}", url);
 
             // Parse query part (if any)
-            if(questionMarkPos!=-1)
+            if (questionMarkPos != -1)
                 fileURL.setQuery(url.substring(questionMarkPos+1));     // Do not include the question mark
-        }
-        catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw e;
-        }
-        catch(Exception e2) {
+        } catch (Exception e2) {
             LOGGER.info("Unexpected exception in FileURL() with "+url, e2);
 
             throw new MalformedURLException();

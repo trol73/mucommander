@@ -91,12 +91,12 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             try {
                 destFile = destFolder.getDirectChild(destFileName);
                 break;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Destination file couldn't be instantiated
 
                 int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFileName));
                 // Retry loops
-                if (ret==RETRY_ACTION) {
+                if (ret == RETRY_ACTION) {
                     continue;
                 }
                 // Cancel or close dialog return false
@@ -144,18 +144,18 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             if (collision != FileCollisionChecker.NO_COLLOSION) {
                 int choice;
                 // Use default action if one has been set, if not show up a dialog
-                if(defaultFileExistsAction==FileCollisionDialog.ASK_ACTION) {
+                if (defaultFileExistsAction==FileCollisionDialog.ASK_ACTION) {
                     FileCollisionDialog dialog = new FileCollisionDialog(getProgressDialog(), getMainFrame(), collision, file, destFile, true, true);
                     choice = waitForUserResponse(dialog);
                     // If 'apply to all' was selected, this choice will be used for any other files (user will not be asked again)
-                    if(dialog.applyToAllSelected())
+                    if (dialog.applyToAllSelected())
                         defaultFileExistsAction = choice;
                 } else {
                     choice = defaultFileExistsAction;
                 }
     
                 // Cancel, skip or close dialog
-                if (choice==-1 || choice== FileCollisionDialog.CANCEL_ACTION) {
+                if (choice == -1 || choice== FileCollisionDialog.CANCEL_ACTION) {
                     interrupt();
                     return null;
                 }
@@ -212,7 +212,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 archiveToOptimize = rwArchiveFile;
                 archiveToOptimize.optimizeArchive();
                 break;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 if(showErrorDialog(errorDialogTitle, Translator.get("error_while_optimizing_archive", rwArchiveFile.getName()))==RETRY_ACTION)
                     continue;
 

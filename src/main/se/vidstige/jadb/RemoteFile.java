@@ -8,14 +8,30 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class RemoteFile {
     private final String path;
 
-    public RemoteFile(String path) { this.path = path;}
+    public RemoteFile(String path) {
+        this.path = path;
+    }
 
-    public String getName() { throw new NotImplementedException(); }
-    public int getSize() { throw new NotImplementedException(); }
-    public long getLastModified() { throw new NotImplementedException(); }
-    public boolean isDirectory() { throw new NotImplementedException(); }
+    public String getName() {
+        return path;
+        //throw new NotImplementedException();
+    }
 
-    public String getPath() { return path;}
+    public int getSize() {
+        throw new RuntimeException("not implemented");
+    }
+
+    public long getLastModified() {
+        throw new RuntimeException("not implemented");
+    }
+
+    public boolean isDirectory() {
+        throw new RuntimeException("not implemented");
+    }
+
+    public String getPath() {
+        return path;
+    }
 
     @Override
     public boolean equals(Object o) {

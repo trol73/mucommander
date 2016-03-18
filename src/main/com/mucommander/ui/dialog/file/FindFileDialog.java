@@ -44,6 +44,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
 import com.mucommander.ui.theme.ThemeCache;
 import com.mucommander.ui.viewer.EditorRegistrar;
+import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 import ru.trolsoft.ui.InputField;
 
@@ -108,9 +109,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 checkUpdates();
                 try {
                     Thread.sleep(REFRESH_RATE);
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
+                } catch(InterruptedException ignore) {}
             }
             checkUpdates();
             job = null;
@@ -127,6 +126,9 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         @Override
         protected void process(List<AbstractFile> chunks) {
             for (AbstractFile f : chunks) {
+                if (isCancelled()) {
+                    break;
+                }
                 listModel.addElement(f);
                 updateResultLabel();
             }
@@ -246,15 +248,26 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 if (file == null) {
                     return;
                 }
+                FileFrame fileFrame;
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_F3:
-                        ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
+                        fileFrame = ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
                                 .returnFocusTo(getFocusOwner());
+                        if (cbSearchHex.isSelected()) {
+                            fileFrame.setSearchedBytes(edtText.getBytes());
+                        } else {
+                            fileFrame.setSearchedText(edtText.getText());
+                        }
                         break;
 
                     case KeyEvent.VK_F4:
-                        EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
+                        fileFrame = EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
                                 .returnFocusTo(getFocusOwner());
+                        if (cbSearchHex.isSelected()) {
+                            fileFrame.setSearchedBytes(edtText.getBytes());
+                        } else {
+                            fileFrame.setSearchedText(edtText.getText());
+                        }
                         break;
 
                     case KeyEvent.VK_SPACE:
@@ -379,14 +392,16 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     }
 
     private void clearResults() {
-        listModel.clear();
+        if (listModel != null) {
+            listModel.clear();
+        }
         lblTotal.setText("");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnNewSearch) {
-            if ( job == null ) {
+            if (job == null) {
                 start();
             }
         } else if (e.getSource() == btnStop) {
@@ -447,7 +462,6 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     }
 
 
-
     @Override
     public void cancel() {
         if (job != null) {
@@ -467,6 +481,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
     @Override
     public void dispose() {
+        super.dispose();
         if (updateRunner != null) {
             try {
                 updateRunner.cancel(true);
@@ -474,6 +489,10 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 t.printStackTrace();
             }
         }
-        super.dispose();
+        clearResults();
+        updateRunner = null;
+        listModel = null;
+        job = null;
+        list = null;
     }
 }

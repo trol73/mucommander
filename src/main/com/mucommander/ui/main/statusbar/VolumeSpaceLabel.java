@@ -91,7 +91,7 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
         if (freeSpace < 0 || totalSpace < 0) {
             setToolTipText(null);       // Removes any previous tooltip
         } else {
-            setToolTipText(Integer.valueOf((int) (100 * freeSpace / (float) totalSpace)) + "%");
+            setToolTipText((int) (100 * freeSpace / (float) totalSpace) + "%");
         }
         repaint();
     }

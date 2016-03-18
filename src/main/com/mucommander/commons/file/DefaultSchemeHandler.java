@@ -27,7 +27,6 @@ package com.mucommander.commons.file;
  * <p>
  * The {@link #getRealm(FileURL)} implementation returns a URL with the same scheme and host (if any) as the specified
  * URL, and a path set to <code>"/"</code>. This behavior can be modified by overriding <code>getRealm</code>.
- * </p>
  *
  * @see com.mucommander.commons.file.FileURL#getDefaultHandler()
  * @see com.mucommander.commons.file.SchemeHandler

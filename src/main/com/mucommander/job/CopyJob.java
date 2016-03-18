@@ -22,6 +22,9 @@ package com.mucommander.job;
 import java.io.IOException;
 
 import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.impl.CachedFile;
+import com.mucommander.commons.file.impl.ProxyFile;
+import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.utils.ScanDirectoryThread;
@@ -118,17 +121,37 @@ public class CopyJob extends AbstractCopyJob {
 
         // Determine filename in destination
         String destFileName = (isFileInBaseFolder && newName != null) ? newName : file.getName();
-
+System.out.println("destFileName " + destFileName);
         // create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
         if (destFile == null) {
             return false;
         }
+System.out.println("destFile " + destFile);
         currentDestFile = destFile;
+
+        AbstractFile sourceFile;
+        if (file instanceof ProxyFile) {
+            sourceFile = ((ProxyFile)file).getProxiedFile();
+        } else {
+            sourceFile = file;
+        }
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink() && file instanceof LocalFile) {
             copySymLink(file, destFile);
+            return true;
+        }
+
+        // ADB files
+        if (sourceFile instanceof AdbFile && destFile instanceof LocalFile && !sourceFile.isDirectory()) {
+            AdbFile adbFile = (AdbFile)sourceFile;
+            try {
+                adbFile.pushTo(destFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
             return true;
         }
 
@@ -145,12 +168,13 @@ public class CopyJob extends AbstractCopyJob {
                 do {
                     try {
                         destFile.mkdir();
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         // Unable to create folder
                         int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", destFileName));
                         // Retry loops
-                        if (ret == RETRY_ACTION)
+                        if (ret == RETRY_ACTION) {
                             continue;
+                        }
                         // Cancel or close dialog return false
                         return false;
                         // Skip continues

@@ -54,7 +54,7 @@ public class OpenLocationAction extends ActiveTabAction {
      * Creates a new OpenLocationAction instance using the provided url's string representation
      * (with credentials stripped out) as label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, FileURL url) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url) {
         this(mainFrame, properties, url, url.getScheme().equals(FileProtocols.FILE) ? url.getPath() : url.toString(false));
     }
 
@@ -79,7 +79,7 @@ public class OpenLocationAction extends ActiveTabAction {
      * Creates a new OpenLocationAction instance using the filename of the provided AbstractFile 
      * as label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, AbstractFile file) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, AbstractFile file) {
         this(mainFrame, properties, file, file.getName());
     }
 
@@ -118,7 +118,7 @@ public class OpenLocationAction extends ActiveTabAction {
      * Convenience constructor, same effect as calling {@link #OpenLocationAction(MainFrame, Map, String, String)} with
      * {@link Bookmark#getLocation()} and {@link Bookmark#getName()}.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, Bookmark bookmark) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, Bookmark bookmark) {
         this(mainFrame, properties, bookmark.getLocation(), bookmark.getName());
     }
 
@@ -127,7 +127,7 @@ public class OpenLocationAction extends ActiveTabAction {
      * Convenience constructor, same effect as calling {@link #OpenLocationAction(MainFrame, Map, FileURL, String)} with
      * {@link BonjourService#getURL()} and {@link BonjourService#getNameWithProtocol()} ()}.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, BonjourService bonjourService) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, BonjourService bonjourService) {
         this(mainFrame, properties, bonjourService.getURL(), bonjourService.getNameWithProtocol());
     }
 

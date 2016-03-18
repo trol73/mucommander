@@ -32,8 +32,8 @@ public class SymLinkUtils {
 
     /**
      * Returns symbolic link target value
-     * @param symLink
-     * @return
+     * @param symLink symbolic link path
+     * @return symbolic link target path
      */
     public static String getTargetPath(AbstractFile symLink) {
         Path path = FileSystems.getDefault().getPath(symLink.getAbsolutePath(), "");
@@ -63,9 +63,9 @@ public class SymLinkUtils {
 
     /**
      *
-     * @param symLink
-     * @param target
-     * @throws IOException
+     * @param symLink symlink path
+     * @param target target file/directory path
+     * @throws IOException if an I/O error occurs.
      *      java.nio.file.AccessDeniedException
      *      java.nio.file.FileAlreadyExistsException
      */

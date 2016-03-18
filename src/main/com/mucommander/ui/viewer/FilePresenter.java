@@ -36,8 +36,9 @@ public abstract class FilePresenter extends JScrollPane {
 			public void focusGained(FocusEvent e) {
 				// Delegate the focus to the JComponent that actually present the file
 				Component component = FilePresenter.this.getViewport().getComponent(0);
-				if (component != null)
-					component.requestFocus();
+				if (component != null) {
+                    component.requestFocus();
+                }
 			}
 		});
 
@@ -161,4 +162,9 @@ public abstract class FilePresenter extends JScrollPane {
      */
     protected abstract void restoreStateOnStartup();
 
+    public void setSearchedText(String searchedText) {
+    }
+
+    public void setSearchedBytes(byte[] searchedBytes) {
+    }
 }

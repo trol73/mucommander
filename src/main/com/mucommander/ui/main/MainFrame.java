@@ -111,7 +111,7 @@ public class MainFrame extends JFrame implements LocationListener {
         // TODO: this code should probably be moved to the desktop API
 
         // - Mac OS X completely ignores calls to #setIconImage/setIconImages, no need to waste time
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent())
             return;
 
         // Use Java 1.6 's new Window#setIconImages(List<Image>) when available
@@ -124,7 +124,7 @@ public class MainFrame extends JFrame implements LocationListener {
             // - Windows XP messes up 8-bit PNG transparency.
             // We would be better off with the .ico of the launch4j exe (which has 8-bit alpha transparency) but there
             // seems to be no way to keep it when in 'dontWrapJar' mode (separate exe and jar files).
-            if(OsFamily.WINDOWS.isCurrent() && OsVersion.WINDOWS_XP.isCurrentOrLower()) {
+            if (OsFamily.WINDOWS.isCurrent() && OsVersion.WINDOWS_XP.isCurrentOrLower()) {
                 icons.add(IconManager.getIcon(IconManager.IconSet.MUCOMMANDER, "icon48_8.png").getImage());
             }
             // - Windows Vista supports 8-bit transparency and icon resolutions up to 256x256.
@@ -449,9 +449,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * @param table the currently active FileTable
      */
     void setActiveTable(FileTable table) {
-        boolean activeTableChanged = activeTable !=table;
+        boolean activeTableChanged = activeTable != table;
 
-        if(activeTableChanged) {
+        if (activeTableChanged) {
             this.activeTable = table;
 
             // Update window title to reflect new active table

@@ -65,42 +65,40 @@ public abstract class BonjourMenu extends JMenu implements MenuListener {
     /////////////////////////////////
     // MenuListener implementation //
     /////////////////////////////////
-
+    @Override
     public void menuSelected(MenuEvent menuEvent) {
         // Remove previous menu items (if any)
         removeAll();
 
-        if(BonjourDirectory.isActive()) {
-            BonjourService services[] = BonjourDirectory.getServices();
-            int nbServices = services.length;
-
-            if(nbServices>0) {
-                // Add a menu item for each Bonjour service.
-                // When clicked, the corresponding URL will opened in the active table.
-                JMenuItem menuItem;
-                MnemonicHelper mnemonicHelper = new MnemonicHelper();
-
-                for (BonjourService service : services) {
-                    menuItem = new JMenuItem(getMenuItemAction(service));
-                    menuItem.setMnemonic(mnemonicHelper.getMnemonic(menuItem.getText()));
-
-                    add(menuItem);
-                }
-            }
-            else {
-                // Inform that no service have been discovered
-                add(new JMenuItem(Translator.get("bonjour.no_service_discovered"))).setEnabled(false);
-            }
-        }
-        else {
+        if (!BonjourDirectory.isActive()) {
             // Inform that Bonjour support has been disabled
             add(new JMenuItem(Translator.get("bonjour.bonjour_disabled"))).setEnabled(false);
+            return;
+        }
+        BonjourService services[] = BonjourDirectory.getServices();
+
+        if (services.length > 0) {
+            // Add a menu item for each Bonjour service.
+            // When clicked, the corresponding URL will opened in the active table.
+            MnemonicHelper mnemonicHelper = new MnemonicHelper();
+
+            for (BonjourService service : services) {
+                JMenuItem menuItem = new JMenuItem(getMenuItemAction(service));
+                menuItem.setMnemonic(mnemonicHelper.getMnemonic(menuItem.getText()));
+
+                add(menuItem);
+            }
+        } else {
+            // Inform that no service have been discovered
+            add(new JMenuItem(Translator.get("bonjour.no_service_discovered"))).setEnabled(false);
         }
     }
 
+    @Override
     public void menuDeselected(MenuEvent menuEvent) {
     }
 
+    @Override
     public void menuCanceled(MenuEvent menuEvent) {
     }
 }

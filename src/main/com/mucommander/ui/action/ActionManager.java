@@ -246,6 +246,8 @@ public class ActionManager {
 		registerAction(new ToggleTableViewModeFullAction.Descriptor(),      new ToggleTableViewModeFullAction.Factory());
 		registerAction(new ToggleTableViewModeCompactAction.Descriptor(),   new ToggleTableViewModeCompactAction.Factory());
 		registerAction(new ToggleTableViewModeShortAction.Descriptor(),     new ToggleTableViewModeShortAction.Factory());
+		registerAction(new EjectDriveAction.Descriptor(),					new EjectDriveAction.Factory());
+		registerAction(new CompareFilesAction.Descriptor(),					new CompareFilesAction.Factory());
     }
 
 	public static void registerCommandsActions() {

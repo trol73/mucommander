@@ -206,8 +206,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         historyRecord.setFileType(textArea.getFileType());
         historyRecord.setScrollPosition(scrollBar.getValue());
         historyRecord.setEncoding(encoding);
-        TextFilesHistory.getInstance().updateRecord(historyRecord);
-        TextFilesHistory.getInstance().save();
+        TextFilesHistory.getInstance().updateRecord(historyRecord).save();
     }
 
     @Override
@@ -314,5 +313,16 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     public TextFilesHistory.FileRecord getHistoryRecord() {
         return historyRecord;
+    }
+
+
+    @Override
+    public void setSearchedText(String searchedText) {
+        textEditorImpl.searchString = searchedText;
+    }
+
+
+    @Override
+    public void setSearchedBytes(byte[] searchedBytes) {
     }
 }

@@ -73,9 +73,9 @@ public abstract class ProxyFile extends AbstractFile {
     }
 
     /**
-     * Returns the <code>AbstractFile</code> instance proxied by this </code>ProxyFile</code>.
+     * Returns the <code>AbstractFile</code> instance proxied by this <code>ProxyFile</code>.
      *
-     * @return the <code>AbstractFile</code> instance proxied by this </code>ProxyFile</code>
+     * @return the <code>AbstractFile</code> instance proxied by this <code>ProxyFile</code>
      */
     public AbstractFile getProxiedFile() {
         return file;

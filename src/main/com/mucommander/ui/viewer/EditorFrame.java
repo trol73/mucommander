@@ -60,7 +60,8 @@ public class EditorFrame extends FileFrame {
 
     @Override
     public void dispose() {
-    	if (editor == null || editor.askSave()) {   /// Returns true if the file does not have any unsaved change or if the user refused to save the changes
+        // Returns true if the file does not have any unsaved change or if the user refused to save the changes
+    	if (editor == null || editor.askSave()) {
             super.dispose();
         }
     }

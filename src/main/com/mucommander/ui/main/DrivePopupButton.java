@@ -20,6 +20,7 @@ package com.mucommander.ui.main;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -27,6 +28,9 @@ import java.util.regex.PatternSyntaxException;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+import com.mucommander.adb.AndroidMenu;
+import com.mucommander.adb.AdbUtils;
+import com.mucommander.bonjour.BonjourDirectory;
 import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -297,7 +301,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<JMenuItem> itemsV = new ArrayList<>();
 
         for (int i = 0; i < nbVolumes; i++) {
-            action = new CustomOpenLocationAction(mainFrame, new HashMap<>(), volumes[i]);
+            action = new CustomOpenLocationAction(mainFrame, volumes[i]);
             String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -337,7 +341,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
             for (Bookmark b : bookmarks) {
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, new HashMap<>(), b));
+                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
                 String location = b.getLocation();
                 if (!location.contains("://")) {
                     Image icon = FileIconsCache.getInstance().getImageIcon(FileFactory.getFile(b.getLocation()));
@@ -356,18 +360,36 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Add 'Network shares' shortcut
         if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            action = new CustomOpenLocationAction(mainFrame, new HashMap<>(), new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
+            action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
 
-        // Add Bonjour services menu
-        setMnemonic(popupMenu.add(new BonjourMenu() {
-            @Override
-            public MuAction getMenuItemAction(BonjourService bs) {
-                return new CustomOpenLocationAction(mainFrame, new HashMap<>(), bs);
-            }
-        }) , mnemonicHelper);
+        if (BonjourDirectory.isActive()) {
+            // Add Bonjour services menu
+            setMnemonic(popupMenu.add(new BonjourMenu() {
+                @Override
+                public MuAction getMenuItemAction(BonjourService bs) {
+                    return new CustomOpenLocationAction(mainFrame, bs);
+                }
+            }), mnemonicHelper);
+        }
+
+        if (AdbUtils.checkAdb()) {
+            setMnemonic(popupMenu.add(new AndroidMenu() {
+                @Override
+                public MuAction getMenuItemAction(String deviceSerial) {
+                    FileURL url = null;
+                    try {
+                        url = FileURL.getFileURL("adb://"+deviceSerial);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    return new CustomOpenLocationAction(mainFrame, url);
+                }
+            }), mnemonicHelper);
+        }
+
         popupMenu.add(new JSeparator());
 
         // Add 'connect to server' shortcuts
@@ -379,6 +401,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         return popupMenu;
     }
+
+
+
     
     /**
      *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
@@ -414,7 +439,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 final String extendedNameFinal = extendedName;
 
                 // Set system icon for volumes, only if system icons are available on the current platform
-                final Icon icon = FileIcons.hasProperSystemIcons()?FileIcons.getSystemFileIcon(volumes[i]):null;
+                final Icon icon = FileIcons.hasProperSystemIcons() ? FileIcons.getSystemFileIcon(volumes[i]) : null;
                 if (icon != null) {
                     iconCache.put(volumes[i], icon);
                 }
@@ -423,7 +448,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     if (useExtendedDriveNames) {
                         item.setText(extendedNameFinal);
                     }
-                    if (icon!=null) {
+                    if (icon != null) {
                         item.setIcon(icon);
                     }
                 });
@@ -523,16 +548,20 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     private class CustomOpenLocationAction extends OpenLocationAction {
 
-        public CustomOpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, Bookmark bookmark) {
-            super(mainFrame, properties, bookmark);
+        public CustomOpenLocationAction(MainFrame mainFrame, Bookmark bookmark) {
+            super(mainFrame, new HashMap<>(), bookmark);
         }
 
-        public CustomOpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, AbstractFile file) {
-            super(mainFrame, properties, file);
+        public CustomOpenLocationAction(MainFrame mainFrame, AbstractFile file) {
+            super(mainFrame, new HashMap<>(), file);
         }
 
-        public CustomOpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, BonjourService bs) {
-            super(mainFrame, properties, bs);
+        public CustomOpenLocationAction(MainFrame mainFrame, BonjourService bs) {
+            super(mainFrame, new HashMap<>(), bs);
+        }
+
+        public CustomOpenLocationAction(MainFrame mainFrame, FileURL url) {
+            super(mainFrame, new HashMap<>(), url);
         }
 
         ////////////////////////

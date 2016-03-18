@@ -52,53 +52,53 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     private JButton btnClose;
     private JLabel lblError;
 
-    private static final CustomOperator OP_SHL = new CustomOperator("<<", true, 10, 2) {
+    private final CustomOperator OP_SHL = new CustomOperator("<<", true, 10, 2) {
         @Override
         protected double applyOperation(double[] values) {
             return Math.round(values[0]) << Math.round(values[1]);
         }
     };
 
-    private static final CustomOperator OP_SHR = new CustomOperator(">>", true, 11, 2) {
+    private final CustomOperator OP_SHR = new CustomOperator(">>", true, 11, 2) {
         @Override
         protected double applyOperation(double[] values) {
             return Math.round(values[0]) >> Math.round(values[1]);
         }
     };
 
-    private static final CustomOperator OP_AND = new CustomOperator("&", true, 8, 2) {
+    private final CustomOperator OP_AND = new CustomOperator("&", true, 8, 2) {
         @Override
         protected double applyOperation(double[] values) {
             return Math.round(values[0]) & Math.round(values[1]);
         }
     };
 
-    private static final CustomOperator OP_OR = new CustomOperator("|", true, 6, 2) {
+    private final CustomOperator OP_OR = new CustomOperator("|", true, 6, 2) {
         @Override
         protected double applyOperation(double[] values) {
             return Math.round(values[0]) | Math.round(values[1]);
         }
     };
 
-    private static final CustomOperator OP_NOT = new CustomOperator("~", true, 15, 1) {
+    private final CustomOperator OP_NOT = new CustomOperator("~", true, 15, 1) {
         @Override
         protected double applyOperation(double[] values) {
             return ~Math.round(values[0]);
         }
     };
 
-    private static final CustomOperator OP_XOR = new CustomOperator("^^", true, 7, 2) {
+    private final CustomOperator OP_XOR = new CustomOperator("^^", true, 7, 2) {
         @Override
         protected double applyOperation(double[] values) {
             return Math.round(values[0]) ^ Math.round(values[1]);
         }
     };
 
-    private static final DecimalFormat FORMAT_DEC = new DecimalFormat("#.##################");
-    private static final DecimalFormat FORMAT_EXP = new DecimalFormat("0.00000000000000E0000");
+    private final DecimalFormat FORMAT_DEC = new DecimalFormat("#.##################");
+    private final DecimalFormat FORMAT_EXP = new DecimalFormat("0.00000000000000E0000");
 
 
-    private static final CustomOperator OPERATORS[] = {
+    private final CustomOperator OPERATORS[] = {
         OP_SHL, OP_SHR, OP_AND, OP_OR, OP_NOT, OP_XOR
     };
 
@@ -233,7 +233,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         lblError.setText(success ? "" : Translator.get("calculator.error"));
     }
 
-    private static double evaluate(String expression) throws Exception {
+    private double evaluate(String expression) throws Exception {
         if (expression.trim().length() == 0) {
             return 0;
         }
@@ -246,7 +246,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         return builder.build().calculate();
     }
 
-    private static String formatExp(double val) {
+    private String formatExp(double val) {
         String result = FORMAT_EXP.format(val).toUpperCase();
         int index = result.indexOf('E');
         if (index > 0 && result.charAt(index+1) != '-') {
@@ -286,5 +286,4 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         super.saveState();
         TextHistory.getInstance().save(TextHistory.Type.CALCULATOR);
     }
-
 }

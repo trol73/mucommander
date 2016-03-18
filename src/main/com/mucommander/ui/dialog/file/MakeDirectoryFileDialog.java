@@ -59,7 +59,7 @@ import com.mucommander.ui.viewer.EditorRegistrar;
  * Dialog invoked when the user wants to create a new folder or an empty file in the current folder.
  *
  * @see MakeDirectoryAction
- * @see MkfileAction
+ * @see MakeFileAction
  * @author Maxence Bernard
  */
 public class MakeDirectoryFileDialog extends FocusDialog implements ActionListener, ItemListener {
@@ -119,14 +119,15 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
 
         // Sets the initial selection.
         AbstractFile currentFile;
-        if((currentFile = mainFrame.getActiveTable().getSelectedFile()) != null) {
+        if ((currentFile = mainFrame.getActiveTable().getSelectedFile()) != null) {
             String initialValue;
-            if(mkfileMode) {
-                if((initialValue = currentFile.getName()) != null)
+            if (mkfileMode) {
+                if ((initialValue = currentFile.getName()) != null) {
                     pathField.setText(initialValue);
-            }
-            else if((initialValue = currentFile.getNameWithoutExtension()) != null)
+                }
+            } else if ((initialValue = currentFile.getNameWithoutExtension()) != null) {
                 pathField.setText(initialValue);
+            }
         }
         pathField.setSelectionStart(0);
         pathField.setSelectionEnd(pathField.getText().length());
@@ -183,18 +184,14 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
             JPanel convertWhitespacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             convertWhitespacePanel.add(new JLabel(Translator.get("mkfile_dialog.convert_whitespace")));
             this.convertWhiteSpaceCheckBox = new JCheckBox();
-            convertWhiteSpaceCheckBox.addItemListener(new ItemListener() {
-    			@Override
-    			public void itemStateChanged(ItemEvent arg0) {
-    				if (convertWhiteSpaceCheckBox.isSelected()) {
-    					oldDirName = pathField.getText();
-    					pathField.setText(oldDirName.replaceAll(" ", "_"));
-    				} else {
-    					pathField.setText(oldDirName);
-    				}
-    			}
-            	
-            });
+            convertWhiteSpaceCheckBox.addItemListener(arg0 -> {
+					if (convertWhiteSpaceCheckBox.isSelected()) {
+						oldDirName = pathField.getText();
+						pathField.setText(oldDirName.replaceAll(" ", "_"));
+					} else {
+						pathField.setText(oldDirName);
+					}
+				});
             convertWhitespacePanel.add(convertWhiteSpaceCheckBox);
             mainPanel.add(convertWhitespacePanel);
        }

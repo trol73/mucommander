@@ -76,9 +76,9 @@ public interface Kernel32API extends StdCallLibrary {
      *
      * <p>Remarks: Each process has an associated error mode that indicates to the system how the application is going
      * to respond to serious errors. A child process inherits the error mode of its parent process. To retrieve the
-     * process error mode, use the GetErrorMode function.</br>
+     * process error mode, use the GetErrorMode function.
      * Because the error mode is set for the entire process, you must ensure that multi-threaded applications do not set
-     * different error-mode flags. Doing so can lead to inconsistent error handling.</br>
+     * different error-mode flags. Doing so can lead to inconsistent error handling.
      * The system does not make alignment faults visible to an application on all processor architectures. Therefore,
      * specifying SEM_NOALIGNMENTFAULTEXCEPT is not an error on such architectures, but the system is free to silently
      * ignore the request.
@@ -197,7 +197,7 @@ public interface Kernel32API extends StdCallLibrary {
     /**
      * Moves an existing file or directory, including its children, with various move options.
      *
-     * <p><b>Warning</b>: this method is NOT available on Windows 95, 98 and Me.</p>
+     * <p><b>Warning</b>: this method is NOT available on Windows 95, 98 and Me.
      * 
      * @param lpExistingFileName The current name of the file or directory on the local computer. If dwFlags specifies
      * MOVEFILE_DELAY_UNTIL_REBOOT, the file cannot exist on a remote share, because delayed operations are performed

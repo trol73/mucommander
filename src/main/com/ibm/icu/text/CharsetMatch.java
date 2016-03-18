@@ -18,13 +18,13 @@ import java.io.Reader;
  * as a possible encoding for a set of input data.  From an instance of this
  * class, you can ask for a confidence level in the charset identification,
  * or for Java Reader or String to access the original byte data in Unicode form.
- * <p/>
+ * <p>
  * Instances of this class are created only by CharsetDetectors.
- * <p/>
+ * <p>
  * Note:  this class has a natural ordering that is inconsistent with equals.
  *        The natural ordering is based on the match confidence value.
  *
- * @stable ICU 3.4
+ * stable ICU 3.4
  */
 public class CharsetMatch implements Comparable<CharsetMatch> {
 
@@ -32,7 +32,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     /**
      * create a java.io.Reader for reading the Unicode character data corresponding
      * to the original byte data supplied to the Charset detect operation.
-     * <p/>
+     * <p>
      * CAUTION:  if the source of the byte data was an InputStream, a Reader
      * can be created for only one matching char set using this method.  If more 
      * than one charset needs to be tried, the caller will need to reset
@@ -40,7 +40,6 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *
      * @return the Reader for the Unicode character data.
      *
-     * @stable ICU 3.4
      */
     public Reader getReader() {
         InputStream inputStream = fInputStream;
@@ -58,14 +57,15 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     }
 
     /**
-     * create a Java String from Unicode character data corresponding
+     * reate a Java String from Unicode character data corresponding
      * to the original byte data supplied to the Charset detect operation.
      *
      * @return a String created from the converted input data.
      *
-     * @stable ICU 3.4
+     * @throws IOException if an IO error occurs.
+     *
      */
-    public String getString()  throws java.io.IOException {
+    public String getString()  throws IOException {
         return getString(-1);
 
     }
@@ -82,9 +82,10 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *                  unlimited length.
      * @return a String created from the converted input data.
      *
-     * @stable ICU 3.4
+     * @throws IOException if an IO error occurs.
+     *
      */
-    public String getString(int maxLength) throws java.io.IOException {
+    public String getString(int maxLength) throws IOException {
         String result;
         if (fInputStream != null) {
             StringBuilder sb = new StringBuilder();
@@ -126,7 +127,6 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *
      * @return the confidence in the charset match
      *
-     * @stable ICU 3.4
      */
     public int getConfidence() {
         return fConfidence;
@@ -145,7 +145,6 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *
      * @return The name of the charset.
      *
-     * @stable ICU 3.4
      */
     public String getName() {
         return fCharsetName;
@@ -156,7 +155,6 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *
      * @return The ISO code for the language or <code>null</code> if the language cannot be determined.
      *
-     * @stable ICU 3.4
      */
     public String getLanguage() {
         return fLang;
@@ -173,16 +171,14 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *          is less than, equal to, or greater than that of
      *          the argument.
      * @throws ClassCastException if the argument is not a CharsetMatch.
-     * @stable ICU 4.4
      */
     public int compareTo (CharsetMatch other) {
-        int compareResult = 0;
         if (this.fConfidence > other.fConfidence) {
-            compareResult = 1;
+            return 1;
         } else if (this.fConfidence < other.fConfidence) {
-            compareResult = -1;
+            return -1;
         }
-        return compareResult;
+        return 0;
     }
 
     /*
@@ -208,7 +204,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     /*
      *  Constructor.  Implementation internal
      */
-    CharsetMatch(CharsetDetector det, CharsetRecognizer rec, int conf, String csName, String lang) {
+    CharsetMatch(CharsetDetector det, int conf, String csName, String lang) {
         fConfidence = conf;
         
         // The references to the original application input data must be copied out

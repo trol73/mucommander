@@ -155,6 +155,7 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         FileIconsCache.getInstance().clear();
         System.gc();
         update();
+        repaint();
     }
 
     @Override

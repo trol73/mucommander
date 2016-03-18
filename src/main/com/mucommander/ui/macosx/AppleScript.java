@@ -151,13 +151,7 @@ public class AppleScript {
     public static String getScriptEncoding() {
         // - AppleScript 2.0+ (Mac OS X 10.5 and up) is fully Unicode-aware and expects a script in UTF-8 encoding.
         // - AppleScript 1.3- (Mac OS X 10.4 or lower) expects MacRoman encoding, not UTF-8.
-        String encoding;
-        if(OsVersion.MAC_OS_X_10_5.isCurrentOrHigher())
-            encoding = UTF8;
-        else
-            encoding = MACROMAN;
-
-        return encoding;
+        return OsVersion.MAC_OS_X_10_5.isCurrentOrHigher() ? UTF8 : MACROMAN;
     }
 
 
@@ -182,8 +176,7 @@ public class AppleScript {
         public void processOutput(byte[] buffer, int offset, int length) {
             try {
                 outputBuffer.append(new String(buffer, offset, length, outputEncoding));
-            }
-            catch(UnsupportedEncodingException e) {
+            } catch(UnsupportedEncodingException e) {
                 // The encoding is necessarily supported
             }
         }
@@ -194,8 +187,9 @@ public class AppleScript {
         public void processDied(int returnValue) {
             // Remove the trailing "\n" character that osascript returns.
             int len = outputBuffer.length();
-            if(len>0 && outputBuffer.charAt(len-1)=='\n')
-                outputBuffer.setLength(len-1);    
+            if (len > 0 && outputBuffer.charAt(len-1) == '\n') {
+                outputBuffer.setLength(len - 1);
+            }
         }
     }
 

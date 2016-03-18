@@ -77,6 +77,10 @@ public class MimeTypes extends Hashtable<String, String> {
 	/**
 	 * Returns the MIME type of the given file (determined by the file extension), <code>null</code>
 	 * if the type is unknown (unknown or no extension) or if the file is a folder.
+	 *
+	 * @param file the given file
+	 *
+	 * @return the MIME type
 	 */
 	public static String getMimeType(AbstractFile file) {
 		if (file.isDirectory()) {

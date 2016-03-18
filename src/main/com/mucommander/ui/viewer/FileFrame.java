@@ -31,15 +31,20 @@ public abstract class FileFrame extends JFrame {
 
 //	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
 
-	// The file presenter within this frame
+    /**
+     * The file presenter within this frame
+     */
 	private FilePresenter filePresenter;
-	
-	// The main frame from which this frame was initiated
+
+    /**
+     * The main frame from which this frame was initiated
+     */
 	private MainFrame mainFrame;
 	
     private Component returnFocusTo;
-	
-	FileFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+
+
+    FileFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
 		this.mainFrame = mainFrame;
 
 		setIconImage(icon);
@@ -79,7 +84,7 @@ public abstract class FileFrame extends JFrame {
                 };
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
                 try {
-                filePresenter.open(file);
+                    filePresenter.open(file);
                 } finally {
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
                 }
@@ -178,12 +183,16 @@ public abstract class FileFrame extends JFrame {
 
     @Override
     public void dispose() {
-        filePresenter.saveStateOnClose();
-        WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
+        try {
+            filePresenter.saveStateOnClose();
+            WindowsStorage.getInstance().put(this, filePresenter.getClass().getCanonicalName());
+        } catch (Throwable ignore) {}
         super.dispose();
-        if (returnFocusTo != null) {
-            FocusRequester.requestFocus(returnFocusTo);
-    }
+        try {
+            if (returnFocusTo != null) {
+                FocusRequester.requestFocus(returnFocusTo);
+            }
+        } catch (Throwable ignore) {}
     }
 
     public FileFrame returnFocusTo(Component returnFocusTo) {
@@ -207,4 +216,11 @@ public abstract class FileFrame extends JFrame {
     
     protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
 
+    public void setSearchedText(String searchedText) {
+        filePresenter.setSearchedText(searchedText);
+    }
+
+    public void setSearchedBytes(byte[] searchedBytes) {
+        filePresenter.setSearchedBytes(searchedBytes);
+    }
 }

@@ -24,6 +24,7 @@ import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -106,18 +107,12 @@ public class VSphereClient implements Closeable {
 	/**
 	 * Establishes session with the vSphere server.
 	 * 
-	 * @return true if connected successfully
 	 * @throws RuntimeFaultFaultMsg
 	 * @throws InvalidLoginFaultMsg
 	 * @throws InvalidLocaleFaultMsg
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyManagementException
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
 	 */
-	public void connect() throws RuntimeFaultFaultMsg,
-			InvalidLocaleFaultMsg, InvalidLoginFaultMsg {
+	public void connect() throws RuntimeFaultFaultMsg, InvalidLocaleFaultMsg, InvalidLoginFaultMsg {
 		String connectionUrl = getVSphereServiceUrl();
 
 		doTrust();
@@ -155,8 +150,7 @@ public class VSphereClient implements Closeable {
 
 		log.trace("Service content retrieved successfully");
 		log.trace("Logging in to vSphere host '{}'", server);
-		UserSession userSession = vimPort.login(serviceContent.getSessionManager(), user,
-				password, null);
+		UserSession userSession = vimPort.login(serviceContent.getSessionManager(), user, password, null);
 		log.trace("Logged in successfully to vSphere host '{}'", server);
 		connected = true;
 	}
@@ -192,7 +186,6 @@ public class VSphereClient implements Closeable {
 	 * 
 	 * @throws RuntimeFaultFaultMsg
 	 * 
-	 * @throws Exception
 	 */
 	public void disconnect() throws RuntimeFaultFaultMsg {
 		if (connected) {
@@ -203,16 +196,12 @@ public class VSphereClient implements Closeable {
 		connected = false;
 	}
 
-	public ManagedObjectReference findVmByUuid(String uuid, boolean instanceUuid)
-			throws RuntimeFaultFaultMsg {
-		return vimPort.findByUuid(this.serviceContent.getSearchIndex(), null,
-				uuid, true, instanceUuid);
+	public ManagedObjectReference findVmByUuid(String uuid, boolean instanceUuid) throws RuntimeFaultFaultMsg {
+		return vimPort.findByUuid(this.serviceContent.getSearchIndex(), null, uuid, true, instanceUuid);
 	}
 	
-	public ManagedObjectReference findVmByIp(String ip)
-			throws RuntimeFaultFaultMsg {
-		return vimPort.findByIp(this.serviceContent.getSearchIndex(), null,
-				ip, true);
+	public ManagedObjectReference findVmByIp(String ip) throws RuntimeFaultFaultMsg {
+		return vimPort.findByIp(this.serviceContent.getSearchIndex(), null, ip, true);
 	}
 
 	/* taken from vmware samples */
@@ -234,14 +223,14 @@ public class VSphereClient implements Closeable {
 		// PropertyFilterSpec is used to hold the ObjectSpec and
 		// PropertySpec for the call
 		PropertyFilterSpec pfSpec = new PropertyFilterSpec();
-		pfSpec.getPropSet().addAll(Arrays.asList(pSpec));
-		pfSpec.getObjectSet().addAll(Arrays.asList(oSpec));
+		pfSpec.getPropSet().addAll(Collections.singletonList(pSpec));
+		pfSpec.getObjectSet().addAll(Collections.singletonList(oSpec));
 
 		// retrieveProperties() returns the properties
 		// selected from the PropertyFilterSpec
 		List<ObjectContent> ocs = vimPort.retrieveProperties(
 				serviceContent.getPropertyCollector(),
-				Arrays.asList(pfSpec));
+				  Collections.singletonList(pfSpec));
 
 		// Return value, one object for each property specified
 		Object[] ret = new Object[properties.length];
@@ -280,10 +269,8 @@ public class VSphereClient implements Closeable {
 
 		try {
 
-			javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext
-					.getInstance("SSL");
-			javax.net.ssl.SSLSessionContext sslsc = sc
-					.getServerSessionContext();
+			javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL");
+			javax.net.ssl.SSLSessionContext sslsc = sc.getServerSessionContext();
 			sslsc.setSessionTimeout(0);
 			sc.init(null, trustAllCerts, null);
 			return sc;

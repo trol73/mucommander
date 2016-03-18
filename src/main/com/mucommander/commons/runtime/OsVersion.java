@@ -64,6 +64,8 @@ public enum OsVersion implements ComparableRuntimeProperty {
 	WINDOWS_7("Windows 7"),
 	/** Windows 8 */
 	WINDOWS_8("Windows 8"),
+    /** Windows 10 */
+    WINDOWS_10("Windows 10"),
 
 
 	///////////////////////
@@ -153,7 +155,7 @@ public enum OsVersion implements ComparableRuntimeProperty {
         // This website holds a collection of system property values under many OSes:
         // http://lopica.sourceforge.net/os.html
 
-        if(osFamily==OsFamily.WINDOWS) {
+        if (osFamily == OsFamily.WINDOWS) {
             if (osNameProp.equals("Windows 95"))
                 return WINDOWS_95;
 
@@ -185,20 +187,20 @@ public enum OsVersion implements ComparableRuntimeProperty {
                 return WINDOWS_8;
 
             // Newer version we don't know of yet, assume latest supported OS version
-            return WINDOWS_8;
+            return WINDOWS_10;
         }
         // Mac OS X versions
-        if (osFamily==OsFamily.MAC_OS_X) {
-            if(osVersionProp.startsWith("10.10"))
+        if (osFamily == OsFamily.MAC_OS_X) {
+            if (osVersionProp.startsWith("10.10"))
                 return MAC_OS_X_10_10;
 
-            if(osVersionProp.startsWith("10.9"))
+            if (osVersionProp.startsWith("10.9"))
                 return MAC_OS_X_10_9;
 
-            if(osVersionProp.startsWith("10.8"))
+            if (osVersionProp.startsWith("10.8"))
                 return MAC_OS_X_10_8;
 
-            if(osVersionProp.startsWith("10.7"))
+            if (osVersionProp.startsWith("10.7"))
                 return MAC_OS_X_10_7;
 
             if (osVersionProp.startsWith("10.6"))
@@ -243,19 +245,19 @@ public enum OsVersion implements ComparableRuntimeProperty {
     //////////////////////////////////////////////
 
     public boolean isCurrentOrLower() {
-		return currentValue.compareTo(this)<=0;
+		return currentValue.compareTo(this) <= 0;
 	}
 
 	public boolean isCurrentLower() {
-		return currentValue.compareTo(this)<0;
+		return currentValue.compareTo(this) < 0;
 	}
 
 	public boolean isCurrentOrHigher() {
-		return currentValue.compareTo(this)>=0;
+		return currentValue.compareTo(this) >= 0;
 	}
 
 	public boolean isCurrentHigher() {
-		return currentValue.compareTo(this)>0;
+		return currentValue.compareTo(this) > 0;
 	}
 
     ////////////////////////

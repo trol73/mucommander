@@ -65,4 +65,7 @@ public interface FileProtocols {
     /** Protocol for files on android devices. */
     String ADB       = "adb";
 
+    /** Protocol for avrdude programmer. */
+    String AVRDUDE       = "avrdude";
+
 }
