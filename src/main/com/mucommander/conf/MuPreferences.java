@@ -441,7 +441,7 @@ public class MuPreferences implements MuPreferencesAPI {
 
 		// Ensure backward compatibility
 		configurationVersion = reader.getVersion();
-		if(configurationVersion == null || !configurationVersion.equals(RuntimeConstants.VERSION)) {
+		if (configurationVersion == null || !configurationVersion.equals(RuntimeConstants.VERSION)) {
 			// Rename preferences that have changed (from v0.8.5)
 			configuration.renameVariable("show_hidden_files", SHOW_HIDDEN_FILES);
 			configuration.renameVariable("auto_size_columns", AUTO_SIZE_COLUMNS);

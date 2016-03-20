@@ -39,9 +39,9 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
     /** Field in which the user will enter the new name. */
     private JTextField nameField;
     /** Ok button. */
-    private JButton    okButton;
+    private JButton okButton;
     /** Cancel button. */
-    private JButton    cancelButton;
+    private JButton cancelButton;
 
 
 
@@ -152,10 +152,11 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
      * @param e describes the event.
      */
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == okButton)
+        if( e.getSource() == okButton) {
             wasValidated = true;
-        else if(e.getSource() == cancelButton)
+        } else if(e.getSource() == cancelButton) {
             wasValidated = false;
+        }
         dispose();
     }
 }

@@ -52,8 +52,8 @@ public class ToggleHiddenFilesAction extends MuAction {
      */
     @Override
     public void performAction() {
-    	MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_HIDDEN_FILES,
-                                    !MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+        boolean show = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES);
+    	MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_HIDDEN_FILES, !show);
         WindowManager.tryRefreshCurrentFolders();
     }
 

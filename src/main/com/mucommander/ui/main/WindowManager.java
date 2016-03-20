@@ -76,17 +76,19 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * Installs all custom look and feels.
      */
     private static void installCustomLookAndFeels() {
-        List<String> plafs;         // All available custom look and feels.
+        // Get all available custom look and feels
+        List<String> plafs = MuConfigurations.getPreferences().getListVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
 
         // Tries to retrieve the custom look and feels list.
-        if((plafs = MuConfigurations.getPreferences().getListVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR)) == null)
+        if (plafs == null)
             return;
 
         // Goes through the list and install every custom look and feel we could find.
         // Look and feels that aren't supported under the current platform are ignored.
-        for(String plaf : plafs) {
-            try {installLookAndFeel(plaf);}
-            catch(Throwable e) {
+        for (String plaf : plafs) {
+            try {
+                installLookAndFeel(plaf);
+            } catch(Throwable e) {
                 LOGGER.info("Failed to install Look&Feel "+plaf, e);
             }
         }
@@ -106,11 +108,13 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         
         // Sets custom lookAndFeel if different from current lookAndFeel
         String lnfName = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
-        if(lnfName!=null && !lnfName.equals(UIManager.getLookAndFeel().getName()))
+        if (lnfName!=null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
             setLookAndFeel(lnfName);
+        }
 
-        if(lnfName == null)
+        if (lnfName == null) {
             LOGGER.debug("Could load look'n feel from preferences");
+        }
         
         MuConfigurations.addPreferencesListener(this);
     }
@@ -151,16 +155,18 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         // Starts with the main frame to make sure that results are immediately
         // visible to the user.
     	instance.currentMainFrame.tryRefreshCurrentFolders();
-        for(MainFrame mainFrame : instance.mainFrames)
-            if(mainFrame != instance.currentMainFrame)
+        for (MainFrame mainFrame : instance.mainFrames) {
+            if (mainFrame != instance.currentMainFrame) {
                 mainFrame.tryRefreshCurrentFolders();
+            }
+        }
     }
 
     /**
      * Creates a new MainFrame and makes it visible on the screen, on top of any other frames.
      *
      * @param mainFrameBuilder
-          */
+     */
     public static synchronized void createNewMainFrame(MainFrameBuilder mainFrameBuilder) {
         MainFrame[] newMainFrames = mainFrameBuilder.build();
 
@@ -193,12 +199,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     public static synchronized void quit() {
         // Dispose all MainFrames, ending with the currently active one.
         int nbFrames = instance.mainFrames.size();
-        if(nbFrames>0) {            // If an uncaught exception occurred in the startup sequence, there is no MainFrame to dispose
+        if (nbFrames>0) {            // If an uncaught exception occurred in the startup sequence, there is no MainFrame to dispose
             // Retrieve current MainFrame's index
             int currentMainFrameIndex = getCurrentWindowIndex();
             
             // Dispose all MainFrames but the current one
-            for(int i=0; i<nbFrames; i++) {
+            for (int i=0; i<nbFrames; i++) {
                 if(i!=currentMainFrameIndex)
                 	instance.mainFrames.get(i).dispose();
             }
@@ -214,9 +220,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         Frame frames[] = Frame.getFrames();
         nbFrames = frames.length;
         Frame frame;
-        for(int i=0; i<nbFrames; i++) {
+        for (int i=0; i < nbFrames; i++) {
             frame = frames[i];
-            if(frame.isShowing()) {
+            if (frame.isShowing()) {
                 LOGGER.debug("disposing frame#"+i);
                 frame.dispose();
             }
@@ -325,7 +331,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         MenuSelectionManager.defaultManager().clearSelectedPath();
 
         // Return if event doesn't originate from a MainFrame (e.g. ViewerFrame or EditorFrame)
-        if(!(source instanceof MainFrame))
+        if (!(source instanceof MainFrame))
             return;
 
         // Let MainFrame know that it is not active anymore
@@ -417,10 +423,10 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
     	// /!\ font.size is set after font.family in AppearancePrefPanel
     	// that's why we only listen to this one in order not to change Font twice
-    	if (var.equals(MuPreferences.LOOK_AND_FEEL)) {
+    	if (MuPreferences.LOOK_AND_FEEL.equals(var)) {
     		String lnfName = event.getValue();
 
-    		if(!UIManager.getLookAndFeel().getClass().getName().equals(lnfName))
+    		if (!UIManager.getLookAndFeel().getClass().getName().equals(lnfName))
     			setLookAndFeel(lnfName);
     	}
     }

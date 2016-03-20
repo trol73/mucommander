@@ -25,13 +25,25 @@ import javax.swing.*;
 /**
  * @author Arik Hadas
  */
-public abstract class PrefCheckBox extends JCheckBox implements PrefComponent {
+public class PrefCheckBox extends JCheckBox implements PrefComponent {
 
-	public PrefCheckBox(String description) {
+	public interface ChangeListener {
+		boolean onChange(JCheckBox checkBox);
+	}
+
+	private final ChangeListener changeListener;
+
+	public PrefCheckBox(String description, ChangeListener changeListener) {
 		super(description);
+		this.changeListener = changeListener;
 	}
 	
 	public void addDialogListener(final PreferencesDialog dialog) {
 		addItemListener(e -> dialog.componentChanged(PrefCheckBox.this));
+	}
+
+	@Override
+	public boolean hasChanged() {
+		return changeListener != null && changeListener.onChange(this);
 	}
 }

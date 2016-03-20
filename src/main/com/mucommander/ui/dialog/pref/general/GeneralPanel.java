@@ -232,11 +232,9 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         tempPanel.add(Box.createHorizontalGlue());
         dateFormatPanel.add(tempPanel);
 
-        showCenturyCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_century")) {
-			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT).contains(YYYY);
-			}
-        };
+        showCenturyCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_century"),
+                checkBox -> checkBox.isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT).contains(YYYY));
+
         showCenturyCheckBox.setSelected(dateFormat.contains(YYYY));
         showCenturyCheckBox.addItemListener(this);
         dateFormatPanel.add(showCenturyCheckBox);
@@ -276,11 +274,8 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         timeFormatPanel.add(time24RadioButton);
         timeFormatPanel.addSpace(10);
 
-        showSecondsCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_seconds")) {
-			public boolean hasChanged() {
-				return isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.TIME_FORMAT).contains(":ss");
-			}
-        };
+        showSecondsCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_seconds"),
+                checkBox -> checkBox.isSelected() != MuConfigurations.getPreferences().getVariable(MuPreference.TIME_FORMAT).contains(":ss"));
         showSecondsCheckBox.setSelected(timeFormat.contains(":ss"));
         showSecondsCheckBox.addItemListener(this);
         timeFormatPanel.add(showSecondsCheckBox);

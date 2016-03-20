@@ -374,7 +374,7 @@ public class LocationChanger {
      * @return <code>true</code> ´if the current folder is currently being changed, <code>false</code> otherwise
      */
     public boolean isFolderChanging() {
-        return changeFolderThread!=null;
+        return changeFolderThread != null;
     }
     
 	/**
@@ -565,7 +565,7 @@ public class LocationChanger {
 		 */
 		public boolean tryKill() {
 			synchronized(KILL_LOCK) {
-				if(killedByStop) {
+				if (killedByStop) {
 					LOGGER.debug("Thread already killed by #interrupt() and #stop(), there's nothing we can do, returning");
 					return false;
 				}
@@ -583,7 +583,7 @@ public class LocationChanger {
 				// interruptible operation such as java.nio.channel.InterruptibleChannel. If this is the case,
 				// InterruptedException or ClosedByInterruptException will be thrown and thus need to be catched by
 				// #init().
-				if(!killedByInterrupt) {
+				if (!killedByInterrupt) {
 					LOGGER.debug("Killing thread using #interrupt()");
 
 					// This field needs to be set before actually interrupting the thread, #init() relies on it
@@ -707,7 +707,7 @@ public class LocationChanger {
 								// The dialog is also not displayed if the file corresponds to the currently selected file,
 								// which is a weak (and not so accurate) way to know if the folder change is the result
 								// of the OpenAction (enter pressed on the file). This works well enough in practice.
-								if(!globalHistory.historyContains(folderURL) && !file.equals(folderPanel.getFileTable().getSelectedFile())) {
+								if (!globalHistory.historyContains(folderURL) && !file.equals(folderPanel.getFileTable().getSelectedFile())) {
 									// Restore default cursor
 									mainFrame.setCursor(Cursor.getDefaultCursor());
 
@@ -722,11 +722,11 @@ public class LocationChanger {
 
 									int ret = dialog.getActionValue();
 
-									if (ret==-1 || ret==CANCEL_ACTION)
+									if (ret == -1 || ret == CANCEL_ACTION)
 										break;
 
 									// Download file
-									if (ret==DOWNLOAD_ACTION) {
+									if (ret == DOWNLOAD_ACTION) {
 										showDownloadDialog(file);
 										break;
 									}
@@ -748,9 +748,9 @@ public class LocationChanger {
 						// Thread was created using an AbstractFile instance, check file existence
 						else if (!folder.exists()) {
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
-							if(findWorkableFolder) {
+							if (findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
-								if(newFolder.equals(folder)) {
+								if (newFolder.equals(folder)) {
 									// If we've already tried the returned folder, give up (avoids a potentially endless loop)
 									showFolderDoesNotExistDialog();
 									break;
@@ -796,7 +796,7 @@ public class LocationChanger {
 						}
 
 						synchronized(KILL_LOCK) {
-							if(killed) {
+							if (killed) {
 								LOGGER.debug("this thread has been killed, returning");
 								break;
 							}
@@ -816,7 +816,7 @@ public class LocationChanger {
 						}*/ 
 
 						synchronized(KILL_LOCK) {
-							if(killed) {
+							if (killed) {
 								LOGGER.debug("this thread has been killed, returning");
 								break;
 							}
@@ -849,7 +849,7 @@ public class LocationChanger {
 					catch(Exception e) {
 						LOGGER.debug("Caught exception", e);
 
-						if(killed) {
+						if (killed) {
 							// If #tryKill() called #interrupt(), the exception we just caught was most likely
 							// thrown as a result of the thread being interrupted.
 							//
@@ -865,7 +865,7 @@ public class LocationChanger {
 						// Restore default cursor
 						mainFrame.setCursor(Cursor.getDefaultCursor());
 
-						if(e instanceof AuthException) {
+						if (e instanceof AuthException) {
 							AuthException authException = (AuthException)e;
 							// Retry (loop) if user provided new credentials, if not stop
 							AuthDialog authDialog = popAuthDialog(authException.getURL(), true, authException.getMessage());
@@ -882,9 +882,9 @@ public class LocationChanger {
 						}
 						else {
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
-							if(findWorkableFolder) {
+							if (findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
-								if(newFolder.equals(folder)) {
+								if (newFolder.equals(folder)) {
 									// If we've already tried the returned folder, give up (avoids a potentially endless loop)
 									showFolderDoesNotExistDialog();
 									break;
@@ -946,10 +946,10 @@ public class LocationChanger {
 			// Make all actions active again
 			mainFrame.setNoEventsMode(false);
 
-			if(!folderChangedSuccessfully) {
-				FileURL failedURL = folder==null?folderURL:folder.getURL();
+			if (!folderChangedSuccessfully) {
+				FileURL failedURL = folder == null ? folderURL : folder.getURL();
 				// Notifies listeners that location change has been cancelled by the user or has failed
-				if(killed)
+				if (killed)
 					locationManager.fireLocationCancelled(failedURL);
 				else
 					locationManager.fireLocationFailed(failedURL);

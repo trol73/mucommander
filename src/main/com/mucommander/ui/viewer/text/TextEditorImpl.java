@@ -118,7 +118,7 @@ class TextEditorImpl implements ThemeListener {
 	// Initialization //
 	////////////////////
 
-	public TextEditorImpl(boolean isEditable, StatusBar statusBar) {
+	TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
         initTextArea(isEditable);
         this.statusBar = statusBar;
@@ -373,7 +373,7 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 
-    public FileType detectFileFormat(AbstractFile file) {
+    FileType detectFileFormat(AbstractFile file) {
         byte bytes[] = BufferPool.getByteArray(256);
         int readBytes;
         try {
@@ -430,7 +430,7 @@ class TextEditorImpl implements ThemeListener {
 
     }
 
-    public void formatCode() {
+    void formatCode() {
         try {
             formatTextArea();
             getStatusBar().setStatusMessage("");
@@ -452,7 +452,7 @@ class TextEditorImpl implements ThemeListener {
         return statusBar;
     }
 
-    public void setSyntaxType(FileType fileType) {
+    void setSyntaxType(FileType fileType) {
         textArea.setFileType(fileType);
         if (statusBar != null) {
             statusBar.setSyntax(fileType.getName());
