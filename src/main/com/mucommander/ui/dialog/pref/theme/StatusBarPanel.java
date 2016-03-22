@@ -297,13 +297,11 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
 
         @Override
         public void paint(Graphics g) {
-            int width;
+            int width = ((getWidth() - 2) * WARNING_DRAW_PERCENTAGE[type]) / 100;
 
-            width = ((getWidth() - 2) * WARNING_DRAW_PERCENTAGE[type]) / 100;
-
-            if(type == OK)
+            if (type == OK)
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_OK_COLOR));
-            else if(type == WARNING)
+            else if (type == WARNING)
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_WARNING_COLOR));
             else
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_CRITICAL_COLOR));

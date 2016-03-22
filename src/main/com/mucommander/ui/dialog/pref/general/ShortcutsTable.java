@@ -413,15 +413,15 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				value = null;
 				
 			KeyStroke typedKeyStroke = (KeyStroke) value;
-			switch(column){
-			case ACCELERATOR_COLUMN_INDEX:
-				tableData.setAccelerator(typedKeyStroke, row);
-				break;
-			case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
-				tableData.setAlternativeAccelerator(typedKeyStroke, row);
-				break;
-			default:
-				LOGGER.debug("Unexpected column index: " + column);
+			switch (column){
+				case ACCELERATOR_COLUMN_INDEX:
+					tableData.setAccelerator(typedKeyStroke, row);
+					break;
+				case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
+					tableData.setAlternativeAccelerator(typedKeyStroke, row);
+					break;
+				default:
+					LOGGER.debug("Unexpected column index: " + column);
 			}
 
 			fireTableCellUpdated(row, column);

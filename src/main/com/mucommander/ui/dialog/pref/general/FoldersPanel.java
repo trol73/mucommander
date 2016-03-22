@@ -37,7 +37,6 @@ import javax.swing.text.JTextComponent;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.text.Translator;
@@ -94,8 +93,6 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 
         setLayout(new BorderLayout());
 
-        final MuPreferencesAPI pref = MuConfigurations.getPreferences();
-
         // Startup folders panel
         YBoxPanel startupFolderPanel = new YBoxPanel();
         startupFolderPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.startup_folders")));
@@ -105,14 +102,14 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 			public boolean hasChanged() {
 				return !(isSelected() ? 
 						MuPreferences.STARTUP_FOLDERS_LAST	: MuPreferences.STARTUP_FOLDERS_CUSTOM).equals(
-                        pref.getVariable(STARTUP_FOLDERS));
+                        getVariable(STARTUP_FOLDERS));
 			}
 		};
 		customFoldersRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_folder")) {
 			public boolean hasChanged() {
 				return !(isSelected() ? 
 						MuPreferences.STARTUP_FOLDERS_CUSTOM : MuPreferences.STARTUP_FOLDERS_LAST).equals(
-                        pref.getVariable(STARTUP_FOLDERS));
+                        getVariable(STARTUP_FOLDERS));
 			}
         };
         startupFolderPanel.add(lastFoldersRadioButton);
@@ -166,13 +163,13 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         
         //Lay out the panel.
         SpringUtilities.makeCompactGrid(container,
-                                        2, 2, //rows, cols
-                                        20, 6,        //initX, initY
-                                        6, 6);       //xPad, yPad
+                                        2, 2,       // rows, cols
+                                        20, 6,      // initX, initY
+                                        6, 6);      // xPad, yPad
         
         startupFolderPanel.add(container);
         
-        if (pref.getVariable(STARTUP_FOLDERS, "").equals(MuPreferences.STARTUP_FOLDERS_LAST)) {
+        if (getVariable(STARTUP_FOLDERS, "").equals(MuPreferences.STARTUP_FOLDERS_LAST)) {
             lastFoldersRadioButton.setSelected(true);
             setCustomFolderComponentsEnabled(false);
         } else {
@@ -186,8 +183,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         northPanel.addSpace(5);
 		
         showHiddenFilesCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_hidden_files"),
-                checkBox -> checkBox.isSelected() != pref.getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
-        showHiddenFilesCheckBox.setSelected(pref.getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+        showHiddenFilesCheckBox.setSelected(getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
         northPanel.add(showHiddenFilesCheckBox);
 
         // Mac OS X-only options
@@ -197,10 +194,9 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
             showHiddenFilesCheckBox.addItemListener(this);
 
             showDSStoreFilesCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_ds_store_files"),
-                    checkBox -> checkBox.isSelected() != pref.getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
+                    checkBox -> checkBox.isSelected() != getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
 
-            showDSStoreFilesCheckBox.setSelected(pref.getVariable(SHOW_DS_STORE_FILES,
-                                                                                  MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
+            showDSStoreFilesCheckBox.setSelected(getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
             showDSStoreFilesCheckBox.setEnabled(showHiddenFilesCheckBox.isSelected());
             // Shift the check box to the right to indicate that it is a sub-option
             northPanel.add(showDSStoreFilesCheckBox, 20);
@@ -208,28 +204,25 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 
         if (OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent()) {
         	showSystemFoldersCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_system_folders"),
-                    checkBox -> checkBox.isSelected() != pref.getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
-        	showSystemFoldersCheckBox.setSelected(pref.getVariable(SHOW_SYSTEM_FOLDERS,
-        			MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
+                    checkBox -> checkBox.isSelected() != getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
+        	showSystemFoldersCheckBox.setSelected(getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
         	northPanel.add(showSystemFoldersCheckBox);        	
         }
 
         compactSizeCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.compact_file_size"),
-                checkBox -> checkBox.isSelected() != pref.getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+                checkBox -> checkBox.isSelected() != getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
 
-        compactSizeCheckBox.setSelected(pref.getVariable(DISPLAY_COMPACT_FILE_SIZE,
-                                                                         MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        compactSizeCheckBox.setSelected(getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
         northPanel.add(compactSizeCheckBox);
 
         followSymlinksCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.follow_symlinks_when_cd"),
-                checkBox -> checkBox.isSelected() != pref.getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
-        followSymlinksCheckBox.setSelected(pref.getVariable(CD_FOLLOWS_SYMLINKS,
-                                                                            MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
+                checkBox -> checkBox.isSelected() != getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
+        followSymlinksCheckBox.setSelected(getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
         northPanel.add(followSymlinksCheckBox);
 
         showTabHeaderCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_tab_header"),
-                checkBox -> checkBox.isSelected() != pref.getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
-        showTabHeaderCheckBox.setSelected(pref.getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
+        showTabHeaderCheckBox.setSelected(getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
         northPanel.add(showTabHeaderCheckBox);
         
         add(northPanel, BorderLayout.NORTH);
@@ -288,8 +281,9 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         	refreshFolders |= pref.setVariable(SHOW_SYSTEM_FOLDERS, showSystemFoldersCheckBox.isSelected());
         }
 
-        if(refreshFolders)
+        if (refreshFolders) {
             WindowManager.tryRefreshCurrentFolders();
+        }
     }
 
 
@@ -319,9 +313,10 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     public void keyTyped(KeyEvent e) {
         Object source = e.getSource();
 		
-        if(source==leftCustomFolderTextField || source==rightCustomFolderTextField) {
-            if(!customFoldersRadioButton.isSelected())
+        if (source==leftCustomFolderTextField || source==rightCustomFolderTextField) {
+            if (!customFoldersRadioButton.isSelected()) {
                 customFoldersRadioButton.setSelected(true);
+            }
         }
     }
 	
@@ -346,17 +341,18 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setDialogTitle(Translator.get("choose_folder"));
         chooser.setDialogType(JFileChooser.OPEN_DIALOG);
-        if(chooser.showDialog(parent, Translator.get("choose")) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showDialog(parent, Translator.get("choose")) == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
-            if (source==leftCustomFolderButton) {
+            if (source == leftCustomFolderButton) {
                 leftCustomFolderTextField.setText(file.getPath());
-                if(!customFoldersRadioButton.isSelected())
+                if (!customFoldersRadioButton.isSelected()) {
                     customFoldersRadioButton.setSelected(true);
-            }
-            else if (source==rightCustomFolderButton) {
+                }
+            } else if (source == rightCustomFolderButton) {
                 rightCustomFolderTextField.setText(file.getPath());
-                if(!customFoldersRadioButton.isSelected())
+                if (!customFoldersRadioButton.isSelected()) {
                     customFoldersRadioButton.setSelected(true);
+                }
             }
         }
 	}
@@ -367,7 +363,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	private final String HOME_FOLDER_PATH = System.getProperty("user.home");
     	
     	public PrefFilePathFieldWithDefaultValue(boolean isLeft) {
-    		super(isLeft ? MuConfigurations.getPreferences().getVariable(LEFT_CUSTOM_FOLDER, "") : MuConfigurations.getPreferences().getVariable(RIGHT_CUSTOM_FOLDER, ""));
+    		super(isLeft ? getVariable(LEFT_CUSTOM_FOLDER, "") : getVariable(RIGHT_CUSTOM_FOLDER, ""));
     		this.isLeft = isLeft;
     		
 //    		setUI(new HintTextFieldUI(HOME_FOLDER_PATH, true));
@@ -375,8 +371,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	
 		public boolean hasChanged() {
 			return isLeft ? 
-					!getText().equals(MuConfigurations.getPreferences().getVariable(LEFT_CUSTOM_FOLDER)) :
-					!getText().equals(MuConfigurations.getPreferences().getVariable(RIGHT_CUSTOM_FOLDER));
+					!getText().equals(getVariable(LEFT_CUSTOM_FOLDER)) :
+					!getText().equals(getVariable(RIGHT_CUSTOM_FOLDER));
 		}
 		
 		public String getFilePath() {
@@ -401,7 +397,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	    }
 
     	    private void repaint() {
-    	        if(getComponent() != null) {
+    	        if (getComponent() != null) {
     	            getComponent().repaint();           
     	        }
     	    }
@@ -441,24 +437,23 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	    protected void paintSafely(Graphics g) {
     	        super.paintSafely(g);
     	        JTextComponent comp = getComponent();
-    	        if (hint != null && comp.getText().length() == 0 && (!(hideOnFocus && comp.hasFocus()))){
-    	            if (color != null) {
-    	                g.setColor(color);
-    	            } else {
-    	                g.setColor(comp.getForeground().brighter().brighter().brighter());              
-    	            }
+    	        if (hint != null && comp.getText().length() == 0 && (!(hideOnFocus && comp.hasFocus()))) {
+                    g.setColor(color != null ? color : comp.getForeground().brighter().brighter().brighter());
     	            int padding = (comp.getHeight() - comp.getFont().getSize())/2;
     	            g.drawString(hint, 3, comp.getHeight()-padding-1);          
     	        }
     	    }
 
     	    public void focusGained(FocusEvent e) {
-    	        if (hideOnFocus) repaint();
-
+    	        if (hideOnFocus) {
+                    repaint();
+                }
     	    }
 
     	    public void focusLost(FocusEvent e) {
-    	        if(hideOnFocus) repaint();
+    	        if (hideOnFocus) {
+                    repaint();
+                }
     	    }
     	    
     	    @Override
@@ -466,6 +461,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	        super.installListeners();
     	        getComponent().addFocusListener(this);
     	    }
+
     	    @Override
     	    protected void uninstallListeners() {
     	        super.uninstallListeners();

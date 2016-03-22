@@ -18,6 +18,11 @@
 
 package com.mucommander.ui.dialog.pref;
 
+import com.mucommander.commons.conf.ValueList;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferencesAPI;
+
 import javax.swing.*;
 
 /**
@@ -45,7 +50,9 @@ public abstract class PreferencesPanel extends JPanel {
      * Returns the panel's title.
      * @return the panel's title.
      */
-    public String getTitle() {return title;}
+    public String getTitle() {
+        return title;
+    }
 	
     /**
      * This method is called by PreferencesDialog after the user pressed 'OK'
@@ -57,5 +64,27 @@ public abstract class PreferencesPanel extends JPanel {
      * Checks whether this panel's data can be committed or whether it contains an error.
      * @return <code>true</code> if the panel's data can be committed, <code>false</code> otherwise.
      */
-    protected boolean checkCommit() {return true;}
+    protected boolean checkCommit() {
+        return true;
+    }
+
+    protected String getVariable(MuPreference preference) {
+        return MuConfigurations.getPreferences().getVariable(preference);
+    }
+
+    protected boolean getVariable(MuPreference preference, boolean value) {
+        return MuConfigurations.getPreferences().getVariable(preference, value);
+    }
+
+    protected String getVariable(MuPreference preference, String value) {
+        return MuConfigurations.getPreferences().getVariable(preference, value);
+    }
+
+    protected float getVariable(MuPreference preference, float value) {
+        return MuConfigurations.getPreferences().getVariable(preference, value);
+    }
+
+    protected ValueList getListVariable(MuPreference preference, String separator) {
+        return MuConfigurations.getPreferences().getListVariable(preference, separator);
+    }
 }

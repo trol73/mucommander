@@ -27,29 +27,29 @@ import com.mucommander.commons.conf.ValueList;
  * @author Arik Hadas
  */
 public interface MuPreferencesAPI {
-	public boolean setVariable(MuPreference preference, String value);
-	public boolean setVariable(MuPreference preference, int value);
-	public boolean setVariable(MuPreference preference, List<String> value, String separator);
-	public boolean setVariable(MuPreference preference, float value);
-	public boolean setVariable(MuPreference preference, boolean value);
-	public boolean setVariable(MuPreference preference, long value);
-	public boolean setVariable(MuPreference preference, double value);
+	boolean setVariable(MuPreference preference, String value);
+	boolean setVariable(MuPreference preference, int value);
+	boolean setVariable(MuPreference preference, List<String> value, String separator);
+	boolean setVariable(MuPreference preference, float value);
+	boolean setVariable(MuPreference preference, boolean value);
+	boolean setVariable(MuPreference preference, long value);
+	boolean setVariable(MuPreference preference, double value);
 	
-	public String 		getVariable(MuPreference preference);
-	public String 		getVariable(MuPreference preference, String value);
-	public int 			getVariable(MuPreference preference, int value);
-	public List<String> getVariable(MuPreference preference, List<String> value, String separator);
-	public float 		getVariable(MuPreference preference, float value);
-	public boolean 		getVariable(MuPreference preference, boolean value);
-	public long 		getVariable(MuPreference preference, long value);
-	public double 		getVariable(MuPreference preference, double value);
-	public ValueList 	getListVariable(MuPreference preference, String separator);
+	String getVariable(MuPreference preference);
+	String getVariable(MuPreference preference, String value);
+	int getVariable(MuPreference preference, int value);
+	List<String> getVariable(MuPreference preference, List<String> value, String separator);
+	float getVariable(MuPreference preference, float value);
+	boolean getVariable(MuPreference preference, boolean value);
+	long getVariable(MuPreference preference, long value);
+	double getVariable(MuPreference preference, double value);
+	ValueList getListVariable(MuPreference preference, String separator);
 	
 	// TODO: remove those methods
-	public boolean getBooleanVariable(String name);
-	public String  getVariable(String name);
+	boolean getBooleanVariable(String name);
+	String  getVariable(String name);
 	
-	public boolean isVariableSet(MuPreference preference);
+	boolean isVariableSet(MuPreference preference);
 	
-	public String removeVariable(String name);
+	String removeVariable(String name);
 }
