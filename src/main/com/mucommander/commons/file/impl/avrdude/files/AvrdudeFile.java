@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.commons.file.impl.avrdude;
+package com.mucommander.commons.file.impl.avrdude.files;
 
+import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 
@@ -28,16 +30,95 @@ import java.io.OutputStream;
 /**
  * @author Oleg Trifonov
  * Created on 09/02/16.
+ *
+ * File hierarhy:
+ *   DEVICE-NAME
+ *    |- config.properties
+ *    |- flash
+ *    |   |- flash.bin
+ *    |   |- flash.hex
+ *    |- eeprom
+ *    |   |- eeprom.bin
+ *    |   |- eeprom.hex
+ *    |- fuses
+ *        |- fuses.bin
+ *        |- fuses.hex
+ *
  */
-public class AvrdudeFile extends ProtocolFile {
+public abstract class AvrdudeFile extends ProtocolFile {
 
-    protected AvrdudeFile(FileURL url) {
+    private static final String STORAGE_DIR = "avr";
+    protected static final String CONFIG_FILE_EXT = ".conf";
+
+    protected final String path;
+    protected final String name;
+
+    AvrdudeFile(FileURL url, String path, String name) throws IOException {
         super(url);
+        this.path = path;
+        this.name = name;
+        AbstractFile baseFolder = PlatformManager.getPreferencesFolder().getChild(STORAGE_DIR);
+        if (!baseFolder.exists()) {
+            baseFolder.mkdir();
+        }
+//        if (path.isEmpty() || path.equals("/") || path.equals("\\")) {
+//
+//        }
+//        System.out.println("path " + path + " [" + getClass().getName());
+//        System.out.println("baseFolder " + baseFolder + getClass().getName());
+    }
+
+    static AbstractFile getBaseFolder() throws IOException {
+        AbstractFile baseFolder = PlatformManager.getPreferencesFolder().getChild(STORAGE_DIR);
+        if (!baseFolder.exists()) {
+            baseFolder.mkdir();
+        }
+        return baseFolder;
+    }
+
+    static AbstractFile[] getConfigFiles() throws IOException {
+        return getBaseFolder().ls(new ExtensionFilenameFilter(CONFIG_FILE_EXT));
+    }
+
+    public String getDeviceName() {
+        if (path == null) {
+            return null;
+        }
+        int from = path.startsWith("/") || path.startsWith("\\") ? 1 : 0;
+        int pos1 = path.indexOf('\\', from);
+        int pos2 = path.indexOf('/', from);
+        int pos;
+        if (pos1 < 0 && pos2 < 0) {
+            pos = -1;
+        } else if (pos1 < 0) {
+            pos = pos2;
+        } else if (pos2 < 0) {
+            pos = pos1;
+        } else {
+            pos = pos1 < pos2 ? pos1 : pos2;
+        }
+        return pos < 0 ? "" : path.substring(0, pos);
+    }
+
+    AbstractFile getLocalConfigFile() throws IOException {
+System.out.println("::>"+getURL());
+System.out.println("::>"+getBaseFolder());
+System.out.println(getDeviceName() + CONFIG_FILE_EXT);
+System.out.println("::>"+getBaseFolder().getChild(getDeviceName() + CONFIG_FILE_EXT));
+        return getBaseFolder().getChild(getDeviceName() + CONFIG_FILE_EXT);
+    }
+
+    @Override
+    public boolean isFileOperationSupported(FileOperation op) {
+        if (op == FileOperation.CHANGE_DATE || op == FileOperation.CHANGE_PERMISSION) {
+            return false;
+        }
+        return super.isFileOperationSupported(op);
     }
 
     @Override
     public long getDate() {
-        return 0;
+        return System.currentTimeMillis();
     }
 
     @Override
@@ -70,10 +151,6 @@ public class AvrdudeFile extends ProtocolFile {
         return false;
     }
 
-    @Override
-    public FilePermissions getPermissions() {
-        return null;
-    }
 
     @Override
     public PermissionBits getChangeablePermissions() {
@@ -115,10 +192,10 @@ public class AvrdudeFile extends ProtocolFile {
         return false;
     }
 
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
+//    @Override
+//    public boolean isDirectory() {
+//        return false;
+//    }
 
     @Override
     public boolean isSymlink() {
@@ -130,15 +207,6 @@ public class AvrdudeFile extends ProtocolFile {
         return false;
     }
 
-    @Override
-    public AbstractFile[] ls() throws IOException {
-        return new AbstractFile[0];
-    }
-
-    @Override
-    public void mkdir() throws IOException {
-
-    }
 
     @Override
     public InputStream getInputStream() throws IOException {

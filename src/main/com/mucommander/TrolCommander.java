@@ -81,7 +81,7 @@ public class TrolCommander {
     /** Whether or not to display the splashscreen. */
     private static boolean useSplash;
     /** true while the application is launching, false after it has finished launching */
-    public static boolean isLaunching = true;
+    static boolean isLaunching = true;
     /** Launch lock. */
     private static final Object LAUNCH_LOCK = new Object();
 
@@ -188,11 +188,11 @@ public class TrolCommander {
             return null;
         }
 
-        public FutureTask<Void> getTask() {
+        FutureTask<Void> getTask() {
             return task;
         }
 
-        public boolean isReadyForExecution() {
+        boolean isReadyForExecution() {
             if (depends == null || depends.length == 0) {
                 return true;
             }
@@ -208,8 +208,7 @@ public class TrolCommander {
             return task.isDone();
         }
 
-        protected void onFinish() {
-
+        void onFinish() {
         }
 
         @Override
@@ -367,8 +366,11 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading dictionary...");
-            try {Translator.init();}
-            catch(Exception e) {helper.printError("Could not load dictionary", e, true);}
+            try {
+                Translator.init();
+            } catch(Exception e) {
+                helper.printError("Could not load dictionary", e, true);
+            }
         }
     }
 
@@ -394,7 +396,9 @@ public class TrolCommander {
             try {
                 boolean install = !MuConfigurations.isPreferencesFileExists();
                 com.mucommander.desktop.DesktopManager.init(install);
-            } catch(Exception e) {helper.printError("Could not initialize desktop", e, true);}
+            } catch(Exception e) {
+                helper.printError("Could not initialize desktop", e, true);
+            }
         }
     }
 
@@ -515,8 +519,9 @@ public class TrolCommander {
         void run() throws Exception {
             // Loads custom commands
             printStartupMessage("Loading file associations...");
-            try {com.mucommander.command.CommandManager.loadCommands();}
-            catch(Exception e) {
+            try {
+                com.mucommander.command.CommandManager.loadCommands();
+            } catch(Exception e) {
                 helper.printFileError("Could not load custom commands", e);
             }
 
@@ -549,8 +554,11 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading bookmarks...");
-            try {com.mucommander.bookmark.BookmarkManager.loadBookmarks();}
-            catch(Exception e) {helper.printFileError("Could not load bookmarks", e);}
+            try {
+                com.mucommander.bookmark.BookmarkManager.loadBookmarks();
+            } catch(Exception e) {
+                helper.printFileError("Could not load bookmarks", e);
+            }
         }
     }
 
@@ -655,7 +663,7 @@ public class TrolCommander {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
 
-        public LauncherExecutor(int cores) {
+        LauncherExecutor(int cores) {
             super(cores, cores, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
             this.cores = cores;
         }

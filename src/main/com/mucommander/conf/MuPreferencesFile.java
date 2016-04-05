@@ -28,11 +28,11 @@ class MuPreferencesFile extends MuConfigurationFile {
 	
 	private static final String DEFAULT_PREFERENCES_FILE_NAME = "preferences.xml";
 	
-	public static MuPreferencesFile getPreferencesFile(String path) throws FileNotFoundException {
+	static MuPreferencesFile getPreferencesFile(String path) throws FileNotFoundException {
 		return new MuPreferencesFile(path);
 	}
 	
-	public static MuPreferencesFile getPreferencesFile() {
+	static MuPreferencesFile getPreferencesFile() {
 		try {
 			return new MuPreferencesFile(null);
 		} catch (FileNotFoundException e) {

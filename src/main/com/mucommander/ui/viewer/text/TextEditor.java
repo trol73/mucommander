@@ -153,18 +153,26 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         OutputStream out = null;
         getStatusBar().setStatusMessage(Translator.get("text_editor.writing"));
 
+        boolean error;
         try {
             out = destFile.getOutputStream();
             write(out);
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    // Ignored
-                }
+            error = false;
+        } catch (Throwable e) {
+            error = true;
+            e.printStackTrace();
+        }
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                error = true;
+                e.printStackTrace();
             }
+        }
+        if (error) {
+            getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
+            return;
         }
 
         // We get here only if the destination file was updated successfully

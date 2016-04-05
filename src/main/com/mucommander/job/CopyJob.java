@@ -121,13 +121,13 @@ public class CopyJob extends AbstractCopyJob {
 
         // Determine filename in destination
         String destFileName = (isFileInBaseFolder && newName != null) ? newName : file.getName();
-System.out.println("destFileName " + destFileName);
+//System.out.println("destFileName " + destFileName);
         // create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
         if (destFile == null) {
             return false;
         }
-System.out.println("destFile " + destFile);
+//System.out.println("destFile " + destFile);
         currentDestFile = destFile;
 
         AbstractFile sourceFile;

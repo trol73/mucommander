@@ -66,6 +66,6 @@ public interface FileProtocols {
     String ADB       = "adb";
 
     /** Protocol for avrdude programmer. */
-    String AVRDUDE       = "avrdude";
+    String AVR       = "avr";
 
 }

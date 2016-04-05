@@ -305,7 +305,7 @@ public abstract class TransferFileJob extends FileJob {
                 if (overwriteReadonly) {
                     copyToReadonlyFile(sourceFile, destFile, append);
                 } else {
-                copyFile(sourceFile, destFile, append);
+                    copyFile(sourceFile, destFile, append);
                 }
                 return true;
             } catch(FileTransferException e) {

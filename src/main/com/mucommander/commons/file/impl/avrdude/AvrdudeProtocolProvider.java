@@ -20,6 +20,7 @@ package com.mucommander.commons.file.impl.avrdude;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.ProtocolProvider;
+import com.mucommander.commons.file.impl.avrdude.files.*;
 
 import java.io.IOException;
 
@@ -28,8 +29,40 @@ import java.io.IOException;
  * Created on 09/02/16.
  */
 public class AvrdudeProtocolProvider implements ProtocolProvider {
+
+    private static final String STORAGE_DIR = "avr";
+
     @Override
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
-        return new AvrdudeFile(url);
+        if (isRootUrl(url)) {
+            return new AvrRootDir(url, getUrlPath(url));
+        } else if (isRootUrl(url.getParent())) {
+            return new AvrDeviceDir(url, getUrlPath(url));
+        } else if (isRootUrl(url.getParent().getParent())) {
+            if (url.getFilename().equalsIgnoreCase(AvrConfigFile.FILENAME)) {
+                return new AvrConfigFile(url);
+            } else {
+                return new AvrMemoryDir(url);
+            }
+        }
+        return new AvrMemoryFile(url);
+    }
+
+    private static String getUrlPath(FileURL url) {
+        if (url == null) {
+            return null;
+        }
+        String location = url.toString();
+        int schemeDelimPos = location.indexOf("://");
+        if (schemeDelimPos > 0) {
+            return location.substring(schemeDelimPos + 3);
+        }
+        return "";
+    }
+
+    private static boolean isRootUrl(FileURL url) {
+        final String path = getUrlPath(url);
+//System.out.println("path " + url + " " + path);
+        return path == null || path.isEmpty() || path.equals("/") || path.equals("\\");
     }
 }

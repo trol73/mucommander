@@ -499,11 +499,8 @@ public class FileURL implements Cloneable {
      * @see #getCredentials()
      */
     public void setCredentials(Credentials credentials) {
-        if(credentials==null || credentials.isEmpty())  // Empty credentials are equivalent to null credentials
-            this.credentials = null;
-        else
-            this.credentials = credentials;
-
+        // Empty credentials are equivalent to null credentials
+        this.credentials = credentials == null || credentials.isEmpty() ? null : credentials;
         urlModified();
     }
 

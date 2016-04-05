@@ -633,7 +633,7 @@ public class CommandManager implements CommandBuilder {
             setCommandFile(new File(path));
         } else {
             setCommandFile(file);
-    }
+        }
     }
         
 

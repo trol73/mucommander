@@ -151,7 +151,7 @@ public class FileFactory {
 
         // TODO !!! check that adb installed
         registerProtocol(FileProtocols.ADB, new com.mucommander.commons.file.impl.adb.AdbProtocolProvider());
-        registerProtocol(FileProtocols.AVRDUDE, new AvrdudeProtocolProvider());
+        registerProtocol(FileProtocols.AVR, new AvrdudeProtocolProvider());
     }
 
     static {

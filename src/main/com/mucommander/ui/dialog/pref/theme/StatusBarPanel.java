@@ -54,7 +54,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
     };
 
     private final static int VOLUME_INFO_SIZE_FORMAT    = SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT | SizeFormat.INCLUDE_SPACE | SizeFormat.ROUND_TO_KB;
-    private final static long TOTAL_SIZE                = 85899345920l;
+    private final static long TOTAL_SIZE                = 85899345920L;
     private final static long NORMAL_SIZE               = TOTAL_SIZE / 2;
     private final static long WARNING_SIZE              = TOTAL_SIZE / 10;
     private final static long CRITICAL_SIZE             = TOTAL_SIZE / 100;
@@ -86,22 +86,18 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
     }
 
     private JPanel createGeneralPanel(FontChooser chooser, ColorButton foreground) {
-        YBoxPanel mainPanel;
-        JPanel    colorPanel;
-        JPanel    flowPanel;
-
         // Initialises the color panel.
-        colorPanel = new ProportionalGridPanel(2);
+        JPanel colorPanel = new ProportionalGridPanel(2);
         colorPanel.add(createCaptionLabel("theme_editor.text"));
         colorPanel.add(foreground);
 
         // Wraps the color panel in a flow layout.
-        flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         flowPanel.add(colorPanel);
         flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.colors")));
 
         // Creates the general panel.
-        mainPanel = new YBoxPanel();
+        YBoxPanel mainPanel = new YBoxPanel();
         mainPanel.add(chooser);
         mainPanel.addSpace(10);
         mainPanel.add(flowPanel);
@@ -246,30 +242,26 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
      * Refreshes the UI depending on the property event.
      */
     public void propertyChange(PropertyChangeEvent event) {
-        // Repaints previews when the overlay or background color have been changed.
-        if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME) || event.getPropertyName().equals(PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME)) {
-            okPreview.repaint();
-            warningPreview.repaint();
-            criticalPreview.repaint();
-        }
-
-        // Resets the preview labels' foreground color.
-        else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME)) {
-            Color color;
-
-            color = themeData.getColor(ThemeData.STATUS_BAR_FOREGROUND_COLOR);
-
-            okPreview.setForeground(color);
-            warningPreview.setForeground(color);
-            criticalPreview.setForeground(color);
-            normalPreview.setForeground(color);
-        }
-
-        // Resets the preview labels' borders.
-        else if(event.getPropertyName().equals(PreviewLabel.BORDER_COLOR_PROPERTY_NAME)) {
-            okPreview.refreshBorder();
-            warningPreview.refreshBorder();
-            criticalPreview.refreshBorder();
+        switch (event.getPropertyName()) {
+            // Repaints previews when the overlay or background color have been changed
+            case PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME:
+            case PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME:
+                okPreview.repaint();
+                warningPreview.repaint();
+                criticalPreview.repaint();
+                break;
+            // Resets the preview labels' foreground color
+            case PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME:
+                okPreview.repaint();
+                warningPreview.repaint();
+                criticalPreview.repaint();
+                break;
+            // Resets the preview labels' borders
+            case PreviewLabel.BORDER_COLOR_PROPERTY_NAME:
+                okPreview.refreshBorder();
+                warningPreview.refreshBorder();
+                criticalPreview.refreshBorder();
+                break;
         }
     }
 
@@ -281,7 +273,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
         private MutableLineBorder border;
         private int type;
 
-        public Preview(int type) {
+        Preview(int type) {
             super(WARNING_LEVEL_TEXT[type]);
             setOpaque(false);
             setBorder(border = new MutableLineBorder(Color.BLACK, 1));
@@ -290,7 +282,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
             this.type = type;
         }
 
-        public void refreshBorder() {
+        void refreshBorder() {
             border.setLineColor(themeData.getColor(ThemeData.STATUS_BAR_BORDER_COLOR));
             repaint();
         }
@@ -299,12 +291,13 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
         public void paint(Graphics g) {
             int width = ((getWidth() - 2) * WARNING_DRAW_PERCENTAGE[type]) / 100;
 
-            if (type == OK)
+            if (type == OK) {
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_OK_COLOR));
-            else if (type == WARNING)
+            } else if (type == WARNING) {
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_WARNING_COLOR));
-            else
+            } else {
                 g.setColor(themeData.getColor(ThemeData.STATUS_BAR_CRITICAL_COLOR));
+            }
             g.fillRect(1, 1, width + 1, getHeight() - 2);
 
             g.setColor(themeData.getColor(ThemeData.STATUS_BAR_BACKGROUND_COLOR));
