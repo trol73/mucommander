@@ -20,9 +20,7 @@ package com.mucommander.commons.file.impl.s3;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractFileTest;
-import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
-import com.mucommander.test.Assumes;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import java.io.IOException;

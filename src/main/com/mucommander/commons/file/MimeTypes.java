@@ -46,13 +46,11 @@ public class MimeTypes extends Hashtable<String, String> {
 			br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(MimeTypes.class.getPackage(), MIME_TYPES_RESOURCE_NAME)));
 
 			String line;
-			StringTokenizer st;
-			String description;
 
 			while ((line=br.readLine())!=null) {
 				try {
-					st = new StringTokenizer(line);
-					description = st.nextToken();
+					StringTokenizer st = new StringTokenizer(line);
+					String description = st.nextToken();
 
 					while(st.hasMoreTokens())
 						put(st.nextToken(), description);

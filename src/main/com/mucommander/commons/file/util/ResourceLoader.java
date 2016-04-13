@@ -140,15 +140,12 @@ public class ResourceLoader {
     public static URL getResourceAsURL(String path, ClassLoader classLoader, AbstractFile rootPackageFile) {
         path = removeLeadingSlash(path);
 
-        if(rootPackageFile==null)
+        if (rootPackageFile == null) {
             return classLoader.getResource(path);
+        }
 
         String separator = rootPackageFile.getSeparator();
-        String nativePath;
-        if(separator.equals("/"))
-            nativePath = path;
-        else
-            nativePath = path.replace("/", separator);
+        String nativePath = separator.equals("/") ? path : path.replace("/", separator);
 
         try {
             // Iterate through all resources that match the given path, and return the one located inside the
@@ -160,17 +157,17 @@ public class ResourceLoader {
             while(resourceEnum.hasMoreElements()) {
                 resourceURL = resourceEnum.nextElement();
 
-                if("jar".equals(resourceURL.getProtocol())) {
-                    if(getJarFilePath(resourceURL).equals(rootPackagePath))
+                if ("jar".equals(resourceURL.getProtocol())) {
+                    if (getJarFilePath(resourceURL).equals(rootPackagePath)) {
                         return resourceURL;
-                }
-                else {
-                    if(normalizeUrlPath(getDecodedURLPath(resourceURL)).equals(resourcePath))
+                    }
+                } else {
+                    if (normalizeUrlPath(getDecodedURLPath(resourceURL)).equals(resourcePath)) {
                         return resourceURL;
+                    }
                 }
             }
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             LOGGER.info("Failed to lookup resource {}", path, e);
             return null;
         }

@@ -23,9 +23,7 @@ import com.mucommander.commons.io.*;
 import com.mucommander.commons.io.security.MuProvider;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.StringUtils;
-import com.mucommander.test.Assumes;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import javax.swing.*;
@@ -92,7 +90,6 @@ public abstract class AbstractFileTest {
 
     public static AbstractFile getTemporaryFolder(String propertyName) {
         String property = System.getProperty(propertyName);
-        Assumes.assumeThat("Temporary folder referenced by property ["+propertyName+"] is configured", property!=null);
 		AbstractFile tempFolder = FileFactory.getFile(property);
 		return tempFolder;
     }

@@ -230,8 +230,8 @@ public abstract class FileURLTestCase {
      * @param url2 second url to test
      */
     protected void assertNotEquals(FileURL url1, FileURL url2) {
-        Assert.assertNotEquals(url1,url2);
-        Assert.assertNotEquals(url2,url1);
+        Assert.assertFalse(url1.equals(url2));
+        Assert.assertFalse(url2.equals(url1));
     }
 
     /**
