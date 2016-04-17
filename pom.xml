@@ -41,6 +41,7 @@
 		<bintray.repo>maven</bintray.repo>
 		<bintray.package>trol-commander</bintray.package>
 		<libs.path>${project.basedir}/assembly/lib</libs.path>
+		<libs.runtime.path>${project.basedir}/lib/runtime</libs.runtime.path>
 		<hadoop.version>1.2.1</hadoop.version>
 		<hadoop.common.version>2.5.1</hadoop.common.version>
 		<guava.version>11.0.2</guava.version>
@@ -212,7 +213,9 @@
 		<dependency>
 			<groupId>com.fifesoft</groupId>
 			<artifactId>rsyntaxtextarea</artifactId>
-			<version>2.5.8</version>
+			<version>2.5.6</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/rsyntaxtextarea-2.6.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
