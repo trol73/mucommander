@@ -285,17 +285,9 @@ public class ShortcutsPanel extends PreferencesPanel {
             }
 
    	private void updateFilter(final KeyStroke pressedKeyStroke) {
-        shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
-            @Override
-            public boolean accept(String actionId) {
-                KeyStroke accelerator = ActionKeymap.getAccelerator(actionId);
-                KeyStroke alternateAccelerator = ActionKeymap.getAlternateAccelerator(actionId);
-                return pressedKeyStroke.equals(accelerator) || pressedKeyStroke.equals(alternateAccelerator);
-            }
-        });
+        shortcutsTable.updateModel(shortcutsTable.createCurrentAcceleratorsActionFilter(pressedKeyStroke));
     }
 		
-	
 	///////////////////////
     // PrefPanel methods //
     ///////////////////////

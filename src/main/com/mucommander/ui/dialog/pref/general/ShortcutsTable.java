@@ -244,6 +244,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		data.filter(filter);
 	}
 
+	public ActionFilter createCurrentAcceleratorsActionFilter(KeyStroke accelerator) {
+		return data.new CurrentActionAccceleratorsFilter(accelerator);
+	}
+
 	/**
 	 * Override this method so that calls for SetModel function outside this class
 	 * won't get to setModel(KeymapTableModel model) function.
@@ -314,6 +318,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		public abstract boolean accept(String actionId);
 	}
 	
+
 	/**
 	 * Helper Classes
 	 */
@@ -507,6 +512,24 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	}
 	
 	private class ShortcutsTableData {
+
+		public class CurrentActionAccceleratorsFilter extends ActionFilter {
+			private KeyStroke accelerator;
+
+			public CurrentActionAccceleratorsFilter(KeyStroke accelerator) {
+				this.accelerator = accelerator;
+			}
+
+			@Override
+			public boolean accept(String actionId) {
+				HashMap<Integer, Object> actionProperties = db.get(actionId);
+				return ShortcutsTableData.this.equals(accelerator,
+				        actionProperties.get(ShortcutsTableData.this.accelerator))
+				        || ShortcutsTableData.this.equals(accelerator,
+				                actionProperties.get(ShortcutsTableData.this.alt_accelerator));
+			}
+		}
+
 		private Object[][] data;
 		private String[] actionIds;
 		private String[] descriptions;
