@@ -18,6 +18,9 @@
 
 package com.mucommander.ui.viewer.text;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -25,11 +28,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.Stack;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuSnapshot;
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.GutterEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,15 +61,29 @@ import com.mucommander.ui.viewer.FileFrame;
 class TextEditor extends FileEditor implements DocumentListener, EncodingListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextEditor.class);
 
-
     //private TextMenuHelper menuHelper;
     private TextEditorImpl textEditorImpl;
     private TextViewer textViewerDelegate;
     private StatusBar statusBar;
 
+    private GutterEx gutter;
+
 
     public TextEditor() {
         textEditorImpl = new TextEditorImpl(true, getStatusBar());
+//        Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
+        gutter = new GutterEx(textEditorImpl.getTextArea());
+        gutter.setLineNumberFont(textEditorImpl.getTextArea().getFont());
+        // TODO
+        gutter.setBackground(Color.LIGHT_GRAY);
+        gutter.setForeground(Color.black);
+        //gutter.setActiveLineRangeColor(new Color(0,0,255));
+        setLineNumbersEnabled(TextViewer.isLineNumbers());
+
+        // Set miscellaneous properties.
+        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
     	textViewerDelegate = new TextViewer(textEditorImpl) {
     		
     		@Override
@@ -70,23 +93,26 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
     		
     		@Override
     		protected void showLineNumbers(boolean show) {
-    			TextEditor.this.setRowHeaderView(show ? new TextLineNumbersPanel(textEditorImpl.getTextArea()) : null);
+                setLineNumbersEnabled(show);
+                TextViewer.setLineNumbers(show);
+    			//TextEditor.this.setRowHeaderView(show ? new TextLineNumbersPanel(textEditorImpl.getTextArea()) : null);
     	    }
     		
     		@Override
     		protected void initMenuBarItems() {
                 menuHelper = new TextMenuHelper(textEditorImpl, true);
-                menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
+                //menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
+                menuHelper.initMenu(TextEditor.this, TextViewer.isLineNumbers());
     		}
     	};
-    	
     	setComponentToPresent(textEditorImpl.getTextArea());
     }
-    
+
+    @Override
     protected void setComponentToPresent(JComponent component) {
 		getViewport().add(component);
 	}
-    
+
     void loadDocument(InputStream in, String encoding, DocumentListener documentListener) throws IOException {
     	textViewerDelegate.loadDocument(in, encoding, documentListener);
         if (getStatusBar() != null) {
@@ -132,7 +158,7 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+        }
     }
 
     @Override
@@ -150,31 +176,17 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
 
     @Override
     protected void saveAs(AbstractFile destFile) throws IOException {
-        OutputStream out = null;
+//        OutputStream out = null;
         getStatusBar().setStatusMessage(Translator.get("text_editor.writing"));
 
-        boolean error;
-        try {
-            out = destFile.getOutputStream();
+        //boolean error;
+        try (OutputStream out = destFile.getOutputStream()) {
             write(out);
-            error = false;
         } catch (Throwable e) {
-            error = true;
-            e.printStackTrace();
-        }
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                error = true;
-                e.printStackTrace();
-            }
-        }
-        if (error) {
             getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
+            e.printStackTrace();
             return;
         }
-
         // We get here only if the destination file was updated successfully
         // so we can set that no further save is needed at this stage 
         setSaveNeeded(false);
@@ -289,6 +301,152 @@ class TextEditor extends FileEditor implements DocumentListener, EncodingListene
         } catch (IOException ex) {
     		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}
+    }
+
+    /**
+     * Ensures the gutter is visible if it's showing anything.
+     */
+    private void checkGutterVisibility() {
+        int count = gutter.getComponentCount();
+        if (count == 0) {
+            if (getRowHeader() != null && getRowHeader().getView() == gutter) {
+                setRowHeaderView(null);
+            }
+        } else {
+            if (getRowHeader() == null || getRowHeader().getView() == null) {
+                setRowHeaderView(gutter);
+            }
+        }
+    }
+
+
+    /**
+     * Returns the gutter.
+     *
+     * @return The gutter.
+     */
+    public Gutter getGutter() {
+        return gutter;
+    }
+
+
+    /**
+     * Returns <code>true</code> if the line numbers are enabled and visible.
+     *
+     * @return Whether or not line numbers are visible.
+     * @see #setLineNumbersEnabled(boolean)
+     */
+    public boolean getLineNumbersEnabled() {
+        return gutter.getLineNumbersEnabled();
+    }
+
+
+    /**
+     * Returns whether the fold indicator is enabled.
+     *
+     * @return Whether the fold indicator is enabled.
+     * @see #setFoldIndicatorEnabled(boolean)
+     */
+    public boolean isFoldIndicatorEnabled() {
+        return gutter.isFoldIndicatorEnabled();
+    }
+
+
+    /**
+     * Returns whether the icon row header is enabled.
+     *
+     * @return Whether the icon row header is enabled.
+     * @see #setIconRowHeaderEnabled(boolean)
+     */
+    public boolean isIconRowHeaderEnabled() {
+        return gutter.isIconRowHeaderEnabled();
+    }
+
+
+    /**
+     * Toggles whether the fold indicator is enabled.
+     *
+     * @param enabled Whether the fold indicator should be enabled.
+     * @see #isFoldIndicatorEnabled()
+     */
+    public void setFoldIndicatorEnabled(boolean enabled) {
+        gutter.setFoldIndicatorEnabled(enabled);
+        checkGutterVisibility();
+    }
+
+
+    /**
+     * Toggles whether the icon row header (used for breakpoints, bookmarks,
+     * etc.) is enabled.
+     *
+     * @param enabled Whether the icon row header is enabled.
+     * @see #isIconRowHeaderEnabled()
+     */
+    public void setIconRowHeaderEnabled(boolean enabled) {
+        gutter.setIconRowHeaderEnabled(enabled);
+        checkGutterVisibility();
+    }
+
+
+    /**
+     * Toggles whether or not line numbers are visible.
+     *
+     * @param enabled Whether or not line numbers should be visible.
+     * @see #getLineNumbersEnabled()
+     */
+    public void setLineNumbersEnabled(boolean enabled) {
+        gutter.setLineNumbersEnabled(enabled);
+        checkGutterVisibility();
+    }
+
+
+    /**
+     * Sets the view for this scroll pane.  This must be an {@link TextArea}.
+     *
+     * @param view The new view.
+     */
+    @Override
+    public void setViewportView(Component view) {
+        TextArea rtaCandidate;
+
+        if (!(view instanceof TextArea)) {
+            rtaCandidate = getFirstRTextAreaDescendant(view);
+            if (rtaCandidate == null) {
+                throw new IllegalArgumentException("view must be either an RTextArea or a JLayer wrapping one");
+            }
+        } else {
+            rtaCandidate = (TextArea)view;
+        }
+        super.setViewportView(view);
+        if (gutter != null) {
+            gutter.setTextArea(rtaCandidate);
+        }
+    }
+
+
+    /**
+     * Returns the first descendant of a component that is an
+     * <code>RTextArea</code>.  This is primarily here to support
+     * <code>javax.swing.JLayer</code>s that wrap <code>RTextArea</code>s.
+     *
+     * @param comp The component to recursively look through.
+     * @return The first descendant text area, or <code>null</code> if none
+     *         is found.
+     */
+    private static TextArea getFirstRTextAreaDescendant(Component comp) {
+        Stack<Component> stack = new Stack<>();
+        stack.add(comp);
+        while (!stack.isEmpty()) {
+            Component current = stack.pop();
+            if (current instanceof TextArea) {
+                return (TextArea)current;
+            }
+            if (current instanceof Container) {
+                Container container = (Container)current;
+                stack.addAll(Arrays.asList(container.getComponents()));
+            }
+        }
+        return null;
     }
 
 

@@ -18,11 +18,16 @@
 
 package com.mucommander.ui.viewer.text;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Stack;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
@@ -39,6 +44,7 @@ import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import org.fife.ui.rtextarea.GutterEx;
 
 
 /**
@@ -63,6 +69,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private String encoding;
 
     private TextFilesHistory.FileRecord historyRecord;
+    private GutterEx gutter;
     
     TextViewer() {
     	this(new TextEditorImpl(false, null));
@@ -71,14 +78,31 @@ public class TextViewer extends FileViewer implements EncodingListener {
     TextViewer(TextEditorImpl textEditorImpl) {
     	this.textEditorImpl = textEditorImpl;
 
-    	setComponentToPresent(textEditorImpl.getTextArea());
-    	
-    	showLineNumbers(lineNumbers);
+        initGutter();
+
+        setComponentToPresent(textEditorImpl.getTextArea());
+
+        showLineNumbers(lineNumbers);
     	textEditorImpl.wrap(lineWrap);
 
     	initMenuBarItems();
     }
-    
+
+    private void initGutter() {
+//        Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
+        gutter = new GutterEx(textEditorImpl.getTextArea());
+        gutter.setLineNumberFont(textEditorImpl.getTextArea().getFont());
+        // TODO
+        gutter.setBackground(Color.LIGHT_GRAY);
+        gutter.setForeground(Color.black);
+//gutter.setActiveLineRangeColor(new Color(0,0,255));
+        showLineNumbers(lineNumbers);
+
+        // Set miscellaneous properties.
+        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    }
+
     @Override
     public void setFrame(final FileFrame frame) {
         super.setFrame(frame);
@@ -121,39 +145,15 @@ public class TextViewer extends FileViewer implements EncodingListener {
         //initHistoryRecord(file);
         // Auto-detect encoding
 
-        // Get a RandomAccessInputStream on the file if possible, if not get a simple InputStream
-        //InputStream in = null;
-        PushbackInputStream in = null;
-
-        try {
-//            if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
-//                try {
-//                    in = file.getRandomAccessInputStream();
-//                } catch (IOException e) {
-//                    // In that case we simply get an InputStream
-//                }
-//            }
-
-//            if (in == null) {
-//                in = file.getInputStream();
-//            }
-
-            in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
+        try (PushbackInputStream in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE)) {
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
             if (textEditorImpl.getStatusBar() != null) {
                 textEditorImpl.getStatusBar().setEncoding(encoding);
             }
             // Load the file into the text area
             loadDocument(in, encoding, documentListener);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    // Nothing to do here.
-                }
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -235,8 +235,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
     }
     
     protected void showLineNumbers(boolean show) {
-    	setRowHeaderView(show ? new TextLineNumbersPanel(textEditorImpl.getTextArea()) : null);
-    	setLineNumbers(show);
+    	//setRowHeaderView(show ? new TextLineNumbersPanel(textEditorImpl.getTextArea()) : null);
+        gutter.setLineNumbersEnabled(show);
+        checkGutterVisibility();
+        setLineNumbers(show);
     }
 
     protected void wrapLines(boolean wrap) {
@@ -246,7 +248,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     protected void initMenuBarItems() {
         menuHelper = new TextMenuHelper(textEditorImpl, false);
-        menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
+        //menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
+        menuHelper.initMenu(TextViewer.this, lineNumbers);
     }
 
     ///////////////////////////////
@@ -315,6 +318,72 @@ public class TextViewer extends FileViewer implements EncodingListener {
         return historyRecord;
     }
 
+
+    /**
+     * Ensures the gutter is visible if it's showing anything.
+     */
+    private void checkGutterVisibility() {
+        int count = gutter.getComponentCount();
+        if (count == 0) {
+            if (getRowHeader() != null && getRowHeader().getView()==gutter) {
+                setRowHeaderView(null);
+            }
+        } else {
+            if (getRowHeader() == null || getRowHeader().getView() == null) {
+                setRowHeaderView(gutter);
+            }
+        }
+    }
+
+
+    /**
+     * Returns the first descendant of a component that is an
+     * <code>RTextArea</code>.  This is primarily here to support
+     * <code>javax.swing.JLayer</code>s that wrap <code>RTextArea</code>s.
+     *
+     * @param comp The component to recursively look through.
+     * @return The first descendant text area, or <code>null</code> if none
+     *         is found.
+     */
+    private static TextArea getFirstRTextAreaDescendant(Component comp) {
+        Stack<Component> stack = new Stack<>();
+        stack.add(comp);
+        while (!stack.isEmpty()) {
+            Component current = stack.pop();
+            if (current instanceof TextArea) {
+                return (TextArea)current;
+            }
+            if (current instanceof Container) {
+                Container container = (Container)current;
+                stack.addAll(Arrays.asList(container.getComponents()));
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Sets the view for this scroll pane.  This must be an {@link TextArea}.
+     *
+     * @param view The new view.
+     */
+    @Override
+    public void setViewportView(Component view) {
+        TextArea rtaCandidate;
+
+        if (!(view instanceof TextArea)) {
+            rtaCandidate = getFirstRTextAreaDescendant(view);
+            if (rtaCandidate == null) {
+                throw new IllegalArgumentException("view must be either an RTextArea or a JLayer wrapping one");
+            }
+        } else {
+            rtaCandidate = (TextArea)view;
+        }
+        super.setViewportView(view);
+        if (gutter != null) {
+            gutter.setTextArea(rtaCandidate);
+        }
+    }
 
     @Override
     public void setSearchedText(String searchedText) {

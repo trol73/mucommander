@@ -25,14 +25,14 @@ public abstract class FilePresenter extends JScrollPane {
 
     protected final static String CUSTOM_FULL_SCREEN_EVENT = "CUSTOM_FULL_SCREEN_EVENT";
     private final static String CUSTOM_DISPOSE_EVENT = "CUSTOM_DISPOSE_EVENT";
-	
+
 	public FilePresenter() {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		
+
 		addFocusListener(new FocusListener() {
 
 			public void focusLost(FocusEvent e) {}
-			
+
 			public void focusGained(FocusEvent e) {
 				// Delegate the focus to the JComponent that actually present the file
 				Component component = FilePresenter.this.getViewport().getComponent(0);

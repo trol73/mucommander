@@ -1438,7 +1438,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
             if (lastSelectedEqCnt == 10) {
                 System.out.println("Sticky cursor!");
-                throw new RuntimeException();
+                throw new RuntimeException("Sticky cursor!");
                /*
                  at com.mucommander.ui.main.table.FileTable.changeSelection(FileTable.java:1432)
                  at javax.swing.plaf.basic.BasicTableUI$Handler.mouseDragged(BasicTableUI.java:1253)
