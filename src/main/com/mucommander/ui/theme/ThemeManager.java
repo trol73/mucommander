@@ -41,6 +41,7 @@ import com.mucommander.conf.MuPreferences;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.io.backup.BackupOutputStream;
 import com.mucommander.text.Translator;
+import com.mucommander.ui.theme.Theme.Type;
 
 /**
  * Offers methods for accessing and modifying themes.
@@ -378,7 +379,7 @@ public class ThemeManager {
             throw new IllegalArgumentException("Cannot delete current theme.");
 
         // Deletes the theme.
-        file = getCustomThemesFolder().getChild(name + ".xml");
+		file = getFile(Type.CUSTOM, name);
         if(file.exists())
             file.delete();
     }
@@ -393,7 +394,7 @@ public class ThemeManager {
 
         // Computes a legal new name and renames theme.
         name = getAvailableCustomThemeName(name);
-        getCustomThemesFolder().getChild(theme.getName() + ".xml").renameTo(getCustomThemesFolder().getChild(name + ".xml"));
+		getFile(Type.CUSTOM, theme.getName()).renameTo(getFile(Type.CUSTOM, name));
         theme.setName(name);
         if(isCurrentTheme(theme))
             setConfigurationTheme(theme);
@@ -421,6 +422,40 @@ public class ThemeManager {
     private static BackupOutputStream getUserThemeOutputStream() throws IOException {
         return new BackupOutputStream(getUserThemeFile());
     }
+
+    /**
+	 * Returns the file to read/write the requested theme.
+	 * <p>
+	 * If <code>type</code> is equal to {@link Theme.Type#USER}, the <code>name</code> argument will be ignored: there
+	 * is only one user theme.
+	 * </p>
+	 *
+	 * If <code>type</code> is equal to {@link Theme.Type#PREDEFINED}, an <code>IllegalArgumentException</code> will be
+	 * thrown: predefined themes are not editable.
+	 *
+	 * @param type
+	 *            type of the theme for which to get the file.
+	 * @param name
+	 *            name of the theme for which to get the file.
+	 * @return a file for the requested theme.
+	 * @throws IllegalArgumentException
+	 *             if <code>type</code> is equal to {@link Theme.Type#PREDEFINED}.
+	 */
+	public static AbstractFile getFile(Theme.Type type, String name) throws IOException {
+		switch (type) {
+		case PREDEFINED:
+			throw new IllegalArgumentException("Can not open output streams on predefined themes.");
+
+		case CUSTOM:
+			return getCustomThemesFolder().getChild(name + ".xml");
+
+		case USER:
+			return getUserThemeFile();
+		}
+
+		// Unknown theme.
+		throw new IllegalArgumentException("Illegal theme type: " + type);
+	}
 
     /**
      * Returns an output stream on the requested theme.
@@ -758,7 +793,7 @@ public class ThemeManager {
      * @throws IOException if an I/O related error occurs.
      */
     private static InputStream getCustomThemeInputStream(String name) throws IOException {
-        return new BackupInputStream(getCustomThemesFolder().getChild(name + ".xml"));
+		return new BackupInputStream(getFile(Type.CUSTOM, name));
     }
 
     /**
@@ -980,9 +1015,6 @@ public class ThemeManager {
         } else {
             writeTheme(themeData, Theme.Type.CUSTOM, currentTheme.getName());
             Theme theme = new Theme(listener, themeData);
-            theme.setName(currentTheme.getName());
-            theme.canModify();
-            currentTheme = theme;
             return theme;
         }
     }

@@ -133,6 +133,14 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         previewComponent.putClientProperty(previewColorPropertyName, currentColor);
     }
 
+	int getColorId() {
+		return colorId;
+	}
+
+	Color getCurrentColor() {
+		return currentColor;
+	}
+
     private void setCurrentColor(Color color, boolean initiatedByUser) {
         currentColor = color;
         if(themeData.isColorDifferent(colorId, currentColor))

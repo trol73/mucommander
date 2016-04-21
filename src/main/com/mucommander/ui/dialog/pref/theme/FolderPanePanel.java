@@ -63,12 +63,16 @@ class FolderPanePanel extends ThemeEditorPanel {
         tabbedPane.add(Translator.get("theme_editor.general"), createScrollPane(createGeneralPanel(fontChooser)));
 
         // Adds the active panel.
-        FilePanel filePanel = new FilePanel(parent, true, themeData, fontChooser);
-        tabbedPane.add(filePanel.getTitle(), createScrollPane(filePanel));
+		FilePanel activeFilePanel = new FilePanel(parent, true, themeData, fontChooser);
+		tabbedPane.add(activeFilePanel.getTitle(), createScrollPane(activeFilePanel));
 
         // Adds the inactive panel.
-        filePanel = new FilePanel(parent, false, themeData, fontChooser);
-        tabbedPane.add(filePanel.getTitle(), createScrollPane(filePanel));
+		FilePanel inactiveFilePanel = new FilePanel(parent, false, themeData, fontChooser);
+		tabbedPane.add(inactiveFilePanel.getTitle(), createScrollPane(inactiveFilePanel));
+
+		// Give the file panels the colors of the respective other one to let them copy from each other.
+		activeFilePanel.setCopyColorButtonsSource(inactiveFilePanel);
+		inactiveFilePanel.setCopyColorButtonsSource(activeFilePanel);
 
         // Adds the file groups panel.
         fileGroupsPanel = new FileGroupsPanel(parent, themeData);
