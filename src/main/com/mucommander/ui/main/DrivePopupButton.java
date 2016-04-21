@@ -344,7 +344,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
                 String location = b.getLocation();
                 if (!location.contains("://")) {
-                    AbstractFile file = FileFactory.getFile(b.getLocation());
+                    AbstractFile file = FileFactory.getFile(location);
                     if (file != null) {
                         Image icon = FileIconsCache.getInstance().getImageIcon(file);
                         if (icon != null)
