@@ -50,7 +50,7 @@ public class AvrdudeConfiguration {
     /**
      * Enable auto erase for flash memory
      */
-    public final Boolean flashAutoerase;
+    public final boolean flashAutoerase;
 
     /**
      * ISP Clock Delay [in microseconds]
@@ -65,9 +65,9 @@ public class AvrdudeConfiguration {
     /**
      * Override invalid signature check.
      */
-    public final Boolean overrideInvalidSignatureCheck;
+    public final boolean overrideInvalidSignatureCheck;
 
-    public final Boolean verify;
+    public final boolean verify;
 
     /**
      * Pass extended_param to programmer.
@@ -81,8 +81,8 @@ public class AvrdudeConfiguration {
 
 
     public AvrdudeConfiguration(String deviceName, Integer baudrate, Integer bitclock, String configFile, String programmer,
-                         Boolean flashAutoerase, Integer ispCockDelay, String port, Boolean overrideInvalidSignatureCheck,
-                         Boolean verify, String extendedParam, String avrdudeLocation) {
+                         boolean flashAutoerase, Integer ispCockDelay, String port, boolean overrideInvalidSignatureCheck,
+                         boolean verify, String extendedParam, String avrdudeLocation) {
         this.deviceName = deviceName;
         this.baudrate = baudrate;
         this.bitclock = bitclock;
@@ -103,11 +103,11 @@ public class AvrdudeConfiguration {
         this.bitclock = null;
         this.configFile = null;
         this.programmer = "usbasp";
-        this.flashAutoerase = null;
+        this.flashAutoerase = true;
         this.ispCockDelay = null;
         this.port = null;
-        this.overrideInvalidSignatureCheck = null;
-        this.verify = null;
+        this.overrideInvalidSignatureCheck = false;
+        this.verify = true;
         this.extendedParam = null;
         this.avrdudeLocation = null;
     }

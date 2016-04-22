@@ -41,8 +41,6 @@ public class AvrConfigFileUtils {
     private static final String KEY_AVRDUDE_PATH = "avrdude_path";
 
 
-
-
     public static AvrdudeConfiguration load(String filePath) throws IOException {
         Properties properties = new Properties();
         Reader reader = new BufferedReader(new FileReader(filePath));
@@ -68,11 +66,12 @@ public class AvrConfigFileUtils {
         Integer bitclock = getPropertyInt(properties, KEY_BITCLOCK);
         String configFile = properties.getProperty(KEY_CONFIG_FILE);
         String programmer = properties.getProperty(KEY_PROGRAMMER);
-        Boolean flashAutoerase = getPropertyBool(properties, KEY_AUTOERASE);
+        boolean flashAutoerase = getPropertyBool(properties, KEY_AUTOERASE, true);
         Integer ispCockDelay = getPropertyInt(properties, KEY_ISP_CLOCK_DELAY);
         String port = properties.getProperty(KEY_PORT);
-        Boolean overrideInvalidSignatureCheck = getPropertyBool(properties, KEY_OVERRIDE_INVALID_SIGNATURE_CHECK);
-        Boolean verify = getPropertyBool(properties, KEY_VERIFY);
+        boolean overrideInvalidSignatureCheck = getPropertyBool(properties, KEY_OVERRIDE_INVALID_SIGNATURE_CHECK, false);
+
+        boolean verify = getPropertyBool(properties, KEY_VERIFY, true);
         String extendedParam = properties.getProperty(KEY_EXTENDED_PARAM);
         String avrdudeLocation = properties.getProperty(KEY_AVRDUDE_PATH);
 
@@ -92,17 +91,17 @@ public class AvrConfigFileUtils {
     }
 
 
-    private static Boolean getPropertyBool(Properties properties, String key) {
+    private static boolean getPropertyBool(Properties properties, String key, boolean defaultValue) {
         String val = properties.getProperty(key);
         if (val == null) {
-            return null;
+            return defaultValue;
         }
         if ("true".equalsIgnoreCase(val) || "yes".equalsIgnoreCase(val)) {
             return true;
         } else if ("false".equalsIgnoreCase(val) || "no".equalsIgnoreCase(val)) {
             return false;
         }
-        return null;
+        return defaultValue;
     }
 
 

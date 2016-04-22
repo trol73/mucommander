@@ -22,6 +22,7 @@ import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.avrdude.AvrConfigFileUtils;
 import com.mucommander.commons.file.impl.avrdude.AvrdudeConfiguration;
+import com.mucommander.commons.file.impl.avrdude.AvrdudeDevice;
 
 import java.io.*;
 
@@ -40,19 +41,25 @@ public class AvrConfigFile extends AvrdudeFile {
         }
     }
 
-    private static class ConfigOutputStream extends ByteArrayOutputStream {
+    private class ConfigOutputStream extends ByteArrayOutputStream {
         @Override
         public void close() throws IOException {
             AvrdudeConfiguration configuration = AvrConfigFileUtils.load(new ByteArrayInputStream(buf));
             if (!configuration.isValid()) {
                 throw new IOException("wrong configuration");
             }
+            if (AvrdudeDevice.getDevice(configuration.deviceName) == null) {
+                throw new IOException("unknown device");
+            }
+            AvrConfigFileUtils.save(configuration, getLocalConfigFile().getAbsolutePath());
+            AvrConfigFile.this.device = null;
+            AvrConfigFile.this.configuration = configuration;
             super.close();
         }
     }
 
     public AvrConfigFile(FileURL url) throws IOException {
-        super(url, extractPathFromUrl(url), FILENAME);
+        super(url);
     }
 
     private static String extractPathFromUrl(FileURL url) {

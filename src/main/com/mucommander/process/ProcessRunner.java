@@ -22,6 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.impl.local.LocalFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -43,7 +44,8 @@ public class ProcessRunner {
     /**
      * Prevents instances of ProcessRunner from being created.
      */
-    private ProcessRunner() {}
+    private ProcessRunner() {
+    }
 
 
 
@@ -95,7 +97,8 @@ public class ProcessRunner {
 //            listener = new DebugProcessListener(tokens);
 
         // Starts the process.
-        AbstractProcess process = new LocalProcess(tokens, (java.io.File)currentDirectory.getUnderlyingFileObject());
+        File dir = currentDirectory == null ? null : (File)currentDirectory.getUnderlyingFileObject();
+        AbstractProcess process = new LocalProcess(tokens, dir);
         process.startMonitoring(listener, encoding);
 
         return process;
@@ -116,7 +119,9 @@ public class ProcessRunner {
      * @return                  the generated process.
      * @throws IOException      thrown if any error occurs while creating the process.
      */
-    public static AbstractProcess execute(String command, AbstractFile currentDirectory, ProcessListener listener) throws IOException {return execute(command, currentDirectory, listener, null);}
+    public static AbstractProcess execute(String command, AbstractFile currentDirectory, ProcessListener listener) throws IOException {
+        return execute(command, currentDirectory, listener, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -128,7 +133,9 @@ public class ProcessRunner {
      * @see                #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command) throws IOException {return execute(command, null, null, null);}
+    public static AbstractProcess execute(String command) throws IOException {
+        return execute(command, null, null, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -141,7 +148,9 @@ public class ProcessRunner {
      * @see                #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command, String encoding) throws IOException {return execute(command, null, null, encoding);}
+    public static AbstractProcess execute(String command, String encoding) throws IOException {
+        return execute(command, null, null, encoding);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -154,7 +163,9 @@ public class ProcessRunner {
      * @see                #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command, ProcessListener listener) throws IOException {return execute(command, null, listener, null);}
+    public static AbstractProcess execute(String command, ProcessListener listener) throws IOException {
+        return execute(command, null, listener, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -168,7 +179,9 @@ public class ProcessRunner {
      * @see                #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command, ProcessListener listener, String encoding) throws IOException {return execute(command, null, listener, encoding);}
+    public static AbstractProcess execute(String command, ProcessListener listener, String encoding) throws IOException {
+        return execute(command, null, listener, encoding);
+    }
 
     /**
      * Executes the specified command in the specified directory.
@@ -181,7 +194,9 @@ public class ProcessRunner {
      * @see                     #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command, AbstractFile currentDirectory) throws IOException {return execute(command, currentDirectory, null, null);}
+    public static AbstractProcess execute(String command, AbstractFile currentDirectory) throws IOException {
+        return execute(command, currentDirectory, null, null);
+    }
 
     /**
      * Executes the specified command in the specified directory.
@@ -195,7 +210,9 @@ public class ProcessRunner {
      * @see                     #execute(String,AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String command, AbstractFile currentDirectory, String encoding) throws IOException {return execute(command, currentDirectory, null, encoding);}
+    public static AbstractProcess execute(String command, AbstractFile currentDirectory, String encoding) throws IOException {
+        return execute(command, currentDirectory, null, encoding);
+    }
 
     /**
      * Executes the specified command in the specified directory.
@@ -253,7 +270,9 @@ public class ProcessRunner {
      * @return             the generated process.
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens) throws IOException {return execute(tokens, null, null, null);}
+    public static AbstractProcess execute(String[] tokens) throws IOException {
+        return execute(tokens, null, null, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -265,7 +284,9 @@ public class ProcessRunner {
      * @return             the generated process.
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, String encoding) throws IOException {return execute(tokens, null, null, encoding);}
+    public static AbstractProcess execute(String[] tokens, String encoding) throws IOException {
+        return execute(tokens, null, null, encoding);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -278,7 +299,9 @@ public class ProcessRunner {
      * @see                #execute(String[],AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, ProcessListener listener) throws IOException {return execute(tokens, null, listener, null);}
+    public static AbstractProcess execute(String[] tokens, ProcessListener listener) throws IOException {
+        return execute(tokens, null, listener, null);
+    }
 
     /**
      * Executes the specified command in the VM's current directory.
@@ -292,7 +315,9 @@ public class ProcessRunner {
      * @see                #execute(String[],AbstractFile,ProcessListener,String)
      * @throws IOException thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, ProcessListener listener, String encoding) throws IOException {return execute(tokens, null, listener, encoding);}
+    public static AbstractProcess execute(String[] tokens, ProcessListener listener, String encoding) throws IOException {
+        return execute(tokens, null, listener, encoding);
+    }
 
     /**
      * Executes the specified command in the specified directory.
@@ -305,7 +330,9 @@ public class ProcessRunner {
      * @see                     #execute(String[],AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory) throws IOException {return execute(tokens, currentDirectory, null, null);}
+    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory) throws IOException {
+        return execute(tokens, currentDirectory, null, null);
+    }
 
     /**
      * Executes the specified command in the specified directory.
@@ -319,5 +346,7 @@ public class ProcessRunner {
      * @see                     #execute(String[],AbstractFile,ProcessListener,String)
      * @throws IOException      thrown if an error happens while starting the process.
      */
-    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory, String encoding) throws IOException {return execute(tokens, currentDirectory, null, encoding);}
+    public static AbstractProcess execute(String[] tokens, AbstractFile currentDirectory, String encoding) throws IOException {
+        return execute(tokens, currentDirectory, null, encoding);
+    }
 }

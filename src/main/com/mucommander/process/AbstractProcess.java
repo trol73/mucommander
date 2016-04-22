@@ -82,6 +82,15 @@ public abstract class AbstractProcess {
         }.start();
     }
 
+    public void waitMonitoring() throws InterruptedException {
+        if (stdoutMonitor != null) {
+            stdoutMonitor.join();
+        }
+        if (stderrMonitor != null) {
+            stderrMonitor.join();
+        }
+    }
+
     /**
      * Starts monitoring the process.
      * @param listener if non <code>null</code>, <code>listener</code> will receive updates about the process' event.
@@ -91,13 +100,19 @@ public abstract class AbstractProcess {
         // Only monitors stdout if the process uses merged streams.
         if (usesMergedStreams()) {
         	LOGGER.debug("Starting process merged output monitor...");
-            new Thread(stdoutMonitor = new ProcessOutputMonitor(getInputStream(), encoding, listener, this), "Process stdout/stderr monitor").start();
+            stdoutMonitor = new ProcessOutputMonitor(getInputStream(), encoding, listener, this);
+            stdoutMonitor.setName("Process stdout/stderr monitor");
+            stdoutMonitor.start();
         }
         // Monitors both stdout and stderr.
         else {
         	LOGGER.debug("Starting process stdout and stderr monitors...");
-            new Thread(stdoutMonitor = new ProcessOutputMonitor(getInputStream(), encoding, listener, this), "Process stdout monitor").start();
-            new Thread(stderrMonitor = new ProcessOutputMonitor(getErrorStream(), encoding, listener), "Process stderr monitor").start();
+            stdoutMonitor = new ProcessOutputMonitor(getInputStream(), encoding, listener, this);
+            stdoutMonitor.setName("Process stdout monitor");
+            stdoutMonitor.start();
+            stderrMonitor = new ProcessOutputMonitor(getErrorStream(), encoding, listener);
+            stderrMonitor.setName("Process stderr monitor");
+            stderrMonitor.start();
         }
     }
 

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * @author Nicolas Rinaudo
  */
-class ProcessOutputMonitor implements Runnable {
+class ProcessOutputMonitor extends Thread {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessOutputMonitor.class);
 	
     // - Instance fields -------------------------------------------------------
@@ -62,8 +62,8 @@ class ProcessOutputMonitor implements Runnable {
      */
     public ProcessOutputMonitor(InputStream in, String encoding, ProcessListener listener) {
         this.listener = listener;
-        this.in       = in;
-        monitor       = true;
+        this.in = in;
+        this.monitor = true;
         this.encoding = encoding;
     }
 

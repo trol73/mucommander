@@ -62,7 +62,7 @@ class LocalProcess extends AbstractProcess {
         // Safeguard: makes sure that an exception is raised if the process could not be created.
         // This might not be strictly necessary, but the Runtime.exec documentation is not very precise
         // on what happens in case of an error.
-        if(process == null)
+        if (process == null)
             throw new IOException();
     }
 
@@ -75,7 +75,9 @@ class LocalProcess extends AbstractProcess {
      * @return <code>true</code> if the current JRE version supports merged <code>java.lang.Process</code> streams, <code>false</code> otherwise.
      */
     @Override
-    public boolean usesMergedStreams() {return JavaVersion.JAVA_1_5.isCurrentOrHigher();}
+    public boolean usesMergedStreams() {
+        return JavaVersion.JAVA_1_5.isCurrentOrHigher();
+    }
 
     /**
      * Waits for the process to die.
@@ -83,27 +85,35 @@ class LocalProcess extends AbstractProcess {
      * @throws InterruptedException if the thread was interrupted while waiting on the process to die.
      */
     @Override
-    public int waitFor() throws InterruptedException {return process.waitFor();}
+    public int waitFor() throws InterruptedException {
+        return process.waitFor();
+    }
 
     /**
      * Destroys the process.
      */
     @Override
-    protected void destroyProcess() {process.destroy();}
+    protected void destroyProcess() {
+        process.destroy();
+    }
 
     /**
      * Returns the process' exit value.
      * @return the process' exit value.
      */
     @Override
-    public int exitValue() {return process.exitValue();}
+    public int exitValue() {
+        return process.exitValue();
+    }
 
     /**
      * Returns the process' output stream.
      * @return the process' output stream.
      */
     @Override
-    public OutputStream getOutputStream() {return process.getOutputStream();}
+    public OutputStream getOutputStream() {
+        return process.getOutputStream();
+    }
 
     /**
      * Returns the process' error stream.
@@ -117,7 +127,7 @@ class LocalProcess extends AbstractProcess {
      */
     @Override
     public InputStream getErrorStream()  throws IOException {
-        if(usesMergedStreams()) {
+        if (usesMergedStreams()) {
             LOGGER.debug("Tried to access the error stream of a merged streams process.");
             throw new IOException();
         }
@@ -129,5 +139,7 @@ class LocalProcess extends AbstractProcess {
      * @return the process' input stream.
      */
     @Override
-    public InputStream getInputStream() {return process.getInputStream();}
+    public InputStream getInputStream() {
+        return process.getInputStream();
+    }
 }

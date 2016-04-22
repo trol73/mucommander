@@ -30,7 +30,7 @@ import java.io.IOException;
 public class AvrRootDir extends AvrdudeFile {
 
     public AvrRootDir(FileURL url, String path) throws IOException {
-        super(url, path, "");
+        super(url);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AvrRootDir extends AvrdudeFile {
         AbstractFile[] devices = getConfigFiles();
         AvrDeviceDir[] result = new AvrDeviceDir[devices.length];
         for (int i = 0; i < devices.length; i++) {
-            result[i] = new AvrDeviceDir(FileURL.getFileURL(getURL() + devices[i].getBaseName()), "/" + devices[i].getBaseName());
+            result[i] = new AvrDeviceDir(FileURL.getFileURL(getURL() + devices[i].getBaseName()));
         }
         return result;
     }

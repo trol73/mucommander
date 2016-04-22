@@ -100,17 +100,15 @@ public class AdbUtils {
 
                 @Override
                 public void processOutput(String output) {
-                    synchronized (result) {
-                        String lines[] = output.split("\\r?\\n");
-                        for (String s : lines) {
-                            String vals[] = s.split("\\s+");
-                            for (String val : vals) {
-                                if (val.startsWith("model:")) {
-                                    String serial = vals[0];
-                                    String name = val.substring(6); // "model:"
-                                    name = name.replace('_', ' ');
-                                    result.put(serial, name);
-                                }
+                    String lines[] = output.split("\\r?\\n");
+                    for (String s : lines) {
+                        String vals[] = s.split("\\s+");
+                        for (String val : vals) {
+                            if (val.startsWith("model:")) {
+                                String serial = vals[0];
+                                String name = val.substring(6); // "model:"
+                                name = name.replace('_', ' ');
+                                result.put(serial, name);
                             }
                         }
                     }
@@ -121,12 +119,12 @@ public class AdbUtils {
                 }
             });
             process.waitFor();
+            process.waitMonitoring();
+            process.destroy();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        synchronized (result) {
-            return result;
-        }
+       return result;
     }
 }

@@ -20,6 +20,7 @@ package com.mucommander.commons.file.impl.avrdude.files;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileURL;
+import com.mucommander.commons.file.impl.avrdude.AvrdudeDevice;
 
 import java.io.IOException;
 
@@ -32,7 +33,10 @@ public class AvrMemoryFile extends AvrdudeFile {
     public enum Type {
         FLASH("flash"),
         EEPROM("eeprom"),
-        FUSES("fuses");
+        FUSES("fuses"),
+        SIGNATURE("signature"),
+        CALIBRATION("calibration"),
+        LOCK("lock");
 
         Type(String name) {
             this.name = name;
@@ -53,9 +57,8 @@ public class AvrMemoryFile extends AvrdudeFile {
     private final Type type;
 
     public AvrMemoryFile(FileURL url) throws IOException {
-        super(url, url.getPath(), url.getFilename());
-        this.type = Type.fromFileName(name);
-
+        super(url);
+        this.type = Type.fromFileName(getURL().getFilename());
     }
 
     @Override
@@ -81,5 +84,26 @@ public class AvrMemoryFile extends AvrdudeFile {
     @Override
     public boolean exists() {
         return true;
+    }
+
+
+    @Override
+    public long getSize() {
+        String fullName = getURL().getFilename();
+        int dotPos = fullName.indexOf('.');
+        String fileName = dotPos > 0 ? fullName.substring(0, dotPos) : fullName;
+        if (fileName.contains("fuse")) {
+            int size = 0;
+            for (String blockName : getDevice().blockSizes.keySet()) {
+                if (blockName.toLowerCase().contains("fuse")) {
+                    size += getDevice().blockSizes.get(blockName);
+                }
+            }
+            return size;
+        } else if (fullName.endsWith(SIGNATURE_FILE_EXT)) {
+            return getDevice().blockSizes.get("signature");
+        } else {
+            return getDevice().blockSizes.get(fileName);
+        }
     }
 }

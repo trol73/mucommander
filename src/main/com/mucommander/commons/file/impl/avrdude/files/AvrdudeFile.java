@@ -20,6 +20,9 @@ package com.mucommander.commons.file.impl.avrdude.files;
 import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
+import com.mucommander.commons.file.impl.avrdude.AvrConfigFileUtils;
+import com.mucommander.commons.file.impl.avrdude.AvrdudeConfiguration;
+import com.mucommander.commons.file.impl.avrdude.AvrdudeDevice;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 
@@ -49,14 +52,13 @@ public abstract class AvrdudeFile extends ProtocolFile {
 
     private static final String STORAGE_DIR = "avr";
     protected static final String CONFIG_FILE_EXT = ".conf";
+    protected static final String SIGNATURE_FILE_EXT = ".sign";
 
-    protected final String path;
-    protected final String name;
+    protected AvrdudeConfiguration configuration;
+    protected AvrdudeDevice device;
 
-    AvrdudeFile(FileURL url, String path, String name) throws IOException {
+    AvrdudeFile(FileURL url) throws IOException {
         super(url);
-        this.path = path;
-        this.name = name;
         AbstractFile baseFolder = PlatformManager.getPreferencesFolder().getChild(STORAGE_DIR);
         if (!baseFolder.exists()) {
             baseFolder.mkdir();
@@ -80,32 +82,33 @@ public abstract class AvrdudeFile extends ProtocolFile {
         return getBaseFolder().ls(new ExtensionFilenameFilter(CONFIG_FILE_EXT));
     }
 
-    public String getDeviceName() {
-        if (path == null) {
-            return null;
-        }
-        int from = path.startsWith("/") || path.startsWith("\\") ? 1 : 0;
-        int pos1 = path.indexOf('\\', from);
-        int pos2 = path.indexOf('/', from);
-        int pos;
-        if (pos1 < 0 && pos2 < 0) {
-            pos = -1;
-        } else if (pos1 < 0) {
-            pos = pos2;
-        } else if (pos2 < 0) {
-            pos = pos1;
-        } else {
-            pos = pos1 < pos2 ? pos1 : pos2;
-        }
-        return pos < 0 ? "" : path.substring(0, pos);
-    }
 
     AbstractFile getLocalConfigFile() throws IOException {
-System.out.println("::>"+getURL());
-System.out.println("::>"+getBaseFolder());
-System.out.println(getDeviceName() + CONFIG_FILE_EXT);
-System.out.println("::>"+getBaseFolder().getChild(getDeviceName() + CONFIG_FILE_EXT));
-        return getBaseFolder().getChild(getDeviceName() + CONFIG_FILE_EXT);
+//        new Exception().printStackTrace();
+//System.out.println("::>"+getURL());
+//System.out.println("::>"+getBaseFolder());
+//System.out.println(getURL().getHost() + CONFIG_FILE_EXT);
+//System.out.println("::>"+getBaseFolder().getChild(getURL().getHost() + CONFIG_FILE_EXT));
+        return getBaseFolder().getChild(getURL().getHost() + CONFIG_FILE_EXT);
+    }
+
+    public AvrdudeDevice getDevice() {
+        try {
+            if (device == null) {
+                device = AvrdudeDevice.getDevice(getConfiguration().deviceName);
+            }
+            return device;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public AvrdudeConfiguration getConfiguration() throws IOException {
+        if (configuration == null) {
+            configuration = AvrConfigFileUtils.load(getLocalConfigFile().getAbsolutePath());
+        }
+        return configuration;
     }
 
     @Override
@@ -118,7 +121,13 @@ System.out.println("::>"+getBaseFolder().getChild(getDeviceName() + CONFIG_FILE_
 
     @Override
     public long getDate() {
-        return System.currentTimeMillis();
+        // TODO store last modification data
+        try {
+            return getLocalConfigFile().getDate();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return System.currentTimeMillis();
+        }
     }
 
     @Override

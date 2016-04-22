@@ -37,7 +37,7 @@ public class AvrdudeProtocolProvider implements ProtocolProvider {
         if (isRootUrl(url)) {
             return new AvrRootDir(url, getUrlPath(url));
         } else if (isRootUrl(url.getParent())) {
-            return new AvrDeviceDir(url, getUrlPath(url));
+            return new AvrDeviceDir(url);
         } else if (isRootUrl(url.getParent().getParent())) {
             if (url.getFilename().equalsIgnoreCase(AvrConfigFile.FILENAME)) {
                 return new AvrConfigFile(url);
@@ -61,8 +61,10 @@ public class AvrdudeProtocolProvider implements ProtocolProvider {
     }
 
     private static boolean isRootUrl(FileURL url) {
+        if (url == null) {
+            return true;
+        }
         final String path = getUrlPath(url);
-//System.out.println("path " + url + " " + path);
         return path == null || path.isEmpty() || path.equals("/") || path.equals("\\");
     }
 }

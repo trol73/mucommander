@@ -150,7 +150,7 @@ public class XmlWriter {
         out.print(availability);
 
         // Writes the description if present.
-        if(description != null) {
+        if (description != null) {
             out.print(' ');
             out.print('\"');
             out.print(description);
@@ -158,14 +158,14 @@ public class XmlWriter {
         }
 
         // Writes the DTD url if present.
-        if(url != null) {
+        if (url != null) {
             out.print(' ');
             out.print('\"');
             out.print(url);
             out.print('\"');
         }
         out.println('>');
-        if(out.checkError())
+        if (out.checkError())
             throw new IOException();
     }
 

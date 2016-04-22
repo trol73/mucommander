@@ -31,13 +31,10 @@ public class AvrMemoryDir extends AvrdudeFile {
 
     private AvrdudeFile parent;
 
-    AvrMemoryDir(FileURL url, String path, String name) throws IOException {
-        super(url, path, name);
+    public AvrMemoryDir(FileURL url) throws IOException {
+        super(url);
     }
 
-    public AvrMemoryDir(FileURL url) throws IOException {
-        super(url, url.getPath(), url.getFilename());
-    }
 
     @Override
     public FilePermissions getPermissions() {
@@ -52,8 +49,8 @@ public class AvrMemoryDir extends AvrdudeFile {
     @Override
     public AbstractFile[] ls() throws IOException {
         AbstractFile[] files = new AbstractFile[2];
-        files[0] = new AvrMemoryFile(FileURL.getFileURL(getURL() + "/" + name + ".hex"));//, path + "/" + name, name);
-        files[1] = new AvrMemoryFile(FileURL.getFileURL(getURL() + "/" + name + ".bin"));//, path + "/" + name, name);
+        files[0] = new AvrMemoryFile(FileURL.getFileURL(getURL() + "/" + getURL().getFilename()+ ".hex"));
+        files[1] = new AvrMemoryFile(FileURL.getFileURL(getURL() + "/" + getURL().getFilename() + ".bin"));
         return files;
     }
 
@@ -71,8 +68,7 @@ public class AvrMemoryDir extends AvrdudeFile {
     public AbstractFile getParent() {
         if (parent == null) {
             try {
-System.out.println("> "+getURL().getParent() + ":" + getURL().getParent().getPath());
-                parent = new AvrDeviceDir(getURL().getParent(), getURL().getParent().getPath());
+                parent = new AvrDeviceDir(getURL().getParent());
             } catch (IOException e) {
                 e.printStackTrace();
             }

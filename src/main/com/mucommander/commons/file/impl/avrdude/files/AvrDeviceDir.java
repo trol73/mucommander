@@ -23,6 +23,9 @@ import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.avrdude.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Oleg Trifonov
@@ -33,8 +36,8 @@ public class AvrDeviceDir extends AvrdudeFile {
 
     private AvrdudeFile parent;
 
-    public AvrDeviceDir(FileURL url, String path) throws IOException {
-        super(url, path, path.replace("/", "").replace("\\", ""));
+    public AvrDeviceDir(FileURL url) throws IOException {
+        super(url);
     }
 
     @Override
@@ -49,12 +52,33 @@ public class AvrDeviceDir extends AvrdudeFile {
 
     @Override
     public AbstractFile[] ls() throws IOException {
-        AbstractFile[] result = new AbstractFile[4];
-        result[0] = new AvrConfigFile(FileURL.getFileURL(getURL() + AvrConfigFile.FILENAME));
-        result[1] = new AvrMemoryDir(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.FLASH.name), path, AvrMemoryFile.Type.FLASH.name);
-        result[2] = new AvrMemoryDir(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.EEPROM.name), path, AvrMemoryFile.Type.EEPROM.name);
-        result[3] = new AvrMemoryDir(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.FUSES.name), path, AvrMemoryFile.Type.FUSES.name);
-        return result;
+        List<AvrdudeFile> childs = new ArrayList<>();
+        AvrdudeDevice device = getDevice();
+        Set<String> blocks = device.blockSizes.keySet();
+
+        childs.add(new AvrConfigFile(FileURL.getFileURL(getURL() + AvrConfigFile.FILENAME)));
+
+        if (blocks.contains("flash")) {
+            childs.add(new AvrMemoryDir(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.FLASH.name)));
+        }
+        if (blocks.contains("eeprom")) {
+            childs.add(new AvrMemoryDir(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.EEPROM.name)));
+        }
+        if (blocks.contains("fuse") || blocks.contains("lfuse")  || blocks.contains("hfuse") || blocks.contains("efuse")) {
+            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.FUSES.name)));
+        }
+        if (blocks.contains("signature")) {
+            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + getDevice().name + SIGNATURE_FILE_EXT)));
+        }
+        if (blocks.contains("calibration")) {
+            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.CALIBRATION.name)));
+        }
+        if (blocks.contains("lock")) {
+            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.LOCK.name)));
+        }
+
+        AbstractFile[] result = new AbstractFile[childs.size()];
+        return childs.toArray(result);
     }
 
     @Override
@@ -65,7 +89,6 @@ public class AvrDeviceDir extends AvrdudeFile {
         }
         file.mkfile();
         AvrConfigFileUtils.save(new AvrdudeConfiguration(), file.getAbsolutePath());
-//        System.out.println("mkdir " + getURL() + " / " + getURL().getParent());
     }
 
     @Override
@@ -96,14 +119,17 @@ public class AvrDeviceDir extends AvrdudeFile {
         return parent;
     }
 
-    @Override
-    public String getDeviceName() {
-        return name;
-    }
 
     @Override
     public void delete() throws IOException {
         getLocalConfigFile().delete();
     }
 
+    @Override
+    public void renameTo(AbstractFile destFile) throws IOException {
+        if (destFile.getParent().getURL().getHost() == null) {
+            AbstractFile newConfig = getLocalConfigFile().getParent().getChild(destFile.getName() + CONFIG_FILE_EXT);
+            getLocalConfigFile().renameTo(newConfig);
+        }
+    }
 }

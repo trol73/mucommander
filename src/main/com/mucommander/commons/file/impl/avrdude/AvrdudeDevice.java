@@ -66,7 +66,7 @@ public class AvrdudeDevice {
     }
 
 
-    private static  Map<String, AvrdudeDevice> load() {
+    private static Map<String, AvrdudeDevice> load() {
         Map<String, AvrdudeDevice> result = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(AvrdudeDevice.class.getPackage(), AVRDUDE_RESOURCE_NAME)))) {
             String line;
@@ -89,11 +89,6 @@ public class AvrdudeDevice {
             e.printStackTrace();
         }
         return result;
-    }
-
-
-    public static void main(String args[]) {
-        System.out.println(load().keySet());
     }
 
 }
