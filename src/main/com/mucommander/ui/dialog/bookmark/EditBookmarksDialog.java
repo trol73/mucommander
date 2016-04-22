@@ -63,7 +63,11 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
     private JButton closeButton;
 
     private JTextField nameField;
+    private JLabel locationLabel;
     private JTextField locationField;
+    // separatorNoticePrefix is required to keep the size of the 1st column
+    private JLabel separatorNoticePrefix;
+    private JLabel separatorNoticeLabel;
 
     private AlteredVector<Bookmark> bookmarks;
     private DynamicList<Bookmark> bookmarkList;
@@ -111,8 +115,13 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
         // create a path field with auto-completion capabilities
         this.locationField = new FilePathField();
+        this.locationLabel = new JLabel(Translator.get("location")+":");
         locationField.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("location")+":", locationField, 10);
+        compPanel.addRow(locationLabel, locationField, 10);
+
+        this.separatorNoticePrefix = new JLabel();
+        this.separatorNoticeLabel = new JLabel(" "+Translator.get("edit_bookmarks_dialog.is_separator"));
+        compPanel.addRow(separatorNoticePrefix, separatorNoticeLabel, 10);
 
         YBoxPanel yPanel = new YBoxPanel(10);
         yPanel.add(compPanel);
@@ -216,6 +225,29 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         goToButton.setEnabled(componentsEnabled);
         duplicateButton.setEnabled(componentsEnabled);
         removeButton.setEnabled(componentsEnabled);
+
+        updateSeparatorNoticeVisibility();
+    }
+
+    /**
+     * Updates visibility of `The specified name defines a separator` notice
+     */
+    private void updateSeparatorNoticeVisibility() {
+        String nameFieldValue = nameField.getText();
+        boolean isSeparator = nameFieldValue != null && nameFieldValue.equals(BookmarkManager.BOOKMARKS_SEPARATOR);
+        if (separatorNoticeLabel.isVisible() == isSeparator)
+            return;
+
+        separatorNoticePrefix.setVisible(isSeparator);
+        separatorNoticeLabel.setVisible(isSeparator);
+        if (isSeparator) {
+            // inherit the preferred sizes of locationXXXX controls,
+            // to keep the layout still
+            separatorNoticePrefix.setPreferredSize(locationLabel.getPreferredSize());
+            separatorNoticeLabel.setPreferredSize(locationField.getPreferredSize());
+        }
+        locationLabel.setVisible(!isSeparator);
+        locationField.setVisible(!isSeparator);
     }
 
 
@@ -256,6 +288,8 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
             selectedBookmark.setName(name);
             bookmarkList.itemModified(selectedIndex, false);
+
+            updateSeparatorNoticeVisibility();
         }
         // Update location
         else {

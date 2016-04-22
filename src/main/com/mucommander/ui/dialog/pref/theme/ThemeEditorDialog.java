@@ -38,7 +38,7 @@ import java.awt.*;
 public class ThemeEditorDialog extends PreferencesDialog {
     private ThemeData data;
     private Theme     theme;
-    private boolean   wasThemeModified;
+	private Theme modifiedTheme;
 
     /**
      * Creates a new theme editor dialog.
@@ -67,7 +67,6 @@ public class ThemeEditorDialog extends PreferencesDialog {
     private void initUI(Theme theme) {
         this.theme       = theme;
         data             = theme.cloneData();
-        wasThemeModified = false;
 
         addPreferencesPanel(new FolderPanePanel(this, data), false);
         addPreferencesPanel(new LocationBarPanel(this, data));
@@ -88,22 +87,25 @@ public class ThemeEditorDialog extends PreferencesDialog {
     }
 
     /**
-     * Edits the theme specified at creation time and returns <code>true</code> if it was modified.
-     * @return <code>true</code> if the theme was modified by the user, <code>false</code> otherwise.
-     */
-    public boolean editTheme() {
+	 * Edits the theme specified at creation time and returns the actually modified theme. This is a new custom theme if
+	 * a pedefined theme was specified or else the theme itself.
+	 * 
+	 * @return the actually modified theme it was modified by the user, null otherwise.
+	 */
+	public Theme editTheme() {
         showDialog();
-        return wasThemeModified;
+		return modifiedTheme;
     }
 
     @Override
     public boolean checkCommit() {
         super.checkCommit();
 
-        // If the theme has been modified and is not the user theme, asks the user to confirm
-        // whether it's ok to overwrite his user theme.
+		// If the theme has been modified and is a predefined theme, asks the user to confirm
+		// whether it's ok to duplicate it.
         if (!theme.isIdentical(data) && !theme.canModify())
-            if (new QuestionDialog(this, Translator.get("warning"), Translator.get("theme_editor.theme_warning"),
+			if (new QuestionDialog(this, Translator.get("warning"),
+			        Translator.get("theme_editor.theme_warning_predefined"),
                                   this, new String[]{Translator.get("yes"), Translator.get("no")}, new int[]{0,1}, 0).getActionValue() != 0)
                 return false;
         return true;
@@ -115,36 +117,27 @@ public class ThemeEditorDialog extends PreferencesDialog {
         if (theme.isIdentical(data)) {
             return;
         }
-        wasThemeModified = true;
 
         try {
-            // If the theme cannot be modified, overwrites the user theme with the new data.
+			// If the theme cannot be modified, create a new custom theme with the same name to save modifications.
             if (!theme.canModify()) {
-                boolean updateCurrentTheme = ThemeManager.isCurrentTheme(theme);
-                // Overwrites the user theme and changes the dialog's title to reflect the change.
-                theme = ThemeManager.overwriteUserTheme(data);
-                setTitle(createTitle(theme));
-
-                // If the old theme was the current one, switch to 'user theme'.
-                if (!updateCurrentTheme) {
-                    ThemeManager.setCurrentTheme(theme);
-                    MuConfigurations.savePreferences();
-                }
+				modifiedTheme = ThemeManager.duplicateTheme(theme);
+			} else {
+				modifiedTheme = theme;
             }
-
-            // Otherwise, imports the new data in the user theme and saves it.
-            else {
-                theme.importData(data);
-                ThemeManager.writeTheme(theme);
-            }
+			modifiedTheme.importData(data);
+			ThemeManager.writeTheme(modifiedTheme);
+			theme = modifiedTheme;
         } catch (Exception exception) {
-            try {
-                InformationDialog.showErrorDialog(this, Translator.get("write_error"), Translator.get("cannot_write_file", ThemeManager.getUserThemeFile().getAbsolutePath()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+			try {
+				InformationDialog.showErrorDialog(this, Translator.get("write_error"),
+				        Translator.get("cannot_write_file",
+				                ThemeManager.getFile(theme.getType(), theme.getName()).getAbsolutePath()));
+				exception.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
-
     }
 
     @Override

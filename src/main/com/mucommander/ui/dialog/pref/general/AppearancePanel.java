@@ -436,17 +436,32 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         return flowPanel;
     }
 
-    private void populateThemes(Theme currentTheme) {
+	private void populateThemes(Theme selectedTheme) {
         ignoreComboChanges = true;
 
         themeComboBox.removeAllItems();
+
+		// Creates new theme instances for all but the currentTheme (current as the currently active one - not
+		// the currently selected one!) so we might need to find the new instance of our previously selected theme.
         Iterator<Theme> themes = ThemeManager.availableThemes();
+		Theme selectedThemeAvailableInstance = null;
+
         while (themes.hasNext()) {
-            themeComboBox.addItem(themes.next());
+			final Theme availableTheme = themes.next();
+			themeComboBox.addItem(availableTheme);
+			if (availableTheme.equals(selectedTheme)) {
+				selectedThemeAvailableInstance = availableTheme;
+			}
         }
 
         ignoreComboChanges = false;
-        themeComboBox.setSelectedItem(currentTheme);
+
+		if (selectedThemeAvailableInstance != null) {
+			themeComboBox.setSelectedItem(selectedThemeAvailableInstance);
+		} else {
+			LOGGER.warn("selected theme not available anymore");
+			themeComboBox.setSelectedIndex(0);
+		}
     }
 
     /**
@@ -902,9 +917,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private void editTheme(Theme theme) {
         // If the edited theme was modified, we must re-populate the list.
-        if (new ThemeEditorDialog(parent, theme).editTheme()) {
-            populateThemes(ThemeManager.getCurrentTheme());
-    }
+        final Theme modifiedTheme = new ThemeEditorDialog(parent, theme).editTheme();
+		if (modifiedTheme != null) {
+			populateThemes(modifiedTheme);
+			parent.setCommitButtonsEnabled(true);
+		}
     }
 
     /**
