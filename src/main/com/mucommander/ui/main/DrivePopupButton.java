@@ -344,8 +344,12 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
                 String location = b.getLocation();
                 if (!location.contains("://")) {
-                    Image icon = FileIconsCache.getInstance().getImageIcon(FileFactory.getFile(b.getLocation()));
-                    item.setIcon(new ImageIcon(icon));
+                    AbstractFile file = FileFactory.getFile(location);
+                    if (file != null) {
+                        Image icon = FileIconsCache.getInstance().getImageIcon(file);
+                        if (icon != null)
+                            item.setIcon(new ImageIcon(icon));
+                    }
                 } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
                     item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
                 }
