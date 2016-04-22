@@ -704,6 +704,8 @@ public class TrolCommander {
     public static void main(String args[]) throws IOException {
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
+			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
+			System.setProperty("prism.order", "sw");
         }
 
         Profiler.start("init");
