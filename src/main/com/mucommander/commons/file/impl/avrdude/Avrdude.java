@@ -17,9 +17,7 @@
  */
 package com.mucommander.commons.file.impl.avrdude;
 
-import com.mucommander.process.AbstractProcess;
-import com.mucommander.process.ProcessListener;
-import com.mucommander.shell.Shell;
+import com.mucommander.process.ExecutorUtils;
 
 import java.io.IOException;
 
@@ -32,32 +30,15 @@ public class Avrdude {
     // Tip: Use “-” as the file name, to write to stdout. Example:
     // avrdude -c usbasp -p m16 -U lfuse:r:-:h -U hfuse:r:-:h -U efuse:r:-:h
 
-    private static String execute(AvrdudeConfiguration config, String command) throws IOException, InterruptedException {
-        String cmd = "ls";
-        StringBuffer result = new StringBuffer();
-
-        AbstractProcess process = Shell.execute(cmd, null, new ProcessListener() {
-            @Override
-            public void processDied(int returnValue) {}
-
-            @Override
-            public void processOutput(String output) {
-                result.append(output);
-            }
-
-            @Override
-            public void processOutput(byte[] buffer, int offset, int length) {}
+    private static void execute(AvrdudeConfiguration config, String command) throws IOException, InterruptedException {
+        String cmd = "ls /Users/trol";
+        ExecutorUtils.executeAndGetOutput(cmd, null, (exitCode, output) -> {
+            System.out.println(exitCode + ": " + output);
         });
-        process.waitFor();
-        process.waitMonitoring();
-        process.destroy();
-        return result.toString();
     }
 
 
     public static void main(String args[]) throws IOException, InterruptedException {
-        String s = execute(null, "");
-//        System.out.println(s);
-        System.out.println(s.length());
+        execute(null, "");
     }
 }

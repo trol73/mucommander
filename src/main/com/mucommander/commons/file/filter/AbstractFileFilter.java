@@ -67,10 +67,7 @@ public abstract class AbstractFileFilter implements FileFilter {
     }
 
     public boolean match(AbstractFile file) {
-        if(inverted)
-            return reject(file);
-
-        return accept(file);
+        return inverted ? reject(file) : accept(file);
     }
 
     public boolean reject(AbstractFile file) {

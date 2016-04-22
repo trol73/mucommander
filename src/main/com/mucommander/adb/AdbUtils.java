@@ -1,5 +1,5 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2015 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
@@ -19,6 +19,7 @@ package com.mucommander.adb;
 
 
 import com.mucommander.process.AbstractProcess;
+import com.mucommander.process.ExecutorUtils;
 import com.mucommander.process.ProcessListener;
 import com.mucommander.shell.Shell;
 import se.vidstige.jadb.JadbConnection;
@@ -93,38 +94,23 @@ public class AdbUtils {
     public static Map<String, String> getDeviceNames() {
         final Map<String, String> result = new HashMap<>();
         try {
-            AbstractProcess process = Shell.execute("adb devices -l", null, new ProcessListener() {
-                @Override
-                public void processDied(int returnValue) {
-                }
-
-                @Override
-                public void processOutput(String output) {
-                    String lines[] = output.split("\\r?\\n");
-                    for (String s : lines) {
-                        String vals[] = s.split("\\s+");
-                        for (String val : vals) {
-                            if (val.startsWith("model:")) {
-                                String serial = vals[0];
-                                String name = val.substring(6); // "model:"
-                                name = name.replace('_', ' ');
-                                result.put(serial, name);
-                            }
+            ExecutorUtils.executeAndGetOutput("adb devices -l", null, (exitCode, output) -> {
+                String lines[] = output.split("\\r?\\n");
+                for (String s : lines) {
+                    String vals[] = s.split("\\s+");
+                    for (String val : vals) {
+                        if (val.startsWith("model:")) {
+                            String serial = vals[0];
+                            String name = val.substring(6); // "model:"
+                            name = name.replace('_', ' ');
+                            result.put(serial, name);
                         }
                     }
                 }
-
-                @Override
-                public void processOutput(byte[] buffer, int offset, int length) {
-                }
             });
-            process.waitFor();
-            process.waitMonitoring();
-            process.destroy();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-       return result;
+        return result;
     }
 }

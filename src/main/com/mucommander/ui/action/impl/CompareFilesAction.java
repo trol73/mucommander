@@ -22,8 +22,10 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.AbstractFileFilter;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.process.ExecutorUtils;
 import com.mucommander.shell.Shell;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
@@ -49,7 +51,8 @@ public class CompareFilesAction extends SelectedFilesAction {
                     if (supported()) {
                         AbstractFile leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile();
                         AbstractFile rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile();
-                        return leftFile != null && !leftFile.isDirectory() && rightFile != null && !rightFile.isDirectory();
+                        return  leftFile != null && !leftFile.isDirectory() && rightFile != null && !rightFile.isDirectory() &&
+                                leftFile instanceof LocalFile && rightFile instanceof LocalFile;
                     }
                     return false;
                 }
@@ -62,8 +65,8 @@ public class CompareFilesAction extends SelectedFilesAction {
         try {
             String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath();
             String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath();
-            Shell.execute("opendiff " + leftFile + " " + rightFile, null, null);
-        } catch (IOException e) {
+            ExecutorUtils.execute("opendiff " + leftFile + " " + rightFile);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

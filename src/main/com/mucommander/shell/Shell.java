@@ -20,6 +20,7 @@ package com.mucommander.shell;
 
 import java.io.IOException;
 
+import com.mucommander.process.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +33,6 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.process.AbstractProcess;
-import com.mucommander.process.ProcessListener;
-import com.mucommander.process.ProcessListenerList;
-import com.mucommander.process.ProcessRunner;
 
 /**
  * Used to execute shell commands.
@@ -173,7 +170,7 @@ public class Shell implements ConfigurationListener {
         System.arraycopy(buffer, 0, tokens, 0, buffer.length);
 
         // Retrieves encoding configuration.
-        encoding           = MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_ENCODING);
+        encoding = MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_ENCODING);
         autoDetectEncoding = MuConfigurations.getPreferences().getVariable(MuPreference.AUTODETECT_SHELL_ENCODING, MuPreferences.DEFAULT_AUTODETECT_SHELL_ENCODING);
     }
 
@@ -185,4 +182,5 @@ public class Shell implements ConfigurationListener {
             setShellCommand();
         }
     }
+
 }

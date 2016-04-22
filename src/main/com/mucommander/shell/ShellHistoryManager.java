@@ -133,8 +133,9 @@ public class ShellHistoryManager {
      */
     public static void add(String command) {
         // Ignores empty commands.
-        if(command.trim().equals(""))
+        if (command.trim().isEmpty()) {
             return;
+        }
         // Ignores the command if it's the same as the last one.
         // There is no last command if history is empty.
         if(historyEnd != historyStart) {
@@ -157,12 +158,12 @@ public class ShellHistoryManager {
         historyEnd++;
 
         // Wraps around the history buffer.
-        if(historyEnd == history.length)
+        if (historyEnd == history.length)
             historyEnd = 0;
 
         // Clears items from the begining of the buffer if necessary.
-        if(historyEnd == historyStart) {
-            if(++historyStart == history.length)
+        if (historyEnd == historyStart) {
+            if (++historyStart == history.length)
                 historyStart = 0;
         }
 
@@ -183,9 +184,8 @@ public class ShellHistoryManager {
      * @see                             #setHistoryFile(AbstractFile)
      */
     public static void setHistoryFile(String path) throws FileNotFoundException {
-        AbstractFile file;
-
-        if((file = FileFactory.getFile(path)) == null)
+        AbstractFile file = FileFactory.getFile(path);
+        if (file == null)
             setHistoryFile(new File(path));
         else
             setHistoryFile(file);
@@ -245,15 +245,8 @@ public class ShellHistoryManager {
      * @throws IOException if an I/O error occurs.
      */
     public static void writeHistory() throws IOException {
-        BackupOutputStream out;
-
-        out = null;
-        try {ShellHistoryWriter.write(out = new BackupOutputStream(getHistoryFile()));}
-        finally {
-            if(out != null) {
-                try {out.close();}
-                catch(Exception e) {}
-            }
+        try (BackupOutputStream out = new BackupOutputStream(getHistoryFile())) {
+            ShellHistoryWriter.write(out);
         }
     }
 
@@ -262,15 +255,8 @@ public class ShellHistoryManager {
      * @throws Exception if an error occurs.
      */
     public static void loadHistory() throws Exception {
-        BackupInputStream in;
-
-        in = null;
-        try {ShellHistoryReader.read(in = new BackupInputStream(getHistoryFile()));}
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e2) {}
-            }
+        try (BackupInputStream in = new BackupInputStream(getHistoryFile())) {
+            ShellHistoryReader.read(in);
         }
     }
 
