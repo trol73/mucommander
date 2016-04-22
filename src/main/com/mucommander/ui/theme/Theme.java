@@ -106,19 +106,48 @@ public class Theme extends ThemeData {
         }
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
 
-    // - Data retrieval ------------------------------------------------------------------
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Theme other = (Theme) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+
+	// - Data retrieval ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
-     * Checks whether this theme is modifiable.
-     * <p>
-     * A theme is modifiable if and only if it's the user theme. This is a utility method
-     * which produces exactly the same result as <code>getType() == USER</code>.
-     * </p>
-     * @return <code>true</code> if the theme is modifiable, <code>false</code> otherwise.
-     *
-     */
-    public boolean canModify() {return type == Type.USER;}
+	 * Checks whether this theme is modifiable.
+	 * <p>
+	 * A theme is modifiable if and only if it's not a predefined theme.
+	 * </p>
+	 *
+	 * @return <code>true</code> if the theme is modifiable, <code>false</code> otherwise.
+	 *
+	 */
+	public boolean canModify() {
+		return type != Type.PREDEFINED;
+	}
 
     /**
      * Returns the theme's type.
@@ -143,21 +172,25 @@ public class Theme extends ThemeData {
     // - Data modification ---------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
-     * Sets one of the theme's fonts.
-     * <p>
-     * Note that this method will only work if the theme is the user one. Any other
-     * theme type will throw an exception.
-     * </p>
-     * @see    ThemeManager#setCurrentFont(int,Font)
-     * @param  id                    identifier of the font to set.
-     * @param  font                  value for the specified font.
-     * @throws IllegalStateException thrown if the theme is not the user one.
-     */
+	 * Sets one of the theme's fonts.
+	 * <p>
+	 * Note that this method will only work if the theme is not a predifined one. Any other theme type will throw an
+	 * exception.
+	 * </p>
+	 * 
+	 * @see ThemeManager#setCurrentFont(int,Font)
+	 * @param id
+	 *            identifier of the font to set.
+	 * @param font
+	 *            value for the specified font.
+	 * @throws IllegalStateException
+	 *             thrown if the theme is a predifined one.
+	 */
     @Override
     public boolean setFont(int id, Font font) {
         // Makes sure we're not trying to modify a non-user theme.
-        if (type != Type.USER) {
-            throw new IllegalStateException("Trying to modify a non user theme.");
+		if (type == Type.PREDEFINED) {
+			throw new IllegalStateException("Trying to modify a predefined theme.");
         }
 
         if (super.setFont(id, font)) {
@@ -169,21 +202,25 @@ public class Theme extends ThemeData {
     }
 
     /**
-     * Sets one of the theme's colors.
-     * <p>
-     * Note that this method will only work if the theme is the user one. Any other
-     * theme type will throw an exception.
-     * </p>
-     * @see    ThemeManager#setCurrentColor(int,Color)
-     * @param  id                    identifier of the color to set.
-     * @param  color                 value for the specified color.
-     * @throws IllegalStateException thrown if the theme is not the user one.
-     */
+	 * Sets one of the theme's colors.
+	 * <p>
+	 * Note that this method will not work if the theme is a predefined one. Any other theme type will throw an
+	 * exception.
+	 * </p>
+	 *
+	 * @see ThemeManager#setCurrentColor(int,Color)
+	 * @param id
+	 *            identifier of the color to set.
+	 * @param color
+	 *            value for the specified color.
+	 * @throws IllegalStateException
+	 *             thrown if the theme is a predefined one.
+	 */
     @Override
     public boolean setColor(int id, Color color) {
         // Makes sure we're not trying to modify a non-user theme.
-        if (type != Type.USER) {
-            throw new IllegalStateException("Trying to modify a non user theme.");
+		if (type == Type.PREDEFINED) {
+			throw new IllegalStateException("Trying to modify a predefined theme.");
         }
 
         if (super.setColor(id, color)) {
