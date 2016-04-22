@@ -341,6 +341,11 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
             for (Bookmark b : bookmarks) {
+                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
+                    popupMenu.add(new JSeparator());
+                    continue;
+                }
+
                 item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
                 String location = b.getLocation();
                 if (!location.contains("://")) {
