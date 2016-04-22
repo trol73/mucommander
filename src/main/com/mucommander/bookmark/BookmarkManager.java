@@ -69,6 +69,8 @@ public class BookmarkManager implements VectorChangeListener {
      * stores VectorChangeListener as weak references) */
     private static BookmarkManager singleton = new BookmarkManager();
 
+    /** Value of bookmark's name that make the bookmark treated as a separator */
+    public static final String BOOKMARKS_SEPARATOR = "-";
 
 
     // - Initialisation --------------------------------------------------------
