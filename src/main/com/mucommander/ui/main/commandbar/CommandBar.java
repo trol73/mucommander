@@ -112,7 +112,13 @@ public class CommandBar extends JPanel implements KeyListener, MouseListener, Co
 
             int nbButtons = buttons.length;
             for (int i=0; i<nbButtons; i++) {
-                buttons[i].setButtonAction(on && alternateActionIds[i] != null ? alternateActionIds[i] : actionIds[i], mainFrame);
+                if (buttons[i] != null) {
+                    buttons[i].setButtonAction(
+                            on && alternateActionIds[i] != null
+                                    ? alternateActionIds[i]
+                                    : actionIds[i],
+                            mainFrame);
+                }
             }
         }
     }
