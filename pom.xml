@@ -316,7 +316,9 @@
 		<dependency>
 			<groupId>org.objectweb.joram</groupId>
 			<artifactId>jftp</artifactId>
-			<version>1.52</version>
+			<version>1.60-trol1</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/jftp-1.60-trol1.jar</systemPath>
 		</dependency>
 
 		<dependency>
