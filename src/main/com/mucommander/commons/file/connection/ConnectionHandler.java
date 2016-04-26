@@ -105,7 +105,7 @@ public abstract class ConnectionHandler {
      * @throws IOException if the connection could not be started
      */
     public boolean checkConnection() throws IOException {
-        if(!isConnected()) {
+        if (!isConnected()) {
             LOGGER.info("not connected, starting connection, this="+this);
             startConnection();
             return true;
@@ -121,7 +121,7 @@ public abstract class ConnectionHandler {
      * @return true if it could be locked, false if it is already locked.
      */
     public synchronized boolean acquireLock() {
-        if(isLocked) {
+        if (isLocked) {
             LOGGER.info("!!!!! acquireLock() returning false, should not happen !!!!!", new Throwable());
             return false;
         }
@@ -138,7 +138,7 @@ public abstract class ConnectionHandler {
      */
     public boolean releaseLock() {
         synchronized(this) {
-            if(!isLocked) {
+            if (!isLocked) {
                 LOGGER.info("!!!!! releaseLock() returning false, should not happen !!!!!", new Throwable());
                 return false;
             }
@@ -258,8 +258,9 @@ public abstract class ConnectionHandler {
      * @see Credentials#equals(Object, boolean)
      */
     public boolean equals(Object o) {
-        if(o==null || !(o instanceof ConnectionHandler))
+        if (o == null || !(o instanceof ConnectionHandler)) {
             return false;
+        }
 
         ConnectionHandler connHandler = (ConnectionHandler)o;
 

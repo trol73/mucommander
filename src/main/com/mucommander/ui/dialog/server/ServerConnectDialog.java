@@ -70,7 +70,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     private JCheckBox saveCredentialsCheckBox;
 
     // Dialog's width has to be at least 320
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(480,0);
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(520, 0);
 	
     private static Class<? extends ServerPanel> lastPanelClass = FTPPanel.class;
 
@@ -165,7 +165,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     protected void updateURLLabel() {
         try {
             FileURL url = currentServerPanel.getServerURL();
-            urlLabel.setText(url==null?" ":url.toString(false));
+            urlLabel.setText(url == null ? " " : url.toString(false));
         }
         catch(MalformedURLException ex) {
             urlLabel.setText(" ");
@@ -184,7 +184,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source==cancelButton) {
+        if (source == cancelButton) {
             dispose();
             return;
         }
@@ -198,10 +198,9 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
             // adds to CredentialsManager once the folder has been successfully changed
             Credentials credentials = serverURL.getCredentials();
             CredentialsMapping credentialsMapping;
-            if(credentials!=null) {
+            if (credentials != null) {
                 credentialsMapping = new CredentialsMapping(credentials, serverURL, saveCredentialsCheckBox.isSelected());
-            }
-            else {
+            } else {
                 credentialsMapping = null;
             }
 
@@ -209,8 +208,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 
             // Change the current folder
             folderPanel.tryChangeCurrentFolder(serverURL, credentialsMapping);
-        }
-        catch(IOException ex) {
+        } catch(IOException ex) {
             InformationDialog.showErrorDialog(this, Translator.get("table.folder_access_error_title"), Translator.get("folder_does_not_exist"));
         }
     }

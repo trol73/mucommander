@@ -89,6 +89,9 @@ public class SFTPPanel extends ServerPanel {
         // Key file field, initialized to last file
         JPanel privateKeyChooser = new JPanel(new BorderLayout());
 
+        if (OsFamily.getCurrent().isUnixBased() && (lastKeyPath == null || lastKeyPath.trim().isEmpty())) {
+            lastKeyPath = System.getProperty("user.home") + "/.ssh/id_rsa";
+        }
         privateKeyPathField = new JTextField(lastKeyPath);
         privateKeyPathField.selectAll();
         addTextFieldListeners(privateKeyPathField, false);
