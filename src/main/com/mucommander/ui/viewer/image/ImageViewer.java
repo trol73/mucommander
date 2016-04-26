@@ -36,7 +36,6 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
@@ -52,6 +51,7 @@ import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
 import net.sf.image4j.codec.ico.ICODecoder;
 import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
@@ -186,9 +186,9 @@ class ImageViewer extends FileViewer implements ActionListener {
         } else if ("svg".equals(ext)) {
             this.image = transcodeSVGDocument(file, 0, 0);
         } else {
-            InputStream is = file.getInputStream();
-            this.image = ImageIO.read(is);
-            is.close();
+            try (InputStream is = file.getInputStream()) {
+                this.image = ImageIO.read(is);
+            }
             statusBar.setImageBpp(image.getColorModel().getPixelSize());
         }
         vectorImage = "svg".equalsIgnoreCase(ext);
@@ -217,10 +217,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 
 
     private static byte[] loadFile(AbstractFile file) throws IOException {
-        InputStream is = file.getInputStream();
-        byte[] data = new byte[(int)file.getSize()];
-        int readTotal = 0;
-        try {
+        byte[] data = new byte[(int) file.getSize()];
+        try (InputStream is = file.getInputStream()) {
+            int readTotal = 0;
             while (readTotal < data.length) {
                 int bytesRead = is.read(data, readTotal, data.length - readTotal);
                 if (bytesRead < 0) {
@@ -230,13 +229,6 @@ class ImageViewer extends FileViewer implements ActionListener {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return data;
     }
@@ -477,29 +469,23 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
         t.addTranscodingHint(PNGTranscoder.KEY_XML_PARSER_VALIDATING, false);
 
-        // create the transcoder input.
-        TranscoderInput input = new TranscoderInput(file.getInputStream());
-        ByteArrayOutputStream ostream = null;
-        try {
-            // create the transcoder output.
-            ostream = new ByteArrayOutputStream();
+        try (InputStream istream = file.getInputStream(); ByteArrayOutputStream ostream = new ByteArrayOutputStream()) {
+            TranscoderInput input = new TranscoderInput(istream);
             TranscoderOutput output = new TranscoderOutput(ostream);
-
             // Save the image.
             t.transcode(input, output);
 
             // Flush and close the stream.
             ostream.flush();
-            ostream.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+            byte[] imgData = ostream.toByteArray();
+
+            // Return the newly rendered image.
+            return ImageIO.read(new ByteArrayInputStream(imgData));
+        } catch (TranscoderException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        // Convert the byte stream into an image.
-        byte[] imgData = ostream.toByteArray();
-
-        // Return the newly rendered image.
-        return ImageIO.read(new ByteArrayInputStream(imgData));
     }
 
 

@@ -26,13 +26,12 @@ import com.mucommander.commons.file.connection.ConnectionPool;
 import com.mucommander.commons.io.*;
 import com.sshtools.j2ssh.io.UnsignedInteger32;
 import com.sshtools.j2ssh.sftp.FileAttributes;
-import com.sshtools.j2ssh.sftp.*;
+//import com.sshtools.j2ssh.sftp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.util.List;
 
