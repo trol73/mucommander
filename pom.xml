@@ -86,6 +86,13 @@
 			<systemPath>${libs.path}/jediterm-pty-2.0.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>jediterm</groupId>
+			<artifactId>purejavacomm</artifactId>
+			<version>0.0.22</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/jediterm/purejavacomm-0.0.22.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>pty4j</groupId>
 			<artifactId>pty4j</artifactId>
 			<version>0.3</version>
