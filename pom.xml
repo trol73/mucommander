@@ -197,6 +197,13 @@
 			<systemPath>${libs.path}/j2ssh-core-0.2.10.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>sshtools</groupId>
+			<artifactId>j2ssh-maverick</artifactId>
+			<version>1.5.4</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/sshtools/j2ssh-maverick-1.5.4.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>net.java.dev.jets3t</groupId>
 			<artifactId>jets3t</artifactId>
 			<version>0.7.2</version>
