@@ -80,6 +80,7 @@ public class Translator {
         registerLocale(Locale.forLanguageTag("sk-SK"));
         registerLocale(Locale.forLanguageTag("sl-SL"));
         registerLocale(Locale.forLanguageTag("sv-SV"));
+        registerLocale(Locale.forLanguageTag("tr-TR"));
         registerLocale(Locale.forLanguageTag("uk-UA"));
         registerLocale(Locale.forLanguageTag("zh-CN"));
         registerLocale(Locale.forLanguageTag("zh-TW"));
@@ -130,6 +131,7 @@ public class Translator {
             case "AR": return Locale.forLanguageTag("ar-SA");
             case "BE": return Locale.forLanguageTag("be-BY");
             case "NB": return Locale.forLanguageTag("no-NO");
+            case "TR": return Locale.forLanguageTag("tr-TR");
             case "CA": return Locale.forLanguageTag("ca-ES");
             default: return Locale.forLanguageTag(localeNameFromConf);
         }
