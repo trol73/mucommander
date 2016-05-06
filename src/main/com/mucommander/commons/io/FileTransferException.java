@@ -70,6 +70,8 @@ public class FileTransferException extends IOException {
     /** The checksum of the source and destination files don't match */
     public final static int CHECKSUM_MISMATCH = 13;
 
+    /** The requested operation is not supported */
+    public final static int UNSUPPORTED_OPERATION = 14;
 
     protected int reason;
 
@@ -77,10 +79,19 @@ public class FileTransferException extends IOException {
 
 
     public FileTransferException(int reason) {
-        this.reason = reason;
+        this(reason, 0, null);
+    }
+
+    public FileTransferException(int reason, Throwable cause) {
+        this(reason, 0, cause);
     }
 
     public FileTransferException(int reason, long bytesWritten) {
+        this(reason, bytesWritten, null);
+    }
+
+    public FileTransferException(int reason, long bytesWritten, Throwable cause) {
+        super(cause);
         this.reason = reason;
         this.bytesWritten = bytesWritten;
     }

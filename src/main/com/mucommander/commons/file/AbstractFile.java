@@ -380,9 +380,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         try {
             out = append ? getAppendOutputStream() : getOutputStream();
+        } catch (UnsupportedFileOperationException e) {
+            throw new FileTransferException(FileTransferException.UNSUPPORTED_OPERATION, e);
         } catch (IOException e) {
-            // TODO: re-throw UnsupportedFileOperationException ? 
-            throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
+            throw new FileTransferException(FileTransferException.OPENING_DESTINATION, e);
         }
 
         try {
@@ -392,7 +393,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             try {
                 out.close();
             } catch(IOException e) {
-                throw new FileTransferException(FileTransferException.CLOSING_DESTINATION);
+                throw new FileTransferException(FileTransferException.CLOSING_DESTINATION, e);
             }
         }
     }
