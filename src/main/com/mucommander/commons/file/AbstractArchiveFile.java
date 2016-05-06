@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -338,7 +339,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         checkEntriesTree();
 
         // Todo: check if that's really necessary / if there is a way to remove this
-        entryPath = entryPath.replace('\\', '/');
+        entryPath = entryPath.replace(File.separatorChar, ArchiveEntry.SEPARATOR_CHAR);
 
         // Find the entry node corresponding to the given path
         DefaultMutableTreeNode entryNode = entryTreeRoot.findEntryNode(entryPath);

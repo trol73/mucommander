@@ -329,6 +329,14 @@ public abstract class TransferFileJob extends FileJob {
                         choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_file", sourceFile.getName()));
                         break;
                     // Could not open destination file for write
+                    case FileTransferException.UNSUPPORTED_OPERATION:
+                        choice = showErrorDialog(errorDialogTitle,
+                                Translator.get("error_unsupported_operation"),
+                                // from the perspective of users there is nothing to cancel but only to acknowledge
+                                new String[] { OK_TEXT },
+                                // technically we're cancelling here
+                                new int[] { CANCEL_ACTION });
+                        break;
                     case FileTransferException.OPENING_DESTINATION:
                         // if write to read-only file
                         if (!destFile.getPermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION)) {

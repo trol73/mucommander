@@ -33,6 +33,9 @@ import com.mucommander.commons.file.util.PathUtils;
  */
 public class ArchiveEntry extends SimpleFileAttributes {
 
+    public static final char SEPARATOR_CHAR = '/';
+    private static final String SEPARATOR_STRING = String.valueOf(SEPARATOR_CHAR);
+
     /** Encapsulated entry object */
     protected Object entryObject;
 
@@ -49,7 +52,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
     /**
      * Creates a new ArchiveEntry using the values of the supplied attributes.
      *
-     * @param path the entry's path
+     * @param path the entry's path with {@link #SEPARATOR_CHAR} as path delimiter
      * @param directory true if the entry is a directory
      * @param date the entry's date
      * @param size the entry's size
@@ -65,8 +68,8 @@ public class ArchiveEntry extends SimpleFileAttributes {
 
 
     /**
-     * Returns the depth of this entry based on the number of path delimiters ('/') its path contains.
-     * Top-level entries have a depth of 1.
+     * Returns the depth of this entry based on the number of path delimiters ({@link #SEPARATOR_CHAR}) its path
+     * contains. Top-level entries have a depth of 1.
      *
      * @return the depth of this entry
      */
@@ -75,14 +78,14 @@ public class ArchiveEntry extends SimpleFileAttributes {
     }
 
     /**
-     * Returns the depth of the specified entry path, based on the number of path delimiters ('/') it contains.
-     * Top-level entries have a depth of 1.
+     * Returns the depth of the specified entry path, based on the number of path delimiters ({@link #SEPARATOR_CHAR})
+     * it contains. Top-level entries have a depth of 1.
      *
      * @param entryPath the path for which to calculate the depth
      * @return the depth of the given entry path
      */
     public static int getDepth(String entryPath) {
-        return PathUtils.getDepth(entryPath, "/");
+        return PathUtils.getDepth(entryPath, SEPARATOR_STRING);
     }
 
     /**
@@ -94,10 +97,10 @@ public class ArchiveEntry extends SimpleFileAttributes {
         String path = getPath();
         int len = path.length();
         // Remove trailing '/' if any
-        if (path.charAt(len-1) == '/')
+        if (path.charAt(len-1) == SEPARATOR_CHAR)
             path = path.substring(0, --len);
 
-        int lastSlash = path.lastIndexOf('/');
+        int lastSlash = path.lastIndexOf(SEPARATOR_CHAR);
         return lastSlash == -1 ? path : path.substring(lastSlash+1, len);
     }
 
@@ -168,7 +171,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
         if(!(o instanceof ArchiveEntry))
             return false;
 
-        return PathUtils.pathEquals(getPath(), ((ArchiveEntry)o).getPath(), "/");
+        return PathUtils.pathEquals(getPath(), ((ArchiveEntry)o).getPath(), SEPARATOR_STRING);
     }
 
     /**
@@ -182,7 +185,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
         String path = getPath();
 
         // #equals(Object) is trailing separator insensitive, so the hashCode must be trailing separator invariant
-        hashCode = path.endsWith("/")
+        hashCode = path.endsWith(SEPARATOR_STRING)
                 ?path.substring(0, path.length()-1).hashCode()
                 :path.hashCode();
 
