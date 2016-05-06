@@ -24,6 +24,7 @@ import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A simple pdf viewer
@@ -59,7 +60,9 @@ public class PdfViewer extends FileViewer {
     protected void show(AbstractFile file) throws IOException {
         String description = "";
         String path = file.getPath();
-        controller.openDocument(file.getInputStream(), description, path);
+        try (InputStream is = file.getInputStream()) {
+            controller.openDocument(is, description, path);
+        }
     }
 
     @Override

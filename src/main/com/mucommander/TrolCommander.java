@@ -65,7 +65,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO;
 import javax.swing.SwingUtilities;
 
 /**
- * muCommander launcher.
+ * trolCommander launcher.
  * <p>
  * This class is used to start muCommander. It will analyse command line
  * arguments, initialize the whole software and start the main window.
