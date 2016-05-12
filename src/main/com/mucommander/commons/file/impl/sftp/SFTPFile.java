@@ -229,7 +229,7 @@ public class SFTPFile extends ProtocolFile {
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void changeDate(long lastModified) throws IOException {
         SFTPConnectionHandler connHandler = null;
         SftpFile sftpFile = null;
         try {
@@ -244,7 +244,7 @@ public class SFTPFile extends ProtocolFile {
             // /!\ SftpFile instance must be closed afterwards to release its file handle
             sftpFile = connHandler.sftpSubsystem.openFile(absPath, SftpSubsystemChannel.OPEN_WRITE);
             SftpFileAttributes attributes = sftpFile.getAttributes();
-            attributes.setTimes(attributes.getAccessedTime(), new UnsignedInteger64(lastModified));
+            attributes.setTimes(attributes.getAccessedTime(), new UnsignedInteger64(lastModified/1000));
             connHandler.sftpSubsystem.setAttributes(sftpFile, attributes);
             // Update local attribute copy
             fileAttributes.setDate(lastModified);
