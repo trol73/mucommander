@@ -75,7 +75,7 @@ public class TablePopupMenu extends MuActionsPopupMenu {
         if (clickedFile != null || parentFolderClicked) {
             addAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID);
             addAction(com.mucommander.ui.action.impl.OpenNativelyAction.Descriptor.ACTION_ID);
-            add(new OpenWithMenu(mainFrame));
+            add(new OpenWithMenu(mainFrame, clickedFile));
 
             addAction(com.mucommander.ui.action.impl.OpenInNewTabAction.Descriptor.ACTION_ID);
         }

@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
+import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.helper.MenuToolkit;
@@ -44,22 +45,28 @@ public class OpenWithMenu extends JMenu {
     /**
      * Creates a new Open With menu.
      */
-    public OpenWithMenu(MainFrame frame) {
+    public OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
         super(Translator.get("file_menu.open_with") + "...");
         this.mainFrame = frame;
-        populate();
+        populate(clickedFile);
     }
 
     /**
      * Refreshes the content of the menu.
      */
-    private synchronized void populate() {
+    private synchronized void populate(AbstractFile clickedFile) {
         for (Command command : CommandManager.commands()) {
-            if(command.getType() == CommandType.NORMAL_COMMAND)
-            	add(ActionManager.getActionInstance(command, mainFrame));
+            if (command.getType() != CommandType.NORMAL_COMMAND) {
+                continue;
+            }
+            if (clickedFile != null && !CommandManager.checkFileMask(command, clickedFile)) {
+                continue;
+            }
+            add(ActionManager.getActionInstance(command, mainFrame));
         }
-        if(getItemCount() == 0)
+        if (getItemCount() == 0) {
             setEnabled(false);
+        }
     }
 
     @Override

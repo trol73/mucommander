@@ -118,7 +118,7 @@ public class CommandAction extends MuAction {
     	private String label;
 
     	public Descriptor(Command command) {
-    		ACTION_ID = ACTION_ID_PREFIX + command.getAlias();
+    		ACTION_ID = ACTION_ID_PREFIX + command.getAlias() + ":" + command.getDisplayName();
     		label = String.format("%s %s", 
     				Translator.get("file_menu.open_with"),
     				command.getDisplayName());

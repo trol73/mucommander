@@ -48,7 +48,7 @@ public class ViewerRegistrar {
     static {
         registerFileViewer(new com.mucommander.ui.viewer.pdf.PdfFactory());
 
-        registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
+        //registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
 
         registerFileViewer(new com.mucommander.ui.viewer.image.ImageFactory());
 

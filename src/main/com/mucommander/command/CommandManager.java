@@ -239,6 +239,9 @@ public class CommandManager implements CommandBuilder {
         String[] split = fileMask.split(",");
         for (String aSplit : split) {
             String mask = aSplit.trim().toLowerCase();
+            if (mask.isEmpty()) {
+                continue;
+            }
             WildcardFileFilter filter = new WildcardFileFilter(mask);
             if (filter.accept(file)) {
                 return true;
