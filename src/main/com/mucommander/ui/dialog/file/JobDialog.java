@@ -42,6 +42,8 @@ public abstract class JobDialog extends FocusDialog {
     /** Number of files displayed in the 'file details' text area */
     private final static int NB_FILE_DETAILS_ROWS = 10;
 
+    private static boolean lastExpanded = false;
+
     protected MainFrame mainFrame;
     protected FileSet files;
 
@@ -78,10 +80,12 @@ public abstract class JobDialog extends FocusDialog {
     /**
      * Creates and returns a 'File details' panel, showing details about the files that the job will operate on. The file details
      * are loaded in a separate thread, when the panel becomes visible.
-     *  
+     *
+     * @param packOnUpdate pack the window after list loading
+     *
      * @return a 'File details' panel, showing details about the files that the job will operate on
      */
-    protected AsyncPanel createFileDetailsPanel() {
+    protected AsyncPanel createFileDetailsPanel(boolean packOnUpdate) {
         return new AsyncPanel() {
             @Override
             public JComponent getTargetComponent(Exception e) {
@@ -97,11 +101,17 @@ public abstract class JobDialog extends FocusDialog {
 
             @Override
             protected void updateLayout() {
-                Container tla = getTopLevelAncestor();
-                if (tla instanceof Window)
-                    ((Window)tla).pack();
+                if (packOnUpdate) {
+                    Container tla = getTopLevelAncestor();
+                    if (tla instanceof Window)
+                        ((Window) tla).pack();
                 }
+            }
         };
+    }
+
+    protected AsyncPanel createFileDetailsPanel() {
+        return createFileDetailsPanel(true);
     }
 
     /**
@@ -112,7 +122,7 @@ public abstract class JobDialog extends FocusDialog {
      * @return a button that expands/collapses the specified 'File details' panel
      */
     protected CollapseExpandButton createFileDetailsButton(JPanel detailsPanel) {
-        collapseExpandButton = new CollapseExpandButton(Translator.get("nb_files", String.valueOf(files.size())), detailsPanel, false);
+        collapseExpandButton = new CollapseExpandButton(Translator.get("nb_files", String.valueOf(files.size())), detailsPanel, lastExpanded);
         return collapseExpandButton;
     }
 
@@ -128,7 +138,9 @@ public abstract class JobDialog extends FocusDialog {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-        panel.add(fileDetailsButton);
+        if (fileDetailsButton != null) {
+            panel.add(fileDetailsButton);
+        }
         panel.add(Box.createVerticalGlue());
         panel.add(buttonsPanel);
 
@@ -146,4 +158,11 @@ public abstract class JobDialog extends FocusDialog {
         }
     }
 
+    @Override
+    public void dispose() {
+        if (collapseExpandButton != null) {
+            lastExpanded = collapseExpandButton.getExpandedState();
+        }
+        super.dispose();
+    }
 }

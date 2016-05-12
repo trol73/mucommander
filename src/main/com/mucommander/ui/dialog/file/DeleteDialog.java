@@ -65,7 +65,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     private JButton deleteButton;
 
     /** Dialog size constraints */
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360,0);
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
 
 
     public DeleteDialog(MainFrame mainFrame, FileSet files, boolean deletePermanently) {
@@ -93,16 +93,23 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         mainPanel.add(informationPane);
         mainPanel.addSpace(10);
 
-        JPanel fileDetailsPanel = createFileDetailsPanel();
+        // add panel with one file above buttons
+        JPanel fileDetailsPanel = createFileDetailsPanel(files.size() > 1);
+        if (files.size() == 1) {
+            mainPanel.add(fileDetailsPanel);
+        }
 
         // create file details button and OK/cancel buttons and lay them out a single row
         deleteButton = new JButton(Translator.get("delete"));
         JButton cancelButton = new JButton(Translator.get("cancel"));
 
-        mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
+        mainPanel.add(createButtonsPanel(files.size() > 1 ? createFileDetailsButton(fileDetailsPanel) : null,
                 DialogToolkit.createOKCancelPanel(deleteButton, cancelButton, getRootPane(), this)));
 
-        mainPanel.add(fileDetailsPanel);
+        // add panel with multiple fil list below buttons
+        if (files.size() > 1) {
+            mainPanel.add(fileDetailsPanel);
+        }
 
         if (moveToTrashCheckBox != null) {
             mainPanel.add(moveToTrashCheckBox);
@@ -118,9 +125,14 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
 
         updateDialog();
 
-        // Size dialog and show it to the screen
-        setMinimumSize(MINIMUM_DIALOG_DIMENSION);
-        setResizable(false);
+        if (files.size() > 1) {
+            // Size dialog and show it to the screen
+            setMinimumSize(MINIMUM_DIALOG_DIMENSION);
+            setResizable(false);
+        } else {
+            pack();
+        }
+
     }
 
 
@@ -128,10 +140,21 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
      * Updates the information pane to reflect the current 'Move to trash' choice.
      */
     private void updateDialog() {
-        informationPane.getMainLabel().setText(Translator.get(moveToTrash?"delete_dialog.move_to_trash.confirmation":"delete_dialog.permanently_delete.confirmation"));
-        informationPane.getCaptionLabel().setText(Translator.get(moveToTrash?"delete_dialog.move_to_trash.confirmation_details":"this_operation_cannot_be_undone"));
-        informationPane.setIcon(moveToTrash?null: InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
-        setTitle(ActionManager.getActionInstance(moveToTrash?DeleteAction.Descriptor.ACTION_ID:PermanentDeleteAction.Descriptor.ACTION_ID, mainFrame).getLabel());
+        String textId;
+        if (moveToTrash) {
+            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.move_to_trash.confirmation";
+        } else {
+            textId = files.size() == 1 ? "delete_dialog.permanently_delete.confirmation_1" : "delete_dialog.permanently_delete.confirmation";
+        }
+        informationPane.getMainLabel().setText(Translator.get(textId));
+        if (moveToTrash) {
+            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_details_1" : "delete_dialog.move_to_trash.confirmation_details";
+        } else {
+            textId = "this_operation_cannot_be_undone";
+        }
+        informationPane.getCaptionLabel().setText(Translator.get(textId));
+        informationPane.setIcon(moveToTrash ? null: InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
+        setTitle(ActionManager.getActionInstance(moveToTrash ? DeleteAction.Descriptor.ACTION_ID:PermanentDeleteAction.Descriptor.ACTION_ID, mainFrame).getLabel());
     }
 
 
