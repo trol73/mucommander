@@ -21,16 +21,14 @@ package com.mucommander;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 
 import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.tools.ToolsEnvironment;
 import com.mucommander.utils.MuLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -659,6 +657,19 @@ public class TrolCommander {
         }
     }
 
+    private static class LoadEnvironmentTask extends LauncherTask {
+
+        LoadEnvironmentTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("load_env", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            ToolsEnvironment.load();
+        }
+    }
+
+
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
@@ -750,6 +761,7 @@ public class TrolCommander {
             LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
             LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
             LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
+            LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
             tasks.add(taskLoadConfigs);
@@ -775,6 +787,7 @@ public class TrolCommander {
             tasks.add(taskRegisterArchives);
             tasks.add(taskRegisterNetwork);
             tasks.add(taskRegisterOtherProtocols);
+            tasks.add(taskLoadEnviroment);
 //System.out.println("Execute tasks");
 
             if (processors <= 1 ) {

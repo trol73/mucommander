@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="j2ssh">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/runtime/sshtools/j2ssh-core-0.2.10.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2015 Oleg Trifonov
+ * Copyright (C) 2013-2016 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
  */
 package com.mucommander.adb;
 
-
-import com.mucommander.process.AbstractProcess;
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.process.ExecutionFinishListener;
 import com.mucommander.process.ExecutorUtils;
-import com.mucommander.process.ProcessListener;
-import com.mucommander.shell.Shell;
+import com.mucommander.ui.tools.ToolsEnvironment;
 import se.vidstige.jadb.JadbConnection;
 import se.vidstige.jadb.JadbDevice;
 import se.vidstige.jadb.JadbException;
@@ -37,6 +38,7 @@ import java.util.Map;
  * Created on 25/12/15.
  */
 public class AdbUtils {
+
 
     private static Map<String, String> lastDeviceNames;
 
@@ -54,7 +56,7 @@ public class AdbUtils {
             }
             return names;
         } catch (JadbException | IOException e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -64,13 +66,50 @@ public class AdbUtils {
      * @return true if adb found
      */
     public static boolean checkAdb() {
-        AbstractProcess process;
-        try {
-            process = Shell.execute("adb devices -l", null, null);
-            return process.waitFor() == 0;
-        } catch (IOException | InterruptedException e) {
-            return false;
+        AbstractFile adbPath = getAdbPath();
+        if (OsFamily.getCurrent().isUnixBased() && adbPath != null) {
+            try {
+                int result = ExecutorUtils.execute("./adb devices -l", adbPath);
+                return result == 0;
+            } catch (IOException | InterruptedException ignore) {}
         }
+        try {
+            int result = ExecutorUtils.execute("adb devices -l", adbPath);
+            return result == 0;
+        } catch (IOException | InterruptedException ignore) {}
+        return false;
+    }
+
+    /**
+     * Tried to found adb utility location
+     *
+     * @return path to adb utility or null
+     */
+    private static AbstractFile getAdbPath() {
+        String path;
+        try {
+            path = ToolsEnvironment.getEnv("ANDROID_HOME");
+        } catch (SecurityException ignore) {
+            path = null;
+        }
+        if (path != null) {
+            AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\platform-tools\\adb.exe" : "/platform-tools/adb"));
+            if (result != null && result.exists()) {
+                return result.getParent();
+            }
+        }
+        try {
+            path = ToolsEnvironment.getEnv("ADB_HOME");
+        } catch (SecurityException ignore) {
+            path = null;
+        }
+        if (path != null) {
+            AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\adb.exe" : "/adb"));
+            if (result != null && result.exists()) {
+                return result.getParent();
+            }
+        }
+        return null;
     }
 
     /**
@@ -93,24 +132,33 @@ public class AdbUtils {
      */
     public static Map<String, String> getDeviceNames() {
         final Map<String, String> result = new HashMap<>();
-        try {
-            ExecutorUtils.executeAndGetOutput("adb devices -l", null, (exitCode, output) -> {
-                String lines[] = output.split("\\r?\\n");
-                for (String s : lines) {
-                    String vals[] = s.split("\\s+");
-                    for (String val : vals) {
-                        if (val.startsWith("model:")) {
-                            String serial = vals[0];
-                            String name = val.substring(6); // "model:"
-                            name = name.replace('_', ' ');
-                            result.put(serial, name);
-                        }
+        ExecutionFinishListener listener = (exitCode, output) -> {
+            String lines[] = output.split("\\r?\\n");
+            for (String s : lines) {
+                String vals[] = s.split("\\s+");
+                for (String val : vals) {
+                    if (val.startsWith("model:")) {
+                        String serial = vals[0];
+                        String name = val.substring(6); // "model:"
+                        name = name.replace('_', ' ');
+                        result.put(serial, name);
                     }
                 }
-            });
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            }
+        };
+        AbstractFile adbPath = getAdbPath();
+        if (OsFamily.getCurrent().isUnixBased() && adbPath != null) {
+            try {
+                ExecutorUtils.executeAndGetOutput("./adb devices -l", adbPath, listener);
+            } catch (IOException | InterruptedException e) {
+                try {
+                    ExecutorUtils.executeAndGetOutput("adb devices -l", adbPath, listener);
+                } catch (IOException | InterruptedException e2) {
+                    e2.printStackTrace();
+                }
+            }
         }
         return result;
     }
+
 }

@@ -35,10 +35,11 @@ public class ExecutorUtils {
      * @param currentFolder            where to init the command from.
      * @param executionFinishListener  here to send information about the resulting process.
      * @param encoding                 output encoding (system default is used if <code>null</code>).
+     * @return process exit code
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void executeAndGetOutput(String command, AbstractFile currentFolder, ExecutionFinishListener executionFinishListener,
+    public static int executeAndGetOutput(String command, AbstractFile currentFolder, ExecutionFinishListener executionFinishListener,
                                            String encoding) throws IOException, InterruptedException {
         StringBuffer out = new StringBuffer();
 
@@ -60,6 +61,7 @@ public class ExecutorUtils {
         if (executionFinishListener != null) {
             executionFinishListener.onFinish(exitCode, out.toString());
         }
+        return exitCode;
     }
 
     /**
@@ -68,16 +70,20 @@ public class ExecutorUtils {
      * @param command                  command to execute
      * @param currentFolder            where to init the command from.
      * @param executionFinishListener  here to send information about the resulting process.
+     * @return exit code
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void executeAndGetOutput(String command, AbstractFile currentFolder, ExecutionFinishListener executionFinishListener) throws IOException, InterruptedException {
-        executeAndGetOutput(command, currentFolder, executionFinishListener, null);
+    public static int executeAndGetOutput(String command, AbstractFile currentFolder, ExecutionFinishListener executionFinishListener) throws IOException, InterruptedException {
+        return executeAndGetOutput(command, currentFolder, executionFinishListener, null);
     }
 
+    public static int execute(String command, AbstractFile currentFolder) throws IOException, InterruptedException {
+        return executeAndGetOutput(command, currentFolder, null);
+    }
 
-    public static void execute(String command) throws IOException, InterruptedException {
-        executeAndGetOutput(command, null, null);
+    public static int execute(String command) throws IOException, InterruptedException {
+        return executeAndGetOutput(command, null, null);
     }
 
 
@@ -85,4 +91,5 @@ public class ExecutorUtils {
         String[] tokens = Command.getTokens(command);
         return encoding == null ? ProcessRunner.execute(tokens, currentFolder, listener) : ProcessRunner.execute(tokens, currentFolder, listener, encoding);
     }
+
 }
