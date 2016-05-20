@@ -46,17 +46,15 @@ public class SortByPermissionsAction extends SortByAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new SortByPermissionsAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends SortByAction.Descriptor {
+    public static final class Descriptor extends SortByAction.Descriptor {
 
         public Descriptor() {
             super(Column.PERMISSIONS, KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.CTRL_DOWN_MASK));
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SortByPermissionsAction(mainFrame, properties);
         }
     }
 }

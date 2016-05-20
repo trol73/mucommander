@@ -55,10 +55,10 @@ public class OpenInNewTabAction extends SelectedFileAction {
     
 	@Override
 	public void performAction() {
-		AbstractFile file;
+		AbstractFile file = mainFrame.getActiveTable().getSelectedFile(true, true);
 
         // Retrieves the currently selected file, aborts if none (should not normally happen).
-        if((file = mainFrame.getActiveTable().getSelectedFile(true, true)) == null || !file.isBrowsable())
+        if (file == null || !file.isBrowsable())
             return;
 
         // Opens the currently selected file in a new tab
@@ -70,14 +70,8 @@ public class OpenInNewTabAction extends SelectedFileAction {
 		return new Descriptor();
 	}
 
-	public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new OpenInNewTabAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenInNewTab";
     	
 		public String getId() { return ACTION_ID; }
@@ -92,6 +86,10 @@ public class OpenInNewTabAction extends SelectedFileAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new OpenInNewTabAction(mainFrame, properties);
         }
     }
 }

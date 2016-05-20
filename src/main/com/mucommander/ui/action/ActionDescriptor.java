@@ -18,7 +18,10 @@
 
 package com.mucommander.ui.action;
 
+import com.mucommander.ui.main.MainFrame;
+
 import javax.swing.*;
+import java.util.Map;
 
 /**
  * Each MuAction is registered with an object of ActionDescriptor type
@@ -27,7 +30,7 @@ import javax.swing.*;
  * 
  * @author Arik Hadas
  */
-public interface ActionDescriptor {
+public interface ActionDescriptor extends ActionFactory {
 	
 	String getId();
 	
@@ -53,4 +56,7 @@ public interface ActionDescriptor {
      * @return <code>true</code> if the action requires parameters at creation time.
      */
     boolean isParameterized();
+
+
+//	MuAction createAction(MainFrame mainFrame, Map<String,Object> properties);
 }

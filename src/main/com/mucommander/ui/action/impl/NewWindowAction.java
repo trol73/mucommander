@@ -52,14 +52,8 @@ public class NewWindowAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new NewWindowAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "NewWindow";
     	
 		public String getId() { return ACTION_ID; }
@@ -74,6 +68,10 @@ public class NewWindowAction extends MuAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new NewWindowAction(mainFrame, properties);
         }
     }
 }

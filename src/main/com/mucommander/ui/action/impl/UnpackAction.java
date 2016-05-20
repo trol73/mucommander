@@ -59,14 +59,8 @@ public class UnpackAction extends SelectedFilesAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new UnpackAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Unpack";
     	
 		public String getId() { return ACTION_ID; }
@@ -81,6 +75,10 @@ public class UnpackAction extends SelectedFilesAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new UnpackAction(mainFrame, properties);
         }
     }
 }

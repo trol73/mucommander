@@ -36,15 +36,9 @@ public class ReportBugAction extends OpenURLInBrowserAction {
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.BUG_REPOSITORY_URL);
     }
-    
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ReportBugAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ReportBug";
     	
 		public String getId() { return ACTION_ID; }
@@ -54,5 +48,9 @@ public class ReportBugAction extends OpenURLInBrowserAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ReportBugAction(mainFrame, properties);
+        }
     }
 }

@@ -54,14 +54,8 @@ public class CalculateChecksumAction extends SelectedFilesAction  {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new CalculateChecksumAction(mainFrame, properties);
-		}
-    }
     
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CalculateChecksum";
     	
 		public String getId() { return ACTION_ID; }
@@ -71,5 +65,10 @@ public class CalculateChecksumAction extends SelectedFilesAction  {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new CalculateChecksumAction(mainFrame, properties);
+        }
     }
+
 }

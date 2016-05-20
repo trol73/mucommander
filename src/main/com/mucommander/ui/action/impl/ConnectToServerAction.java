@@ -58,14 +58,8 @@ public class ConnectToServerAction extends ActiveTabAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ConnectToServerAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ConnectToServer";
     	
 		public String getId() { return ACTION_ID; }
@@ -81,5 +75,10 @@ public class ConnectToServerAction extends ActiveTabAction {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.META_DOWN_MASK);
             }
         }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ConnectToServerAction(mainFrame, properties);
+        }
+
     }
 }

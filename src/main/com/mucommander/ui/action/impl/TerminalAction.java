@@ -89,16 +89,8 @@ public class TerminalAction extends ParentFolderAction {
         return new Descriptor();
     }
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new TerminalAction(mainFrame, properties);
-        }
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "Terminal";
 
         public String getId() { return ACTION_ID; }
@@ -108,6 +100,11 @@ public class TerminalAction extends ParentFolderAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new TerminalAction(mainFrame, properties);
+        }
+
     }
 
 }

@@ -50,14 +50,8 @@ public class MinimizeWindowAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new MinimizeWindowAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MinimizeWindow";
     	
 		public String getId() { return ACTION_ID; }
@@ -76,6 +70,10 @@ public class MinimizeWindowAction extends MuAction {
                 return Translator.get(macLabelKey);
 
             return super.getLabel();
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new MinimizeWindowAction(mainFrame, properties);
         }
     }
 }

@@ -47,13 +47,8 @@ public class SelectNextRowAction extends SelectForwardAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new SelectNextRowAction(mainFrame, properties);
-        }
-    }
 
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "SelectNextRow";
 
         public String getId() {
@@ -70,6 +65,10 @@ public class SelectNextRowAction extends SelectForwardAction {
 
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SelectNextRowAction(mainFrame, properties);
         }
     }
 }

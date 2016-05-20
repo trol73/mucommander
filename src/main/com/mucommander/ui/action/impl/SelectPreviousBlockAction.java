@@ -52,13 +52,8 @@ public class SelectPreviousBlockAction extends SelectBackwardAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new SelectPreviousBlockAction(mainFrame, properties);
-        }
-    }
 
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "SelectPreviousBlock";
 
         public String getId() {
@@ -79,6 +74,10 @@ public class SelectPreviousBlockAction extends SelectBackwardAction {
 
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SelectPreviousBlockAction(mainFrame, properties);
         }
     }
 }

@@ -18,20 +18,22 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.file.LocalCopyDialog;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action invokes the 'Copy dialog' which allows to copy the currently selected/marked files to a specified destination.
@@ -58,7 +60,7 @@ public class LocalCopyAction extends SelectedFileAction {
         AbstractFile selectedFile = activePanel.getFileTable().getSelectedFile(false, true);
 
         // Display local copy dialog only if a file other than '..' is currently selected
-        if(selectedFile!=null) {
+        if (selectedFile != null) {
             new LocalCopyDialog(mainFrame, new FileSet(activePanel.getCurrentFolder(), selectedFile)).showDialog();
         }
     }
@@ -68,14 +70,8 @@ public class LocalCopyAction extends SelectedFileAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new LocalCopyAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "LocalCopy";
     	
 		public String getId() { return ACTION_ID; }
@@ -85,5 +81,9 @@ public class LocalCopyAction extends SelectedFileAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.SHIFT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new LocalCopyAction(mainFrame, properties);
+        }
     }
 }

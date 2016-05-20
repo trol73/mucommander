@@ -46,17 +46,8 @@ public class CalculatorAction extends MuAction {
         return new Descriptor();
     }
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-            return new CalculatorAction(mainFrame, properties);
-        }
-    }
-
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "Calculator";
 
         public String getId() {
@@ -74,5 +65,10 @@ public class CalculatorAction extends MuAction {
         public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK);
         }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new CalculatorAction(mainFrame, properties);
+        }
     }
+
 }

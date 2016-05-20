@@ -33,16 +33,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public enum MakeDirectoryAction{
-	$;
-	static{
-		ActionManager.registerAction(new Descriptor(), new Factory());
-	}
-	//don't make it static to force the $ registering
-	public final String ACTION_ID = "Mkdir";
-	
-	private static class Action extends ParentFolderAction {
-	public Action(MainFrame mainFrame, Map<String, Object> properties) {
+public class MkdirAction extends ParentFolderAction {
+
+	public MkdirAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 
@@ -66,22 +59,13 @@ public enum MakeDirectoryAction{
 	public ActionDescriptor getDescriptor() {
 		return new Descriptor();
 	}
-	}
 
-	// /////////////////
-	// Inner classes //
-	// /////////////////
 
-	private static class Factory implements ActionFactory {
+	public static final class Descriptor extends AbstractActionDescriptor {
+		public static final String ACTION_ID = "Mkdir";
 
-		public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-			return new Action(mainFrame, properties);
-		}
-	}
-
-	private static class Descriptor extends AbstractActionDescriptor {
 		public String getId() {
-			return $.ACTION_ID;
+			return ACTION_ID;
 		}
 
 		public ActionCategory getCategory() {
@@ -94,6 +78,10 @@ public enum MakeDirectoryAction{
 
 		public KeyStroke getDefaultKeyStroke() {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
+		}
+
+		public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+			return new MkdirAction(mainFrame, properties);
 		}
 	}
 }

@@ -18,10 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import java.util.Map;
 
 /**
@@ -36,15 +38,8 @@ public class DonateAction extends OpenURLInBrowserAction {
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.DONATION_URL);
     }
-    
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new DonateAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Donate";
     	
 		public String getId() { return ACTION_ID; }
@@ -54,5 +49,10 @@ public class DonateAction extends OpenURLInBrowserAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new DonateAction(mainFrame, properties);
+        }
+
     }
 }

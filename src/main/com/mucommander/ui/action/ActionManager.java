@@ -18,26 +18,19 @@
 
 package com.mucommander.ui.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.WeakHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ActionManager provides methods to retrieve {@link MuAction} instances and invoke them. It keeps track of all the
@@ -60,7 +53,7 @@ public class ActionManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
 	
     /** MuAction id -> factory map */
-    private static Map<String, ActionFactory> actionFactories = new HashMap<>();
+    //static final Map<String, ActionFactory> actionFactories = new HashMap<>();
     
     /** MainFrame -> MuAction map */
     private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
@@ -69,192 +62,191 @@ public class ActionManager {
     private final static Pattern PATTERN = Pattern.compile(".*\\.(.*)?Action");
 
     public static void registerActions() {
-    	registerAction(new AddBookmarkAction.Descriptor(),                  new AddBookmarkAction.Factory());
-    	registerAction(new AddTabAction.Descriptor(),						new AddTabAction.Factory());
-    	registerAction(new BatchRenameAction.Descriptor(),                  new BatchRenameAction.Factory());
-    	registerAction(new BringAllToFrontAction.Descriptor(),              new BringAllToFrontAction.Factory());
-    	registerAction(new CalculateChecksumAction.Descriptor(),            new CalculateChecksumAction.Factory());
-    	registerAction(new ChangeDateAction.Descriptor(),                   new ChangeDateAction.Factory());
-		registerAction(new ChangeReplicationAction.Descriptor(),            new ChangeReplicationAction.Factory());
-    	registerAction(new ChangeLocationAction.Descriptor(),               new ChangeLocationAction.Factory());
-    	registerAction(new ChangePermissionsAction.Descriptor(),            new ChangePermissionsAction.Factory());
-    	registerAction(new CheckForUpdatesAction.Descriptor(),              new CheckForUpdatesAction.Factory());
-    	registerAction(new CloneTabToOtherPanelAction.Descriptor(), 		new CloneTabToOtherPanelAction.Factory());
-    	registerAction(new CloseDuplicateTabsAction.Descriptor(),			new CloseDuplicateTabsAction.Factory());
-    	registerAction(new CloseOtherTabsAction.Descriptor(),				new CloseOtherTabsAction.Factory());
-    	registerAction(new CloseWindowAction.Descriptor(),                  new CloseWindowAction.Factory());
-    	registerAction(new CloseTabAction.Descriptor(),						new CloseTabAction.Factory());
-//    	registerAction(new CommandAction.Descriptor(),           		     new CommandAction.Factory());
-    	registerAction(new CompareFoldersAction.Descriptor(),               new CompareFoldersAction.Factory());
-    	registerAction(new ConnectToServerAction.Descriptor(),              new ConnectToServerAction.Factory());
-    	registerAction(new CopyAction.Descriptor(),                         new CopyAction.Factory());
-    	registerAction(new CopyFileBaseNamesAction.Descriptor(),            new CopyFileBaseNamesAction.Factory());
-    	registerAction(new CopyFileNamesAction.Descriptor(),                new CopyFileNamesAction.Factory());
-    	registerAction(new CopyFilePathsAction.Descriptor(),                new CopyFilePathsAction.Factory());
-    	registerAction(new CopyFilesToClipboardAction.Descriptor(),         new CopyFilesToClipboardAction.Factory());
-    	registerAction(new FocusPreviousAction.Descriptor(),                new FocusPreviousAction.Factory());
-    	registerAction(new FocusNextAction.Descriptor(),                    new FocusNextAction.Factory());
-    	registerAction(new DeleteAction.Descriptor(),         			    new DeleteAction.Factory());
-    	registerAction(new DonateAction.Descriptor(),    			        new DonateAction.Factory());
-    	registerAction(new DuplicateTabAction.Descriptor(),						new DuplicateTabAction.Factory());
-    	registerAction(new EditAction.Descriptor(),     			        new EditAction.Factory());
-    	registerAction(new EditBookmarksAction.Descriptor(),                new EditBookmarksAction.Factory());
-    	registerAction(new EditCredentialsAction.Descriptor(),              new EditCredentialsAction.Factory());
-    	registerAction(new EmailAction.Descriptor(),          			    new EmailAction.Factory());
-    	registerAction(new EmptyTrashAction.Descriptor(),           	    new EmptyTrashAction.Factory());
-    	registerAction(new ExploreBookmarksAction.Descriptor(),             new ExploreBookmarksAction.Factory());
-//    	registerAction(new GarbageCollectAction.Descriptor(),               new GarbageCollectAction.Factory());
-    	registerAction(new GoBackAction.Descriptor(),                       new GoBackAction.Factory());
-    	registerAction(new GoForwardAction.Descriptor(),                    new GoForwardAction.Factory());
-    	registerAction(new GoToDocumentationAction.Descriptor(),            new GoToDocumentationAction.Factory());
-    	registerAction(new GoToForumsAction.Descriptor(),                   new GoToForumsAction.Factory());
-    	registerAction(new GoToHomeAction.Descriptor(),                     new GoToHomeAction.Factory());
-    	registerAction(new GoToParentAction.Descriptor(),                   new GoToParentAction.Factory());
-    	registerAction(new GoToParentInBothPanelsAction.Descriptor(),       new GoToParentInBothPanelsAction.Factory());
-    	registerAction(new GoToParentInOtherPanelAction.Descriptor(),       new GoToParentInOtherPanelAction.Factory());
-    	registerAction(new GoToRootAction.Descriptor(),                     new GoToRootAction.Factory());
-    	registerAction(new GoToWebsiteAction.Descriptor(),                  new GoToWebsiteAction.Factory());
-    	registerAction(new InternalEditAction.Descriptor(),                 new InternalEditAction.Factory());
-    	registerAction(new InternalViewAction.Descriptor(),                 new InternalViewAction.Factory());
-    	registerAction(new InvertSelectionAction.Descriptor(),              new InvertSelectionAction.Factory());
-    	registerAction(new LocalCopyAction.Descriptor(),                    new LocalCopyAction.Factory());
-    	registerAction(new MarkAllAction.Descriptor(),           		    new MarkAllAction.Factory());
-    	registerAction(new MarkExtensionAction.Descriptor(),            	new MarkExtensionAction.Factory());
-    	registerAction(new MarkGroupAction.Descriptor(),            		new MarkGroupAction.Factory());
-        registerAction(new MarkNextBlockAction.Descriptor(),                new MarkNextBlockAction.Factory());
-    	registerAction(new MarkNextPageAction.Descriptor(),             	new MarkNextPageAction.Factory());
-        registerAction(new MarkNextRowAction.Descriptor(),             	    new MarkNextRowAction.Factory());
-        registerAction(new MarkPreviousBlockAction.Descriptor(),            new MarkPreviousBlockAction.Factory());
-    	registerAction(new MarkPreviousPageAction.Descriptor(),             new MarkPreviousPageAction.Factory());
-        registerAction(new MarkPreviousRowAction.Descriptor(),              new MarkPreviousRowAction.Factory());
-    	registerAction(new MarkSelectedFileAction.Descriptor(),             new MarkSelectedFileAction.Factory());
-    	registerAction(new MarkToFirstRowAction.Descriptor(),               new MarkToFirstRowAction.Factory());
-    	registerAction(new MarkToLastRowAction.Descriptor(),                new MarkToLastRowAction.Factory());
-    	registerAction(new MaximizeWindowAction.Descriptor(),               new MaximizeWindowAction.Factory());
-    	registerAction(new CombineFilesAction.Descriptor(),            		new CombineFilesAction.Factory());
-    	registerAction(new MinimizeWindowAction.Descriptor(),               new MinimizeWindowAction.Factory());
-    	//autoregistered
-    	//registerAction(MakeDirectoryAction.factory);//Descriptor(),           			    new MakeDirectoryAction.Factory());
-    	//registerAction(MakeFileAction.factory());//new MkfileAction.Descriptor(),		                new MkfileAction.Factory());
-    	registerAction(new MoveAction.Descriptor(),		                    new MoveAction.Factory());
-    	registerAction(new MoveTabToOtherPanelAction.Descriptor(),			new MoveTabToOtherPanelAction.Factory());
-    	registerAction(new NewWindowAction.Descriptor(),     		        new NewWindowAction.Factory());
-    	registerAction(new NextTabAction.Descriptor(),						new NextTabAction.Factory());
-    	registerAction(new OpenAction.Descriptor(),          				new OpenAction.Factory());
-    	registerAction(new OpenInBothPanelsAction.Descriptor(),             new OpenInBothPanelsAction.Factory());
-    	registerAction(new OpenInNewTabAction.Descriptor(),					new OpenInNewTabAction.Factory());
-    	registerAction(new OpenInOtherPanelAction.Descriptor(),             new OpenInOtherPanelAction.Factory());
-        registerAction(new OpenLeftInRightPanelAction.Descriptor(),         new OpenLeftInRightPanelAction.Factory());
-        registerAction(new OpenRightInLeftPanelAction.Descriptor(),         new OpenRightInLeftPanelAction.Factory());
-//    	registerAction(new OpenLocationAction.Descriptor(),          	    new OpenLocationAction.Factory());
-    	registerAction(new OpenNativelyAction.Descriptor(),       		    new OpenNativelyAction.Factory());
-    	registerAction(new OpenTrashAction.Descriptor(),           	        new OpenTrashAction.Factory());
-    	registerAction(new OpenURLInBrowserAction.Descriptor(),             new OpenURLInBrowserAction.Factory());
-    	registerAction(new PackAction.Descriptor(),       			        new PackAction.Factory());
-    	registerAction(new PasteClipboardFilesAction.Descriptor(),          new PasteClipboardFilesAction.Factory());
-    	registerAction(new PermanentDeleteAction.Descriptor(),              new PermanentDeleteAction.Factory());
-    	registerAction(new PopupLeftDriveButtonAction.Descriptor(),         new PopupLeftDriveButtonAction.Factory());
-    	registerAction(new PopupRightDriveButtonAction.Descriptor(),        new PopupRightDriveButtonAction.Factory());
-    	registerAction(new PreviousTabAction.Descriptor(),					new PreviousTabAction.Factory());
-    	registerAction(new QuitAction.Descriptor(),              			new QuitAction.Factory());
-    	registerAction(new RecallNextWindowAction.Descriptor(),             new RecallNextWindowAction.Factory());
-    	registerAction(new RecallPreviousWindowAction.Descriptor(),         new RecallPreviousWindowAction.Factory());
-    	registerAction(new RecallWindow10Action.Descriptor(),               new RecallWindow10Action.Factory());
-    	registerAction(new RecallWindow1Action.Descriptor(),                new RecallWindow1Action.Factory());
-    	registerAction(new RecallWindow2Action.Descriptor(),                new RecallWindow2Action.Factory());
-    	registerAction(new RecallWindow3Action.Descriptor(),                new RecallWindow3Action.Factory());
-    	registerAction(new RecallWindow4Action.Descriptor(),                new RecallWindow4Action.Factory());
-    	registerAction(new RecallWindow5Action.Descriptor(),                new RecallWindow5Action.Factory());
-    	registerAction(new RecallWindow6Action.Descriptor(),                new RecallWindow6Action.Factory());
-    	registerAction(new RecallWindow7Action.Descriptor(),                new RecallWindow7Action.Factory());
-    	registerAction(new RecallWindow8Action.Descriptor(),                new RecallWindow8Action.Factory());
-    	registerAction(new RecallWindow9Action.Descriptor(),                new RecallWindow9Action.Factory());
-    	registerAction(new RecallWindowAction.Descriptor(),                 new RecallWindowAction.Factory());
-    	registerAction(new RefreshAction.Descriptor(),        		        new RefreshAction.Factory());
-    	registerAction(new RenameAction.Descriptor(),              		    new RenameAction.Factory());
-    	registerAction(new ReportBugAction.Descriptor(),       	            new ReportBugAction.Factory());
-    	registerAction(new RevealInDesktopAction.Descriptor(),              new RevealInDesktopAction.Factory());
-    	registerAction(new ReverseSortOrderAction.Descriptor(),             new ReverseSortOrderAction.Factory());
-    	registerAction(new RunCommandAction.Descriptor(),     		        new RunCommandAction.Factory());
-        registerAction(new SelectPreviousBlockAction.Descriptor(),          new SelectPreviousBlockAction.Factory());
-        registerAction(new SelectPreviousPageAction.Descriptor(),           new SelectPreviousPageAction.Factory());
-        registerAction(new SelectPreviousRowAction.Descriptor(),            new SelectPreviousRowAction.Factory());
-        registerAction(new SelectNextBlockAction.Descriptor(),              new SelectNextBlockAction.Factory());
-        registerAction(new SelectNextPageAction.Descriptor(),               new SelectNextPageAction.Factory());
-        registerAction(new SelectNextRowAction.Descriptor(),                new SelectNextRowAction.Factory());
-    	registerAction(new SelectFirstRowAction.Descriptor(),               new SelectFirstRowAction.Factory());
-    	registerAction(new SelectLastRowAction.Descriptor(),                new SelectLastRowAction.Factory());
-    	registerAction(new SetSameFolderAction.Descriptor(),                new SetSameFolderAction.Factory());
-    	registerAction(new SetTabTitleAction.Descriptor(),                  new SetTabTitleAction.Factory());
-    	registerAction(new ShowAboutAction.Descriptor(),          		    new ShowAboutAction.Factory());
-    	registerAction(new ShowBookmarksQLAction.Descriptor(),              new ShowBookmarksQLAction.Factory());
-    	registerAction(new CustomizeCommandBarAction.Descriptor(),          new CustomizeCommandBarAction.Factory());
-        registerAction(new ShowDebugConsoleAction.Descriptor(),             new ShowDebugConsoleAction.Factory());
-        registerAction(new ShowFilePropertiesAction.Descriptor(),           new ShowFilePropertiesAction.Factory());
-    	registerAction(new ShowKeyboardShortcutsAction.Descriptor(),        new ShowKeyboardShortcutsAction.Factory());
-    	registerAction(new ShowParentFoldersQLAction.Descriptor(),          new ShowParentFoldersQLAction.Factory());
-    	registerAction(new ShowPreferencesAction.Descriptor(),              new ShowPreferencesAction.Factory());
-    	registerAction(new ShowRecentExecutedFilesQLAction.Descriptor(),    new ShowRecentExecutedFilesQLAction.Factory());
-    	registerAction(new ShowRecentLocationsQLAction.Descriptor(),        new ShowRecentLocationsQLAction.Factory());
-    	registerAction(new ShowRootFoldersQLAction.Descriptor(), 			new ShowRootFoldersQLAction.Factory());
-        registerAction(new ShowRecentViewedFilesQLAction.Descriptor(), 		new ShowRecentViewedFilesQLAction.Factory());
-        registerAction(new ShowRecentEditedFilesQLAction.Descriptor(), 		new ShowRecentEditedFilesQLAction.Factory());
-    	registerAction(new ShowServerConnectionsAction.Descriptor(),        new ShowServerConnectionsAction.Factory());
-    	registerAction(new ShowTabsQLAction.Descriptor(),					new ShowTabsQLAction.Factory());
-    	registerAction(new SortByDateAction.Descriptor(),             		new SortByDateAction.Factory());
-    	registerAction(new SortByExtensionAction.Descriptor(),              new SortByExtensionAction.Factory());
-    	registerAction(new SortByGroupAction.Descriptor(),            		new SortByGroupAction.Factory());
-    	registerAction(new SortByNameAction.Descriptor(),           		new SortByNameAction.Factory());
-    	registerAction(new SortByOwnerAction.Descriptor(),               	new SortByOwnerAction.Factory());
-    	registerAction(new SortByPermissionsAction.Descriptor(),            new SortByPermissionsAction.Factory());
-    	registerAction(new SortBySizeAction.Descriptor(),                   new SortBySizeAction.Factory());
-    	registerAction(new SplitEquallyAction.Descriptor(),             	new SplitEquallyAction.Factory());
-    	registerAction(new SplitFileAction.Descriptor(),            		new SplitFileAction.Factory());
-    	registerAction(new SplitHorizontallyAction.Descriptor(),            new SplitHorizontallyAction.Factory());
-    	registerAction(new SplitVerticallyAction.Descriptor(),              new SplitVerticallyAction.Factory());
-    	registerAction(new StopAction.Descriptor(),              			new StopAction.Factory());
-    	registerAction(new SwapFoldersAction.Descriptor(),       	        new SwapFoldersAction.Factory());
-    	registerAction(new SwitchActiveTableAction.Descriptor(),            new SwitchActiveTableAction.Factory());
-    	registerAction(new ToggleAutoSizeAction.Descriptor(),               new ToggleAutoSizeAction.Factory());
-//    	registerAction(new ToggleColumnAction.Descriptor(),           	    new ToggleColumnAction.Factory());
-    	registerAction(new ToggleCommandBarAction.Descriptor(),             new ToggleCommandBarAction.Factory());
-    	registerAction(new ToggleDateColumnAction.Descriptor(),             new ToggleDateColumnAction.Factory());
-    	registerAction(new ToggleExtensionColumnAction.Descriptor(),        new ToggleExtensionColumnAction.Factory());
-    	registerAction(new ToggleGroupColumnAction.Descriptor(),            new ToggleGroupColumnAction.Factory());
-    	registerAction(new ToggleHiddenFilesAction.Descriptor(),            new ToggleHiddenFilesAction.Factory());
-    	registerAction(new ToggleLockTabAction.Descriptor(),                new ToggleLockTabAction.Factory());
-    	registerAction(new ToggleOwnerColumnAction.Descriptor(),            new ToggleOwnerColumnAction.Factory());
-    	registerAction(new TogglePermissionsColumnAction.Descriptor(),      new TogglePermissionsColumnAction.Factory());
-    	registerAction(new ToggleShowFoldersFirstAction.Descriptor(),       new ToggleShowFoldersFirstAction.Factory());
-    	registerAction(new ToggleSizeColumnAction.Descriptor(),             new ToggleSizeColumnAction.Factory());
-    	registerAction(new ToggleStatusBarAction.Descriptor(),              new ToggleStatusBarAction.Factory());
-    	registerAction(new ToggleToolBarAction.Descriptor(),                new ToggleToolBarAction.Factory());
-    	registerAction(new ToggleTreeAction.Descriptor(),             	    new ToggleTreeAction.Factory());
-    	registerAction(new UnmarkAllAction.Descriptor(),            		new UnmarkAllAction.Factory());
-    	registerAction(new UnmarkGroupAction.Descriptor(),            		new UnmarkGroupAction.Factory());
-    	registerAction(new UnpackAction.Descriptor(),             			new UnpackAction.Factory());
-    	registerAction(new ViewAction.Descriptor(),              			new ViewAction.Factory());
-        registerAction(new ViewAsAction.Descriptor(),              			new ViewAsAction.Factory());
-        registerAction(new TerminalAction.Descriptor(),                     new TerminalAction.Factory());
-        registerAction(new FindFileAction.Descriptor(),                     new FindFileAction.Factory());
-        registerAction(new CalculatorAction.Descriptor(),                   new CalculatorAction.Factory());
-        registerAction(new CreateSymlinkAction.Descriptor(),                new CreateSymlinkAction.Factory());
-        registerAction(new LocateSymlinkAction.Descriptor(),                new LocateSymlinkAction.Factory());
-        registerAction(new EditCommandsAction.Descriptor(),                 new EditCommandsAction.Factory());
-        registerAction(new TerminalPanelAction.Descriptor(),                new TerminalPanelAction.Factory());
-        registerAction(new ShowFoldersSizeAction.Descriptor(),              new ShowFoldersSizeAction.Factory());
-		registerAction(new ToggleTableViewModeFullAction.Descriptor(),      new ToggleTableViewModeFullAction.Factory());
-		registerAction(new ToggleTableViewModeCompactAction.Descriptor(),   new ToggleTableViewModeCompactAction.Factory());
-		registerAction(new ToggleTableViewModeShortAction.Descriptor(),     new ToggleTableViewModeShortAction.Factory());
-		registerAction(new EjectDriveAction.Descriptor(),					new EjectDriveAction.Factory());
-		registerAction(new CompareFilesAction.Descriptor(),					new CompareFilesAction.Factory());
+    	registerAction(new AddBookmarkAction.Descriptor());
+    	registerAction(new AddTabAction.Descriptor());
+    	registerAction(new BatchRenameAction.Descriptor());
+    	registerAction(new BringAllToFrontAction.Descriptor());
+    	registerAction(new CalculateChecksumAction.Descriptor());
+    	registerAction(new ChangeDateAction.Descriptor());
+		registerAction(new ChangeReplicationAction.Descriptor());
+    	registerAction(new ChangeLocationAction.Descriptor());
+    	registerAction(new ChangePermissionsAction.Descriptor());
+    	registerAction(new CheckForUpdatesAction.Descriptor());
+    	registerAction(new CloneTabToOtherPanelAction.Descriptor());
+    	registerAction(new CloseDuplicateTabsAction.Descriptor());
+    	registerAction(new CloseOtherTabsAction.Descriptor());
+    	registerAction(new CloseWindowAction.Descriptor());
+    	registerAction(new CloseTabAction.Descriptor());
+//    	registerAction(new CommandAction.Descriptor());
+    	registerAction(new CompareFoldersAction.Descriptor());
+    	registerAction(new ConnectToServerAction.Descriptor());
+    	registerAction(new CopyAction.Descriptor());
+    	registerAction(new CopyFileBaseNamesAction.Descriptor());
+    	registerAction(new CopyFileNamesAction.Descriptor());
+    	registerAction(new CopyFilePathsAction.Descriptor());
+    	registerAction(new CopyFilesToClipboardAction.Descriptor());
+    	registerAction(new FocusPreviousAction.Descriptor());
+    	registerAction(new FocusNextAction.Descriptor());
+    	registerAction(new DeleteAction.Descriptor());
+    	registerAction(new DonateAction.Descriptor());
+    	registerAction(new DuplicateTabAction.Descriptor());
+    	registerAction(new EditAction.Descriptor());
+    	registerAction(new EditBookmarksAction.Descriptor());
+    	registerAction(new EditCredentialsAction.Descriptor());
+    	registerAction(new EmailAction.Descriptor());
+    	registerAction(new EmptyTrashAction.Descriptor());
+    	registerAction(new ExploreBookmarksAction.Descriptor());
+//    	registerAction(new GarbageCollectAction.Descriptor());
+    	registerAction(new GoBackAction.Descriptor());
+    	registerAction(new GoForwardAction.Descriptor());
+    	registerAction(new GoToDocumentationAction.Descriptor());
+    	registerAction(new GoToForumsAction.Descriptor());
+    	registerAction(new GoToHomeAction.Descriptor());
+    	registerAction(new GoToParentAction.Descriptor());
+    	registerAction(new GoToParentInBothPanelsAction.Descriptor());
+    	registerAction(new GoToParentInOtherPanelAction.Descriptor());
+    	registerAction(new GoToRootAction.Descriptor());
+    	registerAction(new GoToWebsiteAction.Descriptor());
+    	registerAction(new InternalEditAction.Descriptor());
+    	registerAction(new InternalViewAction.Descriptor());
+    	registerAction(new InvertSelectionAction.Descriptor());
+    	registerAction(new LocalCopyAction.Descriptor());
+    	registerAction(new MarkAllAction.Descriptor());
+    	registerAction(new MarkExtensionAction.Descriptor());
+    	registerAction(new MarkGroupAction.Descriptor());
+        registerAction(new MarkNextBlockAction.Descriptor());
+    	registerAction(new MarkNextPageAction.Descriptor());
+        registerAction(new MarkNextRowAction.Descriptor());
+        registerAction(new MarkPreviousBlockAction.Descriptor());
+    	registerAction(new MarkPreviousPageAction.Descriptor());
+        registerAction(new MarkPreviousRowAction.Descriptor());
+    	registerAction(new MarkSelectedFileAction.Descriptor());
+    	registerAction(new MarkToFirstRowAction.Descriptor());
+    	registerAction(new MarkToLastRowAction.Descriptor());
+    	registerAction(new MaximizeWindowAction.Descriptor());
+    	registerAction(new CombineFilesAction.Descriptor());
+    	registerAction(new MinimizeWindowAction.Descriptor());
+    	registerAction(new MkdirAction.Descriptor());
+		registerAction(new MkfileAction.Descriptor());
+    	registerAction(new MoveAction.Descriptor());
+    	registerAction(new MoveTabToOtherPanelAction.Descriptor());
+    	registerAction(new NewWindowAction.Descriptor());
+    	registerAction(new NextTabAction.Descriptor());
+    	registerAction(new OpenAction.Descriptor());
+    	registerAction(new OpenInBothPanelsAction.Descriptor());
+    	registerAction(new OpenInNewTabAction.Descriptor());
+    	registerAction(new OpenInOtherPanelAction.Descriptor());
+        registerAction(new OpenLeftInRightPanelAction.Descriptor());
+        registerAction(new OpenRightInLeftPanelAction.Descriptor());
+//    	registerAction(new OpenLocationAction.Descriptor());
+    	registerAction(new OpenNativelyAction.Descriptor());
+    	registerAction(new OpenTrashAction.Descriptor());
+    	registerAction(new OpenURLInBrowserAction.Descriptor());
+    	registerAction(new PackAction.Descriptor());
+    	registerAction(new PasteClipboardFilesAction.Descriptor());
+    	registerAction(new PermanentDeleteAction.Descriptor());
+    	registerAction(new PopupLeftDriveButtonAction.Descriptor());
+    	registerAction(new PopupRightDriveButtonAction.Descriptor());
+    	registerAction(new PreviousTabAction.Descriptor());
+    	registerAction(new QuitAction.Descriptor());
+    	registerAction(new RecallNextWindowAction.Descriptor());
+    	registerAction(new RecallPreviousWindowAction.Descriptor());
+    	registerAction(new RecallWindow10Action.Descriptor());
+    	registerAction(new RecallWindow1Action.Descriptor());
+    	registerAction(new RecallWindow2Action.Descriptor());
+    	registerAction(new RecallWindow3Action.Descriptor());
+    	registerAction(new RecallWindow4Action.Descriptor());
+    	registerAction(new RecallWindow5Action.Descriptor());
+    	registerAction(new RecallWindow6Action.Descriptor());
+    	registerAction(new RecallWindow7Action.Descriptor());
+    	registerAction(new RecallWindow8Action.Descriptor());
+    	registerAction(new RecallWindow9Action.Descriptor());
+    	registerAction(new RecallWindowAction.Descriptor());
+    	registerAction(new RefreshAction.Descriptor());
+    	registerAction(new RenameAction.Descriptor());
+    	registerAction(new ReportBugAction.Descriptor());
+    	registerAction(new RevealInDesktopAction.Descriptor());
+    	registerAction(new ReverseSortOrderAction.Descriptor());
+    	registerAction(new RunCommandAction.Descriptor());
+        registerAction(new SelectPreviousBlockAction.Descriptor());
+        registerAction(new SelectPreviousPageAction.Descriptor());
+        registerAction(new SelectPreviousRowAction.Descriptor());
+        registerAction(new SelectNextBlockAction.Descriptor());
+        registerAction(new SelectNextPageAction.Descriptor());
+        registerAction(new SelectNextRowAction.Descriptor());
+    	registerAction(new SelectFirstRowAction.Descriptor());
+    	registerAction(new SelectLastRowAction.Descriptor());
+    	registerAction(new SetSameFolderAction.Descriptor());
+    	registerAction(new SetTabTitleAction.Descriptor());
+    	registerAction(new ShowAboutAction.Descriptor());
+    	registerAction(new ShowBookmarksQLAction.Descriptor());
+    	registerAction(new CustomizeCommandBarAction.Descriptor());
+        registerAction(new ShowDebugConsoleAction.Descriptor());
+        registerAction(new ShowFilePropertiesAction.Descriptor());
+    	registerAction(new ShowKeyboardShortcutsAction.Descriptor());
+    	registerAction(new ShowParentFoldersQLAction.Descriptor());
+    	registerAction(new ShowPreferencesAction.Descriptor());
+    	registerAction(new ShowRecentExecutedFilesQLAction.Descriptor());
+    	registerAction(new ShowRecentLocationsQLAction.Descriptor());
+    	registerAction(new ShowRootFoldersQLAction.Descriptor());
+        registerAction(new ShowRecentViewedFilesQLAction.Descriptor());
+        registerAction(new ShowRecentEditedFilesQLAction.Descriptor());
+    	registerAction(new ShowServerConnectionsAction.Descriptor());
+    	registerAction(new ShowTabsQLAction.Descriptor());
+    	registerAction(new SortByDateAction.Descriptor());
+    	registerAction(new SortByExtensionAction.Descriptor());
+    	registerAction(new SortByGroupAction.Descriptor());
+    	registerAction(new SortByNameAction.Descriptor());
+    	registerAction(new SortByOwnerAction.Descriptor());
+    	registerAction(new SortByPermissionsAction.Descriptor());
+    	registerAction(new SortBySizeAction.Descriptor());
+    	registerAction(new SplitEquallyAction.Descriptor());
+    	registerAction(new SplitFileAction.Descriptor());
+    	registerAction(new SplitHorizontallyAction.Descriptor());
+    	registerAction(new SplitVerticallyAction.Descriptor());
+    	registerAction(new StopAction.Descriptor());
+    	registerAction(new SwapFoldersAction.Descriptor());
+    	registerAction(new SwitchActiveTableAction.Descriptor());
+    	registerAction(new ToggleAutoSizeAction.Descriptor());
+//    	registerAction(new ToggleColumnAction.Descriptor());
+    	registerAction(new ToggleCommandBarAction.Descriptor());
+    	registerAction(new ToggleDateColumnAction.Descriptor());
+    	registerAction(new ToggleExtensionColumnAction.Descriptor());
+    	registerAction(new ToggleGroupColumnAction.Descriptor());
+    	registerAction(new ToggleHiddenFilesAction.Descriptor());
+    	registerAction(new ToggleLockTabAction.Descriptor());
+    	registerAction(new ToggleOwnerColumnAction.Descriptor());
+    	registerAction(new TogglePermissionsColumnAction.Descriptor());
+    	registerAction(new ToggleShowFoldersFirstAction.Descriptor());
+    	registerAction(new ToggleSizeColumnAction.Descriptor());
+    	registerAction(new ToggleStatusBarAction.Descriptor());
+    	registerAction(new ToggleToolBarAction.Descriptor());
+    	registerAction(new ToggleTreeAction.Descriptor());
+    	registerAction(new UnmarkAllAction.Descriptor());
+    	registerAction(new UnmarkGroupAction.Descriptor());
+    	registerAction(new UnpackAction.Descriptor());
+    	registerAction(new ViewAction.Descriptor());
+        registerAction(new ViewAsAction.Descriptor());
+        registerAction(new TerminalAction.Descriptor());
+        registerAction(new FindFileAction.Descriptor());
+        registerAction(new CalculatorAction.Descriptor());
+        registerAction(new CreateSymlinkAction.Descriptor());
+        registerAction(new LocateSymlinkAction.Descriptor());
+        registerAction(new EditCommandsAction.Descriptor());
+        registerAction(new TerminalPanelAction.Descriptor());
+        registerAction(new ShowFoldersSizeAction.Descriptor());
+		registerAction(new ToggleTableViewModeFullAction.Descriptor());
+		registerAction(new ToggleTableViewModeCompactAction.Descriptor());
+		registerAction(new ToggleTableViewModeShortAction.Descriptor());
+		registerAction(new EjectDriveAction.Descriptor());
+		registerAction(new CompareFilesAction.Descriptor());
     }
 
 	public static void registerCommandsActions() {
 		// register "open with" commands as actions, to allow for keyboard shortcuts for them
 		for (Command command : CommandManager.commands()) {
 			if (command.getType() == CommandType.NORMAL_COMMAND) {
-				ActionManager.registerAction(new CommandAction.Descriptor(command), new CommandAction.Factory(command));
+				ActionManager.registerAction(new CommandAction.Descriptor(command));
 			}
 		}
 	}
@@ -263,10 +255,9 @@ public class ActionManager {
      * Registration method for MuActions.
      * 
      * @param actionDescriptor - ActionDescriptor instance of the action.
-     * @param actionFactory - ActionFactory instance of the action.
      */
-    public static void registerAction(ActionDescriptor actionDescriptor, ActionFactory actionFactory) {
-    	actionFactories.put(actionDescriptor.getId(), actionFactory);
+    public static void registerAction(ActionDescriptor actionDescriptor) {
+    	//actionFactories.put(actionDescriptor.getId(), actionDescriptor);	// TODO
     	ActionProperties.addActionDescriptor(actionDescriptor);
     }
     
@@ -276,7 +267,8 @@ public class ActionManager {
      * @return Enumeration of all registered actions' ids.
      */
     public static Iterator<String> getActionIds() {
-    	return actionFactories.keySet().iterator();
+		return ActionProperties.actionDescriptors.keySet().iterator();
+    	//return actionFactories.keySet().iterator();
     }
     
     /**
@@ -302,7 +294,8 @@ public class ActionManager {
      * @return true if an MuAction which is represented by the given id is registered, otherwise return false.
      */
     public static boolean isActionExist(String actionId) {    	
-    	return actionId != null && actionFactories.containsKey(actionId);
+    	//return actionId != null && actionFactories.containsKey(actionId);
+		return actionId != null && ActionProperties.actionDescriptors.containsKey(actionId);
     }
 
     /**
@@ -366,7 +359,8 @@ public class ActionManager {
             String actionId = actionParameters.getActionId();
 
             // Looks for the action's factory
-            ActionFactory actionFactory = actionFactories.get(actionId);
+            //ActionFactory actionFactory = actionFactories.get(actionId);
+			ActionFactory actionFactory = ActionProperties.actionDescriptors.get(actionId);
             if(actionFactory == null) {
 //            	LOGGER.debug("couldn't initiate action: " + actionId + ", its factory wasn't found");
 //            	return null;

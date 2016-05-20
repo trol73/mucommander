@@ -43,8 +43,8 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;
-import com.mucommander.ui.action.impl.MakeFileAction;
-import com.mucommander.ui.action.impl.MakeDirectoryAction;
+import com.mucommander.ui.action.impl.MkdirAction;
+import com.mucommander.ui.action.impl.MkfileAction;
 import com.mucommander.ui.chooser.SizeChooser;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -58,8 +58,8 @@ import com.mucommander.ui.viewer.EditorRegistrar;
 /**
  * Dialog invoked when the user wants to create a new folder or an empty file in the current folder.
  *
- * @see MakeDirectoryAction
- * @see MakeFileAction
+ * @see MkdirAction
+ * @see MkfileAction
  * @author Maxence Bernard
  */
 public class MakeDirectoryFileDialog extends FocusDialog implements ActionListener, ItemListener {
@@ -103,7 +103,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
      * @param mkfileMode if true, the dialog will operate in 'mkfile' mode, if false in 'mkdir' mode
      */
     public MakeDirectoryFileDialog(MainFrame mainFrame, boolean mkfileMode) {
-        super(mainFrame, ActionManager.getActionInstance(mkfileMode ? MakeFileAction.$.ACTION_ID : MakeDirectoryAction.$.ACTION_ID, mainFrame).getLabel(), mainFrame);
+        super(mainFrame, ActionManager.getActionInstance(mkfileMode ? MkfileAction.Descriptor.ACTION_ID : MkdirAction.Descriptor.ACTION_ID, mainFrame).getLabel(), mainFrame);
         this.mainFrame = mainFrame;
         this.mkfileMode = mkfileMode;
         setStorageSuffix(mkfileMode ? "file" : "dir");
@@ -111,7 +111,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         Container contentPane = getContentPane();
 
         YBoxPanel mainPanel = new YBoxPanel();
-        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MakeFileAction.$.ACTION_ID : MakeDirectoryAction.$.ACTION_ID)+" :"));
+        mainPanel.add(new JLabel(ActionProperties.getActionTooltip(mkfileMode ? MkfileAction.Descriptor.ACTION_ID : MkdirAction.Descriptor.ACTION_ID)+" :"));
 
         // Create a path field with auto-completion capabilities
         pathField = new FilePathField();

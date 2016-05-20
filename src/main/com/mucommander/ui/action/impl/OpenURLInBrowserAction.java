@@ -50,11 +50,10 @@ public class OpenURLInBrowserAction extends MuAction {
     public void performAction() {
         Object url = getValue(URL_PROPERTY_KEY);
 
-        if(url!=null && (url instanceof String)) {
+        if (url!=null && (url instanceof String)) {
             try {
                 DesktopManager.browse(new URL((String)url));
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 InformationDialog.showErrorDialog(mainFrame);
             }
         }
@@ -65,14 +64,8 @@ public class OpenURLInBrowserAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new OpenURLInBrowserAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenURLInBrowser";
     	
 		public String getId() { return ACTION_ID; }
@@ -85,5 +78,9 @@ public class OpenURLInBrowserAction extends MuAction {
 
         @Override
         public boolean isParameterized() { return true; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new OpenURLInBrowserAction(mainFrame, properties);
+        }
     }
 }

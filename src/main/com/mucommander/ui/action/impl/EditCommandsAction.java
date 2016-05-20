@@ -17,7 +17,10 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.commands.EditCommandsDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -51,17 +54,9 @@ public class EditCommandsAction extends MuAction {
         return new Descriptor();
     }
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
-
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-            return new EditCommandsAction(mainFrame, properties);
-        }
-    }
 
 
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "EditCommands";
 
         public String getId() {
@@ -78,6 +73,10 @@ public class EditCommandsAction extends MuAction {
 
         public KeyStroke getDefaultKeyStroke() {
             return null;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new EditCommandsAction(mainFrame, properties);
         }
     }
 

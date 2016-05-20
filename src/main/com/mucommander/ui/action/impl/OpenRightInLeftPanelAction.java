@@ -18,17 +18,15 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
-import javax.swing.KeyStroke;
-
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.util.Map;
 
 /**
  * Opens browsable files in the left panel.
@@ -71,14 +69,8 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
         return new Descriptor();
     }
 
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new OpenRightInLeftPanelAction(mainFrame, properties);
-        }
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "OpenRightInLeftPanel";
 
         public String getId() { return ACTION_ID; }
@@ -88,5 +80,9 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new OpenRightInLeftPanelAction(mainFrame, properties);
+        }
     }
 }

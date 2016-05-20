@@ -19,7 +19,10 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
@@ -68,9 +71,8 @@ public class GoToParentAction extends ActiveTabAction {
      * @return <code>true</code> if <code>panel</code> has a parent, <code>false</code> otherwise.
      */
     protected boolean goToParent(FolderPanel panel) {
-    	AbstractFile parent;
-
-        if((parent = panel.getCurrentFolder().getParent()) != null) {
+    	AbstractFile parent = panel.getCurrentFolder().getParent();
+        if (parent != null) {
         	panel.tryChangeCurrentFolder(parent, null, true);
             return true;
         }
@@ -97,14 +99,8 @@ public class GoToParentAction extends ActiveTabAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new GoToParentAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToParent";
     	
 		public String getId() { return ACTION_ID; }
@@ -114,5 +110,9 @@ public class GoToParentAction extends ActiveTabAction {
 		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0); }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new GoToParentAction(mainFrame, properties);
+        }
     }
 }

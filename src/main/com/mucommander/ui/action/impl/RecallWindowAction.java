@@ -87,12 +87,6 @@ public class RecallWindowAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new RecallWindowAction(mainFrame, properties);
-		}
-    }
 
     public static class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "RecallWindow";
@@ -127,7 +121,11 @@ public class RecallWindowAction extends MuAction {
 
         @Override
         public boolean isParameterized() {
-            return windowNumber==-1;
+            return windowNumber == -1;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new RecallWindowAction(mainFrame, properties);
         }
     }
 }

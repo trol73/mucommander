@@ -22,7 +22,10 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 
@@ -62,14 +65,8 @@ public class ToggleHiddenFilesAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ToggleHiddenFilesAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ToggleHiddenFiles";
     	
 		public String getId() { return ACTION_ID; }
@@ -84,6 +81,10 @@ public class ToggleHiddenFilesAction extends MuAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ToggleHiddenFilesAction(mainFrame, properties);
         }
     }
 }

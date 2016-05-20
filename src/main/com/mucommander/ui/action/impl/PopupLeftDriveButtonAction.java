@@ -60,14 +60,8 @@ public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabLis
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new PopupLeftDriveButtonAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "PopupLeftDriveButton";
     	
 		public String getId() { return ACTION_ID; }
@@ -77,5 +71,9 @@ public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabLis
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F1, KeyEvent.ALT_DOWN_MASK); }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new PopupLeftDriveButtonAction(mainFrame, properties);
+		}
     }
 }

@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.action;
 
+import com.mucommander.ui.main.MainFrame;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -32,7 +34,7 @@ import java.util.*;
 public class ActionProperties {
 	
 	/* Maps action id -> action descriptor */
-	private static Map<String, ActionDescriptor> actionDescriptors = new Hashtable<>();
+	static final Map<String, ActionDescriptor> actionDescriptors = new Hashtable<>(200);
 
 	private static ActionDescriptor nullActionDescriptor = new NullActionDescriptor();
 	
@@ -234,5 +236,7 @@ public class ActionProperties {
 		public String getTooltip() { return null; }
 
 		public boolean isParameterized() { return false; }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) { return null; }
 	}
 }

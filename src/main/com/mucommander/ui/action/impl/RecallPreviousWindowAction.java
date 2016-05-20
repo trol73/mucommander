@@ -48,14 +48,8 @@ public class RecallPreviousWindowAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new RecallPreviousWindowAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "RecallPreviousWindow";
 
 		public String getId() { return ACTION_ID; }
@@ -70,6 +64,10 @@ public class RecallPreviousWindowAction extends MuAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new RecallPreviousWindowAction(mainFrame, properties);
         }
     }
 }

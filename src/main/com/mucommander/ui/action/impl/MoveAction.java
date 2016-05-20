@@ -61,13 +61,7 @@ public class MoveAction extends SelectedFilesAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new MoveAction(mainFrame, properties);
-		}
-    }
-    
     public static class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Move";
     	
@@ -78,5 +72,9 @@ public class MoveAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new MoveAction(mainFrame, properties);
+        }
     }
 }

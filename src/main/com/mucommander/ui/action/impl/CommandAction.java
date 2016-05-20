@@ -26,7 +26,10 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.TempOpenWithJob;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.text.Translator;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -100,24 +103,16 @@ public class CommandAction extends MuAction {
 		return new Descriptor(command);
 	}
 
-    public static class Factory implements ActionFactory {
-    	private Command command;
 
-    	public Factory(Command command) {
-    		this.command = command;
-    	}
+    public static final class Descriptor extends AbstractActionDescriptor {
+        private Command command;
 
-    	public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-    		return new CommandAction(mainFrame, properties, command);
-    	}
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
     	private static final String ACTION_ID_PREFIX = "OpenWith_";
     	private String ACTION_ID;
     	private String label;
 
     	public Descriptor(Command command) {
+            this.command = command;
     		ACTION_ID = ACTION_ID_PREFIX + command.getAlias() + ":" + command.getDisplayName();
     		label = String.format("%s %s", 
     				Translator.get("file_menu.open_with"),
@@ -133,5 +128,11 @@ public class CommandAction extends MuAction {
     	public KeyStroke getDefaultAltKeyStroke() { return null; }
 
     	public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new CommandAction(mainFrame, properties, command);
+        }
+
+
     }
 }

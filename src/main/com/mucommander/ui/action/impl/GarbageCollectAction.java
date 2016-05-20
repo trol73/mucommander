@@ -18,12 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
-
-import com.mucommander.ui.action.*;
-import com.mucommander.ui.main.MainFrame;
+import java.util.Map;
 
 /**
  * This action invokes the garbage collector and is here for debugging purposes only.
@@ -46,14 +48,8 @@ public class GarbageCollectAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new GarbageCollectAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GarbageCollect";
     	
 		public String getId() { return ACTION_ID; }
@@ -63,5 +59,9 @@ public class GarbageCollectAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new GarbageCollectAction(mainFrame, properties);
+		}
     }
 }

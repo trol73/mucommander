@@ -18,13 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.util.Map;
-
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
+
+import java.util.Map;
 
 /**
  * Shows/hides the 'Size' column of the currently active FileTable. If the column is currently visible, this action
@@ -43,14 +42,14 @@ public class ToggleSizeColumnAction extends ToggleColumnAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ToggleSizeColumnAction(mainFrame, properties);
-		}
-    }
+    public static final class Descriptor extends ToggleColumnAction.Descriptor {
+        public Descriptor() {
+            super(Column.SIZE);
+        }
 
-    public static class Descriptor extends ToggleColumnAction.Descriptor {
-        public Descriptor() { super(Column.SIZE); }
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ToggleSizeColumnAction(mainFrame, properties);
+        }
     }
 }

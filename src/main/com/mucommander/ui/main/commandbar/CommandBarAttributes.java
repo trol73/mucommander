@@ -49,7 +49,7 @@ public class CommandBarAttributes {
     	EditAction.Descriptor.ACTION_ID,
     	CopyAction.Descriptor.ACTION_ID,
     	MoveAction.Descriptor.ACTION_ID,
-    	MakeDirectoryAction.$.ACTION_ID,
+    	MkdirAction.Descriptor.ACTION_ID,
     	DeleteAction.Descriptor.ACTION_ID,
     	RefreshAction.Descriptor.ACTION_ID,
     	CloseWindowAction.Descriptor.ACTION_ID
@@ -62,7 +62,7 @@ public class CommandBarAttributes {
         null,//MakeFileAction.$.ACTION_ID,
     	LocalCopyAction.Descriptor.ACTION_ID,
     	RenameAction.Descriptor.ACTION_ID,
-    	MakeFileAction.$.ACTION_ID,
+    	MkfileAction.Descriptor.ACTION_ID,
     	PermanentDeleteAction.Descriptor.ACTION_ID,
     	null,
     	null

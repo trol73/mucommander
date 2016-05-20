@@ -57,16 +57,8 @@ public class ShowFoldersSizeAction extends ParentFolderAction {
         return new Descriptor();
     }
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-            return new ShowFoldersSizeAction(mainFrame, properties);
-        }
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ShowFoldersSize";
 
         public String getId() { return ACTION_ID; }
@@ -77,6 +69,10 @@ public class ShowFoldersSizeAction extends ParentFolderAction {
 
         public KeyStroke getDefaultKeyStroke() {
             return null;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new ShowFoldersSizeAction(mainFrame, properties);
         }
     }
 

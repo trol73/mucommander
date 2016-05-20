@@ -20,7 +20,10 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.quicklist.ViewAsQL;
 
@@ -69,16 +72,8 @@ public class ViewAsAction extends SelectedFilesAction {
     }
 
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new ViewAsAction(mainFrame, properties);
-        }
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ViewAs";
 
         public String getId() { return ACTION_ID; }
@@ -88,5 +83,9 @@ public class ViewAsAction extends SelectedFilesAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ViewAsAction(mainFrame, properties);
+        }
     }
 }

@@ -58,7 +58,7 @@ public class PasteClipboardFilesAction extends MuAction {
     public void performAction() {
         // Retrieve clipboard files
         FileSet clipboardFiles = ClipboardSupport.getClipboardFiles();
-        if(clipboardFiles==null || clipboardFiles.isEmpty())
+        if (clipboardFiles == null || clipboardFiles.isEmpty())
             return;
 
         // Start copying files
@@ -73,14 +73,8 @@ public class PasteClipboardFilesAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new PasteClipboardFilesAction(mainFrame, properties);
-		}
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "PasteClipboardFiles";
 
 		public String getId() { return ACTION_ID; }
@@ -95,6 +89,10 @@ public class PasteClipboardFilesAction extends MuAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new PasteClipboardFilesAction(mainFrame, properties);
         }
     }
 }

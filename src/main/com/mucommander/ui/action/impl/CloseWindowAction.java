@@ -43,7 +43,7 @@ public class CloseWindowAction extends MuAction {
     @Override
     public void performAction() {
         // Closing the last window is equivalent to quitting the application: perform QuitAction in that case
-        if(WindowManager.getMainFrames().size()==1)
+        if (WindowManager.getMainFrames().size()==1)
             ActionManager.performAction(QuitAction.Descriptor.ACTION_ID, mainFrame);
         // Simply dispose the MainFrame
         else
@@ -55,14 +55,8 @@ public class CloseWindowAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new CloseWindowAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CloseWindow";
     	
 		public String getId() { return ACTION_ID; }
@@ -72,5 +66,9 @@ public class CloseWindowAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK); }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new CloseWindowAction(mainFrame, properties);
+        }
     }
 }

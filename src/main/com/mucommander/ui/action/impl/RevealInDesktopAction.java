@@ -71,14 +71,8 @@ public class RevealInDesktopAction extends ParentFolderAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new RevealInDesktopAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "RevealInDesktop";
     	
 		public String getId() { return ACTION_ID; }
@@ -98,6 +92,10 @@ public class RevealInDesktopAction extends ParentFolderAction {
         @Override
         public String getLabel() {
             return Translator.get(ActionProperties.getActionLabelKey(RevealInDesktopAction.Descriptor.ACTION_ID), DesktopManager.canOpenInFileManager()?DesktopManager.getFileManagerName():Translator.get("file_manager"));
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new RevealInDesktopAction(mainFrame, properties);
         }
     }
 }

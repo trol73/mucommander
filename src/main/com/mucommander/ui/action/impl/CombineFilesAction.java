@@ -52,7 +52,7 @@ public class CombineFilesAction extends SelectedFilesAction {
         FileFilter filter = new AttributeFileFilter(FileAttribute.FILE);
         filter.filter(files);
 
-    	if (files.size()==0)
+    	if (files.isEmpty())
     		return;
 
         AbstractFile destFolder = mainFrame.getInactivePanel().getCurrentFolder();
@@ -64,14 +64,7 @@ public class CombineFilesAction extends SelectedFilesAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new CombineFilesAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CombineFiles";
     	
 		public String getId() { return ACTION_ID; }
@@ -81,5 +74,10 @@ public class CombineFilesAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new CombineFilesAction(mainFrame, properties);
+        }
+
     }
 }

@@ -33,26 +33,25 @@ public class PasteFromArchiveToFilesFromClipboardAction extends SelectedFilesAct
         ClipboardSupport.setOperation(ClipboardOperations.ARCHIVE);
     }
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new PasteFromArchiveToFilesFromClipboardAction(mainFrame, properties);
-		}
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
-    	public static final String ACTION_ID = "PasteFromArchiveToFilesFromClipboard";
-
-		public String getId() { return ACTION_ID; }
-
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
-
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.META_DOWN_MASK); }
-
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK); }
-    }
     @Override
     public ActionDescriptor getDescriptor() {
         return new Descriptor();
+    }
+
+    public static final class Descriptor extends AbstractActionDescriptor {
+        public static final String ACTION_ID = "PasteFromArchiveToFilesFromClipboard";
+
+        public String getId() { return ACTION_ID; }
+
+        public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+
+        public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.META_DOWN_MASK); }
+
+        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new PasteFromArchiveToFilesFromClipboardAction(mainFrame, properties);
+        }
     }
 }

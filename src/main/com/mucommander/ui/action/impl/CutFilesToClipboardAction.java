@@ -22,15 +22,14 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
-import com.mucommander.ui.action.impl.LocateSymlinkAction.Descriptor;
 import com.mucommander.ui.dnd.ClipboardOperations;
 import com.mucommander.ui.dnd.ClipboardSupport;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.util.Map;
-import javax.swing.KeyStroke;
 
 /**
  * This action cuts the selected / marked files to the system clipboard, allowing to paste
@@ -51,14 +50,8 @@ public class CutFilesToClipboardAction extends SelectedFilesAction {
         ClipboardSupport.setOperation(ClipboardOperations.CUT);
     }
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new CutFilesToClipboardAction(mainFrame, properties);
-		}
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CutFilesToClipboard";
 
 		public String getId() { return ACTION_ID; }
@@ -68,6 +61,10 @@ public class CutFilesToClipboardAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK); }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new CutFilesToClipboardAction(mainFrame, properties);
+        }
     }
     @Override
     public ActionDescriptor getDescriptor() {

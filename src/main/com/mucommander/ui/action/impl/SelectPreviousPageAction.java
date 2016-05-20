@@ -48,13 +48,8 @@ public class SelectPreviousPageAction extends SelectBackwardAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new SelectPreviousPageAction(mainFrame, properties);
-        }
-    }
 
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "SelectPreviousPage";
 
         public String getId() {
@@ -71,6 +66,10 @@ public class SelectPreviousPageAction extends SelectBackwardAction {
 
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SelectPreviousPageAction(mainFrame, properties);
         }
     }
 }

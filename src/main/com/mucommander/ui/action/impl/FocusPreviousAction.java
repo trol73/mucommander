@@ -19,7 +19,10 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.helper.FocusRequester;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -82,14 +85,8 @@ public class FocusPreviousAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new FocusPreviousAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "FocusPrevious";
     	
 		public String getId() { return ACTION_ID; }
@@ -104,6 +101,10 @@ public class FocusPreviousAction extends MuAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new FocusPreviousAction(mainFrame, properties);
         }
     }
 }

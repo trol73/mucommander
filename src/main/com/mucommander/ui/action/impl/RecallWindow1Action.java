@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
@@ -34,19 +33,17 @@ public class RecallWindow1Action extends RecallWindowAction {
     public RecallWindow1Action(MainFrame mainFrame, Map<String,Object> properties) {
         super(mainFrame, properties, 1);
     }
-    
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new RecallWindow1Action(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends RecallWindowAction.Descriptor {
+
+    public static final class Descriptor extends RecallWindowAction.Descriptor {
         public static final String ACTION_ID = RecallWindowAction.Descriptor.ACTION_ID+"1";
 
         public Descriptor() {
             super(1);
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new RecallWindow1Action(mainFrame, properties);
         }
     }
 }

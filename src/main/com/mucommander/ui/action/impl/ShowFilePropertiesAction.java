@@ -48,14 +48,8 @@ public class ShowFilePropertiesAction extends SelectedFilesAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ShowFilePropertiesAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ShowFileProperties";
     	
 		public String getId() { return ACTION_ID; }
@@ -65,5 +59,9 @@ public class ShowFilePropertiesAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_DOWN_MASK); }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new ShowFilePropertiesAction(mainFrame, properties);
+		}
     }
 }

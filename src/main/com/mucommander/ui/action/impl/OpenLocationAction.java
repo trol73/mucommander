@@ -19,7 +19,6 @@
 package com.mucommander.ui.action.impl;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.Map;
 
 import com.mucommander.bonjour.BonjourService;
@@ -29,12 +28,12 @@ import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.BatchRenameAction.Descriptor;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.utils.FileIconsCache;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
@@ -170,4 +169,5 @@ public class OpenLocationAction extends ActiveTabAction {
 	public ActionDescriptor getDescriptor() {
 		return new Descriptor();
 	}
+
 }

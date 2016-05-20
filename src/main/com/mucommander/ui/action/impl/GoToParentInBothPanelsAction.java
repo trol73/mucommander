@@ -20,7 +20,10 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -77,20 +80,20 @@ public class GoToParentInBothPanelsAction extends ActiveTabAction {
      */
     @Override
     public void performAction() {
-        Thread       openThread;
         AbstractFile parent;
 
         // If the current panel has a parent file, navigate to it.
-        if((parent = mainFrame.getActivePanel().getCurrentFolder().getParent()) != null) {
-            openThread = mainFrame.getActivePanel().tryChangeCurrentFolder(parent);
+        if ((parent = mainFrame.getActivePanel().getCurrentFolder().getParent()) != null) {
+            Thread openThread = mainFrame.getActivePanel().tryChangeCurrentFolder(parent);
 
             // If the inactive panel has a parent file, wait for the current panel change to be complete and navigate
             // to it.
             if((parent = mainFrame.getInactivePanel().getCurrentFolder().getParent()) != null) {
                 if(openThread != null) {
                     while(openThread.isAlive()) {
-                        try {openThread.join();}
-                        catch(InterruptedException e) {}
+                        try {
+                            openThread.join();
+                        } catch(InterruptedException ignore) {}
                     }
                 }
                 mainFrame.getInactivePanel().tryChangeCurrentFolder(parent);
@@ -103,14 +106,8 @@ public class GoToParentInBothPanelsAction extends ActiveTabAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new GoToParentInBothPanelsAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToParentInBothPanels";
     	
 		public String getId() { return ACTION_ID; }
@@ -125,6 +122,10 @@ public class GoToParentInBothPanelsAction extends ActiveTabAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new GoToParentInBothPanelsAction(mainFrame, properties);
         }
     }
 }

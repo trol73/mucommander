@@ -84,15 +84,9 @@ public class StopAction extends MuAction implements LocationListener {
     public void locationFailed(LocationEvent e) {
         setEnabled(false);
     }
-    
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new StopAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Stop";
     	
 		public String getId() { return ACTION_ID; }
@@ -102,5 +96,9 @@ public class StopAction extends MuAction implements LocationListener {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new StopAction(mainFrame, properties);
+        }
     }
 }

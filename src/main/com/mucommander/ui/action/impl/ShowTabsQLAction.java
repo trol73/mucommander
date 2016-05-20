@@ -47,14 +47,8 @@ public class ShowTabsQLAction extends ShowQuickListAction {
 		return new Descriptor();
 	}
 
-	public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new ShowTabsQLAction(mainFrame, properties);
-		}
-    }
-	
-	public static class Descriptor extends AbstractActionDescriptor {
+	public static final class Descriptor extends AbstractActionDescriptor {
 		public static final String ACTION_ID = "ShowTabsQL";
 		
 		public String getId() { return ACTION_ID; }
@@ -64,5 +58,9 @@ public class ShowTabsQLAction extends ShowQuickListAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_6, KeyEvent.ALT_DOWN_MASK); }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new ShowTabsQLAction(mainFrame, properties);
+		}
     }
 }

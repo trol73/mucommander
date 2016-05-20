@@ -66,14 +66,8 @@ public class NextTabAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new NextTabAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "NextTab";
     	
 		public String getId() { return ACTION_ID; }
@@ -95,5 +89,10 @@ public class NextTabAction extends MuAction {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.META_DOWN_MASK);
             }
         }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new NextTabAction(mainFrame, properties);
+        }
+
     }
 }

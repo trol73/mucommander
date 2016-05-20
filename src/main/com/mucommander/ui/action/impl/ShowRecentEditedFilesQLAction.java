@@ -29,14 +29,8 @@ public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
         return new Descriptor();
     }
 
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new ShowRecentEditedFilesQLAction(mainFrame, properties);
-        }
-    }
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ShowRecentEditedFilesQL";
 
         public String getId() { return ACTION_ID; }
@@ -46,6 +40,10 @@ public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_8, KeyEvent.ALT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new ShowRecentEditedFilesQLAction(mainFrame, properties);
+        }
     }
 
 }

@@ -17,7 +17,10 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.views.TableViewMode;
 
@@ -44,10 +47,6 @@ public class ToggleTableViewModeFullAction extends MuAction {
     @Override
     public void performAction() {
         getMainFrame().getActiveTable().setViewMode(TableViewMode.FULL);
-//        MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_HIDDEN_FILES,
-//                !MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
-
-
     }
 
     @Override
@@ -56,17 +55,8 @@ public class ToggleTableViewModeFullAction extends MuAction {
     }
 
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
-            return new ToggleTableViewModeFullAction(mainFrame, properties);
-        }
-    }
-
-
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ToggleTableViewModeFull";
 
         public String getId() { return ACTION_ID; }
@@ -77,6 +67,10 @@ public class ToggleTableViewModeFullAction extends MuAction {
 
         public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_DOWN_MASK);
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new ToggleTableViewModeFullAction(mainFrame, properties);
         }
     }
 }

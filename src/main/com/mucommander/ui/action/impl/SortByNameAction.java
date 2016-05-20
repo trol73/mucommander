@@ -46,17 +46,15 @@ public class SortByNameAction extends SortByAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new SortByNameAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends SortByAction.Descriptor {
+    public static final class Descriptor extends SortByAction.Descriptor {
 
         public Descriptor() {
             super(Column.NAME, KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.CTRL_DOWN_MASK));
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SortByNameAction(mainFrame, properties);
         }
     }
 }

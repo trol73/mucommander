@@ -47,14 +47,8 @@ public class CheckForUpdatesAction extends MuAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new CheckForUpdatesAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CheckForUpdates";
     	
 		public String getId() { return ACTION_ID; }
@@ -64,5 +58,9 @@ public class CheckForUpdatesAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new CheckForUpdatesAction(mainFrame, properties);
+		}
     }
 }

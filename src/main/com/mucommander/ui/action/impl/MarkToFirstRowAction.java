@@ -50,13 +50,8 @@ public class MarkToFirstRowAction extends MarkBackwardAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new MarkToFirstRowAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkToFirstRow";
     	
 		public String getId() { return ACTION_ID; }
@@ -66,5 +61,9 @@ public class MarkToFirstRowAction extends MarkBackwardAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_DOWN_MASK); }
+
+		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+			return new MarkToFirstRowAction(mainFrame, properties);
+		}
     }
 }

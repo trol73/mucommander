@@ -153,14 +153,8 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new OpenInBothPanelsAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenInBothPanels";
     	
 		public String getId() { return ACTION_ID; }
@@ -175,6 +169,10 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new OpenInBothPanelsAction(mainFrame, properties);
         }
     }
 }

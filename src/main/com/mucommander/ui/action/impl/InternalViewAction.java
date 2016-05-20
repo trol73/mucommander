@@ -20,11 +20,13 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.command.Command;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
-import com.mucommander.ui.main.table.views.full.FileTableModel;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 
 import javax.swing.ImageIcon;
@@ -77,15 +79,8 @@ public class InternalViewAction extends AbstractViewerAction {
 		return new Descriptor();
 	}
 
-    // - Factory -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public static class Factory implements ActionFactory {
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new InternalViewAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "InternalView";
     	
 		public String getId() { return ACTION_ID; }
@@ -95,5 +90,9 @@ public class InternalViewAction extends AbstractViewerAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new InternalViewAction(mainFrame, properties);
+        }
     }
 }

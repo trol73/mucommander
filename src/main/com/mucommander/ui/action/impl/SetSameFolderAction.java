@@ -66,14 +66,8 @@ public class SetSameFolderAction extends MuAction implements ActivePanelListener
 		return new Descriptor();
 	}
 
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new SetSameFolderAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "SetSameFolder";
     	
 		public String getId() { return ACTION_ID; }
@@ -88,6 +82,10 @@ public class SetSameFolderAction extends MuAction implements ActivePanelListener
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.META_DOWN_MASK);
             }
+        }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new SetSameFolderAction(mainFrame, properties);
         }
     }
 }

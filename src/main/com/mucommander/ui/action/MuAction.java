@@ -51,6 +51,10 @@ import java.util.Map;
  */
 public abstract class MuAction extends AbstractAction {
 
+    MuAction() {
+        mainFrame = null;
+    }
+
     /** The MainFrame associated with this MuAction */
     protected final MainFrame mainFrame;
 

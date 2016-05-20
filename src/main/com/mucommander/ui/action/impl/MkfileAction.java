@@ -18,35 +18,27 @@
 
 package com.mucommander.ui.action.impl;
 
-import java.awt.event.KeyEvent;
-import java.util.Map;
-import javax.swing.KeyStroke;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
-import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dialog.file.MakeDirectoryFileDialog;
 import com.mucommander.ui.main.MainFrame;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 /**
  * This action brings up the 'Make file' dialog which allows to create a new file in the currently active folder.
  *
  * @author Maxence Bernard
  */
-public enum MakeFileAction {
-	$;
-	static{
-		ActionManager.registerAction(new Descriptor(), new Factory());
-	}
-	public final String ACTION_ID = "Mkfile";
-	
-	public static class Action extends ParentFolderAction{
+public class MkfileAction extends ParentFolderAction {
 
-    public Action(MainFrame mainFrame, Map<String,Object> properties) {
+    public MkfileAction(MainFrame mainFrame, Map<String,Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -69,22 +61,21 @@ public enum MakeFileAction {
     public ActionDescriptor getDescriptor() {
         return new Descriptor();
     }
-	}
-    
-    private static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new Action(mainFrame, properties);
-		}
-    }
-    
-    private static class Descriptor extends AbstractActionDescriptor {   	
-		public String getId() { return $.ACTION_ID; }
+
+    public static final class Descriptor extends AbstractActionDescriptor {
+        public static final String ACTION_ID = "Mkfile";
+
+		public String getId() { return ACTION_ID; }
 
 		public ActionCategory getCategory() { return ActionCategory.FILES; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_DOWN_MASK); }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new MkfileAction(mainFrame, properties);
+        }
     }
 }

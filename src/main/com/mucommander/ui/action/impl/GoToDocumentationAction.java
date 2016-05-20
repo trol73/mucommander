@@ -18,11 +18,13 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.MainFrame;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
@@ -61,8 +63,8 @@ public class GoToDocumentationAction extends OpenURLInBrowserAction implements P
         String topic = (String)getValue(TOPIC_PROPERTY_KEY);
 
         // If there is a topic, append it to the URL
-        if(topic!=null) {
-            if(url.endsWith("/"))
+        if (topic!=null) {
+            if (url.endsWith("/"))
                 url += "/";
 
             url += topic;
@@ -78,19 +80,13 @@ public class GoToDocumentationAction extends OpenURLInBrowserAction implements P
 
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 
-        if(propertyChangeEvent.getPropertyName().equals(TOPIC_PROPERTY_KEY)) {
+        if (propertyChangeEvent.getPropertyName().equals(TOPIC_PROPERTY_KEY)) {
             updateURL();
         }
     }
-    
-    public static class Factory implements ActionFactory {
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-			return new GoToDocumentationAction(mainFrame, properties);
-		}
-    }
-    
-    public static class Descriptor extends AbstractActionDescriptor {
+
+    public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToDocumentation";
     	
 		public String getId() { return ACTION_ID; }
@@ -100,5 +96,9 @@ public class GoToDocumentationAction extends OpenURLInBrowserAction implements P
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return null; }
+
+        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+            return new GoToDocumentationAction(mainFrame, properties);
+        }
     }
 }

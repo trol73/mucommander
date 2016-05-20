@@ -121,7 +121,7 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
     // Inner classes //
     ///////////////////
 
-    public static class Descriptor extends AbstractActionDescriptor {
+    public abstract static class Descriptor extends AbstractActionDescriptor {
 
         private Column column;
         private KeyStroke defaultKeyStroke;
