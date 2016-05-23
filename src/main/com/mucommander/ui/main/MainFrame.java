@@ -29,6 +29,7 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.conf.MuSnapshot;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.CloseWindowAction;
@@ -282,8 +283,9 @@ public class MainFrame extends JFrame implements LocationListener {
     		/*AbstractFile[] leftInitialFolders, AbstractFile[] rightInitialFolders,
     				 int indexOfLeftSelectedTab, int indexOfRightSelectedTab,
     			     FileURL[] leftLocationHistory, FileURL[] rightLocationHistory) { */
-        init(new FolderPanel(this, leftTabs, indexOfLeftSelectedTab, leftTableConf), 
-        	 new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf));
+        FolderPanel leftPanel = new FolderPanel(this, leftTabs, indexOfLeftSelectedTab, leftTableConf);
+        FolderPanel rightPanel = new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf);
+        init(leftPanel, rightPanel);
 
         for (boolean isLeft = true; ; isLeft=false) {
         	FileTable fileTable = isLeft ? leftTable : rightTable;

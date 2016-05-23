@@ -23,6 +23,7 @@ import com.mucommander.command.CommandManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
@@ -55,6 +56,11 @@ public class EditAction extends InternalEditAction {
         return CommandManager.getCommandForAlias(CommandManager.EDITOR_ALIAS, file);
     }
 
+
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {

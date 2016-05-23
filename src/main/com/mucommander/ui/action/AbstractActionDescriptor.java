@@ -34,6 +34,16 @@ import javax.swing.*;
  * @author Arik Hadas
  */
 public abstract class AbstractActionDescriptor implements ActionDescriptor {
+//        static int count;
+//    public AbstractActionDescriptor() {
+//        count++;
+//        if (count % 10 == 0) {
+//            System.out.println(count);
+//            if (count == 200) {
+//                new Exception().printStackTrace();
+//            }
+//        }
+//    }
 	
 	//////////////////////////////////
 	//// ActionDescriptor methods ////

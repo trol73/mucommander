@@ -361,7 +361,7 @@ public class ActionManager {
             // Looks for the action's factory
             //ActionFactory actionFactory = actionFactories.get(actionId);
 			ActionFactory actionFactory = ActionProperties.actionDescriptors.get(actionId);
-            if(actionFactory == null) {
+            if (actionFactory == null) {
 //            	LOGGER.debug("couldn't initiate action: " + actionId + ", its factory wasn't found");
 //            	return null;
             	throw new IllegalStateException("couldn't initiate action: " + actionId + ", its factory wasn't found");

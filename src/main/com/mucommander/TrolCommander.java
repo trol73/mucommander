@@ -27,6 +27,7 @@ import java.util.concurrent.*;
 import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.icon.FileIcons;
+import com.mucommander.ui.main.frame.MainFrameBuilder;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.tools.ToolsEnvironment;
 import com.mucommander.utils.MuLogging;
@@ -347,12 +348,17 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Initializing window...");
-            WindowManager.createNewMainFrame(new CommandLineMainFrameBuilder(helper.getFolders()));
-
+            Profiler.start("launcher.create-window");
+            WindowManager.createNewMainFrame(new CommandLineMainFrameBuilder(helper.getFolders())); // !!!!
             // If no initial path was specified, start a default main window.
             if (WindowManager.getCurrentMainFrame() == null) {
-                WindowManager.createNewMainFrame(new DefaultMainFramesBuilder());
+                MainFrameBuilder mainFrameBuilder = new DefaultMainFramesBuilder();
+                WindowManager.createNewMainFrame(mainFrameBuilder);                                 // !!!!
             }
+            Profiler.stop("launcher.create-window");
+            Profiler.stop("loading");
+            Profiler.print();
+            Profiler.hide("launcher.");
         }
     }
 
@@ -669,6 +675,18 @@ public class TrolCommander {
         }
     }
 
+    private static class PrepareGraphicsTask extends LauncherTask {
+
+        PrepareGraphicsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("prepare_graphics", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        }
+    }
+
 
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
@@ -720,6 +738,7 @@ public class TrolCommander {
         }
 
         Profiler.start("init");
+        Profiler.start("loading");
 
         String lang = System.getProperty("user.language");
         String country = System.getProperty("user.country");
@@ -738,10 +757,11 @@ public class TrolCommander {
             // Whether or not to ignore warnings when booting.
             helper.parseArgs();
 
+            LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
             LauncherTask taskStart = new StartTask(helper);
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
-            LauncherTask taskLoadTheme = new LoadThemesTask(helper, taskShowSplash);
+            LauncherTask taskLoadTheme = new LoadThemesTask(helper, taskShowSplash, taskPrepareGraphics);
             LauncherTask taskInitDesktop = new InitDesktopTask(helper, taskLoadConfigs);
             LauncherTask taskLoadDict = new LoadDictTask(helper, taskLoadConfigs);
             LauncherTask taskConfigureFs = new ConfigureFsTask(helper);
@@ -754,7 +774,7 @@ public class TrolCommander {
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
             LauncherTask enableNotificationsTask = new EnableNotificationsTask(helper, taskRegisterActions);
-            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions);
+            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions, taskLoadCustomCommands);
             LauncherTask taskShowSetupWindow = new ShowSetupWindowTask(helper, taskLoadConfigs);
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
@@ -764,6 +784,7 @@ public class TrolCommander {
             LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
+            tasks.add(taskPrepareGraphics);
             tasks.add(taskLoadConfigs);
             tasks.add(taskStart);
             tasks.add(taskLoadIcons);
@@ -880,8 +901,8 @@ public class TrolCommander {
             });
         }
         Profiler.stop("init");
-        Profiler.print();
-        Profiler.hide("launcher.");
+        //Profiler.print();
+        //Profiler.hide("launcher.");
         //Profiler.printThreads();
         //Profiler.initThreads();
     }

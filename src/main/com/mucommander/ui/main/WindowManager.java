@@ -186,7 +186,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         for (MainFrame frame : newMainFrames)
         	frame.setVisible(true);
 
-        if (instance.mainFrames.size() > 0) {
+        if (!instance.mainFrames.isEmpty()) {
         	int previouslySelectedMainFrame = mainFrameBuilder.getSelectedFrame();
         	instance.mainFrames.get(previouslySelectedMainFrame).toFront();
         }

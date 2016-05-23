@@ -23,6 +23,7 @@ import com.mucommander.command.CommandManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
@@ -52,6 +53,11 @@ public class ViewAction extends InternalViewAction {
     @Override
     protected Command getCustomCommand(AbstractFile file) {
         return CommandManager.getCommandForAlias(CommandManager.VIEWER_ALIAS, file);
+    }
+
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
     }
 
 

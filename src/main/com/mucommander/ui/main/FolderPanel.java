@@ -157,10 +157,10 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         fileTable = new FileTable(mainFrame, this, conf);
 
         locationChanger = new LocationChanger(mainFrame, this, locationManager);
-        
+
         // create the Tabs (Must be called after the fileTable was created and current folder was set)
         tabs = new FileTableTabs(mainFrame, this, initialTabs);
-        
+
 		// Select the tab that was previously selected on last init
 		tabs.selectTab(indexOfSelectedTab);
 		
@@ -175,7 +175,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         // Remove default border
         treeSplitPane.setBorder(null);
         add(treeSplitPane, BorderLayout.CENTER);
-                
+
         // Disable Ctrl+Tab and Shift+Ctrl+Tab focus traversal keys
         disableCtrlFocusTraversalKeys(locationTextField);
         disableCtrlFocusTraversalKeys(foldersTreePanel.getTree());

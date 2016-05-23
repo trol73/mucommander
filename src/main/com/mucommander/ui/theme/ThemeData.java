@@ -1206,15 +1206,18 @@ public class ThemeData {
             triggerColorEvent(id, color);
         } else {
             switch (id) {
-        case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-        case FILE_TABLE_SELECTED_OUTLINE_COLOR:
-        case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
-        case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
-            triggerColorEvent(id, color);
+                case FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                case FILE_TABLE_SELECTED_OUTLINE_COLOR:
+                case FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR:
+                case FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR:
+                    triggerColorEvent(id, color);
+                }
         }
-        }
-
         return buffer;
+    }
+
+    public void setColorFast(int id, Color color) {
+        colors[id] = color;
     }
 
     /**
@@ -1239,6 +1242,10 @@ public class ThemeData {
         boolean buffer = isFontDifferent(id, font); // Used to store the result of isFontDifferent.
         fonts[id] = font;
         return buffer;
+    }
+
+    public void setFontFast(int id, Font font) {
+        fonts[id] = font;
     }
 
 

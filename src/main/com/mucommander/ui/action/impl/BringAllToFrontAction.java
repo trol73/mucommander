@@ -57,9 +57,9 @@ public class BringAllToFrontAction extends MuAction {
 
         int nbMainFrames = mainFrames.size();
         MainFrame mainFrame;
-        for(int i=nbMainFrames-1; i>=0; i--) {
+        for (int i = nbMainFrames-1; i >= 0; i--) {
             mainFrame = mainFrames.get(i);
-            if(mainFrame!=currentMainFrame) {
+            if (mainFrame != currentMainFrame) {
                 mainFrame.toFront();
             }
         }

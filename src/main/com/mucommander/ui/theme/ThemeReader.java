@@ -172,8 +172,190 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             return;
         }
 
+        // Normal element declaration.
+        if (qName.equals(ELEMENT_NORMAL)) {
+            if (state == State.SHELL)
+                state = State.SHELL_NORMAL;
+            else if (state == State.EDITOR)
+                state = State.EDITOR_NORMAL;
+            else if (state == State.LOCATION_BAR)
+                state = State.LOCATION_BAR_NORMAL;
+            else if (state == State.SHELL_HISTORY)
+                state = State.SHELL_HISTORY_NORMAL;
+            else if (state == State.TERMINAL)
+                state = State.TERMINAL_NORMAL;
+            else if (state == State.HIDDEN)
+                state = State.HIDDEN_NORMAL;
+            else if (state == State.FOLDER)
+                state = State.FOLDER_NORMAL;
+            else if (state == State.ARCHIVE)
+                state = State.ARCHIVE_NORMAL;
+            else if (state == State.SYMLINK)
+                state = State.SYMLINK_NORMAL;
+            else if (state == State.MARKED)
+                state = State.MARKED_NORMAL;
+            else if (state == State.EXECUTABLE)
+                state = State.EXECUTABLE_NORMAL;
+            else if (state == State.FILE)
+                state = State.FILE_NORMAL;
+            else if (state == State.TABLE)
+                state = State.TABLE_NORMAL;
+            else if (state == State.QUICK_LIST_ITEM)
+                state = State.QUICK_LIST_ITEM_NORMAL;
+            else if (state.ordinal() >= State.GROUP_1.ordinal() && state.ordinal() <= State.GROUP_10.ordinal()) {
+                int group = state.ordinal() - State.GROUP_1.ordinal();
+                template.setColorFast(ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group, createColor(attributes));
+            } else
+                traceIllegalDeclaration(qName);
+        }
+
+        // Background color.
+        else if (qName.equals(ELEMENT_BACKGROUND)) {
+            if (state == State.TABLE_NORMAL)
+                template.setColorFast(ThemeData.FILE_TABLE_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.TABLE_SELECTED)
+                template.setColorFast(ThemeData.FILE_TABLE_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.TABLE_ALTERNATE)
+                template.setColorFast(ThemeData.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.TABLE_UNMATCHED)
+                template.setColorFast(ThemeData.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.SHELL_NORMAL)
+                template.setColorFast(ThemeData.SHELL_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.SHELL_SELECTED)
+                template.setColorFast(ThemeData.SHELL_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.EDITOR_NORMAL)
+                template.setColorFast(ThemeData.EDITOR_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.EDITOR_SELECTED)
+                template.setColorFast(ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.EDITOR_CURRENT)
+                template.setColorFast(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.LOCATION_BAR_NORMAL)
+                template.setColorFast(ThemeData.LOCATION_BAR_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.LOCATION_BAR_SELECTED)
+                template.setColorFast(ThemeData.LOCATION_BAR_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.SHELL_HISTORY_NORMAL)
+                template.setColorFast(ThemeData.SHELL_HISTORY_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.SHELL_HISTORY_SELECTED)
+                template.setColorFast(ThemeData.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.TERMINAL_NORMAL)
+                template.setColorFast(ThemeData.TERMINAL_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.TERMINAL_SELECTED)
+                template.setColorFast(ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.STATUS_BAR)
+                template.setColorFast(ThemeData.STATUS_BAR_BACKGROUND_COLOR, createColor(attributes));
+
+            else if (state == State.QUICK_LIST_HEADER)
+                template.setColorFast(ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.QUICK_LIST_ITEM_NORMAL)
+                template.setColorFast(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR, createColor(attributes));
+            else if (state == State.QUICK_LIST_ITEM_SELECTED)
+                template.setColorFast(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR, createColor(attributes));
+
+            else
+                traceIllegalDeclaration(qName);
+        }
+
+        // Selected element declaration.
+        else if (qName.equals(ELEMENT_SELECTED)) {
+            if (state == State.SHELL)
+                state = State.SHELL_SELECTED;
+            else if (state == State.EDITOR)
+                state = State.EDITOR_SELECTED;
+            else if (state == State.LOCATION_BAR)
+                state = State.LOCATION_BAR_SELECTED;
+            else if (state == State.SHELL_HISTORY)
+                state = State.SHELL_HISTORY_SELECTED;
+            else if (state == State.TERMINAL)
+                state = State.TERMINAL_SELECTED;
+            else if (state == State.HIDDEN)
+                state = State.HIDDEN_SELECTED;
+            else if (state == State.FOLDER)
+                state = State.FOLDER_SELECTED;
+            else if (state == State.ARCHIVE)
+                state = State.ARCHIVE_SELECTED;
+            else if (state == State.SYMLINK)
+                state = State.SYMLINK_SELECTED;
+            else if (state == State.MARKED)
+                state = State.MARKED_SELECTED;
+            else if (state == State.EXECUTABLE)
+                state = State.EXECUTABLE_SELECTED;
+            else if (state == State.FILE)
+                state = State.FILE_SELECTED;
+            else if (state == State.TABLE)
+                state = State.TABLE_SELECTED;
+            else if (state == State.QUICK_LIST_ITEM)
+                state = State.QUICK_LIST_ITEM_SELECTED;
+
+            else
+                traceIllegalDeclaration(qName);
+        }
+
+        // Unfocused foreground color.
+        else if(qName.equals(ELEMENT_INACTIVE_FOREGROUND)) {
+            if(state == State.FILE_NORMAL)
+                template.setColorFast(ThemeData.FILE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.FOLDER_NORMAL)
+                template.setColorFast(ThemeData.FOLDER_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.ARCHIVE_NORMAL)
+                template.setColorFast(ThemeData.ARCHIVE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.SYMLINK_NORMAL)
+                template.setColorFast(ThemeData.SYMLINK_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.HIDDEN_NORMAL)
+                template.setColorFast(ThemeData.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.MARKED_NORMAL)
+                template.setColorFast(ThemeData.MARKED_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.EXECUTABLE_NORMAL)
+                template.setColorFast(ThemeData.EXECUTABLE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.FILE_SELECTED)
+                template.setColorFast(ThemeData.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.FOLDER_SELECTED)
+                template.setColorFast(ThemeData.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.ARCHIVE_SELECTED)
+                template.setColorFast(ThemeData.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.SYMLINK_SELECTED)
+                template.setColorFast(ThemeData.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.HIDDEN_SELECTED)
+                template.setColorFast(ThemeData.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.MARKED_SELECTED)
+                template.setColorFast(ThemeData.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else if(state == State.EXECUTABLE_SELECTED)
+                template.setColorFast(ThemeData.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+            else
+                traceIllegalDeclaration(qName);
+        }
+
+        // Font creation.
+        else if (qName.equals(ELEMENT_FONT)) {
+            if (state == State.SHELL)
+                template.setFontFast(ThemeData.SHELL_FONT, createFont(attributes));
+            else if (state == State.EDITOR)
+                template.setFontFast(ThemeData.EDITOR_FONT, createFont(attributes));
+            else if (state == State.LOCATION_BAR)
+                template.setFontFast(ThemeData.LOCATION_BAR_FONT, createFont(attributes));
+            else if (state == State.SHELL_HISTORY)
+                template.setFontFast(ThemeData.SHELL_HISTORY_FONT, createFont(attributes));
+            else if (state == State.TERMINAL)
+                template.setFontFast(ThemeData.TERMINAL_FONT, createFont(attributes));
+            else if (state == State.STATUS_BAR)
+                template.setFontFast(ThemeData.STATUS_BAR_FONT, createFont(attributes));
+            else if (state == State.TABLE)
+                template.setFontFast(ThemeData.FILE_TABLE_FONT, createFont(attributes));
+            else if (state == State.QUICK_LIST_HEADER)
+                template.setFontFast(ThemeData.QUICK_LIST_HEADER_FONT, createFont(attributes));
+            else if (state == State.QUICK_LIST_ITEM)
+                template.setFontFast(ThemeData.QUICK_LIST_ITEM_FONT, createFont(attributes));
+            else
+                traceIllegalDeclaration(qName);
+        }
+
         // XML root element.
-        if (qName.equals(ELEMENT_ROOT)) {
+        else if (qName.equals(ELEMENT_ROOT)) {
             if (state != State.UNKNOWN)
                 traceIllegalDeclaration(ELEMENT_ROOT);
             state = State.ROOT;
@@ -310,78 +492,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             state = State.TERMINAL;
         }
 
-        // Normal element declaration.
-        else if (qName.equals(ELEMENT_NORMAL)) {
-            if (state == State.SHELL)
-                state = State.SHELL_NORMAL;
-            else if (state == State.EDITOR)
-                state = State.EDITOR_NORMAL;
-            else if (state == State.LOCATION_BAR)
-                state = State.LOCATION_BAR_NORMAL;
-            else if (state == State.SHELL_HISTORY)
-                state = State.SHELL_HISTORY_NORMAL;
-            else if (state == State.TERMINAL)
-                state = State.TERMINAL_NORMAL;
-            else if (state == State.HIDDEN)
-                state = State.HIDDEN_NORMAL;
-            else if (state == State.FOLDER)
-                state = State.FOLDER_NORMAL;
-            else if (state == State.ARCHIVE)
-                state = State.ARCHIVE_NORMAL;
-            else if (state == State.SYMLINK)
-                state = State.SYMLINK_NORMAL;
-            else if (state == State.MARKED)
-                state = State.MARKED_NORMAL;
-            else if (state == State.EXECUTABLE)
-                state = State.EXECUTABLE_NORMAL;
-            else if (state == State.FILE)
-                state = State.FILE_NORMAL;
-            else if (state == State.TABLE)
-                state = State.TABLE_NORMAL;
-            else if (state == State.QUICK_LIST_ITEM)
-            	state = State.QUICK_LIST_ITEM_NORMAL;
-            else if (state.ordinal() >= State.GROUP_1.ordinal() && state.ordinal() <= State.GROUP_10.ordinal()) {
-                int group = state.ordinal() - State.GROUP_1.ordinal();
-                template.setColor(ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + group, createColor(attributes));
-            } else
-                traceIllegalDeclaration(qName);
-        }
 
-        // Selected element declaration.
-        else if (qName.equals(ELEMENT_SELECTED)) {
-            if (state == State.SHELL)
-                state = State.SHELL_SELECTED;
-            else if (state == State.EDITOR)
-                state = State.EDITOR_SELECTED;
-            else if (state == State.LOCATION_BAR)
-                state = State.LOCATION_BAR_SELECTED;
-            else if (state == State.SHELL_HISTORY)
-                state = State.SHELL_HISTORY_SELECTED;
-            else if (state == State.TERMINAL)
-                state = State.TERMINAL_SELECTED;
-            else if (state == State.HIDDEN)
-                state = State.HIDDEN_SELECTED;
-            else if (state == State.FOLDER)
-                state = State.FOLDER_SELECTED;
-            else if (state == State.ARCHIVE)
-                state = State.ARCHIVE_SELECTED;
-            else if (state == State.SYMLINK)
-                state = State.SYMLINK_SELECTED;
-            else if (state == State.MARKED)
-                state = State.MARKED_SELECTED;
-            else if (state == State.EXECUTABLE)
-                state = State.EXECUTABLE_SELECTED;
-            else if (state == State.FILE)
-                state = State.FILE_SELECTED;
-            else if (state == State.TABLE)
-                state = State.TABLE_SELECTED;
-            else if (state == State.QUICK_LIST_ITEM)
-            	state = State.QUICK_LIST_ITEM_SELECTED;
-
-            else
-                traceIllegalDeclaration(qName);
-
-        }
         // Current element declaration.
         else if (qName.equals(ELEMENT_CURRENT)) {
             if (state == State.EDITOR) {
@@ -391,38 +502,15 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             }
         }
 
-        // Font creation.
-        else if (qName.equals(ELEMENT_FONT)) {
-            if (state == State.SHELL)
-                template.setFont(ThemeData.SHELL_FONT, createFont(attributes));
-            else if (state == State.EDITOR)
-                template.setFont(ThemeData.EDITOR_FONT, createFont(attributes));
-            else if (state == State.LOCATION_BAR)
-                template.setFont(ThemeData.LOCATION_BAR_FONT, createFont(attributes));
-            else if (state == State.SHELL_HISTORY)
-                template.setFont(ThemeData.SHELL_HISTORY_FONT, createFont(attributes));
-            else if (state == State.TERMINAL)
-                template.setFont(ThemeData.TERMINAL_FONT, createFont(attributes));
-            else if (state == State.STATUS_BAR)
-                template.setFont(ThemeData.STATUS_BAR_FONT, createFont(attributes));
-            else if (state == State.TABLE)
-                template.setFont(ThemeData.FILE_TABLE_FONT, createFont(attributes));
-            else if (state == State.QUICK_LIST_HEADER)
-            	template.setFont(ThemeData.QUICK_LIST_HEADER_FONT, createFont(attributes));
-            else if (state == State.QUICK_LIST_ITEM)
-            	template.setFont(ThemeData.QUICK_LIST_ITEM_FONT, createFont(attributes));
-            else
-                traceIllegalDeclaration(qName);
-        }
 
         // Unfocused background color.
         else if(qName.equals(ELEMENT_INACTIVE_BACKGROUND)) {
             if(state == State.TABLE_NORMAL)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_BACKGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_BACKGROUND_COLOR, createColor(attributes));
             else if(state == State.TABLE_SELECTED)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR, createColor(attributes));
             else if(state == State.TABLE_ALTERNATE)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -430,9 +518,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // Secondary background.
         else if(qName.equals(ELEMENT_SECONDARY_BACKGROUND)) {
             if(state == State.TABLE_SELECTED)
-                template.setColor(ThemeData.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
             else if(state == State.QUICK_LIST_HEADER)
-            	template.setColor(ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
+            	template.setColorFast(ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -440,41 +528,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // Inactive secondary background.
         else if(qName.equals(ELEMENT_INACTIVE_SECONDARY_BACKGROUND)) {
             if(state == State.TABLE_SELECTED)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
-            else
-                traceIllegalDeclaration(qName);
-        }
-
-        // Unfocused foreground color.
-        else if(qName.equals(ELEMENT_INACTIVE_FOREGROUND)) {
-            if(state == State.FILE_NORMAL)
-                template.setColor(ThemeData.FILE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.FOLDER_NORMAL)
-                template.setColor(ThemeData.FOLDER_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.ARCHIVE_NORMAL)
-                template.setColor(ThemeData.ARCHIVE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.SYMLINK_NORMAL)
-                template.setColor(ThemeData.SYMLINK_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.HIDDEN_NORMAL)
-                template.setColor(ThemeData.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.MARKED_NORMAL)
-                template.setColor(ThemeData.MARKED_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.EXECUTABLE_NORMAL)
-                template.setColor(ThemeData.EXECUTABLE_INACTIVE_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.FILE_SELECTED)
-                template.setColor(ThemeData.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.FOLDER_SELECTED)
-                template.setColor(ThemeData.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.ARCHIVE_SELECTED)
-                template.setColor(ThemeData.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.SYMLINK_SELECTED)
-                template.setColor(ThemeData.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.HIDDEN_SELECTED)
-                template.setColor(ThemeData.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.MARKED_SELECTED)
-                template.setColor(ThemeData.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
-            else if(state == State.EXECUTABLE_SELECTED)
-                template.setColor(ThemeData.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -482,10 +536,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // File table border color.
         else if(qName.equals(ELEMENT_BORDER)) {
             if(state == State.TABLE)
-                template.setColor(ThemeData.FILE_TABLE_BORDER_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_BORDER_COLOR, createColor(attributes));
 
             else if(state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_BORDER_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.STATUS_BAR_BORDER_COLOR, createColor(attributes));
 
             else
                 traceIllegalDeclaration(qName);
@@ -494,7 +548,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // File table inactive border color.
         else if(qName.equals(ELEMENT_INACTIVE_BORDER)) {
             if(state == State.TABLE)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_BORDER_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_BORDER_COLOR, createColor(attributes));
 
             else
                 traceIllegalDeclaration(qName);
@@ -503,7 +557,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // File table outline color.
         else if(qName.equals(ELEMENT_OUTLINE)) {
             if(state == State.TABLE)
-                template.setColor(ThemeData.FILE_TABLE_SELECTED_OUTLINE_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_SELECTED_OUTLINE_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -511,7 +565,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // File table inactive outline color.
         else if (qName.equals(ELEMENT_INACTIVE_OUTLINE)) {
             if (state == State.TABLE)
-                template.setColor(ThemeData.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -523,62 +577,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             state = State.TABLE_UNMATCHED;
         }
 
-        // Background color.
-        else if (qName.equals(ELEMENT_BACKGROUND)) {
-            if (state == State.TABLE_NORMAL)
-                template.setColor(ThemeData.FILE_TABLE_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.TABLE_SELECTED)
-                template.setColor(ThemeData.FILE_TABLE_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.TABLE_ALTERNATE)
-                template.setColor(ThemeData.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.TABLE_UNMATCHED)
-                template.setColor(ThemeData.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.SHELL_NORMAL)
-                template.setColor(ThemeData.SHELL_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.SHELL_SELECTED)
-                template.setColor(ThemeData.SHELL_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.EDITOR_NORMAL)
-                template.setColor(ThemeData.EDITOR_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.EDITOR_SELECTED)
-                template.setColor(ThemeData.EDITOR_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.EDITOR_CURRENT)
-                template.setColor(ThemeData.EDITOR_CURRENT_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.LOCATION_BAR_NORMAL)
-                template.setColor(ThemeData.LOCATION_BAR_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.LOCATION_BAR_SELECTED)
-                template.setColor(ThemeData.LOCATION_BAR_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.SHELL_HISTORY_NORMAL)
-                template.setColor(ThemeData.SHELL_HISTORY_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.SHELL_HISTORY_SELECTED)
-                template.setColor(ThemeData.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.TERMINAL_NORMAL)
-                template.setColor(ThemeData.TERMINAL_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.TERMINAL_SELECTED)
-                template.setColor(ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR, createColor(attributes));
-
-            else if (state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_BACKGROUND_COLOR, createColor(attributes));
-            
-            else if (state == State.QUICK_LIST_HEADER)
-            	template.setColor(ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.QUICK_LIST_ITEM_NORMAL)
-            	template.setColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR, createColor(attributes));
-            else if (state == State.QUICK_LIST_ITEM_SELECTED)
-            	template.setColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR, createColor(attributes));
-
-            else
-                traceIllegalDeclaration(qName);
-        }
-
         // Progress bar color.
         else if (qName.equals(ELEMENT_PROGRESS)) {
             if (state == State.LOCATION_BAR)
-                template.setColor(ThemeData.LOCATION_BAR_PROGRESS_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.LOCATION_BAR_PROGRESS_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -586,7 +588,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // 'OK' color.
         else if (qName.equals(ELEMENT_OK)) {
             if (state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_OK_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.STATUS_BAR_OK_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -594,7 +596,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // 'WARNING' color.
         else if (qName.equals(ELEMENT_WARNING)) {
             if (state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_WARNING_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.STATUS_BAR_WARNING_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -602,7 +604,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // 'CRITICAL' color.
         else if (qName.equals(ELEMENT_CRITICAL)) {
             if (state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_CRITICAL_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.STATUS_BAR_CRITICAL_COLOR, createColor(attributes));
             else
                 traceIllegalDeclaration(qName);
         }
@@ -610,77 +612,77 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
         // Text color.
         else if (qName.equals(ELEMENT_FOREGROUND)) {
             if (state == State.HIDDEN_NORMAL)
-                template.setColor(ThemeData.HIDDEN_FILE_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.HIDDEN_FILE_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.HIDDEN_SELECTED)
-                template.setColor(ThemeData.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.TABLE_UNMATCHED)
-                template.setColor(ThemeData.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.FOLDER_NORMAL)
-                template.setColor(ThemeData.FOLDER_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FOLDER_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.FOLDER_SELECTED)
-                template.setColor(ThemeData.FOLDER_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FOLDER_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.ARCHIVE_NORMAL)
-                template.setColor(ThemeData.ARCHIVE_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.ARCHIVE_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.ARCHIVE_SELECTED)
-                template.setColor(ThemeData.ARCHIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.ARCHIVE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.SYMLINK_NORMAL)
-                template.setColor(ThemeData.SYMLINK_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SYMLINK_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.SYMLINK_SELECTED)
-                template.setColor(ThemeData.SYMLINK_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SYMLINK_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.MARKED_NORMAL)
-                template.setColor(ThemeData.MARKED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.MARKED_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.MARKED_SELECTED)
-                template.setColor(ThemeData.MARKED_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.MARKED_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.EXECUTABLE_NORMAL)
-                template.setColor(ThemeData.EXECUTABLE_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.EXECUTABLE_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.EXECUTABLE_SELECTED)
-                template.setColor(ThemeData.EXECUTABLE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.EXECUTABLE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.FILE_NORMAL)
-                template.setColor(ThemeData.FILE_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.FILE_SELECTED)
-                template.setColor(ThemeData.FILE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.FILE_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.SHELL_NORMAL)
-                template.setColor(ThemeData.SHELL_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SHELL_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.SHELL_SELECTED)
-                template.setColor(ThemeData.SHELL_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SHELL_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.SHELL_HISTORY_NORMAL)
-                template.setColor(ThemeData.SHELL_HISTORY_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SHELL_HISTORY_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.SHELL_HISTORY_SELECTED)
-                template.setColor(ThemeData.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.TERMINAL_NORMAL)
-                template.setColor(ThemeData.TERMINAL_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.TERMINAL_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.TERMINAL_SELECTED)
-                template.setColor(ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.TERMINAL_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.EDITOR_NORMAL)
-                template.setColor(ThemeData.EDITOR_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.EDITOR_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.EDITOR_SELECTED)
-                template.setColor(ThemeData.EDITOR_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.EDITOR_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.LOCATION_BAR_NORMAL)
-                template.setColor(ThemeData.LOCATION_BAR_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.LOCATION_BAR_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.LOCATION_BAR_SELECTED)
-                template.setColor(ThemeData.LOCATION_BAR_SELECTED_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.LOCATION_BAR_SELECTED_FOREGROUND_COLOR, createColor(attributes));
 
             else if (state == State.STATUS_BAR)
-                template.setColor(ThemeData.STATUS_BAR_FOREGROUND_COLOR, createColor(attributes));
+                template.setColorFast(ThemeData.STATUS_BAR_FOREGROUND_COLOR, createColor(attributes));
             
             else if (state == State.QUICK_LIST_HEADER)
-            	template.setColor(ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR, createColor(attributes));
+            	template.setColorFast(ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.QUICK_LIST_ITEM_NORMAL)
-            	template.setColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR, createColor(attributes));
+            	template.setColorFast(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR, createColor(attributes));
             else if (state == State.QUICK_LIST_ITEM_SELECTED)
-            	template.setColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR, createColor(attributes));
+            	template.setColorFast(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR, createColor(attributes));
 
             else
                 traceIllegalDeclaration(qName);
@@ -872,7 +874,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 	    String[] availableFonts; // All available fonts.
 
         // Looks for the specified font.
+        // TODO very slow operation (for first execution) !!!!
         availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
         for (String availableFont : availableFonts)
             if (availableFont.equalsIgnoreCase(font))
                 return true;
@@ -891,12 +895,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
      */
     private static Font createFont(Attributes attributes) {
         String          buffer; // Buffer for attribute values.
-        int             size;   // Font size.
-        int             style;  // Font style.
         StringTokenizer parser; // Used to parse the font family.
 
         // Computes the font style.
-        style = 0;
+        int style = 0;
         if (((buffer = attributes.getValue(ATTRIBUTE_BOLD)) != null) && buffer.equals(VALUE_TRUE))
             style |= Font.BOLD;
         if (((buffer = attributes.getValue(ATTRIBUTE_ITALIC)) != null) && buffer.equals(VALUE_TRUE))
@@ -907,7 +909,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
             LOGGER.debug("Missing font size attribute in theme, ignoring.");
             return null;
 	    }
-        size = Integer.parseInt(buffer);
+        int size = Integer.parseInt(buffer);
 
             // Computes the font family.
             if ((buffer = attributes.getValue(ATTRIBUTE_FAMILY)) == null) {
@@ -917,12 +919,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 
         // Looks through the list of declared fonts to find one that is installed on the system.
         parser = new StringTokenizer(buffer, ",");
-        while(parser.hasMoreTokens()) {
+        while (parser.hasMoreTokens()) {
             buffer = parser.nextToken().trim();
 
             // Font was found, use it.
-            if(isFontAvailable(buffer))
-            return new Font(buffer, style, size);
+            if (isFontAvailable(buffer)) {
+                Font result = new Font(buffer, style, size);
+                return result;
+            }
         }
 
         // No font was found, instructs the ThemeManager to use the system default.

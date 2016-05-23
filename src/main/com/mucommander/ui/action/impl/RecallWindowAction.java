@@ -64,7 +64,7 @@ public class RecallWindowAction extends MuAction {
         super(mainFrame, properties);
 
         this.windowNumber = windowNumber;
-        if(windowNumber<=0)
+        if (windowNumber <= 0)
             throw new IllegalArgumentException("windowNumber ("+windowNumber+")");
     }
 
@@ -84,7 +84,7 @@ public class RecallWindowAction extends MuAction {
 
 	@Override
 	public ActionDescriptor getDescriptor() {
-		return new Descriptor();
+		return new Descriptor(windowNumber);
 	}
 
 
@@ -101,14 +101,14 @@ public class RecallWindowAction extends MuAction {
             this.windowNumber = windowNumber;
         }
 
-		public String getId() { return ACTION_ID+(windowNumber==-1?"":""+windowNumber); }
+		public String getId() { return windowNumber < 0 ? ACTION_ID : ACTION_ID + windowNumber; }
 
 		public ActionCategory getCategory() { return ActionCategory.WINDOW; }
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() {
-            if(windowNumber<=0 || windowNumber>10)
+            if (windowNumber <= 0 || windowNumber > 10)
                 return null;
 
             return KeyStroke.getKeyStroke(Character.forDigit(windowNumber==10 ? 0 : windowNumber, 10), KeyEvent.CTRL_DOWN_MASK);

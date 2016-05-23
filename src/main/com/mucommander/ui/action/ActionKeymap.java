@@ -247,7 +247,7 @@ public class ActionKeymap {
     	if (accelerator != null) {
     		InputMap inputMap = comp.getInputMap(condition);
     		ActionMap actionMap = comp.getActionMap();
-    		String actionId = action.getDescriptor().getId();
+    		String actionId = action.getId();//action.getDescriptor().getId();
     		inputMap.put(accelerator, actionId);
     		actionMap.put(actionId, action);
     	}
@@ -273,11 +273,12 @@ public class ActionKeymap {
      * Unregister accelerator of MuAction from JComponent.
      */
     private static void unregisterActionAccelerator(MuAction action, KeyStroke accelerator, JComponent comp, int condition) {
-    	if(accelerator != null) {
+    	if (accelerator != null) {
     		InputMap inputMap = comp.getInputMap(condition);
     		ActionMap actionMap = comp.getActionMap();
     		inputMap.remove(accelerator);
-    		actionMap.remove(action.getDescriptor().getId());
+			String actionId  = action.getId();	// action.getDescriptor().getId()
+    		actionMap.remove(actionId);
     	}
     }
     

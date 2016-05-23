@@ -361,6 +361,10 @@ public abstract class MuAction extends AbstractAction {
     	return action.getSimpleName().replace("Action", "");
     }
 
+    public String getId() {
+        return getClass().getSimpleName().replace("Action", "");
+    }
+
     ///////////////////////////////////
     // AbstractAction implementation //
     ///////////////////////////////////
