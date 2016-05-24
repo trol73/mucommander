@@ -46,7 +46,7 @@ import com.mucommander.io.backup.BackupOutputStream;
  * @author Nicolas Rinaudo
  */
 public class ShellHistoryManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShellHistoryManager.class);
+	private static Logger logger;
 	
     // - History configuration -----------------------------------------------
     // -----------------------------------------------------------------------
@@ -151,7 +151,7 @@ public class ShellHistoryManager {
                 return;
         }
 
-        LOGGER.debug("Adding  " + command + " to shell history.");
+        getLogger().debug("Adding  " + command + " to shell history.");
 
         // Updates the history buffer.
         history[historyEnd] = command;
@@ -260,6 +260,14 @@ public class ShellHistoryManager {
         }
     }
 
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ShellHistoryManager.class);
+        }
+        return logger;
+    }
+
+
     /**
      * Iterator used to browse history.
      * @author Nicolas Rinaudo
@@ -299,6 +307,7 @@ public class ShellHistoryManager {
          * Operation not supported.
          */
         public void remove() throws UnsupportedOperationException {throw new UnsupportedOperationException();}
+
     }
 
 }

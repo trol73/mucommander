@@ -19,6 +19,7 @@
 package com.mucommander;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -61,6 +62,7 @@ import com.mucommander.ui.main.frame.CommandLineMainFrameBuilder;
 import com.mucommander.ui.main.frame.DefaultMainFramesBuilder;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
 
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
@@ -72,15 +74,15 @@ import javax.swing.SwingUtilities;
  * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
 public class TrolCommander {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TrolCommander.class);
-	
+	private static Logger logger;
+
     // - Class fields -----------------------------------------------------------
     // --------------------------------------------------------------------------
     private static SplashScreen  splashScreen;
     /** Whether or not to display the splashscreen. */
     private static boolean useSplash;
     /** true while the application is launching, false after it has finished launching */
-    static boolean isLaunching = true;
+    private static boolean isLaunching = true;
     /** Launch lock. */
     private static final Object LAUNCH_LOCK = new Object();
 
@@ -99,13 +101,13 @@ public class TrolCommander {
      * This method will return immediately if the application has already been launched when it is called.
      */
     public static void waitUntilLaunched() {
-        LOGGER.debug("called, thread="+Thread.currentThread());
+        getLogger().debug("called, thread="+Thread.currentThread());
         synchronized(LAUNCH_LOCK) {
-            while(isLaunching) {
+            while (isLaunching) {
                 try {
-                    LOGGER.debug("waiting");
+                    getLogger().debug("waiting");
                     LAUNCH_LOCK.wait();
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     // will loop
                 }
             }
@@ -122,7 +124,7 @@ public class TrolCommander {
         if (useSplash && splashScreen != null) {
             splashScreen.setLoadingMessage(message);
         }
-        LOGGER.trace(message);
+        getLogger().trace(message);
     }
 
 
@@ -432,7 +434,7 @@ public class TrolCommander {
                     Constructor<?> constructor = osxIntegrationClass.getConstructor();
                     constructor.newInstance();
                 } catch(Exception e) {
-                    LOGGER.debug("Exception thrown while initializing Mac OS X integration", e);
+                    getLogger().debug("Exception thrown while initializing Mac OS X integration", e);
                 }
             }
 
@@ -441,9 +443,12 @@ public class TrolCommander {
             // ------------------------------------------------------------
             // Adds all extensions to the classpath.
             try {
+                Profiler.start("init-extensions-manager");
+                ExtensionManager.init();
+                Profiler.stop("init-extensions-manager");
                 ExtensionManager.addExtensionsToClasspath();
             } catch(Exception e) {
-                LOGGER.debug("Failed to add extensions to the classpath", e);
+                getLogger().debug("Failed to add extensions to the classpath", e);
             }
 
             // This the property is supposed to have the java.net package use the proxy defined in the system settings
@@ -536,7 +541,7 @@ public class TrolCommander {
                 CommandManager.writeCommands();
             } catch(Exception e) {
                 System.out.println("###############################");
-                LOGGER.debug("Caught exception", e);
+                getLogger().debug("Caught exception", e);
                 // There's really nothing we can do about this...
             }
 
@@ -688,6 +693,19 @@ public class TrolCommander {
     }
 
 
+    private static class PrepareKeystrokeClassTask extends LauncherTask {
+
+        PrepareKeystrokeClassTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("prepare_keystroke", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK);
+        }
+    }
+
+
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
@@ -758,6 +776,7 @@ public class TrolCommander {
             helper.parseArgs();
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
+            LauncherTask taskPrepareKeystrokeClass = new PrepareKeystrokeClassTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
             LauncherTask taskStart = new StartTask(helper);
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
@@ -769,7 +788,7 @@ public class TrolCommander {
             LauncherTask taskLoadBookmarks = new LoadBookmarksTask(helper);
             LauncherTask taskLoadCredentials = new LoadCredentialsTask(helper);
             LauncherTask taskInitCustomDataFormat = new InitCustomDateFormatTask(helper, taskLoadConfigs);
-            LauncherTask taskRegisterActions = new LoadActionsTask(helper);      //new LoadActionsTask(helper, taskLoadTheme);
+            LauncherTask taskRegisterActions = new LoadActionsTask(helper, taskPrepareKeystrokeClass);
             LauncherTask taskLoadIcons = new LoadIconsTask(helper);
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
@@ -785,6 +804,9 @@ public class TrolCommander {
 
             List<LauncherTask> tasks = new LinkedList<>();
             tasks.add(taskPrepareGraphics);
+            tasks.add(taskPrepareKeystrokeClass);
+            tasks.add(taskRegisterActions);
+
             tasks.add(taskLoadConfigs);
             tasks.add(taskStart);
             tasks.add(taskLoadIcons);
@@ -797,7 +819,7 @@ public class TrolCommander {
             tasks.add(taskLoadCredentials);
             tasks.add(taskLoadShellHistory);
             tasks.add(taskInitCustomDataFormat);
-            tasks.add(taskRegisterActions);
+            //    tasks.add(taskRegisterActions);
             tasks.add(taskStartBonjour);
             tasks.add(taskInitBars);
             tasks.add(taskCreateWindow);
@@ -862,7 +884,7 @@ public class TrolCommander {
                 splashScreen.dispose();
             }
 
-            LOGGER.error("Startup failed", t);
+            getLogger().error("Startup failed", t);
             
             // Display an error dialog with a proper message and error details
             InformationDialog.showErrorDialog(null, null, Translator.get("startup_error"), null, t);
@@ -906,4 +928,15 @@ public class TrolCommander {
         //Profiler.printThreads();
         //Profiler.initThreads();
     }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            Profiler.start("create-logger");
+            logger = LoggerFactory.getLogger(TrolCommander.class);
+            Profiler.stop("create-logger");
+        }
+        return logger;
+    }
+
+
 }

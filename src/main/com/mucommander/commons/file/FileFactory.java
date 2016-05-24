@@ -82,7 +82,7 @@ import com.mucommander.commons.runtime.OsFamily;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class FileFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileFactory.class);
+    private static Logger logger;
 
     /** All registered protocol providers. */
     private static Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
@@ -362,7 +362,7 @@ public class FileFactory {
         try {
             return getFile(absPath, null);
         } catch(IOException e) {
-            LOGGER.info("Caught an exception", e);
+            getLogger().info("Caught an exception", e);
             return null;
         }
     }
@@ -382,7 +382,7 @@ public class FileFactory {
         try {
             return getFile(absPath, null);
         } catch(IOException e) {
-            LOGGER.info("Caught an exception", e);
+            getLogger().info("Caught an exception", e);
 
             if (throwException) {
                 throw e;
@@ -416,7 +416,7 @@ public class FileFactory {
         try {
             return getFile(fileURL, null);
         } catch(IOException e) {
-            LOGGER.info("Caught an exception", e);
+            getLogger().info("Caught an exception", e);
             return null;
         }
     }
@@ -433,7 +433,7 @@ public class FileFactory {
         try {
             return getFile(fileURL, null);
         } catch(IOException e) {
-            LOGGER.info("Caught an exception", e);
+            getLogger().info("Caught an exception", e);
 
             if (throwException) {
                 throw e;
@@ -767,5 +767,12 @@ public class FileFactory {
      */
     public static void setDefaultAuthenticator(Authenticator authenticator) {
         defaultAuthenticator = authenticator;
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(FileFactory.class);
+        }
+        return logger;
     }
 }

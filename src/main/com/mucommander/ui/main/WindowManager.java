@@ -54,7 +54,7 @@ import com.mucommander.ui.helper.FocusRequester;
  */
 //public class WindowManager implements ActionListener, WindowListener, ActivePanelListener, LocationListener, ConfigurationListener {
 public class WindowManager implements WindowListener, ConfigurationListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(WindowManager.class);
+	private static Logger logger;
 	
     // - MainFrame positioning --------------------------------------------------
     // --------------------------------------------------------------------------
@@ -89,7 +89,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             try {
                 installLookAndFeel(plaf);
             } catch(Throwable e) {
-                LOGGER.info("Failed to install Look&Feel "+plaf, e);
+                getLogger().info("Failed to install Look&Feel "+plaf, e);
             }
         }
     }
@@ -113,7 +113,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
 
         if (lnfName == null) {
-            LOGGER.debug("Could load look'n feel from preferences");
+            getLogger().debug("Could load look'n feel from preferences");
         }
         
         MuConfigurations.addPreferencesListener(this);
@@ -223,7 +223,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         for (int i=0; i < nbFrames; i++) {
             frame = frames[i];
             if (frame.isShowing()) {
-                LOGGER.debug("disposing frame#"+i);
+                getLogger().debug("disposing frame#"+i);
                 frame.dispose();
             }
         }
@@ -277,14 +277,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      */
     private static void setLookAndFeel(String lnfName) {
         try {
-            ClassLoader oldLoader;
-            Thread      currentThread;
 
             // Initializes class loading.
             // This is necessary due to Swing's UIDefaults.LazyProxyValue behaviour that just
             // won't use the right ClassLoader instance to load resources.
-            currentThread = Thread.currentThread();
-            oldLoader     = currentThread.getContextClassLoader();
+            Thread currentThread = Thread.currentThread();
+            ClassLoader oldLoader = currentThread.getContextClassLoader();
             currentThread.setContextClassLoader(ExtensionManager.getClassLoader());
 
             UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).newInstance());
@@ -292,11 +290,11 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             // Restores the contextual ClassLoader.
             currentThread.setContextClassLoader(oldLoader);
 
-            for(int i=0; i<instance.mainFrames.size(); i++)
-                SwingUtilities.updateComponentTreeUI(instance.mainFrames.get(i));
-        }
-        catch(Throwable e) {
-            LOGGER.debug("Exception caught", e);
+            for (MainFrame mainFrame : instance.mainFrames) {
+                SwingUtilities.updateComponentTreeUI(mainFrame);
+            }
+        } catch(Throwable e) {
+            getLogger().debug("Exception caught", e);
         }
     }
 
@@ -345,7 +343,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * windowClosed is synchronized so that it doesn't get called while quit() is executing.
      */
     public synchronized void windowClosed(WindowEvent e) {
-        LOGGER.trace("called");
+        getLogger().trace("called");
 
         Object source = e.getSource();
         if (source instanceof MainFrame) {
@@ -392,7 +390,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         for (int i = 0; i<nbFrames; i++) {
             Frame frame = frames[i];
             if (frame.isShowing()) {
-                LOGGER.debug("found active frame#"+i);
+                getLogger().debug("found active frame#"+i);
                 return;
             }
         }
@@ -429,5 +427,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     		if (!UIManager.getLookAndFeel().getClass().getName().equals(lnfName))
     			setLookAndFeel(lnfName);
     	}
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(WindowManager.class);
+        }
+        return logger;
     }
 }

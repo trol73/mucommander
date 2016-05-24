@@ -35,7 +35,7 @@ import java.io.IOException;
  * @author Arik Hadas
  */
 public abstract class ToolBarIO extends DefaultHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ToolBarIO.class);
+	private static Logger logger;
 	
 	/* Variables used for XML parsing */
 	/** Root element */
@@ -73,7 +73,7 @@ public abstract class ToolBarIO extends DefaultHandler {
         	ToolBarReader reader = new ToolBarReader(descriptionFile);
         	ToolBarAttributes.setActions(reader.getActionsRead());
         } else {
-            LOGGER.debug("User toolbar.xml was not found, using default toolbar");
+            getLogger().debug("User toolbar.xml was not found, using default toolbar");
         }
         
         toolBarWriter = ToolBarWriter.create();
@@ -88,19 +88,19 @@ public abstract class ToolBarIO extends DefaultHandler {
     	if (ToolBarAttributes.areDefaultAttributes()) {
     		AbstractFile toolBarFile = getDescriptionFile();
     		if (toolBarFile != null && toolBarFile.exists()) {
-    			LOGGER.info("Toolbar use default settings, removing descriptor file");
+                getLogger().info("Toolbar use default settings, removing descriptor file");
     			toolBarFile.delete();
     		} else {
-                LOGGER.debug("Toolbar not modified, not saving");
+                getLogger().debug("Toolbar not modified, not saving");
             }
     	} else if (toolBarWriter != null) {
     		if (wasToolBarModified) {
                 toolBarWriter.write();
             } else {
-                LOGGER.debug("Toolbar not modified, not saving");
+                getLogger().debug("Toolbar not modified, not saving");
             }
     	} else {
-            LOGGER.warn("Could not save toolbar. writer is null");
+            getLogger().warn("Could not save toolbar. writer is null");
         }
     }
     
@@ -152,5 +152,13 @@ public abstract class ToolBarIO extends DefaultHandler {
      */
     public static void setDescriptionFile(File file) throws FileNotFoundException {
         setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ToolBarIO.class);
+        }
+        return logger;
     }
 }

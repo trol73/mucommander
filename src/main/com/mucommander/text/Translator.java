@@ -41,7 +41,7 @@ import com.mucommander.conf.MuPreference;
  * @author Maxence Bernard, Arik Hadas
  */
 public class Translator {
-	private static final Logger LOGGER = LoggerFactory.getLogger(Translator.class);
+	private static Logger logger;
 	
     /** List of all available languages in the dictionary file */
     private static List<Locale> availableLanguages = new ArrayList<>();
@@ -98,11 +98,11 @@ public class Translator {
             // Try to match language with the system's language, only if the system's language
             // has values in dictionary, otherwise use default language (English).
             Locale defaultLocale = Locale.getDefault();
-            LOGGER.info("Language not set in preferences, trying to match system's language (" + defaultLocale + ")");
+            getLogger().info("Language not set in preferences, trying to match system's language (" + defaultLocale + ")");
             return defaultLocale;
         }
 
-        LOGGER.info("Using language set in preferences: " + localeNameFromConf);
+        getLogger().info("Using language set in preferences: " + localeNameFromConf);
         switch (localeNameFromConf) {
             // for backward compatibility
             case "EN": return Locale.forLanguageTag("en-US");
@@ -142,17 +142,17 @@ public class Translator {
         if (availableLanguages.contains(locale)) {
             // Language is available
             bundle = ResourceBundle.getBundle("dictionary", locale, new UTF8Control());
-            LOGGER.debug("Language " + locale + " is available.");
+            getLogger().debug("Language " + locale + " is available.");
         } else {
             // Language is not available, fall back to default language
             bundle = ResourceBundle.getBundle("dictionary", new UTF8Control());
-            LOGGER.debug("Language " + locale + " is not available, falling back to English");
+            getLogger().debug("Language " + locale + " is not available, falling back to English");
         }
         // Set preferred language in configuration file
         MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, locale.toLanguageTag());
 
         Translator.language = locale;
-        LOGGER.debug("Current language has been set to " + Translator.language);
+        getLogger().debug("Current language has been set to " + Translator.language);
     }
 
     /**
@@ -207,7 +207,7 @@ public class Translator {
         } catch (Exception e) {
             text = key;
             System.out.println("No value for " + key +" in language " + language + ", using English value");
-            LOGGER.debug("No value for " + key + " in language " + language + ", using English value");
+            getLogger().debug("No value for " + key + " in language " + language + ", using English value");
         }
 
         // Replace %1, %2 ... parameters by their value
@@ -257,5 +257,13 @@ public class Translator {
             }
             return bundle;
         }
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(Translator.class);
+        }
+        return logger;
     }
 }

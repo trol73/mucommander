@@ -21,6 +21,7 @@ package com.mucommander.ui.action;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ import java.util.regex.Pattern;
  * @author Maxence Bernard, Arik Hadas
  */
 public class ActionManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
 	
     /** MuAction id -> factory map */
     //static final Map<String, ActionFactory> actionFactories = new HashMap<>();

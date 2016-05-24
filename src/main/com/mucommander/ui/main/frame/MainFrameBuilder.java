@@ -43,7 +43,7 @@ import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
  * @author Arik Hadas
  */
 public abstract class MainFrameBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MainFrameBuilder.class);
+	private static Logger logger;
 
 	public abstract MainFrame[] build();
 	
@@ -100,9 +100,9 @@ public abstract class MainFrameBuilder {
         		new AbstractFile[] {FileFactory.getFile(System.getProperty("user.home"))} :
                 initialFolders.toArray(new AbstractFile[initialFolders.size()]);
 
-         LOGGER.debug("initial folders:");
+        getLogger().debug("initial folders:");
          for (AbstractFile result:results)
-        	 LOGGER.debug("\t"+result);
+             getLogger().debug("\t"+result);
         
         return results;
     }
@@ -136,8 +136,8 @@ public abstract class MainFrameBuilder {
         AbstractFile result;
         if (customPath == null || (result = FileFactory.getFile(customPath)) == null || !result.exists())
         	result = getHomeFolder();
-        
-        LOGGER.debug("initial folder: " + result);
+
+        getLogger().debug("initial folder: " + result);
         
         return result.getURL();
     }
@@ -175,4 +175,13 @@ public abstract class MainFrameBuilder {
     protected AbstractFile getHomeFolder() {
     	return FileFactory.getFile(System.getProperty("user.home"));
     }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(MainFrameBuilder.class);
+        }
+        return logger;
+    }
+
 }

@@ -36,7 +36,7 @@ import com.mucommander.commons.file.FileFactory;
  * @author Maxence Bernard, Arik Hadas
  */
 public abstract class ActionKeymapIO extends DefaultHandler  {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ActionKeymapIO.class);
+	private static Logger logger;
 	
 	/* Variables used for XML parsing */
 	protected final static String ROOT_ELEMENT = "keymap";
@@ -130,7 +130,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
     	if (wereActionsModified)
     		writer.write();
     	else
-    		LOGGER.debug("Action keymap not modified, not saving");
+            getLogger().debug("Action keymap not modified, not saving");
     }
     
     protected static void createEmptyFile() throws IOException {
@@ -153,8 +153,16 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
     		ActionKeymap.registerActions(reader.getPrimaryActionsKeymap(), reader.getAlternateActionsKeymap());
     	} else {
     		createEmptyFile();
-    		LOGGER.debug(DEFAULT_ACTIONS_FILE_NAME + " was not found, created empty file");
+    		getLogger().debug(DEFAULT_ACTIONS_FILE_NAME + " was not found, created empty file");
     	}
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ActionKeymapIO.class);
+        }
+        return logger;
     }
 }
 

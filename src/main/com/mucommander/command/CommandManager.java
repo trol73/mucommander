@@ -40,7 +40,7 @@ import com.mucommander.io.backup.BackupOutputStream;
  * @author Nicolas Rinaudo
  */
 public class CommandManager implements CommandBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+	private static Logger logger;
 	
     // - Built-in commands -----------------------------------------------------
     // -------------------------------------------------------------------------
@@ -253,7 +253,7 @@ public class CommandManager implements CommandBuilder {
 
     private static void setDefaultCommand(Command command) {
         if (defaultCommand == null && command.getAlias().equals(FILE_OPENER_ALIAS)) {
-        	LOGGER.debug("Registering '" + command.getCommand() + "' as default command.");
+        	getLogger().debug("Registering '" + command.getCommand() + "' as default command.");
             defaultCommand = command;
         }
     }
@@ -262,7 +262,7 @@ public class CommandManager implements CommandBuilder {
         // Registers the command and marks command as having been modified.
         setDefaultCommand(command);
 
-        LOGGER.debug("Registering '" + command.getCommand() + "' as '" + command.getAlias() + "'");
+        getLogger().debug("Registering '" + command.getCommand() + "' as '" + command.getAlias() + "'");
         final String alias = command.getAlias();
         if (!commands.containsKey(alias)) {
             commands.put(alias, new ArrayList<>());
@@ -308,7 +308,7 @@ public class CommandManager implements CommandBuilder {
         Command command = getCommandForAlias(cmd, null);
 
         if (command == null) {
-        	LOGGER.debug("Failed to create association as '" + command + "' is not known.");
+        	getLogger().debug("Failed to create association as '" + command + "' is not known.");
             throw new CommandException(command + " not found");
         }
 
@@ -527,7 +527,7 @@ public class CommandManager implements CommandBuilder {
      */
     public static void loadAssociations() throws IOException, CommandException {
         AbstractFile file = getAssociationFile();
-        LOGGER.debug("Loading associations from file: " + file.getAbsolutePath());
+        getLogger().debug("Loading associations from file: " + file.getAbsolutePath());
 
         // Tries to load the associations file.
         // Associations are not considered to be modified by this. 
@@ -569,26 +569,17 @@ public class CommandManager implements CommandBuilder {
     public static void writeAssociations() throws CommandException, IOException {
         // Do not save the associations if they were not modified.
         if (!wereAssociationsModified) {
-            LOGGER.debug("Custom file associations not modified, skip saving.");
+            getLogger().debug("Custom file associations not modified, skip saving.");
             return;
         }
-            LOGGER.debug("Writing associations to file: " + getAssociationFile());
+        getLogger().debug("Writing associations to file: " + getAssociationFile());
 
-            // Writes the associations.
-        BackupOutputStream out = null;
-            try {
-                buildAssociations(new AssociationWriter(out = new BackupOutputStream(getAssociationFile())));
-                wereAssociationsModified = false;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch(Exception e) {
-                        // Ignores this.
-                    }
-                }
-            }
+        // Writes the associations.
+        try (BackupOutputStream out = new BackupOutputStream(getAssociationFile())) {
+            buildAssociations(new AssociationWriter(out));
+            wereAssociationsModified = false;
         }
+    }
 
 
 
@@ -690,10 +681,10 @@ public class CommandManager implements CommandBuilder {
     public static void writeCommands() throws IOException, CommandException {
         // Only saves the command if they were modified since the last time they were written.
         if (!wereCommandsModified) {
-            LOGGER.debug("Custom commands not modified, skip saving.");
+            getLogger().debug("Custom commands not modified, skip saving.");
             return;
         }
-            LOGGER.debug("Writing custom commands to file: " + getCommandFile());
+        getLogger().debug("Writing custom commands to file: " + getCommandFile());
 
             // Writes the commands.
         BackupOutputStream out = null;
@@ -725,7 +716,7 @@ public class CommandManager implements CommandBuilder {
      */
     public static void loadCommands() throws IOException, CommandException {
         AbstractFile file = getCommandFile();
-        LOGGER.debug("Loading custom commands from: " + file.getAbsolutePath());
+        getLogger().debug("Loading custom commands from: " + file.getAbsolutePath());
 
         // Tries to load the commands file.
         // Commands are not considered to be modified by this.
@@ -797,5 +788,13 @@ public class CommandManager implements CommandBuilder {
 
             }
         }
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CommandManager.class);
+        }
+        return logger;
     }
 }

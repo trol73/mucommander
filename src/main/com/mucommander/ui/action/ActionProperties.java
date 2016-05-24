@@ -34,7 +34,7 @@ import java.util.*;
 public class ActionProperties {
 	
 	/* Maps action id -> action descriptor */
-	static final Map<String, ActionDescriptor> actionDescriptors = new Hashtable<>(200);
+	static final Map<String, ActionDescriptor> actionDescriptors = new HashMap<>(200);
 
 	private static ActionDescriptor nullActionDescriptor = new NullActionDescriptor();
 	
@@ -47,7 +47,7 @@ public class ActionProperties {
 	private static Map<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
 	/* Maps shortcut -> action id */
 	private static AcceleratorMap defaultAcceleratorMap = new AcceleratorMap();
-	
+
 	/**
 	 * Getter for ActionDescriptor.
 	 * 
@@ -55,7 +55,7 @@ public class ActionProperties {
 	 */
 	public static void addActionDescriptor(ActionDescriptor actionDescriptor) {
 		String actionId = actionDescriptor.getId();
-		
+
 		// Add the descriptor to the descriptors map.
 		actionDescriptors.put(actionId, actionDescriptor);
 		
@@ -64,14 +64,14 @@ public class ActionProperties {
 		if (category != null) {
             actionCategories.add(category);
         }
-		
+
 		// Add the shortcuts in the descriptor to the default keymap
 		KeyStroke defaultActionKeyStroke = actionDescriptor.getDefaultKeyStroke();
 		if (defaultActionKeyStroke != null) {
 			defaultPrimaryActionKeymap.put(actionId, defaultActionKeyStroke);
 			defaultAcceleratorMap.putAccelerator(defaultActionKeyStroke, actionId);
 		}
-		
+
 		KeyStroke defaultActionAlternativeKeyStroke = actionDescriptor.getDefaultAltKeyStroke();
 		if (defaultActionAlternativeKeyStroke != null) {
 			defaultAlternateActionKeymap.put(actionId, defaultActionAlternativeKeyStroke);

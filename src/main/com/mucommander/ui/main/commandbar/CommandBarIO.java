@@ -36,7 +36,7 @@ import com.mucommander.commons.file.FileFactory;
  * @author Arik Hadas
  */
 public abstract class CommandBarIO extends DefaultHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandBarIO.class);
+	private static Logger logger;
 	
 	/* Variables used for XML parsing */
 	/** Root element */
@@ -84,7 +84,7 @@ public abstract class CommandBarIO extends DefaultHandler {
     		CommandBarAttributes.setAttributes(reader.getActionsRead(), reader.getAlternateActionsRead(), reader.getModifierRead());
     	} else {
     		CommandBarAttributes.restoreDefault();
-    		LOGGER.debug(DEFAULT_COMMAND_BAR_FILE_NAME + " was not found, using defaults");
+    		getLogger().debug(DEFAULT_COMMAND_BAR_FILE_NAME + " was not found, using defaults");
     	}
     	
     	// initialize the writer after setting the command-bar initial attributes:
@@ -107,19 +107,19 @@ public abstract class CommandBarIO extends DefaultHandler {
     	if (CommandBarAttributes.areDefaultAttributes()) {
     		AbstractFile commandBarFile = getDescriptionFile();
         	if(commandBarFile != null && commandBarFile.exists()) {
-        		LOGGER.info("Command bar use default settings, removing descriptor file");
+				getLogger().info("Command bar use default settings, removing descriptor file");
         		commandBarFile.delete();
         	} else {
-				LOGGER.debug("Command bar not modified, not saving");
+				getLogger().debug("Command bar not modified, not saving");
 			}
     	} else if (commandBarWriter != null) {
     		if (wasCommandBarModified) {
 				commandBarWriter.write();
 			} else {
-				LOGGER.debug("Command bar not modified, not saving");
+				getLogger().debug("Command bar not modified, not saving");
 			}
     	} else {
-			LOGGER.warn("Could not save command bar. writer is null");
+			getLogger().warn("Could not save command bar. writer is null");
 		}
     }
 	
@@ -169,5 +169,12 @@ public abstract class CommandBarIO extends DefaultHandler {
 		}
         return commandBarFile;
     }
+
+	private static Logger getLogger() {
+		if (logger == null) {
+			logger = LoggerFactory.getLogger(CommandBarIO.class);
+		}
+		return logger;
+	}
 }
 

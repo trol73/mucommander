@@ -54,7 +54,7 @@ import com.mucommander.ui.main.MainFrame;
  * @author Maxence Bernard
  */
 public class CheckVersionDialog extends QuestionDialog {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CheckVersionDialog.class);
+	private static Logger logger;
 	
     /** Parent MainFrame instance */
     private MainFrame mainFrame;
@@ -105,7 +105,7 @@ public class CheckVersionDialog extends QuestionDialog {
         String         jarURL = null;
 
         try {
-            LOGGER.debug("Checking for new version...");
+            getLogger().debug("Checking for new version...");
 
             if (version == null) {
                 version = VersionChecker.getInstance();
@@ -113,7 +113,7 @@ public class CheckVersionDialog extends QuestionDialog {
             //version = VersionChecker.getInstance();
             // A newer version is available
             if(version.isNewVersionAvailable()) {
-                LOGGER.info("A new version is available!");
+                getLogger().info("A new version is available!");
 
                 title = Translator.get("version_dialog.new_version_title");
 
@@ -129,7 +129,7 @@ public class CheckVersionDialog extends QuestionDialog {
             }
             // We're already running latest version
             else {
-                LOGGER.debug("No new version.");
+                getLogger().debug("No new version.");
 
                 // If the version check was not iniated by the user (i.e. was automatic),
                 // we do not need to inform the user that he already has the latest version
@@ -217,5 +217,12 @@ public class CheckVersionDialog extends QuestionDialog {
 		
         // Remember user preference
         MuConfigurations.getPreferences().setVariable(MuPreference.CHECK_FOR_UPDATE, showNextTimeCheckBox.isSelected());
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CheckVersionDialog.class);
+        }
+        return logger;
     }
 }

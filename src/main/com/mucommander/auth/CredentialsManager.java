@@ -55,7 +55,7 @@ import com.mucommander.io.backup.BackupOutputStream;
  * @author Maxence Bernard
  */
 public class CredentialsManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsManager.class);
+	private static Logger logger;
 	
     /** Contains volatile CredentialsMapping instances, lost when the application terminates */
     private static List<CredentialsMapping> volatileCredentialMappings = new Vector<>();
@@ -162,12 +162,12 @@ public class CredentialsManager {
     public static void loadCredentials() throws Exception {
         AbstractFile credentialsFile = getCredentialsFile();
         if (credentialsFile.exists()) {
-        	LOGGER.debug("Found credentials file: "+credentialsFile.getAbsolutePath());
+            getLogger().debug("Found credentials file: "+credentialsFile.getAbsolutePath());
             // Parse the credentials file
             new CredentialsParser().parse(credentialsFile);
-            LOGGER.debug("Credentials file loaded.");
+            getLogger().debug("Credentials file loaded.");
         } else {
-            LOGGER.debug("No credentials file found at " + credentialsFile.getAbsolutePath());
+            getLogger().debug("No credentials file found at " + credentialsFile.getAbsolutePath());
         }
     }
 
@@ -205,9 +205,9 @@ public class CredentialsManager {
         boolean fileSecured = !OsFamily.getCurrent().isUnixBased() || Chmod.chmod(credentialsFile, 0600);     // rw-------
 
         if (fileSecured) {
-            LOGGER.debug("Credentials file saved successfully.");
+            getLogger().debug("Credentials file saved successfully.");
         } else {
-            LOGGER.warn("Credentials file could not be chmod!");
+            getLogger().warn("Credentials file could not be chmod!");
         }
     }
 
@@ -293,9 +293,9 @@ public class CredentialsManager {
 
         boolean persist = credentialsMapping.isPersistent();
 
-        LOGGER.trace("called, realm="+ credentialsMapping.getRealm()+" isPersistent="+ credentialsMapping.isPersistent());
-        LOGGER.trace("before, persistentCredentials="+ persistentCredentialMappings);
-        LOGGER.trace("before, volatileCredentials="+ volatileCredentialMappings);
+        getLogger().trace("called, realm="+ credentialsMapping.getRealm()+" isPersistent="+ credentialsMapping.isPersistent());
+        getLogger().trace("before, persistentCredentials="+ persistentCredentialMappings);
+        getLogger().trace("before, volatileCredentials="+ volatileCredentialMappings);
 
         if (persist) {
             replaceListElement(persistentCredentialMappings, credentialsMapping);
@@ -305,8 +305,8 @@ public class CredentialsManager {
             persistentCredentialMappings.removeElement(credentialsMapping);
         }
 
-        LOGGER.trace("after, persistentCredentials="+ persistentCredentialMappings);
-        LOGGER.trace("after, volatileCredentials="+ volatileCredentialMappings);
+        getLogger().trace("after, persistentCredentials="+ persistentCredentialMappings);
+        getLogger().trace("after, volatileCredentials="+ volatileCredentialMappings);
     }
 
 
@@ -346,7 +346,7 @@ public class CredentialsManager {
      * @param location the FileURL to authenticate
      */
     private static void authenticateImplicit(FileURL location) {
-    	LOGGER.trace("called, fileURL="+ location +" containsCredentials="+ location.containsCredentials());
+        getLogger().trace("called, fileURL="+ location +" containsCredentials="+ location.containsCredentials());
 
         CredentialsMapping creds[] = getMatchingCredentials(location);
         if (creds.length > 0) {
@@ -376,7 +376,7 @@ public class CredentialsManager {
             }
         }
 
-        LOGGER.trace("returning matches="+matches);
+        getLogger().trace("returning matches="+matches);
     }
 
     /**
@@ -449,7 +449,7 @@ public class CredentialsManager {
             }
         }
 
-        LOGGER.trace("returning bestMatchIndex="+bestMatchIndex);
+        getLogger().trace("returning bestMatchIndex="+bestMatchIndex);
 
         return bestMatchIndex;
     }
@@ -509,5 +509,12 @@ public class CredentialsManager {
         public void authenticate(FileURL fileURL) {
             CredentialsManager.authenticateImplicit(fileURL);
         }
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CredentialsManager.class);
+        }
+        return logger;
     }
 }

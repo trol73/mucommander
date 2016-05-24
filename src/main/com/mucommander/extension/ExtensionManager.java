@@ -26,7 +26,6 @@ import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import javax.swing.UIManager;
 
 /**
  * Manages muCommander's extensions.
@@ -74,20 +73,20 @@ public class ExtensionManager {
     // - Extensions folder ------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Path to the extensions folder. */
-    private static       AbstractFile extensionsFolder;
+    private static AbstractFile extensionsFolder;
     /** Default name of the extensions folder. */
-    public  static final String       DEFAULT_EXTENSIONS_FOLDER_NAME = "extensions";
+    public static final String DEFAULT_EXTENSIONS_FOLDER_NAME = "extensions";
 
 
 
     // - Initialisation ---------------------------------------------------------
     // --------------------------------------------------------------------------
-    static {
-        ClassLoader temp;
+    public static void init() {
+        ClassLoader temp = ClassLoader.getSystemClassLoader();
 
         // Initialises the extension class loader.
         // If the system classloader is an instance of AbstractFileClassLoader, use it.
-        if((temp = ClassLoader.getSystemClassLoader()) instanceof AbstractFileClassLoader)
+        if (temp instanceof AbstractFileClassLoader)
             loader = (AbstractFileClassLoader)temp;
 
         // Otherwise, use a new instance of AbstractFileClassLoader.
@@ -194,8 +193,9 @@ public class ExtensionManager {
      */
     public static AbstractFile getExtensionsFolder() throws IOException {
         // If the extensions folder has been set, use it.
-        if(extensionsFolder != null)
+        if (extensionsFolder != null) {
             return extensionsFolder;
+        }
 
         return getDefaultExtensionsFolder();
     }
@@ -228,14 +228,13 @@ public class ExtensionManager {
      * @return      <code>true</code> if the specified file is in the system classpath, <code>false</code> otherwise.
      */
     public static boolean isInClasspath(AbstractFile file) {
-        StringTokenizer parser;
-        String          path;
-
-        path   = file.getAbsolutePath();
-        parser = new StringTokenizer(System.getProperty("java.class.path"), System.getProperty("path.separator"));
-        while(parser.hasMoreTokens())
-            if(parser.nextToken().equals(path))
+        String path = file.getAbsolutePath();
+        StringTokenizer parser = new StringTokenizer(System.getProperty("java.class.path"), System.getProperty("path.separator"));
+        while (parser.hasMoreTokens()) {
+            if (parser.nextToken().equals(path)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -264,8 +263,6 @@ public class ExtensionManager {
      * @throws IOException if an I/O error occurs.
      */
     public static boolean importLibrary(AbstractFile file, boolean force) throws IOException {
-        AbstractFile dest;
-
         // If the file is already in the extensions or classpath,
         // there's nothing to do.
         if(isAvailable(file))
@@ -273,7 +270,7 @@ public class ExtensionManager {
 
         // If the destination file already exists, either delete it
         // if force is set to true or just return false.
-        dest = getExtensionsFile(file.getName());
+        AbstractFile dest = getExtensionsFile(file.getName());
         if(dest.exists()) {
             if(!force)
                 return false;
@@ -304,13 +301,11 @@ public class ExtensionManager {
      * @throws IOException if the extensions folder is not accessible.
      */
     public static void addExtensionsToClasspath() throws IOException {
-        AbstractFile[] files;
-
         // Adds the extensions folder to the classpath.
         addToClassPath(getExtensionsFolder());
 
         // Adds all JAR files contained by the extensions folder to the classpath.
-        files = getExtensionsFolder().ls(new ExtensionFilenameFilter(".jar"));
+        AbstractFile[] files = getExtensionsFolder().ls(new ExtensionFilenameFilter(".jar"));
         for (AbstractFile file : files)
             addToClassPath(file);
     }
@@ -319,5 +314,7 @@ public class ExtensionManager {
      * Returns the <code>ClassLoader</code> used to load all extensions.
      * @return the <code>ClassLoader</code> used to load all extensions.
      */
-    public static ClassLoader getClassLoader() {return loader;}
+    public static ClassLoader getClassLoader() {
+        return loader;
+    }
 }

@@ -41,7 +41,7 @@ import com.mucommander.ui.main.tabs.ConfFileTableTab;
  * @author Arik Hadas
  */
 public class DefaultMainFramesBuilder extends MainFrameBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMainFramesBuilder.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMainFramesBuilder.class);
 	
 	private Configuration snapshot = MuConfigurations.getSnapshot();
 	
