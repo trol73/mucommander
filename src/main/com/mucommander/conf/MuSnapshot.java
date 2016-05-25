@@ -52,7 +52,7 @@ import com.mucommander.ui.viewer.text.TextViewer;
  * @author Arik Hadas
  */
 public class MuSnapshot {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MuSnapshot.class);
+	private static Logger logger;
 	
 	// - Last screen variables -----------------------------------------------
     // -----------------------------------------------------------------------
@@ -556,7 +556,7 @@ public class MuSnapshot {
                 try {
                     screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 } catch (HeadlessException e) {
-                    LOGGER.debug("Could not fetch screen size: " + e.getMessage());
+                    getLogger().debug("Could not fetch screen size: " + e.getMessage());
                 }
             }
         }
@@ -724,5 +724,12 @@ public class MuSnapshot {
         // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
         // in JSplitPane which is anti-natural / confusing
     	configuration.setVariable(getSplitOrientation(index), currentMainFrame.getSplitPane().getOrientation()==JSplitPane.HORIZONTAL_SPLIT?MuSnapshot.VERTICAL_SPLIT_ORIENTATION:MuSnapshot.HORIZONTAL_SPLIT_ORIENTATION);
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(MuSnapshot.class);
+        }
+        return logger;
     }
 }

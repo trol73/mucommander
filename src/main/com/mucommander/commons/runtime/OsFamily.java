@@ -51,7 +51,7 @@ public enum OsFamily {
     UNKNOWN_OS_FAMILY("Unknown");
 
     /** Logger used by this class. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OsFamily.class);
+    private static Logger logger;
 
     /** The String representation of this RuntimeProperty, set at creation time */
     protected final String stringRepresentation;
@@ -60,16 +60,6 @@ public enum OsFamily {
 
     /** Holds the OsFamily of the current runtime environment  */
     private static OsFamily currentValue;
-
-    /**
-     * Determines the current value by parsing the corresponding system property. This method is called automatically
-     * by this class the first time the current value is accessed. However, this method has been made public to allow
-     * to force the initialization if it needs to happen at a predictable time.
-     */
-    static {
-    	currentValue = parseSystemProperty(getRawSystemProperty());
-    	LOGGER.info("Current OS family: {}", currentValue);
-    }
 
     
     OsFamily(String stringRepresentation) {
@@ -92,6 +82,9 @@ public enum OsFamily {
      * @return the OS family of the current runtime environment
      */
     public static OsFamily getCurrent() {
+        if (currentValue == null) {
+            currentValue = parseSystemProperty(getRawSystemProperty());
+        }
         return currentValue;
     }
 
@@ -199,4 +192,11 @@ public enum OsFamily {
 	public boolean isCaseSensitiveFilesystem() {
 		return isCaseSensitiveFilesystem;
 	}
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(OsFamily.class);
+        }
+        return logger;
+    }
 }

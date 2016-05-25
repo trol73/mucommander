@@ -78,7 +78,7 @@ import java.util.WeakHashMap;
  * @author Maxence Bernard
  */
 public abstract class AbstractArchiveFile extends ProxyFile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractArchiveFile.class);
+    private static Logger logger;
 
     /** Archive entries tree */
     protected ArchiveEntryTree entryTreeRoot;
@@ -121,7 +121,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
             while((entry=entries.nextEntry())!=null)
                 treeRoot.addArchiveEntry(entry);
 
-            LOGGER.info("entries tree created in "+(System.currentTimeMillis()-start)+" ms");
+            getLogger().info("entries tree created in "+(System.currentTimeMillis()-start)+" ms");
 
             this.entryTreeRoot = treeRoot;
             declareEntriesTreeUpToDate();
@@ -525,4 +525,11 @@ public abstract class AbstractArchiveFile extends ProxyFile {
 
     // Note: do not override #isDirectory() to always return true, as AbstractArchiveFile instances may be created when
     // the file does not exist yet, and then be mkdir(): in that case, the file will be a directory and not an archive.
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(AbstractArchiveFile.class);
+        }
+        return logger;
+    }
 }

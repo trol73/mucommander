@@ -37,7 +37,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Nicolas Rinaudo
  */
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ThemeReader.class);
+	private static Logger logger;
 	
     private enum State {
     /** Parsing hasn't started yet. */
@@ -168,7 +168,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         // Ignores the content of unknown elements.
         if (unknownElement != null) {
-            LOGGER.debug("Ignoring element " + qName);
+            getLogger().debug("Ignoring element " + qName);
             return;
         }
 
@@ -906,14 +906,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 
         // Computes the font size.
         if ((buffer = attributes.getValue(ATTRIBUTE_SIZE)) == null) {
-            LOGGER.debug("Missing font size attribute in theme, ignoring.");
+            getLogger().debug("Missing font size attribute in theme, ignoring.");
             return null;
 	    }
         int size = Integer.parseInt(buffer);
 
             // Computes the font family.
             if ((buffer = attributes.getValue(ATTRIBUTE_FAMILY)) == null) {
-                LOGGER.debug("Missing font family attribute in theme, ignoring.");
+                getLogger().debug("Missing font family attribute in theme, ignoring.");
                 return null;
         }
 
@@ -924,13 +924,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 
             // Font was found, use it.
             if (isFontAvailable(buffer)) {
-                Font result = new Font(buffer, style, size);
-                return result;
+                return new Font(buffer, style, size);
             }
         }
 
         // No font was found, instructs the ThemeManager to use the system default.
-        LOGGER.debug("Requested font families are not installed on the system, using default.");
+        getLogger().debug("Requested font families are not installed on the system, using default.");
         return null;
     }
 
@@ -944,7 +943,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
 
         // Retrieves the color attribute's value.
         if (buffer == null) {
-            LOGGER.debug("Missing color attribute in theme, ignoring.");
+            getLogger().debug("Missing color attribute in theme, ignoring.");
             return null;
         }
         int color = Integer.parseInt(buffer, 16);
@@ -961,6 +960,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants {
     // -----------------------------------------------------------------------
     private void traceIllegalDeclaration(String element) {
         unknownElement = element;
-        LOGGER.debug("Unexpected start of element " + element + ", ignoring.");
+        getLogger().debug("Unexpected start of element " + element + ", ignoring.");
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ThemeReader.class);
+        }
+        return logger;
     }
 }

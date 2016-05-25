@@ -39,7 +39,7 @@ import java.net.MalformedURLException;
  * @author Maxence Bernard
  */
 class BookmarkParser extends DefaultHandler implements BookmarkConstants {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BookmarkParser.class);
+	private static Logger logger;
 	
     /** Variable used for XML parsing */
     private String bookmarkName;
@@ -127,7 +127,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
         switch (qName) {
             case ELEMENT_BOOKMARK:
                 if (bookmarkName == null || bookmarkLocation == null) {
-                    LOGGER.info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
+                    getLogger().info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
                     return;
                 }
 
@@ -165,5 +165,12 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
                 }
                 break;
         }
+    }
+
+    private static final Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(BookmarkParser.class);
+        }
+        return logger;
     }
 }

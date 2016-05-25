@@ -56,7 +56,7 @@ import java.net.URL;
  * @author Maxence Bernard
  */
 public abstract class ProxyFile extends AbstractFile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyFile.class);
+    private static Logger logger;
 
     /** The proxied file instance */
     protected AbstractFile file;
@@ -238,7 +238,7 @@ public abstract class ProxyFile extends AbstractFile {
             }
         } catch(Exception e) {
             // Should never happen, unless AbstractFile method signatures have changed and FileOperation has not been updated
-            LOGGER.warn("Exception caught, this should not have happened", e);
+            getLogger().warn("Exception caught, this should not have happened", e);
         }
 
         // Otherwise, check for the presence of the UnsupportedFileOperation annotation in the wrapped AbstractFile.
@@ -407,5 +407,12 @@ public abstract class ProxyFile extends AbstractFile {
     @Override
     public void closePushbackInputStream() throws IOException {
     	file.closePushbackInputStream();
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ProxyFile.class);
+        }
+        return logger;
     }
 }

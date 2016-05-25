@@ -75,7 +75,7 @@ import com.mucommander.utils.Callback;
  * @author Maxence Bernard, Arik Hadas
  */
 public class FolderPanel extends JPanel implements FocusListener, QuickListContainer, ActiveTabListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FolderPanel.class);
+	private static Logger logger;
 
 	/** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
@@ -121,9 +121,9 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     FolderPanel(MainFrame mainFrame, ConfFileTableTab[] initialTabs, int indexOfSelectedTab, FileTableConfiguration conf) {
         super(new BorderLayout());
 
-        LOGGER.trace(" initialTabs:");
+        getLogger().trace(" initialTabs:");
         for (FileTableTab tab:initialTabs)
-        	LOGGER.trace("\t"+(tab.getLocation() != null ?  tab.getLocation().toString() : null));
+            getLogger().trace("\t"+(tab.getLocation() != null ?  tab.getLocation().toString() : null));
         		
         this.mainFrame = mainFrame;
         
@@ -538,4 +538,11 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
 		locationTextField.setEnabled(!isCurrentTabLocked);
 		driveButton.setEnabled(!isCurrentTabLocked);
 	}
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(FolderPanel.class);
+        }
+        return logger;
+    }
 }

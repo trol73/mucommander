@@ -47,7 +47,7 @@ import java.util.Random;
  * @author Maxence Bernard
  */
 public abstract class LRUCache<K, V> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LRUCache.class);
+	private static Logger logger;
 	
     /** Cache capacity: maximum number of items this cache can contain */
     protected int capacity;
@@ -102,7 +102,7 @@ public abstract class LRUCache<K, V> {
 
 
     ///////////////////////
-    // Absctract methods //
+    // Abstract methods //
     ///////////////////////
 
     /**
@@ -229,7 +229,7 @@ public abstract class LRUCache<K, V> {
                 // Test the cache for corruption
                 cache.testCorruption();
             } catch(RuntimeException e) {
-                LOGGER.debug("Cache corrupted after "+i+" iterations, cache state="+cache);
+                getLogger().debug("Cache corrupted after "+i+" iterations, cache state="+cache);
                 return;
             }
 
@@ -237,9 +237,16 @@ public abstract class LRUCache<K, V> {
             //			System.out.println(cache.toString());
         }
 
-        LOGGER.debug("Stress test took "+(System.currentTimeMillis()-timeStamp)+" ms.\n");
+        getLogger().debug("Stress test took "+(System.currentTimeMillis()-timeStamp)+" ms.\n");
 
         // Print the cache's state
         System.out.println(cache.toString());
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(LRUCache.class);
+        }
+        return logger;
     }
 }

@@ -34,7 +34,7 @@ import java.awt.Font;
  */
 public abstract class BaseCellRenderer implements TableCellRenderer, ThemeListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseCellRenderer.class);
+    private static Logger logger;
 
     protected FileTable table;
     protected BaseFileTableModel tableModel;
@@ -130,7 +130,15 @@ public abstract class BaseCellRenderer implements TableCellRenderer, ThemeListen
     }
 
     protected void debug(String s) {
-        LOGGER.debug(s);
+        getLogger().debug(s);
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(BaseCellRenderer.class);
+        }
+        return logger;
     }
 
 }

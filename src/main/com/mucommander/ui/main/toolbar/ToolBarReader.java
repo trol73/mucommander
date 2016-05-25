@@ -41,7 +41,7 @@ import com.mucommander.ui.action.ActionManager;
  * @author Maxence Bernard, Arik Hadas
  */
 public class ToolBarReader extends ToolBarIO {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ToolBarReader.class);
+	private static Logger logger;
 
     /** Temporarily used for XML parsing */
     private List<String> actionIdsV;
@@ -50,18 +50,8 @@ public class ToolBarReader extends ToolBarIO {
      * Starts parsing the XML description file.
      */
     ToolBarReader(AbstractFile descriptionFile) throws Exception {
-        InputStream in = null;
-
-        try {
-            in = new BackupInputStream(descriptionFile);
+        try (InputStream in = new BackupInputStream(descriptionFile)) {
             SAXParserFactory.newInstance().newSAXParser().parse(in, this);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(IOException ignore) {
-                }
-            }
         }
     }
     
@@ -94,7 +84,7 @@ public class ToolBarReader extends ToolBarIO {
                     if (ActionManager.isActionExist(actionIdAttribute))
                         actionIdsV.add(actionIdAttribute);
                     else
-                        LOGGER.warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id \"" + actionIdAttribute + "\" not found");
+                        getLogger().warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id \"" + actionIdAttribute + "\" not found");
                 } else {
                     // Resolve action class
                     String actionClassAttribute = attributes.getValue(ACTION_ATTRIBUTE);
@@ -102,7 +92,7 @@ public class ToolBarReader extends ToolBarIO {
                     if (ActionManager.isActionExist(actionId))
                         actionIdsV.add(actionId);
                     else
-                        LOGGER.warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id for class " + actionClassAttribute + " was not found");
+                        getLogger().warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id for class " + actionClassAttribute + " was not found");
                 }
                 break;
             case SEPARATOR_ELEMENT:
@@ -117,5 +107,12 @@ public class ToolBarReader extends ToolBarIO {
                     setModified();
                 break;
         }
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ToolBarReader.class);
+        }
+        return logger;
     }
 }

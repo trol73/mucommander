@@ -45,7 +45,7 @@ import com.mucommander.commons.file.FileURL;
  * @see BonjourMenu
  */
 public class BonjourDirectory implements ServiceListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BonjourDirectory.class);
+	private static Logger logger;
 	
     /** Singleton instance held to prevent garbage collection and also used for synchronization */
     private final static BonjourDirectory instance = new BonjourDirectory();
@@ -90,7 +90,7 @@ public class BonjourDirectory implements ServiceListener {
                 for (String[] KNOWN_SERVICE_TYPE : KNOWN_SERVICE_TYPES)
                     jmDNS.addServiceListener(KNOWN_SERVICE_TYPE[0], instance);
             } catch(IOException e) {
-            	LOGGER.warn("Could not instantiate jmDNS, Bonjour not enabled", e);
+            	getLogger().warn("Could not instantiate jmDNS, Bonjour not enabled", e);
             }
         } else if(!enabled && jmDNS != null) {
             // Shutdown JmDNS
@@ -142,7 +142,7 @@ public class BonjourDirectory implements ServiceListener {
                     return new BonjourService(serviceInfo.getName(), FileURL.getFileURL(serviceInfo.getURL(KNOWN_SERVICE_TYPE[1])), serviceInfo.getQualifiedName());
                 }
             }
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             // Null will be returned
         }
 
@@ -155,7 +155,7 @@ public class BonjourDirectory implements ServiceListener {
     ////////////////////////////////////
 
     public void serviceAdded(final ServiceEvent serviceEvent) {
-    	LOGGER.trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType());
+        getLogger().trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType());
         
         // Ignore if Bonjour has been disabled
         if(!isActive())
@@ -172,7 +172,7 @@ public class BonjourDirectory implements ServiceListener {
     }
 
     public void serviceResolved(ServiceEvent serviceEvent) {
-    	LOGGER.trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType()+" info="+serviceEvent.getInfo());
+        getLogger().trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType()+" info="+serviceEvent.getInfo());
 
         // Ignore if Bonjour has been disabled
         if(!isActive())
@@ -183,7 +183,7 @@ public class BonjourDirectory implements ServiceListener {
         if(serviceInfo!=null) {
             if(serviceInfo.getInetAddress() instanceof Inet6Address) {
                 // IPv6 addresses not supported at this time + they seem not to be correctly handled by ServiceInfo
-            	LOGGER.debug("ignoring IPv6 service");
+                getLogger().debug("ignoring IPv6 service");
                 return;
             }
 
@@ -191,7 +191,7 @@ public class BonjourDirectory implements ServiceListener {
             // Synchronized to properly handle duplicate calls
             synchronized(instance) {
                 if(bs!=null && !services.contains(bs)) {
-                	LOGGER.debug("BonjourService "+bs+" added");
+                    getLogger().debug("BonjourService "+bs+" added");
                     services.add(bs);
                 }
             }
@@ -199,7 +199,7 @@ public class BonjourDirectory implements ServiceListener {
     }
 
     public void serviceRemoved(ServiceEvent serviceEvent) {
-    	LOGGER.trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType());
+        getLogger().trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType());
 
         // Ignore if Bonjour has been disabled
         if(!isActive())
@@ -212,7 +212,7 @@ public class BonjourDirectory implements ServiceListener {
         if(serviceInfo!=null) {
             if(serviceInfo.getInetAddress() instanceof Inet6Address) {
                 // IPv6 addresses not supported at this time + they seem not to be correctly handled by ServiceInfo
-            	LOGGER.debug("ignoring IPv6 service");
+                getLogger().debug("ignoring IPv6 service");
                 return;
             }
 
@@ -221,10 +221,17 @@ public class BonjourDirectory implements ServiceListener {
             synchronized(instance) {
                 // Note: BonjourService#equals() uses the service's fully qualified name as the discriminator.
                 if(bs!=null && services.contains(bs)) {
-                	LOGGER.debug("BonjourService "+bs+" removed");
+                    getLogger().debug("BonjourService "+bs+" removed");
                     services.remove(bs);
                 }
             }
         }
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(BonjourDirectory.class);
+        }
+        return logger;
     }
 }

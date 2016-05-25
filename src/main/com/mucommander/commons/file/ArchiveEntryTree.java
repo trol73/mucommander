@@ -33,7 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author Maxence Bernard
  */
 public class ArchiveEntryTree extends DefaultMutableTreeNode {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArchiveEntryTree.class);
+    private static Logger logger = LoggerFactory.getLogger(ArchiveEntryTree.class);
 
     /**
      * Creates a new empty tree.
@@ -74,9 +74,9 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
                 }
             }
 
-            if(matchFound) {
+            if (matchFound) {
                 if(d==entryDepth) {
-                    LOGGER.trace("Replacing entry for node "+childNode);
+                    getLogger().trace("Replacing entry for node "+childNode);
                     // Replace existing entry
                     childNode.setUserObject(entry);
                 }
@@ -91,7 +91,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
                     node.add(new DefaultMutableTreeNode(entry, true));
                 }
                 else {
-                    LOGGER.trace("Creating node for "+subPath);
+                    getLogger().trace("Creating node for "+subPath);
                     childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getDate(), 0, true), true);
                     node.add(childNode);
                     node = childNode;
@@ -139,5 +139,12 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
         }
 
         return currentNode;
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(AbstractArchiveFile.class);
+        }
+        return logger;
     }
 }

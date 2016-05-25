@@ -38,7 +38,7 @@ import com.mucommander.xml.XmlWriter;
  * @author Arik Hadas
  */
 class CommandBarWriter extends CommandBarIO {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandBarWriter.class);
+	private static Logger logger;
 	
 	// - Singleton -------------------------------------------------------
     // -------------------------------------------------------------------
@@ -61,7 +61,7 @@ class CommandBarWriter extends CommandBarIO {
 			new Writer(bos).write(commandBarActionIds, commandBarAlterativeActionIds, commandBarModifier);
 			wasCommandBarModified = false;
 		} catch (IOException e) {
-			LOGGER.debug("Caught exception", e);
+			getLogger().debug("Caught exception", e);
 		}
 	}
 	
@@ -96,10 +96,17 @@ class CommandBarWriter extends CommandBarIO {
 			attributes.add(ACTION_ID_ATTRIBUTE, actionId);
 			if (alternativeActionId != null)
 				attributes.add(ALT_ACTION_ID_ATTRIBUTE, alternativeActionId);
-			
-            LOGGER.trace("Writing button: action_id = "  + attributes.getValue(ACTION_ID_ATTRIBUTE) + ", alt_action_id = " + attributes.getValue(ALT_ACTION_ID_ATTRIBUTE));
+
+			getLogger().trace("Writing button: action_id = "  + attributes.getValue(ACTION_ID_ATTRIBUTE) + ", alt_action_id = " + attributes.getValue(ALT_ACTION_ID_ATTRIBUTE));
 			
 			writer.writeStandAloneElement(BUTTON_ELEMENT, attributes);
 		}
+	}
+
+	private static Logger getLogger() {
+		if (logger == null) {
+			logger = LoggerFactory.getLogger(CommandBarWriter.class);
+		}
+		return logger;
 	}
 }

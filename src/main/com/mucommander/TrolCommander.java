@@ -706,6 +706,19 @@ public class TrolCommander {
     }
 
 
+    private static class PrepareLoggerTask extends LauncherTask {
+
+        PrepareLoggerTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("prepare_logger", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            getLogger().info("Current OS family: {}", OsFamily.getCurrent());
+        }
+    }
+
+
     private static class LauncherExecutor extends ThreadPoolExecutor {
         private final Set<LauncherTask> runningTasks = new HashSet<>();
         private final int cores;
@@ -758,6 +771,8 @@ public class TrolCommander {
         Profiler.start("init");
         Profiler.start("loading");
 
+        getLogger().info("Current OS family: {}", OsFamily.getCurrent());
+
         String lang = System.getProperty("user.language");
         String country = System.getProperty("user.country");
         if ("tr".equalsIgnoreCase(lang) || "tr".equalsIgnoreCase(country)) {
@@ -777,6 +792,7 @@ public class TrolCommander {
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
             LauncherTask taskPrepareKeystrokeClass = new PrepareKeystrokeClassTask(helper);
+            //LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
             LauncherTask taskStart = new StartTask(helper);
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
@@ -803,6 +819,8 @@ public class TrolCommander {
             LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
+//            tasks.add(taskPrepareLogger);
+
             tasks.add(taskPrepareGraphics);
             tasks.add(taskPrepareKeystrokeClass);
             tasks.add(taskRegisterActions);
@@ -923,6 +941,7 @@ public class TrolCommander {
             });
         }
         Profiler.stop("init");
+
         //Profiler.print();
         //Profiler.hide("launcher.");
         //Profiler.printThreads();

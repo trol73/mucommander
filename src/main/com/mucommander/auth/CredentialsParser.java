@@ -44,7 +44,7 @@ import java.util.Map;
  * @see CredentialsWriter
  */
 class CredentialsParser extends DefaultHandler implements CredentialsConstants {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsParser.class);
+	private static Logger logger;
 	
     // Variables used for XML parsing
     private FileURL url;
@@ -132,7 +132,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
         switch (qName) {
             case ELEMENT_CREDENTIALS:
                 if (url == null || login == null || password == null) {
-                    LOGGER.info("Missing value, credentials ignored: url=" + url + " login=" + login);
+                    getLogger().info("Missing value, credentials ignored: url=" + url + " login=" + login);
                 return;
             }
 
@@ -146,7 +146,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
                 try {
                     password = XORCipher.decryptXORBase64(password);
                 } catch (IOException e) {
-                    LOGGER.info("Password could not be decrypted: " + password + ", credentials will be ignored");
+                    getLogger().info("Password could not be decrypted: " + password + ", credentials will be ignored");
                 return;
             }
 
@@ -157,7 +157,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
                 try {
                     url = FileURL.getFileURL(characters.toString().trim());
                 } catch (MalformedURLException e) {
-                    LOGGER.info("Malformed URL: " + characters + ", location will be ignored");
+                    getLogger().info("Malformed URL: " + characters + ", location will be ignored");
         }
                 break;
             case ELEMENT_LOGIN:
@@ -172,5 +172,13 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
     @Override
     public void characters(char[] ch, int offset, int length) {
         characters.append(ch, offset, length);
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CredentialsParser.class);
+        }
+        return logger;
     }
 }

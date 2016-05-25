@@ -41,7 +41,7 @@ import java.util.List;
  * @author Maxence Bernard, Arik Hadas
  */
 class CommandBarReader extends CommandBarIO {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandBarReader.class);
+	private static Logger logger;
 	
     /** Temporarily used for XML parsing */
     private List<String> actionsIdsV;
@@ -62,18 +62,9 @@ class CommandBarReader extends CommandBarIO {
      */
     CommandBarReader(AbstractFile file) throws SAXException, IOException, ParserConfigurationException {
     	this.file = file;
-    	
-    	InputStream in = null;
-        try {
-            in = new BackupInputStream(file);
+
+        try (InputStream in = new BackupInputStream(file)) {
             SAXParserFactory.newInstance().newSAXParser().parse(in, this);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ignore) {
-                }
-            }
         }
     }
 
@@ -105,7 +96,7 @@ class CommandBarReader extends CommandBarIO {
 
     @Override
     public void startDocument() {
-    	LOGGER.trace(file.getAbsolutePath()+" parsing started");
+        getLogger().trace(file.getAbsolutePath()+" parsing started");
 
         actionsIdsV = new ArrayList<>();
         alternateActionsIdsV = new ArrayList<>();
@@ -114,7 +105,7 @@ class CommandBarReader extends CommandBarIO {
 
     @Override
     public void endDocument() {
-    	LOGGER.trace(file.getAbsolutePath()+" parsing finished");
+        getLogger().trace(file.getAbsolutePath()+" parsing finished");
     }
 
     @Override
@@ -148,13 +139,13 @@ class CommandBarReader extends CommandBarIO {
         					if (ActionManager.isActionExist(actionId))
         						alternateActionsIdsV.add(actionId);
         					else {
-        						LOGGER.warn("Error in "+DEFAULT_COMMAND_BAR_FILE_NAME+": action id for " + actionClassAttribute + " not found");
+        						getLogger().warn("Error in "+DEFAULT_COMMAND_BAR_FILE_NAME+": action id for " + actionClassAttribute + " not found");
         						alternateActionsIdsV.add(null);
         					}
         				}
         			}
         			else
-        				LOGGER.warn("Error in "+DEFAULT_COMMAND_BAR_FILE_NAME+": action id for " + actionClassAttribute + " not found");
+                        getLogger().warn("Error in "+DEFAULT_COMMAND_BAR_FILE_NAME+": action id for " + actionClassAttribute + " not found");
         		}
         	}
         }
@@ -169,5 +160,12 @@ class CommandBarReader extends CommandBarIO {
     		if (!RuntimeConstants.VERSION.equals(fileVersion))
     			setModified();
         }
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CommandBarReader.class);
+        }
+        return logger;
     }
 }

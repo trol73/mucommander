@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Maxence Bernard
  */
 public class ShutdownHook extends Thread {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownHook.class);
+	private static Logger logger;
 	
     /** Whether shutdown tasks have been performed already. */
     private static boolean shutdownTasksPerformed;
@@ -43,7 +43,7 @@ public class ShutdownHook extends Thread {
     /**
      * Creates a new <code>ShutdownHook</code>.
      */
-    public ShutdownHook() {
+    ShutdownHook() {
         super(ShutdownHook.class.getName());
     }
 
@@ -52,7 +52,7 @@ public class ShutdownHook extends Thread {
      * Shuts down muCommander.
      */
     public static void initiateShutdown() {
-        LOGGER.info("shutting down");
+        getLogger().info("shutting down");
 
 //            // No need to call System.exit() under Java 1.4, application will naturally exit
 //            // when no there is no more window showing and no non-daemon thread still running.
@@ -86,25 +86,40 @@ public class ShutdownHook extends Thread {
         TreeIOThreadManager.getInstance().interrupt();
 
         // Save snapshot
-        try{MuConfigurations.saveSnapshot();}
-        catch(Exception e) {LOGGER.warn("Failed to save snapshot", e);}
+        try{
+            MuConfigurations.saveSnapshot();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save snapshot", e);
+        }
         
         // Save preferences
         // Don't need to save preferences on shutdown because it saves in Preferences edit dialog on Ok pressed
-        try {MuConfigurations.savePreferences();}
-        catch(Exception e) {LOGGER.warn("Failed to save configuration", e);}
+        try {
+            MuConfigurations.savePreferences();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save configuration", e);
+        }
 
         // Save shell history
-        try {ShellHistoryManager.writeHistory();}
-        catch(Exception e) {LOGGER.warn("Failed to save shell history", e);}
+        try {
+            ShellHistoryManager.writeHistory();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save shell history", e);
+        }
 
         // Write credentials file to disk, only if changes were made
-        try {CredentialsManager.writeCredentials(false);}
-        catch(Exception e) {LOGGER.warn("Failed to save credentials", e);}
+        try {
+            CredentialsManager.writeCredentials(false);
+        } catch(Exception e) {
+            getLogger().warn("Failed to save credentials", e);
+        }
 
         // Write bookmarks file to disk, only if changes were made
-        try {BookmarkManager.writeBookmarks(false);}
-        catch(Exception e) {LOGGER.warn("Failed to save bookmarks", e);}
+        try {
+            BookmarkManager.writeBookmarks(false);
+        } catch(Exception e) {
+            getLogger().warn("Failed to save bookmarks", e);
+        }
 
         // Saves the current theme.
 //        try {ThemeManager.saveCurrentTheme();}
@@ -117,19 +132,35 @@ public class ShutdownHook extends Thread {
 //        catch(Exception e) {LOGGER.warn("Failed to save associations", e);}
         
         // Saves the action keymap.
-        try { ActionKeymapIO.saveActionKeymap(); }
-        catch(Exception e) {LOGGER.warn("Failed to save action keymap", e);}
+        try {
+            ActionKeymapIO.saveActionKeymap();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save action keymap", e);
+        }
         
         // Saves the command bar.
-        try { CommandBarIO.saveCommandBar(); }
-        catch(Exception e) {LOGGER.warn("Failed to save command bar", e); }
+        try {
+            CommandBarIO.saveCommandBar();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save command bar", e);
+        }
         
         // Saves the tool bar.
-        try { ToolBarIO.saveToolBar(); }
-        catch(Exception e) {LOGGER.warn("Failed to save toolbar", e); }
+        try {
+            ToolBarIO.saveToolBar();
+        } catch(Exception e) {
+            getLogger().warn("Failed to save toolbar", e);
+        }
         
 
         // Shutdown tasks should only be performed once
         shutdownTasksPerformed = true;
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(ShutdownHook.class);
+        }
+        return logger;
     }
 }

@@ -87,7 +87,7 @@ import com.mucommander.ui.quicksearch.QuickSearch;
  */
 public class FileTable extends JTable implements MouseListener, MouseMotionListener, KeyListener,
                                                  ActivePanelListener, ConfigurationListener, ThemeListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileTable.class);
+	private static Logger logger;
 	
     // - Column sizes --------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -2241,7 +2241,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             } catch (Throwable e) {
                 // While no such thing should happen, we want to make absolutely sure no exception
                 // is propagated to the AWT event dispatch thread.
-                LOGGER.warn("Caught exception while changing folder, this should not happen!", e);
+                getLogger().warn("Caught exception while changing folder, this should not happen!", e);
             } finally {
                 // Notify #setCurrentFolder that we're done changing the folder.
                 synchronized(this) {
@@ -2272,6 +2272,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     public int getFilesCount() {
         return ((BaseFileTableModel)getModel()).getFilesCount();
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(FileTable.class);
+        }
+        return logger;
     }
 
 

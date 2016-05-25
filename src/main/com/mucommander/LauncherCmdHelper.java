@@ -32,7 +32,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO;
  * @author Maxence Bernard, Nicolas Rinaudo, Oleg Trifonov
  */
 public class LauncherCmdHelper {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TrolCommander.class);
+	private static Logger logger;
 
     /**
      * Whether or not to display verbose error messages.
@@ -319,11 +319,11 @@ public class LauncherCmdHelper {
      */
     private static void printError(String msg, boolean quit) {
         if (quit) {
-        	LOGGER.error(msg);
+        	getLogger().error(msg);
             System.err.println("See mucommander --help for more information.");
             System.exit(1);
-        }else{
-        	LOGGER.warn(msg);        	
+        } else{
+        	getLogger().warn(msg);
         }
     }
 
@@ -376,6 +376,14 @@ public class LauncherCmdHelper {
         String[] folders = new String[args.length - index];
         System.arraycopy(args, index, folders, 0, folders.length);
         return folders;
+    }
+
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(TrolCommander.class);
+        }
+        return logger;
     }
 
 }
