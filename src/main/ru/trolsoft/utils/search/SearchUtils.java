@@ -46,7 +46,7 @@ public class SearchUtils {
                 return i - pattern.length() + 1;
             }
         }
-        source.close();
+//        source.close();
         return -1;
     }
 

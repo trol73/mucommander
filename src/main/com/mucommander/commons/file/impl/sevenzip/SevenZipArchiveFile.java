@@ -17,39 +17,124 @@
  */
 package com.mucommander.commons.file.impl.sevenzip;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.impl.SevenZipJBindingROArchiveFile;
-
-import net.sf.sevenzipjbinding.ArchiveFormat;
-import net.sf.sevenzipjbinding.ExtractAskMode;
-import net.sf.sevenzipjbinding.ExtractOperationResult;
-import net.sf.sevenzipjbinding.IArchiveExtractCallback;
-import net.sf.sevenzipjbinding.IArchiveOpenVolumeCallback;
-import net.sf.sevenzipjbinding.IInArchive;
-import net.sf.sevenzipjbinding.IInStream;
-import net.sf.sevenzipjbinding.ISequentialOutStream;
-import net.sf.sevenzipjbinding.PropID;
-import net.sf.sevenzipjbinding.SevenZipException;
+import com.mucommander.commons.file.*;
+import com.mucommander.commons.util.CircularByteBuffer;
+import net.sf.sevenzipjbinding.*;
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Created on 23/05/14.
  * @author Oleg Trifonov
  */
-public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
+public class SevenZipArchiveFile extends AbstractROArchiveFile {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SevenZipArchiveFile.class);
+
+    private ISevenZipInArchive inArchive;
+    private ArchiveOpenVolumeCallback archiveOpenVolumeCallback;
+
+    /**
+     * Creates an AbstractROArchiveFile on top of the given file.
+     *
+     * @param file the file on top of which to create the archive
+     */
+    protected SevenZipArchiveFile(AbstractFile file) {
+        super(file);
+    }
+
+    private ISevenZipInArchive openSevenZipFile() throws IOException, SevenZipException {
+        if (inArchive == null) {
+            archiveOpenVolumeCallback = new ArchiveOpenVolumeCallback();
+            SevenZipRandomAccessFile in = new SevenZipRandomAccessFile(file);
+            inArchive = SevenZip.openInArchive(ArchiveFormat.SEVEN_ZIP, in);
+            //new VolumedArchiveInStream(in, archiveOpenVolumeCallback));
+        }
+        return inArchive;
+    }
 
 
-    public SevenZipArchiveFile(AbstractFile file, ArchiveFormat sevenZipJBindingFormat, byte[] formatSignature) {
-        super(file, sevenZipJBindingFormat, formatSignature);
+    @Override
+    public ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+        try {
+            final ISevenZipInArchive sevenZipFile = openSevenZipFile();
+            int nbEntries = sevenZipFile.getNumberOfItems();
+            List<ArchiveEntry> entries = new ArrayList<>();
+            for (int i = 0; i < nbEntries; i++) {
+                entries.add(createArchiveEntry(i));
+            }
+            return new WrapperArchiveEntryIterator(entries.iterator());
+        } catch (SevenZipException e) {
+            throw new IOException(e);
+        } finally {
+            try {
+                if (inArchive != null) {
+                    inArchive.close();
+                }
+            } catch (SevenZipException e) {
+                System.err.println("Error closing archive: " + e);
+            }
+            inArchive = null;
+        }
 
+    }
+
+    @Override
+    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+        final int[] in = new int[1];
+        in[0] = (Integer)entry.getEntryObject();
+        final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    final ISevenZipInArchive sevenZipFile = openSevenZipFile();
+                    sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
+                } catch (SevenZipException | IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (inArchive != null) {
+                        try {
+                            inArchive.close();
+                        } catch (SevenZipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        cbb.getOutputStream().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    inArchive = null;
+                }
+            }
+        }.start();
+
+        return cbb.getInputStream();
+    }
+
+
+
+
+    /**
+     * Creates and return an {@link ArchiveEntry()} whose attributes are fetched from the given {@link com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZipEntry}
+     *
+     * @param i the index of entry
+     * @return an ArchiveEntry whose attributes are fetched from the given SevenZipEntry
+     */
+    private ArchiveEntry createArchiveEntry(int i) throws IOException, SevenZipException {
+        final ISevenZipInArchive sevenZipFile = openSevenZipFile();
+        String path = sevenZipFile.getStringProperty(i, PropID.PATH);
+        boolean isDirectory = (Boolean)sevenZipFile.getProperty(i, PropID.IS_FOLDER);
+        Date time = (Date)sevenZipFile.getProperty(i, PropID.LAST_WRITE_TIME);
+        long size = (Long)sevenZipFile.getProperty(i, PropID.SIZE);
+        ArchiveEntry result = new ArchiveEntry(path, isDirectory, time.getTime(), size, true);
+        result.setEntryObject(i);
+        return result;
     }
 
     private static class ArchiveOpenVolumeCallback implements IArchiveOpenVolumeCallback {
@@ -132,10 +217,10 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
         private long size = 0;
         private int index;
         private boolean skipExtraction;
-        private IInArchive inArchive;
+        private ISevenZipInArchive inArchive;
         private OutputStream os;
 
-        public ExtractCallback(IInArchive inArchive, OutputStream os) {
+        public ExtractCallback(ISevenZipInArchive inArchive, OutputStream os) {
             this.inArchive = inArchive;
             this.os = os;
         }

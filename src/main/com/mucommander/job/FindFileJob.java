@@ -28,6 +28,7 @@ import ru.trolsoft.utils.search.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,12 +129,12 @@ public class FindFileJob extends FileJob {
             return false;
         }
 
-        try {
-            SearchSourceStream source = new InputStreamSource(f.getInputStream());
+        try (InputStream is = getCurrentFile().getInputStream()) {
+            SearchSourceStream source = new InputStreamSource(is);
             long pos = SearchUtils.indexOf(source, searchPattern);
             //Profiler.stop("check_new");
             return pos >= 0;
-        } catch (SearchException | IOException e) {
+        } catch (IOException | SearchException e) {
             e.printStackTrace();
             return false;
         }
