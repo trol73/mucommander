@@ -99,6 +99,9 @@ public class MainFrame extends JFrame implements LocationListener {
     /** Is this MainFrame active in the foreground ? */
     private boolean foregroundActive;
 
+    /** Is single panel view? */
+    private boolean singlePanel;
+
     /** Contains all registered ActivePanelListener instances, stored as weak references */
     private WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<>();
 
@@ -684,7 +687,27 @@ public class MainFrame extends JFrame implements LocationListener {
             getRootPane().putClientProperty("Window.documentFile", javaIoFile);
         }
     }
-    
+
+
+    /**
+     * Returns <code>true</code> if only one panel is show
+     *
+     * @return <code>true</code> if only one panel is show
+     */
+    public boolean isSinglePanel() {
+        return singlePanel;
+    }
+
+    /**
+     * Toggles single panel view state and returns new one
+     *
+     * @return new state for singlePanel boolean
+     */
+    public boolean toggleSinglePanel() {
+        singlePanel = !singlePanel;
+        return singlePanel;
+    }
+
 
     ///////////////////////
     // Overridden methods //

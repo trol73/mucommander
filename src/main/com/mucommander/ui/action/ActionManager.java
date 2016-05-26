@@ -206,6 +206,7 @@ public class ActionManager {
     	registerAction(new SplitHorizontallyAction.Descriptor());
     	registerAction(new SplitVerticallyAction.Descriptor());
     	registerAction(new StopAction.Descriptor());
+		registerAction(new ToggleSinglePanelAction.Descriptor());
     	registerAction(new SwapFoldersAction.Descriptor());
     	registerAction(new SwitchActiveTableAction.Descriptor());
     	registerAction(new ToggleAutoSizeAction.Descriptor());

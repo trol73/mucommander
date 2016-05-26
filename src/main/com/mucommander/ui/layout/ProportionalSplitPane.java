@@ -204,9 +204,16 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         }
     }
 
+    /**
+     * Returns current pane split ratio.
+     */
+    public float getSplitRatio() {
+        return this.splitRatio;
+    }
+
     public void componentShown(ComponentEvent e) {
         // Called when the window is made visible
-        if(e.getSource()==window) {
+        if (e.getSource() == window) {
             // Set initial divider's location
             updateDividerLocation();
         }
@@ -221,8 +228,9 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
     ///////////////////////////
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        if(DesktopManager.isLeftMouseButton(mouseEvent) && mouseEvent.getClickCount()==2)
+        if (DesktopManager.isLeftMouseButton(mouseEvent) && mouseEvent.getClickCount()==2) {
             setSplitRatio(0.5f);
+        }
     }
 
     public void mousePressed(MouseEvent mouseEvent) {
