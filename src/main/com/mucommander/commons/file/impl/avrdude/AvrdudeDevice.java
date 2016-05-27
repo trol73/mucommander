@@ -18,13 +18,9 @@
 package com.mucommander.commons.file.impl.avrdude;
 
 import com.mucommander.commons.file.util.ResourceLoader;
-import com.mucommander.commons.io.FileTransferException;
-import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.ui.chooser.IntegerChooser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -35,7 +31,7 @@ import java.util.Map;
  * Created on 13/04/16.
  */
 public class AvrdudeDevice {
-    private static final String AVRDUDE_RESOURCE_NAME = "avrdude.csv";
+    private static final String AVRDUDE_RESOURCE_NAME = "/avr/avrdude.csv";
 
     public final String id;
     public final String name;
@@ -68,7 +64,7 @@ public class AvrdudeDevice {
 
     private static Map<String, AvrdudeDevice> load() {
         Map<String, AvrdudeDevice> result = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(ResourceLoader.getPackageResourceAsStream(AvrdudeDevice.class.getPackage(), AVRDUDE_RESOURCE_NAME)))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceAsStream(AVRDUDE_RESOURCE_NAME)))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(":");

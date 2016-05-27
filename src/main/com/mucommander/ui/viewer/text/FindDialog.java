@@ -102,6 +102,9 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
 
     public void setText(String text) {
         findField.setText(text);
+        if (text != null) {
+            findField.select(0, text.length());
+        }
     }
 
     /**

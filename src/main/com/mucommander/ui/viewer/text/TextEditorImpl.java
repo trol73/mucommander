@@ -23,6 +23,7 @@ import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.text.Translator;
+import com.mucommander.tools.AvrAssemblerCommandsHelper;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
@@ -40,6 +41,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -73,40 +75,72 @@ class TextEditorImpl implements ThemeListener {
 
                 // check if we have 6-digit hex-word on cursor (color)
                 String str = textArea.getLineStr(line);
-                if (str == null || str.length() < 6 || col >= str.length()) {
+                if (str == null || str.isEmpty()) {
+                    statusBar.setColor(-1);
+                    if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
+                        statusBar.setStatusMessage("");
+                    }
                     return;
                 }
-                char ch = str.charAt(col);
-                if (isHexDigit(ch)) {
-                    String word = "" + ch;
-                    for (int pos = col-1; pos >= 0; pos--) {
-                        char c = str.charAt(pos);
-                        if (isHexDigit(c)) {
-                            word = c + word;
-                        } else {
+                if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
+                    StringTokenizer tokenizer = new StringTokenizer(str, " \t\n\r");
+                    boolean found = false;
+                    while (tokenizer.hasMoreElements()) {
+                        String instruction = tokenizer.nextToken();
+                        if (instruction.endsWith(":") || instruction.startsWith(";") || instruction.startsWith("//")) {
+                            continue;
+                        }
+                        String description = AvrAssemblerCommandsHelper.getCommandDescription(instruction);
+                        if (description != null) {
+                            statusBar.setStatusMessage(description);
+                            found = true;
                             break;
                         }
                     }
-                    for (int pos = col+1; pos < str.length(); pos++) {
-                        char c = str.charAt(pos);
-                        if (isHexDigit(c)) {
-                            word = word + c;
-                        } else {
-                            break;
-                        }
+                    if (!found) {
+                        statusBar.setStatusMessage("");
                     }
-                    if (word.length() == 6) {
-                        statusBar.setColor(Integer.parseInt(word, 16));
-                    } else {
-                        statusBar.setColor(-1);
-                    }
-                } else {
-                    statusBar.setColor(-1);
                 }
-
+                checkColorOnCursor(str, col);
             }
         }
     };
+
+
+    private boolean checkColorOnCursor(String str, int col) {
+        if (str.length() < 6 || col >= str.length()) {
+            return false;
+        }
+        char ch = str.charAt(col);
+        if (isHexDigit(ch)) {
+            String word = "" + ch;
+            for (int pos = col-1; pos >= 0; pos--) {
+                char c = str.charAt(pos);
+                if (isHexDigit(c)) {
+                    word = c + word;
+                } else {
+                    break;
+                }
+            }
+            for (int pos = col+1; pos < str.length(); pos++) {
+                char c = str.charAt(pos);
+                if (isHexDigit(c)) {
+                    word = word + c;
+                } else {
+                    break;
+                }
+            }
+            if (word.length() == 6) {
+                statusBar.setColor(Integer.parseInt(word, 16));
+                return true;
+            } else {
+                statusBar.setColor(-1);
+            }
+        } else {
+            statusBar.setColor(-1);
+        }
+        return false;
+    }
 
 
     private static boolean isHexDigit(char ch) {
@@ -162,18 +196,18 @@ class TextEditorImpl implements ThemeListener {
 		textArea.setWrapStyleWord(true);
 
 		textArea.addMouseWheelListener(e -> {
-				boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
-				if (isCtrlPressed) {
-					Font currentFont = textArea.getFont();
-					int currentFontSize = currentFont.getSize();
-					boolean rotationUp = e.getWheelRotation() < 0;
-					if ((!rotationUp && currentFontSize > 1) || rotationUp) {
-						Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
-						textArea.setFont(newFont);
-					}
-				} else {
-					textArea.getParent().dispatchEvent(e);
-				}
+            boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+            if (isCtrlPressed) {
+                Font currentFont = textArea.getFont();
+                int currentFontSize = currentFont.getSize();
+                boolean rotationUp = e.getWheelRotation() < 0;
+                if ((!rotationUp && currentFontSize > 1) || rotationUp) {
+                    Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
+                    textArea.setFont(newFont);
+                }
+            } else {
+                textArea.getParent().dispatchEvent(e);
+            }
 		});
 
         textArea.addCaretListener(caretListener);
