@@ -87,25 +87,27 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
         new Thread() {
             @Override
             public void run() {
-                try {
-                    final IInArchive sevenZipFile = openInArchive();
-                    sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (inArchive != null) {
-                        try {
-                            inArchive.close();
-                        } catch (SevenZipException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                synchronized (SevenZipJBindingROArchiveFile.this) {
                     try {
-                        cbb.getOutputStream().close();
+                        final IInArchive sevenZipFile = openInArchive();
+                        sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } finally {
+                        if (inArchive != null) {
+                            try {
+                                inArchive.close();
+                            } catch (SevenZipException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            cbb.getOutputStream().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        inArchive = null;
                     }
-                    inArchive = null;
                 }
             }
         }.start();
