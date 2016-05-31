@@ -143,7 +143,7 @@ public class FileFactory {
         registerArchiveFormat(new com.mucommander.commons.file.impl.cpio.CpioFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.deb.DebFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.lzh.LzhFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.lzma.LzmaFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.lzma.LzmaFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.udf.UdfFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.wim.WimFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.xar.XarFormatProvider());
