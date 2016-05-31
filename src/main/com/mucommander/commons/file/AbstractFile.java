@@ -1965,7 +1965,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return he stream which can be re-used for file reading
      * @throws IOException
      */
-    public PushbackInputStream getPushBackInputStream(final int bufferSize) throws IOException {
+    public synchronized PushbackInputStream getPushBackInputStream(final int bufferSize) throws IOException {
         if (pushbackInputStream == null) {
             pushbackInputStream = new MuPushbackInputStream(getInputStream(), bufferSize);
         } else if (pushbackInputStream.getBufferSize() < bufferSize) {
@@ -2001,9 +2001,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         }
 
         @Override
-        public synchronized void close() throws IOException {
-            super.close();
-            pushbackInputStream = null;
+        public void close() throws IOException {
+            synchronized (AbstractFile.this) {
+                super.close();
+                pushbackInputStream = null;
+            }
         }
 
         int getBufferSize() {
