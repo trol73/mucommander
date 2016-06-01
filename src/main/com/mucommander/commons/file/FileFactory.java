@@ -138,16 +138,16 @@ public class FileFactory {
         registerArchiveFormat(new com.mucommander.commons.file.impl.rar.RarFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.sevenzip.SevenZipFormatProvider());
 
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.arj.ArjFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.cab.CabFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.cpio.CpioFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.deb.DebFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.lzh.LzhFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.lzma.LzmaFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.udf.UdfFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.wim.WimFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.xar.XarFormatProvider());
-//        registerArchiveFormat(new com.mucommander.commons.file.impl.z.ZFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.arj.ArjFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.cab.CabFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.cpio.CpioFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.deb.DebFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.lzh.LzhFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.lzma.LzmaFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.udf.UdfFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.wim.WimFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.xar.XarFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.z.ZFormatProvider());
 
         /*SevenZipJBindings RPM support lacks RPM Metadata - only payload would be available - there are better java
          *  libs available for handling RPM */
