@@ -42,7 +42,6 @@ public class ExecutorUtils {
     public static int executeAndGetOutput(String command, AbstractFile currentFolder, ExecutionFinishListener executionFinishListener,
                                            String encoding) throws IOException, InterruptedException {
         StringBuffer out = new StringBuffer();
-
         AbstractProcess process = execute(command, currentFolder, new ProcessListener() {
                 @Override
                 public void processDied(int returnValue) {}

@@ -18,6 +18,7 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.AbstractFileFilter;
 import com.mucommander.commons.file.filter.AndFileFilter;
@@ -25,6 +26,7 @@ import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.process.ExecutionFinishListener;
 import com.mucommander.process.ExecutorUtils;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
@@ -65,9 +67,9 @@ public class CompareFilesAction extends SelectedFilesAction {
     @Override
     public void performAction(FileSet files) {
         try {
-            String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath();
-            String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath();
-            ExecutorUtils.execute("opendiff " + leftFile + " " + rightFile);
+            String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
+            String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
+            ExecutorUtils.execute("/usr/bin/opendiff " + leftFile + " " + rightFile);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
