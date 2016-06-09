@@ -18,44 +18,83 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.jidesoft.swing.JideSplitButton;
+import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.ui.viewer.FileViewersList;
+
+import javax.swing.SwingUtilities;
+
+import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
 
 /**
  * Created on 09/06/16.
  * @author Oleg Trifonov
  */
 public class FileWindowsListButton extends JideSplitButton {
+    private long lastUpdateTime;
+    private FileRecord selectedRecord;
 
-    /*
 
-        /*
-                    Frame frames[] = Frame.getFrames();
-            nbFrames = frames.length;
-            boolean firstFrame = true;
-            for (int i = 0; i < nbFrames; i++) {
-                Frame frame = frames[i];
-                // Test if Frame is not hidden (disposed), Frame.getFrames() returns both active and disposed frames
-                if (frame.isShowing() && (frame instanceof FileFrame)) {
-                    // Add a separator before the first non-MainFrame frame to mark a separation between MainFrames
-                    // and other frames
-                    if (firstFrame) {
-                        windowMenu.add(new JSeparator());
-                        firstFrame = false;
-                    }
-                    // Use frame's window title
-                    JMenuItem menuItem = new JMenuItem(frame.getTitle());
-                    menuItem.addActionListener(this);
-                    windowMenu.add(menuItem);
-                    windowMenuFrames.put(menuItem, frame);
-                }
+    public FileWindowsListButton() {
+        super();
+        updateList();
+        addActionListener(e -> showSelectedFile());
+    }
+
+    private void showSelectedFile() {
+        if (selectedRecord == null) {
+            return;
+        }
+        FileFrame fileFrame = selectedRecord.fileFrameRef.get();
+        if (fileFrame != null) {
+            fileFrame.toFront();
+        }
+    }
+
+
+    private void selectFile(FileRecord fileRecord) {
+        setText(fileRecord.shortName);
+        selectedRecord = fileRecord;
+        showSelectedFile();
+    }
+
+
+
+
+    public void updateList() {
+        removeAll();
+        boolean containsSelected = false;
+        for (FileRecord fr: FileViewersList.getFiles()) {
+            add(fr.fileName).addActionListener(e -> selectFile(fr));
+            if (fr == selectedRecord) {
+                containsSelected = true;
             }
+        }
+        if (!containsSelected) {
+            selectedRecord = null;
+        }
 
-    JideSplitButton sb = new JideSplitButton();
-    sb.setText("button");
-    sb.add("---1");
-    sb.add("---2");
-    sb.add("---3");
-    add(sb);
+        if (getMenuComponentCount() > 0) {
+            if (selectedRecord == null) {
+                selectedRecord = FileViewersList.getFiles().get(0);
+            }
+            setText(selectedRecord.shortName);
+            setVisible(true);
+        } else {
+            setVisible(false);
+            selectedRecord = null;
+        }
+        lastUpdateTime = System.currentTimeMillis();
+    }
 
-     */
+
+
+
+    @Override
+    public boolean isVisible() {
+        if (lastUpdateTime < FileViewersList.getLastUpdateTime()) {
+            SwingUtilities.invokeLater(this::updateList);
+        }
+        return super.isVisible();
+    }
 
 }

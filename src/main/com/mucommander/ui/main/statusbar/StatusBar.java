@@ -95,6 +95,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     private TaskPanel taskPanel;
 
+    private FileWindowsListButton fileWindowsListButton;
+
     /** Thread which auto updates volume info */
     private Thread autoUpdateThread;
 
@@ -171,6 +173,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         add(selectedFilesLabel);
 
         add(Box.createHorizontalGlue());
+
+        fileWindowsListButton = new FileWindowsListButton();
+        add(fileWindowsListButton);
 
         taskPanel = new TaskPanel();
         add(taskPanel);

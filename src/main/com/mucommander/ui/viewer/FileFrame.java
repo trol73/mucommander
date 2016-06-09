@@ -31,6 +31,7 @@ public abstract class FileFrame extends JFrame {
 
 //	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
 
+
     /**
      * The file presenter within this frame
      */
@@ -54,6 +55,7 @@ public abstract class FileFrame extends JFrame {
         
         setResizable(true);
 
+        //FileViewersList.update();
         //initContentPane(file);
 	}
 	
@@ -140,6 +142,7 @@ public abstract class FileFrame extends JFrame {
         }
 
         setVisible(true);
+        FileViewersList.update();
     }
 
 	private void showGenericErrorDialog() {
@@ -192,6 +195,7 @@ public abstract class FileFrame extends JFrame {
             if (returnFocusTo != null) {
                 FocusRequester.requestFocus(returnFocusTo);
             }
+            FileViewersList.update();
         } catch (Throwable ignore) {}
     }
 
@@ -222,5 +226,16 @@ public abstract class FileFrame extends JFrame {
 
     public void setSearchedBytes(byte[] searchedBytes) {
         filePresenter.setSearchedBytes(searchedBytes);
+    }
+
+    public FilePresenter getFilePresenter() {
+        return filePresenter;
+    }
+
+
+    @Override
+    public void setTitle(String title) {
+        super.setTitle(title);
+        FileViewersList.update();
     }
 }

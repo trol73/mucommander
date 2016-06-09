@@ -586,11 +586,9 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             // Add 'other' (non-MainFrame) windows : viewer and editor frames, no associated accelerator
             Frame frames[] = Frame.getFrames();
             nbFrames = frames.length;
-            Frame frame;
-            JMenuItem menuItem;
             boolean firstFrame = true;
             for (int i = 0; i < nbFrames; i++) {
-                frame = frames[i];
+                Frame frame = frames[i];
                 // Test if Frame is not hidden (disposed), Frame.getFrames() returns both active and disposed frames
                 if (frame.isShowing() && (frame instanceof FileFrame)) {
                     // Add a separator before the first non-MainFrame frame to mark a separation between MainFrames
@@ -600,7 +598,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
                         firstFrame = false;
                     }
                     // Use frame's window title
-                    menuItem = new JMenuItem(frame.getTitle());
+                    JMenuItem menuItem = new JMenuItem(frame.getTitle());
                     menuItem.addActionListener(this);
                     windowMenu.add(menuItem);
                     windowMenuFrames.put(menuItem, frame);
@@ -611,13 +609,11 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             themesMenu.removeAll();
             ButtonGroup buttonGroup = new ButtonGroup();
             Iterator<Theme> themes = ThemeManager.availableThemes();
-            Theme theme;
-            JCheckBoxMenuItem item;
             themesMenu.add(new JMenuItem(new EditCurrentThemeAction()));
             themesMenu.add(new JSeparator());
             while (themes.hasNext()) {
-                theme = themes.next();
-                item = new JCheckBoxMenuItem(new ChangeCurrentThemeAction(theme));
+                Theme theme = themes.next();
+                JCheckBoxMenuItem item = new JCheckBoxMenuItem(new ChangeCurrentThemeAction(theme));
                 buttonGroup.add(item);
                 if (ThemeManager.isCurrentTheme(theme)) {
                     item.setSelected(true);
