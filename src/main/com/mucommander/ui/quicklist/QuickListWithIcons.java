@@ -38,7 +38,7 @@ import com.mucommander.ui.quicklist.item.QuickListDataListWithIcons;
 
 /**
  * FileTablePopupWithIcons is a FileTablePopupWithDataList in which the data list 
- * 	contains icons.
+ * contains icons.
  * 
  * @author Arik Hadas
  */

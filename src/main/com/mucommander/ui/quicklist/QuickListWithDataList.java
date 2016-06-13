@@ -18,11 +18,13 @@
 
 package com.mucommander.ui.quicklist;
 
+import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.quicklist.item.QuickListDataList;
 import com.mucommander.ui.quicklist.item.QuickListDataModel;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -48,8 +50,22 @@ public abstract class QuickListWithDataList<T> extends QuickList implements KeyL
 		// add JScrollPane that contains the TablePopupDataList to the popup.
 		JScrollPane scroll = new JScrollPane(dataList,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);				
-		scroll.setBorder(null);		        
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER) {
+            @Override
+            public Dimension getPreferredSize() {
+                // default we have quicklist height for 10 lines maximum
+                // calculate new height to better filling
+                if (container instanceof FolderPanel) {
+                    FolderPanel folderPanel = (FolderPanel) container;
+                    Dimension parentSize = folderPanel.getSize();
+                    Dimension preferredSize = dataList.getPreferredSize();
+                    return new Dimension(super.getPreferredSize().width,
+                            preferredSize.height < parentSize.height*8/10 ? preferredSize.height : parentSize.height*8/10);
+                }
+                return super.getPreferredSize();
+            }
+        };
+		scroll.setBorder(null);
 		scroll.getVerticalScrollBar().setFocusable(false);
         scroll.getHorizontalScrollBar().setFocusable(false);
         add(scroll);

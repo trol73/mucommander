@@ -106,7 +106,7 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 			width = Math.max(width, item.getPreferredSize().getWidth());
 			height += item.getPreferredSize().getHeight();
 		}
-		
+
 		return new Dimension((int) Math.ceil(
 				Math.max(container == null ? 0 : container.getWidth() / 2, width * 1.05)), (int) Math.ceil(height));
 	}
