@@ -33,6 +33,12 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
+import com.mucommander.ui.viewer.hex.HexViewer;
+import com.mucommander.ui.viewer.html.HtmlViewer;
+import com.mucommander.ui.viewer.pdf.PdfViewer;
+import com.mucommander.ui.viewer.text.TextEditor;
+import com.mucommander.ui.viewer.text.TextViewer;
+import net.sf.jftp.gui.tasks.ImageViewer;
 
 /**
  * EditorRegistrar maintains a list of registered file editors and provides methods to dynamically register file editors
@@ -67,6 +73,19 @@ public class EditorRegistrar {
      * @return the created EditorFrame
      */
     public static FileFrame createEditorFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+        // Check if this file is already opened
+        for (FileViewersList.FileRecord fr: FileViewersList.getFiles()) {
+            if (fr.fileName.equals(file.getAbsolutePath()) && fr.viewerClass != null) {
+                Class viewerClass = fr.viewerClass;
+                if (viewerClass.equals(TextEditor.class)) {
+                    FileFrame openedFrame = fr.fileFrameRef.get();
+                    if (openedFrame != null) {
+                        openedFrame.toFront();
+                    }
+                    return null;
+                }
+            }
+        }
         EditorFrame frame = new EditorFrame(mainFrame, file, icon);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)

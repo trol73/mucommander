@@ -35,8 +35,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuSnapshot;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.GutterEx;
 import org.slf4j.Logger;
@@ -58,7 +56,7 @@ import com.mucommander.ui.viewer.FileFrame;
  *
  * @author Maxence Bernard, Nicolas Rinaudo, Arik Hadas
  */
-class TextEditor extends FileEditor implements DocumentListener, EncodingListener {
+public class TextEditor extends FileEditor implements DocumentListener, EncodingListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextEditor.class);
 
     //private TextMenuHelper menuHelper;

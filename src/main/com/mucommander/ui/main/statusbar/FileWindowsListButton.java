@@ -18,10 +18,14 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.jidesoft.swing.JideSplitButton;
-import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.FileViewersList;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import java.util.List;
 
 import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
 
@@ -32,19 +36,30 @@ import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
 public class FileWindowsListButton extends JideSplitButton {
     private long lastUpdateTime;
     private FileRecord selectedRecord;
+    private MainFrame selectedMainFrame;
+    private final boolean includeMainFrames;
 
 
-    public FileWindowsListButton() {
+    public FileWindowsListButton(boolean includeMainFrames) {
         super();
+        this.includeMainFrames = includeMainFrames;
         updateList();
         addActionListener(e -> showSelectedFile());
     }
 
+    public FileWindowsListButton() {
+        this(false);
+    }
+
     private void showSelectedFile() {
         if (selectedRecord == null) {
+            if (selectedMainFrame != null) {
+                setText(mainframeName(selectedMainFrame));
+                selectedMainFrame.toFront();
+            }
             return;
         }
-        FileFrame fileFrame = selectedRecord.fileFrameRef.get();
+        JFrame fileFrame = selectedRecord.fileFrameRef.get();
         if (fileFrame != null) {
             fileFrame.toFront();
         }
@@ -62,6 +77,14 @@ public class FileWindowsListButton extends JideSplitButton {
 
     public void updateList() {
         removeAll();
+        if (includeMainFrames) {
+            List<MainFrame> mainFrames = WindowManager.getMainFrames();
+            for (MainFrame mainFrame : mainFrames) {
+                String name = mainframeName(mainFrame);
+                add(name).addActionListener(e -> mainFrame.toFront());
+            }
+
+        }
         boolean containsSelected = false;
         for (FileRecord fr: FileViewersList.getFiles()) {
             add(fr.fileName).addActionListener(e -> selectFile(fr));
@@ -75,9 +98,15 @@ public class FileWindowsListButton extends JideSplitButton {
 
         if (getMenuComponentCount() > 0) {
             if (selectedRecord == null) {
-                selectedRecord = FileViewersList.getFiles().get(0);
+                if (includeMainFrames) {
+                    selectedRecord = null;
+                    selectedMainFrame = WindowManager.getCurrentMainFrame();
+                    setText(mainframeName(selectedMainFrame));
+                } else {
+                    selectedRecord = FileViewersList.getFiles().get(0);
+                    setText(selectedRecord.shortName);
+                }
             }
-            setText(selectedRecord.shortName);
             setVisible(true);
         } else {
             setVisible(false);
@@ -86,7 +115,9 @@ public class FileWindowsListButton extends JideSplitButton {
         lastUpdateTime = System.currentTimeMillis();
     }
 
-
+    private static String mainframeName(MainFrame mainFrame) {
+        return mainFrame.getLeftPanel().getCurrentFolder().getName() + " : " + mainFrame.getRightPanel().getCurrentFolder().getName();
+    }
 
 
     @Override

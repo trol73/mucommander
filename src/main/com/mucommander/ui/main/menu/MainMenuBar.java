@@ -550,13 +550,11 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             
             // create a menu item for each of the MainFrame instances, that displays the MainFrame's path
             // and a keyboard accelerator to recall the frame (for the first 10 frames only).
-            java.util.List<MainFrame> mainFrames = WindowManager.getMainFrames();
-            MainFrame mainFrame;
-            JCheckBoxMenuItem checkBoxMenuItem;
+            List<MainFrame> mainFrames = WindowManager.getMainFrames();
             int nbFrames = mainFrames.size();
             for (int i = 0; i < nbFrames; i++) {
-                mainFrame = mainFrames.get(i);
-                checkBoxMenuItem = new JCheckBoxMenuItem();
+                MainFrame mainFrame = mainFrames.get(i);
+                JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem();
 
                 // If frame number is less than 10, use the corresponding action class (accelerator will be displayed in the menu item)
                 MuAction recallWindowAction;

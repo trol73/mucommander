@@ -33,6 +33,11 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.audio.AudioFactory;
 import com.mucommander.ui.viewer.hex.HexFactory;
+import com.mucommander.ui.viewer.hex.HexViewer;
+import com.mucommander.ui.viewer.html.HtmlViewer;
+import com.mucommander.ui.viewer.pdf.PdfViewer;
+import com.mucommander.ui.viewer.text.TextViewer;
+import net.sf.jftp.gui.tasks.ImageViewer;
 
 /**
  * ViewerRegistrar maintains a list of registered file viewers and provides methods to dynamically register file viewers
@@ -82,6 +87,21 @@ public class ViewerRegistrar {
      * @return the created ViewerFrame
      */
     public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory) {
+        // Check if this file is already opened
+        for (FileViewersList.FileRecord fr: FileViewersList.getFiles()) {
+            if (fr.fileName.equals(file.getAbsolutePath()) && fr.viewerClass != null) {
+                Class viewerClass = fr.viewerClass;
+                if (viewerClass.equals(TextViewer.class) || viewerClass.equals(HexViewer.class) || viewerClass.equals(HtmlViewer.class) ||
+                        viewerClass.equals(ImageViewer.class) || viewerClass.equals(PdfViewer.class)) {
+                    FileFrame openedFrame = fr.fileFrameRef.get();
+                    if (openedFrame != null) {
+                        openedFrame.toFront();
+                    }
+                    return null;
+                }
+            }
+        }
+
         ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
@@ -95,7 +115,7 @@ public class ViewerRegistrar {
         // WindowManager will listen to window closed events to trigger shutdown sequence
         // if it is the last window visible
         frame.addWindowListener(WindowManager.getInstance());
-        
+
         return frame;
     }
 
@@ -160,7 +180,7 @@ public class ViewerRegistrar {
                 if (!factory.canViewFile(file)) {
                     continue;
                 }
-            } catch (WarnUserException e) {}
+            } catch (WarnUserException ignore) {}
             result.add(factory);
         }
         return result;
