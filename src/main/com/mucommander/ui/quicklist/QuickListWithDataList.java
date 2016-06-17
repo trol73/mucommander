@@ -142,10 +142,25 @@ public abstract class QuickListWithDataList<T> extends QuickList implements KeyL
 
     @Override
     public void keyTyped(KeyEvent e) {
+System.out.println("keyTyped ");
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (dataList == null) {
+            return;
+        }
+        int selectedIndex = dataList.getSelectedIndex();
+        int lastIndex = dataList.getModel().getSize() - 1;
+        if (e.getExtendedKeyCode() == KeyEvent.VK_UP && selectedIndex == 0) {
+            dataList.setSelectedIndex(lastIndex);
+            dataList.ensureIndexIsVisible(lastIndex);
+            e.consume();
+        } else if (e.getExtendedKeyCode() == KeyEvent.VK_DOWN && dataList.getSelectedIndex() == lastIndex) {
+            dataList.setSelectedIndex(0);
+            dataList.ensureIndexIsVisible(0);
+            e.consume();
+        }
     }
 
     @Override

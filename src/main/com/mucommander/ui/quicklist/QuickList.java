@@ -72,7 +72,7 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 	 */
 	protected abstract boolean prepareForShowing(QuickListContainer container);
 
-@SuppressWarnings("deprecated")
+	@SuppressWarnings("deprecated")
 	public void show() {
 
 		if (prepareForShowing(container)) {
