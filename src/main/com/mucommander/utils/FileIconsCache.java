@@ -18,11 +18,14 @@
 package com.mucommander.utils;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.icon.FileIcons;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
 import java.util.*;
 
 /**
@@ -72,6 +75,23 @@ public class FileIconsCache {
             files.remove(path);
             files.addFirst(path);
             return result;
+        }
+        return addIcon(file, path);
+    }
+
+    public Icon getIcon(String path) {
+        Icon result = icons.get(path);
+        if (result != null) {
+            // move record to top
+            files.remove(path);
+            files.addFirst(path);
+            return result;
+        }
+        AbstractFile file = null;
+        try {
+            file = FileFactory.getFile(FileURL.getFileURL(path));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
         return addIcon(file, path);
     }

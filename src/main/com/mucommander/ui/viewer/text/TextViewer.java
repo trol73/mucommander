@@ -70,9 +70,12 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     private TextFilesHistory.FileRecord historyRecord;
     private GutterEx gutter;
-    
+    private StatusBar statusBar;
+
+
     TextViewer() {
     	this(new TextEditorImpl(false, null));
+        textEditorImpl.setStatusBar(getStatusBar());
     }
     
     TextViewer(TextEditorImpl textEditorImpl) {
@@ -87,6 +90,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     	initMenuBarItems();
     }
+
 
     private void initGutter() {
 //        Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
@@ -196,7 +200,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     @Override
     protected StatusBar getStatusBar() {
-        return null;
+        if (statusBar == null) {
+            statusBar = new StatusBar();
+        }
+        return statusBar;
     }
 
     public void saveState(JScrollBar scrollBar) {

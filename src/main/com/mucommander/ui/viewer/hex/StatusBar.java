@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.viewer.hex;
 
+import com.mucommander.ui.main.statusbar.FileWindowsListButton;
 import org.fife.ui.StatusBarPanel;
 import ru.trolsoft.utils.StrUtils;
 
@@ -30,9 +31,7 @@ import java.awt.GridBagConstraints;
  *
  */
 public class StatusBar extends org.fife.ui.StatusBar {
-    private StatusBarPanel panelOffset;
-    private StatusBarPanel panelEncoding;
-    private StatusBarPanel panelValue;
+    private FileWindowsListButton lbFiles;
 
     private JLabel lblOffset;
     private JLabel lblEncoding;
@@ -44,24 +43,27 @@ public class StatusBar extends org.fife.ui.StatusBar {
     public StatusBar() {
         super("");
 
+        lbFiles = new FileWindowsListButton(true);
+        StatusBarPanel panelWindows = new StatusBarPanel(new BorderLayout());
+        panelWindows.add(lbFiles);
+
         lblOffset = createLabel();
-        panelOffset = new StatusBarPanel(new BorderLayout(), lblOffset);
+        StatusBarPanel panelOffset = new StatusBarPanel(new BorderLayout(), lblOffset);
 
         lblEncoding = createLabel();
-        panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
+        StatusBarPanel panelEncoding = new StatusBarPanel(new BorderLayout(), lblEncoding);
 
         lblValue = createLabel();
-        panelValue = new StatusBarPanel(new BorderLayout(), lblValue);
+        StatusBarPanel panelValue = new StatusBarPanel(new BorderLayout(), lblValue);
 
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
 
         c.weightx = 0.0;
+        addStatusBarComponent(panelWindows, c);
         addStatusBarComponent(panelOffset, c);
-        c.weightx = 0.0;
         addStatusBarComponent(panelValue, c);
-        c.weightx = 0.0;
         addStatusBarComponent(panelEncoding, c);
     }
 

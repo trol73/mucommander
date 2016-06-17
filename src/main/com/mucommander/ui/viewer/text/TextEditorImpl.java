@@ -486,6 +486,10 @@ class TextEditorImpl implements ThemeListener {
         return statusBar;
     }
 
+    public void setStatusBar(StatusBar statusBar) {
+        this.statusBar = statusBar;
+    }
+
     void setSyntaxType(FileType fileType) {
         textArea.setFileType(fileType);
         if (statusBar != null) {

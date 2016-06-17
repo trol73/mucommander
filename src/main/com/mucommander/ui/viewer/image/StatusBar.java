@@ -17,6 +17,7 @@
  */
 package com.mucommander.ui.viewer.image;
 
+import com.mucommander.ui.main.statusbar.FileWindowsListButton;
 import org.fife.ui.StatusBarPanel;
 
 import javax.swing.JLabel;
@@ -28,12 +29,7 @@ import java.util.Date;
  * Created on 11/03/14.
  */
 public class StatusBar extends org.fife.ui.StatusBar {
-
-    private StatusBarPanel panelImageSize;
-    private StatusBarPanel panelFileNumber;
-    private StatusBarPanel panelZoom;
-    private StatusBarPanel panelFileSize;
-    private StatusBarPanel panelDateTime;
+    private FileWindowsListButton lbFiles;
 
     private JLabel lblImageSize;
     private JLabel lblFileNumber;
@@ -46,40 +42,36 @@ public class StatusBar extends org.fife.ui.StatusBar {
     public StatusBar() {
         super("");
 
+        lbFiles = new FileWindowsListButton(true);
+        StatusBarPanel panelWindows = new StatusBarPanel(new BorderLayout());
+        panelWindows.add(lbFiles);
+
         lblImageSize = new JLabel();
-        panelImageSize = new StatusBarPanel(new BorderLayout(), lblImageSize);
+        StatusBarPanel panelImageSize = new StatusBarPanel(new BorderLayout(), lblImageSize);
 
         lblFileNumber = new JLabel();
-        panelFileNumber = new StatusBarPanel(new BorderLayout(), lblFileNumber);
+        StatusBarPanel panelFileNumber = new StatusBarPanel(new BorderLayout(), lblFileNumber);
 
         lblZoom = new JLabel();
-        panelZoom = new StatusBarPanel(new BorderLayout(), lblZoom);
+        StatusBarPanel panelZoom = new StatusBarPanel(new BorderLayout(), lblZoom);
 
         lblFileSize = new JLabel();
-        panelFileSize = new StatusBarPanel(new BorderLayout(), lblFileSize);
+        StatusBarPanel panelFileSize = new StatusBarPanel(new BorderLayout(), lblFileSize);
 
         lblDateTime = new JLabel();
-        panelDateTime = new StatusBarPanel(new BorderLayout(), lblDateTime);
+        StatusBarPanel panelDateTime = new StatusBarPanel(new BorderLayout(), lblDateTime);
 
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
 
         c.weightx = 0.0;
+        addStatusBarComponent(panelWindows, c);
         addStatusBarComponent(panelImageSize, c);
-
-        c.weightx = 0.0;
         addStatusBarComponent(panelFileNumber, c);
-
-        c.weightx = 0.0;
         addStatusBarComponent(panelZoom, c);
-
-        c.weightx = 0.0;
         addStatusBarComponent(panelFileSize, c);
-
-        c.weightx = 0.0;
         addStatusBarComponent(panelDateTime, c);
-
     }
 
     public void setImageSize(int width, int height) {

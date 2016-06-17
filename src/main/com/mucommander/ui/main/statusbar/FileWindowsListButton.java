@@ -18,13 +18,21 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.jidesoft.swing.JideSplitButton;
+import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.impl.EditAction;
+import com.mucommander.ui.action.impl.ViewAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.FileViewersList;
+import com.mucommander.ui.viewer.text.TextEditor;
+import com.mucommander.utils.FileIconsCache;
 
+import javax.swing.Icon;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
+import java.awt.Window;
 import java.util.List;
 
 import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
@@ -55,6 +63,7 @@ public class FileWindowsListButton extends JideSplitButton {
         if (selectedRecord == null) {
             if (selectedMainFrame != null) {
                 setText(mainframeName(selectedMainFrame));
+                setIcon(getIconFrom(selectedMainFrame));
                 selectedMainFrame.toFront();
             }
             return;
@@ -68,11 +77,10 @@ public class FileWindowsListButton extends JideSplitButton {
 
     private void selectFile(FileRecord fileRecord) {
         setText(fileRecord.shortName);
+        setIcon(getIconFrom(fileRecord));
         selectedRecord = fileRecord;
         showSelectedFile();
     }
-
-
 
 
     public void updateList() {
@@ -81,13 +89,22 @@ public class FileWindowsListButton extends JideSplitButton {
             List<MainFrame> mainFrames = WindowManager.getMainFrames();
             for (MainFrame mainFrame : mainFrames) {
                 String name = mainframeName(mainFrame);
-                add(name).addActionListener(e -> mainFrame.toFront());
+                JMenuItem menuItem = new JMenuItem(name, getIconFrom(mainFrame));
+                menuItem.addActionListener(e -> mainFrame.toFront());
+                add(menuItem);
             }
 
         }
         boolean containsSelected = false;
         for (FileRecord fr: FileViewersList.getFiles()) {
-            add(fr.fileName).addActionListener(e -> selectFile(fr));
+            Window excludedFrame = SwingUtilities.getWindowAncestor(this);
+            if (fr.fileFrameRef.get() == excludedFrame) {
+                continue;
+            }
+            JMenuItem menuItem = new JMenuItem(fr.fileName, getIconFrom(fr));
+            menuItem.addActionListener(e -> selectFile(fr));
+            add(menuItem);
+
             if (fr == selectedRecord) {
                 containsSelected = true;
             }
@@ -102,9 +119,11 @@ public class FileWindowsListButton extends JideSplitButton {
                     selectedRecord = null;
                     selectedMainFrame = WindowManager.getCurrentMainFrame();
                     setText(mainframeName(selectedMainFrame));
+                    setIcon(getIconFrom(selectedMainFrame));
                 } else {
                     selectedRecord = FileViewersList.getFiles().get(0);
                     setText(selectedRecord.shortName);
+                    setIcon(getIconFrom(selectedRecord));
                 }
             }
             setVisible(true);
@@ -117,6 +136,24 @@ public class FileWindowsListButton extends JideSplitButton {
 
     private static String mainframeName(MainFrame mainFrame) {
         return mainFrame.getLeftPanel().getCurrentFolder().getName() + " : " + mainFrame.getRightPanel().getCurrentFolder().getName();
+    }
+
+    private Icon getIconFrom(MainFrame mainFrame) {
+        return FileIconsCache.getInstance().getIcon(mainFrame.getActivePanel().getCurrentFolder());
+    }
+
+    private Icon getIconFrom(FileRecord fileRecord) {
+        if (fileRecord == null) {
+            return null;
+        }
+        //Icon icon = FileIconsCache.getInstance().getIcon(fileRecord.fileName);
+        Icon icon;
+        if (fileRecord.viewerClass == TextEditor.class) {
+            icon = MuAction.getStandardIcon(EditAction.class);
+        } else {
+            icon = MuAction.getStandardIcon(ViewAction.class);
+        }
+        return icon;
     }
 
 
