@@ -34,7 +34,7 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 class BookmarkRoot extends ProtocolFile implements BookmarkListener {
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Time at which the bookmarks were last modified. */
     private long lastModified;

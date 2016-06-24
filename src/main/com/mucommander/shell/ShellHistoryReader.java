@@ -41,7 +41,7 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
 
 
 
-    // - getInstance fields -----------------------------------------------------
+    // - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** Reader's current status. */
     private int          status;

@@ -35,7 +35,7 @@ import com.mucommander.commons.runtime.JavaVersion;
 class LocalProcess extends AbstractProcess {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocalProcess.class);
 
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Underlying system process. */
     private Process process;

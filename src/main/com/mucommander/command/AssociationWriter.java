@@ -33,7 +33,7 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 public class AssociationWriter implements AssociationsXmlConstants, AssociationBuilder {
-    // - getInstance variables --------------------------------------------------
+    // - Instance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Where to write the custom command associations to. */
     private XmlWriter out;

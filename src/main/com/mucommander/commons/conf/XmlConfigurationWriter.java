@@ -43,7 +43,7 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
     /** Factory used to create instances of {@link XmlConfigurationWriter}. */
     public static final ConfigurationWriterFactory<XmlConfigurationWriter> FACTORY;
 
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Writer on the destination XML stream. */
     protected final ContentHandler out;

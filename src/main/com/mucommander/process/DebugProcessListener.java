@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 class DebugProcessListener implements ProcessListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DebugProcessListener.class);
 	
-    // - getInstance fields -----------------------------------------------------
+    // - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** Command that this listener is monitoring. */
     private String command;

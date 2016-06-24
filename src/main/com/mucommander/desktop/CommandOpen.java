@@ -29,7 +29,7 @@ import java.io.IOException;
  * @author Nicolas Rinaudo
  */
 class CommandOpen extends LocalFileOperation {
-    // - getInstance fields -------------------------------------------------
+    // - Instance fields -------------------------------------------------
     // -------------------------------------------------------------------
     /** Whether or not the 'init as executable' command can be used if no better alternative is found. */
     private boolean allowDefault;

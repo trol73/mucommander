@@ -36,7 +36,7 @@ public class AbstractFileClassLoader extends ClassLoader {
     private final static org.slf4j.Logger LOGGER = null;//org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
 
 	
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** All abstract files in which to look for classes and resources. */
     private Vector<AbstractFile> files;

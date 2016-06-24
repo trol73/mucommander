@@ -25,7 +25,7 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 class ConfigurationSection {
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Contains all the variables defined in the section. */
     private final Map<String, String> variables = new HashMap<>();

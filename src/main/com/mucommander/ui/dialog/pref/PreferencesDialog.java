@@ -38,18 +38,18 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public abstract class PreferencesDialog extends FocusDialog implements ActionListener {
-    // - getInstance fields --------------------------------------------------------
+    // - Instance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Displays the different panels. */
-    private JTabbedPane                      tabbedPane;
+    private JTabbedPane tabbedPane;
     /** Stores the different panels. */
     private List<PreferencesPanel> prefPanels;
     /** Apply button. */
-    private JButton                          applyButton;
+    private JButton btnApply;
     /** OK button. */
-    private JButton                          okButton;
+    private JButton btnOk;
     /** Cancel button. */
-    private JButton                          cancelButton;
+    private JButton btnCancel;
 
 
 
@@ -94,19 +94,19 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
         // Buttons panel.
         XBoxPanel buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(applyButton = new JButton(Translator.get("apply")));
+        buttonsPanel.add(btnApply = new JButton(Translator.get("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(okButton     = new JButton(Translator.get("ok")));
-        buttonsPanel.add(cancelButton = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(btnOk = new JButton(Translator.get("ok")));
+        buttonsPanel.add(btnCancel = new JButton(Translator.get("cancel")));
         
         // Disable "commit buttons".
-        okButton.setEnabled(false);
-    	applyButton.setEnabled(false);
+        btnOk.setEnabled(false);
+    	btnApply.setEnabled(false);
 
         // Buttons listening.
-        applyButton.addActionListener(this);
-        okButton.addActionListener(this);
-        cancelButton.addActionListener(this);
+        btnApply.addActionListener(this);
+        btnOk.addActionListener(this);
+        btnCancel.addActionListener(this);
 
         // Aligns the button panel to the right.
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -114,7 +114,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
         contentPane.add(tempPanel, BorderLayout.SOUTH);
 
         // Selects OK when enter is pressed
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().setDefaultButton(btnOk);
     }
 
 
@@ -213,7 +213,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
         Object source = e.getSource();
 
         // Commit changes
-        if (source == okButton || source == applyButton) {
+        if (source == btnOk || source == btnApply) {
             if (!checkCommit()) {
                 return;
             }
@@ -221,7 +221,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
         }
 
         // Dispose dialog
-        if (source == okButton || source == cancelButton) {
+        if (source == btnOk || source == btnCancel) {
             dispose();
         }
     }
@@ -242,8 +242,8 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      *  enabled (true) or disabled (false).
      */
     public void setCommitButtonsEnabled(boolean enable) {
-    	okButton.setEnabled(enable);
-    	applyButton.setEnabled(enable);
+    	btnOk.setEnabled(enable);
+    	btnApply.setEnabled(enable);
     }
     
     /**

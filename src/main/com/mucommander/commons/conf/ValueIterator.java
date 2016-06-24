@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
  * @author Nicolas Rinaudo
  */
 public class ValueIterator implements Iterator<String> {
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Wrapped iterator. */
     private final Iterator<String> iterator;

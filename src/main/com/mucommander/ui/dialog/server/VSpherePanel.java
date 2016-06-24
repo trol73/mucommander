@@ -38,7 +38,7 @@ import com.mucommander.ui.main.MainFrame;
  */
 public class VSpherePanel extends ServerPanel {
 
-	private static final String IP_UUID_INSTANCE_UUID = "IP\\UUID\\getInstance UUID";
+	private static final String IP_UUID_INSTANCE_UUID = "IP\\UUID\\Instance UUID";
 
 	private static final long serialVersionUID = -3850165192515539062L;
 	

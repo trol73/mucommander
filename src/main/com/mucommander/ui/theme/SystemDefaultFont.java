@@ -44,12 +44,12 @@ import java.beans.PropertyChangeListener;
  * @author Nicolas Rinaudo
  */
 public class SystemDefaultFont extends DefaultFont implements PropertyChangeListener {
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Name of the {@link UIManager#getFont(Object)} font property} to query. */
-    private String          property;
+    private String property;
     /** Current value of the default font. */
-    private Font            font;
+    private Font font;
     /** Used to create instance of the component whose font will be retrieved (in case {@link #property} isn't set). */
     private ComponentMapper mapper;
 

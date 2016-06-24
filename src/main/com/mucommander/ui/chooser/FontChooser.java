@@ -42,7 +42,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
 
 
 
-    // - getInstance fields --------------------------------------------------------
+    // - Instance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Lists all the available font families. */
     private JComboBox<String> families;

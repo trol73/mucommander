@@ -104,7 +104,7 @@ public class VersionChecker extends DefaultHandler {
 
 
 
-    // - getInstance fields --------------------------------------------------------
+    // - Instance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Remote version number. */
     private String latestVersion;

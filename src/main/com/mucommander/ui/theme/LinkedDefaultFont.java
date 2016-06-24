@@ -30,7 +30,7 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme font to default to. */
     private int id;

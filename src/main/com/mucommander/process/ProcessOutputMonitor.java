@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 class ProcessOutputMonitor extends Thread {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessOutputMonitor.class);
 	
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Stream to read from. */
     private InputStream     in;

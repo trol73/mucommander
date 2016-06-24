@@ -46,7 +46,7 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 abstract class ThemeEditorPanel extends PreferencesPanel {
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Edited theme data. */
     protected ThemeData themeData;
@@ -282,7 +282,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @author Nicolas Rinaudo
      */
     private static class ThemeFontChooserListener implements ChangeListener {
-        // - getInstance fields -------------------------------------------------------------
+        // - Instance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Theme data in which to update the font when it changes. */
         private ThemeData data;
@@ -324,7 +324,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @author Nicolas Rinaudo
      */
     private static class PreviewFontChooserListener implements ChangeListener {
-        // - getInstance fields -------------------------------------------------------------
+        // - Instance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Component to update when the font has changed. */
         private JComponent preview;

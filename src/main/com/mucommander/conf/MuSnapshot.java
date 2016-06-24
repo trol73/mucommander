@@ -529,7 +529,7 @@ public class MuSnapshot {
     
     private static final String ROOT_ELEMENT = "snapshot";
     
-	// - getInstance fields -----------------------------------------------------
+	// - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     private final Configuration configuration;
 

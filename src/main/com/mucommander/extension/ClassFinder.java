@@ -46,7 +46,7 @@ import com.mucommander.commons.file.filter.OrFileFilter;
  * @author Nicolas Rinaudo
  */
 public class ClassFinder {
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** ClassLoader used to load classes from explored files. */
     private ClassLoader  loader;

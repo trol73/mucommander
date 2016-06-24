@@ -66,7 +66,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener {
 
 
 
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     private ThemeData    data;
     private boolean      isActive;

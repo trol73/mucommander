@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 class ColorButton extends JPanel implements ActionListener, ColorChangeListener {
 
-    // - getInstance variables -----------------------------------------------------
+    // - Instance variables -----------------------------------------------------
     // --------------------------------------------------------------------------
 
     /** ThemeData from which to retrieve the color chooser's values. */

@@ -66,7 +66,7 @@ public class CellLabel extends JLabel {
 
 
 
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Last text set by the setText method */
     protected String lastText;

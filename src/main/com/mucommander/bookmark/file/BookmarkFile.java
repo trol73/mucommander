@@ -33,7 +33,7 @@ import java.io.*;
  * @author Nicolas Rinaudo
  */
 public class BookmarkFile extends ProtocolFile {
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Bookmark wrapped by this abstract file. */
     private Bookmark     bookmark;

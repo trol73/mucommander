@@ -30,7 +30,7 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
-    // - getInstance fields -----------------------------------------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme color to default to. */
     private int colorId;

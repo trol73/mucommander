@@ -25,7 +25,7 @@ import com.mucommander.ui.main.table.Column;
  * @author Nicolas Rinaudo
  */
 public class FileTableConfiguration {
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Each column's enabled state. */
     private boolean[] enabled;

@@ -147,7 +147,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** Is automatic columns sizing enabled ? */
     private boolean autoSizeColumnsEnabled;
 
-    /** getInstance of the inner class that handles quick search */
+    /** Instance of the inner class that handles quick search */
     private QuickSearch<AbstractFile> quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */

@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractProcess {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractProcess.class);
 	
-    // - getInstance fields -------------------------------------------------------
+    // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Stdout monitor. */
     private ProcessOutputMonitor stdoutMonitor;

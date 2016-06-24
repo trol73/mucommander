@@ -38,7 +38,7 @@ import java.io.InputStreamReader;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 class FileEditorPanel extends ThemeEditorPanel implements PropertyChangeListener {
-    // - getInstance fields -----------------------------------------------------------------
+    // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Used to preview the editor's theme. */
     private RSyntaxTextArea preview;
