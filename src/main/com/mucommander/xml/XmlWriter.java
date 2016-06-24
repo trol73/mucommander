@@ -53,7 +53,7 @@ public class XmlWriter {
 
 
 
-    // - Instance fields -------------------------------------------------
+    // - getInstance fields -------------------------------------------------
     // -------------------------------------------------------------------
     /** Where to write the XML content to. */
     private PrintWriter out;

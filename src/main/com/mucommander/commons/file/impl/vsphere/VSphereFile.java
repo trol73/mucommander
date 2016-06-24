@@ -100,7 +100,7 @@ import com.vmware.vim25.TaskInProgressFaultMsg;
  * Note that the machine credentials cab also be set as a property named
  * "guestCredentials" of this object.
  * 
- * The identifier of a VM can be one of the following: - Instance UUID - BIOS
+ * The identifier of a VM can be one of the following: - getInstance UUID - BIOS
  * UUID - IP address
  * 
  * Note that even if you use IP to identify the machine, you don't need network

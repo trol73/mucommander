@@ -59,7 +59,7 @@ public class RecentLocationsQL extends QuickListWithIcons<RecentLocationsQL.Rece
     @Override
     public RecentLocation[] getData() {
         List<RecentLocation> list = new LinkedList<>();
-        for (FileURL url : GlobalLocationHistory.Instance().getHistory()) {
+        for (FileURL url : GlobalLocationHistory.getInstance().getHistory()) {
             // Don't include the currently presented location in the list
             if (url.equals(folderPanel.getCurrentFolder().getURL()))
                 continue;

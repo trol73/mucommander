@@ -23,7 +23,7 @@ package com.mucommander.commons.conf;
  * @author Nicolas Rinaudo
  */
 class ConfigurationExplorer {
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Current section. */
     private ConfigurationSection section;

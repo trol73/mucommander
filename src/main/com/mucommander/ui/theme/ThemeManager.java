@@ -68,7 +68,7 @@ public class ThemeManager {
     private static List<String> predefinedSyntaxThemeNames;
 
 
-    // - Instance variables --------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Whether or not the user theme was modified. */
     private static boolean       wasUserThemeModified;

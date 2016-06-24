@@ -43,7 +43,7 @@ import java.io.InputStream;
  * @author Nicolas Rinaudo
  */
 public class AssociationReader extends DefaultHandler implements AssociationsXmlConstants {
-    // - Instance variables --------------------------------------------------
+    // - getInstance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Where to send building messages. */
     private AssociationBuilder builder;

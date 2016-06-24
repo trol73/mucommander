@@ -191,7 +191,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         YBoxPanel buttonsPanel = new YBoxPanel();
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
                 DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
-        //        DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)
+        //        DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this)
         ));
         buttonsPanel.add(fileDetailsPanel);
 

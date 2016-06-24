@@ -39,25 +39,29 @@ public class TextMenuHelper {
     private final boolean editMode;
 
     /** Menu bar */
-    // Menus //
-    private JMenu editMenu;
-    private JMenu viewMenu;
-    private JMenu viewMenuSyntax;
-    // Items //
-    private JMenuItem undoItem;
-    private JMenuItem redoItem;
-    private JMenuItem copyItem;
-    private JMenuItem cutItem;
-    private JMenuItem pasteItem;
-    private JMenuItem selectAllItem;
-    private JMenuItem findItem;
-    private JMenuItem findNextItem;
-    private JMenuItem findPreviousItem;
-    private JMenuItem gotoLineItem;
-    private JMenuItem toggleLineWrapItem;
-    private JMenuItem toggleLineNumbersItem;
-    private JMenuItem viewMenuCalculator;
-    private JMenuItem formatItem;
+    // Menus
+    private JMenu menuEdit;
+    private JMenu menuView;
+    private JMenu menuViewSyntax;
+    private JMenu menuSearch;
+    // Items
+    private JMenuItem miUndo;
+    private JMenuItem miRedo;
+    private JMenuItem miCopy;
+    private JMenuItem miCut;
+    private JMenuItem miPaste;
+    private JMenuItem miSelectAll;
+
+    private JMenuItem miFind;
+    private JMenuItem miFindNext;
+    private JMenuItem miFindPrevious;
+    private JMenuItem miReplace;
+
+    private JMenuItem miGotoLine;
+    private JMenuItem miToggleLineWrap;
+    private JMenuItem miToggleLineNumbers;
+    private JMenuItem miCalculator;
+    private JMenuItem miFormat;
 
     public TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
         this.textEditorImpl = textEditorImpl;
@@ -66,48 +70,55 @@ public class TextMenuHelper {
 
     public void initMenu(ActionListener actionListener, boolean lineNumbers) {
         // Edit menu
-        editMenu = new JMenu(Translator.get("text_editor.edit"));
+        menuEdit = new JMenu(Translator.get("text_editor.edit"));
         MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
 
         if (editMode) {
-            undoItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.undo"), menuItemMnemonicHelper, null, actionListener);
-            redoItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.redo"), menuItemMnemonicHelper, null, actionListener);
-            editMenu.addSeparator();
+            miUndo = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.undo"), menuItemMnemonicHelper, null, actionListener);
+            miRedo = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.redo"), menuItemMnemonicHelper, null, actionListener);
+            menuEdit.addSeparator();
         }
-        copyItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.copy"), menuItemMnemonicHelper, null, actionListener);
+        miCopy = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.copy"), menuItemMnemonicHelper, null, actionListener);
         if (editMode) {
-            cutItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.cut"), menuItemMnemonicHelper, null, actionListener);
-            pasteItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.paste"), menuItemMnemonicHelper, null, actionListener);
+            miCut = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.cut"), menuItemMnemonicHelper, null, actionListener);
+            miPaste = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.paste"), menuItemMnemonicHelper, null, actionListener);
         }
 
-        selectAllItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.select_all"), menuItemMnemonicHelper, null, actionListener);
-        editMenu.addSeparator();
+        miSelectAll = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.select_all"), menuItemMnemonicHelper, null, actionListener);
+        menuEdit.addSeparator();
 
-        findItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), actionListener);
-        findNextItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), actionListener);
-        findPreviousItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), actionListener);
-        editMenu.addSeparator();
-        gotoLineItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
+        menuEdit.addSeparator();
 
         if (editMode) {
-            formatItem = MenuToolkit.addMenuItem(editMenu, Translator.get("text_editor.format"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
+            miFormat = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.format"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
         }
-        viewMenu = new JMenu(Translator.get("text_editor.view"));
 
+        menuSearch = new JMenu(Translator.get("text_editor.search"));
+        miFind = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), actionListener);
+        miFindNext = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), actionListener);
+        miFindPrevious = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), actionListener);
+        if (editMode) {
+            menuSearch.addSeparator();
+            miReplace = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.replace_menu"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()|KeyEvent.ALT_MASK), actionListener);
+        }
+        menuSearch.addSeparator();
+        miGotoLine = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
 
-        toggleLineWrapItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
-        toggleLineWrapItem.setSelected(textEditorImpl.isWrap());
-        toggleLineNumbersItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, Translator.get("text_editor.line_numbers"), menuItemMnemonicHelper, null, actionListener);
-        toggleLineNumbersItem.setSelected(lineNumbers);
+        menuView = new JMenu(Translator.get("text_editor.view"));
 
-        viewMenu.addSeparator();
-        viewMenuCalculator = MenuToolkit.addMenuItem(viewMenu, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
-        viewMenu.addSeparator();
-        viewMenuSyntax = new JMenu(Translator.get("text_editor.syntax"));
+        miToggleLineWrap = MenuToolkit.addCheckBoxMenuItem(menuView, Translator.get("text_editor.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
+        miToggleLineWrap.setSelected(textEditorImpl.isWrap());
+        miToggleLineNumbers = MenuToolkit.addCheckBoxMenuItem(menuView, Translator.get("text_editor.line_numbers"), menuItemMnemonicHelper, null, actionListener);
+        miToggleLineNumbers.setSelected(lineNumbers);
 
-        viewMenu.add(viewMenuSyntax);
+        menuView.addSeparator();
+        miCalculator = MenuToolkit.addMenuItem(menuView, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
+        menuView.addSeparator();
+        menuViewSyntax = new JMenu(Translator.get("text_editor.syntax"));
+
+        menuView.add(menuViewSyntax);
         for (FileType fileType : FileType.values()) {
-            MenuToolkit.addCheckBoxMenuItem(viewMenuSyntax, fileType.getName(), menuItemMnemonicHelper, null, actionListener);
+            MenuToolkit.addCheckBoxMenuItem(menuViewSyntax, fileType.getName(), menuItemMnemonicHelper, null, actionListener);
         }
     }
 
@@ -121,11 +132,15 @@ public class TextMenuHelper {
 
 
     public JMenu getEditMenu() {
-        return editMenu;
+        return menuEdit;
     }
 
-    public JMenu getViewMenu() {
-        return viewMenu;
+    public JMenu getMenuView() {
+        return menuView;
+    }
+
+    public JMenu getSearchMenu() {
+        return menuSearch;
     }
 
     public boolean performAction(ActionEvent e, TextViewer textViewerDelegate) {
@@ -135,8 +150,8 @@ public class TextMenuHelper {
         }
         // check style picker
         if (source instanceof JCheckBoxMenuItem) {
-            for (int i = 0; i < viewMenuSyntax.getItemCount(); i++) {
-                JCheckBoxMenuItem item = (JCheckBoxMenuItem)viewMenuSyntax.getItem(i);
+            for (int i = 0; i < menuViewSyntax.getItemCount(); i++) {
+                JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuViewSyntax.getItem(i);
                 if (source == item) {
                     FileType fileType = FileType.getByName(item.getText());
                     textEditorImpl.setSyntaxType(fileType);
@@ -146,36 +161,38 @@ public class TextMenuHelper {
             }
         }
 
-        if (source == copyItem) {
+        if (source == miCopy) {
             textEditorImpl.copy();
-        } else if(source == cutItem) {
+        } else if(source == miCut) {
             textEditorImpl.cut();
-        } else if(source == pasteItem) {
+        } else if(source == miPaste) {
             textEditorImpl.paste();
-        } else if(source == selectAllItem) {
+        } else if(source == miSelectAll) {
             textEditorImpl.selectAll();
-        } else if(source == findItem) {
+        } else if(source == miFind) {
             textEditorImpl.find();
-        } else if(source == findNextItem) {
+        } else if (source == miReplace) {
+            textEditorImpl.replace();
+        } else if(source == miFindNext) {
             textEditorImpl.findNext();
-        } else if(source == findPreviousItem) {
+        } else if(source == miFindPrevious) {
             textEditorImpl.findPrevious();
-        } else if(source == toggleLineWrapItem) {
+        } else if(source == miToggleLineWrap) {
             if (e.getWhen() == 0) {  
-            toggleLineWrapItem.setSelected(!toggleLineWrapItem.isSelected());
+                miToggleLineWrap.setSelected(!miToggleLineWrap.isSelected());
             }
-            textViewerDelegate.wrapLines(toggleLineWrapItem.isSelected());
-        } else if(source == toggleLineNumbersItem) {
-            textViewerDelegate.showLineNumbers(toggleLineNumbersItem.isSelected());
-        } else if (source == gotoLineItem) {
+            textViewerDelegate.wrapLines(miToggleLineWrap.isSelected());
+        } else if(source == miToggleLineNumbers) {
+            textViewerDelegate.showLineNumbers(miToggleLineNumbers.isSelected());
+        } else if (source == miGotoLine) {
             textEditorImpl.gotoLine();
-        } else if (source == undoItem) {
+        } else if (source == miUndo) {
             textEditorImpl.undo();
-        } else if (source == redoItem) {
+        } else if (source == miRedo) {
             textEditorImpl.redo();
-        } else if (source == formatItem) {
+        } else if (source == miFormat) {
             textEditorImpl.formatCode();
-        } else if (source == viewMenuCalculator) {
+        } else if (source == miCalculator) {
             new CalculatorDialog(textEditorImpl.frame).showDialog();
         } else {
             return false;
@@ -185,8 +202,8 @@ public class TextMenuHelper {
     }
 
     public void setSyntax(FileType fileType) {
-        for (int i = 0; i < viewMenuSyntax.getItemCount(); i++) {
-            JCheckBoxMenuItem item = (JCheckBoxMenuItem)viewMenuSyntax.getItem(i);
+        for (int i = 0; i < menuViewSyntax.getItemCount(); i++) {
+            JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuViewSyntax.getItem(i);
             item.setSelected(item.getText().equals(fileType.getName()));
         }
         updateEditActions();
@@ -210,10 +227,10 @@ public class TextMenuHelper {
             return;
         }
         final TextArea textArea = textEditorImpl.getTextArea();
-        undoItem.setEnabled(textArea.canUndo());
-        redoItem.setEnabled(textArea.canRedo());
+        miUndo.setEnabled(textArea.canUndo());
+        miRedo.setEnabled(textArea.canRedo());
         FileType ft = textArea.getFileType();
-        formatItem.setVisible(ft == FileType.XML || ft == FileType.JSON);
+        miFormat.setVisible(ft == FileType.XML || ft == FileType.JSON);
     }
 
 

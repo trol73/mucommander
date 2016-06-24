@@ -38,7 +38,7 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public abstract class PreferencesDialog extends FocusDialog implements ActionListener {
-    // - Instance fields --------------------------------------------------------
+    // - getInstance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Displays the different panels. */
     private JTabbedPane                      tabbedPane;

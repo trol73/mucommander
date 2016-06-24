@@ -76,7 +76,7 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
 
 
 
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Current depth in the configuration tree. */
     private       int                  depth;

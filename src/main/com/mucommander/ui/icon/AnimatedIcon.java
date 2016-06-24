@@ -46,7 +46,7 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Instance fields -----------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** All tracked components. */
     private Set<TrackedComponent> components = new HashSet<>();

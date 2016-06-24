@@ -412,7 +412,7 @@ public class MuPreferences implements MuPreferencesAPI {
 	
 	private static final String ROOT_ELEMENT = "preferences";
 
-	// - Instance fields -----------------------------------------------------
+	// - getInstance fields -----------------------------------------------------
 	// -----------------------------------------------------------------------
 	private Configuration configuration;
 	

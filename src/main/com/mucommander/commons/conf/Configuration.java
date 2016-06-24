@@ -1129,7 +1129,7 @@ public class Configuration {
      * @author Nicolas Rinaudo
      */
     private class ConfigurationLoader implements ConfigurationBuilder {
-        // - Instance variables ----------------------------------------------------------------------------------------
+        // - getInstance variables ----------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
         /** Parents of {@link #currentSection}. */
         private Stack<ConfigurationSection> sections;

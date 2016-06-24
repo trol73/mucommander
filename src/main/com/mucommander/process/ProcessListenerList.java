@@ -26,7 +26,7 @@ import java.util.Vector;
  * @author Nicolas Rinaudo
  */
 public class ProcessListenerList implements ProcessListener {
-    // - Instance fields -----------------------------------------------------
+    // - getInstance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** All registered listeners. */
     private final List<ProcessListener> listeners = new Vector<>();

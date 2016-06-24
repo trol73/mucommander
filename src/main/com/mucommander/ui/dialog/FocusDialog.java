@@ -341,4 +341,17 @@ public class FocusDialog extends JDialog implements WindowListener {
     public Component getReturnFocusTo() {
         return ownerFocusedComponent;
     }
+
+
+    protected void fixHeight() {
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension preferredSize = getPreferredSize();
+                int width = getWidth();
+                setSize(new Dimension(Math.max(width, preferredSize.width), preferredSize.height));
+                super.componentResized(e);
+            }
+        });
+    }
 }

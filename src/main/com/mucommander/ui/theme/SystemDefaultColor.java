@@ -74,7 +74,7 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
 
 
 
-    // - Instance fields -----------------------------------------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** {@link UIManager} property to look for. */
     private String          property;

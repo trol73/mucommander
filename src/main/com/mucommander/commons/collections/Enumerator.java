@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  * @author Nicolas Rinaudo
  */
 public class Enumerator<T> implements Iterator<T> {
-    // - Instance variables ----------------------------------------------------
+    // - getInstance variables ----------------------------------------------------
     // -------------------------------------------------------------------------
     /** Enumeration wrapped by this <code>Enumerator</code>. */
     private Enumeration<T> enumeration;

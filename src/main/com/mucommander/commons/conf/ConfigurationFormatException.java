@@ -48,7 +48,7 @@ public class ConfigurationFormatException extends ConfigurationException {
 
 
 
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Line at which the error occurred. */
     private int line   = UNKNOWN_LOCATION;

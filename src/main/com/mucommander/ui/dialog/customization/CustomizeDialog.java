@@ -129,7 +129,7 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
     	okButton.setEnabled(enabled);
     	
     	// if commit buttons are enabled then set the "okButton" as default button, 
-    	// otherwise set the "cancelButton" as default button.
+    	// otherwise set the "btnCancel" as default button.
     	getRootPane().setDefaultButton(enabled ? okButton : cancelButton);
     }
 }

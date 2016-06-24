@@ -41,7 +41,7 @@ public class CommandTest {
 
 
 
-    // - Instance fields -------------------------------------------------------
+    // - getInstance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Used while testing keyword substitution. */
     private AbstractFile[] files;

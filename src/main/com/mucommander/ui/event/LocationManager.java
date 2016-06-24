@@ -60,7 +60,7 @@ public class LocationManager {
     public LocationManager(FolderPanel folderPanel) {
         this.folderPanel = folderPanel;
         
-        addLocationListener(GlobalLocationHistory.Instance());
+        addLocationListener(GlobalLocationHistory.getInstance());
     }
 
     /**

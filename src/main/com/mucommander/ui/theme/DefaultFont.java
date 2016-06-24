@@ -35,7 +35,7 @@ import java.util.List;
  * @author Nicolas Rinaudo
  */
 public abstract class DefaultFont {
-    // - Instance fields -----------------------------------------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of fonts linked to this default value. */
     private List<Integer> linkedFonts = new ArrayList<>();

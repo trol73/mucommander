@@ -30,7 +30,7 @@ package com.mucommander.commons.conf;
  * @author Nicolas Rinaudo
  */
 public class ConfigurationEvent {
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Name of the variable that has been modified. */
     private final String        name;

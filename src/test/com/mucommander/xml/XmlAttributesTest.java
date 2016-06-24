@@ -41,9 +41,9 @@ public class XmlAttributesTest {
 
 
 
-    // - Instance fields -----------------------------------------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
-    /** Instance used to test the XmlAttributes class. */
+    /** getInstance used to test the XmlAttributes class. */
     private XmlAttributes attributes;
 
 

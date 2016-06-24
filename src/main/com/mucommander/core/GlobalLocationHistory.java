@@ -50,7 +50,7 @@ public class GlobalLocationHistory extends LocationAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GlobalLocationHistory.class);
 	
 	/** Singleton instance */
-	private final static GlobalLocationHistory instance = new GlobalLocationHistory();
+	private static GlobalLocationHistory instance;
 	
 	/** Locations that were accessed */
 	private Set<FileURL> history = new LinkedHashSet<>();
@@ -81,7 +81,10 @@ public class GlobalLocationHistory extends LocationAdapter {
 	 * 
 	 * @return Singleton instance of this class
 	 */
-	public static GlobalLocationHistory Instance() {
+	public static GlobalLocationHistory getInstance() {
+		if (instance == null) {
+			instance = new GlobalLocationHistory();
+		}
 		return instance;
 	}
 

@@ -43,7 +43,7 @@ import java.io.InputStream;
  * @author Nicolas Rinaudo
  */
 public class CommandReader extends DefaultHandler implements CommandsXmlConstants {
-    // - Instance variables --------------------------------------------------
+    // - getInstance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Where to send building messages. */
     private CommandBuilder builder;

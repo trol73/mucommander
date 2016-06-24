@@ -26,7 +26,7 @@ import java.nio.charset.Charset;
  * @author Nicolas Rinaudo
  */
 public class FileConfigurationSource implements ConfigurationSource {
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Path to the file on which to open input and output streams. */
     private final File file;

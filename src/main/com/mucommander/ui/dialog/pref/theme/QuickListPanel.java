@@ -51,7 +51,7 @@ import com.mucommander.ui.theme.ThemeData;
  * @author Arik Hadas
  */
 public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeListener {
-	// - Instance fields -----------------------------------------------------------------
+	// - getInstance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Used to preview the quick list. */
 	private JPanel quickListPreviewPanel;

@@ -51,7 +51,7 @@ public class Shell implements ConfigurationListener {
     private static String[] tokens;
     /** Tokens that compose remote shell commands. */
     private static String[] remoteTokens;
-    /** Instance of configuration listener. */
+    /** getInstance of configuration listener. */
     private static Shell    confListener;
 
 

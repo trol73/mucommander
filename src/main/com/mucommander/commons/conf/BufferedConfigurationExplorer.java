@@ -29,7 +29,7 @@ import java.util.Stack;
  * @author Nicolas Rinaudo
  */
 class BufferedConfigurationExplorer extends ConfigurationExplorer {
-    // - Instance variables --------------------------------------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Sections that have been passed through. */
     private final Stack<ConfigurationSection> sections = new Stack<>();

@@ -33,7 +33,7 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
-    // - Instance variables --------------------------------------------------
+    // - getInstance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Where to write the custom command associations to. */
     private XmlWriter out;

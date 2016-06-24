@@ -61,7 +61,7 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 public class BackupOutputStream extends OutputStream implements BackupConstants {
-    // - Instance fields --------------------------------------------------------
+    // - getInstance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** The underlying OutputStream */
     private OutputStream out;

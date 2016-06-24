@@ -25,11 +25,13 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 /**
+ * @author Oleg Trifonov
+ *
  * Stores history of search requests for text search, file search etc.
  */
 public class TextHistory {
 
-    private static final int MAX_RECORDS = 250;
+    private static final int MAX_RECORDS = 500;
 
     public enum Type {
         TEXT_SEARCH("search-text.history"),
@@ -72,9 +74,9 @@ public class TextHistory {
 
     public void add(Type type, String s, boolean save) {
         LinkedList<String> list = getList(type);
-        boolean alreadyFirstInList = list.indexOf(s) == 0;
-        if (alreadyFirstInList) {
-            list.remove(s);
+        int index = list.indexOf(s);
+        if (index >= 0) {
+            list.remove(index);
         }
         if (s.trim().isEmpty()) {
             return;
@@ -84,7 +86,7 @@ public class TextHistory {
             list.removeLast();
         }
         // save only if new record was added
-        if (!alreadyFirstInList && save) {
+        if (index < 0 && save) {
             save(type);
         }
     }
@@ -100,10 +102,8 @@ public class TextHistory {
 
 
     private LinkedList<String> load(AbstractFile file) throws IOException {
-        BufferedReader reader = null;
         LinkedList<String> result = new LinkedList<>();
-        try {
-            reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"))) {
             String line;
             while ( (line = reader.readLine() ) != null) {
                 String trim = line.trim();
@@ -114,25 +114,15 @@ public class TextHistory {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
         }
         return result;
     }
 
     private void save(AbstractFile file, List<String> list) throws  IOException {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), "UTF8"));
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), "UTF8"))) {
             for (String s : list) {
                 writer.write(s);
                 writer.write('\n');
-            }
-        } finally {
-            if (writer != null) {
-                writer.close();
             }
         }
     }

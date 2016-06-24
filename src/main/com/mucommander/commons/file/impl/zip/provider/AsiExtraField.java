@@ -80,7 +80,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
     private boolean dirFlag = false;
 
     /**
-     * Instance used to calculate checksums.
+     * getInstance used to calculate checksums.
      */
     private CRC32 crc = new CRC32();
 

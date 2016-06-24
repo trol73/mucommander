@@ -27,7 +27,7 @@ import com.mucommander.commons.file.filter.FileFilter;
  */
 class CommandAssociation {
 
-    // - Instance fields -------------------------------------------------------
+    // - getInstance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Command associated to this file name IMAGE_FILTER. */
     private Command    command;

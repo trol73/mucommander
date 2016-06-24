@@ -45,7 +45,7 @@ import java.util.Map;
 public class CommandAction extends MuAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandAction.class);
 	
-    // - Instance fields -------------------------------------------------------
+    // - getInstance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Command to init. */
     private Command command;

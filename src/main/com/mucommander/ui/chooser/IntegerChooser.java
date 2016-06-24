@@ -35,13 +35,13 @@ import java.util.WeakHashMap;
  * @author Nicolas Rinaudo
  */
 public class IntegerChooser extends JPanel implements ChangeListener {
-    // - Instance variables --------------------------------------------------------------
+    // - getInstance variables --------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** List of all registered state change listeners. */
     private WeakHashMap<ChangeListener, ?> listeners;
 
 
-    // - Instance fields --------------------------------------------------------
+    // - getInstance fields --------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Integer slider. */
     private JSlider  slider;

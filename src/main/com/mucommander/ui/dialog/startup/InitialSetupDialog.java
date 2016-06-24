@@ -45,7 +45,7 @@ import com.mucommander.ui.theme.ThemeManager;
  * @author Nicolas Rinaudo
  */
 public class InitialSetupDialog extends FocusDialog implements ActionListener {
-    // - Instance fields -----------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** All available look and feels. */
     private UIManager.LookAndFeelInfo lfInfo[];

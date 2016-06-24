@@ -63,7 +63,7 @@ public class LocationChanger {
 
 	private ChangeFolderThread changeFolderThread;
 
-	private GlobalLocationHistory globalHistory = GlobalLocationHistory.Instance();
+	private GlobalLocationHistory globalHistory = GlobalLocationHistory.getInstance();
 
 	/** The lock object used to prevent simultaneous folder change operations */
 	private final Object FOLDER_CHANGE_LOCK = new Object();

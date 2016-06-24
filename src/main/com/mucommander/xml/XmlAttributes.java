@@ -31,7 +31,7 @@ import java.util.*;
  * @author Nicolas Rinaudo, Arik Hadas
  */
 public class XmlAttributes {
-    // - Instance fields -------------------------------------------------
+    // - getInstance fields -------------------------------------------------
     // -------------------------------------------------------------------
     /** Contains the XML attributes. */
     private Map<String, String> attributes = new HashMap<>();

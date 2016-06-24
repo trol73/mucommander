@@ -53,13 +53,13 @@ import com.mucommander.ui.layout.YBoxPanel;
 public class PreferredEncodingsDialog extends FocusDialog {
 
     /** Contains all the checkbox added to this dialog */
-    private java.util.List<JCheckBox> checkboxes;
+    private List<JCheckBox> checkboxes;
 
     /** Minimum dimensions of this dialog */
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(300,0);
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(300, 0);
 
     /** Maximum dimensions of this dialog */
-    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(550,400);
+    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(550, 400);
 
     /**
      * Creates a new PreferredEncodingsDialog, without showing it on screen.
@@ -84,32 +84,32 @@ public class PreferredEncodingsDialog extends FocusDialog {
 
     protected void init() {
         // Mac OS X: small window borders
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             getRootPane().putClientProperty("Window.style", "small");
+        }
 
         Container contentPane = getContentPane();
 
         // Label
-
         JLabel label = new JLabel(Translator.get("preferred_encodings")+":");
 
         // Mac OS X: small component size
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             label.putClientProperty("JComponent.sizeVariant", "small");
+        }
 
         contentPane.add(label, BorderLayout.NORTH);
 
         // Checkboxes
-
         YBoxPanel yPanel = new YBoxPanel();
 
         checkboxes = new Vector<>();
-        JCheckBox checkbox;
-        for(String enc : Charset.availableCharsets().keySet()) {
-            checkbox = new JCheckBox(enc);
+        for (String enc : Charset.availableCharsets().keySet()) {
+            JCheckBox checkbox = new JCheckBox(enc);
             // Mac OS X: component size
-            if(OsFamily.MAC_OS_X.isCurrent())
+            if (OsFamily.MAC_OS_X.isCurrent()) {
                 checkbox.putClientProperty("JComponent.sizeVariant", "small");
+            }
 
             checkboxes.add(checkbox);
             yPanel.add(checkbox);
@@ -124,8 +124,9 @@ public class PreferredEncodingsDialog extends FocusDialog {
 
         JButton defaultsButton = new JButton(Translator.get("reset"));
         // Mac OS X: component size
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             defaultsButton.putClientProperty("JComponent.sizeVariant", "small");
+        }
 
         defaultsButton.addActionListener(e -> selectCheckboxes(EncodingPreferences.getDefaultPreferredEncodings()));
 

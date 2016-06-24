@@ -37,7 +37,7 @@ import java.util.List;
  * @author Nicolas Rinaudo
  */
 public abstract class DefaultColor {
-    // - Instance fields -----------------------------------------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of colors linked to this default value. */
     private List<Integer> linkedColors = new ArrayList<>();

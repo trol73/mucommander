@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.viewer.text;
 
+import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
@@ -25,8 +26,15 @@ import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.text.Translator;
 import com.mucommander.tools.AvrAssemblerCommandsHelper;
 import com.mucommander.ui.theme.*;
+import com.mucommander.ui.viewer.text.search.FindDialog;
+import com.mucommander.ui.viewer.text.search.ReplaceDialog;
+import com.mucommander.ui.viewer.text.search.SearchEvent;
+import com.mucommander.ui.viewer.text.search.SearchListener;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
+import org.fife.ui.rtextarea.SearchResult;
 
 import javax.swing.JFrame;
 import javax.swing.event.CaretEvent;
@@ -46,19 +54,17 @@ import java.util.StringTokenizer;
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
  *
- * @author Maxence Bernard, Mariusz Jakubowski, Nicolas Rinaudo, Arik Hadas
+ * @author Maxence Bernard, Mariusz Jakubowski, Nicolas Rinaudo, Arik Hadas, Oleg Trifonov
  */
 class TextEditorImpl implements ThemeListener {
 
     private static final Insets INSETS = new Insets(4, 3, 4, 3);
 
-	String searchString;
-
 	JFrame frame;
 
     private TextArea textArea;
 
-    //private GotoLineDialog dlgGoto;
+    private SearchContext searchContext;
 
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
@@ -218,30 +224,119 @@ class TextEditorImpl implements ThemeListener {
 	/////////////////
 
     void find() {
-		FindDialog dlgFind = new FindDialog(frame) {
+        SearchListener searchListener = new SearchListener() {
             @Override
-            protected void doSearch(String text) {
-                if (text != null && !text.isEmpty()) {
-                    searchString = getSearchString();
-
-                    if (!searchString.isEmpty()) {
-                        search(0, true);
-                    }
+            public void searchEvent(SearchEvent e) {
+                searchContext = e.getSearchContext();
+                String searchString = searchContext.getSearchFor();
+                TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, searchString, true);
+                SearchResult result = SearchEngine.find(textArea, searchContext);
+                if (!result.wasFound()) {
+                    beep();
+                    setStatusMessage(Translator.get("text_editor.text_not_found"));
+                } else {
+                    setStatusMessage(Translator.get("text_editor.found") + " " + result.getMarkedCount() + " " + Translator.get("text_editor.matches"));
+                    textArea.setCaretPosition(textArea.getSelectionStart());
                 }
+
                 // Request the focus on the text area which could be lost after the Find dialog was disposed
                 textArea.requestFocus();
             }
+
+            @Override
+            public String getSelectedText() {
+                return textArea.getSelectedText();
+            }
         };
-        dlgFind.setText(searchString);
-        dlgFind.showDialog();
+        FindDialog dlg = new FindDialog(frame, searchListener);
+        dlg.setSearchString(searchContext != null ? searchContext.getSearchFor() : "");
+        dlg.showDialog();
 	}
+
+
+    void findMore(boolean forward) {
+        if (searchContext == null) {
+            beep();
+            return;
+        }
+        if (!forward && textArea.getCaretPosition() == 0) {
+            beep();
+            return;
+        }
+        searchContext.setSearchForward(forward);
+        int savedCaretPosition = textArea.getCaretPosition();
+        try {
+            int pos = textArea.getSelectionStart();
+            if (forward) {
+                pos += searchContext.getSearchFor().length();
+            }
+            textArea.setCaretPosition(pos);
+        } catch (IllegalArgumentException ignore) {}
+        SearchResult result = SearchEngine.find(textArea, searchContext);
+        if (!result.wasFound()) {
+            textArea.setCaretPosition(savedCaretPosition);
+            setStatusMessage(Translator.get("text_editor.text_not_found"));
+            beep();
+        } else {
+            setStatusMessage("");
+            textArea.setCaretPosition(textArea.getSelectionStart());
+        }
+    }
 
 	void findNext() {
-		search(textArea.getSelectionEnd(), true);
+        findMore(true);
 	}
 
+    void replace() {
+        SearchListener searchListener = new SearchListener() {
+            @Override
+            public void searchEvent(SearchEvent e) {
+                searchContext = e.getSearchContext();
+                String searchString = searchContext.getSearchFor();
+                TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, searchString, true);
+                SearchResult result;
+                switch (e.getType()) {
+                    case FIND:
+                        result = SearchEngine.find(textArea, searchContext);
+                        break;
+                    case REPLACE:
+                        result = SearchEngine.replace(textArea, searchContext);
+                        break;
+                    case REPLACE_ALL:
+                        result = SearchEngine.replaceAll(textArea, searchContext);
+                        break;
+                    default:
+                        result = null;
+                }
+                if (result == null) {
+                    return;
+                }
+                if (!result.wasFound()) {
+                    beep();
+                    setStatusMessage(Translator.get("text_editor.text_not_found"));
+                } else {
+                    if (e.getType() == SearchEvent.Type.REPLACE_ALL) {
+                        setStatusMessage(Translator.get("text_editor.replaced") + " " + result.getCount() + " " + Translator.get("text_editor.occurrences"));
+                    } else {
+                        setStatusMessage(Translator.get("text_editor.found") + " " + result.getMarkedCount() + " " + Translator.get("text_editor.matches"));
+                    }
+                }
+            }
+
+            @Override
+            public String getSelectedText() {
+                return textArea.getSelectedText();
+            }
+        };
+        ReplaceDialog dlg = new ReplaceDialog(frame, searchListener);
+        dlg.setSearchString(searchContext != null ? searchContext.getSearchFor() : "");
+        dlg.showDialog();
+    }
+
+
 	void findPrevious() {
-		search(textArea.getSelectionStart() - 1, false);
+        findMore(false);
+		//search(textArea.getSelectionStart() - 1, false);
 	}
 
     void gotoLine() {
@@ -254,41 +349,6 @@ class TextEditorImpl implements ThemeListener {
         dlgGoto.showDialog();
     }
 
-	private String getTextLC() {
-		return textArea.getText().toLowerCase();
-	}
-
-	private void search(int startPos, boolean forward) {
-		if (searchString == null || searchString.isEmpty()) {
-			return;
-        }
-        String ss = searchString.toLowerCase(); // TODO add 'Case sensitive' checkbox
-		int pos;
-		if (forward) {
-			pos = getTextLC().indexOf(ss, startPos);
-		} else {
-			pos = getTextLC().lastIndexOf(ss, startPos);
-		}
-		if (pos >= 0) {
-			textArea.select(pos, pos + searchString.length());
-		} else {
-			// Beep when no match has been found.
-			// The beep method is called from a separate thread because this method seems to lock until the beep has
-			// been played entirely. If the 'Find next' shortcut is left pressed, a series of beeps will be played when
-			// the end of the file is reached, and we don't want those beeps to played one after the other as to:
-			// 1/ not lock the event thread
-			// 2/ have those beeps to end rather sooner than later
-			new Thread() {
-				@Override
-				public void run() {
-					Toolkit.getDefaultToolkit().beep();
-				}
-			}.start();
-            if (getStatusBar() != null) {
-                getStatusBar().setStatusMessage(Translator.get("text_editor.text_not_found"));
-		}
-	}
-	}
 
 	public boolean isWrap() {
 		return textArea.getLineWrap();
@@ -437,7 +497,7 @@ class TextEditorImpl implements ThemeListener {
             return FileType.PYTHON;
         } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash")) {
             return FileType.UNIX_SHELL;
-        } else if (str.startsWith("<!DOCTYPE html PUBLIC \"")) {
+        } else if (str.startsWith("<!DOCTYPE html")) {
             return FileType.HTML;
         } else if (str.startsWith("#!/usr/bin/ruby") || str.startsWith("#!/usr/bin/env ruby")) {
             return FileType.RUBY;
@@ -467,7 +527,7 @@ class TextEditorImpl implements ThemeListener {
     void formatCode() {
         try {
             formatTextArea();
-            getStatusBar().setStatusMessage("");
+            setStatusMessage("");
         } catch (CodeFormatException e) {
             if (e.getLine() > 0 ) {
                 if (e.getRow() > 0) {
@@ -476,9 +536,9 @@ class TextEditorImpl implements ThemeListener {
                     textArea.gotoLine(e.getLine());
                 }
             }
-            getStatusBar().setStatusMessage(e.getLocalizedMessage());
+            setStatusMessage(e.getLocalizedMessage());
         } catch (Exception e) {
-            getStatusBar().setStatusMessage(Translator.get("error"));
+            setStatusMessage(Translator.get("error"));
         }
     }
 
@@ -496,4 +556,30 @@ class TextEditorImpl implements ThemeListener {
             statusBar.setSyntax(fileType.getName());
         }
     }
+
+    void setStatusMessage(String message) {
+        if (getStatusBar() != null) {
+            getStatusBar().setStatusMessage(message);
+        }
+    }
+
+    private void beep() {
+        // The beep method is called from a separate thread because this method seems to lock until the beep has
+        // been played entirely. If the 'Find next' shortcut is left pressed, a series of beeps will be played when
+        // the end of the file is reached, and we don't want those beeps to played one after the other as to:
+        // 1/ not lock the event thread
+        // 2/ have those beeps to end rather sooner than later
+        new Thread() {
+            @Override
+            public void run() {
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }.start();
+    }
+
+
+    public void setupSearchContext(String searchStr) {
+        searchContext = new SearchContext(searchStr);
+    }
+
 }

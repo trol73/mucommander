@@ -75,6 +75,8 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
 
         // The text field will receive initial focus
         setInitialFocusComponent(edtLineNumber);
+
+        fixHeight();
     }
 
 

@@ -45,7 +45,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private static final ListSelectionModel SELECTION_MODEL   = new DefaultListSelectionModel();
 
 
-    // - Instance fields -----------------------------------------------------------------
+    // - getInstance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** All registered listeners. */
     private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<>();
@@ -505,7 +505,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @author Nicolas Rinaudo
      */
     private class ColumnEnumeration implements Enumeration<TableColumn> {
-        // - Instance fields -------------------------------------------------------------
+        // - getInstance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Index of the next available element in the enumeration. */
         private int nextIndex;
@@ -578,7 +578,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @author Nicolas Rinaudo
      */
     private static class ColumnSorter implements Comparator<TableColumn> {
-        // - Instance fields -------------------------------------------------------------
+        // - getInstance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Defines the columns order. */
         private FileTableConfiguration conf;

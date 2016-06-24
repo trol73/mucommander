@@ -58,8 +58,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private TextEditorImpl textEditorImpl;
 
-	private static boolean fullScreen = MuConfigurations.getSnapshot().getBooleanVariable(MuSnapshot.TEXT_FILE_PRESENTER_FULL_SCREEN);
-
 	private static boolean lineWrap = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, MuSnapshot.DEFAULT_LINE_WRAP);
 
 	private static boolean lineNumbers = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, MuSnapshot.DEFAULT_LINE_NUMBERS);
@@ -111,23 +109,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
     public void setFrame(final FileFrame frame) {
         super.setFrame(frame);
 
-        //frame.setFullScreen(isFullScreen());
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
-//    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
-//    		public void actionPerformed(ActionEvent e){
-//    			setFullScreen(!frame.isFullScreen());
-//    			frame.setFullScreen(isFullScreen());
-//    		}
-//    	});
     }
 
-    static void setFullScreen(boolean fullScreen) {
-		//TextViewer.fullScreen = fullScreen;
-	}
-
-//	public static boolean isFullScreen() {
-//		return fullScreen;
-//	}
 
 	static void setLineWrap(boolean lineWrap) {
 		TextViewer.lineWrap = lineWrap;
@@ -148,7 +132,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
     void startEditing(AbstractFile file, DocumentListener documentListener) throws IOException {
         //initHistoryRecord(file);
         // Auto-detect encoding
-
         try (PushbackInputStream in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE)) {
             String encoding = historyRecord.getEncoding() != null ? historyRecord.getEncoding() : EncodingDetector.detectEncoding(in);
             if (textEditorImpl.getStatusBar() != null) {
@@ -191,7 +174,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
         encodingMenu.addEncodingListener(this);
 
         menuBar.add(menuHelper.getEditMenu());
-        menuBar.add(menuHelper.getViewMenu());
+        menuBar.add(menuHelper.getSearchMenu());
+        menuBar.add(menuHelper.getMenuView());
         menuBar.add(encodingMenu, menuBar);
 
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
@@ -332,7 +316,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private void checkGutterVisibility() {
         int count = gutter.getComponentCount();
         if (count == 0) {
-            if (getRowHeader() != null && getRowHeader().getView()==gutter) {
+            if (getRowHeader() != null && getRowHeader().getView() == gutter) {
                 setRowHeaderView(null);
             }
         } else {
@@ -394,11 +378,16 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     @Override
     public void setSearchedText(String searchedText) {
-        textEditorImpl.searchString = searchedText;
+        textEditorImpl.setupSearchContext(searchedText);
     }
 
 
     @Override
     public void setSearchedBytes(byte[] searchedBytes) {
+        try {
+            textEditorImpl.setupSearchContext(new String(searchedBytes, encoding));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

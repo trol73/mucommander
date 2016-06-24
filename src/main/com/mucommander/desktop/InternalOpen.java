@@ -28,7 +28,7 @@ import java.io.IOException;
  * @author Nicolas Rinaudo
  */
 class InternalOpen extends LocalFileOperation {
-    // - Instance variables --------------------------------------------------
+    // - getInstance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Underlying desktop instance. */
     private Desktop desktop;

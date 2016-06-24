@@ -24,10 +24,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -132,7 +129,8 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         encodingMenu.addEncodingListener(this);
 
         menuBar.add(textViewerDelegate.menuHelper.getEditMenu());
-        menuBar.add(textViewerDelegate.menuHelper.getViewMenu());
+        menuBar.add(textViewerDelegate.menuHelper.getSearchMenu());
+        menuBar.add(textViewerDelegate.menuHelper.getMenuView());
         menuBar.add(encodingMenu);
 
         textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
@@ -450,11 +448,16 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 
     @Override
     public void setSearchedText(String searchedText) {
-        textEditorImpl.searchString = searchedText;
+        textEditorImpl.setupSearchContext(searchedText);
     }
 
 
     @Override
     public void setSearchedBytes(byte[] searchedBytes) {
+        try {
+            textEditorImpl.setupSearchContext(new String(searchedBytes, textViewerDelegate.getEncoding()));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

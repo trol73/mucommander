@@ -27,7 +27,7 @@ import java.net.URL;
  * @author Nicolas Rinaudo
  */
 class InternalBrowse extends UrlOperation {
-    // - Instance variables --------------------------------------------------
+    // - getInstance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Underlying desktop instance. */
     private Desktop desktop;

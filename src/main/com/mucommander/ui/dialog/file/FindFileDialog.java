@@ -61,6 +61,7 @@ import java.awt.event.*;
 import java.util.List;
 
 /**
+ * @author Oleg Trifonov
  * Find file dialog
  */
 public class FindFileDialog extends FocusDialog implements ActionListener, DocumentListener {

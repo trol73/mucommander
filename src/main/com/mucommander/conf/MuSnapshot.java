@@ -529,7 +529,7 @@ public class MuSnapshot {
     
     private static final String ROOT_ELEMENT = "snapshot";
     
-	// - Instance fields -----------------------------------------------------
+	// - getInstance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     private final Configuration configuration;
 
@@ -650,7 +650,7 @@ public class MuSnapshot {
     }
     
     private void setGlobalHistory() {
-    	List<FileURL> locations = GlobalLocationHistory.Instance().getHistory();
+    	List<FileURL> locations = GlobalLocationHistory.getInstance().getHistory();
 
     	configuration.setVariable(getRecentLocationsCountVariable(), locations.size());
 
