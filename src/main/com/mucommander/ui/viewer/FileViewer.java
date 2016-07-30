@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
+import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -48,6 +49,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
 	
     /** Close menu item */
     private JMenuItem closeItem;
+    private JMenuItem filesItem;
 
     /**
      * Creates a new FileViewer.
@@ -67,6 +69,10 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
 
         // File menu
         JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), menuMnemonicHelper, null);
+
+        filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.ALT_MASK), this);
+        fileMenu.add(new JSeparator());
+
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
         fileMenu.add(closeItem);
         
@@ -82,6 +88,9 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == closeItem) {
             getFrame().dispose();
+        } else if (e.getSource() == filesItem) {
+            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
+            viewedAndEditedFilesQL.show();
         }
     }
 

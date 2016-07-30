@@ -4,12 +4,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.quicklist.QuickListContainer;
 import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,7 @@ import com.mucommander.ui.main.MainFrame;
  * 
  * @author Arik Hadas
  */
-public abstract class FileFrame extends JFrame {
+public abstract class FileFrame extends JFrame implements QuickListContainer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileFrame.class);
 
 //	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
@@ -45,7 +43,7 @@ public abstract class FileFrame extends JFrame {
     private Component returnFocusTo;
 
 
-    FileFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+    FileFrame(MainFrame mainFrame, Image icon) {
 		this.mainFrame = mainFrame;
 
 		setIconImage(icon);
@@ -238,4 +236,23 @@ public abstract class FileFrame extends JFrame {
         super.setTitle(title);
         FileViewersList.update();
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public Point calcQuickListPosition(Dimension dim) {
+        int x = Math.max((getWidth() - (int)dim.getWidth()) / 2, 0);
+        int y = Math.max((getHeight() - (int)dim.getHeight()) / 2, 0);
+        return new Point(x, y);
+    }
+
+    public Component containerComponent() {
+        return this;
+    }
+
+    public Component nextFocusableComponent() {
+        return this;
+    }
+
 }

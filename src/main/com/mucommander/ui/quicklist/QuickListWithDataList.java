@@ -142,7 +142,6 @@ public abstract class QuickListWithDataList<T> extends QuickList implements KeyL
 
     @Override
     public void keyTyped(KeyEvent e) {
-System.out.println("keyTyped ");
     }
 
     @Override

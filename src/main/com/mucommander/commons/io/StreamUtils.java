@@ -110,7 +110,7 @@ public class StreamUtils {
                 throw new FileTransferException(FileTransferException.READING_SOURCE);
             }
 
-            if (nbRead == -1) {
+            if (nbRead < 0) {
                 break;
             }
             try {

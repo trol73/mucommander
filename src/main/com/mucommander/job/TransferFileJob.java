@@ -226,9 +226,7 @@ public abstract class TransferFileJob extends FileJob {
         }
 
         // Under Mac OS X only, preserving the file type and creator
-        if (OsFamily.MAC_OS_X.isCurrent()
-            && sourceFile.hasAncestor(LocalFile.class)
-            && destFile.hasAncestor(LocalFile.class)) {
+        if (OsFamily.MAC_OS_X.isCurrent() && sourceFile.hasAncestor(LocalFile.class) && destFile.hasAncestor(LocalFile.class)) {
 
             String sourcePath = sourceFile.getAbsolutePath();
             try {
@@ -242,7 +240,6 @@ public abstract class TransferFileJob extends FileJob {
         // This block is executed only if integrity check has been enabled (disabled by default)
         if (integrityCheckEnabled) {
             String sourceChecksum;
-            String destinationChecksum;
 
             // Indicate that integrity is being checked, the value is reset when the next file starts
             isCheckingIntegrity = true;
@@ -264,6 +261,7 @@ public abstract class TransferFileJob extends FileJob {
             LOGGER.debug("Source checksum= "+sourceChecksum);
 
             // Calculate the destination file's checksum
+            String destinationChecksum;
             try {
                 destinationChecksum = calculateChecksum(destFile);
             } catch(Exception e) {
@@ -403,7 +401,7 @@ public abstract class TransferFileJob extends FileJob {
      * @return the 'augmented' InputStream using the given stream as the underlying InputStream
      */
     protected synchronized InputStream setCurrentInputStream(InputStream in) {
-        if(tlin==null) {
+        if (tlin == null) {
             tlin = new ThroughputLimitInputStream(new CounterInputStream(in, currentFileByteCounter), throughputLimit);
         } else {
             tlin.setUnderlyingInputStream(new CounterInputStream(in, currentFileByteCounter));
@@ -521,7 +519,7 @@ public abstract class TransferFileJob extends FileJob {
      * @return the size of the file currently being processed, -1 if this information is not available.
      */
     public long getCurrentFileSize() {
-        return getCurrentFile()==null?-1:getCurrentFile().getSize();
+        return getCurrentFile() == null ? -1 : getCurrentFile().getSize();
     }
 
 

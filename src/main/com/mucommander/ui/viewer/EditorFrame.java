@@ -45,7 +45,7 @@ public class EditorFrame extends FileFrame {
      * {@link EditorRegistrar#createEditorFrame(MainFrame,AbstractFile,Image)}.
      */
     EditorFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
-        super(mainFrame, file, icon);
+        super(mainFrame, icon);
         initContentPane(file);
     }
 

@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.viewer;
 
+import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import com.mucommander.ui.viewer.html.HtmlViewer;
 import com.mucommander.ui.viewer.pdf.PdfViewer;
 import com.mucommander.ui.viewer.text.TextViewer;
 import net.sf.jftp.gui.tasks.ImageViewer;
+
 
 /**
  * ViewerRegistrar maintains a list of registered file viewers and provides methods to dynamically register file viewers
@@ -84,9 +86,10 @@ public class ViewerRegistrar {
      * @param mainFrame the parent MainFrame instance
      * @param file the file that will be displayed by the returned ViewerFrame
      * @param icon window's icon.
-     * @return the created ViewerFrame
+     * @param defaultFactory postponed action
+     * @param createListener this lambda will be executed after viewer frame creation
      */
-    public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory) {
+    public static void createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory, FileFrameCreateListener createListener) {
         // Check if this file is already opened
         for (FileViewersList.FileRecord fr: FileViewersList.getFiles()) {
             if (fr.fileName.equals(file.getAbsolutePath()) && fr.viewerClass != null) {
@@ -97,30 +100,118 @@ public class ViewerRegistrar {
                     if (openedFrame != null) {
                         openedFrame.toFront();
                     }
-                    return null;
+                    if (createListener != null) {
+                        createListener.onCreate(openedFrame);
+                    }
+                    return;
                 }
             }
         }
+        new FilePreloadWorker(file, mainFrame, () -> {
+            ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
 
-        ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
-
-        // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
-            // Displays the document icon in the window title bar, works only for local files
-            if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
-                frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+            // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
+            if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+                // Displays the document icon in the window title bar, works only for local files
+                if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
+                    frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+                }
             }
-        }
 
-        // WindowManager will listen to window closed events to trigger shutdown sequence
-        // if it is the last window visible
-        frame.addWindowListener(WindowManager.getInstance());
+            // WindowManager will listen to window closed events to trigger shutdown sequence
+            // if it is the last window visible
+            frame.addWindowListener(WindowManager.getInstance());
 
-        return frame;
+            if (createListener != null) {
+                createListener.onCreate(frame);
+            }
+
+        }).execute();
+/*
+        TaskWidget taskWidget = new TaskWidget();
+        taskWidget.setText(file.getName());
+        mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
+        mainFrame.getStatusBar().revalidate();
+        mainFrame.getStatusBar().repaint();
+
+        new SwingWorker<Void, Void>() {
+            volatile Throwable readException;
+            volatile int progress;
+            @Override
+            protected Void doInBackground() throws Exception {
+
+                try {
+                    publish();
+                    final PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
+                    if (is instanceof HasProgress) {
+                        Thread progressThread = new Thread() {
+                            @Override
+                            public void run() {
+                                while (true) {
+                                    progress = ((HasProgress) is).getProgress();
+                                    publish();
+                                    if (progress >= 100 || readException != null) {
+                                        progress = -1;
+                                        publish();
+                                        break;
+                                    }
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException ignored) {}
+                                }
+                            }
+                        };
+                        progressThread.setName("ProgressInputStreamThread");
+                        progressThread.start();
+
+                    }
+                    is.read();
+                    is.unread(1);
+                } catch (Throwable e) {
+                    readException = e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void process(List<Void> chunks) {
+                taskWidget.setProgress(progress);
+            }
+
+            @Override
+            protected void done() {
+                taskWidget.removeFromPanel();
+                if (readException != null) {
+                    mainFrame.getStatusBar().setStatusInfo(Translator.get("text_viewer.open_file_error"));
+                }
+                ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
+
+                // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
+                if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+                    // Displays the document icon in the window title bar, works only for local files
+                    if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
+                        frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+                    }
+                }
+
+                // WindowManager will listen to window closed events to trigger shutdown sequence
+                // if it is the last window visible
+                frame.addWindowListener(WindowManager.getInstance());
+
+                if (createListener != null) {
+                    createListener.onCreate(frame);
+                }
+            }
+        }.execute();
+*/
     }
 
-    public static FileFrame createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
-        return createViewerFrame(mainFrame, file, icon, null);
+    public static void createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+        createViewerFrame(mainFrame, file, icon, null, null);
+    }
+
+    public static void createViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, FileFrameCreateListener createListener) {
+        createViewerFrame(mainFrame, file, icon, null, createListener);
     }
     
     /**
@@ -132,17 +223,29 @@ public class ViewerRegistrar {
      * @throws UserCancelledException if the user has been asked to confirm the operation and canceled
      */
     public static FileViewer createFileViewer(AbstractFile file, ViewerFrame frame, ViewerFactory defaultFactory) throws UserCancelledException {
+System.out.println("create sync start");
     	FileViewer viewer = null;
+        MainFrame mainFrame = frame != null ? frame.getMainFrame() : null;
         for (ViewerFactory factory : viewerFactories) {
             if (defaultFactory != null && !factory.getName().equals(defaultFactory.getName())) {
                 continue;
             }
             try {
+                if (mainFrame != null) {
+                    mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                }
                 if (factory.canViewFile(file)) {
                     viewer = factory.createFileViewer();
+                    if (mainFrame != null) {
+                        mainFrame.setCursor(Cursor.getDefaultCursor());
+                    }
                     break;
                 }
+System.out.println("create sync finish");
             } catch (WarnUserException e) {
+                if (mainFrame != null) {
+                    mainFrame.setCursor(Cursor.getDefaultCursor());
+                }
             	// TODO: question the user how does he want to open the file (as image, text..)
                 // Todo: display a proper warning dialog with the appropriate icon
             	
@@ -162,6 +265,10 @@ public class ViewerRegistrar {
                 } else {
                     // User canceled the operation
                     throw new UserCancelledException();
+                }
+            } catch (Exception e) {
+                if (mainFrame != null) {
+                    mainFrame.setCursor(Cursor.getDefaultCursor());
                 }
             }
         }

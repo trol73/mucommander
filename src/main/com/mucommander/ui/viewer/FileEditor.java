@@ -43,6 +43,7 @@ import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
+import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
 
 
 /**
@@ -58,10 +59,11 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     private JMenuItem saveItem;
     private JMenuItem saveAsItem;
     private JMenuItem closeItem;
+    private JMenuItem filesItem;
     
     /** Serves to indicate if saving is needed before closing the window, value should only be modified using the setSaveNeeded() method */
     private boolean saveNeeded;
-    
+
     /**
      * Creates a new FileEditor.
      */
@@ -213,6 +215,8 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         }
         saveAsItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), menuItemMnemonicHelper, null, this);
         fileMenu.add(new JSeparator());
+        filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.ALT_MASK), this);
+        fileMenu.add(new JSeparator());
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
 		
         menuBar.add(fileMenu);
@@ -234,7 +238,10 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             trySaveAs();
         } else if (source == closeItem) {
         	getFrame().dispose();
-        }			
+        } else if (source == filesItem) {
+            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
+            viewedAndEditedFilesQL.show();
+        }
     }
 
     //////////////////////

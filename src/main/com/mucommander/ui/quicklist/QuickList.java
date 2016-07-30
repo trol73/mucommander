@@ -110,9 +110,11 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 		return new Dimension((int) Math.ceil(
 				Math.max(container == null ? 0 : container.getWidth() / 2, width * 1.05)), (int) Math.ceil(height));
 	}
-	
+
+	@Override
 	public void focusGained(FocusEvent arg0) {}
 
+	@Override
 	public void focusLost(FocusEvent arg0) {
 		setVisible(false);		
 	}

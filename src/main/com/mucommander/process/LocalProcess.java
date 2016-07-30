@@ -32,7 +32,7 @@ import com.mucommander.commons.runtime.JavaVersion;
  * Process running on the local computer.
  * @author Nicolas Rinaudo
  */
-class LocalProcess extends AbstractProcess {
+public class LocalProcess extends AbstractProcess {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocalProcess.class);
 
     // - Instance fields -------------------------------------------------------

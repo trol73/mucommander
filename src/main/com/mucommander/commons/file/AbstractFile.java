@@ -28,6 +28,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.swing.Icon;
 
+import com.mucommander.commons.HasProgress;
 import com.mucommander.commons.file.compat.CompatURLStreamHandler;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
@@ -1990,7 +1991,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     /**
      *
      */
-    private class MuPushbackInputStream extends PushbackInputStream {
+    private class MuPushbackInputStream extends PushbackInputStream implements HasProgress {
 
         public MuPushbackInputStream(InputStream in) {
             super(in);
@@ -2010,6 +2011,16 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         int getBufferSize() {
             return buf.length;
+        }
+
+        @Override
+        public int getProgress() {
+            return hasProgress() ? ((HasProgress)in).getProgress() : -1;
+        }
+
+        @Override
+        public boolean hasProgress() {
+            return in instanceof HasProgress;
         }
     }
 }

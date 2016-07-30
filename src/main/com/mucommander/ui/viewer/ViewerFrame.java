@@ -43,10 +43,10 @@ public class ViewerFrame extends FileFrame {
      * Creates a new ViewerFrame to start viewing the given file.
      *
      * <p>This constructor has package access only, ViewerFrame need to be created can
-     * {@link ViewerRegistrar#createViewerFrame(MainFrame,AbstractFile,Image)}.
+     * {@link ViewerRegistrar#createViewerFrame(MainFrame, AbstractFile, Image)}.
      */
     ViewerFrame(MainFrame mainFrame, AbstractFile file, Image icon, ViewerFactory defaultFactory) {
-        super(mainFrame, file, icon);
+        super(mainFrame, icon);
         this.defaultFactory = defaultFactory;
         initContentPane(file);
     }

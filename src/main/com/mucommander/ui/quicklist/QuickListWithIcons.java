@@ -153,8 +153,7 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 	protected Icon resizeIcon(Icon icon,  final Dimension preferredSize) {
 		if (icon instanceof ImageIcon) {
 			Image image = ((ImageIcon) icon).getImage();
-			final Dimension dimension = preferredSize;
-			final double height = dimension.getHeight();
+			final double height = preferredSize.getHeight();
 			final double width = (height / icon.getIconHeight()) * icon.getIconWidth();
 			image = image.getScaledInstance((int)width, (int)height, Image.SCALE_SMOOTH);
 			return new ImageIcon(image);

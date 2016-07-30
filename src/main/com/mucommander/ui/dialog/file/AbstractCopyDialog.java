@@ -75,9 +75,8 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
     @Override
     protected PathFieldContent computeInitialPath(FileSet files) {
         String fieldText;     // Text to display in the destination field.
-        int    startPosition; // Index of the first selected character in the destination field.
-        int    endPosition;   // Index of the last selected character in the destination field.
-        int    nbFiles = files.size();
+        int startPosition; // Index of the first selected character in the destination field.
+        int endPosition;   // Index of the last selected character in the destination field.
 
         // Fill text field with absolute path, and if there is only one file,
         // append file's name
@@ -85,7 +84,7 @@ public abstract class AbstractCopyDialog extends TransferDestinationDialog {
         // Append filename to destination path if there is only one file to copy
         // and if the file is not a directory that already exists in destination
         // (otherwise folder would be copied into the destination folder)
-        if (nbFiles == 1) {
+        if (files.size() == 1) {
             AbstractFile file = files.elementAt(0);
             AbstractFile destFile;
 

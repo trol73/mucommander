@@ -22,7 +22,6 @@ package com.mucommander.job;
 import java.io.IOException;
 
 import com.mucommander.commons.file.*;
-import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.ProxyFile;
 import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;

@@ -1,5 +1,5 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2016 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
@@ -68,7 +68,8 @@ public class AvrDeviceDir extends AvrdudeFile {
             childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.FUSES.name)));
         }
         if (blocks.contains("signature")) {
-            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + getDevice().name + SIGNATURE_FILE_EXT)));
+            //childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + getDevice().name + SIGNATURE_FILE_EXT)));
+            childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.SIGNATURE.name)));
         }
         if (blocks.contains("calibration")) {
             childs.add(new AvrMemoryFile(FileURL.getFileURL(getURL() + AvrMemoryFile.Type.CALIBRATION.name)));

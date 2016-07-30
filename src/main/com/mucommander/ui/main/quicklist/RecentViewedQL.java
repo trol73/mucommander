@@ -1,5 +1,5 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2014 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@ import javax.swing.Icon;
 import java.util.List;
 
 /**
+ * @author Oleg Trifonv
  * Created on 01/07/14.
  */
 public class RecentViewedQL extends QuickListWithIcons<AbstractFile> {

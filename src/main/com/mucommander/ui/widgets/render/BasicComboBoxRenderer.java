@@ -1,6 +1,6 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2016 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ import java.awt.Dimension;
 /**
  * Renderer for ComboBox
  *
- * Created by trol on 05/01/14.
+ * @author Oleg Trifonov
+ * Created on 05/01/14.
  */
 public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer<T> {
     /**
@@ -37,7 +38,7 @@ public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer
      * <code>Border</code> used by this renderer directly set it using
      * the <code>setBorder</code> method.
      */
-    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+    protected static final Border NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
     private static final Border SAFE_NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
 
     @Override
@@ -55,7 +56,7 @@ public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer
         if (value instanceof Icon) {
             setIcon((Icon) value);
         } else {
-            setText((value == null) ? "" : value.toString());
+            setText(value == null ? "" : value.toString());
         }
         return this;
     }
@@ -68,17 +69,13 @@ public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer
     }
 
     private static Border getNoFocusBorder() {
-        if (System.getSecurityManager() != null) {
-            return SAFE_NO_FOCUS_BORDER;
-        } else {
-            return noFocusBorder;
-        }
+        return System.getSecurityManager() == null ? NO_FOCUS_BORDER : SAFE_NO_FOCUS_BORDER;
     }
 
     public Dimension getPreferredSize() {
         Dimension size;
 
-        if ((this.getText() == null) || (this.getText().equals(""))) {
+        if (getText() == null || getText().isEmpty()) {
             setText(" ");
             size = super.getPreferredSize();
             setText("");

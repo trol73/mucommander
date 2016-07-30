@@ -17,6 +17,13 @@
  */
 package com.mucommander.ui.viewer;
 
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.impl.EditAction;
+import com.mucommander.ui.action.impl.ViewAction;
+import com.mucommander.ui.viewer.text.TextEditor;
+
+import javax.swing.Icon;
 import java.awt.Frame;
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -30,7 +37,6 @@ import java.util.List;
 public class FileViewersList {
     private static final List<FileRecord> files = new ArrayList<>();
     private static long lastUpdateTime;
-
 
     /**
      *
@@ -52,6 +58,16 @@ public class FileViewersList {
         public String toString() {
             return fileName;
         }
+
+        public Icon getIcon() {
+            //Icon icon = FileIconsCache.getInstance().getIcon(fileRecord.fileName);
+            if (viewerClass == TextEditor.class) {
+                return MuAction.getStandardIcon(EditAction.class);
+            } else {
+                return MuAction.getStandardIcon(ViewAction.class);
+            }
+        }
+
     }
 
     private static void buildFilesList(List<FileRecord> fileNames) {

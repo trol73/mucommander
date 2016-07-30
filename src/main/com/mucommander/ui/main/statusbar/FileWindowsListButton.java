@@ -18,13 +18,9 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.jidesoft.swing.JideSplitButton;
-import com.mucommander.ui.action.MuAction;
-import com.mucommander.ui.action.impl.EditAction;
-import com.mucommander.ui.action.impl.ViewAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.FileViewersList;
-import com.mucommander.ui.viewer.text.TextEditor;
 import com.mucommander.utils.FileIconsCache;
 
 import javax.swing.Icon;
@@ -62,7 +58,7 @@ public class FileWindowsListButton extends JideSplitButton {
     private void showSelectedFile() {
         if (selectedRecord == null) {
             if (selectedMainFrame != null) {
-                setText(mainframeName(selectedMainFrame));
+                setText(mainFrameName(selectedMainFrame));
                 setIcon(getIconFrom(selectedMainFrame));
                 selectedMainFrame.toFront();
             }
@@ -88,7 +84,7 @@ public class FileWindowsListButton extends JideSplitButton {
         if (includeMainFrames) {
             List<MainFrame> mainFrames = WindowManager.getMainFrames();
             for (MainFrame mainFrame : mainFrames) {
-                String name = mainframeName(mainFrame);
+                String name = mainFrameName(mainFrame);
                 JMenuItem menuItem = new JMenuItem(name, getIconFrom(mainFrame));
                 menuItem.addActionListener(e -> mainFrame.toFront());
                 add(menuItem);
@@ -118,7 +114,7 @@ public class FileWindowsListButton extends JideSplitButton {
                 if (includeMainFrames) {
                     selectedRecord = null;
                     selectedMainFrame = WindowManager.getCurrentMainFrame();
-                    setText(mainframeName(selectedMainFrame));
+                    setText(mainFrameName(selectedMainFrame));
                     setIcon(getIconFrom(selectedMainFrame));
                 } else {
                     selectedRecord = FileViewersList.getFiles().get(0);
@@ -134,7 +130,7 @@ public class FileWindowsListButton extends JideSplitButton {
         lastUpdateTime = System.currentTimeMillis();
     }
 
-    private static String mainframeName(MainFrame mainFrame) {
+    private static String mainFrameName(MainFrame mainFrame) {
         return mainFrame.getLeftPanel().getCurrentFolder().getName() + " : " + mainFrame.getRightPanel().getCurrentFolder().getName();
     }
 
@@ -143,19 +139,8 @@ public class FileWindowsListButton extends JideSplitButton {
     }
 
     private Icon getIconFrom(FileRecord fileRecord) {
-        if (fileRecord == null) {
-            return null;
-        }
-        //Icon icon = FileIconsCache.getInstance().getIcon(fileRecord.fileName);
-        Icon icon;
-        if (fileRecord.viewerClass == TextEditor.class) {
-            icon = MuAction.getStandardIcon(EditAction.class);
-        } else {
-            icon = MuAction.getStandardIcon(ViewAction.class);
-        }
-        return icon;
+        return fileRecord == null ? null : fileRecord.getIcon();
     }
-
 
     @Override
     public boolean isVisible() {

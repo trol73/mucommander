@@ -33,12 +33,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
-import com.mucommander.ui.viewer.hex.HexViewer;
-import com.mucommander.ui.viewer.html.HtmlViewer;
-import com.mucommander.ui.viewer.pdf.PdfViewer;
 import com.mucommander.ui.viewer.text.TextEditor;
-import com.mucommander.ui.viewer.text.TextViewer;
-import net.sf.jftp.gui.tasks.ImageViewer;
 
 /**
  * EditorRegistrar maintains a list of registered file editors and provides methods to dynamically register file editors
@@ -70,9 +65,9 @@ public class EditorRegistrar {
      * @param mainFrame the parent MainFrame instance
      * @param file the file that will be displayed by the returned EditorFrame 
      * @param icon editor frame's icon.
-     * @return the created EditorFrame
+     * @param createListener postponed action
      */
-    public static FileFrame createEditorFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+    public static void createEditorFrame(MainFrame mainFrame, AbstractFile file, Image icon, FileFrameCreateListener createListener) {
         // Check if this file is already opened
         for (FileViewersList.FileRecord fr: FileViewersList.getFiles()) {
             if (fr.fileName.equals(file.getAbsolutePath()) && fr.viewerClass != null) {
@@ -81,26 +76,36 @@ public class EditorRegistrar {
                     FileFrame openedFrame = fr.fileFrameRef.get();
                     if (openedFrame != null) {
                         openedFrame.toFront();
+                        if (createListener != null) {
+                            createListener.onCreate(openedFrame);
+                        }
                     }
-                    return null;
+                    return;
                 }
             }
         }
-        EditorFrame frame = new EditorFrame(mainFrame, file, icon);
+        new FilePreloadWorker(file, mainFrame, () -> {
+            EditorFrame frame = new EditorFrame(mainFrame, file, icon);
 
-        // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
-            // Displays the document icon in the window title bar, works only for local files
-            if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
-                frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+            // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
+            if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+                // Displays the document icon in the window title bar, works only for local files
+                if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
+                    frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());
+                }
             }
-        }
 
-        // WindowManager will listen to window closed events to trigger shutdown sequence
-        // if it is the last window visible
-        frame.addWindowListener(WindowManager.getInstance());
-        
-        return frame;
+            // WindowManager will listen to window closed events to trigger shutdown sequence
+            // if it is the last window visible
+            frame.addWindowListener(WindowManager.getInstance());
+            if (createListener != null) {
+                createListener.onCreate(frame);
+            }
+        }).execute();
+    }
+
+    public static void createEditorFrame(MainFrame mainFrame, AbstractFile file, Image icon) {
+        createEditorFrame(mainFrame, file, icon, null);
     }
 
     

@@ -284,11 +284,11 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         JobProgressMonitor.getInstance().addJobProgressListener(this);
 
         if (taskWidget == null) {
-        showDialog();
+            showDialog();
         } else {
             firstTimeActivated = false;
             this.job.start();
-    }
+        }
     }
 
 
@@ -465,7 +465,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
                 mainFrame.getStatusBar().revalidate();
                 mainFrame.getStatusBar().repaint();
-        }
+            }
             taskWidget.setVisible(true);
             setVisible(false);
         }

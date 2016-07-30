@@ -44,7 +44,6 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.text.FilePathField;
 import com.mucommander.ui.theme.ThemeCache;
 import com.mucommander.ui.viewer.EditorRegistrar;
-import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 import ru.trolsoft.ui.InputField;
 
@@ -249,26 +248,27 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                 if (file == null) {
                     return;
                 }
-                FileFrame fileFrame;
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_F3:
-                        fileFrame = ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
-                                .returnFocusTo(getFocusOwner());
-                        if (cbSearchHex.isSelected()) {
-                            fileFrame.setSearchedBytes(edtText.getBytes());
-                        } else {
-                            fileFrame.setSearchedText(edtText.getText());
-                        }
+                        ViewerRegistrar.createViewerFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage(), (fileFrame) -> {
+                            fileFrame.returnFocusTo(getFocusOwner());
+                            if (cbSearchHex.isSelected()) {
+                                fileFrame.setSearchedBytes(edtText.getBytes());
+                            } else {
+                                fileFrame.setSearchedText(edtText.getText());
+                            }
+                        });
                         break;
 
                     case KeyEvent.VK_F4:
-                        fileFrame = EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage())
-                                .returnFocusTo(getFocusOwner());
-                        if (cbSearchHex.isSelected()) {
-                            fileFrame.setSearchedBytes(edtText.getBytes());
-                        } else {
-                            fileFrame.setSearchedText(edtText.getText());
-                        }
+                        EditorRegistrar.createEditorFrame(mainFrame, file, IconManager.getImageIcon(file.getIcon()).getImage(), (fileFrame) -> {
+                            fileFrame.returnFocusTo(getFocusOwner());
+                            if (cbSearchHex.isSelected()) {
+                                fileFrame.setSearchedBytes(edtText.getBytes());
+                            } else {
+                                fileFrame.setSearchedText(edtText.getText());
+                            }
+                        });
                         break;
 
                     case KeyEvent.VK_SPACE:

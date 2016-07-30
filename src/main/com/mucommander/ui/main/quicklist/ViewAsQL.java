@@ -140,7 +140,7 @@ public class ViewAsQL extends QuickListWithDataList<ViewerFactory> {
             return;
         }
         Image icon = ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage();
-        ViewerRegistrar.createViewerFrame(mainFrame, file, icon, item);
+        ViewerRegistrar.createViewerFrame(mainFrame, file, icon, item, null);
     }
 
     @Override

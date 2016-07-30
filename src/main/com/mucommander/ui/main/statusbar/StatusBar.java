@@ -97,6 +97,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     private FileWindowsListButton fileWindowsListButton;
 
+    private JProgressBar progressBar;
+
     /** Thread which auto updates volume info */
     private Thread autoUpdateThread;
 
@@ -167,7 +169,12 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         this.mainFrame = mainFrame;
-		
+
+        progressBar = new JProgressBar();
+        add(progressBar);
+        progressBar.setVisible(false);
+        add(Box.createHorizontalGlue());
+
         selectedFilesLabel = new JLabel("");
         dial = new SpinningDial();
         add(selectedFilesLabel);
@@ -415,7 +422,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         }
         selectedFilesLabel.setIcon(icon);
 
-        selectedFilesLabel.setHorizontalTextPosition(iconBeforeText?JLabel.TRAILING:JLabel.LEADING);
+        selectedFilesLabel.setHorizontalTextPosition(iconBeforeText ? JLabel.TRAILING : JLabel.LEADING);
 
     }
 
@@ -619,6 +626,15 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     public TaskPanel getTaskPanel() {
         return taskPanel;
+    }
+
+    public void showProgress(int progress) {
+        if (progress >= 0) {
+            progressBar.setVisible(true);
+            progressBar.setValue(progress);
+        } else {
+            progressBar.setVisible(false);
+        }
     }
 
 }

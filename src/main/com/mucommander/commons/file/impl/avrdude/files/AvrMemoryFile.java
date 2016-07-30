@@ -20,9 +20,11 @@ package com.mucommander.commons.file.impl.avrdude.files;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.impl.avrdude.AvrdudeDevice;
+import com.mucommander.commons.file.impl.avrdude.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author Oleg Trifonov
@@ -44,7 +46,7 @@ public class AvrMemoryFile extends AvrdudeFile {
 
         static Type fromFileName(String fileName) {
             for (Type type : values()) {
-                if (fileName.startsWith(type.name + ".")) {
+                if (fileName.startsWith(type.name)) {
                     return type;
                 }
             }
@@ -105,5 +107,50 @@ public class AvrMemoryFile extends AvrdudeFile {
         } else {
             return getDevice().blockSizes.get(fileName);
         }
+    }
+
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+System.out.println("?-> " + type);
+        Avrdude.Operation operation;
+        switch (type) {
+            case FLASH:
+                operation = Avrdude.Operation.READ_FLASH;
+                break;
+            case EEPROM:
+                operation = Avrdude.Operation.READ_EEPROM;
+                break;
+            case SIGNATURE:
+                operation = Avrdude.Operation.READ_SIGNATURE;
+                break;
+            case CALIBRATION:
+                operation = Avrdude.Operation.READ_CALIBRATION;
+                break;
+            default:
+                throw new RuntimeException("unsupported operation for " + type);
+        }
+        AvrDudeInputStream is = new AvrDudeInputStream(StreamType.HEX, configuration, operation);
+        return is;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        Avrdude.Operation operation;
+        switch (type) {
+            case FLASH:
+                operation = Avrdude.Operation.WRITE_FLASH;
+                break;
+            case EEPROM:
+                operation = Avrdude.Operation.WRITE_EEPROM;
+                break;
+            case CALIBRATION:
+                operation = Avrdude.Operation.WRITE_CALIBRATION;
+                break;
+            default:
+                throw new RuntimeException("unsupported operation for " + type);
+        }
+        AvrdudeOutputStream os = new AvrdudeOutputStream(StreamType.HEX, configuration, operation);
+        return os;
     }
 }

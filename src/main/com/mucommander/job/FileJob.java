@@ -136,9 +136,9 @@ public abstract class FileJob implements Runnable {
          */
         INTERRUPTED,
 
-    /** Indicates that this job has naturally finished (i.e. without being interrupted), this is a permanent state */
+        /** Indicates that this job has naturally finished (i.e. without being interrupted), this is a permanent state */
         FINISHED
-        }
+    }
 
 
     /** Current state of this job */

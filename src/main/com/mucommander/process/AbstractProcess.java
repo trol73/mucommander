@@ -96,7 +96,7 @@ public abstract class AbstractProcess {
      * @param listener if non <code>null</code>, <code>listener</code> will receive updates about the process' event.
      * @param encoding encoding that should be used by the process' stdout and stderr streams.
      */
-    final void startMonitoring(ProcessListener listener, String encoding) throws IOException {
+    public final void startMonitoring(ProcessListener listener, String encoding) throws IOException {
         // Only monitors stdout if the process uses merged streams.
         if (usesMergedStreams()) {
         	LOGGER.debug("Starting process merged output monitor...");

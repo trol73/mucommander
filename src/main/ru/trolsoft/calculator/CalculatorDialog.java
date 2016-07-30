@@ -190,6 +190,8 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
 
         setMinimumSize(MIN_DIMENSION);
         setModal(false);
+
+        fixHeight();
     }
 
     private void calculate() {

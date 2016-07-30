@@ -17,9 +17,81 @@
  */
 package com.mucommander.commons.file.impl.avrdude;
 
+import com.mucommander.commons.HasProgress;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * @author Oleg Trifonov
  * Created on 31/03/16.
  */
-public class AvrDudeInputStream {
+public class AvrDudeInputStream extends InputStream implements HasProgress {
+
+    private StreamType type;
+    private Avrdude avrdude;
+    private AvrdudeConfiguration config;
+    private Avrdude.Operation operation;
+    private ByteArrayInputStream data;
+
+
+    public AvrDudeInputStream(StreamType type, AvrdudeConfiguration config, Avrdude.Operation operation) {
+        this.type = type;
+        this.config = config;
+        this.operation = operation;
+        this.avrdude = new Avrdude();
+    }
+
+
+    @Override
+    public int read() throws IOException {
+        if (avrdude.getStatus() == Avrdude.Status.NONE) {
+            readAll();
+        }
+        return data.read();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return data.available();
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        data.reset();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return data.markSupported();
+    }
+
+    @Override
+    public synchronized void mark(int readlimit) {
+        data.mark(readlimit);
+    }
+
+    @Override
+    public int getProgress() {
+        return avrdude.getProgress();
+    }
+
+    @Override
+    public boolean hasProgress() {
+        return true;
+    }
+
+    void readAll() throws IOException {
+        try {
+            avrdude.execute(config, operation, type);
+            avrdude.waitFor();
+            if (type == StreamType.HEX) {
+                data = new ByteArrayInputStream(avrdude.getHexOutput().getBytes());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new IOException(e);
+        }
+    }
 }

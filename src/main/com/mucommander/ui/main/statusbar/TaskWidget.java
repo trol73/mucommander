@@ -1,6 +1,6 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2016 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.mucommander.ui.dialog.FocusDialog;
+import org.apache.commons.lang.StringUtils;
+import ru.trolsoft.ui.TProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,13 +29,10 @@ import java.awt.event.*;
  * @author Oleg Trifonov
  * Created on 08/12/14.
  */
-public class TaskWidget extends JProgressBar {//NonFocusableButton {
+public class TaskWidget extends TProgressBar {//NonFocusableButton {
 
     private static final Insets INSETS = new Insets(2, 2, 2, 2);
-
-    private Color colorBorder = new Color(0x555555);
-    private Color colorForeground = new Color(0xbbbbff);
-    private Color colorText = new Color(0x000000);
+    private static final int STRING_LENGTH = 25;
 
     private int progress;
 
@@ -112,6 +111,10 @@ public class TaskWidget extends JProgressBar {//NonFocusableButton {
 
 
     public void setText(String s) {
+        if (s.length() > STRING_LENGTH) {
+            s = s.substring(0, STRING_LENGTH-4) + "..";
+        }
+        s = StringUtils.center(s, STRING_LENGTH);
         setString(s);
 
         Dimension dim = new JLabel(s).getPreferredSize();
