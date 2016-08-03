@@ -127,6 +127,10 @@ public abstract class TransferFileJob extends FileJob {
     /**
      * Copies the given source file to the specified destination file, optionally resuming the operation.
      * As much as the source and destination protocols allow, the source file's date and permissions will be preserved.
+     *
+     * @param sourceFile source file
+     * @param destFile destination file
+     * @param append append or overwrite
      */
     protected void copyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
         // Reset this field in case it was set to true for the previous file
@@ -173,7 +177,7 @@ public abstract class TransferFileJob extends FileJob {
                         in = sourceFile.getInputStream();
                         if (integrityCheckEnabled) {
                             in = new ChecksumInputStream(in, MessageDigest.getInstance(CHECKSUM_VERIFICATION_ALGORITHM));
-                    }
+                        }
                     }
 
                     setCurrentInputStream(in);
@@ -239,11 +243,10 @@ public abstract class TransferFileJob extends FileJob {
 
         // This block is executed only if integrity check has been enabled (disabled by default)
         if (integrityCheckEnabled) {
-            String sourceChecksum;
-
             // Indicate that integrity is being checked, the value is reset when the next file starts
             isCheckingIntegrity = true;
 
+            String sourceChecksum;
             if (in != null && (in instanceof ChecksumInputStream)) {
                 // The file was copied with a ChecksumInputStream, the checksum is already calculated, simply
                 // retrieve it
@@ -346,7 +349,7 @@ public abstract class TransferFileJob extends FileJob {
                                 choice = showErrorDialog(errorDialogTitle, Translator.get("overwrite_readonly_file", destFile.getName()), actionTexts, actionValues);
                             }
                         } else {
-                        choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
+                            choice = showErrorDialog(errorDialogTitle, Translator.get("cannot_write_file", destFile.getName()));
                         }
                         break;
                     // Source and destination files are identical
@@ -471,7 +474,7 @@ public abstract class TransferFileJob extends FileJob {
         // Resume job if currently paused 
         if (getState() == State.PAUSED) {
             setPaused(false);
-    }
+        }
     }
 
     /**
@@ -557,13 +560,13 @@ public abstract class TransferFileJob extends FileJob {
     public void setThroughputLimit(long bytesPerSecond) {
         // Note: ThroughputInputStream interprets 0 as a complete pause (blocks reads) which is different
         // from what a user would expect when specifying 0 as a limit
-        this.throughputLimit = bytesPerSecond<=0?-1:bytesPerSecond;
+        this.throughputLimit = bytesPerSecond <= 0 ? -1 : bytesPerSecond;
 
         synchronized(this) {
             if (getState() != State.PAUSED && tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
+            }
         }
-    }
     }
 
     /**
@@ -607,7 +610,7 @@ public abstract class TransferFileJob extends FileJob {
         super.jobPaused();
 
         synchronized(this) {
-            if(tlin !=null)
+            if (tlin != null)
                 tlin.setThroughputLimit(0);
         }
     }
@@ -625,8 +628,8 @@ public abstract class TransferFileJob extends FileJob {
             // Restore previous throughput limit (if any, -1 by default)
             if (tlin != null) {
                 tlin.setThroughputLimit(throughputLimit);
+            }
         }
-    }
     }
 
 

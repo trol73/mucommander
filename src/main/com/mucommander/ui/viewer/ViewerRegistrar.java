@@ -223,7 +223,6 @@ public class ViewerRegistrar {
      * @throws UserCancelledException if the user has been asked to confirm the operation and canceled
      */
     public static FileViewer createFileViewer(AbstractFile file, ViewerFrame frame, ViewerFactory defaultFactory) throws UserCancelledException {
-System.out.println("create sync start");
     	FileViewer viewer = null;
         MainFrame mainFrame = frame != null ? frame.getMainFrame() : null;
         for (ViewerFactory factory : viewerFactories) {
@@ -241,7 +240,6 @@ System.out.println("create sync start");
                     }
                     break;
                 }
-System.out.println("create sync finish");
             } catch (WarnUserException e) {
                 if (mainFrame != null) {
                     mainFrame.setCursor(Cursor.getDefaultCursor());

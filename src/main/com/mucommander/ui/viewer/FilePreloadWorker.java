@@ -78,8 +78,8 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
 
             }
             // read one byte to init reader (actual for avrdude-files, etc.)
-            is.read();
-            is.unread(1);
+            int b = is.read();
+            is.unread(b);
         } catch (Throwable e) {
             readException = e;
         }
