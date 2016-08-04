@@ -27,9 +27,11 @@
 		<encoder>
 			<pattern>%4relative %5p [%-17thread] - %-200msg - %d %logger{30} \(%file:%line\)%n</pattern>
 		</encoder>
+<!--		
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>target/trolCommander.log.%d{yyyy-MM-dd}</fileNamePattern>
 		</rollingPolicy>
+-->		
 	</appender>
 	<root level="INFO">
 		<appender-ref ref="CONSOLE_APPENDER" />

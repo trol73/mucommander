@@ -29,7 +29,9 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import java.awt.Window;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
 
@@ -92,7 +94,8 @@ public class FileWindowsListButton extends JideSplitButton {
 
         }
         boolean containsSelected = false;
-        for (FileRecord fr: FileViewersList.getFiles()) {
+        List<FileRecord> list = new ArrayList<>(FileViewersList.getFiles());
+        for (FileRecord fr : list) {
             Window excludedFrame = SwingUtilities.getWindowAncestor(this);
             if (fr.fileFrameRef.get() == excludedFrame) {
                 continue;
@@ -105,6 +108,7 @@ public class FileWindowsListButton extends JideSplitButton {
                 containsSelected = true;
             }
         }
+
         if (!containsSelected) {
             selectedRecord = null;
         }

@@ -20,12 +20,19 @@ package com.mucommander.ui.viewer.text;
 
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.text.Translator;
 import com.mucommander.tools.AvrAssemblerCommandsHelper;
+import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.impl.EditAction;
+import com.mucommander.ui.action.impl.ViewAction;
 import com.mucommander.ui.theme.*;
+import com.mucommander.ui.viewer.EditorRegistrar;
+import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.ui.viewer.ViewerRegistrar;
 import com.mucommander.ui.viewer.text.search.FindDialog;
 import com.mucommander.ui.viewer.text.search.ReplaceDialog;
 import com.mucommander.ui.viewer.text.search.SearchEvent;
@@ -36,7 +43,7 @@ import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.fife.ui.rtextarea.SearchResult;
 
-import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
@@ -47,7 +54,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.StringTokenizer;
 
@@ -60,7 +69,7 @@ class TextEditorImpl implements ThemeListener {
 
     private static final Insets INSETS = new Insets(4, 3, 4, 3);
 
-	JFrame frame;
+	FileFrame frame;
 
     private TextArea textArea;
 
@@ -71,46 +80,136 @@ class TextEditorImpl implements ThemeListener {
 
     private StatusBar statusBar;
 
-    private CaretListener caretListener = new CaretListener() {
-        @Override
-        public void caretUpdate(CaretEvent e) {
-            if (statusBar != null) {
-                int line = textArea.getLine();
-                int col = textArea.getColumn();
-                statusBar.setPosition(line, col);
+    /**
+     * Full path to editable file with slash at end
+     */
+    private String fileLocation;
 
-                // check if we have 6-digit hex-word on cursor (color)
-                String str = textArea.getLineStr(line);
-                if (str == null || str.isEmpty()) {
-                    statusBar.setColor(-1);
-                    if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
-                        statusBar.setStatusMessage("");
-                    }
+    /**
+     * If not null then contains included file under cursor that will ber opened by Ctrl(Cmd)+Enter hotkey
+     */
+    private AbstractFile selectedFile;
+
+    private KeyListener textAreaKeyListener = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == KeyEvent.ALT_MASK) {
+                if (selectedFile == null) {
                     return;
                 }
-                if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
-                    StringTokenizer tokenizer = new StringTokenizer(str, " \t\n\r");
-                    boolean found = false;
-                    while (tokenizer.hasMoreElements()) {
-                        String instruction = tokenizer.nextToken();
-                        if (instruction.endsWith(":") || instruction.startsWith(";") || instruction.startsWith("//")) {
-                            continue;
-                        }
-                        String description = AvrAssemblerCommandsHelper.getCommandDescription(instruction);
-                        if (description != null) {
-                            statusBar.setStatusMessage(description);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        statusBar.setStatusMessage("");
-                    }
+                if (textArea.isEditable()) {
+                    ImageIcon icon = MuAction.getStandardIcon(EditAction.class);
+                    EditorRegistrar.createEditorFrame(frame.getMainFrame(), selectedFile, icon.getImage(), (fileFrame -> fileFrame.returnFocusTo(frame)));
+                } else {
+                    ImageIcon icon = MuAction.getStandardIcon(ViewAction.class);
+                    ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedFile, icon.getImage(), (fileFrame -> fileFrame.returnFocusTo(frame)));
                 }
-                checkColorOnCursor(str, col);
             }
         }
     };
+
+    private CaretListener caretListener = new CaretListener() {
+        @Override
+        public void caretUpdate(CaretEvent e) {
+            if (statusBar == null) {
+                return;
+            }
+            int line = textArea.getLine();
+            int col = textArea.getColumn();
+            statusBar.setPosition(line, col);
+            statusBar.setStatusMessage("");
+
+            // check if we have 6-digit hex-word on cursor (color)
+            String str = textArea.getLineStr(line);
+            if (str == null || str.isEmpty()) {
+                statusBar.setColor(-1);
+                //if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
+                selectedFile = null;
+                //}
+                return;
+            }
+            checkAssemblerInstruction(str);
+            checkColorOnCursor(str, col);
+            checkIncludeInstruction(str, col);
+        }
+    };
+
+    private void checkIncludeInstruction(String str, int col) {
+        if (!str.toLowerCase().contains("include")) {
+            selectedFile = null;
+            return;
+        }
+        if (col > 0) {
+            col--;
+        }
+        try {
+            int lastQuote2 = str.indexOf('"', col);
+            int lastQuote1 = str.indexOf('\'', col);
+            int lastBracket = str.indexOf(">", col);
+            String quotedName = null;
+            if (lastQuote2 > 0) {
+                int firstQuote2 = str.lastIndexOf('"', col);
+                if (firstQuote2 > 0) {
+                    quotedName = str.substring(firstQuote2 + 1, lastQuote2);
+                    if (quotedName.trim().isEmpty()) {
+                        quotedName = null;
+                    }
+                }
+            }
+            if (quotedName == null && lastBracket > 0) {
+                int firstBracket = str.lastIndexOf('<', col);
+                if (firstBracket > 0) {
+                    quotedName = str.substring(firstBracket + 1, lastBracket);
+                    if (quotedName.trim().isEmpty()) {
+                        quotedName = null;
+                    }
+                }
+            }
+            if (quotedName == null && lastQuote1 > 0) {
+                int firstQuote1 = str.lastIndexOf('\'', col);
+                if (firstQuote1 > 0) {
+                    quotedName = str.substring(firstQuote1 + 1, lastBracket);
+                    if (quotedName.trim().isEmpty()) {
+                        quotedName = null;
+                    }
+                }
+            }
+
+            if (quotedName != null) {
+                selectedFile = FileFactory.getFile(fileLocation + quotedName);
+                if (selectedFile != null && !selectedFile.exists()) {
+                    selectedFile = null;
+                }
+                if (selectedFile != null) {
+                    statusBar.setStatusMessage("<html>" + Translator.get("text_editor.press_alt_enter_to_open_file") + " <b>" + quotedName + "</b>");
+                }
+            } else {
+                statusBar.setStatusMessage(null);
+            }
+        } catch (StringIndexOutOfBoundsException ignore) {}
+    }
+
+    private void checkAssemblerInstruction(String str) {
+        if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
+            StringTokenizer tokenizer = new StringTokenizer(str, " \t\n\r");
+            boolean found = false;
+            while (tokenizer.hasMoreElements()) {
+                String instruction = tokenizer.nextToken();
+                if (instruction.endsWith(":") || instruction.startsWith(";") || instruction.startsWith("//")) {
+                    continue;
+                }
+                String description = AvrAssemblerCommandsHelper.getCommandDescription(instruction);
+                if (description != null) {
+                    statusBar.setStatusMessage(description);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                statusBar.setStatusMessage("");
+            }
+        }
+    }
 
 
     private boolean checkColorOnCursor(String str, int col) {
@@ -177,6 +276,7 @@ class TextEditorImpl implements ThemeListener {
         textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
         textArea.setAntiAliasingEnabled(true);
 		textArea.setEditable(isEditable);
+        textArea.addKeyListener(textAreaKeyListener);
 
         try {
             ThemeManager.readEditorTheme(ThemeManager.getCurrentSyntaxThemeName()).apply(textArea);
@@ -582,4 +682,11 @@ class TextEditorImpl implements ThemeListener {
         searchContext = new SearchContext(searchStr);
     }
 
+    public void prepareForEdit(AbstractFile file) {
+        fileLocation = file.getParent().getAbsolutePath();
+    }
+
+    public void setFrame(FileFrame frame) {
+        this.frame = frame;
+    }
 }

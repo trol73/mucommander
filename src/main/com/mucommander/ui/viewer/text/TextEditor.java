@@ -202,7 +202,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     @Override
     public void setFrame(final FileFrame frame) {
     	super.setFrame(frame);
-    	
+    	textEditorImpl.setFrame(frame);
     	//frame.setFullScreen(TextViewer.isFullScreen());
 
     	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
@@ -230,6 +230,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         if (type == FileType.NONE) {
             type = textEditorImpl.detectFileFormat(file);
         }
+        textEditorImpl.prepareForEdit(file);
         textEditorImpl.setSyntaxType(type);
         textViewerDelegate.menuHelper.setSyntax(type);
     	textViewerDelegate.startEditing(file, this);

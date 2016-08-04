@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.viewer;
 
-import com.mucommander.commons.file.FileFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ViewAction;

@@ -192,6 +192,10 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
         try {
             if (returnFocusTo != null) {
                 FocusRequester.requestFocus(returnFocusTo);
+                if (returnFocusTo instanceof FileFrame) {
+                    FocusRequester.requestFocus(((FileFrame)returnFocusTo).filePresenter);
+                    //((FileFrame)returnFocusTo).filePresenter
+                }
             }
             FileViewersList.update();
         } catch (Throwable ignore) {}
