@@ -19,6 +19,7 @@ package com.mucommander.ui.main.quicklist;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
@@ -55,7 +56,8 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ALT) {
+                int mask = KeyEvent.CTRL_MASK;//OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+                if (e.getKeyCode() == mask) {
                     setVisible(false);
                     acceptListItem(dataList.getSelectedValue());
                 }
