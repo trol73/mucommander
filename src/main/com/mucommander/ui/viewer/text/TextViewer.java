@@ -178,6 +178,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         menuBar.add(menuHelper.getMenuView());
         menuBar.add(encodingMenu, menuBar);
 
+        textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
         return menuBar;
     }

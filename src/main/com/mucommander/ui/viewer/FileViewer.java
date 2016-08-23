@@ -71,13 +71,13 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
         // File menu
         JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), menuMnemonicHelper, null);
 
-        int mask = KeyEvent.CTRL_MASK;//OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+        int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
         filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
         fileMenu.add(new JSeparator());
 
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
         fileMenu.add(closeItem);
-        
+
         menuBar.add(fileMenu);
 
         return menuBar;
@@ -109,6 +109,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
             @Override
             public void keyPressed(KeyEvent e) {
                 KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+System.out.println("> " + keyStroke);
                 JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
                 if (menuItem != null) {
                     actionPerformed(new ActionEvent(menuItem, 0, null));
@@ -140,7 +141,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
                 }
                 int keyCode = keyStroke.getKeyCode();
                 if ((keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) || (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN)
-                        || keyCode == KeyEvent.VK_ENTER) {
+                        || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB) {
                     menuKeyStrokes.put(keyStroke, menuItem);
                 }
             }

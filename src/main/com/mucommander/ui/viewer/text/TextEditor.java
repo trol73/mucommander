@@ -133,6 +133,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         menuBar.add(textViewerDelegate.menuHelper.getMenuView());
         menuBar.add(encodingMenu);
 
+        textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
         textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
     	return menuBar;
     }
