@@ -305,6 +305,11 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                         filesInfo.append(target);
                     }
                 }
+                if (!selectedFile.isDirectory()) {
+                    filesInfo.append(" (");
+                    filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
+                    filesInfo.append(")");
+                }
             }
         }		
 
