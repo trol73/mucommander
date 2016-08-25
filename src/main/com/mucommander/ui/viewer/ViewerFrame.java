@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.io.IOException;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.text.Translator;
@@ -38,6 +39,8 @@ public class ViewerFrame extends FileFrame {
     private final static Dimension MIN_DIMENSION = new Dimension(500, 360);
 
     private final ViewerFactory defaultFactory;
+
+    private AbstractFile file;
 
     /**
      * Creates a new ViewerFrame to start viewing the given file.
@@ -62,6 +65,7 @@ public class ViewerFrame extends FileFrame {
 
 	@Override
 	protected FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException {
+	    this.file = file;
 		return ViewerRegistrar.createFileViewer(file, ViewerFrame.this, defaultFactory);
 	}
 
@@ -74,4 +78,17 @@ public class ViewerFrame extends FileFrame {
     protected String getGenericErrorDialogMessage() {
 		return Translator.get("file_viewer.view_error");
 	}
+
+    @Override
+    public void dispose() {
+        if (file != null) {
+            try {
+                file.closePushbackInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            file = null;
+        }
+        super.dispose();
+    }
 }

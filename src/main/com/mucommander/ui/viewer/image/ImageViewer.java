@@ -213,6 +213,12 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         checkNextPrev();
         setFrameCursor(CURSOR_DEFAULT);
+
+        try {
+            file.closePushbackInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

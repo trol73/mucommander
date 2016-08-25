@@ -64,8 +64,7 @@ public class TextFactory implements ViewerFactory, EditorFactory {
         }
         // Warn the user if the file looks like a binary file
 
-        try {
-            PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
+        try (PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE)) {
             if (BinaryDetector.guessBinary(is)) {
                 return false;
             }

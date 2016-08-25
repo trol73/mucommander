@@ -1993,18 +1993,23 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     private class MuPushbackInputStream extends PushbackInputStream implements HasProgress {
 
+        private final InputStream src;
+
         public MuPushbackInputStream(InputStream in) {
             super(in);
+            src = in;
         }
 
         public MuPushbackInputStream(InputStream in, int size) {
             super(in, size);
+            src = in;
         }
 
         @Override
         public void close() throws IOException {
             synchronized (AbstractFile.this) {
                 super.close();
+                src.close();
                 pushbackInputStream = null;
             }
         }
