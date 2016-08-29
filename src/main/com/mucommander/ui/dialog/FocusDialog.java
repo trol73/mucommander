@@ -245,12 +245,26 @@ public class FocusDialog extends JDialog implements WindowListener {
             super.setMaximumSize(getSize());
             DialogToolkit.fitToScreen(this);
         }
-		
+
         if (minimumDimension != null) {
             DialogToolkit.fitToMinDimension(this, minimumDimension);
         } else {
             super.setMinimumSize(getSize());
         }
+    }
+
+    protected void packDialog() {
+        super.pack();
+    }
+
+    protected void setMinimumSizeDialog(Dimension d) {
+        minimumDimension = d;
+        super.setMinimumSize(d);
+    }
+
+    protected void setMaximumSizeDialog(Dimension d) {
+        maximumDimension = d;
+        super.setMaximumSize(d);
     }
 
 	

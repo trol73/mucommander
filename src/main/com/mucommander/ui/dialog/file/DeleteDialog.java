@@ -124,15 +124,17 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         updateDialog();
-
         if (files.size() > 1) {
             // Size dialog and show it to the screen
             setMinimumSize(MINIMUM_DIALOG_DIMENSION);
-            setResizable(false);
+            //setResizable(false);
         } else {
-            pack();
+            Dimension d = getContentPane().getPreferredSize();
+            getContentPane().setMaximumSize(new Dimension(getContentPane().getMaximumSize().width, getContentPane().getPreferredSize().height));
+            setMinimumSizeDialog(new Dimension(d.width*6/5, d.height*6/5));
+            int maxWidth = Math.max(d.width*4, mainFrame.getWidth());
+            setMaximumSizeDialog(new Dimension(maxWidth, d.height*3/2));
         }
-
     }
 
 

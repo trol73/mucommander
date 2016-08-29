@@ -103,8 +103,9 @@ public abstract class JobDialog extends FocusDialog {
             protected void updateLayout() {
                 if (packOnUpdate) {
                     Container tla = getTopLevelAncestor();
-                    if (tla instanceof Window)
+                    if (tla instanceof Window) {
                         ((Window) tla).pack();
+                    }
                 }
             }
         };
