@@ -23,6 +23,7 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
+import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -73,7 +74,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
 
         int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
         filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        fileMenu.add(new JSeparator());
+        fileMenu.add(new TMenuSeparator());
 
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
         fileMenu.add(closeItem);

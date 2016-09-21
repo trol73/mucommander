@@ -33,6 +33,7 @@ import com.mucommander.ui.notifier.AbstractNotifier;
 import com.mucommander.ui.notifier.NotificationType;
 import com.mucommander.ui.text.FileLabel;
 import com.mucommander.ui.text.FontUtils;
+import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -204,7 +205,7 @@ public class FileCollisionDialog extends QuestionDialog {
         }
 
         // Add a separator before file details
-        yPanel.add(new JSeparator());
+        yPanel.add(new TMenuSeparator());
 
         XAlignedComponentPanel tfPanel = new XAlignedComponentPanel(10);
 
@@ -221,7 +222,7 @@ public class FileCollisionDialog extends QuestionDialog {
         yPanel.add(tfPanel);
 
         // Add a separator after file details
-        yPanel.add(new JSeparator());
+        yPanel.add(new TMenuSeparator());
         
         init(yPanel, choicesText, choicesActions, 3);
 

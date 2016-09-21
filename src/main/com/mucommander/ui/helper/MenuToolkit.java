@@ -22,13 +22,11 @@ package com.mucommander.ui.helper;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.MenuListener;
 
 import com.mucommander.ui.action.MuAction;
+import ru.trolsoft.ui.TCheckBoxMenuItem;
 
 
 /**
@@ -105,7 +103,7 @@ public class MenuToolkit {
      * @param createCheckBoxMenuItem specifies whether the menu item to be created is a JCheckBoxMenuItem or just a regular JMenuItem.
      */
     private static JMenuItem addMenuItem(JMenu menu, String text, MnemonicHelper mnemonicHelper, KeyStroke accelerator, ActionListener actionListener, boolean createCheckBoxMenuItem) {
-        JMenuItem menuItem = createCheckBoxMenuItem?new JCheckBoxMenuItem(text, false):new JMenuItem(text);
+        JMenuItem menuItem = createCheckBoxMenuItem ? new TCheckBoxMenuItem(text, false):new JMenuItem(text);
 
         if (mnemonicHelper!=null) {
             char mnemonic = mnemonicHelper.getMnemonic(text);
@@ -156,7 +154,7 @@ public class MenuToolkit {
     
 
     private static JMenuItem addMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper, boolean createCheckBoxMenuItem) {
-        JMenuItem menuItem = createCheckBoxMenuItem ? new JCheckBoxMenuItem(action) : new JMenuItem(action);
+        JMenuItem menuItem = createCheckBoxMenuItem ? new TCheckBoxMenuItem(action) : new JMenuItem(action);
 
         if (mnemonicHelper != null && action != null) {
             char mnemonic = mnemonicHelper.getMnemonic(action.getLabel());

@@ -20,6 +20,8 @@ package com.mucommander.ui.encoding;
 
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
+import ru.trolsoft.ui.TCheckBoxMenuItem;
+import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,11 +86,11 @@ public class EncodingMenu extends JMenu {
             encodings.add(0, selectedEncoding);
 
         // Add preferred encodings to the menu
-        int nbEncodings = encodings.size();
+        //int nbEncodings = encodings.size();
         JCheckBoxMenuItem item;
         ButtonGroup group = new ButtonGroup();
         for(String enc: encodings) {
-            item = new JCheckBoxMenuItem(enc);
+            item = new TCheckBoxMenuItem(enc);
 
             // Select the current encoding, if there is one
             if(selectedEncoding!=null && selectedEncoding.equals(enc))
@@ -108,7 +110,7 @@ public class EncodingMenu extends JMenu {
             add(item);
         }
 
-        add(new JSeparator());
+        add(new TMenuSeparator());
 
         // 'Customize' menu item
         JMenuItem customizeItem = new JMenuItem(Translator.get("customize")+"...");

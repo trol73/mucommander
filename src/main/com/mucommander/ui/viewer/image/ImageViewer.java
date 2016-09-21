@@ -59,6 +59,7 @@ import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.pnm.PNMImageParser;
 import org.apache.sanselan.formats.psd.PsdImageParser;
 import org.apache.sanselan.formats.tiff.TiffImageParser;
+import ru.trolsoft.ui.TMenuSeparator;
 
 //import org.apache.commons.imaging.Imaging;
 
@@ -121,7 +122,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     	
         nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
         prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
-        controlsMenu.add(new JSeparator());
+        controlsMenu.add(new TMenuSeparator());
         if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
             zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
             zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);

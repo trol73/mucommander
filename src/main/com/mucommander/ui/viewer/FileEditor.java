@@ -44,6 +44,7 @@ import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
+import ru.trolsoft.ui.TMenuSeparator;
 
 
 /**
@@ -214,10 +215,10 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             saveItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
         }
         saveAsItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), menuItemMnemonicHelper, null, this);
-        fileMenu.add(new JSeparator());
+        fileMenu.add(new TMenuSeparator());
         int mask = KeyEvent.CTRL_MASK;//OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
         filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        fileMenu.add(new JSeparator());
+        fileMenu.add(new TMenuSeparator());
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
 		
         menuBar.add(fileMenu);

@@ -70,6 +70,7 @@ import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
+import ru.trolsoft.ui.TMenuSeparator;
 
 
 /**
@@ -335,14 +336,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         new RefreshDriveNamesAndIcons(popupMenu, itemsV).start();
 
-        popupMenu.add(new JSeparator());
+        popupMenu.add(new TMenuSeparator());
 
         // Add bookmarks
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
             for (Bookmark b : bookmarks) {
                 if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
-                    popupMenu.add(new JSeparator());
+                    popupMenu.add(new TMenuSeparator());
                     continue;
                 }
 
@@ -365,7 +366,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             popupMenu.add(Translator.get("bookmarks_menu.no_bookmark")).setEnabled(false);
         }
 
-        popupMenu.add(new JSeparator());
+        popupMenu.add(new TMenuSeparator());
 
         // Add 'Network shares' shortcut
         if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
@@ -399,7 +400,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             }), mnemonicHelper);
         }
 
-        popupMenu.add(new JSeparator());
+        popupMenu.add(new TMenuSeparator());
 
         // Add 'connect to server' shortcuts
         setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);

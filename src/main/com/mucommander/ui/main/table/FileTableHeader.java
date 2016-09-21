@@ -22,6 +22,8 @@ import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.ToggleAutoSizeAction;
 import com.mucommander.ui.main.MainFrame;
+import ru.trolsoft.ui.TCheckBoxMenuItem;
+import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -82,7 +84,7 @@ public class FileTableHeader extends JTableHeader implements MouseListener {
                     continue;
                 }
 
-                checkboxMenuItem = new JCheckBoxMenuItem(ActionManager.getActionInstance(c.getToggleColumnActionId(), mainFrame));
+                checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(c.getToggleColumnActionId(), mainFrame));
 
                 checkboxMenuItem.setSelected(table.isColumnEnabled(c));
                 checkboxMenuItem.setEnabled(table.isColumnDisplayable(c));
@@ -92,9 +94,9 @@ public class FileTableHeader extends JTableHeader implements MouseListener {
                 popupMenu.add(checkboxMenuItem);
             }
 
-            popupMenu.add(new JSeparator());
+            popupMenu.add(new TMenuSeparator());
 
-            checkboxMenuItem = new JCheckBoxMenuItem(ActionManager.getActionInstance(ToggleAutoSizeAction.Descriptor.ACTION_ID, mainFrame));
+            checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(ToggleAutoSizeAction.Descriptor.ACTION_ID, mainFrame));
             checkboxMenuItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());
             popupMenu.add(checkboxMenuItem);
 
