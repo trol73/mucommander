@@ -29,7 +29,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import com.mucommander.bonjour.BonjourMenu;
@@ -225,19 +224,21 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         for (JCheckBoxMenuItem checkBoxMenuItem : tableModeItems) {
             groupViewMode.add(checkBoxMenuItem);
         }
-        tableModeMenu.addMenuListener(new MenuListener() {
-            @Override
-            public void menuSelected(MenuEvent e) {
-                int mode = mainFrame.getActiveTable().getViewMode().ordinal();
-                tableModeItems[mode].setSelected(true);
-            }
-
-            @Override
-            public void menuDeselected(MenuEvent e) { }
-
-            @Override
-            public void menuCanceled(MenuEvent e) { }
-        });
+//        tableModeMenu.addMenuListener(new MenuListener() {
+//            @Override
+//            public void menuSelected(MenuEvent e) {
+//                int mode = mainFrame.getActiveTable().getViewMode().ordinal();
+//                tableModeItems[mode].setSelected(true);
+//            }
+//
+//            @Override
+//            public void menuDeselected(MenuEvent e) { }
+//
+//            @Override
+//            public void menuCanceled(MenuEvent e) { }
+//        });
+        tableModeMenu.add(new TMenuSeparator());
+        MenuToolkit.addMenuItem(tableModeMenu, ActionManager.getActionInstance(TogglePanelPreviewModeAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper2);
         viewMenu.add(tableModeMenu);
         viewMenu.add(new TMenuSeparator());
 
@@ -468,7 +469,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             toggleToggleAutoSizeItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());
             toggleSinglePanel.setSelected(mainFrame.isSinglePanel());
             /* TODO branch toggleBranchView.setSelected(activeTable.getFolderPanel().isBranchView()); */ 
-        } else if(source == columnsMenu) {
+        } else if (source == columnsMenu) {
             // Update the selected and enabled state of each column menu item.
             FileTable activeTable = mainFrame.getActiveTable();
             for (Column c : Column.values()) {
@@ -622,6 +623,9 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
                 themesMenu.add(item);
             }
+        } else if (source == tableModeMenu) {
+            int mode = mainFrame.getActiveTable().getViewMode().ordinal();
+            tableModeItems[mode].setSelected(true);
         }
     }
 	

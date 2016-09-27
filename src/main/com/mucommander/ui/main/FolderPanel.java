@@ -35,9 +35,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import com.mucommander.ui.event.TableSelectionListener;
 import com.mucommander.ui.main.quicklist.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +78,10 @@ import com.mucommander.utils.Callback;
  */
 public class FolderPanel extends JPanel implements FocusListener, QuickListContainer, ActiveTabListener {
 	private static Logger logger;
+    private boolean previewMode;
 
-	/** The following constants are used to identify the left and right folder panels */
+
+    /** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
 
     private MainFrame mainFrame;
@@ -108,6 +112,25 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     /** Array of all the existing pop ups for this panel's FileTable **/
     private QuickList[] fileTablePopups;
 
+    private JPanel locationPanel;
+
+    private PreviewPanel previewPanel;
+
+    private TableSelectionListener previewTableSelectionListener = new TableSelectionListener() {
+        @Override
+        public void selectedFileChanged(FileTable source) {
+            if (previewMode) {
+                AbstractFile file = source.getFolderPanel().getFileTable().getSelectedFile();
+                previewPanel.loadFile(file);
+            }
+        }
+
+        @Override
+        public void markedFilesChanged(FileTable source) {
+        }
+    };
+
+
     /* TODO branch private boolean branchView; */
 
     /**
@@ -122,15 +145,16 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         super(new BorderLayout());
 
         getLogger().trace(" initialTabs:");
-        for (FileTableTab tab:initialTabs)
-            getLogger().trace("\t"+(tab.getLocation() != null ?  tab.getLocation().toString() : null));
+        for (FileTableTab tab:initialTabs) {
+            getLogger().trace("\t" + (tab.getLocation() != null ? tab.getLocation().toString() : null));
+        }
         		
         this.mainFrame = mainFrame;
         
         // No decoration for this panel
         setBorder(null);
 
-        JPanel locationPanel = new JPanel(new GridBagLayout());
+        locationPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
@@ -545,4 +569,31 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         }
         return logger;
     }
+
+
+    public void setPreviewMode(boolean previewMode) {
+        this.previewMode = previewMode;
+        if (previewMode) {
+            remove(treeSplitPane);
+            locationPanel.setVisible(false);
+            if (previewPanel == null) {
+                previewPanel = new PreviewPanel();
+            }
+            add(previewPanel, BorderLayout.CENTER);
+            mainFrame.getActivePanel().getFileTable().addTableSelectionListener(previewTableSelectionListener);
+            previewPanel.loadFile(mainFrame.getActiveTable().getSelectedFile());
+        } else {
+            remove(previewPanel);
+            add(treeSplitPane, BorderLayout.CENTER);
+            locationPanel.setVisible(true);
+            mainFrame.getActivePanel().getFileTable().removeTableSelectionListener(previewTableSelectionListener);
+        }
+        doLayout();
+        repaint();
+    }
+
+    public boolean isPreviewMode() {
+        return previewMode;
+    }
+
 }

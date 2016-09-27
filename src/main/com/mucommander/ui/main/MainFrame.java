@@ -29,7 +29,6 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.conf.MuSnapshot;
-import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.CloseWindowAction;
@@ -258,7 +257,7 @@ public class MainFrame extends JFrame implements LocationListener {
 
         ActionKeymap.registerActions(this);
 
-        // Fire table change events on registered ActivePanelListener instances, to notify of the intial active table.
+        // Fire table change events on registered ActivePanelListener instances, to notify of the initial active table.
         fireActivePanelChanged(activeTable.getFolderPanel());
 
         // Set the custom FocusTraversalPolicy that manages focus for both FolderPanel and their subcomponents.
@@ -290,7 +289,7 @@ public class MainFrame extends JFrame implements LocationListener {
         FolderPanel rightPanel = new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf);
         init(leftPanel, rightPanel);
 
-        for (boolean isLeft = true; ; isLeft=false) {
+        for (boolean isLeft = true; ; isLeft = false) {
         	FileTable fileTable = isLeft ? leftTable : rightTable;
         	fileTable.sortBy(Column.valueOf(MuConfigurations.getSnapshot().getVariable(MuSnapshot.getFileTableSortByVariable(0, isLeft), MuSnapshot.DEFAULT_SORT_BY).toUpperCase()),
                     !MuConfigurations.getSnapshot().getVariable(MuSnapshot.getFileTableSortOrderVariable(0, isLeft), MuSnapshot.DEFAULT_SORT_ORDER).equals(MuSnapshot.SORT_ORDER_DESCENDING));
@@ -718,10 +717,12 @@ public class MainFrame extends JFrame implements LocationListener {
      */
     @Override
     public void toFront() {
-        if((getExtendedState()&Frame.ICONIFIED)!=0)
+        if ( (getExtendedState()&Frame.ICONIFIED) != 0)
             setExtendedState(Frame.NORMAL);
         super.toFront();
     }
+
+
 
 
     ///////////////////

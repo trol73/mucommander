@@ -71,7 +71,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private StatusBar statusBar;
 
 
-    TextViewer() {
+    public TextViewer() {
     	this(new TextEditorImpl(false, null));
         textEditorImpl.setStatusBar(getStatusBar());
     }

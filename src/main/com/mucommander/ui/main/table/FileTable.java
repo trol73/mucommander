@@ -245,7 +245,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             @Override
             public void focusGained(FocusEvent e) {
                 overlayTable.repaint();
-                }
+            }
         });
     }
 
@@ -1823,6 +1823,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 repaint();
         }
     }
+
+
 
 
     /**

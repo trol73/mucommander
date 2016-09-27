@@ -166,14 +166,18 @@ class ImageViewer extends FileViewer implements ActionListener {
     private synchronized void loadImage(AbstractFile file) throws IOException, ImageReadException {
         setFrameCursor(CURSOR_WAIT);
 
-        statusBar.setFileSize(file.getSize());
-        statusBar.setDateTime(file.getDate());
+        if (statusBar != null) {
+            statusBar.setFileSize(file.getSize());
+            statusBar.setDateTime(file.getDate());
+        }
         int imageWidth, imageHeight;
 
         final String ext = file.getExtension().toLowerCase();
         if ("scr".equals(ext) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
             this.image = ZxSpectrumScrImage.load(file.getInputStream());
-            statusBar.setImageBpp(4);
+            if (statusBar != null) {
+                statusBar.setImageBpp(4);
+            }
         } else if ("psd".equals(ext)) {
             this.image = new PsdImageParser().getBufferedImage(loadFile(file), null);
         } else if ("tif".equals(ext) || "tiff".equals(ext)) {
@@ -190,14 +194,18 @@ class ImageViewer extends FileViewer implements ActionListener {
             try (InputStream is = file.getInputStream()) {
                 this.image = ImageIO.read(is);
             }
-            statusBar.setImageBpp(image.getColorModel().getPixelSize());
+            if (statusBar != null) {
+                statusBar.setImageBpp(image.getColorModel().getPixelSize());
+            }
         }
         vectorImage = "svg".equalsIgnoreCase(ext);
         imageWidth = image.getWidth();
         imageHeight = image.getHeight();
         this.hasTransparentPixels = image.getColorModel().hasAlpha();
 
-        statusBar.setImageSize(imageWidth, imageHeight);
+        if (statusBar != null) {
+            statusBar.setImageSize(imageWidth, imageHeight);
+        }
 
         this.zoomFactor = 1.0;
         Dimension screen = MuSnapshot.getScreenSize();
@@ -249,8 +257,9 @@ class ImageViewer extends FileViewer implements ActionListener {
         } else if (cursor == CURSOR_CROSS && waitCursorMode) {
             return;
         }
-        if (getFrame().getCursor() != cursor) {
-            getFrame().setCursor(cursor);
+        FileFrame frame = getFrame();
+        if (frame != null && frame.getCursor() != cursor) {
+            frame.setCursor(cursor);
         }
     }
 
@@ -284,7 +293,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 //            this.scaledImage = image;
         }
 
-        statusBar.setZoom(factor);
+        if (statusBar != null) {
+            statusBar.setZoom(factor);
+        }
         checkZoom();
         setFrameCursor(CURSOR_DEFAULT);
     }
@@ -357,7 +368,9 @@ class ImageViewer extends FileViewer implements ActionListener {
                     break;
                 }
             }
-            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.size());
+            if (statusBar != null) {
+                statusBar.setFileNumber(indexInDirectory + 1, filesInDirectory.size());
+            }
         }
         try {
             loadImage(file);
@@ -424,7 +437,9 @@ class ImageViewer extends FileViewer implements ActionListener {
     private void gotoFile() {
         try {
             show(filesInDirectory.get(indexInDirectory));
-            statusBar.setFileNumber(indexInDirectory+1, filesInDirectory.size());
+            if (statusBar != null) {
+                statusBar.setFileNumber(indexInDirectory + 1, filesInDirectory.size());
+            }
             updateFrame();
         } catch (IOException e) {
             InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));
@@ -650,7 +665,9 @@ class ImageViewer extends FileViewer implements ActionListener {
 //            int r = (color >> 16) & 0xff;
 //            int g = (color >> 8) & 0xff;
 //            int b = (color) & 0xff;
-            statusBar.setStatusMessage("XY: (" +pixelX + ", " + pixelY + ")  " + colorToRgbStr(color) + "  HTML: (" + colorToHexStr(color) + ")");
+            if (statusBar != null) {
+                statusBar.setStatusMessage("XY: (" + pixelX + ", " + pixelY + ")  " + colorToRgbStr(color) + "  HTML: (" + colorToHexStr(color) + ")");
+            }
         }
 
         @Override

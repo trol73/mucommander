@@ -225,8 +225,7 @@ public class LocationChanger {
 	public ChangeFolderThread tryChangeCurrentFolder(String folderPath) {
 		try {
 			return tryChangeCurrentFolder(FileURL.getFileURL(folderPath), null, false);
-		}
-		catch(MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			// FileURL could not be resolved, notify the user that the folder doesn't exist
 			showFolderDoesNotExistDialog();
 
@@ -439,10 +438,10 @@ public class LocationChanger {
 		AbstractFile newFolder = folder;
 		do {
 			newFolder = newFolder.getParent();
-			if(newFolder!=null && newFolder.exists())
+			if (newFolder != null && newFolder.exists())
 				return newFolder;
 		}
-		while(newFolder!=null);
+		while (newFolder != null);
 
 		// Fall back to the first existing volume
 		AbstractFile[] localVolumes = LocalFile.getVolumes();
@@ -639,14 +638,14 @@ public class LocationChanger {
 			// optional and CredentialsManager has credentials for this location, popup the authentication dialog to
 			// avoid waiting for an AuthException to be thrown.
 			else if(!folderURL.containsCredentials() &&
-					(  (authenticationType==AuthenticationType.AUTHENTICATION_REQUIRED)
+					( (authenticationType==AuthenticationType.AUTHENTICATION_REQUIRED)
 							|| (authenticationType==AuthenticationType.AUTHENTICATION_OPTIONAL && CredentialsManager.getMatchingCredentials(folderURL).length>0))) {
 				AuthDialog authDialog = popAuthDialog(folderURL, false, null);
 				newCredentialsMapping = authDialog.getCredentialsMapping();
 				guestCredentialsSelected = authDialog.guestCredentialsSelected();
 
 				// User cancelled the authentication dialog, stop
-				if (newCredentialsMapping ==null)
+				if (newCredentialsMapping == null)
 					userCancelled = true;
 				// Use the provided credentials and invalidate the folder AbstractFile instance (if any) so that
 				// it gets recreated with the new credentials
@@ -872,7 +871,7 @@ public class LocationChanger {
 							newCredentialsMapping = authDialog.getCredentialsMapping();
 							guestCredentialsSelected = authDialog.guestCredentialsSelected();
 
-							if(newCredentialsMapping!=null) {
+							if (newCredentialsMapping != null) {
 								// Invalidate the existing AbstractFile instance
 								folder = null;
 								// Use the provided credentials

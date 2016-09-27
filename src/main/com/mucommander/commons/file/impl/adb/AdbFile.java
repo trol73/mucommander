@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * @author Oleg Trifonov
- *         Created on 09/09/15.
+ * Created on 09/09/15.
  */
 public class AdbFile extends ProtocolFile {
 

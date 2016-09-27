@@ -21,11 +21,8 @@ package com.mucommander.ui.action;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
-import com.mucommander.profiler.Profiler;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
@@ -242,6 +239,7 @@ public class ActionManager {
 		registerAction(new ToggleTableViewModeShortAction.Descriptor());
 		registerAction(new EjectDriveAction.Descriptor());
 		registerAction(new CompareFilesAction.Descriptor());
+		registerAction(new TogglePanelPreviewModeAction.Descriptor());
     }
 
 	public static void registerCommandsActions() {

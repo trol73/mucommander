@@ -124,8 +124,10 @@ public class HexViewer extends FileViewer {
             hexTable.setOnOffsetChangeListener(onOffsetChangeListener);
             onOffsetChangeListener.onChange(0);
 
-            statusBar.setMaxOffset(file.getSize() - 1);
-            statusBar.setOffset(hexTable.getCurrentAddress());
+            if (statusBar != null) {
+                statusBar.setMaxOffset(file.getSize() - 1);
+                statusBar.setOffset(hexTable.getCurrentAddress());
+            }
 
             setComponentToPresent(hexTable);
             getViewport().setBackground(hexTable.getBackground());
@@ -212,9 +214,13 @@ public class HexViewer extends FileViewer {
             }
             if (lastSearchResult >= 0) {
                 hexTable.gotoOffset(lastSearchResult);
-                statusBar.clearStatusMessage();
+                if (statusBar != null) {
+                    statusBar.clearStatusMessage();
+                }
             } else {
-                statusBar.setStatusMessage(Translator.get("hex_viewer.search_not_found"));
+                if (statusBar != null) {
+                    statusBar.setStatusMessage(Translator.get("hex_viewer.search_not_found"));
+                }
             }
         } catch (IOException e1) {
             e1.printStackTrace();

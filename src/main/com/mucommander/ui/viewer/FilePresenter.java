@@ -111,7 +111,10 @@ public abstract class FilePresenter extends JScrollPane {
     protected final void setCurrentFile(AbstractFile file) {
         this.file = file;
         // Update frame's title
-        getFrame().setTitle(getTitle());
+        FileFrame frame = getFrame();
+        if (frame != null) {
+            frame.setTitle(getTitle());
+        }
     }
 	
 	/**
