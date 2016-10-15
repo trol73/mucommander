@@ -21,28 +21,7 @@ package com.mucommander.ui.main.toolbar;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import com.mucommander.ui.action.impl.AddBookmarkAction;
-import com.mucommander.ui.action.impl.ConnectToServerAction;
-import com.mucommander.ui.action.impl.EditBookmarksAction;
-import com.mucommander.ui.action.impl.EditCredentialsAction;
-import com.mucommander.ui.action.impl.EmailAction;
-import com.mucommander.ui.action.impl.GoBackAction;
-import com.mucommander.ui.action.impl.GoForwardAction;
-import com.mucommander.ui.action.impl.GoToHomeAction;
-import com.mucommander.ui.action.impl.GoToParentAction;
-import com.mucommander.ui.action.impl.MarkGroupAction;
-import com.mucommander.ui.action.impl.NewWindowAction;
-import com.mucommander.ui.action.impl.PackAction;
-import com.mucommander.ui.action.impl.RevealInDesktopAction;
-import com.mucommander.ui.action.impl.RunCommandAction;
-import com.mucommander.ui.action.impl.SetSameFolderAction;
-import com.mucommander.ui.action.impl.ShowFilePropertiesAction;
-import com.mucommander.ui.action.impl.ShowPreferencesAction;
-import com.mucommander.ui.action.impl.ShowServerConnectionsAction;
-import com.mucommander.ui.action.impl.StopAction;
-import com.mucommander.ui.action.impl.SwapFoldersAction;
-import com.mucommander.ui.action.impl.UnmarkGroupAction;
-import com.mucommander.ui.action.impl.UnpackAction;
+import com.mucommander.ui.action.impl.*;
 
 /**
  * This class is responsible to handle the attributes of ToolBars - their actions and separators.
@@ -63,6 +42,7 @@ public class ToolBarAttributes {
     /** Default command bar actions: Class instances or null to signify a separator */
     private final static String[] DEFAULT_TOOLBAR_ACTIONS = new String[] {
             NewWindowAction.Descriptor.ACTION_ID,
+            AddTabAction.Descriptor.ACTION_ID,
             null,
             GoBackAction.Descriptor.ACTION_ID,
             GoForwardAction.Descriptor.ACTION_ID,

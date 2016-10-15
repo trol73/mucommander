@@ -90,7 +90,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
     // Dialog width is constrained to 320, height is not an issue (always the same)
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(640, 10000);
-    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320, 0);
+    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(410, 0);
 
     /** Height allocated to the 'speed graph' */
     private final static int SPEED_GRAPH_HEIGHT = 80;

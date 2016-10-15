@@ -52,7 +52,8 @@ public class AddTabAction extends MuAction {
 
 
 	public static final class Descriptor extends AbstractActionDescriptor {
-		public String getId() { return "AddTab"; }
+		public static final String ACTION_ID = "AddTab";
+		public String getId() { return ACTION_ID; }
 
 		public ActionCategory getCategory() { return ActionCategory.TAB; }
 

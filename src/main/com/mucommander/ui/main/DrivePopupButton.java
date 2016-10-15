@@ -353,8 +353,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     AbstractFile file = FileFactory.getFile(location);
                     if (file != null) {
                         Image icon = FileIconsCache.getInstance().getImageIcon(file);
-                        if (icon != null)
+                        if (icon != null) {
                             item.setIcon(new ImageIcon(icon));
+                        }
                     }
                 } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
                     item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));

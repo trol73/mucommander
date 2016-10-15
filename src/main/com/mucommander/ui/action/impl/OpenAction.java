@@ -18,8 +18,10 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
+import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
@@ -38,6 +40,7 @@ import com.mucommander.ui.main.tabs.FileTableTabs;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -102,15 +105,28 @@ public class OpenAction extends MuAction {
         	resolvedFile = MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS) ? resolvedFile : file;
 
         	FileTableTabs tabs = destination.getTabs();
-        	if (tabs.getCurrentTab().isLocked()) {
-				tabs.add(resolvedFile);
+
+			if (BookmarkManager.isBookmark(resolvedFile)) {
+				String bookmarkLocation = BookmarkManager.getBookmark(resolvedFile.getName()).getLocation();
+				try {
+					FileURL bookmarkURL = FileURL.getFileURL(bookmarkLocation);
+					if (tabs.getCurrentTab().isLocked()) {
+						tabs.add(bookmarkURL);
+					} else {
+						destination.tryChangeCurrentFolder(bookmarkURL);
+					}
+				} catch (MalformedURLException ignore) {}
 			} else {
-				destination.tryChangeCurrentFolder(resolvedFile);
+				if (tabs.getCurrentTab().isLocked()) {
+					tabs.add(resolvedFile);
+				} else {
+					destination.tryChangeCurrentFolder(resolvedFile);
+				}
 			}
         }
 
         // Opens local files using their native associations.
-        else if(resolvedFile.getURL().getScheme().equals(FileProtocols.FILE) && (resolvedFile.hasAncestor(LocalFile.class))) {
+        else if (resolvedFile.getURL().getScheme().equals(FileProtocols.FILE) && (resolvedFile.hasAncestor(LocalFile.class))) {
             try {
             	DesktopManager.open(resolvedFile);
             	RecentExecutedFilesQL.addFile(resolvedFile);

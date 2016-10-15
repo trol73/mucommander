@@ -19,7 +19,11 @@
 
 package com.mucommander.commons.file.icon;
 
+import com.mucommander.bookmark.Bookmark;
+import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.ui.icon.FileIcons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,6 +85,17 @@ public class CachedFileIconProvider implements FileIconProvider {
      */
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {
         boolean isCacheable = cacheableFip.isCacheable(file, preferredResolution);
+
+        if (BookmarkManager.isBookmark(file)) {
+            for (Bookmark bookmark : BookmarkManager.getBookmarks()) {
+                if (file.getName().equals(bookmark.getName())) {
+                    // Note: if several bookmarks match current folder, the first one will be used
+                    file = FileFactory.getFile(bookmark.getLocation());
+                    //return getFileIcon(file, preferredResolution);
+                    return FileIcons.getFileIcon(file, preferredResolution);
+                }
+            }
+        }
 
         // Look for the file icon in the provider's cache
         Icon icon = isCacheable ? cacheableFip.lookupCache(file, preferredResolution) : null;

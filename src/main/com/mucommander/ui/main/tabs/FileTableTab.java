@@ -18,10 +18,12 @@
 
 package com.mucommander.ui.main.tabs;
 
+import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.core.LocalLocationHistory;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.tabs.Tab;
 
 /**
@@ -89,6 +91,9 @@ public abstract class FileTableTab implements Tab {
 	}
 
 	private String createDisplayableTitleFromLocation(FileURL location) {
+		if (BookmarkManager.isBookmark(location) && location.getHost() == null) {
+			return Translator.get("bookmarks_menu");
+		}
 		boolean local = FileURL.LOCALHOST.equals(location.getHost());
 		return getHostRepresentation(location.getHost(), local) + getFilenameRepresentation(location.getFilename(), local);
 	}
@@ -102,8 +107,7 @@ public abstract class FileTableTab implements Tab {
 		if (local && LocalFile.hasRootDrives() && filename != null)
 			return PathUtils.removeLeadingSeparator(filename, "/");
 		// Under other OSes, if the filename is empty return "/"
-		else
-			return filename == null ? "/" : filename;
+		return filename == null ? "/" : filename;
 	}
 
 	/**

@@ -20,7 +20,10 @@
 package com.mucommander.commons.file.icon.impl;
 
 import ch.randelshofer.quaqua.osx.OSXFile;
+import com.mucommander.bookmark.Bookmark;
+import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.icon.CacheableFileIconProvider;
 import com.mucommander.commons.file.icon.CachedFileIconProvider;
@@ -155,9 +158,8 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
             } else {
                 if (fileChooser == null) {
                     return OSXFile.getIcon(javaIoFile, preferredSize);
-                } else {
-                    return fileChooser.getIcon(javaIoFile);
                 }
+                return fileChooser.getIcon(javaIoFile);
             }
         } catch (Exception e) {
             LOGGER.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
@@ -223,7 +225,6 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         if (OsFamily.MAC_OS_X.isCurrent() && !FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
             return getSwingIcon(new File("/Network"), preferredResolution.width);
         }
-
         // Look for an existing icon instance for the file's extension
         return (file.isDirectory()? directoryIconCache : fileIconCache).get(getCheckedExtension(file));
     }

@@ -49,7 +49,7 @@ public class SplashScreen extends JWindow {
     private Font customFont;
 
     /** Path to the splash screen wo image within the JAR file */
-    private final static String SPLASH_IMAGE_PATH = IconManager.IconSet.MUCOMMANDER.getFolder() + "splash.png";
+    private final static String SPLASH_IMAGE_PATH = IconManager.IconSet.TROLCOMMANDER.getFolder() + "splash.png";
 
     /** Name of the font used to display text on this splash screen */
     private final static String FONT_NAME = "Courier";

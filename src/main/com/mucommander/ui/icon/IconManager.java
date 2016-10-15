@@ -58,8 +58,8 @@ public class IconManager {
         PROGRESS("progress"),
         /** Designates the language icon set */
         LANGUAGE("language"),
-        /** Designates the mucommander icon set */
-        MUCOMMANDER("trolcommander"),
+        /** Designates the trolcommander icon set */
+        TROLCOMMANDER("trolcommander"),
         /** Other images */
         MISC("misc");
 

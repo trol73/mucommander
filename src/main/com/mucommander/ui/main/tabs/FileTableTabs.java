@@ -123,6 +123,10 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	public void add(FileTableTab tab) {
 		addAndSelectTab(tab);
 	}
+
+	public void add(FileURL fileURL) {
+		addTab(defaultTabsFactory.createTab(fileURL));
+	}
 	
 	public FileTableTab closeCurrentTab() {
 		return removeTab();
@@ -177,4 +181,5 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	}
 	
 	public void locationChanging(LocationEvent locationEvent) { }
+
 }

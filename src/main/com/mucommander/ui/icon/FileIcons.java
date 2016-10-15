@@ -28,6 +28,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.icon.FileIconProvider;
 import com.mucommander.commons.file.impl.adb.AdbFile;
+import com.mucommander.commons.file.impl.ftp.FTPFile;
+import com.mucommander.commons.file.impl.http.HTTPFile;
+import com.mucommander.commons.file.impl.sftp.SFTPFile;
 import com.mucommander.commons.runtime.OsFamily;
 
 /**
@@ -131,6 +134,8 @@ public class FileIcons {
         }
         if (file instanceof AdbFile && file.isRoot()) {
             return IconManager.getIcon(IconManager.IconSet.FILE, "android.png");
+        } else if (file instanceof FTPFile || file instanceof HTTPFile || file instanceof SFTPFile) {
+            return IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME);
         }
 
         if (systemIcon) {

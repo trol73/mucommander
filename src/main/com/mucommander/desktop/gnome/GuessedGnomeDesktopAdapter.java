@@ -32,9 +32,13 @@ public class GuessedGnomeDesktopAdapter extends GnomeDesktopAdapter {
     @Override
     public boolean isAvailable() {
         try {
+            ProcessRunner.execute("gvfs-open");
+            return true;
+        } catch(Exception ignore) {}
+        try {
             ProcessRunner.execute("gnome-open");
             return true;
-        }
-        catch(Exception e) {return false;}
+        } catch(Exception ignore) {}
+        return false;
     }
 }

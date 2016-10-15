@@ -69,7 +69,7 @@ public class ConnectionPool implements Runnable {
                 		synchronized(connHandler) {     // Ensures that lock remains unchanged while we access/update it
                 			if (!connHandler.isLocked()) {
                 				// Try to acquire lock if a lock was requested
-                				if(!acquireLock || connHandler.acquireLock()) {
+                				if (!acquireLock || connHandler.acquireLock()) {
                 					LOGGER.info("returning ConnectionHandler {}, realm = {}", connHandler, realm);
 
                 					// Update last activity timestamp to now
@@ -140,7 +140,10 @@ public class ConnectionPool implements Runnable {
      * @return a list of registered ConnectionHandler instances
      */
     public static List<ConnectionHandler> getConnectionHandlersSnapshot() {
-        return new ArrayList<>(connectionHandlers);
+    //    return new ArrayList<>(connectionHandlers);
+        synchronized (connectionHandlers) {
+            return new ArrayList<>(connectionHandlers);
+        }
     }
     
 //    /**
@@ -219,7 +222,7 @@ public class ConnectionPool implements Runnable {
                         // If keep-alive period has been reached without any connection activity or a keep alive,
                         // keep connection alive in a separate thread
                         long keepAlivePeriod = connHandler.getKeepAlivePeriod();
-                        if (keepAlivePeriod!=-1 && now-Math.max(lastUsed, connHandler.getLastKeepAliveTimestamp())>keepAlivePeriod*1000) {
+                        if (keepAlivePeriod != -1 && now-Math.max(lastUsed, connHandler.getLastKeepAliveTimestamp()) > keepAlivePeriod*1000) {
                             // Update last keep alive timestamp to now
                             connHandler.updateLastKeepAliveTimestamp();
 
@@ -230,7 +233,7 @@ public class ConnectionPool implements Runnable {
                 }
 
                 // Stop monitor thread if there are no more ConnectionHandler
-                if (connectionHandlers.size() == 0) {
+                if (connectionHandlers.isEmpty()) {
                     LOGGER.info("No more ConnectionHandler, stopping monitor thread");
                     monitorThread = null;
                 }

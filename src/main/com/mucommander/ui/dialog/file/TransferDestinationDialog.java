@@ -163,6 +163,8 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             }
             mainPanel.add(fileExistsActionComboBox);
 
+            mainPanel.addSpace(10);
+
             skipErrorsCheckBox = new JCheckBox(Translator.get("destination_dialog.skip_errors"));
             mainPanel.add(skipErrorsCheckBox);
 
@@ -173,7 +175,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             cbBackgroundMode.setSelected(enableBackgroundMode);
             mainPanel.add(cbBackgroundMode);
 
-            mainPanel.addSpace(10);
+            //mainPanel.addSpace(10);
         }
 
         getContentPane().add(mainPanel, BorderLayout.NORTH);
@@ -188,7 +190,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         JButton cancelButton = new JButton(Translator.get("cancel"));
 
-        YBoxPanel buttonsPanel = new YBoxPanel();
+        YBoxPanel buttonsPanel = new YBoxPanel(10);
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
                 DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
         //        DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this)
