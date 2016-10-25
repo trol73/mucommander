@@ -621,13 +621,14 @@ public class LocalFile extends ProtocolFile {
         }
 
         // Note: this value must not be cached as its value can change over time (canonical path can change)
-        AbstractFile parent = getParent();
-        String canonPath = getCanonicalPath(false);
-        if (parent == null || canonPath == null) {
-            return false;
-        }
-            String parentCanonPath = parent.getCanonicalPath(true);
-            return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
+        return Files.isSymbolicLink(file.toPath());
+//        AbstractFile parent = getParent();
+//        String canonPath = getCanonicalPath(false);
+//        if (parent == null || canonPath == null) {
+//            return false;
+//        }
+//            String parentCanonPath = parent.getCanonicalPath(true);
+//            return !canonPath.equalsIgnoreCase(parentCanonPath+getName());
         }
 
     @Override
