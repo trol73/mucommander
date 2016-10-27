@@ -19,6 +19,7 @@ package com.mucommander.adb;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.process.ExecutionFinishListener;
 import com.mucommander.process.ExecutorUtils;
@@ -94,7 +95,7 @@ public class AdbUtils {
         }
         if (path != null) {
             AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\platform-tools\\adb.exe" : "/platform-tools/adb"));
-            if (result != null && result.exists()) {
+            if (result != null && result.exists() && !result.isDirectory()) {
                 return result.getParent();
             }
         }
@@ -105,7 +106,14 @@ public class AdbUtils {
         }
         if (path != null) {
             AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\adb.exe" : "/adb"));
-            if (result != null && result.exists()) {
+            if (result != null && result.exists() && !result.isDirectory()) {
+                return result.getParent();
+            }
+        }
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            String defaultPath = System.getProperty("user.home") + "/Library/Android/sdk/platform-tools/adb";
+            AbstractFile result = FileFactory.getFile(defaultPath);
+            if (result != null && result.exists() && !result.isDirectory()) {
                 return result.getParent();
             }
         }
