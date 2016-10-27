@@ -107,7 +107,7 @@ public class GoToParentAction extends ActiveTabAction {
 
 		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0); }
+		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0); }
 

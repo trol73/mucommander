@@ -126,7 +126,7 @@ public class OpenAction extends MuAction {
         }
 
         // Opens local files using their native associations.
-        else if (resolvedFile.getURL().getScheme().equals(FileProtocols.FILE) && (resolvedFile.hasAncestor(LocalFile.class))) {
+        else if (resolvedFile.getURL().getScheme().equals(FileProtocols.FILE) && resolvedFile.hasAncestor(LocalFile.class)) {
             try {
             	DesktopManager.open(resolvedFile);
             	RecentExecutedFilesQL.addFile(resolvedFile);
@@ -184,7 +184,7 @@ public class OpenAction extends MuAction {
 
 		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0); }
+		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0); }
 

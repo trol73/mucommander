@@ -174,6 +174,8 @@ public class ActionManager {
         registerAction(new SelectNextRowAction.Descriptor());
     	registerAction(new SelectFirstRowAction.Descriptor());
     	registerAction(new SelectLastRowAction.Descriptor());
+		registerAction(new LeftArrowAction.Descriptor());
+		registerAction(new RightArrowAction.Descriptor());
     	registerAction(new SetSameFolderAction.Descriptor());
     	registerAction(new SetTabTitleAction.Descriptor());
     	registerAction(new ShowAboutAction.Descriptor());

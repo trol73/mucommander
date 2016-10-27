@@ -74,11 +74,10 @@ public class StressTester implements Runnable, ActionListener {
                 AbstractFile parentFolder = currentFolder.getParent();
                 AbstractFile children[] = currentFolder.ls();
                 // 1 in 3 chance to go up if folder has children
-                if(children.length==0 || (random.nextInt(3)==0 && parentFolder!=null)) {
+                if (children.length==0 || (random.nextInt(3)==0 && parentFolder!=null)) {
                     fileTable.selectFile(0);
                     ActionManager.performAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID, mainFrame);
-                }
-                else {
+                } else {
                     AbstractFile randomChild = children[random.nextInt(children.length)];
                     if(!randomChild.isBrowsable())
                         continue;
@@ -89,8 +88,7 @@ public class StressTester implements Runnable, ActionListener {
                     ActionManager.performAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID, mainFrame);
                     //					folderPanel.tryChangeCurrentFolder(randomChild, true);
                 }
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 LOGGER.debug("Caught Exception", e);
             }
 
