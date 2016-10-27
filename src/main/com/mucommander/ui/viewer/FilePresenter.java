@@ -98,7 +98,7 @@ public abstract class FilePresenter extends JScrollPane {
      *
      * @return the file that is being presented.
      */
-    protected AbstractFile getCurrentFile() {
+    public AbstractFile getCurrentFile() {
         return file;
     }
 

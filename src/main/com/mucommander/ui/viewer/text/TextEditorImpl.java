@@ -24,11 +24,13 @@ import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.io.bom.BOMInputStream;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.tools.AvrAssemblerCommandsHelper;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ViewAction;
+import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.FileFrame;
@@ -104,6 +106,14 @@ class TextEditorImpl implements ThemeListener {
                     ImageIcon icon = MuAction.getStandardIcon(ViewAction.class);
                     ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedFile, icon.getImage(), (fileFrame -> fileFrame.returnFocusTo(frame)));
                 }
+                return;
+            }
+
+            int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+            if (textArea.isEditable() && e.getKeyChar() == KeyEvent.VK_TAB && e.getModifiers() == mask) {
+                ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(frame, frame.getFilePresenter().getCurrentFile());
+                viewedAndEditedFilesQL.show();
+                e.consume();
             }
         }
     };

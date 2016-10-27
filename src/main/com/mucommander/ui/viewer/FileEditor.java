@@ -22,6 +22,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -31,7 +32,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import com.mucommander.commons.file.*;
@@ -93,7 +93,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
 		AbstractFile currentFile = getCurrentFile();
         // Sets selected file in JFileChooser to current file
         if (currentFile.getURL().getScheme().equals(FileProtocols.FILE)) {
-            fileChooser.setSelectedFile(new java.io.File(currentFile.getAbsolutePath()));
+            fileChooser.setSelectedFile(new File(currentFile.getAbsolutePath()));
         }
         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         int ret = fileChooser.showSaveDialog(getFrame());
@@ -216,7 +216,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         }
         saveAsItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), menuItemMnemonicHelper, null, this);
         fileMenu.add(new TMenuSeparator());
-        int mask = KeyEvent.CTRL_MASK;//OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+        int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
         filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
         fileMenu.add(new TMenuSeparator());
         closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
