@@ -66,13 +66,18 @@ public class CompareFilesAction extends SelectedFilesAction {
 
     @Override
     public void performAction(FileSet files) {
-        try {
-            String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
-            String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
-            ExecutorUtils.execute("/usr/bin/opendiff " + leftFile + " " + rightFile);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
+        String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    ExecutorUtils.execute("/usr/bin/opendiff " + leftFile + " " + rightFile);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     private static boolean supported() {
