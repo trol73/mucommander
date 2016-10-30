@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -62,7 +62,7 @@ public class OSXFileUtils {
      * @return the Spotlight/Finder comment of the specified file
      */
     public static String getSpotlightComment(AbstractFile file) {
-        if(!(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher()))
+        if (!(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher()))
             return null;
 
         InputStream pin = null;
@@ -70,8 +70,9 @@ public class OSXFileUtils {
             Process process = Runtime.getRuntime().exec(new String[]{"mdls", "-name", "kMDItemFinderComment", file.getAbsolutePath()});
             process.waitFor();
 
-            if(process.exitValue()!=0)
+            if (process.exitValue() != 0) {
                 return null;
+            }
 
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             pin = process.getInputStream();
@@ -85,23 +86,24 @@ public class OSXFileUtils {
             String output = new String(bout.toByteArray());
             Matcher matcher = MDLS_COMMENT_PATTERN.matcher(output);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 // Strip off the quotes surrounding the comment
                 String group = matcher.group();
                 return group.substring(1, group.length()-1);
             }
 
             return null;
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.info("Caught exception", e);
 
             return null;
-        }
-        finally {
-            if(pin!=null)
-                try { pin.close(); }
-                catch(IOException e) {}
+        } finally {
+            if (pin != null) {
+                try {
+                    pin.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
     }
 }

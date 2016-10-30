@@ -21,6 +21,7 @@ package com.mucommander.job;
 
 import java.util.WeakHashMap;
 
+import com.mucommander.ui.dialog.PasswordDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,6 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.notifier.AbstractNotifier;
 import com.mucommander.ui.notifier.NotificationType;
-
 
 
 /**
@@ -164,10 +164,14 @@ public abstract class FileJob implements Runnable {
     protected final static int OK_ACTION = 5;
     protected final static int OVERWRITE_READONLY_ACTION = 6;
     protected final static int OVERWRITE_READONLY_ALL_ACTION = 7;
+    protected final static int RETRY_AS_ROOT_ACTION = 8;
+    protected final static int RETRY_AS_ROOT_ALWAYS_ACTION = 9;
 
     protected final static String SKIP_TEXT = Translator.get("skip");
     protected final static String SKIP_ALL_TEXT = Translator.get("skip_all");
     protected final static String RETRY_TEXT = Translator.get("retry");
+    protected final static String RETRY_AS_ROOT_TEXT = Translator.get("retry_as_root");
+    protected final static String RETRY_AS_ROOT_ALWAYS_TEXT = Translator.get("retry_as_root_always");
     protected final static String CANCEL_TEXT = Translator.get("cancel");
     protected final static String APPEND_TEXT = Translator.get("resume");
     protected final static String OK_TEXT = Translator.get("ok");
@@ -614,8 +618,9 @@ public abstract class FileJob implements Runnable {
         // Return SKIP_ACTION if 'skip all' has previously been selected and 'skip' is in the list of actions.
         if (autoSkipErrors) {
             for (int actionValue : actionValues)
-                if (actionValue == SKIP_ACTION)
+                if (actionValue == SKIP_ACTION) {
                     return SKIP_ACTION;
+                }
         }
 
         // Send a system notification if a notifier is available and enabled
@@ -625,7 +630,7 @@ public abstract class FileJob implements Runnable {
 
         QuestionDialog dialog;
         if (getProgressDialog() == null) {
-            dialog = new QuestionDialog(getMainFrame(), 
+            dialog = new QuestionDialog(getMainFrame(),
                                         title,
                                         message,
                                         getMainFrame(),
@@ -652,6 +657,11 @@ public abstract class FileJob implements Runnable {
         }
 
         return userChoice;
+    }
+
+
+    protected String enterRootPasswordDialog() {
+        return new PasswordDialog(Translator.get("enter_root_password")).getPassword();
     }
 	
 	

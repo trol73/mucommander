@@ -22,13 +22,12 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.mucommander.commons.file.FilePermissions;
+import com.mucommander.commons.file.*;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.macosx.AppleScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.RandomAccessOutputStream;
@@ -97,9 +96,11 @@ public class MakeDirectoryFileJob extends FileJob {
             return false;
         }
 
+        boolean makeAsRoot = false;
+
         do {
             try {
-                LOGGER.debug("Creating "+file);
+                LOGGER.debug("Creating " + file);
 
                 // Check for file collisions, i.e. if the file already exists in the destination
                 int collision = FileCollisionChecker.checkForCollision(null, file);
@@ -136,7 +137,7 @@ public class MakeDirectoryFileJob extends FileJob {
                 // Select newly created file when job is finished
                 selectFileWhenFinished(file);
 
-                return true;		// Return Success
+                return true;        // Return Success
             } catch (IOException e) {
                 // In mkfile mode, interrupting the job will close the OutputStream and cause an IOException to be
                 // thrown, this is normal behavior
@@ -146,21 +147,52 @@ public class MakeDirectoryFileJob extends FileJob {
 
                 LOGGER.debug("IOException caught", e);
 
-                int action = showErrorDialog(
-                     Translator.get("error"),
-                     Translator.get(mkfileMode ? "cannot_write_file" : "cannot_create_folder", file.getAbsolutePath()),
-                     new String[]{RETRY_TEXT, CANCEL_TEXT},
-                     new int[]{RETRY_ACTION, CANCEL_ACTION}
-                );
-                // Retry (loop)
-                if (action == RETRY_ACTION) {
-                    continue;
+                boolean needAdminPermissions = e instanceof FileAccessDeniedException;
+                int action;
+                if (needAdminPermissions && !mkfileMode) {
+                    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                        if (!mkfileMode) {
+                            tryMkDirAsAdministrator(file.getAbsolutePath(), null);
+                        }
+                        return true;
+                    } else {
+                        action = showErrorDialog(
+                                Translator.get("error"),
+                                Translator.get(mkfileMode ? "cannot_write_file" : "cannot_create_folder", file.getAbsolutePath()),
+                                new String[]{RETRY_TEXT, RETRY_AS_ROOT_TEXT, RETRY_AS_ROOT_ALWAYS_TEXT, CANCEL_TEXT},
+                                new int[]{RETRY_ACTION, RETRY_AS_ROOT_ACTION, RETRY_AS_ROOT_ALWAYS_ACTION, CANCEL_ACTION}
+                        );
+                    }
+                } else {
+                    action = showErrorDialog(
+                            Translator.get("error"),
+                            Translator.get(mkfileMode ? "cannot_write_file" : "cannot_create_folder", file.getAbsolutePath()),
+                            new String[] {RETRY_TEXT, CANCEL_TEXT},
+                            new int[] {RETRY_ACTION, CANCEL_ACTION}
+                    );
                 }
-				
+                // Retry (loop)
+                switch (action) {
+                    case RETRY_AS_ROOT_ACTION:
+                        String password = enterRootPasswordDialog();
+                        tryMkDirAsAdministrator(file.getAbsolutePath(), password);
+                        continue;
+//                    case RETRY_AS_ROOT_ALWAYS_ACTION:
+//                        String password = enterRootPasswordDialog();
+                    case RETRY_ACTION:
+                        continue;
+                }
+
                 // Cancel action
                 return false;		// Return Failure
             }    
         } while(true);
+    }
+
+    private void tryMkDirAsAdministrator(String path, String password) {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            AppleScript.execute("do shell script \"mkdir -p + '" + path + "' \" with administrator privileges", new StringBuilder());
+        }
     }
 
 
@@ -188,7 +220,7 @@ public class MakeDirectoryFileJob extends FileJob {
 
                     try {
                         long remaining = allocateSpace;
-                        while(remaining > 0 && getState() != State.INTERRUPTED) {
+                        while (remaining > 0 && getState() != State.INTERRUPTED) {
                             int nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
                             mkfileOut.write(buffer, 0, nbWrite);
                             remaining -= nbWrite;

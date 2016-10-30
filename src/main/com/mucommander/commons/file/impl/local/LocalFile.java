@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -31,10 +31,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.UserPrincipal;
@@ -44,19 +41,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileOperation;
-import com.mucommander.commons.file.FilePermissions;
-import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.GroupedPermissionBits;
-import com.mucommander.commons.file.IndividualPermissionBits;
-import com.mucommander.commons.file.MacOsSystemFolder;
-import com.mucommander.commons.file.PermissionBits;
-import com.mucommander.commons.file.ProtocolFile;
-import com.mucommander.commons.file.UnsupportedFileOperation;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
+import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.commons.file.util.Kernel32;
 import com.mucommander.commons.file.util.Kernel32API;
@@ -288,7 +273,7 @@ public class LocalFile extends ProtocolFile {
                 // running Window NT or higher.
                 // Note: no command invocation under Windows 95/98/Me, because it causes a shell window to
                 // appear briefly every time this method is called (See ticket #63).
-                else if(OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
+                else if (OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
                     // 'dir' command returns free space on the last line
                     Process process = Runtime.getRuntime().exec(
                             (OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT)>=0 ? "cmd /c" : "command.com /c")
@@ -371,8 +356,8 @@ public class LocalFile extends ProtocolFile {
 
                     // Find the last token starting with '/'
                     int pos = nbTokens-1;
-                    while(!tokenV.get(pos).startsWith("/")) {
-                        if(pos==0) {
+                    while (!tokenV.get(pos).startsWith("/")) {
+                        if (pos==0) {
                             // This shouldn't normally happen
                         	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
                             return dfInfo;
@@ -396,8 +381,12 @@ public class LocalFile extends ProtocolFile {
             }
         } finally {
             // TODO use autoclose
-            if (br!=null)
-                try { br.close(); } catch(IOException e) {}
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
 
         return dfInfo;
@@ -898,7 +887,7 @@ public class LocalFile extends ProtocolFile {
 		
         if (!ret) {
             throw new IOException();
-    }
+        }
     }
 
 
@@ -909,9 +898,16 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public void mkdir() throws IOException {
-        if (!file.mkdir()) {
-            throw new IOException();
-    }
+        Path path = FileSystems.getDefault().getPath(getAbsolutePath(), "");
+        try {
+            Files.createDirectory(path);
+        } catch (AccessDeniedException e) {
+            throw new FileAccessDeniedException();
+        } catch (IOException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new IOException(t);
+        }
     }
 	
     @Override
@@ -957,10 +953,10 @@ public class LocalFile extends ProtocolFile {
                 }
             }
             // Windows NT: Kernel32's MoveFileEx can be used, if the Kernel32 DLL is available.
-            else if(Kernel32.isAvailable()) {
+            else if (Kernel32.isAvailable()) {
                 // Note: MoveFileEx is always used, even if the destination file does not exist, to avoid having to
                 // call #exists() on the destination file which has a cost.
-                if(!Kernel32.getInstance().MoveFileEx(absPath, destFile.getAbsolutePath(),
+                if (!Kernel32.getInstance().MoveFileEx(absPath, destFile.getAbsolutePath(),
                         Kernel32API.MOVEFILE_REPLACE_EXISTING|Kernel32API.MOVEFILE_WRITE_THROUGH)) {
                 	String errorMessage = Integer.toString(Kernel32.getInstance().GetLastError());
                 	// TODO: use Kernel32.FormatMessage
