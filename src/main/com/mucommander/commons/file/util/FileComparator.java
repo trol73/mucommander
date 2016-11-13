@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * <li>{@link #NAME_CRITERION}: compares filenames returned by {@link AbstractFile#getName()}
  * <li>{@link #SIZE_CRITERION}: compares file sizes returned by {@link AbstractFile#getSize()}. Note: size for
  * directories is always considered as 0, even if {@link AbstractFile#getSize()} returns something else. 
- * <li>{@link #DATE_CRITERION}: compares file dates returned by {@link AbstractFile#getDate()}
+ * <li>{@link #DATE_CRITERION}: compares file dates returned by {@link AbstractFile#getLastModifiedDate()}
  * <li>{@link #EXTENSION_CRITERION}: compares file extensions returned by {@link AbstractFile#getExtension()}
  * <li>{@link #PERMISSIONS_CRITERION}: compares file permissions returned by {@link AbstractFile#getPermissions()}
  * </ul>
@@ -357,7 +357,7 @@ public class FileComparator implements Comparator<AbstractFile> {
             // Returns file1 size - file2 size, file size of -1 (unavailable) is considered as enormous (max long value)
             diff = (fileSize1==-1?Long.MAX_VALUE:fileSize1)-(fileSize2==-1?Long.MAX_VALUE:fileSize2);
         } else if (criterion == DATE_CRITERION) {
-            diff = f1.getDate()-f2.getDate();
+            diff = f1.getLastModifiedDate()-f2.getLastModifiedDate();
         } else if (criterion == PERMISSIONS_CRITERION) {
             diff = f1.getPermissions().getIntValue() - f2.getPermissions().getIntValue();
         } else if (criterion == EXTENSION_CRITERION) {

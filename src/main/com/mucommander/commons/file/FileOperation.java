@@ -97,9 +97,9 @@ public enum FileOperation {
     RENAME,
 
     /**
-     * Represents a 'change date' operation, as specified by {@link AbstractFile#changeDate(long)}.
+     * Represents a 'change date' operation, as specified by {@link AbstractFile#setLastModifiedDate(long)}.
      *
-     * @see AbstractFile#changeDate(long)
+     * @see AbstractFile#setLastModifiedDate(long)
      **/
     CHANGE_DATE,
 
@@ -166,7 +166,7 @@ public enum FileOperation {
                     return c.getMethod("ls");
 
                 case CHANGE_DATE:
-                    return c.getMethod("changeDate", Long.TYPE);
+                    return c.getMethod("setLastModifiedDate", Long.TYPE);
 
                 case GET_BLOCKSIZE:
                     return c.getMethod("getBlocksize");

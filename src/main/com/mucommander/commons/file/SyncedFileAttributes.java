@@ -199,10 +199,10 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
      * Overridden to trigger attributes update if the expiration date has been reached.
      */
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         checkForExpiration(false);
 
-        return super.getDate();
+        return super.getLastModifiedDate();
     }
 
     /**

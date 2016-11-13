@@ -65,11 +65,11 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
      * @throws IOException if the entry does not exist within the archive
      */
     @Override
-    public void changeDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws IOException, UnsupportedFileOperationException {
         if(!entry.exists())
             throw new IOException();
 
-        long oldDate = entry.getDate();
+        long oldDate = entry.getLastModifiedDate();
         entry.setDate(lastModified);
 
         boolean success = updateEntryAttributes();

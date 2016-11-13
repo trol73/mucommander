@@ -82,7 +82,7 @@ public class CachedDirectory extends ProxyFile {
             return false;
         }
         // check if directory contents changed
-        if (lsTimeStamp != file.getDate()) {
+        if (lsTimeStamp != file.getLastModifiedDate()) {
             setReadingChildren(true);
             // read children in caching thread
             TreeIOThreadManager.getInstance().addTask(this::lsAsync);
@@ -127,7 +127,7 @@ public class CachedDirectory extends ProxyFile {
              * Set cache to new value. This is invoked in swing thread
              * so event listeners are called from right thread. 
              */
-            SwingUtilities.invokeAndWait(() -> setLsCache(children2, file.getDate()));
+            SwingUtilities.invokeAndWait(() -> setLsCache(children2, file.getLastModifiedDate()));
         } catch (Exception e) {
             LOGGER.debug("Caught exception", e);
         }

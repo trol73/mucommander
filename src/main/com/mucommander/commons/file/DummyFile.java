@@ -51,7 +51,7 @@ public class DummyFile extends AbstractFile {
      * Implementation notes: always returns <code>0</code>.
      */
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         return 0;
     }
 
@@ -62,7 +62,7 @@ public class DummyFile extends AbstractFile {
      */
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
     }
 

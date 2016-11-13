@@ -106,11 +106,11 @@ public class DebugFile extends ProxyFile {
     /////////////////////////////////////////////////////
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         LOGGER.trace(getDebugString());
         lag();
 
-        return super.getDate();
+        return super.getLastModifiedDate();
     }
 
     @Override

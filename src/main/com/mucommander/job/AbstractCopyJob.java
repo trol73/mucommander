@@ -176,7 +176,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 //  Overwrite file if destination is older
                 else if (choice== FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
                     // Overwrite if file is newer (stricly)
-                    if(file.getDate()<=destFile.getDate())
+                    if(file.getLastModifiedDate()<=destFile.getLastModifiedDate())
                         return null;
                     break;
                 } else if (choice == FileCollisionDialog.RENAME_ACTION) {

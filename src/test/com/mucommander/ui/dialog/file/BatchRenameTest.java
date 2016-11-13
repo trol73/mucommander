@@ -63,7 +63,7 @@ public class BatchRenameTest {
         }
 
         @Override
-        public long getDate() {
+        public long getLastModifiedDate() {
             return date;
         }
 

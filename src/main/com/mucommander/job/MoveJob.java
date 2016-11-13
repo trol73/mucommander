@@ -183,7 +183,7 @@ public class MoveJob extends AbstractCopyJob {
                     // Only when finished with folder, set destination folder's date to match the original folder one
                     if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
                         try {
-                            destFile.changeDate(file.getDate());
+                            destFile.setLastModifiedDate(file.getLastModifiedDate());
                         }
                         catch (IOException e) {
                             LOGGER.debug("failed to change the date of "+destFile, e);

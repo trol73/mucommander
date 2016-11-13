@@ -287,7 +287,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     }
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         if (isSymlink()) {
             return ((org.apache.commons.net.ftp.FTPFile) getCanonicalFile().getUnderlyingFileObject()).getTimestamp().getTimeInMillis();
         }
@@ -301,7 +301,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
      * part of the basic FTP command set, it may as well not be supported by the remote server.
      */
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         // Note: FTPFile.setTimeStamp only changes the instance's date, but doesn't change it on the server-side.
         FTPConnectionHandler connHandler = null;
         try {

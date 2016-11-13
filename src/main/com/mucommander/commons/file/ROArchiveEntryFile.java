@@ -47,7 +47,7 @@ public class ROArchiveEntryFile extends AbstractArchiveEntryFile {
      */
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
     }
 

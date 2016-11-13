@@ -172,8 +172,8 @@ public abstract class S3File extends ProtocolFile {
     // Delegates to FileAttributes
 
     @Override
-    public long getDate() {
-        return getFileAttributes().getDate();
+    public long getLastModifiedDate() {
+        return getFileAttributes().getLastModifiedDate();
     }
 
     @Override
@@ -261,7 +261,7 @@ public abstract class S3File extends ProtocolFile {
 
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
     }
 }

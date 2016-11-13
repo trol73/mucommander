@@ -89,7 +89,7 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
      * @return the date at which the bookmark list was last modified.
      */
     @Override
-    public long getDate() {return lastModified;}
+    public long getLastModifiedDate() {return lastModified;}
 
 
 
@@ -111,7 +111,7 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
     public void renameTo(AbstractFile destFile) throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.RENAME);}
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);}
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);}
     @Override
     public long getSize() {return -1;}
     @Override

@@ -224,12 +224,12 @@ public class SFTPFile extends ProtocolFile {
      * Implementation note: for symlinks, returns the date of the link's target.
      */
     @Override
-    public long getDate() {
-        return ((SFTPFileAttributes)getCanonicalFile().getUnderlyingFileObject()).getDate();
+    public long getLastModifiedDate() {
+        return ((SFTPFileAttributes)getCanonicalFile().getUnderlyingFileObject()).getLastModifiedDate();
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         SFTPConnectionHandler connHandler = null;
         SftpFile sftpFile = null;
         try {

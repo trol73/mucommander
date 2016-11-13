@@ -432,12 +432,12 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public long getDate() {
+	public long getLastModifiedDate() {
 		return date;
 	}
 
 	@Override
-	public void changeDate(long lastModified) throws IOException,
+	public void setLastModifiedDate(long lastModified) throws IOException,
 			UnsupportedFileOperationException {
 
 		VsphereConnHandler connHandler = null;

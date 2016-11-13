@@ -125,8 +125,8 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
     /////////////////////////////////
 
     @Override
-    public long getDate() {
-        return entry.getDate();
+    public long getLastModifiedDate() {
+        return entry.getLastModifiedDate();
     }
 
     @Override

@@ -61,7 +61,7 @@ public class SimpleFileAttributesTest {
     private void assertAttributesMatch(AbstractFile file, SimpleFileAttributes attrs) {
         assert file.getAbsolutePath().equals(attrs.getPath());
         assert file.exists() == attrs.exists();
-        assert file.getDate() == attrs.getDate();
+        assert file.getLastModifiedDate() == attrs.getLastModifiedDate();
         assert file.getSize() == attrs.getSize();
         assert file.isDirectory() == attrs.isDirectory();
         assert file.getPermissions() == attrs.getPermissions();
@@ -78,7 +78,7 @@ public class SimpleFileAttributesTest {
         SimpleFileAttributes attrs = new SimpleFileAttributes();
         assert attrs.getPath() == null;
         assert !attrs.exists();
-        assert 0 == attrs.getDate();
+        assert 0 == attrs.getLastModifiedDate();
         assert 0 ==  attrs.getSize();
         assert !attrs.isDirectory();
         assert attrs.getPermissions() == null;

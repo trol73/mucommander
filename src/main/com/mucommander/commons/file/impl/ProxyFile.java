@@ -87,13 +87,13 @@ public abstract class ProxyFile extends AbstractFile {
     /////////////////////////////////
 
     @Override
-    public long getDate() {
-        return file.getDate();
+    public long getLastModifiedDate() {
+        return file.getLastModifiedDate();
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
-        file.changeDate(lastModified);
+    public void setLastModifiedDate(long lastModified) throws IOException {
+        file.setLastModifiedDate(lastModified);
     }
 
     @Override

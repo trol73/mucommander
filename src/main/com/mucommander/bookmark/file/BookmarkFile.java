@@ -343,12 +343,12 @@ public class BookmarkFile extends ProtocolFile {
     @UnsupportedFileOperation
     public void mkdir() throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.CREATE_DIRECTORY);}
     @Override
-    public long getDate() {return 0;}
+    public long getLastModifiedDate() {return 0;}
     @Override
     public PermissionBits getChangeablePermissions() {return PermissionBits.EMPTY_PERMISSION_BITS;}
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);}
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);}
     @Override
     public long getSize() {return -1;}
     @Override

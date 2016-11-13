@@ -102,7 +102,7 @@ class CompatURLConnection extends URLConnection {
         try {
             checkConnected();
 
-            return file.getDate();
+            return file.getLastModifiedDate();
         }
         catch(IOException e) {
             return 0;

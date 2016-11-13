@@ -201,7 +201,7 @@ public class SplitFileJob extends AbstractCopyJob {
 	        // Preserve source file's date
             if(destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
                 try {
-                    destFile.changeDate(sourceFile.getDate());
+                    destFile.setLastModifiedDate(sourceFile.getLastModifiedDate());
                 }
                 catch (IOException e) {
                     LOGGER.debug("failed to change date of "+destFile, e);

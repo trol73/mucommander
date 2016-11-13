@@ -141,12 +141,12 @@ public class UNCFile extends ProtocolFile {
     }
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
     	return file.lastModified();
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         // java.io.File#setLastModified(long) throws an IllegalArgumentException if time is negative.
         // If specified time is negative, set it to 0 (01/01/1970).
         if(lastModified < 0)

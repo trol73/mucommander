@@ -68,7 +68,7 @@ public class CompareFoldersAction extends MuAction {
                     fileIndex = j;
                     break;
                 }
-            if (fileIndex < 0 || rightTableModel.getFileAt(fileIndex).getDate()<tempFile.getDate()) {
+            if (fileIndex < 0 || rightTableModel.getFileAt(fileIndex).getLastModifiedDate()<tempFile.getLastModifiedDate()) {
                 leftTableModel.setFileMarked(tempFile, true);
                 leftTable.repaint();
             }
@@ -86,7 +86,7 @@ public class CompareFoldersAction extends MuAction {
                     fileIndex = j;
                     break;
                 }
-            if (fileIndex==-1 || leftTableModel.getFileAt(fileIndex).getDate()<tempFile.getDate()) {
+            if (fileIndex==-1 || leftTableModel.getFileAt(fileIndex).getLastModifiedDate()<tempFile.getLastModifiedDate()) {
                 rightTableModel.setFileMarked(tempFile, true);
                 rightTable.repaint();
             }

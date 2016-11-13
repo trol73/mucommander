@@ -191,7 +191,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         // Change the parent folder's date to now, so that changes are picked up by folder auto-refresh (see ticket #258)
         if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
             try {
-                destFile.getParent().changeDate(System.currentTimeMillis());
+                destFile.getParent().setLastModifiedDate(System.currentTimeMillis());
             } catch (IOException e) {
                 LOGGER.debug("failed to change the date of "+destFile, e);
                 // Fail silently

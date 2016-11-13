@@ -72,7 +72,7 @@ public class IconManager {
         /** Caches for the different icon sets */
         private final Map<String, ImageIcon> cache = new Hashtable<>();
 
-        private IconSet(String folder) {
+        IconSet(String folder) {
             this.folder = BASE_IMAGE_FOLDER + folder + '/';
         }
 

@@ -120,10 +120,10 @@ public abstract class AvrdudeFile extends ProtocolFile {
     }
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         // TODO store last modification data
         try {
-            return getLocalConfigFile().getDate();
+            return getLocalConfigFile().getLastModifiedDate();
         } catch (IOException e) {
             e.printStackTrace();
             return System.currentTimeMillis();
@@ -131,7 +131,7 @@ public abstract class AvrdudeFile extends ProtocolFile {
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
 
     }
 

@@ -64,7 +64,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
 	 * @throws RarException 
      */
     private void checkRarFile() throws IOException, UnsupportedFileOperationException, RarException {
-        long currentDate = file.getDate();
+        long currentDate = file.getLastModifiedDate();
         
         if (rarFile==null || currentDate != lastRarFileDate) {
         	rarFile = new RarFile(file);

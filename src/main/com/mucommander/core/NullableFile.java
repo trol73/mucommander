@@ -32,7 +32,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public void changeDate(long arg0) throws IOException, UnsupportedFileOperationException {
+	public void setLastModifiedDate(long arg0) throws IOException, UnsupportedFileOperationException {
 		throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
 	}
 
@@ -68,7 +68,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public long getDate() {
+	public long getLastModifiedDate() {
 		return 0;
 	}
 

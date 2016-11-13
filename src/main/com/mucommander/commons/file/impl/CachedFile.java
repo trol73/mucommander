@@ -61,7 +61,7 @@ public class CachedFile extends ProxyFile {
 
     // set-flags
     private static final int SIZE_SET_MASK = 1;
-    private static final int DATE_SET_MASK = 1 << 1;
+    private static final int LAST_MODIFICATION_SET_MASK = 1 << 1;
     private static final int SYMLINK_SET_MASK = 1 << 2;
     private static final int DIRECTORY_SET_MASK = 1 << 3;
     private static final int ARCHIVE_SET_MASK = 1 << 4;
@@ -82,15 +82,17 @@ public class CachedFile extends ProxyFile {
     private static final int PARENT_SET_MASK = 1 << 19;
     private static final int GET_ROOT_SET_MASK = 1 << 20;
     private static final int CANONICAL_FILE_SET_MASK = 1 << 21;
+    private static final int CREATION_DATE_SET_MASK = 1 << 22;
+    private static final int LAST_ACCESS_SET_MASK = 1 << 23;
 
     // boolean values
-    private static final int SYMLINK_VALUE_MASK = 1 << 22;
-    private static final int DIRECTORY_VALUE_MASK = 1 << 23;
+    private static final int SYMLINK_VALUE_MASK = 1 << 24;
+    private static final int DIRECTORY_VALUE_MASK = 1 << 25;
     private static final int ARCHIVE_VALUE_MASK = 1 << 24;
-    private static final int EXECUTABLE_VALUE_MASK = 1 << 25;
-    private static final int HIDDEN_VALUE_MASK = 1 << 26;
-    private static final int EXISTS_VALUE_MASK = 1 << 27;
-    private static final int IS_ROOT_VALUE_MASK = 1 << 28;
+    private static final int EXECUTABLE_VALUE_MASK = 1 << 27;
+    private static final int HIDDEN_VALUE_MASK = 1 << 28;
+    private static final int EXISTS_VALUE_MASK = 1 << 29;
+    private static final int IS_ROOT_VALUE_MASK = 1 << 30;
 
     // others
     /** If true, AbstractFile instances returned by this class will be wrapped into CachedFile instances */
@@ -106,7 +108,9 @@ public class CachedFile extends ProxyFile {
     ///////////////////
     
     private long getSize;
-    private long getDate;
+    private long getLastModified;
+    private long getCreationDate;
+    private long getLastAccessDate;
     private String getAbsolutePath;
     private String getCanonicalPath;
     private String getExtension;
@@ -261,12 +265,30 @@ public class CachedFile extends ProxyFile {
     }
 
     @Override
-    public long getDate() {
-        if ((bitmask & DATE_SET_MASK) == 0) {
-            getDate = file.getDate();
-            bitmask |= DATE_SET_MASK;
+    public long getLastModifiedDate() {
+        if ((bitmask & LAST_MODIFICATION_SET_MASK) == 0) {
+            getLastModified = file.getLastModifiedDate();
+            bitmask |= LAST_MODIFICATION_SET_MASK;
         }
-        return getDate;
+        return getLastModified;
+    }
+
+    @Override
+    public long getCreationDate() throws IOException {
+        if ((bitmask & CREATION_DATE_SET_MASK) == 0) {
+            getCreationDate = file.getCreationDate();
+            bitmask |= CREATION_DATE_SET_MASK;
+        }
+        return getCreationDate;
+    }
+
+    @Override
+    public long getLastAccessDate() throws IOException {
+        if ((bitmask & LAST_ACCESS_SET_MASK) == 0) {
+            getLastAccessDate = file.getLastAccessDate();
+            bitmask |= LAST_ACCESS_SET_MASK;
+        }
+        return getLastAccessDate;
     }
 
     @Override

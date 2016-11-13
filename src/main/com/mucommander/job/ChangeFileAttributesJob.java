@@ -121,7 +121,7 @@ public class ChangeFileAttributesJob extends FileJob {
             }
 
         try {
-            file.changeDate(date);
+            file.setLastModifiedDate(date);
             } catch (IOException e) {
                 LOGGER.debug("failed to change the date of " + file, e);
                 return false;

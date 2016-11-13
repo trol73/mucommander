@@ -78,7 +78,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
      * @throws IOException if an error occurred while reloading
      */
     private void checkZipFile() throws IOException, UnsupportedFileOperationException {
-        long currentDate = file.getDate();
+        long currentDate = file.getLastModifiedDate();
 
         if(zipFile==null || currentDate!=lastZipFileDate) {
             zipFile = new ZipFile(file);
@@ -91,7 +91,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
      * {@link #checkZipFile()} from being reloaded.
      */
     private void declareZipFileUpToDate() {
-        lastZipFileDate = file.getDate();
+        lastZipFileDate = file.getLastModifiedDate();
     }
 
     /**
@@ -314,7 +314,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
 
             checkZipFile();
 
-            zipEntry.setTime(entry.getDate());
+            zipEntry.setTime(entry.getLastModifiedDate());
             zipEntry.setUnixMode(entry.getPermissions().getIntValue());
             
             // Physically update the entry's attributes in the Zip file

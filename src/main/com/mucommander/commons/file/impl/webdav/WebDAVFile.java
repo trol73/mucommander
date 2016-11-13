@@ -53,12 +53,12 @@ public class WebDAVFile extends ProtocolFile {
     }
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         return 1L;
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws IOException, UnsupportedFileOperationException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

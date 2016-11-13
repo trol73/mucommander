@@ -144,7 +144,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         folderPanel.getLocationManager().addLocationListener(this);
 
         this.currentFolder = folderPanel.getCurrentFolder();
-        this.currentFolderDate = currentFolder.getDate();
+        this.currentFolderDate = currentFolder.getLastModifiedDate();
 
         // Folder contents is up-to-date let's wait before checking it for changes
         this.lastCheckTimestamp = System.currentTimeMillis();
@@ -253,7 +253,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
      */
     private void updateFolderInfo(AbstractFile folder) {
         this.currentFolder = folder;
-        this.currentFolderDate = currentFolder.getDate();
+        this.currentFolderDate = currentFolder.getLastModifiedDate();
 
         // Reset time average
         totalCheckTime = 0;
@@ -276,7 +276,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         long timeStamp = System.currentTimeMillis();
 		
         // Check folder's date
-        long date = currentFolder.getDate();
+        long date = currentFolder.getLastModifiedDate();
 
         totalCheckTime += System.currentTimeMillis() - timeStamp;
         nbSamples++;

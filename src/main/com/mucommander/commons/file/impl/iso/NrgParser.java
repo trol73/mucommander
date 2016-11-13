@@ -175,7 +175,7 @@ class NrgParser extends IsoParser {
                             new IsoArchiveEntry(
                                     file.getName() + ".TRACK" + (k + 1) + ".wav",
                                     false,
-                                    file.getDate(),
+                                    file.getLastModifiedDate(),
                                     tracksEnd[k] - tracksOffset[k] + IsoUtil.WAV_header, // adding wav header
                                     0,
                                     sectSize,

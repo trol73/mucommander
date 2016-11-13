@@ -143,7 +143,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * underlying file protocol.
      */
     protected void checkEntriesTree() throws IOException, UnsupportedFileOperationException {
-        if(this.entryTreeRoot==null || getDate()!=this.entryTreeDate)
+        if(this.entryTreeRoot==null || getLastModifiedDate()!=this.entryTreeDate)
             createEntriesTree();
     }
 
@@ -154,7 +154,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * {@link #checkEntriesTree()} is called.
      */
     protected void declareEntriesTreeUpToDate() {
-        this.entryTreeDate = getDate();
+        this.entryTreeDate = getLastModifiedDate();
     }
 
     /**

@@ -67,7 +67,7 @@ class TarArchiver extends Archiver {
             entry.setSize(size);
 
         // Set the entry's date and permissions
-        entry.setModTime(attributes.getDate());
+        entry.setModTime(attributes.getLastModifiedDate());
         entry.setMode(SimpleFilePermissions.padPermissions(attributes.getPermissions(), isDirectory
                     ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS
                     : FilePermissions.DEFAULT_FILE_PERMISSIONS).getIntValue());

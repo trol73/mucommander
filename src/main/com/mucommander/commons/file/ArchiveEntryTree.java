@@ -92,7 +92,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
                 }
                 else {
                     getLogger().trace("Creating node for "+subPath);
-                    childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getDate(), 0, true), true);
+                    childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getLastModifiedDate(), 0, true), true);
                     node.add(childNode);
                     node = childNode;
                 }

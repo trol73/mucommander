@@ -211,7 +211,7 @@ public abstract class TransferFileJob extends FileJob {
         // Preserve source file's date
         if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
             try {
-                destFile.changeDate(sourceFile.getDate());
+                destFile.setLastModifiedDate(sourceFile.getLastModifiedDate());
             } catch (IOException e) {
                 LOGGER.debug("failed to change the date of "+destFile, e);
                 // Fail silently

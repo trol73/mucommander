@@ -82,7 +82,7 @@ public class CompactFileTableModel extends BaseFileTableModel {
         // Special '..' file
         if (parent != null) {
 //            cellValuesCache[0] = "..";
-            currentFolderDateSnapshot = currentFolder.getDate();
+            currentFolderDateSnapshot = currentFolder.getLastModifiedDate();
         }
 
         for (int i = 0; i < len; i++) {

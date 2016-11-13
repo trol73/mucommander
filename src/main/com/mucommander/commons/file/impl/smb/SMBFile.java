@@ -203,7 +203,7 @@ import java.net.MalformedURLException;
     /////////////////////////////////////////
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         try {
             return file.lastModified();
         }
@@ -213,7 +213,7 @@ import java.net.MalformedURLException;
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         file.setLastModified(lastModified);
     }
 

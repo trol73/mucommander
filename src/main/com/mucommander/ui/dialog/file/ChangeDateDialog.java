@@ -83,7 +83,7 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
         this.dateSpinner = new JSpinner(new SpinnerDateModel());
         dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, CustomDateFormat.getDateFormatString()));
         // Use the selected file's date if there is only one file, if not use base folder's date.
-        dateSpinner.setValue(new Date(destFile.getDate()));
+        dateSpinner.setValue(new Date(destFile.getLastModifiedDate()));
         // Spinner is disabled until the 'Specific date' radio button is selected 
         dateSpinner.setEnabled(false);
 

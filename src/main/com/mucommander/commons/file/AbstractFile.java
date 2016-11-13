@@ -1499,7 +1499,27 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * @return this file's last modified date, in milliseconds since the epoch (00:00:00 GMT, January 1, 1970)
      */
-    public abstract long getDate();
+    public abstract long getLastModifiedDate();
+
+    /**
+     * Returns this file's creation date, in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
+     *
+     * @throws IOException
+     * @return creation date
+     */
+    public long getCreationDate() throws IOException {
+        throw new IOException("operation not supported");
+    }
+
+    /**
+     * Returns this file's last access date, in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
+     *
+     * @throws IOException
+     * @return last access date
+     */
+    public long getLastAccessDate() throws IOException {
+        throw new IOException("operation not supported");
+    }
 
     /**
      * Changes this file's last modified date to the specified one. Throws an <code>IOException</code> if the date
@@ -1515,7 +1535,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
      */
-    public abstract void changeDate(long lastModified) throws IOException;
+    public abstract void setLastModifiedDate(long lastModified) throws IOException;
 
     public abstract void changeReplication(short replication) throws IOException;
     /**

@@ -77,7 +77,7 @@ public class FileTableModel extends BaseFileTableModel {
             Object[] cell = cellValuesCache[0];
             cell[Column.NAME.ordinal()-1] = "..";
             cell[Column.SIZE.ordinal()-1] = DIRECTORY_SIZE_STRING;
-            currentFolderDateSnapshot = currentFolder.getDate();
+            currentFolderDateSnapshot = currentFolder.getLastModifiedDate();
             cell[Column.DATE.ordinal()-1] =	CustomDateFormat.format(new Date(currentFolderDateSnapshot));
             // Don't display parent's permissions as they can have a different format from the folder contents
             // (e.g. for archives) and this looks weird
@@ -126,7 +126,7 @@ public class FileTableModel extends BaseFileTableModel {
             sizeValue = SizeFormat.format(file.getSize(), sizeFormat);
         }
         cell[Column.SIZE.ordinal()-1] = sizeValue;
-        cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(new Date(file.getDate()));
+        cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(new Date(file.getLastModifiedDate()));
         cell[Column.PERMISSIONS.ordinal()-1] = file.getPermissionsString();
         if (file.canGetOwner()) {
             cell[Column.OWNER.ordinal() - 1] = file.getOwner();

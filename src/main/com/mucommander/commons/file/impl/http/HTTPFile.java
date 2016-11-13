@@ -67,7 +67,7 @@ import java.util.regex.Pattern;
  * <br>
  * A HEAD request is then issued only for non-HTML files, to determine their size and last modified date.
  * HTML files will thus have a size returned by {@link #getSize()} of <code>-1</code> (undetermined), and a date
- * returned by {@link #getDate()} corresponding to 'now' (current time).</p>
+ * returned by {@link #getLastModifiedDate()} corresponding to 'now' (current time).</p>
  *
  * <p>Access to HTTP files is provided by the <code>java.net</code> API. The {@link #getUnderlyingFileObject()} method
  * allows to retrieve a <code>java.net.URL</code> instance corresponding to this HTTPFile.</p>
@@ -289,10 +289,10 @@ public class HTTPFile extends ProtocolFile {
     /////////////////////////////////////////
 	
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         checkResolveFile();
 
-        return attributes.getDate();
+        return attributes.getLastModifiedDate();
     }
 
     /**
@@ -302,7 +302,7 @@ public class HTTPFile extends ProtocolFile {
      */
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long date) throws UnsupportedFileOperationException {
+    public void setLastModifiedDate(long date) throws UnsupportedFileOperationException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
     }
 	

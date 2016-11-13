@@ -65,7 +65,7 @@ public abstract class FilesService implements CompletionService {
 	        
 	        AbstractFile currentDirectory = FileFactory.getFile(currentDirectoryName);
 	        if (currentDirectory != null && currentDirectory.exists()) {	        
-		        long currentDirectoryDate = currentDirectory.getDate();
+		        long currentDirectoryDate = currentDirectory.getLastModifiedDate();
 		        if (cachedDirectoryName == null || !cachedDirectoryName.equals(currentDirectoryName) || currentDirectoryDate != cachedDirectoryDate) {
 		        	AbstractFile[] currentDirectoryFiles;
 					try {

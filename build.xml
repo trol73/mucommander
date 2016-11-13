@@ -294,7 +294,7 @@
     	
     	<replace file="${dist}/${dist.app.name}/Contents/Info.plist">
     	                <replacetoken><![CDATA[</dict>]]></replacetoken>
-    	                <replacevalue><![CDATA[<key>NSHighResolutionCapable</key><true/></dict>]]></replacevalue>
+    	                <replacevalue><![CDATA[<key>NSHighResolutionCapable</key><true/>]]></replacevalue>
     	                <replacevalue><![CDATA[<key>NSSupportsAutomaticGraphicsSwitching</key><true/></dict>]]></replacevalue>    	                
     	</replace>
     	

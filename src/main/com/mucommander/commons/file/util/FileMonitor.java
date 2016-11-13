@@ -249,7 +249,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
     public void run() {
         Thread thisThread = monitorThread;
 
-        long lastDate = (attributes&DATE_ATTRIBUTE)!=0?file.getDate():0;
+        long lastDate = (attributes&DATE_ATTRIBUTE)!=0?file.getLastModifiedDate():0;
         long lastSize = (attributes&SIZE_ATTRIBUTE)!=0?file.getSize():0;
         int lastPermissions = (attributes&PERMISSIONS_ATTRIBUTE)!=0?file.getPermissions().getIntValue():0;
         boolean lastIsDirectory = (attributes&IS_DIRECTORY_ATTRIBUTE)!=0 && file.isDirectory();
@@ -273,7 +273,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
             now = System.currentTimeMillis();
 
             if((attributes&DATE_ATTRIBUTE)!=0) {
-                if((tempLong=file.getDate())!=lastDate) {
+                if((tempLong=file.getLastModifiedDate())!=lastDate) {
                     lastDate = tempLong;
                     changedAttributes |= DATE_ATTRIBUTE;
                 }

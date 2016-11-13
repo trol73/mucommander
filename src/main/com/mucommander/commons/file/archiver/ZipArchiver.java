@@ -76,7 +76,7 @@ class ZipArchiver extends Archiver {
         if(!isDirectory && size>=0) 	// Do not set size if file is directory or file size is unknown!
             entry.setSize(size);
 
-        entry.setTime(attributes.getDate());
+        entry.setTime(attributes.getLastModifiedDate());
         entry.setUnixMode(SimpleFilePermissions.padPermissions(attributes.getPermissions(), isDirectory
                     ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS
                     : FilePermissions.DEFAULT_FILE_PERMISSIONS).getIntValue());

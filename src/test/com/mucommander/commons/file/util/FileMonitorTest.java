@@ -58,10 +58,10 @@ public class FileMonitorTest implements FileMonitorConstants {
     public void testDateAttribute() throws IOException {
         setUp(DATE_ATTRIBUTE);
 
-        file.changeDate(file.getDate()-2000);
+        file.setLastModifiedDate(file.getLastModifiedDate()-2000);
         assert hasAttributeChanged(DATE_ATTRIBUTE);
 
-        file.changeDate(file.getDate()+2000);
+        file.setLastModifiedDate(file.getLastModifiedDate()+2000);
         assert hasAttributeChanged(DATE_ATTRIBUTE);
     }
 

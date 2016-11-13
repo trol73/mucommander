@@ -34,7 +34,7 @@ package com.mucommander.commons.file;
  * @see com.mucommander.commons.file.AbstractFile#getPermissions()
  * @author Maxence Bernard
  */
-public abstract interface FilePermissions extends PermissionBits {
+public interface FilePermissions extends PermissionBits {
 
     /** Empty file permissions: read/write/execute permissions cleared for user/group/other (0), none of the permission
      * bits are supported (mask is 0) */
@@ -48,7 +48,7 @@ public abstract interface FilePermissions extends PermissionBits {
      * are not available in the source: rwxr-xr-x (755 octal). All of the permission bits are marked as supported. */
     FilePermissions DEFAULT_DIRECTORY_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
 
-    public final static FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
+    FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
 
 
     /**

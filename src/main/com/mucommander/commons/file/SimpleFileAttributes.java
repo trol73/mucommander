@@ -73,7 +73,7 @@ public class SimpleFileAttributes implements MutableFileAttributes {
     public SimpleFileAttributes(AbstractFile file) {
         setPath(file.getAbsolutePath());
         setExists(file.exists());
-        setDate(file.getDate());
+        setDate(file.getLastModifiedDate());
         setSize(file.getSize());
         setDirectory(file.isDirectory());
         setPermissions(file.getPermissions());
@@ -102,7 +102,7 @@ public class SimpleFileAttributes implements MutableFileAttributes {
         this.exists = exists;
     }
 
-    public long getDate() {
+    public long getLastModifiedDate() {
         return date;
     }
 

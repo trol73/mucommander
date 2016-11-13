@@ -168,7 +168,7 @@ class ImageViewer extends FileViewer implements ActionListener {
 
         if (statusBar != null) {
             statusBar.setFileSize(file.getSize());
-            statusBar.setDateTime(file.getDate());
+            statusBar.setDateTime(file.getLastModifiedDate());
         }
         int imageWidth, imageHeight;
 

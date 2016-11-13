@@ -26,7 +26,7 @@ package com.mucommander.commons.file.util;
  */
 public interface FileMonitorConstants {
 
-    /** File date attribute, as returned by {@link com.mucommander.commons.file.AbstractFile#getDate()}. */
+    /** File date attribute, as returned by {@link com.mucommander.commons.file.AbstractFile#getLastModifiedDate()}. */
     int DATE_ATTRIBUTE = 1;
 
     /** File size attribute, as returned by {@link com.mucommander.commons.file.AbstractFile#getSize()}. */

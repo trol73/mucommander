@@ -32,6 +32,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.UserPrincipal;
@@ -261,11 +262,10 @@ public class LocalFile extends ProtocolFile {
                     LongByReference totalSpaceLBR = new LongByReference();
                     LongByReference freeSpaceLBR = new LongByReference();
 
-                    if(Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
+                    if (Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
                         dfInfo[0] = totalSpaceLBR.getValue();
                         dfInfo[1] = freeSpaceLBR.getValue();
-                    }
-                    else {
+                    } else {
                         logger.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
                     }
                 }
@@ -280,7 +280,7 @@ public class LocalFile extends ProtocolFile {
                             + " dir \""+absPath+"\"");
 
                     // Check that the process was correctly started
-                    if(process!=null) {
+                    if (process != null) {
                         br = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         String line;
                         String lastLine = null;
@@ -348,7 +348,7 @@ public class LocalFile extends ProtocolFile {
                     }
 
                     int nbTokens = tokenV.size();
-                    if(nbTokens<6) {
+                    if (nbTokens < 6) {
                         // This shouldn't normally happen
                     	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
                         return dfInfo;
@@ -357,7 +357,7 @@ public class LocalFile extends ProtocolFile {
                     // Find the last token starting with '/'
                     int pos = nbTokens-1;
                     while (!tokenV.get(pos).startsWith("/")) {
-                        if (pos==0) {
+                        if (pos == 0) {
                             // This shouldn't normally happen
                         	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
                             return dfInfo;
@@ -657,12 +657,22 @@ public class LocalFile extends ProtocolFile {
     }
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         return file.lastModified();
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public long getCreationDate() throws IOException {
+        return Files.readAttributes(file.toPath(), BasicFileAttributes.class).creationTime().toMillis();
+    }
+
+    @Override
+    public long getLastAccessDate() throws IOException {
+        return Files.readAttributes(file.toPath(), BasicFileAttributes.class).lastAccessTime().toMillis();
+    }
+
+    @Override
+    public void setLastModifiedDate(long lastModified) throws IOException {
         // java.io.File#setLastModified(long) throws an IllegalArgumentException if time is negative.
         // If specified time is negative, set it to 0 (01/01/1970).
         if (lastModified < 0) {

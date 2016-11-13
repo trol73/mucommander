@@ -154,7 +154,7 @@ public class NFSFile extends ProtocolFile {
     /////////////////////////////////////////
 
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         return file.lastModified();
     }
 
@@ -165,7 +165,7 @@ public class NFSFile extends ProtocolFile {
      */
     @Override
     @UnsupportedFileOperation
-    public void changeDate(long lastModified) throws UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws UnsupportedFileOperationException {
         // XFile has no method for that purpose
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
     }

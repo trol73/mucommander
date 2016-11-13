@@ -184,8 +184,8 @@ public abstract class HadoopFile extends ProtocolFile {
     }
 
     @Override
-    public long getDate() {
-        return fileAttributes.getDate();
+    public long getLastModifiedDate() {
+        return fileAttributes.getLastModifiedDate();
     }
 
     @Override
@@ -281,7 +281,7 @@ public abstract class HadoopFile extends ProtocolFile {
     }
 
     @Override
-    public void changeDate(long lastModified) throws IOException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         // Note: setTimes seems to fail on HDFS directories.
         fs.setTimes(path, lastModified, lastModified);
 

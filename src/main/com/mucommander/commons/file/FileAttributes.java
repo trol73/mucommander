@@ -80,7 +80,7 @@ public interface FileAttributes {
      *
      * @return the file's date in milliseconds since the epoch (00:00:00 GMT, January 1, 1970), <code>0</code> by default
      */
-    long getDate();
+    long getLastModifiedDate();
 
     /**
      * Returns the file's size in bytes.

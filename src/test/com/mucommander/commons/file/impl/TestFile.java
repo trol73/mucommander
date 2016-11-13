@@ -57,7 +57,7 @@ public class TestFile extends DummyFile {
     }
  
     @Override
-    public long getDate() {
+    public long getLastModifiedDate() {
         return date;
     }
     

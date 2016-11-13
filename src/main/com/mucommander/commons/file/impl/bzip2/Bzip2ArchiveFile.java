@@ -69,7 +69,7 @@ public class Bzip2ArchiveFile extends AbstractROArchiveFile {
                 name = name.substring(0, name.length()-4);
         }
 
-        return new SingleArchiveEntryIterator(new ArchiveEntry("/"+name, false, getDate(), -1, true));
+        return new SingleArchiveEntryIterator(new ArchiveEntry("/"+name, false, getLastModifiedDate(), -1, true));
     }
 
     @Override

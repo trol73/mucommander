@@ -81,8 +81,8 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     private JLabel ownerLabel;
     private JLabel groupLabel;
 	private JLabel lastMod;
-	private JLabel createtime;
-	private JLabel lastacces;
+	private JLabel createTimeLabel;
+	private JLabel lastAccessLabel;
 	AbstractFile file;
 	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
@@ -153,10 +153,10 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 		// more information
 		lastMod = new JLabel("");
 		labelPanel.addRow("Last Modified" + ":", lastMod, 6);
-		createtime = new JLabel("");
-		labelPanel.addRow("Created" + ":", createtime, 6);
-		lastacces = new JLabel("");
-		labelPanel.addRow("Last Accessed" + ":", lastacces, 6);
+		createTimeLabel = new JLabel("");
+		labelPanel.addRow("Created" + ":", createTimeLabel, 6);
+		lastAccessLabel = new JLabel("");
+		labelPanel.addRow("Last Accessed" + ":", lastAccessLabel, 6);
 
         if (isSingleFile) {
             if (singleFile.canGetOwner()) {
@@ -234,36 +234,45 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
 		
 		//adding last modification time and date
-		lastMod.setText(sdf.format(file.getDate()));
+		lastMod.setText(sdf.format(file.getLastModifiedDate()));
 
 
 		
 //		BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getAbsolutePath())),
 //				BasicFileAttributes.class);
-//		createtime.setText(attr.creationTime().toString());
+//		createTimeLabel.setText(attr.creationTime().toString());
 //
 //		lastacces.setText(attr.lastAccessTime().toString());
 
-		lastacces.setText("coming soon");
-		createtime.setText("coming soon");
+        long lastAccessTime;
+        try {
+            lastAccessTime = file.getLastAccessDate();
+        } catch (IOException e) {
+            lastAccessTime = -1;
+        }
+        lastAccessLabel.setText(lastAccessTime > 0 ? sdf.format(lastAccessTime) : Translator.get("unknown"));
+        long createTime;
+        try {
+            createTime = file.getCreationDate();
+        } catch (IOException e) {
+            createTime = -1;
+        }
+        createTimeLabel.setText(createTime > 0 ? sdf.format(createTime) : Translator.get("unknown"));
         counterLabel.repaint(REFRESH_RATE);
         sizeLabel.repaint(REFRESH_RATE);
     }
 
-		protected AbstractFile createDestinationFile(AbstractFile destFolder,
-			String destFileName) {
+		protected AbstractFile createDestinationFile(AbstractFile destFolder, String destFileName) {
 		AbstractFile destFile;
 		do { // Loop for retry
 			try {
 				destFile = destFolder.getDirectChild(destFileName);
 				break;
-			} catch (IOException e) {
-		
-			}
+			} catch (IOException ignore) {}
 		} while (true);
 		return destFile;
 	}
-	public static void renamefile(AbstractFile destFile, String newName){
+	public static void renameFile(AbstractFile destFile, String newName){
 
 		AbstractFile destination = FileFactory.getFile(destFile.getParent()+"/"+newName);
 		
@@ -290,7 +299,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
     public void run() {
         dial.setAnimated(true);
-        while(repaintThread!=null && job.getState()!= FileJob.State.FINISHED) {
+        while (repaintThread != null && job.getState()!= FileJob.State.FINISHED) {
             updateLabels();
 			
             try {
@@ -311,12 +320,9 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okCancelButton) {
-renamefile(file,textfield.getText());
-			 //failer her kan ikke rename file.
-} else {
-		
+            renameFile(file,textfield.getText());
 		}
-            dispose();
+		dispose();
     }
 
 

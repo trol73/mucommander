@@ -134,7 +134,7 @@ public class AdbFile extends ProtocolFile {
 
 
 	@Override
-	public long getDate() {
+	public long getLastModifiedDate() {
 		if (remoteFile == null) {
 			return 0;
 		}
@@ -142,7 +142,7 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public void changeDate(long lastModified) throws IOException {
+	public void setLastModifiedDate(long lastModified) throws IOException {
 	}
 
 	@Override
@@ -422,7 +422,7 @@ public class AdbFile extends ProtocolFile {
 			closeConnection();
 			throw new IOException("file not found: " + getURL());
 		}
-		long lastModified = sourceFile.getDate();
+		long lastModified = sourceFile.getLastModifiedDate();
 		int mode = 0664;
 		try {
 			device.push(sourceFile.getInputStream(), lastModified, mode, getURL().getPath());

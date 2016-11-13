@@ -558,15 +558,15 @@ public abstract class AbstractFileTest {
     }
 
     /**
-     * Tests {@link AbstractFile#changeDate(long)} when the operation is not supported.
+     * Tests {@link AbstractFile#setLastModifiedDate(long)} when the operation is not supported.
      *
      * @throws IOException should not happen
      */
     protected void testChangeDateUnsupported() throws IOException {
-        // Assert that #changeDate throws a proper UnsupportedFileOperationException when called
+        // Assert that #setLastModifiedDate throws a proper UnsupportedFileOperationException when called
         UnsupportedFileOperationException e = null;
         try {
-            tempFile.changeDate(System.currentTimeMillis());
+            tempFile.setLastModifiedDate(System.currentTimeMillis());
         }
         catch(UnsupportedFileOperationException ex) {
             e = ex;
@@ -575,7 +575,7 @@ public abstract class AbstractFileTest {
     }
 
     /**
-     * Tests {@link AbstractFile#changeDate(long)} when the operation is supported.
+     * Tests {@link AbstractFile#setLastModifiedDate(long)} when the operation is supported.
      *
      * @throws IOException should not happen
      * @throws NoSuchAlgorithmException should not happen
@@ -585,11 +585,11 @@ public abstract class AbstractFileTest {
 
         long date;
 
-        // Assert that changeDate succeeds (does not throw an exception)
-        tempFile.changeDate(date=(tempFile.getDate()-1000));
+        // Assert that setLastModifiedDate succeeds (does not throw an exception)
+        tempFile.setLastModifiedDate(date=(tempFile.getLastModifiedDate()-1000));
 
-        // Assert that the getDate returns the date that was set
-        assert date == tempFile.getDate();
+        // Assert that the getLastModifiedDate returns the date that was set
+        assert date == tempFile.getLastModifiedDate();
     }
 
     /**
@@ -1588,8 +1588,8 @@ public abstract class AbstractFileTest {
         testPathResolution(tempFile, url.toString());
 
         // Ensure that the file's length and date reported by URL match those of AbstractFile
-        assert url.openConnection().getLastModified() == tempFile.getDate();
-        assert url.openConnection().getDate() == tempFile.getDate();
+        assert url.openConnection().getLastModified() == tempFile.getLastModifiedDate();
+        assert url.openConnection().getDate() == tempFile.getLastModifiedDate();
         assert url.openConnection().getContentLength() == tempFile.getSize();
 
         // Test data integrity of the InputStream returned by URL#openConnection()#getInputStream()
@@ -1632,8 +1632,8 @@ public abstract class AbstractFileTest {
         testPathResolution(tempFile, url.toString());
 
         // Ensure that the file's length and date reported by URL match those of AbstractFile
-        assert url.openConnection().getLastModified() == tempFile.getDate();
-        assert url.openConnection().getDate() == tempFile.getDate();
+        assert url.openConnection().getLastModified() == tempFile.getLastModifiedDate();
+        assert url.openConnection().getDate() == tempFile.getLastModifiedDate();
         assert url.openConnection().getContentLength() == tempFile.getSize();
     }
 
@@ -1976,7 +1976,7 @@ public abstract class AbstractFileTest {
     }
 
     /**
-     * Tests {@link AbstractFile#changeDate(long)}, calling {@link #testChangeDateSupported()} or
+     * Tests {@link AbstractFile#setLastModifiedDate(long)}, calling {@link #testChangeDateSupported()} or
      * {@link #testChangeDateUnsupported()} depending on whether or not the {@link FileOperation#CHANGE_DATE}
      * operation is supported.
      *
@@ -1992,7 +1992,7 @@ public abstract class AbstractFileTest {
     }
 
     /**
-     * Tests {@link AbstractFile#getDate()}.
+     * Tests {@link AbstractFile#getLastModifiedDate()}.
      *
      * @throws IOException should not happen
      * @throws NoSuchAlgorithmException should not happen
@@ -2002,11 +2002,11 @@ public abstract class AbstractFileTest {
         createFile(tempFile, 0);
 
         // Asserts that the date changes when the file is modified
-        long date = tempFile.getDate();
+        long date = tempFile.getLastModifiedDate();
         sleep(1000);    // Sleep a full second, some filesystems may only have a one-second granularity
         createFile(tempFile, 1);  // 1 byte should be enough
 
-        assert tempFile.getDate()>date;
+        assert tempFile.getLastModifiedDate()>date;
     }
 
     /**

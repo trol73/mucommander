@@ -1092,7 +1092,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         @Override
         public String apply(AbstractFile file) {
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(file.getDate());
+            c.setTimeInMillis(file.getLastModifiedDate());
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < len; i++) {
                 switch (token.charAt(i)) {
