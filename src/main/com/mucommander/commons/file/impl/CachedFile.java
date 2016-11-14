@@ -88,7 +88,7 @@ public class CachedFile extends ProxyFile {
     // boolean values
     private static final int SYMLINK_VALUE_MASK = 1 << 24;
     private static final int DIRECTORY_VALUE_MASK = 1 << 25;
-    private static final int ARCHIVE_VALUE_MASK = 1 << 24;
+    private static final int ARCHIVE_VALUE_MASK = 1 << 26;
     private static final int EXECUTABLE_VALUE_MASK = 1 << 27;
     private static final int HIDDEN_VALUE_MASK = 1 << 28;
     private static final int EXISTS_VALUE_MASK = 1 << 29;
