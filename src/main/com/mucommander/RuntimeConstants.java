@@ -60,7 +60,7 @@ public class RuntimeConstants {
     /** URL at which to see the donation information. */
     public static final String DONATION_URL       = HOMEPAGE_URL + "/#donate";
     /** Bug tracker URL. */
-    public static final String BUG_REPOSITORY_URL = HOMEPAGE_URL + "/bugs/";
+    public static final String BUG_REPOSITORY_URL = "https://github.com/trol73/mucommander/issues"; //HOMEPAGE_URL + "/bugs/";
     /** Documentation URL. */
     public static final String DOCUMENTATION_URL  = HOMEPAGE_URL + "/documentation/";
 
