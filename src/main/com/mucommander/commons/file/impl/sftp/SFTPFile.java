@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -15,9 +15,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-
 package com.mucommander.commons.file.impl.sftp;
 
 import com.mucommander.commons.file.*;
@@ -97,12 +94,12 @@ public class SFTPFile extends ProtocolFile {
      * Creates a new instance of SFTPFile and initializes the SSH/SFTP connection to the server.
      * @throws IOException
      */
-    protected SFTPFile(FileURL fileURL) throws IOException {
+    SFTPFile(FileURL fileURL) throws IOException {
         this(fileURL, null);
     }
 
     
-    protected SFTPFile(FileURL fileURL, SFTPFileAttributes fileAttributes) throws IOException {
+    SFTPFile(FileURL fileURL, SFTPFileAttributes fileAttributes) throws IOException {
         super(fileURL);
 //        // Throw an AuthException if the url doesn't contain any credentials
 //        if(!fileURL.containsCredentials())
@@ -667,11 +664,9 @@ public class SFTPFile extends ProtocolFile {
                     public void close() throws IOException {
                         // SftpFileInputStream.close() closes the open SftpFile file handle
                         super.close();
-
                         // Release the lock on the ConnectionHandler
                         connHandler.releaseLock();
                 }
-
 
             };
         } catch(IOException e) {
@@ -921,7 +916,16 @@ public class SFTPFile extends ProtocolFile {
         private SftpFileInputStreamEx in;
 
         private SFTPRandomAccessInputStream() throws IOException {
-            this.in = (SftpFileInputStreamEx)getInputStream();
+            try {
+                final SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
+                    // Makes sure the connection is started, if not starts it
+                    connHandler.checkConnection();
+                SftpFile sftpFile = connHandler.sftpSubsystem.openFile(absPath, SftpSubsystemChannel.OPEN_READ);
+                this.in = new SftpFileInputStreamEx(sftpFile);//SftpFileInputStreamEx)getInputStream();
+            } catch (SftpStatusException | SshException e) {
+                e.printStackTrace();
+                throw new IOException(e);
+            }
         }
 
         @Override

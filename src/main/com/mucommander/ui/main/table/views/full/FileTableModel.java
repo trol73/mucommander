@@ -35,7 +35,7 @@ import com.mucommander.ui.main.table.views.BaseFileTableModel;
 public class FileTableModel extends BaseFileTableModel {
 
     /** Cell values cache */
-    protected Object cellValuesCache[][];
+    private Object cellValuesCache[][];
 
 
     /**
@@ -163,6 +163,9 @@ public class FileTableModel extends BaseFileTableModel {
 
     @Override
     public synchronized Object getValueAt(int rowIndex, int columnIndex) {
+        if (cellValuesCache.length <= columnIndex) {
+            return null;
+        }
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
