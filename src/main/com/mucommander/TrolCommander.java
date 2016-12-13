@@ -895,6 +895,7 @@ public class TrolCommander {
                     }
                 }
             }
+            executor.shutdown();
             System.out.println("finished");
         } catch(Throwable t) {
             // Startup failed, dispose the splash screen

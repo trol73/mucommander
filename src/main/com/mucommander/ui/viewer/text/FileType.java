@@ -18,6 +18,7 @@
 package com.mucommander.ui.viewer.text;
 
 import com.mucommander.commons.file.AbstractFile;
+import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
@@ -125,7 +126,7 @@ public enum FileType {
         String masks[] = fileMasks.split(",");
         WildcardFileFilter[] result = new WildcardFileFilter[masks.length];
         for (int i = 0; i < masks.length; i++) {
-            result[i] = new WildcardFileFilter(masks[i]);
+            result[i] = new WildcardFileFilter(masks[i], IOCase.INSENSITIVE);
         }
         return result;
     }
