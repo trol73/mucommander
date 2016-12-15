@@ -62,15 +62,13 @@ public class FocusRequester implements Runnable {
     public static synchronized void requestFocus(Component c) {
         if (c == null) {
             LOGGER.debug(">>>>>>>>>>>>>>>>>> Component is null, returning!");
-            
             return;
         }
-        
         SwingUtilities.invokeLater(new FocusRequester(c, false));
     }
 
     /**
-     * Requests focus on the given componentusing {@link java.awt.Component#requestFocusInWindow(boolean)}}, after all
+     * Requests focus on the given component using {@link java.awt.Component#requestFocusInWindow(boolean)}}, after all
      * currently queued Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
@@ -82,10 +80,8 @@ public class FocusRequester implements Runnable {
     public static synchronized void requestFocusInWindow(Component c) {
         if (c == null) {
             LOGGER.debug(">>>>>>>>>>>>>>>>>> Component is null, returning!");
-
             return;
         }
-
         SwingUtilities.invokeLater(new FocusRequester(c, true));
     }
 

@@ -25,17 +25,11 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.*;
 
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,6 +177,12 @@ public class FocusDialog extends JDialog implements WindowListener {
             t.printStackTrace();
         }
         super.dispose();
+
+        // fixed issue: return to main frame form FocusDialog
+        if ((ownerFocusedComponent instanceof JRootPane && getOwner() instanceof MainFrame)) {
+            ownerFocusedComponent = null;
+        }
+
         FocusRequester.requestFocus(ownerFocusedComponent != null ? ownerFocusedComponent : getOwner());
     }
 
@@ -227,7 +227,7 @@ public class FocusDialog extends JDialog implements WindowListener {
      *
      * @param enabled true to enable automatic keyboard disposal, false to disable it
      */
-    public void setKeyboardDisposalEnabled(boolean enabled) {
+    protected void setKeyboardDisposalEnabled(boolean enabled) {
         this.keyboardDisposalEnabled = enabled;
     }
 

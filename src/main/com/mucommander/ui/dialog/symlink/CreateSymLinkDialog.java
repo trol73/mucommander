@@ -111,13 +111,7 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk) {
-            new Thread() {
-                @Override
-                public void run() {
-                    execute();
-                }
-            }.start();
-
+            new Thread(this::execute).start();
         } // btnOk
     }
 

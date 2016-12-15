@@ -47,9 +47,9 @@ public abstract class JobDialog extends FocusDialog {
     protected MainFrame mainFrame;
     protected FileSet files;
 
-    protected CollapseExpandButton collapseExpandButton;
+    private CollapseExpandButton collapseExpandButton;
 
-    public JobDialog(MainFrame mainFrame, String title, FileSet files) {
+    JobDialog(MainFrame mainFrame, String title, FileSet files) {
         super(mainFrame, title, mainFrame);
 
         this.mainFrame = mainFrame;
@@ -85,7 +85,7 @@ public abstract class JobDialog extends FocusDialog {
      *
      * @return a 'File details' panel, showing details about the files that the job will operate on
      */
-    protected AsyncPanel createFileDetailsPanel(boolean packOnUpdate) {
+    AsyncPanel createFileDetailsPanel(boolean packOnUpdate) {
         return new AsyncPanel() {
             @Override
             public JComponent getTargetComponent(Exception e) {
