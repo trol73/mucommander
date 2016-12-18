@@ -719,7 +719,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         String name = getName();
         int position = name.lastIndexOf('.');
 
-        if ((position <= 0) || (position == name.length() - 1)) {
+        if (position <= 0 || position == name.length() - 1) {
             return name;
         }
 
@@ -2030,7 +2030,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             src = in;
         }
 
-        public MuPushbackInputStream(InputStream in, int size) {
+        MuPushbackInputStream(InputStream in, int size) {
             super(in, size);
             src = in;
         }

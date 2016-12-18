@@ -1,5 +1,5 @@
 /*
- * This file is part of trolCommander, http://www.trolsoft.ru/soft/trolcommander
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2016 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mucommander.commons.file.impl.avrdude;
 
