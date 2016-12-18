@@ -47,7 +47,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     private FileComparator sort;
     
     /** Listeners. */
-    protected EventListenerList listenerList = new EventListenerList();
+    private EventListenerList listenerList = new EventListenerList();
 
     /** Root of the directory tree. */
     private AbstractFile root;
@@ -59,7 +59,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     private SpinningDial spinningIcon = new SpinningDial(16, 16, false);
 
 
-    public FilesTreeModel(FileFilter filter, FileComparator sort) {
+    FilesTreeModel(FileFilter filter, FileComparator sort) {
         super();
         this.sort = sort;
         cache = new DirectoryCache(filter, sort);
@@ -74,14 +74,12 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     public void setRoot(AbstractFile newRoot) {
         final CachedDirectory cachedRoot = new CachedDirectory(newRoot, cache);
         cachedRoot.setCachedIcon(FileIcons.getFileIcon(newRoot));
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                root = cachedRoot.getProxiedFile();
-                cache.clear();
-                cache.put(root, cachedRoot);
-                TreePath path = new TreePath(root);
-                fireTreeStructureChanged(this, path);
-            }
+        SwingUtilities.invokeLater(() -> {
+            root = cachedRoot.getProxiedFile();
+            cache.clear();
+            cache.put(root, cachedRoot);
+            TreePath path = new TreePath(root);
+            fireTreeStructureChanged(this, path);
         });
     }
     
@@ -97,34 +95,22 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
      */
     private AbstractFile[] getChildren(AbstractFile parent) {
         CachedDirectory cachedDir = cache.getOrAdd(parent);
-        if (cachedDir.isCached())
-            return cachedDir.get();
-        else
-            return null;
+        return cachedDir.isCached() ? cachedDir.get() : null;
     }
 
     public Object getChild(Object parent, int index) {
         AbstractFile[] children = getChildren((AbstractFile) parent);
-        if (children != null) {
-            return children[index];
-        }
-        return null;
+        return children != null ? children[index] : null;
     }
 
     public int getChildCount(Object parent) {
         AbstractFile[] children = getChildren((AbstractFile) parent);
-        if (children != null) {
-            return children.length;
-        }
-        return 0;
+        return children != null ? children.length : 0;
     }
 
     public int getIndexOfChild(Object parent, Object child) {
         AbstractFile[] children = getChildren((AbstractFile) parent);
-        if (children != null) {
-            return Arrays.binarySearch(children, (AbstractFile)child, sort);
-        }
-        return 0;
+        return children != null ? Arrays.binarySearch(children, (AbstractFile)child, sort) : 0;
     }
 
     public boolean isLeaf(Object node) {
@@ -166,7 +152,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
      * 
      * @param aNode the TreeNode to get the path for
      */
-    public AbstractFile[] getPathToRoot(AbstractFile aNode) {
+    AbstractFile[] getPathToRoot(AbstractFile aNode) {
         return getPathToRoot(aNode, 0);
     }
 
@@ -182,7 +168,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
      * @return an array of TreeNodes giving the path from the root to the
      *         specified node 
      */
-    protected AbstractFile[] getPathToRoot(AbstractFile aNode, int depth) {
+    private AbstractFile[] getPathToRoot(AbstractFile aNode, int depth) {
         AbstractFile[]              retNodes;
     // This method recurses, traversing towards the root in order
     // size the array. On the way back, it fills in the nodes,
@@ -190,19 +176,15 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
 
         /* Check for null, in case someone passed in a null node, or
            they passed in an element that isn't rooted at root. */
-        if(aNode == null) {
-            if(depth == 0)
+        if (aNode == null) {
+            if (depth == 0) {
                 return null;
-            else
-                retNodes = new AbstractFile[depth];
-        }
-        else {
-            depth++;
-            if(aNode == root) {
-                retNodes = new AbstractFile[depth];
             } else {
-                retNodes = getPathToRoot(aNode.getParent(), depth);
+                retNodes = new AbstractFile[depth];
             }
+        } else {
+            depth++;
+            retNodes = aNode == root ? new AbstractFile[depth] : getPathToRoot(aNode.getParent(), depth);
             retNodes[retNodes.length - depth] = aNode;
             cache.getOrAdd(aNode).isCached();       // ensures that a path is in cache
         }
@@ -253,13 +235,10 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
      * @return an icon of this directory or spinning icon if this directory is
      *         being cached.
      */
-    public Icon getCurrentIcon(AbstractFile file) {
+    Icon getCurrentIcon(AbstractFile file) {
         CachedDirectory cached = cache.get(file);
         if (cached != null) {
-            if (cached.isReadingChildren()) {
-                return spinningIcon;
-            }
-            return cached.getCachedIcon();
+            return cached.isReadingChildren() ? spinningIcon : cached.getCachedIcon();
         }
         return spinningIcon;
     }

@@ -226,6 +226,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertDetailedUrl(doc,    "ICEpdf",              "Apache License",                       "http://www.icesoft.org/java/home.jsf");
             insertDetailedUrl(doc,    "image4j",             "LGPL",                                 "http://image4j.sourceforge.net");
             insertDetailedUrl(doc,    "JediTerm",            "LGPL",                                 "https://github.com/JetBrains/jediterm");
+            insertDetailedUrl(doc,    "JADB",                "Apache License 2.0",                   "https://github.com/vidstige/jadb");
 
             insertDetailedUrl(doc,    "Mark James' icons",   "Creative Commons Attribution License", "http://famfamfam.com");
             insertLineBreak(doc);

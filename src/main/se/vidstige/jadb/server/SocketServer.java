@@ -7,51 +7,60 @@ import java.net.Socket;
 // >set ANDROID_ADB_SERVER_PORT=15037
 public abstract class SocketServer implements Runnable {
 
-	private final int port;
-	private ServerSocket socket;
-	private Thread thread;
-	private final Object lockObject = new Object();
+    private final int port;
+    private ServerSocket socket;
+    private Thread thread;
 
-    protected SocketServer(int port)
-    {
+    private boolean isStarted = false;
+    private final Object lockObject = new Object();
+
+    protected SocketServer(int port) {
         this.port = port;
     }
-		
-	public void start() throws InterruptedException
-	{
-		thread = new Thread(this, "Fake Adb Server");
-		thread.setDaemon(true);
-		thread.start();
-		synchronized (lockObject) {
-			lockObject.wait();
-		}
-	}
-	
-	public int getPort() {
-		return port;
-	}
 
-	@Override
-	public void run() {
-		try {
-			System.out.println("Starting on port " + port);
-			socket = new ServerSocket(port);
-			socket.setReuseAddress(true);
-			
-			synchronized (lockObject) {
-				lockObject.notify();
-			}
-			
-			while (true)
-			{				
-				Socket c = socket.accept();
-				Thread clientThread = new Thread(createResponder(c), "AdbClientWorker");
-				clientThread.setDaemon(true);
-				clientThread.start();		
-			}
-		} catch (IOException e) {
-		}
-	}
+    public void start() throws InterruptedException {
+        thread = new Thread(this, "Fake Adb Server");
+        thread.setDaemon(true);
+        thread.start();
+        waitForServer();
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public void run() {
+        try {
+            socket = new ServerSocket(port);
+            socket.setReuseAddress(true);
+
+            serverReady();
+
+            while (true) {
+                Socket c = socket.accept();
+                Thread clientThread = new Thread(createResponder(c), "AdbClientWorker");
+                clientThread.setDaemon(true);
+                clientThread.start();
+            }
+        } catch (IOException e) {
+        }
+    }
+
+    private void serverReady() {
+        synchronized (lockObject) {
+            isStarted = true;
+            lockObject.notify();
+        }
+    }
+
+    private void waitForServer() throws InterruptedException {
+        synchronized (lockObject) {
+            if (!isStarted) {
+                lockObject.wait();
+            }
+        }
+    }
 
     protected abstract Runnable createResponder(Socket socket);
 

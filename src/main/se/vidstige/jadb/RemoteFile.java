@@ -1,37 +1,19 @@
 package se.vidstige.jadb;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * Created by vidstige on 2014-03-20
  */
 public class RemoteFile {
     private final String path;
 
-    public RemoteFile(String path) {
-        this.path = path;
-    }
+    public RemoteFile(String path) { this.path = path; }
 
-    public String getName() {
-        return path;
-        //throw new NotImplementedException();
-    }
+    public String getName() { throw new UnsupportedOperationException(); }
+    public int getSize() { throw new UnsupportedOperationException(); }
+    public long getLastModified() { throw new UnsupportedOperationException(); }
+    public boolean isDirectory() { throw new UnsupportedOperationException(); }
 
-    public int getSize() {
-        throw new RuntimeException("not implemented");
-    }
-
-    public long getLastModified() {
-        throw new RuntimeException("not implemented");
-    }
-
-    public boolean isDirectory() {
-        throw new RuntimeException("not implemented");
-    }
-
-    public String getPath() {
-        return path;
-    }
+    public String getPath() { return path;}
 
     @Override
     public boolean equals(Object o) {

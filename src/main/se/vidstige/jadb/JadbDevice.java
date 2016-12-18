@@ -1,35 +1,47 @@
 package se.vidstige.jadb;
 
+import se.vidstige.jadb.managers.Bash;
+
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class JadbDevice {
-	private final String serial;
-	private final Transport transport;
-	private boolean selected = false;
+    public enum State {
+        Unknown,
+        Offline,
+        Device,
+        BootLoader
+    };
 
-	JadbDevice(String serial, String type, Transport transport) {
-		this.serial = serial;
-		this.transport = transport;
-	}
+    private final String serial;
+    private final ITransportFactory transportFactory;
 
-    static JadbDevice createAny(Transport transport) { return new JadbDevice(transport); }
-
-    private JadbDevice(Transport transport) {
-        serial = null;
-        this.transport = transport;
+    JadbDevice(String serial, String type, ITransportFactory tFactory) {
+        this.serial = serial;
+        this.transportFactory = tFactory;
     }
 
-    private void ensureTransportIsSelected() throws IOException, JadbException {
-        if (!selected) {
-            selectTransport();
-            selected = true;
+    static JadbDevice createAny(JadbConnection connection) {
+        return new JadbDevice(connection);
+    }
+
+    private JadbDevice(ITransportFactory tFactory) {
+        serial = null;
+        this.transportFactory = tFactory;
+    }
+
+    private State convertState(String type) {
+        switch (type) {
+            case "device":     return State.Device;
+            case "offline":    return State.Offline;
+            case "bootloader": return State.BootLoader;
+            default:           return State.Unknown;
         }
     }
 
-    private void selectTransport() throws IOException, JadbException {
+    private Transport getTransport() throws IOException, JadbException {
+        Transport transport = transportFactory.createTransport();
         if (serial == null) {
             transport.send("host:transport-any");
             transport.verifyResponse();
@@ -37,39 +49,74 @@ public class JadbDevice {
             transport.send("host:transport:" + serial);
             transport.verifyResponse();
         }
+        return transport;
     }
 
-    public String getSerial()
-	{
-		return serial;
-	}
+    public String getSerial() {
+        return serial;
+    }
 
-	public String getState() throws IOException, JadbException {
-        ensureTransportIsSelected();
-		transport.send("get-state");
-		transport.verifyResponse();
-		return transport.readString();
-	}
+    public State getState() throws IOException, JadbException {
+        Transport transport = transportFactory.createTransport();
+        if (serial == null) {
+            transport.send("host:get-state");
+            transport.verifyResponse();
+        } else {
+            transport.send("host-serial:" + serial + ":get-state");
+            transport.verifyResponse();
+        }
 
-	public void executeShell(String command, String ... args) throws IOException, JadbException {
-		ensureTransportIsSelected();
+        State state = convertState(transport.readString());
+        transport.close();
+        return state;
+    }
 
-		StringBuilder shellLine = new StringBuilder(command);
-		for (String arg : args)	{
-			shellLine.append(" ");
-			// quote arg if it contains space
-			if (arg.contains(" ")) {
-				arg = arg.replace(" ", "\\ ");
-			}
-			// TODO: throw if arg contains double quote
-			shellLine.append(arg);	
-		}
-		send("shell:" + shellLine.toString());
-	}
+    /** Execute a shell command.
+     *
+     * @param command main command to run. E.g. "ls"
+     * @param args arguments to the command.
+     * @return combined stdout/stderr stream.
+     * @throws IOException
+     * @throws JadbException
+     */
+    public InputStream executeShell(String command, String... args) throws IOException, JadbException {
+        Transport transport = getTransport();
+        StringBuilder shellLine = new StringBuilder(command);
+        for (String arg : args) {
+            shellLine.append(" ");
+            shellLine.append(Bash.quote(arg));
+        }
+        send(transport, "shell:" + shellLine.toString());
+        return new AdbFilterInputStream(new BufferedInputStream(transport.getInputStream()));
+    }
+
+    /**
+     *
+     * @deprecated Use InputStream executeShell(String command, String... args) method instead. Together with
+     * Stream.copy(in, out), it is possible to achieve the same effect.
+     */
+    @Deprecated
+    public void executeShell(OutputStream output, String command, String... args) throws IOException, JadbException {
+        Transport transport = getTransport();
+        StringBuilder shellLine = new StringBuilder(command);
+        for (String arg : args) {
+            shellLine.append(" ");
+            shellLine.append(Bash.quote(arg));
+        }
+        send(transport, "shell:" + shellLine.toString());
+        if (output != null) {
+        	AdbFilterOutputStream out = new AdbFilterOutputStream(output);
+        	try {
+        		transport.readResponseTo(out);
+        	} finally {
+        		out.close();
+        	}
+        }
+    }
 
     public List<RemoteFile> list(String remotePath) throws IOException, JadbException {
-        ensureTransportIsSelected();
-        SyncTransport sync  = transport.startSync();
+        Transport transport = getTransport();
+        SyncTransport sync = transport.startSync();
         sync.send("LIST", remotePath);
 
         List<RemoteFile> result = new ArrayList<RemoteFile>();
@@ -79,23 +126,19 @@ public class JadbDevice {
         return result;
     }
 
-    private int getMode(File file)
-    {
+    private int getMode(File file) {
+        //noinspection OctalInteger
         return 0664;
     }
 
     public void push(InputStream source, long lastModified, int mode, RemoteFile remote) throws IOException, JadbException {
-        push(source, lastModified, mode, remote.getPath());
-    }
-
-    public void push(InputStream source, long lastModified, int mode, String remotePath) throws IOException, JadbException {
-        ensureTransportIsSelected();
-        SyncTransport sync  = transport.startSync();
-        sync.send("SEND", remotePath + "," + Integer.toString(mode));
+        Transport transport = getTransport();
+        SyncTransport sync = transport.startSync();
+        sync.send("SEND", remote.getPath() + "," + Integer.toString(mode));
 
         sync.sendStream(source);
 
-        sync.sendStatus("DONE", (int)lastModified);
+        sync.sendStatus("DONE", (int) lastModified);
         sync.verifyStatus();
     }
 
@@ -103,16 +146,12 @@ public class JadbDevice {
         FileInputStream fileStream = new FileInputStream(local);
         push(fileStream, local.lastModified(), getMode(local), remote);
         fileStream.close();
-	}
-
-    public void pull(RemoteFile remote, OutputStream destination) throws IOException, JadbException {
-        pull(remote.getPath(), destination);
     }
 
-    public void pull(String remoteFilePath, OutputStream destination) throws IOException, JadbException {
-        ensureTransportIsSelected();
+    public void pull(RemoteFile remote, OutputStream destination) throws IOException, JadbException {
+        Transport transport = getTransport();
         SyncTransport sync = transport.startSync();
-        sync.send("RECV", remoteFilePath);
+        sync.send("RECV", remote.getPath());
 
         sync.readChunksTo(destination);
     }
@@ -123,60 +162,40 @@ public class JadbDevice {
         fileStream.close();
     }
 
-	private void send(String command) throws IOException, JadbException {
-		transport.send(command);
+    private void send(Transport transport, String command) throws IOException, JadbException {
+        transport.send(command);
         transport.verifyResponse();
-	}
-
-    public void delete(String remotePath) throws IOException, JadbException {
-        executeShell("rm", remotePath);
     }
 
-    public void deleteDir(String remotePath) throws IOException, JadbException {
-        executeShell("rmdir", remotePath);
+    @Override
+    public String toString() {
+        return "Android Device with serial " + serial;
     }
 
-	public void makeDir(String path) throws IOException, JadbException {
-		executeShell("mkdir", path);
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((serial == null) ? 0 : serial.hashCode());
+        return result;
+    }
 
-	public void rename(String from, String to) throws IOException, JadbException {
-		executeShell("mv", from, to);
-	}
-	
-	@Override
-	public String toString()
-	{
-		return "Android Device with serial " + serial;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((serial == null) ? 0 : serial.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        }
-		if (obj == null) {
+        if (obj == null)
             return false;
-        }
-		if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
-		JadbDevice other = (JadbDevice) obj;
-		if (serial == null) {
-			if (other.serial != null) {
+        JadbDevice other = (JadbDevice) obj;
+        if (serial == null) {
+            if (other.serial != null)
                 return false;
-            }
-		} else if (!serial.equals(other.serial)) {
+        } else if (!serial.equals(other.serial))
             return false;
-        }
-		return true;
-	}
+        return true;
+    }
+
+
 }

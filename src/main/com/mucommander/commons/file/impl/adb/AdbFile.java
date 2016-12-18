@@ -49,7 +49,7 @@ public class AdbFile extends ProtocolFile {
 	 *
 	 * @param url the FileURL instance that represents this file's location
 	 */
-	protected AdbFile(FileURL url, RemoteFile remoteFile) throws IOException {
+	private AdbFile(FileURL url, RemoteFile remoteFile) throws IOException {
 		super(url);
 
 		if (remoteFile == null) {
@@ -120,15 +120,15 @@ public class AdbFile extends ProtocolFile {
 		return device;
 	}
 
-	void closeConnection() throws IOException {
+	private void closeConnection() throws IOException {
 		if (jadbConnection != null) {
-			jadbConnection.close();
+			//jadbConnection.close();
 			jadbConnection = null;
 		}
 	}
 
 
-	protected AdbFile(FileURL url) throws IOException {
+	AdbFile(FileURL url) throws IOException {
 		this(url, null);
 	}
 
@@ -183,7 +183,7 @@ public class AdbFile extends ProtocolFile {
 			return "/".equals(path);
 		}
 		for (RemoteFile rf : adbParent.childs) {
-			if (getName().equals(rf.getName())) {
+			if (getName().equals(rf.getPath())) {
 				return true;
 			}
 		}
@@ -263,7 +263,7 @@ public class AdbFile extends ProtocolFile {
 		AbstractFile[] result = new AbstractFile[childs.size() - 1];  // skip ".."
 		int index = 0;
 		for (RemoteFile rf : childs) {
-			if ("..".equals(rf.getName())) {
+			if ("..".equals(rf.getPath())) {
 				continue;
 			}
 			FileURL url = FileURL.getFileURL(getURL() + "/" + rf.getPath());
@@ -282,7 +282,7 @@ public class AdbFile extends ProtocolFile {
 			throw new IOException("file not found: " + getURL());
 		}
 		try {
-			device.makeDir(getURL().getPath());
+			device.executeShell("mkdir", getURL().getPath());
 		} catch (JadbException e) {
 			throw new IOException(e);
 		}
@@ -340,6 +340,7 @@ public class AdbFile extends ProtocolFile {
 		}
 	}
 
+
 	@Override
 	public void delete() throws IOException {
 		JadbDevice device = getDevice(getURL());
@@ -349,9 +350,9 @@ public class AdbFile extends ProtocolFile {
 		}
 		try {
 			if (isDirectory()) {
-				device.deleteDir(getURL().getPath());
+				device.executeShell("rmdir", getURL().getPath());
 			} else {
-				device.delete(getURL().getPath());
+				device.executeShell("rm", getURL().getPath());
 			}
 		} catch (JadbException e) {
 			closeConnection();
@@ -369,7 +370,7 @@ public class AdbFile extends ProtocolFile {
 			throw new IOException("file not found: " + getURL());
 		}
 		try {
-			device.rename(getURL().getPath(), destFile.getURL().getPath());
+			device.executeShell("mv", getURL().getPath(), destFile.getURL().getPath());
 		} catch (JadbException e) {
 			throw new IOException(e);
 		}
@@ -409,7 +410,7 @@ public class AdbFile extends ProtocolFile {
 			throw new IOException("file not found: " + getURL());
 		}
 		try {
-			device.pull(getURL().getPath(), destFile.getOutputStream());
+			device.pull(new RemoteFile(getURL().getPath()), destFile.getOutputStream());
 		} catch (JadbException e) {
 			throw new IOException(e);
 		}
@@ -425,7 +426,7 @@ public class AdbFile extends ProtocolFile {
 		long lastModified = sourceFile.getLastModifiedDate();
 		int mode = 0664;
 		try {
-			device.push(sourceFile.getInputStream(), lastModified, mode, getURL().getPath());
+			device.push(sourceFile.getInputStream(), lastModified, mode, new RemoteFile(getURL().getPath()));
 		} catch (JadbException e) {
 			closeConnection();
 			e.printStackTrace();

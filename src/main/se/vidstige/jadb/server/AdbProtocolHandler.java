@@ -10,26 +10,25 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 class AdbProtocolHandler implements Runnable {
-	private final Socket socket;
+    private final Socket socket;
     private final AdbResponder responder;
     private AdbDeviceResponder selected;
 
     public AdbProtocolHandler(Socket socket, AdbResponder responder) {
-		this.socket = socket;
+        this.socket = socket;
         this.responder = responder;
     }
 
     private AdbDeviceResponder findDevice(String serial) throws ProtocolException {
-        for (AdbDeviceResponder d : responder.getDevices())
-        {
+        for (AdbDeviceResponder d : responder.getDevices()) {
             if (d.getSerial().equals(serial)) return d;
         }
         throw new ProtocolException("'" + serial + "' not connected");
     }
 
-	@Override
-	public void run() {
-        try{
+    @Override
+    public void run() {
+        try {
             runServer();
         } catch (IOException e) {
             if (e.getMessage() != null) // thrown when exiting for some reason
@@ -53,8 +52,7 @@ class AdbProtocolHandler implements Runnable {
 
             responder.onCommand(command);
 
-            try
-            {
+            try {
                 if ("host:version".equals(command)) {
                     output.writeBytes("OKAY");
                     send(output, String.format("%04x", responder.getVersion()));
@@ -65,8 +63,7 @@ class AdbProtocolHandler implements Runnable {
                 } else if ("host:devices".equals(command)) {
                     ByteArrayOutputStream tmp = new ByteArrayOutputStream();
                     DataOutputStream writer = new DataOutputStream(tmp);
-                    for (AdbDeviceResponder d : responder.getDevices())
-                    {
+                    for (AdbDeviceResponder d : responder.getDevices()) {
                         writer.writeBytes(d.getSerial() + "\t" + d.getType() + "\n");
                     }
                     output.writeBytes("OKAY");
@@ -83,6 +80,37 @@ class AdbProtocolHandler implements Runnable {
                         SyncTransport sync = new SyncTransport(output, input);
                         sync.send("FAIL", e.getMessage());
                     }
+                } else if (command.startsWith("shell:")) {
+                    String shellCommand = command.substring("shell:".length());
+                    output.writeBytes("OKAY");
+                    shell(shellCommand, output, input);
+                    output.close();
+                    return;
+                } else if ("host:get-state".equals(command)) {
+                    // TODO: Check so that exactly one device is selected.
+                    AdbDeviceResponder device = responder.getDevices().get(0);
+                    output.writeBytes("OKAY");
+                    send(output, device.getType());
+                } else if (command.startsWith("host-serial:")) {
+                    String[] strs = command.split(":",0);
+                    if (strs.length != 3) {
+                        throw new ProtocolException("Invalid command: " + command);
+                    }
+
+                    String serial = strs[1];
+                    boolean found = false;
+                    output.writeBytes("OKAY");
+                    for (AdbDeviceResponder d : responder.getDevices()) {
+                        if (d.getSerial().equals(serial)) {
+                            send(output, d.getType());
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        send(output, "unknown");
+                    }
                 } else {
                     throw new ProtocolException("Unknown command: " + command);
                 }
@@ -92,6 +120,10 @@ class AdbProtocolHandler implements Runnable {
             }
             output.flush();
         }
+    }
+
+    private void shell(String command, DataOutputStream stdout, DataInput stdin) throws IOException {
+        selected.shell(command, stdout, stdin);
     }
 
     private int readInt(DataInput input) throws IOException {
@@ -107,14 +139,12 @@ class AdbProtocolHandler implements Runnable {
     private void sync(DataOutput output, DataInput input) throws IOException, JadbException {
         String id = readString(input, 4);
         int length = readInt(input);
-        if ("SEND".equals(id))
-        {
+        if ("SEND".equals(id)) {
             String remotePath = readString(input, length);
             int idx = remotePath.lastIndexOf(',');
             String path = remotePath;
             int mode = 0666;
-            if (idx > 0)
-            {
+            if (idx > 0) {
                 path = remotePath.substring(0, idx);
                 mode = Integer.parseInt(remotePath.substring(idx + 1));
             }
@@ -123,24 +153,22 @@ class AdbProtocolHandler implements Runnable {
             transport.readChunksTo(buffer);
             selected.filePushed(new RemoteFile(path), mode, buffer);
             transport.sendStatus("OKAY", 0); // 0 = ignored
-        }
-        else if ("RECV".equals(id)) {
+        } else if ("RECV".equals(id)) {
             String remotePath = readString(input, length);
             SyncTransport transport = new SyncTransport(output, input);
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             selected.filePulled(new RemoteFile(remotePath), buffer);
             transport.sendStream(new ByteArrayInputStream(buffer.toByteArray()));
             transport.sendStatus("DONE", 0); // ignored
-        }
-        else throw new JadbException("Unknown sync id " + id);
+        } else throw new JadbException("Unknown sync id " + id);
     }
 
     private String getCommandLength(String command) {
-		return String.format("%04x", command.length());
-	}
-	
-	public void send(DataOutput writer, String response) throws IOException {
-		writer.writeBytes(getCommandLength(response));
-		writer.writeBytes(response);
-	}
+        return String.format("%04x", command.length());
+    }
+
+    public void send(DataOutput writer, String response) throws IOException {
+        writer.writeBytes(getCommandLength(response));
+        writer.writeBytes(response);
+    }
 }

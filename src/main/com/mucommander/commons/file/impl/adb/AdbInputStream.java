@@ -19,6 +19,7 @@ package com.mucommander.commons.file.impl.adb;
 
 import se.vidstige.jadb.JadbDevice;
 import se.vidstige.jadb.JadbException;
+import se.vidstige.jadb.RemoteFile;
 
 import java.io.*;
 import java.util.Random;
@@ -35,7 +36,7 @@ public class AdbInputStream extends InputStream {
     private InputStream is;
     private final File tempFile;
 
-    public AdbInputStream(AdbFile file) throws IOException {
+    AdbInputStream(AdbFile file) throws IOException {
         this.bos = file.getSize() <= MAX_CACHED_SIZE ? new ByteArrayOutputStream() : null;
         this.tempFile = bos == null ? File.createTempFile(file.getName(), ""+System.currentTimeMillis() + "-" + new Random().nextInt(0xffff)) : null;
 
@@ -45,14 +46,14 @@ public class AdbInputStream extends InputStream {
         }
         if (bos != null) {
             try {
-                device.pull(file.getURL().getPath(), bos);
+                device.pull(new RemoteFile(file.getURL().getPath()), bos);
             } catch (JadbException e) {
                 close();
                 throw new IOException(e);
             }
         } else {
             try {
-                device.pull(file.getURL().getPath(), new FileOutputStream(tempFile));
+                device.pull(new RemoteFile(file.getURL().getPath()), new FileOutputStream(tempFile));
             } catch (JadbException e) {
                 close();
                 throw new IOException(e);
