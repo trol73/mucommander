@@ -18,8 +18,6 @@
 
 package com.mucommander.ui.main.table.views.full;
 
-import java.util.*;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.text.CustomDateFormat;
 import com.mucommander.text.SizeFormat;
@@ -78,7 +76,7 @@ public class FileTableModel extends BaseFileTableModel {
             cell[Column.NAME.ordinal()-1] = "..";
             cell[Column.SIZE.ordinal()-1] = DIRECTORY_SIZE_STRING;
             currentFolderDateSnapshot = currentFolder.getLastModifiedDate();
-            cell[Column.DATE.ordinal()-1] =	CustomDateFormat.format(new Date(currentFolderDateSnapshot));
+            cell[Column.DATE.ordinal()-1] =	CustomDateFormat.format(currentFolderDateSnapshot);
             // Don't display parent's permissions as they can have a different format from the folder contents
             // (e.g. for archives) and this looks weird
             cell[Column.PERMISSIONS.ordinal()-1] = "";
@@ -126,7 +124,7 @@ public class FileTableModel extends BaseFileTableModel {
             sizeValue = SizeFormat.format(file.getSize(), sizeFormat);
         }
         cell[Column.SIZE.ordinal()-1] = sizeValue;
-        cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(new Date(file.getLastModifiedDate()));
+        cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(file.getLastModifiedDate());
         cell[Column.PERMISSIONS.ordinal()-1] = file.getPermissionsString();
         if (file.canGetOwner()) {
             cell[Column.OWNER.ordinal() - 1] = file.getOwner();

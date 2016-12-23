@@ -102,7 +102,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             } else {
                 if ((enabled[columnIndex] = conf.isEnabled(c))) {
                     countCache++;
-            }
+                }
             }
             column.setMinWidth(c.getMinimumColumnWidth());
 
@@ -220,7 +220,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             if (visibility[column.getModelIndex()]) {
                 if (++visibleIndex == index) {
                     return i;
-        }
+                }
             }
         }
         // Index doesn't exist.
@@ -328,7 +328,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         widthCache = 0;
         while (elements.hasMoreElements()) {
             widthCache += elements.nextElement().getWidth();
-    }
+        }
     }
 
     /**
@@ -395,7 +395,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnAdded(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnAdded(event);
-    }
+        }
     }
 
     /**
@@ -415,7 +415,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnMoved(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnMoved(event);
-    }
+        }
     }
 
     /**
@@ -425,7 +425,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private void triggerColumnRemoved(TableColumnModelEvent event) {
         for (TableColumnModelListener listener: listeners.keySet()) {
             listener.columnRemoved(event);
-    }
+        }
     }
 
 
@@ -517,7 +517,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         /**
          * Creates a new column enumeration.
          */
-        public ColumnEnumeration() {
+        ColumnEnumeration() {
             nextIndex = -1;
             findNextElement();
         }
@@ -530,8 +530,8 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 TableColumn column = columns.get(nextIndex);
                 if (visibility[column.getModelIndex()]) {
                     break;
+                }
             }
-        }
         }
 
 
@@ -590,7 +590,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         /**
          * Loads the columns order as defined in the configuration.
          */
-        public ColumnSorter(FileTableConfiguration conf) {
+        ColumnSorter(FileTableConfiguration conf) {
             this.conf = conf;
         }
 
@@ -619,7 +619,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 }
                 if (id1 == id2) {
                     return 0;
-            }
+                }
             }
             return 1;
         }

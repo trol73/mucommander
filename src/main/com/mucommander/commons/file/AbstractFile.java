@@ -638,14 +638,15 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // Permissions go by triplets (rwx), there are 3 of them for respectively 'owner', 'group' and 'other' accesses.
         // The first one ('owner') will always be displayed, regardless of the permission bit mask. 'Group' and 'other'
         // will be displayed only if the permission mask contains information about them (at least one permission bit).
-        for (int a=USER_ACCESS; a>=OTHER_ACCESS; a--) {
+        for (int a = USER_ACCESS; a >= OTHER_ACCESS; a--) {
 
-            if(a==USER_ACCESS || (supportedPerms & (7<<bitShift))!=0) {
-                for(int p=READ_PERMISSION; p>=EXECUTE_PERMISSION; p=p>>1) {
-                    if((perms & (p<<bitShift))==0)
+            if (a == USER_ACCESS || (supportedPerms & (7<<bitShift)) != 0) {
+                for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p >> 1) {
+                    if ((perms & (p<<bitShift)) == 0) {
                         s += '-';
-                    else
-                        s += p==READ_PERMISSION?'r':p==WRITE_PERMISSION?'w':'x';
+                    } else {
+                        s += p == READ_PERMISSION ? 'r' : p == WRITE_PERMISSION ? 'w' : 'x';
+                    }
                 }
             }
 

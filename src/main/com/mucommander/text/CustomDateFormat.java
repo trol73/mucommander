@@ -109,13 +109,22 @@ public class CustomDateFormat implements ConfigurationListener {
      *
      * @return a formatted string representing the given date.
      */
-    public static synchronized String format(Date date) {
+    private static synchronized String format(Date date) {
         // Calls to SimpleDateFormat MUST be synchronized otherwise it will start throwing exceptions (verified that!),
         // that is why this method is synchronized.
         // Quote from SimpleDateFormat's Javadoc: "Date formats are not synchronized. It is recommended to create
         // separate format instances for each thread. If multiple threads access a format concurrently, 
         // it must be synchronized externally."
         return dateFormat.format(date);
+    }
+
+    /**
+     * Formats the given timestamp with custom date format and returns a formatted date string.
+     *
+     * @return a formatted string representing the given date.
+     */
+    public static String format(long date) {
+        return format(new Date(date));
     }
 	
 

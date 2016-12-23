@@ -41,13 +41,13 @@ import java.util.*;
  */
 public abstract class BaseFileTableModel extends AbstractTableModel {
 
-    protected static final Cursor WAIT_CURSOR = new Cursor(Cursor.WAIT_CURSOR);
+    private static final Cursor WAIT_CURSOR = new Cursor(Cursor.WAIT_CURSOR);
 
     /** String used as size information for directories */
     public static final String DIRECTORY_SIZE_STRING = "<DIR>";
 
     /** String used as size information for directories that queued to size calculation */
-    public static final String QUEUED_DIRECTORY_SIZE_STRING = "<...>";
+    protected static final String QUEUED_DIRECTORY_SIZE_STRING = "<...>";
 
 
     /** True if the name column is temporarily editable */
@@ -57,7 +57,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     protected static int sizeFormat;
 
     /** Contains sort-related variables */
-    protected SortInfo sortInfo;
+    private SortInfo sortInfo;
 
     /** Index array */
     protected int fileArrayIndex[];
@@ -72,16 +72,16 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     protected AbstractFile parent;
 
     /** Cached file instances */
-    protected AbstractFile cachedFiles[];
+    private AbstractFile cachedFiles[];
 
     /** Combined size of files currently marked */
-    protected long markedTotalSize;
+    private long markedTotalSize;
 
     /** Number of files currently marked */
-    protected int nbFilesMarked;
+    private int nbFilesMarked;
 
     /** Marked files array */
-    protected boolean fileMarked[];
+    private boolean fileMarked[];
 
 
     /** Tasks queue for directory size calculate */
@@ -94,14 +94,14 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     protected boolean hasCalculatedDirectories;
 
     /** Stores marked directories to calculate these size if need */
-    protected final Set<AbstractFile> markedDirectories = new HashSet<>();
+    private final Set<AbstractFile> markedDirectories = new HashSet<>();
 
     /** Here will be stored sizes of directories calculated by F3 command */
     protected final Map<AbstractFile, Long> directorySizes = new HashMap<>();
 
-    protected FileComparator fileComparator;
+    private FileComparator fileComparator;
 
-    /**
+    /*
      * First visible row
      */
     //protected int firstVisibleRow;

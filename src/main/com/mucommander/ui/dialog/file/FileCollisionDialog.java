@@ -41,7 +41,6 @@ import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.Frame;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -65,11 +64,11 @@ public class FileCollisionDialog extends QuestionDialog {
     public final static int RENAME_ACTION = 5;
 
     public final static String CANCEL_TEXT = Translator.get("cancel");
-    public final static String SKIP_TEXT = Translator.get("skip");
-    public final static String OVERWRITE_TEXT = Translator.get("overwrite");
-    public final static String OVERWRITE_IF_OLDER_TEXT = Translator.get("overwrite_if_older");
-    public final static String RESUME_TEXT = Translator.get("resume");
-    public final static String RENAME_TEXT = Translator.get("rename");
+    final static String SKIP_TEXT = Translator.get("skip");
+    final static String OVERWRITE_TEXT = Translator.get("overwrite");
+    final static String OVERWRITE_IF_OLDER_TEXT = Translator.get("overwrite_if_older");
+    final static String RESUME_TEXT = Translator.get("resume");
+    final static String RENAME_TEXT = Translator.get("rename");
 
     private JCheckBox applyToAllCheckBox;
 
@@ -248,7 +247,7 @@ public class FileCollisionDialog extends QuestionDialog {
 
         addFileDetailsRow(panel, Translator.get("size")+":", new JLabel(SizeFormat.format(file.getSize(), SizeFormat.DIGITS_FULL| SizeFormat.UNIT_LONG| SizeFormat.INCLUDE_SPACE)), 0);
 
-        addFileDetailsRow(panel, Translator.get("date")+":", new JLabel(CustomDateFormat.format(new Date(file.getLastModifiedDate()))), 0);
+        addFileDetailsRow(panel, Translator.get("date")+":", new JLabel(CustomDateFormat.format(file.getLastModifiedDate())), 0);
 
         addFileDetailsRow(panel, Translator.get("permissions")+":", new JLabel(file.getPermissionsString()), imgSizeLabel == null ? 10 :0);
 

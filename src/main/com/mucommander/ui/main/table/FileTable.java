@@ -20,6 +20,7 @@ package com.mucommander.ui.main.table;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -29,6 +30,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.mucommander.profiler.Profiler;
 import com.mucommander.text.SizeFormat;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.table.views.BaseCellRenderer;
@@ -1237,12 +1239,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     // - Layout management ---------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     private void doAutoLayout(boolean respectSize) {
+        final AbstractFile currentFolder = getFolderPanel().getCurrentFolder();
         final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
         final int dirStringWidth1 = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
         final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024 * 1024 * 555, FileTableModel.getSizeFormat())); // some big value with big string-length
         final int dirStringWidth3 = fm.stringWidth(SizeFormat.format(1016 * 1024, FileTableModel.getSizeFormat())); // some other big value with big string-length
         final int dirStringWidth = Math.max(Math.max(dirStringWidth1, dirStringWidth2), dirStringWidth3);
-
 
         pageSize = getParent().getSize().height / getRowHeight();
 
@@ -1269,6 +1271,17 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 int columnWidth;
                 if (c == Column.EXTENSION) {
                     columnWidth = (int) FileIcons.getIconDimension().getWidth();
+                } else if (c == Column.DATE) {
+                    String val = CustomDateFormat.format(currentFolder.getLastModifiedDate());
+                    columnWidth = Math.max(MIN_COLUMN_AUTO_WIDTH, fm.stringWidth(val));
+                    columnWidth *= 1.1;
+                } else if (c == Column.SIZE) {
+                    long size = 1000 * 1024 * 1024;
+                    String val = SizeFormat.format(size, BaseFileTableModel.getSizeFormat());
+                    columnWidth = Math.max(dirStringWidth, fm.stringWidth(val));
+                    columnWidth *= 1.1;
+                } else if (c == Column.PERMISSIONS) {
+                    columnWidth = Math.max(fm.stringWidth("wwww"), fm.stringWidth(currentFolder.getPermissionsString()));
                 } else {
                     columnWidth = MIN_COLUMN_AUTO_WIDTH;
 
@@ -1278,8 +1291,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                             break;
                         }
                         String val = (String)getModel().getValueAt(rowNum, column.getModelIndex());
-                        boolean isDirectorySize = c == Column.SIZE;// && FileTableModel.DIRECTORY_SIZE_STRING.equals(val);
-                        int stringWidth = val == null ? 0 : isDirectorySize ? dirStringWidth : fm.stringWidth(val);
+                        int stringWidth = val == null ? 0 : c == Column.SIZE ? dirStringWidth : fm.stringWidth(val);
                         columnWidth = Math.max(columnWidth, stringWidth);
                     }
                 }
@@ -1354,7 +1366,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             nameColumn.setWidth(nameColumn.getWidth() + width);
         } else {
             nameColumn.setWidth(RESERVED_NAME_COLUMN_WIDTH);
-    }
+        }
     }
 
     /**
@@ -1924,7 +1936,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
          * @param col column which is being edited
          * @see AbstractCopyDialog#selectDestinationFilename(AbstractFile, String, int)
          */
-        public void notifyEditing(int row, int col) {
+        void notifyEditing(int row, int col) {
             // The editing row has to be saved as it could change after row editing has been started
             this.editingRow = row;
             this.editingCol = col;

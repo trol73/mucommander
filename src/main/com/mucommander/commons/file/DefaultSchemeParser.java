@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -66,17 +66,17 @@ public class DefaultSchemeParser implements SchemeParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSchemeParser.class);
 
     /** True if query should be parsed and not considered as part of the path */
-    protected boolean parseQuery;
+    private boolean parseQuery;
 
     /** <code>PathCanonizer</code> instance to be used for canonizing the path part */
-    protected PathCanonizer pathCanonizer;
+    private PathCanonizer pathCanonizer;
 
 
     /**
      * Creates a DefaultSchemeParser with a {@link DefaultPathCanonizer} that uses the operating system's default 
      * path separator as the path separator and no tilde replacement, and query parsing disabled.
      */
-    public DefaultSchemeParser() {
+    DefaultSchemeParser() {
         this(false);
     }
 
@@ -89,7 +89,7 @@ public class DefaultSchemeParser implements SchemeParser {
      * @param parseQuery <code>true</code>, any query part (delimited by '?') will be parsed as such, or considered
      * as part of the path otherwise
      */
-    public DefaultSchemeParser(boolean parseQuery) {
+    DefaultSchemeParser(boolean parseQuery) {
         this(new DefaultPathCanonizer(System.getProperty("file.separator"), null), parseQuery);
     }
 
@@ -102,7 +102,7 @@ public class DefaultSchemeParser implements SchemeParser {
      * @param parseQuery <code>true</code>, any query part (delimited by '?') will be parsed as such, or considered
      * as part of the path otherwise
      */
-    public DefaultSchemeParser(PathCanonizer pathCanonizer, boolean parseQuery) {
+    DefaultSchemeParser(PathCanonizer pathCanonizer, boolean parseQuery) {
         this.parseQuery = parseQuery;
         this.pathCanonizer = pathCanonizer;
     }
@@ -128,7 +128,7 @@ public class DefaultSchemeParser implements SchemeParser {
      *
      * @return the {@link PathCanonizer} instance that is used by this {@link DefaultSchemeParser}
      */
-    public PathCanonizer getPathCanonizer() {
+    private PathCanonizer getPathCanonizer() {
         return pathCanonizer;
     }
 
@@ -158,17 +158,17 @@ public class DefaultSchemeParser implements SchemeParser {
             int urlLen = url.length();
 
             // If the given url contains no scheme, consider that it is a local path and transform it into a file:// URL
-            if(schemeDelimPos==-1) {
+            if (schemeDelimPos == -1) {
                 // Treat the URL as local file path if it starts with:
                 // - '/' and OS doesn't use root drives (Unix-style path)
                 // - a drive letter and OS uses root drives (Windows-style) [support both C:\ and C:/ style]
                 // - a ~ character (refers to the user home folder)
-                if ((!LocalFile.USES_ROOT_DRIVES && url.startsWith("/")) || url.startsWith("~")) {
+                if ((!LocalFile.USES_ROOT_DRIVES && url.startsWith("/")) || url.startsWith("~/") || url.equals("~")) {
                     handleLocalFilePath(url, fileURL);
 
                     // All done, return
                     return;
-                } else if (LocalFile.USES_ROOT_DRIVES && (url.indexOf(":\\")==1 || url.indexOf(":/")==1)) {
+                } else if (LocalFile.USES_ROOT_DRIVES && (url.indexOf(":\\") == 1 || url.indexOf(":/") == 1)) {
                     // Turn forward slash-separated paths into their backslash-separated counterparts.
                     if (url.charAt(2) == '/') {
                         url = url.replace('/', '\\');

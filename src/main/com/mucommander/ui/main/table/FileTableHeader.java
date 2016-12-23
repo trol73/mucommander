@@ -37,7 +37,7 @@ public class FileTableHeader extends JTableHeader implements MouseListener {
 
     private FileTable table;
 
-    public FileTableHeader(FileTable table) {
+    FileTableHeader(FileTable table) {
         super(table.getColumnModel());
 
         this.table = table;
