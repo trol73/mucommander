@@ -39,7 +39,7 @@ public class FileIconsCache {
     /**
      * Default cache size
      */
-    public static final int DEFAULT_SIZE = 1000;
+    private static final int DEFAULT_SIZE = 1000;
 
     private final Map<String, Icon> icons = new HashMap<>();
     private final LinkedList<String> files = new LinkedList<>();

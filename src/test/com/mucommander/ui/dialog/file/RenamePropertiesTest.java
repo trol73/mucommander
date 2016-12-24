@@ -25,7 +25,7 @@ public class RenamePropertiesTest {
         AbstractFile abstractFile = FileFactory.getFile(tmpFile.getAbsolutePath());
 
         //runs the renamefile methode from the PropertiesDialog class
-        PropertiesDialog.renamefile(abstractFile, newFilename + ".tmp");
+        PropertiesDialog.renameFile(abstractFile, newFilename + ".tmp");
         
         //creates a standard Java fil object from the muCommander file that was created before, this is the renamed file
         File newFile = new File(abstractFile.getParent().getAbsolutePath() + newFilename + ".tmp");

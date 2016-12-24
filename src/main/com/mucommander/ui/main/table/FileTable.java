@@ -20,7 +20,6 @@ package com.mucommander.ui.main.table;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -30,7 +29,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.mucommander.profiler.Profiler;
 import com.mucommander.text.SizeFormat;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.table.views.BaseCellRenderer;

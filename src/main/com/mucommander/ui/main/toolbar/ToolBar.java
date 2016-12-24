@@ -52,6 +52,7 @@ import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.button.RolloverButtonAdapter;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.MainFrame;
+import ru.trolsoft.macosx.RetinaImageIcon;
 
 /**
  * This class is the icon toolbar attached to a MainFrame, triggering events when buttons are clicked.
@@ -205,6 +206,10 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
 
         button.setIcon(icon);
+        if (icon instanceof RetinaImageIcon) {
+            button.setDisabledIcon(((RetinaImageIcon)icon).buildDisabledIcon());
+            button.setPressedIcon(icon);
+        }
     }
 
     

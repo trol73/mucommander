@@ -33,6 +33,7 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.button.NonFocusableButton;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.MainFrame;
+import ru.trolsoft.macosx.RetinaImageIcon;
 
 /**
  * Button that located in command-bar.
@@ -55,14 +56,13 @@ public class CommandBarButton extends NonFocusableButton implements Configuratio
 		return actionId == null ? null : new CommandBarButton(actionId, mainFrame);
 	}
 	
-	protected CommandBarButton(String actionId, MainFrame mainFrame) {
+	CommandBarButton(String actionId, MainFrame mainFrame) {
 		
 		// Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
         if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             //putClientProperty("JComponent.sizeVariant", "small");
             //putClientProperty("JButton.buttonType", "textured");
-        }
-        else {
+        } else {
             setMargin(new Insets(3,4,3,4));
         }
         
@@ -88,13 +88,20 @@ public class CommandBarButton extends NonFocusableButton implements Configuratio
         // Append the action's shortcut to the button's label
         String label;
         label = action.getLabel();
-        if(action.getAcceleratorText() != null)
+        if (action.getAcceleratorText() != null) {
             label += " [" + action.getAcceleratorText() + ']';
+        }
         setText(label);
 
         // Scale icon if scale factor is different from 1.0
-        if(scaleFactor!=1.0f)
+        if (scaleFactor != 1.0f) {
             setIcon(IconManager.getScaledIcon(action.getIcon(), scaleFactor));
+        }
+        if (RetinaImageIcon.IS_RETINA && getIcon() instanceof RetinaImageIcon) {
+            setDisabledIcon(((RetinaImageIcon) getIcon()).buildDisabledIcon());
+            setPressedIcon(getIcon());
+        }
+
     }
 	
     /**

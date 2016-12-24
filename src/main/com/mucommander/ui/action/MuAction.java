@@ -66,7 +66,7 @@ public abstract class MuAction extends AbstractAction {
     private boolean performActionInSeparateThread = false;
 
     /** Name of the alternate accelerator KeyStroke property */
-    public final static String ALTERNATE_ACCELERATOR_PROPERTY_KEY = "alternate_accelerator";
+    private final static String ALTERNATE_ACCELERATOR_PROPERTY_KEY = "alternate_accelerator";
     
     /**
      * Creates a new <code>MuAction</code> associated with the specified {@link MainFrame}. The properties contained by

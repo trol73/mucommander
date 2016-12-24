@@ -19,10 +19,9 @@
 
 package com.mucommander.ui.icon;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.util.ResourceLoader;
+import ru.trolsoft.macosx.RetinaImageIcon;
 
 /**
  * IconManager takes care of loading, caching, rescaling the icons contained inside the application's JAR file.
@@ -109,9 +109,31 @@ public class IconManager {
             LOGGER.debug("Warning: attempt to load non-existing icon: " + iconPath + " , icon missing ?");
             return null;
         }
-        ImageIcon icon = new ImageIcon(resourceURL);
+        ImageIcon icon;
+        if (RetinaImageIcon.IS_RETINA) {
+            icon = new RetinaImageIcon(getRetinaUrl(resourceURL));
+            if (icon.getImageLoadStatus() == MediaTracker.ERRORED) {
+                icon = new ImageIcon(resourceURL);
+            }
+        } else {
+            icon = new ImageIcon(resourceURL);
+        }
+        //ImageIcon icon = new ImageIcon(resourceURL);
         return scaleFactor == 1.0f ? icon : getScaledIcon(icon, scaleFactor);
     }
+
+    private static URL getRetinaUrl(URL url) {
+        String path = url.toString();
+        if (path.endsWith(".png") && !path.contains("@")) {
+            try {
+                return new URL(path.replace(".png", "@2x.png"));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        return url;
+    }
+
 
     /**
      * Convenience method, calls and returns the result of {@link #getIcon(String, float) getIcon(iconPath, scaleFactor)}

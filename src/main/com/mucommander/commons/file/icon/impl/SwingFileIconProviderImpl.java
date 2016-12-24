@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -20,10 +20,7 @@
 package com.mucommander.commons.file.icon.impl;
 
 import ch.randelshofer.quaqua.osx.OSXFile;
-import com.mucommander.bookmark.Bookmark;
-import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.icon.CacheableFileIconProvider;
 import com.mucommander.commons.file.icon.CachedFileIconProvider;
@@ -36,6 +33,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trolsoft.macosx.RetinaImageIcon;
 import ru.trolsoft.utils.FileUtils;
 
 import javax.swing.*;
@@ -157,6 +155,13 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
                 return fileSystemView.getSystemIcon(javaIoFile);
             } else {
                 if (fileChooser == null) {
+                    if (RetinaImageIcon.IS_RETINA) {
+                        Icon icon = OSXFile.getIcon(javaIoFile, preferredSize*2);
+                        if (icon instanceof ImageIcon) {
+                            ImageIcon imageIcon = (ImageIcon)icon;
+                            return new RetinaImageIcon(imageIcon.getImage());
+                        }
+                    }
                     return OSXFile.getIcon(javaIoFile, preferredSize);
                 }
                 return fileChooser.getIcon(javaIoFile);

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 package com.mucommander.commons.file.icon;
 
@@ -40,12 +39,12 @@ import javax.swing.*;
 public class IconCache {
 
    /** The actual hash map */
-    protected final ReferenceMap<Object, Icon> hashMap = new ReferenceMap<>(ReferenceMap.ReferenceStrength.HARD, ReferenceMap.ReferenceStrength.SOFT);
+    private final ReferenceMap<Object, Icon> hashMap = new ReferenceMap<>(ReferenceMap.ReferenceStrength.HARD, ReferenceMap.ReferenceStrength.SOFT);
 
     /**
      * Creates a new icon cache.
      */
-    public IconCache() {
+    IconCache() {
     }
 
     /**

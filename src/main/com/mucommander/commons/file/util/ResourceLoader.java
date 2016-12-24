@@ -237,9 +237,8 @@ public class ResourceLoader {
     public static InputStream getResourceAsStream(String path, ClassLoader classLoader, AbstractFile rootPackageFile) {
         try {
             URL resourceURL = getResourceAsURL(path, classLoader, rootPackageFile);
-            return resourceURL==null?null:resourceURL.openStream();
-        }
-        catch(IOException e) {
+            return resourceURL == null ? null : resourceURL.openStream();
+        } catch(IOException e) {
             return null;
         }
     }
