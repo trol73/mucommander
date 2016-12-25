@@ -161,7 +161,7 @@ public class FileTableModel extends BaseFileTableModel {
 
     @Override
     public synchronized Object getValueAt(int rowIndex, int columnIndex) {
-        if (cellValuesCache.length <= columnIndex) {
+        if (rowIndex >= cellValuesCache.length || columnIndex >= cellValuesCache[rowIndex].length) {
             return null;
         }
         // Need to check that row index is not larger than actual number of rows
@@ -199,7 +199,6 @@ public class FileTableModel extends BaseFileTableModel {
             result = fillOneCellCache(index, parent != null ? fileIndex + 1 : fileIndex)[columnIndex];
         }
         // TODO preload icons for all visible files
-
         return result;
     }
 

@@ -29,14 +29,14 @@ public class CompactFileTableModel extends BaseFileTableModel {
 
     final int columns;
 
-    protected int visibleRows;
+    private int visibleRows;
 
 //    private int rowCount;
 
     private int offset;
 
     /** Cell values cache */
-    protected String cellValuesCache[];
+    private String cellValuesCache[];
 
     public CompactFileTableModel(int columns, int visibleRows) {
         super();
