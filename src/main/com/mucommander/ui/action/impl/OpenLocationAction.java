@@ -60,7 +60,7 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Creates a new OpenLocationAction instance using the provided FileURL and label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url, String label) {
+    private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url, String label) {
         super(mainFrame, properties);
 
         this.url = url;

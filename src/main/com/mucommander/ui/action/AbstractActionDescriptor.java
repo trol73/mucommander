@@ -116,7 +116,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      * @param actionId a String identification of MuAction
      * @return the standard icon image corresponding to the specified MuAction, <code>null</code> if none was found
      */
-    private static ImageIcon getStandardIcon(String actionId) {
+    protected static ImageIcon getStandardIcon(String actionId) {
         // Look for an icon image file with the /action/<action id>.png path and use it if it exists
         String iconPath = getStandardIconPath(actionId);
         return ResourceLoader.getResourceAsURL(iconPath) == null ? null : IconManager.getIcon(iconPath);

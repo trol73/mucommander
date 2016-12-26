@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class ChangeLocationAction extends ActiveTabAction {
 
-    public ChangeLocationAction(MainFrame mainFrame, Map<String, Object> properties) {
+    ChangeLocationAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

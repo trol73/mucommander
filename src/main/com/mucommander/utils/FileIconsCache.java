@@ -21,6 +21,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.icon.FileIcons;
+import ru.trolsoft.macosx.RetinaImageIcon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,7 +100,10 @@ public class FileIconsCache {
 
     public Image getImageIcon(AbstractFile file) {
         Icon icon = getIcon(file);
-        if (icon instanceof ImageIcon) {
+System.out.println("> " + icon.getClass().getName());
+        if (icon instanceof RetinaImageIcon) {
+            return ((RetinaImageIcon) icon).getImage();
+        } else if (icon instanceof ImageIcon) {
             return ((ImageIcon)icon).getImage();
         } else {
             int w = icon.getIconWidth();

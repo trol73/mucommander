@@ -17,8 +17,6 @@
  */
 package ru.trolsoft.macosx;
 
-import sun.swing.ImageIconUIResource;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;

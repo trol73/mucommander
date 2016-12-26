@@ -29,7 +29,7 @@ import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class RevealInDesktopAction extends ParentFolderAction {
 
-    public RevealInDesktopAction(MainFrame mainFrame, Map<String,Object> properties) {
+    RevealInDesktopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setEnabled(DesktopManager.canOpenInFileManager());
@@ -91,7 +91,16 @@ public class RevealInDesktopAction extends ParentFolderAction {
 
         @Override
         public String getLabel() {
-            return Translator.get(ActionProperties.getActionLabelKey(RevealInDesktopAction.Descriptor.ACTION_ID), DesktopManager.canOpenInFileManager()?DesktopManager.getFileManagerName():Translator.get("file_manager"));
+            return Translator.get(ActionProperties.getActionLabelKey(RevealInDesktopAction.Descriptor.ACTION_ID),
+                    DesktopManager.canOpenInFileManager() ? DesktopManager.getFileManagerName() : Translator.get("file_manager"));
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+		    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                return super.getStandardIcon("Finder");
+            }
+            return super.getIcon();
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

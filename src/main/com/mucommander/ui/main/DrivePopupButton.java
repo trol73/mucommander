@@ -129,7 +129,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      *
      * @param folderPanel the FolderPanel instance this button will be added to
      */
-    public DrivePopupButton(FolderPanel folderPanel) {
+    DrivePopupButton(FolderPanel folderPanel) {
         this.folderPanel = folderPanel;
 		
         // Listen to location events to update the button when the current folder changes
@@ -352,10 +352,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 if (!location.contains("://")) {
                     AbstractFile file = FileFactory.getFile(location);
                     if (file != null) {
-                        Image icon = FileIconsCache.getInstance().getImageIcon(file);
+                        Icon icon = FileIconsCache.getInstance().getIcon(file);
                         if (icon != null) {
-                            item.setIcon(new ImageIcon(icon));
+                            item.setIcon(icon);
                         }
+//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
+//                        if (image != null) {
+//                            item.setIcon(new ImageIcon(image));
+//                        }
                     }
                 } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
                     item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));

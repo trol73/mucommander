@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabListener {
 
-    public PopupLeftDriveButtonAction(MainFrame mainFrame, Map<String,Object> properties) {
+    PopupLeftDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         
         mainFrame.getLeftPanel().getTabs().addActiveTabListener(this);
