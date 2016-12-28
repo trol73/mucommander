@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *

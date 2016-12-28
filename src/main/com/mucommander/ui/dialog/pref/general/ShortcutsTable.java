@@ -24,12 +24,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -116,9 +111,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	private static final int NUM_OF_CLICKS_TO_ENTER_EDITING_STATE = 2;
 	
 	/** Column indexes */
-	public static final int ACTION_DESCRIPTION_COLUMN_INDEX     = 0;
-	public static final int ACCELERATOR_COLUMN_INDEX            = 1;
-	public static final int ALTERNATE_ACCELERATOR_COLUMN_INDEX  = 2;
+	private static final int ACTION_DESCRIPTION_COLUMN_INDEX     = 0;
+	static final int ACCELERATOR_COLUMN_INDEX            = 1;
+	static final int ALTERNATE_ACCELERATOR_COLUMN_INDEX  = 2;
 
 	/** Number of columns in the table */
 	private static final int NUM_OF_COLUMNS = 3;
@@ -132,7 +127,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 
 	private ShortcutsTableCellRenderer cellRenderer;
 	
-	public ShortcutsTable(TooltipBar tooltipBar) {
+	ShortcutsTable(TooltipBar tooltipBar) {
 		super();
 		this.tooltipBar = tooltipBar;
 		
@@ -192,9 +187,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
      * Assumes table is contained in a JScrollPane. Scrolls the
      * cell (rowIndex, vColIndex) so that it is visible within the viewport.
  	*/
-    public void scrollToVisible(int rowIndex, int vColIndex) {
-    	if (!(getParent() instanceof JViewport))
-            return;
+	private void scrollToVisible(int rowIndex, int vColIndex) {
+    	if (!(getParent() instanceof JViewport)) {
+			return;
+		}
 
     	JViewport viewport = (JViewport) getParent();
     
@@ -218,9 +214,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	 * create thread that will cancel the editing state of the given TableCellEditor
 	 * after CELL_EDITING_STATE_PERIOD time in which with no pressing was made.
 	 */
-	public void createCancelEditingStateThread(TableCellEditor cellEditor) {
-		if (cancelEditingStateThread != null)
+	private void createCancelEditingStateThread(TableCellEditor cellEditor) {
+		if (cancelEditingStateThread != null) {
 			cancelEditingStateThread.neutralize();
+		}
 		(cancelEditingStateThread = new CancelEditingStateThread(cellEditor)).start();
 	}
 	
@@ -240,11 +237,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			tooltipBar.showActionTooltip(data.getCurrentTooltip());
 	}
 	
-	public void updateModel(ActionFilter filter) {
+	void updateModel(ActionFilter filter) {
 		data.filter(filter);
 	}
 
-	public ActionFilter createCurrentAcceleratorsActionFilter(KeyStroke accelerator) {
+	ActionFilter createCurrentAcceleratorsActionFilter(KeyStroke accelerator) {
 		return data.new CurrentActionAccceleratorsFilter(accelerator);
 	}
 
@@ -267,11 +264,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	/**
 	 * This method updates ActionKeymap with the modified shortcuts.
 	 */
-	public void commitChanges() {
+	void commitChanges() {
 		data.submitChanges();
 	}
 	
-	public void restoreDefaults() {
+	void restoreDefaults() {
 		data.restoreDefaultAccelerators();
 	}
 	
@@ -326,7 +323,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		
 		RecordingKeyStrokeField rec;
 		
-		public KeyStrokeCellEditor(RecordingKeyStrokeField rec) {
+		KeyStrokeCellEditor(RecordingKeyStrokeField rec) {
 			super(rec);
 			this.rec = rec;
 			rec.setSelectionColor(rec.getBackground());
@@ -361,11 +358,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		private boolean stopped = false;
 		private TableCellEditor cellEditor;
 
-		public CancelEditingStateThread(TableCellEditor cellEditor) {
+		CancelEditingStateThread(TableCellEditor cellEditor) {
 			this.cellEditor = cellEditor;
 		}
 		
-		public void neutralize() {
+		void neutralize() {
 			stopped = true;
 		}
 		
@@ -441,7 +438,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		// Before any keystroke is entered, it contains the keystroke appearing in the cell before entering the editing state.
 		private KeyStroke lastKeyStroke;
 		
-		public RecordingKeyStrokeField(KeyStroke currentKeyStroke) {
+		RecordingKeyStrokeField(KeyStroke currentKeyStroke) {
 			super(Translator.get("shortcuts_table.type_in_a_shortcut"));
 			
 			lastKeyStroke = currentKeyStroke;			
@@ -459,7 +456,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		 * 
 		 * @return the last KeyStroke the user entered to the field.
 		 */
-		public KeyStroke getLastKeyStroke() { return lastKeyStroke; }
+		KeyStroke getLastKeyStroke() { return lastKeyStroke; }
 
 
         ////////////////////////
@@ -516,13 +513,13 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		public class CurrentActionAccceleratorsFilter extends ActionFilter {
 			private KeyStroke accelerator;
 
-			public CurrentActionAccceleratorsFilter(KeyStroke accelerator) {
+			CurrentActionAccceleratorsFilter(KeyStroke accelerator) {
 				this.accelerator = accelerator;
 			}
 
 			@Override
 			public boolean accept(String actionId) {
-				HashMap<Integer, Object> actionProperties = db.get(actionId);
+				Map<Integer, Object> actionProperties = db.get(actionId);
 				return ShortcutsTableData.this.equals(accelerator,
 				        actionProperties.get(ShortcutsTableData.this.accelerator))
 				        || ShortcutsTableData.this.equals(accelerator,
@@ -540,14 +537,14 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		private final Integer tooltips = 3;
 		
 		private List<String> allActionIds;
-		private HashMap<String, HashMap<Integer, Object>> db;
+		private HashMap<String, Map<Integer, Object>> db;
 		
-		public ShortcutsTableData() {
+		ShortcutsTableData() {
             allActionIds = new ArrayList<>();
             Iterator<String> iterator = ActionManager.getActionIds();
             while(iterator.hasNext())
                 allActionIds.add(iterator.next());
-			Collections.sort(allActionIds, ACTIONS_COMPARATOR);
+			allActionIds.sort(ACTIONS_COMPARATOR);
 			
 			final int nbActions = allActionIds.size();
 			db = new HashMap<>(nbActions);
@@ -559,20 +556,20 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
             for(String actionId : allActionIds) {
 				ActionDescriptor actionDescriptor = ActionProperties.getActionDescriptor(actionId);
 				
-				HashMap<Integer, Object> actionProperties = new HashMap<>();
+				Map<Integer, Object> actionProperties = new HashMap<>();
 				
 				ImageIcon actionIcon = actionDescriptor.getIcon();
 				if (actionIcon == null)
 					actionIcon = transparentIcon;
 				String actionLabel = actionDescriptor.getLabel();
 				
-				/* 0 -> action's icon & name pair */
+				// 0 -> action's icon & name pair
 				actionProperties.put(description, new Pair<>(IconManager.getPaddedIcon(actionIcon, insets), actionLabel));
-				/* 1 -> action's accelerator */
+				// 1 -> action's accelerator
 				actionProperties.put(accelerator, ActionKeymap.getAccelerator(actionId));
-				/* 2 -> action's alternate accelerator */
+				// 2 -> action's alternate accelerator
 				actionProperties.put(alt_accelerator, ActionKeymap.getAlternateAccelerator(actionId));
-				/* 3 -> action's description */
+				// 3 -> action's description
 				actionProperties.put(tooltips, actionDescriptor.getDescription());
 				
 				db.put(actionId, actionProperties);
@@ -611,17 +608,17 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			ShortcutsTable.this.scrollToVisible(0, 0);
 		}
 		
-		public Object[][] getTableData() { return data; }
+		Object[][] getTableData() { return data; }
 		
-		public Object getTableData(int row, int col) { return data[row][col]; }
+		Object getTableData(int row, int col) { return data[row][col]; }
 		
-		public String getCurrentTooltip() { return descriptions[getSelectedRow()]; }
+		String getCurrentTooltip() { return descriptions[getSelectedRow()]; }
 		
-		public String getActionId(int row) { return actionIds[row]; }
+		String getActionId(int row) { return actionIds[row]; }
 		
-		public boolean hasChanged() {
+		boolean hasChanged() {
             for (String actionId : db.keySet()) {
-                HashMap<Integer, Object> actionProperties = db.get(actionId);
+                Map<Integer, Object> actionProperties = db.get(actionId);
                 if (!equals(actionProperties.get(this.accelerator), ActionKeymap.getAccelerator(actionId)) ||
                         !equals(actionProperties.get(this.alt_accelerator), ActionKeymap.getAlternateAccelerator(actionId)))
                     return true;
@@ -629,7 +626,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			return false;
 		}
 		
-		public void restoreDefaultAccelerators() {
+		void restoreDefaultAccelerators() {
             for (String actionId : allActionIds) {
                 (db.get(actionId)).put(this.accelerator, ActionProperties.getDefaultAccelerator(actionId));
                 (db.get(actionId)).put(this.alt_accelerator, ActionProperties.getDefaultAlternativeAccelerator(actionId));
@@ -644,9 +641,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			((DefaultTableModel) getModel()).fireTableDataChanged();
 		}
 		
-		public void submitChanges() {
+		void submitChanges() {
             for (String actionId : db.keySet()) {
-                HashMap<Integer, Object> actionProperties = db.get(actionId);
+                Map<Integer, Object> actionProperties = db.get(actionId);
                 KeyStroke accelerator = (KeyStroke) actionProperties.get(this.accelerator);
                 KeyStroke alternateAccelerator = (KeyStroke) actionProperties.get(this.alt_accelerator);
 
@@ -699,7 +696,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		/** Custom JLabel that render specific column cells */
 	    private DotBorderedCellLabel[] cellLabels = new DotBorderedCellLabel[NUM_OF_COLUMNS];
 	    
-	    public ShortcutsTableCellRenderer() {
+	    ShortcutsTableCellRenderer() {
 	    	for(int i=0; i<NUM_OF_COLUMNS; ++i)
 	            cellLabels[i] = new DotBorderedCellLabel();
 
@@ -719,8 +716,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	     */
 	    private void setCellLabelsFont(Font newFont) {
 	        // Set custom font
-	        for(int i=0; i<NUM_OF_COLUMNS; ++i)
-	        	cellLabels[i].setFont(newFont);
+	        for (int i=0; i < NUM_OF_COLUMNS; ++i) {
+				cellLabels[i].setFont(newFont);
+			}
 	    }
 	    
 		public Component getTableCellRendererComponent(JTable table, Object value,  boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
@@ -788,7 +786,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	     * Receives theme font changes notifications.
 	     */
 	    public void fontChanged(FontChangedEvent event) {
-	        if(event.getFontId() == Theme.FILE_TABLE_FONT) {
+	        if (event.getFontId() == Theme.FILE_TABLE_FONT) {
 	            setCellLabelsFont(ThemeCache.tableFont);
 	        }
 	    }

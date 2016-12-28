@@ -62,25 +62,25 @@ public interface ZipConstants {
     /**
      * UTF-8 encoding String
      */
-    public final static String UTF_8 = "UTF-8";
+    String UTF_8 = "UTF-8";
 
     /**
      * Local file header signature
      */
-    static final byte[] LFH_SIG = ZipLong.getBytes(0X04034B50L);
+    byte[] LFH_SIG = ZipLong.getBytes(0X04034B50L);
 
     /**
      * Data descriptor signature
      */
-    static final byte[] DD_SIG = ZipLong.getBytes(0X08074B50L);
+    byte[] DD_SIG = ZipLong.getBytes(0X08074B50L);
 
     /**
      * Central file header signature
      */
-    static final byte[] CFH_SIG = ZipLong.getBytes(0X02014B50L);
+    byte[] CFH_SIG = ZipLong.getBytes(0X02014B50L);
 
     /**
      * End of central dir signature
      */
-    static final byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L);
+    byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L);
 }

@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -32,9 +33,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.jidesoft.hints.ListDataIntelliHints;
+import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
@@ -54,7 +54,6 @@ import com.mucommander.ui.main.table.FileTable;
  * @author Maxence Bernard
  */
 public class FileSelectionDialog extends FocusDialog implements ActionListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileSelectionDialog.class);
 
     /** Add to or remove from selection ? */	 
     private boolean addToSelection;
@@ -118,6 +117,10 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         selectionField.addActionListener(this);
         selectionField.setSelectionStart(0);
         selectionField.setSelectionEnd(keywordString.length());
+
+        List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
+        new ListDataIntelliHints<>(selectionField, filesHistory).setCaseSensitive(false);
+
         tempPanel.add(selectionField);
         northPanel.add(tempPanel);
 
@@ -167,7 +170,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
             FileFilter filter = new WildcardFileFilter(keywordString, caseSensitive);
 
             // If folders are excluded, add a regular file IMAGE_FILTER and chain it with an AndFileFilter
-            if(!includeFolders) {
+            if (!includeFolders) {
                 filter = new AndFileFilter(
                     new AttributeFileFilter(FileAttribute.FILE),
                     filter

@@ -23,10 +23,8 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.ChangeFileAttributesJob;
-import com.mucommander.text.CustomDateFormat;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
-import com.mucommander.ui.action.impl.ChangeDateAction;
 import com.mucommander.ui.action.impl.ChangeReplicationAction;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.layout.FluentPanel;
@@ -41,9 +39,6 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Date;
 
 /**
  * This dialog allows the user to change the date of the currently selected/marked file(s). By default, the date is now

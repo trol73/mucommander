@@ -169,19 +169,14 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
                 // Close connection in a separate thread as I/O can lock.
                 // Todo: Add a confirmation dialog if the connection is active as it will stop whatever the connection is currently doing
-                new Thread(){
-                    @Override
-                    public void run() {
-                        connHandler.closeConnection();
-                    }
-                }.start();
+                new Thread(connHandler::closeConnection).start();
 
                 // Remove connection from the list
                 connections.remove(selectedIndex);
                 connectionList.setSelectedIndex(Math.min(selectedIndex, connections.size()));
                 connectionList.repaint();
 
-                // Disable contextual butons if there are no more connections
+                // Disable contextual buttons if there are no more connections
                 if (connections.isEmpty()) {
                     disconnectButton.setEnabled(false);
                     goToButton.setEnabled(false);

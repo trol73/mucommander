@@ -166,7 +166,7 @@ public class DialogToolkit {
     }
 
     /**
-     * Returns the specified component's toplevel <code>Frame</code> or
+     * Returns the specified component's top level <code>Frame</code> or
      * <code>Dialog</code>.
      *
      * @param parentComponent the <code>Component</code> to check for a

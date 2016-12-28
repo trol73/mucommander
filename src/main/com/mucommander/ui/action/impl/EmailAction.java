@@ -22,11 +22,15 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.job.SendMailJob;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.action.*;
+import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.EmailFilesDialog;
+import com.mucommander.ui.dialog.pref.general.GeneralPreferencesDialog;
 import com.mucommander.ui.main.MainFrame;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -38,7 +42,7 @@ import java.util.Map;
 @InvokesDialog
 public class EmailAction extends SelectedFilesAction {
 
-    public EmailAction(MainFrame mainFrame, Map<String,Object> properties) {
+    EmailAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));
@@ -46,6 +50,16 @@ public class EmailAction extends SelectedFilesAction {
 
     @Override
     public void performAction(FileSet files) {
+        // Notifies the user that mail preferences are not set and brings the preferences dialog
+        if (!SendMailJob.mailPreferencesSet()) {
+            InformationDialog.showErrorDialog(mainFrame, Translator.get("email_dialog.prefs_not_set"), Translator.get("email_dialog.prefs_not_set_title"));
+            SwingUtilities.invokeLater(() -> {
+                GeneralPreferencesDialog preferencesDialog = GeneralPreferencesDialog.getDialog();
+                preferencesDialog.setActiveTab(GeneralPreferencesDialog.MAIL_TAB);
+                preferencesDialog.showDialog();
+            });
+            return;
+        }
         new EmailFilesDialog(mainFrame, files).showDialog();
     }
 

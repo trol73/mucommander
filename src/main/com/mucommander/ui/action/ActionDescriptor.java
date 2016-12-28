@@ -18,10 +18,7 @@
 
 package com.mucommander.ui.action;
 
-import com.mucommander.ui.main.MainFrame;
-
 import javax.swing.*;
-import java.util.Map;
 
 /**
  * Each MuAction is registered with an object of ActionDescriptor type

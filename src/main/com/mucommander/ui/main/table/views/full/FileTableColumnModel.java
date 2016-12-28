@@ -111,7 +111,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         }
 
         // Sorts the columns.
-        Collections.sort(columns, new ColumnSorter(conf));
+        columns.sort(new ColumnSorter(conf));
     }
 
 

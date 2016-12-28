@@ -68,9 +68,10 @@ public class MarkExtensionAction extends MuAction {
     // - Property names ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Key that controls which extension should be matched. */
-    public static final String EXTENSION_PROPERTY_KEY      = "extension";
+    private static final String EXTENSION_PROPERTY_KEY      = "extension";
     /** Key that controls whether extension matching should be done in a case sensitive fashion (defaults to false). */
-    public static final String CASE_SENSITIVE_PROPERTY_KEY = "case_sensitive";
+
+    private static final String CASE_SENSITIVE_PROPERTY_KEY = "case_sensitive";
 
 
 
@@ -81,7 +82,7 @@ public class MarkExtensionAction extends MuAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public MarkExtensionAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -94,15 +95,17 @@ public class MarkExtensionAction extends MuAction {
      * @return the extension that was configured in the action's properties, <code>null</code> if none.
      */
     private String getExtension() {
-        Object o;
+        Object o = getValue(EXTENSION_PROPERTY_KEY);
 
         // If the key wasn't set, return null.
-        if((o = getValue(EXTENSION_PROPERTY_KEY)) == null)
+        if (o == null) {
             return null;
+        }
 
         // If the value is a string, return it.
-        if(o instanceof String)
-            return (String)o;
+        if (o instanceof String) {
+            return (String) o;
+        }
 
         // Otherwise, return null.
         return null;
@@ -187,7 +190,7 @@ public class MarkExtensionAction extends MuAction {
         boolean mark = !tableModel.isFileMarked(fileTable.getSelectedFileIndex());
 
         // Goes through all files in the active table, marking all that match 'IMAGE_FILTER'.
-        for(int i = tableModel.getFirstMarkableIndex(); i < filesCount; i++) {
+        for (int i = tableModel.getFirstMarkableIndex(); i < filesCount; i++) {
             if (filter.accept(tableModel.getCachedFileAt(i))) {
                 tableModel.setFileMarked(i, mark);
             }

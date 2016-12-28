@@ -41,7 +41,7 @@ public class OtherTextComponentCompletion extends CompletionType {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtherTextComponentCompletion.class);
 	
 	private class ShowingThreadImp extends ShowingThread {
-    	public ShowingThreadImp(int delay) {
+    	ShowingThreadImp(int delay) {
     		super(delay);
     	}
 

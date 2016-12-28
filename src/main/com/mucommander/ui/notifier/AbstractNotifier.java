@@ -55,7 +55,7 @@ public abstract class AbstractNotifier {
 
     static {
         // Finds and creates a suitable AbstractNotifier instance for the platform, if there is one
-        if(OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent())
             notifier = new GrowlNotifier();
         else if(JavaVersion.JAVA_1_6.isCurrentOrHigher() && SystemTray.isSupported())
             notifier = new SystemTrayNotifier();
@@ -111,20 +111,15 @@ public abstract class AbstractNotifier {
      * @param description the description of the notification to display
      */
     public void displayBackgroundNotification(final NotificationType notificationType, final String title, final String description) {
-        SwingUtilities.invokeLater(
-            new Thread() {
-                @Override
-                public void run() {
-                    if(WindowManager.getCurrentMainFrame().isAncestorOfActiveWindow()) {
-                    	LOGGER.debug("Ignoring notification, application is in foreground");
-                        return;
-                    }
-
-                    if(!displayNotification(notificationType, title, description))
-                    	LOGGER.debug("Notification failed to be displayed");
-                }
+        SwingUtilities.invokeLater(() -> {
+            if (WindowManager.getCurrentMainFrame().isAncestorOfActiveWindow()) {
+                LOGGER.debug("Ignoring notification, application is in foreground");
+                return;
             }
-        );
+
+            if (!displayNotification(notificationType, title, description))
+                LOGGER.debug("Notification failed to be displayed");
+        });
     }
 
 

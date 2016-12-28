@@ -22,7 +22,6 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.PermissionAccesses;
 import com.mucommander.commons.file.PermissionTypes;
 import com.mucommander.commons.file.filter.AbstractFileFilter;
-import com.mucommander.commons.runtime.JavaVersion;
 
 /**
  * Filter on a file's permissions.
@@ -37,28 +36,31 @@ public class PermissionsFileFilter extends AbstractFileFilter implements Permiss
      * @param permission permission that will be checked against as defined in {@link com.mucommander.commons.file.FilePermissions}.
      * @param filter     whether or not the specified permission flag must be set for a file to be accepted.
      */
-    public PermissionsFileFilter(int permission, boolean filter) {
+    PermissionsFileFilter(int permission, boolean filter) {
         this.permission = permission;
-        this.filter     = filter;
+        this.filter = filter;
     }
 
     public boolean accept(AbstractFile file) {
-        if(permission== EXECUTE_PERMISSION && JavaVersion.JAVA_1_5.isCurrentOrLower())
-            return true;
-
-        return filter ? file.getPermissions().getBitValue(USER_ACCESS, permission) : !file.getPermissions().getBitValue(USER_ACCESS, permission);
+//        if(permission== EXECUTE_PERMISSION && JavaVersion.JAVA_1_5.isCurrentOrLower())
+//            return true;
+        return filter == file.getPermissions().getBitValue(USER_ACCESS, permission);
     }
 
     /**
      * Returns the permission that this IMAGE_FILTER will check.
      * @return the permission that this IMAGE_FILTER will check.
      */
-    public int getPermission() {return permission;}
+    public int getPermission() {
+        return permission;
+    }
 
     /**
      * Returns <code>true</code> if files must have the IMAGE_FILTER's permission flag set in order to be accepted.
      * @return <code>true</code> if files must have the IMAGE_FILTER's permission flag set in order to be accepted, <code>false</code> otherwise.
      */
-    public boolean getFilter() {return filter;}
+    public boolean getFilter() {
+        return filter;
+    }
 }
 

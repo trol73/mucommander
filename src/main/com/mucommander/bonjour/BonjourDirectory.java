@@ -158,24 +158,19 @@ public class BonjourDirectory implements ServiceListener {
         getLogger().trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType());
         
         // Ignore if Bonjour has been disabled
-        if(!isActive())
+        if (!isActive()) {
             return;
-
+        }
         // Resolve service info in a separate thread, serviceResolved() will be called once service info has been resolved.
         // Not spawning a thread often leads to service info loss (serviceResolved() not called).
-        new Thread() {
-            @Override
-            public void run() {
-                jmDNS.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName(), SERVICE_RESOLUTION_TIMEOUT);
-            }
-        }.start();
+        new Thread(() -> jmDNS.requestServiceInfo(serviceEvent.getType(), serviceEvent.getName(), SERVICE_RESOLUTION_TIMEOUT)).start();
     }
 
     public void serviceResolved(ServiceEvent serviceEvent) {
         getLogger().trace("name="+serviceEvent.getName()+" type="+serviceEvent.getType()+" info="+serviceEvent.getInfo());
 
         // Ignore if Bonjour has been disabled
-        if(!isActive())
+        if (!isActive())
             return;
 
         // Creates a new BonjourService corresponding to the new service and add it to the list of current Bonjour services
@@ -209,7 +204,7 @@ public class BonjourDirectory implements ServiceListener {
         // the list of current Bonjour services.
         // ServiceInfo should be available in JmDNS's cache.
         ServiceInfo serviceInfo = jmDNS.getServiceInfo(serviceEvent.getType(), serviceEvent.getName()); 
-        if(serviceInfo!=null) {
+        if (serviceInfo != null) {
             if(serviceInfo.getInetAddress() instanceof Inet6Address) {
                 // IPv6 addresses not supported at this time + they seem not to be correctly handled by ServiceInfo
                 getLogger().debug("ignoring IPv6 service");
@@ -220,7 +215,7 @@ public class BonjourDirectory implements ServiceListener {
             // Synchronized to properly handle duplicate calls
             synchronized(instance) {
                 // Note: BonjourService#equals() uses the service's fully qualified name as the discriminator.
-                if(bs!=null && services.contains(bs)) {
+                if (bs != null && services.contains(bs)) {
                     getLogger().debug("BonjourService "+bs+" removed");
                     services.remove(bs);
                 }

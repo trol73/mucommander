@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class MarkSelectedFileAction extends MuAction {
 
-    public MarkSelectedFileAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkSelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -23,9 +23,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.net.MalformedURLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.conf.Configuration;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.conf.MuConfigurations;

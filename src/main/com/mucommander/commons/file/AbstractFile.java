@@ -1793,7 +1793,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * -- {@link #isFileOperationSupported(FileOperation)} can be called to find out if it is. If the operation isn't
      * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.
      *
-     * @return an <code>OuputStream</code> to write the contents of this file
+     * @return an <code>OutputStream</code> to write the contents of this file
      * @throws IOException in any of the cases listed above
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.
@@ -1816,7 +1816,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * -- {@link #isFileOperationSupported(FileOperation)} can be called to find out if it is. If the operation isn't
      * supported, a {@link UnsupportedFileOperation} will be thrown when this method is called.
      *
-     * @return an <code>OuputStream</code> to write the contents of this file
+     * @return an <code>OutputStream</code> to write the contents of this file
      * @throws IOException in any of the cases listed above
      * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
      * or is not implemented.

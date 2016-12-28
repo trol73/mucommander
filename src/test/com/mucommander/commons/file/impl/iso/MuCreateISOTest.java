@@ -18,7 +18,7 @@ import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.google.common.io.Files;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.archiver.ISOArchiver;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -151,11 +151,11 @@ public class MuCreateISOTest {
             random.nextBytes(chars);
             
             PrintWriter pw = new PrintWriter(file);
-            
-            for(int i = 0; i < chars.length; i++){
-                //Since java use signed bytes, add 128 in order to 
+
+            for (byte aChar : chars) {
+                //Since java use signed bytes, add 128 in order to
                 //get a byte range from 0 to 255
-                pw.write(chars[i] + 128);
+                pw.write(aChar + 128);
             }
             pw.flush();
             pw.close();

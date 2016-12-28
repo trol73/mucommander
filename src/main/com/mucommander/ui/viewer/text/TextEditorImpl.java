@@ -52,10 +52,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -101,10 +98,12 @@ class TextEditorImpl implements ThemeListener {
                 }
                 if (textArea.isEditable()) {
                     ImageIcon icon = MuAction.getStandardIcon(EditAction.class);
-                    EditorRegistrar.createEditorFrame(frame.getMainFrame(), selectedFile, icon.getImage(), (fileFrame -> fileFrame.returnFocusTo(frame)));
+                    Image img = icon == null ? null : icon.getImage();
+                    EditorRegistrar.createEditorFrame(frame.getMainFrame(), selectedFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
                 } else {
                     ImageIcon icon = MuAction.getStandardIcon(ViewAction.class);
-                    ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedFile, icon.getImage(), (fileFrame -> fileFrame.returnFocusTo(frame)));
+                    Image img = icon == null ? null : icon.getImage();
+                    ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
                 }
                 return;
             }
@@ -364,7 +363,7 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 
-    void findMore(boolean forward) {
+    private void findMore(boolean forward) {
         if (searchContext == null) {
             beep();
             return;
@@ -656,7 +655,7 @@ class TextEditorImpl implements ThemeListener {
         return statusBar;
     }
 
-    public void setStatusBar(StatusBar statusBar) {
+    void setStatusBar(StatusBar statusBar) {
         this.statusBar = statusBar;
     }
 
@@ -667,7 +666,7 @@ class TextEditorImpl implements ThemeListener {
         }
     }
 
-    void setStatusMessage(String message) {
+    private void setStatusMessage(String message) {
         if (getStatusBar() != null) {
             getStatusBar().setStatusMessage(message);
         }
@@ -679,20 +678,15 @@ class TextEditorImpl implements ThemeListener {
         // the end of the file is reached, and we don't want those beeps to played one after the other as to:
         // 1/ not lock the event thread
         // 2/ have those beeps to end rather sooner than later
-        new Thread() {
-            @Override
-            public void run() {
-                Toolkit.getDefaultToolkit().beep();
-            }
-        }.start();
+        new Thread(() -> Toolkit.getDefaultToolkit().beep()).start();
     }
 
 
-    public void setupSearchContext(String searchStr) {
+    void setupSearchContext(String searchStr) {
         searchContext = new SearchContext(searchStr);
     }
 
-    public void prepareForEdit(AbstractFile file) {
+    void prepareForEdit(AbstractFile file) {
         fileLocation = file.getParent().getAbsolutePath();
     }
 

@@ -379,12 +379,7 @@ public abstract class MuAction extends AbstractAction {
         // Discard this event while in 'no events mode'
         if (!(mainFrame.getNoEventsMode() && honourNoEventsMode())) {
             if (performActionInSeparateThread()) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        performAction();
-                    }
-                }.start();
+                new Thread(this::performAction).start();
             } else {
                 performAction();
             }

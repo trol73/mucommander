@@ -19,10 +19,7 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.FindFileDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -34,9 +31,10 @@ import java.util.Map;
  * Find File action
  * @author Oleg Trifonov
  */
+@InvokesDialog
 public class FindFileAction extends ParentFolderAction {
 
-    public FindFileAction(MainFrame mainFrame, Map<String, Object> properties) {
+    FindFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

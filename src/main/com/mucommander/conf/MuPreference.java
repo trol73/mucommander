@@ -102,7 +102,7 @@ public enum MuPreference {
 
     private String label;
 	
-	private MuPreference(String label) {
+	MuPreference(String label) {
 		this.label = label;
 	}
 	

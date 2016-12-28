@@ -239,6 +239,9 @@ public class IconManager {
      * @return an icon made of the specified icon and some transparent space around it
      */
     public static ImageIcon getPaddedIcon(ImageIcon icon, Insets insets) {
+        if (icon instanceof RetinaImageIcon) {
+            return RetinaImageIcon.buildPaddedIcon(icon, insets);
+        }
         BufferedImage bi = new BufferedImage(
                 icon.getIconWidth() + insets.left + insets.right,
                 icon.getIconHeight() + insets.top + insets.bottom,

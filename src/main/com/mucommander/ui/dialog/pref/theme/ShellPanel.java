@@ -29,8 +29,6 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.theme.ThemeData;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;

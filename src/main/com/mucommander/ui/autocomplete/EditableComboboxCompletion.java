@@ -38,13 +38,13 @@ public class EditableComboboxCompletion extends CompletionType {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EditableComboboxCompletion.class);
 	
 	private class ShowingThreadImp extends ShowingThread {
-    	public ShowingThreadImp(int delay) {
+    	ShowingThreadImp(int delay) {
     		super(delay);
     	}
 
 		@Override
         void showAutocompletionPopup() {
-	        if (autocompletedtextComp.isShowing() && autocompletedtextComp.isEnabled() && updateListData(list)){
+	        if (autocompletedtextComp.isShowing() && autocompletedtextComp.isEnabled() && updateListData(list)) {
 					            
 	            list.setVisibleRowCount(Math.min(list.getModel().getSize() ,VISIBLE_ROW_COUNT));
 	            

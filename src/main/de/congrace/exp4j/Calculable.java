@@ -9,10 +9,12 @@ package de.congrace.exp4j;
 public interface Calculable {
 	/**
 	 * calculate the result of the expression
-	 * 
+	 *
 	 * @return the result of the calculation
 	 */
-	public double calculate();
+	default double calculate() {
+		return 0;
+	}
 
 	/**
 	 * calculate the result of the expression
@@ -22,14 +24,14 @@ public interface Calculable {
 	 *            the {@link ExpressionBuilder} used to construct this {@link Calculable} instance
 	 * @return the result of the calculation
 	 */
-	public double calculate(double... variableValues);
+	double calculate(double... variableValues);
 
 	/**
 	 * return the expression in reverse polish postfix notation
 	 * 
 	 * @return the expression used to construct this {@link Calculable}
 	 */
-	public String getExpression();
+	String getExpression();
 
 	/**
 	 * set a variable value for the calculation
@@ -39,5 +41,5 @@ public interface Calculable {
 	 * @param value
 	 *            the value of the variable
 	 */
-	public void setVariable(String name, double value);
+	void setVariable(String name, double value);
 }

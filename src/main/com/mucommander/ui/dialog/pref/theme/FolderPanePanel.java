@@ -87,7 +87,7 @@ class FolderPanePanel extends ThemeEditorPanel {
      * Creates the 'general' theme.
      */
     private JPanel createGeneralPanel(FontChooser chooser) {
-        ProportionalGridPanel panel = new ProportionalGridPanel(4);;
+        ProportionalGridPanel panel = new ProportionalGridPanel(4);
 
         // Initialises the quicksearch panel.
         addLabelRow(panel);

@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;

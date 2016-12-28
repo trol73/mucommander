@@ -33,7 +33,6 @@ import com.sshtools.sftp.SftpSubsystemChannel;
 import com.sshtools.ssh.*;
 import com.sshtools.ssh.components.SshKeyPair;
 import com.sshtools.ssh2.*;
-import com.sshtools.ssh.components.SshPrivateKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

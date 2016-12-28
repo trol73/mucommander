@@ -172,19 +172,8 @@ public class VSphereFile extends ProtocolFile implements
 			fixPathInVmIfNeeded(connHandler);
 
 			checkAttributues(connHandler);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (URISyntaxException e) {
+		} catch (RuntimeFaultFaultMsg | FileFaultFaultMsg | GuestOperationsFaultFaultMsg | TaskInProgressFaultMsg |
+				InvalidPropertyFaultMsg | URISyntaxException | InvalidStateFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -198,7 +187,7 @@ public class VSphereFile extends ProtocolFile implements
 		}
 	}
 
-	public VSphereFile(FileURL url, VSphereFile related)
+	private VSphereFile(FileURL url, VSphereFile related)
 			throws URISyntaxException, IOException, RuntimeFaultFaultMsg,
 			InvalidPropertyFaultMsg, FileFaultFaultMsg,
 			GuestOperationsFaultFaultMsg, InvalidStateFaultMsg,
@@ -501,21 +490,8 @@ public class VSphereFile extends ProtocolFile implements
 
 		try {
 			parent = new VSphereFile(fileURL.getParent(), this);
-		} catch (URISyntaxException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		} catch (RuntimeFaultFaultMsg e) {
-			return null;
-		} catch (InvalidPropertyFaultMsg e) {
-			return null;
-		} catch (FileFaultFaultMsg e) {
-			return null;
-		} catch (GuestOperationsFaultFaultMsg e) {
-			return null;
-		} catch (InvalidStateFaultMsg e) {
-			return null;
-		} catch (TaskInProgressFaultMsg e) {
+		} catch (URISyntaxException | IOException | InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | InvalidStateFaultMsg
+				| TaskInProgressFaultMsg | FileFaultFaultMsg | GuestOperationsFaultFaultMsg e) {
 			return null;
 		}
 		return parent;
@@ -670,17 +646,7 @@ public class VSphereFile extends ProtocolFile implements
 					.getVimPort()
 					.makeDirectoryInGuest(getFileManager(connHandler), vm,
 							credentials, getPathInVm(), false);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
+		} catch (FileFaultFaultMsg | GuestOperationsFaultFaultMsg | RuntimeFaultFaultMsg | InvalidStateFaultMsg | InvalidPropertyFaultMsg | TaskInProgressFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -688,8 +654,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException,
-			UnsupportedFileOperationException {
+	public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -707,17 +672,7 @@ public class VSphereFile extends ProtocolFile implements
 			URL website = new URL(fileDlUrl);
 			return website.openStream();
 
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
+		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg | TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -758,11 +713,7 @@ public class VSphereFile extends ProtocolFile implements
 
 			copyFileToRemote(getPathInVm(), in, length, connHandler,
 					fileManager);
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (IOException e) {
+		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | IOException e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -833,17 +784,8 @@ public class VSphereFile extends ProtocolFile implements
 
 			parseResponse(conn);
 
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
+		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg
+				| TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
 			translateandLogException(e);
 		}
 
@@ -858,8 +800,7 @@ public class VSphereFile extends ProtocolFile implements
 		}
 
 		if (responseCode != 200) {
-			throw new IOException("Failed to copy file using vsphere: "
-					+ message);
+			throw new IOException("Failed to copy file using vsphere: " + message);
 		}
 	}
 
@@ -1017,17 +958,7 @@ public class VSphereFile extends ProtocolFile implements
 								getPathInVm(),
 								((VSphereFile) destFile).getPathInVm(), true);
 			}
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
+		} catch (FileFaultFaultMsg | GuestOperationsFaultFaultMsg | RuntimeFaultFaultMsg | InvalidStateFaultMsg | InvalidPropertyFaultMsg | TaskInProgressFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -1043,8 +974,7 @@ public class VSphereFile extends ProtocolFile implements
 
 	@Override
 	@UnsupportedFileOperation
-	public void copyRemotelyTo(AbstractFile destFile) throws IOException,
-			UnsupportedFileOperationException {
+	public void copyRemotelyTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
 		throw new UnsupportedFileOperationException(FileOperation.COPY_REMOTELY);
 	}
 
@@ -1058,8 +988,7 @@ public class VSphereFile extends ProtocolFile implements
 
 	@Override
 	@UnsupportedFileOperation
-	public long getTotalSpace() throws IOException,
-			UnsupportedFileOperationException {
+	public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
 
 		throw new UnsupportedFileOperationException(
 				FileOperation.GET_TOTAL_SPACE);

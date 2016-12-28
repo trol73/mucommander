@@ -20,7 +20,6 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.ui.main.statusbar.FileWindowsListButton;
 import org.fife.ui.StatusBarPanel;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import java.awt.Color;

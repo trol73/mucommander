@@ -62,24 +62,21 @@ public abstract class AbstractProcess {
         // under MAC OS X.
         // Using a separate thread allows muCommander to continue working properly even
         // when that occurs.
-        new Thread() {
-            @Override
-            public void run() {
-                // Closes the process' streams.
-            	LOGGER.debug("Destroying process...");
-                stdoutMonitor.stopMonitoring();
-                if (stderrMonitor != null) {
-                    stderrMonitor.stopMonitoring();
-                }
-
-                // Destroys the process.
-                try {
-                    destroyProcess();
-                } catch(IOException e) {
-                	LOGGER.debug("IOException caught", e);
-                }
+        new Thread(() -> {
+            // Closes the process' streams.
+            LOGGER.debug("Destroying process...");
+            stdoutMonitor.stopMonitoring();
+            if (stderrMonitor != null) {
+                stderrMonitor.stopMonitoring();
             }
-        }.start();
+
+            // Destroys the process.
+            try {
+                destroyProcess();
+            } catch(IOException e) {
+                LOGGER.debug("IOException caught", e);
+            }
+        }).start();
     }
 
     public void waitMonitoring() throws InterruptedException {
@@ -96,7 +93,7 @@ public abstract class AbstractProcess {
      * @param listener if non <code>null</code>, <code>listener</code> will receive updates about the process' event.
      * @param encoding encoding that should be used by the process' stdout and stderr streams.
      */
-    public final void startMonitoring(ProcessListener listener, String encoding) throws IOException {
+    final void startMonitoring(ProcessListener listener, String encoding) throws IOException {
         // Only monitors stdout if the process uses merged streams.
         if (usesMergedStreams()) {
         	LOGGER.debug("Starting process merged output monitor...");

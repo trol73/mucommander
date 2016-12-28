@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 

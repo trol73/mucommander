@@ -64,10 +64,10 @@ public class FileIcons {
     public final static String USE_SYSTEM_ICONS_ALWAYS = "always";
 
     /** Default policy for system icons */
-    public final static String DEFAULT_SYSTEM_ICONS_POLICY = USE_SYSTEM_ICONS_APPLICATIONS;
+    private final static String DEFAULT_SYSTEM_ICONS_POLICY = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? USE_SYSTEM_ICONS_ALWAYS : USE_SYSTEM_ICONS_APPLICATIONS;
 
     /** Default icon scale factor (no rescaling) */
-    public final static float DEFAULT_SCALE_FACTOR = 1.0f;
+    private final static float DEFAULT_SCALE_FACTOR = 1.0f;
 
     /** Base width and height of icons for a scale factor of 1 */
     private final static int BASE_ICON_DIMENSION = 16;
@@ -88,7 +88,7 @@ public class FileIcons {
     private static Dimension iconDimension = new Dimension((int)(BASE_ICON_DIMENSION * DEFAULT_SCALE_FACTOR), (int)(BASE_ICON_DIMENSION * DEFAULT_SCALE_FACTOR));
 
 
-    /**
+    /*
      * Initializes the system and custom file icon providers.
      */
     static {
@@ -157,7 +157,7 @@ public class FileIcons {
      * @param file the file for which an icon is to be returned
      * @return a custom icon for the given file
      */
-    public static Icon getCustomFileIcon(AbstractFile file) {
+    private static Icon getCustomFileIcon(AbstractFile file) {
         return getCustomFileIcon(file, iconDimension);
     }
 
@@ -171,7 +171,7 @@ public class FileIcons {
      * @return a custom icon for the given file
      * @see #getCustomFileIconProvider()
      */
-    public static Icon getCustomFileIcon(AbstractFile file, Dimension iconDimension) {
+    private static Icon getCustomFileIcon(AbstractFile file, Dimension iconDimension) {
         return getFileProviderIcon(customFileIconProvider, file, iconDimension);
     }
 
@@ -196,7 +196,7 @@ public class FileIcons {
      * @param iconDimension the icon's dimension
      * @return a system icon for the given file
      */
-    public static Icon getSystemFileIcon(AbstractFile file, Dimension iconDimension) {
+    private static Icon getSystemFileIcon(AbstractFile file, Dimension iconDimension) {
         return getFileProviderIcon(systemFileIconProvider, file, iconDimension);
     }
 
@@ -231,7 +231,7 @@ public class FileIcons {
      *
      * @return the FileIconProvider instance that provides 'custom' file icons.
      */
-    public static FileIconProvider getCustomFileIconProvider() {
+    private static FileIconProvider getCustomFileIconProvider() {
         return customFileIconProvider;
     }
 
@@ -240,7 +240,7 @@ public class FileIcons {
      *
      * @param fip the FileIconProvider instance that provides 'custom' file icons
      */
-    public static void setCustomFileIconProvider(FileIconProvider fip) {
+    private static void setCustomFileIconProvider(FileIconProvider fip) {
         customFileIconProvider = fip;
     }
 
@@ -258,7 +258,7 @@ public class FileIcons {
      *
      * @param fip the FileIconProvider instance that provides 'custom' file icons
      */
-    public static void setSystemFileIconProvider(FileIconProvider fip) {
+    private static void setSystemFileIconProvider(FileIconProvider fip) {
         systemFileIconProvider = fip;
     }
 

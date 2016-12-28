@@ -28,7 +28,6 @@ import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.BatchRenameAction.Descriptor;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;

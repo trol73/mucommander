@@ -18,10 +18,7 @@
 
 package com.mucommander.ui.icon;
 
-import com.mucommander.bookmark.Bookmark;
-import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.icon.FileIconProvider;
 

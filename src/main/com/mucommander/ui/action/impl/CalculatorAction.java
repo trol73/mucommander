@@ -29,9 +29,10 @@ import java.util.Map;
  * Created on 04/06/14.
  * @author Oleg Trifonov
  */
+@InvokesDialog
 public class CalculatorAction extends MuAction {
 
-    public CalculatorAction(MainFrame mainFrame, Map<String, Object> properties) {
+    CalculatorAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

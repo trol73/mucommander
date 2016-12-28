@@ -25,6 +25,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -178,7 +179,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Creates a new appearance panel with the specified parent.
      * @param parent dialog in which this panel is placed.
      */
-    public AppearancePanel(PreferencesDialog parent) {
+    AppearancePanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.appearance_tab"));
         initUI();
 
@@ -469,19 +470,19 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @return the system icons panel.
      */
     private JPanel createSystemIconsPanel() {
-        /* 'Use system file icons' combo box */
+        // 'Use system file icons' combo box
         this.useSystemFileIconsComboBox = new PrefComboBox<String>() {
 			public boolean hasChanged() {
 				String systemIconsPolicy;
-				switch(useSystemFileIconsComboBox.getSelectedIndex()) {
-				case 0:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
-					break;
-				case 1:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
-					break;
-				default:
-					systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
+				switch (useSystemFileIconsComboBox.getSelectedIndex()) {
+                    case 0:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
+                        break;
+                    case 1:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
+                        break;
+                    default:
+                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
 				}
 				return !systemIconsPolicy.equals(getVariable(USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
 			}
@@ -1109,7 +1110,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
          * Creates a new extension file IMAGE_FILTER that will match files with the specified extension.
          * @param extension extension to match.
          */
-        public ExtensionFileFilter(String extension, String description) {
+        ExtensionFileFilter(String extension, String description) {
             this.extension   = extension;
             this.description = description;
         }
@@ -1118,7 +1119,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
          * Returns <code>true</code> if the specified file should be displayed in the chooser.
          */
         @Override
-        public boolean accept(java.io.File file) {
+        public boolean accept(File file) {
             // Directories are always displayed.
             if (file.isDirectory()) {
                 return true;

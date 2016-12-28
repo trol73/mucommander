@@ -190,13 +190,12 @@ public class CredentialsManager {
             credentialsFile = getCredentialsFile();
             CredentialsWriter.write(out = new BackupOutputStream(credentialsFile));
             saveNeeded = false;
-        }
-        finally {
+        } finally {
             if (out != null) {
                 // TODO autoclosable
                 try {
                     out.close();
-                } catch(Exception e) {}
+                } catch(Exception ignore) {}
             }
         }
 

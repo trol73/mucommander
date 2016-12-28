@@ -84,10 +84,11 @@ public class SystemFileFilter extends AbstractFileFilter {
     public boolean accept(AbstractFile file) {
         String path = file.getAbsolutePath(false);
 
-        int nbSystemFolders = SYSTEM_FOLDERS.length;
-        for(int i=0; i<nbSystemFolders; i++)
-            if(path.equals(SYSTEM_FOLDERS[i]))
+        for (String SYSTEM_FOLDER : SYSTEM_FOLDERS) {
+            if (path.equals(SYSTEM_FOLDER)) {
                 return false;
+            }
+        }
 
         return true;
     }

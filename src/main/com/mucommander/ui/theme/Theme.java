@@ -117,22 +117,25 @@ public class Theme extends ThemeData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null) {
+            return false;
+        }
+		if (getClass() != obj.getClass()) {
+            return false;
+        }
 		Theme other = (Theme) obj;
 		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
+			if (other.name != null) {
+                return false;
+            }
+		} else if (!name.equals(other.name)) {
+            return false;
+        }
+        return type == other.type;
+    }
 
 	// - Data retrieval ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
@@ -252,7 +255,9 @@ public class Theme extends ThemeData {
      * Sets this theme's name.
      * @param name theme's name.
      */
-    void setName(String name) {this.name = name;}
+    void setName(String name) {
+        this.name = name;
+    }
 
 
 
@@ -267,9 +272,18 @@ public class Theme extends ThemeData {
      * Returns the theme's name.
      * @return the theme's name.
      */
-    public String toString() {return getName();}
-    private static void addThemeListener(ThemeListener listener) {listeners.put(listener, null);}
-    private static void removeThemeListener(ThemeListener listener) {listeners.remove(listener);}
+    public String toString() {
+        return getName();
+    }
+
+    private static void addThemeListener(ThemeListener listener) {
+        listeners.put(listener, null);
+    }
+
+    private static void removeThemeListener(ThemeListener listener) {
+        listeners.remove(listener);
+    }
+
     private static void triggerFontEvent(FontChangedEvent event) {
         for (ThemeListener listener : listeners.keySet()) {
             listener.fontChanged(event);
@@ -285,7 +299,7 @@ public class Theme extends ThemeData {
     private class DefaultValuesListener implements ThemeListener {
         private Theme theme;
 
-        public DefaultValuesListener() {}
+        DefaultValuesListener() {}
 
         public void setTheme(Theme theme) {this.theme = theme;}
 

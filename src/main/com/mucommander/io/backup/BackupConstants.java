@@ -24,5 +24,5 @@ package com.mucommander.io.backup;
  */
 interface BackupConstants {
     /** Character to add suffix file names with in order to mark them as backup. */
-    static final char BACKUP_SUFFIX = '~';
+    char BACKUP_SUFFIX = '~';
 }

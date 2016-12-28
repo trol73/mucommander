@@ -46,9 +46,9 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
 
     // - Dimensions -------------------------------------------------------------
     // --------------------------------------------------------------------------
-    /** Dialog's minimum dimensions. */
+    /* Dialog's minimum dimensions. */
 //    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580, 300);
-    /** Dialog's maximum dimensions. */
+    /* Dialog's maximum dimensions. */
 //    private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 800);
 
 
@@ -62,10 +62,12 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     public static final int FOLDERS_TAB    = 1;
     /** Identifier of the 'appearance' tab. */
     public static final int APPEARANCE_TAB = 2;
+    /** Identifier of the 'shortcuts' tab. */
+    public static final int SHORTCUTS_TAB = 3;
     /** Identifier of the 'mail' tab. */
-    public static final int MAIL_TAB       = 3;
+    public static final int MAIL_TAB       = 4;
     /** Identifier of the 'misc' tab. */
-    public static final int MISC_TAB       = 4;
+    public static final int MISC_TAB       = 5;
 
 
 

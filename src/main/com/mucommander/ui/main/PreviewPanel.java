@@ -126,9 +126,7 @@ public class PreviewPanel extends JPanel {
                 viewer.open(file);
                 add(viewer);
             }
-        } catch (UserCancelledException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (UserCancelledException | IOException e) {
             e.printStackTrace();
         }
     }

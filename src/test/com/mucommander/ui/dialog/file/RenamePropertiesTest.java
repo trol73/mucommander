@@ -5,7 +5,7 @@ import com.mucommander.commons.file.FileFactory;
 import java.io.File;
 import java.io.IOException;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
 public class RenamePropertiesTest {

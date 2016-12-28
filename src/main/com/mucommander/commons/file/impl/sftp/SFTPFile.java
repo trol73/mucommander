@@ -21,7 +21,6 @@ import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.connection.ConnectionHandler;
 import com.mucommander.commons.file.connection.ConnectionPool;
 import com.mucommander.commons.io.*;
-import com.sshtools.sftp.SftpFileAttributes;
 import com.sshtools.sftp.*;
 import com.sshtools.ssh.SshException;
 import com.sshtools.util.UnsignedInteger32;

@@ -17,14 +17,14 @@ public class RemoteFile {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         if (o == null || getClass() != o.getClass()) return false;
 
         RemoteFile that = (RemoteFile) o;
 
-        if (!path.equals(that.path)) return false;
-
-        return true;
+        return path.equals(that.path);
     }
 
     @Override

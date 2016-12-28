@@ -82,18 +82,6 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
 	
     public EmailFilesDialog(MainFrame mainFrame, FileSet files) {
         super(mainFrame, ActionProperties.getActionLabel(EmailAction.Descriptor.ACTION_ID), files);
-
-        // Notifies the user that mail preferences are not set and brings the preferences dialog 
-        if(!SendMailJob.mailPreferencesSet()) {
-            showErrorDialog(Translator.get("email_dialog.prefs_not_set"), Translator.get("email_dialog.prefs_not_set_title"));
-	
-            GeneralPreferencesDialog preferencesDialog = GeneralPreferencesDialog.getDialog();
-            preferencesDialog.setActiveTab(GeneralPreferencesDialog.MAIL_TAB);
-            preferencesDialog.showDialog();
-			
-            return;
-        }
-		
 		
         try {
             // Figures out which files to send and calculates the number of files and the number of bytes

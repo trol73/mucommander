@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.main.toolbar;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;

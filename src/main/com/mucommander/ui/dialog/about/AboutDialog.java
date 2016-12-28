@@ -82,11 +82,11 @@ public class AboutDialog extends FocusDialog implements ActionListener {
     // - UI components ----------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Button that closes the dialog. */
-    private JButton     okButton;
-    /** Button that opens muCommander's homepage in a browser. */
-    private JButton     homeButton;
-    /** Button that opens the muCommander's license. */
-    private JButton     licenseButton;
+    private JButton btnOk;
+    /** Button that opens trolCommander's homepage in a browser. */
+    private JButton btnHome;
+    /** Button that opens the trolCommander's license. */
+    private JButton btnLicense;
     /** Panel in which all the textual information is displayed. */
     private JScrollPane textPanel;
 
@@ -113,8 +113,8 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         pack();
 
         // Makes OK the default action.
-        setInitialFocusComponent(okButton);
-        getRootPane().setDefaultButton(okButton);
+        setInitialFocusComponent(btnOk);
+        getRootPane().setDefaultButton(btnOk);
     }
 
     /**
@@ -133,15 +133,18 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertTitle(doc,          "The trolCommander team");
 
             // Core developers.
-            insertHeader(doc,         "Core developers");
+            insertHeader(doc,         "Developers and contributors");
             insertNormalString(doc,   "Maxence Bernard");
             insertNormalString(doc,   "Arik Hadas");
             insertNormalString(doc,   "Mariusz Jakubowski");
             insertNormalString(doc,   "Nicolas Rinaudo");
-            insertLineBreak(doc);
+            insertNormalString(doc,   "Oleg Trifonov");
+            insertNormalString(doc,   "Ondřej Zima");
+            insertNormalString(doc,   "Martin Kortkamp");
+//            insertLineBreak(doc);
 
             // Contributors.
-            insertHeader(doc,         "Contributors");
+  //          insertHeader(doc,         "Contributors");
             insertNormalString(doc,   "Ivan Baidakov");
             insertNormalString(doc,   "Vassil Dichev");
             insertNormalString(doc,   "Karel Klic");
@@ -152,9 +155,6 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertNormalString(doc,   "Alejandro Scandroli");
             insertNormalString(doc,   "Alexander Yerenkow");
             insertNormalString(doc,   "Johann Schmitz");
-            insertNormalString(doc,   "Oleg Trifonov");
-            insertNormalString(doc,   "Ondřej Zima");
-            insertNormalString(doc,   "Martin Kortkamp");
             insertLineBreak(doc);
 
             // QA
@@ -166,7 +166,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertHeader(doc,         "Translators");
             insertDetailedString(doc, "4X_Pro",              "Russian");
             insertDetailedString(doc, "Roberto Angeletti",   "Italian");
-            insertDetailedString(doc, "Emre Aytaç",          "Turkish");
+            //insertDetailedString(doc, "Emre Aytaç",          "Turkish");
             insertDetailedString(doc, "Tamás Balogh-Walder", "Hungarian");
             insertDetailedString(doc, "Mykola Bilovus",      "Ukrainian");
             insertDetailedString(doc, "ChArLoK_16",          "Arabic");
@@ -320,21 +320,21 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 	}
 
 	private JButton createHomeButton() {
-		homeButton = new JButton(ActionProperties.getActionLabel(GoToWebsiteAction.Descriptor.ACTION_ID));
-		homeButton.addActionListener(this);
-		return homeButton;
+		btnHome = new JButton(ActionProperties.getActionLabel(GoToWebsiteAction.Descriptor.ACTION_ID));
+		btnHome.addActionListener(this);
+		return btnHome;
 	}
 
 	private JButton createLicenseButton() {
-		licenseButton = new JButton(Translator.get("license"));
-		licenseButton.addActionListener(this);
-		return licenseButton;
+		btnLicense = new JButton(Translator.get("license"));
+		btnLicense.addActionListener(this);
+		return btnLicense;
 	}
 
 	private JButton createOkButton() {
-		okButton = new JButton(Translator.get("ok"));
-		okButton.addActionListener(this);
-		return okButton;
+		btnOk = new JButton(Translator.get("ok"));
+		btnOk.addActionListener(this);
+		return btnOk;
 	}
 
 
@@ -346,12 +346,8 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * @param doc document in which to create the styles.
      */
     private static void setStyles(StyledDocument doc) {
-        Style master;
-        Style currentStyle;
-        Font  font;
-
-        master = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-        font   = ThemeManager.getCurrentFont(Theme.FILE_TABLE_FONT);
+        Style master = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+        Font font = ThemeManager.getCurrentFont(Theme.FILE_TABLE_FONT);
 
         // Normal style.
         master = doc.addStyle(STYLE_NORMAL, master);
@@ -365,7 +361,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         doc.setParagraphAttributes(0, 0, master, true);
 
         // Header style.
-        currentStyle = doc.addStyle(STYLE_HEADER, master);
+        Style currentStyle = doc.addStyle(STYLE_HEADER, master);
         StyleConstants.setBold(currentStyle, true);
         StyleConstants.setFontSize(currentStyle, font.getSize() + 2);
         StyleConstants.setForeground(currentStyle, ThemeManager.getCurrentColor(Theme.FOLDER_FOREGROUND_COLOR));
@@ -461,11 +457,11 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * @throws BadLocationException thrown if something wrong happened to the document.
      */
     private static void insertTitle(StyledDocument doc, String string) throws BadLocationException {
-        int   pos;
-        Style style;
+        int pos = doc.getLength();
+        Style style = doc.getStyle(STYLE_TITLE);
 
         string += LINE_BREAK;
-        doc.insertString(pos = doc.getLength(), string, style = doc.getStyle(STYLE_TITLE));
+        doc.insertString(pos, string, style);
         doc.setParagraphAttributes(pos, string.length(), style, true);
         doc.setParagraphAttributes(doc.getLength(), 0, doc.getStyle(STYLE_NORMAL), true);
 
@@ -480,15 +476,15 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * Reacts to validations of the <code>OK</code> or <code>home</code> buttons.
      */
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == okButton)
+        if (e.getSource() == btnOk) {
             dispose();
-        else if(e.getSource() == homeButton) {
+        } else if(e.getSource() == btnHome) {
             try {DesktopManager.browse(new URL(RuntimeConstants.HOMEPAGE_URL));}
             // Ignores errors here as there really isn't anything we can do.
             catch(IOException ignored) {}
-        }
-        else if(e.getSource() == licenseButton)
+        } else if(e.getSource() == btnLicense) {
             new LicenseDialog(this).showDialog();
+        }
     }
 
 
@@ -500,15 +496,10 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * @return a formatted version of muCommander's build date.
      */
     private String getFormatedDate() {
-        StringBuilder buffer;
-
-        buffer = new StringBuilder(RuntimeConstants.BUILD_DATE.substring(0, 4));
-        buffer.append('/');
-        buffer.append(RuntimeConstants.BUILD_DATE.substring(4, 6));
-        buffer.append('/');
-        buffer.append(RuntimeConstants.BUILD_DATE.substring(6, 8));
-
-        return buffer.toString();
+        return RuntimeConstants.BUILD_DATE.substring(0, 4) + '/' +
+                RuntimeConstants.BUILD_DATE.substring(4, 6) +
+                '/' +
+                RuntimeConstants.BUILD_DATE.substring(6, 8);
     }
 
     /**

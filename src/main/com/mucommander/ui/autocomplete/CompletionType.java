@@ -42,17 +42,17 @@ import java.awt.event.MouseListener;
 public abstract class CompletionType {
 		
 	private Completer completer;
-	protected AutocompleterTextComponent autocompletedtextComp;
-    protected DocumentListener documentListener;
-    protected JList list = new JList(); 
+	AutocompleterTextComponent autocompletedtextComp;
+    DocumentListener documentListener;
+    protected JList<String> list = new JList<>();
     protected final JPopupMenu popup = new JPopupMenu();
-    protected ShowingThread showingThread;
+    ShowingThread showingThread;
     
     // Constants:
-    protected final int VISIBLE_ROW_COUNT = 10;
-    protected final int POPUP_DELAY_AT_TEXT_INSERTION = 1500;
-    protected final int POPUP_DELAY_AT_TEXT_DELETION  = 500;
-    protected final int POPUP_DELAY_AFTER_ACCEPTING_LIST_ITEM = 1500;
+    final int VISIBLE_ROW_COUNT = 10;
+    private final int POPUP_DELAY_AT_TEXT_INSERTION = 1500;
+    private final int POPUP_DELAY_AT_TEXT_DELETION  = 500;
+    private final int POPUP_DELAY_AFTER_ACCEPTING_LIST_ITEM = 1500;
     
     /**
      * ShowingThread is an abstract class for threads that show auto-completion popup
@@ -64,10 +64,10 @@ public abstract class CompletionType {
      */
     protected abstract class ShowingThread extends Thread {
     	
-		protected boolean isStopped;
-		protected int delayTime;
+		boolean isStopped;
+		int delayTime;
 		
-		public ShowingThread(int delayTime) {
+		ShowingThread(int delayTime) {
 			isStopped = false;
 			this.delayTime = delayTime;
 		}
@@ -112,7 +112,7 @@ public abstract class CompletionType {
 		abstract void showAutocompletionPopup();
 	}    
     
-    public CompletionType(AutocompleterTextComponent comp, Completer completer) {
+    CompletionType(AutocompleterTextComponent comp, Completer completer) {
     	autocompletedtextComp = comp;
     	this.completer = completer;
 
@@ -165,7 +165,7 @@ public abstract class CompletionType {
      * @param list - Auto-completion popup's list.
      * @return true if the list was updated successfully, false otherwise. 
      */
-    protected boolean updateListData(JList<String> list) {
+    boolean updateListData(JList<String> list) {
     	return completer.updateListData(list, autocompletedtextComp);
     }
  
@@ -175,7 +175,7 @@ public abstract class CompletionType {
      * 
      * @param selected - The selected item from the auto-completion popup's list.
      */
-    protected void updateTextComponent(String selected) {
+    private void updateTextComponent(String selected) {
     	completer.updateTextComponent(selected, autocompletedtextComp);
     }
     
@@ -185,7 +185,7 @@ public abstract class CompletionType {
      * 
      * @param delay - The requested delay (in miliseconds) until the popup appear.
      */
-    protected void createNewShowingThread(int delay) {
+    void createNewShowingThread(int delay) {
     	// stop current showing thread (if exist)
     	if (showingThread != null)
     		showingThread.done();
@@ -213,7 +213,7 @@ public abstract class CompletionType {
 				if (e.getClickCount() == 2) {
 		             int index = list.locationToIndex(e.getPoint());
 		             list.setSelectedIndex(index);
-		             acceptListItem((String) list.getSelectedValue());
+		             acceptListItem(list.getSelectedValue());
 				}
 			}
 
@@ -250,21 +250,21 @@ public abstract class CompletionType {
     /** 
      * Returns true if the auto-completion popup window is visible.
      */
-    protected boolean isPopupListShowing() {
+    boolean isPopupListShowing() {
     	return popup.isShowing();
     }
     
     /** 
      * Returns true if there is a selected item at the auto-completion popup window.
      */
-    protected boolean isItemSelectedAtPopupList() {
+    boolean isItemSelectedAtPopupList() {
     	return popup.isShowing() && list.getSelectedIndex() >= 0;
     }
 
     /** 
      * Selects the first item in the list. 
      */
-    protected void selectFirstValue() {
+    void selectFirstValue() {
     	list.setSelectedIndex(0); 
         list.ensureIndexIsVisible(0);
     }
@@ -272,7 +272,7 @@ public abstract class CompletionType {
     /** 
      * Selects the last item in the list. 
      */
-    protected void selectLastValue() {
+    void selectLastValue() {
     	int lastIndex = list.getModel().getSize() - 1;
     	
     	list.setSelectedIndex(lastIndex); 
@@ -283,13 +283,13 @@ public abstract class CompletionType {
      * Selects the item at (VISIBLE_ROW_COUNT - 1) places after the currently
      * selected item in the list. 
      */
-    protected void selectNextPage() {
+    void selectNextPage() {
     	int si = list.getSelectedIndex();
     	
     	int nextIndex = 0;
-    	if (si >= 0)
-    		nextIndex = Math.min(si + VISIBLE_ROW_COUNT - 1, list.getModel().getSize() - 1);
-    	
+    	if (si >= 0) {
+            nextIndex = Math.min(si + VISIBLE_ROW_COUNT - 1, list.getModel().getSize() - 1);
+        }
     	list.setSelectedIndex(nextIndex); 
         list.ensureIndexIsVisible(nextIndex); 
     }
@@ -298,10 +298,10 @@ public abstract class CompletionType {
      * Selects the item at (VISIBLE_ROW_COUNT - 1) places before the currently
      * selected item in the list. 
      */
-    protected void selectPreviousPage() {
+    void selectPreviousPage() {
     	int si = list.getSelectedIndex(); 
     	 
-        if(si > 0){ 
+        if (si > 0){
         	int nextIndex = Math.max(si - (VISIBLE_ROW_COUNT - 1), 0);
             list.setSelectedIndex(nextIndex); 
             list.ensureIndexIsVisible(nextIndex); 
@@ -311,11 +311,11 @@ public abstract class CompletionType {
     /** 
      * Selects the next item in the list.  It won't change the selection if the 
      * currently selected item is already the last item. 
-     */ 
-    protected void selectNextPossibleValue(){ 
+     */
+    void selectNextPossibleValue(){
         int si = list.getSelectedIndex(); 
  
-        if(si < list.getModel().getSize() - 1){
+        if (si < list.getModel().getSize() - 1) {
         	int nextIndex = si + 1;
             list.setSelectedIndex(nextIndex); 
             list.ensureIndexIsVisible(nextIndex); 
@@ -325,11 +325,11 @@ public abstract class CompletionType {
     /** 
      * Selects the previous item in the list.  It won't change the selection if the 
      * currently selected item is already the first item. 
-     */ 
-    protected void selectPreviousPossibleValue(){ 
+     */
+    void selectPreviousPossibleValue(){
         int si = list.getSelectedIndex(); 
  
-        if(si > 0){ 
+        if (si > 0){
         	int nextIndex = si - 1;
             list.setSelectedIndex(nextIndex); 
             list.ensureIndexIsVisible(nextIndex); 

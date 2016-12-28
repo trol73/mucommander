@@ -77,7 +77,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 	// Area in which tooltip texts and error messages are shown below the table
 	private TooltipBar tooltipBar;
 	
-	public ShortcutsPanel(PreferencesDialog parent) {
+	ShortcutsPanel(PreferencesDialog parent) {
 		super(parent, Translator.get("shortcuts_panel" + ".title"));
 		initUI();
 		setPreferredSize(new Dimension(0, 0));
@@ -304,7 +304,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		private static final int MESSAGE_SHOWING_TIME = 3000;
 		private MessageRemoverThread currentRemoverThread;
 		
-		public TooltipBar() {
+		TooltipBar() {
 			DEFAULT_MESSAGE = Translator.get("shortcuts_panel.default_message");
 			Font tableFont = UIManager.getFont("TableHeader.font");
 			setFont(new Font(tableFont.getName(), Font.BOLD, tableFont.getSize()));
@@ -313,15 +313,15 @@ public class ShortcutsPanel extends PreferencesPanel {
 			setText(DEFAULT_MESSAGE);
 		}
 		
-		public void showActionTooltip(String text) {
+		void showActionTooltip(String text) {
 			setText(lastActionTooltipShown = text == null ? " " : text);
 		}
 		
-		public void showDefaultMessage() {
+		void showDefaultMessage() {
 			setText(DEFAULT_MESSAGE);
 		}
 		
-		public void showErrorMessage(String text) {
+		void showErrorMessage(String text) {
 			setText(text);
 			createMessageRemoverThread();
 		}
@@ -335,7 +335,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		private class MessageRemoverThread extends Thread {
 			private boolean stopped = false;
 			
-			public void neutralize() {
+			void neutralize() {
 				stopped = true;
 			}
 		
@@ -355,7 +355,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 	
 	private class RemoveButton extends JButton implements ListSelectionListener, TableModelListener {
 		
-		public RemoveButton() {
+		RemoveButton() {
 			setEnabled(false);
 			setAction(new AbstractAction(Translator.get("remove")) {
 				

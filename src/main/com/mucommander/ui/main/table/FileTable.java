@@ -1594,32 +1594,29 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     // the filename/date/permission editor
                     if (hasFocus() && System.currentTimeMillis() - focusGainedTime > 100) {
                         // create a new thread and sleep long enough to ensure that this click was not the first of a double click
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                try {
-                                    sleep(800);
-                                } catch (InterruptedException ignore) {}
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(800);
+                            } catch (InterruptedException ignore) {}
 
-                                // Do not execute this block (cancel editing) if:
-                                // - a double click was made in the last second
-                                // - current row changed
-                                // - isEditing() is true which could happen if multiple clicks were made
-                                if ((System.currentTimeMillis() - lastDoubleClickTimestamp) > 1000 && row == currentRow) {
-                                    if (isNameColumn) {
-                                        if (!isEditing()) {
-                                            editCurrentFilename();
-                                        }
-                                    } else if (isDateColumn) {
-                                        ActionManager.performAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID, mainFrame);
-                                    } else if (isPermissionColumn) {
-                                        if (getSelectedFile().getChangeablePermissions().getIntValue() != 0) {
-                                            ActionManager.performAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID, mainFrame);
-                                        }
+                            // Do not execute this block (cancel editing) if:
+                            // - a double click was made in the last second
+                            // - current row changed
+                            // - isEditing() is true which could happen if multiple clicks were made
+                            if ((System.currentTimeMillis() - lastDoubleClickTimestamp) > 1000 && row == currentRow) {
+                                if (isNameColumn) {
+                                    if (!isEditing()) {
+                                        editCurrentFilename();
+                                    }
+                                } else if (isDateColumn) {
+                                    ActionManager.performAction(ChangeDateAction.Descriptor.ACTION_ID, mainFrame);
+                                } else if (isPermissionColumn) {
+                                    if (getSelectedFile().getChangeablePermissions().getIntValue() != 0) {
+                                        ActionManager.performAction(ChangePermissionsAction.Descriptor.ACTION_ID, mainFrame);
                                     }
                                 }
                             }
-                        }.start();
+                        }).start();
                     }
                 }
             }

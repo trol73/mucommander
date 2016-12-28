@@ -128,7 +128,7 @@ public class DesktopManager {
     // - Initialisation --------------------------------------------------
     // -------------------------------------------------------------------
     /**
-     * Prevents instanciation of the class.
+     * Prevents instantiation of the class.
      */
     private DesktopManager() {}
 
@@ -198,7 +198,7 @@ public class DesktopManager {
      * shortcuts...
      * </p>
      * @param install                         whether or not to install desktop specific information.
-     * @throws DesktopInitialisationException if an error occured while initialising desktops.
+     * @throws DesktopInitialisationException if an error occurred while initialising desktops.
      */
     public static void init(boolean install) throws DesktopInitialisationException {
         // Browses desktop from the last registered to the first, to make sure that
@@ -495,7 +495,7 @@ public class DesktopManager {
     // - Mouse management ------------------------------------------------
     // -------------------------------------------------------------------
     /**
-     * Checks whether the specified <code>MouseEvent</code> is a left-click for this destop.
+     * Checks whether the specified <code>MouseEvent</code> is a left-click for this desktop.
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
@@ -512,7 +512,7 @@ public class DesktopManager {
     }
 
     /**
-     * Checks whether the specified <code>MouseEvent</code> is a left-click for this destop.
+     * Checks whether the specified <code>MouseEvent</code> is a left-click for this desktop.
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
@@ -529,7 +529,7 @@ public class DesktopManager {
     }
 
     /**
-     * Checks whether the specified <code>MouseEvent</code> is a left-click for this destop.
+     * Checks whether the specified <code>MouseEvent</code> is a left-click for this desktop.
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>

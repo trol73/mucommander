@@ -21,7 +21,6 @@ package com.mucommander.ui.dialog.pref;
 import com.mucommander.commons.conf.ValueList;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferencesAPI;
 
 import javax.swing.*;
 

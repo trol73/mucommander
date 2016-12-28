@@ -17,10 +17,7 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.commands.EditCommandsDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -31,6 +28,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  * Created on 09/10/14.
  */
+@InvokesDialog
 public class EditCommandsAction extends MuAction {
 
     /**
@@ -40,7 +38,7 @@ public class EditCommandsAction extends MuAction {
      * @param mainFrame  the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      */
-    public EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

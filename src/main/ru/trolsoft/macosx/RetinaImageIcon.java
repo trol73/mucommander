@@ -19,6 +19,7 @@ package ru.trolsoft.macosx;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -100,6 +101,19 @@ public class RetinaImageIcon extends ImageIcon {
 
     public ImageIcon buildDisabledIcon() {
         return new RetinaImageIcon(GrayFilter.createDisabledImage(getImage()));
+    }
+
+    public static ImageIcon buildPaddedIcon(ImageIcon icon, Insets insets) {
+        int scale = IS_RETINA ? 2 : 1;
+        BufferedImage bi = new BufferedImage(
+                scale*icon.getIconWidth() + scale*insets.left + scale*insets.right,
+                scale*icon.getIconHeight() + scale*insets.top + scale*insets.bottom,
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics g = bi.getGraphics();
+        g.drawImage(icon.getImage(), scale*insets.left, scale*insets.top, null);
+
+        return new RetinaImageIcon(bi);
     }
 
 }

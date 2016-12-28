@@ -27,8 +27,6 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.popup.MuActionsPopupMenu;
 import ru.trolsoft.ui.TMenuSeparator;
 
-import javax.swing.JSeparator;
-
 /**
  * Contextual popup menu invoked by FileTable when right-clicking on a file or a group of files.
  *

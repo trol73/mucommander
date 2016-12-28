@@ -24,9 +24,9 @@ package com.mucommander.shell;
  */
 interface ShellHistoryConstants {
     /** Name of the XML file's root element. */
-    static final String ROOT_ELEMENT    = "history";
+    String ROOT_ELEMENT    = "history";
     /** Name of a command element in the XML file. */
-    static final String COMMAND_ELEMENT = "command";
+    String COMMAND_ELEMENT = "command";
     /** Name of the root element's attribute containing the muCommander version that was used to create the shell history file */
-    static final String ATTRIBUTE_VERSION      = "version";
+    String ATTRIBUTE_VERSION      = "version";
 }

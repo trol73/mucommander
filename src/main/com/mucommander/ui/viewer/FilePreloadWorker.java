@@ -56,23 +56,20 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
             publish();
             final PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             if (is instanceof HasProgress) {
-                Thread progressThread = new Thread() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            progress = ((HasProgress) is).getProgress();
+                Thread progressThread = new Thread(() -> {
+                    while (true) {
+                        progress = ((HasProgress) is).getProgress();
+                        publish();
+                        if (progress >= 100 || readException != null || progress < 0) {
+                            progress = -1;
                             publish();
-                            if (progress >= 100 || readException != null || progress < 0) {
-                                progress = -1;
-                                publish();
-                                break;
-                            }
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException ignored) {}
+                            break;
                         }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ignored) {}
                     }
-                };
+                });
                 progressThread.setName("ProgressInputStreamThread");
                 progressThread.start();
 

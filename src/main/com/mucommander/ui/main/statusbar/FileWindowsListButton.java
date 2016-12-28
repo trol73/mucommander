@@ -31,7 +31,6 @@ import javax.swing.SwingUtilities;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
 

@@ -22,7 +22,7 @@ public class PackageManager {
     }
 
     public List<Package> getPackages() throws IOException, JadbException {
-        ArrayList<Package> result = new ArrayList<Package>();
+        ArrayList<Package> result = new ArrayList<>();
         BufferedReader input = null;
         try {
             input = new BufferedReader(new InputStreamReader(device.executeShell("pm", "list", "packages"), Charset.forName("UTF-8")));
@@ -66,10 +66,10 @@ public class PackageManager {
     }
 
     public void install(File apkFile) throws IOException, JadbException {
-        install(apkFile, new ArrayList<String>(0));
+        install(apkFile, new ArrayList<>(0));
     }
 
-    public void installWithOptions(File apkFile, List<? extends InstallOption> options) throws IOException, JadbException {
+    private void installWithOptions(File apkFile, List<? extends InstallOption> options) throws IOException, JadbException {
         List<String> optionsAsStr = new ArrayList<>(options.size());
 
         for(InstallOption installOption : options) {
@@ -110,7 +110,7 @@ public class PackageManager {
 
     public static final InstallOption WITH_FORWARD_LOCK = new InstallOption("-l");
 
-    public static final InstallOption REINSTALL_KEEPING_DATA =
+    private static final InstallOption REINSTALL_KEEPING_DATA =
             new InstallOption("-r");
 
     public static final InstallOption ALLOW_TEST_APK =

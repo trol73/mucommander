@@ -84,33 +84,30 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
         final int[] in = new int[1];
         in[0] = (Integer)entry.getEntryObject();
         final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
-        new Thread() {
-            @Override
-            public void run() {
-                synchronized (SevenZipJBindingROArchiveFile.this) {
-                    try {
-                        final IInArchive sevenZipFile = openInArchive();
-                        sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (inArchive != null) {
-                            try {
-                                inArchive.close();
-                            } catch (SevenZipException e) {
-                                e.printStackTrace();
-                            }
-                        }
+        new Thread(() -> {
+            synchronized (SevenZipJBindingROArchiveFile.this) {
+                try {
+                    final IInArchive sevenZipFile = openInArchive();
+                    sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (inArchive != null) {
                         try {
-                            cbb.getOutputStream().close();
-                        } catch (IOException e) {
+                            inArchive.close();
+                        } catch (SevenZipException e) {
                             e.printStackTrace();
                         }
-                        inArchive = null;
                     }
+                    try {
+                        cbb.getOutputStream().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    inArchive = null;
                 }
             }
-        }.start();
+        }).start();
 
         return cbb.getInputStream();
     }

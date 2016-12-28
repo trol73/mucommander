@@ -36,16 +36,16 @@ public class WebDAVFile extends ProtocolFile {
     private URI PATH;
 
     protected AbstractFile parent;
-    protected boolean parentSet;
+    private boolean parentSet;
 
     private final static String SEPARATOR = "/";
 
-    protected WebDAVFile(FileURL fileURL) throws UnsupportedEncodingException, URISyntaxException {
+    WebDAVFile(FileURL fileURL) throws UnsupportedEncodingException, URISyntaxException {
         super(fileURL);
                
         String scheme = "http";
         
-        if(fileURL.getPort() == 443){
+        if (fileURL.getPort() == 443){
             scheme = "https";
         }
 
@@ -148,11 +148,7 @@ public class WebDAVFile extends ProtocolFile {
             return true;
         }
 
-        if (resources.isEmpty()) {
-            return false;
-        }
-
-        return resources.get(0).isDirectory();
+        return !resources.isEmpty() && resources.get(0).isDirectory();
     }
 
     @Override
@@ -185,15 +181,15 @@ public class WebDAVFile extends ProtocolFile {
             parentPath += SEPARATOR;
         }
 
-        for (int i = 0; i < nbFiles; i++) {
-            if (files.get(i) == null) {
+        for (DavResource file : files) {
+            if (file == null) {
                 continue;
             }
 
-            childName = files.get(i).getName();
+            childName = file.getName();
 
             //Skip current path (Like skipping "." and ".."
-            if (parentPath.equals(files.get(i).getPath())) {
+            if (parentPath.equals(file.getPath())) {
                 continue;
             }
 
@@ -201,7 +197,7 @@ public class WebDAVFile extends ProtocolFile {
             childURL = (FileURL) fileURL.clone();
             childURL.setPath(parentPath + childName);
 
-            child = FileFactory.getFile(childURL, this, files.get(i));
+            child = FileFactory.getFile(childURL, this, file);
             children[fileCount++] = child;
         }
 

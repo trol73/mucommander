@@ -19,7 +19,6 @@ package com.mucommander.adb;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.process.ExecutionFinishListener;
 import com.mucommander.process.ExecutorUtils;

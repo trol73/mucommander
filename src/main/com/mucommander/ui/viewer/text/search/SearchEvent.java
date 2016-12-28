@@ -73,7 +73,7 @@ public class SearchEvent extends EventObject {
          * The event fired when the user wants to replace all instances of
          * specific text with new text in the editor.
          */
-        REPLACE_ALL;
+        REPLACE_ALL
 
     }
 }

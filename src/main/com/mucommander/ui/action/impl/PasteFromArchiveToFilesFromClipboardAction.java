@@ -5,7 +5,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.ActionFactory;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.dnd.ClipboardOperations;
 import com.mucommander.ui.dnd.ClipboardSupport;

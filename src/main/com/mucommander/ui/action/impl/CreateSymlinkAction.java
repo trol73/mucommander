@@ -2,10 +2,7 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
-import com.mucommander.ui.action.AbstractActionDescriptor;
-import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.symlink.CreateSymLinkDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -19,9 +16,10 @@ import java.util.Map;
  *
  * @author Oleg Trifonov
  */
+@InvokesDialog
 public class CreateSymlinkAction extends ParentFolderAction {
 
-    public CreateSymlinkAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CreateSymlinkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

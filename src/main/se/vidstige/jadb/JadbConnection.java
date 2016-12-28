@@ -16,7 +16,7 @@ public class JadbConnection implements ITransportFactory {
         this("localhost", DEFAULTPORT);
     }
 
-    public JadbConnection(String host, int port) {
+    private JadbConnection(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -50,9 +50,9 @@ public class JadbConnection implements ITransportFactory {
         return new DeviceWatcher(transport, listener, this);
     }
 
-    public List<JadbDevice> parseDevices(String body) {
+    List<JadbDevice> parseDevices(String body) {
         String[] lines = body.split("\n");
-        ArrayList<JadbDevice> devices = new ArrayList<JadbDevice>(lines.length);
+        ArrayList<JadbDevice> devices = new ArrayList<>(lines.length);
         for (String line : lines) {
             String[] parts = line.split("\t");
             if (parts.length > 1) {
