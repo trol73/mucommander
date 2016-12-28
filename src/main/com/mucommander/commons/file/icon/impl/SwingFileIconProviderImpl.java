@@ -60,10 +60,10 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     private static JFileChooser fileChooser;
 
     /** Caches icons for directories, used only for non-local files */
-    protected static IconCache directoryIconCache = CachedFileIconProvider.createCache();
+    private static IconCache directoryIconCache = CachedFileIconProvider.createCache();
 
     /** Caches icons for regular files, used only for non-local files */
-    protected static IconCache fileIconCache = CachedFileIconProvider.createCache();
+    private static IconCache fileIconCache = CachedFileIconProvider.createCache();
 
     /** True if init has been called */
     protected static boolean initialized;
@@ -72,10 +72,10 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     private final static String SYMLINK_ICON_NAME = "link.png";
 
     /** Icon that is painted over a symlink's target file icon to symbolize a symlink to the target file. */
-    protected static ImageIcon SYMLINK_OVERLAY_ICON;
+    private static ImageIcon SYMLINK_OVERLAY_ICON;
 
     /** Allows stderr to be 'silenced' when needed */
-    protected static SilenceableOutputStream errOut;
+    private static SilenceableOutputStream errOut;
 
 
 

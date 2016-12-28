@@ -69,23 +69,25 @@ public class CellLabel extends JLabel {
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Last text set by the setText method */
-    protected String lastText;
+    private String lastText;
     /** Last icon set by the setIcon method */
-    protected ImageIcon lastIcon;
+    private ImageIcon lastIcon;
     /** Last tooltip text set by the setToolTipText method */
-    protected String lastTooltip;
+    private String lastTooltip;
     /** Last foreground color set by the setForeground method */
-    protected Color lastForegroundColor;
+    private Color lastForegroundColor;
     /** Last background color set by the setBackground method */
-    protected Color lastBackgroundColor;
+    private Color lastBackgroundColor;
     /** Outline color (top and bottom). */
     protected Color outlineColor;
     /** Gradient color for the background. */
-    protected Color gradientColor;
+    private Color gradientColor;
 
-    protected boolean hasSeparatorLine;
+    private boolean hasSeparatorLine;
 
     private int progressValue;
+
+    private Color markerColor;
 
 
     // - Initialisation ------------------------------------------------------------------
@@ -245,9 +247,9 @@ public class CellLabel extends JLabel {
      */
     @Override
     public void paint(Graphics g) {
-        boolean doOutline;
-
-        doOutline = outlineColor != null && !outlineColor.equals(lastBackgroundColor);
+        boolean doOutline = outlineColor != null && !outlineColor.equals(lastBackgroundColor);
+        final int w = getWidth();
+        final int h = getHeight();
 
         // Checks whether we need to paint a gradient background.
         if (gradientColor != null) {
@@ -259,33 +261,42 @@ public class CellLabel extends JLabel {
             // TODO avoid object creation in paint methods
             g2.setPaint(new GradientPaint(0, 0, lastBackgroundColor, 0, getHeight(), gradientColor, false));
             if (doOutline) {
-                g2.fillRect(0, 1, getWidth(), getHeight() - 2);
+                g2.fillRect(0, 1, w, h - 2);
             } else {
-                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.fillRect(0, 0, w, h);
             }
 
             // Restores the graphics to its previous state.
             g2.setPaint(oldPaint);
         }
 
-        // Normal painting.
-        super.paint(g);
+        if (markerColor != null) {
+            setSize(w - h, h);
+            super.paint(g);
+            setSize(w, h);
+            if (gradientColor == null) {
+                g.setColor(lastBackgroundColor);
+                g.fillRect(w - h, 1, h, h - 2);
+            }
+            g.setColor(markerColor);
+            g.fillArc(w - h, h/6, h*2/3, h*2/3, 0, 360);
+        } else {
+            // Normal painting
+            super.paint(g);
+        }
 
         // If necessary, paints the outline color.
         if (doOutline) {
             paintOutline(g);
         }
         if (hasSeparatorLine) {
-            int w = getWidth()-1;
             Graphics2D g2d = (Graphics2D)g;
             g2d.setColor(Color.GRAY);
             g2d.setStroke(DASHED_STROKE);
-            g2d.drawLine(w, 0, w, getHeight());
+            g2d.drawLine(w-1, 0, w-1, getHeight());
         }
         // TODO improve it
         if (progressValue > 0) {
-            int w = getWidth();
-            int h = getHeight();
             int a = -progressValue*20 % 360;
             int r = h - 4;
             if (r % 2 != 0) {
@@ -302,7 +313,7 @@ public class CellLabel extends JLabel {
             g.fillOval(w - r + d, 2 + d, r2, r2);
             //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
         }
-    }	
+    }
 
     protected void paintOutline(Graphics g) {
     	g.setColor(outlineColor);
@@ -393,6 +404,14 @@ public class CellLabel extends JLabel {
 
     public void setProgressValue(int progressValue) {
         this.progressValue = progressValue;
+    }
+
+    /**
+     * Set label color (Mac OS X only)
+     * @param markerColor color or null if file has no label
+     */
+    public void setMarkerColor(Color markerColor) {
+        this.markerColor = markerColor;
     }
 
 }

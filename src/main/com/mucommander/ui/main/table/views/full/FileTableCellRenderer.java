@@ -31,6 +31,7 @@ import com.mucommander.ui.main.table.views.BaseCellRenderer;
 import com.mucommander.ui.quicksearch.QuickSearch;
 import com.mucommander.ui.theme.*;
 import com.mucommander.utils.FileIconsCache;
+import ru.trolsoft.macosx.FileLabelCache;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -208,6 +209,12 @@ public class FileTableCellRenderer extends BaseCellRenderer {
             label.setOutline(table.hasFocus() ? ThemeCache.activeOutlineColor : ThemeCache.inactiveOutlineColor);
         } else {
             label.setOutline(null);
+        }
+
+        if (column == Column.NAME) {
+            label.setMarkerColor(FileLabelCache.getInstance().getLabelColor(file));
+        } else {
+            label.setMarkerColor(null);
         }
 
         return label;

@@ -328,14 +328,15 @@ public class FileFactory {
      * @param filename an archive filename that potentially matches one of the registered <code>ArchiveFormatProvider</code>
      * @return the first <code>ArchiveFormatProvider</code> that matches the specified filename, <code>null</code> if there is none
      */
-    public static ArchiveFormatProvider getArchiveFormatProvider(String filename) {
+    private static ArchiveFormatProvider getArchiveFormatProvider(String filename) {
         if (filename == null || archiveFormatProviders == null) {
             return null;
         }
 
         for (ArchiveFormatProvider provider : archiveFormatProviders) {
-            if (provider.getFilenameFilter().accept(filename))
+            if (provider != null && provider.getFilenameFilter() != null && provider.getFilenameFilter().accept(filename)) {
                 return provider;
+            }
         }
         return null;
     }

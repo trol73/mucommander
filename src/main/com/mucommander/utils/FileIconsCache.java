@@ -100,7 +100,6 @@ public class FileIconsCache {
 
     public Image getImageIcon(AbstractFile file) {
         Icon icon = getIcon(file);
-System.out.println("> " + icon.getClass().getName());
         if (icon instanceof RetinaImageIcon) {
             return ((RetinaImageIcon) icon).getImage();
         } else if (icon instanceof ImageIcon) {

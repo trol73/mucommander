@@ -90,8 +90,6 @@ public abstract class BaseCellRenderer implements TableCellRenderer, ThemeListen
     }
 
 
-
-
     /**
      * Sets CellLabels' font to the current one.
      */
