@@ -40,9 +40,9 @@ public class ActionKeymap {
     /** Maps Keystroke instances onto action id */
     private static AcceleratorMap acceleratorMap = new AcceleratorMap();
 
-    /******************
+    /*=================
      * Public Methods *
-     ******************/
+     =================*/
     
     /**
      * Register all action shortcuts to the given MainFrame's file tables.
@@ -228,9 +228,9 @@ public class ActionKeymap {
     }
     
     
-    /*******************
+    /*==================
      * Private Methods *
-     *******************/
+     ==================*/
 
     /**
      * Register MuAction instance to MainFrame instance.

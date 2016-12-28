@@ -98,7 +98,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
         @Override
         public ImageIcon getIcon() {
 		    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-                return super.getStandardIcon("Finder");
+                return getStandardIcon("Finder");
             }
             return super.getIcon();
         }

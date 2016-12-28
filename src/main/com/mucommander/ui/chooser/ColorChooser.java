@@ -67,9 +67,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
 
     // - Localisation -----------------------------------------------------------
     // --------------------------------------------------------------------------
-    /**
-     * Overrides the default, incomplete Swing translations.
-     */
     static {
         String buffer;
 

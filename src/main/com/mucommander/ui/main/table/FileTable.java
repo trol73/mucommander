@@ -1911,10 +1911,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
 
 
-        /**
-         * Restores default row height.
-         */
-/*
+        /*
         public void restore() {
             // Filename editor's row resize disabled because of Java bug #4398268 which prevents new rows from being visible after setRowHeight(row, height) has been called.
             // Add to that the fact that DefaultCellEditor's stopCellEditing() and cancelCellEditing() are not always called, for instance when table header is clicked.

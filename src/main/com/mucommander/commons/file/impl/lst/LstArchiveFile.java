@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -51,7 +51,7 @@ import java.io.InputStream;
  */
 public class LstArchiveFile extends AbstractROArchiveFile {
     
-    public LstArchiveFile(AbstractFile file) {
+    LstArchiveFile(AbstractFile file) {
         super(file);
     }
 
@@ -61,12 +61,12 @@ public class LstArchiveFile extends AbstractROArchiveFile {
     ////////////////////////////////////////
 
     @Override
-    public ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+    public ArchiveEntryIterator getEntryIterator() throws IOException {
         return new LstArchiveEntryIterator(getInputStream());
     }
 
     @Override
-    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
         // Will throw an IOException if the file designated by the entry doesn't exist 
         return FileFactory.getFile(((LstArchiveEntry)entry).getBaseFolder()+entry.getPath(), true).getInputStream();
     }

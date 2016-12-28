@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -58,7 +58,7 @@ import java.io.OutputStream;
 public abstract class AbstractArchiveEntryFile extends AbstractFile {
 
     /** The archive file that contains this entry */
-    protected AbstractArchiveFile archiveFile;
+    AbstractArchiveFile archiveFile;
 
     /** This entry file's parent, can be the archive file itself if this entry is located at the top level */
     protected AbstractFile parent;
@@ -95,7 +95,7 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
      *
      * @return the AbstractArchiveFile that contains the entry represented by this file
      */
-    public AbstractArchiveFile getArchiveFile() {
+    AbstractArchiveFile getArchiveFile() {
         return archiveFile;
     }
 
@@ -107,14 +107,15 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
      *
      * @return the relative path of this entry, with respect to the archive file.
      */
-    public String getRelativeEntryPath() {
+    private String getRelativeEntryPath() {
         String path = entry.getPath();
 
         // Replace all occurrences of the entry's separator by the archive file's separator, only if the separator is
         // not "/" (i.e. the entry path separator).
         String separator = getSeparator();
-        if(!separator.equals("/"))
+        if (!separator.equals("/")) {
             path = path.replace("/", separator);
+        }
 
         return path;
     }
@@ -146,17 +147,17 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
     }
 
     @Override
-    public AbstractFile[] ls() throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls() throws IOException {
         return archiveFile.ls(this, null, null);
     }
 
     @Override
-    public AbstractFile[] ls(FilenameFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         return archiveFile.ls(this, filter, null);
     }
 	
     @Override
-    public AbstractFile[] ls(FileFilter filter) throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls(FileFilter filter) throws IOException {
         return archiveFile.ls(this, null, filter);
     }
 
@@ -187,7 +188,7 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
     }
 
     @Override
-    public void changePermission(int access, int permission, boolean enabled) throws IOException, UnsupportedFileOperationException {
+    public void changePermission(int access, int permission, boolean enabled) throws IOException {
         changePermissions(ByteUtils.setBit(getPermissions().getIntValue(), (permission << (access*3)), enabled));
     }
 
@@ -235,7 +236,7 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
      * {@link FileOperation#GET_FREE_SPACE} operations.
      */
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+    public long getFreeSpace() throws IOException {
         return archiveFile.getFreeSpace();
     }
 
@@ -247,7 +248,7 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
      * {@link FileOperation#GET_TOTAL_SPACE} operations.
      */
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+    public long getTotalSpace() throws IOException {
         return archiveFile.getTotalSpace();
     }
 
@@ -259,7 +260,7 @@ public abstract class AbstractArchiveEntryFile extends AbstractFile {
      * {@link FileOperation#READ_FILE} operations.
      */
     @Override
-    public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream() throws IOException {
         return archiveFile.getEntryInputStream(entry, null);
     }
 

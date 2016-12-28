@@ -88,7 +88,7 @@ public abstract class AsyncPanel extends JPanel {
     /**
      * Creates a new <code>AsyncPanel</code> with the default wait component.
      */
-    public AsyncPanel() {
+    protected AsyncPanel() {
         this(getDefaultWaitComponent());
     }
 
@@ -98,7 +98,7 @@ public abstract class AsyncPanel extends JPanel {
      *
      * @param waitComponent the component to display while the target component is being loaded
      */
-    public AsyncPanel(JComponent waitComponent) {
+    protected AsyncPanel(JComponent waitComponent) {
         super(new BorderLayout());
 
         this.waitComponent = waitComponent;
@@ -134,7 +134,7 @@ public abstract class AsyncPanel extends JPanel {
         }
     }
 
-    /**
+    /*
      * Loads the target component by calling {@link #getTargetComponent()} and replace the wait component by it.
      */
 /*

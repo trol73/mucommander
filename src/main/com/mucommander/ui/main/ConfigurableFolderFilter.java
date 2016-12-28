@@ -65,7 +65,6 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
         if (!pref.getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES))
             addFileFilter(dsFileFilter);
 
-        /** Filters out Mac OS X system folders, null when 'show system folders' option is enabled */
         if (!pref.getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS))
             addFileFilter(systemFileFilter);
     }

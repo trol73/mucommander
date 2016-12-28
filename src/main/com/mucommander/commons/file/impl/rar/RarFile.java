@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -38,7 +38,7 @@ public class RarFile {
     private Archive archive;
     private AbstractFile file;
 
-    public RarFile(AbstractFile file) throws IOException, UnsupportedFileOperationException, RarException {
+    RarFile(AbstractFile file) throws IOException, RarException {
         this.file = file;
         try (InputStream fileIn = file.getInputStream()) {
             archive = new Archive(new File(file.getPath()));

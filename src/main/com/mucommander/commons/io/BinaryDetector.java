@@ -42,7 +42,7 @@ public class BinaryDetector {
 
     /** Provides an indication as to the number of bytes that should fed to the detector for it to have enough
      * confidence. */
-    public final static int RECOMMENDED_BYTE_SIZE = 1024*16;
+    private final static int RECOMMENDED_BYTE_SIZE = 1024*16;
 
 
     /**
@@ -65,7 +65,7 @@ public class BinaryDetector {
      * @param len specifies where to stop reading the array
      * @return true if BinaryDetector thinks that the specified data is binary
      */
-    public static boolean guessBinary(byte b[], int off, int len) {
+    private static boolean guessBinary(byte b[], int off, int len) {
         // binary .torrent files etc. doesn't contains any 0x0A, 0x0D or 0x00 bytes
         int x0Acnt = 0;
         int x0Dcnt = 0;

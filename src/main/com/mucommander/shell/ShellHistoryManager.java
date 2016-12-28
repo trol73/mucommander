@@ -77,9 +77,6 @@ public class ShellHistoryManager {
      */
     private ShellHistoryManager() {}
 
-    /**
-     * Initialises history.
-     */
     static {
         history   = new String[MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_HISTORY_SIZE, MuPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
         listeners = new WeakHashMap<>();

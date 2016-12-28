@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -32,13 +32,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author Maxence Bernard
  */
-public class ArchiveEntryTree extends DefaultMutableTreeNode {
+class ArchiveEntryTree extends DefaultMutableTreeNode {
     private static Logger logger = LoggerFactory.getLogger(ArchiveEntryTree.class);
 
     /**
      * Creates a new empty tree.
      */
-    public ArchiveEntryTree() {
+    ArchiveEntryTree() {
     }
 
     /**
@@ -46,7 +46,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
      *
      * @param entry the entry to add to the tree
      */
-    public void addArchiveEntry(ArchiveEntry entry) {
+    void addArchiveEntry(ArchiveEntry entry) {
         String entryPath = entry.getPath();
         int entryDepth = entry.getDepth();
         int slashPos = 0;
@@ -75,7 +75,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
             }
 
             if (matchFound) {
-                if(d==entryDepth) {
+                if (d == entryDepth) {
                     getLogger().trace("Replacing entry for node "+childNode);
                     // Replace existing entry
                     childNode.setUserObject(entry);
@@ -85,12 +85,11 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
                 }
             }
             else {
-                if(d==entryDepth) {
+                if (d == entryDepth) {
                     // create a leaf node for the entry
                     entry.setExists(true);      // the entry has to exist
                     node.add(new DefaultMutableTreeNode(entry, true));
-                }
-                else {
+                } else {
                     getLogger().trace("Creating node for "+subPath);
                     childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getLastModifiedDate(), 0, true), true);
                     node.add(childNode);
@@ -112,7 +111,7 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
      * @param entryPath the path to the entry to look up in this tree
      * @return the node that corresponds to the specified entry path
      */
-    public DefaultMutableTreeNode findEntryNode(String entryPath) {
+    DefaultMutableTreeNode findEntryNode(String entryPath) {
         int entryDepth = ArchiveEntry.getDepth(entryPath);
         int slashPos = 0;
         DefaultMutableTreeNode currentNode = this;
@@ -121,19 +120,20 @@ public class ArchiveEntryTree extends DefaultMutableTreeNode {
 
             int nbChildren = currentNode.getChildCount();
             DefaultMutableTreeNode matchNode = null;
-            for(int c=0; c<nbChildren; c++) {
+            for (int c=0; c<nbChildren; c++) {
                 DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)currentNode.getChildAt(c);
 
                 // Path comparison is 'trailing slash insensitive'
-                if(PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
+                if (PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
                     // Found the node, let's return it
                     matchNode = childNode;
                     break;
                 }
             }
 
-            if(matchNode==null)
+            if (matchNode == null) {
                 return null;    // No node maching the provided path, return null
+            }
 
             currentNode = matchNode;
         }

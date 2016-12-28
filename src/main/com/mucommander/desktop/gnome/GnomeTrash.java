@@ -71,10 +71,6 @@ public class GnomeTrash extends QueuedTrash {
 	private static final AbstractFile TRASH_VOLUME;
 	/** Formats dates in trash info files. */
 	private static final SimpleDateFormat INFO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    /**
-	 * Resolves the user Trash folder and its "info" and "files" subfolders once and for all. The
-	 * trash folder is created if it doesn't already exist.
-     */
     static {
         TRASH_FOLDER = getTrashFolder();
 		if (TRASH_FOLDER != null) {

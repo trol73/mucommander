@@ -972,10 +972,7 @@ public class LocationChanger {
 	}
 	
 	/* TODO branch         
-	*//**
-	 * Reads all files in the current directory and all its subdirectories.
-	 * @param parent
-	 *//*
+	*//*
 	private void readBranch(AbstractFile parent) {
 		AbstractFile[] children;
 		try {

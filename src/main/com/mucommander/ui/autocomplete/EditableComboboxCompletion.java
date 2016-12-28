@@ -84,36 +84,38 @@ public class EditableComboboxCompletion extends CompletionType {
                 case KeyEvent.VK_ENTER:
                 	if (isItemSelectedAtPopupList()) {
                 		hideAutocompletionPopup();
-                		acceptListItem((String)list.getSelectedValue());
+                		acceptListItem(list.getSelectedValue());
                 		keyEvent.consume();
                 	}
                 	else {
 						// Stop the active showing-thread to prevent suggestions-popup 
                     	// opening after the operation was initiated.
-                    	if(showingThread!=null)
-                            showingThread.done();
+                    	if (showingThread != null) {
+							showingThread.done();
+						}
 					
                 		autocompletedtextComp.OnEnterPressed(keyEvent);
 					}
                 	break;
                 case KeyEvent.VK_ESCAPE:
                 	if (isPopupListShowing()) {
-                		if (autocompletedtextComp.isEnabled())
-                			hideAutocompletionPopup();
+                		if (autocompletedtextComp.isEnabled()) {
+							hideAutocompletionPopup();
+						}
                 		keyEvent.consume();
                 	}
                 	else
                 		autocompletedtextComp.OnEscPressed(keyEvent);
                 	break;
                 case KeyEvent.VK_UP:
-                	if(autocompletedtextComp.isEnabled() && popup.isVisible()) {
+                	if (autocompletedtextComp.isEnabled() && popup.isVisible()) {
                 		selectPreviousPossibleValue();
                 		keyEvent.consume();
                 	}
                 	break;
                 case KeyEvent.VK_DOWN:
-                	if(autocompletedtextComp.isEnabled()){ 
-                        if(popup.isVisible()) {
+                	if (autocompletedtextComp.isEnabled()){
+                        if (popup.isVisible()) {
                             selectNextPossibleValue();
                             keyEvent.consume();
                         }

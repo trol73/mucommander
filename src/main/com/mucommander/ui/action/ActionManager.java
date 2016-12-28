@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 public class ActionManager {
 	//private static final Logger LOGGER = LoggerFactory.getLogger(ActionManager.class);
 	
-    /** MuAction id -> factory map */
+    /* MuAction id -> factory map */
     //static final Map<String, ActionFactory> actionFactories = new HashMap<>();
     
     /** MainFrame -> MuAction map */
@@ -259,7 +259,7 @@ public class ActionManager {
      * 
      * @param actionDescriptor - ActionDescriptor instance of the action.
      */
-    public static void registerAction(ActionDescriptor actionDescriptor) {
+    private static void registerAction(ActionDescriptor actionDescriptor) {
     	//actionFactories.put(actionDescriptor.getId(), actionDescriptor);	// TODO
     	ActionProperties.addActionDescriptor(actionDescriptor);
     }
@@ -309,7 +309,7 @@ public class ActionManager {
      * @param command the command that is invoked by the returned action
      * @param mainFrame the MainFrame instance the action belongs to
      * @return a MuAction instance matching the given action ID and MainFrame, <code>null</code> if the
-     * @see {@link #getActionInstance(String, MainFrame)}
+     * @see #getActionInstance(String, MainFrame)
      * action could not be found or could not be instantiated.
      */
     public static MuAction getActionInstance(Command command, MainFrame mainFrame) {
@@ -324,7 +324,7 @@ public class ActionManager {
      * @param actionId ID of the action to instantiate
      * @param mainFrame the MainFrame instance the action belongs to
      * @return a MuAction instance matching the given action ID and MainFrame, <code>null</code> if the
-     * @see {@link #getActionInstance(ActionParameters, MainFrame)}
+     * @see #getActionInstance(ActionParameters, MainFrame)
      * action could not be found or could not be instantiated.
      */
     public static MuAction getActionInstance(String actionId, MainFrame mainFrame) {
@@ -438,7 +438,7 @@ public class ActionManager {
      * @param muActionId the MuAction id to compare instances against
      * @return  a ArrayList of all MuAction instances matching the specified action id
      */
-    public static List<MuAction> getActionInstances(String muActionId) {
+    static List<MuAction> getActionInstances(String muActionId) {
         List<MuAction> actionInstances = new ArrayList<>();
 
         // Iterate on all MainFrame instances
@@ -500,7 +500,7 @@ public class ActionManager {
     	private MuAction action;
     	private String id;
     	
-    	public ActionAndIdPair(MuAction action, String id) {
+    	ActionAndIdPair(MuAction action, String id) {
     		this.action = action;
     		this.id = id;
     	}

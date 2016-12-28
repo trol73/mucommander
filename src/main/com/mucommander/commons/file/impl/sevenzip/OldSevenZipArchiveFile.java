@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -30,7 +30,6 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractROArchiveFile;
 import com.mucommander.commons.file.ArchiveEntry;
 import com.mucommander.commons.file.ArchiveEntryIterator;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.WrapperArchiveEntryIterator;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.IInArchive;
 import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZipEntry;
@@ -80,7 +79,7 @@ public class OldSevenZipArchiveFile extends AbstractROArchiveFile {
     //////////////////////////////////////////
 
     @Override
-    public InputStream getEntryInputStream(final ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public InputStream getEntryInputStream(final ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
 		final IInArchive sevenZipFile = openSevenZipFile();
 		
 /*		ByteArrayOutputStream os = new ByteArrayOutputStream(1024);

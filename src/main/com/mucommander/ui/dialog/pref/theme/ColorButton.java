@@ -68,11 +68,11 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         this(parent, themeData, colorId, null, null);
     }
 
-    public ColorButton(PreferencesDialog parent, ThemeData themeData, int colorId, String previewColorPropertyName) {
+    ColorButton(PreferencesDialog parent, ThemeData themeData, int colorId, String previewColorPropertyName) {
         this(parent, themeData, colorId, previewColorPropertyName, null);
     }
 
-    public ColorButton(PreferencesDialog parent, ThemeData themeData, int colorId, String previewColorPropertyName, JComponent previewComponent) {
+    ColorButton(PreferencesDialog parent, ThemeData themeData, int colorId, String previewColorPropertyName, JComponent previewComponent) {
         FlowLayout flowLayout = new FlowLayout();
         flowLayout.setHgap(0);
         flowLayout.setVgap(0);
@@ -161,7 +161,7 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         if(previewComponent!=null && previewColorPropertyName!=null && (previewComponent instanceof PreviewLabel)) {
             try {
                 return new ColorChooser(currentColor, (PreviewLabel)((PreviewLabel)previewComponent).clone(), previewColorPropertyName);
-            } catch(CloneNotSupportedException e) {}
+            } catch(CloneNotSupportedException ignored) {}
         }
         return new ColorChooser(currentColor, new PreviewLabel(), PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME);
     }

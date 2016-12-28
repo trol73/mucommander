@@ -32,13 +32,12 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public void setLastModifiedDate(long arg0) throws IOException, UnsupportedFileOperationException {
+	public void setLastModifiedDate(long arg0) throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.CHANGE_DATE);
 	}
 
 	@Override
-	public void changePermission(int arg0, int arg1, boolean arg2)
-			throws IOException, UnsupportedFileOperationException {
+	public void changePermission(int arg0, int arg1, boolean arg2) throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.CHANGE_PERMISSION);
 	}
 
@@ -73,7 +72,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+	public long getFreeSpace() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.GET_FREE_SPACE);
 	}
 
@@ -83,12 +82,12 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
+	public InputStream getInputStream() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.WRITE_FILE);
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
+	public OutputStream getOutputStream() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.READ_FILE);
 	}
 
@@ -114,7 +113,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException, UnsupportedFileOperationException {
+	public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.RANDOM_READ_FILE);
 	}
 
@@ -124,8 +123,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public long getTotalSpace() throws IOException,
-			UnsupportedFileOperationException {
+	public long getTotalSpace() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.GET_TOTAL_SPACE);
 	}
 

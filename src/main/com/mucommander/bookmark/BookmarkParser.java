@@ -167,7 +167,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
         }
     }
 
-    private static final Logger getLogger() {
+    private static Logger getLogger() {
         if (logger == null) {
             logger = LoggerFactory.getLogger(BookmarkParser.class);
         }

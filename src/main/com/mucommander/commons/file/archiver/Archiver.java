@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -55,7 +55,7 @@ public abstract class Archiver {
     /** Zip archive format (many entries format) */
     public final static int ZIP_FORMAT = 0;
     /** Gzip archive format (single entry format) */
-    public final static int GZ_FORMAT = 1;
+    private final static int GZ_FORMAT = 1;
     /** Bzip2 archive format (single entry format) */
     public final static int BZ2_FORMAT = 2;
     /** Tar archive format without any compression (many entries format) */
@@ -138,7 +138,7 @@ public abstract class Archiver {
     /** Archive format's name of this Archiver */
     protected String formatName;
     /** Support output stream for archiving files */
-    protected boolean supporStream;
+    boolean supportStream;
 	
     /**
      * Creates a new Archiver.
@@ -147,7 +147,7 @@ public abstract class Archiver {
      */
     Archiver(OutputStream out) {
         this.out = out;
-        this.supporStream = true;
+        this.supportStream = true;
     }
 
     /**
@@ -204,7 +204,7 @@ public abstract class Archiver {
      * @return true if the archiver supports writing with streams
      */
     public boolean supportsStream() {
-        return supporStream;
+        return supportStream;
     }
 
     /**
@@ -233,7 +233,7 @@ public abstract class Archiver {
 	  *
 	  * @return normalized path
      */
-    protected String normalizePath(String entryPath, boolean isDirectory) {
+    String normalizePath(String entryPath, boolean isDirectory) {
         // Replace any \ character by /
         entryPath = entryPath.replace('\\', '/');
 		
@@ -303,7 +303,7 @@ public abstract class Archiver {
      * null if the specified format is not valid.
      * @throws IOException if an error occurred while intializing the archiver
      */
-    public static Archiver getArchiver(OutputStream out, int format) throws IOException {
+    private static Archiver getArchiver(OutputStream out, int format) throws IOException {
         Archiver archiver;
 
         switch(format) {
@@ -345,7 +345,7 @@ public abstract class Archiver {
      * @return a Bzip2 OutputStream
      * @throws IOException if an error occurred while initializing the Bzip2 OutputStream
      */
-    protected static OutputStream createBzip2OutputStream(OutputStream out) throws IOException {
+    private static OutputStream createBzip2OutputStream(OutputStream out) throws IOException {
         // Writes the 2 magic bytes 'BZ', as required by CBZip2OutputStream. A quote from CBZip2OutputStream's Javadoc:
         // "Attention: The caller is responsible to write the two BZip2 magic bytes "BZ" to the specified stream
         // prior to calling this constructor."

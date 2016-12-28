@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -205,7 +205,7 @@ public abstract class AbstractFileTest {
      *
      * @param timeMs number of milliseconds to sleep
      */
-    protected void sleep(long timeMs) {
+    private void sleep(long timeMs) {
         try {
             Thread.sleep(timeMs);
         } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -37,7 +37,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
     private static final String SEPARATOR_STRING = String.valueOf(SEPARATOR_CHAR);
 
     /** Encapsulated entry object */
-    protected Object entryObject;
+    private Object entryObject;
 
     /** Caches the computed hashcode */
     private int hashCode;
@@ -84,7 +84,7 @@ public class ArchiveEntry extends SimpleFileAttributes {
      * @param entryPath the path for which to calculate the depth
      * @return the depth of the given entry path
      */
-    public static int getDepth(String entryPath) {
+    static int getDepth(String entryPath) {
         return PathUtils.getDepth(entryPath, SEPARATOR_STRING);
     }
 
@@ -168,10 +168,8 @@ public class ArchiveEntry extends SimpleFileAttributes {
      * @see PathUtils#pathEquals(String, String, String)
      */
     public boolean equals(Object o) {
-        if(!(o instanceof ArchiveEntry))
-            return false;
+        return o instanceof ArchiveEntry && PathUtils.pathEquals(getPath(), ((ArchiveEntry) o).getPath(), SEPARATOR_STRING);
 
-        return PathUtils.pathEquals(getPath(), ((ArchiveEntry)o).getPath(), SEPARATOR_STRING);
     }
 
     /**

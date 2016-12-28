@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2010 Maxence Bernard
  *
@@ -46,7 +46,7 @@ public class ExtensionPathFilter extends AbstractExtensionFilter implements Path
      * @param caseSensitive if true, this PathFilter will be case-sensitive
      * @param inverted if true, this filter will operate in inverted mode.
      */
-    public ExtensionPathFilter(String extension, boolean caseSensitive, boolean inverted) {
+    private ExtensionPathFilter(String extension, boolean caseSensitive, boolean inverted) {
         this(new String[]{extension}, caseSensitive, inverted);
     }
 

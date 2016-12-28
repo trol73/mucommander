@@ -157,10 +157,6 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		return tabsCollection;
 	}
 
-	/***********************
-	 * Tabs Actions Support
-	 ***********************/
-
 	/* Actions which are not depended on the display type (single/multiple tabs) */
 
 	/**
@@ -263,11 +259,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		tabsViewer.requestFocus();
 	}
 
-	/********************
-	 * Protected Methods
-	 ********************/
-
-	/**
+    /**
 	 * Returns the tab at the given index
 	 * An exception will be thrown if no tab exists in the given index
 	 * 
