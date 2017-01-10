@@ -22,9 +22,7 @@ import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
 import com.mucommander.commons.file.AbstractFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 
 /**
@@ -64,7 +62,26 @@ public class RarFile {
         if (header == null) {
             return null;
         }
-        return archive.getInputStream(header);
+        //return archive.getInputStream(header);
+        PipedInputStream in = new PipedInputStream('耀');
+        final PipedOutputStream out = new PipedOutputStream(in);
+        (new Thread(() -> {
+            try {
+                archive.extractFile(header, out);
+            } catch (RarException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    out.close();
+                    archive.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        })).start();
+        return in;
+
 
 
         // If the file that is going to be extracted is divided and continued in another archive
@@ -106,5 +123,10 @@ public class RarFile {
             }
         }
         return null;
+    }
+
+
+    public void close() throws IOException {
+        archive.close();
     }
 }

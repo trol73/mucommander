@@ -2026,10 +2026,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
         private final InputStream src;
 
-        public MuPushbackInputStream(InputStream in) {
-            super(in);
-            src = in;
-        }
+//        public MuPushbackInputStream(InputStream in) {
+//            super(in);
+//            src = in;
+//        }
 
         MuPushbackInputStream(InputStream in, int size) {
             super(in, size);

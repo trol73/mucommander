@@ -30,7 +30,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
 	private long lastRarFileDate;	
 	
     
-	public RarArchiveFile(AbstractFile file) throws IOException {		
+	RarArchiveFile(AbstractFile file) throws IOException {
 		super(file);
 	}
 	
@@ -44,10 +44,10 @@ public class RarArchiveFile extends AbstractROArchiveFile {
      * or is not implemented.
 	 * @throws RarException 
      */
-    private void checkRarFile() throws IOException, UnsupportedFileOperationException, RarException {
+    private void checkRarFile() throws IOException, RarException {
         long currentDate = file.getLastModifiedDate();
         
-        if (rarFile==null || currentDate != lastRarFileDate) {
+        if (rarFile == null || currentDate != lastRarFileDate) {
         	rarFile = new RarFile(file);
             declareRarFileUpToDate(currentDate);
         }
@@ -62,7 +62,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
     }
     
     /**
-     * Creates and return an {@link ArchiveEntry()} whose attributes are fetched from the given {@link com.mucommander.commons.file.impl.rar.provider.de.innosystec.unrar.rarfile.FileHeader}
+     * Creates and return an {@link ArchiveEntry()} whose attributes are fetched from the given {@link com.github.junrar.rarfile.FileHeader}
      *
      * @param header the object that serves to initialize the attributes of the returned ArchiveEntry
      * @return an ArchiveEntry whose attributes are fetched from the given FileHeader
@@ -85,10 +85,14 @@ public class RarArchiveFile extends AbstractROArchiveFile {
     //////////////////////////////////////////
     
     @Override
-    public synchronized ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+    public synchronized ArchiveEntryIterator getEntryIterator() throws IOException {
         try {
 			checkRarFile();
 		} catch (RarException e) {
+        	if (rarFile != null) {
+				rarFile.close();
+				rarFile = null;
+			}
 			throw new IOException();
 		}
 
@@ -96,6 +100,9 @@ public class RarArchiveFile extends AbstractROArchiveFile {
         for (FileHeader header : rarFile.getEntries()) {
             entries.add(createArchiveEntry(header));
         }
+
+        rarFile.close();
+        rarFile = null;
 
         return new WrapperArchiveEntryIterator(entries.iterator());
     }
