@@ -106,7 +106,7 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
 
     public void changeTabTitle() {
     	String title = titleTextField.getText().trim();
-    	folderPanel.getTabs().setTitle(title.length() == 0 ? null : title);
+    	folderPanel.getTabs().setTitle(title.isEmpty() ? null : title);
     }
     
     // - Listener code ----------------------------------------------------------

@@ -71,7 +71,7 @@ public class LzmaAlone
 			int pos = 0;
 			boolean switchMode = true;
 			for (String s : args) {
-				if (s.length() == 0)
+				if (s.isEmpty())
 					return false;
 				if (switchMode) {
 					if (s.compareTo("--") == 0) {
@@ -80,7 +80,7 @@ public class LzmaAlone
 					}
 					if (s.charAt(0) == '-') {
 						String sw = s.substring(1).toLowerCase();
-						if (sw.length() == 0)
+						if (sw.isEmpty())
 							return false;
 						try {
 							if (!ParseSwitch(sw))

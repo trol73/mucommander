@@ -148,7 +148,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private boolean autoSizeColumnsEnabled;
 
     /** Instance of the inner class that handles quick search */
-    private QuickSearch<AbstractFile> quickSearch = new FileTableQuickSearch();
+    private QuickSearch quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
     private WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
@@ -479,7 +479,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * @return the QuickSearch inner class instance used by this FileTable
      */
-    public QuickSearch<AbstractFile> getQuickSearch() {
+    public QuickSearch getQuickSearch() {
         return quickSearch;
     }
 
@@ -750,7 +750,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param index index of the file to mark/unmark
      * @param marked true to mark the file, false to unmark it
      */
-    public void setFileMarked(int index, boolean marked) {
+    private void setFileMarked(int index, boolean marked) {
         setFileMarked(index, marked, true);
     }
 
@@ -765,7 +765,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param marked true to mark the file, false to unmark it
      * @param repaint true to repaint the row after it has been marked/unmarked
      */
-    public void setFileMarked(int index, boolean marked, boolean repaint) {
+    private void setFileMarked(int index, boolean marked, boolean repaint) {
         if (isParentFolder(index)) {
             return;
         }
@@ -912,7 +912,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param ascending true for ascending order, false for descending order
      * @param foldersFirst if true, folders are displayed before regular files. If false, files are mixed with directories.
      */
-    public void sortBy(Column criterion, boolean ascending, boolean foldersFirst) {
+    private void sortBy(Column criterion, boolean ascending, boolean foldersFirst) {
         // If we're not changing the current sort values, abort.
         if (criterion == sortInfo.getCriterion() && ascending == sortInfo.getAscendingOrder() && foldersFirst == sortInfo.getFoldersFirst()) {
             return;
@@ -982,7 +982,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * @return this table's TableColumnModel cast as a FileTableColumnModel
      */
-    public FileTableColumnModel getFileTableColumnModel() {
+    private FileTableColumnModel getFileTableColumnModel() {
         return getColumnModel() instanceof FileTableColumnModel ? (FileTableColumnModel)getColumnModel() : null;
     }
 
@@ -994,7 +994,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * @return this table's TableColumnModel cast as a CompactFileTableColumnModel
      */
-    public CompactFileTableColumnModel getCompactFileTableColumnModel() {
+    private CompactFileTableColumnModel getCompactFileTableColumnModel() {
         return getColumnModel() instanceof CompactFileTableColumnModel ? (CompactFileTableColumnModel)getColumnModel() : null;
     }
 
@@ -1217,7 +1217,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /**
      * Notifies all registered listeners that the currently selected file has changed on this FileTable.
      */
-    public void fireSelectedFileChangedEvent() {
+    private void fireSelectedFileChangedEvent() {
         for (TableSelectionListener listener : tableSelectionListeners.keySet()) {
             listener.selectedFileChanged(this);
         }
@@ -1279,7 +1279,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     columnWidth = Math.max(dirStringWidth, fm.stringWidth(val));
                     columnWidth *= 1.1;
                 } else if (c == Column.PERMISSIONS) {
-                    columnWidth = Math.max(fm.stringWidth("wwww"), fm.stringWidth(currentFolder.getPermissionsString()));
+                    columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(currentFolder.getPermissionsString()));
                 } else {
                     columnWidth = MIN_COLUMN_AUTO_WIDTH;
 
@@ -1862,7 +1862,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
          *
          * @param textField the text field to use for editing filenames
          */
-        public FilenameEditor(JTextField textField) {
+        FilenameEditor(JTextField textField) {
             super(textField);
             this.filenameField = textField;
             // Sets the font to the same one that's used for cell rendering (user-defined)
@@ -1963,7 +1963,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /**
      * This inner class adds 'quick search' functionality to the FileTable
      */
-    private class FileTableQuickSearch extends QuickSearch<AbstractFile> {
+    private class FileTableQuickSearch extends QuickSearch {
 
         /**
          * Creates a new QuickSearch instance, only one instance per FileTable should be created.
@@ -2257,7 +2257,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
-    public void updateSelectedFilesStatusbar() {
+    void updateSelectedFilesStatusBar() {
         mainFrame.getStatusBar().updateSelectedFilesInfo();
     }
 

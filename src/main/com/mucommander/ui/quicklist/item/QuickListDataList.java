@@ -55,7 +55,7 @@ public class QuickListDataList<T> extends JList<T> {
 	
 	public final static int VISIBLE_ROWS_COUNT = 10;
 
-	private QuickSearch<T> quickSearch = new QuickListQuickSearch();
+	private QuickSearch quickSearch = new QuickListQuickSearch();
 	
 	private Component nextFocusableComponent;
 
@@ -80,7 +80,7 @@ public class QuickListDataList<T> extends JList<T> {
 		return new DataListItemRenderer();
 	}
 
-	public QuickSearch<T> getQuickSearch() { 
+	public QuickSearch getQuickSearch() {
 		return quickSearch;
 	}
 
@@ -162,7 +162,7 @@ public class QuickListDataList<T> extends JList<T> {
 				return null;
 			}
 
-			QuickSearch<T> search = QuickListDataList.this.getQuickSearch();
+			QuickSearch search = QuickListDataList.this.getQuickSearch();
 			boolean matches = !search.isActive() || search.matches(item.toString());
 
 			CellLabel label = new CellLabel();
@@ -223,7 +223,7 @@ public class QuickListDataList<T> extends JList<T> {
 	/**
 	 * 
 	 */
-	public class QuickListQuickSearch extends QuickSearch<T> {
+	public class QuickListQuickSearch extends QuickSearch {
 
 		public QuickListQuickSearch() {
 			super(QuickListDataList.this);

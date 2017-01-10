@@ -165,7 +165,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     /**
      * Creates a new MainFrame and makes it visible on the screen, on top of any other frames.
      *
-     * @param mainFrameBuilder
+     * @param mainFrameBuilder MainFrameBuilder class
      */
     public static synchronized void createNewMainFrame(MainFrameBuilder mainFrameBuilder) {
         MainFrame[] newMainFrames = mainFrameBuilder.build();

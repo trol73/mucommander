@@ -20,7 +20,6 @@ package com.mucommander.core;
 
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ import com.mucommander.commons.file.AuthenticationType;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
@@ -332,10 +330,8 @@ public class LocationChanger {
      * @param folder folder to be made current folder
      * @param fileToSelect file to be selected after the folder has been refreshed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
      * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
-	 * @throws IOException 
-	 * @throws UnsupportedFileOperationException 
      */
-    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) throws IOException {
+    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) {
     	// Update the timestamp right before the folder is set in case FolderChangeMonitor checks the timestamp
         // while FileTable#setCurrentFolder is being called. 
         lastFolderChangeTime = System.currentTimeMillis();
@@ -495,7 +491,7 @@ public class LocationChanger {
 		/* TODO branch private ArrayList childrenList; */
 
 
-		public ChangeFolderThread(AbstractFile folder, boolean findWorkableFolder, boolean changeLockedTab) {
+		ChangeFolderThread(AbstractFile folder, boolean findWorkableFolder, boolean changeLockedTab) {
 			// Ensure that we work on a raw file instance and not a cached one
 			this.folder = (folder instanceof CachedFile)?((CachedFile)folder).getProxiedFile():folder;
 			this.folderURL = folder.getURL();
@@ -511,7 +507,7 @@ public class LocationChanger {
 		 * @param credentialsMapping the CredentialsMapping to use for accessing the folder, <code>null</code> for none
 		 * @param changeLockedTab
 		 */
-		public ChangeFolderThread(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
+		ChangeFolderThread(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
 			this.folderURL = folderURL;
 			this.changeLockedTab = changeLockedTab;
 			this.credentialsMapping = credentialsMapping;

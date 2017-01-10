@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Arik Hadas
  */
-public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
+public abstract class QuickSearch extends KeyAdapter implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QuickSearch.class);
 	
 	/** Quick search string */
@@ -147,7 +147,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 	}
 
 	protected boolean isSearchStringEmpty() {
-		return searchString.length() == 0;
+		return searchString.isEmpty();
 	}
 	
 	protected void removeLastCharacterFromSearchString() {
@@ -233,8 +233,9 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
             }
 
             // If we already have a match on this test case, let's skip to the next string
-            if (startsWithNoCaseMatch!=-1)
+            if (startsWithNoCaseMatch >= 0) {
                 continue;
+            }
 
             String itemLC = item.toLowerCase();
             if (itemLC.startsWith(searchStringLC)) {
@@ -244,12 +245,14 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 
             // No need to check if the compared string contains search string if both size are equal,
             // in the case startsWith test yields the same result
-            if (itemLen == searchStringLen)
+            if (itemLen == searchStringLen) {
                 continue;
+            }
 
             // If we already have a match on this test case, let's skip to the next string
-            if (containsCaseMatch != -1)
+            if (containsCaseMatch != -1) {
                 continue;
+            }
 
             if (item.contains(searchString)) {
                 // We've got a match, let's see if we can find a better match on the next string
@@ -258,8 +261,9 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
             }
 
             // If we already have a match on this test case, let's skip to the next string
-            if (containsNoCaseMatch != -1)
+            if (containsNoCaseMatch != -1) {
                 continue;
+            }
 
             if (itemLC.contains(searchStringLC)) {
                 // We've got a match, let's see if we can find a better match on the next string
@@ -312,7 +316,7 @@ public abstract class QuickSearch<T> extends KeyAdapter implements Runnable {
 	/**
 	 * Hook that is called after a search was done for an empty string
 	 * 
-	 * @param searchString
+	 * @param searchString - the string that was being searched
 	 */
 	protected abstract void searchStringBecameEmpty(String searchString);
 	

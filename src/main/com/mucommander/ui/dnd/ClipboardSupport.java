@@ -45,7 +45,7 @@ public class ClipboardSupport {
      * Returns the system clipboard's contents as a <code>Transferable</code>, <code>null</code>
      * if it currently has no contents.
      */
-    public static Transferable getClipboardContents() {
+    private static Transferable getClipboardContents() {
         try {
             return getClipboard().getContents(null);
         } catch(IllegalStateException e) {
@@ -61,7 +61,7 @@ public class ClipboardSupport {
     public static void setClipboardContents(Transferable transferable) {
         try {
             getClipboard().setContents(transferable, null);
-        } catch(IllegalStateException e) {}
+        } catch(IllegalStateException ignored) {}
     }
 
 
@@ -71,12 +71,8 @@ public class ClipboardSupport {
      */
     public static FileSet getClipboardFiles() {
         Transferable transferable = getClipboardContents();
-        // Return null if Clipboard has no contents
-        if(transferable==null)
-            return null;
-
         // May return null if no file could be retrieved from the transferable instance
-        return TransferableFileSet.getTransferFiles(transferable);
+        return transferable == null ? null : TransferableFileSet.getTransferFiles(transferable);
     }
 
     /**

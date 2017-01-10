@@ -43,16 +43,16 @@ public abstract class ToolBarIO extends DefaultHandler {
 	/** Attribute containing the last muCommander version that was used to create the file */
 	protected static final String VERSION_ATTRIBUTE  = "version";
     /** Element describing one of the button in the list */
-	protected static final String BUTTON_ELEMENT = "button";
+	static final String BUTTON_ELEMENT = "button";
     /** Attribute containing the action class associated with the button */
-	protected static final String ACTION_ATTRIBUTE  = "action";
+	static final String ACTION_ATTRIBUTE  = "action";
 	/** Attribute containing the action id associated with the button */
-	protected static final String ACTION_ID_ATTRIBUTE  = "action_id";
+	static final String ACTION_ID_ATTRIBUTE  = "action_id";
     /** Element describing one of the separator in the list */
-	protected static final String SEPARATOR_ELEMENT = "separator";
+	static final String SEPARATOR_ELEMENT = "separator";
 
 	/** Default toolbar descriptor filename */
-    protected final static String DEFAULT_TOOLBAR_FILE_NAME = "toolbar.xml";
+    final static String DEFAULT_TOOLBAR_FILE_NAME = "toolbar.xml";
 
     /** Toolbar descriptor file used when calling {@link #loadDescriptionFile()} */
     private static AbstractFile descriptionFile;
@@ -61,7 +61,7 @@ public abstract class ToolBarIO extends DefaultHandler {
 	private static ToolBarWriter toolBarWriter;
     
     /** Whether the command-bar has been modified and should be saved */
-    protected static boolean wasToolBarModified;
+    static boolean wasToolBarModified;
     
     /**
      * Parses the XML file describing the toolbar's buttons and associated actions.
@@ -82,7 +82,6 @@ public abstract class ToolBarIO extends DefaultHandler {
     /**
      * Writes the current tool bar to the user's tool bar file.
      * @throws IOException 
-     * @throws IOException
      */
     public static void saveToolBar() throws IOException {
     	if (ToolBarAttributes.areDefaultAttributes()) {
@@ -107,7 +106,7 @@ public abstract class ToolBarIO extends DefaultHandler {
     /**
      * Mark that actions were modified and therefore should be saved.
      */
-    public static void setModified() {
+    static void setModified() {
         wasToolBarModified = true;
     }
     
@@ -116,14 +115,14 @@ public abstract class ToolBarIO extends DefaultHandler {
      * By default, this file is {@link #DEFAULT_TOOLBAR_FILE_NAME} within the preferences folder.
      * @param file path to the toolbar descriptor file
      */
-    public static void setDescriptionFile(AbstractFile file) throws FileNotFoundException {
+    private static void setDescriptionFile(AbstractFile file) throws FileNotFoundException {
         if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file);
         }
         descriptionFile = file;
     }
 
-    public static AbstractFile getDescriptionFile() throws IOException {
+    static AbstractFile getDescriptionFile() throws IOException {
         if (descriptionFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_TOOLBAR_FILE_NAME);
         }
@@ -150,7 +149,7 @@ public abstract class ToolBarIO extends DefaultHandler {
      * By default, this file is {@link #DEFAULT_TOOLBAR_FILE_NAME} within the preferences folder.
      * @param file path to the toolbar descriptor file
      */
-    public static void setDescriptionFile(File file) throws FileNotFoundException {
+    private static void setDescriptionFile(File file) throws FileNotFoundException {
         setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));
     }
 

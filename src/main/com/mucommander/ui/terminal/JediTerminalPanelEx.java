@@ -41,8 +41,8 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
     private final int keyModifier;
     private int lineHeight;
 
-    public JediTerminalPanelEx(@NotNull SettingsProvider settingsProvider, @NotNull TerminalTextBuffer terminalTextBuffer,
-                               @NotNull StyleState styleState, MainFrame mainFrame) {
+    JediTerminalPanelEx(@NotNull SettingsProvider settingsProvider, @NotNull TerminalTextBuffer terminalTextBuffer,
+                        @NotNull StyleState styleState, MainFrame mainFrame) {
         super(settingsProvider, terminalTextBuffer, styleState);
         this.mainFrame = mainFrame;
         this.keyModifier = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;

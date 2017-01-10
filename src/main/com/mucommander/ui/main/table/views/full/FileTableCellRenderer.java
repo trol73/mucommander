@@ -61,6 +61,8 @@ import java.awt.Component;
  */
 public class FileTableCellRenderer extends BaseCellRenderer {
 
+    private static int progressIndicatorCounter;
+
     public FileTableCellRenderer(FileTable table) {
         super(table);
 
@@ -93,7 +95,6 @@ public class FileTableCellRenderer extends BaseCellRenderer {
     // TableCellRenderer methods //
     ///////////////////////////////
 
-    static int cnt;
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
         // Need to check that row index is not out of bounds because when the folder
@@ -125,7 +126,7 @@ public class FileTableCellRenderer extends BaseCellRenderer {
         final CellLabel label = cellLabels[column.ordinal()];
 
         if (isCalculatedSizeDir && column == Column.NAME) {
-            label.setProgressValue(cnt++);
+            label.setProgressValue(progressIndicatorCounter++);
         } else {
             label.setProgressValue(0);
         }

@@ -55,10 +55,11 @@ public abstract class AbstractNotifier {
 
     static {
         // Finds and creates a suitable AbstractNotifier instance for the platform, if there is one
-        if (OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             notifier = new GrowlNotifier();
-        else if(JavaVersion.JAVA_1_6.isCurrentOrHigher() && SystemTray.isSupported())
+        } else if (JavaVersion.JAVA_1_6.isCurrentOrHigher() && SystemTray.isSupported()) {
             notifier = new SystemTrayNotifier();
+        }
     }
 
     /**
@@ -68,7 +69,7 @@ public abstract class AbstractNotifier {
      * @return true if an AbstractNotifier instance is available
      */
     public static boolean isAvailable() {
-        return notifier!=null;
+        return notifier != null;
     }
 
     /**

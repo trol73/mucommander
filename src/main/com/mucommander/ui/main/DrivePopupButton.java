@@ -268,7 +268,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      *
      * @return the list of volumes to be displayed in the popup menu
      */
-    public static AbstractFile[] getDisplayableVolumes() {
+    private static AbstractFile[] getDisplayableVolumes() {
         AbstractFile[] volumes = LocalFile.getVolumes();
 
         if (volumeFilter != null) {
@@ -430,7 +430,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         private JPopupMenu popupMenu;
         private List<JMenuItem> items;
 
-        public RefreshDriveNamesAndIcons(JPopupMenu popupMenu, List<JMenuItem> items) {
+        RefreshDriveNamesAndIcons(JPopupMenu popupMenu, List<JMenuItem> items) {
             super("RefreshDriveNamesAndIcons");
             this.popupMenu = popupMenu;
             this.items = items;
@@ -563,19 +563,19 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     private class CustomOpenLocationAction extends OpenLocationAction {
 
-        public CustomOpenLocationAction(MainFrame mainFrame, Bookmark bookmark) {
+        CustomOpenLocationAction(MainFrame mainFrame, Bookmark bookmark) {
             super(mainFrame, new HashMap<>(), bookmark);
         }
 
-        public CustomOpenLocationAction(MainFrame mainFrame, AbstractFile file) {
+        CustomOpenLocationAction(MainFrame mainFrame, AbstractFile file) {
             super(mainFrame, new HashMap<>(), file);
         }
 
-        public CustomOpenLocationAction(MainFrame mainFrame, BonjourService bs) {
+        CustomOpenLocationAction(MainFrame mainFrame, BonjourService bs) {
             super(mainFrame, new HashMap<>(), bs);
         }
 
-        public CustomOpenLocationAction(MainFrame mainFrame, FileURL url) {
+        CustomOpenLocationAction(MainFrame mainFrame, FileURL url) {
             super(mainFrame, new HashMap<>(), url);
         }
 

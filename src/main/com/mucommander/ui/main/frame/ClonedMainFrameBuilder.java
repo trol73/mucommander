@@ -61,14 +61,18 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
         // Make sure we're still within the screen.
         // Note that while the width and height tests look redundant, they are required. Some
         // window managers, such as Gnome, return rather peculiar results.
-        if(!isInsideUsableScreen(currentMainFrame, x + width, -1))
+        if (!isInsideUsableScreen(currentMainFrame, x + width, -1)) {
             x = 0;
-        if(!isInsideUsableScreen(currentMainFrame, -1, y + height))
+        }
+        if (!isInsideUsableScreen(currentMainFrame, -1, y + height)) {
             y = 0;
-        if(width + x > screenSize.width)
+        }
+        if (width + x > screenSize.width) {
             width = screenSize.width - x;
-        if(height + y > screenSize.height)
+        }
+        if (height + y > screenSize.height) {
             height = screenSize.height - y;
+        }
         
         mainFrame.setBounds(new Rectangle(x, y, width, height));
         
@@ -88,7 +92,7 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
      * @param window the window for which screen insets should be computed.
      * @return the screen's insets for the specified window
      */
-    public static Insets getScreenInsets(Window window) {
+    private static Insets getScreenInsets(Window window) {
         return Toolkit.getDefaultToolkit().getScreenInsets(window.getGraphicsConfiguration());
     }
 	
@@ -106,12 +110,9 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
      * @return      <code>true</code> if the frame can be moved at the specified location,
      *              <code>false</code> otherwise.
      */
-    public static boolean isInsideUsableScreen(Frame frame, int x, int y) {
-        Insets    screenInsets;
-        Dimension screenSize;
-
-        screenInsets = getScreenInsets(frame);
-        screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
+    private static boolean isInsideUsableScreen(Frame frame, int x, int y) {
+        Insets screenInsets = getScreenInsets(frame);
+        Dimension screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
 
         return (x < 0 || (x >= screenInsets.left && x < screenSize.width - screenInsets.right))
             && (y < 0 || (y >= screenInsets.top && y < screenSize.height - screenInsets.bottom));

@@ -59,8 +59,9 @@ public class MnemonicHelper {
      */
     public char getMnemonic(String text) {
         // Returns 0 in case of null string
-        if(text==null || text.length()==0)
+        if (text == null || text.isEmpty()) {
             return 0;
+        }
 		
         // Find first letter available for mnemonic (keyboard shortcut)
         int mnemonicPos = 0;

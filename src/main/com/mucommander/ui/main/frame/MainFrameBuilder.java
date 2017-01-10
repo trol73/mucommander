@@ -82,8 +82,9 @@ public abstract class MainFrameBuilder {
         	// Set initial path to each tab
         	int nbFolderPaths = snapshot.getIntegerVariable(MuSnapshot.getTabsCountVariable(window, folderPanelType == FolderPanelType.LEFT));
         	folderPaths = new String[nbFolderPaths];
-        	for (int i=0; i<nbFolderPaths;++i)
-        		folderPaths[i] = snapshot.getVariable(MuSnapshot.getTabLocationVariable(window, folderPanelType == FolderPanelType.LEFT, i));
+        	for (int i=0; i<nbFolderPaths;++i) {
+                folderPaths[i] = snapshot.getVariable(MuSnapshot.getTabLocationVariable(window, folderPanelType == FolderPanelType.LEFT, i));
+            }
         }
 
         List<AbstractFile> initialFolders = new LinkedList<>(); // Initial folders
@@ -117,8 +118,8 @@ public abstract class MainFrameBuilder {
      * @param  folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
      *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
      * @return       the user's initial path for the specified frame.
-     */ 
-    protected FileURL getInitialPath(FolderPanelType folderPanelType) {
+     */
+    FileURL getInitialPath(FolderPanelType folderPanelType) {
         // Preferences configuration
         MuPreferencesAPI preferences = MuConfigurations.getPreferences();
         
@@ -134,22 +135,21 @@ public abstract class MainFrameBuilder {
         }
 
         AbstractFile result;
-        if (customPath == null || (result = FileFactory.getFile(customPath)) == null || !result.exists())
-        	result = getHomeFolder();
+        if (customPath == null || (result = FileFactory.getFile(customPath)) == null || !result.exists()) {
+            result = getHomeFolder();
+        }
 
         getLogger().debug("initial folder: " + result);
         
         return result.getURL();
     }
 
-    protected FileTableConfiguration getFileTableConfiguration(FolderPanelType folderPanelType, int window) {
-        FileTableConfiguration conf;
-
-        conf = new FileTableConfiguration();
+    FileTableConfiguration getFileTableConfiguration(FolderPanelType folderPanelType, int window) {
+        FileTableConfiguration conf = new FileTableConfiguration();
 
         // Loop on columns
-        for(Column c  : Column.values()) {
-            if(c!=Column.NAME) {       // Skip the special name column (always visible, width automatically calculated)
+        for (Column c  : Column.values()) {
+            if (c != Column.NAME) {       // Skip the special name column (always visible, width automatically calculated)
             	// Sets the column's initial visibility.
             	conf.setEnabled(c,
             			MuConfigurations.getSnapshot().getVariable(
@@ -172,7 +172,7 @@ public abstract class MainFrameBuilder {
         return conf;
     }
     
-    protected AbstractFile getHomeFolder() {
+    AbstractFile getHomeFolder() {
     	return FileFactory.getFile(System.getProperty("user.home"));
     }
 

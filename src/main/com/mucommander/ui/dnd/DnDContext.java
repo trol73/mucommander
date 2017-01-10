@@ -28,7 +28,7 @@ import com.mucommander.ui.main.FolderPanel;
  * @see FileDragSourceListener
  * @author Maxence Bernard
  */
-public class DnDContext {
+class DnDContext {
 
     /** Has the drag operation been initiated by muCommander ? */
     private static boolean dragInitiatedByMucommander;
@@ -44,7 +44,7 @@ public class DnDContext {
      * Returns <code>true<code> if the current drag has been initiated by muCommander, i.e. *not* by another application.
      * The returned value has a meaning only if a drag operation is currently being performed.
      */
-    public static boolean isDragInitiatedByMucommander() {
+    static boolean isDragInitiatedByMucommander() {
         return dragInitiatedByMucommander;
     }
 
@@ -60,7 +60,7 @@ public class DnDContext {
      * Returns the {@link FolderPanel} instance that initiated the drag operation.
      * This method returns <code>null</code> if the current drag has not been initiated by muCommander.
      */
-    public static FolderPanel getDragInitiator() {
+    static FolderPanel getDragInitiator() {
         return dragInitiator;
     }
 
@@ -76,7 +76,7 @@ public class DnDContext {
      * Returns the extended modifiers that are currently pressed while dragging.
      * This method returns <code>0</code> if the current drag has not been initiated by muCommander.
      */
-    public static int getDragGestureModifiersEx() {
+    static int getDragGestureModifiersEx() {
         return dragGestureModifiersEx;
     }
     

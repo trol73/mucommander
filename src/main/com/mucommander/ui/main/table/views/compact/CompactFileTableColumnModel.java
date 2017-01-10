@@ -245,7 +245,7 @@ public class CompactFileTableColumnModel implements TableColumnModel, PropertyCh
         /**
          * Creates a new column enumeration.
          */
-        public ColumnEnumeration() {
+        ColumnEnumeration() {
             nextIndex = 0;
         }
 

@@ -68,7 +68,7 @@ public class CalculateDirectorySizeWorker extends SwingWorker<Long, Long> {
         fileTableModel.addProcessedDirectory(path, table, size, false);
         fileTableModel.fillCellCache();
         table.repaint();
-        table.updateSelectedFilesStatusbar();
+        table.updateSelectedFilesStatusBar();
     }
 
     private void calcDirectorySize(AbstractFile path) throws IOException {

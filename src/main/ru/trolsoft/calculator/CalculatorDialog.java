@@ -236,7 +236,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     }
 
     private double evaluate(String expression) throws Exception {
-        if (expression.trim().length() == 0) {
+        if (expression.trim().isEmpty()) {
             return 0;
         }
         ExpressionBuilder builder = new ExpressionBuilder(expression);

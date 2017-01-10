@@ -39,7 +39,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class SplashScreen extends JWindow {
 
-    /** muCommander version displayed on this splash screen */
+    /** trolCommander version displayed on this splash screen */
     private String version;
 
     /** Current loading message displayed on this splash screen */
@@ -77,7 +77,7 @@ public class SplashScreen extends JWindow {
     /**
      * Creates and displays a new SplashScreen, with the given version string and initial loading message.
      *
-     * @param version muCommander version string which will be displayed in the top right corner
+     * @param version trolCommander version string which will be displayed in the top right corner
      * @param loadingMessage initial loading message, displayed in the lower left corner
      */
     public SplashScreen(String version, String loadingMessage) {

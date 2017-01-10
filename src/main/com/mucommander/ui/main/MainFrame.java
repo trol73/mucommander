@@ -273,12 +273,12 @@ public class MainFrame extends JFrame implements LocationListener {
     /**
      * Creates a new main frame set to the given initial folders.
      *
-     * @param leftTabs
-     * @param indexOfLeftSelectedTab
-     * @param leftTableConf
-     * @param rightTabs
-     * @param indexOfRightSelectedTab
-     * @param rightTableConf
+     * @param leftTabs left panel tabs configuration
+     * @param indexOfLeftSelectedTab index of left selected tab
+     * @param leftTableConf left table configuration
+     * @param rightTabs right panel tabs configuration
+     * @param indexOfRightSelectedTab index of right selected tab
+     * @param rightTableConf right table configuration
      */
     public MainFrame(ConfFileTableTab[] leftTabs, int indexOfLeftSelectedTab, FileTableConfiguration leftTableConf,
     		         ConfFileTableTab[] rightTabs, int indexOfRightSelectedTab, FileTableConfiguration rightTableConf) {
@@ -663,19 +663,19 @@ public class MainFrame extends JFrame implements LocationListener {
         setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             // Displays the document icon in the window title bar, works only for local files
             AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
             Object javaIoFile;
             if (currentFolder.getURL().getScheme().equals(FileProtocols.FILE)) {
                 // If the current folder is an archive entry, display the archive file, this is the closest we can get
                 // with a java.io.File
-                if(currentFolder.hasAncestor(AbstractArchiveEntryFile.class))
+                if (currentFolder.hasAncestor(AbstractArchiveEntryFile.class)) {
                     javaIoFile = currentFolder.getParentArchive().getUnderlyingFileObject();
-                else
+                } else {
                     javaIoFile = currentFolder.getUnderlyingFileObject();
-            }
-            else {
+                }
+            } else {
                 // If the current folder is not a local file, use the special /Network directory which is sort of
                 // 'Network Neighborhood'.
                 javaIoFile = new java.io.File("/Network");

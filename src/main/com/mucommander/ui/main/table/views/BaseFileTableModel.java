@@ -127,9 +127,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     /**
      * Returns index of file in directory (index of '..' == 0)
-     * @param row
-     * @param col
-     * @return
+     * @param row table row
+     * @param col table column
+     * @return index file in the table
      */
     public abstract int getFileIndexAt(int row, int col);
 
@@ -188,7 +188,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      *
      * @param cachedFile a CachedFile instance from which to pre-fetch attributes
      */
-    protected static void prefetchCachedFileAttributes(AbstractFile cachedFile) {
+    private static void prefetchCachedFileAttributes(AbstractFile cachedFile) {
         cachedFile.isDirectory();
         cachedFile.isBrowsable();
         cachedFile.isHidden();
@@ -270,7 +270,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * @return the current folder's children, as an array of CachedFile instances
      * @see #getFiles()
      */
-    public synchronized AbstractFile[] getCachedFiles() {
+    private synchronized AbstractFile[] getCachedFiles() {
         // Clone the array to make sure it can't be modified outside of this class
         AbstractFile[] cachedFilesCopy = new AbstractFile[cachedFiles.length];
         System.arraycopy(cachedFiles, 0, cachedFilesCopy, 0, cachedFiles.length);
@@ -292,7 +292,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     // Sort methods //
     //////////////////
 
-    protected static FileComparator createFileComparator(SortInfo sortInfo) {
+    private static FileComparator createFileComparator(SortInfo sortInfo) {
         return new FileComparator(sortInfo.getCriterion().getFileComparatorCriterion(), sortInfo.getAscendingOrder(), sortInfo.getFoldersFirst());
     }
 
@@ -575,7 +575,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
         if (parent != null) {
             if (index == 0) {
-            return parent;
+                return parent;
             }
             index--;
         }
@@ -760,16 +760,15 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
             if (fileSize > 0) {
                 markedTotalSize += fileSize;
             }
-
             nbFilesMarked++;
         } else {
             // File size can equal -1 if not available, do not count that in total
             if (fileSize > 0) {
                 markedTotalSize -= fileSize;
-        }
+            }
 
             nbFilesMarked--;
-    }
+        }
 
         fileMarked[fileIndex] = marked;
     }
@@ -801,8 +800,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     /**
      * Add directory to size calculation and start calculation worker if it doesn't busy
-     * @param table
-     * @param file
+     * @param table file table
+     * @param file directory to add
      */
     public void startDirectorySizeCalculation(FileTable table, AbstractFile file) {
         if (!file.isDirectory()) {
@@ -829,7 +828,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     /**
      * Takes a first ask for queue and starts calculation worker
-     * @param table
+     * @param table file table
      */
     private void processNextQueuedFile(FileTable table) {
         AbstractFile nextFile;
@@ -850,8 +849,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * Called from size-calculation worker after it finish or requests to repaint table.
      * Updates map of directory sizes and starts next task if worker finished
      *
-     * @param path
-     * @param table
+     * @param path directory to process
+     * @param table file table
      * @param size calculated directory size
      * @param finish true if worker completely finish task, false if it will just repaint table
      */
@@ -871,7 +870,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     /**
      * Stops directory calculation, clears calculated size ant tasks queue, interrupts currently executed worker if exists
      */
-    protected void stopSizeCalculation() {
+    private void stopSizeCalculation() {
         synchronized (directorySizes) {
             directorySizes.clear();
         }
@@ -891,7 +890,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     }
 
 
-    protected long calcMarkedDirectoriesSize() {
+    private long calcMarkedDirectoriesSize() {
         if (!hasCalculatedDirectories) {
             return 0;
         }

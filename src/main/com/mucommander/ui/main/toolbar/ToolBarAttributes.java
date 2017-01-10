@@ -123,7 +123,7 @@ public class ToolBarAttributes {
      * 
      * @return true if the default attributes are used, false otherwise.
      */
-    public static boolean areDefaultAttributes() {
+    static boolean areDefaultAttributes() {
     	if (useDefaultActions) {
     		return true;
         }
@@ -162,7 +162,7 @@ public class ToolBarAttributes {
     
     // - Listeners -------------------------------------------------------------
     // -------------------------------------------------------------------------
-    public static void addToolBarAttributesListener(ToolBarAttributesListener listener) {
+    static void addToolBarAttributesListener(ToolBarAttributesListener listener) {
     	synchronized(listeners) {listeners.put(listener, null);}
     }
     
@@ -170,7 +170,7 @@ public class ToolBarAttributes {
     	synchronized(listeners) {listeners.remove(listener);}
     }
     
-    public static void fireActionsChanged() {
+    private static void fireActionsChanged() {
     	synchronized(listeners) {
             for (ToolBarAttributesListener listener : listeners.keySet())
                 listener.toolBarActionsChanged();

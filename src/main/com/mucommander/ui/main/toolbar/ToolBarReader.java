@@ -54,7 +54,7 @@ public class ToolBarReader extends ToolBarIO {
         }
     }
     
-    public String[] getActionsRead() {
+    String[] getActionsRead() {
     	int nbActions = actionIdsV.size();
     	String[] actionIds = new String[nbActions];
         actionIdsV.toArray(actionIds);

@@ -39,14 +39,14 @@ import java.io.IOException;
  *
  * Created on 26/09/2016.
  */
-public class PreviewPanel extends JPanel {
+class PreviewPanel extends JPanel {
 
     private TextArea textArea;
 
     private TextViewer textViewer;
     private ImageViewer imageViewer;
 
-    public PreviewPanel() {
+    PreviewPanel() {
         super(new BorderLayout());
 
         // No decoration for this panel
@@ -102,7 +102,7 @@ public class PreviewPanel extends JPanel {
     }
 
 
-    public void loadFile(AbstractFile file) {
+    void loadFile(AbstractFile file) {
         if (file == null) {
             clearPreviewArea();
             doLayout();

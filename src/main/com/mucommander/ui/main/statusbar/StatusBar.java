@@ -99,6 +99,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     private JProgressBar progressBar;
 
+    private Component progressGlue;
+
     /** Thread which auto updates volume info */
     private Thread autoUpdateThread;
 
@@ -119,7 +121,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     public final static String WAITING_ICON = "waiting.png";
 
     /** Listens to configuration changes and updates static fields accordingly */
-    public final static ConfigurationListener CONFIGURATION_ADAPTER;
+    private final static ConfigurationListener CONFIGURATION_ADAPTER;
 
     /** SizeFormat format used to create the selected file(s) size string */
     private static int selectedFileSizeFormat;
@@ -172,8 +174,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         progressBar = new JProgressBar();
         add(progressBar);
-        progressBar.setVisible(false);
-        add(Box.createHorizontalGlue());
+        //progressBar.setVisible(false);
+        progressGlue = Box.createHorizontalGlue();
+        add(progressGlue);
+        showProgress(-1);
 
         selectedFilesLabel = new JLabel("");
         dial = new SpinningDial();
@@ -428,7 +432,6 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         selectedFilesLabel.setIcon(icon);
 
         selectedFilesLabel.setHorizontalTextPosition(iconBeforeText ? JLabel.TRAILING : JLabel.LEADING);
-
     }
 
 	
@@ -637,8 +640,12 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         if (progress >= 0) {
             progressBar.setVisible(true);
             progressBar.setValue(progress);
+            progressGlue.setMaximumSize(new Dimension(Short.MAX_VALUE, 0));
+            progressGlue.revalidate();
         } else {
             progressBar.setVisible(false);
+            progressGlue.setMaximumSize(new Dimension(0, 0));
+            progressGlue.revalidate();
         }
     }
 

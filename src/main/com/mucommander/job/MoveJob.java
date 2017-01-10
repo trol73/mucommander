@@ -44,7 +44,7 @@ public class MoveJob extends AbstractCopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoveJob.class);
 	
     /** True if this job corresponds to a single file renaming */
-    protected boolean renameMode = false;
+    private boolean renameMode = false;
 
     
     /**
@@ -81,8 +81,9 @@ public class MoveJob extends AbstractCopyJob {
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         // Stop if interrupted
-        if (getState() == State.INTERRUPTED)
+        if (getState() == State.INTERRUPTED) {
             return false;
+        }
 		
         // Destination folder
         AbstractFile destFolder = recurseParams == null ? baseDestFolder : (AbstractFile)recurseParams;
@@ -96,32 +97,34 @@ public class MoveJob extends AbstractCopyJob {
 
         // create destination AbstractFile instance
         AbstractFile destFile = createDestinationFile(destFolder, destFileName);
-        if (destFile == null)
+        if (destFile == null) {
             return false;
-
-        // Do not follow symlink, simply delete it and return
-        if (file.isSymlink()) {
-            do {		// Loop for retry
-                try  {
-                    file.delete();
-                    return true;
-                } catch(IOException e) {
-                    LOGGER.debug("IOException caught", e);
-
-                    int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_file", file.getAbsolutePath()));
-                    // Retry loops
-                    if (ret == RETRY_ACTION) {
-                        continue;
-                    }
-                    // Cancel, skip or close dialog returns false
-                    return false;
-                }
-            } while(true);
         }
 
+        // Do not follow symlink, simply delete it and return
+//        if (file.isSymlink()) {
+//            do {		// Loop for retry
+//                try  {
+//                    file.delete();
+//                    return true;
+//                } catch(IOException e) {
+//                    LOGGER.debug("IOException caught", e);
+//
+//                    int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_file", file.getAbsolutePath()));
+//                    // Retry loops
+//                    if (ret == RETRY_ACTION) {
+//                        continue;
+//                    }
+//                    // Cancel, skip or close dialog returns false
+//                    return false;
+//                }
+//            } while(true);
+//        }
+
         destFile = checkForCollision(file, destFolder, destFile, renameMode);
-        if (destFile == null)
+        if (destFile == null) {
             return false;
+        }
 
         // Let's try to rename the file using AbstractFile#renameTo() whenever possible, as it is more efficient
         // than moving the file manually.
@@ -132,7 +135,7 @@ public class MoveJob extends AbstractCopyJob {
         // - if the 'rename' operation is not supported
         // Note: we want to avoid calling AbstractFile#renameTo when we know it will fail, as it performs some costly
         // I/O bound checks and ends up throwing an exception which also comes at a cost.
-        if(!append && file.getURL().schemeEquals(destFile.getURL()) && file.isFileOperationSupported(FileOperation.RENAME)) {
+        if (!append && file.getURL().schemeEquals(destFile.getURL()) && file.isFileOperationSupported(FileOperation.RENAME)) {
             try {
                 file.renameTo(destFile);
                 return true;
@@ -192,8 +195,9 @@ public class MoveJob extends AbstractCopyJob {
                     }
 
                     // If one file failed to be moved, return false (failure) since this folder could not be moved totally
-                    if(!isFolderEmpty)
+                    if (!isFolderEmpty) {
                         return false;
+                    }
                 } catch (IOException e) {
                     // file.ls() failed
                     int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_folder", file.getName()));
@@ -207,8 +211,9 @@ public class MoveJob extends AbstractCopyJob {
             } while(true);
 
             // Return now if the job was interrupted, so that we do not attempt to delete this folder
-            if (getState() == State.INTERRUPTED)
+            if (getState() == State.INTERRUPTED) {
                 return false;
+            }
 
             // finally, delete the empty folder
             do {		// Loop for retry
@@ -241,8 +246,9 @@ public class MoveJob extends AbstractCopyJob {
 
                         int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_file", file.getAbsolutePath()));
                         // Retry loops
-                        if (ret==RETRY_ACTION)
+                        if (ret == RETRY_ACTION) {
                             continue;
+                        }
                         // Cancel, skip or close dialog returns false
                         return false;
                     }
@@ -270,15 +276,17 @@ public class MoveJob extends AbstractCopyJob {
 
         // If the source files are located inside an archive, optimize the archive file
         AbstractArchiveFile sourceArchiveFile = getBaseSourceFolder()==null?null:getBaseSourceFolder().getParentArchive();
-        if (sourceArchiveFile != null && sourceArchiveFile.isArchive() && sourceArchiveFile.isWritable())
-            optimizeArchive((AbstractRWArchiveFile)sourceArchiveFile);
+        if (sourceArchiveFile != null && sourceArchiveFile.isArchive() && sourceArchiveFile.isWritable()) {
+            optimizeArchive((AbstractRWArchiveFile) sourceArchiveFile);
+        }
 
         // If the destination files are located inside an archive, optimize the archive file, only if the destination
         // archive is different from the source one
         AbstractArchiveFile destArchiveFile = baseDestFolder.getParentArchive();
         if (destArchiveFile != null && destArchiveFile.isArchive() && destArchiveFile.isWritable()
-                && !(sourceArchiveFile != null && destArchiveFile.equalsCanonical(sourceArchiveFile)))
-            optimizeArchive((AbstractRWArchiveFile)destArchiveFile);
+                && !(sourceArchiveFile != null && destArchiveFile.equalsCanonical(sourceArchiveFile))) {
+            optimizeArchive((AbstractRWArchiveFile) destArchiveFile);
+        }
 
         // If this job corresponds to a file renaming in the same directory, select the renamed file
         // in the active table after this job has finished (and hasn't been cancelled)

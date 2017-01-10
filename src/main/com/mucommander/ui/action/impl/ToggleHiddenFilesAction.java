@@ -43,7 +43,7 @@ public class ToggleHiddenFilesAction extends MuAction {
     /**
      * Creates a new <code>ToggleHiddenFilesAction</code>.
      */
-    public ToggleHiddenFilesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleHiddenFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -66,7 +66,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
     /** Panel containing this file table */
     private FolderPanel folderPanel;
     
-	public FileTableWrapperForDisplay(final FileTable fileTable, final FolderPanel folderPanel, final MainFrame mainFrame) {
+	FileTableWrapperForDisplay(final FileTable fileTable, final FolderPanel folderPanel, final MainFrame mainFrame) {
 		super(fileTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		this.mainFrame = mainFrame;
@@ -165,7 +165,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 	/**
      * Dims the scrollpane's background, called by {@link com.mucommander.ui.quicksearch.QuickSearch} when a quick search is started.
      */
-    public void dimBackground() {
+    void dimBackground() {
         fileTable.setBackground(unmatchedBackgroundColor);
         getViewport().setBackground(unmatchedBackgroundColor);
     }
@@ -174,7 +174,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
      * Stops dimming the scrollpane's background (returns to a normal background color), called by
      * {@link com.mucommander.ui.quicksearch.QuickSearch} when a quick search is over.
      */
-    public void undimBackground() {
+    void undimBackground() {
         // Identifies the new background color.
     	Color newColor = fileTable.hasFocus() ?  backgroundColor : unfocusedBackgroundColor;
 

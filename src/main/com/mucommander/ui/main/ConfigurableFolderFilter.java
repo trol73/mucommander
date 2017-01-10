@@ -81,24 +81,27 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
         // Show or hide hidden files
         switch (event.getVariable()) {
             case MuPreferences.SHOW_HIDDEN_FILES:
-                if (event.getBooleanValue())
+                if (event.getBooleanValue()) {
                     removeFileFilter(hiddenFileFilter);
-                else
+                } else {
                     addFileFilter(hiddenFileFilter);
+                }
                 break;
             // Show or hide .DS_Store files (Mac OS X option)
             case MuPreferences.SHOW_DS_STORE_FILES:
-                if (event.getBooleanValue())
+                if (event.getBooleanValue()) {
                     removeFileFilter(dsFileFilter);
-                else
+                } else {
                     addFileFilter(dsFileFilter);
+                }
                 break;
             // Show or hide system folders (Mac OS X option)
             case MuPreferences.SHOW_SYSTEM_FOLDERS:
-                if (event.getBooleanValue())
+                if (event.getBooleanValue()) {
                     removeFileFilter(systemFileFilter);
-                else
+                } else {
                     addFileFilter(systemFileFilter);
+                }
                 break;
         }
 

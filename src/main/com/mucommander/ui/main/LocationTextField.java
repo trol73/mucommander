@@ -82,7 +82,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
      *
      * @param folderPanel FolderPanel this text field is displayed in
      */
-    public LocationTextField(FolderPanel folderPanel) {
+    LocationTextField(FolderPanel folderPanel) {
         // Use a custom text field that can display loading progress when changing folders
         super(0, ThemeManager.getCurrentColor(Theme.LOCATION_BAR_PROGRESS_COLOR));
 
@@ -221,7 +221,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
      * 
      * @return true if a malformed url was entered, false otherwise.
      */
-    public boolean textFieldValidated() {
+    private boolean textFieldValidated() {
         String location = getText().trim();
 
         // Under Windows, trim the entered path for the following reason.
@@ -236,8 +236,9 @@ public class LocationTextField extends ProgressTextField implements LocationList
         if (OsFamily.WINDOWS.isCurrent() && location.indexOf(":\\") == 1) {
             // Looks for trailing spaces and if some 
             Matcher matcher = windowsTrailingSpacePattern.matcher(location);
-            if (matcher.find())
+            if (matcher.find()) {
                 location = location.substring(0, matcher.start());
+            }
         }
                 
         // Save the path that was entered in case the location change fails or is cancelled 
@@ -281,7 +282,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
         return folderPanel.tryChangeCurrentFolder(location) == null;
     }
 
-    public void textFieldCancelled() {
+    private void textFieldCancelled() {
         setText(folderPanel.getCurrentFolder().getAbsolutePath());
         transferFocus();
     }
@@ -342,7 +343,8 @@ public class LocationTextField extends ProgressTextField implements LocationList
      * Receives theme font changes notifications.
      */
     public void fontChanged(FontChangedEvent event) {
-        if(event.getFontId() == Theme.LOCATION_BAR_FONT)
+        if (event.getFontId() == Theme.LOCATION_BAR_FONT) {
             setFont(event.getFont());
+        }
     }
 }

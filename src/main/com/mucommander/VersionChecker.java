@@ -275,7 +275,7 @@ public class VersionChecker extends DefaultHandler {
         latestVersion = latestVersion.toLowerCase().trim();
         downloadURL   = downloadURL.trim();
         jarURL        = jarURL.trim();
-        if (jarURL.length() == 0) {
+        if (jarURL.isEmpty()) {
             jarURL = null;
         }
         releaseDate   = releaseDate.trim();

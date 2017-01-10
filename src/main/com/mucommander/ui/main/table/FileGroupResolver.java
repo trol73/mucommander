@@ -37,7 +37,7 @@ public class FileGroupResolver {
         WildcardFileFilter filter;
         int group;
 
-        public ResolverRecord(int group, String mask) {
+        ResolverRecord(int group, String mask) {
             this.group = group;
             this.filter = new WildcardFileFilter(mask);
         }
