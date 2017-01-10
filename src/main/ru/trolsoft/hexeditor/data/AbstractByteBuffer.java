@@ -36,7 +36,7 @@ public abstract class AbstractByteBuffer {
     /**
      *
      */
-    protected static final int DEFAULT_CAPACITY = 1024*256;
+    static final int DEFAULT_CAPACITY = 1024*256;
 
 
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractByteBuffer {
     }
 
 
-    protected long calcOffset(long fileOffset, boolean randomAccessStream) {
+    private long calcOffset(long fileOffset, boolean randomAccessStream) {
         if (randomAccessStream) {
             switch (cacheStrategy) {
                 case FORWARD:

@@ -23,6 +23,7 @@ import com.mucommander.cache.LRUCache;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.ftp.FTPFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
@@ -48,6 +49,7 @@ import com.mucommander.ui.main.table.views.BaseFileTableModel;
 import com.mucommander.ui.theme.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trolsoft.utils.ImageSizeDetector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +59,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -125,6 +128,9 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     /** SizeFormat format used to create the selected file(s) size string */
     private static int selectedFileSizeFormat;
+
+    private final static ExtensionFilenameFilter SUPPORTED_IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {
+            ".png", ".gif", ".jpg", ".jpeg", ".bmp", ".tga", ".tiff", ".tif"});
 
 
     static {
@@ -313,6 +319,22 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                     filesInfo.append(" (");
                     filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
                     filesInfo.append(")");
+
+                    boolean local = selectedFile instanceof LocalFile ||
+                            (selectedFile instanceof CachedFile && ((CachedFile)selectedFile).getProxiedFile() instanceof LocalFile);
+                    if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
+                        try (InputStream is = selectedFile.getInputStream()) {
+                            ImageSizeDetector detector = new ImageSizeDetector(is);
+                            if (detector.getType() != null) {
+                                filesInfo.append(" ");
+                                filesInfo.append(detector.getWidth());
+                                filesInfo.append(" x ");
+                                filesInfo.append(detector.getHeight());
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }		

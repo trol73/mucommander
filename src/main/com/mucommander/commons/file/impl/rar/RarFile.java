@@ -21,7 +21,6 @@ import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +39,9 @@ public class RarFile {
 
     RarFile(AbstractFile file) throws IOException, RarException {
         this.file = file;
-        try (InputStream fileIn = file.getInputStream()) {
-            archive = new Archive(new File(file.getPath()));
-        }
+        //try (InputStream fileIn = file.getInputStream()) {
+        archive = new Archive(new File(file.getPath()));
+        //}
     }
 
 
