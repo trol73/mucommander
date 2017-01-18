@@ -175,15 +175,17 @@ public class LocalLocationHistory {
 	 * currently isn't any 'forward' folder in history, but may never be null.
 	 */
 	public FileURL[] getForwardFolders() {
-		if(!hasForwardFolder())
+		if (!hasForwardFolder()) {
 			return new FileURL[0];
+		}
 
 		int historySize = history.size();
 		FileURL urls[] = new FileURL[historySize-historyIndex-1];
 
 		int cur = 0;
-		for(int i=historyIndex+1; i<historySize; i++)
+		for(int i=historyIndex+1; i<historySize; i++) {
 			urls[cur++] = history.get(i);
+		}
 
 		return urls;
 	}

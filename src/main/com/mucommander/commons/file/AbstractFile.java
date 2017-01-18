@@ -57,12 +57,12 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     protected FileURL fileURL;
 
     /** Default path separator */
-    public final static String DEFAULT_SEPARATOR = "/";
+    protected final static String DEFAULT_SEPARATOR = "/";
 
     /** Size of the read/write buffer */
     // Note: raising buffer size from 8192 to 65536 makes a huge difference in SFTP read transfer rates but beyond
     // 65536, no more gain (not sure why).
-    public final static int IO_BUFFER_SIZE = 65536;
+    protected final static int IO_BUFFER_SIZE = 65536;
 
 
     /**
@@ -1276,7 +1276,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @throws UnsupportedFileOperationException if this method relies on a file operation that is not supported
      * or not implemented by the underlying filesystem.
      */
-    protected final void deleteRecursively(AbstractFile file) throws IOException {
+    private void deleteRecursively(AbstractFile file) throws IOException {
         if (file.isDirectory() && !file.isSymlink()) {
             AbstractFile children[] = file.ls();
             for (AbstractFile child : children) {
@@ -1447,11 +1447,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #equalsCanonical(Object)
      */
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof AbstractFile)) {
-            return false;
-        }
-
-        return getURL().equals(((AbstractFile)o).getURL(), true, true);
+        return o instanceof AbstractFile && getURL().equals(((AbstractFile) o).getURL(), true, true);
     }
 
     /**
@@ -1474,13 +1470,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see #equals(Object)
      */
     public boolean equalsCanonical(Object o) {
-        if (o == null || !(o instanceof AbstractFile)) {
-            return false;
+        if (o instanceof AbstractFile) {
+            // TODO: resolve hostnames ?
+            return getCanonicalPath(false).equals(((AbstractFile)o).getCanonicalPath(false));
         }
-
-        // TODO: resolve hostnames ?
-
-        return getCanonicalPath(false).equals(((AbstractFile)o).getCanonicalPath(false));
+        return false;
     }
 
     /**

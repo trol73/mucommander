@@ -113,37 +113,15 @@ public enum JavaVersion implements ComparableRuntimeProperty {
      */
     static JavaVersion parseSystemProperty(String javaVersionProp) {
         // Java version property should never be null or empty, but better be safe than sorry ...
-        if (javaVersionProp==null || (javaVersionProp=javaVersionProp.trim()).isEmpty())
-            // Assume java 1.7 (first supported Java version)
-            return JavaVersion.JAVA_1_7;
-        // Java 1.8
-        if (javaVersionProp.startsWith("1.8"))
-            return JavaVersion.JAVA_1_7;
-        // Java 1.7
-        if (javaVersionProp.startsWith("1.7"))
-            return JavaVersion.JAVA_1_7;
-        // Java 1.6
-        if (javaVersionProp.startsWith("1.6"))
-            return JavaVersion.JAVA_1_6;
-        // Java 1.5
-        if (javaVersionProp.startsWith("1.5"))
-            return JavaVersion.JAVA_1_5;
-        // Java 1.4
-        if (javaVersionProp.startsWith("1.4"))
-            return JavaVersion.JAVA_1_4;
-        // Java 1.3
-        if (javaVersionProp.startsWith("1.3"))
-            return JavaVersion.JAVA_1_3;
-        // Java 1.2
-        if (javaVersionProp.startsWith("1.2"))
-            return JavaVersion.JAVA_1_2;
-        // Java 1.1
-        if (javaVersionProp.startsWith("1.1"))
-            return JavaVersion.JAVA_1_1;
-        // Java 1.0
-        if (javaVersionProp.startsWith("1.0"))
-            return JavaVersion.JAVA_1_0;
-
+        if (javaVersionProp == null || (javaVersionProp = javaVersionProp.trim()).isEmpty()) {
+            // Assume last java version
+            return values()[values().length-1];
+        }
+        for (JavaVersion ver : values()) {
+            if (javaVersionProp.startsWith(ver.stringRepresentation)) {
+                return ver;
+            }
+        }
         // Newer version we don't know of yet, assume latest supported Java version
         return JavaVersion.JAVA_1_8;
     }
@@ -154,7 +132,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
      * @return true if this instance is the same as the current runtime's value
      */
     public boolean isCurrent() {
-        return this==currentValue;
+        return this == currentValue;
     }
 
     //////////////////////////////////////////////

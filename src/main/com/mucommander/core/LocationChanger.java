@@ -920,7 +920,7 @@ public class LocationChanger {
 			}
 		}
 
-		public void cleanup(boolean folderChangedSuccessfully) {
+		void cleanup(boolean folderChangedSuccessfully) {
 			// Ensures that this method is called only once
 			synchronized(KILL_LOCK) {
 				if(disposed) {

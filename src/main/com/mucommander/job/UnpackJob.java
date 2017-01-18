@@ -45,10 +45,10 @@ import java.util.List;
 public class UnpackJob extends AbstractCopyJob {
 
     /** Archive entries to be unpacked */
-    protected List<ArchiveEntry> selectedEntries;
+    private List<ArchiveEntry> selectedEntries;
 
     /** Depth of the folder in which the top entries are located. 0 is the highest depth (archive's root folder) */
-    protected int baseArchiveDepth;
+    private int baseArchiveDepth;
 
     private long totalFilesSize;
     private int totalFilesCount;

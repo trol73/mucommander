@@ -38,7 +38,7 @@ public class XORCipher {
 
 
     /** Long enough key (256 bytes) to avoid having too much redundancy in small text strings. */
-    public final static int NOT_SO_PRIVATE_KEY[] = {
+    private final static int NOT_SO_PRIVATE_KEY[] = {
         161, 220, 156, 76, 177, 174, 56, 37, 98, 93, 224, 19, 160, 95, 69, 140,
         91, 138, 33, 114, 248, 57, 179, 17, 54, 172, 249, 58, 26, 181, 167, 231,
         241, 185, 218, 174, 37, 102, 100, 26, 16, 214, 119, 29, 118, 151, 135, 175,
@@ -61,8 +61,9 @@ public class XORCipher {
         int keyLen = NOT_SO_PRIVATE_KEY.length;
 
         byte[] result = new byte[len];
-        for(int i=0; i<len; i++)
-            result[i] = (byte)(b[i]^NOT_SO_PRIVATE_KEY[i%keyLen]);
+        for(int i=0; i<len; i++) {
+            result[i] = (byte) (b[i] ^ NOT_SO_PRIVATE_KEY[i % keyLen]);
+        }
 
         return result;
     }

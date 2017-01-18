@@ -96,7 +96,7 @@ public class BookmarkManager implements VectorChangeListener {
      * @param  builder           where to send bookmark building messages.
      * @throws BookmarkException if an error occurs.
      */
-    public static synchronized void buildBookmarks(BookmarkBuilder builder) throws BookmarkException {
+    private static synchronized void buildBookmarks(BookmarkBuilder builder) throws BookmarkException {
         builder.startBookmarks();
         for (Bookmark bookmark : bookmarks) {
             builder.addBookmark(bookmark.getName(), bookmark.getLocation());
@@ -118,7 +118,7 @@ public class BookmarkManager implements VectorChangeListener {
      * @see    #setBookmarksFile(String)
      * @throws IOException if there was a problem locating the default bookmarks file.
      */
-    public static synchronized AbstractFile getBookmarksFile() throws IOException {
+    private static synchronized AbstractFile getBookmarksFile() throws IOException {
         if (bookmarksFile == null) {
             return PlatformManager.getPreferencesFolder().getChild(DEFAULT_BOOKMARKS_FILE_NAME);
         }
@@ -153,7 +153,7 @@ public class BookmarkManager implements VectorChangeListener {
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see       #getBookmarksFile()
      */
-    public static void setBookmarksFile(File file) throws FileNotFoundException {setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()));}
+    private static void setBookmarksFile(File file) throws FileNotFoundException {setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()));}
 
     /**
      * Sets the path to the bookmarks file.
@@ -162,7 +162,7 @@ public class BookmarkManager implements VectorChangeListener {
      * @see       #getBookmarksFile()
      */
 
-    public static synchronized void setBookmarksFile(AbstractFile file) throws FileNotFoundException {
+    private static synchronized void setBookmarksFile(AbstractFile file) throws FileNotFoundException {
         if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
         }
@@ -178,20 +178,14 @@ public class BookmarkManager implements VectorChangeListener {
      * @throws Exception if an error occurs.
      */
     public static synchronized void loadBookmarks() throws Exception {
-        InputStream in = null;
-
         // Parse the bookmarks file
         isLoading = true;
-        try {
-            in = new BackupInputStream(getBookmarksFile());
+        try (InputStream in = new BackupInputStream(getBookmarksFile())) {
             readBookmarks(in, new Loader());
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(Exception ignore) {}
-            }
             isLoading = false;
+        } catch (IOException e) {
+            isLoading = false;
+            throw e;
         }
     }
 
@@ -231,19 +225,12 @@ public class BookmarkManager implements VectorChangeListener {
      */
     public static synchronized void writeBookmarks(boolean forceWrite) throws IOException, BookmarkException {
         // Write bookmarks file only if changes were made to the bookmarks since last write, or if write is forced.
-        if (!(forceWrite || saveNeeded)) {
+        if (!forceWrite && !saveNeeded) {
             return;
         }
-        OutputStream out = null;
-        try {
-            buildBookmarks(getBookmarkWriter(out = new BackupOutputStream(getBookmarksFile())));
+        try (OutputStream out  = new BackupOutputStream(getBookmarksFile())) {
+            buildBookmarks(getBookmarkWriter(out));
             saveNeeded = false;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch(Exception ignore) {}
-            }
         }
     }
 
@@ -337,7 +324,7 @@ public class BookmarkManager implements VectorChangeListener {
      * @param listener the BookmarkListener to remove from the list of registered listeners.
      * @see   #addBookmarkListener(BookmarkListener)
      */
-    public static void removeBookmarkListener(BookmarkListener listener) {
+    private static void removeBookmarkListener(BookmarkListener listener) {
         synchronized(listeners) {listeners.remove(listener);}
     }
 
@@ -349,7 +336,7 @@ public class BookmarkManager implements VectorChangeListener {
      * <li>An existing bookmark which has been removed
      * </ul>
      */
-    public static void fireBookmarksChanged() {
+    static void fireBookmarksChanged() {
         // Bookmarks file will need to be saved
         if (!isLoading) {
             saveNeeded = true;

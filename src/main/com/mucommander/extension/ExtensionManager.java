@@ -75,7 +75,7 @@ public class ExtensionManager {
     /** Path to the extensions folder. */
     private static AbstractFile extensionsFolder;
     /** Default name of the extensions folder. */
-    public static final String DEFAULT_EXTENSIONS_FOLDER_NAME = "extensions";
+    private static final String DEFAULT_EXTENSIONS_FOLDER_NAME = "extensions";
 
 
 
@@ -85,13 +85,13 @@ public class ExtensionManager {
         ClassLoader temp = ClassLoader.getSystemClassLoader();
 
         // Initialises the extension class loader.
-        // If the system classloader is an instance of AbstractFileClassLoader, use it.
-        if (temp instanceof AbstractFileClassLoader)
-            loader = (AbstractFileClassLoader)temp;
-
-        // Otherwise, use a new instance of AbstractFileClassLoader.
-        else
+        if (temp instanceof AbstractFileClassLoader) {
+            // If the system classloader is an instance of AbstractFileClassLoader, use it.
+            loader = (AbstractFileClassLoader) temp;
+        } else {
+            // Otherwise, use a new instance of AbstractFileClassLoader.
             loader = new AbstractFileClassLoader(ExtensionManager.class.getClassLoader());
+        }
 //        
 //        UIManager.put("ClassLoader", loader);
     }
@@ -117,7 +117,7 @@ public class ExtensionManager {
      * @see                #setExtensionsFolder(String)
      * @see                #getExtensionsFolder()
      */
-    public static void setExtensionsFolder(File folder) throws IOException {setExtensionsFolder(FileFactory.getFile(folder.getAbsolutePath()));}
+    private static void setExtensionsFolder(File folder) throws IOException {setExtensionsFolder(FileFactory.getFile(folder.getAbsolutePath()));}
 
     /**
      * Sets the path to the folder in which all extensions are stored.
@@ -131,14 +131,14 @@ public class ExtensionManager {
      * @see                #setExtensionsFolder(String)
      * @see                #getExtensionsFolder()
      */
-    public static void setExtensionsFolder(AbstractFile folder) throws IOException {
+    private static void setExtensionsFolder(AbstractFile folder) throws IOException {
         // If the folder doesn't exist, create it.
-        if(!folder.exists())
+        if (!folder.exists()) {
             folder.mkdir();
-
-        // If it's not a browsable file, use its parent.
-        else if(!folder.isBrowsable())
+        } else if (!folder.isBrowsable()) {
+            // If it's not a browsable file, use its parent.
             folder = folder.getParent();
+        }
 
         extensionsFolder = folder;
     }
@@ -156,12 +156,13 @@ public class ExtensionManager {
      * @see                #getExtensionsFolder()
      */
     public static void setExtensionsFolder(String path) throws IOException {
-        AbstractFile folder;
+        AbstractFile folder = FileFactory.getFile(path);
 
-        if((folder = FileFactory.getFile(path)) == null)
+        if(folder == null) {
             setExtensionsFolder(new File(path));
-        else
+        } else {
             setExtensionsFolder(folder);
+        }
     }
 
     /**
@@ -179,8 +180,9 @@ public class ExtensionManager {
         AbstractFile folder = PlatformManager.getPreferencesFolder().getChild(DEFAULT_EXTENSIONS_FOLDER_NAME);
 
         // Makes sure the folder exists.
-        if(!folder.exists())
+        if (!folder.exists()) {
             folder.mkdir();
+        }
 
         return folder;
     }
@@ -191,7 +193,7 @@ public class ExtensionManager {
      * @throws IOException if an error occured while locating the default extensions folder.
      * @see                #setExtensionsFolder(AbstractFile)
      */
-    public static AbstractFile getExtensionsFolder() throws IOException {
+    private static AbstractFile getExtensionsFolder() throws IOException {
         // If the extensions folder has been set, use it.
         if (extensionsFolder != null) {
             return extensionsFolder;
@@ -220,14 +222,14 @@ public class ExtensionManager {
      * @param  file file whose presence in the extensions path will be checked.
      * @return      <code>true</code> if the specified file is in the extension's classloader path, <code>false</code> otherwise.
      */
-    public static boolean isInExtensionsPath(AbstractFile file) {return loader.contains(file);}
+    private static boolean isInExtensionsPath(AbstractFile file) {return loader.contains(file);}
 
     /**
      * Returns <code>true</code> if the specified file is in the system classpath.
      * @param  file file whose presence in the system classpath will be checked.
      * @return      <code>true</code> if the specified file is in the system classpath, <code>false</code> otherwise.
      */
-    public static boolean isInClasspath(AbstractFile file) {
+    private static boolean isInClasspath(AbstractFile file) {
         String path = file.getAbsolutePath();
         StringTokenizer parser = new StringTokenizer(System.getProperty("java.class.path"), System.getProperty("path.separator"));
         while (parser.hasMoreTokens()) {
@@ -265,15 +267,17 @@ public class ExtensionManager {
     public static boolean importLibrary(AbstractFile file, boolean force) throws IOException {
         // If the file is already in the extensions or classpath,
         // there's nothing to do.
-        if(isAvailable(file))
+        if (isAvailable(file)) {
             return true;
+        }
 
         // If the destination file already exists, either delete it
         // if force is set to true or just return false.
         AbstractFile dest = getExtensionsFile(file.getName());
-        if(dest.exists()) {
-            if(!force)
+        if (dest.exists()) {
+            if (!force) {
                 return false;
+            }
             dest.delete();
         }
 
@@ -287,7 +291,7 @@ public class ExtensionManager {
      * Adds the specified file to the extension's classpath.
      * @param file file to add to the classpath.
      */
-    public static void addToClassPath(AbstractFile file) {loader.addFile(file);}
+    private static void addToClassPath(AbstractFile file) {loader.addFile(file);}
 
     /**
      * Adds all known extensions to the current classpath.
@@ -306,8 +310,9 @@ public class ExtensionManager {
 
         // Adds all JAR files contained by the extensions folder to the classpath.
         AbstractFile[] files = getExtensionsFolder().ls(new ExtensionFilenameFilter(".jar"));
-        for (AbstractFile file : files)
+        for (AbstractFile file : files) {
             addToClassPath(file);
+        }
     }
 
     /**

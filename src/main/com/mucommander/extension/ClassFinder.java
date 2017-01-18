@@ -19,6 +19,7 @@
 package com.mucommander.extension;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -80,12 +81,10 @@ public class ClassFinder {
      * @throws IOException    if an error occurs while exploring <code>currentFile</code>.
      */
     private List<Class<?>> find(String currentPackage, AbstractFile currentFile) throws IOException {
-        AbstractFile[]   files;        // All subfolders or child class files of currentFile.
-        Class<?>         currentClass; // Buffer for the current class.
-        List<Class<?>>   result = new Vector<>();
+        AbstractFile[] files = currentFile.ls(filter);        // All subfolders or child class files of currentFile.
+        List<Class<?>> result = new ArrayList<>();
         
         // Analyses all subdirectories and class files.
-        files = currentFile.ls(filter);
         for (AbstractFile file : files) {
             // Explores subdirectories recursively.
             if (file.isDirectory())
@@ -95,10 +94,10 @@ public class ClassFinder {
                 // Errors are treated as 'this class is not wanted'.
             else {
                 try {
+                    Class<?> currentClass; // Buffer for the current class.
                     if (classFilter.accept(currentClass = Class.forName(currentPackage + file.getNameWithoutExtension(), false, loader)))
                         result.add(currentClass);
-                }
-                catch (Throwable e) {
+                } catch (Throwable ignore) {
                 }
             }
         }

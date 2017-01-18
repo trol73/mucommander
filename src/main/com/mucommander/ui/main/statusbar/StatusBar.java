@@ -94,11 +94,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     /** Label that displays info about current volume (free/total space) */
     private VolumeSpaceLabel volumeSpaceLabel;
 
-    private HeapIndicator heapIndicator;
-
     private TaskPanel taskPanel;
-
-    private FileWindowsListButton fileWindowsListButton;
 
     private JProgressBar progressBar;
 
@@ -191,14 +187,14 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         add(Box.createHorizontalGlue());
 
-        fileWindowsListButton = new FileWindowsListButton();
+        FileWindowsListButton fileWindowsListButton = new FileWindowsListButton();
         add(fileWindowsListButton);
 
         taskPanel = new TaskPanel();
         add(taskPanel);
         add(Box.createRigidArea(new Dimension(2, 0)));
 
-        heapIndicator = new HeapIndicator();
+        HeapIndicator heapIndicator = new HeapIndicator();
         add(heapIndicator);
         add(Box.createRigidArea(new Dimension(2, 0)));
 

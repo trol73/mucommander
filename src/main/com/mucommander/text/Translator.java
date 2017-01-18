@@ -86,12 +86,12 @@ public class Translator {
     }
 
 
-    public static void registerLocale(Locale locale) {
+    private static void registerLocale(Locale locale) {
         availableLanguages.add(locale);
     }
 
 
-    private static Locale getLocale() {
+    private static Locale loadLocale() {
         String localeNameFromConf = MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE);
         if (localeNameFromConf == null) {
             // language is not set in preferences, use system's language
@@ -135,8 +135,28 @@ public class Translator {
         }
     }
 
+    private static Locale matchLocale(Locale loadedLocale) {
+        final String lang = loadedLocale.getLanguage();
+        for (Locale locale : availableLanguages) {
+            if (lang.equals(loadedLocale.getLanguage()) && Objects.equals(locale.getCountry(), loadedLocale.getCountry())) {
+                getLogger().info("Found exact match (language+country) for locale {}", locale);
+                return locale;
+            }
+        }
+
+        for (Locale locale : availableLanguages) {
+            if (lang.equals(loadedLocale.getLanguage())) {
+                getLogger().info("Found close match (language) for locale {}", loadedLocale);
+                return locale;
+            }
+        }
+
+        getLogger().info("Locale {} is not available, falling back to English", loadedLocale);
+        return Locale.ENGLISH;
+    }
+
     public static void init() throws IOException {
-        Locale locale = getLocale();
+        Locale locale = matchLocale(loadLocale());
 
         // Determines if language is one of the languages declared as available
         if (availableLanguages.contains(locale)) {

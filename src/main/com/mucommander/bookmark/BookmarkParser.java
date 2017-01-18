@@ -56,7 +56,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
     /**
      * Creates a new BookmarkParser instance.
      */
-    public BookmarkParser() {}
+    BookmarkParser() {}
 
     /**
      * Parses the given XML bookmarks file. Should only be called by BookmarkManager.

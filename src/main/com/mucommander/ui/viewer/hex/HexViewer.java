@@ -54,7 +54,6 @@ public class HexViewer extends FileViewer {
     private StatusBar statusBar;
     private String encoding = DEFAULT_ENCODING;
     private byte[] lastSearchBytes;
-    private long lastSearchResult = -1;
 
     private JMenu menuView;
     private JMenuItem gotoItem;
@@ -66,7 +65,7 @@ public class HexViewer extends FileViewer {
     private FindDialog dlgFind;
 
 
-    public HexViewer() {
+    HexViewer() {
         super();
 
         MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
@@ -207,6 +206,7 @@ public class HexViewer extends FileViewer {
     private void doSearchFromPos(byte[] bytes, long pos, boolean next) {
         lastSearchBytes = bytes;
         try {
+            long lastSearchResult;
             if (next) {
                 lastSearchResult = ByteBufferSearchUtils.indexOf(byteBuffer, bytes, pos);
             } else {

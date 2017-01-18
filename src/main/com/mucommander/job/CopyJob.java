@@ -22,7 +22,6 @@ package com.mucommander.job;
 import java.io.IOException;
 
 import com.mucommander.commons.file.*;
-import com.mucommander.commons.file.impl.ProxyFile;
 import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
@@ -46,12 +45,12 @@ public class CopyJob extends AbstractCopyJob {
 
     /** Destination file that is being copied, this value is updated every time #processFile() is called.
      * The value can be used by subclasses that override processFile should they need to work on the destination file. */
-    protected AbstractFile currentDestFile;
+    AbstractFile currentDestFile;
 
-    protected final ScanDirectoryThread scanDirectoryThread;
+    private final ScanDirectoryThread scanDirectoryThread;
 
     /** Processed files counter */
-    protected long processedFilesCount;
+    private long processedFilesCount;
 
 
 
@@ -129,12 +128,7 @@ public class CopyJob extends AbstractCopyJob {
 //System.out.println("destFile " + destFile);
         currentDestFile = destFile;
 
-        AbstractFile sourceFile;
-        if (file instanceof ProxyFile) {
-            sourceFile = ((ProxyFile)file).getProxiedFile();
-        } else {
-            sourceFile = file;
-        }
+        AbstractFile sourceFile = file.getAncestor();
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink() && file instanceof LocalFile) {

@@ -8,6 +8,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class HexTable extends JTable {
     }
 
 
-    private final ViewerHexTableModel model;
+    private ViewerHexTableModel model;
     private final CellRenderer cellRenderer = new CellRenderer();
     private final HeaderRenderer headerRenderer = new HeaderRenderer();
     private final Rectangle repaintRect = new Rectangle();
@@ -58,8 +59,6 @@ public class HexTable extends JTable {
         enableEvents(AWTEvent.KEY_EVENT_MASK);
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-
-
         setShowGrid(false);
         setIntercellSpacing(ZERO_DIMENSION);
         alternateCellColor = getBackground();
@@ -85,9 +84,9 @@ public class HexTable extends JTable {
     /**
      * Changes the selected byte range.
      *
-     * @param row
-     * @param col
-     * @param toggle
+     * @param row row
+     * @param col column
+     * @param toggle see description for {@link JTable#changeSelection(int, int, boolean, boolean)}
      * @param extend if true, extend the current selection
      * @see #changeSelectionByOffset(long, boolean)
      * @see #setSelectedRows(int, int)
@@ -180,6 +179,13 @@ public class HexTable extends JTable {
         }
     }
 
+
+    public void setModel(ViewerHexTableModel model) {
+        super.setModel(model);
+        this.model = model;
+        calculateSizes(getFont());
+    }
+
     /**
      * Calculates table column sizes after change of font
      */
@@ -187,6 +193,7 @@ public class HexTable extends JTable {
         if (model == null) {
             return;
         }
+
         FontMetrics fm = getFontMetrics(font);
         FontMetrics fmHeader = getFontMetrics(getTableHeader().getFont());
 
@@ -194,15 +201,22 @@ public class HexTable extends JTable {
         fontHeight = fm.getHeight();
         fontAscent = fm.getAscent();
 
+        int width = 0;
         final int hexColumns = model.getNumberOfHexColumns();
         int w = Math.max(widthOfW*3, fmHeader.stringWidth("+9D9")+2);   // +9W9
         for (int i = 1; i <= hexColumns; i++) {
             setColumnWidth(i, w);
+            width += w;
         }
+
         // Offset
         setColumnWidth(0, widthOfW * 10);
+        width += widthOfW * 10;
 
+        // Hex dump
         w = widthOfW * (hexColumns + 1);
+        width += w;
+
         // ASCII dump
         setColumnWidth(hexColumns + 1, w);
 
@@ -211,13 +225,13 @@ public class HexTable extends JTable {
             model.setAsciiCharVisible(ch, fm.charWidth(ch) <= widthOfW);
         }
 
-        setPreferredScrollableViewportSize(new Dimension(w * 16 + 200, 25 * getRowHeight()));    // todo
+        setPreferredScrollableViewportSize(new Dimension(width, 25 * getRowHeight()));
     }
 
     /**
      * Set preferred, minimum and maximum width of column
-     * @param index
-     * @param width
+     * @param index index of column
+     * @param width column width
      */
     private void setColumnWidth(int index, int width) {
         TableColumn column = getColumnModel().getColumn(index);
@@ -322,8 +336,8 @@ public class HexTable extends JTable {
     /**
      * Changes the selection by an offset into the bytes being edited.
      *
-     * @param offset
-     * @param extend
+     * @param offset offset
+     * @param extend if true, extend the current selection
      * @see #changeSelection(int, int, boolean, boolean)
      * @see #setSelectedRows(int, int)
      * @see #setSelectionByOffsets(long, long)
@@ -479,7 +493,7 @@ public class HexTable extends JTable {
 
     /**
      * Current offset in file
-     * @return
+     * @return current offset in file
      */
     public long getCurrentAddress() {
         return anchorSelectionIndex;
@@ -503,7 +517,7 @@ public class HexTable extends JTable {
 
     /**
      * Set color to render the first offset column
-     * @param color
+     * @param color color to render the first offset column
      */
     public void setOffsetColumnColor(Color color) {
         this.offsetColor = color;
@@ -511,7 +525,7 @@ public class HexTable extends JTable {
 
     /**
      * Get color to render the first offset column
-     * @return
+     * @return color to render the first offset column
      */
     public Color getOffsetColomnColor() {
         return offsetColor;
@@ -527,7 +541,7 @@ public class HexTable extends JTable {
 
     /**
      * Get color to render the last ASCII dump column
-     * @return
+     * @return color to render the ASCII dump column
      */
     public Color getAsciiColumnColor() {
         return asciiDumpColor;
@@ -535,7 +549,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @param color
+     * @param color background color of highlighted section in ascii dump
      */
     public void setHighlightSelectionInAsciiDumpColor(Color color) {
         this.highlightSelectionInAsciiDumpColor = color;
@@ -543,7 +557,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @return
+     * @return background color of highlighted section in ascii dump
      */
     public Color getHighlightSelectionInAsciiDumpColor() {
         return highlightSelectionInAsciiDumpColor;
@@ -552,7 +566,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @param enable
+     * @param enable true if used alternate background color for odd rows
      */
     public void setAlternateRowBackground(boolean enable) {
         this.alternateRowBackground = enable;
@@ -560,7 +574,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @return
+     * @return true if used alternate background color for odd rows
      */
     public boolean isAlternateRowBackground() {
         return alternateRowBackground;
@@ -568,7 +582,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @param enable
+     * @param enable true if used alternate background color for odd columns
      */
     public void setAlternateColumnBackground(boolean enable) {
         this.alternateColumnBackground = enable;
@@ -576,7 +590,7 @@ public class HexTable extends JTable {
 
     /**
      *
-     * @return
+     * @return true if used alternate background color for odd columns
      */
     public boolean isAlternateColumnBackground() {
         return alternateColumnBackground;
@@ -646,8 +660,6 @@ public class HexTable extends JTable {
                     e.consume();
                     return;
                 case KeyEvent.VK_BACK_SPACE:
-//System.out.println();
-//Profiler.print();
                     //System.out.println(Profiler.getTime());
                     return;
             }
@@ -673,7 +685,7 @@ public class HexTable extends JTable {
         private final Map desktopAAHints;
         private boolean hasSeparatorLine;
 
-        public CellRenderer() {
+        CellRenderer() {
             highlight = new Point();
             desktopAAHints = getDesktopAntiAliasHints();
             setFont(HexTable.this.getFont());
@@ -779,7 +791,7 @@ public class HexTable extends JTable {
         private final Map desktopAAHints;
         private boolean centerText;
 
-        public HeaderRenderer() {
+        HeaderRenderer() {
             desktopAAHints = getDesktopAntiAliasHints();
             setFont(HexTable.this.getFont());
         }

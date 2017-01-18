@@ -183,7 +183,7 @@ public abstract class MuAction extends AbstractAction {
      *
      * @return the alternate accelerator KeyStroke of this action, <code>null</code> if it doesn't have any
      */
-    public KeyStroke getAlternateAccelerator() {
+    KeyStroke getAlternateAccelerator() {
         return (KeyStroke)getValue(ALTERNATE_ACCELERATOR_PROPERTY_KEY);
     }
 
@@ -193,7 +193,7 @@ public abstract class MuAction extends AbstractAction {
      *
      * @param keyStroke the new alternate accelerator KeyStroke for this action, replacing the previous one (if any)
      */
-    public void setAlternateAccelerator(KeyStroke keyStroke) {
+    void setAlternateAccelerator(KeyStroke keyStroke) {
         putValue(ALTERNATE_ACCELERATOR_PROPERTY_KEY, keyStroke);
     }
 
@@ -207,10 +207,10 @@ public abstract class MuAction extends AbstractAction {
      * @param ks2 second keystroke to test
      * @return <code>true</code> if both keystrokes' char, code and modifiers are equal
      */
-    protected boolean acceleratorsEqual(KeyStroke ks1, KeyStroke ks2) {
-        return ks1.getKeyChar()==ks2.getKeyChar()
-            && ks1.getKeyCode()==ks2.getKeyCode()
-            && ks1.getModifiers()==ks2.getModifiers();
+    private boolean acceleratorsEqual(KeyStroke ks1, KeyStroke ks2) {
+        return ks1.getKeyChar() == ks2.getKeyChar()
+            && ks1.getKeyCode() == ks2.getKeyCode()
+            && ks1.getModifiers() == ks2.getModifiers();
     }
 
     /**
@@ -261,7 +261,7 @@ public abstract class MuAction extends AbstractAction {
      * @return <code>true</code> if action events are ignored while the <code>MainFrame</code> associated with this
      * action is in 'no events' mode
      */
-    public boolean honourNoEventsMode() {
+    private boolean honourNoEventsMode() {
         return honourNoEventsMode;
     }
 
@@ -273,7 +273,7 @@ public abstract class MuAction extends AbstractAction {
      * @param honourNoEventsMode if true, actions events will be ignored while the <code>MainFrame</code> associated
      * with this action is in 'no events mode'
      */
-    public void setHonourNoEventsMode(boolean honourNoEventsMode) {
+    protected void setHonourNoEventsMode(boolean honourNoEventsMode) {
         this.honourNoEventsMode = honourNoEventsMode;
     }
 
@@ -289,7 +289,7 @@ public abstract class MuAction extends AbstractAction {
      * @return <code>true</code> if {@link #performAction()} is called from a separate thread (and not from the event
      * thread) when this action is performed
      */
-    public boolean performActionInSeparateThread() {
+    private boolean performActionInSeparateThread() {
         return performActionInSeparateThread;
     }
 
@@ -304,7 +304,7 @@ public abstract class MuAction extends AbstractAction {
      * @param performActionInSeparateThread <code>true</code> to have {@link #performAction()} called from a separate
      * thread (and not from the event thread) when this action is performed
      */
-    public void setPerformActionInSeparateThread(boolean performActionInSeparateThread) {
+    protected void setPerformActionInSeparateThread(boolean performActionInSeparateThread) {
         this.performActionInSeparateThread = performActionInSeparateThread;
     }
 
@@ -354,7 +354,7 @@ public abstract class MuAction extends AbstractAction {
      * @param action a MuAction class descriptor
      * @return the standard path to the icon image corresponding to the specified MuAction class
      */
-    public static String getStandardIconPath(Class<? extends MuAction> action) {
+    private static String getStandardIconPath(Class<? extends MuAction> action) {
         return IconManager.IconSet.ACTION.getFolder() + getActionName(action) + ".png";
     }
 

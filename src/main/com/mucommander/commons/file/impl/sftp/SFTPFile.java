@@ -91,7 +91,7 @@ public class SFTPFile extends ProtocolFile {
 
     /**
      * Creates a new instance of SFTPFile and initializes the SSH/SFTP connection to the server.
-     * @throws IOException
+     * @throws IOException if an I/O error occurred
      */
     SFTPFile(FileURL fileURL) throws IOException {
         this(fileURL, null);
@@ -857,8 +857,8 @@ public class SFTPFile extends ProtocolFile {
             setPermissions(new SimpleFilePermissions(
                attrs.getPermissions().intValue() & PermissionBits.FULL_PERMISSION_INT
             ));
-            setOwner(attrs.getUID().toString());
-            setGroup(attrs.getGID().toString());
+            setOwner(attrs.getUID());
+            setGroup(attrs.getGID());
             setSymlink(isSymlink);
         }
 

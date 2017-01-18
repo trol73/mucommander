@@ -151,11 +151,12 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      */
     @Override
     public void write(byte[] b) throws IOException {
-        if(error)
+        if (error) {
             out.write(b);
-        else {
-            try {out.write(b);}
-            catch(IOException e) {
+        } else {
+            try {
+                out.write(b);
+            } catch(IOException e) {
                 error = true;
                 throw e;
             }
@@ -178,11 +179,12 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      */
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        if(error)
+        if (error) {
             out.write(b, off, len);
-        else {
-            try {out.write(b, off, len);}
-            catch(IOException e) {
+        } else {
+            try {
+                out.write(b, off, len);
+            } catch(IOException e) {
                 error = true;
                 throw e;
             }
@@ -224,8 +226,9 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      */
     private void backup() throws IOException {
         // Deletes the destination file (AbstractFile.copyTo now fails when the destination exists).
-        if(target.exists())
+        if (target.exists()) {
             target.delete();
+        }
 
         // We're not using backup.moveTo(target) because we want to make absolutely sure
         // that if an error occurs in the middle of the operation, at least one of the two files
@@ -256,7 +259,8 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
         out.flush();
         out.close();
 
-        if(backup)
+        if (backup) {
             backup();
+        }
     }
 }

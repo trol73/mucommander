@@ -42,12 +42,12 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public void copyRemotelyTo(AbstractFile arg0) throws IOException, UnsupportedFileOperationException {
+	public void copyRemotelyTo(AbstractFile arg0) throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.COPY_REMOTELY);
 	}
 
 	@Override
-	public void delete() throws IOException, UnsupportedFileOperationException {
+	public void delete() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.DELETE);
 	}
 
@@ -57,7 +57,7 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public OutputStream getAppendOutputStream() throws IOException, UnsupportedFileOperationException {
+	public OutputStream getAppendOutputStream() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.APPEND_FILE);
 	}
 

@@ -220,8 +220,7 @@ public class JobProgressMonitor implements FileJobListener {
 	 */
 	public void jobStateChanged(final FileJob source, FileJob.State oldState, FileJob.State newState) {
 		if (newState==FileJob.State.FINISHED || newState==FileJob.State.INTERRUPTED) {
-			ActionListener jobToRemove = e -> removeJob(source);
-			Timer timer = new Timer(FINISHED_JOB_REMOVE_TIME, jobToRemove);
+			Timer timer = new Timer(FINISHED_JOB_REMOVE_TIME, (e) -> removeJob(source));
 			timer.setRepeats(false);
 			timer.start();
 		}		

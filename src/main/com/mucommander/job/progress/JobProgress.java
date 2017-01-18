@@ -69,7 +69,7 @@ public class JobProgress {
 	 * @return <code>true</code> if full job progress has been updated,
 	 *         <code>false</code> if only label has been updated.
 	 */
-	public boolean calcJobProgress(boolean fullUpdate) {
+	boolean calcJobProgress(boolean fullUpdate) {
 		FileJob.State jobState = job.getState();
 		jobPauseStartDate = job.getPauseStartDate();
 		if (jobState == FileJob.State.FINISHED || jobState == FileJob.State.INTERRUPTED) {
@@ -104,8 +104,7 @@ public class JobProgress {
 		}
 
 		if (transferFileJob != null) {
-			bytesTotal = transferFileJob.getTotalByteCounter().getByteCount()
-					- transferFileJob.getTotalSkippedByteCounter().getByteCount();
+			bytesTotal = transferFileJob.getTotalByteCounter().getByteCount() - transferFileJob.getTotalSkippedByteCounter().getByteCount();
 			totalBps = (long) (bytesTotal * 1000d / effectiveJobTime);
 			if (now - lastTime > 0) { // To avoid divisions by zero 
 				currentBps = (long) ((bytesTotal - lastBytesTotal) * 1000d / (now - lastTime));

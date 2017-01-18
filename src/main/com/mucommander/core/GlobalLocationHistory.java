@@ -101,7 +101,7 @@ public class GlobalLocationHistory extends LocationAdapter {
 	/**
 	 * Returns true if the global history contains the given FileURL
 	 */
-	public boolean historyContains(FileURL folderURL) {
+	boolean historyContains(FileURL folderURL) {
 		return history.contains(folderURL);
 	}
 	
@@ -117,8 +117,9 @@ public class GlobalLocationHistory extends LocationAdapter {
 		boolean alreadyExists = history.remove(file);
 		
 		// ensure that we won't cross the maximum number of saved locations
-		if (!alreadyExists && MAX_CAPACITY == history.size())
+		if (!alreadyExists && MAX_CAPACITY == history.size()) {
 			history.remove(history.iterator().next());
+		}
 		
 		// add the location as last one in the history
 		history.add(locationEvent.getFolderURL());

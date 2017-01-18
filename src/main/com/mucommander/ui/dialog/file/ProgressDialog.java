@@ -97,21 +97,21 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
 
     private JLabel currentFileLabel;
-    protected JLabel totalTransferredLabel;
+    private JLabel totalTransferredLabel;
 
     private JProgressBar totalProgressBar;
-    protected JProgressBar currentFileProgressBar;
+    private JProgressBar currentFileProgressBar;
 
-    protected JLabel currentSpeedLabel;
+    private JLabel currentSpeedLabel;
     private JCheckBox limitSpeedCheckBox;
     private SizeChooser speedChooser;
     private JLabel elapsedTimeLabel;
 
     private SpeedGraph speedGraph;
 
-    protected CollapseExpandButton collapseExpandButton;
+    private CollapseExpandButton collapseExpandButton;
     private ButtonChoicePanel buttonsChoicePanel;
-    protected JButton pauseResumeButton;
+    private JButton pauseResumeButton;
     private JButton skipButton;
     private JButton stopButton;
     private JButton backgroundButton;
@@ -448,10 +448,11 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         if (source == stopButton) {
             State jobState = job.getState();
             // Case when 'Close when finished' isn't selected, stop button's action becomes 'Close'
-            if (jobState == State.FINISHED || jobState == State.INTERRUPTED)
+            if (jobState == State.FINISHED || jobState == State.INTERRUPTED) {
                 dispose();
-            else
+            } else {
                 job.interrupt();
+            }
         } else if (source == skipButton) {
             transferFileJob.skipCurrentFile();
         } else if (source == pauseResumeButton) {
@@ -523,7 +524,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
         // Stop job if it isn't already
         State jobState = job.getState();
-        if (!(jobState == State.FINISHED || jobState == State.INTERRUPTED)) {
+        if (jobState != State.FINISHED && jobState != State.INTERRUPTED) {
             job.interrupt();
         }
 
