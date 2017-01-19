@@ -50,6 +50,7 @@ import com.mucommander.ui.theme.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.trolsoft.utils.ImageSizeDetector;
+import ru.trolsoft.utils.JavaClassVersionDetector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,6 +128,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     private final static ExtensionFilenameFilter SUPPORTED_IMAGE_FILTER = new ExtensionFilenameFilter(new String[] {
             ".png", ".gif", ".jpg", ".jpeg", ".bmp", ".tga", ".tiff", ".tif"});
+
+    private final static ExtensionFilenameFilter JAVA_CLASS_FILTER = new ExtensionFilenameFilter(".class");
 
 
     static {
@@ -311,18 +314,29 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                         filesInfo.append(target);
                     }
                 }
-                if (!selectedFile.isDirectory()) {
+                boolean local = selectedFile.getAncestor() instanceof LocalFile;
+                if (selectedFile.isDirectory()) {
+                    if (local) {
+                        filesInfo.append(" (");
+                        try {
+                            filesInfo.append(selectedFile.ls().length);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        filesInfo.append(' ');
+                        filesInfo.append(Translator.get("files"));
+                        filesInfo.append(')');
+                    }
+                } else {
                     filesInfo.append(" (");
                     filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
-                    filesInfo.append(")");
 
-                    boolean local = selectedFile instanceof LocalFile ||
-                            (selectedFile instanceof CachedFile && ((CachedFile)selectedFile).getProxiedFile() instanceof LocalFile);
                     if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
+                        // Show image size
                         try (InputStream is = selectedFile.getInputStream()) {
                             ImageSizeDetector detector = new ImageSizeDetector(is);
                             if (detector.getType() != null) {
-                                filesInfo.append(" ");
+                                filesInfo.append(", ");
                                 filesInfo.append(detector.getWidth());
                                 filesInfo.append(" x ");
                                 filesInfo.append(detector.getHeight());
@@ -330,7 +344,22 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    } else if (JAVA_CLASS_FILTER.accept(selectedFile)) {
+                        try (InputStream is = selectedFile.getPushBackInputStream(16)) {
+                            JavaClassVersionDetector detector = new JavaClassVersionDetector(is);
+
+                            if (detector.getVersion() != JavaClassVersionDetector.Version.UNKNOWN) {
+                                filesInfo.append(", Java v").append(detector.getVersion().name);
+                            } else if (detector.getVersion() != JavaClassVersionDetector.Version.WRONG_FORMAT) {
+                                filesInfo.append(", Java major = ").append(detector.getMajor()).append(", minor = ").append(detector.getMinor());
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+
+                    filesInfo.append(")");
+
                 }
             }
         }		

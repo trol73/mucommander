@@ -884,9 +884,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return the immediate ancestor of this <code>AbstractFile</code> if it has one, <code>this</code> otherwise
      */
     public final AbstractFile getAncestor() {
-        if (this instanceof ProxyFile)
-            return ((ProxyFile)this).getProxiedFile();
-
+        if (this instanceof ProxyFile) {
+            return ((ProxyFile) this).getProxiedFile();
+        }
         return this;
     }
 
