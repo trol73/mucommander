@@ -41,7 +41,7 @@ public class TogglePanelPreviewModeAction extends MuAction {
      * @param mainFrame  the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      */
-    public TogglePanelPreviewModeAction(MainFrame mainFrame, Map<String, Object> properties) {
+    TogglePanelPreviewModeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -72,7 +72,7 @@ public class TogglePanelPreviewModeAction extends MuAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_4, KeyEvent.CTRL_DOWN_MASK);
+            return KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK);
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {

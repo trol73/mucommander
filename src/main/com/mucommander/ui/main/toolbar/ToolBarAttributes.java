@@ -65,6 +65,8 @@ public class ToolBarAttributes {
             EditBookmarksAction.Descriptor.ACTION_ID,
             EditCredentialsAction.Descriptor.ACTION_ID,
             null,
+            FindFileAction.Descriptor.ACTION_ID,
+            null,
             ConnectToServerAction.Descriptor.ACTION_ID,
             ShowServerConnectionsAction.Descriptor.ACTION_ID,
             RunCommandAction.Descriptor.ACTION_ID,
@@ -127,14 +129,12 @@ public class ToolBarAttributes {
     	if (useDefaultActions) {
     		return true;
         }
-    		
     	int nbActions = actionIds.length;
-    	
     	if (nbActions != DEFAULT_TOOLBAR_ACTIONS.length) {
     		return false;
         }
     	
-    	for (int i=0; i<nbActions; ++i) {
+    	for (int i = 0; i < nbActions; ++i) {
             if (!equals(actionIds[i], DEFAULT_TOOLBAR_ACTIONS[i])) {
     			return false;
             }
@@ -167,7 +167,9 @@ public class ToolBarAttributes {
     }
     
     public static void removeToolBarAttributesListener(ToolBarAttributesListener listener) {
-    	synchronized(listeners) {listeners.remove(listener);}
+    	synchronized(listeners) {
+    	    listeners.remove(listener);
+    	}
     }
     
     private static void fireActionsChanged() {
