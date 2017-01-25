@@ -63,9 +63,10 @@ public class GoToDocumentationAction extends OpenURLInBrowserAction implements P
         String topic = (String)getValue(TOPIC_PROPERTY_KEY);
 
         // If there is a topic, append it to the URL
-        if (topic!=null) {
-            if (url.endsWith("/"))
+        if (topic != null) {
+            if (url.endsWith("/")) {
                 url += "/";
+            }
 
             url += topic;
         }

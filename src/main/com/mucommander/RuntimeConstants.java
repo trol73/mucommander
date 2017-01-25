@@ -36,8 +36,6 @@ public class RuntimeConstants {
 	
     // - Constant paths ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
-    /** Path to the muCommander dictionary. */
-    public static final String DICTIONARY_FILE = "/dictionary.txt";
     /** Path to the themes directory. */
     public static final String THEMES_PATH     = "/themes";
     /** Path to the viewer/editor themes directory. */
@@ -54,7 +52,7 @@ public class RuntimeConstants {
     /** Homepage URL. */
     public static final String HOMEPAGE_URL       = "http://trolsoft.ru/en/soft/trolcommander";
     /** URL at which to download the latest version description. */
-    public static final String VERSION_URL;
+    static final String VERSION_URL;
     /** URL of the muCommander forums. */
     public static final String FORUMS_URL         = HOMEPAGE_URL + "/forums/";
     /** URL at which to see the donation information. */
@@ -62,7 +60,7 @@ public class RuntimeConstants {
     /** Bug tracker URL. */
     public static final String BUG_REPOSITORY_URL = "https://github.com/trol73/mucommander/issues"; //HOMEPAGE_URL + "/bugs/";
     /** Documentation URL. */
-    public static final String DOCUMENTATION_URL  = HOMEPAGE_URL + "/documentation/";
+    public static final String DOCUMENTATION_URL  = HOMEPAGE_URL;// + "/documentation/";
 
 
 
@@ -83,40 +81,25 @@ public class RuntimeConstants {
     /** String describing the software (<code>muCommander vMAJOR.MINOR.DEV</code>). */
     public  static final String APP_STRING;
     /** String describing the muCommander build number. */
-    public  static final String BUILD_NUMBER;
+    public static final String BUILD_NUMBER;
 
     
 
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes  attributes = null; // JAR file's manifest's attributes.
-        InputStream in = null;
-        try {
-            if((in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) != null) {
-                Manifest manifest;
-
-                manifest = new Manifest();
+        Attributes attributes = null; // JAR file's manifest's attributes.
+        try (InputStream in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) {
+            if (in != null) {
+                Manifest manifest = new Manifest();
                 manifest.read(in);
                 attributes = manifest.getMainAttributes();
-            } else {
-                LOGGER.warn("MANIFEST.MF not found, default values will be used");
             }
-        }  catch(Exception e) {
+        } catch (IOException e) {
             LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
-            // Ignore this, attributes is already set to null.
-        }  finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(IOException e) {
-                    // Ignore this, we don't really care if we can't close this stream.
-                }
-            }
         }
 
-        // No MANIFEST.MF found, use default values.
-        if (attributes == null) {
+        if (attributes == null) {   // No MANIFEST.MF found, use default values.
             VERSION = "?";
             COPYRIGHT    = "2013-" + Calendar.getInstance().get(Calendar.YEAR);
             // We use a date that we are sure is later than the latest version to trigger the version checker.
@@ -124,10 +107,7 @@ public class RuntimeConstants {
             BUILD_DATE = DEFAULT_RELEASE_DATE;
             VERSION_URL  = HOMEPAGE_URL + "/version/version.xml";
             BUILD_NUMBER = "?";
-        }
-
-        // A MANIFEST.MF file was found, extract data from it.
-        else {
+        } else {    // A MANIFEST.MF file was found, extract data from it.
             VERSION      = getAttribute(attributes, "Specification-Version");
             BUILD_DATE = getAttribute(attributes, "Build-Date");
             VERSION_URL  = getAttribute(attributes, "Build-URL");

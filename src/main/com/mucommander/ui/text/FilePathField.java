@@ -39,36 +39,37 @@ public class FilePathField extends JTextField {
 
     public FilePathField() {
         super();
-        enableAutoCompletion();
+        init();
     }
 
     public FilePathField(String text) {
         super(text);
-        enableAutoCompletion();
+        init();
     }
 
     public FilePathField(int columns) {
         super(columns);
-        enableAutoCompletion();
+        init();
     }
 
     public FilePathField(String text, int columns) {
         super(text, columns);
-        enableAutoCompletion();
+        init();
     }
 
     public FilePathField(Document doc, String text, int columns) {
         super(doc, text, columns);
-        enableAutoCompletion();
+        init();
     }
 
 
     /**
      * Adds auto-completion capabilities to this text field.
      */
-    private void enableAutoCompletion() {
+    private void init() {
         pathCompleter = (PathCompleter)CompleterFactory.getPathCompleter();
         new TextFieldCompletion(new BasicAutocompleterTextComponent(this), pathCompleter);
+        new FilePathFieldKeyListener(this, true);
     }
 
 

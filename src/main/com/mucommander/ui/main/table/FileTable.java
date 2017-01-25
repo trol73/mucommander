@@ -40,6 +40,7 @@ import com.mucommander.ui.main.table.views.full.FileTableCellRenderer;
 import com.mucommander.ui.main.table.views.full.FileTableColumnModel;
 import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 import com.mucommander.ui.main.table.views.full.FileTableModel;
+import com.mucommander.ui.text.FilePathFieldKeyListener;
 import com.mucommander.ui.theme.*;
 import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
@@ -115,7 +116,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** TableCellRender instance used by this JTable to render cells */
     private BaseCellRenderer cellRenderer;
     /** CellEditor used to edit filenames when clicked */
-    private FilenameEditor        filenameEditor;
+    private FilenameEditor filenameEditor;
 
     /** Contains sort-related variables */
     private final SortInfo sortInfo = new SortInfo();
@@ -1865,15 +1866,16 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         FilenameEditor(JTextField textField) {
             super(textField);
             this.filenameField = textField;
+
             // Sets the font to the same one that's used for cell rendering (user-defined)
             filenameField.setFont(FileTableCellRenderer.getCellFont());
             textField.addKeyListener(
-                new KeyAdapter() {
+                new FilePathFieldKeyListener(textField, false) {
                     // Cancel editing when escape key pressed, this is unfortunately not DefaultCellEditor's default behavior
                     @Override
                     public void keyPressed(KeyEvent e) {
-                        int keyCode = e.getKeyCode();
-                        if (keyCode == KeyEvent.VK_ESCAPE) {
+                        super.keyPressed(e);
+                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                             cancelCellEditing();
                         }
                     }
@@ -1889,6 +1891,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 				
 				public void focusGained(FocusEvent e) {}
 			});
+
+
         }
         
 

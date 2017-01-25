@@ -185,8 +185,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             tblNames.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 
                     InputEvent.SHIFT_DOWN_MASK, false), "shift tab");
             // 
-            tblNames.getColumnModel().getColumn(COL_CHANGED_NAME).setCellEditor(new
-                     DefaultCellEditor(new JTextField()));
+            tblNames.getColumnModel().getColumn(COL_CHANGED_NAME).setCellEditor(new DefaultCellEditor(new JTextField()));
             colBlock = tblNames.getColumnModel().getColumn(COL_CHANGE_BLOCK); 
             colBlock.setMaxWidth(60);
             tblNames.removeColumn(colBlock);
@@ -194,7 +193,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         return tblNames;
     }
     
-    public Action getActRemove() {
+    private Action getActRemove() {
         if (actRemove == null) {
             actRemove = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
@@ -465,7 +464,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                     break;
                 }
                 String strToken = pattern.substring(i + 1, tokenEnd);
-                if (strToken.length() > 0) {
+                if (!strToken.isEmpty()) {
                     c = strToken.charAt(0);
                     AbstractToken t;
                     switch (c) {
@@ -476,10 +475,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                         t = new ExtToken(strToken);
                         break;
                     case 'C':
-                        int start = StringUtils.parseIntDef(edtCounterStart
-                                .getText(), 0);
-                        int step = StringUtils.parseIntDef(edtCounterStep
-                                .getText(), 0);
+                        int start = StringUtils.parseIntDef(edtCounterStart.getText(), 0);
+                        int step = StringUtils.parseIntDef(edtCounterStep.getText(), 0);
                         int digits = cbCounterDigits.getSelectedIndex() + 1;
                         t = new CounterToken(strToken, start, step, digits);
                         break;
@@ -530,8 +527,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             newName = oldName.toUpperCase();
             break;
         case CASE_FIRST_UPPER:
-            newName = oldName.substring(0, 1).toUpperCase()
-                    + oldName.substring(1).toLowerCase();
+            newName = oldName.substring(0, 1).toUpperCase() + oldName.substring(1).toLowerCase();
             break;
         case CASE_WORD_UPPER:
             boolean afterSpace = true;
@@ -542,8 +538,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                     afterSpace = true;
                 } else {
                     if (afterSpace) {
-                        newNameCase.append(Character.toUpperCase(oldName
-                                .charAt(i)));
+                        newNameCase.append(Character.toUpperCase(oldName.charAt(i)));
                         afterSpace = false;
                     } else {
                         newNameCase.append(oldName.charAt(i));
@@ -563,8 +558,9 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      */
     private String applyPattern(AbstractFile file) {
         StringBuilder filename = new StringBuilder();
-        for (AbstractToken token: tokens)
+        for (AbstractToken token: tokens) {
             filename.append(token.apply(file));
+        }
         return filename.toString();
     }
     
@@ -790,7 +786,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         /** a length of the token */
         protected int len;
 
-        public AbstractToken(String token) {
+        AbstractToken(String token) {
             this.token = token;
             this.len = token.length();
         }
@@ -828,19 +824,18 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
          *            a default value if an integer cannot be parsed
          * @return the integer from this token string or the default value
          */
-        public int getInt(int def) {
-            int startpos = pos;
+        int getInt(int def) {
+            int startPos = pos;
             while (pos < len) {
                 char c = token.charAt(pos);
                 if (c < '0' || c > '9') {
-                    if (c != '-' || startpos != pos)
+                    if (c != '-' || startPos != pos) {
                         break;
+                    }
                 }
                 pos++;
             }
-            if (startpos == pos)
-                return def;
-            return StringUtils.parseIntDef(token.substring(startpos, pos), def);
+            return startPos == pos ? def : StringUtils.parseIntDef(token.substring(startPos, pos), def);
         }
 
     }
@@ -854,7 +849,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      */
     static class CopyChar extends AbstractToken {
 
-        public CopyChar(String token) {
+        CopyChar(String token) {
             super(token);
         }
 
@@ -890,7 +885,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         private int endIndex;
         private int charCount;
 
-        public NameToken(String token) {
+        NameToken(String token) {
             super(token);
         }
 
@@ -923,7 +918,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
          *            a string from which extract a part
          * @return the part of the name
          */
-        protected String extractNamePart(String name) {
+        String extractNamePart(String name) {
             int targetLen = name.length();
             int currentStartIndex = startIndex;
             int currentEndIndex = endIndex;
@@ -933,19 +928,18 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                     currentStartIndex = 1;
                 }
             }
-            if (currentEndIndex < 0)
+            if (currentEndIndex < 0) {
                 currentEndIndex = targetLen + currentEndIndex + 1;
+            }
             if (currentStartIndex > 0) {
                 if (charCount > 0) {
                     currentEndIndex = currentStartIndex + charCount - 1;
                 } else if (currentEndIndex == 0) {
                     currentEndIndex = currentStartIndex;
                 }
-                if (currentStartIndex <= currentEndIndex
-                        && currentStartIndex - 1 < targetLen) {
+                if (currentStartIndex <= currentEndIndex && currentStartIndex - 1 < targetLen) {
                     try {
-                        name = name.substring(currentStartIndex - 1, Math.min(
-                                currentEndIndex, targetLen));
+                        name = name.substring(currentStartIndex - 1, Math.min(currentEndIndex, targetLen));
                     } catch (Exception e) {
                     	LOGGER.info("currentStartIndex="+currentStartIndex+", currentEndIndex="+currentEndIndex, e);
                     }
@@ -967,22 +961,16 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      */
     static class ExtToken extends NameToken {
 
-        public ExtToken(String token) {
+        ExtToken(String token) {
             super(token);
         }
 
         @Override
         public String apply(AbstractFile file) {
             // split name & extension
-            String ext;
             String oldName = file.getName();
             int dot = oldName.lastIndexOf('.');
-            if (dot >= 0) {
-                ext = oldName.substring(dot + 1);
-            } else {
-                ext = "";
-            }
-
+            String ext = dot >= 0 ? oldName.substring(dot + 1) : "";
             return extractNamePart(ext);
         }
 
@@ -1009,7 +997,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         private int current;
         private NumberFormat numberFormat;
 
-        public CounterToken(String token, int start, int step, int digits) {
+        CounterToken(String token, int start, int step, int digits) {
             super(token);
             this.start = start;
             this.step = step;
@@ -1047,16 +1035,14 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      */
     static class ParentDirToken extends NameToken {
 
-        public ParentDirToken(String token) {
+        ParentDirToken(String token) {
             super(token);
         }
 
         @Override
         public String apply(AbstractFile file) {
             AbstractFile parent = file.getParent();
-            if (parent != null)
-                return extractNamePart(parent.getName());
-            return "";
+            return parent != null ? extractNamePart(parent.getName()) : "";
         }
 
     }
@@ -1079,7 +1065,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         private NumberFormat year;
         private NumberFormat digits2;
 
-        public DateToken(String token) {
+        DateToken(String token) {
             super(token);
             year = NumberFormat.getIntegerInstance();
             year.setMinimumIntegerDigits(4);

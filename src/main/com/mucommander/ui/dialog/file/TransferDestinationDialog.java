@@ -19,8 +19,7 @@
 
 package com.mucommander.ui.dialog.file;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -81,7 +80,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      */
     protected final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(400, 10000);
 	
-    protected static boolean enableBackgroundMode;
+    static boolean enableBackgroundMode;
 
 
     protected String errorDialogTitle;
@@ -93,7 +92,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
     private JCheckBox skipErrorsCheckBox;
     private JCheckBox verifyIntegrityCheckBox;
-    protected JCheckBox cbBackgroundMode;
+    JCheckBox cbBackgroundMode;
     private final JButton okButton;
 
     /** Background thread that is currently being executed, <code>null</code> if there is none. */
@@ -102,12 +101,12 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     /**
      * Background mode flag, operation will be performed in background mode if true
      */
-    protected boolean backgroundMode;
+    private boolean backgroundMode;
 
     /**
      * for background operations
      */
-    protected TaskWidget taskWidget;
+    private TaskWidget taskWidget;
 
 
 	
@@ -192,8 +191,8 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         YBoxPanel buttonsPanel = new YBoxPanel(10);
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
-        //        DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this)
+            DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
+        //    DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this)
         ));
         buttonsPanel.add(fileDetailsPanel);
 
@@ -235,7 +234,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      *
      * @return the field where the destination path has to be entered.
      */
-    protected FilePathField getPathField() {
+    FilePathField getPathField() {
         return pathField;
     }
 
@@ -517,25 +516,25 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             // Perform UI tasks in the AWT event thread
             SwingUtilities.invokeLater(() -> {
-                    if (interrupted) {
-                        dispose();
-                    } else if (isValid) {
-                        dispose();
-                        startJob(resolvedDest);
-                    } else {
-                        showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
-                        // Re-enable the OK button and path field so that a new path can be entered
-                        setEnabledOkButtons(true);
-                        pathField.setEnabled(true);
-                    }
+                if (interrupted) {
+                    dispose();
+                } else if (isValid) {
+                    dispose();
+                    startJob(resolvedDest);
+                } else {
+                    showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
+                    // Re-enable the OK button and path field so that a new path can be entered
+                    setEnabledOkButtons(true);
+                    pathField.setEnabled(true);
+                }
             });
 
             // Set the current thread to null
             synchronized(TransferDestinationDialog.this) {
                 if (thread == this) {       // This thread may have been interrupted already
                     thread = null;
+                }
             }
-        }
         }
 
         /**
@@ -549,7 +548,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     }
 
 
-    protected void setEnabledOkButtons(boolean enabled) {
+    private void setEnabledOkButtons(boolean enabled) {
         okButton.setEnabled(enabled);
     }
 }
