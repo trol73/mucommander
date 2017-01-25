@@ -35,13 +35,17 @@ import com.mucommander.desktop.DesktopManager;
  */
 public class OSXDesktopAdapter extends DefaultDesktopAdapter {
     private static final String OPENER_COMMAND = "open $f";
-    private static final String FINDER_COMMAND = "open -a Finder $f";
+    private static final String FINDER_COMMAND = "open $f -R";
     private static final String FINDER_NAME    = "Finder";
 
-    public String toString() {return "MAC OS X Desktop";}
+    public String toString() {
+        return "MAC OS X Desktop";
+    }
 
     @Override
-    public boolean isAvailable() {return OsFamily.getCurrent().equals(OsFamily.MAC_OS_X);}
+    public boolean isAvailable() {
+        return OsFamily.getCurrent().equals(OsFamily.MAC_OS_X);
+    }
 
     @Override
     public void init(boolean install) throws DesktopInitialisationException {

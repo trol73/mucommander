@@ -60,7 +60,15 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     public void performAction() {
         try {
-            DesktopManager.openInFileManager(mainFrame.getActivePanel().getCurrentFolder());
+            if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
+                if (currentFile == null) {
+                    currentFile = mainFrame.getActivePanel().getCurrentFolder();
+                }
+                DesktopManager.openInFileManager(currentFile);
+            } else {
+                DesktopManager.openInFileManager(mainFrame.getActivePanel().getCurrentFolder());
+            }
         } catch(Exception e) {
             InformationDialog.showErrorDialog(mainFrame);
         }
