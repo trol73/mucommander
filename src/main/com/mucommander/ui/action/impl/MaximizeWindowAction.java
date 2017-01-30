@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MaximizeWindowAction extends MuAction {
 
-    public MaximizeWindowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MaximizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

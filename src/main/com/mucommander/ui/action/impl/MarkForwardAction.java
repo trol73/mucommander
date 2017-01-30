@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public abstract class MarkForwardAction extends MuAction {
 
-    public MarkForwardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkForwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -37,7 +37,7 @@ import java.util.Map;
 @InvokesDialog
 public class ChangeDateAction extends SelectedFilesAction {
 
-    public ChangeDateAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ChangeDateAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.CHANGE_DATE));

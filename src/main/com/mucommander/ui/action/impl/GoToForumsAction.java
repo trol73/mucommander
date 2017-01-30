@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class GoToForumsAction extends OpenURLInBrowserAction {
 
-    public GoToForumsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToForumsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.FORUMS_URL);

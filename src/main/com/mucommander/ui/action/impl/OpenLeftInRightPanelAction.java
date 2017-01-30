@@ -56,7 +56,7 @@ public class OpenLeftInRightPanelAction extends FileAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public OpenLeftInRightPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenLeftInRightPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

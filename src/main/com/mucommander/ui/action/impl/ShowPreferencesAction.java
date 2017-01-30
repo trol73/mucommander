@@ -33,7 +33,7 @@ import java.util.Map;
 @InvokesDialog
 public class ShowPreferencesAction extends MuAction {
 
-    public ShowPreferencesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowPreferencesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -35,7 +35,7 @@ import java.util.Map;
 @InvokesDialog
 public class ConnectToServerAction extends ActiveTabAction {
 
-    public ConnectToServerAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ConnectToServerAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     

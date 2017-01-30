@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class MoveTabToOtherPanelAction extends ActiveTabAction {
 
-    public MoveTabToOtherPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MoveTabToOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     

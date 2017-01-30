@@ -153,6 +153,8 @@ public class LocalFile extends ProtocolFile {
     }
 
     /**
+     * @param fileURL file URL
+     *
      * Creates a new instance of LocalFile and a corresponding {@link File} instance.
      */
     protected LocalFile(FileURL fileURL) throws IOException {
@@ -1007,7 +1009,7 @@ public class LocalFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -1095,7 +1097,7 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls(FilenameFilter filenameFilter) throws IOException {
-        File files[] = file.listFiles(filenameFilter==null?null:new LocalFilenameFilter(filenameFilter));
+        File files[] = file.listFiles(filenameFilter == null ? null : new LocalFilenameFilter(filenameFilter));
 
         if (files == null) {
             throw new IOException();

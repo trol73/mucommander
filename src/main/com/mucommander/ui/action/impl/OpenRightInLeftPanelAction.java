@@ -52,7 +52,7 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

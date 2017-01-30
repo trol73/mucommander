@@ -198,7 +198,6 @@ public class FileTableModel extends BaseFileTableModel {
         if (result == null) {
             result = fillOneCellCache(index, parent != null ? fileIndex + 1 : fileIndex)[columnIndex];
         }
-        // TODO preload icons for all visible files
         return result;
     }
 

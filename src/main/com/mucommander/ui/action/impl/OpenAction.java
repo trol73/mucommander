@@ -62,7 +62,7 @@ public class OpenAction extends MuAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public OpenAction(MainFrame mainFrame, Map<String,Object> properties) {
+	OpenAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -60,6 +60,8 @@ public class LocalLocationHistory {
 
 	/**
 	 * Creates a new FolderHistory instance which will keep track of visited folders in the given FolderPanel.
+	 *
+	 * @param folderPanel folder panel
 	 */
 	public LocalLocationHistory(FolderPanel folderPanel) {
 		this.folderPanel = folderPanel;
@@ -69,11 +71,14 @@ public class LocalLocationHistory {
 	 * Adds the specified folder to history. The folder won't be added if the previous folder is the same.
 	 *
 	 * <p>This method is called by FolderPanel each time a folder is changed.
+	 *
+	 * @param folderURL url to add
 	 */
 	public void tryToAddToHistory(FileURL folderURL) {
 		// Do not add folder to history if new current folder is the same as previous folder
-		if (historyIndex<0 || !folderURL.equals(history.get(historyIndex), false, false))
+		if (historyIndex < 0 || !folderURL.equals(history.get(historyIndex), false, false)) {
 			addToHistory(folderURL);
+		}
 
 		// Save last recallable folder on startup, only if :
 		//  - it is a directory on a local filesytem
@@ -136,6 +141,7 @@ public class LocalLocationHistory {
 
 	/**
 	 * Returns <code>true</code> if there is at least one folder 'back' in the history.
+	 * @return  <code>true</code> if there is at least one folder 'back' in the history.
 	 */
 	public boolean hasBackFolder() {
 		return historyIndex>0;
@@ -143,6 +149,7 @@ public class LocalLocationHistory {
 
 	/**
 	 * Returns <code>true</code> if there is at least one folder 'forward' in the history.
+	 * @return <code>true</code> if there is at least one folder 'forward' in the history.
 	 */
 	public boolean hasForwardFolder() {
 		return historyIndex!=history.size()-1;
@@ -152,6 +159,8 @@ public class LocalLocationHistory {
 	/**
 	 * Returns a list of 'back' folders, most recently visited folder first. The returned array may be empty if there
 	 * currently isn't any 'back' folder in history, but may never be null.
+	 *
+	 * @return a list of 'back' folders, most recently visited folder first
 	 */
 	public FileURL[] getBackFolders() {
 		if (!hasBackFolder()) {
@@ -173,6 +182,8 @@ public class LocalLocationHistory {
 	/**
 	 * Returns a list of 'forward' folders, most recently visited folder first. The returned array may be empty if there
 	 * currently isn't any 'forward' folder in history, but may never be null.
+	 *
+	 * @return a list of 'forward' folders, most recently visited folder first
 	 */
 	public FileURL[] getForwardFolders() {
 		if (!hasForwardFolder()) {
@@ -209,6 +220,9 @@ public class LocalLocationHistory {
 	 * which would be likely not to be reachable next time the app is started, or a removable media drive
 	 * (cd/dvd/floppy) under Windows, which would trigger a nasty 'drive not ready' popup dialog if the drive
 	 * is not available or the media has changed.
+	 *
+	 * @return the last visited folder that can be saved when the application terminates, and recalled next time
+	 * the application is started
 	 */
 	public String getLastRecallableFolder() {
 		return this.lastRecallableFolder;

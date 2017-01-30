@@ -28,27 +28,27 @@ import java.util.List;
  */
 public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefComponent {
 
-	public PrefComboBox() {
+	protected PrefComboBox() {
 		super();
 	}
 
-    public PrefComboBox(List<E> items) {
+    protected PrefComboBox(List<E> items) {
         super();
         addItems(items);
     }
 
-    public PrefComboBox(E[] items) {
+    protected PrefComboBox(E[] items) {
         super();
         addItems(items);
     }
 
-    public void addItems(List<E> items) {
+    private void addItems(List<E> items) {
         for (E item : items) {
             addItem(item);
         }
     }
 
-    public void addItems(E[] items) {
+    private void addItems(E[] items) {
         for (E item : items) {
             addItem(item);
         }

@@ -66,7 +66,7 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public OpenInBothPanelsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenInBothPanelsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform this action in a separate thread, to avoid locking the event thread

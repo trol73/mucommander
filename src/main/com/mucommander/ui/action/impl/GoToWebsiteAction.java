@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class GoToWebsiteAction extends OpenURLInBrowserAction {
 
-    public GoToWebsiteAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToWebsiteAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.HOMEPAGE_URL);

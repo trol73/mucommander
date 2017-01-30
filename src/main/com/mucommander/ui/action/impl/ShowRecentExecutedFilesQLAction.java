@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ShowRecentExecutedFilesQLAction extends ShowQuickListAction {
 	
-	public ShowRecentExecutedFilesQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowRecentExecutedFilesQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

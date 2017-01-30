@@ -23,10 +23,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
-import com.mucommander.ui.main.table.CellLabel;
-import com.mucommander.ui.main.table.Column;
-import com.mucommander.ui.main.table.FileGroupResolver;
-import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.*;
 import com.mucommander.ui.main.table.views.BaseCellRenderer;
 import com.mucommander.ui.quicksearch.QuickSearch;
 import com.mucommander.ui.theme.*;
@@ -62,6 +59,7 @@ import java.awt.Component;
 public class FileTableCellRenderer extends BaseCellRenderer {
 
     private static int progressIndicatorCounter;
+    private final CellLabel transparentLabel = new TransparentCellLabel();
 
     public FileTableCellRenderer(FileTable table) {
         super(table);
@@ -95,7 +93,6 @@ public class FileTableCellRenderer extends BaseCellRenderer {
     // TableCellRenderer methods //
     ///////////////////////////////
 
-
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
         // Need to check that row index is not out of bounds because when the folder
         // has just been changed, the JTable may try to repaint the old folder and
@@ -114,7 +111,9 @@ public class FileTableCellRenderer extends BaseCellRenderer {
 
         final QuickSearch search = this.table.getQuickSearch();
 
-        final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.tableModel.getFileNameAt(row));
+        //final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.tableModel.getFileNameAt(row));
+        final boolean searchMatches = search.isActive() && search.matches(file);
+        final boolean matches = !table.hasFocus() || !search.isActive() || searchMatches;
 
         // Retrieves the various indexes of the colors to apply.
         // Selection only applies when the table is the active one
@@ -123,7 +122,7 @@ public class FileTableCellRenderer extends BaseCellRenderer {
         final int colorIndex = getFileColorIndex(row, file, tableModel);
 
         final Column column = Column.valueOf(table.convertColumnIndexToModel(col));
-        final CellLabel label = cellLabels[column.ordinal()];
+        CellLabel label = cellLabels[column.ordinal()];
 
         if (isCalculatedSizeDir && column == Column.NAME) {
             label.setProgressValue(progressIndicatorCounter++);
@@ -133,7 +132,10 @@ public class FileTableCellRenderer extends BaseCellRenderer {
 
         // Extension/icon column: return ImageIcon instance
         if (column == Column.EXTENSION) {
-            // Set file icon (parent folder icon if '..' file)
+
+            if (search.isActive() && !searchMatches && row != 0) {
+                label = transparentLabel;
+            }
             label.setIcon(row == 0 && tableModel.hasParentFolder()
                     ? IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.PARENT_FOLDER_ICON_NAME, FileIcons.getScaleFactor())
                     // : FileIcons.getFileIcon(file));

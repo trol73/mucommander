@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class UnmarkAllAction extends MarkAllAction {
 
-    public UnmarkAllAction(MainFrame mainFrame, Map<String,Object> properties) {
+    UnmarkAllAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, false);
     }
 

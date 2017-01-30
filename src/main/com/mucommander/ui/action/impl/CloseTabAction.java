@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class CloseTabAction extends ActiveTabAction {
 
-    public CloseTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CloseTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     

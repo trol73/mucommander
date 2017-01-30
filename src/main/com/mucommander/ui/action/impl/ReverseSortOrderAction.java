@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ReverseSortOrderAction extends MuAction {
 
-    public ReverseSortOrderAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ReverseSortOrderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

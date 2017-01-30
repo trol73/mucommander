@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class CloseWindowAction extends MuAction {
 
-    public CloseWindowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CloseWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

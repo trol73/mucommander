@@ -173,9 +173,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
             // Sleep for a while
             try {
                 Thread.sleep(TICK);
-            } catch(InterruptedException e) {
-                // ignore exception
-            }
+            } catch(InterruptedException ignore) {}
 			
             // Loop on instances
             try {
@@ -203,7 +201,12 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         // - MainFrame is in the foreground
         // - monitor is not paused
         // - current folder is not being changed
-        if (!monitor.folderPanel.getMainFrame().isForegroundActive() || folderChanging || monitor.paused) {
+        if (!monitor.folderPanel.getMainFrame().isForegroundActive() || monitor.folderChanging || monitor.paused) {
+            return;
+        }
+        if (disableAutoRefreshFilter.match(monitor.currentFolder)) {
+            monitor.lastCheckTimestamp = System.currentTimeMillis();
+            monitor.waitBeforeCheckTime = checkPeriod;
             return;
         }
         // By checking FolderPanel.getLastFolderChangeTime(), we ensure that we don't check right after
@@ -268,9 +271,9 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
      * @return <code>true</code> if the folder was refreshed.
      */
     private synchronized boolean checkAndRefresh() {
-        if (paused || disableAutoRefreshFilter.match(currentFolder)) {
-            return false;
-        }
+//        if (disableAutoRefreshFilter.match(currentFolder)) {
+//            return false;
+//        }
 
         // Update time average next loop
         long timeStamp = System.currentTimeMillis();
@@ -284,11 +287,13 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         // Has date changed ?
         // Note that date will be 0 if the folder is no longer available, and thus yield a refresh: this is exactly
         // what we want (the folder will be changed to a 'workable' folder).
+        boolean result = false;
         if (date != currentFolderDate) {
             LOGGER.debug(this+" ("+currentFolder.getName()+") Detected changes in current folder, refreshing table!");
 			
             // Try and refresh current folder in a separate thread as to not lock monitor thread
             folderPanel.tryRefreshCurrentFolder();
+            result = true;
         }
 
         if (!forceRefreshFilePath.isEmpty()) {
@@ -298,13 +303,14 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
                     if (path.startsWith(folderPath)) {
                         forceRefreshFilePath.remove(path);
                         folderPanel.tryRefreshCurrentFolder();
+                        result = true;
                         break;
                     }
                 }
             }
         }
 		
-        return false;
+        return result;
     }
 
 

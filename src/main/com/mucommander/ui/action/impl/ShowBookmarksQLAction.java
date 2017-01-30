@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class ShowBookmarksQLAction extends ShowQuickListAction {
 	
-	public ShowBookmarksQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowBookmarksQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

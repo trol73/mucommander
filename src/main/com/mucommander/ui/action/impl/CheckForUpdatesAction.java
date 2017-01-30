@@ -33,7 +33,7 @@ import java.util.Map;
 @InvokesDialog
 public class CheckForUpdatesAction extends MuAction {
 
-    public CheckForUpdatesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CheckForUpdatesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

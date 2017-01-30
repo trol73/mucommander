@@ -39,18 +39,18 @@ public abstract class ToggleColumnAction extends MuAction {
     /** Index of the FileTable column this action operates on */
     protected Column column;
 
-    public ToggleColumnAction(MainFrame mainFrame, Map<String,Object> properties, Column column) {
+    ToggleColumnAction(MainFrame mainFrame, Map<String, Object> properties, Column column) {
         super(mainFrame, properties);
 
         this.column = column;
         updateLabel();
     }
 
-    protected boolean isColumnVisible() {
+    private boolean isColumnVisible() {
         return mainFrame.getActiveTable().isColumnVisible(column);
     }
 
-    protected void updateLabel() {
+    private void updateLabel() {
         setLabel(Translator.get(isColumnVisible()?"ToggleColumn.hide":"ToggleColumn.show", column.getLabel()));
     }
 

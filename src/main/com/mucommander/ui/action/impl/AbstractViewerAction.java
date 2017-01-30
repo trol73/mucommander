@@ -45,7 +45,7 @@ abstract class AbstractViewerAction extends SelectedFileAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public AbstractViewerAction(MainFrame mainFrame, Map<String,Object> properties) {
+    AbstractViewerAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Enable this action only if the currently selected file is can be read.

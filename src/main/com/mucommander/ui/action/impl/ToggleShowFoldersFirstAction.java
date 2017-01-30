@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class ToggleShowFoldersFirstAction extends MuAction {
 
-    public ToggleShowFoldersFirstAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleShowFoldersFirstAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

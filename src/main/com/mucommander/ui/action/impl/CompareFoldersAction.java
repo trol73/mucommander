@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class CompareFoldersAction extends MuAction {
 
-    public CompareFoldersAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CompareFoldersAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

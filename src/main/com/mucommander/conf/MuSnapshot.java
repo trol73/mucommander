@@ -544,7 +544,7 @@ public class MuSnapshot {
 
     /**
      *
-     * @return
+     * @return size of screen
      */
     public static Dimension getScreenSize() {
         if (screenSize != null) {

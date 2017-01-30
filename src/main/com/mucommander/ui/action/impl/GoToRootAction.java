@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class GoToRootAction extends ActiveTabAction {
 
-    public GoToRootAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToRootAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

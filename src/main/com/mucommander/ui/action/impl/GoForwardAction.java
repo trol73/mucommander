@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class GoForwardAction extends ActiveTabAction {
 
-    public GoForwardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoForwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

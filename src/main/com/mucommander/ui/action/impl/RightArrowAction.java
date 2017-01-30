@@ -24,6 +24,7 @@ import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.views.TableViewMode;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -44,6 +45,9 @@ public class RightArrowAction extends MuAction {
     public void performAction() {
         FileTable table = mainFrame.getActiveTable();
         if (table == null) {
+            return;
+        }
+        if (table.getViewMode() != TableViewMode.FULL) {
             return;
         }
         int count = table.getFilesCount();

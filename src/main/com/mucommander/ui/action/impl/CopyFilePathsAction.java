@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class CopyFilePathsAction extends SelectedFilesAction {
 
-    public CopyFilePathsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CopyFilePathsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

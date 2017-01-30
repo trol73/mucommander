@@ -50,7 +50,7 @@ public class InternalEditAction extends AbstractViewerAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public InternalEditAction(MainFrame mainFrame, Map<String,Object> properties) {
+    InternalEditAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Edit requires being able to write the file (in addition to view requirements)

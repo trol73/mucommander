@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class MarkToLastRowAction extends MarkForwardAction {
 
-    public MarkToLastRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkToLastRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

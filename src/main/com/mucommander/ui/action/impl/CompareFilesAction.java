@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class CompareFilesAction extends SelectedFilesAction {
 
-    public CompareFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    CompareFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         setSelectedFileFilter(new AndFileFilter(
             new FileOperationFilter(FileOperation.READ_FILE),

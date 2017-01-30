@@ -80,6 +80,7 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
      * @param  in          where to read association data from.
      * @param  b           where to send building events to.
      * @throws IOException if any IO error occurs.
+     * @throws CommandException if any parse error occurs
      * @see                #read(InputStream,AssociationBuilder)
      */
     public static void read(InputStream in, AssociationBuilder b) throws IOException, CommandException {

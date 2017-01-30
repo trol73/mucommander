@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class NewWindowAction extends MuAction {
 
-    public NewWindowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    NewWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // This action must be performed in a separate thread as it will otherwise lock the AWT event thread

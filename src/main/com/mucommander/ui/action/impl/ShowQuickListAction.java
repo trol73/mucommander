@@ -32,11 +32,11 @@ import java.util.Map;
  */
 abstract class ShowQuickListAction extends MuAction {
 
-	public ShowQuickListAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowQuickListAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);		
 	}
 	
-	public void openQuickList(QuickLists quickList) {		
+	void openQuickList(QuickLists quickList) {
 		mainFrame.getActivePanel().showQuickList(quickList.ordinal());
 	}
 }

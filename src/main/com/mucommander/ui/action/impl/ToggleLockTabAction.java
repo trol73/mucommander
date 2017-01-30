@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class ToggleLockTabAction extends ActiveTabAction {
 
-	public ToggleLockTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ToggleLockTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

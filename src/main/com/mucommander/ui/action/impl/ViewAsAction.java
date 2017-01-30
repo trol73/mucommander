@@ -44,7 +44,7 @@ public class ViewAsAction extends SelectedFilesAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public ViewAsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    ViewAsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         ImageIcon icon = getStandardIcon(ViewAction.class);

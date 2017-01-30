@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class ShowDebugConsoleAction extends MuAction {
 
-    public ShowDebugConsoleAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowDebugConsoleAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

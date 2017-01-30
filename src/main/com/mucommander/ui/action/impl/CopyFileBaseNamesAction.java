@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class CopyFileBaseNamesAction extends SelectedFilesAction {
 
-	public CopyFileBaseNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
+	CopyFileBaseNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 

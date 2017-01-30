@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class ExploreBookmarksAction extends ActiveTabAction {
 
-    public ExploreBookmarksAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ExploreBookmarksAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -39,12 +39,12 @@ import java.util.Map;
 public class MarkAllAction extends MuAction {
     private boolean mark;
 
-    protected MarkAllAction(MainFrame mainFrame, Map<String,Object> properties, boolean mark) {
+    MarkAllAction(MainFrame mainFrame, Map<String, Object> properties, boolean mark) {
         super(mainFrame, properties);
         this.mark = mark;
     }
 
-    public MarkAllAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkAllAction(MainFrame mainFrame, Map<String, Object> properties) {
         this(mainFrame, properties, true);
     }
 

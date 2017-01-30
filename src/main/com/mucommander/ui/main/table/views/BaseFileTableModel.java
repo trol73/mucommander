@@ -30,6 +30,7 @@ import com.mucommander.text.SizeFormat;
 import com.mucommander.ui.main.table.CalculateDirectorySizeWorker;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.SortInfo;
+import com.mucommander.ui.quicksearch.QuickSearch;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.Cursor;
@@ -58,6 +59,11 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     /** Contains sort-related variables */
     private SortInfo sortInfo;
+
+    /**
+     * QuickSearch object to sorting and filtering matched files
+     */
+    protected QuickSearch quickSearch;
 
     /** Index array */
     protected int fileArrayIndex[];
@@ -114,7 +120,6 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         setSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
                                                   MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
     }
-
 
 
     public abstract void fillCellCache();
@@ -292,8 +297,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     // Sort methods //
     //////////////////
 
-    private static FileComparator createFileComparator(SortInfo sortInfo) {
-        return new FileComparator(sortInfo.getCriterion().getFileComparatorCriterion(), sortInfo.getAscendingOrder(), sortInfo.getFoldersFirst());
+    private FileComparator createFileComparator(SortInfo sortInfo) {
+        return new FileComparator(sortInfo.getCriterion().getFileComparatorCriterion(), sortInfo.getAscendingOrder(),
+                sortInfo.getFoldersFirst(), quickSearch != null && quickSearch.isActive() ? quickSearch : null);
     }
 
 
@@ -383,6 +389,11 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public void setSortInfo(SortInfo sortInfo) {
         this.sortInfo = sortInfo;
     }
+
+    public void setQuickSearch(QuickSearch quickSearch) {
+        this.quickSearch = quickSearch;
+    }
+
 
 
     /**
@@ -622,13 +633,13 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public synchronized AbstractFile getFileAt(int row, int col) {
         AbstractFile file = getCachedFileAt(row, col);
 	
-        if (file == null) {
-            return null;
-        }
+//        if (file == null) {
+//            return null;
+//        }
         if (file instanceof CachedFile) {
             return ((CachedFile) file).getProxiedFile();
         }
-            return file;
+        return file;
     }
 	
 
@@ -646,7 +657,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
             return 0;
         }
 
-        // Use dichotomic binary search rather than a dumb linear search since file array is sorted, complexity is reduced to O(log n) instead of O(n^2)
+        // Use dichotomic binary search rather than a dumb linear search since file array is sorted, complexity is
+        // reduced to O(log n) instead of O(n^2)
         int left = parent == null ? 0 : 1;
         int right = getFilesCount() - 1;
         FileComparator fc = createFileComparator(sortInfo);
@@ -660,7 +672,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
                 right = mid - 1;
             } else {
                 left = mid+1;
-        }
+            }
         }
 		
         return -1;

@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ReportBugAction extends OpenURLInBrowserAction {
 
-    public ReportBugAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ReportBugAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.BUG_REPOSITORY_URL);

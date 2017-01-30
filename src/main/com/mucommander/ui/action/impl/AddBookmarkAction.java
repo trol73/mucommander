@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
 @InvokesDialog
 public class AddBookmarkAction extends MuAction {
 
-    public AddBookmarkAction(MainFrame mainFrame, Map<String, Object> properties) {
+    AddBookmarkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

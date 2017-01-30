@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public abstract class SelectBackwardAction extends MuAction {
 
-    public SelectBackwardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectBackwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

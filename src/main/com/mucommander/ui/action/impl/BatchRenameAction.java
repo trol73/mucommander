@@ -41,7 +41,7 @@ import com.mucommander.ui.main.MainFrame;
 @InvokesDialog
 public class BatchRenameAction extends SelectedFilesAction {
 
-    public BatchRenameAction(MainFrame mainFrame, Map<String,Object> properties) {
+    BatchRenameAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new OrFileFilter(

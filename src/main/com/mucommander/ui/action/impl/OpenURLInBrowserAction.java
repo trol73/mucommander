@@ -37,9 +37,9 @@ import com.mucommander.ui.main.MainFrame;
 public class OpenURLInBrowserAction extends MuAction {
 
     /** Key to the URL property */
-    public final static String URL_PROPERTY_KEY = "url";
+    final static String URL_PROPERTY_KEY = "url";
 
-    public OpenURLInBrowserAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenURLInBrowserAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Enable this action only if the current platform is capable of opening URLs in the default browser.

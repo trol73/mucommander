@@ -100,6 +100,10 @@ public abstract class TransferFileJob extends FileJob {
 
     /**
      * Creates a new TransferFileJob.
+     *
+     * @param progressDialog dialog which shows this job's progress
+     * @param mainFrame mainFrame this job has been triggered by
+     * @param files files which are going to be processed
      */
     public TransferFileJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files) {
         super(progressDialog, mainFrame, files);
@@ -131,8 +135,9 @@ public abstract class TransferFileJob extends FileJob {
      * @param sourceFile source file
      * @param destFile destination file
      * @param append append or overwrite
+     * @throws FileTransferException on transfer error
      */
-    protected void copyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
+    private void copyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
         // Reset this field in case it was set to true for the previous file
         isCheckingIntegrity = false;
 
@@ -298,7 +303,7 @@ public abstract class TransferFileJob extends FileJob {
      * @return true if the file was properly copied, false if the transfer was interrupted / aborted by the user
      *
      */
-    protected boolean tryCopyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append, String errorDialogTitle) {
+    boolean tryCopyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append, String errorDialogTitle) {
         boolean overwriteReadonly = false;
         // Copy file to destination
         do {				// Loop for retry

@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class ToggleToolBarAction extends MuAction {
 
-    public ToggleToolBarAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleToolBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.TOOLBAR_VISIBLE, MuPreferences.DEFAULT_TOOLBAR_VISIBLE));
     }

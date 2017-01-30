@@ -23,6 +23,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
 
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +39,17 @@ import org.slf4j.LoggerFactory;
  * @author Arik Hadas
  */
 public abstract class QuickSearch extends KeyAdapter implements Runnable {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(QuickSearch.class);
-	
-	/** Quick search string */
+
+    /** Icon that is used to indicate in the status bar that quick search has failed */
+    protected final static String QUICK_SEARCH_KO_ICON = "quick_search_ko.png";
+
+    /** Icon that is used to indicate in the status bar that quick search has found a match */
+    protected final static String QUICK_SEARCH_OK_ICON = "quick_search_ok.png";
+
+
+    /** Quick search string */
     private String searchString;
 
 	/** Timestamp of the last search string change, used when quick search is active */
@@ -47,15 +59,10 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      * has a null value when quick search is not active */
     private Thread timeoutThread;
 
-	/** Quick search timeout in ms */
-    private final static int QUICK_SEARCH_TIMEOUT = 2000;
+	/** Quick search timeout in ms. No timeout if <= 0 */
+    private int quickSearchTimeout;
 
-    /** Icon that is used to indicate in the status bar that quick search has failed */
-    protected final static String QUICK_SEARCH_KO_ICON = "quick_search_ko.png";
 
-    /** Icon that is used to indicate in the status bar that quick search has found a match */
-    protected final static String QUICK_SEARCH_OK_ICON = "quick_search_ok.png";
-    
     private JComponent component;
     
     protected QuickSearch(JComponent component) {
@@ -75,8 +82,11 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
             // Reset search string
             searchString = "";
             // Start the thread that's responsible for canceling the quick search on timeout
-            timeoutThread = new Thread(this, "QuickSearch timeout thread");
-            timeoutThread.start();
+            quickSearchTimeout = MuConfigurations.getPreferences().getVariable(MuPreference.QUICK_SEARCH_TIMEOUT, MuPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
+            if (quickSearchTimeout > 0) {
+                timeoutThread = new Thread(this, "QuickSearch timeout thread");
+                timeoutThread.start();
+            }
             lastSearchStringChange = System.currentTimeMillis();
 
             searchStarted();
@@ -89,7 +99,6 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
     public synchronized void stop() {
         if (isActive()) {
             timeoutThread = null;
-
             searchStopped();
         }
     }
@@ -113,6 +122,10 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      */
     public boolean matches(String string) {
         return isActive() && string.toLowerCase().contains(searchString.toLowerCase());
+    }
+
+    public boolean matches(AbstractFile file) {
+        return matches(file.getName());
     }
 
 
@@ -188,7 +201,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
         	int bestMatch = getBestMatch(startIndex, descending, findBestMatch);
 
             if (bestMatch >= 0) {
-                matchFound(bestMatch, searchString);
+                matchFound(bestMatch, searchString, findBestMatch);
             } else {
                 matchNotFound(searchString);
             }
@@ -280,7 +293,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
             : -1;
         LOGGER.trace("startsWithCaseMatch="+startsWithCaseMatch+" containsCaseMatch="+containsCaseMatch+" startsWithNoCaseMatch="+startsWithNoCaseMatch+" containsNoCaseMatch="+containsNoCaseMatch);
         LOGGER.trace("bestMatch="+bestMatch);
-        
+
         return bestMatch;
     }
 
@@ -325,8 +338,9 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
 	 * 
 	 * @param row - the row of the item that was found
 	 * @param searchString - the string that was being searched
+     * @param itsBestMatch - if found best match (true it it's a new search, elsewhere if we navigate between matced files)
 	 */
-	protected abstract void matchFound(int row, String searchString);
+	protected abstract void matchFound(int row, String searchString, boolean itsBestMatch);
 	
 	/**
 	 * Hood that is called after a search was done and no item was found
@@ -347,7 +361,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
             }
 
             synchronized(this) {
-                if (timeoutThread != null && System.currentTimeMillis()-lastSearchStringChange >= QUICK_SEARCH_TIMEOUT) {
+                if (timeoutThread != null && System.currentTimeMillis()-lastSearchStringChange >= quickSearchTimeout) {
                     stop();
                 }
             }

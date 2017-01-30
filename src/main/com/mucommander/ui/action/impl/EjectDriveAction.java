@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class EjectDriveAction extends SelectedFilesAction {
 
-    public EjectDriveAction(MainFrame mainFrame, Map<String, Object> properties) {
+    EjectDriveAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         setSelectedFileFilter(new MountedDriveFilter());
     }

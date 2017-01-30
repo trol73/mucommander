@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class MarkNextPageAction extends MarkForwardAction {
 
-    public MarkNextPageAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkNextPageAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

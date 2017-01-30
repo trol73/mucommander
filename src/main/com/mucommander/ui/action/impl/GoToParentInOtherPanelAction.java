@@ -45,7 +45,7 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public GoToParentInOtherPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToParentInOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

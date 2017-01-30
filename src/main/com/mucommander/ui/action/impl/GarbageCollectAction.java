@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class GarbageCollectAction extends MuAction {
 
-    public GarbageCollectAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GarbageCollectAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

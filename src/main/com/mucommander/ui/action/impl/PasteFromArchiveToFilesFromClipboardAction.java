@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 public class PasteFromArchiveToFilesFromClipboardAction extends SelectedFilesAction {
     
 
-    public PasteFromArchiveToFilesFromClipboardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    PasteFromArchiveToFilesFromClipboardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

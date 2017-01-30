@@ -48,7 +48,7 @@ public abstract class FileAction extends MuAction implements TableSelectionListe
     protected FileFilter filter;
 
 
-    public FileAction(MainFrame mainFrame, Map<String,Object> properties) {
+    FileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         init(mainFrame);
     }

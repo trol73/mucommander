@@ -263,6 +263,7 @@ public class LocationChanger {
 	 *
 	 * @param folderURL folder's URL to be made current folder. If this URL does not resolve into an existing file, an error message will be displayed.
 	 * @param credentialsMapping the CredentialsMapping to use for authentication, can be null
+	 * @param changeLockedTab flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
@@ -503,9 +504,9 @@ public class LocationChanger {
 
 		/**
 		 * 
-		 * @param folderURL
+		 * @param folderURL folder's URL to be made current folder. If this URL does not resolve into an existing file, an error message will be displayed.
 		 * @param credentialsMapping the CredentialsMapping to use for accessing the folder, <code>null</code> for none
-		 * @param changeLockedTab
+		 * @param changeLockedTab flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 		 */
 		ChangeFolderThread(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
 			this.folderURL = folderURL;

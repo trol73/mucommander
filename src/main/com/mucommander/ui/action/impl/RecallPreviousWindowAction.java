@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class RecallPreviousWindowAction extends MuAction {
 
-    public RecallPreviousWindowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    RecallPreviousWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

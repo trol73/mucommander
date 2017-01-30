@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SelectPreviousRowAction extends SelectBackwardAction {
 
-    public SelectPreviousRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectPreviousRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -43,7 +43,7 @@ public class OpenInOtherPanelAction extends SelectedFileAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public OpenInOtherPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenInOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

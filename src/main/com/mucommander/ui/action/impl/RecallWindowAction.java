@@ -51,13 +51,15 @@ public class RecallWindowAction extends MuAction {
         super(mainFrame, properties);
 
         Object windowNumberValue = getValue(WINDOW_NUMBER_PROPERTY_KEY);
-        if(windowNumberValue==null || !(windowNumberValue instanceof String))
-            throw new IllegalArgumentException(WINDOW_NUMBER_PROPERTY_KEY+" ("+windowNumberValue+")");
+        if (windowNumberValue == null || !(windowNumberValue instanceof String)) {
+            throw new IllegalArgumentException(WINDOW_NUMBER_PROPERTY_KEY + " (" + windowNumberValue + ")");
+        }
 
         windowNumber = Integer.parseInt((String)windowNumberValue);
 
-        if(windowNumber<=0)
-            throw new IllegalArgumentException(WINDOW_NUMBER_PROPERTY_KEY+" ("+windowNumberValue+")");
+        if (windowNumber <= 0) {
+            throw new IllegalArgumentException(WINDOW_NUMBER_PROPERTY_KEY + " (" + windowNumberValue + ")");
+        }
     }
 
     public RecallWindowAction(MainFrame mainFrame, Map<String,Object> properties, int windowNumber) {

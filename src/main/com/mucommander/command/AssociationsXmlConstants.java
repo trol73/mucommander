@@ -52,7 +52,7 @@ package com.mucommander.command;
  * &lt;!ELEMENT executable EMPTY&gt;
  * &lt;!ATTLIST executable value (true|false) #REQUIRED&gt;
  * </pre>
- * </p>
+ *
  * @see AssociationReader
  * @see AssociationWriter
  * @author Nicolas Rinaudo

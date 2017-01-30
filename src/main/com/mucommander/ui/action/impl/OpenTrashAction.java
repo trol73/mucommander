@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class OpenTrashAction extends MuAction {
 
-    public OpenTrashAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenTrashAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         AbstractTrash trash = DesktopManager.getTrash();

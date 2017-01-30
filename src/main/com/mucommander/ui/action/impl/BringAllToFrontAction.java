@@ -46,7 +46,7 @@ import java.util.Map;
  */
 public class BringAllToFrontAction extends MuAction {
 
-    public BringAllToFrontAction(MainFrame mainFrame, Map<String,Object> properties) {
+    BringAllToFrontAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

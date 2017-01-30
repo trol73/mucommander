@@ -28,7 +28,7 @@ import com.mucommander.ui.encoding.EncodingSelectBox;
  */
 public abstract class PrefEncodingSelectBox extends EncodingSelectBox implements PrefComponent {
 
-    public PrefEncodingSelectBox(DialogOwner dialogOwner, String selectedEncoding) {
+    protected PrefEncodingSelectBox(DialogOwner dialogOwner, String selectedEncoding) {
         super(dialogOwner, selectedEncoding);
     }
 

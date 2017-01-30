@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class SwitchActiveTableAction extends MuAction {
 
-    public SwitchActiveTableAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SwitchActiveTableAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

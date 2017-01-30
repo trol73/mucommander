@@ -42,7 +42,7 @@ public class MarkNextBlockAction extends MarkForwardAction {
     // TODO: make this value configurable
     private static final int BLOCK_SIZE = 5;
 
-    public MarkNextBlockAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkNextBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

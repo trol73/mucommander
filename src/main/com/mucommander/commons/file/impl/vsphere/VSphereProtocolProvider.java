@@ -10,7 +10,7 @@ import java.io.IOException;
  * This class is the provider for the VSphere filesystem implemented by
  * {@link com.mucommander.commons.file.impl.vsphere.VSphereFile}.
  * 
- * @author Yuval Kohavi <yuval.kohavi@intigua.com>
+ * @author Yuval Kohavi yuval.kohavi@intigua.com
  * @see com.mucommander.commons.file.impl.vsphere.VSphereFile
  */
 public class VSphereProtocolProvider implements ProtocolProvider {

@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByGroupAction extends SortByAction {
 
-    public SortByGroupAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SortByGroupAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.GROUP);
     }
 

@@ -616,10 +616,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * Here are a couple examples to illustrate:
      * <ul>
      *  <li>a directory for which the file permissions' mask is 0 will return the string <code>d---</code>, no matter
-     * what permission values the FilePermissions returned by {@link #getPermissions()} contains</li>.
+     * what permission values the FilePermissions returned by {@link #getPermissions()} contains</li>
      *  <li>a regular file for which the file permissions' mask returns 777 (full permissions support) and which
      * has read/write/executable permissions for all three 'user', 'group' and 'other' access types will return
-     * <code>-rwxrwxrwx</code></li>.
+     * <code>-rwxrwxrwx</code></li>
      * </ul>
      *
      * @return a string representation of this file's permissions
@@ -1509,7 +1509,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     /**
      * Returns this file's creation date, in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurred
      * @return creation date
      */
     public long getCreationDate() throws IOException {
@@ -1519,7 +1519,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     /**
      * Returns this file's last access date, in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurred
      * @return last access date
      */
     public long getLastAccessDate() throws IOException {
@@ -1989,7 +1989,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * @param bufferSize minimum size of buffer for <code>PushbackInputStream</code>.
      * @return he stream which can be re-used for file reading
-     * @throws IOException
+     * @throws IOException if an I/O error occurred
      */
     public synchronized PushbackInputStream getPushBackInputStream(final int bufferSize) throws IOException {
         if (pushbackInputStream == null) {
@@ -2004,7 +2004,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
     /**
      * Closes PushbackStream if it exists
-     * @throws IOException
+     * @throws IOException if an I/O error occurred
      */
     public void closePushbackInputStream() throws IOException {
         if (pushbackInputStream != null) {

@@ -39,7 +39,7 @@ import com.mucommander.ui.main.MainFrame;
 @InvokesDialog
 public class SplitFileAction extends SelectedFileAction {
 
-    public SplitFileAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SplitFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new AndFileFilter(

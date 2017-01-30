@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class GoBackAction extends ActiveTabAction {
 
-    public GoBackAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoBackAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

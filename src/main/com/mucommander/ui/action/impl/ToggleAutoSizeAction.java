@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class ToggleAutoSizeAction extends MuAction {
 
-    public ToggleAutoSizeAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleAutoSizeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

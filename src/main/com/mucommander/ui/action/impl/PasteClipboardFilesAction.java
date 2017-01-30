@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class PasteClipboardFilesAction extends MuAction {
 
-    public PasteClipboardFilesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    PasteClipboardFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Allows this action to be dynamically enabled when the clipboard contains files, and disabled otherwise.

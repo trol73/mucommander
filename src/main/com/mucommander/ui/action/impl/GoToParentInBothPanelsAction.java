@@ -54,7 +54,7 @@ public class GoToParentInBothPanelsAction extends ActiveTabAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public GoToParentInBothPanelsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToParentInBothPanelsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform this action in a separate thread, to avoid locking the event thread

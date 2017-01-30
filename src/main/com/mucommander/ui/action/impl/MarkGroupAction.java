@@ -34,7 +34,7 @@ import java.util.Map;
 @InvokesDialog
 public class MarkGroupAction extends MuAction {
 
-    public MarkGroupAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkGroupAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

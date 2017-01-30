@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class ToggleCommandBarAction extends MuAction {
 
-    public ToggleCommandBarAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_VISIBLE, MuPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
     }

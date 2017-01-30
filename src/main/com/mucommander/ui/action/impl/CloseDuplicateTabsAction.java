@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class CloseDuplicateTabsAction extends MuAction {
 	
-	public CloseDuplicateTabsAction(MainFrame mainFrame, Map<String,Object> properties) {
+	CloseDuplicateTabsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

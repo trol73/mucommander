@@ -42,7 +42,7 @@ import com.mucommander.ui.main.table.FileTable;
  */
 public class OpenInNewTabAction extends SelectedFileAction {
 
-	public OpenInNewTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+	OpenInNewTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 	

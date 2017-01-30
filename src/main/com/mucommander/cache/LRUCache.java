@@ -176,6 +176,8 @@ public abstract class LRUCache<K, V> {
 
     /**
      * Test method : simple test case + stress/sanity test
+     *
+     * @param args command line arguments
      */
     public static void main(String args[]) {
         LRUCache<Integer, Integer> cache;

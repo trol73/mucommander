@@ -45,33 +45,34 @@ import com.mucommander.ui.main.WindowManager;
 public class OSXIntegration {
 
     public OSXIntegration() {
-        if(OsFamily.MAC_OS_X.isCurrent()) {
-            // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
-            // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
-            // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
-            if(OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
-                // Turn on/off brush metal look (default is off because still buggy when scrolling and panning dialog windows) :
-                //  "Allows you to display your main windows with the 'textured' Aqua window appearance.
-                //   This property should be applied only to the primary application window,
-                //   and should not affect supporting windows like dialogs or preference windows."
-                System.setProperty("apple.awt.brushMetalLook",
-                    ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_BRUSHED_METAL, MuPreferences.DEFAULT_USE_BRUSHED_METAL));
-            }
-
-            // Enables/Disables screen menu bar (default is on) :
-            //  "if you are using the Aqua look and feel, this property puts Swing menus in the Mac OS X menu bar."
-            System.setProperty("apple.laf.useScreenMenuBar", ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_SCREEN_MENU_BAR,
-                                                                                                 MuPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
-
-            // Catch 'About', 'Preferences' and 'Quit' events
-            new EAWTHandler();
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
+            return;
         }
+        // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
+        // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
+        // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
+        if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
+            // Turn on/off brush metal look (default is off because still buggy when scrolling and panning dialog windows) :
+            //  "Allows you to display your main windows with the 'textured' Aqua window appearance.
+            //   This property should be applied only to the primary application window,
+            //   and should not affect supporting windows like dialogs or preference windows."
+            System.setProperty("apple.awt.brushMetalLook",
+                ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_BRUSHED_METAL, MuPreferences.DEFAULT_USE_BRUSHED_METAL));
+        }
+
+        // Enables/Disables screen menu bar (default is on) :
+        //  "if you are using the Aqua look and feel, this property puts Swing menus in the Mac OS X menu bar."
+        System.setProperty("apple.laf.useScreenMenuBar", ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_SCREEN_MENU_BAR,
+                                                                                             MuPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
+
+        // Catch 'About', 'Preferences' and 'Quit' events
+        new EAWTHandler();
     }
 
     /**
      * Shows the 'About' dialog.
      */
-    public static void showAbout() {
+    static void showAbout() {
         MainFrame mainFrame = WindowManager.getCurrentMainFrame();
         
         // Do nothing (return) when in 'no events mode'
@@ -85,11 +86,11 @@ public class OSXIntegration {
     /**
      * Shows the 'Preferences' dialog.
      */
-    public static void showPreferences() {
+    static void showPreferences() {
         MainFrame mainFrame = WindowManager.getCurrentMainFrame();
 
         // Do nothing (return) when in 'no events mode'
-        if (mainFrame.getNoEventsMode()) {
+        if (mainFrame == null || mainFrame.getNoEventsMode()) {
             return;
         }
 
@@ -100,7 +101,7 @@ public class OSXIntegration {
      * Quits the application after displaying a confirmation dialog if it hasn't been disabled
      * in the preferences. Return <code>true</code> if the operation has been aborted by user.
      */
-    public static boolean doQuit() {
+    static boolean doQuit() {
         // Ask the user for confirmation and abort if user refused to quit.
         if (!QuitDialog.confirmQuit()) {
             return false;

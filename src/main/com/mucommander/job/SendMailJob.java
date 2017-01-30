@@ -89,10 +89,10 @@ public class SendMailJob extends TransferFileJob {
     public SendMailJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet filesToSend, String recipientString, String mailSubject, String mailBody) {
         super(progressDialog, mainFrame, filesToSend);
 
-        this.boundary = "mucommander"+System.currentTimeMillis();
+        this.boundary = "trolcommander"+System.currentTimeMillis();
         this.recipientString = recipientString;
         this.mailSubject = mailSubject;
-        this.mailBody = mailBody+"\n\n"+"Sent by muCommander - http://www.mucommander.com\n";
+        this.mailBody = mailBody+"\n\n"+"Sent by trolCommander - http://www.mucommander.com\n";
 
         this.mailServer = MuConfigurations.getPreferences().getVariable(MuPreference.SMTP_SERVER);
         this.fromName = MuConfigurations.getPreferences().getVariable(MuPreference.MAIL_SENDER_NAME);
@@ -193,29 +193,24 @@ public class SendMailJob extends TransferFileJob {
      * and completely transferred.
      */ 
     private void sendAttachment(AbstractFile file) throws IOException {
-        InputStream fileIn = null;
-        try {
-            // Send MIME type of attachment file
-            String mimeType = MimeTypes.getMimeType(file);
-            // Default mime type
-            if(mimeType==null)
-                mimeType = "application/octet-stream";
-            writeLine("Content-Type:"+mimeType+"; name="+file.getName());
-            writeLine("Content-Disposition: attachment;filename=\""+file.getName()+"\"");
-            writeLine("Content-transfer-encoding: base64\r\n");
-            fileIn = setCurrentInputStream(file.getInputStream());
-            
+        // Send MIME type of attachment file
+        String mimeType = MimeTypes.getMimeType(file);
+        // Default mime type
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        writeLine("Content-Type:"+mimeType+"; name="+file.getName());
+        writeLine("Content-Disposition: attachment;filename=\""+file.getName()+"\"");
+        writeLine("Content-transfer-encoding: base64\r\n");
+
+        try (InputStream fileIn = setCurrentInputStream(file.getInputStream())) {
             // Write file to socket
             StreamUtils.copyStream(fileIn, out64);
-	
+
             // Writes padding bytes without closing the stream.
             out64.writePadding();
-	
+
             writeLine("\r\n--" + boundary);
-        }
-        finally {
-            if(fileIn!=null)
-                fileIn.close();
         }
     }
 	
@@ -231,9 +226,7 @@ public class SendMailJob extends TransferFileJob {
             socket.close();
             in.close();
             out64.close();
-        }
-        catch(Exception e){
-        }
+        } catch(Exception ignore) {}
     }
     
     private void readWriteLine(String s) throws IOException {
@@ -329,9 +322,10 @@ public class SendMailJob extends TransferFileJob {
 
     @Override
     public String getStatusString() {
-        if(connectedToMailServer)
+        if (connectedToMailServer) {
             return Translator.get("email.sending_file", getCurrentFilename());
-        else
+        } else {
             return Translator.get("email.connecting_to_server", mailServer);
+        }
     }
 }

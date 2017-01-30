@@ -37,7 +37,7 @@ import java.util.Map;
 @InvokesDialog
 public class ChangeReplicationAction extends SelectedFilesAction {
 
-    public ChangeReplicationAction(MainFrame mainFrame, Map<String, Object> properties) {
+    ChangeReplicationAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.CHANGE_REPLICATION));

@@ -25,6 +25,7 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.views.TableViewMode;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -44,6 +45,9 @@ public class LeftArrowAction extends MuAction {
     public void performAction() {
         FileTable table = mainFrame.getActiveTable();
         if (table == null) {
+            return;
+        }
+        if (table.getViewMode() != TableViewMode.FULL) {
             return;
         }
         if (table.getSelectedFileIndex() == 0) {

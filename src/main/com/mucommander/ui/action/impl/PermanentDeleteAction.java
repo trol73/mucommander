@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class PermanentDeleteAction extends SelectedFilesAction {
 
-    public PermanentDeleteAction(MainFrame mainFrame, Map<String,Object> properties) {
+    PermanentDeleteAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.DELETE));

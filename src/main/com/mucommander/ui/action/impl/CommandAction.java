@@ -60,7 +60,7 @@ public class CommandAction extends MuAction {
      * @param properties ignored.
      * @param command    command to init when this action is called.
      */
-    public CommandAction(MainFrame mainFrame, Map<String,Object> properties, Command command) {
+    CommandAction(MainFrame mainFrame, Map<String, Object> properties, Command command) {
         super(mainFrame, properties);
         this.command = command;
         setLabel(command.getDisplayName());

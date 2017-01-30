@@ -123,7 +123,7 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
     }
 
 
-    public MiscPanel(PreferencesDialog parent) {
+    MiscPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.misc_tab"));
 
         setLayout(new BorderLayout());
@@ -138,10 +138,11 @@ class MiscPanel extends PreferencesPanel implements ItemListener {
         };
 
         // Use system default or custom shell ?
-        if (getVariable(USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
+        if (getVariable(USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL)) {
             useCustomShellRadioButton.setSelected(true);
-        else
+        } else {
             useDefaultShellRadioButton.setSelected(true);
+        }
 
         useCustomShellRadioButton.addItemListener(this);
 

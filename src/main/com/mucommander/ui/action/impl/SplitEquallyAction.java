@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class SplitEquallyAction extends MuAction {
 
-    public SplitEquallyAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SplitEquallyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

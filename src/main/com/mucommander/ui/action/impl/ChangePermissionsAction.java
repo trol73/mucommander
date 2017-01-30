@@ -37,7 +37,7 @@ import java.util.Map;
 @InvokesDialog
 public class ChangePermissionsAction extends SelectedFilesAction {
 
-    public ChangePermissionsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ChangePermissionsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.CHANGE_PERMISSION));

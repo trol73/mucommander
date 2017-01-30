@@ -40,7 +40,7 @@ import java.util.Map;
 public class CutFilesToClipboardAction extends SelectedFilesAction {
     
 
-    public CutFilesToClipboardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CutFilesToClipboardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

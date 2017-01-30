@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class SplitHorizontallyAction extends MuAction {
 
-    public SplitHorizontallyAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SplitHorizontallyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

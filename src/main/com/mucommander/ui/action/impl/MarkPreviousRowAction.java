@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MarkPreviousRowAction extends MarkBackwardAction {
 
-    public MarkPreviousRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkPreviousRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

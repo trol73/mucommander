@@ -36,7 +36,7 @@ import java.beans.PropertyChangeListener;
 public abstract class ProxyAction implements Action {
 
     /** Proxied action */
-    protected Action proxiedAction;
+    private Action proxiedAction;
 
     
     /**
@@ -44,7 +44,7 @@ public abstract class ProxyAction implements Action {
      *
      * @param proxiedAction the action to proxy
      */
-    public ProxyAction(Action proxiedAction) {
+    ProxyAction(Action proxiedAction) {
         this.proxiedAction = proxiedAction;
     }
 

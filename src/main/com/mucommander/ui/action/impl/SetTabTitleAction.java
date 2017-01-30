@@ -34,7 +34,7 @@ import java.util.Map;
 @InvokesDialog
 public class SetTabTitleAction extends MuAction {
 
-	public SetTabTitleAction(MainFrame mainFrame, Map<String,Object> properties) {
+	SetTabTitleAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

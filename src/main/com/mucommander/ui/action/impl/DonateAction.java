@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class DonateAction extends OpenURLInBrowserAction {
 
-    public DonateAction(MainFrame mainFrame, Map<String,Object> properties) {
+    DonateAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.DONATION_URL);

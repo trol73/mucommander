@@ -35,7 +35,7 @@ import java.util.Map;
 @InvokesDialog
 public class ShowServerConnectionsAction extends MuAction {
 
-    public ShowServerConnectionsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowServerConnectionsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

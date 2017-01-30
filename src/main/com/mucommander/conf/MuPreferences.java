@@ -300,7 +300,7 @@ public class MuPreferences implements MuPreferencesAPI {
 	// - Folder monitoring variables -----------------------------------------
 	// -----------------------------------------------------------------------
 	/** Section describing the automatic folder refresh behavior. */
-	public static final String REFRESH_SECTION                    = "auto_refresh";
+	static final String REFRESH_SECTION                    = "auto_refresh";
 	/** Frequency at which the current folder is checked for updates, -1 to disable auto refresh. */
 	public static final String REFRESH_CHECK_PERIOD               = REFRESH_SECTION + '.' + "check_period";
 	/** Default folder refresh frequency. */
@@ -309,6 +309,21 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final String WAIT_AFTER_REFRESH                 = REFRESH_SECTION + '.' + "wait_after_refresh";
 	/** Default minimum amount of time between two refreshes. */
 	public static final long   DEFAULT_WAIT_AFTER_REFRESH         = 10000;
+
+
+	// - Quick search variables -----------------------------------------
+	// -----------------------------------------------------------------------
+
+	static final String QUICK_SEARCH_SECTION = "quick_search";
+	/** Controls whether matched files are displayed first in the FileTable or mixed with other files on quick search operation. */
+	static final String SHOW_QUICK_SEARCH_MATCHES_FIRST     = QUICK_SEARCH_SECTION + '.' + "show_quick_search_matches_first";
+	/** Default value for 'Show matches first' option. */
+	public static final boolean DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST = true;
+
+	static final String QUICK_SEARCH_TIMEOUT			    = QUICK_SEARCH_SECTION + '.' + "timeout";
+	/** Quick search timeout in ms. No timeout if &lt;= 0 */
+	public static final int DEFAULT_QUICK_SEARCH_TIMEOUT    = 5000;
+
 
 
 
@@ -388,27 +403,27 @@ public class MuPreferences implements MuPreferencesAPI {
 
     // - File group masks ----------------------------------------------------
     // -----------------------------------------------------------------------
-    public static final String FILE_GROUP_SECTION                 = "file_groups";
-    public static final String FILE_GROUP_1_MASK                  = FILE_GROUP_SECTION + ".files1";
-    public static final String FILE_GROUP_2_MASK                  = FILE_GROUP_SECTION + ".files2";
-    public static final String FILE_GROUP_3_MASK                  = FILE_GROUP_SECTION + ".files3";
-    public static final String FILE_GROUP_4_MASK                  = FILE_GROUP_SECTION + ".files4";
-    public static final String FILE_GROUP_5_MASK                  = FILE_GROUP_SECTION + ".files5";
-    public static final String FILE_GROUP_6_MASK                  = FILE_GROUP_SECTION + ".files6";
-    public static final String FILE_GROUP_7_MASK                  = FILE_GROUP_SECTION + ".files7";
-    public static final String FILE_GROUP_8_MASK                  = FILE_GROUP_SECTION + ".files8";
-    public static final String FILE_GROUP_9_MASK                  = FILE_GROUP_SECTION + ".files9";
-    public static final String FILE_GROUP_10_MASK                 = FILE_GROUP_SECTION + ".files10";
+    static final String FILE_GROUP_SECTION                 = "file_groups";
+    static final String FILE_GROUP_1_MASK                  = FILE_GROUP_SECTION + ".files1";
+    static final String FILE_GROUP_2_MASK                  = FILE_GROUP_SECTION + ".files2";
+    static final String FILE_GROUP_3_MASK                  = FILE_GROUP_SECTION + ".files3";
+    static final String FILE_GROUP_4_MASK                  = FILE_GROUP_SECTION + ".files4";
+    static final String FILE_GROUP_5_MASK                  = FILE_GROUP_SECTION + ".files5";
+    static final String FILE_GROUP_6_MASK                  = FILE_GROUP_SECTION + ".files6";
+    static final String FILE_GROUP_7_MASK                  = FILE_GROUP_SECTION + ".files7";
+    static final String FILE_GROUP_8_MASK                  = FILE_GROUP_SECTION + ".files8";
+    static final String FILE_GROUP_9_MASK                  = FILE_GROUP_SECTION + ".files9";
+    static final String FILE_GROUP_10_MASK                 = FILE_GROUP_SECTION + ".files10";
 
 	// - Find file dialog ----------------------------------------------------
 	// -----------------------------------------------------------------------
-	public static final String FIND_FILE_SECTION				  = "find_file";
-	public static final String FIND_FILE_ENCODING                 = FIND_FILE_SECTION + ".encoding";
-	public static final String FIND_FILE_SUBDIRECTORIES           = FIND_FILE_SECTION + ".subdirectories";
-	public static final String FIND_FILE_ARCHIVES                 = FIND_FILE_SECTION + ".archives";
-	public static final String FIND_FILE_IGNORE_HIDDEN            = FIND_FILE_SECTION + ".ignore_hidden";
-	public static final String FIND_FILE_CASE_SENSITIVE           = FIND_FILE_SECTION + ".case_sensitive";
-	public static final String FIND_FILE_SEARCH_HEX               = FIND_FILE_SECTION + ".search_hex";
+	static final String FIND_FILE_SECTION				  = "find_file";
+	static final String FIND_FILE_ENCODING                 = FIND_FILE_SECTION + ".encoding";
+	static final String FIND_FILE_SUBDIRECTORIES           = FIND_FILE_SECTION + ".subdirectories";
+	static final String FIND_FILE_ARCHIVES                 = FIND_FILE_SECTION + ".archives";
+	static final String FIND_FILE_IGNORE_HIDDEN            = FIND_FILE_SECTION + ".ignore_hidden";
+	static final String FIND_FILE_CASE_SENSITIVE           = FIND_FILE_SECTION + ".case_sensitive";
+	static final String FIND_FILE_SEARCH_HEX               = FIND_FILE_SECTION + ".search_hex";
 	
 	private static final String ROOT_ELEMENT = "preferences";
 

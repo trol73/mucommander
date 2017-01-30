@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class StopAction extends MuAction implements LocationListener {
 
-    public StopAction(MainFrame mainFrame, Map<String,Object> properties) {
+    StopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // This action is initially disabled and enabled only during a folder change

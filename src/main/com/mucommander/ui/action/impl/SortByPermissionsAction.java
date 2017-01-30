@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByPermissionsAction extends SortByAction {
 
-    public SortByPermissionsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SortByPermissionsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.PERMISSIONS);
     }
 

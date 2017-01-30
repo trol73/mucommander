@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MarkNextRowAction extends MarkForwardAction {
 
-    public MarkNextRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkNextRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public abstract class MarkBackwardAction extends MuAction {
 
-    public MarkBackwardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkBackwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

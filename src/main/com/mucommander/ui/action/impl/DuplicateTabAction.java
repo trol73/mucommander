@@ -53,7 +53,7 @@ import java.util.Map;
  */
 public class DuplicateTabAction extends MuAction {
 	
-	public DuplicateTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+	DuplicateTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

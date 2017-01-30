@@ -34,7 +34,7 @@ import java.util.Map;
 @InvokesDialog
 public class EditBookmarksAction extends MuAction {
 
-    public EditBookmarksAction(MainFrame mainFrame, Map<String,Object> properties) {
+    EditBookmarksAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

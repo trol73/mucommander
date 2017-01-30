@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByNameAction extends SortByAction {
 
-    public SortByNameAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SortByNameAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.NAME);
     }
 

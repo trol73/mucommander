@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class MinimizeWindowAction extends MuAction {
 
-    public MinimizeWindowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MinimizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

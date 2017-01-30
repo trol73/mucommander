@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class QuitAction extends MuAction {
 
-    public QuitAction(MainFrame mainFrame, Map<String,Object> properties) {
+    QuitAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

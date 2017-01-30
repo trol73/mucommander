@@ -34,7 +34,7 @@ import java.util.Map;
 @InvokesDialog
 public class EditCredentialsAction extends MuAction {
 
-    public EditCredentialsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    EditCredentialsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

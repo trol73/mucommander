@@ -53,7 +53,7 @@ class MailPanel extends PreferencesPanel {
     private PrefTextField portField;
 
 
-    public MailPanel(PreferencesDialog parent) {
+    MailPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.mail_tab"));
 
         setLayout(new BorderLayout());

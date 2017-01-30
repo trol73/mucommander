@@ -42,7 +42,7 @@ public class MarkPreviousBlockAction extends MarkBackwardAction {
     // TODO: make this value configurable
     private static final int BLOCK_SIZE = 5;
 
-    public MarkPreviousBlockAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ToggleGroupColumnAction extends ToggleColumnAction {
 
-    public ToggleGroupColumnAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleGroupColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.GROUP);
     }
 

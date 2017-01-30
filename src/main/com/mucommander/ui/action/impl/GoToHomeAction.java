@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class GoToHomeAction extends ActiveTabAction {
 
-    public GoToHomeAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToHomeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     

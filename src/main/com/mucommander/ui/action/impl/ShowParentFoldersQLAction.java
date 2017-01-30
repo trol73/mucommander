@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ShowParentFoldersQLAction extends ShowQuickListAction {
 	
-	public ShowParentFoldersQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowParentFoldersQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

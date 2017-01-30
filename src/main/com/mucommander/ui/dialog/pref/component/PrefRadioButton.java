@@ -27,7 +27,7 @@ import javax.swing.*;
  */
 public abstract class PrefRadioButton extends JRadioButton implements PrefComponent {
 
-	public PrefRadioButton(String description) {
+	protected PrefRadioButton(String description) {
 		super(description);
 	}
 	

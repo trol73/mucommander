@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class SelectFirstRowAction extends MuAction {
 
-    public SelectFirstRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectFirstRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

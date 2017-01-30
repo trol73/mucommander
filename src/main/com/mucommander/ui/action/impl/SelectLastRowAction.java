@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SelectLastRowAction extends MuAction {
 
-    public SelectLastRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectLastRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

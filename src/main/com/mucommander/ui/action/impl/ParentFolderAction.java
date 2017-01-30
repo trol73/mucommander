@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
  */
 public abstract class ParentFolderAction extends MuAction implements ActivePanelListener, LocationListener {
 
-    public ParentFolderAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ParentFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Listen to active table change events

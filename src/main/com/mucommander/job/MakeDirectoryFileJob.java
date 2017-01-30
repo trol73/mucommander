@@ -54,6 +54,9 @@ public class MakeDirectoryFileJob extends FileJob {
 
     /**
      * Creates a new MakeDirectoryFileJob which operates in 'mkdir' mode.
+     * @param progressDialog dialog which shows this job's progress
+     * @param mainFrame mainFrame this job has been triggered by
+     * @param fileSet files which are going to be processed
      */
     public MakeDirectoryFileJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet fileSet) {
         super(progressDialog, mainFrame, fileSet);
@@ -67,6 +70,9 @@ public class MakeDirectoryFileJob extends FileJob {
     /**
      * Creates a new MakeDirectoryFileJob which operates in 'mkfile' mode.
      *
+     * @param progressDialog dialog which shows this job's progress
+     * @param mainFrame mainFrame this job has been triggered by
+     * @param fileSet files which are going to be processed
      * @param allocateSpace number of bytes to allocate to the file, -1 for none (use AbstractFile#mkfile())
      * @param executable set 'executable' attribute on unix-systems
      */

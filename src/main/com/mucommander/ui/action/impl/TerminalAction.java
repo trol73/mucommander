@@ -41,7 +41,7 @@ public class TerminalAction extends ParentFolderAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
+    TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

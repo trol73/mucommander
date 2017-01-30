@@ -129,7 +129,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     // Used when right button is pressed and mouse is dragged
     private boolean markOnRightClick;
-    private int     lastDraggedRow = -1;
+    private int lastDraggedRow = -1;
 
     // Used by shift+Click
     private int lastRow;
@@ -149,7 +149,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private boolean autoSizeColumnsEnabled;
 
     /** Instance of the inner class that handles quick search */
-    private QuickSearch quickSearch = new FileTableQuickSearch();
+    private final QuickSearch quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
     private WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
@@ -201,6 +201,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         this.conf = conf;
         tableModel = (BaseFileTableModel)getModel();
         tableModel.setSortInfo(sortInfo);
+        tableModel.setQuickSearch(quickSearch);
 
         ThemeManager.addCurrentThemeListener(this);
 
@@ -279,7 +280,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             case COMPACT:
             case SHORT:
                 if (!fromConstructor) {
-                    setModel(new CompactFileTableModel(mode.getColumnsCount(), pageSize > 0 ? pageSize : 10));
+                    CompactFileTableModel newModel = new CompactFileTableModel(mode.getColumnsCount(), pageSize > 0 ? pageSize : 10);
+                    newModel.setQuickSearch(quickSearch);
+                    setModel(newModel);
                     setColumnModel(new CompactFileTableColumnModel(mode.getColumnsCount(), conf));
                 }
                 int columnWidth = getWidth()/mode.getColumnsCount();
@@ -700,6 +703,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             sortInfo.setFoldersFirst(enabled);
             sortTable();
         }
+    }
+
+    /**
+     * Controls whether quick search matches are displayed first in this FileTable or mixed with other files.
+     * @param enabled
+     */
+    public void setShowMatchesFirst(boolean enabled) {
+        sortInfo.setQuickSearchMatchesFirst(enabled);
     }
 
 
@@ -1173,7 +1184,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Sorts this FileTable and repaints it. Marked files and selected file will remain the same, only
      * their position will have changed in the newly sorted table.
      */
-    private void sortTable() {
+    private synchronized void sortTable() {
         // Save currently selected file
         AbstractFile selectedFile = tableModel.getFileAt(currentRow, currentColumn);
 
@@ -1978,16 +1989,22 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         
         @Override
 		protected void searchStarted() {
+            sortInfo.setQuickSearchMatchesFirst(
+                    MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
         	// Repaint the table to add the 'dim' effect on non-matching files
             scrollpaneWrapper.dimBackground();
 		}
 
 		@Override
 		protected void searchStopped() {
+            if (sortInfo.getQuickSearchMatchesFirst()) {
+                sortTable();
+            }
 			mainFrame.getStatusBar().updateSelectedFilesInfo();
             // Removes the 'dim' effect on non-matching files.
             scrollpaneWrapper.undimBackground();
-		}
+            // re-sort table if need
+        }
 		
 		@Override
 		protected int getNumOfItems() {
@@ -2005,24 +2022,56 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 		}
 
 		@Override
-		protected void matchFound(int index, String searchString) {
+		protected void matchFound(int index, String searchString, boolean itsBestSearch) {
 			// Select best match's row
-            int currentFileIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
-            if (index != currentFileIndex) {
-                selectFile(index);
-                //centerRow();
-            }
+            AbstractFile fileToSelect = tableModel.getFileAt(index);
+            if (sortInfo.getQuickSearchMatchesFirst()) {
+                //sortTable();
+                tableModel.sortRows();
+                // Restore selected file
+                selectFile(0);
+                if (fileToSelect != null) {
+                    selectFile(fileToSelect);
+                }
 
+                // Repaint table
+                repaint();
+            } else {
+                if (fileToSelect != null) {
+                    selectFile(fileToSelect);
+                }
+            }
             // Display the new search string in the status bar
             // that indicates that the search has yielded a match
-            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_OK_ICON), false);
+            String hint = "<html><b>" + Translator.get("quick_search") + ": " + searchString + "</b>";
+            if (sortInfo.getQuickSearchMatchesFirst()) {
+                hint += "   (" + Translator.get("status_bar.quick_search.press_esc_to_stop_search") + ")";
+            }
+            mainFrame.getStatusBar().setStatusInfo(hint, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_OK_ICON), false);
+            // re-sort table if need
 		}
 
 		@Override
 		protected void matchNotFound(String searchString) {
 			// No file matching the search string, display the new search string with an icon
             // that indicates that the search has failed
-            mainFrame.getStatusBar().setStatusInfo(searchString, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_KO_ICON), false);
+            if (sortInfo.getQuickSearchMatchesFirst()) {
+                int currentFileIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
+                if (currentFileIndex >= 0) {
+                    if (currentFileIndex > 0) {
+                        selectFile(0);
+                    }
+                    AbstractFile currentFile = tableModel.getFileAt(currentFileIndex);
+                    if (quickSearch.matches(currentFile.getName())) {
+                        return;
+                    }
+                }
+            }
+            String hint = "<html><b>" + Translator.get("quick_search") + ": " + searchString + "</b>";
+            if (sortInfo.getQuickSearchMatchesFirst()) {
+                hint += "   (" + Translator.get("status_bar.quick_search.press_esc_to_stop_search") + ")";
+            }
+            mainFrame.getStatusBar().setStatusInfo(hint, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_KO_ICON), false);
 		}
 		
         ///////////////////////////////
@@ -2080,12 +2129,13 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	            // Find the first row before/after the current row that matches the search string
 	            boolean down = keyCode == KeyEvent.VK_DOWN;
                 int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
-	            findMatch(currentIndex + (down ? 1 : -1), down, false);
+                if (currentIndex != 1 || down || !tableModel.hasParentFolder()) {
+                    findMatch(currentIndex + (down ? 1 : -1), down, false);
+                }
 	        }
 	        // MarkSelectedFileAction and MarkNextRowAction mark the current row and moves to the next match
 	        else if (ActionManager.getActionInstance(MarkSelectedFileAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))
 	             || ActionManager.getActionInstance(MarkNextRowAction.Descriptor.ACTION_ID, mainFrame).isAccelerator(KeyStroke.getKeyStrokeForEvent(e))) {
-
                 int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
 	            if (!isParentFolderSelected()) { // Don't mark/unmark the '..' file
                     setFileMarked(currentIndex, !tableModel.isFileMarked(currentRow, currentColumn));
@@ -2114,17 +2164,23 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	        } else {
 	            // Test if the typed key combination corresponds to a registered action.
 	            // If that's the case, the quick search is canceled and the action is performed.
-	            String muActionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStrokeForEvent(e));
-	            if (muActionId != null) {
+	            String actionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStrokeForEvent(e));
+	            if (actionId != null) {
+
 	                // Consume the key event otherwise it would be fired again on the FileTable
 	                // (or any other KeyListener on this FileTable)
 	                e.consume();
 
+                    if (getViewMode() != TableViewMode.FULL) {
+                        if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
+                            return;
+                        }
+                    }
 	                // Cancel quick search
 	                stop();
 
 	                // Perform the action
-	                ActionManager.getActionInstance(muActionId, mainFrame).performAction();
+	                ActionManager.getActionInstance(actionId, mainFrame).performAction();
 	            }
 
 	            // Do not update last search string's change timestamp

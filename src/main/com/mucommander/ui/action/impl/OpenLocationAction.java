@@ -84,7 +84,7 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Creates a new OpenLocationAction instance using the provided AbstractFile and label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, AbstractFile file, String label) {
+    private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, AbstractFile file, String label) {
         super(mainFrame, properties);
 
         this.file = file;
@@ -103,7 +103,7 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Creates a new OpenLocationAction instance using the provided path and label.
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, String path, String label) {
+    private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, String path, String label) {
         super(mainFrame, properties);
 
         this.path = path;

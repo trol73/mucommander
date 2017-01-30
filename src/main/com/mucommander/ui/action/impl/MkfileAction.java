@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class MkfileAction extends ParentFolderAction {
 
-    public MkfileAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MkfileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

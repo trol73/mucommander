@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class InvertSelectionAction extends MuAction {
 
-    public InvertSelectionAction(MainFrame mainFrame, Map<String, Object> properties) {
+    InvertSelectionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

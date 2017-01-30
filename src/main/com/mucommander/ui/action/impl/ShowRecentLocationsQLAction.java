@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ShowRecentLocationsQLAction extends ShowQuickListAction {
 	
-	public ShowRecentLocationsQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowRecentLocationsQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

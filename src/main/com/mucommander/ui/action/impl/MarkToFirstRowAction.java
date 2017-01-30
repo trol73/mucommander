@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class MarkToFirstRowAction extends MarkBackwardAction {
 
-    public MarkToFirstRowAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MarkToFirstRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

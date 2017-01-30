@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class CopyFileNamesAction extends SelectedFilesAction {
 
-    public CopyFileNamesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CopyFileNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

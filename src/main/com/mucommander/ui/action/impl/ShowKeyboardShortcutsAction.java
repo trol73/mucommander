@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ShowKeyboardShortcutsAction extends MuAction {
 
-    public ShowKeyboardShortcutsAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowKeyboardShortcutsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

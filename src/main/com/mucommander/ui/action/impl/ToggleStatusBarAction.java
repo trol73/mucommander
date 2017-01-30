@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class ToggleStatusBarAction extends MuAction {
 
-    public ToggleStatusBarAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleStatusBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE));
     }

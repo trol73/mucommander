@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class CopyAction extends SelectedFilesAction {
 
-    public CopyAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CopyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));

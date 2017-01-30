@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class MoveAction extends SelectedFilesAction {
 
-    public MoveAction(MainFrame mainFrame, Map<String,Object> properties) {
+    MoveAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new OrFileFilter(

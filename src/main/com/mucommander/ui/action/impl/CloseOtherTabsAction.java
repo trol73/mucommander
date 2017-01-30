@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class CloseOtherTabsAction extends MuAction {
 	
-	public CloseOtherTabsAction(MainFrame mainFrame, Map<String,Object> properties) {
+	CloseOtherTabsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

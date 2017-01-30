@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ShowAboutAction extends MuAction {
 
-    public ShowAboutAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowAboutAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public abstract class SelectForwardAction extends MuAction {
 
-    public SelectForwardAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectForwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

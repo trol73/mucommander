@@ -33,7 +33,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class ToggleExtensionColumnAction extends ToggleColumnAction {
 
-    public ToggleExtensionColumnAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleExtensionColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.EXTENSION);
     }
 

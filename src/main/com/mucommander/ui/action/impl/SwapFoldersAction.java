@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class SwapFoldersAction extends MuAction {
 
-    public SwapFoldersAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SwapFoldersAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

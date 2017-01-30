@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ShowFoldersSizeAction extends ParentFolderAction {
 
-    public ShowFoldersSizeAction(MainFrame mainFrame, Map<String, Object> properties) {
+    ShowFoldersSizeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

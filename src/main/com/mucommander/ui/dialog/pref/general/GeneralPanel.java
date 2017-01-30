@@ -118,7 +118,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
 
 
 
-    public GeneralPanel(PreferencesDialog parent) {
+    GeneralPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.general_tab"));
 
         setLayout(new BorderLayout());
@@ -135,7 +135,8 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
 
         languageComboBox = new PrefComboBox<Locale>() {
 			public boolean hasChanged() {
-				return !languages.get(getSelectedIndex()).equals(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
+			    String lang = languages.get(getSelectedIndex()).toLanguageTag();
+				return !lang.equals(MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE));
 			}
         };
 
@@ -183,10 +184,11 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         String separator = MuConfigurations.getPreferences().getVariable(MuPreference.DATE_SEPARATOR, MuPreferences.DEFAULT_DATE_SEPARATOR);
         int dateFormatIndex = 0;
         String buffer = dateFormat.replace(separator.charAt(0), '/');
-        for(int i=0; i<DATE_FORMATS.length; i++) {
+        for (int i = 0; i < DATE_FORMATS.length; i++) {
             dateFormatComboBox.addItem(DATE_FORMAT_LABELS[i]);
-            if(buffer.equals(DATE_FORMATS[i]) || buffer.equals(DATE_FORMATS_WITH_CENTURY[i]))
+            if (buffer.equals(DATE_FORMATS[i]) || buffer.equals(DATE_FORMATS_WITH_CENTURY[i])) {
                 dateFormatIndex = i;
+            }
         }        
         dateFormatComboBox.setSelectedIndex(dateFormatIndex);
         dateFormatComboBox.addItemListener(this);

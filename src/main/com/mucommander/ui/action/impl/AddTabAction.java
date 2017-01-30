@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
  */
 public class AddTabAction extends MuAction {
 
-	public AddTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+	AddTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

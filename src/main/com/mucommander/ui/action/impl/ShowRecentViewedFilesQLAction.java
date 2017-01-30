@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  */
 public class ShowRecentViewedFilesQLAction extends ShowQuickListAction {
-    public ShowRecentViewedFilesQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowRecentViewedFilesQLAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

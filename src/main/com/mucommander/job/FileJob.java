@@ -440,6 +440,7 @@ public abstract class FileJob implements Runnable {
 	
     /**
      * Sets or unsets this job in paused mode.
+     * @param paused true to set in pause mode
      */
     public void setPaused(boolean paused) {
         // Lock the pause lock while updating paused status
@@ -476,6 +477,7 @@ public abstract class FileJob implements Runnable {
      * starts processing a new file other than a top-level file, i.e. one that was passed
      * as an argument to {@link #processFile(AbstractFile, Object) processFile()}.
      * ({#nextFile(AbstractFile) nextFile()} is automatically called for files in base folder).
+     * @param file file to process
      */
     protected void nextFile(AbstractFile file) {
         this.setCurrentFile(file);
@@ -525,7 +527,7 @@ public abstract class FileJob implements Runnable {
      * @return the name of the file currently being processed surrounded by simple quotes, or an empty string if no file
      * is currently being processed
      */
-    protected String getCurrentFilename() {
+    String getCurrentFilename() {
         return currentFilename;
     }
 
@@ -601,6 +603,9 @@ public abstract class FileJob implements Runnable {
      * offers to skip the file, retry or cancel and waits for user choice.
      * The job is stopped if 'cancel' or 'close' was chosen, and the result 
      * is returned.
+     *
+     * @param title error dialog title
+     * @param message error dialog message
      */
     protected int showErrorDialog(String title, String message) {
         String actionTexts[] = new String[]{SKIP_TEXT, SKIP_ALL_TEXT, RETRY_TEXT, CANCEL_TEXT};
@@ -613,6 +618,11 @@ public abstract class FileJob implements Runnable {
 	
     /**
      * Displays an error dialog with the specified title and message and returns the selection action's value.
+     *
+     * @param title error dialog title
+     * @param message error dialog message
+     * @param actionTexts actions text to display
+     * @param actionValues actions return values
      */
     protected int showErrorDialog(String title, String message, String actionTexts[], int actionValues[]) {
         // Return SKIP_ACTION if 'skip all' has previously been selected and 'skip' is in the list of actions.
@@ -660,21 +670,25 @@ public abstract class FileJob implements Runnable {
     }
 
 
-    protected String enterRootPasswordDialog() {
+    String enterRootPasswordDialog() {
         return new PasswordDialog(Translator.get("enter_root_password")).getPassword();
     }
-	
-	
+
+
+
+
     /**
      * Waits for the user's answer to the given question dialog, putting this
      * job in pause mode while waiting for the user.
+     *
+     * @param dialog object
      */
-    protected int waitForUserResponse(DialogResult dialog) {
+    int waitForUserResponse(DialogResult dialog) {
         Object userInput = waitForUserResponseObject(dialog);
         return (Integer) userInput;
     }
     
-    protected Object waitForUserResponseObject(DialogResult dialog) {
+    Object waitForUserResponseObject(DialogResult dialog) {
         // Put this job in pause mode while waiting for user response
         setPaused(true);
         
@@ -691,7 +705,7 @@ public abstract class FileJob implements Runnable {
     /**
      * Check and if needed, refreshes both file tables's current folders, based on the job's refresh policy.
      */
-    protected void refreshTables() {
+    private void refreshTables() {
     	FolderPanel activePanel = getMainFrame().getActivePanel();
     	FolderPanel inactivePanel = getMainFrame().getInactivePanel();
 
@@ -816,7 +830,7 @@ public abstract class FileJob implements Runnable {
      * Returns the base source folder.
      * @return the baseSourceFolder
      */
-    protected AbstractFile getBaseSourceFolder() {
+    AbstractFile getBaseSourceFolder() {
         return baseSourceFolder;
     }
 	
@@ -837,11 +851,10 @@ public abstract class FileJob implements Runnable {
 //this.nbFilesDiscovered += nbFiles;
 
         // Loop on all source files, checking that job has not been interrupted
-        for(int i = 0; i < nbFiles; i++) {
-            AbstractFile currentFile = files.elementAt(i);
+        for (currentFileIndex=0; currentFileIndex < nbFiles; currentFileIndex++) {
+            AbstractFile currentFile = files.elementAt(currentFileIndex);
 
             // Change current file and advance file index
-            currentFileIndex = i;
             nextFile(currentFile);
 
             // Process current file
@@ -860,7 +873,7 @@ public abstract class FileJob implements Runnable {
 
             // If last file was reached without any user interruption, all files have been processed with or
             // without errors, switch to FINISHED state and notify listeners
-            if (i == nbFiles-1) {
+            if (currentFileIndex >= nbFiles-1 && getState() != FileJob.State.INTERRUPTED) {
                 currentFileIndex++;
                 stop();
                 jobCompleted();

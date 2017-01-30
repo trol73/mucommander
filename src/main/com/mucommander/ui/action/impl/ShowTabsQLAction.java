@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ShowTabsQLAction extends ShowQuickListAction {
 	
-	public ShowTabsQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowTabsQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

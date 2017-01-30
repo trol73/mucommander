@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public class NextTabAction extends MuAction {
 	
-	public NextTabAction(MainFrame mainFrame, Map<String,Object> properties) {
+	NextTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

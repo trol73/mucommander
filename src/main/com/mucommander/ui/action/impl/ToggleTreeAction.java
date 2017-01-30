@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class ToggleTreeAction extends MuAction {
 
-    public ToggleTreeAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleTreeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

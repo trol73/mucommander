@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class LocateSymlinkAction extends SelectedFilesAction {
 
-    public LocateSymlinkAction(MainFrame mainFrame, Map<String, Object> properties) {
+    LocateSymlinkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new AttributeFileFilter(AttributeFileFilter.FileAttribute.SYMLINK));

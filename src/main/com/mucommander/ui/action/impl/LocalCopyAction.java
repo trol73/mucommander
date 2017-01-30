@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class LocalCopyAction extends SelectedFileAction {
 
-    public LocalCopyAction(MainFrame mainFrame, Map<String,Object> properties) {
+    LocalCopyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new AndFileFilter(

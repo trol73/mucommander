@@ -18,9 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -37,12 +35,14 @@ import javax.swing.text.JTextComponent;
 
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 import com.mucommander.ui.dialog.pref.component.PrefCheckBox;
+import com.mucommander.ui.dialog.pref.component.PrefComboBox;
 import com.mucommander.ui.dialog.pref.component.PrefFilePathField;
 import com.mucommander.ui.dialog.pref.component.PrefRadioButton;
 import com.mucommander.ui.layout.SpringUtilities;
@@ -70,25 +70,30 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     private PrefFilePathFieldWithDefaultValue rightCustomFolderTextField;
 	private JButton rightCustomFolderButton;
 
-    // Show hidden files?
-    private PrefCheckBox showHiddenFilesCheckBox;
+	private QuickSearchTimeoutCombobox comboQuickSearchTimeout;
 
-    // Show Mac OS X .DS_Store?
-    private PrefCheckBox showDSStoreFilesCheckBox;
+    /** Show hidden files? */
+    private PrefCheckBox cbShowHiddenFiles;
 
-    // Show system folders ?
-    private PrefCheckBox showSystemFoldersCheckBox;
+    /** Show Mac OS X .DS_Store? */
+    private PrefCheckBox cbShowDSStoreFiles;
 
-    // Display compact file size ?
-    private PrefCheckBox compactSizeCheckBox;
+    /** Show system folders ? */
+    private PrefCheckBox cbShowSystemFolders;
+
+    /** Display compact file size ? */
+    private PrefCheckBox cbCompactSize;
 	
-    // Follow symlinks when changing directory ?
-    private PrefCheckBox followSymlinksCheckBox;
+    /** Follow symlinks when changing directory ? */
+    private PrefCheckBox cbFollowSymlinks;
     
-    // Always show single tab's header ?
-    private PrefCheckBox showTabHeaderCheckBox;
+    /** Always show single tab's header ? */
+    private PrefCheckBox cbShowTabHeader;
 
-    public FoldersPanel(PreferencesDialog parent) {
+    /** Show quick search matches first in file panels */
+    private PrefCheckBox cbShowQuickSearchMatchesFirst;
+
+    FoldersPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.folders_tab"));
 
         setLayout(new BorderLayout());
@@ -181,65 +186,94 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         YBoxPanel northPanel = new YBoxPanel();
         northPanel.add(startupFolderPanel);
         northPanel.addSpace(5);
-		
-        showHiddenFilesCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_hidden_files"),
+
+        // ------- Quick search panel --------
+        JPanel pnlQuickSearch = new JPanel(new SpringLayout());
+        pnlQuickSearch.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.quick_search")));
+        comboQuickSearchTimeout = new QuickSearchTimeoutCombobox();
+        JLabel lblQuickSearchTimeout = new JLabel(Translator.get("prefs_dialog.quick_search_timeout"));
+        lblQuickSearchTimeout.setAlignmentX(LEFT_ALIGNMENT);
+
+        pnlQuickSearch.add(lblQuickSearchTimeout);
+        pnlQuickSearch.add(comboQuickSearchTimeout);
+
+        cbShowQuickSearchMatchesFirst = new PrefCheckBox(Translator.get("prefs_dialog.show_quick_search_matches_first"),
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
+        cbShowQuickSearchMatchesFirst.setSelected(getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
+        pnlQuickSearch.add(cbShowQuickSearchMatchesFirst);
+        pnlQuickSearch.add(Box.createHorizontalGlue());
+
+        SpringUtilities.makeCompactGrid(pnlQuickSearch,
+                2, 2,       // rows, cols
+                6, 6,      // initX, initY
+                6, 6);      // xPad, yPad
+
+        northPanel.add(pnlQuickSearch);
+        northPanel.addSpace(10);
+
+        // ----- checkboxes ----
+
+        cbShowHiddenFiles = new PrefCheckBox(Translator.get("prefs_dialog.show_hidden_files"),
                 checkBox -> checkBox.isSelected() != getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
-        showHiddenFilesCheckBox.setSelected(getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
-        northPanel.add(showHiddenFilesCheckBox);
+        cbShowHiddenFiles.setSelected(getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+        northPanel.add(cbShowHiddenFiles);
 
         // Mac OS X-only options
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            // Monitor showHiddenFilesCheckBox state to disable 'show .DS_Store files' option
+            // Monitor cbShowHiddenFiles state to disable 'show .DS_Store files' option
             // when 'Show hidden files' is disabled, as .DS_Store files are hidden files
-            showHiddenFilesCheckBox.addItemListener(this);
+            cbShowHiddenFiles.addItemListener(this);
 
-            showDSStoreFilesCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_ds_store_files"),
+            cbShowDSStoreFiles = new PrefCheckBox(Translator.get("prefs_dialog.show_ds_store_files"),
                     checkBox -> checkBox.isSelected() != getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
 
-            showDSStoreFilesCheckBox.setSelected(getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
-            showDSStoreFilesCheckBox.setEnabled(showHiddenFilesCheckBox.isSelected());
+            cbShowDSStoreFiles.setSelected(getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
+            cbShowDSStoreFiles.setEnabled(cbShowHiddenFiles.isSelected());
             // Shift the check box to the right to indicate that it is a sub-option
-            northPanel.add(showDSStoreFilesCheckBox, 20);
+            northPanel.add(cbShowDSStoreFiles, 20);
         }
 
         if (OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent()) {
-        	showSystemFoldersCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_system_folders"),
+        	cbShowSystemFolders = new PrefCheckBox(Translator.get("prefs_dialog.show_system_folders"),
                     checkBox -> checkBox.isSelected() != getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
-        	showSystemFoldersCheckBox.setSelected(getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
-        	northPanel.add(showSystemFoldersCheckBox);        	
+        	cbShowSystemFolders.setSelected(getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
+        	northPanel.add(cbShowSystemFolders);
         }
 
-        compactSizeCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.compact_file_size"),
+        cbCompactSize = new PrefCheckBox(Translator.get("prefs_dialog.compact_file_size"),
                 checkBox -> checkBox.isSelected() != getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
 
-        compactSizeCheckBox.setSelected(getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
-        northPanel.add(compactSizeCheckBox);
+        cbCompactSize.setSelected(getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        northPanel.add(cbCompactSize);
 
-        followSymlinksCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.follow_symlinks_when_cd"),
+        cbFollowSymlinks = new PrefCheckBox(Translator.get("prefs_dialog.follow_symlinks_when_cd"),
                 checkBox -> checkBox.isSelected() != getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
-        followSymlinksCheckBox.setSelected(getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
-        northPanel.add(followSymlinksCheckBox);
+        cbFollowSymlinks.setSelected(getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
+        northPanel.add(cbFollowSymlinks);
 
-        showTabHeaderCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.show_tab_header"),
+        cbShowTabHeader = new PrefCheckBox(Translator.get("prefs_dialog.show_tab_header"),
                 checkBox -> checkBox.isSelected() != getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
-        showTabHeaderCheckBox.setSelected(getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
-        northPanel.add(showTabHeaderCheckBox);
-        
+        cbShowTabHeader.setSelected(getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
+        northPanel.add(cbShowTabHeader);
+
+
         add(northPanel, BorderLayout.NORTH);
         
         lastFoldersRadioButton.addDialogListener(parent);
         customFoldersRadioButton.addDialogListener(parent);
         rightCustomFolderTextField.addDialogListener(parent);
         leftCustomFolderTextField.addDialogListener(parent);
-        showHiddenFilesCheckBox.addDialogListener(parent);
-        compactSizeCheckBox.addDialogListener(parent);
-        followSymlinksCheckBox.addDialogListener(parent);
-        showTabHeaderCheckBox.addDialogListener(parent);
+        cbShowHiddenFiles.addDialogListener(parent);
+        cbCompactSize.addDialogListener(parent);
+        cbFollowSymlinks.addDialogListener(parent);
+        cbShowTabHeader.addDialogListener(parent);
+        cbShowQuickSearchMatchesFirst.addDialogListener(parent);
+        comboQuickSearchTimeout.addDialogListener(parent);
         if (OsFamily.MAC_OS_X.isCurrent()) {
-        	showDSStoreFilesCheckBox.addDialogListener(parent);
+        	cbShowDSStoreFiles.addDialogListener(parent);
         }
         if (OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent()) {
-        	showSystemFoldersCheckBox.addDialogListener(parent);    		
+        	cbShowSystemFolders.addDialogListener(parent);
         }
     }
 
@@ -264,21 +298,25 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 
         pref.setVariable(RIGHT_CUSTOM_FOLDER, rightCustomFolderTextField.getFilePath());
 
-        pref.setVariable(DISPLAY_COMPACT_FILE_SIZE, compactSizeCheckBox.isSelected());
+        pref.setVariable(DISPLAY_COMPACT_FILE_SIZE, cbCompactSize.isSelected());
 
-        pref.setVariable(CD_FOLLOWS_SYMLINKS, followSymlinksCheckBox.isSelected());
+        pref.setVariable(CD_FOLLOWS_SYMLINKS, cbFollowSymlinks.isSelected());
 
-        pref.setVariable(SHOW_TAB_HEADER, showTabHeaderCheckBox.isSelected());
+        pref.setVariable(SHOW_TAB_HEADER, cbShowTabHeader.isSelected());
+
+        pref.setVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, cbShowQuickSearchMatchesFirst.isSelected());
+
+        pref.setVariable(QUICK_SEARCH_TIMEOUT, comboQuickSearchTimeout.getMilliseconds());
 
         // If one of the show/hide file filters have changed, refresh current folders of current MainFrame
-        boolean refreshFolders = pref.setVariable(SHOW_HIDDEN_FILES, showHiddenFilesCheckBox.isSelected());
+        boolean refreshFolders = pref.setVariable(SHOW_HIDDEN_FILES, cbShowHiddenFiles.isSelected());
         
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            refreshFolders |= pref.setVariable(SHOW_DS_STORE_FILES, showDSStoreFilesCheckBox.isSelected());
+            refreshFolders |= pref.setVariable(SHOW_DS_STORE_FILES, cbShowDSStoreFiles.isSelected());
         }
 
         if (OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent()) {
-        	refreshFolders |= pref.setVariable(SHOW_SYSTEM_FOLDERS, showSystemFoldersCheckBox.isSelected());
+        	refreshFolders |= pref.setVariable(SHOW_SYSTEM_FOLDERS, cbShowSystemFolders.isSelected());
         }
 
         if (refreshFolders) {
@@ -295,8 +333,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         Object source = event.getSource();
 
         // Disable 'show .DS_Store files' option when 'Show hidden files' is disabled, as .DS_Store files are hidden files
-        if (source == showHiddenFilesCheckBox) {
-            showDSStoreFilesCheckBox.setEnabled(showHiddenFilesCheckBox.isSelected());
+        if (source == cbShowHiddenFiles) {
+            cbShowDSStoreFiles.setEnabled(cbShowHiddenFiles.isSelected());
         } else if (source == customFoldersRadioButton) {
             setCustomFolderComponentsEnabled(customFoldersRadioButton.isSelected());
         }
@@ -362,7 +400,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	private boolean isLeft;
     	private final String HOME_FOLDER_PATH = System.getProperty("user.home");
     	
-    	public PrefFilePathFieldWithDefaultValue(boolean isLeft) {
+    	PrefFilePathFieldWithDefaultValue(boolean isLeft) {
     		super(isLeft ? getVariable(LEFT_CUSTOM_FOLDER, "") : getVariable(RIGHT_CUSTOM_FOLDER, ""));
     		this.isLeft = isLeft;
     		
@@ -375,7 +413,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 					!getText().equals(getVariable(RIGHT_CUSTOM_FOLDER));
 		}
 		
-		public String getFilePath() {
+		String getFilePath() {
 			String text = super.getText();
 			
 			return text.trim().isEmpty() ? HOME_FOLDER_PATH : text;
@@ -423,11 +461,11 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	        this(hint,false);
     	    }
 
-    	    public HintTextFieldUI(String hint, boolean hideOnFocus) {
+    	    HintTextFieldUI(String hint, boolean hideOnFocus) {
     	        this(hint,hideOnFocus, Color.gray);
     	    }
 
-    	    public HintTextFieldUI(String hint, boolean hideOnFocus, Color color) {
+    	    HintTextFieldUI(String hint, boolean hideOnFocus, Color color) {
     	        this.hint = hint;
     	        this.hideOnFocus = hideOnFocus;
     	        this.color = color;
@@ -468,5 +506,46 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     	        getComponent().removeFocusListener(this);
     	    }
     	}
+    }
+
+
+    private class QuickSearchTimeoutCombobox extends PrefComboBox<String> {
+
+        QuickSearchTimeoutCombobox() {
+            super();
+            addItem(Translator.get("prefs_dialog.quick_search_timeout_never"));
+            int selectedIndex = 0;
+            long prefVal = getPrefValue();
+            int step = 1;
+            for (int i = 1; i <= 60; i += step) {
+                if (i == 5) {
+                    step = 5;
+                } else if (i == 30) {
+                    step = 10;
+                }
+                addItem(i + " " + Translator.get("prefs_dialog.quick_search_timeout_sec"));
+                if (i == prefVal/1000) {
+                    selectedIndex = getItemCount()-1;
+                }
+            }
+            setSelectedIndex(selectedIndex);
+        }
+
+        long getPrefValue() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.QUICK_SEARCH_TIMEOUT, MuPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
+        }
+
+        long getMilliseconds() {
+            if (getSelectedIndex() == 0) {
+                return 0;
+            }
+            String val = getSelectedItem();
+            return Integer.parseInt(val.substring(0, val.indexOf(' '))) * 1000;
+        }
+
+        @Override
+        public boolean hasChanged() {
+            return getMilliseconds() != getPrefValue();
+        }
     }
 }

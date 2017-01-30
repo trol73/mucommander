@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class RefreshAction extends MuAction {
 
-    public RefreshAction(MainFrame mainFrame, Map<String,Object> properties) {
+    RefreshAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

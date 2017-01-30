@@ -63,7 +63,7 @@ public abstract class PreferencesPanel extends JPanel {
      * Checks whether this panel's data can be committed or whether it contains an error.
      * @return <code>true</code> if the panel's data can be committed, <code>false</code> otherwise.
      */
-    protected boolean checkCommit() {
+    boolean checkCommit() {
         return true;
     }
 

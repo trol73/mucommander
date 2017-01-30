@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ShowRootFoldersQLAction extends ShowQuickListAction {
 
-	public ShowRootFoldersQLAction(MainFrame mainFrame, Map<String,Object> properties) {
+	ShowRootFoldersQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	

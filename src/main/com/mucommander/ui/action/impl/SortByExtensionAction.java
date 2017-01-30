@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByExtensionAction extends SortByAction {
 
-    public SortByExtensionAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SortByExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.EXTENSION);
     }
 

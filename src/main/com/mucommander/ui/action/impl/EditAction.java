@@ -43,7 +43,7 @@ public class EditAction extends InternalEditAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public EditAction(MainFrame mainFrame, Map<String,Object> properties) {
+    EditAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

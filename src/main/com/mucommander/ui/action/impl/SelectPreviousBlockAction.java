@@ -38,7 +38,7 @@ public class SelectPreviousBlockAction extends SelectBackwardAction {
     // TODO: make this value configurable
     private static final int BLOCK_SIZE = 5;
 
-    public SelectPreviousBlockAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

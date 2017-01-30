@@ -38,7 +38,7 @@ import java.util.Map;
 @InvokesDialog
 public class CalculateChecksumAction extends SelectedFilesAction  {
 
-    public CalculateChecksumAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CalculateChecksumAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));

@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class RenameAction extends SelectedFileAction {
 
-    public RenameAction(MainFrame mainFrame, Map<String,Object> properties) {
+    RenameAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new OrFileFilter(

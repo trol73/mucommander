@@ -38,7 +38,7 @@ import java.util.Map;
 @InvokesDialog
 public class PackAction extends SelectedFilesAction {
 
-    public PackAction(MainFrame mainFrame, Map<String,Object> properties) {
+    PackAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));

@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortBySizeAction extends SortByAction {
 
-    public SortBySizeAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SortBySizeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.SIZE);
     }
 

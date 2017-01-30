@@ -42,8 +42,9 @@ public class SortInfo implements Cloneable {
     /** Should folders be displayed first, or mixed with regular files */
     private boolean showFoldersFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_FOLDERS_FIRST, MuPreferences.DEFAULT_SHOW_FOLDERS_FIRST);
 
+    private boolean showQuickSearchMatchesFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
 
-    public SortInfo() {
+    SortInfo() {
     }
 
 
@@ -84,6 +85,15 @@ public class SortInfo implements Cloneable {
     }
 
     /**
+     * Sets whether folders are currently sorted and displayed before regular files or mixed with them.
+     *
+     * @param showFoldersFirst true if folders are sorted and displayed before regular files, false if they are mixed with regular files and sorted altogether
+     */
+    public void setFoldersFirst(boolean showFoldersFirst) {
+        this.showFoldersFirst = showFoldersFirst;
+    }
+
+    /**
      * Returns <code>true</code> if folders are sorted and displayed before regular files, <code>false</code> if they
      * are mixed with regular files and sorted altogether.
      *
@@ -94,13 +104,24 @@ public class SortInfo implements Cloneable {
     }
 
     /**
-     * Sets whether folders are currently sorted and displayed before regular files or mixed with them.
+     * Sets whether matched files are currently sorted and displayed before other files or mixed with them on quick search.
      *
-     * @param showFoldersFirst true if folders are sorted and displayed before regular files, false if they are mixed with regular files and sorted altogether
+     * @param showFoldersFirst true if matched are sorted and displayed before other files, false if they are mixed with regular files and sorted altogether
      */
-    public void setFoldersFirst(boolean showFoldersFirst) {
-        this.showFoldersFirst = showFoldersFirst;
+    void setQuickSearchMatchesFirst(boolean showFoldersFirst) {
+        this.showQuickSearchMatchesFirst = showFoldersFirst;
     }
+
+    /**
+     * Returns <code>true</code> if quick search matched are sorted and displayed before other files, <code>false</code> if they
+     * are mixed with other files and sorted altogether.
+     *
+     * @return true if matched are sorted and displayed before other files, false if they are mixed with other files and sorted altogether
+     */
+    boolean getQuickSearchMatchesFirst() {
+        return showQuickSearchMatchesFirst;
+    }
+
 
 
     ////////////////////////

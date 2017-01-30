@@ -37,7 +37,6 @@ import java.io.Reader;
  * <p>
  * This class is abstract, with a single method to implement: {@link #getNextReader()}.
  * See {@link IteratorCompoundReader} for an <code>Iterator</code>-backed implementation.
- * </p>
  *
  * @see IteratorCompoundReader
  * @see CompoundInputStream

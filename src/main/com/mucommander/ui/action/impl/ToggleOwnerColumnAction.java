@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ToggleOwnerColumnAction extends ToggleColumnAction {
 
-    public ToggleOwnerColumnAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ToggleOwnerColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.OWNER);
     }
 

@@ -53,7 +53,7 @@ import com.mucommander.ui.theme.ThemeManager;
 public class QuickListDataList<T> extends JList<T> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QuickListDataList.class);
 	
-	public final static int VISIBLE_ROWS_COUNT = 10;
+	private final static int VISIBLE_ROWS_COUNT = 10;
 
 	private QuickSearch quickSearch = new QuickListQuickSearch();
 	
@@ -255,7 +255,7 @@ public class QuickListDataList<T> extends JList<T> {
 		}
 
 		@Override
-		protected void matchFound(int row, String searchString) {
+		protected void matchFound(int row, String searchString, boolean itsBestMatch) {
 			if (row != getSelectedIndex()) {
 				setSelectedIndex(row);
 				ensureIndexIsVisible(row);

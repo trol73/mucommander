@@ -39,7 +39,7 @@ import java.util.Map;
 @InvokesDialog
 public class UnpackAction extends SelectedFilesAction {
 
-    public UnpackAction(MainFrame mainFrame, Map<String,Object> properties) {
+    UnpackAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Unpack job operates on archives and directories

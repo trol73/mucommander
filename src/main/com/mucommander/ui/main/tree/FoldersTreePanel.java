@@ -291,7 +291,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
     private class ChangeTimer extends Timer {
         private transient AbstractFile folder;
 
-        public ChangeTimer() {
+        ChangeTimer() {
             super(1000, null);
             setRepeats(false);
         }

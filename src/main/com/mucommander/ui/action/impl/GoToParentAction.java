@@ -42,7 +42,7 @@ public class GoToParentAction extends ActiveTabAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    public GoToParentAction(MainFrame mainFrame, Map<String,Object> properties) {
+    GoToParentAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class SetSameFolderAction extends MuAction implements ActivePanelListener {
 
-    public SetSameFolderAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SetSameFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         mainFrame.addActivePanelListener(this);

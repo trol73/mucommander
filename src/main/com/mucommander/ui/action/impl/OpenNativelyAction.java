@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class OpenNativelyAction extends MuAction {
 
-    public OpenNativelyAction(MainFrame mainFrame, Map<String,Object> properties) {
+    OpenNativelyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public abstract class SelectedFileAction extends FileAction {
 
-    public SelectedFileAction(MainFrame mainFrame, Map<String,Object> properties) {
+    SelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -45,7 +45,7 @@ public abstract class SelectedFileAction extends FileAction {
      *
      * @return the IMAGE_FILTER that restricts the enabled condition to selected files that match the specified IMAGE_FILTER.
      */
-    public FileFilter getSelectedFileFilter() {
+    FileFilter getSelectedFileFilter() {
         return filter;
     }
 

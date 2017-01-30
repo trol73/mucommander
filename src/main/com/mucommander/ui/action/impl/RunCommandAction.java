@@ -35,7 +35,7 @@ import java.util.Map;
 @InvokesDialog
 public class RunCommandAction extends MuAction {
 
-    public RunCommandAction(MainFrame mainFrame, Map<String,Object> properties) {
+    RunCommandAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

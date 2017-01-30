@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class EmptyTrashAction extends MuAction {
 
-    public EmptyTrashAction(MainFrame mainFrame, Map<String,Object> properties) {
+    EmptyTrashAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         AbstractTrash trash = DesktopManager.getTrash();

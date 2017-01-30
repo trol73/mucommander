@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class ShowFilePropertiesAction extends SelectedFilesAction {
 
-    public ShowFilePropertiesAction(MainFrame mainFrame, Map<String,Object> properties) {
+    ShowFilePropertiesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

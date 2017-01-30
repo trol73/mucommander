@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class FocusNextAction extends MuAction {
 
-    public FocusNextAction(MainFrame mainFrame, Map<String,Object> properties) {
+    FocusNextAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform the action also when in 'no events' mode

@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class FocusPreviousAction extends MuAction {
 
-    public FocusPreviousAction(MainFrame mainFrame, Map<String,Object> properties) {
+    FocusPreviousAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform the action also when in 'no events' mode

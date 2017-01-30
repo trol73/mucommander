@@ -49,7 +49,7 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
     /** FileTable column this action operates on */
     protected Column column;
 
-    public SortByAction(MainFrame mainFrame, Map<String,Object> properties, Column column) {
+    SortByAction(MainFrame mainFrame, Map<String, Object> properties, Column column) {
         super(mainFrame, properties);
 
         this.column = column;

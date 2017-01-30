@@ -367,7 +367,6 @@ public class PathUtils {
      *   <li><code>("/home/maxence/, "/", 2)</code> will return ""</li>
      *   <li><code>("/home/maxence/, "/", 3)</code> will return ""</li>
      * </ul>
-     * </p>
      *
      * @param path the path to modify
      * @param separator the path separator, usually "/" or "\\"

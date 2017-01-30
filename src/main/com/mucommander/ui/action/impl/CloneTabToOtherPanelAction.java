@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class CloneTabToOtherPanelAction extends MuAction {
 
-    public CloneTabToOtherPanelAction(MainFrame mainFrame, Map<String,Object> properties) {
+    CloneTabToOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
