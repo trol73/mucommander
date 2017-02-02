@@ -93,6 +93,9 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
     /** Show quick search matches first in file panels */
     private PrefCheckBox cbShowQuickSearchMatchesFirst;
 
+    /** Calculate folder size on mark action */
+    private PrefCheckBox cbCalculateFolderSizeOnMark;
+
     FoldersPanel(PreferencesDialog parent) {
         super(parent, Translator.get("prefs_dialog.folders_tab"));
 
@@ -256,6 +259,11 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         cbShowTabHeader.setSelected(getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
         northPanel.add(cbShowTabHeader);
 
+		cbCalculateFolderSizeOnMark = new PrefCheckBox(Translator.get("prefs_dialog.calculate_folder_size_on_mark"),
+			checkBox -> checkBox.isSelected() != getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
+		cbCalculateFolderSizeOnMark.setSelected(getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
+		northPanel.add(cbCalculateFolderSizeOnMark);
+
 
         add(northPanel, BorderLayout.NORTH);
         
@@ -268,6 +276,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         cbFollowSymlinks.addDialogListener(parent);
         cbShowTabHeader.addDialogListener(parent);
         cbShowQuickSearchMatchesFirst.addDialogListener(parent);
+        cbCalculateFolderSizeOnMark.addDialogListener(parent);
         comboQuickSearchTimeout.addDialogListener(parent);
         if (OsFamily.MAC_OS_X.isCurrent()) {
         	cbShowDSStoreFiles.addDialogListener(parent);
@@ -305,6 +314,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         pref.setVariable(SHOW_TAB_HEADER, cbShowTabHeader.isSelected());
 
         pref.setVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, cbShowQuickSearchMatchesFirst.isSelected());
+
+		pref.setVariable(CALCULATE_FOLDER_SIZE_ON_MARK, cbCalculateFolderSizeOnMark.isSelected());
 
         pref.setVariable(QUICK_SEARCH_TIMEOUT, comboQuickSearchTimeout.getMilliseconds());
 
