@@ -18,11 +18,17 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.main.table.views.full.FileTableModel;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -49,8 +55,22 @@ public class MarkSelectedFileAction extends MuAction {
 
     @Override
     public void performAction() {
+		if (MuConfigurations.getPreferences().getVariable(MuPreference.CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK))
+		{
+			calculateFolderSize();
+		}
         mainFrame.getActiveTable().markSelectedFile();
     }
+
+	private void calculateFolderSize() {
+		FileTable table = mainFrame.getActiveTable();
+		AbstractFile file = table.getSelectedFile();
+
+		if (file != null && file.isDirectory()) {
+			FileTableModel model = (FileTableModel) mainFrame.getActiveTable().getModel();
+			model.startDirectorySizeCalculation(table, table.getSelectedFile());
+		}
+	}
 
 	@Override
 	public ActionDescriptor getDescriptor() {

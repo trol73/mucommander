@@ -252,6 +252,10 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final String SHOW_SINGLE_TAB_HEADER			   = FILE_TABLE_SECTION + '.' + "show_single_tab_header";
 	/** Default value for 'Always show single tab header" */
 	public static final boolean DEFAULT_SHOW_TAB_HEADER	   = false;
+	/** Whether to calculate folder size when marking that folder */
+	public static final String CALCULATE_FOLDER_SIZE_ON_MARK       = FILE_TABLE_SECTION + '.' + "calculate_folder_size_on_mark";
+	/** Default value for 'Calculate folder size on mark' */
+	public static final boolean DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK = false;
 
 	/** Name of the root element's attribute that contains the version of muCommander used to write the CONFIGURATION file. */
 	static final String VERSION_ATTRIBUTE = "version";
