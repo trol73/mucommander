@@ -155,16 +155,16 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 }
     
                 // Cancel, skip or close dialog
-                if (choice == -1 || choice== FileCollisionDialog.CANCEL_ACTION) {
+                if (choice == -1 || choice == FileCollisionDialog.CANCEL_ACTION) {
                     interrupt();
                     return null;
                 }
                 // Skip file
-                else if (choice== FileCollisionDialog.SKIP_ACTION) {
+                else if (choice == FileCollisionDialog.SKIP_ACTION) {
                     return null;
                 }
                 // Append to file (resume file copy)
-                else if (choice== FileCollisionDialog.RESUME_ACTION) {
+                else if (choice == FileCollisionDialog.RESUME_ACTION) {
                     append = true;
                     break;
                 }
@@ -174,9 +174,9 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                     break;
                 }
                 //  Overwrite file if destination is older
-                else if (choice== FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
+                else if (choice == FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
                     // Overwrite if file is newer (stricly)
-                    if(file.getLastModifiedDate()<=destFile.getLastModifiedDate())
+                    if(file.getLastModifiedDate() <= destFile.getLastModifiedDate())
                         return null;
                     break;
                 } else if (choice == FileCollisionDialog.RENAME_ACTION) {

@@ -2039,6 +2039,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             } else {
                 if (fileToSelect != null) {
                     selectFile(fileToSelect);
+                    repaint();
                 }
             }
             // Display the new search string in the status bar
@@ -2059,7 +2060,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 int currentFileIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
                 if (currentFileIndex >= 0) {
                     if (currentFileIndex > 0) {
-                        selectFile(0);
+                        selectFile(tableModel.hasParentFolder() ? 1 : 0);
                     }
                     AbstractFile currentFile = tableModel.getFileAt(currentFileIndex);
                     if (quickSearch.matches(currentFile.getName())) {
@@ -2129,8 +2130,16 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 	            // Find the first row before/after the current row that matches the search string
 	            boolean down = keyCode == KeyEvent.VK_DOWN;
                 int currentIndex = tableModel.getFileIndexAt(currentRow, currentColumn);
-                if (currentIndex != 1 || down || !tableModel.hasParentFolder()) {
-                    findMatch(currentIndex + (down ? 1 : -1), down, false);
+                if (sortInfo.getQuickSearchMatchesFirst()) {
+                    if (currentIndex <= 1 && !down && tableModel.hasParentFolder()) {
+                        findMatch(getFilesCount() - 1, false, false);
+                    } else {
+                        findMatch(currentIndex + (down ? 1 : -1), down, false);
+                    }
+                } else {
+                    if (currentIndex != 1 || down || !tableModel.hasParentFolder()) {
+                        findMatch(currentIndex + (down ? 1 : -1), down, false);
+                    }
                 }
 	        }
 	        // MarkSelectedFileAction and MarkNextRowAction mark the current row and moves to the next match

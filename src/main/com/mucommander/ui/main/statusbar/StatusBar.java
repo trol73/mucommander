@@ -59,6 +59,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -339,6 +340,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                                 filesInfo.append(" x ");
                                 filesInfo.append(detector.getHeight());
                             }
+                        } catch (FileNotFoundException ignore) {
+                            // etc. if file was moved
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

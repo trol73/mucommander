@@ -118,7 +118,7 @@ public class SortInfo implements Cloneable {
      *
      * @return true if matched are sorted and displayed before other files, false if they are mixed with other files and sorted altogether
      */
-    boolean getQuickSearchMatchesFirst() {
+    public boolean getQuickSearchMatchesFirst() {
         return showQuickSearchMatchesFirst;
     }
 

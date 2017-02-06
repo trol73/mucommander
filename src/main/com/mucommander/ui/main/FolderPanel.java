@@ -38,6 +38,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.ui.event.TableSelectionListener;
 import com.mucommander.ui.main.quicklist.*;
 import org.slf4j.Logger;
@@ -529,7 +532,9 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
     public void focusLost(FocusEvent e) {
-        fileTable.getQuickSearch().stop();
+        if (!MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
+            fileTable.getQuickSearch().stop();
+        }
     }
 
     ////////////////////////////////

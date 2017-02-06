@@ -64,6 +64,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
 
 
     private JComponent component;
+    private volatile boolean active;
     
     protected QuickSearch(JComponent component) {
     	this.component = component;
@@ -87,6 +88,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
                 timeoutThread = new Thread(this, "QuickSearch timeout thread");
                 timeoutThread.start();
             }
+            active = true;
             lastSearchStringChange = System.currentTimeMillis();
 
             searchStarted();
@@ -99,6 +101,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
     public synchronized void stop() {
         if (isActive()) {
             timeoutThread = null;
+            active = false;
             searchStopped();
         }
     }
@@ -108,8 +111,8 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      *
      * @return true if a quick search is being performed
      */
-    public synchronized boolean isActive() {
-        return timeoutThread != null;
+    public boolean isActive() {
+        return active;
     }
 
 
@@ -193,13 +196,11 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      */
     protected void findMatch(int startIndex, boolean descending, boolean findBestMatch) {
         LOGGER.trace("startRow="+startIndex+" descending="+descending+" findMatch="+findBestMatch);
-
         // If search string is empty, update status bar without any icon and return
         if (searchString.isEmpty()) {
             searchStringBecameEmpty(searchString);
         } else {
         	int bestMatch = getBestMatch(startIndex, descending, findBestMatch);
-
             if (bestMatch >= 0) {
                 matchFound(bestMatch, searchString, findBestMatch);
             } else {
