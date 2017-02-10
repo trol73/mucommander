@@ -38,10 +38,10 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
     // --------------------------------------------------------------------------
 
     /** ThemeData from which to retrieve the color chooser's values. */
-    private ThemeData         themeData;
+    private ThemeData themeData;
 
     /** Identifier of the color that's being edited. */
-    private int               colorId;
+    private int colorId;
 
     /** Dialog on which the color chooser should be centered and modal to. */
     private PreferencesDialog parent;
@@ -78,32 +78,33 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         flowLayout.setVgap(0);
         setLayout(flowLayout);
 
-        this.themeData                = themeData;
-        this.colorId                  = colorId;
-        this.parent                   = parent;
-        this.previewComponent         = previewComponent;
+        this.themeData = themeData;
+        this.colorId = colorId;
+        this.parent = parent;
+        this.previewComponent = previewComponent;
         this.previewColorPropertyName = previewColorPropertyName;
 
-        if(previewColorPropertyName != null && previewComponent != null)
+        if (previewColorPropertyName != null && previewComponent != null) {
             addUpdatedPreviewComponent(previewComponent);
+        }
  
         button = new JButton() {
-                @Override
-                public Dimension getPreferredSize() {return new Dimension(70, 30);}
+            @Override
+            public Dimension getPreferredSize() {return new Dimension(70, 30);}
 
-                @Override
-                public void paint(Graphics g) {
-                    int width  = getWidth();
-                    int height = getHeight();
+            @Override
+            public void paint(Graphics g) {
+                int width  = getWidth();
+                int height = getHeight();
 
-                    // Fill the button with the specified color
-                    g.setColor((ColorButton.this).currentColor);
-                    g.fillRect(0, 0, width, height);
+                // Fill the button with the specified color
+                g.setColor((ColorButton.this).currentColor);
+                g.fillRect(0, 0, width, height);
 
-                    // Paint custom border
-                    border.paintBorder(this, g, 0, 0, width, height);
-                }
-            };
+                // Paint custom border
+                border.paintBorder(this, g, 0, 0, width, height);
+            }
+        };
 
         button.addActionListener(this);
         button.setBorderPainted(true);
@@ -111,7 +112,7 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
         add(button);
 
         // Add a ColorPicker only if this component is supported by the current environment
-        if(ColorPicker.isSupported()) {
+        if (ColorPicker.isSupported()) {
             ColorPicker colorPicker = new ColorPicker();
             colorPicker.addColorChangeListener(this);
             add(colorPicker);
@@ -122,14 +123,13 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
 
 
     void addUpdatedPreviewComponent(JComponent previewComponent) {
-        if (previewColorPropertyName == null)
+        if (previewColorPropertyName == null) {
             return;
-
-        if (updatedPreviewComponents == null)
+        }
+        if (updatedPreviewComponents == null) {
             updatedPreviewComponents = new ArrayList<>();
-
+        }
         updatedPreviewComponents.add(previewComponent);
-
         previewComponent.putClientProperty(previewColorPropertyName, currentColor);
     }
 
@@ -143,17 +143,19 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
 
     private void setCurrentColor(Color color, boolean initiatedByUser) {
         currentColor = color;
-        if(themeData.isColorDifferent(colorId, currentColor))
-        	initiatedByUser &= themeData.setColor(colorId, currentColor);
+        if (themeData.isColorDifferent(colorId, currentColor)) {
+            initiatedByUser &= themeData.setColor(colorId, currentColor);
+        }
         button.repaint();
 
-        if(updatedPreviewComponents != null && previewColorPropertyName != null) {
-            for (JComponent updatedPreviewComponent : updatedPreviewComponents)
+        if (updatedPreviewComponents != null && previewColorPropertyName != null) {
+            for (JComponent updatedPreviewComponent : updatedPreviewComponents) {
                 updatedPreviewComponent.putClientProperty(previewColorPropertyName, color);
+            }
         }
-        
-        if (initiatedByUser)
-        	parent.componentChanged(null);
+        if (initiatedByUser) {
+            parent.componentChanged(null);
+        }
     }
 
 

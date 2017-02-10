@@ -64,9 +64,8 @@ public class ThemeEditorDialog extends PreferencesDialog {
     }
 
     private void initUI(Theme theme) {
-        this.theme       = theme;
-        data             = theme.cloneData();
-
+        this.theme = theme;
+        data = theme.cloneData();
         addPreferencesPanel(new FolderPanePanel(this, data), false);
         addPreferencesPanel(new LocationBarPanel(this, data));
         addPreferencesPanel(new StatusBarPanel(this, data));

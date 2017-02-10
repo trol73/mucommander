@@ -644,7 +644,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
         private Theme theme;
 
-        public ChangeCurrentThemeAction(Theme theme) {
+        ChangeCurrentThemeAction(Theme theme) {
             super(theme.getName());
             this.theme = theme;
         }
@@ -662,7 +662,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
      * Actions that edits the current theme.
      */
     private class EditCurrentThemeAction extends AbstractAction {
-        public EditCurrentThemeAction() {
+        EditCurrentThemeAction() {
             super(Translator.get("prefs_dialog.edit_current_theme"));
         }
 

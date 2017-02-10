@@ -59,689 +59,7 @@ import java.util.WeakHashMap;
  * @see javax.swing.UIManager
  * @author Nicolas Rinaudo
  */
-public class ThemeData {
-    // - Dirty hack ----------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    // This is an effort to make the ThemeData class a bit easier to maintain, but I'm the first
-    // to admit it's rather dirty.
-    // 
-    // For optimization reasons, we're storing the fonts and colors in arrays, using their
-    // identifiers as indexes in the array. This, however, means that lots of bits of code
-    // must be updated whenever a font or color is added or removed. The probability of
-    // someone forgetting this is, well, 100%.
-    //
-    // For this reason, we've declared the number of font and colors as constants.
-    // People are still going to forget to update these constants, but at least it'll be
-    // a lot easier to fix.
-
-    /**
-     * Number of known fonts.
-     * <p>
-     * Since font identifiers are contiguous, it is possible to explore all fonts contained
-     * by an instance of theme data by looping from 0 to this value.
-     * </p>
-     */
-    public static final int FONT_COUNT  = 9;
-
-    /**
-     * Number of known colors.
-     * <p>
-     * Since color identifiers are contiguous, it is possible to explore all colors contained
-     * by an instance of theme data by looping from 0 to this color.
-     * </p>
-     */
-    public static final int COLOR_COUNT = 87;
-
-
-
-    // - Font definitions ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * Font used in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> font.
-     * </p>
-     */
-    public static final int FILE_TABLE_FONT = 0;
-
-    /**
-     * Font used to display shell output.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> font.
-     * </p>
-     */
-    public static final int SHELL_FONT = 1;
-
-    /**
-     * Font used in the file editor and viewer.
-     * <p>
-     * This defaults to the current <code>JTable</code> font.
-     * </p>
-     */
-    public static final int EDITOR_FONT = 2;
-
-    /**
-     * Font used in the location bar.
-     * <p>
-     * This defaults to the current <code>JTextField</code> font.
-     * </p>
-     */
-    public static final int LOCATION_BAR_FONT = 3;
-
-    /**
-     * Font used in the shell history widget.
-     * <p>
-     * This defaults to the current <code>JTextField</code> font.
-     * </p>
-     */
-    public static final int SHELL_HISTORY_FONT = 4;
-
-    /**
-     * Font used in the status bar.
-     * <p>
-     * This defaults to the current <code>JLabel</code> font.
-     * </p>
-     */
-    public static final int STATUS_BAR_FONT = 5;
-
-    /**
-     * Font used in the quick list header.
-     * <p>
-     * This defaults to a similar font of the current <code>JTable</code> font, but a little bigger.
-     * </p>
-     */
-    public static final int QUICK_LIST_HEADER_FONT = 6;
-    
-    /**
-     * Font used in the quick list item.
-     * <p>
-     * This defaults to the current <code>JTable</code> font.
-     * </p>
-     */
-    public static final int QUICK_LIST_ITEM_FONT = 7;
-
-    public static final int TERMINAL_FONT = 8;
-
-
-    // - Color definitions ---------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * Color used to paint the folder panels' borders.
-     * <p>
-     * This defaults to <code>Color.GRAY</code>.
-     * </p>
-     */
-    public static final int FILE_TABLE_BORDER_COLOR = 0;
-
-    /**
-     * Color used to paint the folder panels' borders when it doesn't have the focus.
-     * <p>
-     * This defaults to <code>Color.GRAY</code>.
-     * </p>
-     */
-    public static final int FILE_TABLE_INACTIVE_BORDER_COLOR = 56;
-
-    /**
-     * Color used to paint the folder panel's background color.
-     * <p>
-     * This defaults to the current <code>JTable</code> background color.
-     * </p>
-     */
-    public static final int FILE_TABLE_BACKGROUND_COLOR = 1;
-
-    /**
-     * Color used to paint the folder panel's alternate background color.
-     * <p>
-     * This defaults to the current <code>JTable</code> background color.
-     * </p>
-     */
-    public static final int FILE_TABLE_ALTERNATE_BACKGROUND_COLOR = 2;
-
-    /**
-     * Color used to paint the folder panel's background color when it doesn't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FILE_TABLE_BACKGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int FILE_TABLE_INACTIVE_BACKGROUND_COLOR = 3;
-
-    /**
-     * Color used to paint the folder panel's alternate background color when inactive.
-     * <p>
-     * This defaults to the current <code>JTable</code> background color.
-     * </p>
-     */
-    public static final int FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR = 4;
-
-    /**
-     * Color used to paint the file table's background color when it's part of an unmatched file.
-     */
-    public static final int FILE_TABLE_UNMATCHED_BACKGROUND_COLOR = 5;
-
-    /**
-     * Color used to paint the file table's foreground color when it's part of an unmatched file.
-     */
-    public static final int FILE_TABLE_UNMATCHED_FOREGROUND_COLOR = 6;
-
-    /**
-     * Color used to paint the file table's background color when in a selected row.
-     */
-    public static final int FILE_TABLE_SELECTED_BACKGROUND_COLOR = 7;
-
-    /**
-     * Color used to paint the gradient of the file table's selection.
-     */
-    public static final int FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR = 59;
-
-    /**
-     * Color used to paint the gradient of the file table's selection when inactive.
-     */
-    public static final int FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR = 60;
-
-    /**
-     * Colors used to pain the file table's background color when in an inactive selected row.
-     */
-    public static final int FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR = 8;
-
-    /**
-     * Color used to paint hidden files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int HIDDEN_FILE_FOREGROUND_COLOR = 9;
-
-    /**
-     * Color used to paint hidden files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #HIDDEN_FILE_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR = 10;
-
-    /**
-     * Color used to paint selected hidden files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int HIDDEN_FILE_SELECTED_FOREGROUND_COLOR = 11;
-
-    /**
-     * Color used to paint selected hidden files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #HIDDEN_FILE_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR = 12;
-
-    /**
-     * Color used to paint folders text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int FOLDER_FOREGROUND_COLOR = 13;
-
-    /**
-     * Color used to paint folders text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FOLDER_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int FOLDER_INACTIVE_FOREGROUND_COLOR = 14;
-
-    /**
-     * Color used to paint selected folders text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int FOLDER_SELECTED_FOREGROUND_COLOR = 15;
-
-    /**
-     * Color used to paint selected folders text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FOLDER_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR = 16;
-
-    /**
-     * Color used to paint archives text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int ARCHIVE_FOREGROUND_COLOR = 17;
-
-    /**
-     * Color used to paint archives text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #ARCHIVE_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int ARCHIVE_INACTIVE_FOREGROUND_COLOR = 18;
-
-    /**
-     * Color used to paint selected archives text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int ARCHIVE_SELECTED_FOREGROUND_COLOR = 19;
-
-    /**
-     * Color used to paint selected archives text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #ARCHIVE_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR = 20;
-
-    /**
-     * Color used to paint symlinks text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int SYMLINK_FOREGROUND_COLOR = 21;
-
-    /**
-     * Color used to paint symlinks text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #SYMLINK_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int SYMLINK_INACTIVE_FOREGROUND_COLOR = 22;
-
-    /**
-     * Color used to paint selected symlinks text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int SYMLINK_SELECTED_FOREGROUND_COLOR = 23;
-
-    /**
-     * Color used to paint selected symlinks text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #SYMLINK_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR = 24;
-
-    /**
-     * Color used to paint marked files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int MARKED_FOREGROUND_COLOR = 25;
-
-    /**
-     * Color used to paint marked files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #MARKED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int MARKED_INACTIVE_FOREGROUND_COLOR = 26;
-
-    /**
-     * Color used to paint selected marked files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int MARKED_SELECTED_FOREGROUND_COLOR = 27;
-
-    /**
-     * Color used to paint selected marked files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #MARKED_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR = 28;
-
-    /**
-     * Color used to paint plain files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int FILE_FOREGROUND_COLOR = 29;
-
-    /**
-     * Color used to paint plain files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FILE_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int FILE_INACTIVE_FOREGROUND_COLOR = 30;
-
-    /**
-     * Color used to paint selected plain files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int FILE_SELECTED_FOREGROUND_COLOR = 31;
-
-    /**
-     * Color used to paint selected plain files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FILE_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int FILE_INACTIVE_SELECTED_FOREGROUND_COLOR = 32;
-
-    /**
-     * Color used to paint shell commands output.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> foreground color.
-     * </p>
-     */
-    public static final int SHELL_FOREGROUND_COLOR = 33;
-
-    /**
-     * Color used to paint the background of shell commands output.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> background color.
-     * </p>
-     */
-    public static final int SHELL_BACKGROUND_COLOR = 34;
-
-    /**
-     * Color used to paint shell commands output when selected.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> selection foreground color.
-     * </p>
-     */
-    public static final int SHELL_SELECTED_FOREGROUND_COLOR = 35;
-
-    /**
-     * Color used to paint the background of shell commands output when selected.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> selection background color.
-     * </p>
-     */
-    public static final int SHELL_SELECTED_BACKGROUND_COLOR = 36;
-
-    /**
-     * Color used to paint the shell history's text.
-     * <p>
-     * This defaults to the current <code>JTextField</code> foreground color.
-     * </p>
-     */
-    public static final int SHELL_HISTORY_FOREGROUND_COLOR = 37;
-
-    /**
-     * Color used to paint the shell history's background.
-     * <p>
-     * This defaults to the current <code>JTextField</code> background color.
-     * </p>
-     */
-    public static final int SHELL_HISTORY_BACKGROUND_COLOR = 38;
-
-    /**
-     * Color used to paint the shell history's text when selected.
-     * <p>
-     * This defaults to the current <code>JTextField</code> selection foreground color.
-     * </p>
-     */
-    public static final int SHELL_HISTORY_SELECTED_FOREGROUND_COLOR = 39;
-
-    /**
-     * Color used to paint the shell history's background when selected.
-     * <p>
-     * This defaults to the current <code>JTextField</code> selection background color.
-     * </p>
-     */
-    public static final int SHELL_HISTORY_SELECTED_BACKGROUND_COLOR = 40;
-
-    /**
-     * Color used to paint the file editor / viewer's text.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> foreground color.
-     * </p>
-     */
-    public static final int EDITOR_FOREGROUND_COLOR = 41;
-
-    /**
-     * Color used to paint the file editor / viewer's background.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> background color.
-     * </p>
-     */
-    public static final int EDITOR_BACKGROUND_COLOR = 42;
-
-    /**
-     * Color used to paint the file editor / viewer's foreground when selected.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> selection foreground color.
-     * </p>
-     */
-    public static final int EDITOR_SELECTED_FOREGROUND_COLOR = 43;
-
-    /**
-     * Color used to paint the file editor / viewer's background when selected.
-     * <p>
-     * This defaults to the current <code>JTextArea</code> selection background color.
-     * </p>
-     */
-    public static final int EDITOR_SELECTED_BACKGROUND_COLOR = 44;
-
-    /**
-     * Color used to paint the location's bar text.
-     * <p>
-     * This defaults to the current <code>JTextField</code> foreground color.
-     * </p>
-     */
-    public static final int LOCATION_BAR_FOREGROUND_COLOR = 45;
-
-    /**
-     * Color used to paint the location's bar background.
-     * <p>
-     * This defaults to the current <code>JTextField</code> background color.
-     * </p>
-     */
-    public static final int LOCATION_BAR_BACKGROUND_COLOR = 46;
-
-    /**
-     * Color used to paint the location's bar text when selected.
-     * <p>
-     * This defaults to the current <code>JTextField</code> selection foreground color.
-     * </p>
-     */
-    public static final int LOCATION_BAR_SELECTED_FOREGROUND_COLOR = 47;
-
-    /**
-     * Color used to paint the location's bar background when selected.
-     * <p>
-     * This defaults to the current <code>JTextField</code> selection background color.
-     * </p>
-     */
-    public static final int LOCATION_BAR_SELECTED_BACKGROUND_COLOR = 48;
-
-    /**
-     * Color used to paint the location's bar background when used as a progress bar.
-     * <p>
-     * Note that this color is painted over the location's bar background and foreground. In order
-     * for anything to be visible under it, it needs to have an alpha transparency component.
-     * </p>
-     * <p>
-     * This defaults to the current <code>JTextField</code> selection background color, with an
-     * alpha transparency value of 64.
-     * </p>
-     */
-    public static final int LOCATION_BAR_PROGRESS_COLOR = 49;
-
-    /**
-     * Color used to paint the status bar's text.
-     * <p>
-     * This defaults to the current <code>JLabel</code> foreground color.
-     * </p>
-     */
-    public static final int STATUS_BAR_FOREGROUND_COLOR = 50;
-
-    /**
-     * Color used to paint the status bar's background
-     * <p>
-     * This defaults to the current <code>JLabel</code> background color.
-     * </p>
-     */
-    public static final int STATUS_BAR_BACKGROUND_COLOR = 51;
-
-    /**
-     * Color used to paint the status bar's border.
-     * <p>
-     * This defaults to <code>Color.GRAY</code>.
-     * </p>
-     */
-    public static final int STATUS_BAR_BORDER_COLOR = 52;
-
-    /**
-     * Color used to paint the status bar's drive usage color when there's plenty of space left.
-     * <p>
-     * This defaults to <code>0x70EC2B</code>.
-     * </p>
-     */
-    public static final int STATUS_BAR_OK_COLOR = 53;
-
-    /**
-     * Color used to paint the status bar's drive usage color when there's an average amount of space left.
-     * <p>
-     * This defaults to <code>0xFF7F00</code>.
-     * </p>
-     */
-    public static final int STATUS_BAR_WARNING_COLOR = 54;
-
-    /**
-     * Color used to paint the status bar's drive usage color when there's dangerously little space left.
-     * <p>
-     * This defaults to <code>Color.RED</code>.
-     * </p>
-     */
-    public static final int STATUS_BAR_CRITICAL_COLOR = 55;
-
-    /**
-     * Color used to paint the outline of selected files.
-     */
-    public static final int FILE_TABLE_SELECTED_OUTLINE_COLOR = 57;
-
-    /**
-     * Color used to paint the outline of selected files in an inactive table.
-     */
-    public static final int FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR = 58;
-    
-    /**
-     * Color used to paint the main background of a quick list header.
-     */
-    public static final int QUICK_LIST_HEADER_BACKGROUND_COLOR = 61;
-    
-    /**
-     * Color used to paint the secondary background of a quick list header.
-     */
-    public static final int QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR = 62;
-    
-    /**
-     * Color used to paint the text of a quick list header.
-     */
-    public static final int QUICK_LIST_HEADER_FOREGROUND_COLOR = 63;
-    
-    /**
-     * Color used to paint the background of a quick list item.
-     */
-    public static final int QUICK_LIST_ITEM_BACKGROUND_COLOR = 64;
-    
-    /**
-     * Color used to paint the text of a quick list item.
-     */
-    public static final int QUICK_LIST_ITEM_FOREGROUND_COLOR = 65;
-
-    /**
-     * Color used to paint the background of a selected quick list item.
-     */
-    public static final int QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR = 66;
-    
-    /**
-     * Color used to paint the text of a selected quick list item.
-     */
-    public static final int QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR = 67;
-
-    /**
-     * Color used to paint current line in the file editor / viewer's background when selected.
-     * <p>
-     * This defaults to the current <code>RTextArea</code> selection background color.
-     * </p>
-     */
-    public static final int EDITOR_CURRENT_BACKGROUND_COLOR = 68;
-
-    public static final int FILE_GROUP_1_FOREGROUND_COLOR = 69;
-    public static final int FILE_GROUP_2_FOREGROUND_COLOR = 70;
-    public static final int FILE_GROUP_3_FOREGROUND_COLOR = 71;
-    public static final int FILE_GROUP_4_FOREGROUND_COLOR = 72;
-    public static final int FILE_GROUP_5_FOREGROUND_COLOR = 73;
-    public static final int FILE_GROUP_6_FOREGROUND_COLOR = 74;
-    public static final int FILE_GROUP_7_FOREGROUND_COLOR = 75;
-    public static final int FILE_GROUP_8_FOREGROUND_COLOR = 76;
-    public static final int FILE_GROUP_9_FOREGROUND_COLOR = 77;
-    public static final int FILE_GROUP_10_FOREGROUND_COLOR = 78;
-
-    public static final int TERMINAL_BACKGROUND_COLOR = 79;
-    public static final int TERMINAL_FOREGROUND_COLOR = 80;
-    public static final int TERMINAL_SELECTED_FOREGROUND_COLOR = 81;
-    public static final int TERMINAL_SELECTED_BACKGROUND_COLOR = 82;
-
-    /**
-     * Color used to paint plain files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
-     */
-    public static final int EXECUTABLE_FOREGROUND_COLOR = 83;
-
-    /**
-     * Color used to paint plain files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FILE_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int EXECUTABLE_INACTIVE_FOREGROUND_COLOR = 84;
-
-    /**
-     * Color used to paint selected plain files text in the folder panels.
-     * <p>
-     * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
-     */
-    public static final int EXECUTABLE_SELECTED_FOREGROUND_COLOR = 85;
-
-    /**
-     * Color used to paint selected plain files text in the folder panels when they don't have the focus.
-     * <p>
-     * This behaves in exactly the same fashion as {@link #FILE_SELECTED_FOREGROUND_COLOR}, and defaults
-     * to the same value.
-     * </p>
-     */
-    public static final int EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR = 86;
-
-
-
+public class ThemeData implements ThemeId {
     // - Default fonts -------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     // The following fields are look&feel dependant values for the fonts that are used by
@@ -751,29 +69,30 @@ public class ThemeData {
 
     // - Default identifiers -------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
-    public static final String DEFAULT_TEXT_AREA_FOREGROUND            = "TextArea.foreground";
-    public static final String DEFAULT_TEXT_AREA_BACKGROUND            = "TextArea.background";
-    public static final String DEFAULT_TEXT_AREA_SELECTION_FOREGROUND  = "TextArea.selectionForeground";
-    public static final String DEFAULT_TEXT_AREA_SELECTION_BACKGROUND  = "TextArea.selectionBackground";
-    public static final String DEFAULT_TEXT_AREA_CURRENT_BACKGROUND    = "TextArea.currentBackground";
-    public static final String DEFAULT_TEXT_FIELD_FOREGROUND           = "TextField.foreground";
-    public static final String DEFAULT_TEXT_FIELD_BACKGROUND           = "TextField.background";
-    public static final String DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND = "TextField.selectionForeground";
-    public static final String DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND = "TextField.selectionBackground";
-    public static final String DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND  = "TextField.progress";
-    public static final String DEFAULT_TABLE_FOREGROUND                = "Table.foreground";
-    public static final String DEFAULT_TABLE_BACKGROUND                = "Table.background";
-    public static final String DEFAULT_TABLE_SELECTION_FOREGROUND      = "Table.selectionForeground";
-    public static final String DEFAULT_TABLE_SELECTION_BACKGROUND      = "Table.selectionBackground";
-    public static final String DEFAULT_TABLE_UNMATCHED_FOREGROUND      = "Table.unmatchedForeground";
-    public static final String DEFAULT_TABLE_UNMATCHED_BACKGROUND      = "Table.unmatchedBackground";
-    public static final String DEFAULT_MENU_HEADER_FOREGROUND          = "MenuHeader.foreground";
-    public static final String DEFAULT_MENU_HEADER_BACKGROUND          = "MenuHeader.background";
-    public static final String DEFAULT_TEXT_AREA_FONT                  = "TextArea.font";
-    public static final String DEFAULT_TEXT_FIELD_FONT                 = "TextField.font";
-    public static final String DEFAULT_LABEL_FONT                      = "Label.font";
-    public static final String DEFAULT_TABLE_FONT                      = "Table.font";
-    public static final String DEFAULT_MENU_HEADER_FONT                = "MenuHeader.font";
+    private static final String DEFAULT_TEXT_AREA_FOREGROUND            = "TextArea.foreground";
+    private static final String DEFAULT_TEXT_AREA_BACKGROUND            = "TextArea.background";
+    private static final String DEFAULT_TEXT_AREA_SELECTION_FOREGROUND  = "TextArea.selectionForeground";
+    private static final String DEFAULT_TEXT_AREA_SELECTION_BACKGROUND  = "TextArea.selectionBackground";
+    private static final String DEFAULT_TEXT_AREA_CURRENT_BACKGROUND    = "TextArea.currentBackground";
+    private static final String DEFAULT_TEXT_FIELD_FOREGROUND           = "TextField.foreground";
+    private static final String DEFAULT_TEXT_FIELD_BACKGROUND           = "TextField.background";
+    private static final String DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND = "TextField.selectionForeground";
+    private static final String DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND = "TextField.selectionBackground";
+    private static final String DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND  = "TextField.progress";
+    private static final String DEFAULT_TABLE_FOREGROUND                = "Table.foreground";
+    private static final String DEFAULT_TABLE_BACKGROUND                = "Table.background";
+    private static final String DEFAULT_TABLE_SELECTION_FOREGROUND      = "Table.selectionForeground";
+    private static final String DEFAULT_TABLE_SELECTION_BACKGROUND      = "Table.selectionBackground";
+    private static final String DEFAULT_TABLE_UNMATCHED_FOREGROUND      = "Table.unmatchedForeground";
+    private static final String DEFAULT_TABLE_UNMATCHED_BACKGROUND      = "Table.unmatchedBackground";
+    private static final String DEFAULT_MENU_HEADER_FOREGROUND          = "MenuHeader.foreground";
+    private static final String DEFAULT_MENU_HEADER_BACKGROUND          = "MenuHeader.background";
+    private static final String DEFAULT_TEXT_AREA_FONT                  = "TextArea.font";
+    private static final String DEFAULT_TEXT_FIELD_FONT                 = "TextField.font";
+    private static final String DEFAULT_LABEL_FONT                      = "Label.font";
+    private static final String DEFAULT_TABLE_FONT                      = "Table.font";
+    private static final String DEFAULT_MENU_HEADER_FONT                = "MenuHeader.font";
+    private static final String DEFAULT_HEX_VIEWER_FONT                 = "HexViewer.font";
 
 
     // - Listeners -----------------------------------------------------------------------------------------------------
@@ -802,18 +121,17 @@ public class ThemeData {
     private Color[] colors;
     /** All the fonts contained by the theme. */
     private Font[]  fonts;
-    private int defaultTerminalFont;
 
 
-    public static void registerDefaultColor(String name, DefaultColor color) {
+    private static void registerDefaultColor(String name, DefaultColor color) {
         DEFAULT_COLORS.put(name, color);
     }
 
-    public static void registerDefaultFont(String name, DefaultFont font) {
+    private static void registerDefaultFont(String name, DefaultFont font) {
         DEFAULT_FONTS.put(name, font);
     }
 
-    public static void registerColor(int id, String defaultColor) {
+    private static void registerColor(int id, String defaultColor) {
         DefaultColor color = DEFAULT_COLORS.get(defaultColor);
         if (color == null) {
             throw new IllegalArgumentException("Not a registered default color: " + defaultColor);
@@ -821,7 +139,7 @@ public class ThemeData {
         registerColor(id, color);
     }
 
-    public static void registerFont(int id, String defaultFont) {
+    private static void registerFont(int id, String defaultFont) {
         DefaultFont font = DEFAULT_FONTS.get(defaultFont);
 
         if (font == null) {
@@ -830,15 +148,15 @@ public class ThemeData {
         registerFont(id, font);
     }
 
-    public static void registerColor(int id, Color color) {
+    private static void registerColor(int id, Color color) {
         registerColor(id, new FixedDefaultColor(color));
     }
 
-    public static void registerFont(int id, Font font) {
+    private static void registerFont(int id, Font font) {
         registerFont(id, new FixedDefaultFont(font));
     }
 
-    public static void registerColor(int id, int defaultId) {
+    private static void registerColor(int id, int defaultId) {
         registerColor(id, new LinkedDefaultColor(defaultId));
     }
 
@@ -846,13 +164,13 @@ public class ThemeData {
         registerFont(id, new LinkedDefaultFont(defaultId));
     }
 
-    public static void registerColor(int id, DefaultColor color) {
+    private static void registerColor(int id, DefaultColor color) {
         Integer colorId = id;
         COLORS.put(colorId, color);
         color.link(colorId);
     }
 
-    public static void registerFont(int id, DefaultFont font) {
+    private static void registerFont(int id, DefaultFont font) {
         Integer fontId = id;
         FONTS.put(fontId, font);
         font.link(fontId);
@@ -874,12 +192,15 @@ public class ThemeData {
             public Font getFont(ThemeData data) {
                 Font font = super.getFont(data);
                 if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-                    Font menlo = new Font("Menlo", font.getStyle(), font.getSize());
-                    if (menlo != null) {
-                        return menlo;
-                    }
+                    return new Font("Menlo", font.getStyle(), font.getSize());
                 }
                 return font;
+            }
+        });
+        registerDefaultFont(DEFAULT_HEX_VIEWER_FONT, new SystemDefaultFont("Table.font", mapper) {
+            @Override
+            public Font getFont(ThemeData data) {
+                return new Font("Monospaced", Font.PLAIN, 14);
             }
         });
         registerDefaultColor(DEFAULT_TEXT_AREA_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextArea.foreground", mapper));
@@ -1069,6 +390,17 @@ public class ThemeData {
         registerColor(STATUS_BAR_OK_COLOR,         new Color(0x70EC2B));
         registerColor(STATUS_BAR_WARNING_COLOR,    new Color(0xFF7F00));
 
+
+        // Hex viewer default values
+        registerFont(HEX_VIEWER_FONT, DEFAULT_HEX_VIEWER_FONT);
+        registerColor(HEX_VIEWER_HEX_FOREGROUND_COLOR, DEFAULT_TEXT_FIELD_FOREGROUND);
+        registerColor(HEX_VIEWER_BACKGROUND_COLOR, DEFAULT_TEXT_FIELD_BACKGROUND);
+        registerColor(HEX_VIEWER_ALTERNATE_BACKGROUND_COLOR, DEFAULT_TEXT_FIELD_BACKGROUND);
+        registerColor(HEX_VIEWER_ASCII_FOREGROUND_COLOR, DEFAULT_TEXT_FIELD_FOREGROUND);
+        registerColor(HEX_VIEWER_OFFSET_FOREGROUND_COLOR, DEFAULT_TEXT_FIELD_FOREGROUND);
+        registerColor(HEX_VIEWER_SELECTED_DUMP_FOREGROUND_COLOR, DEFAULT_TEXT_FIELD_FOREGROUND);
+        registerColor(HEX_VIEWER_SELECTED_BACKGROUND_COLOR, new Color(0x0000ff));
+        registerColor(HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR, DEFAULT_TEXT_FIELD_FOREGROUND);
     }
 
 
@@ -1122,19 +454,18 @@ public class ThemeData {
      * @return                a clone of the current theme data.
      * @see                   #cloneData()
      */
-    public ThemeData cloneData(boolean freezeDefaults) {
-        ThemeData data; // New data.
-        int       i;    // Used to browse the fonts and colors.
-
-        data = new ThemeData();
+    private ThemeData cloneData(boolean freezeDefaults) {
+        ThemeData data = new ThemeData();
 
         // Clones the theme's colors.
-        for(i = 0; i < COLOR_COUNT; i++)
+        for (int i = 0; i < COLOR_COUNT; i++) {
             data.colors[i] = freezeDefaults ? getColor(i) : colors[i];
+        }
 
         // Clones the theme's fonts.
-        for(i = 0; i < FONT_COUNT; i++)
+        for (int i = 0; i < FONT_COUNT; i++) {
             data.fonts[i] = freezeDefaults ? getFont(i) : fonts[i];
+        }
 
         return data;
     }
@@ -1174,7 +505,7 @@ public class ThemeData {
         // Imports the theme's fonts.
         for (int i = 0; i < FONT_COUNT; i++) {
             setFont(i, data.fonts[i]);
-    }
+        }
     }
 
 
@@ -1216,7 +547,7 @@ public class ThemeData {
         return buffer;
     }
 
-    public void setColorFast(int id, Color color) {
+    void setColorFast(int id, Color color) {
         colors[id] = color;
     }
 
@@ -1244,7 +575,7 @@ public class ThemeData {
         return buffer;
     }
 
-    public void setFontFast(int id, Font font) {
+    void setFontFast(int id, Font font) {
         fonts[id] = font;
     }
 
@@ -1278,7 +609,7 @@ public class ThemeData {
      */
     public synchronized Font getFont(int id) {
         checkFontIdentifier(id);
-        return (fonts[id] == null) ? getDefaultFont(id, this) : fonts[id];
+        return fonts[id] == null ? getDefaultFont(id, this) : fonts[id];
     }
 
 
@@ -1288,7 +619,9 @@ public class ThemeData {
      * @return    <code>true</code> if the specified color is set, <code>false</code> otherwise.
      * @see       #getDefaultColor(int,ThemeData)
      */
-    public boolean isColorSet(int id) {return colors[id] != null;}
+    boolean isColorSet(int id) {
+        return colors[id] != null;
+    }
 
     /**
      * Returns <code>true</code> if the specified font is set.
@@ -1296,7 +629,9 @@ public class ThemeData {
      * @return    <code>true</code> if the specified font is set, <code>false</code> otherwise.
      * @see       #getDefaultFont(int, ThemeData)
      */
-    public boolean isFontSet(int id) {return fonts[id] != null;}
+    boolean isFontSet(int id) {
+        return fonts[id] != null;
+    }
 
     /**
      * Returns the default value for the specified color.
@@ -1313,7 +648,6 @@ public class ThemeData {
     private static Color getDefaultColor(int id, ThemeData data) {
         // Makes sure id is a legal color identifier.
         checkColorIdentifier(id);
-
         return COLORS.get(id).getColor(data);
     }
 
@@ -1351,17 +685,19 @@ public class ThemeData {
      * @see                   #isFontDifferent(int,Font,boolean)
      * @see                   #isColorDifferent(int,Color,boolean)
      */
-    public boolean isIdentical(ThemeData data, boolean ignoreDefaults) {
+    private boolean isIdentical(ThemeData data, boolean ignoreDefaults) {
         // Compares the colors.
-        for (int i = 0; i < COLOR_COUNT; i++)
-            if (isColorDifferent(i, data.colors[i] , ignoreDefaults))
+        for (int i = 0; i < COLOR_COUNT; i++) {
+            if (isColorDifferent(i, data.colors[i], ignoreDefaults)) {
                 return false;
-
+            }
+        }
         // Compares the fonts.
-        for (int i = 0; i < FONT_COUNT; i++)
-            if (isFontDifferent(i, data.fonts[i], ignoreDefaults))
+        for (int i = 0; i < FONT_COUNT; i++) {
+            if (isFontDifferent(i, data.fonts[i], ignoreDefaults)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
@@ -1387,7 +723,7 @@ public class ThemeData {
      * @see         #isFontDifferent(int,Font,boolean)
      * @see         #isColorDifferent(int,Color)
      */
-    public boolean isFontDifferent(int id, Font font) {return isFontDifferent(id, font, false);}
+    boolean isFontDifferent(int id, Font font) {return isFontDifferent(id, font, false);}
 
     /**
      * Checks whether the current font and the specified one are different from one another.
@@ -1403,12 +739,12 @@ public class ThemeData {
      * @see                   #isFontDifferent(int,Font)
      * @see                   #isColorDifferent(int,Color)
      */
-    public synchronized boolean isFontDifferent(int id, Font font, boolean ignoreDefaults) {
+    private synchronized boolean isFontDifferent(int id, Font font, boolean ignoreDefaults) {
         checkFontIdentifier(id);
 
         // If the specified font is null, the only way for both fonts to be equal is for fonts[id]
         // to be null as well.
-        if( font == null) {
+        if (font == null) {
             return fonts[id] != null;
         }
 
@@ -1450,7 +786,7 @@ public class ThemeData {
      * @see                   #isColorDifferent(int,Color)
      * @see                   #isFontDifferent(int,Font)
      */
-    public synchronized boolean isColorDifferent(int id, Color color, boolean ignoreDefaults) {
+    private synchronized boolean isColorDifferent(int id, Color color, boolean ignoreDefaults) {
         checkColorIdentifier(id);
 
         // If the specified color is null, the only way for both colors to be equal is for colors[id]
@@ -1489,7 +825,9 @@ public class ThemeData {
      * @param listener theme listener to register.
      * @see            #removeDefaultValuesListener(ThemeListener)
      */
-    public static void addDefaultValuesListener(ThemeListener listener) {listeners.put(listener, null);}
+    static void addDefaultValuesListener(ThemeListener listener) {
+        listeners.put(listener, null);
+    }
 
     /**
      * Removes the specified instance from the list of registered theme listeners.
@@ -1501,7 +839,9 @@ public class ThemeData {
      * @param listener instance to remove from the list of registered theme listeners.
      * @see            #addDefaultValuesListener(ThemeListener)
      */
-    public static void removeDefaultValuesListener(ThemeListener listener) {listeners.remove(listener);}
+    private static void removeDefaultValuesListener(ThemeListener listener) {
+        listeners.remove(listener);
+    }
 
     /**
      * Dispatches a {@link FontChangedEvent} to all registered listeners.
@@ -1513,8 +853,9 @@ public class ThemeData {
         FontChangedEvent event = new FontChangedEvent(null, id, font);  // Event that will be dispatched.
 
         // Dispatches it.
-        for (ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet()) {
             listener.fontChanged(event);
+        }
     }
 
     /**
@@ -1543,7 +884,7 @@ public class ThemeData {
     private static void checkColorIdentifier(int id) {
         if (id < 0 || id >= COLOR_COUNT) {
             throw new IllegalArgumentException("Illegal color identifier: " + id);
-    }
+        }
     }
 
     /**
@@ -1554,7 +895,7 @@ public class ThemeData {
     private static void checkFontIdentifier(int id) {
         if (id < 0 || id >= FONT_COUNT) {
             throw new IllegalArgumentException("Illegal font identifier: " + id);
-    }
+        }
     }
 
     private static Font createDefaultTerminalFont() {

@@ -27,6 +27,7 @@ import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.theme.ThemeData;
+import com.mucommander.ui.theme.ThemeId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,15 +37,15 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Nicolas Rinaudo, Maxence Bernard
  */
-class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener {
+class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener, ThemeId {
     private static final int OK       = 0;
     private static final int WARNING  = 1;
     private static final int CRITICAL = 2;
 
     private final static int WARNING_LEVEL_COLOR_IDS[] = {
-        ThemeData.STATUS_BAR_OK_COLOR,
-        ThemeData.STATUS_BAR_WARNING_COLOR,
-        ThemeData.STATUS_BAR_CRITICAL_COLOR
+        STATUS_BAR_OK_COLOR,
+        STATUS_BAR_WARNING_COLOR,
+        STATUS_BAR_CRITICAL_COLOR
     };
 
     private final static String WARNING_LEVEL_LABELS[] = {
@@ -80,7 +81,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
      * @param parent   dialog containing the panel.
      * @param themeData themeData being edited.
      */
-    public StatusBarPanel(PreferencesDialog parent, ThemeData themeData) {
+    StatusBarPanel(PreferencesDialog parent, ThemeData themeData) {
         super(parent, Translator.get("theme_editor.statusbar_tab"), themeData);
         initUI();
     }
@@ -184,17 +185,17 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
         FontChooser  fontChooser;
 
         JTabbedPane tabbedPane;
-        fontChooser = createFontChooser(ThemeData.STATUS_BAR_FONT);
+        fontChooser = createFontChooser(STATUS_BAR_FONT);
 
         // Initialises the foreground color button.
-        foreground = new ColorButton(parent, themeData, ThemeData.STATUS_BAR_FOREGROUND_COLOR, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
+        foreground = new ColorButton(parent, themeData, STATUS_BAR_FOREGROUND_COLOR, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
         previewLabel.setTextPainted(true);
         addFontChooserListener(fontChooser, previewLabel);
         previewLabel.addPropertyChangeListener(this);
 
         // Initialises the background and border color buttons.
-        background = new ColorButton(parent, themeData, ThemeData.STATUS_BAR_BACKGROUND_COLOR, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
-        border     = new ColorButton(parent, themeData, ThemeData.STATUS_BAR_BORDER_COLOR, PreviewLabel.BORDER_COLOR_PROPERTY_NAME, borderPreviewLabel = new PreviewLabel());
+        background = new ColorButton(parent, themeData, STATUS_BAR_BACKGROUND_COLOR, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
+        border     = new ColorButton(parent, themeData, STATUS_BAR_BORDER_COLOR, PreviewLabel.BORDER_COLOR_PROPERTY_NAME, borderPreviewLabel = new PreviewLabel());
 
         // Initialises the background color preview.
         previewLabel.setTextPainted(true);
@@ -278,12 +279,12 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
             setOpaque(false);
             setBorder(border = new MutableLineBorder(Color.BLACK, 1));
             setHorizontalAlignment(CENTER);
-            setForeground(themeData.getColor(ThemeData.STATUS_BAR_FOREGROUND_COLOR));
+            setForeground(themeData.getColor(STATUS_BAR_FOREGROUND_COLOR));
             this.type = type;
         }
 
         void refreshBorder() {
-            border.setLineColor(themeData.getColor(ThemeData.STATUS_BAR_BORDER_COLOR));
+            border.setLineColor(themeData.getColor(STATUS_BAR_BORDER_COLOR));
             repaint();
         }
 
@@ -292,15 +293,15 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener 
             int width = ((getWidth() - 2) * WARNING_DRAW_PERCENTAGE[type]) / 100;
 
             if (type == OK) {
-                g.setColor(themeData.getColor(ThemeData.STATUS_BAR_OK_COLOR));
+                g.setColor(themeData.getColor(STATUS_BAR_OK_COLOR));
             } else if (type == WARNING) {
-                g.setColor(themeData.getColor(ThemeData.STATUS_BAR_WARNING_COLOR));
+                g.setColor(themeData.getColor(STATUS_BAR_WARNING_COLOR));
             } else {
-                g.setColor(themeData.getColor(ThemeData.STATUS_BAR_CRITICAL_COLOR));
+                g.setColor(themeData.getColor(STATUS_BAR_CRITICAL_COLOR));
             }
             g.fillRect(1, 1, width + 1, getHeight() - 2);
 
-            g.setColor(themeData.getColor(ThemeData.STATUS_BAR_BACKGROUND_COLOR));
+            g.setColor(themeData.getColor(STATUS_BAR_BACKGROUND_COLOR));
             g.fillRect(width + 1, 1, getWidth() - width - 1, getHeight() - 2);
 
             super.paint(g);

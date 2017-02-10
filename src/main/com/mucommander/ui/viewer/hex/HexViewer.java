@@ -22,8 +22,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
-import com.mucommander.ui.theme.Theme;
-import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.theme.ThemeId;
 import com.mucommander.ui.viewer.FileViewer;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
@@ -33,18 +32,19 @@ import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
 
 import javax.swing.*;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import static com.mucommander.ui.theme.ThemeManager.getCurrentColor;
+import static com.mucommander.ui.theme.ThemeManager.getCurrentFont;
 
 /**
  * Hex dump viewer
  * @author Oleg Trifonov
  */
-public class HexViewer extends FileViewer {
+public class HexViewer extends FileViewer implements ThemeId {
 
     private static final String DEFAULT_ENCODING = "windows-1252";
 
@@ -101,6 +101,7 @@ public class HexViewer extends FileViewer {
         }
     };
 
+
     @Override
     protected void show(AbstractFile file) throws IOException {
         try {
@@ -108,17 +109,23 @@ public class HexViewer extends FileViewer {
             model = new ViewerHexTableModel(byteBuffer);
             model.load();
             hexTable = new HexTable(model);
-            hexTable.setBackground(ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR));
-            hexTable.setForeground(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
-            //hexTable.setAlternateBackground(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
-            hexTable.setAlternateBackground(new Color(20, 20, 20));
-            hexTable.setOffsetColumnColor(new Color(0, 255, 255));
-            hexTable.setAsciiColumnColor(new Color(255, 0, 255));
-            hexTable.setHighlightSelectionInAsciiDumpColor(new Color(0, 0, 255));
+            hexTable.setBackground(getCurrentColor(HEX_VIEWER_BACKGROUND_COLOR));
+            hexTable.setForeground(getCurrentColor(HEX_VIEWER_HEX_FOREGROUND_COLOR));
+            hexTable.setAlternateBackground(getCurrentColor(HEX_VIEWER_ALTERNATE_BACKGROUND_COLOR));
+            hexTable.setOffsetColumnColor(getCurrentColor(HEX_VIEWER_OFFSET_FOREGROUND_COLOR));
+            hexTable.setAsciiColumnColor(getCurrentColor(HEX_VIEWER_ASCII_FOREGROUND_COLOR));
+            hexTable.setAsciiSelectionBackgroundColor(getCurrentColor(HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR));
+            hexTable.setSelectionBackground(getCurrentColor(HEX_VIEWER_SELECTED_BACKGROUND_COLOR));
+            hexTable.setFont(getCurrentFont(HEX_VIEWER_FONT));
+//hexTable.setAlternateBackground(new Color(20, 20, 20));
+//hexTable.setOffsetColumnColor(new Color(0, 255, 255));
+//hexTable.setAsciiColumnColor(new Color(255, 0, 255));
+//hexTable.setAsciiSelectionBackgroundColor(new Color(0, 0, 255));
             hexTable.setAlternateRowBackground(true);
 
-            hexTable.setFont(new Font("Monospaced", Font.PLAIN, 14));
+//        hexTable.setFont(new Font("Monospaced", Font.PLAIN, 14));
             hexTable.getTableHeader().setFont(new Font("Monospaced", Font.PLAIN, 12));
+
 
             hexTable.setOnOffsetChangeListener(onOffsetChangeListener);
             onOffsetChangeListener.onChange(0);

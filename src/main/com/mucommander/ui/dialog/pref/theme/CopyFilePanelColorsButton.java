@@ -32,12 +32,12 @@ class CopyFilePanelColorsButton extends JButton {
 	private final Map<Integer, ColorButton> targetColorButtons = new HashMap<>();
 
 	/**
-	 * Constructs an instance that copies all colors from the other panel set with {@link #setSource(Container)} to the
+	 * Constructs an instance that copies all colors from the other panel set with {@link #setSource(PreferencesPanel)} to the
 	 * corresponding {@link ColorButton}s in <code>targetColorButtonsContainer</code>.
 	 * 
 	 * @param targetColorButtonsContainer
 	 */
-	public CopyFilePanelColorsButton(Container targetColorButtonsContainer, boolean isTargetActive) {
+	CopyFilePanelColorsButton(Container targetColorButtonsContainer, boolean isTargetActive) {
 		super();
 		findColorButtons(targetColorButtonsContainer, targetColorButtons);
 
@@ -67,10 +67,9 @@ class CopyFilePanelColorsButton extends JButton {
 	/**
 	 * Sets the source container having all the {@link ColorButton}s to copy the colors from.
 	 * 
-	 * @param otherPanelsColorButtonsContainer
+	 * @param otherPanelsColorButtonsContainer source container
 	 */
 	public void setSource(PreferencesPanel otherPanelsColorButtonsContainer) {
-
 		findColorButtons(otherPanelsColorButtonsContainer, sourceColorButtons);
 
 		setText(Translator.get("theme_editor.copy_colors", otherPanelsColorButtonsContainer.getTitle()));

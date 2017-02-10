@@ -66,10 +66,7 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
     }
 
     public void setTextPainted(boolean b) {
-        if(b)
-            setText(Translator.get("sample_text"));
-        else
-            setText(" ");
+        setText(b ? Translator.get("sample_text") : " ");
     }
 
     public void setOverlayUnderText(boolean b) {
@@ -107,11 +104,8 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        PreviewLabel label;
-
-        label = (PreviewLabel)super.clone();
+        PreviewLabel label = (PreviewLabel)super.clone();
         label.addPropertyChangeListener(label);
-        
         return label;
     }
 
@@ -126,19 +120,22 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
         g.setColor(getBackground());
         g.fillRect(0, 0, width, height);
 
-        if(!overlayUnderText)
+        if (!overlayUnderText) {
             paintText(g);
+        }
 
-        if(overlayColor != null) {
+        if (overlayColor != null) {
             g.setColor(overlayColor);
             g.fillRect(0, 0, width/2, height);
         }
 
-        if(overlayUnderText)
+        if (overlayUnderText) {
             paintText(g);
+        }
 
-        if(border != null)
+        if (border != null) {
             border.paintBorder(this, g, 0, 0, width, height);
+        }
     }
 
     @Override
@@ -157,17 +154,14 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
         String name = event.getPropertyName();
         Object value = event.getNewValue();
 
-        if(FOREGROUND_COLOR_PROPERTY_NAME.equals(name)) {
+        if (FOREGROUND_COLOR_PROPERTY_NAME.equals(name)) {
             super.setForeground((Color)value);
-        }
-        else if(BACKGROUND_COLOR_PROPERTY_NAME.equals(name)) {
+        } else if (BACKGROUND_COLOR_PROPERTY_NAME.equals(name)) {
             super.setBackground((Color)value);
-        }
-        else if(OVERLAY_COLOR_PROPERTY_NAME.equals(name)) {
+        } else if (OVERLAY_COLOR_PROPERTY_NAME.equals(name)) {
             overlayColor = (Color)value;
             repaint();
-        }
-        else if(BORDER_COLOR_PROPERTY_NAME.equals(name)) {
+        } else if (BORDER_COLOR_PROPERTY_NAME.equals(name)) {
             border = new LineBorder((Color)value, 1);
             repaint();
         }

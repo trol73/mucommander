@@ -225,6 +225,12 @@ public class Translator {
         try {
             text = bundle.getString(key);
         } catch (Exception e) {
+            if (key == null) {
+                return null;
+            }
+            if (key.isEmpty()) {
+                return "";
+            }
             text = key;
             System.out.println("No value for " + key +" in language " + language + ", using English value");
             getLogger().debug("No value for " + key + " in language " + language + ", using English value");

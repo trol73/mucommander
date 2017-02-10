@@ -26,6 +26,7 @@ import com.mucommander.ui.layout.ProportionalGridPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.progress.ProgressTextField;
 import com.mucommander.ui.theme.ThemeData;
+import com.mucommander.ui.theme.ThemeId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Nicolas Rinaudo, Maxence Bernard
  */
-class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListener {
+class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListener, ThemeId {
     private ProgressTextField  normalPreview;
     private ProgressTextField  progressPreview;
 
@@ -46,7 +47,7 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
      * @param parent   dialog containing the panel.
      * @param themeData themeData being edited.
      */
-    public LocationBarPanel(PreferencesDialog parent, ThemeData themeData) {
+    LocationBarPanel(PreferencesDialog parent, ThemeData themeData) {
         super(parent, Translator.get("theme_editor.locationbar_tab"), themeData);
         initUI();
     }
@@ -58,7 +59,7 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
         ProportionalGridPanel colorsPanel;
         PreviewLabel          label;
 
-        fontChooser = createFontChooser(ThemeData.LOCATION_BAR_FONT);
+        fontChooser = createFontChooser(LOCATION_BAR_FONT);
         addFontChooserListener(fontChooser, normalPreview);
         addFontChooserListener(fontChooser, progressPreview);
 
@@ -66,9 +67,9 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
 
         label = new PreviewLabel();
         addColorButtons(colorsPanel, fontChooser, "theme_editor.normal",
-                          ThemeData.LOCATION_BAR_FOREGROUND_COLOR, ThemeData.LOCATION_BAR_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+                          LOCATION_BAR_FOREGROUND_COLOR, LOCATION_BAR_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         addColorButtons(colorsPanel, fontChooser, "theme_editor.selected",
-                          ThemeData.LOCATION_BAR_SELECTED_FOREGROUND_COLOR, ThemeData.LOCATION_BAR_SELECTED_BACKGROUND_COLOR).addPropertyChangeListener(this);
+                          LOCATION_BAR_SELECTED_FOREGROUND_COLOR, LOCATION_BAR_SELECTED_BACKGROUND_COLOR).addPropertyChangeListener(this);
 
         label.setTextPainted(true);
         addFontChooserListener(fontChooser, label);
@@ -76,7 +77,7 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
         PreviewLabel previewLabel = new PreviewLabel();
         previewLabel.setTextPainted(true);
         colorsPanel.add(new JLabel());
-        ColorButton btn = new ColorButton(parent, themeData, ThemeData.LOCATION_BAR_PROGRESS_COLOR, PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME, previewLabel);
+        ColorButton btn = new ColorButton(parent, themeData, LOCATION_BAR_PROGRESS_COLOR, PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME, previewLabel);
         colorsPanel.add(btn);
         btn.addUpdatedPreviewComponent(label);
         label.addPropertyChangeListener(this);
@@ -106,13 +107,13 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
 
         //        panel.add(new JLabel(Translator.get("theme_editor.normal")));
         panel.add(createCaptionLabel("theme_editor.normal"));
-        normalPreview = new ProgressTextField(0, themeData.getColor(ThemeData.LOCATION_BAR_PROGRESS_COLOR));
+        normalPreview = new ProgressTextField(0, themeData.getColor(LOCATION_BAR_PROGRESS_COLOR));
         panel.add(normalPreview);
         normalPreview.setText(System.getProperty("user.home"));
 
         panel.addSpace(10);
         panel.add(createCaptionLabel("theme_editor.progress"));
-        progressPreview = new ProgressTextField(50, themeData.getColor(ThemeData.LOCATION_BAR_PROGRESS_COLOR));
+        progressPreview = new ProgressTextField(50, themeData.getColor(LOCATION_BAR_PROGRESS_COLOR));
         panel.add(progressPreview);
         progressPreview.setText(System.getProperty("user.home"));
         progressPreview.setEnabled(false);
@@ -144,34 +145,37 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
 
     public void propertyChange(PropertyChangeEvent event) {
         // Background color changed.
-        if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
+        if (event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME)) {
             setBackgroundColors();
 
-        // Foreground color changed.
-        else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
+            // Foreground color changed.
+        } else if (event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME)) {
             setForegroundColors();
 
-        // Overlay color changed.
-        else if(event.getPropertyName().equals(PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME))
+            // Overlay color changed.
+        } else if(event.getPropertyName().equals(PreviewLabel.OVERLAY_COLOR_PROPERTY_NAME)) {
             setProgressColors();
+        }
     }
 
     private void setBackgroundColors() {
-        normalPreview.setBackground(themeData.getColor(ThemeData.LOCATION_BAR_BACKGROUND_COLOR));
-        normalPreview.setSelectionColor(themeData.getColor(ThemeData.LOCATION_BAR_SELECTED_BACKGROUND_COLOR));
-        progressPreview.setBackground(themeData.getColor(ThemeData.LOCATION_BAR_BACKGROUND_COLOR));
-        progressPreview.setSelectionColor(themeData.getColor(ThemeData.LOCATION_BAR_SELECTED_BACKGROUND_COLOR));
+        normalPreview.setBackground(themeData.getColor(LOCATION_BAR_BACKGROUND_COLOR));
+        normalPreview.setSelectionColor(themeData.getColor(LOCATION_BAR_SELECTED_BACKGROUND_COLOR));
+        progressPreview.setBackground(themeData.getColor(LOCATION_BAR_BACKGROUND_COLOR));
+        progressPreview.setSelectionColor(themeData.getColor(LOCATION_BAR_SELECTED_BACKGROUND_COLOR));
     }
 
     private void setForegroundColors() {
-        normalPreview.setForeground(themeData.getColor(ThemeData.LOCATION_BAR_FOREGROUND_COLOR));
-        normalPreview.setSelectedTextColor(themeData.getColor(ThemeData.LOCATION_BAR_SELECTED_FOREGROUND_COLOR));
-        progressPreview.setForeground(themeData.getColor(ThemeData.LOCATION_BAR_FOREGROUND_COLOR));
-        progressPreview.setSelectedTextColor(themeData.getColor(ThemeData.LOCATION_BAR_SELECTED_FOREGROUND_COLOR));
-        progressPreview.setDisabledTextColor(themeData.getColor(ThemeData.LOCATION_BAR_FOREGROUND_COLOR));
+        normalPreview.setForeground(themeData.getColor(LOCATION_BAR_FOREGROUND_COLOR));
+        normalPreview.setSelectedTextColor(themeData.getColor(LOCATION_BAR_SELECTED_FOREGROUND_COLOR));
+        progressPreview.setForeground(themeData.getColor(LOCATION_BAR_FOREGROUND_COLOR));
+        progressPreview.setSelectedTextColor(themeData.getColor(LOCATION_BAR_SELECTED_FOREGROUND_COLOR));
+        progressPreview.setDisabledTextColor(themeData.getColor(LOCATION_BAR_FOREGROUND_COLOR));
     }
 
-    private void setProgressColors() {progressPreview.setProgressColor(themeData.getColor(ThemeData.LOCATION_BAR_PROGRESS_COLOR));}
+    private void setProgressColors() {
+        progressPreview.setProgressColor(themeData.getColor(LOCATION_BAR_PROGRESS_COLOR));
+    }
 
     // - Modification management ---------------------------------------------------------
     // -----------------------------------------------------------------------------------

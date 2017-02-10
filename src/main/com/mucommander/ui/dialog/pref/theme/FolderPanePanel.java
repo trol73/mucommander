@@ -42,7 +42,7 @@ class FolderPanePanel extends ThemeEditorPanel {
      * @param parent dialog containing the panel.
      * @param themeData themeData being edited.
      */
-    public FolderPanePanel(PreferencesDialog parent, ThemeData themeData) {
+    FolderPanePanel(PreferencesDialog parent, ThemeData themeData) {
         super(parent, Translator.get("theme_editor.folder_tab"), themeData);
         initUI();
     }

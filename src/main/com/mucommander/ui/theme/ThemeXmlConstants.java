@@ -45,6 +45,7 @@ interface ThemeXmlConstants {
     String ELEMENT_FILE_GROUPS          = "file_groups";
     String ELEMENT_GROUP                = "group";
     String ELEMENT_TERMINAL             = "terminal";
+    String ELEMENT_HEX_VIEWER           = "hex_viewer";
 
 
 
@@ -116,6 +117,10 @@ interface ThemeXmlConstants {
     String ELEMENT_OK                            = "ok";
     String ELEMENT_WARNING                       = "warning";
     String ELEMENT_CRITICAL                      = "critical";
+    String ELEMENT_ASCII_FOREGROUND              = "ascii_foreground";
+    String ELEMENT_ASCII_BACKGROUND              = "ascii_background";
+    String ELEMENT_OFFSET_FOREGROUND             = "offset_foreground";
     String ATTRIBUTE_COLOR                       = "color";
     String ATTRIBUTE_ALPHA                       = "alpha";
+
 }

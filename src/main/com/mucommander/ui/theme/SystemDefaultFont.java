@@ -62,10 +62,10 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
      * @param property {@link UIManager} property to query for the default font.
      * @param mapper   component mapper to use when the {@link UIManager} property isn't set.
      */
-    public SystemDefaultFont(String property, ComponentMapper mapper) {
+    SystemDefaultFont(String property, ComponentMapper mapper) {
         UIManager.addPropertyChangeListener(this);
         this.property = property;
-        this.mapper   = mapper;
+        this.mapper = mapper;
     }
 
 

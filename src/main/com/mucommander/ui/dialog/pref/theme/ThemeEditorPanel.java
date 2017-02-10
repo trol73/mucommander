@@ -70,7 +70,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param title     title of the panel.
      * @param themeData data that is being edited.
      */
-    public ThemeEditorPanel(PreferencesDialog parent, String title, ThemeData themeData) {
+    ThemeEditorPanel(PreferencesDialog parent, String title, ThemeData themeData) {
         super(parent, title);
 
         this.themeData = themeData;
@@ -89,7 +89,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param  dictionaryKey name of the dictionary entry to use in the label.
      * @return               a caption label containing the specified localised entry.
      */
-    protected JLabel createCaptionLabel(String dictionaryKey) {
+    JLabel createCaptionLabel(String dictionaryKey) {
         JLabel captionLabel = new JLabel(Translator.get(dictionaryKey));
         captionLabel.setFont(captionLabelFont);
         captionLabel.setForeground(captionTextColor);
@@ -102,7 +102,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param title label title
      * @return a caption label containing the specified entry.
      */
-    protected JLabel createCaptionLabelWithTitle(String title) {
+    JLabel createCaptionLabelWithTitle(String title) {
         JLabel captionLabel = new JLabel(title);
         captionLabel.setFont(captionLabelFont);
         captionLabel.setForeground(captionTextColor);
@@ -120,7 +120,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * </p>
      * @param panel panel in which to add the label row.
      */
-    protected void addLabelRow(ProportionalGridPanel panel) {addLabelRow(panel, true);}
+    void addLabelRow(ProportionalGridPanel panel) {addLabelRow(panel, true);}
 
     /**
      * Adds a row with standard color type labels.
@@ -133,7 +133,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param panel          panel in which to add the label row.
      * @param includePreview whether or not to add the <code>preview</code> label.
      */
-    protected void addLabelRow(ProportionalGridPanel panel, boolean includePreview) {
+    void addLabelRow(ProportionalGridPanel panel, boolean includePreview) {
         // Skips first column.
         panel.add(new JLabel());
 
@@ -142,8 +142,9 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         panel.add(createCaptionLabel("theme_editor.background"));
 
         // Adds the preview label if requested.
-        if (includePreview)
+        if (includePreview) {
             panel.add(createCaptionLabel("preview"));
+        }
     }
 
 
@@ -154,14 +155,12 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * Creates a font chooser that will keep the specified font up-to-date in the current theme data.
      * @param fontId identifier of the font this chooser will be editing.
      */
-    protected FontChooser createFontChooser(int fontId) {
-        FontChooser    fontChooser; // Font chooser that will be returned.
-        ChangeListener listener;    // Internal listener.
-
+    FontChooser createFontChooser(int fontId) {
         // Initialises the font chooser.
-        fontChooser = new FontChooser(themeData.getFont(fontId));
+        FontChooser fontChooser = new FontChooser(themeData.getFont(fontId));
         fontChooser.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.font")));
-        fontChooser.addChangeListener(listener = new ThemeFontChooserListener(themeData, fontId, parent));
+        ChangeListener listener = new ThemeFontChooserListener(themeData, fontId, parent);
+        fontChooser.addChangeListener(listener);
 
         // Hold a reference to this listener to prevent garbage collection
         listenerReferences.add(listener);
@@ -178,7 +177,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param fontChooser      chooser to monitor.
      * @param previewComponent component whose font should be tied to that of the chooser
      */
-    protected void addFontChooserListener(FontChooser fontChooser, JComponent previewComponent) {
+    void addFontChooserListener(FontChooser fontChooser, JComponent previewComponent) {
         // Update button font when a new font has been chosen in the FontChooser
         if (fontChooser != null) {
             ChangeListener listener;
@@ -201,10 +200,8 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * </p>
      * @param panel panel to wrap in a <code>JScrollPane</code>.
      */
-    protected JComponent createScrollPane(JPanel panel) {
-        JScrollPane scrollPane;
-
-        scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    JComponent createScrollPane(JPanel panel) {
+        JScrollPane scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(null);
 
         return scrollPane;
@@ -225,7 +222,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param foregroundId identifier of the color to display in the foreground button.
      * @param backgroundId identifier of the color to display in the background button.
      */
-    protected PreviewLabel addColorButtons(ProportionalGridPanel gridPanel, FontChooser fontChooser, String label, int foregroundId, int backgroundId) {
+    PreviewLabel addColorButtons(ProportionalGridPanel gridPanel, FontChooser fontChooser, String label, int foregroundId, int backgroundId) {
         return addColorButtons(gridPanel, fontChooser, label, foregroundId, backgroundId, null);
     }
 
@@ -244,7 +241,8 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param backgroundId identifier of the color to display in the background button.
      * @param comp         component to register as a listener on the color buttons.
      */
-    protected PreviewLabel addColorButtons(ProportionalGridPanel gridPanel, FontChooser fontChooser, String label, int foregroundId, int backgroundId, JComponent comp) {
+    PreviewLabel addColorButtons(ProportionalGridPanel gridPanel, FontChooser fontChooser, String label, int foregroundId,
+                                 int backgroundId, JComponent comp) {
         // Adds the row's caption label.
         gridPanel.add(createCaptionLabel(label));
 
@@ -253,21 +251,26 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         previewLabel.setTextPainted(true);
         addFontChooserListener(fontChooser, previewLabel);
 
-        ColorButton colorButton;
         // Creates the foreground color button.
         if (foregroundId >= 0 ) {
-            gridPanel.add(colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel));
-            if (comp != null)
+            ColorButton colorButton = new ColorButton(parent, themeData, foregroundId, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel);
+            gridPanel.add(colorButton);
+            if (comp != null) {
                 colorButton.addUpdatedPreviewComponent(comp);
+            }
         } else {
-            gridPanel.add(new JLabel());
+            gridPanel.add(Box.createHorizontalGlue());
         }
 
         // Creates the background color button.
         if (backgroundId >= 0) {
-            gridPanel.add(colorButton = new ColorButton(parent, themeData, backgroundId, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel));
-            if (comp != null)
+            ColorButton colorButton = new ColorButton(parent, themeData, backgroundId, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel);
+            gridPanel.add(colorButton);
+            if (comp != null) {
                 colorButton.addUpdatedPreviewComponent(comp);
+            }
+        } else {
+            gridPanel.add(Box.createHorizontalGlue());
         }
 
         return previewLabel;
@@ -287,7 +290,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         /** Theme data in which to update the font when it changes. */
         private ThemeData data;
         /** Identifier of the font we're listening on. */
-        private int       fontId;
+        private int fontId;
         /** Parent dialog of this panel **/
         private PreferencesDialog dialog;
 
@@ -299,7 +302,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
          * @param data   theme data to modify when change events are received.
          * @param fontId identifier of the font that is being listened on.
          */
-        public ThemeFontChooserListener(ThemeData data, int fontId, PreferencesDialog dialog) {
+        ThemeFontChooserListener(ThemeData data, int fontId, PreferencesDialog dialog) {
             this.data   = data;
             this.fontId = fontId;
             this.dialog = dialog;
@@ -327,8 +330,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         // - Instance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Component to update when the font has changed. */
-        private JComponent preview;
-
+        private final JComponent preview;
 
 
         // - Initialisation --------------------------------------------------------------
@@ -337,7 +339,9 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
          * Creates a new instance of <code>PreviewFontChooserListener</code>.
          * @param preview component to update when the font has changed.
          */
-        public PreviewFontChooserListener(JComponent preview) {this.preview = preview;}
+        PreviewFontChooserListener(JComponent preview) {
+            this.preview = preview;
+        }
 
 
 
@@ -346,6 +350,8 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         /**
          * Updates the preview component.
          */
-        public void stateChanged(ChangeEvent event) {preview.setFont(((FontChooser)event.getSource()).getCurrentFont());}
+        public void stateChanged(ChangeEvent event) {
+            preview.setFont(((FontChooser)event.getSource()).getCurrentFont());
+        }
     }
 }

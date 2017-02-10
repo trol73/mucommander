@@ -14,17 +14,22 @@ public class ViewerHexTableModel extends AbstractTableModel {
     protected final boolean[] VISIBLE_SYMBOLS = new boolean[256];
     protected long fileSize;
 
-    private int hexDataColumns = 16*2;
+    private final int hexDataColumns;
     protected final AbstractByteBuffer buffer;
 
 
 
 
-    public ViewerHexTableModel(AbstractByteBuffer byteBuffer) {
+    public ViewerHexTableModel(AbstractByteBuffer byteBuffer, int columns) {
         this.buffer = byteBuffer;
         for (int i = 0; i < VISIBLE_SYMBOLS.length; i++) {
             VISIBLE_SYMBOLS[i] = i > 0;
         }
+        this.hexDataColumns = columns;
+    }
+
+    public ViewerHexTableModel(AbstractByteBuffer byteBuffer) {
+        this(byteBuffer, 32);
     }
 
 

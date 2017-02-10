@@ -133,7 +133,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param iconName  name of the icon that represents this dialog.
      * @param scroll    whether this panel should be wrapped in a scroll panel.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel, String iconName, boolean scroll) {
+    private void addPreferencesPanel(PreferencesPanel prefPanel, String iconName, boolean scroll) {
         tabbedPane.addTab(prefPanel.getTitle(), IconManager.getIcon(IconManager.IconSet.PREFERENCES, iconName), getTabbedPanel(prefPanel, scroll));
         prefPanels.add(prefPanel);
     }
@@ -143,7 +143,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param prefPanel panel to add.
      * @param iconName  name of the icon that represents this dialog.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel, String iconName) {
+    protected void addPreferencesPanel(PreferencesPanel prefPanel, String iconName) {
         addPreferencesPanel(prefPanel, iconName, true);
     }
 
@@ -152,7 +152,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * @param prefPanel panel to add.
      * @param scroll    whether this panel should be wrapped in a scroll panel.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel, boolean scroll) {
+    protected void addPreferencesPanel(PreferencesPanel prefPanel, boolean scroll) {
         tabbedPane.addTab(prefPanel.getTitle(), getTabbedPanel(prefPanel, scroll));
         prefPanels.add(prefPanel);
     }
@@ -161,7 +161,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Adds the specified preferences panel to this dialog.
      * @param prefPanel panel to add.
      */
-    public void addPreferencesPanel(PreferencesPanel prefPanel) {
+    protected void addPreferencesPanel(PreferencesPanel prefPanel) {
         addPreferencesPanel(prefPanel, true);
     }
 
@@ -230,7 +230,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Returns the index of the currently selected configuration panel.
      * @return the index of the currently selected configuration panel.
      */
-    public int getSelectedPanelIndex() {
+    protected int getSelectedPanelIndex() {
         return tabbedPane.getSelectedIndex();
     }
     

@@ -17,50 +17,31 @@
  */
 package ru.trolsoft.hexeditor.data;
 
-import java.io.*;
+import java.io.IOException;
 
-
-public class FileByteBuffer extends AbstractByteBuffer {
-
-    private final String filePath;
-    private final String fileMode;
-    private RandomAccessFile file;
-
-    public FileByteBuffer(String filePath, String fileMode, int capacity) {
+/**
+ * @author Oleg Trifonov
+ * Created on 08/02/17.
+ */
+public class MemoryByteBuffer extends AbstractByteBuffer {
+    public MemoryByteBuffer(int capacity) {
         super(capacity);
-        this.filePath = filePath;
-        this.fileMode = fileMode;
+        size = capacity;
+        streamSize = capacity;
     }
-
-
-    public FileByteBuffer(String filePath, String fileMode) {
-        this(filePath, fileMode, DEFAULT_CAPACITY);
-    }
-
-    private RandomAccessFile getFile() throws FileNotFoundException {
-        if (file == null) {
-            file = new RandomAccessFile(filePath, fileMode);
-        }
-        return file;
-    }
-
 
     @Override
     protected void closeStream() throws IOException {
-        if (file != null) {
-            file.close();
-        }
+
     }
 
     @Override
     protected long getStreamSize() throws IOException {
-        return getFile().length();
+        return capacity;
     }
 
     @Override
     protected void loadBuffer() throws IOException {
-        getFile().seek(offset);
-        size = getFile().read(buffer);
     }
 
     @Override
@@ -68,5 +49,17 @@ public class FileByteBuffer extends AbstractByteBuffer {
         return true;
     }
 
+    @Override
+    public long getFileSize() throws IOException {
+        return capacity;
+    }
 
+    @Override
+    public byte getByte(long offset) {
+        return buffer[(int)offset];
+    }
+
+    public void setByte(long offset, int val) {
+        buffer[(int)offset] = (byte)val;
+    }
 }

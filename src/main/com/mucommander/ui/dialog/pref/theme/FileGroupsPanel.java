@@ -26,6 +26,7 @@ import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
 import com.mucommander.ui.main.table.FileGroupResolver;
 import com.mucommander.ui.theme.ThemeData;
+import com.mucommander.ui.theme.ThemeId;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,7 +38,7 @@ import java.awt.BorderLayout;
 /**
  * @author Oleg Trifonov
  */
-public class FileGroupsPanel extends ThemeEditorPanel {
+public class FileGroupsPanel extends ThemeEditorPanel implements ThemeId {
 
     private static final int NUMBER_OF_GROUPS = 10;
 
@@ -50,7 +51,7 @@ public class FileGroupsPanel extends ThemeEditorPanel {
      * @param parent   dialog containing the panel
      * @param data     theme to edit.
      */
-    public FileGroupsPanel(final PreferencesDialog parent, ThemeData data) {
+    FileGroupsPanel(final PreferencesDialog parent, ThemeData data) {
         super(parent, Translator.get("theme_editor.file_groups"), data);
 
         DocumentListener documentListener = new DocumentListener() {
@@ -81,7 +82,7 @@ public class FileGroupsPanel extends ThemeEditorPanel {
             MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
             String mask = prefs.getVariable(preference);
             gridPanel.add(createCaptionLabelWithTitle(Translator.get("theme_editor.group_") + " " + (i+1)));
-            ColorButton colorButton  = new ColorButton(parent, themeData, ThemeData.FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
+            ColorButton colorButton  = new ColorButton(parent, themeData, FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
             gridPanel.add(colorButton);
             fileMasks[i] = new JTextField(24);
             fileMasks[i].setText(mask);

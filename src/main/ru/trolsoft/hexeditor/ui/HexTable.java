@@ -1,6 +1,7 @@
 package ru.trolsoft.hexeditor.ui;
 
 
+import com.mucommander.profiler.Profiler;
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 
 import javax.swing.JTable;
@@ -8,7 +9,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class HexTable extends JTable {
     private Color alternateCellColor;
     private Color offsetColor;
     private Color asciiDumpColor;
-    private Color highlightSelectionInAsciiDumpColor;
+    private Color selectionAsciiBackgroundColor;
     private boolean alternateRowBackground;
     private boolean alternateColumnBackground;
     private long leadSelectionIndex;
@@ -547,21 +547,24 @@ public class HexTable extends JTable {
         return asciiDumpColor;
     }
 
+
     /**
      *
      * @param color background color of highlighted section in ascii dump
      */
-    public void setHighlightSelectionInAsciiDumpColor(Color color) {
-        this.highlightSelectionInAsciiDumpColor = color;
+    public void setAsciiSelectionBackgroundColor(Color color) {
+        this.selectionAsciiBackgroundColor = color;
     }
 
     /**
      *
      * @return background color of highlighted section in ascii dump
      */
-    public Color getHighlightSelectionInAsciiDumpColor() {
-        return highlightSelectionInAsciiDumpColor;
+    public Color getSelectionAsciiBackgroundColor() {
+        return selectionAsciiBackgroundColor;
     }
+
+
 
 
     /**
@@ -746,7 +749,7 @@ public class HexTable extends JTable {
             int y = (getHeight() - fontHeight)/2 + fontAscent;
 
             if (highlight.x >= 0) {
-                g.setColor(highlightSelectionInAsciiDumpColor);
+                g.setColor(selectionAsciiBackgroundColor);
                 g.fillRect(x + highlight.x * widthOfW, 0, (highlight.y - highlight.x + 1) * widthOfW, getRowHeight());
             }
 

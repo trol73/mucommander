@@ -49,7 +49,7 @@ class FilePanel extends ThemeEditorPanel {
      * @param data     theme to edit.
      * @param fontChooser  File table font chooser.
      */
-    public FilePanel(PreferencesDialog parent, boolean isActive, ThemeData data, FontChooser fontChooser) {
+	FilePanel(PreferencesDialog parent, boolean isActive, ThemeData data, FontChooser fontChooser) {
         super(parent, Translator.get(isActive ? "theme_editor.active_panel" : "theme_editor.inactive_panel"), data);
         initUI(isActive, fontChooser);
     }
@@ -177,7 +177,7 @@ class FilePanel extends ThemeEditorPanel {
     @Override
     public void commit() {}
 
-	public void setCopyColorButtonsSource(PreferencesPanel otherPanelsColorButtonsContainer) {
+	void setCopyColorButtonsSource(PreferencesPanel otherPanelsColorButtonsContainer) {
 		copyColorsButton.setSource(otherPanelsColorButtonsContainer);
 	}
 }

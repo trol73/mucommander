@@ -14,7 +14,7 @@ class FilePanelColorIds {
 	private final Map<Integer, Integer> colorMap;
 	private final Map<Integer, Integer> reverseColorMap;
 
-	public FilePanelColorIds() {
+	FilePanelColorIds() {
 		super();
 
 		colorMap = new HashMap<>();
@@ -38,9 +38,7 @@ class FilePanelColorIds {
 		add(FILE_TABLE_BORDER_COLOR, FILE_TABLE_INACTIVE_BORDER_COLOR);
 		add(FILE_TABLE_SELECTED_OUTLINE_COLOR, FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR);
 		
-		reverseColorMap = colorMap.entrySet().stream().collect(Collectors.toMap(
-				e -> e.getValue(), 
-				e -> e.getKey()));
+		reverseColorMap = colorMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 	}
 
 	/**
@@ -52,12 +50,8 @@ class FilePanelColorIds {
 	 *            the id of the color in the active file panel
 	 * @return the id of the active or inactive panel depending on <code>isActive</code>
 	 */
-	public int getIdByActive(boolean isActive, int activeColorId) {
-		if (isActive) {
-			return activeColorId;
-		} else {
-			return colorMap.get(activeColorId);
-		}
+	int getIdByActive(boolean isActive, int activeColorId) {
+		return isActive ? activeColorId : colorMap.get(activeColorId);
 	}
 
 	/**
@@ -69,12 +63,8 @@ class FilePanelColorIds {
 	 *            the id of the color in the inactive file panel
 	 * @return the id of the active or inactive panel depending on <code>isActive</code>
 	 */
-	public int getIdByInactive(boolean isActive, int inactiveColorId) {
-		if (!isActive) {
-			return inactiveColorId;
-		} else {
-			return reverseColorMap.get(inactiveColorId);
-		}
+	int getIdByInactive(boolean isActive, int inactiveColorId) {
+		return isActive ? reverseColorMap.get(inactiveColorId) : inactiveColorId;
 	}
 
 	private void add(int active, int inactive) {

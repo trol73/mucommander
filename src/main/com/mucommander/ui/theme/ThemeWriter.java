@@ -30,7 +30,7 @@ import java.io.OutputStream;
  * Class used to save themes in XML format.
  * @author Nicolas Rinaudo
  */
-class ThemeWriter implements ThemeXmlConstants {
+class ThemeWriter implements ThemeXmlConstants, ThemeId {
     // - Initialisation ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
@@ -59,56 +59,41 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
 
         // Global values.
-        if(theme.isColorSet(Theme.FILE_TABLE_BORDER_COLOR))
-            out.writeStandAloneElement(ELEMENT_BORDER, getColorAttributes(theme.getColor(Theme.FILE_TABLE_BORDER_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_BORDER_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_BORDER, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_BORDER_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_SELECTED_OUTLINE_COLOR))
-            out.writeStandAloneElement(ELEMENT_OUTLINE, getColorAttributes(theme.getColor(Theme.FILE_TABLE_SELECTED_OUTLINE_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_OUTLINE, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR)));
-        if(theme.isFontSet(Theme.FILE_TABLE_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.FILE_TABLE_FONT)));
+        writeColor(theme, out, FILE_TABLE_BORDER_COLOR, ELEMENT_BORDER);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_BORDER_COLOR, ELEMENT_INACTIVE_BORDER);
+        writeColor(theme, out, FILE_TABLE_SELECTED_OUTLINE_COLOR, ELEMENT_OUTLINE);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR, ELEMENT_INACTIVE_OUTLINE);
+        writeFont(theme, out, FILE_TABLE_FONT, ELEMENT_FONT);
 
         // Normal background colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.FILE_TABLE_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR)));
+        writeColor(theme, out, FILE_TABLE_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_BACKGROUND_COLOR, ELEMENT_INACTIVE_BACKGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected background colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.FILE_TABLE_SELECTED_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_SELECTED_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_SECONDARY_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_SECONDARY_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR)));
+        writeColor(theme, out, FILE_TABLE_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR, ELEMENT_INACTIVE_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_SELECTED_SECONDARY_BACKGROUND_COLOR, ELEMENT_INACTIVE_SECONDARY_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_SELECTED_SECONDARY_BACKGROUND_COLOR, ELEMENT_SECONDARY_BACKGROUND);
 
         out.endElement(ELEMENT_SELECTED);
 
         // Alternate background colors.
         out.startElement(ELEMENT_ALTERNATE);
         out.println();
-        if(theme.isColorSet(Theme.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR)));
+        writeColor(theme, out, FILE_TABLE_ALTERNATE_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR, ELEMENT_INACTIVE_BACKGROUND);
         out.endElement(ELEMENT_ALTERNATE);
 
         // Unmatched colors.
         out.startElement(ELEMENT_UNMATCHED);
         out.println();
-        if(theme.isColorSet(Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR)));
+        writeColor(theme, out, FILE_TABLE_UNMATCHED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_UNMATCHED);
 
         // Hidden files.
@@ -116,17 +101,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.HIDDEN_FILE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.HIDDEN_FILE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR)));
+        writeColor(theme, out, HIDDEN_FILE_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_HIDDEN);
 
@@ -135,17 +116,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.FOLDER_INACTIVE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.FOLDER_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FOLDER_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.FOLDER_FOREGROUND_COLOR)));
+        writeColor(theme, out, FOLDER_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, FOLDER_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FOLDER_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.FOLDER_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, FOLDER_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_FOLDER);
 
@@ -154,17 +131,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.ARCHIVE_INACTIVE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.ARCHIVE_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.ARCHIVE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.ARCHIVE_FOREGROUND_COLOR)));
+        writeColor(theme, out, ARCHIVE_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, ARCHIVE_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.ARCHIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.ARCHIVE_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, ARCHIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_ARCHIVE);
 
@@ -173,17 +146,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.SYMLINK_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.SYMLINK_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.SYMLINK_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SYMLINK_FOREGROUND_COLOR)));
+        writeColor(theme, out, SYMLINK_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, SYMLINK_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.SYMLINK_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SYMLINK_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, SYMLINK_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_SYMLINK);
 
@@ -192,17 +161,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.MARKED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.MARKED_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.MARKED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.MARKED_FOREGROUND_COLOR)));
+        writeColor(theme, out, MARKED_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, MARKED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.MARKED_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.MARKED_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, MARKED_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_MARKED);
 
@@ -211,17 +176,13 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.EXECUTABLE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.EXECUTABLE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_FOREGROUND_COLOR)));
+        writeColor(theme, out, EXECUTABLE_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, EXECUTABLE_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.EXECUTABLE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EXECUTABLE_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, EXECUTABLE_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_EXECUTABLE);
 
@@ -230,21 +191,16 @@ class ThemeWriter implements ThemeXmlConstants {
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.FILE_INACTIVE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.FILE_INACTIVE_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.FILE_FOREGROUND_COLOR)));
+        writeColor(theme, out, FILE_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, FILE_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_INACTIVE_FOREGROUND, getColorAttributes(theme.getColor(Theme.FILE_INACTIVE_SELECTED_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.FILE_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.FILE_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        writeColor(theme, out, FILE_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_FILE);
         out.endElement(ELEMENT_TABLE);
-
 
         // File groups
         out.startElement(ELEMENT_FILE_GROUPS);
@@ -252,11 +208,7 @@ class ThemeWriter implements ThemeXmlConstants {
         for (int i = 0; i < 10; i++) {
             out.startElement(ELEMENT_GROUP + (i+1));
             out.println();
-
-            if (theme.isColorSet(Theme.FILE_GROUP_1_FOREGROUND_COLOR+i)) {
-                out.writeStandAloneElement(ELEMENT_NORMAL, getColorAttributes(theme.getColor(Theme.FILE_GROUP_1_FOREGROUND_COLOR + i)));
-            }
-
+            writeColor(theme, out, FILE_GROUP_1_FOREGROUND_COLOR+i, ELEMENT_NORMAL);
             out.endElement(ELEMENT_GROUP + (i+1));
         }
         out.endElement(ELEMENT_FILE_GROUPS);
@@ -266,30 +218,20 @@ class ThemeWriter implements ThemeXmlConstants {
         // -------------------------------------------------------------------------------
         out.startElement(ELEMENT_SHELL);
         out.println();
-        if (theme.isFontSet(Theme.SHELL_FONT)) {
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.SHELL_FONT)));
-        }
+        writeFont(theme, out, SHELL_FONT, ELEMENT_FONT);
 
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if (theme.isColorSet(Theme.SHELL_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.SHELL_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.SHELL_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SHELL_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, SHELL_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, SHELL_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if (theme.isColorSet(Theme.SHELL_SELECTED_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.SHELL_SELECTED_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.SHELL_SELECTED_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SHELL_SELECTED_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, SHELL_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, SHELL_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_SHELL);
 
@@ -298,29 +240,20 @@ class ThemeWriter implements ThemeXmlConstants {
         // -------------------------------------------------------------------------------
         out.startElement(ELEMENT_SHELL_HISTORY);
         out.println();
-        if(theme.isFontSet(Theme.SHELL_HISTORY_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.SHELL_HISTORY_FONT)));
+        writeFont(theme, out, SHELL_HISTORY_FONT, ELEMENT_FONT);
 
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if (theme.isColorSet(Theme.SHELL_HISTORY_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.SHELL_HISTORY_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.SHELL_HISTORY_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SHELL_HISTORY_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, SHELL_HISTORY_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, SHELL_HISTORY_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if (theme.isColorSet(Theme.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.SHELL_HISTORY_SELECTED_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.SHELL_HISTORY_SELECTED_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, SHELL_HISTORY_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, SHELL_HISTORY_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_SHELL_HISTORY);
 
@@ -328,29 +261,20 @@ class ThemeWriter implements ThemeXmlConstants {
         // -------------------------------------------------------------------------------
         out.startElement(ELEMENT_TERMINAL);
         out.println();
-        if(theme.isFontSet(Theme.TERMINAL_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.TERMINAL_FONT)));
+        writeFont(theme, out, TERMINAL_FONT, ELEMENT_FONT);
 
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if (theme.isColorSet(Theme.TERMINAL_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.TERMINAL_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.TERMINAL_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.TERMINAL_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, TERMINAL_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, TERMINAL_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if (theme.isColorSet(Theme.TERMINAL_SELECTED_BACKGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.TERMINAL_SELECTED_BACKGROUND_COLOR)));
-        }
-        if (theme.isColorSet(Theme.TERMINAL_SELECTED_FOREGROUND_COLOR)) {
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.TERMINAL_SELECTED_FOREGROUND_COLOR)));
-        }
+        writeColor(theme, out, TERMINAL_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, TERMINAL_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_TERMINAL);
 
@@ -359,63 +283,76 @@ class ThemeWriter implements ThemeXmlConstants {
         // -------------------------------------------------------------------------------
         out.startElement(ELEMENT_EDITOR);
         out.println();
-        if(theme.isFontSet(Theme.EDITOR_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.EDITOR_FONT)));
+        writeFont(theme, out, EDITOR_FONT, ELEMENT_FONT);
 
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.EDITOR_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.EDITOR_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_FOREGROUND_COLOR)));
+        writeColor(theme, out, EDITOR_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, EDITOR_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.EDITOR_SELECTED_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_SELECTED_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.EDITOR_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, EDITOR_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, EDITOR_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
 
         // Current line
         out.startElement(ELEMENT_CURRENT);
         out.println();
-        if(theme.isColorSet(Theme.EDITOR_CURRENT_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR)));
+        writeColor(theme, out, EDITOR_CURRENT_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
         out.endElement(ELEMENT_CURRENT);
         out.endElement(ELEMENT_EDITOR);
+
+        // - Hex viewer description ------------------------------------------------------
+        // -------------------------------------------------------------------------------
+        out.startElement(ELEMENT_HEX_VIEWER);
+        out.println();
+        writeFont(theme, out, HEX_VIEWER_FONT, ELEMENT_FONT);
+
+        // Normal colors
+        out.startElement(ELEMENT_NORMAL);
+        out.println();
+        writeColor(theme, out, HEX_VIEWER_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, HEX_VIEWER_HEX_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HEX_VIEWER_ALTERNATE_BACKGROUND_COLOR, ELEMENT_SECONDARY_BACKGROUND);
+        writeColor(theme, out, HEX_VIEWER_ASCII_FOREGROUND_COLOR, ELEMENT_ASCII_FOREGROUND);
+        writeColor(theme, out, HEX_VIEWER_OFFSET_FOREGROUND_COLOR, ELEMENT_OFFSET_FOREGROUND);
+        out.endElement(ELEMENT_NORMAL);
+
+        // Selected colors
+        out.startElement(ELEMENT_SELECTED);
+        out.println();
+        writeColor(theme, out, HEX_VIEWER_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, HEX_VIEWER_SELECTED_DUMP_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR, ELEMENT_ASCII_BACKGROUND);
+        out.endElement(ELEMENT_SELECTED);
+
+        out.endElement(ELEMENT_HEX_VIEWER);
 
         // - Location bar description ----------------------------------------------------
         // -------------------------------------------------------------------------------
         out.startElement(ELEMENT_LOCATION_BAR);
         out.println();
-        if(theme.isFontSet(Theme.LOCATION_BAR_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.LOCATION_BAR_FONT)));
-        if(theme.isColorSet(Theme.LOCATION_BAR_PROGRESS_COLOR))
-            out.writeStandAloneElement(ELEMENT_PROGRESS, getColorAttributes(theme.getColor(Theme.LOCATION_BAR_PROGRESS_COLOR)));
+        writeFont(theme, out, LOCATION_BAR_FONT, ELEMENT_FONT);
+        writeColor(theme, out, LOCATION_BAR_PROGRESS_COLOR, ELEMENT_PROGRESS);
 
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.LOCATION_BAR_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.LOCATION_BAR_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.LOCATION_BAR_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.LOCATION_BAR_FOREGROUND_COLOR)));
+        writeColor(theme, out, LOCATION_BAR_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, LOCATION_BAR_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_NORMAL);
 
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.LOCATION_BAR_SELECTED_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.LOCATION_BAR_SELECTED_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.LOCATION_BAR_SELECTED_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.LOCATION_BAR_SELECTED_FOREGROUND_COLOR)));
+        writeColor(theme, out, LOCATION_BAR_SELECTED_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, LOCATION_BAR_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_LOCATION_BAR);
-
 
 
         // - Volume label description ----------------------------------------------------
@@ -423,22 +360,15 @@ class ThemeWriter implements ThemeXmlConstants {
         out.startElement(ELEMENT_STATUS_BAR);
         out.println();
         // Font.
-        if(theme.isFontSet(Theme.STATUS_BAR_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.STATUS_BAR_FONT)));
+        writeFont(theme, out, STATUS_BAR_FONT, ELEMENT_FONT);
 
         // Colors.
-        if(theme.isColorSet(Theme.STATUS_BAR_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.STATUS_BAR_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.STATUS_BAR_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.STATUS_BAR_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.STATUS_BAR_BORDER_COLOR))
-            out.writeStandAloneElement(ELEMENT_BORDER, getColorAttributes(theme.getColor(Theme.STATUS_BAR_BORDER_COLOR)));
-        if(theme.isColorSet(Theme.STATUS_BAR_OK_COLOR))
-            out.writeStandAloneElement(ELEMENT_OK, getColorAttributes(theme.getColor(Theme.STATUS_BAR_OK_COLOR)));
-        if(theme.isColorSet(Theme.STATUS_BAR_WARNING_COLOR))
-            out.writeStandAloneElement(ELEMENT_WARNING, getColorAttributes(theme.getColor(Theme.STATUS_BAR_WARNING_COLOR)));
-        if(theme.isColorSet(Theme.STATUS_BAR_CRITICAL_COLOR))
-            out.writeStandAloneElement(ELEMENT_CRITICAL, getColorAttributes(theme.getColor(Theme.STATUS_BAR_CRITICAL_COLOR)));
+        writeColor(theme, out, STATUS_BAR_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, STATUS_BAR_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, STATUS_BAR_BORDER_COLOR, ELEMENT_BORDER);
+        writeColor(theme, out, STATUS_BAR_OK_COLOR, ELEMENT_OK);
+        writeColor(theme, out, STATUS_BAR_WARNING_COLOR, ELEMENT_WARNING);
+        writeColor(theme, out, STATUS_BAR_CRITICAL_COLOR, ELEMENT_CRITICAL);
         out.endElement(ELEMENT_STATUS_BAR);
 
 
@@ -452,39 +382,30 @@ class ThemeWriter implements ThemeXmlConstants {
         out.startElement(ELEMENT_HEADER);
         out.println();
         // Font.
-        if(theme.isFontSet(Theme.QUICK_LIST_HEADER_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.QUICK_LIST_HEADER_FONT)));
+        writeFont(theme, out, QUICK_LIST_HEADER_FONT, ELEMENT_FONT);
         // Colors.
-        if(theme.isColorSet(Theme.QUICK_LIST_HEADER_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_HEADER_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.QUICK_LIST_HEADER_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_HEADER_BACKGROUND_COLOR)));
-        if(theme.isColorSet(Theme.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_SECONDARY_BACKGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR)));
+        writeColor(theme, out, QUICK_LIST_HEADER_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, QUICK_LIST_HEADER_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
+        writeColor(theme, out, QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, ELEMENT_SECONDARY_BACKGROUND);
         out.endElement(ELEMENT_HEADER);
         
         // Quick list item
         out.startElement(ELEMENT_ITEM);
         out.println();
         // Font.
-        if(theme.isFontSet(Theme.QUICK_LIST_ITEM_FONT))
-            out.writeStandAloneElement(ELEMENT_FONT, getFontAttributes(theme.getFont(Theme.QUICK_LIST_ITEM_FONT)));
+        writeFont(theme, out, QUICK_LIST_ITEM_FONT, ELEMENT_FONT);
         // Colors.
         // Normal colors.
         out.startElement(ELEMENT_NORMAL);
         out.println();
-        if(theme.isColorSet(Theme.QUICK_LIST_ITEM_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_ITEM_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.QUICK_LIST_ITEM_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_ITEM_BACKGROUND_COLOR)));
+        writeColor(theme, out, QUICK_LIST_ITEM_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, QUICK_LIST_ITEM_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
         out.endElement(ELEMENT_NORMAL);
         // Selected colors.
         out.startElement(ELEMENT_SELECTED);
         out.println();
-        if(theme.isColorSet(Theme.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_FOREGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR)));
-        if(theme.isColorSet(Theme.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR))
-            out.writeStandAloneElement(ELEMENT_BACKGROUND, getColorAttributes(theme.getColor(Theme.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR)));
+        writeColor(theme, out, QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR, ELEMENT_BACKGROUND);
         out.endElement(ELEMENT_SELECTED);
         out.endElement(ELEMENT_ITEM);
         out.endElement(ELEMENT_QUICK_LIST);
@@ -509,10 +430,12 @@ class ThemeWriter implements ThemeXmlConstants {
         attributes.add(ATTRIBUTE_SIZE, Integer.toString(font.getSize()));
 
         // Font style.
-        if(font.isBold())
+        if (font.isBold()) {
             attributes.add(ATTRIBUTE_BOLD, VALUE_TRUE);
-        if(font.isItalic())
+        }
+        if (font.isItalic()) {
             attributes.add(ATTRIBUTE_ITALIC, VALUE_TRUE);
+        }
 
         return attributes;
     }
@@ -526,33 +449,49 @@ class ThemeWriter implements ThemeXmlConstants {
         StringBuilder buffer = new StringBuilder(); // Used to build the color's string representation.
 
         // Red component.
-        if(color.getRed() < 16)
+        if (color.getRed() < 16) {
             buffer.append('0');
+        }
         buffer.append(Integer.toString(color.getRed(), 16));
 
         // Green component.
-        if(color.getGreen() < 16)
+        if (color.getGreen() < 16) {
             buffer.append('0');
+        }
         buffer.append(Integer.toString(color.getGreen(), 16));
 
         // Blue component.
-        if(color.getBlue() < 16)
+        if (color.getBlue() < 16) {
             buffer.append('0');
+        }
         buffer.append(Integer.toString(color.getBlue(), 16));
 
         // Builds the XML attributes.
         XmlAttributes attributes = new XmlAttributes(); // Stores the color's description.
         attributes.add(ATTRIBUTE_COLOR, buffer.toString());
 
-        if(color.getAlpha() != 255) {
+        if (color.getAlpha() != 255) {
             buffer.setLength(0);
-            if(color.getAlpha() < 16)
+            if (color.getAlpha() < 16) {
                 buffer.append('0');
+            }
             buffer.append(Integer.toString(color.getAlpha(), 16));
             attributes.add(ATTRIBUTE_ALPHA, buffer.toString());
         }
 
         return attributes;
+    }
+
+    private static void writeColor(ThemeData theme, XmlWriter out, int colorId, String name) throws IOException {
+        if (theme.isColorSet(colorId)) {
+            out.writeStandAloneElement(name, getColorAttributes(theme.getColor(colorId)));
+        }
+    }
+
+    private static void writeFont(ThemeData theme, XmlWriter out, int fontId, String name) throws IOException {
+        if (theme.isFontSet(fontId)) {
+            out.writeStandAloneElement(name, getFontAttributes(theme.getFont(fontId)));
+        }
     }
 
 }

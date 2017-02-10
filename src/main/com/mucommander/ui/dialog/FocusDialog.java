@@ -78,6 +78,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     private static long lastCreateTime;
     private static String lastCreateTitle;
+    private static Class lastTreateClass;
     /**
      * Saved to restore focus
      */
@@ -90,16 +91,21 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (owner != null) {
             ownerFocusedComponent = owner.getFocusOwner();
         }
+        boolean kill = false;
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250) {
-                dispose();
-                throw new RuntimeException("EventDispatchThread error");
+            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+                kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
+        lastTreateClass = getClass();
+        if (kill) {
+            dispose();
+            throw new RuntimeException("EventDispatchThread error");
+        }
     }
 
     public FocusDialog(Dialog owner, String title, Component locationRelativeComp) {
@@ -109,16 +115,21 @@ public class FocusDialog extends JDialog implements WindowListener {
             ownerFocusedComponent = owner.getFocusOwner();
         }
 
+        boolean kill = false;
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250) {
-                dispose();
-                throw new RuntimeException("EventDispatchThread error");
+            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+                kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
+        lastTreateClass = getClass();
+        if (kill) {
+            dispose();
+            throw new RuntimeException("EventDispatchThread error");
+        }
     }
 
     private void init(Component locationRelativeComp) {

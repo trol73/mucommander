@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -28,7 +28,9 @@ import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.component.PrefComponent;
+import com.mucommander.ui.dialog.pref.theme.ThemeEditorDialog;
 import com.mucommander.ui.main.WindowManager;
+import com.mucommander.ui.theme.ThemeManager;
 
 /**
  * This is the main preferences dialog that contains all preferences panels organized by tabs.
@@ -123,6 +125,11 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
 
         // Restores the last selected index.
         setActiveTab(lastTabIndex);
+
+        // prepare ThemeEditorDialog
+        // because first construction of this object can take time (about 500-1000 ms)
+        // we make that to reduce delay on show theme editor dialog
+        new Thread(() -> new ThemeEditorDialog((Dialog) null, ThemeManager.getCurrentTheme())).start();
     }
 
 

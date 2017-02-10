@@ -46,11 +46,12 @@ import com.mucommander.ui.quicklist.item.QuickListDataList;
 import com.mucommander.ui.quicklist.item.QuickListDataListWithIcons;
 import com.mucommander.ui.quicklist.item.QuickListHeaderItem;
 import com.mucommander.ui.theme.ThemeData;
+import com.mucommander.ui.theme.ThemeId;
 
 /**
  * @author Arik Hadas
  */
-public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeListener {
+public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeListener, ThemeId {
 	// - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Used to preview the quick list. */
@@ -125,7 +126,7 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      * @param parent    dialog containing the panel.
      * @param themeData  themeData being edited.
      */
-    public QuickListPanel(PreferencesDialog parent, ThemeData themeData) {
+    QuickListPanel(PreferencesDialog parent, ThemeData themeData) {
         super(parent, Translator.get("quick_lists_menu"), themeData);
         initUI();
     }
@@ -138,27 +139,23 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      * @return the JPanel that contains all of the item's color configuration elements.
      */
     private JPanel createItemColorsPanel(FontChooser fontChooser) {
-        ProportionalGridPanel gridPanel;   // Contains all the color buttons.
-        JPanel                colorsPanel; // Used to wrap the colors panel in a flow layout.
-        PreviewLabel          label;
-
         // Initialisation.
-        gridPanel = new ProportionalGridPanel(3);
+        ProportionalGridPanel gridPanel = new ProportionalGridPanel(3); // Contains all the color buttons.
 
         // Header.
         addLabelRow(gridPanel, false);
 
-        label = new PreviewLabel();
+        PreviewLabel label = new PreviewLabel();
         
         // Color buttons.
         addColorButtons(gridPanel, fontChooser, "theme_editor.normal",
-                        ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR, ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+                QUICK_LIST_ITEM_FOREGROUND_COLOR, QUICK_LIST_ITEM_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         addColorButtons(gridPanel, fontChooser, "theme_editor.selected",
-                ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR, ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+                QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR, QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         label.addPropertyChangeListener(this);
         
         // Wraps everything in a flow layout.
-        colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         colorsPanel.add(gridPanel);
         colorsPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.colors")));
 
@@ -171,27 +168,23 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      * @return the JPanel that contains all of the header's color configuration elements.
      */
     private JPanel createHeaderColorsPanel(FontChooser fontChooser) {
-        ProportionalGridPanel gridPanel;   // Contains all the color buttons.
-        JPanel                colorsPanel; // Used to wrap the colors panel in a flow layout.
-        PreviewLabel          label;
-
         // Initialization.
-        gridPanel = new ProportionalGridPanel(3);
+        ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);  // // Contains all the color buttons.
 
         // Header.
         addLabelRow(gridPanel, false);
 
-        label = new PreviewLabel();
+        PreviewLabel label = new PreviewLabel();
         
         // Color buttons.        
         addColorButtons(gridPanel, fontChooser, "",
-        		ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR, ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+        		QUICK_LIST_HEADER_FOREGROUND_COLOR, QUICK_LIST_HEADER_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         addColorButtons(gridPanel, fontChooser, "",
-                -1, ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
+                -1, QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR, label).addPropertyChangeListener(this);
         label.addPropertyChangeListener(this);
 
         // Wraps everything in a flow layout.
-        colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel colorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         colorsPanel.add(gridPanel);
         colorsPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.colors")));
 
@@ -202,13 +195,6 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      * Initializes the panel's UI.
      */
     private void initUI() {
-        YBoxPanel   headerConfigurationPanel; // Contains all the configuration elements.
-        YBoxPanel   itemConfigurationPanel; // Contains all the configuration elements.
-        FontChooser fontChooser1;        // Used to select a font.
-        FontChooser fontChooser2;        // Used to select a font.
-        JPanel      mainPanel;          // Main panel.
-        JTabbedPane tabbedPane;
-        
         header.addComponentListener(new ComponentListener() {
 
 			public void componentHidden(ComponentEvent e) {}
@@ -224,30 +210,30 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
 
 
         // Font chooser and preview initialization.
-        fontChooser1 = createFontChooser(ThemeData.QUICK_LIST_HEADER_FONT);
-        fontChooser2 = createFontChooser(ThemeData.QUICK_LIST_ITEM_FONT);
+        FontChooser fontChooser1 = createFontChooser(QUICK_LIST_HEADER_FONT);
+        FontChooser fontChooser2 = createFontChooser(QUICK_LIST_ITEM_FONT);
         addFontChooserListener(fontChooser1, header);
         addFontChooserListener(fontChooser2, list);
 
         // Header configuration panel initialization.
-        headerConfigurationPanel = new YBoxPanel();
+        YBoxPanel headerConfigurationPanel = new YBoxPanel();
         headerConfigurationPanel.add(fontChooser1);
         headerConfigurationPanel.addSpace(10);
         headerConfigurationPanel.add(createHeaderColorsPanel(fontChooser1));
 
         // Item configuration panel initialization.
-        itemConfigurationPanel = new YBoxPanel();
+        YBoxPanel itemConfigurationPanel = new YBoxPanel();
         itemConfigurationPanel.add(fontChooser2);
         itemConfigurationPanel.addSpace(10);
         itemConfigurationPanel.add(createItemColorsPanel(fontChooser1));
         
         // create the tabbed pane.
-        tabbedPane = new JTabbedPane();
+        JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add(Translator.get("theme_editor.header"), headerConfigurationPanel);
         tabbedPane.add(Translator.get("theme_editor.item"), itemConfigurationPanel);
         
         // Main layout.
-        mainPanel   = new JPanel(new BorderLayout());
+        JPanel mainPanel   = new JPanel(new BorderLayout());
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(createPreviewPanel(), BorderLayout.EAST);
         
@@ -261,18 +247,18 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      */
     public void propertyChange(PropertyChangeEvent event) {
         // Background color changed.
-        if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME)) {
-            header.setBackgroundColors(themeData.getColor(ThemeData.QUICK_LIST_HEADER_BACKGROUND_COLOR),
-            		themeData.getColor(ThemeData.QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR));
-            list.setBackgroundColors(themeData.getColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR),
-            						 themeData.getColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR));
+        if (event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME)) {
+            header.setBackgroundColors(themeData.getColor(QUICK_LIST_HEADER_BACKGROUND_COLOR),
+            		themeData.getColor(QUICK_LIST_HEADER_SECONDARY_BACKGROUND_COLOR));
+            list.setBackgroundColors(themeData.getColor(QUICK_LIST_ITEM_BACKGROUND_COLOR),
+            						 themeData.getColor(QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR));
         }
 
         // Foreground color changed.
-        else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME)) {
-            header.setForegroundColor(themeData.getColor(ThemeData.QUICK_LIST_HEADER_FOREGROUND_COLOR));            
-            list.setForegroundColors(themeData.getColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR),
-            						 themeData.getColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR));
+        else if (event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME)) {
+            header.setForegroundColor(themeData.getColor(QUICK_LIST_HEADER_FOREGROUND_COLOR));
+            list.setForegroundColors(themeData.getColor(QUICK_LIST_ITEM_FOREGROUND_COLOR),
+            						 themeData.getColor(QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR));
         }
     }
 
