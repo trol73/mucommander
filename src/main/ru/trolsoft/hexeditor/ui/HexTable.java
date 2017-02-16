@@ -1,7 +1,6 @@
 package ru.trolsoft.hexeditor.ui;
 
 
-import com.mucommander.profiler.Profiler;
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
 
 import javax.swing.JTable;

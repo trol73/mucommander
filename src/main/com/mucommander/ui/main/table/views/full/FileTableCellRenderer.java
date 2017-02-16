@@ -113,7 +113,8 @@ public class FileTableCellRenderer extends BaseCellRenderer {
 
         //final boolean matches = !table.hasFocus() || !search.isActive() || search.matches(this.tableModel.getFileNameAt(row));
         final boolean searchMatches = search.isActive() && search.matches(file);
-        final boolean matches = !table.hasFocus() || !search.isActive() || searchMatches;
+        //final boolean matches = !table.hasFocus() || !search.isActive() || searchMatches;
+        final boolean matches = !search.isActive() || searchMatches;
 
         // Retrieves the various indexes of the colors to apply.
         // Selection only applies when the table is the active one

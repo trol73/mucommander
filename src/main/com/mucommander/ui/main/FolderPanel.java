@@ -473,7 +473,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      * Sets a width of a folders tree.
      * @param width new width
      */
-    public void setTreeWidth(int width) {
+    void setTreeWidth(int width) {
         if (!treeVisible) {
             oldTreeWidth = width;
         } else {

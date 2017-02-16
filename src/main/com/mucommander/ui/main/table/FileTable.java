@@ -607,7 +607,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile children[], AbstractFile fileToSelect) {
         // Stop quick search in case it was being used before folder change
-        quickSearch.stop();
+        if (!isQuickSearchMatchesFirst()) {
+            quickSearch.stop();
+        }
 
         AbstractFile currentFolder = folderPanel.getCurrentFolder();
         // If we're refreshing the current folder, save the current selection and marked files
@@ -1016,7 +1018,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         super.setColumnModel(columnModel);
         if (filenameEditor != null) {
             if (viewMode == TableViewMode.FULL) {
-            columnModel.getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
+                columnModel.getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
             } else {
                 for (int i = 0; i < columnModel.getColumnCount(); i++) {
                     columnModel.getColumn(i).setCellEditor(filenameEditor);
@@ -1975,6 +1977,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
+
     /**
      * This inner class adds 'quick search' functionality to the FileTable
      */
@@ -1989,8 +1992,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         
         @Override
 		protected void searchStarted() {
-            sortInfo.setQuickSearchMatchesFirst(
-                    MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
+            sortInfo.setQuickSearchMatchesFirst(isQuickSearchMatchesFirst());
         	// Repaint the table to add the 'dim' effect on non-matching files
             scrollpaneWrapper.dimBackground();
 		}
@@ -2186,7 +2188,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                         }
                     }
 	                // Cancel quick search
-	                stop();
+                    if (!isQuickSearchMatchesFirst()) {
+                        stop();
+                    }
 
 	                // Perform the action
 	                ActionManager.getActionInstance(actionId, mainFrame).performAction();
@@ -2356,6 +2360,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
         return logger;
     }
+
+    private static boolean isQuickSearchMatchesFirst() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST,
+                MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
+    }
+
 
 
 }
