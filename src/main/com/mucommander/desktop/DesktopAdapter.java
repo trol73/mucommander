@@ -31,7 +31,7 @@ import java.awt.event.MouseEvent;
  *   <li>Desktop detection</li>
  *   <li>Desktop initialisation</li>
  * </ul>
- * </p>
+ *
  * <h3>Desktop detection</h3>
  * <p>
  * This is achieved through the {@link #isAvailable()} method. While it has a fairly
@@ -40,14 +40,14 @@ import java.awt.event.MouseEvent;
  * but application developers might end up having to try to init commands to see if they work
  * (this can be done through the {@link com.mucommander.process.ProcessRunner} class), query
  * environment variables, ...
- * </p>
+ *
  * <h3>Desktop initialisation</h3>
  * <p>
  * This is achieved through the {@link #init(boolean)} method. Application developers are
  * expected to register all of their desktop specific tools there: {@link DesktopOperation desktop operations},
  * {@link com.mucommander.command.Command commands},
  * {@link com.mucommander.command.CommandManager#registerDefaultAssociation(String, FileFilter) associations}...<br>
- * </p>
+ *
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public interface DesktopAdapter {
@@ -67,12 +67,11 @@ public interface DesktopAdapter {
      * This gives the instance an opportunity to set itself up -
      * default {@link com.mucommander.command.Command} and {@link com.mucommander.ui.action.MuAction} registration, 
      * trash management...
-     * </p>
      * <p>
      * If the <code>install</code> parameter is set to <code>true</code>, this is the first time the
      * application has been started. The desktop instance should use this opportunity to install platform
      * dependant things such as {@link com.mucommander.bookmark.Bookmark} or {@link com.mucommander.ui.action.ActionKeymap}.
-     * </p>
+     *
      * @param  install                        <code>true</code> if this is the application's first boot, <code>false</code> otherwise.
      * @throws DesktopInitialisationException if any error occurs.
      */
@@ -88,7 +87,7 @@ public interface DesktopAdapter {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -102,7 +101,7 @@ public interface DesktopAdapter {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isMiddleMouseButton(MouseEvent)
@@ -116,7 +115,7 @@ public interface DesktopAdapter {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -140,7 +139,6 @@ public interface DesktopAdapter {
      * <p>
      * The returned command must set the shell in its 'init script' mode.
      * For example, for bash, the returned command should be <code>/bin/bash -l -c"</code>.
-     * </p>
      * @return the command used to start shell processes.
      */
     String getDefaultShell();

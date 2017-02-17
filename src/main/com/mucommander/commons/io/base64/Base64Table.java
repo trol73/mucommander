@@ -29,10 +29,10 @@ package com.mucommander.commons.io.base64;
  *   <li>{@link #FILENAME_SAFE_TABLE}</li>
  *   <li>{@link #REGEXP_SAFE_TABLE}</li>
  * </ul>
- * </p>
+ *
  * @author Maxence Bernard
  */
-public class Base64Table {
+class Base64Table {
 
     /** Encoding table, 64 bytes long */
     protected byte[] encodingTable;
@@ -148,7 +148,7 @@ public class Base64Table {
      *
      * @return the ASCII character used for padding.
      */
-    public byte getPaddingChar() {
+    byte getPaddingChar() {
         return paddingChar;
     }
 }

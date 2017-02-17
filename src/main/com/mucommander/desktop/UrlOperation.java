@@ -32,7 +32,7 @@ import java.net.URL;
  * and {@link DesktopOperation#execute(Object[])}, instances of <code>LocalFileOperation</code>
  * can use {@link #canExecute(URL)} and {@link #execute(URL)} and ignore the complexity of
  * the desktop API's genericity.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public abstract class UrlOperation implements DesktopOperation {
@@ -60,7 +60,7 @@ public abstract class UrlOperation implements DesktopOperation {
      * might want to overwrite it. For example, a <code>UrlOperation</code> that only works
      * on HTTPS URLs would override this method to only return <code>true</code> if the specified
      * URL is an HTTPS one.
-     * </p>
+     *
      * @param  url url to check against.
      * @return     <code>true</code> if the operation is supported for the specified file, <code>false</code> otherwise.
      */
@@ -75,11 +75,10 @@ public abstract class UrlOperation implements DesktopOperation {
      * <p>
      * By default, this method will call {@link #extractTarget(Object[])} on the specified parameters
      * and pass the resulting <code>java.net.URL</code> instance to {@link #canExecute(URL)}.
-     * </p>
      * <p>
      * This behaviour can be overriden by implementations, although most cases can be handled through
      * {@link #canExecute(URL)} instead.
-     * </p>
+     *
      * @param  target operation parameters.
      * @return        <code>true</code> if the operation is supported for the specified parameters, <code>false</code> otherwise.
      * @see           #canExecute(URL)
@@ -95,7 +94,7 @@ public abstract class UrlOperation implements DesktopOperation {
      * <p>
      * This method is a wrapper for {@link #extractTarget(Object[])} and {@link #execute(URL)}. Most
      * implementations should ignore it.
-     * </p>
+     *
      * @param  target                        parameters of the operation.
      * @throws IOException                   if an error occurs.
      * @throws UnsupportedOperationException if the operation is not supported.
@@ -122,10 +121,9 @@ public abstract class UrlOperation implements DesktopOperation {
      *   <li>has a length of 1.</li>
      *   <li>contains an instance of either <code>java.io.File</code>,{@link com.mucommander.commons.file.impl.local.LocalFile} or <code>String</code>.</li>
      * </ul>
-     * </p>
      * <p>
      * This behaviour can be overridden by implementations to fit their own needs, although it's probably not a great idea.
-     * </p>
+     *
      * @param  target operation parameters.
      * @return        <code>null</code> if the parameters are not legal, a <code>java.io.File</code> instance instead.
      */

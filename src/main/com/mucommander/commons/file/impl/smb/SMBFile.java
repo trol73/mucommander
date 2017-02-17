@@ -424,7 +424,7 @@ import java.net.MalformedURLException;
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation

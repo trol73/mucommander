@@ -5,10 +5,10 @@ import com.mucommander.commons.file.AbstractFile;
 /**
  * <code>CriterionFilter</code> is a {@link FileFilter} that operates on a file criterion. It can be used to match
  * paths without having to deal with {@link AbstractFile} instances. By extending {@link FileFilter}, this class can be
- * used everywhere a <code>FileFilter</code> is accepted.</p>
+ * used everywhere a <code>FileFilter</code> is accepted.
  *
  * <p>Several convenience methods are provided to operate this filter on a set of criteria values, and filter out
- * values that are rejected by this filter.</p>
+ * values that are rejected by this filter.
  *
  * @see AbstractPathFilter
  * @author Maxence Bernard

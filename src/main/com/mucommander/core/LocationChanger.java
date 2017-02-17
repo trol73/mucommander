@@ -138,11 +138,10 @@ public class LocationChanger {
 	 * Tries to change the current folder to the new specified one and notifies the user in case of a problem.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
-	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
+	 * It does nothing and returns <code>null</code> if another folder change is already underway.
 	 *
 	 * <p>
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
-	 * </p>
 	 *
 	 * @param folder the folder to be made current folder
 	 * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
@@ -160,14 +159,13 @@ public class LocationChanger {
 	 * <p>If the current folder could not be changed to the requested folder and <code>findWorkableFolder</code> is
 	 * <code>true</code>, the current folder will be changed to the first existing parent of the request folder if there
 	 * is one, to the first existing local volume otherwise. In the unlikely event that no local volume is workable,
-	 * the user will be notified that the folder could not be changed.</p>
+	 * the user will be notified that the folder could not be changed.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
-	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
+	 * It does nothing and returns <code>null</code> if another folder change is already underway.
 	 *
 	 * <p>
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
-	 * </p>
 	 *
 	 * @param folder the folder to be made current folder
 	 * @param selectThisFileAfter the file to be selected after the folder has been changed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
@@ -208,11 +206,10 @@ public class LocationChanger {
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
 	 * It does nothing and returns <code>null</code> if another folder change is already underway or if the given
-	 * path could not be resolved.</p>
+	 * path could not be resolved.
 	 *
 	 * <p>
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
-	 * </p>
 	 *
 	 * @param folderPath path to the new current folder. If this path does not resolve into a file, an error message will be displayed.
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway or if the given path could not be resolved
@@ -232,11 +229,10 @@ public class LocationChanger {
 	 * Tries to change current folder to the new specified URL and notifies the user in case of a problem.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
-	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
+	 * It does nothing and returns <code>null</code> if another folder change is already underway.
 	 *
 	 * <p>
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
-	 * </p>
 	 *
 	 * @param folderURL location to the new current folder. If this URL does not resolve into a file, an error message will be displayed.
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
@@ -252,14 +248,13 @@ public class LocationChanger {
 	/**
 	 * Tries to change current folder to the new specified path and notifies the user in case of a problem.
 	 * If not <code>null</code>, the specified {@link com.mucommander.auth.CredentialsMapping} is used to authenticate
-	 * the folder, and added to {@link CredentialsManager} if the folder has been successfully changed.</p>
+	 * the folder, and added to {@link CredentialsManager} if the folder has been successfully changed.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
-	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
+	 * It does nothing and returns <code>null</code> if another folder change is already underway.
 	 *
 	 * <p>
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
-	 * </p>
 	 *
 	 * @param folderURL folder's URL to be made current folder. If this URL does not resolve into an existing file, an error message will be displayed.
 	 * @param credentialsMapping the CredentialsMapping to use for authentication, can be null
@@ -306,9 +301,9 @@ public class LocationChanger {
 	 * 'workable' folder (see {@link #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean, boolean)}.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
-	 * It does nothing and returns <code>null</code> if another folder change is already underway.</p>
+	 * It does nothing and returns <code>null</code> if another folder change is already underway.
 	 *
-	 * <p>This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.</p>
+	 * <p>This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
 	 *
 	 * @param selectThisFileAfter file to be selected after the folder has been refreshed (if it exists in the folder),
 	 * can be null in which case FileTable rules will be used to select current file
@@ -326,7 +321,6 @@ public class LocationChanger {
      * <p>
      * This method <b>is</b> I/O-bound and locks the calling thread until the folder has been changed. It may under
      * certain circumstances lock indefinitely, for example when accessing network-based filesystems.
-     * </p>
      *
      * @param folder folder to be made current folder
      * @param fileToSelect file to be selected after the folder has been refreshed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
@@ -462,7 +456,7 @@ public class LocationChanger {
 	 *
 	 * <p>A little note out of nowhere: never ever call JComponent.paintImmediately() from a thread
 	 * other than the Event Dispatcher Thread, as will create nasty repaint glitches that
-	 * then become very hard to track. Sun's Javadoc doesn't make it clear enough... just don't!</p>
+	 * then become very hard to track. Sun's Javadoc doesn't make it clear enough... just don't!
 	 *
 	 * @author Maxence Bernard
 	 */
@@ -530,7 +524,7 @@ public class LocationChanger {
 		 * AbstractFile instance must be resolved again.
 		 *
 		 * <p>HTTP files MUST have their canonical path followed. For all other file protocols, this is an option in
-		 * the preferences.</p>
+		 * the preferences.
 		 *
 		 * @param file the file to test
 		 * @return <code>true</code> if the given file should have its canonical path followed
@@ -551,12 +545,12 @@ public class LocationChanger {
 		 * gracefully should it be waiting for a thread or blocked in an interruptible operation such as an
 		 * InterruptibleChannel. This may have no immediate effect if the thread is blocked in a non-interruptible
 		 * operation. This thread will however be marked as 'killed' which will sooner or later cause {@link #run()}
-		 * to stop the thread by simply returning.</p> 
+		 * to stop the thread by simply returning.
 		 *
 		 * <p>The second time this method is called, the deprecated (and unsafe) {@link #stop()} method is called,
-		 * forcing the thread to abort.</p>
+		 * forcing the thread to abort.
 		 *
-		 * <p>Any subsequent calls to this method will have no effect and return <code>false</code>.</p>
+		 * <p>Any subsequent calls to this method will have no effect and return <code>false</code>.
 		 *
 		 * @return true if an attempt was made to stop this thread.
 		 */

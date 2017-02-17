@@ -17,7 +17,7 @@ import java.io.OutputStream;
  */
 public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
 
-    protected RWArchiveEntryFile(FileURL url, AbstractArchiveFile archiveFile, ArchiveEntry entry) {
+    RWArchiveEntryFile(FileURL url, AbstractArchiveFile archiveFile, ArchiveEntry entry) {
         super(url, archiveFile, entry);
     }
 
@@ -46,7 +46,7 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
      * @throws IOException if the entry does not exist within the archive
      */
     @Override
-    public void setLastModifiedDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) throws IOException {
         if(!entry.exists())
             throw new IOException();
 
@@ -81,26 +81,25 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
      *  <li>if this entry is a non-empty directory</li>
      *  <li>if an I/O error occurred</li>
      * </ul>
-     * </p>
      *
      * @throws IOException in any of the cases listed above.
-     * @throws UnsupportedFileOperationException if the underlying archive file does not support the required read and
-     * write {@link FileOperation file operations}.
      */
     @Override
-    public void delete() throws IOException, UnsupportedFileOperationException {
-        if(!entry.exists())
+    public void delete() throws IOException {
+        if (!entry.exists()) {
             throw new IOException();
+        }
 
         AbstractRWArchiveFile rwArchiveFile = (AbstractRWArchiveFile)archiveFile;
 
         // Throw an IOException if this entry is a non-empty directory
-        if(isDirectory()) {
+        if (isDirectory()) {
             ArchiveEntryTree tree = rwArchiveFile.getArchiveEntryTree();
-            if(tree!=null) {
+            if (tree != null) {
                 DefaultMutableTreeNode node = tree.findEntryNode(entry.getPath());
-                if(node!=null && node.getChildCount()>0)
+                if (node != null && node.getChildCount() > 0) {
                     throw new IOException();
+                }
             }
         }
 
@@ -122,13 +121,12 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
      * </p>
      *
      * @throws IOException if this entry already exists in the archive or if an I/O error occurred.
-     * @throws UnsupportedFileOperationException if the underlying archive file does not support the required read and
-     * write {@link FileOperation file operations}.
      */
     @Override
-    public void mkdir() throws IOException, UnsupportedFileOperationException {
-        if(entry.exists())
+    public void mkdir() throws IOException {
+        if (entry.exists()) {
             throw new IOException();
+        }
 
         AbstractRWArchiveFile rwArchivefile = (AbstractRWArchiveFile)archiveFile;
         // Update the ArchiveEntry
@@ -151,29 +149,26 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
      * </p>
      *
      * @throws IOException if an I/O error occurred
-     * @throws UnsupportedFileOperationException if the underlying archive file does not support the required read and
-     * write {@link FileOperation file operations}.
      */
     @Override
-    public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
-        if(entry.exists()) {
+    public OutputStream getOutputStream() throws IOException {
+        if (entry.exists()) {
             try {
                 delete();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Go ahead and try to add the file anyway
             }
         }
 
         // Update the ArchiveEntry's size as data gets written to the OutputStream
         OutputStream out = new CounterOutputStream(((AbstractRWArchiveFile)archiveFile).addEntry(entry),
-                new ByteCounter() {
-                    @Override
-                    public synchronized void add(long nbBytes) {
-                        entry.setSize(entry.getSize()+nbBytes);
-                        entry.setDate(System.currentTimeMillis());
-                    }
-                });
+            new ByteCounter() {
+                @Override
+                public synchronized void add(long nbBytes) {
+                    entry.setSize(entry.getSize()+nbBytes);
+                    entry.setDate(System.currentTimeMillis());
+                }
+            });
         entry.setExists(true);
 
         return out;
@@ -181,18 +176,21 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
 
     @Override
     public void changePermissions(int permissions) throws IOException {
-        if(!entry.exists())
+        if (!entry.exists()) {
             throw new IOException();
+        }
 
         FilePermissions oldPermissions = entry.getPermissions();
         FilePermissions newPermissions = new SimpleFilePermissions(permissions, oldPermissions.getMask());
         entry.setPermissions(newPermissions);
 
         boolean success = updateEntryAttributes();
-        if(!success)        // restore old permissions if attributes could not be updated
+        if (!success) {       // restore old permissions if attributes could not be updated
             entry.setPermissions(oldPermissions);
+        }
 
-        if(!success)
+        if (!success) {
             throw new IOException();
+        }
     }
 }

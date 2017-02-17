@@ -36,7 +36,7 @@ import java.util.List;
  *  <li>Byte array buffers (<code>byte[]</code>)</li>
  *  <li><code>java.nio.ByteBuffer</code></li>
  * </ul>
- * </p>
+ *
  * <p>
  * Usage of this class is similar to malloc/free:
  * <ul>
@@ -46,9 +46,8 @@ import java.util.List;
  * subsequent calls to <code>#get*Buffer(int)</code>. Failing to call this method will prevent the buffer from being
  * used again and from being garbage-collected.</li>
  * </ul>
- * </p>
  *
- * <p>Note: this class is thread safe and thus can safely be used by concurrent threads.</p>
+ * <p>Note: this class is thread safe and thus can safely be used by concurrent threads.
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  * @see com.mucommander.commons.io.StreamUtils
@@ -92,10 +91,10 @@ public class BufferPool {
      * and returned.
      *
      * <p>This method won't return the same buffer instance until it has been released with
-     * {@link #releaseByteArray(byte[])}.</p>
+     * {@link #releaseByteArray(byte[])}.
      *
      * <p>This method is a shorthand for {@link #getBuffer(com.mucommander.commons.io.BufferPool.BufferFactory,int)} called
-     * with a {@link com.mucommander.commons.io.BufferPool.ByteArrayFactory} instance.</p>.
+     * with a {@link com.mucommander.commons.io.BufferPool.ByteArrayFactory} instance.
      *
      * @param length length of the byte array
      * @return a byte array of the specified size
@@ -120,10 +119,10 @@ public class BufferPool {
      * and returned.
      *
      * <p>This method won't return the same buffer instance until it has been released with
-     * {@link #releaseCharArray(char[])}.</p>
+     * {@link #releaseCharArray(char[])}.
      *
      * <p>This method is a shorthand for {@link #getBuffer(com.mucommander.commons.io.BufferPool.BufferFactory,int)} called
-     * with a {@link com.mucommander.commons.io.BufferPool.CharArrayFactory} instance.</p>.
+     * with a {@link com.mucommander.commons.io.BufferPool.CharArrayFactory} instance.
      *
      * @param length length of the char array
      * @return a char array of the specified length
@@ -148,10 +147,10 @@ public class BufferPool {
      * a new instance is created and returned.
      *
      * <p>This method won't return the same buffer instance until it has been released with
-     * {@link #releaseByteBuffer(ByteBuffer)}.</p>
+     * {@link #releaseByteBuffer(ByteBuffer)}.
      *
      * <p>This method is a shorthand for {@link #getBuffer(com.mucommander.commons.io.BufferPool.BufferFactory,int)} called
-     * with a {@link com.mucommander.commons.io.BufferPool.ByteBufferFactory} instance.</p>.
+     * with a {@link com.mucommander.commons.io.BufferPool.ByteBufferFactory} instance.
 
      * @param capacity capacity of the ByteBuffer
      * @return a ByteBuffer with the specified capacity
@@ -177,10 +176,10 @@ public class BufferPool {
      * a new instance is created and returned.
      *
      * <p>This method won't return the same buffer instance until it has been released with
-     * {@link #releaseCharBuffer(CharBuffer)}.</p>
+     * {@link #releaseCharBuffer(CharBuffer)}.
      *
      * <p>This method is a shorthand for {@link #getBuffer(com.mucommander.commons.io.BufferPool.BufferFactory,int)} called
-     * with a {@link com.mucommander.commons.io.BufferPool.CharBufferFactory} instance.</p>.
+     * with a {@link com.mucommander.commons.io.BufferPool.CharBufferFactory} instance.
 
      * @param capacity capacity of the CharBuffer
      * @return a CharBuffer with the specified capacity
@@ -208,7 +207,7 @@ public class BufferPool {
      * If not, a new instance is created and returned using {@link BufferFactory#newBuffer(int)}.
      *
      * <p>This method won't return the same buffer instance until it has been released with
-     * {@link #releaseBuffer(Object, BufferFactory)}.</p>
+     * {@link #releaseBuffer(Object, BufferFactory)}.
      *
      * @param factory BufferFactory used to identify the target buffer class and create a new buffer (if necessary)
      * @param size size of the buffer
@@ -243,7 +242,7 @@ public class BufferPool {
      * the pool.
      *
      * <p>After calling this method, the given buffer instance <b>must not be used</b>, otherwise it could get
-     * corrupted if other threads were using it.</p>
+     * corrupted if other threads were using it.
      *
      * @param buffer the buffer instance to make available for further use
      * @return <code>true</code> if the buffer was added to the pool, <code>false</code> if the buffer was already in the pool
@@ -259,7 +258,7 @@ public class BufferPool {
      * the pool.
      *
      * <p>After calling this method, the given buffer instance <b>must not be used</b>, otherwise it could get
-     * corrupted if other threads were using it.</p>
+     * corrupted if other threads were using it.
      *
      * @param buffer the buffer instance to make available for further use
      * @return <code>true</code> if the buffer was added to the pool, <code>false</code> if the buffer was already in the pool
@@ -275,7 +274,7 @@ public class BufferPool {
      * the pool.
      *
      * <p>After calling this method, the given buffer instance <b>must not be used</b>, otherwise it could get
-     * corrupted if other threads were using it.</p>
+     * corrupted if other threads were using it.
      *
      * @param buffer the buffer instance to make available for further use
      * @return <code>true</code> if the buffer was added to the pool, <code>false</code> if the buffer was already in the pool
@@ -291,7 +290,7 @@ public class BufferPool {
      * the pool.
      *
      * <p>After calling this method, the given buffer instance <b>must not be used</b>, otherwise it could get
-     * corrupted if other threads were using it.</p>
+     * corrupted if other threads were using it.
      *
      * @param buffer the buffer instance to make available for further use
      * @return <code>true</code> if the buffer was added to the pool, <code>false</code> if the buffer was already in the pool
@@ -308,7 +307,7 @@ public class BufferPool {
      * the pool or the pool size limit has been reached.
      *
      * <p>After calling this method, the given buffer instance <b>must not be used</b>, otherwise it could get
-     * corrupted if other threads were using it.</p>
+     * corrupted if other threads were using it.
      *
      * @param buffer the buffer instance to make available for further use
      * @param factory the BufferFactory that was used to create the buffer
@@ -344,7 +343,7 @@ public class BufferPool {
      * Returns <code>true</code> if the specified buffer is currently in the pool.
      *
      * <p>Note that it is not necessary (and thus not recommended for performance reasons) to call this method before
-     * calling <code>release*Buffer</code> as it already performs this test before adding a buffer to the pool.</p>
+     * calling <code>release*Buffer</code> as it already performs this test before adding a buffer to the pool.
      *
      * @param buffer the buffer to look for in the pool
      * @param factory the BufferFactory that was used to create the buffer
@@ -387,7 +386,7 @@ public class BufferPool {
      * Returns the default size of buffers returned by <code>get*Buffer</code> methods without a <code>size</code>
      * argument.
      *
-     * <p>The default buffer size is initially set to {@link #INITIAL_DEFAULT_BUFFER_SIZE}.</p>
+     * <p>The default buffer size is initially set to {@link #INITIAL_DEFAULT_BUFFER_SIZE}.
      *
      * @return the default size of buffers returned by <code>get*Buffer</code> methods without a <code>size</code> argument
      */
@@ -419,7 +418,7 @@ public class BufferPool {
      * Before adding a buffer to the pool, <code>release*Buffer</code> methods ensure that the pool size will
      * not be exceeded. If and only if that is the case, the buffer is added to the pool.
      *
-     * <p>The max pool size is initially set to {@link #INITIAL_POOL_LIMIT}.</p>
+     * <p>The max pool size is initially set to {@link #INITIAL_POOL_LIMIT}.
      *
      * @return the maximum combined size in bytes for all buffers in the pool
      */

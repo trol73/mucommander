@@ -1002,7 +1002,7 @@ public class FileURL implements Cloneable {
      * </ul>
      * <p>
      * Credentials (login and password parts) are compared only if requested. The comparison for both the login and
-     * password is case-sensitive.</br>
+     * password is case-sensitive.<br>
      * Likewise, properties are compared only if requested: the comparison of all properties is case-sensitive.
      *
      * @param o object to compare against this FileURL instance

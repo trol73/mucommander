@@ -27,7 +27,7 @@ import java.util.*;
  * Class that maintains properties of the registered MuAction-s:
  * 1. General properties of all registered actions, such as all existing action categories.
  * 2. ActionDescriptors and helper methods for fetching specific property from ActionDescriptor.
- * 3. Default actions <-> shortcuts mapping.
+ * 3. Default actions &lt;-&gt; shortcuts mapping.
  * 
  * @author Arik Hadas
  */

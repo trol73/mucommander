@@ -162,6 +162,7 @@ public abstract class Archiver {
     
     /**
      * Returns the archiver format used by this Archiver. See format constants.
+     * @return archiver format code
      */
     public int getFormat() {
         return this.format;
@@ -362,6 +363,7 @@ public abstract class Archiver {
      * depending on the value of the specified boolean parameter. 
      *
      * @param manyEntries if true, a list of many entries formats (a subset of single entry formats) will be returned
+     * @return an array of available archive formats
      */
     public static int[] getFormats(boolean manyEntries) {
         return manyEntries? MANY_ENTRIES_FORMATS : SINGLE_ENTRY_FORMATS;
@@ -372,6 +374,7 @@ public abstract class Archiver {
      * Returns the name of the given archive format. The returned name can be used for display in a GUI.
      *
      * @param format an archive format
+     * @return name of the format
      */
     public static String getFormatName(int format) {
         return FORMAT_NAMES[format];
@@ -382,7 +385,8 @@ public abstract class Archiver {
      * Returns the default archive format extension. Note: some formats such as Tar/Gzip have several common
      * extensions (e.g. tar.gz or tgz), the most common one will be returned.
      *
-     * @param format an archive format	 
+     * @param format an archive format
+     * @return the default archive format extension
      */
     public static String getFormatExtension(int format) {
         return FORMAT_EXTENSIONS[format];
@@ -393,6 +397,7 @@ public abstract class Archiver {
      * Returns true if the specified archive format supports storage of more than one entry.
      *
      * @param format an archive format
+     * @return true if the specified archive format supports storage of more than one entry
      */
     public static boolean formatSupportsManyFiles(int format) {
         return SUPPORTS_MANY_ENTRIES[format];
@@ -402,7 +407,8 @@ public abstract class Archiver {
     /**
      * Returns true if the specified archive format can store an optional comment.
      *
-     * @param format an archive format	 
+     * @param format an archive format
+     * @return true if the specified archive format can store an optional comment
      */
     public static boolean formatSupportsComment(int format) {
         return format == ZIP_FORMAT;
@@ -441,25 +447,33 @@ public abstract class Archiver {
     /**
      * @return Name of current file being processed
      */
-    public String getProcessingFile(){return null;}
+    public String getProcessingFile() {
+        return null;
+    }
     
     /**
      * Written bytes in total without the current file progress
      * @return number of bytes written as a long
      */
-    public long totalWrittenBytes(){return -1;}
+    public long totalWrittenBytes() {
+        return -1;
+    }
     
     /**
      * Written bytes to the current file being processed, will be the same size as the
      * file if complete.
      * @return number of bytes written as a long
      */
-    public long writtenBytesCurrentFile(){return -1;}
+    public long writtenBytesCurrentFile() {
+        return -1;
+    }
     
     /**
      * @return Size of the current file being processed in bytes
      */
-    public long currentFileLength(){return -1;}
+    public long currentFileLength() {
+        return -1;
+    }
     
     /**
      * Finish the archiving process when all files have been added.

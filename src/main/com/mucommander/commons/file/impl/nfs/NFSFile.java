@@ -78,8 +78,10 @@ public class NFSFile extends ProtocolFile {
 
     /**
      * Creates a new instance of NFSFile.
+     *
+     * @param fileURL fiel url
      */
-    protected NFSFile(FileURL fileURL) {
+    NFSFile(FileURL fileURL) {
         super(fileURL);
 
         // create the NFS URL used by XFile.
@@ -332,7 +334,7 @@ public class NFSFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -343,7 +345,7 @@ public class NFSFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -355,7 +357,7 @@ public class NFSFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -373,19 +375,22 @@ public class NFSFile extends ProtocolFile {
     public AbstractFile[] ls(FilenameFilter filenameFilter) throws IOException {
         String names[] = file.list();
 
-        if(names==null)
+        if (names == null) {
             throw new IOException();
+        }
 
-        if(filenameFilter!=null)
+        if (filenameFilter != null) {
             names = filenameFilter.filter(names);
+        }
 
         AbstractFile children[] = new AbstractFile[names.length];
         FileURL childURL;
         String baseURLPath = fileURL.getPath();
-        if(!baseURLPath.endsWith("/"))
+        if (!baseURLPath.endsWith("/")) {
             baseURLPath += SEPARATOR;
+        }
 
-        for(int i=0; i<names.length; i++) {
+        for (int i=0; i<names.length; i++) {
             // Clone this file's URL with the connection properties and set the child file's path
             childURL = (FileURL)fileURL.clone();
             childURL.setPath(baseURLPath+names[i]);

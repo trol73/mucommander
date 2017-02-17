@@ -125,7 +125,10 @@ public class Command implements Comparable<Command> {
      * Creates a new command.
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
-     * <code>{@link Command(String,String,CommandType,String, String) Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null, null)</code>.
+     * <code>
+     *     {@link #Command(String, String, CommandType, String, String)
+     *     Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null, null)
+     * </code>.
      *
      * @param alias   alias of the command.
      * @param command command that will be executed.
@@ -138,7 +141,7 @@ public class Command implements Comparable<Command> {
      * Creates a new command.
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
-     * <code>{@link Command(String,String,CommandType,String, String) Command(}alias, command, type, null, null)</code>.
+     * <code>{@link #Command(String,String,CommandType,String, String) Command(}alias, command, type, null, null)</code>.
      *
      * @param alias   alias of the command.
      * @param command command that will be executed.

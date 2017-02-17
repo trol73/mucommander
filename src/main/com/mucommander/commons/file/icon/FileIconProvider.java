@@ -25,7 +25,7 @@ public interface FileIconProvider {
      * <p>The specified <code>Dimension</code> is used as a hint at the preferred icon's resolution; there is
      * absolutely no guarantee that the returned <code>Icon</code> will indeed have this resolution. This dimension is
      * only used to choose between different resolutions should more than one resolution be available, and return the
-     * one that most closely matches the specified one.<br/>
+     * one that most closely matches the specified one.<br>
      * The implementation is not expected to perform any rescaling (either up or down), this method should only return
      * icons in their 'native' resolutions, using the preferred resolution to choose between different native dimensions.
      * For example, if this provider is able to create icons both in 16x16 and 32x32 resolutions, and a 48x48 resolution

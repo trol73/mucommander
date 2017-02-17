@@ -12,7 +12,7 @@ import com.vmware.vim25.RuntimeFaultFaultMsg;
 /**
  * Manage VSphere connections.
  * 
- * @author Yuval Kohavi <yuval.kohavi@intigua.com>
+ * @author Yuval Kohavi, yuval.kohavi@intigua.com
  * 
  */
 public class VsphereConnHandler extends ConnectionHandler {
@@ -20,11 +20,11 @@ public class VsphereConnHandler extends ConnectionHandler {
 	private VSphereClient client = null;
 	private FileURL location;
 
-	public VSphereClient getClient() {
+	VSphereClient getClient() {
 		return client;
 	}
 
-	public VsphereConnHandler(FileURL serverURL) {
+	VsphereConnHandler(FileURL serverURL) {
 		super(serverURL);
 		location = serverURL;
 	}

@@ -83,7 +83,7 @@ public class OpenAction extends MuAction {
      *     then opened using its native association.
      *   </li>
      * </ul>
-     * </p>
+	 *
      * @param file        file to open.
      * @param destination if <code>file</code> is browsable, folder panel in which to open the file.
      */

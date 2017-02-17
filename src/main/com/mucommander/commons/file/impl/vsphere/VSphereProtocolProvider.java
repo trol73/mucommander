@@ -19,8 +19,7 @@ public class VSphereProtocolProvider implements ProtocolProvider {
 	// ProtocolProvider Implementation //
 	// ///////////////////////////////////
 
-	public AbstractFile getFile(FileURL url, Object... instantiationParams)
-			throws IOException {
+	public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
 		return new VSphereFile(url);
 	}
 }

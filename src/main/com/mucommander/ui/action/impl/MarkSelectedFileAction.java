@@ -43,6 +43,7 @@ import java.util.Map;
  * <li>if the {@link com.mucommander.ui.action.impl.MarkSelectedFileAction} key event is repeated and the last file has already
  * been marked/unmarked since the key was last released, the file is not marked in order to avoid
  * marked/unmarked flaps when the mark key is kept pressed.
+ * </ul>
  *
  * @author Maxence Bernard
  */

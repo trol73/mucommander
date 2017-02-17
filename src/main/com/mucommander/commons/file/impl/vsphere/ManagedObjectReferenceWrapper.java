@@ -5,7 +5,7 @@ import com.vmware.vim25.ManagedObjectReference;
 /**
  * A wrapper for ManagedObjectReferenceWrapper that adds equals and hashCode for it.
  * 
- * @author Yuval Kohavi <yuval.kohavi@intigua.com>
+ * @author Yuval Kohavi, yuval.kohavi@intigua.com
  *
  */
 public class ManagedObjectReferenceWrapper {

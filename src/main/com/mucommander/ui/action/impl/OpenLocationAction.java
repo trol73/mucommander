@@ -51,6 +51,10 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Creates a new OpenLocationAction instance using the provided url's string representation
      * (with credentials stripped out) as label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param url location to open
      */
     public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url) {
         this(mainFrame, properties, url, url.getScheme().equals(FileProtocols.FILE) ? url.getPath() : url.toString(false));
@@ -58,6 +62,11 @@ public class OpenLocationAction extends ActiveTabAction {
 
     /**
      * Creates a new OpenLocationAction instance using the provided FileURL and label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param url location to open
+     * @param label tooltip label
      */
     private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, FileURL url, String label) {
         super(mainFrame, properties);
@@ -76,6 +85,10 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Creates a new OpenLocationAction instance using the filename of the provided AbstractFile 
      * as label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param file location to open
      */
     public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, AbstractFile file) {
         this(mainFrame, properties, file, file.getName());
@@ -83,6 +96,11 @@ public class OpenLocationAction extends ActiveTabAction {
 
     /**
      * Creates a new OpenLocationAction instance using the provided AbstractFile and label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param file location to open
+     * @param label tooltip label
      */
     private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, AbstractFile file, String label) {
         super(mainFrame, properties);
@@ -95,13 +113,22 @@ public class OpenLocationAction extends ActiveTabAction {
 
     /**
      * Creates a new OpenLocationAction instance using the provided path as label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param path path to open
      */
-    public OpenLocationAction(MainFrame mainFrame, Map<String,Object> properties, String path) {
+    public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, String path) {
         this(mainFrame, properties, path, path);
     }
 
     /**
      * Creates a new OpenLocationAction instance using the provided path and label.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param path path to open
+     * @param label tooltip label
      */
     private OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, String path, String label) {
         super(mainFrame, properties);
@@ -115,6 +142,10 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Convenience constructor, same effect as calling {@link #OpenLocationAction(MainFrame, Map, String, String)} with
      * {@link Bookmark#getLocation()} and {@link Bookmark#getName()}.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param  bookmark location top open
      */
     public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, Bookmark bookmark) {
         this(mainFrame, properties, bookmark.getLocation(), bookmark.getName());
@@ -124,6 +155,10 @@ public class OpenLocationAction extends ActiveTabAction {
     /**
      * Convenience constructor, same effect as calling {@link #OpenLocationAction(MainFrame, Map, FileURL, String)} with
      * {@link BonjourService#getURL()} and {@link BonjourService#getNameWithProtocol()} ()}.
+     *
+     * @param mainFrame main frame
+     * @param properties properties to use in this action
+     * @param  bonjourService location to open
      */
     public OpenLocationAction(MainFrame mainFrame, Map<String, Object> properties, BonjourService bonjourService) {
         this(mainFrame, properties, bonjourService.getURL(), bonjourService.getNameWithProtocol());

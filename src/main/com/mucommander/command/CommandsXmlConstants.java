@@ -43,7 +43,7 @@ package com.mucommander.command;
  *  <li><i>alias</i> is the name under which the command will be known throughout muCommander.</li>
  *  <li><i>type</i> is the command's type (<i>system</i>, <i>invisible</i> or <i>normal</i>). See {@link Command} for more information.</li>
  * </ul>
- * </p>
+ *
  * @see CommandReader
  * @see CommandWriter
  * @author Nicolas Rinaudo

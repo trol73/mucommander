@@ -164,6 +164,9 @@ public class LocalFile extends ProtocolFile {
     /**
      * Creates a new instance of LocalFile, using the given {@link File} if not <code>null</code>, creating a new
      * {@link File} instance otherwise.
+     *
+     * @param fileURL
+     * @param file
      */
     protected LocalFile(FileURL fileURL, File file) throws IOException {
         super(fileURL);

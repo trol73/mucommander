@@ -25,10 +25,9 @@ package com.mucommander.commons.file;
  * <code>FileURL</code> registers a number of handlers for the schemes/protocols supported by the muCommander file API.
  * Additional handlers can be registered dynamically using {@link FileURL#registerHandler(String, SchemeHandler)}.
  * Likewise, existing handlers can be unregistered or replaced at runtime using
- * {@link FileURL#registerHandler(String, SchemeHandler)} and {@link FileURL#unregisterHandler(String)}.</br>
- * </br>
+ * {@link FileURL#registerHandler(String, SchemeHandler)} and {@link FileURL#unregisterHandler(String)}.<br>
+ * <br>
  * <code>FileURL</code> uses a default handler for schemes that do not have a specific handler registered.
- * </p>
  *
  * @see DefaultSchemeHandler
  * @see com.mucommander.commons.file.FileURL#registerHandler(String, SchemeHandler)

@@ -56,7 +56,6 @@ public class OSXFileUtils {
      *   <li>if the specified file has no comment</li>
      *   <li>if the comment could not be retrieved (for any reason)</li>
      *  </ul>
-     * </p>
      *
      * @param file a local file
      * @return the Spotlight/Finder comment of the specified file

@@ -36,12 +36,12 @@ import com.vmware.vim25.VimService;
 /**
  * Wrapper over the vSphere API
  * 
- * @author Yuval Kohavi <yuval.kohavi@intigua.com>
+ * @author Yuval Kohavi, yuval.kohavi@intigua.com
  * 
  */
 public class VSphereClient implements Closeable {
 
-	public static final String TYPE_SERVICE_INSTANCE = "ServiceInstance";
+	private static final String TYPE_SERVICE_INSTANCE = "ServiceInstance";
 	private static Logger log = LoggerFactory.getLogger(VSphereClient.class);
 
 	private final String server;
@@ -59,17 +59,17 @@ public class VSphereClient implements Closeable {
 		return server;
 	}
 	
-	public boolean isConnected() {
+	boolean isConnected() {
 		return connected;
 	}
 
-	public VSphereClient(String server, String user, String password) {
+	VSphereClient(String server, String user, String password) {
 		this.server = server;
 		this.user = user;
 		this.password = password;
 	}
 
-	protected String getVSphereServiceUrl() {
+	private String getVSphereServiceUrl() {
 		if (StringUtils.isNullOrEmpty((server))) {
 			log.warn("Can't construct vim service url, vSphere host name is empty");
 			throw new IllegalArgumentException();

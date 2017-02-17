@@ -393,7 +393,7 @@ public class PathUtils {
 
     /**
      * Returns the depth of the specified path, based on the number of path separators it contains, excluding those
-     * occurring at the beginning and at the end. The minimum depth of a path is 0.<br/>
+     * occurring at the beginning and at the end. The minimum depth of a path is 0.<br>
      * Here are a few examples when the path separator is <code>"/"</code>:
      * <dl>
      *   <dt>/</dt><dd>0</dd>
@@ -404,14 +404,13 @@ public class PathUtils {
      * <p>
      * It is worth noting that this method relies strictly on the occurences of path separators and nothing else.
      * Therefore, Windows-like paths that start with a drive letter will always have a minimum depth
-     * of 1.<br/>
-     * Here are a few examples when the path separator is <code>"\\"</code>:
+     * of 1.<br>
+     * Here are a few examples when the path separator is {@code "\\"}:
      * <dl>
      *   <dt>C:\\</dt><dd>1</dd>
      *   <dt>C:\\home</dt><dd>2</dd>
      *   <dt>C:\\home\\maxence</dt><dd>1</dd>
      * </dl>
-     * </p>
      *
      * @param path the path for which to calculate the depth
      * @param separator the path separator, usually "/" or "\\"

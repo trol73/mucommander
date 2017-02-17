@@ -610,7 +610,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -621,7 +621,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation

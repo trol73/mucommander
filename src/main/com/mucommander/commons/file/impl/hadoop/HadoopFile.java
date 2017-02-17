@@ -43,14 +43,14 @@ public abstract class HadoopFile extends ProtocolFile {
     private boolean isWriting;
 
     /** Default Hadoop Configuration, whose values are fetched from XML configuration files. */
-    protected final static Configuration DEFAULT_CONFIGURATION = new Configuration();
+    final static Configuration DEFAULT_CONFIGURATION = new Configuration();
     
 
-    protected HadoopFile(FileURL url) throws IOException {
+    HadoopFile(FileURL url) throws IOException {
         this(url, null, null);
     }
 
-    protected HadoopFile(FileURL url, FileSystem fs, FileStatus fileStatus) throws IOException {
+    HadoopFile(FileURL url, FileSystem fs, FileStatus fileStatus) throws IOException {
         super(url);
 
         if(fs==null) {
@@ -64,16 +64,14 @@ public abstract class HadoopFile extends ProtocolFile {
                 // FileSystem implementations throw IllegalArgumentException under various circumstances
                 throw new IOException(e.getMessage());
             }
-        }
-        else {
+        } else {
             this.fs = fs;
         }
 
-        if(fileStatus==null) {
+        if (fileStatus == null) {
             this.path = new Path(fileURL.getPath());
             this.fileAttributes = new HadoopFileAttributes();
-        }
-        else {
+        } else {
             this.fileAttributes = new HadoopFileAttributes(fileStatus);
             this.path = fileStatus.getPath();
         }
@@ -323,7 +321,7 @@ public abstract class HadoopFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -335,7 +333,7 @@ public abstract class HadoopFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     public long getFreeSpace() throws IOException {
@@ -345,7 +343,7 @@ public abstract class HadoopFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     public long getTotalSpace() throws IOException {
@@ -460,15 +458,15 @@ public abstract class HadoopFile extends ProtocolFile {
             try {
                 setAttributes(fs.getFileStatus(path));
                 setExists(true);
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 // File doesn't exist on the server
                 setExists(false);
                 setDefaultFileAttributes(getURL(), this);
 
                 // Rethrow AuthException
-                if(e instanceof AuthException)
-                    throw (AuthException)e;
+                if (e instanceof AuthException) {
+                    throw (AuthException) e;
+                }
             }
         }
 

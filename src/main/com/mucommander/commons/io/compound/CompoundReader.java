@@ -32,7 +32,7 @@ import java.io.Reader;
  *   <dt>Unmerged</dt>
  *   <dd>the compound reader has be advanced manually. EOF are signaled individually for each underlying reader.
  * After EOF is reached, the current reader has to be advanced to the next one using {@link #advanceReader()}.</dd>
- * <dl>
+ * </dl>
  *
  * <p>
  * This class is abstract, with a single method to implement: {@link #getNextReader()}.

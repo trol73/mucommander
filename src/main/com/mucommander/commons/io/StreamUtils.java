@@ -78,18 +78,18 @@ public class StreamUtils {
     }
     
     /**
-     * Copies up to <code>length</code> bytes from the given <code>InputStream</code> to the specified
-     * </code>OutputStream</code>, less if the end-of-file was reached before that. 
+     * Copies up to {@code length} bytes from the given {@code InputStream} to the specified
+     * {@code OutputStream}, less if the end-of-file was reached before that.
      * This method does *NOT* close any of the given streams.
      *
-     * <p>Read and write operations use the specified buffer, making the use of a <code>BufferedInputStream</code>
-     * unnecessary. A <code>BufferedOutputStream</code> also isn't necessary, unless this method
-     * is called repeatedly with the same <code>OutputStream</code> and with potentially small <code>InputStream</code>
-     * (smaller than the buffer's size): in this case, providing a <code>BufferedOutputStream</code> will further
-     * improve performance by grouping calls to the underlying <code>OutputStream</code> write method.</p>
+     * <p>Read and write operations use the specified buffer, making the use of a {@code BufferedInputStream}
+     * unnecessary. A {@code BufferedOutputStream} also isn't necessary, unless this method
+     * is called repeatedly with the same {@code OutputStream} and with potentially small {@code InputStream}
+     * (smaller than the buffer's size): in this case, providing a {@code BufferedOutputStream} will further
+     * improve performance by grouping calls to the underlying {@code OutputStream} write method.
      *
      * <p>Copy progress can optionally be monitored by supplying a {@link com.mucommander.commons.io.CounterInputStream} and/or
-     * {@link com.mucommander.commons.io.CounterOutputStream}.</p>
+     * {@link com.mucommander.commons.io.CounterOutputStream}.
      *
      * @param in the InputStream to read from
      * @param out the OutputStream to write to

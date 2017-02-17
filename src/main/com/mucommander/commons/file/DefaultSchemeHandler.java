@@ -3,7 +3,7 @@ package com.mucommander.commons.file;
 /**
  * This class provides a default {@link SchemeHandler} implementation. The no-arg constructor creates an
  * instance with default values that suit most schemes. This is how the default URL handler returned by
- * {@link FileURL#getDefaultHandler()} is created.</br>
+ * {@link FileURL#getDefaultHandler()} is created.<br>
  * The multi-arg constructor allows to create a scheme handler with specific values.
  * <p>
  * The {@link #getRealm(FileURL)} implementation returns a URL with the same scheme and host (if any) as the specified
@@ -107,7 +107,7 @@ public class DefaultSchemeHandler implements SchemeHandler {
      * Returns a URL with the same scheme, host and port (if any) as the specified URL, and a path set to 
 	 * <code>"/"</code> or <code>"\"</code> depending on the URL format.
      * The login, password, query and fragment parts of the returned URL are always <code>null</code>.
-     * For example, when called with <code>http://www.mucommander.com:8080/path/to/file?query&param=value</code>,
+     * For example, when called with {@code http://www.mucommander.com:8080/path/to/file?query&param=value},
      * this method returns <code>http://www.mucommander.com:8080/</code>.
      * 
      * @param location the location for which to return the authentication realm

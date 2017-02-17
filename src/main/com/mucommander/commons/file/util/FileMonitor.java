@@ -22,7 +22,6 @@ import java.util.WeakHashMap;
  *  <li>{@link #IS_DIRECTORY_ATTRIBUTE}
  *  <li>{@link #EXISTS_ATTRIBUTE}
  * </ul>
- * </p>
  *
  * <p>The polling frequency is controlled by the poll period. This parameter determines how often the file's attributes
  * are checked. The lower this period is, the faster changes will be reported to listeners, but also the higher the
@@ -31,7 +30,7 @@ import java.util.WeakHashMap;
  * <p>Note that FileMonitor uses file attributes polling because the Java API doesn't currently provide any better way
  * to do detect file changes. If Java ever does provide a callback mechanism for detecting file changes, this class
  * will be modified to take advantage of it. Another possible improvement would be to add JNI hooks for platform-specific
- * filesystem events such as 'inotify' (Linux Kernel), 'kqueue' (BSD, Mac OS X), PAM (Solaris), ...</p>
+ * filesystem events such as 'inotify' (Linux Kernel), 'kqueue' (BSD, Mac OS X), PAM (Solaris), ...
  *
  * @see FileChangeListener
  * @author Maxence Bernard
@@ -113,7 +112,6 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      *  <li>{@link #EXISTS_ATTRIBUTE}
      * </ul>
      * Several attributes can be specified by combining them with the binary OR operator.
-     * </p>
      *
      * <p>
      * The poll period specified in the constructor determines how often the file's attributes will be checked.
@@ -121,13 +119,12 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * impact on I/O and CPU.
      * <br>Note that the time spent for polling is taken into account for the poll period. For example, if the poll
      * period is 1000ms, and polling the file's attributes took 50ms, the next poll will happen in 950ms.
-     * </p>
      *
      * @param file the AbstractFile to monitor for changes
      * @param attributes the set of attributes to monitor, see constant fields for a list of possible attributes
      * @param pollPeriod number of milliseconds between two file attributes polls
      */
-    public FileMonitor(AbstractFile file, int attributes, long pollPeriod) {
+    FileMonitor(AbstractFile file, int attributes, long pollPeriod) {
         this.file = file;
         this.attributes = attributes;
         this.pollPeriod = pollPeriod;
@@ -143,7 +140,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * @param listener the FileChangeListener to add to the list of registered listeners.
      * @see   #removeFileChangeListener(FileChangeListener)
      */
-    public void addFileChangeListener(FileChangeListener listener) {
+    void addFileChangeListener(FileChangeListener listener) {
         listeners.put(listener, null);
     }
 
@@ -153,7 +150,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * @param listener the FileChangeListener to remove from the list of registered listeners.
      * @see   #addFileChangeListener(FileChangeListener)
      */
-    public void removeFileChangeListener(FileChangeListener listener) {
+    private void removeFileChangeListener(FileChangeListener listener) {
         listeners.remove(listener);
     }
 
@@ -175,7 +172,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * monitored file doesn't exist anymore. Thus, it is important not to forget to call {@link #stopMonitoring()} when
      * monitoring is not needed anymore, in order to prevent unnecessary resource hogging.</p>
      */
-    public synchronized void startMonitoring() {
+    synchronized void startMonitoring() {
         if(monitorThread ==null) {
             monitorThread = new Thread(this);
             monitorThread.start();

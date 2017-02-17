@@ -35,7 +35,7 @@ import com.mucommander.commons.file.filter.OrFileFilter;
  * <p>
  * This class will explore the content of a browsable {@link com.mucommander.commons.file.AbstractFile} and match
  * all discovered classes to a {@link ClassFilter}.
- * </p>
+ *
  * <p>
  * In order for classes to be analyzed, they need to be loaded. This can be achieved in two ways:
  * <ul>
@@ -43,7 +43,7 @@ import com.mucommander.commons.file.filter.OrFileFilter;
  *   <li>
  *     By using an {@link com.mucommander.commons.file.AbstractFileClassLoader}
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ClassFinder {
@@ -113,7 +113,7 @@ public class ClassFinder {
      * <p>
      * The <code>browsable</code> argument must be browsable as defined by {@link com.mucommander.commons.file.AbstractFile#isBrowsable()}.
      * If such is not the case, the returned vector will be empty.
-     * </p>
+     *
      * @param  browsable   file in which to look for classes.
      * @param  classFilter how to decide which classes should be kept.
      * @param  classLoader used to load each class found in <code>browsable</code>.
@@ -145,7 +145,7 @@ public class ClassFinder {
      * loader = new AbstractFileClassLoader();
      * loader.addFile(browsable);
      * </pre>
-     * </p>
+     *
      * @param  browsable   file in which to look for classes.
      * @param  classFilter how to decide which classes should be kept.
      * @return             a vector containing all the classes that were found and matched <code>classFilter</code>.

@@ -49,11 +49,11 @@ public class SimpleFilePermissions extends GroupedPermissionBits implements File
     /**
      * Pads the given permissions with the specified ones: the permission bits that are not supported
      * (as reported by the supplied permissions mask} are replaced by those of the default permissions.
-     * That means:<br/>
+     * That means:<br>
      *  - if the mask indicates that all permission bits are supported (mask = 777 octal), the supplied permissions will
-     * simply be returned, without using any of the default permissions<br/>
+     * simply be returned, without using any of the default permissions<br>
      *  - if the mask indicates that none of the permission bits are supported (mask = 0), the default permissions will
-     * be returned, without using any of the supplied permissions<br/>
+     * be returned, without using any of the supplied permissions<br>
      *
      * @param permissions the permissions to pad with default permissions for the bits that are not supported
      * @param defaultPermissions permissions to use for the bits that are not supported
@@ -70,11 +70,11 @@ public class SimpleFilePermissions extends GroupedPermissionBits implements File
     /**
      * Pads the given permissions with the specified ones: the permission bits that are not supported
      * (as reported by the supplied permissions mask} are replaced by those of the default permissions.
-     * That means:<br/>
+     * That means:<br>
      *  - if the mask indicates that all permission bits are supported (mask = 777 octal), the supplied permissions will
-     * simply be returned, without using any of the default permissions<br/>
+     * simply be returned, without using any of the default permissions<br>
      *  - if the mask indicates that none of the permission bits are supported (mask = 0), the default permissions will
-     * be returned, without using any of the supplied permissions<br/>
+     * be returned, without using any of the supplied permissions<br>
      *
      * @param permissions the permissions to pad with default permissions for the bits that are not supported
      * @param supportedPermissionsMask the bit mask that indicates which bits of the given permissions are supported

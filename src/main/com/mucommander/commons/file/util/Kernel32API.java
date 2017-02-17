@@ -148,23 +148,23 @@ public interface Kernel32API extends StdCallLibrary {
     int MOVEFILE_REPLACE_EXISTING = 1;
 
     /** If the file is to be moved to a different volume, the function simulates the move by using the CopyFile and
-     * DeleteFile functions.<br/>
+     * DeleteFile functions.<br>
      * This value cannot be used with MOVEFILE_DELAY_UNTIL_REBOOT. */
     int MOVEFILE_COPY_ALLOWED = 2;
 
     /** The system does not move the file until the operating system is restarted. The system moves the file immediately
      * after AUTOCHK is executed, but before creating any paging files. Consequently, this parameter enables the
-     * function to delete paging files from previous startups.<br/>
+     * function to delete paging files from previous startups.<br>
      * This value can be used only if the process is in the context of a user who belongs to the administrators group or
-     * the LocalSystem account.<br/>
-     * This value cannot be used with MOVEFILE_COPY_ALLOWED.<br/>
+     * the LocalSystem account.<br>
+     * This value cannot be used with MOVEFILE_COPY_ALLOWED.<br>
      * <b>Windows 2000</b>:  If you specify the MOVEFILE_DELAY_UNTIL_REBOOT flag for dwFlags, you cannot also prepend
      * the filename that is specified by lpExistingFileName with "\\?". */
     int MOVEFILE_DELAY_UNTIL_REBOOT = 4;
 
-    /** The function does not return until the file is actually moved on the disk.<br/>
+    /** The function does not return until the file is actually moved on the disk.<br>
      * Setting this value guarantees that a move performed as a copy and delete operation is flushed to disk before the
-     * function returns. The flush occurs at the end of the copy operation.<br/>
+     * function returns. The flush occurs at the end of the copy operation.<br>
      * This value has no effect if MOVEFILE_DELAY_UNTIL_REBOOT is set. */
     int MOVEFILE_WRITE_THROUGH = 8;
 

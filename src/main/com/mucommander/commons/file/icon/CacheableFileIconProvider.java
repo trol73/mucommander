@@ -22,7 +22,7 @@ public interface CacheableFileIconProvider extends FileIconProvider {
      * each time an icon is requested. If <code>true</code> is returned, the icon cache will be looked up with
      * {@link #lookupCache(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} and if the cache did not return
      * an icon, the icon will be be added to the cache with {@link #addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon, java.awt.Dimension)}.
-     * <br/>
+     * <br>
      * On the other hand, if <code>false</code> is returned, {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * will simply be called, without querying or adding to the cache.
      *
@@ -36,13 +36,13 @@ public interface CacheableFileIconProvider extends FileIconProvider {
      * This method is called by {@link CachedFileIconProvider#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * to perform a cache lookup and give implementations a chance to re-use a cached icon. If a non-null value is
      * returned, the returned icon will be used.
-     * <br/>
+     * <br>
      * On the other hand, if <code>null</code> is returned, the icon will be fetched using {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * followed by a call to {@link #addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon,java.awt.Dimension)}
      * to add the freshly-retrieved icon to the cache.
      *
      * <p>This method is called only if the prior call to {@link #isCacheable(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
-     * returned <code>true</code>.</p>.
+     * returned <code>true</code>.
      *
      * @param file the file for which to look for a previously cached icon
      * @param preferredResolution the preferred resolution for the icon
@@ -54,12 +54,12 @@ public interface CacheableFileIconProvider extends FileIconProvider {
      * This method is called by {@link CachedFileIconProvider#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * to give implementations a chance to cache an icon fetched with {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * and have it returned later by {@link #lookupCache(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.
-     * <br/>
+     * <br>
      * There is no obligation for this method to cache the given icon, implementations may freely choose whether to
      * cache certain icons only.
      *
      * <p>This method is called only if the prior call to {@link #isCacheable(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
-     * returned <code>true</code>.</p>.
+     * returned <code>true</code>.
      *
      * @param file the file that corresponds to the given icon
      * @param icon the icon to add to the cache

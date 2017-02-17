@@ -75,7 +75,7 @@ public class ZipEntry implements Cloneable {
     /** Contains info about how this entry is stored in the zip file */
     protected ZipEntryInfo entryInfo;
 
-    /** An instance of Calendar shared through all instances of this class and used for Java<->DOS time conversion */
+    /** An instance of Calendar shared through all instances of this class and used for Java &lt;-&gt; DOS time conversion */
     protected final static Calendar CALENDAR = Calendar.getInstance();
 
     /** Smallest DOS time (Epoch 1980) */

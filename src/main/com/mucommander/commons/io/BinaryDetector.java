@@ -109,7 +109,7 @@ public class BinaryDetector {
     }
 
     /**
-     * Tries and detect whether the given stream contains binary or text data.</br>
+     * Tries and detect whether the given stream contains binary or text data.<br>
      * This method returns <code>true</code> if it thinks that the bytes correspond to binary data.
      *
      * <p>A maximum of {@link #RECOMMENDED_BYTE_SIZE} will be read from the <code>InputStream</code>. The

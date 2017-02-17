@@ -47,15 +47,15 @@ import java.util.Map;
  *     If one is browsable an not the other one, only the current selection will be opened.
  *   </li>
  * </ul>
- * </p>
+ *
  * <p>
  * Note that this action's behaviour is strictly equivalent to that of {@link OpenAction} in the
  * active panel. Differences will only occur in the inactive panel, and then again only when possible.
- * </p>
+ *
  * <p>
  * This action opens both files synchronously: it will wait for the active panel file to have been
  * opened before opening the inactive panel one.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class OpenInBothPanelsAction extends SelectedFileAction {

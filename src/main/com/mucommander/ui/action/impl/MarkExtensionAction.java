@@ -48,7 +48,7 @@ import java.util.Map;
  *     be marked.
  *   </li>
  * </ul>
- * </p>
+ *
  * <p>
  * By default, this action will mark all files whose extension match that of the current selection in a case-insensitive fashion.
  * It can, however, be configured:
@@ -61,7 +61,7 @@ import java.util.Map;
  *     If the <code>case_sensitive</code> property is set to <code>true</code>, extension matching will be done in a case sensitive fashion.
  *   </li>
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class MarkExtensionAction extends MuAction {

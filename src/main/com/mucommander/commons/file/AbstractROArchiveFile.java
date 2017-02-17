@@ -30,7 +30,6 @@ package com.mucommander.commons.file;
  *  <li>{@link AbstractArchiveFile#getEntryInputStream(ArchiveEntry, ArchiveEntryIterator)} to retrieve a particular entry's content.
  * </ul>
  * The {@link #isWritable()} method is implemented to always returns <code>false</code>.
- * </p>
  *
  * @author Maxence Bernard
  */

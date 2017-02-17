@@ -127,10 +127,9 @@ public interface Shell32API extends StdCallLibrary {
      * This function can be used to copy, move, rename, or delete a file system object.
      *
      * <p>Remarks: You should use fully qualified path names with this function. Using it with relative path names
-     * is not thread-safe.</br>
+     * is not thread-safe.<br>
      * When used to delete a file, SHFileOperation attempts to place the deleted file in the Recycle Bin. If you
      * wish to delete a file and guarantee that it is not placed in the Recycle Bin, use the DeleteFile function.
-     * </p>
      *
      * @param lpFileOp a SHFILEOPSTRUCT structure that contains information this function needs to carry out the
      * specified operation.

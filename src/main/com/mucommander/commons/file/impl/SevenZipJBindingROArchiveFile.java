@@ -34,7 +34,6 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
      * Creates an AbstractROArchiveFile on top of the given file.
      *
      * @param file the file on top of which to create the archive
-     * @param any {@link ArchiveFormat} with extraction support
      *
      * @see <a href="http://sevenzipjbind.sourceforge.net/javadoc/net/sf/sevenzipjbinding/ArchiveFormat.html">
      *      ArchiveFormat</a>

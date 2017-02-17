@@ -29,7 +29,7 @@ public interface ComparableRuntimeProperty {
      * Returns <code>true</code> if the current runtime's value of this property is equal or lower to this instance,
      * according to {@link Enum#compareTo(Object)}.
      *
-     * @return <code>true</code> if the current runtime's value of this property is equal or lower to this instance
+     * @return {@codetrue} if the current runtime's value of this property is equal or lower to this instance
      */
     boolean isCurrentOrLower();
 
@@ -37,23 +37,23 @@ public interface ComparableRuntimeProperty {
      * Returns <code>true</code> if the current runtime's value of this property is lower than this instance,
      * according to {@link Enum##compareTo(Object)}.
      *
-     * @return <code>true</code> if the current runtime's value of this property is lower than this instance
+     * @return {@code true} if the current runtime's value of this property is lower than this instance
      */
     boolean isCurrentLower();
 
     /**
-     * Returns <code>true</code> if the current runtime's value of this property is equal or higher to this instance,
+     * Returns {@code true} if the current runtime's value of this property is equal or higher to this instance,
      * according to {@link Enum##compareTo(Object)}.
      *
-     * @return <code>true</code> if the current runtime's value of this property is equal or higher to this instance
+     * @return {@code true} if the current runtime's value of this property is equal or higher to this instance
      */
     boolean isCurrentOrHigher();
 
     /**
-     * Returns <code>true</code> if the current runtime's value of this property is higher than this instance,
+     * Returns {@code true} if the current runtime's value of this property is higher than this instance,
      * according to {@link Enum##compareTo(Object)}.
      *
-     * @return <code>true</code> if the current runtime's value of this property is higher than this instance
+     * @return {@code true} if the current runtime's value of this property is higher than this instance
      */
     boolean isCurrentHigher();
 }

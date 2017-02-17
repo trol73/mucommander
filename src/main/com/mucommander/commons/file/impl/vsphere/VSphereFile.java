@@ -101,7 +101,7 @@ import com.vmware.vim25.TaskInProgressFaultMsg;
  * Agreement. See: http://www.vmware.com/go/vwssdk-redistribution-info
  * 
  * @see ConnectionPool
- * @author Yuval Kohavi <yuval.kohavi@intigua.com>
+ * @author Yuval Kohavi, yuval.kohavi@intigua.com
  */
 public class VSphereFile extends ProtocolFile implements
 		ConnectionHandlerFactory {

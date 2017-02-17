@@ -61,7 +61,7 @@ public class SizeFormat {
     /** Bitmask to include a space character to separate the digits and unit parts */
     public final static int INCLUDE_SPACE = 64;
 
-    /** Bitmask to round any size < 1KB to 1KB (except 0 which will be 0 KB) */
+    /** Bitmask to round any size &lt; 1KB to 1KB (except 0 which will be 0 KB) */
     public final static int ROUND_TO_KB = 128;
 
     /** One kilobyte: 2^10 */

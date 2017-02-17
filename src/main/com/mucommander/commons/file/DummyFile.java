@@ -281,7 +281,7 @@ public class DummyFile extends AbstractFile {
     /**
      * Implementation notes: always throws {@link UnsupportedFileOperationException}.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation
@@ -292,7 +292,7 @@ public class DummyFile extends AbstractFile {
     /**
      * Implementation notes: always throws {@link UnsupportedFileOperationException}.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation

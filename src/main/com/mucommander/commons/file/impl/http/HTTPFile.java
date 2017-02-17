@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
  * will return <code>true</code>).
  *  <li>If not, the file will just be a regular file.
  * </ul>
- * </p>
  *
  * <p>In order to avoid the cost of having to perform a HEAD request for each file, some guessing based on the URL and
  * its filename is performed to determine if the file is an HTML/XHTML file or not.
@@ -51,7 +50,7 @@ import java.util.regex.Pattern;
  * returned by {@link #getLastModifiedDate()} corresponding to 'now' (current time).</p>
  *
  * <p>Access to HTTP files is provided by the <code>java.net</code> API. The {@link #getUnderlyingFileObject()} method
- * allows to retrieve a <code>java.net.URL</code> instance corresponding to this HTTPFile.</p>
+ * allows to retrieve a <code>java.net.URL</code> instance corresponding to this HTTPFile.
  *
  * @author Maxence Bernard
  */
@@ -460,7 +459,7 @@ public class HTTPFile extends ProtocolFile {
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *
-     * @throws UnsupportedFileOperationException, always
+     * @throws UnsupportedFileOperationException always
      */
     @Override
     @UnsupportedFileOperation

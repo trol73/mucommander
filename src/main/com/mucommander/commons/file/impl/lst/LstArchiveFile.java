@@ -44,7 +44,6 @@ import java.io.InputStream;
  * ash.exe	74240	2004.1.27	2:14.20
  * awk.exe	19	2006.10.2	19:34.4
  * </pre>
- * </p>
  *
  * @see com.mucommander.commons.file.impl.lst.LstFormatProvider
  * @author Maxence Bernard

@@ -1630,7 +1630,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * will be returned.
      *
      * @return information about the owner of this file
-     * @throws UnsupportedFileOperationException
+     * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
+     * or is not implemented.
      */
     public abstract short getReplication() throws UnsupportedFileOperationException;
 
@@ -1643,7 +1644,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * will be returned.
      *
      * @return information about the owner of this file
-     * @throws UnsupportedFileOperationException
+     * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
+     * or is not implemented.
      */
     public abstract long getBlocksize() throws UnsupportedFileOperationException;
 

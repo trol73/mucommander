@@ -58,7 +58,6 @@ import com.mucommander.ui.notifier.NotificationType;
  *                         |                                    |
  *                         -------------------------------------|
  * </pre>
- * </p>
  *
  * @author Maxence Bernard
  */

@@ -87,11 +87,8 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * @see           #extractTarget(Object[])
      */
     public boolean canExecute(Object[] target) {
-        AbstractFile file;
-
-        if((file = extractTarget(target)) != null)
-            return canExecute(file);
-        return false;
+        AbstractFile file = extractTarget(target);
+        return file != null && canExecute(file);
     }
 
     /**
@@ -107,11 +104,12 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * @see                                  #extractTarget(Object[])
      */
     public void execute(Object[] target) throws IOException, UnsupportedOperationException {
-        AbstractFile file;
+        AbstractFile file  = extractTarget(target);
 
         // Makes sure we received the right kind of parameters.
-        if((file = extractTarget(target)) == null)
+        if (file == null) {
             throw new UnsupportedOperationException();
+        }
 
         // Execute the operation.
         execute(file);
@@ -132,32 +130,36 @@ public abstract class LocalFileOperation implements DesktopOperation {
      *     or {@link com.mucommander.commons.file.impl.local.SpecialWindowsLocation}.
      *   </li>
      * </ul>
-     * </p>
      * <p>
      * This behaviour can be overridden by implementations to fit their own needs, although it's probably not a great idea.
-     * </p>
+     *
      * @param  target operation parameters.
      * @return        <code>null</code> if the parameters are not legal, a {@link com.mucommander.commons.file.AbstractFile} instance instead.
      */
     protected AbstractFile extractTarget(Object[] target) {
         // We only deal with arrays containing 1 element.
-        if(target.length != 1)
+        if (target.length != 1) {
             return null;
+        }
 
         // If we find an instance of java.io.File, we can stop here.
-        if(target[0] instanceof File)
-            return FileFactory.getFile(((File)target[0]).getAbsolutePath());
+        if (target[0] instanceof File) {
+            return FileFactory.getFile(((File) target[0]).getAbsolutePath());
+        }
 
-        if(target[0] instanceof SpecialWindowsLocation)
-            return (AbstractFile)target[0];
+        if (target[0] instanceof SpecialWindowsLocation) {
+            return (AbstractFile) target[0];
+        }
 
         // Deals with instances of LocalFile: raw instances or wrapped in another AbstractFile container (e.g. archive files)
-        if(target[0] instanceof AbstractFile && ((AbstractFile)target[0]).hasAncestor(LocalFile.class))
-            return (AbstractFile)target[0];
+        if (target[0] instanceof AbstractFile && ((AbstractFile)target[0]).hasAncestor(LocalFile.class)) {
+            return (AbstractFile) target[0];
+        }
 
         // Deals with instances of String.
-        if(target[0] instanceof String)
-            return FileFactory.getFile((String)target[0]);
+        if (target[0] instanceof String) {
+            return FileFactory.getFile((String) target[0]);
+        }
 
         // Illegal parameters.
         return null;

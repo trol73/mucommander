@@ -66,7 +66,7 @@ public class FileSet extends Vector<AbstractFile> {
 	
 
     /**
-     * Adds all the files in the given array to this FileSet. Does nothing if the specified array is <code>null</code.
+     * Adds all the files in the given array to this FileSet. Does nothing if the specified array is {@code null}.
      *
      * @param files the files to add to this FileSet.
      */

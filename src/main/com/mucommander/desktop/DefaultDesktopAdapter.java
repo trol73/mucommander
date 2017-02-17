@@ -34,11 +34,11 @@ import com.mucommander.commons.file.AbstractFile;
  * This implementation is meant to help application developers by providing standard
  * implementations of all {@link DesktopAdapter} methods, letting subclasses concentrate
  * on what's important rather than mundane.
- * </p>
+ *
  * <p>
  * Moreover, an instance of <code>DefaultDesktopAdapter</code> will be used by the
  * {@link DesktopManager} if no valid desktop could be identifier.
- * </p>
+ *
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class DefaultDesktopAdapter implements DesktopAdapter {
@@ -101,7 +101,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * <p>
      * This method will return <code>true</code> if <code>(e.getModifiers() & MouseEvent.BUTTON3_MASK)</code>
      * doesn't equal 0.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a middle-click, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -114,7 +114,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * <p>
      * This method will return <code>true</code> if <code>(e.getModifiers() & MouseEvent.BUTTON2_MASK)</code>
      * doesn't equal 0.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a right-click, <code>false</code> otherwise.
      * @see      #isLeftMouseButton(MouseEvent)

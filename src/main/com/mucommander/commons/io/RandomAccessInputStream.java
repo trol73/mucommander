@@ -101,7 +101,7 @@ public abstract class RandomAccessInputStream extends InputStream implements Ran
      * @param n number of bytes to skip
      * @return the number of bytes that have effectively been skipped, -1 if the offset is already positionned to the
      * end of the stream when this method is called (FIXME this violates the definitin of the return value 
-     * of java.io.InputStream (>=0) and therefore it cannot be used as an InputStream as it should when extending it. 
+     * of java.io.InputStream (&gt;=0) and therefore it cannot be used as an InputStream as it should when extending it.
      * Either this class should not extend InputStream or it should not return a negative value)
      * @throws IOException if something went wrong
      */

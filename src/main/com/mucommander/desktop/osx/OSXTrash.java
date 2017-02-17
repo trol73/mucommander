@@ -35,7 +35,7 @@ import java.util.List;
  * to the trash.
  *
  * <p>
- *   <b>Implementation notes:</b><br/>
+ *   <b>Implementation notes:</b><br>
  *   <br/>
  *   This trash is implemented as a {@link com.mucommander.desktop.QueuedTrash} for several reasons:
  *   <ul>
@@ -45,7 +45,7 @@ import java.util.List;
  *    <li>executing an AppleScript has a cost as it has to be compiled first. When files are moved repeatedly, it is
  *        more efficient to group files and execute only one AppleScript.</li>
  *   </ul>
- *   <br/>
+ *   <br>
  *   This class uses {@link com.mucommander.ui.macosx.AppleScript} to interact with the trash.
  *
  * @see OSXTrashProvider

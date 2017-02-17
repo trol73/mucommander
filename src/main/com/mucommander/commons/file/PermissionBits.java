@@ -16,7 +16,6 @@ package com.mucommander.commons.file;
  * <code>getIntValue()</code> method by relying on <code>getBitValue()</code> and querying it sequentially for every
  * permission bit.</li>
  *   </ul>
- * </p>
  *
  * @see com.mucommander.commons.file.GroupedPermissionBits
  * @see com.mucommander.commons.file.IndividualPermissionBits

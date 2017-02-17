@@ -19,7 +19,6 @@ import com.mucommander.commons.file.icon.LocalFileIconProvider;
  * It is also noteworthy that those Swing classes maintain an icon cache. Therefore, local file icons are not cached,
  * only non-local files (remote protocol or archive entries) have their icons cached to avoid excessive temporary file
  * creation, using their extension as the cache's key.
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -35,7 +34,6 @@ public class SwingFileIconProvider extends CachedFileIconProvider {
      * <p>
      * The initialization must be triggered by a thread other than the EventDispatchThread, or a deadlock may happen
      * on platforms where JFileChooser is used. This method provides to control when and where the initialization occurs.
-     * </p>
      */
     public static void forceInit() {
         SwingFileIconProviderImpl.checkInit();

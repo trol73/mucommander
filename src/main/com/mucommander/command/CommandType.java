@@ -51,7 +51,7 @@ public enum CommandType {
      *   <li>If <code>type</code> equals {CommandsXmlConstants#VALUE_INVISIBLE}, {@link #INVISIBLE_COMMAND} will be returned.</li>
      *   <li>In any other case, {@link #NORMAL_COMMAND} will be returned.</li>
      * </ul>
-     * </p>
+     *
      * @param  value String representation of type to analyze.
      * @return <code>type</code>'s integer equivalent.
      */

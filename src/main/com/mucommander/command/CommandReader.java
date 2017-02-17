@@ -80,7 +80,7 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
      * </p>
      * @param  in        where to read command data from.
      * @param  b         where to send building events to.
-     * @throws Exception thrown if any error occurs.
+     * @throws IOException thrown if any error occurs.
      */
     public static void read(InputStream in, CommandBuilder b) throws CommandException, IOException {
         b.startBuilding();

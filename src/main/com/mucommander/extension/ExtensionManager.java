@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
  * <p>
  * Extensions must be stored in {@link #getExtensionsFolder()} in order for this class to be aware of them.
  * Moreover, the method {@link #addExtensionsToClasspath()} must have been called before extensions can be used.
- * </p>
+ *
  * <p>
  * Extensions are loaded through a custom <code>ClassLoader</code>. The optimal situation is for that <code>ClassLoader</code>
  * to be the system one, which can only be achieved through setting the <code>java.system.class.loader</code> system property
@@ -41,7 +41,7 @@ import java.util.StringTokenizer;
  * might cause conflicts under rare circumstances. Extension writers are advised to load resources through the <code>ClassLoader</code>
  * returned by {@link #getClassLoader()}, as not doing so might result in using the bootstrap classloader which doesn't have access to
  * resources found in {@link #getExtensionsFolder()}.
- * </p>
+ *
  * <p>
  * This class can also be used to load Swing look and feel from JAR files that aren't in the system's classpath. In order to achieve this,
  * application writers must:
@@ -59,7 +59,7 @@ import java.util.StringTokenizer;
  * through the system class loader rather than the one specified at initialisation time. This happens with Look&Feels that extend system ones, such
  * as <code>Quaqua</code>. The only way to get these to load properly is to make sure the system classloader is an instance of
  * {@link com.mucommander.commons.file.AbstractFileClassLoader}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ExtensionManager {

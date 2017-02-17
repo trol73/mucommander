@@ -55,7 +55,6 @@ public class SMBProtocolProvider implements ProtocolProvider {
      *   <dt>3,4,5</dt><dd>Sends LMv2 and NTLMv2 data. NTLMv2 session security is also negotiated if the server supports
      * it. This is the default behavior (in 1.3.0 or later)</dd>
      * </dl>
-     * </p>
      *
      * @param value one of the allowed values, refer to JCIFS's documentation for more information.
      */
@@ -72,7 +71,6 @@ public class SMBProtocolProvider implements ProtocolProvider {
      * This configuration option is mapped onto jCIFS's <code>jcifs.smb.client.useExtendedSecurity</code> client
      * property. jCIFS's default value will be used if this method is not called, which is <code>true</code> since
      * jCIFS 1.3.0.
-     * </p>
      *
      * @param value <code>true</code> to enable extended security, refer to JCIFS's documentation for more information.
      */

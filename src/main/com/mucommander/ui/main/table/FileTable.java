@@ -607,7 +607,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile children[], AbstractFile fileToSelect) {
         // Stop quick search in case it was being used before folder change
-        if (!isQuickSearchMatchesFirst()) {
+        if (!isQuickSearchMatchesFirst() || !folder.equals(tableModel.getCurrentFolder())) {
             quickSearch.stop();
         }
 

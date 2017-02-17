@@ -65,7 +65,6 @@ import java.io.PushbackInputStream;
  * KOI8-R
  * ISO-8859-9
  * </pre>
- * </p>
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  * @see <a href="http://philip.html5.org/data/charsets.html">ICU charset detection accuracy</a>
@@ -80,8 +79,7 @@ public class EncodingDetector {
      *
      * Comment by Trol: 4096 is wrong value here. I have a lot of times situation when the encoding doesn't detected correctly
      * in case of source file with UTF-8 comments at the end
-     * </p>
-     *  */
+     */
     public final static int MAX_RECOMMENDED_BYTE_SIZE = 1024*16;
 
 
@@ -102,7 +100,7 @@ public class EncodingDetector {
      * <code>java.nio.Charset#isSupported(String)</code> to determine if it is available.
      *
      * <p>A maximum of {@link #MAX_RECOMMENDED_BYTE_SIZE} will be read from the array. If the array is larger than this
-     * value, all further bytes will be ignored.</p>
+     * value, all further bytes will be ignored.
      *
      * @param bytes the bytes for which to detect the encoding
      * @param off the array offset at which the data to process starts
@@ -181,7 +179,6 @@ public class EncodingDetector {
      * stream will not be closed and will not be repositionned after the bytes have been read. It is up to the calling
      * method to use the <code>InputStream#mark()</code> and <code>InputStream#reset()</code> methods (if supported) 
      * or reopen the stream if needed.
-     * </p>
      *
      * @param in the InputStream that supplies the bytes
      * @return the best guess at the character encoding, null if there is none (not enough data or confidence)
