@@ -42,7 +42,7 @@ import java.util.List;
  *   <li>Access to the {@link #themeData ThemeData} being edited.</li>
  *   <li>Helper methods for theme-specific layout creation.</li>
  * </ul>
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 abstract class ThemeEditorPanel extends PreferencesPanel {
@@ -117,7 +117,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * <p>
      * This is a convenience method and is strictly equivalent to calling
      * <code>{@link #addLabelRow(ProportionalGridPanel,boolean) addLabelRow}(pane, true)</code>.
-     * </p>
+     *
      * @param panel panel in which to add the label row.
      */
     void addLabelRow(ProportionalGridPanel panel) {addLabelRow(panel, true);}
@@ -129,7 +129,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * <pre>
      *    &lt;EMPTY&gt; | Text | Background | (Preview)
      * </pre>
-     * </p>
+     *
      * @param panel          panel in which to add the label row.
      * @param includePreview whether or not to add the <code>preview</code> label.
      */
@@ -173,7 +173,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * <p>
      * The specified listener will receive calls to its <code>setFont</code> method whenever
      * the font chooser has been updated.
-     * </p>
+     *
      * @param fontChooser      chooser to monitor.
      * @param previewComponent component whose font should be tied to that of the chooser
      */
@@ -197,7 +197,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * Wraps the specified panel within a scroll pane.
      * <p>
      * The resulting scroll pane will have a vertical bar as needed, no horizontal scroll bar policy.
-     * </p>
+     *
      * @param panel panel to wrap in a <code>JScrollPane</code>.
      */
     JComponent createScrollPane(JPanel panel) {
@@ -215,7 +215,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * <p>
      * This is a convenience method and is strictly equivalent to calling
      * <code>addColorButtons(gridPanel, fontChooser, label, foregroundId, backgroundId, null)</code>.
-     * </p>
+     *
      * @param gridPanel    a 3 columns proportinal grid panel in which to add the buttons.
      * @param fontChooser  used to decide which font to use in each color button's preview.
      * @param label        label for the row.
@@ -233,8 +233,8 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * <pre>
      * LABEL | COLOR (foreground) | COLOR (background)
      * </pre>
-     * </p>
-     * @param gridPanel    a 3 columns proportinal grid panel in which to add the buttons.
+     *
+     * @param gridPanel    a 3 columns proportional grid panel in which to add the buttons.
      * @param fontChooser  used to decide which font to use in each color button's preview.
      * @param label        label for the row.
      * @param foregroundId identifier of the color to display in the foreground button.

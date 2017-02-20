@@ -1,9 +1,9 @@
 package de.congrace.exp4j;
 
 /**
- * This class is used to create custom operators for use in expressions<br/>
- * The applyOperation(double[] values) will have to be implemented by users of this class. <br/>
- * <b>Example</b><br/>
+ * This class is used to create custom operators for use in expressions<br>
+ * The applyOperation(double[] values) will have to be implemented by users of this class. <br>
+ * <b>Example</b><br>
  * <code><pre>{@code} 
  *      CustomOperator greaterEq = new CustomOperator(">=", true, 4, 2) {
  *            double applyOperation(double[] values) {
@@ -18,10 +18,10 @@ package de.congrace.exp4j;
  *       assertTrue(0d == calc.calculate());
  * </pre></code> When constructing {@link CustomOperator} special attention has to be given to the precedence of the
  * operation. see http://en.wikipedia.org/wiki/Order_of_operations. The precendence values for the builtin operators are
- * as follows: <br/>
- * Addition and Subtraction (+,-) have precedence 1<br/>
- * Division Multiplication, and Modulo (/,*,%) have precedence 3<br/>
- * Exponentiation (^) has precendence 5 <br/>
+ * as follows: <br>
+ * Addition and Subtraction (+,-) have precedence 1<br>
+ * Division Multiplication, and Modulo (/,*,%) have precedence 3<br>
+ * Exponentiation (^) has precendence 5 <br>
  * Unary minus and plus (+1,-1) have precedence 7
  * 
  * @author frank asseg
@@ -47,7 +47,7 @@ public abstract class CustomOperator {
 	 * @param precedence
 	 *            the precedence of the operation
 	 */
-	protected CustomOperator(final String symbol, final boolean leftAssociative, final int precedence) {
+	CustomOperator(final String symbol, final boolean leftAssociative, final int precedence) {
 		super();
 		this.leftAssociative = leftAssociative;
 		this.symbol = symbol;
@@ -84,7 +84,7 @@ public abstract class CustomOperator {
 	 * @param symbol
 	 *            the {@link String} to use a symbol for this operation
 	 */
-	protected CustomOperator(final String symbol) {
+	CustomOperator(final String symbol) {
 		super();
 		this.leftAssociative = true;
 		this.symbol = symbol;
@@ -100,7 +100,7 @@ public abstract class CustomOperator {
 	 * @param precedence
 	 *            the precedence of the operation
 	 */
-	protected CustomOperator(final String symbol, final int precedence) {
+	CustomOperator(final String symbol, final int precedence) {
 		super();
 		this.leftAssociative = true;
 		this.symbol = symbol;

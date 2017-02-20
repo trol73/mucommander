@@ -29,7 +29,7 @@ import java.beans.PropertyChangeListener;
  * <p>
  * The purpose of this class is to create default colors that map, for example, to the default text area foreground
  * color for the current look and feel.
- * </p>
+ *
  * <p>
  * The mechanism used to identify the default color goes through three different stages:
  * <ul>
@@ -42,7 +42,7 @@ import java.beans.PropertyChangeListener;
  * If this is <code>null</code>, return a hard-coded default value.
  * </li>
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class SystemDefaultColor extends DefaultColor implements PropertyChangeListener {
@@ -99,7 +99,7 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      * @param property name of the {@link UIManager} property to look for.
      * @param mapper   component mapper to use when the {@link UIManager} property isn't set.
      */
-    public SystemDefaultColor(int type, String property, ComponentMapper mapper) {
+    SystemDefaultColor(int type, String property, ComponentMapper mapper) {
         UIManager.addPropertyChangeListener(this);
         this.property = property;
         this.mapper   = mapper;
@@ -117,10 +117,9 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      */
     private Color getColor(JComponent component) {
         // Foreground color.
-        if(type == FOREGROUND)
+        if (type == FOREGROUND) {
             return component.getForeground();
-
-        // Background color.
+        }// Background color.
         else if(type == BACKGROUND)
             return component.getBackground();
 
@@ -161,10 +160,12 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
 
     @Override
     public Color getColor(ThemeData data) {
-        if(color == null) {
-            if((color = UIManager.getColor(property)) == null)
-                if((color = getColor(mapper.getComponent())) == null)
+        if (color == null) {
+            if ((color = UIManager.getColor(property)) == null) {
+                if ((color = getColor(mapper.getComponent())) == null) {
                     color = getColor();
+                }
+            }
                 
             color = new Color(color.getRGB(), (color.getRGB() & 0xFF000000) != 0xFF000000);
         }

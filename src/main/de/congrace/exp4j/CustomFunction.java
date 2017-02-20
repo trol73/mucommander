@@ -1,9 +1,9 @@
 package de.congrace.exp4j;
 
 /**
- * this classed is used to create custom functions for exp4j<br/>
- * <br/>
- * <b>Example</b><br/>
+ * This classed is used to create custom functions for exp4j<br>
+ *
+ * <b>Example</b><br>
  * <code><pre>{@code}	
  * CustomFunction fooFunc = new CustomFunction("foo") {
  * 		public double applyFunction(double value) {
@@ -29,7 +29,7 @@ public abstract class CustomFunction {
 	 * @param name
 	 *            the name of the function (e.g. foo)
 	 */
-	protected CustomFunction(String name) throws InvalidCustomFunctionException {
+	CustomFunction(String name) throws InvalidCustomFunctionException {
 		this.argc = 1;
 		this.name = name;
 		int firstChar = (int) name.charAt(0);

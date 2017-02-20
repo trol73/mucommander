@@ -54,7 +54,6 @@ import com.mucommander.process.ProcessRunner;
  *       for more information.
  *   </li>
  * </ul>
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -76,7 +75,7 @@ public class AppleScript {
      * the buffer will contain details about the error.
      *
      * <p>If the caller is not interested in the script's output, a <code>null</code> value can be passed which will
-     * speed the execution up a little.</p>
+     * speed the execution up a little.
      *
      * @param appleScript the AppleScript to execute
      * @param outputBuffer the StringBuilder that will hold the script's output, <code>null</code> for no output

@@ -54,11 +54,11 @@ import java.net.MalformedURLException;
     private final static PermissionBits CHANGEABLE_PERMISSIONS = new GroupedPermissionBits(128);   // -w------- (200 octal)
 
     
-    protected SMBFile(FileURL fileURL) throws IOException {
+    SMBFile(FileURL fileURL) throws IOException {
         this(fileURL, null);
     }
 
-    protected SMBFile(FileURL fileURL, SmbFile smbFile) throws IOException {
+    SMBFile(FileURL fileURL, SmbFile smbFile) throws IOException {
         super(fileURL);
 
         if (!fileURL.containsCredentials()) {
@@ -116,7 +116,7 @@ import java.net.MalformedURLException;
      */
     private static SmbFile createSmbFile(FileURL url) throws MalformedURLException {
         Credentials credentials = url.getCredentials();
-        if(credentials==null)
+        if (credentials == null)
             return new SmbFile(url.toString(false));
 
         // Extract the domain (if any) from the username
@@ -174,7 +174,7 @@ import java.net.MalformedURLException;
      *
      * @param period time period during which attributes values are cached, in milliseconds
      */
-    public static void setAttributeCachingPeriod(long period) {
+    static void setAttributeCachingPeriod(long period) {
         jcifs.Config.setProperty("jcifs.smb.client.attrExpirationPeriod", ""+period);
     }
 
@@ -187,8 +187,7 @@ import java.net.MalformedURLException;
     public long getLastModifiedDate() {
         try {
             return file.lastModified();
-        }
-        catch(SmbException e) {
+        } catch(SmbException e) {
             return 0;
         }
     }
@@ -202,17 +201,16 @@ import java.net.MalformedURLException;
     public long getSize() {
         try {
             return file.length();
-        }
-        catch(SmbException e) {
+        } catch(SmbException e) {
             return 0;
         }
     }
 
     @Override
     public AbstractFile getParent() {
-        if(!parentValSet) {
+        if (!parentValSet) {
             FileURL parentURL = fileURL.getParent();
-            if(parentURL!=null) {
+            if (parentURL!=null) {
                 parent = FileFactory.getFile(parentURL);
                 // Note: parent may be null if it can't be resolved
             }
@@ -235,8 +233,7 @@ import java.net.MalformedURLException;
         // Unlike java.io.File, SmbFile.exists() can throw an SmbException
         try {
             return file.exists();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             LOGGER.info("Exception caught while calling SmbFile#exists(): " +   e.getMessage());
 
             return e instanceof SmbAuthException;
@@ -255,13 +252,15 @@ import java.net.MalformedURLException;
 
     @Override
     public void changePermission(int access, int permission, boolean enabled) throws IOException {
-        if(access!=USER_ACCESS || permission!=WRITE_PERMISSION)
+        if (access!=USER_ACCESS || permission!=WRITE_PERMISSION) {
             throw new IOException();
+        }
 
-        if(enabled)
+        if (enabled) {
             file.setReadWrite();
-        else
+        } else {
             file.setReadOnly();
+        }
     }
 
     /**
@@ -300,8 +299,7 @@ import java.net.MalformedURLException;
     public boolean isDirectory() {
         try {
             return file.isDirectory();
-        }
-        catch(SmbException e) {
+        } catch(SmbException e) {
             return false;
         }
     }

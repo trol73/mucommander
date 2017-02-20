@@ -28,7 +28,7 @@ import java.beans.PropertyChangeListener;
  * <p>
  * The purpose of this class is to create default fonts that map, for example, to the default text area font for the
  * current look and feel.
- * </p>
+ *
  * <p>
  * The mechanism used to identify the default font goes through three different stages:
  * <ul>
@@ -40,7 +40,7 @@ import java.beans.PropertyChangeListener;
  * If this is <code>null</code>, return a default SansSerif font.
  * </li>
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class SystemDefaultFont extends DefaultFont implements PropertyChangeListener {

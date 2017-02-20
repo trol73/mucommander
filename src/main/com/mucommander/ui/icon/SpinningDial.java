@@ -27,12 +27,12 @@ import java.awt.image.BufferedImage;
  * This behaves as any animated icon except for one thing: when the animation is stopped using
  * {@link #setAnimated(boolean)}, the dial won't be displayed anymore until the animation is
  * resumed.
- * </p>
+ *
  * <p>
  * This heavily borrows code from Technomage's <code>furbelow</code> package, distributed
  * under the GNU Lesser General Public License.<br>
  * The original source code can be found <a href="http://furbelow.svn.sourceforge.net/viewvc/furbelow/trunk/src/furbelow">here</a>.
- * </p>
+ *
  * @author twall, Nicolas Rinaudo
  */
 public class SpinningDial extends AnimatedIcon {
@@ -83,11 +83,10 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
      */
     public SpinningDial() {this(DEFAULT_SIZE, DEFAULT_SIZE);}
 
@@ -100,7 +99,7 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * @param animate whether to animate the dial immediately or not.
      */
     public SpinningDial(boolean animate) {this(DEFAULT_SIZE, DEFAULT_SIZE, animate);}
@@ -113,11 +112,11 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
+     *
      * @param c color in which to paint the dial.
      */
     public SpinningDial(Color c) {this(DEFAULT_SIZE, DEFAULT_SIZE, c);}
@@ -130,7 +129,7 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * @param c       color in which to paint the dial.
      * @param animate whether to animate the dial immediately or not.
      */
@@ -144,11 +143,11 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
+     *
      * @param w width of the icon.
      * @param h height of the icon.
      */
@@ -162,7 +161,7 @@ public class SpinningDial extends AnimatedIcon {
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
      * </ul>
-     * </p>
+     *
      * @param w       width of the icon.
      * @param h       height of the icon.
      * @param animate whether to animate the dial immediately or not.
@@ -173,11 +172,11 @@ public class SpinningDial extends AnimatedIcon {
      * Creates a new spinning dial with the specified dimensions and color.
      * <p>
      * The new instance will use {@link #DEFAULT_SPOKES} for its number of spokes.
-     * </p>
+     *
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
+     *
      * @param w width of the icon.
      * @param h height of the icon.
      * @param c color in which to paint the dial.
@@ -188,7 +187,7 @@ public class SpinningDial extends AnimatedIcon {
      * Creates a new spinning dial with the specified dimensions and color.
      * <p>
      * The new instance will use {@link #DEFAULT_SPOKES} for its number of spokes.
-     * </p>
+     *
      * @param w       width of the icon.
      * @param h       height of the icon.
      * @param c       color in which to paint the dial.
@@ -200,11 +199,11 @@ public class SpinningDial extends AnimatedIcon {
      * Creates a new spinning dial with the specified dimensions and number of spokes.
      * <p>
      * The new instance will use {@link #DEFAULT_COLOR} for its color.
-     * </p>
+     *
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
+     *
      * @param w      width of the icon.
      * @param h      height of the icon.
      * @param spokes number of spokes that compose the dial.
@@ -215,7 +214,7 @@ public class SpinningDial extends AnimatedIcon {
      * Creates a new spinning dial with the specified dimensions and number of spokes.
      * <p>
      * The new instance will use {@link #DEFAULT_COLOR} for its color.
-     * </p>
+     *
      * @param w       width of the icon.
      * @param h       height of the icon.
      * @param spokes  number of spokes that compose the dial.
@@ -228,7 +227,7 @@ public class SpinningDial extends AnimatedIcon {
      * <p>
      * A dial created that way will not be displayed until {@link #setAnimated(boolean)} is
      * called to animate it.
-     * </p>
+     *
      * @param w      width of the icon.
      * @param h      height of the icon.
      * @param spokes number of spokes that compose the dial.
@@ -399,8 +398,8 @@ public class SpinningDial extends AnimatedIcon {
      * Starts / stops the spinning dial.
      * <p>
      * If <code>a</code> is <code>false</code>, the animation will stop and the
-     * the dial won't be displayed anymore until the animationr resumes.
-     * </p>
+     * the dial won't be displayed anymore until the animation resumes.
+     *
      * @param a whether to start or stop the animation.
      */
     @Override
@@ -408,7 +407,8 @@ public class SpinningDial extends AnimatedIcon {
         super.setAnimated(a);
 
         // Makes sure the dial disapears when the animation is stopped.
-        if(!a)
+        if (!a) {
             repaint();
+        }
     }
 }

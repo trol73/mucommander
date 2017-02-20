@@ -51,7 +51,7 @@ public class MultiLineLabel extends JTextArea {
      * method of the Window that contains this component, for the window to be layed out properly. This works around a
      * well-known bug that affects line-wrapping text components which report an incorrect preferred size, causing
      * layout issues. This parameter should be always enabled unless a fixed number of rows or columns is set using
-     * {@link #setRows(int)} or {@link #setColumns(int)}.</br>
+     * {@link #setRows(int)} or {@link #setColumns(int)}.<br>
      * For reference, here are links to the afore-mentionned issue:
      * <ul>
      *  <li>http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4924163</li>

@@ -87,8 +87,8 @@ public class SMBProtocolProvider implements ProtocolProvider {
     /////////////////////////////////////
 
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
-        return instantiationParams.length==0
-            ?new SMBFile(url)
-            :new SMBFile(url, (SmbFile)instantiationParams[0]);
+        return instantiationParams.length == 0
+            ? new SMBFile(url)
+            : new SMBFile(url, (SmbFile)instantiationParams[0]);
     }
 }

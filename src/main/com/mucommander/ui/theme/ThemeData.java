@@ -30,30 +30,30 @@ import java.util.WeakHashMap;
 /**
  * Base class for all things Theme.
  * <p>
- * The role of <code>ThemeData</code> is twofold:<br/>
+ * The role of <code>ThemeData</code> is twofold:<br>
  * - theme data storage.<br/>
- * - default values retrievals and notification.<br/>
- * </p>
+ * - default values retrievals and notification.<br>
+ *
  * <p>
  * In the current version, theme data is solely composed of assorted colors and fonts. <code>ThemeData</code>
  * offers methods to {@link #setColor(int,Color) set}, {@link #getColor(int) retrieve}, {@link #isIdentical(ThemeData,boolean) compare}
  * and {@link #cloneData() clone} these values.
- * </p>
+ *
  * <p>
  * One of its major constraints is that it can <b>never</b> return <code>null</code> values for the items it contains. Whenever a specific
  * value hasn't been set, <code>ThemeData</code> will seemlessly provide the rest of the world with default values retrieved from the current
  * look&amp;feel.
- * </p>
+ *
  * <p>
  * This default values system means that theme items can change outside of anybody's control: Swing UI properties can be updated, the current
  * look&amp;feel can be modified... <code>ThemeData</code> will track this changes and make sure that the proper event are dispatched
  * to listeners.
- * </p>
+ *
  * <p>
  * In theory, classes that use the theme API should not need to worry about default value modifications. This is already managed internally, and
  * if the change affects any of the themes being listened on, the event will be propagated to them. There might special cases where it's necessary,
  * however, for which <code>ThemeData</code> provides a {@link #addDefaultValuesListener(ThemeListener) listening} mechanism.
- * </p>
+ *
  * @see Theme
  * @see ThemeManager
  * @see javax.swing.UIManager
@@ -409,7 +409,7 @@ public class ThemeData implements ThemeId {
      * <p>
      * <code>ThemeData</code> instances created that way will return default values for every
      * single one of their items.
-     * </p>
+     *
      * @see #cloneData()
      */
     public ThemeData() {
@@ -424,13 +424,13 @@ public class ThemeData implements ThemeId {
      * since we're copying the arrays themselves, rather than creating new ones and copying
      * each color and font individually, <code>from</code> will be unreliable at the end of this
      * call.
-     * </p>
+     *
      * <p>
      * This constructor is only meant for optimisation purposes. When transforming
      * theme data in a proper theme, using this constructor allows us to not duplicate
      * all the fonts and color. It's a risky constructor to use, however, and should not be exposed
      * outside of the scope of the package.
-     * </p>
+     *
      * @param from theme data from which to import values.
      */
     ThemeData(ThemeData from) {
@@ -449,7 +449,7 @@ public class ThemeData implements ThemeId {
      * This method allows callers to decide whether they want to <i>freeze</i> default values or
      * not. Freezing a value means that it will be considered to have been set to the default value,
      * and will not be updated when this default value changes.
-     * </p>
+     *
      * @param  freezeDefaults whether or not to freeze the data's default values.
      * @return                a clone of the current theme data.
      * @see                   #cloneData()
@@ -474,7 +474,7 @@ public class ThemeData implements ThemeId {
      * Clones the theme data without freezing default values.
      * <p>
      * This is a convenience method, and is exactly equivalent to calling <code>{@link #cloneData(boolean) cloneData(false)}</code>.
-     * </p>
+     *
      * @return a clone of the current theme data.
      */
     public ThemeData cloneData() {return cloneData(false);}
@@ -487,13 +487,13 @@ public class ThemeData implements ThemeId {
      * go wrong during the operation and an exception was raised, the current data would
      * find itself in an invalid state, where some of its values would have been updated but
      * not all of them. It is up to callers to deal with these issues.
-     * </p>
+     *
      * <p>
      * Values overwriting is done through the use of the current instance's {@link #setColor(int,Color)}
      * and {@link #setFont(int,Font)} methods. This allows subclasses to plug their own code here. A good
      * example of that is {@link Theme}, which will automatically trigger font and color events when
      * importing data.
-     * </p>
+     *
      * @param data data to import.
      */
     public void importData(ThemeData data) {
@@ -516,16 +516,16 @@ public class ThemeData implements ThemeId {
      * Sets the specified color to the specified value.
      * <p>
      * Use a value of <code>null</code> to restore the color to it's default value.
-     * </p>
+     *
      * <p>
      * This method will return <code>false</code> if it didn't actually change the theme data.
      * This is checked through the use of <code>{@link #isColorDifferent(int,Color) isColorDifferent(}id,color)</code>.
-     * </p>
+     *
      * <p>
      * Note that even if the color is found to be identical, the previous value will be overwritten -
      * this is a design choice, meant for these cases where developers need to work with home-made
      * subclasses of <code>Color</code>.
-     * </p>
+     *
      * @param  id    identifier of the color to set.
      * @param  color value to which the color should be set.
      * @return       <code>true</code> if the call actually changed the data, <code>false</code> otherwise.
@@ -555,16 +555,16 @@ public class ThemeData implements ThemeId {
      * Sets the specified font to the specified value.
      * <p>
      * Use a value of <code>null</code> to restore the font to it's default value.
-     * </p>
+     *
      * <p>
      * This method will return <code>false</code> if it didn't actually change the theme data.
      * This is checked through the use of <code>{@link #isFontDifferent(int,Font) isFontDifferent(}id, font)</code>.
-     * </p>
+     *
      * <p>
      * Note that even if the font is found to be identical, the previous value will be overwritten -
      * this is a design choice, meant for these cases where developers need to work with home-made
      * subclasses of <code>Font</code>.
-     * </p>
+     *
      * @param  id   identifier of the font to set.
      * @param  font value to which the font should be set.
      * @return      <code>true</code> if the call actually changed the data, <code>false</code> otherwise.
@@ -586,7 +586,7 @@ public class ThemeData implements ThemeId {
      * Returns the requested color.
      * <p>
      * If the requested color wasn't set, its default value will be returned.
-     * </p>
+     *
      * @param  id identifier of the color to retrieve.
      * @return    the requested color, or its default value if not set.
      * @see       #getDefaultColor(int,ThemeData)
@@ -601,7 +601,7 @@ public class ThemeData implements ThemeId {
      * Returns the requested font.
      * <p>
      * If the requested font wasn't set, its default value will be returned.
-     * </p>
+     *
      * @param  id identifier of the font to retrieve.
      * @return    the requested font, or its default value if not set.
      * @see       #getDefaultFont(int, ThemeData)
@@ -639,7 +639,7 @@ public class ThemeData implements ThemeId {
      * Default values are look&amp;feel dependant, and are subject to change during the application's
      * life time.<br/>
      * Classes that need to monitor such changes can register themselves using {@link #addDefaultValuesListener(ThemeListener)}.
-     * </p>
+     *
      * @param  id   identifier of the color whose default value should be retrieved.
      * @param  data theme data from which to retrieve default values.
      * @return      the default value for the specified color.
@@ -657,7 +657,7 @@ public class ThemeData implements ThemeId {
      * Default values are look&amp;feel dependant, and are subject to change during the application's
      * life time.<br/>
      * Classes that need to monitor such changes can register themselves using {@link #addDefaultValuesListener(ThemeListener)}.
-     * </p>
+     *
      * @param  id identifier of the font whose default value should be retrieved.
      * @return    the default value for the specified font.
      * @see       #addDefaultValuesListener(ThemeListener)
@@ -678,7 +678,7 @@ public class ThemeData implements ThemeId {
      * Comparisons is done by calling {@link #isFontDifferent(int,Font,boolean)} and {@link #isColorDifferent(int,Color,boolean)}
      * on every font and color. Refer to the documentation of these methods for more information on using the <code>ignoreDefaults</code>
      * parameter.
-     * </p>
+     *
      * @param  data           data against which to compare.
      * @param  ignoreDefaults whether or not to compare default values.
      * @return                <code>true</code> if the specified data and the current one are identical, <code>false</code> otherwise.
@@ -705,7 +705,7 @@ public class ThemeData implements ThemeId {
      * Returns <code>true</code> if the current data is identical to the specified one, using default values when items haven't been set.
      * <p>
      * This is a convenience method, and is strictly equivalent to calling {@link #isIdentical(ThemeData,boolean) isIdentical(data, false)}.
-     * </p>
+     *
      * @param  data data against which to compare.
      * @return      <code>true</code> if the specified data and the current one are identical, <code>false</code> otherwise.
      */
@@ -716,7 +716,7 @@ public class ThemeData implements ThemeId {
      * <p>
      * This is a convenience method, and is stricly equivalent to calling
      * <code>{@link #isFontDifferent(int,Font,boolean) isFontDifferent(}id, font, false)</code>.
-     * </p>
+     *
      * @param  id   identifier of the font to check.
      * @param  font font to check.
      * @return      <code>true</code> if <code>font</code> is different from the one defined in the data.
@@ -731,7 +731,7 @@ public class ThemeData implements ThemeId {
      * Setting <code>ignoreDefaults</code> to <code>false</code> will compare both fonts from a 'user' point of view: comparison
      * will be done on the values that are used by the rest of the application. It might however be necessary to consider
      * fonts to be different if one is set but not the other. This can be achieved by setting <code>ignoreDefaults</code> to <code>true</code>.
-     * </p>
+     *
      * @param  id             identifier of the font to check.
      * @param  font           font to check.
      * @param  ignoreDefaults whether or not to ignore defaults if the requested item doesn't have a value.
@@ -763,7 +763,7 @@ public class ThemeData implements ThemeId {
      * <p>
      * This is a convenience method, and is strictly equivalent to calling
      * <code>{@link #isColorDifferent(int,Color,boolean) isColorDifferent(}id, color, false)</code>.
-     * </p>
+     *
      * @param  id   identifier of the color to check.
      * @param  color color to check.
      * @return      <code>true</code> if <code>color</code> is different from the one defined in the data.
@@ -778,7 +778,7 @@ public class ThemeData implements ThemeId {
      * Setting <code>ignoreDefaults</code> to <code>false</code> will compare both colors from a 'user' point of view: comparison
      * will be done on the values that are used by the rest of the application. It might however be necessary to consider
      * colors to be different if one is set but not the other. This can be achieved by setting <code>ignoreDefaults</code> to <code>true</code>.
-     * </p>
+     *
      * @param  id             identifier of the color to check.
      * @param  color           color to check.
      * @param  ignoreDefaults whether or not to ignore defaults if the requested item doesn't have a value.
@@ -812,16 +812,16 @@ public class ThemeData implements ThemeId {
      * <p>
      * The listener will receive {@link FontChangedEvent font} and {@link ColorChangedEvent color} events whenever
      * one of the default values has been changed, by a modification to the current look&amp;feel for example.
-     * </p>
+     *
      * <p>
      * It is not necessary for 'themable' components to listen to default values, as they are automatically propagated
      * through {@link Theme} and {@link ThemeManager}.
-     * </p>
+     *
      * <p>
      * Note that listeners are stored as weak references, to make sure that the API doesn't keep ghost copies of objects
      * whose usefulness is long since past. This forces callers to make sure they keep a copy of the listener's instance: if
      * they do not, the instance will be weakly linked and garbage collected out of existence.
-     * </p>
+     *
      * @param listener theme listener to register.
      * @see            #removeDefaultValuesListener(ThemeListener)
      */
@@ -835,7 +835,7 @@ public class ThemeData implements ThemeId {
      * Note that since listeners are stored as weak references, calling this method is not strictly necessary. As soon
      * as a listener instance is not referenced anymore, it will automatically be caught and destroyed by the garbage
      * collector.
-     * </p>
+     *
      * @param listener instance to remove from the list of registered theme listeners.
      * @see            #addDefaultValuesListener(ThemeListener)
      */
