@@ -281,6 +281,7 @@
 	    	icon="${res.package}/osx/icon.icns" >
 	        <classpath file="${dist.jar}" />
 	    	<option value="-Xmx128m"/>
+	    	<option value="-Xms128m"/>
 	    	<option value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader" />
 	    	<option value="-Dcom.apple.smallTabs=true" />
 	    	<option value="-Dcom.apple.hwaccel" />
@@ -626,6 +627,10 @@
         <echo>Compressing JAR file...</echo>
         <mkdir dir="${dist}"/>
         <unjar src="${jar.obf}" dest="${tmp.obf}"/>
+
+        <!-- Fix Proguard bug - replace files to orignal -->
+        <copy file="${tmp.libs}/jcifs/smb/SmbFile.class" tofile="${tmp.obf}/jcifs/smb/SmbFile.class" overwrite="true"/>
+        
         <exec executable="${7za.executable}" dir="${tmp.obf}" failonerror="true">
             <arg value="a"/>
             <arg value="-tzip"/>
@@ -701,10 +706,11 @@
                printmapping="${reports.proguard}/mapping.txt" 
                printusage="${reports.proguard}/usage.txt"
                printseeds="${reports.proguard}/seeds.txt" 
-               repackageclasses=""
                target="${source.version}"
+               repackageclasses=""
                verbose="true"
                preverify="true">
+               
             <injar  name="${jar.normal}"/>
             <outjar name="${jar.obf}"/>
 
@@ -831,6 +837,16 @@
 				<method name="*"/>
 				<constructor name="*"/>
 			</keep>
+			<keep name="jcifs.smb.SmbFile" allowshrinking="false" allowoptimization="false" allowobfuscation="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
+			<keepclassmembers name="jcifs.smb.SmbFile" allowshrinking="false" allowoptimization="false" allowobfuscation="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keepclassmembers>			
 
 <!--			
 
