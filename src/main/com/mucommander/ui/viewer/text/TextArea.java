@@ -35,7 +35,7 @@ import java.awt.Rectangle;
  */
 public class TextArea extends RSyntaxTextArea implements DocumentListener {
 
-    public static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
+    private static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
 
     /**
      * The #gotoLine(int) method can't be executed successfully if the model is not painted.
@@ -48,7 +48,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      */
     private boolean dirty;
 
-    public TextArea() {
+    TextArea() {
         dirty = false;
         getDocument().addDocumentListener(this);
     }
@@ -57,9 +57,9 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      *
      * @param line line number (started from 1)
      * @param column cursor position in the line
-     * @return
+     * @return true on success
      */
-    public boolean gotoLine(int line, int column) {
+    boolean gotoLine(int line, int column) {
         try {
             int pos = getLineStartOffset(line - 1) + column - 1;
             setCaretPosition(pos);
@@ -70,13 +70,13 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
                 forceCurrentLineHighlightRepaint();
             }
             return true;
-        } catch (BadLocationException e) {
+        } catch (IllegalArgumentException | BadLocationException e) {
             System.out.println("Invalid line: " + line + ":" + column);
             return false;
         }
     }
 
-    public boolean gotoLine(int line) {
+    boolean gotoLine(int line) {
         return gotoLine(line, 1);
     }
 
@@ -90,11 +90,11 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         return map.getElementIndex(dot) + 1;
     }
 
-    public void setFileType(FileType fileType) {
+    void setFileType(FileType fileType) {
         setSyntaxEditingStyle(fileType.getContentType());
     }
 
-    public FileType getFileType() {
+    FileType getFileType() {
         return FileType.getByContentType(getSyntaxEditingStyle());
     }
 
@@ -270,7 +270,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
     }
 
 
-    public String getLineStr(int line) {
+    String getLineStr(int line) {
         try {
             int posStart = getLineStartOffset(line - 1);
             int posEnd = getLineEndOffset(line - 1);

@@ -38,7 +38,7 @@ import com.mucommander.ui.macosx.AppleScript;
  * <p>This class communicates with Growl using {@link AppleScript}. More information about the AppleScript syntax can
  * be found <a href="http://growl.info/documentation/applescript-support.php"/>here</a>.
  * The Growl Java library part of the Growl SDK was previously used but it relied on the Cocoa-Java library which has
- * been deprecated by Apple since then.</p>.
+ * been deprecated by Apple since then.
  *
  * @author Maxence Bernard
  */
@@ -154,9 +154,8 @@ public class GrowlNotifier extends AbstractNotifier {
     public boolean displayNotification(NotificationType notificationType, String title, String description) {
     	LOGGER.debug("notificationType="+notificationType+" title="+title+" description="+description);
 
-        if(!isEnabled()) {
+        if (!isEnabled()) {
         	LOGGER.debug("Ignoring notification, this notifier is not enabled");
-
             return false;
         }
 
