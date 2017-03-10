@@ -54,10 +54,19 @@ class NumberToken extends CalculationToken {
             }
         }
         if (isHex) {
+        	if (value.indexOf('_') >= 0) {
+        		value = value.replace("_", "");
+			}
             this.doubleValue = Long.parseLong(value, 16);
         } else if (isBin) {
+			if (value.indexOf('_') >= 0) {
+				value = value.replace("_", "");
+			}
             this.doubleValue = Long.parseLong(value, 2);
         } else if (isOct) {
+			if (value.indexOf('_') >= 0) {
+				value = value.replace("_", "");
+			}
             this.doubleValue = Long.parseLong(value, 8);
         } else if (value.indexOf('E') > 0 || value.indexOf('e') > 0){
 			//scientific notation as requested in EXP-17
@@ -67,6 +76,9 @@ class NumberToken extends CalculationToken {
 			double exponent = Double.parseDouble(value.substring(pos + 1));
 			this.doubleValue = mantissa * Math.pow(10, exponent);
 		} else {
+			if (value.indexOf('_') >= 0) {
+				value = value.replace("_", "");
+			}
 			this.doubleValue = Double.parseDouble(value);
 		}
 	}

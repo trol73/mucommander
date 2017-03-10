@@ -76,10 +76,10 @@ class Tokenizer {
                             numberLen++;
                             continue;
                         } else if (cc == 'b' || cc == 'B') {    // binary
-                            binNotationPrefixOccurred = true;
-                            valueBuilder.append(cc);
-                            numberLen++;
-                            continue;
+							binNotationPrefixOccurred = true;
+							valueBuilder.append(cc);
+							numberLen++;
+							continue;
                         } else if (cc != '.') {                  // octal
                             octNotationPrefixOccurred = true;
                         }
@@ -109,7 +109,7 @@ class Tokenizer {
 					} else if (lastCharExpNotationSeparator && (cc == '-' || cc == '+')) {
 						valueBuilder.append(chars[i + numberLen]);
 						lastCharExpNotationSeparator = false;
-					} else {
+					} else if (cc != '_') {
 						break; // break out of the while loop here, since the number seem finished
 					}
 					numberLen++;
@@ -184,17 +184,17 @@ class Tokenizer {
 		if (openCurly != 0 || openBraces != 0 | openSquare != 0){
 			StringBuilder errorBuilder = new StringBuilder();
 			errorBuilder.append("There are ");
-			boolean first=true;
+			boolean first = true;
 			if (openBraces != 0) {
 				errorBuilder.append(Math.abs(openBraces)).append(" unmatched parantheses ");
-				first=false;
+				first = false;
 			}
 			if (openCurly != 0) {
 				if (!first){
 					errorBuilder.append(" and ");
 				}
 				errorBuilder.append(Math.abs(openCurly)).append(" unmatched curly brackets ");
-				first=false;
+				first = false;
 			}
 			if (openSquare != 0){
 				if (!first){
