@@ -54,7 +54,7 @@ import org.fife.ui.rtextarea.GutterEx;
  */
 public class TextViewer extends FileViewer implements EncodingListener {
 
-	public final static String CUSTOM_FULL_SCREEN_EVENT = "CUSTOM_FULL_SCREEN_EVENT";
+	private final static String CUSTOM_FULL_SCREEN_EVENT = "CUSTOM_FULL_SCREEN_EVENT";
 
 	private TextEditorImpl textEditorImpl;
 
@@ -62,7 +62,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private static boolean lineNumbers = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, MuSnapshot.DEFAULT_LINE_NUMBERS);
 
-    protected TextMenuHelper menuHelper;
+    TextMenuHelper menuHelper;
 
     private String encoding;
 
@@ -71,7 +71,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     private StatusBar statusBar;
 
 
-    public TextViewer() {
+    TextViewer() {
     	this(new TextEditorImpl(false, null));
         textEditorImpl.setStatusBar(getStatusBar());
     }
@@ -191,7 +191,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         return statusBar;
     }
 
-    public void saveState(JScrollBar scrollBar) {
+    void saveState(JScrollBar scrollBar) {
         final TextArea textArea = textEditorImpl.getTextArea();
         historyRecord.setLine(textArea.getLine());
         historyRecord.setColumn(textArea.getColumn());
@@ -233,7 +233,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         setLineNumbers(show);
     }
 
-    protected void wrapLines(boolean wrap) {
+    void wrapLines(boolean wrap) {
     	textEditorImpl.wrap(wrap);
     	setLineWrap(wrap);
     }
@@ -300,13 +300,13 @@ public class TextViewer extends FileViewer implements EncodingListener {
     	}   
     }
 
-    public TextFilesHistory.FileRecord initHistoryRecord(AbstractFile file) {
+    TextFilesHistory.FileRecord initHistoryRecord(AbstractFile file) {
         historyRecord = TextFilesHistory.getInstance().get(file);
         return historyRecord;
     }
 
 
-    public TextFilesHistory.FileRecord getHistoryRecord() {
+    TextFilesHistory.FileRecord getHistoryRecord() {
         return historyRecord;
     }
 

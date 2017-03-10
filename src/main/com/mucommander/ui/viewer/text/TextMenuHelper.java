@@ -63,12 +63,12 @@ public class TextMenuHelper {
     private JMenuItem miCalculator;
     private JMenuItem miFormat;
 
-    public TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
+    TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
         this.textEditorImpl = textEditorImpl;
         this.editMode = editMode;
     }
 
-    public void initMenu(ActionListener actionListener, boolean lineNumbers) {
+    void initMenu(ActionListener actionListener, boolean lineNumbers) {
         // Edit menu
         menuEdit = new JMenu(Translator.get("text_editor.edit"));
         MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
@@ -131,15 +131,15 @@ public class TextMenuHelper {
     }
 
 
-    public JMenu getEditMenu() {
+    JMenu getEditMenu() {
         return menuEdit;
     }
 
-    public JMenu getMenuView() {
+    JMenu getMenuView() {
         return menuView;
     }
 
-    public JMenu getSearchMenu() {
+    JMenu getSearchMenu() {
         return menuSearch;
     }
 

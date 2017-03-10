@@ -24,6 +24,7 @@ import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.theme.ThemeId;
 import com.mucommander.ui.viewer.FileViewer;
+import ru.trolsoft.calculator.CalculatorDialog;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
 import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
@@ -60,6 +61,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     private JMenuItem findItem;
     private JMenuItem findNextItem;
     private JMenuItem findPrevItem;
+    private JMenuItem calculatorItem;
 
     private GotoDialog dlgGoto;
     private FindDialog dlgFind;
@@ -75,6 +77,8 @@ public class HexViewer extends FileViewer implements ThemeId {
         findItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.search"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), this);
         findNextItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchNext"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
         findPrevItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchPrev"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
+        menuView.addSeparator();
+        calculatorItem = MenuToolkit.addMenuItem(menuView, Translator.get("Calculator.label"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), this);
     }
 
     private int getCtrlOrMetaMask() {
@@ -117,13 +121,8 @@ public class HexViewer extends FileViewer implements ThemeId {
             hexTable.setAsciiSelectionBackgroundColor(getCurrentColor(HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR));
             hexTable.setSelectionBackground(getCurrentColor(HEX_VIEWER_SELECTED_BACKGROUND_COLOR));
             hexTable.setFont(getCurrentFont(HEX_VIEWER_FONT));
-//hexTable.setAlternateBackground(new Color(20, 20, 20));
-//hexTable.setOffsetColumnColor(new Color(0, 255, 255));
-//hexTable.setAsciiColumnColor(new Color(255, 0, 255));
-//hexTable.setAsciiSelectionBackgroundColor(new Color(0, 0, 255));
             hexTable.setAlternateRowBackground(true);
 
-//        hexTable.setFont(new Font("Monospaced", Font.PLAIN, 14));
             hexTable.getTableHeader().setFont(new Font("Monospaced", Font.PLAIN, 12));
 
 
@@ -190,6 +189,8 @@ public class HexViewer extends FileViewer implements ThemeId {
             findNext();
         } else if (source == findPrevItem && findPrevItem.isEnabled()) {
             findPrev();
+        } else if (source == calculatorItem && calculatorItem.isEnabled()) {
+            new CalculatorDialog(getFrame()).showDialog();
         } else {
             super.actionPerformed(e);
         }
