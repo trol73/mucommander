@@ -14,17 +14,17 @@ class Transport {
         this.inputStream = inputStream;
     }
 
-    public Transport(Socket socket) throws IOException {
+    Transport(Socket socket) throws IOException {
         this(socket.getOutputStream(), socket.getInputStream());
     }
 
-    public String readString() throws IOException {
+    String readString() throws IOException {
         String encodedLength = readString(4);
         int length = Integer.parseInt(encodedLength, 16);
         return readString(length);
     }
 
-    public void readResponseTo(OutputStream output) throws IOException {
+    void readResponseTo(OutputStream output) throws IOException {
         Stream.copy(inputStream, output);
     }
 
@@ -32,7 +32,7 @@ class Transport {
         return inputStream;
     }
 
-    public void verifyResponse() throws IOException, JadbException {
+    void verifyResponse() throws IOException, JadbException {
         String response = readString(4);
         if (!"OKAY".equals(response)) {
             String error = readString();
@@ -40,25 +40,27 @@ class Transport {
         }
     }
 
-    public String readString(int length) throws IOException {
+    private String readString(int length) throws IOException {
         DataInput reader = new DataInputStream(inputStream);
         byte[] responseBuffer = new byte[length];
         reader.readFully(responseBuffer);
         return new String(responseBuffer, Charset.forName("utf-8"));
     }
 
-    public String getCommandLength(String command) {
-        return String.format("%04x", command.length());
-    }
+//    private String getCommandLength(String command) {
+//        return String.format("%04x", command.length());
+//    }
 
     public void send(String command) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        writer.write(getCommandLength(command));
+        OutputStreamWriter writer = new OutputStreamWriter(outputStream, "utf-8");
+        byte[] data = command.getBytes("utf-8");
+        writer.write(String.format("%04x", data.length));
+        //writer.write(getCommandLength(command));
         writer.write(command);
         writer.flush();
     }
 
-    public SyncTransport startSync() throws IOException, JadbException {
+    SyncTransport startSync() throws IOException, JadbException {
         send("sync:");
         verifyResponse();
         return new SyncTransport(outputStream, inputStream);

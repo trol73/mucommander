@@ -11,7 +11,7 @@ public class SyncTransport {
     private final DataOutput output;
     private final DataInput input;
 
-    public SyncTransport(OutputStream outputStream, InputStream inputStream) {
+    SyncTransport(OutputStream outputStream, InputStream inputStream) {
         output = new DataOutputStream(outputStream);
         input = new DataInputStream(inputStream);
     }
@@ -22,10 +22,15 @@ public class SyncTransport {
     }
 
     public void send(String syncCommand, String name) throws IOException {
-        if (syncCommand.length() != 4) throw new IllegalArgumentException("sync commands must have length 4");
+        if (syncCommand.length() != 4) {
+            throw new IllegalArgumentException("sync commands must have length 4");
+        }
         output.writeBytes(syncCommand);
-        output.writeInt(Integer.reverseBytes(name.length()));
-        output.writeBytes(name);
+//        output.writeInt(Integer.reverseBytes(name.length()));
+//        output.writeBytes(name);
+        byte[] data = name.getBytes("utf-8");
+        output.writeInt(Integer.reverseBytes(data.length));
+        output.write(data);
     }
 
     public void sendStatus(String statusCode, int length) throws IOException {
@@ -33,7 +38,7 @@ public class SyncTransport {
         output.writeInt(Integer.reverseBytes(length));
     }
 
-    public void verifyStatus() throws IOException, JadbException {
+    void verifyStatus() throws IOException, JadbException {
         String status = readString(4);
         int length = readInt();
         if ("FAIL".equals(status)) {
@@ -45,17 +50,17 @@ public class SyncTransport {
         }
     }
 
-    public int readInt() throws IOException {
+    private int readInt() throws IOException {
         return Integer.reverseBytes(input.readInt());
     }
 
-    public String readString(int length) throws IOException {
+    private String readString(int length) throws IOException {
         byte[] buffer = new byte[length];
         input.readFully(buffer);
         return new String(buffer, Charset.forName("utf-8"));
     }
 
-    public RemoteFileRecord readDirectoryEntry() throws IOException {
+    RemoteFileRecord readDirectoryEntry() throws IOException {
         String id = readString(4);
         int mode = readInt();
         int size = readInt();
