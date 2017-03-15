@@ -26,6 +26,7 @@ import java.awt.event.ItemListener;
 import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.archiver.ArchiveFormat;
 import com.mucommander.commons.file.archiver.Archiver;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
@@ -49,7 +50,7 @@ import com.mucommander.ui.text.FilePathField;
 public class PackDialog extends TransferDestinationDialog implements ItemListener {
 
     private JComboBox<String> formatsComboBox;
-    private int formats[];
+    private ArchiveFormat formats[];
 	
     private JTextArea commentArea;
 
@@ -57,7 +58,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
     private int lastFormatIndex;
 
     /** Last archive format used (Zip initially), selected by default when this dialog is created */
-    private static int lastFormat = Archiver.ZIP_FORMAT;
+    private static ArchiveFormat lastFormat = ArchiveFormat.ZIP;
 
 
     public PackDialog(MainFrame mainFrame, FileSet files) {
@@ -65,10 +66,10 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
         // Retrieve available formats for single file or many file archives
         int nbFiles = files.size();
-        this.formats = Archiver.getFormats(nbFiles > 1 || (nbFiles>0 && files.elementAt(0).isDirectory()));
+        this.formats = Archiver.getFormats(nbFiles > 1 || (nbFiles > 0 && files.elementAt(0).isDirectory()));
         int nbFormats = formats.length;
 
-        int initialFormat = formats[0];		// this value will only be used if last format is not available
+        ArchiveFormat initialFormat = formats[0];		// this value will only be used if last format is not available
         int initialFormatIndex = 0;			// this value will only be used if last format is not available
         for (int i = 0; i<nbFormats; i++) {
             if (formats[i] == lastFormat) {
@@ -85,8 +86,9 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tempPanel.add(new JLabel(Translator.get("pack_dialog.archive_format")));		
         this.formatsComboBox = new JComboBox<>();
-        for(int format : formats)
-            formatsComboBox.addItem(Archiver.getFormatName(format));
+        for (ArchiveFormat format : formats) {
+            formatsComboBox.addItem(format.name);
+        }
 
         formatsComboBox.setSelectedIndex(lastFormatIndex);
 		
@@ -129,10 +131,10 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
                     :file.getNameWithoutExtension();
         } else {
             file = files.getBaseFolder();
-            fileName = file.isRoot()?"":DesktopManager.isApplication(file)?file.getNameWithoutExtension():file.getName();
+            fileName = file.isRoot() ? "" : DesktopManager.isApplication(file) ? file.getNameWithoutExtension() : file.getName();
         }
 
-        return new PathFieldContent(initialPath + fileName + "." + Archiver.getFormatExtension(lastFormat), initialPath.length(), initialPath.length() + fileName.length());
+        return new PathFieldContent(initialPath + fileName + "." + lastFormat.ext, initialPath.length(), initialPath.length() + fileName.length());
     }
 
     @Override
@@ -160,7 +162,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
         }
 
         int destType = resolvedDest.getDestinationType();
-        return destType==PathUtils.ResolvedDestination.NEW_FILE || destType==PathUtils.ResolvedDestination.EXISTING_FILE;
+        return destType == PathUtils.ResolvedDestination.NEW_FILE || destType == PathUtils.ResolvedDestination.EXISTING_FILE;
     }
 
 
@@ -169,27 +171,26 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
     //////////////////////////
 
     public void itemStateChanged(ItemEvent e) {
-        int newFormatIndex;
-
         FilePathField pathField = getPathField();
+        int newFormatIndex = formatsComboBox.getSelectedIndex();
 
         // Updates the GUI if, and only if, the format selection has changed.
-        if(lastFormatIndex != (newFormatIndex = formatsComboBox.getSelectedIndex())) {
+        if (lastFormatIndex != newFormatIndex) {
 
             String fileName = pathField.getText();  // Name of the destination archive file.
-            String oldFormatExtension = Archiver.getFormatExtension(formats[lastFormatIndex]);	// Old/current format's extension
+            String oldFormatExtension = formats[lastFormatIndex].ext;	// Old/current format's extension
             if (fileName.endsWith("." + oldFormatExtension)) {
                 // Saves the old selection.
                 int selectionStart = pathField.getSelectionStart();
                 int selectionEnd   = pathField.getSelectionEnd();
 
                 // Computes the new file name.
-                fileName = fileName.substring(0, fileName.length() - oldFormatExtension.length()) +
-                    Archiver.getFormatExtension(formats[newFormatIndex]);
+                fileName = fileName.substring(0, fileName.length() - oldFormatExtension.length()) + formats[newFormatIndex].ext;
 
                 // Makes sure that the selection stays somewhat coherent.
-                if (selectionEnd == pathField.getText().length())
+                if (selectionEnd == pathField.getText().length()) {
                     selectionEnd = fileName.length();
+                }
 
                 // Resets the file path field.
                 pathField.setText(fileName);

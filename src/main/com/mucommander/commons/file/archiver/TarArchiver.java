@@ -20,7 +20,7 @@ class TarArchiver extends Archiver {
     private TarOutputStream tos;
     private boolean firstEntry = true;
 
-    protected TarArchiver(OutputStream outputStream) {
+    TarArchiver(OutputStream outputStream) {
         super(outputStream);
 
         this.tos = new TarOutputStream(outputStream);
@@ -36,8 +36,9 @@ class TarArchiver extends Archiver {
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
         // Start by closing current entry
-        if(!firstEntry)
+        if (!firstEntry) {
             tos.closeEntry();
+        }
 
         boolean isDirectory = attributes.isDirectory();
 		
@@ -45,7 +46,7 @@ class TarArchiver extends Archiver {
         TarEntry entry = new TarEntry(normalizePath(entryPath, isDirectory));
         // Use provided file's size (required by TarOutputStream) and date
         long size = attributes.getSize();
-        if(!isDirectory && size>=0)		// Do not set size if file is directory or file size is unknown!
+        if (!isDirectory && size >= 0)		// Do not set size if file is directory or file size is unknown!
             entry.setSize(size);
 
         // Set the entry's date and permissions
@@ -57,19 +58,21 @@ class TarArchiver extends Archiver {
         // Add the entry
         tos.putNextEntry(entry);
 
-        if(firstEntry)
+        if (firstEntry) {
             firstEntry = false;
+        }
 	
         // Return the OutputStream that allows to write to the entry, only if it isn't a directory 
-        return isDirectory?null:tos;
+        return isDirectory ? null : tos;
     }
 
 
     @Override
     public void close() throws IOException {
         // Close current entry
-        if(!firstEntry)
+        if (!firstEntry) {
             tos.closeEntry();
+        }
 		
         tos.close();
     }

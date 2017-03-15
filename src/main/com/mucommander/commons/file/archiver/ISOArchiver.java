@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author Jeppe Vennekilde
  */
-public class ISOArchiver extends Archiver{
+public class ISOArchiver extends Archiver {
     private StreamHandler streamHandler;
     private ISO9660Config config;
     private final ISO9660RootDirectory root;
@@ -38,7 +38,7 @@ public class ISOArchiver extends Archiver{
     private boolean enableElTorito = false;
     private MuCreateISO createISOProcess = null;
 
-    public ISOArchiver(AbstractFile file) throws FileNotFoundException {
+    ISOArchiver(AbstractFile file) throws FileNotFoundException {
         super(null);
         supportStream = false;
         
@@ -47,14 +47,10 @@ public class ISOArchiver extends Archiver{
             config.allowASCII(false);
             config.setInterchangeLevel(1);
             //The rock ridge extension of ISO9660 allow directory depth to exceed 8
-            if(enableRockRidge){
-                config.restrictDirDepthTo8(false);
-            } else {
-                config.restrictDirDepthTo8(true);
-            }
+            config.restrictDirDepthTo8(!enableRockRidge);
             config.setPublisher(System.getProperty("user.name"));
             //Max length of volume is 32 chars
-            config.setVolumeID(file.getName().substring(0,Math.min(file.getName().length(), 31)));
+            config.setVolumeID(file.getName().substring(0, Math.min(file.getName().length(), 31)));
             config.setDataPreparer(System.getProperty("user.name"));
             config.forceDotDelimiter(true);
         } catch (ConfigException ex) {
@@ -74,29 +70,32 @@ public class ISOArchiver extends Archiver{
     /////////////////////////////
     // Archiver implementation //
     /////////////////////////////
-
-    
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
-        try{
-            boolean isDirectory = attributes.isDirectory();
-            if(isDirectory){
+        try {
+            if (attributes.isDirectory()) {
                 String[] split = entryPath.split("\\\\");
                 ISO9660Directory dir = new ISO9660Directory(split[split.length-1]);
-                getParentDirectory(entryPath).addDirectory(dir);
+                ISO9660Directory parent = getParentDirectory(entryPath);
+                if (parent != null) {
+                    parent.addDirectory(dir);
+                }
             } else {
                 try {
                     ISO9660File file = new ISO9660File(new File(attributes.getPath()));
-                    getParentDirectory(entryPath).addFile(file);
+                    ISO9660Directory parent = getParentDirectory(entryPath);
+                    if (parent != null) {
+                        parent.addFile(file);
+                    }
                 } catch (HandlerException ex) {
                     Logger.getLogger(ISOArchiver.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             e.printStackTrace();
             throw e;
         }
-        return null;
+        return null;    // TODO !!!! NPE here !!!
     }
     
     /**
@@ -109,9 +108,9 @@ public class ISOArchiver extends Archiver{
         String[] directories = isoPath.split("\\\\");
         //Initial directory (root)
         ISO9660Directory parent = root;
-        for(int i = 0; i < directories.length - 1; i++){
+        for (int i = 0; i < directories.length - 1; i++){
             ISO9660Directory dir = containsDirectory(parent,directories[i]);
-            if(dir == null){
+            if (dir == null) {
                 return null;
             }
             parent = dir;
@@ -129,8 +128,8 @@ public class ISOArchiver extends Archiver{
      * null if it does not contain the sub directory
      */
     private ISO9660Directory containsDirectory(ISO9660Directory parentDirectory, String isoSubDirPath){
-        for(ISO9660Directory directory : parentDirectory.getDirectories()){
-            if(directory.getName().equals(isoSubDirPath)){
+        for (ISO9660Directory directory : parentDirectory.getDirectories()) {
+            if (directory.getName().equals(isoSubDirPath)){
                 return directory;
             }
         }
@@ -159,7 +158,7 @@ public class ISOArchiver extends Archiver{
     
     @Override
     public void postProcess() throws IOException {
-        if(root.hasSubDirs() || root.getFiles().size() > 0){
+        if (root.hasSubDirs() || !root.getFiles().isEmpty()){
             createISOProcess = new MuCreateISO(streamHandler, root);
 
             RockRidgeConfig rrConfig = null;
@@ -176,7 +175,7 @@ public class ISOArchiver extends Archiver{
                 // Joliet support
                 jolietConfig = new JolietConfig();
                 try {
-                    if(config.getPublisher() instanceof String){
+                    if (config.getPublisher() instanceof String){
                         jolietConfig.setPublisher((String) config.getPublisher());
                     } else {
                         try {
@@ -187,7 +186,7 @@ public class ISOArchiver extends Archiver{
                     } 
                     //Max volume id is 16 in the joliet config
                     jolietConfig.setVolumeID(config.getVolumeID().substring(0,Math.min(config.getVolumeID().length(), 15)));
-                    if(config.getDataPreparer() != null){
+                    if (config.getDataPreparer() != null){
                         if(config.getDataPreparer() instanceof String){
                             jolietConfig.setDataPreparer((String) config.getDataPreparer());
                         } else {

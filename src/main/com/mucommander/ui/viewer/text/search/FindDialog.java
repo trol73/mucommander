@@ -35,7 +35,7 @@ public class FindDialog extends AbstractSearchDialog {
     /**
      * Our search listener, cached so we can grab its selected text easily.
      */
-    protected SearchListener searchListener;
+    private SearchListener searchListener;
 
 
     public FindDialog(Frame owner, SearchListener listener) {

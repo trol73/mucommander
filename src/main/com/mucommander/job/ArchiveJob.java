@@ -22,6 +22,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.mucommander.commons.file.archiver.ArchiveFormat;
 import com.mucommander.job.utils.ScanDirectoryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class ArchiveJob extends TransferFileJob {
     private Archiver archiver;
 
     /** Archive format */
-    private int archiveFormat;
+    private ArchiveFormat archiveFormat;
 	
     /** Optional archive comment */
     private String archiveComment;
@@ -62,14 +63,14 @@ public class ArchiveJob extends TransferFileJob {
     /** Lock to avoid Archiver.close() to be called while data is being written */
     private final Object ioLock = new Object();
 
-    protected final ScanDirectoryThread scanDirectoryThread;
+    private final ScanDirectoryThread scanDirectoryThread;
 
     /** Processed files counter */
-    protected long processedFilesCount;
+    private long processedFilesCount;
 
 
 
-    public ArchiveJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFile, int archiveFormat, String archiveComment) {
+    public ArchiveJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destFile, ArchiveFormat archiveFormat, String archiveComment) {
         super(progressDialog, mainFrame, files);
 		
         this.destFile = destFile;
@@ -127,11 +128,13 @@ public class ArchiveJob extends TransferFileJob {
                     return true;
                 }
             } catch (Exception e) {  // Catch Exception rather than IOException as ZipOutputStream has been seen throwing NullPointerException
+                e.printStackTrace();
                 // If job was interrupted by the user at the time when the exception occurred,
                 // it most likely means that the exception was caused by user cancellation.
                 // In this case, the exception should not be interpreted as an error.
-                if (getState() == State.INTERRUPTED)
+                if (getState() == State.INTERRUPTED) {
                     return false;
+                }
 
                 LOGGER.debug("Caught IOException", e);
                 

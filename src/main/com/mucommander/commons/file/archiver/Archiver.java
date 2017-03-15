@@ -30,7 +30,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
-//import org.apache.tools.bzip2.CBZip2OutputStream;
 
 
 /**
@@ -52,91 +51,11 @@ import java.util.zip.GZIPOutputStream;
  */
 public abstract class Archiver {
 
-    /** Zip archive format (many entries format) */
-    public final static int ZIP_FORMAT = 0;
-    /** Gzip archive format (single entry format) */
-    private final static int GZ_FORMAT = 1;
-    /** Bzip2 archive format (single entry format) */
-    public final static int BZ2_FORMAT = 2;
-    /** Tar archive format without any compression (many entries format) */
-    public final static int TAR_FORMAT = 3;
-    /** Tar archive compressed with Gzip format (many entries format) */
-    public final static int TAR_GZ_FORMAT = 4;
-    /** Tar archive compressed with Bzip2 format (many entries format) */
-    public final static int TAR_BZ2_FORMAT = 5;
-    /** ISO archive format (many entries format) */
-    public final static int ISO_FORMAT = 6;
-
-    /** Boolean array describing for each format if it can store more than one entry */
-    private final static boolean SUPPORTS_MANY_ENTRIES[] = {
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true
-    };
-	
-    /** Boolean array describing for each format if it can store more than one entry */
-    public final static boolean SUPPORTS_FILE_STREAMING[] = {
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-    };
-    /** Array of single entry formats: many entries formats are considered to be single entry formats as well */
-    private final static int SINGLE_ENTRY_FORMATS[] = {
-        ZIP_FORMAT,
-        GZ_FORMAT,
-        BZ2_FORMAT,
-        TAR_FORMAT,
-        TAR_GZ_FORMAT,
-        TAR_BZ2_FORMAT,
-        ISO_FORMAT
-    };
-
-    /** Array of many entries formats */
-    private final static int MANY_ENTRIES_FORMATS[] = {
-        ZIP_FORMAT,
-        TAR_FORMAT,
-        TAR_GZ_FORMAT,
-        TAR_BZ2_FORMAT,
-        ISO_FORMAT
-    };
-	
-    /** Array of format names */
-    private final static String FORMAT_NAMES[] = {
-        "Zip",
-        "Gzip",
-        "Bzip2",
-        "Tar",
-        "Tar/Gzip",
-        "Tar/Bzip2",
-        "ISO"
-    };
-
-    /** Array of format extensions */
-    private final static String FORMAT_EXTENSIONS[] = {
-        "zip",
-        "gz",
-        "bz2",
-        "tar",
-        "tar.gz",
-        "tar.bz2",
-        "iso"
-    };
-	
 
     /** The underlying stream this archiver is writing to */
     protected OutputStream out;
     /** Archive format of this Archiver */
-    protected int format;
-    /** Archive format's name of this Archiver */
-    protected String formatName;
+    protected ArchiveFormat format;
     /** Support output stream for archiving files */
     boolean supportStream;
 	
@@ -164,34 +83,17 @@ public abstract class Archiver {
      * Returns the archiver format used by this Archiver. See format constants.
      * @return archiver format code
      */
-    public int getFormat() {
+    public ArchiveFormat getFormat() {
         return this.format;
     }
 	
     /**
      * Sets the archiver format used by this Archiver, for internal use only.
      */
-    private void setFormat(int format) {
+    private void setFormat(ArchiveFormat format) {
         this.format = format;
     }
 	
-	
-    /**
-     * @return the name of the archive format used by this Archiver.
-     */
-    public String getFormatName() {
-        return FORMAT_NAMES[this.format];
-    }
-
-	
-    /**
-     * Checks if the format used by this Archiver can store more than one entry.
-     * @return true if the format used by this Archiver can store more than one entry.
-     */
-    public boolean supportsManyFiles() {
-        return formatSupportsManyFiles(this.format);
-    }
-
 
     /**
      * Checks if the format used by this Archiver can store an optional comment.
@@ -210,7 +112,7 @@ public abstract class Archiver {
 
     /**
      * Sets an optional comment in the archive, the {@link #supportsComment()} or
-     * {@link #formatSupportsComment(int)} must first be called to make sure
+     * {@link #formatSupportsComment(ArchiveFormat)} must first be called to make sure
      * the archive format supports comment, otherwise calling this method will have no effect.
      *
      * <p>Implementation note: Archiver implementations must override this method to handle comments
@@ -265,11 +167,11 @@ public abstract class Archiver {
      * @throws IOException if the file cannot be opened for write, or if an error occurred while intializing the archiver
      * @throws UnsupportedFileOperationException if the underlying filesystem does not support write operations
      */
-    public static Archiver getArchiver(AbstractFile file, int format) throws IOException, UnsupportedFileOperationException {
-        switch(format) {
-            case ISO_FORMAT:
-                return new ISOArchiver(file);
-        }
+    public static Archiver getArchiver(AbstractFile file, ArchiveFormat format) throws IOException, UnsupportedFileOperationException {
+//        switch(format) {
+//            case ISO:
+//                return new ISOArchiver(file);
+//        }
         OutputStream out = null;
 
         if (file.isFileOperationSupported(FileOperation.RANDOM_WRITE_FILE)) {
@@ -302,32 +204,32 @@ public abstract class Archiver {
      * @param format an archive format
      * @return an Archiver for the specified format and that uses the given {@link AbstractFile} to write entries to ;
      * null if the specified format is not valid.
-     * @throws IOException if an error occurred while intializing the archiver
+     * @throws IOException if an error occurred while initializing the archiver
      */
-    private static Archiver getArchiver(OutputStream out, int format) throws IOException {
+    private static Archiver getArchiver(OutputStream out, ArchiveFormat format) throws IOException {
         Archiver archiver;
 
-        switch(format) {
-            case ZIP_FORMAT:
+        switch (format) {
+            case ZIP:
                 archiver = new ZipArchiver(out);
                 break;
-            case GZ_FORMAT:
+            case GZ:
                 archiver = new SingleFileArchiver(new GZIPOutputStream(out));
                 break;
-            case BZ2_FORMAT:
+            case BZ2:
                 archiver = new SingleFileArchiver(createBzip2OutputStream(out));
                 break;
-            case TAR_FORMAT:
+            case TAR:
                 archiver = new TarArchiver(out);
                 break;
-            case TAR_GZ_FORMAT:
+            case TAR_GZ:
                 archiver = new TarArchiver(new GZIPOutputStream(out));
                 break;
-            case TAR_BZ2_FORMAT:
+            case TAR_BZ2:
                 archiver = new TarArchiver(createBzip2OutputStream(out));
                 break;
-            case ISO_FORMAT:
-                throw new IllegalStateException("ISO archiving not supported by stream");
+//            case ISO:
+//                throw new IllegalStateException("ISO archiving not supported by stream");
 
             default:
                 return null;
@@ -365,53 +267,35 @@ public abstract class Archiver {
      * @param manyEntries if true, a list of many entries formats (a subset of single entry formats) will be returned
      * @return an array of available archive formats
      */
-    public static int[] getFormats(boolean manyEntries) {
-        return manyEntries? MANY_ENTRIES_FORMATS : SINGLE_ENTRY_FORMATS;
+    public static ArchiveFormat[] getFormats(boolean manyEntries) {
+        if (!manyEntries) {
+            return ArchiveFormat.values();
+        }
+        int cnt = 0;
+        for (ArchiveFormat af : ArchiveFormat.values()) {
+            if (af.supportManyEntries) {
+                cnt++;
+            }
+        }
+        ArchiveFormat[] result = new ArchiveFormat[cnt];
+        int i = 0;
+        for (ArchiveFormat af : ArchiveFormat.values()) {
+            if (af.supportManyEntries) {
+                result[i++] = af;
+            }
+        }
+        return result;
     }
 
-	
-    /**
-     * Returns the name of the given archive format. The returned name can be used for display in a GUI.
-     *
-     * @param format an archive format
-     * @return name of the format
-     */
-    public static String getFormatName(int format) {
-        return FORMAT_NAMES[format];
-    }
 
-	
-    /**
-     * Returns the default archive format extension. Note: some formats such as Tar/Gzip have several common
-     * extensions (e.g. tar.gz or tgz), the most common one will be returned.
-     *
-     * @param format an archive format
-     * @return the default archive format extension
-     */
-    public static String getFormatExtension(int format) {
-        return FORMAT_EXTENSIONS[format];
-    }
-	
-	
-    /**
-     * Returns true if the specified archive format supports storage of more than one entry.
-     *
-     * @param format an archive format
-     * @return true if the specified archive format supports storage of more than one entry
-     */
-    public static boolean formatSupportsManyFiles(int format) {
-        return SUPPORTS_MANY_ENTRIES[format];
-    }
-	
-	
     /**
      * Returns true if the specified archive format can store an optional comment.
      *
      * @param format an archive format
      * @return true if the specified archive format can store an optional comment
      */
-    public static boolean formatSupportsComment(int format) {
-        return format == ZIP_FORMAT;
+    public static boolean formatSupportsComment(ArchiveFormat format) {
+        return format == ArchiveFormat.ZIP;
     }
 	
 	

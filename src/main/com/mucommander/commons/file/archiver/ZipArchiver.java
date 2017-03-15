@@ -7,8 +7,6 @@ import com.mucommander.commons.file.impl.zip.provider.ZipEntry;
 import com.mucommander.commons.file.impl.zip.provider.ZipOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-//import java.util.zip.ZipEntry;
-//import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -23,7 +21,7 @@ class ZipArchiver extends Archiver {
 
 
 
-    protected ZipArchiver(OutputStream outputStream) {
+    ZipArchiver(OutputStream outputStream) {
         super(outputStream);
 
         this.zos = new ZipOutputStream(outputStream);
@@ -46,8 +44,9 @@ class ZipArchiver extends Archiver {
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
         // Start by closing current entry
-        if(!firstEntry)
+        if (!firstEntry) {
             zos.closeEntry();
+        }
 
         boolean isDirectory = attributes.isDirectory();
 		
@@ -55,8 +54,9 @@ class ZipArchiver extends Archiver {
         ZipEntry entry = new ZipEntry(normalizePath(entryPath, isDirectory));
         // Use provided file's size and date
         long size = attributes.getSize();
-        if(!isDirectory && size>=0) 	// Do not set size if file is directory or file size is unknown!
+        if (!isDirectory && size >= 0) {    // Do not set size if file is directory or file size is unknown!
             entry.setSize(size);
+        }
 
         entry.setTime(attributes.getLastModifiedDate());
         entry.setUnixMode(SimpleFilePermissions.padPermissions(attributes.getPermissions(), isDirectory
@@ -66,8 +66,9 @@ class ZipArchiver extends Archiver {
         // Add the entry
         zos.putNextEntry(entry);
 
-        if(firstEntry)
+        if (firstEntry) {
             firstEntry = false;
+        }
 		
         // Return the OutputStream that allows to write to the entry, only if it isn't a directory 
         return isDirectory?null:zos;

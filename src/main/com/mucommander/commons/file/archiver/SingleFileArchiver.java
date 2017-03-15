@@ -16,7 +16,7 @@ class SingleFileArchiver extends Archiver {
     private boolean firstEntry = true;
 
 
-    protected SingleFileArchiver(OutputStream outputStream) {
+    SingleFileArchiver(OutputStream outputStream) {
         super(outputStream);
     }
 
@@ -31,10 +31,11 @@ class SingleFileArchiver extends Archiver {
      */
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
-        if(firstEntry)
+        if (firstEntry) {
             firstEntry = false;
-        else
+        } else {
             throw new IOException();
+        }
 
         return out;
     }
