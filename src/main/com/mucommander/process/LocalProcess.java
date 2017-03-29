@@ -50,7 +50,7 @@ public class LocalProcess extends AbstractProcess {
      * @throws IOException if the process could not be created.
      */
     public LocalProcess(String[] tokens, File dir) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder(tokens);
+        ProcessBuilder pb = new ProcessBuilder(removeOuterQuotationMarks(tokens));
         // Set the process' working directory
         pb.directory(dir);
         // Merge the process' stdout and stderr
@@ -65,7 +65,21 @@ public class LocalProcess extends AbstractProcess {
             throw new IOException();
     }
 
+    private boolean isQuotedWith(String string, String quotationMark) {
+        return string.startsWith(quotationMark) && string.endsWith(quotationMark)
+    }
 
+    private String[] removeOuterQuotationMarks(String[] tokens) {
+        String[] newTokens = new String[tokens.length];
+        for(int i = 0; i < tokens.length; ++i) {
+            String token = tokens[i];
+            if (token.length() > 1 && isQuotedWith(token, "\"") || isQuotedWith(token, "'")) {
+                token = token.substring(1, token.length() - 1);
+            }
+            newTokens[i]= token;
+        }
+        return newTokens;
+    }
 
     // - Implementation --------------------------------------------------------
     // -------------------------------------------------------------------------
