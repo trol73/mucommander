@@ -66,7 +66,7 @@ public class LocalProcess extends AbstractProcess {
     }
 
     private boolean isQuotedWith(String string, String quotationMark) {
-        return string.startsWith(quotationMark) && string.endsWith(quotationMark)
+        return string.startsWith(quotationMark) && string.endsWith(quotationMark);
     }
 
     private String[] removeOuterQuotationMarks(String[] tokens) {
