@@ -602,9 +602,9 @@ class TextEditorImpl implements ThemeListener {
             return FileType.XML;
         } else if (str.startsWith("<?php")) {
             return FileType.PHP;
-        } else if (str.startsWith("#!/usr/bin/python")) {
+        } else if (str.startsWith("#!/usr/bin/python") | str.startsWith("#! /usr/bin/python")) {
             return FileType.PYTHON;
-        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash")) {
+        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash") || str.startsWith("#! /bin/bash") || str.startsWith("#! /bin/sh")) {
             return FileType.UNIX_SHELL;
         } else if (str.startsWith("<!DOCTYPE html")) {
             return FileType.HTML;
