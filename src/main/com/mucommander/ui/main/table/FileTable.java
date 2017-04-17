@@ -1293,7 +1293,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     columnWidth = Math.max(dirStringWidth, fm.stringWidth(val));
                     columnWidth *= 1.1;
                 } else if (c == Column.PERMISSIONS) {
-                    columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(currentFolder.getPermissionsString()));
+                    try {
+                        columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(currentFolder.getPermissionsString()));
+                    } catch (Exception e) {
+                        columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth("wwww"));
+                    }
                 } else {
                     columnWidth = MIN_COLUMN_AUTO_WIDTH;
 

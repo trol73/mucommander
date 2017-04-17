@@ -13,6 +13,8 @@ import com.sshtools.sftp.SftpStatusException;
 import com.sshtools.sftp.SftpSubsystemChannel;
 import com.sshtools.ssh.*;
 import com.sshtools.ssh.components.SshKeyPair;
+import com.sshtools.ssh.components.SshPublicKey;
+import com.sshtools.ssh.components.jce.SshX509RsaPublicKey;
 import com.sshtools.ssh2.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +108,6 @@ class SFTPConnectionHandler extends ConnectionHandler {
 
             SshAuthentication authClient = null;
             String privateKeyPath = realm.getProperty(SFTPFile.PRIVATE_KEY_PATH_PROPERTY_NAME);
-
             // Try public key first. Don't try other methods if there's a key file defined
             if (authMethods.contains(PUBLIC_KEY_AUTH_METHOD) && privateKeyPath != null) {
                 LOGGER.info("Using {} authentication method", PUBLIC_KEY_AUTH_METHOD);
@@ -120,19 +121,21 @@ class SFTPConnectionHandler extends ConnectionHandler {
                     SshKeyPair pair = pkfile.toKeyPair(pkfile.isPassphraseProtected() ? credentials.getPassword() : null);
                     pk.setPrivateKey(pair.getPrivateKey());
                     pk.setPublicKey(pair.getPublicKey());
-                } catch (InvalidPassphraseException e) {
+                } catch (IOException | InvalidPassphraseException e) {
                     e.printStackTrace();
-                    throwAuthException("Invalid private key file or passphrase");  // Todo: localize this entry
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throwAuthException("Error reading private key file");  // Todo: localize this entry
+                    privateKeyPath = null;  // try to authorize via password on error
+//                    throwAuthException("Invalid private key file or passphrase");  // Todo: localize this entry
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    throwAuthException("Error reading private key file");  // Todo: localize this entry
                 }
 
                 authClient = pk;
             }
             // Use 'keyboard-interactive' method only if 'password' auth method is not available and
             // 'keyboard-interactive' is supported by the server
-            else if (!authMethods.contains(PASSWORD_AUTH_METHOD) && authMethods.contains(KEYBOARD_INTERACTIVE_AUTH_METHOD) &&
+            //else
+            if (!authMethods.contains(PASSWORD_AUTH_METHOD) && authMethods.contains(KEYBOARD_INTERACTIVE_AUTH_METHOD) &&
                     privateKeyPath == null) {
                 LOGGER.info("Using {} authentication method", KEYBOARD_INTERACTIVE_AUTH_METHOD);
 
