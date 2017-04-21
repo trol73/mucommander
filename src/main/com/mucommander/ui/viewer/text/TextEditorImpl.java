@@ -393,8 +393,11 @@ class TextEditorImpl implements ThemeListener {
     }
 
 	void findNext() {
-        if (searchContext == null && FindDialog.getLastSearchStr() != null) {
-            setupSearchContext(FindDialog.getLastSearchStr());
+        if (searchContext == null) {
+            String last = FindDialog.getLastSearchStr();
+            if (last != null) {
+                setupSearchContext(FindDialog.getLastSearchStr());
+            }
             find();
         } else {
             findMore(true);
@@ -449,8 +452,15 @@ class TextEditorImpl implements ThemeListener {
 
 
 	void findPrevious() {
-        findMore(false);
-		//search(textArea.getSelectionStart() - 1, false);
+        if (searchContext == null) {
+            String last = FindDialog.getLastSearchStr();
+            if (last != null) {
+                setupSearchContext(FindDialog.getLastSearchStr());
+            }
+            find();
+        } else {
+            findMore(false);
+        }
 	}
 
     void gotoLine() {
