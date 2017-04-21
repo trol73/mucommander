@@ -393,7 +393,12 @@ class TextEditorImpl implements ThemeListener {
     }
 
 	void findNext() {
-        findMore(true);
+        if (searchContext == null && FindDialog.getLastSearchStr() != null) {
+            setupSearchContext(FindDialog.getLastSearchStr());
+            find();
+        } else {
+            findMore(true);
+        }
 	}
 
     void replace() {
