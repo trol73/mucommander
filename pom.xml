@@ -1,17 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.raisercostin.utils</groupId>
-		<artifactId>maven-defaults</artifactId>
-		<version>2</version>
-		<relativePath></relativePath>
-	</parent>
-	<groupId>org.raisercostin</groupId>
-	<artifactId>trol-commander</artifactId>
-	<version>0.10.0-SNAPSHOT</version>
+
+	<groupId>ru.trolsoft</groupId>
+	<artifactId>trolcommander</artifactId>
+	<version>0.9.9</version>
 	<name>trolCommander</name>
-	<description>Utility to inline css styles in html document to be used in emails.</description>
+	<description>Two panel filemanager</description>
 	<url>${github.url}</url>
 	<licenses>
 		<license>
@@ -21,10 +16,9 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>Costin Grigore</name>
-			<email>raisercostin@gmail.com</email>
-			<organization>brainlight</organization>
-			<organizationUrl>http://raisercostin.org</organizationUrl>
+			<name>Oleg Trifonow</name>
+			<organization>trolsoft</organization>
+			<organizationUrl>http://trolsoft.ru/en</organizationUrl>
 		</developer>
 	</developers>
 	<properties>
@@ -34,12 +28,12 @@
 		<target.java.version>1.8</target.java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<github.user>raisercostin</github.user>
+		<github.user>trol73</github.user>
 		<github.repo>mucommander</github.repo>
 		<github.url>https://github.com/${github.user}/${github.repo}</github.url>
-		<bintray.user>raisercostin</bintray.user>
+		<bintray.user>trol73</bintray.user>
 		<bintray.repo>maven</bintray.repo>
-		<bintray.package>trol-commander</bintray.package>
+		<bintray.package>trolcommander</bintray.package>
 		<libs.path>${project.basedir}/assembly/lib</libs.path>
 		<libs.runtime.path>${project.basedir}/lib/runtime</libs.runtime.path>
 		<hadoop.version>1.2.1</hadoop.version>
@@ -197,11 +191,11 @@
 			<systemPath>${libs.path}/j2ssh-core-0.2.10.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>sshtools</groupId>
+			<groupId>com.sshtools</groupId>
 			<artifactId>j2ssh-maverick</artifactId>
-			<version>1.5.4</version>
+			<version>1.5.5</version>
 			<scope>system</scope>
-			<systemPath>${libs.runtime.path}/sshtools/j2ssh-maverick-1.5.4.jar</systemPath>
+			<systemPath>${libs.runtime.path}/sshtools/j2ssh-maverick-1.5.5.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.java.dev.jets3t</groupId>
@@ -226,10 +220,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.fifesoft</groupId>
-			<artifactId>rsyntaxtextarea</artifactId>
-			<version>2.5.6</version>
-			<scope>system</scope>
+    			<artifactId>rsyntaxtextarea</artifactId>
+               <version>2.6.1</version>
+<!--               
 			<systemPath>${libs.runtime.path}/rsyntaxtextarea-2.6.0-SNAPSHOT.jar</systemPath>
+-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
