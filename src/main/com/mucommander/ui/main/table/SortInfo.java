@@ -42,6 +42,9 @@ public class SortInfo implements Cloneable {
     /** Should folders be displayed first, or mixed with regular files */
     private boolean showFoldersFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_FOLDERS_FIRST, MuPreferences.DEFAULT_SHOW_FOLDERS_FIRST);
 
+    /** Should Folders also get sorted or alway alphabetical ... only possible if Folders First enabled */
+    private boolean foldersAlwaysAlphabetical = MuConfigurations.getPreferences().getVariable(MuPreference.FOLDERS_ALWAYS_ALPHABETICAL, MuPreferences.DEFAULT_FOLDERS_ALWAYS_ALPHABETICAL);
+
     private boolean showQuickSearchMatchesFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
 
     SortInfo() {
@@ -94,6 +97,15 @@ public class SortInfo implements Cloneable {
     }
 
     /**
+     * Sets whether folders are currently sorted always alphabetical.
+     *
+     * @param foldersAlwaysAlphabetical true if folders are sorted always alphabetical
+     */
+    public void setFoldersAlwaysAlphabetical(boolean foldersAlwaysAlphabetical) {
+        this.foldersAlwaysAlphabetical = foldersAlwaysAlphabetical;
+    }
+
+    /**
      * Returns <code>true</code> if folders are sorted and displayed before regular files, <code>false</code> if they
      * are mixed with regular files and sorted altogether.
      *
@@ -104,12 +116,21 @@ public class SortInfo implements Cloneable {
     }
 
     /**
+     * Returns <code>true</code> if folders are sorted always alphabetical
+     *
+     * @return true if folders are sorted always alphabetical
+     */
+    public boolean getFoldersAlwaysAlphabetical() {
+        return foldersAlwaysAlphabetical;
+    }
+
+    /**
      * Sets whether matched files are currently sorted and displayed before other files or mixed with them on quick search.
      *
-     * @param showFoldersFirst true if matched are sorted and displayed before other files, false if they are mixed with regular files and sorted altogether
+     * @param quickSearchMatchesFirst true if matched are sorted and displayed before other files, false if they are mixed with regular files and sorted altogether
      */
-    void setQuickSearchMatchesFirst(boolean showFoldersFirst) {
-        this.showQuickSearchMatchesFirst = showFoldersFirst;
+    void setQuickSearchMatchesFirst(boolean quickSearchMatchesFirst) {
+        this.showQuickSearchMatchesFirst = quickSearchMatchesFirst;
     }
 
     /**

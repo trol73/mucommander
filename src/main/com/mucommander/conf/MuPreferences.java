@@ -242,8 +242,12 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final String  DEFAULT_USE_SYSTEM_FILE_ICONS      = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
 	/** Controls whether folders are displayed first in the FileTable or mixed with regular files. */
 	public static final String  SHOW_FOLDERS_FIRST                 = FILE_TABLE_SECTION + '.' + "show_folders_first";
+	/** Controls whether folders are always sorted alphabetical, doesn't matter which sort is set for the files. */
+	public static final String  FOLDERS_ALWAYS_ALPHABETICAL        = FILE_TABLE_SECTION + '.' + "folders_always_alphabetical";
 	/** Default value for 'Show folders first' option. */
 	public static final boolean DEFAULT_SHOW_FOLDERS_FIRST         = true;
+	/** Default value for 'Folders always alphabetical' option. */
+	public static final boolean DEFAULT_FOLDERS_ALWAYS_ALPHABETICAL        = true;
 	/** Controls whether symlinks should be followed when changing directory. */
 	public static final String  CD_FOLLOWS_SYMLINKS                = FILE_TABLE_SECTION + '.' + "cd_follows_symlinks";
 	/** Default value for 'Follow symlinks when changing directory' option. */

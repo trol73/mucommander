@@ -87,6 +87,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private JCheckBoxMenuItem[] toggleColumnItems = new TCheckBoxMenuItem[Column.values().length];
     private JCheckBoxMenuItem toggleToggleAutoSizeItem;
     private JCheckBoxMenuItem toggleShowFoldersFirstItem;
+    private JCheckBoxMenuItem toggleFoldersAlwaysAlphabeticalItem;
     private JCheckBoxMenuItem toggleShowHiddenFilesItem;
     private JCheckBoxMenuItem toggleTreeItem;
     private JCheckBoxMenuItem toggleSinglePanel;
@@ -244,6 +245,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         viewMenu.add(new TMenuSeparator());
 
         toggleShowFoldersFirstItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleShowFoldersFirstAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        toggleFoldersAlwaysAlphabeticalItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleFoldersAlwaysAlphabeticalAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         toggleShowHiddenFilesItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleHiddenFilesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         toggleTreeItem = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleTreeAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         toggleSinglePanel = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(ToggleSinglePanelAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
@@ -464,7 +466,10 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             // Select the 'sort by' criterion currently in use in the active table
             sortByItems[activeTable.getSortInfo().getCriterion().ordinal()].setSelected(true);
 
-            toggleShowFoldersFirstItem.setSelected(activeTable.getSortInfo().getFoldersFirst());
+            Boolean foldersFirst = activeTable.getSortInfo().getFoldersFirst();
+            toggleShowFoldersFirstItem.setSelected(foldersFirst);
+            toggleFoldersAlwaysAlphabeticalItem.setEnabled(foldersFirst);
+            toggleFoldersAlwaysAlphabeticalItem.setSelected(foldersFirst && activeTable.getSortInfo().getFoldersAlwaysAlphabetical());
             toggleShowHiddenFilesItem.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
             toggleTreeItem.setSelected(activeTable.getFolderPanel().isTreeVisible());
             toggleToggleAutoSizeItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());

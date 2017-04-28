@@ -220,6 +220,7 @@ public class ActionManager {
     	registerAction(new ToggleOwnerColumnAction.Descriptor());
     	registerAction(new TogglePermissionsColumnAction.Descriptor());
     	registerAction(new ToggleShowFoldersFirstAction.Descriptor());
+    	registerAction(new ToggleFoldersAlwaysAlphabeticalAction.Descriptor());
     	registerAction(new ToggleSizeColumnAction.Descriptor());
     	registerAction(new ToggleStatusBarAction.Descriptor());
     	registerAction(new ToggleToolBarAction.Descriptor());
