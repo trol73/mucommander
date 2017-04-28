@@ -300,7 +300,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     private FileComparator createFileComparator(SortInfo sortInfo) {
         QuickSearch qs = quickSearch != null && quickSearch.isActive() && sortInfo.getQuickSearchMatchesFirst() ? quickSearch : null;
         return new FileComparator(sortInfo.getCriterion().getFileComparatorCriterion(), sortInfo.getAscendingOrder(),
-                sortInfo.getFoldersFirst(), qs);
+                sortInfo.getFoldersFirst(), sortInfo.getFoldersAlwaysAlphabetical(), qs);
     }
 
 

@@ -692,12 +692,10 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
-
-
     /**
      * Controls whether folders are displayed first in this FileTable or mixed with regular files.
      * After calling this method, the table is refreshed to reflect the change.
-     * 
+     *
      * @param enabled if true, folders are displayed before regular files. If false, files are mixed with directories.
      */
     public void setFoldersFirst(boolean enabled) {
@@ -706,6 +704,20 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             sortTable();
         }
     }
+
+    /**
+     * Controls whether folders are sorted always alphabetical (if displayed first in this FileTable)
+     * After calling this method, the table is refreshed to reflect the change.
+     *
+     * @param enabled if true, folders are sorted alphabetical
+     */
+    public void setFoldersAlwaysAlphabetical(boolean enabled) {
+        if (sortInfo.getFoldersAlwaysAlphabetical() != enabled) {
+            sortInfo.setFoldersAlwaysAlphabetical(enabled);
+            sortTable();
+        }
+    }
+
 
     /**
      * Controls whether quick search matches are displayed first in this FileTable or mixed with other files.
@@ -926,13 +938,18 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param ascending true for ascending order, false for descending order
      * @param foldersFirst if true, folders are displayed before regular files. If false, files are mixed with directories.
      */
-    private void sortBy(Column criterion, boolean ascending, boolean foldersFirst) {
+    private void sortBy(Column criterion, boolean ascending, boolean foldersFirst, boolean foldersAlwaysAlphabetical) {
         // If we're not changing the current sort values, abort.
-        if (criterion == sortInfo.getCriterion() && ascending == sortInfo.getAscendingOrder() && foldersFirst == sortInfo.getFoldersFirst()) {
+        if (criterion == sortInfo.getCriterion()
+                && ascending == sortInfo.getAscendingOrder()
+                && foldersFirst == sortInfo.getFoldersFirst()
+                && foldersAlwaysAlphabetical == sortInfo.getFoldersAlwaysAlphabetical()
+            ) {
             return;
         }
 
         sortInfo.setFoldersFirst(foldersFirst);
+        sortInfo.setFoldersAlwaysAlphabetical(foldersAlwaysAlphabetical);
 
         // Ignore the sort criterion and order if the corresponding column is not visible
         if (isColumnVisible(criterion)) {
@@ -958,7 +975,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param sortInfo the information to use to sort this table.
      */
     public void sortBy(SortInfo sortInfo) {
-        sortBy(sortInfo.getCriterion(), sortInfo.getAscendingOrder(), sortInfo.getFoldersFirst());
+        sortBy(sortInfo.getCriterion(), sortInfo.getAscendingOrder(), sortInfo.getFoldersFirst(), sortInfo.getFoldersAlwaysAlphabetical());
     }
 
 
@@ -970,7 +987,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param ascending true for ascending order, false for descending order
      */
     public void sortBy(Column criterion, boolean ascending) {
-        sortBy(criterion, ascending, sortInfo.getFoldersFirst());
+        sortBy(criterion, ascending, sortInfo.getFoldersFirst(), sortInfo.getFoldersAlwaysAlphabetical());
     }
 
     /**
