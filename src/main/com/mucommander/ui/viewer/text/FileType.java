@@ -42,7 +42,9 @@ public enum FileType {
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
     DTD("DTD", SyntaxConstants.SYNTAX_STYLE_DTD, "*.dtd"),
     FORTRAN("Fortran", SyntaxConstants.SYNTAX_STYLE_FORTRAN, "*.f,*.for,*.ftn,*.i"),
+    GO("Go", SyntaxConstants.SYNTAX_STYLE_GO, "*.go"),
     GROOVY("Groovy", SyntaxConstants.SYNTAX_STYLE_GROOVY,"*.groovy,*.gvy,*.gy,*.gsh,*.gradle"),
+    HEX("Intel HEX", SyntaxConstants.SYNTAX_STYLE_HEX, "*.hex,*.ihex"),
     HTACCESS("htaccess", SyntaxConstants.SYNTAX_STYLE_HTACCESS, ".htaccess"),
     HTML("HTML", SyntaxConstants.SYNTAX_STYLE_HTML, "*.html,*.htm"),
     JAVA("Java", SyntaxConstants.SYNTAX_STYLE_JAVA, "*.java"),
@@ -60,6 +62,7 @@ public enum FileType {
     PROPERTIES_FILE("Properties file", SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE, "*.properties,*.prop,*.conf"),
     PYTHON("Python", SyntaxConstants.SYNTAX_STYLE_PYTHON, "*.py,make.builder"),
     RUBY("Ruby", SyntaxConstants.SYNTAX_STYLE_RUBY, "*.rb"),
+    RUST("Rust", SyntaxConstants.SYNTAX_STYLE_RUST, "*.rs,*.rs.in"),
     SAS("SAS", SyntaxConstants.SYNTAX_STYLE_SAS, "*.sas"),
     SCALA("Scala", SyntaxConstants.SYNTAX_STYLE_SCALA, "*.scala"),
     SQL("SQL", SyntaxConstants.SYNTAX_STYLE_SQL, "*.sql"),
@@ -67,10 +70,7 @@ public enum FileType {
     UNIX_SHELL("Unix Shell", SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL, "*.sh,*.zsh,.zshrc,.profile,.bash_profile"),
     VISUAL_BASIC("VisualBasic", SyntaxConstants.SYNTAX_STYLE_VISUAL_BASIC, "*.bas,*.vb"),
     WINDOWS_BATCH("Windows bath", SyntaxConstants.SYNTAX_STYLE_WINDOWS_BATCH, "*.bat,*.cmd"),
-    XML("XML", SyntaxConstants.SYNTAX_STYLE_XML, "*.xml,Info.plist,*.jnlp,*.svg"),
-    HEX("Intel HEX", SyntaxConstants.SYNTAX_STYLE_HEX, "*.hex,*.ihex"),
-    GO("Go", SyntaxConstants.SYNTAX_STYLE_GO, "*.go"),
-    RUST("Rust", SyntaxConstants.SYNTAX_STYLE_RUST, "*.rs");
+    XML("XML", SyntaxConstants.SYNTAX_STYLE_XML, "*.xml,Info.plist,*.jnlp,*.svg");
 
 
     private final String contentType;

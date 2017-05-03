@@ -185,8 +185,9 @@ public class HTTPFile extends ProtocolFile {
 
             // Test if content is HTML
             String contentType = conn.getContentType();
-            if(isParsableMimeType(contentType))
+            if (isParsableMimeType(contentType)) {
                 attributes.setDirectory(true);
+            }
 
             // File was successfully resolved on the remote HTTP server and thus exists
             attributes.setExists(true);

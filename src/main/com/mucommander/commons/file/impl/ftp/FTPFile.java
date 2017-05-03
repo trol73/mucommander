@@ -1368,7 +1368,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // Thus, the only way (AFAIK) to know if the socket is still connected is to intercept all IOException
             // thrown by FTPClient and check if they correspond to a socket exception.
 
-            return ftpClient!=null && ftpClient.isConnected();
+            return ftpClient != null && ftpClient.isConnected();
 
 //            if(ftpClient==null || !ftpClient.isConnected())
 //                return false;
@@ -1386,12 +1386,16 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 // Try to logout, this may fail if the connection is broken
                 try {
                     ftpClient.logout();
-                } catch(IOException ignore) {}
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Close the socket connection
                 try {
                     ftpClient.disconnect();
-                } catch(IOException ignore) {}
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
 
                 ftpClient = null;
             }

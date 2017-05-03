@@ -44,7 +44,9 @@ public class ConnectionPool implements Runnable {
                 int matchingConnHandlers = 0;
 
                 // Try and find an appropriate existing ConnectionHandler
-                for (ConnectionHandler connHandler : connectionHandlers) {
+                //for (ConnectionHandler connHandler : connectionHandlers) {
+                for (Iterator<ConnectionHandler> it = connectionHandlers.iterator(); it.hasNext(); ) {
+                    ConnectionHandler connHandler = it.next();
                 	// ConnectionHandler must match the realm and credentials and must not be locked
                 	if (connHandler.equals(realm, urlCredentials)) {
                 		matchingConnHandlers++;
@@ -71,11 +73,16 @@ public class ConnectionPool implements Runnable {
                             long t0 = System.currentTimeMillis();
                             connectionHandlers.wait(timeout);      // relinquishes the lock on connectionHandlers
                             if (System.currentTimeMillis() - t0 > timeout) {
+                                connHandler.closeConnection();
+                                it.remove();
                                 throw new InterruptedIOException();
                             }
                             break;
                         } catch(InterruptedException e) {
                             LOGGER.info("Interrupted while waiting on a connection for {}", url, e);
+                            connHandler.closeConnection();
+                            it.remove();
+
                             throw new InterruptedIOException();
                         }
                     }
@@ -122,8 +129,8 @@ public class ConnectionPool implements Runnable {
      * @return a list of registered ConnectionHandler instances
      */
     public static List<ConnectionHandler> getConnectionHandlersSnapshot() {
-    //    return new ArrayList<>(connectionHandlers);
         synchronized (connectionHandlers) {
+            connectionHandlers.removeIf(connectionHandler -> !connectionHandler.isConnected());
             return new ArrayList<>(connectionHandlers);
         }
     }
@@ -161,7 +168,6 @@ public class ConnectionPool implements Runnable {
             synchronized(connectionHandlers) {      // Ensures that getConnectionHandler is not currently changing the list while we access it
                 for (Iterator<ConnectionHandler> it = connectionHandlers.iterator(); it.hasNext();) {
                     final ConnectionHandler connHandler = it.next();
-                //for (ConnectionHandler connHandler : connectionHandlers) {
 
                     synchronized(connHandler) {     // Ensures that no one is trying to acquire a lock on the connection while we access it
                         // Do not touch ConnectionHandler if it is currently locked
@@ -174,7 +180,6 @@ public class ConnectionPool implements Runnable {
                         if (!connHandler.isConnected()) {
                             LOGGER.info("Removing unconnected ConnectionHandler {}", connHandler);
 
-                            //connectionHandlers.remove(connHandler);
                             it.remove();
                             // Notify any thread waiting for a ConnectionHandler to be released
                             connectionHandlers.notify();
@@ -190,7 +195,6 @@ public class ConnectionPool implements Runnable {
                         if (closePeriod != -1 && now - lastUsed > closePeriod*1000) {
                             LOGGER.info("Removing timed-out ConnectionHandler {}",connHandler);
 
-                            //connectionHandlers.remove(connHandler);
                             it.remove();
                             // Notify any thread waiting for a ConnectionHandler to be released
                             connectionHandlers.notify();
@@ -224,7 +228,7 @@ public class ConnectionPool implements Runnable {
             // Sleep for MONITOR_SLEEP_PERIOD milliseconds, minus the processing time of this loop
             try {
                 Thread.sleep(Math.max(0, MONITOR_SLEEP_PERIOD-(System.currentTimeMillis()-now)));
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 // Will loop again
             }
         }
@@ -246,7 +250,7 @@ public class ConnectionPool implements Runnable {
         @Override
         public void run() {
             // Try to close connection, only if it is connected
-            if(connHandler.isConnected()) {
+            if (connHandler.isConnected()) {
                 LOGGER.info("Closing connection held by {}", connHandler);
                 connHandler.closeConnection();
             }
@@ -272,12 +276,14 @@ public class ConnectionPool implements Runnable {
 
             synchronized(connHandler) {
                 // Ensures that lock was not grabbed in the meantime
-                if(connHandler.isLocked())
+                if (connHandler.isLocked()) {
                     return;
+                }
 
                 // Keep alive connection, only if it is connected
-                if(connHandler.isConnected())
+                if (connHandler.isConnected()) {
                     connHandler.keepAlive();
+                }
             }
         }
     }

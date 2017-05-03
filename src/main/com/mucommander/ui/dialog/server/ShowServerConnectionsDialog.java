@@ -80,7 +80,6 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
             public String getElementAt(int i) {
                 ConnectionHandler connHandler = connections.get(i);
-
                 // Show login (but not password) in the URL
                 // Note: realm returned by ConnectionHandler does not contain credentials
                 FileURL clonedRealm = (FileURL)connHandler.getRealm().clone();
