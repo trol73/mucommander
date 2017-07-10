@@ -132,7 +132,8 @@ public class CopyJob extends AbstractCopyJob {
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink() && file instanceof LocalFile) {
-            copySymLink(file, destFile);
+            //copySymLink(file, destFile);
+            tryCopySymlinkFile(file, destFolder);
             return true;
         }
 
@@ -292,9 +293,9 @@ public class CopyJob extends AbstractCopyJob {
     }
 
 
-    private void copySymLink(AbstractFile file, AbstractFile destFile) {
-        String targetPath = SymLinkUtils.getTargetPath(file);
-        SymLinkUtils.createSymlink(destFile, targetPath);
-    }
+//    private void copySymLink(AbstractFile file, AbstractFile destFile) {
+//        String targetPath = SymLinkUtils.getTargetPath(file);
+//        SymLinkUtils.createSymlink(destFile, targetPath);
+//    }
 
 }

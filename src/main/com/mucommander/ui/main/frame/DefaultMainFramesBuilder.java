@@ -53,8 +53,8 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
 	public MainFrame[] build() {
 		int nbFrames = snapshot.getIntegerVariable(MuSnapshot.getWindowsCount());
 
-		// if there're no windows saved in the snapshot file, open one window with default settings
-		if (nbFrames == 0) {
+        // if there is no window saved in the snapshot file or custom folders are set, open one window with default settings
+		if (nbFrames == 0 || MuConfigurations.getPreferences().getVariable(MuPreference.STARTUP_FOLDERS).equals(MuPreferences.STARTUP_FOLDERS_CUSTOM)) {
 			MainFrame mainFrame = new MainFrame(
 					new ConfFileTableTab(getInitialPath(FolderPanelType.LEFT)),
 					getFileTableConfiguration(FolderPanelType.LEFT, -1),
@@ -76,8 +76,9 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
 		}
 		else {
 			MainFrame[] mainFrames = new MainFrame[nbFrames];
-			for (int i=0; i<mainFrames.length; ++i)
+			for (int i=0; i<mainFrames.length; ++i) {
 				mainFrames[i] = createMainFrame(i);
+			}
 
 			return mainFrames;
 		}
@@ -86,19 +87,21 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
 	private MainFrame createMainFrame(int index) {
 		int nbTabsInLeftPanel = snapshot.getIntegerVariable(MuSnapshot.getTabsCountVariable(index, true));
 		ConfFileTableTab[] leftTabs = new ConfFileTableTab[nbTabsInLeftPanel];
-		for (int i=0; i<nbTabsInLeftPanel; ++i)
+		for (int i=0; i<nbTabsInLeftPanel; ++i) {
 			leftTabs[i] = new ConfFileTableTab(
-									snapshot.getBooleanVariable(MuSnapshot.getTabLockedVariable(index, true, i)),
-									restoreFileURL(snapshot.getVariable(MuSnapshot.getTabLocationVariable(index, true, i))),
-									snapshot.getVariable(MuSnapshot.getTabTitleVariable(index, true, i)));
+					snapshot.getBooleanVariable(MuSnapshot.getTabLockedVariable(index, true, i)),
+					restoreFileURL(snapshot.getVariable(MuSnapshot.getTabLocationVariable(index, true, i))),
+					snapshot.getVariable(MuSnapshot.getTabTitleVariable(index, true, i)));
+		}
 
 		int nbTabsInRightPanel = snapshot.getIntegerVariable(MuSnapshot.getTabsCountVariable(index, false));
 		ConfFileTableTab[] rightTabs = new ConfFileTableTab[nbTabsInRightPanel];
-		for (int i=0; i<nbTabsInRightPanel; ++i)
-			rightTabs[i] = new ConfFileTableTab(
-									snapshot.getBooleanVariable(MuSnapshot.getTabLockedVariable(index, false, i)),
-									restoreFileURL(snapshot.getVariable(MuSnapshot.getTabLocationVariable(index, false, i))),
-									snapshot.getVariable(MuSnapshot.getTabTitleVariable(index, false, i)));
+		for (int i=0; i<nbTabsInRightPanel; ++i) {
+            rightTabs[i] = new ConfFileTableTab(
+                    snapshot.getBooleanVariable(MuSnapshot.getTabLockedVariable(index, false, i)),
+                    restoreFileURL(snapshot.getVariable(MuSnapshot.getTabLocationVariable(index, false, i))),
+                    snapshot.getVariable(MuSnapshot.getTabTitleVariable(index, false, i)));
+        }
 
 		MainFrame mainFrame = new MainFrame(
 				leftTabs,

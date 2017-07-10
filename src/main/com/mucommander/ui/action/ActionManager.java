@@ -77,6 +77,7 @@ public class ActionManager {
     	registerAction(new CloseTabAction.Descriptor());
 //    	registerAction(new CommandAction.Descriptor());
     	registerAction(new CompareFoldersAction.Descriptor());
+		registerAction(new CompareFolderFilesAction.Descriptor());
     	registerAction(new ConnectToServerAction.Descriptor());
     	registerAction(new CopyAction.Descriptor());
     	registerAction(new CopyFileBaseNamesAction.Descriptor());

@@ -254,7 +254,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
                     boolean result = super.processFile(file, recurseParams);
                     if (result && openInTextEditor) {
                         EditorRegistrar.createEditorFrame(mainFrame, file, EditAction.getStandardIcon(EditAction.class).getImage(),
-                                (frame) -> FocusRequester.requestFocus(frame));
+                                FocusRequester::requestFocus);
                     }
                     return result;
                 }

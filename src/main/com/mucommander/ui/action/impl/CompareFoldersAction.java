@@ -50,51 +50,43 @@ public class CompareFoldersAction extends MuAction {
 
         BaseFileTableModel leftTableModel = leftTable.getFileTableModel();
         BaseFileTableModel rightTableModel = rightTable.getFileTableModel();
-
-        int nbFilesLeft = leftTableModel.getFileCount();
-        int nbFilesRight = rightTableModel.getFileCount();
-        int fileIndex;
-        String tempFileName;
-        AbstractFile tempFile;
-        for(int i=0; i<nbFilesLeft; i++) {
-            tempFile = leftTableModel.getFileAt(i);
-            if(tempFile.isDirectory())
-                continue;
-
-            tempFileName = tempFile.getName();
-            fileIndex = -1;
-            for(int j=0; j<nbFilesRight; j++)
-                if (rightTableModel.getFileAt(j).getName().equals(tempFileName)) {
-                    fileIndex = j;
-                    break;
-                }
-            if (fileIndex < 0 || rightTableModel.getFileAt(fileIndex).getLastModifiedDate()<tempFile.getLastModifiedDate()) {
-                leftTableModel.setFileMarked(tempFile, true);
-                leftTable.repaint();
-            }
+        if (compare(leftTableModel, rightTableModel)) {
+            leftTable.repaint();
         }
-
-        for(int i=0; i<nbFilesRight; i++) {
-            tempFile = rightTableModel.getFileAt(i);
-            if(tempFile.isDirectory())
-                continue;
-
-            tempFileName = tempFile.getName();
-            fileIndex = -1;
-            for(int j=0; j<nbFilesLeft; j++)
-                if (leftTableModel.getFileAt(j).getName().equals(tempFileName)) {
-                    fileIndex = j;
-                    break;
-                }
-            if (fileIndex==-1 || leftTableModel.getFileAt(fileIndex).getLastModifiedDate()<tempFile.getLastModifiedDate()) {
-                rightTableModel.setFileMarked(tempFile, true);
-                rightTable.repaint();
-            }
+        if (compare(rightTableModel, leftTableModel)) {
+            rightTable.repaint();
         }
 
         // Notify registered listeners that currently marked files have changed on the file tables
         leftTable.fireMarkedFilesChangedEvent();
         rightTable.fireMarkedFilesChangedEvent();
+    }
+
+    private boolean compare(BaseFileTableModel firstTableModel, BaseFileTableModel secondTableModel) {
+        boolean result = false;
+        int nbFilesFirst = firstTableModel.getFileCount();
+        int nbFilesSecond = secondTableModel.getFileCount();
+
+        for (int i = 0; i < nbFilesFirst; i++) {
+            AbstractFile tempFile = firstTableModel.getFileAt(i);
+            if (tempFile.isDirectory()) {
+                continue;
+            }
+
+            String tempFileName = tempFile.getName();
+            int fileIndex = -1;
+            for (int j = 0; j < nbFilesSecond; j++) {
+                if (secondTableModel.getFileAt(j).getName().equals(tempFileName)) {
+                    fileIndex = j;
+                    break;
+                }
+            }
+            if (fileIndex < 0 || secondTableModel.getFileAt(fileIndex).getLastModifiedDate() < tempFile.getLastModifiedDate()) {
+                firstTableModel.setFileMarked(tempFile, true);
+                result = true;
+            }
+        }
+        return result;
     }
 
 	@Override
@@ -113,11 +105,11 @@ public class CompareFoldersAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+//            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_DOWN_MASK);
-            }
+//            } else {
+//                return KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_DOWN_MASK);
+//            }
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

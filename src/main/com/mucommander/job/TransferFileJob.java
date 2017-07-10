@@ -19,8 +19,11 @@
 
 package com.mucommander.job;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -116,7 +119,7 @@ public abstract class TransferFileJob extends FileJob {
         this.totalSkippedByteCounter = new ByteCounter(currentFileSkippedByteCounter);
     }
 
-    protected void copyToReadonlyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
+    void copyToReadonlyFile(AbstractFile sourceFile, AbstractFile destFile, boolean append) throws FileTransferException {
         try {
             destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
             copyFile(sourceFile, destFile, append);
@@ -142,8 +145,9 @@ public abstract class TransferFileJob extends FileJob {
         isCheckingIntegrity = false;
 
         // Throw a specific FileTransferException if source and destination files are identical
-        if (sourceFile.equalsCanonical(destFile))
+        if (sourceFile.equalsCanonical(destFile)) {
             throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
+        }
 
         // Determine whether or not AbstractFile.copyRemotelyTo() should be used to copy the file.
         // Some file protocols do not provide a getOutputStream() method and require the use of copyRemotelyTo(). Some other
@@ -408,7 +412,7 @@ public abstract class TransferFileJob extends FileJob {
      * @param in the InputStream to be used
      * @return the 'augmented' InputStream using the given stream as the underlying InputStream
      */
-    protected synchronized InputStream setCurrentInputStream(InputStream in) {
+    synchronized InputStream setCurrentInputStream(InputStream in) {
         if (tlin == null) {
             tlin = new ThroughputLimitInputStream(new CounterInputStream(in, currentFileByteCounter), throughputLimit);
         } else {
@@ -421,7 +425,7 @@ public abstract class TransferFileJob extends FileJob {
     /**
      * Closes the currently registered source InputStream.
      */
-    protected synchronized void closeCurrentInputStream() {
+    synchronized void closeCurrentInputStream() {
         if (tlin != null) {
             try {
                 tlin.close();
@@ -438,7 +442,7 @@ public abstract class TransferFileJob extends FileJob {
      *
      * @return true if file transfers need to be checked for data integrity
      */
-    public boolean isIntegrityCheckEnabled() {
+    boolean isIntegrityCheckEnabled() {
         return integrityCheckEnabled;
     }
 
@@ -457,7 +461,7 @@ public abstract class TransferFileJob extends FileJob {
      *
      * @return true if the integrity of the current file is being verified
      */
-    protected boolean isCheckingIntegrity() {
+    boolean isCheckingIntegrity() {
         return isCheckingIntegrity;
     }
 
@@ -487,7 +491,7 @@ public abstract class TransferFileJob extends FileJob {
      *
      * @return true if the file that is currently being processed has been skipped
      */
-    public synchronized boolean wasCurrentFileSkipped() {
+    synchronized boolean wasCurrentFileSkipped() {
         return currentFileSkipped;
     }
 
@@ -517,7 +521,7 @@ public abstract class TransferFileJob extends FileJob {
      *
      * @return the number of bytes that have been skipped in the current file
      */
-    public ByteCounter getCurrentFileSkippedByteCounter() {
+    private ByteCounter getCurrentFileSkippedByteCounter() {
         return currentFileSkippedByteCounter;
     }
 
@@ -685,6 +689,61 @@ public abstract class TransferFileJob extends FileJob {
 
         return super.getStatusString();
     }
+
+    protected boolean tryCopySymlinkFile(AbstractFile sourceFile, AbstractFile destFile) {
+        Path sourcePath = ((File) sourceFile.getUnderlyingFileObject()).toPath();
+        Path destPath = ((File) destFile.getUnderlyingFileObject()).toPath();
+        try {
+            Files.createSymbolicLink(destPath, Files.readSymbolicLink(sourcePath));
+        } catch (IOException e) {
+            LOGGER.debug("failed to create symbolic link "+destFile, e);
+            return false;
+        }
+
+        // Preserve source file's date
+        tryCopyFileDate(sourceFile, destFile);
+        // Preserve source file's permissions: preserve only the permissions bits that are supported by the source file
+        // and use default permissions for the rest of them.
+        tryCopyFilePermissions(sourceFile, destFile);
+
+        // Under Mac OS X only, preserving the file type and creator
+        tryCopyFileTypeAndCreator(sourceFile, destFile);
+        return true;
+    }
+
+    private void tryCopyFileDate(AbstractFile sourceFile, AbstractFile destFile) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+            try {
+                destFile.setLastModifiedDate(sourceFile.getLastModifiedDate());
+            } catch (IOException e) {
+                LOGGER.debug("failed to change the date of "+destFile, e);
+            }
+        }
+    }
+
+    private void tryCopyFilePermissions(AbstractFile sourceFile, AbstractFile destFile) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_PERMISSION)) {
+            try {
+                destFile.importPermissions(sourceFile, FilePermissions.DEFAULT_FILE_PERMISSIONS);  // use #importPermissions(AbstractFile, int) to avoid isDirectory test
+            } catch(IOException e) {
+                LOGGER.debug("failed to import "+sourceFile+" permissions into "+destFile, e);
+            }
+        }
+    }
+
+    private void tryCopyFileTypeAndCreator(AbstractFile sourceFile, AbstractFile destFile) {
+        if (OsFamily.MAC_OS_X.isCurrent()&& sourceFile.hasAncestor(LocalFile.class) && destFile.hasAncestor(LocalFile.class)) {
+
+            String sourcePath = sourceFile.getAbsolutePath();
+            try {
+                FileManager.setFileTypeAndCreator(destFile.getAbsolutePath(), FileManager.getFileType(sourcePath), FileManager.getFileCreator(sourcePath));
+            } catch(IOException e) {
+                // Swallow the exception and do not interrupt the transfer
+                LOGGER.debug("Error while setting Mac OS X file type and creator on destination", e);
+            }
+        }
+    }
+
 
 //    /**
 //     * Method overridden to return a more accurate percentage of job processed so far by taking

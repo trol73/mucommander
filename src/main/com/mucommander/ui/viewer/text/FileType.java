@@ -54,7 +54,7 @@ public enum FileType {
     LATEX("Latex", SyntaxConstants.SYNTAX_STYLE_LATEX, "*.tex"),
     LISP("Lisp", SyntaxConstants.SYNTAX_STYLE_LISP, "*.lisp,*.lsp"),
     LUA("Lua", SyntaxConstants.SYNTAX_STYLE_LUA, "*.lua"),
-    MAKEFILE("Makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE, "Makefile"),
+    MAKEFILE("Makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE, "Makefile,*.mk"),
     MXML("MXML", SyntaxConstants.SYNTAX_STYLE_MXML, "*.mxml"),
     NSIS("Nsis", SyntaxConstants.SYNTAX_STYLE_NSIS, "*.nsi"),
     PERL("Perl", SyntaxConstants.SYNTAX_STYLE_PERL, "*.pl"),

@@ -19,9 +19,9 @@
 
 package com.mucommander.ui.helper;
 
-import java.awt.Component;
+import java.awt.*;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
@@ -97,10 +97,15 @@ public class FocusRequester implements Runnable {
         } else {
             c.requestFocus();
         }
+        if (c instanceof Frame) {
+            Frame f = (Frame)c;
+            f.toFront();
+        }
         if (c instanceof MainFrame) {
             MainFrame mainFrame = (MainFrame)c;
             mainFrame.getActiveTable().requestFocus();
         }
+
 
         LOGGER.debug("focus requested on " + (c.getClass().getName()));
 
