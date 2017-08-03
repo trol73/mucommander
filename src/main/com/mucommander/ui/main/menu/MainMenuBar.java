@@ -510,7 +510,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             for (AbstractFile volume : volumes) {
                 if (volume != null && !volume.isSymlink() && !volume.getPath().toLowerCase().startsWith("/users/")) {
                     MenuToolkit.addMenuItem(ejectDrivesMenu, volume.getName(), null, null, event -> {
-                        EjectDriveAction.eject(volume);
+                        EjectDriveAction.eject(mainFrame, volume);
                         mainFrame.tryRefreshCurrentFolders();
                     });
                     empty = false;

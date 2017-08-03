@@ -21,14 +21,17 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.MountedDriveFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.text.Translator;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.macosx.AppleScript;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.statusbar.TaskWidget;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,19 +48,16 @@ public class EjectDriveAction extends SelectedFilesAction {
 
     @Override
     public void performAction(FileSet files) {
-        if (files.size() == 1 && eject(files.get(0))) {
+        if (files.size() == 1) {
+            eject(mainFrame, files.get(0));
             mainFrame.tryRefreshCurrentFolders();
         }
     }
 
-    public static boolean eject(AbstractFile file) {
+    public static void eject(MainFrame mainFrame, AbstractFile file) {
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-            StringBuilder sb = new StringBuilder();
-            return AppleScript.execute("tell application \"Finder\"\n" +
-                    "   eject disk \"" + file.getName() + "\"\n" +
-                    "end tell", sb);
+            new EjectWorker(mainFrame, file.getName()).execute();
         }
-        return false;
     }
 
     @Override
@@ -79,6 +79,67 @@ public class EjectDriveAction extends SelectedFilesAction {
 
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new EjectDriveAction(mainFrame, properties);
+        }
+    }
+
+
+    private static class EjectWorker extends SwingWorker<Void, Void> {
+        private final MainFrame mainFrame;
+        private final TaskWidget taskWidget;
+        private final String fileName;
+        private boolean taskWidgetAttached;
+        private int progress;
+
+        EjectWorker(MainFrame mainFrame, String fileName) {
+            this.mainFrame = mainFrame;
+            this.fileName = fileName;
+            this.taskWidget = new TaskWidget();
+            taskWidget.setText(Translator.get("EjectDrive.label"));
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            try {
+                publish();
+                StringBuilder sb = new StringBuilder();
+                publish();
+                Thread t = new Thread(() -> {
+                    //try {Thread.sleep(5000); } catch (Throwable e) {}
+                    AppleScript.execute("tell application \"Finder\"\n" +
+                            "   eject disk \"" + fileName + "\"\n" +
+                            "end tell", sb);
+                });
+                t.start();
+                while (t.isAlive() || progress < 100) {
+                    if (!t.isAlive()) {
+                        progress += 10;
+                    }
+                    Thread.sleep(50);
+                    publish();
+                }
+                progress = 100;
+                publish();
+            } catch (Throwable ignore) {}
+            return null;
+        }
+
+        @Override
+        protected void process(List<Void> chunks) {
+            if (!taskWidgetAttached) {
+                mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
+                mainFrame.getStatusBar().revalidate();
+                mainFrame.getStatusBar().repaint();
+                taskWidgetAttached = true;
+            }
+            if (progress < 100) {
+                progress += 10;
+            }
+            taskWidget.setProgress(progress);
+        }
+
+        @Override
+        protected void done() {
+            taskWidget.removeFromPanel();
         }
     }
 }

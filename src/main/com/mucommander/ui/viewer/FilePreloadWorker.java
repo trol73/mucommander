@@ -42,7 +42,7 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
     private boolean taskWidgetAttached;
 
 
-    public FilePreloadWorker(AbstractFile file, MainFrame mainFrame, Runnable onFinish) {
+    FilePreloadWorker(AbstractFile file, MainFrame mainFrame, Runnable onFinish) {
         this.file = file;
         this.mainFrame = mainFrame;
         this.onFinish = onFinish;

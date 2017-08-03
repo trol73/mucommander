@@ -847,6 +847,11 @@
 				<method name="*"/>
 				<constructor name="*"/>
 			</keepclassmembers>			
+			<keep name="com.beust.jcommander.**" allowshrinking="false" allowoptimization="false" allowobfuscation="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
 
 <!--			
 
