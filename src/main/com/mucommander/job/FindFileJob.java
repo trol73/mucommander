@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2014-2016 Oleg Trifonov
+ * Copyright (C) 2014-2017 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import ru.trolsoft.utils.search.*;
 
@@ -165,9 +167,18 @@ public class FindFileJob extends FileJob {
         } else {
             filterCase = IOCase.SENSITIVE;
         }
-        fileFilter = new WildcardFileFilter(fileMask, filterCase);
-        if (!caseSensitive && fileContent != null) {
-            this.fileContent = fileContent.toLowerCase();
+        if (fileMask.contains(",")) {
+            String masks[] = fileMask.split(",");
+            List<IOFileFilter> fileFilters = new ArrayList<>();
+            for (String mask : masks) {
+                String trimMask = mask.trim();
+                if (!trimMask.isEmpty()) {
+                    fileFilters.add(new WildcardFileFilter(trimMask, filterCase));
+                }
+            }
+            fileFilter = new OrFileFilter(fileFilters);
+        } else {
+            fileFilter = new WildcardFileFilter(fileMask, filterCase);
         }
 
         if (hexMode) {

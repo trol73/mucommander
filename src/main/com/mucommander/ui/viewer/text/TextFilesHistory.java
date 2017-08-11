@@ -36,7 +36,7 @@ public class TextFilesHistory {
     /** Default text file history file name */
     private static final String DEFAULT_HISTORY_FILE_NAME = "textfiles.history";
 
-    private static final int MAX_NUMBER_OF_RECORDS = 500;
+    private static final int MAX_NUMBER_OF_RECORDS = 1000;
 
 
     private static WeakReference<TextFilesHistory> instance;
@@ -50,12 +50,12 @@ public class TextFilesHistory {
         private FileType fileType;
         private String encoding;
 
-        public FileRecord(String fileName, int firstLine, int row, int column,  FileType fileType, String encoding) {
+        FileRecord(String fileName, int firstLine, int row, int column, FileType fileType, String encoding) {
             this.fileName = fileName;
             update(firstLine, row, column, fileType, encoding);
         }
 
-        public FileRecord(String fileName) {
+        FileRecord(String fileName) {
             this.fileName = fileName;
         }
 
@@ -129,8 +129,7 @@ public class TextFilesHistory {
             instance = new WeakReference<>(textFilesHistory);
             try {
                 textFilesHistory.load();
-            } catch (IOException ignore) {
-            }
+            } catch (IOException ignore) {}
         }
         return textFilesHistory;
     }
@@ -248,7 +247,7 @@ public class TextFilesHistory {
     }
 
 
-    public TextFilesHistory updateRecord(FileRecord record) {
+    TextFilesHistory updateRecord(FileRecord record) {
         int index = findRecord(record.fileName);
         if (index >= 0) {
             records.remove(index);
