@@ -374,7 +374,8 @@ public class FocusDialog extends JDialog implements WindowListener {
             public void componentResized(ComponentEvent e) {
                 Dimension preferredSize = getPreferredSize();
                 int width = getWidth();
-                setSize(new Dimension(Math.max(width, preferredSize.width), preferredSize.height));
+                int minWidth = minimumDimension != null ? minimumDimension.width : preferredSize.width;
+                setSize(new Dimension(Math.max(width, minWidth), preferredSize.height));
                 super.componentResized(e);
             }
         });
