@@ -35,6 +35,8 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -42,7 +44,7 @@ import java.util.List;
  * Created on 04/06/14.
  * @author Oleg Trifonov
  */
-public class CalculatorDialog extends FocusDialog implements ActionListener {
+public class CalculatorDialog extends FocusDialog implements ActionListener, KeyListener {
 
     private static final Dimension MIN_DIMENSION = new Dimension(520, 300);
 
@@ -167,6 +169,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         compPanel.addRow(btnExp, edtExp, 0);
 
         cbExpression.addActionListener(this);
+        cbExpression.getEditor().getEditorComponent().addKeyListener(this);
 
         // Bottom line
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
@@ -194,7 +197,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         fixHeight();
     }
 
-    private void calculate() {
+    private boolean calculate() {
         String expression = cbExpression.getSelectedItem().toString().trim();
         boolean success;
         try {
@@ -233,6 +236,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         btnOct.setEnabled(success);
         btnExp.setEnabled(success);
         lblError.setText(success ? "" : Translator.get("calculator.error"));
+        return success;
     }
 
     private double evaluate(String expression) throws Exception {
@@ -287,5 +291,22 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     protected void saveState() {
         super.saveState();
         TextHistory.getInstance().save(TextHistory.Type.CALCULATOR);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && (e.getModifiers() & (KeyEvent.CTRL_MASK | KeyEvent.META_MASK)) != 0) {
+            if (calculate()) {
+                cbExpression.setSelectedItem(edtDec.getText());
+            }
+        }
     }
 }
