@@ -1083,7 +1083,12 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             }
             // we need to refresh the file after update
             // otherwise the file size for archives will be show incorrect etc.
-            FTPFile.this.file = getFTPFile(getURL());
+            try {
+                FTPFile.this.file = getFTPFile(getURL());
+            } catch (IOException e) {
+                // Checks if the IOException corresponds to a socket error and in that case, closes the connection
+                connHandler.checkSocketException(e);
+            }
             // force to refresh folder pane with this file
             FolderChangeMonitor.addFileToRefresh(getAbsolutePath());
             isClosed = true;

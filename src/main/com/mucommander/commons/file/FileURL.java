@@ -198,8 +198,9 @@ public class FileURL implements Cloneable {
         } catch (Exception e) {
             // Catch any unexpected exception thrown by the SchemeParser and turn it into a MalformedURLException
             // with a specific error message.
-            if (e instanceof MalformedURLException)
-                throw (MalformedURLException)e;
+            if (e instanceof MalformedURLException) {
+                throw (MalformedURLException) e;
+            }
 
             throw new MalformedURLException("URL parser error");
         }

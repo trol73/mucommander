@@ -41,6 +41,7 @@ public class AdbFile extends ProtocolFile {
 	private List<RemoteFile> childs;
 	private AbstractFile parent;
 	private JadbConnection jadbConnection;
+	private String rootFolder;
 
 	private static FileURL lastModifiedPath;        // FIXME that's a bad way to detect directory changes
 
@@ -63,18 +64,12 @@ public class AdbFile extends ProtocolFile {
 				path = "/";
 			}
 
-			try {
-				List<RemoteFile> files = device.list(path);
-				childs = new ArrayList<>();
-				for (RemoteFile rf : files) {
-					if (".".equals(rf.getPath())) {
-						remoteFile = rf;
-					} else {
-						childs.add(rf);
-					}
+			remoteFile = tryLs(device, path);
+			if (remoteFile == null && "/".equals(path)) {
+				remoteFile = tryLs(device, "/sdcard/");
+				if (remoteFile != null) {
+					rootFolder = "/sdcard/";
 				}
-			} catch (JadbException e) {
-				e.printStackTrace();
 			}
 			closeConnection();
 		} else {
@@ -82,7 +77,28 @@ public class AdbFile extends ProtocolFile {
 				rebuildChildrenList(url);
 			}
 		}
+		if (rootFolder == null) {
+			rootFolder = "/";
+		}
 		this.remoteFile = remoteFile;
+	}
+
+	private RemoteFile tryLs(JadbDevice device, String path) throws IOException {
+		RemoteFile result = null;
+		try {
+			List<RemoteFile> files = device.list(path);
+			childs = new ArrayList<>();
+			for (RemoteFile rf : files) {
+				if (".".equals(rf.getPath())) {
+					result = rf;
+				} else {
+					childs.add(rf);
+				}
+			}
+		} catch (JadbException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	private void rebuildChildrenList(FileURL url) throws IOException {
@@ -266,7 +282,8 @@ public class AdbFile extends ProtocolFile {
 			if ("..".equals(rf.getPath())) {
 				continue;
 			}
-			FileURL url = FileURL.getFileURL(getURL() + "/" + rf.getPath());
+
+			FileURL url = FileURL.getFileURL(getURL() + rootFolder + rf.getPath());
 			AdbFile adbFile = new AdbFile(url, rf);
 			adbFile.parent = this;
 			result[index++] = adbFile;
