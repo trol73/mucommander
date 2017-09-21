@@ -1097,7 +1097,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 super.close();
 
                 LOGGER.trace("complete pending commands");
-                connHandler.ftpClient.completePendingCommand();
+                if (connHandler != null && connHandler.ftpClient != null) {
+                    connHandler.ftpClient.completePendingCommand();
+                }
                 LOGGER.trace("commands completed");
             } catch(IOException e) {
                 LOGGER.info("exception in completePendingCommands()", e);
