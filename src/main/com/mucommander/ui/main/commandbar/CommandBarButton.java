@@ -45,11 +45,11 @@ import ru.trolsoft.macosx.RetinaImageIcon;
 public class CommandBarButton extends NonFocusableButton implements ConfigurationListener {
 
 	/** ID of the button's action */
-	private String actionId;
+	private final String actionId;
 	
 	/** Current icon scale factor */
     // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-    protected static float scaleFactor = Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_ICON_SCALE,
+    static float scaleFactor = Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_ICON_SCALE,
                                                                         MuPreferences.DEFAULT_COMMAND_BAR_ICON_SCALE));
 	
     public static CommandBarButton create(String actionId, MainFrame mainFrame) {

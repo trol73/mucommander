@@ -78,24 +78,24 @@ public class HTTPFile extends ProtocolFile {
 
     /** User agent used for all HTTP connections made by HTTPFile */
     // TODO: add file API version, like muCommander-file-API/1.0
-    public static final String USER_AGENT = "muCommander-file-API (Java "+System.getProperty("java.vm.version")
+    private static final String USER_AGENT = "trolCommander-file-API (Java "+System.getProperty("java.vm.version")
                                             + "; " + System.getProperty("os.name") + " " +
                                             System.getProperty("os.version") + " " + System.getProperty("os.arch") + ")";
 
     /** Matches HTML and XHTML attribute key/value pairs, where the value is surrounded by Single Quotes */
-    private final static Pattern linkAttributePatternSQ = Pattern.compile("(src|href|SRC|HREF)=\\\'.*?\\\'");
+    private final static Pattern linkAttributePatternSQ = Pattern.compile("(src|href|SRC|HREF)='.*?'");
 
     /** Matches HTML and XHTML attribute key/value pairs, where the value is surrounded by Double Quotes */
-    private final static Pattern linkAttributePatternDQ = Pattern.compile("(src|href|SRC|HREF)=\\\".*?\\\"");
+    private final static Pattern linkAttributePatternDQ = Pattern.compile("(src|href|SRC|HREF)=\".*?\"");
 
 
-    protected HTTPFile(FileURL fileURL) throws IOException {
+    HTTPFile(FileURL fileURL) throws IOException {
         // TODO: optimize this
         this(fileURL, new URL(fileURL.toString(false)));
     }
 
 	
-    protected HTTPFile(FileURL fileURL, URL url) throws IOException {
+    HTTPFile(FileURL fileURL, URL url) throws IOException {
         super(fileURL);
 
         String scheme = fileURL.getScheme().toLowerCase();
@@ -592,13 +592,14 @@ public class HTTPFile extends ProtocolFile {
             FileURL childFileURL;
             Credentials credentials = fileURL.getCredentials();
 
-            String parentPath = fileURL.getPath();
-            if(!parentPath.endsWith("/"))
-                parentPath += "/";
+//            String parentPath = fileURL.getPath();
+//            if (!parentPath.endsWith("/")) {
+//                parentPath += "/";
+//            }
 
             String parentHost = fileURL.getHost();
 
-            FileURL tempChildURL = (FileURL)fileURL.clone();
+            //FileURL tempChildURL = (FileURL)fileURL.clone();
 
             Pattern pattern;
             String line, match, link;
@@ -634,36 +635,35 @@ public class HTTPFile extends ProtocolFile {
 
                             children.add(FileFactory.getFile(childFileURL, null, childURL, childURL.toString()));
                             childrenURL.add(link);
-                        }
-                        catch(IOException e) {
+                        } catch(IOException e) {
                             LOGGER.info("Cannot create child: {}", e);
                         }
                     }
 
-                    if(pattern==linkAttributePatternDQ)
+                    if (pattern == linkAttributePatternDQ) {
                         break;
+                    }
                 }
             }
 
             AbstractFile childrenArray[] = new AbstractFile[children.size()];
             children.toArray(childrenArray);
             return childrenArray;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.info("Exception caught while parsing HTML, throwing IOException", e);
 
-            if(e instanceof IOException)
-                throw (IOException)e;
+            if (e instanceof IOException) {
+                throw (IOException) e;
+            }
 
             throw new IOException();
-        }
-        finally {
+        } finally {
             try {
                 // Try and close URL connection
-                if(br!=null)
+                if (br != null) {
                     br.close();
-            }
-            catch(IOException e) {}
+                }
+            } catch(IOException ignore) {}
         }
     }
 
@@ -679,8 +679,11 @@ public class HTTPFile extends ProtocolFile {
 
     @Override
     public String getName() {
-        try {return java.net.URLDecoder.decode(super.getName(), "utf-8");}
-        catch(Exception e) {return super.getName();}
+        try {
+            return java.net.URLDecoder.decode(super.getName(), "utf-8");
+        } catch(Exception e) {
+            return super.getName();
+        }
     }
 
     /**
@@ -727,12 +730,14 @@ public class HTTPFile extends ProtocolFile {
             super(CHUNK_SIZE);
 
             // HEAD the HTTP resource to get its length
-            if(!fileResolved)
+            if (!fileResolved) {
                 resolveFile();
+            }
 
             length = getSize();
-            if(length == -1)        // Knowing the content length is required
+            if (length == -1) {        // Knowing the content length is required
                 throw new IOException();
+            }
         }
 
         ///////////////////////////////////////////
@@ -755,9 +760,9 @@ public class HTTPFile extends ProtocolFile {
                 int read;
                 while (totalRead < blockLen) {
                     read = in.read(block, totalRead, blockLen - totalRead);
-                    if (read == -1)
+                    if (read == -1) {
                         break;
-
+                    }
                     totalRead += read;
                 }
 

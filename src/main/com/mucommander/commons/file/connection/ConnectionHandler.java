@@ -28,16 +28,16 @@ public abstract class ConnectionHandler {
     protected boolean isLocked;
 
     /** Time at which the connection managed by this ConnectionHandler was last used */
-    protected long lastActivityTimestamp;
+    private long lastActivityTimestamp;
 
     /** Time at which the connection managed by this ConnectionHandler was last kept alive */
-    protected long lastKeepAliveTimestamp;
+    private long lastKeepAliveTimestamp;
 
     /** Number of seconds of inactivity after which this ConnectionHandler's connection will be closed by ConnectionPool */
-    protected long closeOnInactivityPeriod = DEFAULT_CLOSE_ON_INACTIVITY_PERIOD;
+    private long closeOnInactivityPeriod = DEFAULT_CLOSE_ON_INACTIVITY_PERIOD;
 
     /** Number of seconds of inactivity after which this ConnectionHandler's connection will be kept alive by ConnectionPool */
-    protected long keepAlivePeriod = DEFAULT_KEEP_ALIVE_PERIOD;
+    private long keepAlivePeriod = DEFAULT_KEEP_ALIVE_PERIOD;
 
     /** Default 'close on inactivity' period */
     private final static long DEFAULT_CLOSE_ON_INACTIVITY_PERIOD = 300;
@@ -102,7 +102,7 @@ public abstract class ConnectionHandler {
      *
      * @return true if it could be locked, false if it is already locked.
      */
-    public synchronized boolean acquireLock() {
+    synchronized boolean acquireLock() {
         if (isLocked) {
             LOGGER.info("!!!!! acquireLock() returning false, should not happen !!!!!", new Throwable());
             return false;
@@ -146,7 +146,7 @@ public abstract class ConnectionHandler {
     /**
      * Updates the time at which the connection managed by this ConnectionHandler was last used to now (current time).
      */
-    public void updateLastActivityTimestamp() {
+    void updateLastActivityTimestamp() {
         lastActivityTimestamp = System.currentTimeMillis();
     }
 
@@ -155,7 +155,7 @@ public abstract class ConnectionHandler {
      *
      * @return the time at which the connection managed by this ConnectionHandler was last used
      */
-    public long getLastActivityTimestamp() {
+    long getLastActivityTimestamp() {
         return lastActivityTimestamp;
     }
 
@@ -163,7 +163,7 @@ public abstract class ConnectionHandler {
     /**
      * Updates the time at which the connection managed by this ConnectionHandler was last kept alive to now (current time).
      */
-    public void updateLastKeepAliveTimestamp() {
+    void updateLastKeepAliveTimestamp() {
         lastKeepAliveTimestamp = System.currentTimeMillis();
     }
 
@@ -172,7 +172,7 @@ public abstract class ConnectionHandler {
      *
      * @return the time at which the connection managed by this ConnectionHandler was last kept alive
      */
-    public long getLastKeepAliveTimestamp() {
+    long getLastKeepAliveTimestamp() {
         return lastKeepAliveTimestamp;
     }
 
@@ -187,7 +187,7 @@ public abstract class ConnectionHandler {
      * @return the number of seconds of inactivity after which {@link ConnectionPool} will close the connection,
      * <code>-1</code> to indicate that the connection should not be automatically closed
      */
-    public long getCloseOnInactivityPeriod() {
+    long getCloseOnInactivityPeriod() {
         return closeOnInactivityPeriod;
     }
 
@@ -214,7 +214,7 @@ public abstract class ConnectionHandler {
      * @return the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection alive
      * by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive
      */
-    public long getKeepAlivePeriod() {
+    long getKeepAlivePeriod() {
         return keepAlivePeriod;
     }
 
@@ -227,7 +227,7 @@ public abstract class ConnectionHandler {
      * @param nbSeconds the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection
      * alive by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive
      */
-    public void setKeepAlivePeriod(long nbSeconds) {
+    protected void setKeepAlivePeriod(long nbSeconds) {
         keepAlivePeriod = nbSeconds;
     }
 
@@ -260,16 +260,16 @@ public abstract class ConnectionHandler {
      * @see Credentials#equals(Object, boolean)
      */
     public boolean equals(FileURL realm, Credentials credentials) {
-
-        if(!this.realm.equals(realm, false, true))
+        if (!this.realm.equals(realm, false, true)) {
             return false;
+        }
 
         // Compare credentials. One or both Credentials instances may be null.
 
         // Note: Credentials.equals() considers null as equal to empty Credentials (see Credentials#isEmpty())
-        return (this.credentials==null && credentials==null)
-            || (this.credentials!=null && this.credentials.equals(credentials, true))
-            || (credentials!=null && credentials.equals(this.credentials, true));
+        return (this.credentials == null && credentials == null)
+            || (this.credentials != null && this.credentials.equals(credentials, true))
+            || (credentials != null && credentials.equals(this.credentials, true));
     }
 
 
@@ -281,7 +281,7 @@ public abstract class ConnectionHandler {
      * @param message the message to pass to AuthException's constructor, can be <code>null</code>
      * @throws AuthException always throws the created AuthException
      */
-    public void throwAuthException(String message) throws AuthException {
+    protected void throwAuthException(String message) throws AuthException {
         FileURL clonedRealm = (FileURL)realm.clone();
         clonedRealm.setCredentials(credentials);
 

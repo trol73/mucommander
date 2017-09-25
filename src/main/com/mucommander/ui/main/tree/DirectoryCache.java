@@ -35,7 +35,7 @@ import java.util.Map;
 public class DirectoryCache {
     
     /** a map that holds cached folders */
-    private Map<AbstractFile, CachedDirectory> cache = new HashMap<>();
+    private final Map<AbstractFile, CachedDirectory> cache = new HashMap<>();
     
     /** Comparator used to sort folders */
     private FileComparator sort;
@@ -44,7 +44,7 @@ public class DirectoryCache {
     private FileFilter filter;
 
     /** Listeners. */
-    protected EventListenerList listenerList = new EventListenerList();
+    private EventListenerList listenerList = new EventListenerList();
 
 
     /**
@@ -52,7 +52,7 @@ public class DirectoryCache {
      * @param filter IMAGE_FILTER used to IMAGE_FILTER children directories.
      * @param sort a comparator used to sort children
      */
-    public DirectoryCache(FileFilter filter, FileComparator sort) {
+    DirectoryCache(FileFilter filter, FileComparator sort) {
         //this.cache = Collections.synchronizedMap(new HashMap());
         this.filter = filter;
         this.sort = sort;
@@ -77,7 +77,7 @@ public class DirectoryCache {
      * @param cachedDirectory a directory those children has been cached
      * @param readingChildren 
      */
-    public void fireChildrenCached(CachedDirectory cachedDirectory, boolean readingChildren) {
+    void fireChildrenCached(CachedDirectory cachedDirectory, boolean readingChildren) {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == CachedDirectoryListener.class) {
@@ -90,7 +90,7 @@ public class DirectoryCache {
         }
     }
     
-    public void addCachedDirectoryListener(CachedDirectoryListener l) {
+    void addCachedDirectoryListener(CachedDirectoryListener l) {
         listenerList.add(CachedDirectoryListener.class, l);
     }
 
@@ -113,7 +113,7 @@ public class DirectoryCache {
     /**
      * Deletes entry and all children from the cache.
      */
-    public synchronized void removeWithChildren(AbstractFile key) {
+    synchronized void removeWithChildren(AbstractFile key) {
         CachedDirectory cachedDir = cache.get(key);
         if (cachedDir != null) {
             cache.remove(key);
@@ -132,7 +132,7 @@ public class DirectoryCache {
      * @param key an AbstractFile instance
      * @return a cached file instance
      */
-    public synchronized CachedDirectory getOrAdd(AbstractFile key) {
+    synchronized CachedDirectory getOrAdd(AbstractFile key) {
         CachedDirectory cachedDir = cache.get(key);
         if (cachedDir == null) {
             cachedDir = new CachedDirectory(key, this);

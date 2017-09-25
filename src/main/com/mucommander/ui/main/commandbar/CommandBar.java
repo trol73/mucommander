@@ -38,7 +38,7 @@ import java.awt.event.MouseListener;
 public class CommandBar extends JPanel implements KeyListener, MouseListener, CommandBarAttributesListener {
 
     /** Parent MainFrame instance */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /** True when modifier key is pressed */
     private boolean modifierDown;

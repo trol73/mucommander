@@ -32,13 +32,14 @@ public class ClonedFileTableTabFactory implements TabFactory<FileTableTab, FileT
 
 	private FolderPanel folderPanel;
 	
-	public ClonedFileTableTabFactory(FolderPanel folderPanel) {
+	ClonedFileTableTabFactory(FolderPanel folderPanel) {
 		this.folderPanel = folderPanel;
 	}
 	
 	public FileTableTab createTab(FileTableTab tab) {
-		if (tab.getLocation() == null)
+		if (tab.getLocation() == null) {
 			throw new RuntimeException("Invalid location");
+		}
 
 		return new ClonedFileTableTab(tab, folderPanel);
 	}
@@ -55,12 +56,12 @@ public class ClonedFileTableTabFactory implements TabFactory<FileTableTab, FileT
 		private String title;
 
 		/** History of accessed location within the tab */
-		private LocalLocationHistory locationHistory;
+		private final LocalLocationHistory locationHistory;
 
 		/**
 		 * Private constructor
 		 * 
-		 * @param location - the location that would be presented in the tab
+		 * @param tab - the location that would be presented in the tab
 		 */
 		private ClonedFileTableTab(FileTableTab tab, FolderPanel folderPanel) {
 			this.location = tab.getLocation();
@@ -111,8 +112,7 @@ public class ClonedFileTableTabFactory implements TabFactory<FileTableTab, FileT
 		public boolean equals(Object obj) {
 			if (obj instanceof FileTableTab) {
 				FileTableTab other = ((FileTableTab) obj);
-				return location.equals(other.getLocation()) &&
-					   locked == ((FileTableTab) obj).isLocked();
+				return location.equals(other.getLocation()) && locked == ((FileTableTab) obj).isLocked();
 			}
 			return false;
 		}

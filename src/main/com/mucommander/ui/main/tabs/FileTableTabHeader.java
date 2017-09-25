@@ -43,14 +43,14 @@ import com.mucommander.ui.main.FolderPanel;
 */
 public class FileTableTabHeader extends JPanel implements ActionListener {
 	
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 	
 	private static final String CLOSE_ICON_NAME = "close.png";
     private static final String CLOSE_ROLLOVER_ICON_NAME = "close_rollover.png";
     private static final int CLOSE_ICON_SIZE = 12;
     
     public static final String LOCKED_ICON_NAME = "lock.png";
-    public static final int LOCKED_ICON_SIZE = 12;
+    private static final int LOCKED_ICON_SIZE = 12;
 
     FileTableTabHeader(FolderPanel folderPanel, boolean closable, FileTableTab tab) {
         super(new GridBagLayout());

@@ -195,13 +195,13 @@ public class CalculateChecksumJob extends TransferFileJob {
 
         // Check for file collisions, i.e. if the file already exists in the destination
         int collision = FileCollisionChecker.checkForCollision(null, checksumFile);
-        if(collision!=FileCollisionChecker.NO_COLLOSION) {
+        if (collision != FileCollisionChecker.NO_COLLOSION) {
             // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
             // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
             int choice = waitForUserResponse(new FileCollisionDialog(getProgressDialog(), getMainFrame(), collision, null, checksumFile, false, false));
 
             // Overwrite file
-            if (choice== FileCollisionDialog.OVERWRITE_ACTION) {
+            if (choice == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Do nothing, simply continue and file will be overwritten
             }
             // 'Cancel' or close dialog interrupts the job
@@ -219,7 +219,7 @@ public class CalculateChecksumJob extends TransferFileJob {
 
                 break;
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 int choice = showErrorDialog(Translator.get("error"),
                                              Translator.get("cannot_write_file", checksumFile.getName()),
                                              new String[] {CANCEL_TEXT, RETRY_TEXT},
@@ -252,8 +252,9 @@ public class CalculateChecksumJob extends TransferFileJob {
         
         // Close the checksum file's OutputStream
         if (checksumFileOut != null) {
-            try { checksumFileOut.close(); }
-            catch(IOException ignore){
+            try {
+                checksumFileOut.close();
+            } catch (IOException ignore) {
                 // No need to inform the user
             }
         }

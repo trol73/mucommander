@@ -61,10 +61,10 @@ import ru.trolsoft.macosx.RetinaImageIcon;
  */
 public class ToolBar extends JToolBar implements ConfigurationListener, MouseListener, ToolBarAttributesListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /** Holds a reference to the RolloverButtonAdapter instance so that it doesn't get garbage-collected */
-    private RolloverButtonAdapter rolloverButtonAdapter;
+    private final RolloverButtonAdapter rolloverButtonAdapter;
 
     /** Dimension of button separators */
     private final static Dimension SEPARATOR_DIMENSION = new Dimension(10, 16);
@@ -293,7 +293,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
      */
     private class HistoryPopupButton extends PopupButton {
 
-        private MuAction action;
+        private final MuAction action;
 
         private HistoryPopupButton(MuAction action) {
             super(action);

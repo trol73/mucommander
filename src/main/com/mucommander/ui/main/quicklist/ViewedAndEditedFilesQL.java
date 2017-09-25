@@ -37,8 +37,8 @@ import java.util.List;
  */
 public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
 
-    private List<FileViewersList.FileRecord> files = FileViewersList.getFiles();
-    private AbstractFile currentFile;
+    private final List<FileViewersList.FileRecord> files = FileViewersList.getFiles();
+    private final AbstractFile currentFile;
     private int currentFileIndex = -1;
 
     public ViewedAndEditedFilesQL(QuickListContainer container, AbstractFile currentFile) {

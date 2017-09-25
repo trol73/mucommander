@@ -35,9 +35,9 @@ class EditableHeaderUI extends BasicTableHeaderUI {
 	public class MouseInputHandler extends BasicTableHeaderUI.MouseInputHandler {
 		private Component dispatchComponent;
 
-		protected EditableHeader header;
+		protected final EditableHeader header;
 
-		public MouseInputHandler(EditableHeader header) {
+		MouseInputHandler(EditableHeader header) {
 			this.header = header;
 		}
 

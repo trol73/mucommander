@@ -34,10 +34,10 @@ import java.awt.*;
  */
 public class FoldersTreeRenderer extends DefaultTreeCellRenderer {
 
-    private JTree tree;
-    private FilesTreeModel model;
+    private final JTree tree;
+    private final FilesTreeModel model;
     
-	public FoldersTreeRenderer(JTree tree) {
+	FoldersTreeRenderer(JTree tree) {
         super();
         this.tree = tree;
         this.model = (FilesTreeModel) tree.getModel();

@@ -35,7 +35,7 @@ import java.awt.event.MouseListener;
  */
 public class FileTableHeader extends JTableHeader implements MouseListener {
 
-    private FileTable table;
+    private final FileTable table;
 
     FileTableHeader(FileTable table) {
         super(table.getColumnModel());

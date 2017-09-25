@@ -47,11 +47,11 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Name of the {@link UIManager#getFont(Object)} font property} to query. */
-    private String property;
+    private final String property;
     /** Current value of the default font. */
     private Font font;
     /** Used to create instance of the component whose font will be retrieved (in case {@link #property} isn't set). */
-    private ComponentMapper mapper;
+    private final ComponentMapper mapper;
 
 
 

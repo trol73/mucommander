@@ -40,7 +40,7 @@ public abstract class DefaultColor {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of colors linked to this default value. */
-    private List<Integer> linkedColors = new ArrayList<>();
+    private final List<Integer> linkedColors = new ArrayList<>();
 
 
 
@@ -49,7 +49,7 @@ public abstract class DefaultColor {
     /**
      * Creates a new instance of {@link DefaultColor}.
      */
-    protected DefaultColor() {
+    DefaultColor() {
     }
 
 
@@ -60,9 +60,10 @@ public abstract class DefaultColor {
      * Notifies the current theme of a default value change to all linked colors.
      * @param color new default color value.
      */
-    protected void notifyChange(Color color) {
-        for(int i : linkedColors)
-            ThemeData.triggerColorEvent(i, color);    
+    void notifyChange(Color color) {
+        for(int i : linkedColors) {
+            ThemeData.triggerColorEvent(i, color);
+        }
     }
 
     /**

@@ -52,14 +52,14 @@ import com.mucommander.ui.tabs.TabbedPane;
 public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements FocusListener {
 
 	/** The FileTable instance presented in each tab */
-	private JComponent fileTableComponent;
+	private final JComponent fileTableComponent;
 	
 	private MainFrame mainFrame;
 	private FolderPanel folderPanel;
 	private FileTableTabHeaderFactory headersFactory;
 	
 
-	public FileTableTabbedPane(MainFrame mainFrame, FolderPanel folderPanel, JComponent fileTableComponent, FileTableTabHeaderFactory headersFactory) {
+	FileTableTabbedPane(MainFrame mainFrame, FolderPanel folderPanel, JComponent fileTableComponent, FileTableTabHeaderFactory headersFactory) {
 		this.fileTableComponent = fileTableComponent;
 		this.mainFrame = mainFrame;
 		this.folderPanel = folderPanel;
@@ -113,7 +113,7 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 	 * @param index
 	 * @param component
 	 */
-	public void setTabHeader(int index, FileTableTabHeader component) {
+	private void setTabHeader(int index, FileTableTabHeader component) {
 		super.setTabComponentAt(index, component);
 	}
 
@@ -155,7 +155,7 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 			locationText = PathUtils.removeLeadingSeparator(locationText, "/");
 		setToolTipTextAt(index, locationText);
 
-		SwingUtilities.invokeLater(() -> validate());
+		SwingUtilities.invokeLater(this::validate);
 	}
 
 	//////////////////////////////////

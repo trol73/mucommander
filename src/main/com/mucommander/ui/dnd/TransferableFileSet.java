@@ -243,8 +243,9 @@ public class TransferableFileSet implements Transferable {
                 for (File aFileList : fileList) {
                     file = FileFactory.getFile(aFileList.getAbsolutePath());
 
-                    if (file != null)
+                    if (file != null) {
                         files.add(file);
+                    }
                 }
             }
             // Text plain DataFlavor: assume that lines designate file paths

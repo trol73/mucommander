@@ -86,7 +86,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
     private FilesTreeModel model;
 
     /** A timer that fires a directory change */
-    private ChangeTimer changeTimer = new ChangeTimer();
+    private final ChangeTimer changeTimer = new ChangeTimer();
 
     static {
         TreeIOThreadManager.getInstance().start();

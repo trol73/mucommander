@@ -779,14 +779,7 @@ public class CommandManager implements CommandBuilder {
     public static void removeAllNormalCommands() {
         for (String type : commands.keySet()) {
             List<Command> list = commands.get(type);
-            Iterator<Command> it = list.iterator();
-            while (it.hasNext()) {
-                Command cmd = it.next();
-                if (cmd.getType() == CommandType.NORMAL_COMMAND) {
-                    it.remove();
-                }
-
-            }
+            list.removeIf(cmd -> cmd.getType() == CommandType.NORMAL_COMMAND);
         }
     }
 

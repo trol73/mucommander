@@ -37,7 +37,7 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  */
 public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> {
 
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 	
 	public ParentFoldersQL(FolderPanel folderPanel) {
 		super(folderPanel,

@@ -19,20 +19,18 @@
 
 package com.mucommander.job;
 
-import java.io.IOException;
-
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.commons.file.util.SymLinkUtils;
-import com.mucommander.job.utils.ScanDirectoryThread;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.util.FileSet;
+import com.mucommander.job.utils.ScanDirectoryThread;
 import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 
 /**

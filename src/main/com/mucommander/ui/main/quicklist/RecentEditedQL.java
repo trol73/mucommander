@@ -43,7 +43,7 @@ import java.util.List;
 public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
 
 
-    private static LinkedList<AbstractFile> list = new LinkedList<>();
+    private static final LinkedList<AbstractFile> list = new LinkedList<>();
 
     private static final int MAX_FILES_IN_LIST = 50;
 

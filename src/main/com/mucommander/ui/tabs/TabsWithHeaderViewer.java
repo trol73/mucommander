@@ -31,18 +31,19 @@ import javax.swing.event.ChangeListener;
 */
 public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
-	private TabsCollection<T> tabsCollection;
-	private TabbedPane<T> tabbedpane;
+	private final TabsCollection<T> tabsCollection;
+	private final TabbedPane<T> tabbedPane;
 
 	public TabsWithHeaderViewer(TabsCollection<T> tabs, TabbedPane<T> tabbedpane) {
 		super(tabbedpane, tabs);
 
 		this.tabsCollection = tabs;
-		this.tabbedpane = tabbedpane;
+		this.tabbedPane = tabbedpane;
 
 		int index = 0;
-		for (T tab : tabs)
+		for (T tab : tabs) {
 			tabbedpane.add(tab, index++);
+		}
 	}
 
 	/**************
@@ -51,22 +52,22 @@ public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	@Override
 	public int getSelectedTabIndex() {
-		return tabbedpane.getSelectedIndex();
+		return tabbedPane.getSelectedIndex();
 	}
 
 	@Override
 	public void removeTab(int index) {
-		tabbedpane.remove(index);
+		tabbedPane.remove(index);
 	}
 
 	@Override
 	public void addChangeListener(ChangeListener listener) { 
-		tabbedpane.addChangeListener(listener);
+		tabbedPane.addChangeListener(listener);
 	}
 
 	@Override
 	public void removeChangeListener(ChangeListener listener) { 
-		tabbedpane.removeChangeListener(listener);
+		tabbedPane.removeChangeListener(listener);
 	}
 
 	@Override
@@ -76,22 +77,22 @@ public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	@Override
 	public void add(T tab, int index) {
-		tabbedpane.add(tab, index);
+		tabbedPane.add(tab, index);
 	}
 
 	@Override
 	public void update(T tab, int index) {
-		tabbedpane.update(tab, index);
+		tabbedPane.update(tab, index);
 	}
 
 	@Override
 	public void setSelectedTabIndex(int index) {
-		tabbedpane.setSelectedIndex(index);
+		tabbedPane.setSelectedIndex(index);
 	}
 
 	@Override
 	public void requestFocus() {
-		tabbedpane.requestFocusInWindow();
+		tabbedPane.requestFocusInWindow();
 	}
 
 	@Override
@@ -154,6 +155,6 @@ public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	@Override
 	public void removeTab(Component header) {
-		tabsCollection.remove(tabbedpane.indexOfTabComponent(header));
+		tabsCollection.remove(tabbedPane.indexOfTabComponent(header));
 	}
 }

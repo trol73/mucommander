@@ -104,9 +104,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     // - Containers ----------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Frame containing this file table. */
-    private MainFrame   mainFrame;
+    private final MainFrame mainFrame;
     /** Folder panel containing this frame. */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
 
     // - UI components -------------------------------------------------------------------
@@ -116,7 +116,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** TableCellRender instance used by this JTable to render cells */
     private BaseCellRenderer cellRenderer;
     /** CellEditor used to edit filenames when clicked */
-    private FilenameEditor filenameEditor;
+    private final FilenameEditor filenameEditor;
 
     /** Contains sort-related variables */
     private final SortInfo sortInfo = new SortInfo();
@@ -152,7 +152,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private final QuickSearch quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
-    private WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
+    private final WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
 
     /** True when this table is the current or last active table in the MainFrame */
     private boolean isActiveTable;
@@ -171,17 +171,17 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private int doubleClickCounter = 1;
 
     /** Interval to wait for the double-click */
-    private static int DOUBLE_CLICK_INTERVAL = DesktopManager.getMultiClickInterval();
+    private static final int DOUBLE_CLICK_INTERVAL = DesktopManager.getMultiClickInterval();
 
     /** Wrapper of presentation adjustments for the file-table */
-    private FileTableWrapperForDisplay scrollpaneWrapper;
+    private final FileTableWrapperForDisplay scrollpaneWrapper;
 
     /** Table that shows the user to refresh if the location doesn't exist */
-    private DefaultOverlayable overlayTable;
+    private final DefaultOverlayable overlayTable;
 
     private TableViewMode viewMode;
 
-    private FileTableConfiguration conf;
+    private final FileTableConfiguration conf;
 
     /**
      * Number of visible rows on table. Calculated on layout and used to compact/short model
@@ -1885,7 +1885,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     private class FilenameEditor extends DefaultCellEditor {
 
-        private JTextField filenameField;
+        private final JTextField filenameField;
 
         /** Row that is currently being edited */
         private int editingRow;
@@ -2268,10 +2268,10 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @author Nicolas Rinaudo, Maxence Bernard
      */
     private class FolderChangeThread implements Runnable {
-        private AbstractFile   folder;
-        private AbstractFile[] children;
-        private FileSet        markedFiles;
-        private AbstractFile   selectedFile;
+        private final AbstractFile   folder;
+        private final AbstractFile[] children;
+        private final FileSet        markedFiles;
+        private final AbstractFile   selectedFile;
 
         private FolderChangeThread(AbstractFile folder, AbstractFile[] children, FileSet markedFiles, AbstractFile selectedFile) {
             this.folder       = folder;

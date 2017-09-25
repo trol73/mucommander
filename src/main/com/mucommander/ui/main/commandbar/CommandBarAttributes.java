@@ -68,7 +68,7 @@ public class CommandBarAttributes {
     	null
     };
     /** Default modifier key that triggers the display of alternate actions when pressed */
-    private static KeyStroke DEFAULT_MODIFIER = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
+    private static final KeyStroke DEFAULT_MODIFIER = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
     
     /** Contains all registered command-bar attributes listeners, stored as weak references */
     private static final WeakHashMap<CommandBarAttributesListener, ?> listeners = new WeakHashMap<>();
@@ -77,7 +77,7 @@ public class CommandBarAttributes {
      * This method restore the default command-bar attributes.
      * The attributes are updated only if they are not already equal to the default attributes.
      */
-    public static void restoreDefault() {
+    static void restoreDefault() {
         String[] defaultActions = null;
         String[] alternateActions = null;
         for (int i = 0; i < DEFAULT_ACTION_IDS.length; i++) {

@@ -46,10 +46,10 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
 
     private long usedMem;
     private long totalMem;
-    private Color colorBorder = new Color(0x555555);
-    private Color colorForeground = new Color(0x8888ff);
+    private final Color colorBorder = new Color(0x555555);
+    private final Color colorForeground = new Color(0x8888ff);
 
-    public HeapIndicator() {
+    HeapIndicator() {
         super("");
         setHorizontalAlignment(CENTER);
         setRefreshInterval(1000*10);

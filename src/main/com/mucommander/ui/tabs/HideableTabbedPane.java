@@ -54,16 +54,16 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	private static final Logger LOGGER = LoggerFactory.getLogger(HideableTabbedPane.class);
 
 	/* The tabs which are being displayed */
-	private TabsCollection<T> tabsCollection = new TabsCollection<>();
+	private final TabsCollection<T> tabsCollection = new TabsCollection<>();
 	/* The tabs display type (with/without tabs headers)
 	 * It is initialize as nullable so that it can be destroyed when it's replaced for the first time (see @{link tabAdded()})*/
 	private TabsViewer<T> tabsViewer = new NullableTabsViewer<>();
 	/* The factory that will be used to create the viewers for tabs with no headers */	
-	private TabsViewerFactory<T> tabsWithoutHeadersViewerFactory;
+	private final TabsViewerFactory<T> tabsWithoutHeadersViewerFactory;
 	/* The factory that will be used to create the viewers for tabs with headers */	
-	private TabsViewerFactory<T> tabsWithHeadersViewerFactory;
+	private final TabsViewerFactory<T> tabsWithHeadersViewerFactory;
 	/* Contains all registered active tab change listeners, stored as weak references */
-    private WeakHashMap<ActiveTabListener, ?> activeTabChangedListener = new WeakHashMap<>();
+    private final WeakHashMap<ActiveTabListener, ?> activeTabChangedListener = new WeakHashMap<>();
 
 	/**
 	 * Constructor
@@ -270,7 +270,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		return tabsCollection.get(index);
 	}
 
-	protected boolean refreshViewer() {
+	private boolean refreshViewer() {
 		int nbTabs = tabsCollection.count();
 
 		switch (nbTabs) {

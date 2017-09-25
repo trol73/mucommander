@@ -42,9 +42,9 @@ import java.awt.*;
  */
 public class TrashPopupButton extends PopupButton {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    public TrashPopupButton(MainFrame mainFrame) {
+    TrashPopupButton(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
         setContentAreaFilled(false);

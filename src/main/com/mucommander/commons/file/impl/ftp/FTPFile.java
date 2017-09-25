@@ -103,11 +103,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     private final static SimpleDateFormat SITE_UTIME_DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
 
-    protected FTPFile(FileURL fileURL) throws IOException {
+    FTPFile(FileURL fileURL) throws IOException {
         this(fileURL, null);
     }
 
-    protected FTPFile(FileURL fileURL, org.apache.commons.net.ftp.FTPFile file) throws IOException {
+    FTPFile(FileURL fileURL, org.apache.commons.net.ftp.FTPFile file) throws IOException {
         super(fileURL);
 
         this.absPath = fileURL.getPath();
@@ -378,7 +378,8 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     @Override
     public FilePermissions getPermissions() {
         if (isSymlink()) {
-            return getCanonicalFile().getAncestor(FTPFile.class).permissions;
+            FTPFile ancestor = getCanonicalFile().getAncestor(FTPFile.class);
+            return ancestor != null ? ancestor.permissions : null;
         }
 
         return permissions;
@@ -1298,7 +1299,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                     }
 	
 	                // Login
-	                ftpClient.login(credentials.getLogin(), credentials.getPassword());
+                    if (credentials != null) {
+                        ftpClient.login(credentials.getLogin(), credentials.getPassword());
+                    }
 	                // Throw an IOException (potentially an AuthException) if the server replied with an error
 	                checkServerReply();
 	
@@ -1416,7 +1419,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             if (ftpClient != null) {
                 try {
                     ftpClient.sendNoOp();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // Checks if the IOException corresponds to a socket error and in that case, closes the connection
                     checkSocketException(e);
                 }
@@ -1431,7 +1434,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         private org.apache.commons.net.ftp.FTPFile file;
 
-        public FTPFilePermissions(org.apache.commons.net.ftp.FTPFile file) {
+        FTPFilePermissions(org.apache.commons.net.ftp.FTPFile file) {
             this.file = file;
         }
 

@@ -54,9 +54,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /** All available columns. */
     private final List<TableColumn> columns = new ArrayList<>(Column.values().length);
     /** Enabled state of each column. */
-    private boolean[]     enabled = new boolean[Column.values().length];
+    private final boolean[]     enabled = new boolean[Column.values().length];
     /** Visibility state of each column. */
-    private boolean[]     visibility = new boolean[Column.values().length];
+    private final boolean[]     visibility = new boolean[Column.values().length];
     /** Cache for the number of available columns. */
     private int           countCache;
     /** Whether the column sizes were set already. */
@@ -581,7 +581,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         // - getInstance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Defines the columns order. */
-        private FileTableConfiguration conf;
+        private final FileTableConfiguration conf;
 
 
 

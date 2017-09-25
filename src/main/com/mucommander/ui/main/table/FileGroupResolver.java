@@ -34,8 +34,8 @@ import java.util.Map;
 public class FileGroupResolver {
 
     private static class ResolverRecord {
-        WildcardFileFilter filter;
-        int group;
+        final int group;
+        final WildcardFileFilter filter;
 
         ResolverRecord(int group, String mask) {
             this.group = group;
@@ -43,8 +43,8 @@ public class FileGroupResolver {
         }
     }
 
-    private Map<String, Integer> extensionsMap = new HashMap<>();
-    private List<ResolverRecord> filtersList = new ArrayList<>();
+    private final Map<String, Integer> extensionsMap = new HashMap<>();
+    private final List<ResolverRecord> filtersList = new ArrayList<>();
 
     private static FileGroupResolver instance;
 

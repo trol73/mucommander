@@ -35,13 +35,13 @@ import com.mucommander.ui.tabs.TabFactory;
 public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements LocationListener {
 
 	/** FolderPanel containing those tabs */
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 
 	/** Factory of instances of FileTableTab */
-	private TabFactory<FileTableTab, FileURL> defaultTabsFactory;
+	private final TabFactory<FileTableTab, FileURL> defaultTabsFactory;
 
 	/** Factory of instances of FileTableTab */
-	private TabFactory<FileTableTab, FileTableTab> clonedTabsFactory;
+	private final TabFactory<FileTableTab, FileTableTab> clonedTabsFactory;
 
 	public FileTableTabs(MainFrame mainFrame, FolderPanel folderPanel, ConfFileTableTab[] initialTabs) {
 		super(new FileTableTabsWithoutHeadersViewerFactory(folderPanel), new FileTableTabsWithHeadersViewerFactory(mainFrame, folderPanel));

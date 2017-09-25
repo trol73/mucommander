@@ -32,10 +32,10 @@ public class IOThread extends Thread {
 	private static final Logger LOGGER = LoggerFactory.getLogger(IOThread.class);
 	
     /** a queue with tasks to execute */
-    private List<Runnable> queue;
+    private final List<Runnable> queue;
     
     /** a time after this thread is marked as blocked */
-    private long blockThreshold;
+    private final long blockThreshold;
 
     /** a time when this thread signalled that is alive */
     private volatile long lastActionTime = 0;
@@ -46,7 +46,7 @@ public class IOThread extends Thread {
      * @param queue a queue with tasks
      * @param blockThreshold a time after this thread is marked as blocked [ms]
      */
-    public IOThread(List<Runnable> queue, long blockThreshold) {
+    IOThread(List<Runnable> queue, long blockThreshold) {
         super("IOThread");
         this.queue = queue;
         this.blockThreshold = blockThreshold;

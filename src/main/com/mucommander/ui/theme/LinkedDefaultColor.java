@@ -33,7 +33,7 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme color to default to. */
-    private int colorId;
+    private final int colorId;
 
 
 
@@ -44,7 +44,7 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
      * Creates a new instance of {@link LinkedDefaultColor}.
      * @param colorId identifier of the current theme color to default to.
      */
-    public LinkedDefaultColor(int colorId) {
+    LinkedDefaultColor(int colorId) {
         this.colorId = colorId;
         ThemeData.addDefaultValuesListener(this);
     }
