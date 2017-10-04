@@ -252,7 +252,7 @@ public class FileURL implements Cloneable {
      * @param scheme the scheme to associate the handler with (case-insensitive)
      * @param handler the new handler in charge of the scheme
      */
-    public static void registerHandler(String scheme, SchemeHandler handler) {
+    static void registerHandler(String scheme, SchemeHandler handler) {
         handlers.put(scheme.toLowerCase(), handler);
     }
 
@@ -262,7 +262,7 @@ public class FileURL implements Cloneable {
      *
      * @param scheme the scheme to remove the handler for
      */
-    public static void unregisterHandler(String scheme) {
+    static void unregisterHandler(String scheme) {
         handlers.remove(scheme.toLowerCase());
     }
 
@@ -282,7 +282,7 @@ public class FileURL implements Cloneable {
      *
      * @return the default handler
      */
-    public static SchemeHandler getDefaultHandler() {
+    static SchemeHandler getDefaultHandler() {
         return DEFAULT_HANDLER;
     }
 
@@ -925,7 +925,7 @@ public class FileURL implements Cloneable {
      * @param url the URL to test for properties equality
      * @return <code>true</code> if the properties contained by this URL and the given URL are equal
      */
-    public boolean propertiesEquals(FileURL url) {
+    private boolean propertiesEquals(FileURL url) {
         return (this.properties == null && url.properties == null)
            ||  (this.properties != null && this.properties.equals(url.properties))
            ||  (url.properties != null && url.properties.equals(this.properties));

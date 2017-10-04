@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.macosx;
 
+import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
@@ -28,6 +29,8 @@ import com.mucommander.ui.dialog.about.AboutDialog;
 import com.mucommander.ui.dialog.shutdown.QuitDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
+
+import java.awt.*;
 
 /**
  * This class handles Mac OS X specifics when muCommander is started:
@@ -66,7 +69,15 @@ public class OSXIntegration {
                                                                                              MuPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
 
         // Catch 'About', 'Preferences' and 'Quit' events
-        new EAWTHandler();
+        try {
+            if (JavaVersion.JAVA_1_9.isCurrentOrLower()) {
+                new Java9DesktopHandler();
+            } else {
+                new EAWTHandler();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     /**

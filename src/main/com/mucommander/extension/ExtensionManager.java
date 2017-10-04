@@ -97,7 +97,7 @@ public class ExtensionManager {
     }
 
     /**
-     * Prevents instanciations of this class.
+     * Prevents instantiations of this class.
      */
     private ExtensionManager() {}
 

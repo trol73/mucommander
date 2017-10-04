@@ -38,7 +38,7 @@ import java.io.File;
 class EAWTHandler implements AboutHandler, PreferencesHandler, AppReOpenedListener, OpenFilesHandler,
         PrintFilesHandler, QuitHandler {
 
-    public EAWTHandler() {
+    EAWTHandler() {
         Application app = Application.getApplication();
 
         // Enable the 'About' menu item
@@ -71,11 +71,15 @@ class EAWTHandler implements AboutHandler, PreferencesHandler, AppReOpenedListen
         TrolCommander.waitUntilLaunched();
         for (File f : openFilesEvent.getFiles()) {
             AbstractFile file = FileFactory.getFile(f.toString());
+            if (file == null) {
+                continue;
+            }
             FolderPanel activePanel = WindowManager.getCurrentMainFrame().getActivePanel();
-            if(file.isBrowsable())
+            if(file.isBrowsable()) {
                 activePanel.tryChangeCurrentFolder(file);
-            else
+            } else {
                 activePanel.tryChangeCurrentFolder(file.getParent(), file, false);
+            }
         }
 
     }

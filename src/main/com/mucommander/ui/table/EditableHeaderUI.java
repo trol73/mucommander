@@ -53,8 +53,7 @@ class EditableHeaderUI extends BasicTableHeaderUI {
 			if (dispatchComponent == null) {
 				return false;
 			}
-			MouseEvent e2 = SwingUtilities.convertMouseEvent(header, e,
-					dispatchComponent);
+			MouseEvent e2 = SwingUtilities.convertMouseEvent(header, e, dispatchComponent);
 			dispatchComponent.dispatchEvent(e2);
 			return true;
 		}

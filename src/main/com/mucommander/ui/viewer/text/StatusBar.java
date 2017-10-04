@@ -87,7 +87,7 @@ public class StatusBar extends org.fife.ui.StatusBar {
         panelColor.setBackground(new Color(color));
     }
 
-    public void setPosition(int line, int column) {
+    void setPosition(int line, int column) {
         lblPosition.setText(line + " : " + column);
     }
 

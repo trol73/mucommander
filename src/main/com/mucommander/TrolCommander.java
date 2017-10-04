@@ -408,6 +408,26 @@ public class TrolCommander {
         }
     }
 
+    private static void initMacOsSupport() {
+        // - MAC OS X specific init -----------------------------------
+        // ------------------------------------------------------------
+        // If trolCommander is running under Mac OS X (how lucky!), add some glue for the main menu bar and other OS X
+        // specifics.
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            // Use reflection to create an OSXIntegration instance so that ClassLoader
+            // doesn't throw an NoClassDefFoundException under platforms other than Mac OS X
+            try {
+                Class<?> osxIntegrationClass = Class.forName("com.mucommander.ui.macosx.OSXIntegration");
+                Constructor<?> constructor = osxIntegrationClass.getConstructor();
+                constructor.newInstance();
+            } catch(Exception e) {
+                getLogger().debug("Exception thrown while initializing Mac OS X integration", e);
+            }
+        }
+
+    }
+
+
     private static class StartTask extends LauncherTask {
         StartTask(LauncherCmdHelper helper, LauncherTask... depends) {
             super("start", helper, depends);
@@ -422,22 +442,7 @@ public class TrolCommander {
             // ------------------------------------------------------------
             MuLogging.configureLogging();
 
-            // - MAC OS X specific init -----------------------------------
-            // ------------------------------------------------------------
-            // If trolCommander is running under Mac OS X (how lucky!), add some glue for the main menu bar and other OS X
-            // specifics.
-            if (OsFamily.MAC_OS_X.isCurrent()) {
-                // Use reflection to create an OSXIntegration instance so that ClassLoader
-                // doesn't throw an NoClassDefFoundException under platforms other than Mac OS X
-                try {
-                    Class<?> osxIntegrationClass = Class.forName("com.mucommander.ui.macosx.OSXIntegration");
-                    Constructor<?> constructor = osxIntegrationClass.getConstructor();
-                    constructor.newInstance();
-                } catch(Exception e) {
-                    getLogger().debug("Exception thrown while initializing Mac OS X integration", e);
-                }
-            }
-
+            initMacOsSupport();
 
             // - trolCommander boot -----------------------------------------
             // ------------------------------------------------------------

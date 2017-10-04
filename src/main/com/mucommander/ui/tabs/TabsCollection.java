@@ -90,7 +90,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
 	 * @param index - the index of the tab to be updated
 	 * @param updater - the object that will be used to update the tab
 	 */
-	public void updateTab(int index, TabUpdater<T> updater) {
+	void updateTab(int index, TabUpdater<T> updater) {
 		updater.update(get(index));
 		fireTabUpdated(index);
 	}
@@ -145,7 +145,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
 	 * 
 	 * @param listener - object that implements TabsChangeListener interface
 	 */
-	public synchronized void addTabsListener(TabsEventListener listener) {
+	synchronized void addTabsListener(TabsEventListener listener) {
         tabsListeners.put(listener, null);
     }
 
@@ -163,7 +163,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      * 
      * @param index - the index of the added tab
      */
-    public synchronized void fireTabAdded(int index) {
+    private synchronized void fireTabAdded(int index) {
     	Set<TabsEventListener> listeners = new HashSet<>(tabsListeners.keySet());
     	for(TabsEventListener listener : listeners)
             listener.tabAdded(index);
@@ -174,7 +174,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      * 
      * @param index - the index in which the removed tab was located
      */
-    public synchronized void fireTabRemoved(int index) {
+    private synchronized void fireTabRemoved(int index) {
     	Set<TabsEventListener> listeners = tabsListeners.keySet();
         for(TabsEventListener listener : listeners)
             listener.tabRemoved(index);
@@ -185,7 +185,7 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      * 
      * @param index - the index of the updated tab
      */
-    public synchronized void fireTabUpdated(int index) {
+    private synchronized void fireTabUpdated(int index) {
     	Set<TabsEventListener> listeners = tabsListeners.keySet();
         for(TabsEventListener listener : listeners)
             listener.tabUpdated(index);

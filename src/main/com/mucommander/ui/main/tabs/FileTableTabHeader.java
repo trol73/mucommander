@@ -120,7 +120,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
 	 **************************************************/
     private class CloseButton extends JButton {
     	 
-        public CloseButton() {
+        CloseButton() {
             setPreferredSize(new Dimension(CLOSE_ICON_SIZE, CLOSE_ICON_SIZE));
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
@@ -150,7 +150,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
     
     private class LockedIcon extends JLabel {
    	 
-        public LockedIcon() {
+        LockedIcon() {
         	super(IconManager.getIcon(IconManager.IconSet.COMMON, LOCKED_ICON_NAME));
             setPreferredSize(new Dimension(LOCKED_ICON_SIZE, LOCKED_ICON_SIZE));
             //No need to be focusable

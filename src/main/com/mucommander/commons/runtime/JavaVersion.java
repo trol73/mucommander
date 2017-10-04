@@ -47,7 +47,9 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     /** Java 1.7.x */
     JAVA_1_7("1.7"),
     /** Java 1.8.x */
-    JAVA_1_8("1.8");
+    JAVA_1_8("1.8"),
+    /** Java 1.9.x */
+    JAVA_1_9("1.9");
 
 
     /** Logger used by this class. */
@@ -123,7 +125,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
             }
         }
         // Newer version we don't know of yet, assume latest supported Java version
-        return JavaVersion.JAVA_1_8;
+        return JavaVersion.JAVA_1_9;
     }
 
     /**
@@ -140,19 +142,19 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     //////////////////////////////////////////////
 
 	public boolean isCurrentOrLower() {
-		return CURRENT_VALUE.compareTo(this)<=0;
+		return CURRENT_VALUE.compareTo(this) <= 0;
 	}
 
 	public boolean isCurrentLower() {
-		return CURRENT_VALUE.compareTo(this)<0;
+		return CURRENT_VALUE.compareTo(this) < 0;
 	}
 
 	public boolean isCurrentOrHigher() {
-		return CURRENT_VALUE.compareTo(this)>=0;
+		return CURRENT_VALUE.compareTo(this) >= 0;
 	}
 
 	public boolean isCurrentHigher() {
-		return CURRENT_VALUE.compareTo(this)>0;
+		return CURRENT_VALUE.compareTo(this) > 0;
 	}
 
     ////////////////////////

@@ -684,7 +684,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         return taskPanel;
     }
 
-    public void showProgress(int progress) {
+    private void showProgress(int progress) {
         if (progress >= 0) {
             progressBar.setVisible(true);
             progressBar.setValue(progress);

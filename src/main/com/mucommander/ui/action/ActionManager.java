@@ -351,13 +351,9 @@ public class ActionManager {
      * MuAction action denoted by the ActionParameters could not be found or could not be instantiated.
      */
     public static MuAction getActionInstance(ActionParameters actionParameters, MainFrame mainFrame) {
-        Map<ActionParameters, ActionAndIdPair> mainFrameActions = mainFrameActionsMap.get(mainFrame);
-        if (mainFrameActions == null) {
-            mainFrameActions = new Hashtable<>();
-            mainFrameActionsMap.put(mainFrame, mainFrameActions);
-        }
+		Map<ActionParameters, ActionAndIdPair> mainFrameActions = mainFrameActionsMap.computeIfAbsent(mainFrame, k -> new Hashtable<>());
 
-        // Looks for an existing MuAction instance used by the specified MainFrame
+		// Looks for an existing MuAction instance used by the specified MainFrame
         if (mainFrameActions.containsKey(actionParameters)) {
         	return mainFrameActions.get(actionParameters).getAction();
         } else {
