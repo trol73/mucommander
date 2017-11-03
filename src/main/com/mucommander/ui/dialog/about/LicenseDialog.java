@@ -19,7 +19,6 @@
 package com.mucommander.ui.dialog.about;
 
 import com.mucommander.RuntimeConstants;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
@@ -54,8 +53,8 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * Creates a new license dialog centered on the specified window.
      * @param dialog window on which to center the new dialog.
      */
-    public LicenseDialog(Dialog dialog) {
-        super(dialog, Translator.get("license"), dialog);
+    LicenseDialog(Dialog dialog) {
+        super(dialog, i18n("license"), dialog);
         initUI();
     }
 
@@ -64,7 +63,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * @param frame window on which to center the new dialog.
      */
     public LicenseDialog(Frame frame) {
-        super(frame, Translator.get("license"), frame);
+        super(frame, i18n("license"), frame);
         initUI();
     }
 
@@ -76,12 +75,10 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * @return the 'ok' button panel.
      */
     private JPanel createButtonPanel() {
-        JPanel panel;
-
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-        okButton = new JButton(Translator.get("ok"));
+        okButton = new JButton(i18n("ok"));
         okButton.addActionListener(this);
         panel.add(okButton);
 
@@ -93,9 +90,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * @return the panel in which the license text is displayed.
      */
     private JScrollPane createLicensePanel() {
-        JTextArea license;
-
-        license = new JTextArea();
+        JTextArea license = new JTextArea();
         license.setEditable(false);
 
         // Applies the file editor's theme to the license text.
@@ -118,9 +113,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * Initialises the dialog's UI.
      */
     private void initUI() {
-        Container   contentPane;
-
-        contentPane = getContentPane();
+        Container contentPane = getContentPane();
 
         // Adds the UI components.
         contentPane.add(createLicensePanel(), BorderLayout.CENTER);
@@ -144,28 +137,16 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
      * @return the license text.
      */
     private String getLicenseText() {
-        StringBuilder     text;   // Stores the license text.
-        char[]            buffer; // Buffer for each chunk of data read from the license file.
-        int               count;  // Number of characters read from the last read operation.
-        InputStreamReader in;     // Stream on the license file.
+        StringBuilder text = new StringBuilder();
+        try (InputStreamReader in  = new InputStreamReader(LicenseDialog.class.getResourceAsStream(RuntimeConstants.LICENSE))) {
+            char[] buffer = new char[2048];
 
-        in   = null;
-        text = new StringBuilder();
-        try {
-            in     = new InputStreamReader(LicenseDialog.class.getResourceAsStream(RuntimeConstants.LICENSE));
-            buffer = new char[2048];
-
-            while((count = in.read(buffer)) != -1)
+            int count;
+            while ((count = in.read(buffer)) != -1) {
                 text.append(buffer, 0, count);
-        }
-        catch(Exception e) {
-            LOGGER.warn("Failed to read license file", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(Exception ignore) {}
             }
+        } catch(Exception e) {
+            LOGGER.warn("Failed to read license file", e);
         }
         return text.toString();
     }

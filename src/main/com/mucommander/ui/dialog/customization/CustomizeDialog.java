@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.customization;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XBoxPanel;
 
@@ -34,7 +33,7 @@ import java.awt.event.ActionListener;
  */
 public abstract class CustomizeDialog extends FocusDialog implements ActionListener {
 	
-	public static final Dimension PREFERRED_SIZE = new Dimension(700, 500);
+	private static final Dimension PREFERRED_SIZE = new Dimension(700, 500);
 	
 	/** Apply button. */
     private JButton     applyButton;
@@ -43,7 +42,7 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
     /** Cancel button. */
     private JButton     cancelButton;
 
-	public CustomizeDialog(Frame parent, String title) {
+	CustomizeDialog(Frame parent, String title) {
         super(parent, title, parent);
         initUI();
     }
@@ -54,23 +53,19 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
     }
   
     private void initUI() {
-    	XBoxPanel buttonsPanel;
-    	JPanel    tempPanel;
-    	Container contentPane;
-    	
     	// Get content-pane and set its layout.
-        contentPane = getContentPane();
+        Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         
         // Add customization panel
         contentPane.add(createCustomizationPanel(), BorderLayout.CENTER);
     	
     	// Buttons panel.
-        buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(applyButton = new JButton(Translator.get("apply")));
+        XBoxPanel buttonsPanel = new XBoxPanel();
+        buttonsPanel.add(applyButton = new JButton(i18n("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(okButton     = new JButton(Translator.get("ok")));
-        buttonsPanel.add(cancelButton = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(okButton     = new JButton(i18n("ok")));
+        buttonsPanel.add(cancelButton = new JButton(i18n("cancel")));
         
         // Disable "commit buttons".
         applyButton.setEnabled(false);
@@ -82,7 +77,7 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
         cancelButton.addActionListener(this);
         
         // Aligns the button panel to the right.
-        tempPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         tempPanel.add(buttonsPanel);
         contentPane.add(tempPanel, BorderLayout.SOUTH);
         
@@ -112,19 +107,22 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
         Object source = e.getSource();
 
         // Commit changes
-        if (source == okButton || source == applyButton)
+        if (source == okButton || source == applyButton) {
             commit();
+        }
 
         // Disable OK & Apply buttons
-        if (source == applyButton)
-        	setCommitButtonsEnabled(false);
+        if (source == applyButton) {
+            setCommitButtonsEnabled(false);
+        }
         
         // Dispose dialog
-        if (source == okButton || source == cancelButton)
+        if (source == okButton || source == cancelButton) {
             dispose();
+        }
     }
     
-    protected void setCommitButtonsEnabled(boolean enabled) {
+    void setCommitButtonsEnabled(boolean enabled) {
     	applyButton.setEnabled(enabled);
     	okButton.setEnabled(enabled);
     	

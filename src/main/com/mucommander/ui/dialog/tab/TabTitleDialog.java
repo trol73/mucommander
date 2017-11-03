@@ -30,7 +30,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.SetTabTitleAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -78,8 +77,8 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
         titleTextField.setText(folderPanel.getTabs().getCurrentTab().getTitle());
         titleTextField.selectAll();
 
-        okButton = new JButton(Translator.get("ok"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("ok"));
+        cancelButton = new JButton(i18n("cancel"));
 
     	// Get content-pane and set its layout.
     	Container contentPane = getContentPane();
@@ -97,14 +96,14 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
 
     private JPanel createInnerPanel() {
     	XBoxPanel panel = new XBoxPanel();
-    	panel.add(new JLabel(Translator.get("title") + ":"));
+    	panel.add(new JLabel(i18n("title") + ":"));
     	panel.addSpace(10);
     	panel.add(titleTextField);//, BorderLayout.CENTER);
     	panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     	return panel;
     }
 
-    public void changeTabTitle() {
+    private void changeTabTitle() {
     	String title = titleTextField.getText().trim();
     	folderPanel.getTabs().setTitle(title.isEmpty() ? null : title);
     }
@@ -117,7 +116,8 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         dispose();
         
-        if (e.getSource() == okButton)
+        if (e.getSource() == okButton) {
             changeTabTitle();
+        }
     }
 }

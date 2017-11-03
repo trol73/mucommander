@@ -40,7 +40,6 @@ import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.WildcardFileFilter;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -97,7 +96,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
      */
     public FileSelectionDialog(MainFrame mainFrame, boolean addToSelection) {
 
-        super(mainFrame, Translator.get(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"), mainFrame);
+        super(mainFrame, i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"), mainFrame);
 	
         this.mainFrame = mainFrame;
         this.addToSelection = addToSelection;
@@ -106,7 +105,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         contentPane.setLayout(new BorderLayout());
 
         YBoxPanel northPanel = new YBoxPanel(5);
-        JLabel label = new JLabel(Translator.get(addToSelection?"file_selection_dialog.mark_description":"file_selection_dialog.unmark_description")+" :");
+        JLabel label = new JLabel(i18n(addToSelection?"file_selection_dialog.mark_description":"file_selection_dialog.unmark_description")+" :");
         northPanel.add(label);
 
         JPanel tempPanel = new JPanel();
@@ -127,10 +126,10 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         // Add some vertical space
         northPanel.addSpace(10);
 		
-        caseSensitiveCheckBox = new JCheckBox(Translator.get("file_selection_dialog.case_sensitive"), caseSensitive);
+        caseSensitiveCheckBox = new JCheckBox(i18n("file_selection_dialog.case_sensitive"), caseSensitive);
         northPanel.add(caseSensitiveCheckBox);
 
-        includeFoldersCheckBox = new JCheckBox(Translator.get("file_selection_dialog.include_folders"), includeFolders);
+        includeFoldersCheckBox = new JCheckBox(i18n("file_selection_dialog.include_folders"), includeFolders);
         northPanel.add(includeFoldersCheckBox);
 		
         northPanel.addSpace(10);
@@ -138,8 +137,8 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
 
         contentPane.add(northPanel, BorderLayout.NORTH);
 
-        okButton = new JButton(Translator.get(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, new JButton(Translator.get("cancel")), getRootPane(), this), BorderLayout.SOUTH);
+        okButton = new JButton(i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"));
+        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, new JButton(i18n("cancel")), getRootPane(), this), BorderLayout.SOUTH);
 
         // Selection field receives initial keyboard focus
         setInitialFocusComponent(selectionField);

@@ -38,7 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.YBoxPanel;
 
@@ -66,8 +65,8 @@ public class PreferredEncodingsDialog extends FocusDialog {
      *
      * @param owner the frame that invoked this dialog
      */
-    public PreferredEncodingsDialog(Frame owner) {
-        super(owner, Translator.get("preferred_encodings"), owner);
+    PreferredEncodingsDialog(Frame owner) {
+        super(owner, i18n("preferred_encodings"), owner);
         init();
     }
 
@@ -77,7 +76,7 @@ public class PreferredEncodingsDialog extends FocusDialog {
      * @param owner the dialog that invoked this dialog
      */
     public PreferredEncodingsDialog(Dialog owner) {
-        super(owner, Translator.get("preferred_encodings"), owner);
+        super(owner, i18n("preferred_encodings"), owner);
         init();
     }
 
@@ -91,7 +90,7 @@ public class PreferredEncodingsDialog extends FocusDialog {
         Container contentPane = getContentPane();
 
         // Label
-        JLabel label = new JLabel(Translator.get("preferred_encodings")+":");
+        JLabel label = new JLabel(i18n("preferred_encodings")+":");
 
         // Mac OS X: small component size
         if (OsFamily.MAC_OS_X.isCurrent()) {
@@ -122,7 +121,7 @@ public class PreferredEncodingsDialog extends FocusDialog {
 
         // 'Revert to defaults' button
 
-        JButton defaultsButton = new JButton(Translator.get("reset"));
+        JButton defaultsButton = new JButton(i18n("reset"));
         // Mac OS X: component size
         if (OsFamily.MAC_OS_X.isCurrent()) {
             defaultsButton.putClientProperty("JComponent.sizeVariant", "small");
@@ -157,7 +156,7 @@ public class PreferredEncodingsDialog extends FocusDialog {
      *
      * @param selectedEncodings list of encodings to select
      */
-    protected void selectCheckboxes(List<String> selectedEncodings) {
+    private void selectCheckboxes(List<String> selectedEncodings) {
         for (JCheckBox checkbox : checkboxes) {
             checkbox.setSelected(selectedEncodings.contains(checkbox.getText()));
         }

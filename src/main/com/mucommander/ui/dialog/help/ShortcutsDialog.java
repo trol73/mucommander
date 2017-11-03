@@ -19,7 +19,6 @@
 
 package com.mucommander.ui.dialog.help;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
@@ -64,12 +63,14 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
     /** Comparator of actions according to their labels */
     private static final Comparator<String> ACTIONS_COMPARATOR = (id1, id2) -> {
         String label1 = ActionProperties.getActionLabel(id1);
-        if (label1 == null)
+        if (label1 == null) {
             return 1;
+        }
 
         String label2 = ActionProperties.getActionLabel(id2);
-        if (label2 == null)
+        if (label2 == null) {
             return -1;
+        }
 
         return label1.compareTo(label2);
     };
@@ -95,12 +96,12 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
         }
 
         // create tab for quick-search category
-        addTopic(tabbedPane, Translator.get(QUICK_SEARCH_TITLE), QUICK_SEARCH_SHORTCUTS);
+        addTopic(tabbedPane, i18n(QUICK_SEARCH_TITLE), QUICK_SEARCH_SHORTCUTS);
 
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
         // Add an OK button
-        JButton okButton = new JButton(Translator.get("ok"));
+        JButton okButton = new JButton(i18n("ok"));
         contentPane.add(DialogToolkit.createOKPanel(okButton, getRootPane(), this), BorderLayout.SOUTH);
         // OK will be selected when enter is pressed
         getRootPane().setDefaultButton(okButton);
@@ -133,21 +134,17 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
     }
 
     private void addTopic(JTabbedPane tabbedPane, String titleKey, Iterator<String> descriptionsIterator) {
-        XAlignedComponentPanel compPanel;
-        JPanel northPanel;
-        JScrollPane scrollPane;
-
-        compPanel = new XAlignedComponentPanel(15);
+        XAlignedComponentPanel compPanel = new XAlignedComponentPanel(15);
 
         // Add all shortcuts and their description
         addShortcutList(compPanel, descriptionsIterator);
 
         // Panel needs to be vertically aligned to the top
-        northPanel = new JPanel(new BorderLayout());
+        JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(compPanel, BorderLayout.NORTH);
 
         // Horizontal/vertical scroll bars will be displayed if needed
-        scrollPane = new JScrollPane(northPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scrollPane = new JScrollPane(northPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(null);
 
         tabbedPane.addTab(titleKey, scrollPane);
@@ -176,19 +173,17 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
 
     private void addShortcutList(XAlignedComponentPanel compPanel, Iterator<String> muActionIdsIterator) {
         // Add all actions shortcut and label (or tooltip if available)
-        String actionId;
-        KeyStroke shortcut;
-        String shortcutsRep;
         while (muActionIdsIterator.hasNext()) {
-            actionId = muActionIdsIterator.next();
+            String actionId = muActionIdsIterator.next();
 
-            shortcut = ActionKeymap.getAccelerator(actionId);
+            KeyStroke shortcut = ActionKeymap.getAccelerator(actionId);
 
-            shortcutsRep = KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(shortcut);
+            String shortcutsRep = KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(shortcut);
 
             shortcut = ActionKeymap.getAlternateAccelerator(actionId);
-            if(shortcut!=null)
-                shortcutsRep += " / "+ KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(shortcut);
+            if (shortcut != null) {
+                shortcutsRep += " / " + KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(shortcut);
+            }
 
             compPanel.addRow(shortcutsRep, new JLabel(ActionProperties.getActionDescription(actionId)), 5);
         }
@@ -198,8 +193,9 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
         List<String> vec = new ArrayList<>(actionsToShortcutsMap.keySet());
         Collections.sort(vec);
 
-        for(String action : vec)
-            compPanel.addRow(actionsToShortcutsMap.get(action), new JLabel(Translator.get(action)), 5);
+        for (String action : vec) {
+            compPanel.addRow(actionsToShortcutsMap.get(action), new JLabel(i18n(action)), 5);
+        }
     }
 
     public void actionPerformed(ActionEvent e) {

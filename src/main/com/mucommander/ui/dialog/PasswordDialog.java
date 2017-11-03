@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.dialog;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.layout.YBoxPanel;
 
@@ -63,14 +62,14 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
 
         YBoxPanel mainPanel = new YBoxPanel();
         edtPassword = new JPasswordField(10);
-        mainPanel.add(new JLabel(Translator.get("password")));
+        mainPanel.add(new JLabel(i18n("password")));
         mainPanel.addSpace(5);
         mainPanel.add(edtPassword);
         mainPanel.addSpace(10);
 
-        btnOk = new JButton(Translator.get("ok"));
+        btnOk = new JButton(i18n("ok"));
         btnOk.addActionListener(this);
-        btnCancel = new JButton(Translator.get("cancel"));
+        btnCancel = new JButton(i18n("cancel"));
         btnCancel.addActionListener(this);
         JButton buttons[] = new JButton[]{btnOk, btnCancel};
 

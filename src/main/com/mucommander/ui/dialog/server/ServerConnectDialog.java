@@ -24,7 +24,6 @@ import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ConnectToServerAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -120,7 +119,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 		
         YBoxPanel yPanel = new YBoxPanel();
         XBoxPanel xPanel = new XBoxPanel();
-        xPanel.add(new JLabel(Translator.get("server_connect_dialog.server_url")+":"));
+        xPanel.add(new JLabel(i18n("server_connect_dialog.server_url")+":"));
         xPanel.addSpace(5);
         urlLabel = new JLabel("");
         updateURLLabel();
@@ -129,13 +128,13 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 
         yPanel.addSpace(10);
 
-        this.saveCredentialsCheckBox = new JCheckBox(Translator.get("auth_dialog.store_credentials"), false);
+        this.saveCredentialsCheckBox = new JCheckBox(i18n("auth_dialog.store_credentials"), false);
         // Enables 'save credentials' checkbox only if server panel/protocol uses credentials
         saveCredentialsCheckBox.setEnabled(currentServerPanel.usesCredentials());
         yPanel.add(saveCredentialsCheckBox);
 
-        JButton okButton = new JButton(Translator.get("server_connect_dialog.connect"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        JButton okButton = new JButton(i18n("server_connect_dialog.connect"));
+        cancelButton = new JButton(i18n("cancel"));
         yPanel.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this));
 
         contentPane.add(yPanel, BorderLayout.SOUTH);
@@ -148,8 +147,9 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 
 
     public void addTab(String protocol, ServerPanel serverPanel, Class<? extends ServerPanel> selectPanelClass) {
-        if(!FileFactory.isRegisteredProtocol(protocol))
+        if (!FileFactory.isRegisteredProtocol(protocol)) {
             return;
+        }
 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(serverPanel, BorderLayout.NORTH);
@@ -162,7 +162,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     }
 
 
-    protected void updateURLLabel() {
+    void updateURLLabel() {
         try {
             FileURL url = currentServerPanel.getServerURL();
             urlLabel.setText(url == null ? " " : url.toString(false));
@@ -209,7 +209,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
             // Change the current folder
             folderPanel.tryChangeCurrentFolder(serverURL, credentialsMapping);
         } catch(IOException ex) {
-            InformationDialog.showErrorDialog(this, Translator.get("table.folder_access_error_title"), Translator.get("folder_does_not_exist"));
+            InformationDialog.showErrorDialog(this, i18n("table.folder_access_error_title"), i18n("folder_does_not_exist"));
         }
     }
 	

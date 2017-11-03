@@ -49,7 +49,6 @@ import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.job.FileJob;
 import com.mucommander.job.PropertiesJob;
 import com.mucommander.utils.text.SizeFormat;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowFilePropertiesAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -103,7 +102,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     public PropertiesDialog(MainFrame mainFrame, FileSet files) {
         super(mainFrame,
               files.size() > 1 ? ActionProperties.getActionLabel(ShowFilePropertiesAction.Descriptor.ACTION_ID) :
-              Translator.get("properties_dialog.file_properties", files.elementAt(0).getName()), mainFrame);
+                      i18n("properties_dialog.file_properties", files.elementAt(0).getName()), mainFrame);
 
         this.job = new PropertiesJob(files, mainFrame);
 		
@@ -138,17 +137,17 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 		textfield.setEditable(true);
         // Contents (set later)
         counterLabel = new JLabel("");
-        labelPanel.addRow(Translator.get("properties_dialog.contents")+":", counterLabel, 6);
+        labelPanel.addRow(i18n("properties_dialog.contents")+":", counterLabel, 6);
 
         // Location (set here)
-        labelPanel.addRow(Translator.get("location")+":", new FileLabel(files.getBaseFolder(), true), 6);
+        labelPanel.addRow(i18n("location")+":", new FileLabel(files.getBaseFolder(), true), 6);
 
         // Combined size (set later)
         JPanel sizePanel;
         sizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         sizePanel.add(sizeLabel = new JLabel(""));
         sizePanel.add(new JLabel(dial = new SpinningDial()));
-        labelPanel.addRow(Translator.get("size") + ":", sizePanel, 6);
+        labelPanel.addRow(i18n("size") + ":", sizePanel, 6);
 
 		// more information
 		lastMod = new JLabel("");
@@ -162,20 +161,20 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
             if (singleFile.canGetOwner()) {
                 String owner = singleFile.getOwner();
                 if (owner != null) {
-                    labelPanel.addRow(Translator.get("owner") + ":", new JLabel(owner), 6);
+                    labelPanel.addRow(i18n("owner") + ":", new JLabel(owner), 6);
                 }
             }
             if (singleFile.canGetGroup()) {
                 String group = singleFile.getGroup();
                 if (group != null) {
-                    labelPanel.addRow(Translator.get("group") + ":", new JLabel(group), 6);
+                    labelPanel.addRow(i18n("group") + ":", new JLabel(group), 6);
                 }
             }
             if (singleFile.isFileOperationSupported(FileOperation.GET_REPLICATION)) {
                 short replication = 0;
                 try {
                     replication = singleFile.getReplication();
-                    labelPanel.addRow(Translator.get("replication") + ":", new JLabel(Short.toString(replication)), 6);
+                    labelPanel.addRow(i18n("replication") + ":", new JLabel(Short.toString(replication)), 6);
                 } catch (UnsupportedFileOperationException e) {
                     e.printStackTrace();
                 }
@@ -184,7 +183,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                 long blocksize = 0;
                 try {
                     blocksize = singleFile.getBlocksize();
-                    labelPanel.addRow(Translator.get("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
+                    labelPanel.addRow(i18n("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
                 } catch (UnsupportedFileOperationException e) {
                     e.printStackTrace();
                 }
@@ -193,7 +192,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
         if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher() && isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
             String comment = OSXFileUtils.getSpotlightComment(singleFile);
-            JLabel commentLabel = new JLabel(Translator.get("comment")+":");
+            JLabel commentLabel = new JLabel(i18n("comment")+":");
             commentLabel.setAlignmentY(JLabel.TOP_ALIGNMENT);
             commentLabel.setVerticalAlignment(SwingConstants.TOP);
 
@@ -208,7 +207,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         yPanel.add(fileDetailsPanel);
         contentPane.add(yPanel, BorderLayout.NORTH);
 
-        okCancelButton = new JButton(Translator.get("cancel"));
+        okCancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKPanel(okCancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // OK button will receive initial focus
@@ -225,9 +224,9 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         int nbFiles = job.getNbFilesRecurse();
         int nbFolders = job.getNbFolders();
         counterLabel.setText(
-                             (nbFiles>0?Translator.get("nb_files", ""+nbFiles):"")
-                             +(nbFiles>0&&nbFolders>0?", ":"")
-                             +(nbFolders>0?Translator.get("nb_folders", ""+nbFolders):"")
+                             (nbFiles > 0 ? i18n("nb_files", ""+nbFiles) : "")
+                             +(nbFiles > 0 && nbFolders > 0 ? ", ":"")
+                             +(nbFolders > 0 ? i18n("nb_folders", ""+nbFolders):"")
                              );
         sizeLabel.setText(SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE| SizeFormat.ROUND_TO_KB) +
 			  " (" + SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE) + ")");
@@ -250,14 +249,14 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         } catch (IOException e) {
             lastAccessTime = -1;
         }
-        lastAccessLabel.setText(lastAccessTime > 0 ? sdf.format(lastAccessTime) : Translator.get("unknown"));
+        lastAccessLabel.setText(lastAccessTime > 0 ? sdf.format(lastAccessTime) : i18n("unknown"));
         long createTime;
         try {
             createTime = file.getCreationDate();
         } catch (IOException e) {
             createTime = -1;
         }
-        createTimeLabel.setText(createTime > 0 ? sdf.format(createTime) : Translator.get("unknown"));
+        createTimeLabel.setText(createTime > 0 ? sdf.format(createTime) : i18n("unknown"));
         counterLabel.repaint(REFRESH_RATE);
         sizeLabel.repaint(REFRESH_RATE);
     }
@@ -272,7 +271,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 		} while (true);
 		return destFile;
 	}
-	public static void renameFile(AbstractFile destFile, String newName){
+	static void renameFile(AbstractFile destFile, String newName){
 
 		AbstractFile destination = FileFactory.getFile(destFile.getParent()+"/"+newName);
 		
@@ -309,7 +308,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
         // Updates button labels and stops spinning dial.
         updateLabels();
-        okCancelButton.setText(Translator.get("ok"));
+        okCancelButton.setText(i18n("ok"));
         dial.setAnimated(false);
     }
 

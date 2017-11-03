@@ -46,7 +46,6 @@ import javax.swing.text.StyledDocument;
 
 import com.mucommander.RuntimeConstants;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.GoToWebsiteAction;
 import com.mucommander.ui.action.impl.ShowAboutAction;
@@ -326,13 +325,13 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 	}
 
 	private JButton createLicenseButton() {
-		btnLicense = new JButton(Translator.get("license"));
+		btnLicense = new JButton(i18n("license"));
 		btnLicense.addActionListener(this);
 		return btnLicense;
 	}
 
 	private JButton createOkButton() {
-		btnOk = new JButton(Translator.get("ok"));
+		btnOk = new JButton(i18n("ok"));
 		btnOk.addActionListener(this);
 		return btnOk;
 	}

@@ -21,7 +21,6 @@ package com.mucommander.ui.dialog.bookmark;
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.collections.AlteredVector;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditBookmarksAction;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -111,16 +110,16 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         // Add bookmark name field
         this.nameField = new JTextField();
         nameField.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("name")+":", nameField, 5);
+        compPanel.addRow(i18n("name")+":", nameField, 5);
 
         // create a path field with auto-completion capabilities
         this.locationField = new FilePathField();
-        this.locationLabel = new JLabel(Translator.get("location")+":");
+        this.locationLabel = new JLabel(i18n("location")+":");
         locationField.getDocument().addDocumentListener(this);
         compPanel.addRow(locationLabel, locationField, 10);
 
         this.separatorNoticePrefix = new JLabel();
-        this.separatorNoticeLabel = new JLabel(" "+Translator.get("edit_bookmarks_dialog.is_separator"));
+        this.separatorNoticeLabel = new JLabel(" "+i18n("edit_bookmarks_dialog.is_separator"));
         compPanel.addRow(separatorNoticePrefix, separatorNoticeLabel, 10);
 
         YBoxPanel yPanel = new YBoxPanel(10);
@@ -134,13 +133,13 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // New bookmark button
-        newButton = new JButton(Translator.get("edit_bookmarks_dialog.new"));
+        newButton = new JButton(i18n("edit_bookmarks_dialog.new"));
         newButton.setMnemonic(mnemonicHelper.getMnemonic(newButton));
         newButton.addActionListener(this);
         buttonGroupPanel.add(newButton);
 
         // Duplicate bookmark button
-        duplicateButton = new JButton(Translator.get("duplicate"));
+        duplicateButton = new JButton(i18n("duplicate"));
         duplicateButton.setMnemonic(mnemonicHelper.getMnemonic(duplicateButton));
         duplicateButton.addActionListener(this);
         buttonGroupPanel.add(duplicateButton);
@@ -151,7 +150,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         buttonGroupPanel.add(removeButton);
 
         // Go to bookmark button
-        goToButton = new JButton(Translator.get("go_to"));
+        goToButton = new JButton(i18n("go_to"));
         goToButton.setMnemonic(mnemonicHelper.getMnemonic(goToButton));
         goToButton.addActionListener(this);
         buttonGroupPanel.add(goToButton);
@@ -159,7 +158,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         buttonsPanel.add(buttonGroupPanel);
 
         // Button that closes the window
-        closeButton = new JButton(Translator.get("close"));
+        closeButton = new JButton(i18n("close"));
         closeButton.setMnemonic(mnemonicHelper.getMnemonic(closeButton));
         closeButton.addActionListener(this);
 
@@ -258,14 +257,16 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
      * @param sourceDocument the javax.swing.text.Document of the JTextField that was modified
      */
     private void modifyBookmark(Document sourceDocument) {
-        if (ignoreDocumentListenerEvents || bookmarks.isEmpty())
+        if (ignoreDocumentListenerEvents || bookmarks.isEmpty()) {
             return;
+        }
 
         int selectedIndex = bookmarkList.getSelectedIndex();
 
         // Make sure that the selected index is not out of bounds
-        if (!bookmarkList.isIndexValid(selectedIndex))
+        if (!bookmarkList.isIndexValid(selectedIndex)) {
             return;
+        }
 
         Bookmark selectedBookmark = bookmarks.elementAt(selectedIndex);
 
@@ -274,17 +275,17 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
             // is cancelled.
             try {
                 currentBookmarkSave = (Bookmark)selectedBookmark.clone();
-            } catch(CloneNotSupportedException ex) {
-            }
+            } catch(CloneNotSupportedException ignored) {}
 
             this.currentListIndex = selectedIndex;
         }
 
         // Update name
-        if (sourceDocument==nameField.getDocument()) {
+        if (sourceDocument == nameField.getDocument()) {
             String name = nameField.getText();
-            if (name.trim().isEmpty())
-                name = getFreeNameVariation(Translator.get("untitled"));
+            if (name.trim().isEmpty()) {
+                name = getFreeNameVariation(i18n("untitled"));
+            }
 
             selectedBookmark.setName(name);
             bookmarkList.itemModified(selectedIndex, false);
@@ -333,9 +334,10 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
      */
     private boolean containsName(String name) {
         int nbBookmarks = bookmarks.size();
-        for(int i=0; i<nbBookmarks; i++) {
-            if(bookmarks.elementAt(i).getName().equals(name))
+        for (int i = 0; i < nbBookmarks; i++) {
+            if (bookmarks.elementAt(i).getName().equals(name)) {
                 return true;
+            }
         }
 
         return false;
@@ -351,7 +353,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         super.dispose();
 
         // Rollback current bookmark's modifications if the dialog was cancelled
-        if(currentBookmarkSave!=null) {
+        if (currentBookmarkSave!=null) {
             bookmarks.setElementAt(currentBookmarkSave, currentListIndex);
             currentBookmarkSave = null;
         }
@@ -387,7 +389,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         else if (source==newButton || source==duplicateButton) {
             Bookmark newBookmark;
             if(source==newButton) {
-                newBookmark = new Bookmark(getFreeNameVariation(Translator.get("untitled")), "");
+                newBookmark = new Bookmark(getFreeNameVariation(i18n("untitled")), "");
             }
             else {      // Duplicate button
                 try {

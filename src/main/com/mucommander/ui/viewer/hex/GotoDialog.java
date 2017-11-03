@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.viewer.hex;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import ru.trolsoft.ui.InputField;
@@ -44,11 +43,11 @@ public abstract class GotoDialog extends FocusDialog implements ActionListener {
     private JButton btnOk;
 
 
-    public GotoDialog(Frame owner, long maxOffset) {
-        super(owner, Translator.get("hex_viewer.goto"), owner);
+    GotoDialog(Frame owner, long maxOffset) {
+        super(owner, i18n("hex_viewer.goto"), owner);
         this.maxOffset = maxOffset;
         Container contentPane = getContentPane();
-        contentPane.add(new JLabel(Translator.get("hex_viewer.goto.offset")+":"), BorderLayout.NORTH);
+        contentPane.add(new JLabel(i18n("hex_viewer.goto.offset")+":"), BorderLayout.NORTH);
 
         edtOffset = new InputField(16, InputField.FilterType.HEX_LONG) {
             @Override
@@ -61,8 +60,8 @@ public abstract class GotoDialog extends FocusDialog implements ActionListener {
         edtOffset.addActionListener(this);
         contentPane.add(edtOffset, BorderLayout.CENTER);
 
-        btnOk = new JButton(Translator.get("ok"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("ok"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus

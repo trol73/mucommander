@@ -19,7 +19,6 @@
 
 package com.mucommander.ui.dialog.pref;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.pref.component.PrefComponent;
 import com.mucommander.ui.icon.IconManager;
@@ -94,10 +93,10 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
         // Buttons panel.
         XBoxPanel buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(btnApply = new JButton(Translator.get("apply")));
+        buttonsPanel.add(btnApply = new JButton(i18n("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(btnOk = new JButton(Translator.get("ok")));
-        buttonsPanel.add(btnCancel = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(btnOk = new JButton(i18n("ok")));
+        buttonsPanel.add(btnCancel = new JButton(i18n("cancel")));
         
         // Disable "commit buttons".
         btnOk.setEnabled(false);

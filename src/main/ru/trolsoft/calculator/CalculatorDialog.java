@@ -18,7 +18,6 @@
 package ru.trolsoft.calculator;
 
 import com.mucommander.cache.TextHistory;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
@@ -105,7 +104,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
     };
 
     public CalculatorDialog(Frame owner) {
-        super(owner, Translator.get("calculator.calculator"), null);
+        super(owner, i18n("calculator.calculator"), null);
 
         Container contentPane = getContentPane();
 
@@ -123,7 +122,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
         List<String> calcHistory = TextHistory.getInstance().getList(TextHistory.Type.CALCULATOR);
         cbExpression = new HistoryComboBox(this, calcHistory);
 
-        compPanel.addRow(Translator.get("calculator.expression")+":", cbExpression, 5);
+        compPanel.addRow(i18n("calculator.expression")+":", cbExpression, 5);
 
         lblError = new JLabel();
         compPanel.addRow("", lblError, 10);
@@ -178,7 +177,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
         XBoxPanel buttonsPanel = new XBoxPanel();
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        btnClose = new JButton(Translator.get("close"));
+        btnClose = new JButton(i18n("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);
@@ -235,7 +234,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
         btnBin.setEnabled(success);
         btnOct.setEnabled(success);
         btnExp.setEnabled(success);
-        lblError.setText(success ? "" : Translator.get("calculator.error"));
+        lblError.setText(success ? "" : i18n("calculator.error"));
         return success;
     }
 

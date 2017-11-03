@@ -20,7 +20,6 @@ package com.mucommander.ui.dialog.commands;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XBoxPanel;
 
@@ -53,7 +52,7 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
 
 
     public EditCommandsDialog(Frame owner, Component locationRelativeComp) {
-        super(owner, Translator.get("EditCommands.label"), locationRelativeComp);
+        super(owner, i18n("EditCommands.label"), locationRelativeComp);
         initUI();
     }
 
@@ -68,13 +67,13 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
         CommandsPanel panel = new CommandsPanel(this, CommandManager.VIEWER_ALIAS);
-        tabbedPane.addTab(Translator.get("EditCommands.group.view"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.view"), panel);
         panels.add(panel);
         panel = new CommandsPanel(this, CommandManager.EDITOR_ALIAS);
-        tabbedPane.addTab(Translator.get("EditCommands.group.edit"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.edit"), panel);
         panels.add(panel);
         panel = new CommandsPanel(this, null);
-        tabbedPane.addTab(Translator.get("EditCommands.group.others"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.others"), panel);
         panels.add(panel);
 
 
@@ -85,10 +84,10 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
 
         // Buttons panel.
         XBoxPanel buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(btnApply = new JButton(Translator.get("apply")));
+        buttonsPanel.add(btnApply = new JButton(i18n("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(btnOk = new JButton(Translator.get("ok")));
-        buttonsPanel.add(btnCancel = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(btnOk = new JButton(i18n("ok")));
+        buttonsPanel.add(btnCancel = new JButton(i18n("cancel")));
 
         // Disable "commit buttons".
         btnOk.setEnabled(false);

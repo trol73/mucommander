@@ -36,11 +36,10 @@ import java.awt.event.ActionListener;
  * The main reason for this component's existence is Swing's <code>JColorChooser</code> does not offer
  * alpha transparency edition, and that its localisation is incomplete. This is a wrapper that fixes both
  * of these shortcomings.
- * </p>
  * <p>
  * This component can be used either as a regular widget and be added to a <code>container</code> or as
  * a dialog box through the {@link #createDialog(Frame,ColorChooser) createDialog} method.
- * </p>
+ *
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class ColorChooser extends YBoxPanel implements ChangeListener {
@@ -279,16 +278,16 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         /**
          * Creates a new dialog containing the specified color chooser.
          */
-        public ChooserDialog(Frame parent, ColorChooser chooser) {
-            super(parent, Translator.get("color_chooser.title"), parent);
+        ChooserDialog(Frame parent, ColorChooser chooser) {
+            super(parent, i18n("color_chooser.title"), parent);
             initUI(chooser);
         }
 
         /**
          * Creates a new dialog containing the specified color chooser.
          */
-        public ChooserDialog(Dialog parent, ColorChooser chooser) {
-            super(parent, Translator.get("color_chooser.title"), parent);
+        ChooserDialog(Dialog parent, ColorChooser chooser) {
+            super(parent, i18n("color_chooser.title"), parent);
             initUI(chooser);
         }
 
@@ -296,12 +295,10 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
          * Initialises the dialog's UI.
          */
         private void initUI(ColorChooser chooser) {
-            Container   contentPane;
-
             this.chooser = chooser;
 
             // Initialises the dialog and its content pane.
-            contentPane = getContentPane();
+            Container contentPane = getContentPane();
             contentPane.setLayout(new BorderLayout());
 
             // Creates the content of the dialog.
@@ -313,16 +310,13 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
          * Creates the panel that contains the dialog's buttons.
          */
         private JPanel createButtonsPanel() {
-            XBoxPanel buttonsPanel;
-            JPanel    panel;
-            JButton okButton;
-
             // Creates the panel and buttons.
-            buttonsPanel = new XBoxPanel();
-            buttonsPanel.add(resetButton = new JButton(Translator.get("reset")));
+            XBoxPanel buttonsPanel = new XBoxPanel();
+            buttonsPanel.add(resetButton = new JButton(i18n("reset")));
             buttonsPanel.addSpace(20);
-            buttonsPanel.add(okButton = new JButton(Translator.get("ok")));
-            buttonsPanel.add(cancelButton = new JButton(Translator.get("cancel")));
+            JButton okButton = new JButton(i18n("ok"));
+            buttonsPanel.add(okButton);
+            buttonsPanel.add(cancelButton = new JButton(i18n("cancel")));
 
             // Tracks events.
             resetButton.addActionListener(this);
@@ -333,7 +327,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
             getRootPane().setDefaultButton(okButton);
 
             // Aligns the buttons to the right of the panel.
-            panel = new JPanel();
+            JPanel panel = new JPanel();
             panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
             panel.add(buttonsPanel);
 
@@ -354,13 +348,13 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
          */
         public void actionPerformed(ActionEvent e) {
             // Resets the current color.
-            if(e.getSource() == resetButton)
+            if (e.getSource() == resetButton) {
                 chooser.reset(true);
-
-            // Closes the dialog, applying modifications if necessary.
+            }// Closes the dialog, applying modifications if necessary.
             else {
-                if(e.getSource() == cancelButton)
+                if (e.getSource() == cancelButton) {
                     chooser.reset(false);
+                }
                 dispose();
             }
         }

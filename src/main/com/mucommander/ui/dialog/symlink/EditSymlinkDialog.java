@@ -19,7 +19,6 @@ package com.mucommander.ui.dialog.symlink;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -55,7 +54,7 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
 
 
     public EditSymlinkDialog(Frame mainFrame, AbstractFile linkPath) {
-        super(mainFrame, Translator.get("symboliclinkeditor.edit"), null);
+        super(mainFrame, i18n("symboliclinkeditor.edit"), null);
         this.mainFrame = mainFrame;
         this.linkPath = linkPath;
 
@@ -65,7 +64,7 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
 
         edtTarget = new FilePathField();
         edtTarget.setDefaultLocation(linkPath.getParent());
-        String hint = String.format(Translator.get("symboliclinkeditor.target_file_edit"), linkPath.getBaseName())+ ':';
+        String hint = String.format(i18n("symboliclinkeditor.target_file_edit"), linkPath.getBaseName())+ ':';
         yPanel.add(new JLabel(hint));
         yPanel.add(edtTarget);
 
@@ -76,8 +75,8 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
 
         contentPane.add(yPanel, BorderLayout.NORTH);
 
-        btnOk = new JButton(Translator.get("ok"));
-        JButton btnCancel = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("ok"));
+        JButton btnCancel = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
         btnOk.addActionListener(this);
 

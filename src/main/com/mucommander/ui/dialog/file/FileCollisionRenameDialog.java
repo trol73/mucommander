@@ -22,7 +22,6 @@ package com.mucommander.ui.dialog.file;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.job.CopyJob;
 import com.mucommander.job.ui.DialogResult;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -61,12 +60,12 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
      * @param file the file to rename.
      */
     public FileCollisionRenameDialog(MainFrame mainFrame, AbstractFile file) {
-        super(mainFrame, Translator.get("rename"), mainFrame);
+        super(mainFrame, i18n("rename"), mainFrame);
 
         Container contentPane = getContentPane();
 
         YBoxPanel mainPanel = new YBoxPanel();
-        mainPanel.add(new JLabel(Translator.get("rename_dialog.new_name") + ":"));
+        mainPanel.add(new JLabel(i18n("rename_dialog.new_name") + ":"));
         edtNewName = new JTextField();
         edtNewName.addActionListener(this);
 
@@ -77,8 +76,8 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
         mainPanel.addSpace(10);
         contentPane.add(mainPanel, BorderLayout.NORTH);
         
-        okButton = new JButton(Translator.get("rename"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("rename"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
@@ -97,7 +96,7 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
         Object source = e.getSource();
 		
         // OK Button
-        if(source == okButton || source == edtNewName) {
+        if (source == okButton || source == edtNewName) {
         	newName = edtNewName.getText();
         } else {
             newName = null;

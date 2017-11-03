@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
@@ -62,7 +61,7 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
      * @param name  current name.
      */
     public ThemeNameDialog(Frame owner, String name) {
-        super(owner, Translator.get("rename"), owner);
+        super(owner, i18n("rename"), owner);
         init(name);
     }
 
@@ -72,7 +71,7 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
      * @param name  current name.
      */
     public ThemeNameDialog(Dialog owner, String name) {
-        super(owner, Translator.get("rename"), owner);
+        super(owner, i18n("rename"), owner);
         init(name);
     }
 
@@ -86,14 +85,12 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
      * @return      the panel in which we'll store the label and name field.
      */
     private JPanel createNamePanel(String name) {
-        XAlignedComponentPanel panel;
-
-        panel = new XAlignedComponentPanel(5);
+        XAlignedComponentPanel panel = new XAlignedComponentPanel(5);
         nameField = new JTextField();
         nameField.setText(name);
         nameField.setSelectionStart(0);
         nameField.setSelectionEnd(name.length());
-        panel.addRow(Translator.get("name"), nameField, 0);
+        panel.addRow(i18n("name"), nameField, 0);
 
         return panel;
     }
@@ -102,17 +99,17 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
      * Initialises the dialog's UI.
      */
     private void init(String name) {
-        YBoxPanel panel;
-
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
 
         // Creates the name panel.
-        panel = new YBoxPanel();
+        YBoxPanel panel = new YBoxPanel();
         panel.add(createNamePanel(name));
 
         // Creates the button panel.
-        panel.add(new ButtonChoicePanel(new JButton[] {okButton = new JButton(Translator.get("ok")), cancelButton = new JButton(Translator.get("cancel"))},
-                                        2, getRootPane()));
+        panel.add(new ButtonChoicePanel(new JButton[] {
+                okButton = new JButton(i18n("ok")),
+                cancelButton = new JButton(i18n("cancel"))
+        }, 2, getRootPane()));
         okButton.addActionListener(this);
         cancelButton.addActionListener(this);
         getContentPane().add(panel, BorderLayout.NORTH);

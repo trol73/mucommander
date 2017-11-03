@@ -60,7 +60,6 @@ import com.mucommander.job.progress.JobProgressListener;
 import com.mucommander.job.progress.JobProgressMonitor;
 import com.mucommander.utils.text.DurationFormat;
 import com.mucommander.utils.text.SizeFormat;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.button.CollapseExpandButton;
 import com.mucommander.ui.chooser.SizeChooser;
@@ -170,7 +169,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             yPanel.add(currentFileProgressBar);
             yPanel.addSpace(10);
 		
-            totalTransferredLabel = new JLabel(Translator.get("progress_dialog.starting"));
+            totalTransferredLabel = new JLabel(i18n("progress_dialog.starting"));
             yPanel.add(totalTransferredLabel);
 			
             yPanel.add(totalProgressBar);
@@ -182,7 +181,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
 
         yPanel.addSpace(10);
-        elapsedTimeLabel = new JLabel(Translator.get("progress_dialog.elapsed_time")+": ");
+        elapsedTimeLabel = new JLabel(i18n("progress_dialog.elapsed_time")+": ");
         elapsedTimeLabel.setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, StatusBar.WAITING_ICON));
         yPanel.add(elapsedTimeLabel);
 
@@ -203,7 +202,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             advancedPanel.addSpace(5);
 
             JPanel tempPanel2 = new JPanel(new BorderLayout());
-            this.limitSpeedCheckBox = new JCheckBox(Translator.get("progress_dialog.limit_speed")+":", false);
+            this.limitSpeedCheckBox = new JCheckBox(i18n("progress_dialog.limit_speed")+":", false);
             limitSpeedCheckBox.addItemListener(this);
 
             tempPanel2.add(limitSpeedCheckBox, BorderLayout.WEST);
@@ -219,7 +218,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             // panel height can't be greater than speedChooser height
             tempPanel2.setMaximumSize(new Dimension(tempPanel2.getMaximumSize().width, speedChooser.getPreferredSize().height));
 
-            this.collapseExpandButton = new CollapseExpandButton(Translator.get("progress_dialog.advanced"), advancedPanel, true);
+            this.collapseExpandButton = new CollapseExpandButton(i18n("progress_dialog.advanced"), advancedPanel, true);
             collapseExpandButton.setExpandedState(MuConfigurations.getPreferences().getVariable(MuPreference.PROGRESS_DIALOG_EXPANDED,
                                                                                    MuPreferences.DEFAULT_PROGRESS_DIALOG_EXPANDED));
             tempPanel.add(collapseExpandButton, BorderLayout.EAST);
@@ -233,7 +232,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             yPanel.add(advancedPanel);
         }
 
-        closeWhenFinishedCheckBox = new JCheckBox(Translator.get("progress_dialog.close_when_finished"));
+        closeWhenFinishedCheckBox = new JCheckBox(i18n("progress_dialog.close_when_finished"));
         closeWhenFinishedCheckBox.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.PROGRESS_DIALOG_CLOSE_WHEN_FINISHED,
                                                                                MuPreferences.DEFAULT_PROGRESS_DIALOG_CLOSE_WHEN_FINISHED));
         yPanel.add(closeWhenFinishedCheckBox);
@@ -241,18 +240,18 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 //        yPanel.add(Box.createVerticalGlue());
         contentPane.add(yPanel, BorderLayout.CENTER);
 
-        pauseResumeButton = new JButton(Translator.get("pause"), IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
+        pauseResumeButton = new JButton(i18n("pause"), IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
         pauseResumeButton.addActionListener(this);
 
         if (transferFileJob != null) {
-            skipButton = new JButton(Translator.get("skip"), IconManager.getIcon(IconManager.IconSet.PROGRESS, SKIP_ICON));
+            skipButton = new JButton(i18n("skip"), IconManager.getIcon(IconManager.IconSet.PROGRESS, SKIP_ICON));
             skipButton.addActionListener(this);
         }
 
-        stopButton = new JButton(Translator.get("stop"), IconManager.getIcon(IconManager.IconSet.PROGRESS, STOP_ICON));
+        stopButton = new JButton(i18n("stop"), IconManager.getIcon(IconManager.IconSet.PROGRESS, STOP_ICON));
         stopButton.addActionListener(this);
 
-        backgroundButton = new JButton(Translator.get("progress_dialog.hide"));
+        backgroundButton = new JButton(i18n("progress_dialog.hide"));
         backgroundButton.addActionListener(this);
 
         this.buttonsChoicePanel = new ButtonChoicePanel(
@@ -313,7 +312,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     }
 
     private void updateCurrentSpeedLabel(String value) {
-        currentSpeedLabel.setText(Translator.get("progress_dialog.current_speed")+": "+value);
+        currentSpeedLabel.setText(i18n("progress_dialog.current_speed")+": "+value);
     }
 
 
@@ -342,7 +341,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 // bars to indicate that the job is finished
 
                 // Change 'Stop' button's label to 'Close'
-                stopButton.setText(Translator.get("close"));
+                stopButton.setText(i18n("close"));
 
                 // Disable components
                 pauseResumeButton.setEnabled(false);
@@ -354,7 +353,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 }
             }
         } else if (newState == State.PAUSED) {
-            pauseResumeButton.setText(Translator.get("resume"));
+            pauseResumeButton.setText(i18n("resume"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, RESUME_ICON));
 
             // Update buttons mnemonics
@@ -364,7 +363,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 updateCurrentSpeedLabel("N/A");
         }
         } else if (newState == State.RUNNING) {
-            pauseResumeButton.setText(Translator.get("pause"));
+            pauseResumeButton.setText(i18n("pause"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
 
             // Update buttons mnemonics
@@ -389,7 +388,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
             // Update total transferred label
             totalTransferredLabel.setText(
-               Translator.get("progress_dialog.transferred",
+                    i18n("progress_dialog.transferred",
                               SizeFormat.format(progress.getBytesTotal(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.ROUND_TO_KB),
                               SizeFormat.format(progress.getTotalBps(), SizeFormat.UNIT_SPEED | SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT | SizeFormat.ROUND_TO_KB))
             );
@@ -410,7 +409,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
 
         // Update elapsed time label
-        elapsedTimeLabel.setText(Translator.get("progress_dialog.elapsed_time")+": "+DurationFormat.format(progress.getEffectiveJobTime()));
+        elapsedTimeLabel.setText(i18n("progress_dialog.elapsed_time")+": "+DurationFormat.format(progress.getEffectiveJobTime()));
     	
     }
     

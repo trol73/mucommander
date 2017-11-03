@@ -21,7 +21,6 @@ package com.mucommander.ui.dialog.bookmark;
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.AddBookmarkAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -76,18 +75,18 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
         nameField.setEditable(true);
         // Monitors text changes to disable 'Add' button if name field is empty
         nameField.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("name")+":", nameField, 10);
+        compPanel.addRow(i18n("name")+":", nameField, 10);
 		
         // Add URL field, non editable
         this.locationField = new JTextField(currentFolder.getCanonicalPath());
-        compPanel.addRow(Translator.get("location")+":", locationField, 10);
+        compPanel.addRow(i18n("location")+":", locationField, 10);
 
         mainPanel.add(compPanel);
 
         contentPane.add(mainPanel, BorderLayout.NORTH);
 				
-        addButton = new JButton(Translator.get("add_bookmark_dialog.add"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        addButton = new JButton(i18n("add_bookmark_dialog.add"));
+        cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(addButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Select text in name field and transfer focus to it for immediate user change
@@ -133,7 +132,7 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
             BookmarkManager.addBookmark(new Bookmark(nameField.getText(), locationField.getText()));
             try {BookmarkManager.writeBookmarks(false);}
             // We should probably pop an error dialog here.
-            catch(Exception e2) {}
+            catch(Exception ignored) {}
         }
         else if (source==cancelButton)  {
             dispose();			

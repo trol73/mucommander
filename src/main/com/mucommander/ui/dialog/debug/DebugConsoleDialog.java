@@ -45,7 +45,6 @@ import javax.swing.SwingUtilities;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.action.impl.ShowDebugConsoleAction;
@@ -109,7 +108,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        threadsButton = new JButton(Translator.get("debug_console_dialog.threads"));
+        threadsButton = new JButton(i18n("debug_console_dialog.threads"));
         threadsButton.addActionListener(this);
         buttonPanel.add(threadsButton);
 
@@ -117,7 +116,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         refreshButton.addActionListener(this);
         buttonPanel.add(refreshButton);
 
-        closeButton = new JButton(Translator.get("close"));
+        closeButton = new JButton(i18n("close"));
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
@@ -138,7 +137,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      */
     private JPanel createComboPanel() {
         JPanel comboPanel = new JPanel(new FlowLayout());
-        comboPanel.add(new JLabel(Translator.get("debug_console_dialog.level")+":"));
+        comboPanel.add(new JLabel(i18n("debug_console_dialog.level")+":"));
         LogLevel logLevel = MuLogging.getLogLevel();
 
         for (LogLevel level:LogLevel.values()) {
@@ -296,11 +295,12 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
             // If component's preferred width is larger than the list's width then the component is not entirely
             // visible. In that case, we set a tooltip text that will display the whole text when mouse is over the
             // component
-            if (loggingEventsList.getVisibleRect().getWidth() < label.getPreferredSize().getWidth())
+            if (loggingEventsList.getVisibleRect().getWidth() < label.getPreferredSize().getWidth()) {
                 label.setToolTipText(label.getText());
-            // Have to set it to null because of the rubber-stamp rendering scheme (last value is kept)
-            else
+            }// Have to set it to null because of the rubber-stamp rendering scheme (last value is kept)
+            else {
                 label.setToolTipText(null);
+            }
             
             return label;
         }

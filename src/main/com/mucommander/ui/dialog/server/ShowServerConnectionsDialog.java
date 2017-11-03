@@ -22,7 +22,6 @@ import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.connection.ConnectionHandler;
 import com.mucommander.commons.file.connection.ConnectionPool;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowServerConnectionsAction;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -87,7 +86,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
                 clonedRealm.setCredentials(loginCredentials);
 
                 return clonedRealm.toString(true)
-                        +" ("+Translator.get(connHandler.isLocked()?"server_connections_dialog.connection_busy":"server_connections_dialog.connection_idle")+")";
+                        +" ("+i18n(connHandler.isLocked()?"server_connections_dialog.connection_busy":"server_connections_dialog.connection_idle")+")";
             }
         });
 
@@ -110,7 +109,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // Disconnect button
-        btnDisconnect = new JButton(Translator.get("server_connections_dialog.disconnect"));
+        btnDisconnect = new JButton(i18n("server_connections_dialog.disconnect"));
         btnDisconnect.setMnemonic(mnemonicHelper.getMnemonic(btnDisconnect));
         btnDisconnect.setEnabled(hasConnections);
         if (hasConnections) {
@@ -120,7 +119,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         buttonGroupPanel.add(btnDisconnect);
 
         // Go to button
-        btnGoto = new JButton(Translator.get("go_to"));
+        btnGoto = new JButton(i18n("go_to"));
         btnGoto.setMnemonic(mnemonicHelper.getMnemonic(btnGoto));
         btnGoto.setEnabled(hasConnections);
         if (hasConnections) {
@@ -131,7 +130,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         buttonsPanel.add(buttonGroupPanel);
 
         // Button that closes the window
-        btnClose = new JButton(Translator.get("close"));
+        btnClose = new JButton(i18n("close"));
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         btnClose.addActionListener(this);
 

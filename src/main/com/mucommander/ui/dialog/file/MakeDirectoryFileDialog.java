@@ -39,7 +39,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.MakeDirectoryFileJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;
@@ -137,7 +136,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         if (mkfileMode) {
             JPanel allocPanel = new JPanel(new BorderLayout());
 
-            allocateSpaceCheckBox = new JCheckBox(Translator.get("mkfile_dialog.allocate_space")+":", false);
+            allocateSpaceCheckBox = new JCheckBox(i18n("mkfile_dialog.allocate_space")+":", false);
             allocateSpaceCheckBox.addItemListener(this);
             allocPanel.add(allocateSpaceCheckBox, BorderLayout.WEST);
 
@@ -147,13 +146,13 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
 
             mainPanel.add(allocPanel);
 
-            openTextEditorCheckBox = new JCheckBox(Translator.get("mkfile_dialog.open_in_editor"), false);
+            openTextEditorCheckBox = new JCheckBox(i18n("mkfile_dialog.open_in_editor"), false);
             openTextEditorCheckBox.addItemListener(this);
             openTextEditorCheckBox.setSelected(openInTextEditor);
             mainPanel.add(openTextEditorCheckBox);
 
             if (OsFamily.getCurrent().isUnixBased()) {
-                makeExecutableCheckBox = new JCheckBox(Translator.get("mkfile_dialog.make_executable"), false);
+                makeExecutableCheckBox = new JCheckBox(i18n("mkfile_dialog.make_executable"), false);
                 makeExecutableCheckBox.addItemListener(this);
                 mainPanel.add(makeExecutableCheckBox);
 
@@ -183,7 +182,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
             }
         } else {
             JPanel convertWhitespacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            convertWhitespacePanel.add(new JLabel(Translator.get("mkfile_dialog.convert_whitespace")));
+            convertWhitespacePanel.add(new JLabel(i18n("mkfile_dialog.convert_whitespace")));
             this.convertWhiteSpaceCheckBox = new JCheckBox();
             convertWhiteSpaceCheckBox.addItemListener(arg0 -> {
 					if (convertWhiteSpaceCheckBox.isSelected()) {
@@ -200,8 +199,8 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         mainPanel.addSpace(10);
         contentPane.add(mainPanel, BorderLayout.NORTH);
         
-        okButton = new JButton(Translator.get("create"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("create"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
@@ -223,14 +222,14 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         PathUtils.ResolvedDestination resolvedDest = PathUtils.resolveDestination(enteredPath, mainFrame.getActivePanel().getCurrentFolder(), false);
         // The path entered doesn't correspond to any existing folder
         if (resolvedDest == null) {
-            InformationDialog.showErrorDialog(mainFrame, Translator.get("invalid_path", enteredPath));
+            InformationDialog.showErrorDialog(mainFrame, i18n("invalid_path", enteredPath));
             return;
         }
 
         // Checks if the directory already exists and reports the error if that's the case
         int destinationType = resolvedDest.getDestinationType();
         if (destinationType == PathUtils.ResolvedDestination.EXISTING_FOLDER) {
-            InformationDialog.showErrorDialog(mainFrame, Translator.get("directory_already_exists", enteredPath));
+            InformationDialog.showErrorDialog(mainFrame, i18n("directory_already_exists", enteredPath));
             return;
         }
 

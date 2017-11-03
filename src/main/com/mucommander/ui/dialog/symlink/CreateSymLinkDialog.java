@@ -20,7 +20,6 @@ package com.mucommander.ui.dialog.symlink;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.job.ui.UserInputHelper;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
@@ -41,6 +40,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.FileAlreadyExistsException;
 
 /**
+ * @author Oleg Trifonov
  * Created on 09/06/14.
  */
 public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
@@ -55,8 +55,6 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     private static final Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 320);
 
     private final Frame mainFrame;
-    private final AbstractFile linkPath;
-    private final AbstractFile targetFile;
     private final FilePathField edtTarget;
     private final JTextField edtName;
     private final JButton btnOk;
@@ -74,28 +72,28 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
      * @param targetFile existing filename (filename symlink will point to)
      */
     public CreateSymLinkDialog(Frame mainFrame, AbstractFile linkPath, AbstractFile targetFile) {
-        super(mainFrame, Translator.get("symboliclinkeditor.create"), null);
+        super(mainFrame, i18n("symboliclinkeditor.create"), null);
         this.mainFrame = mainFrame;
-        this.linkPath = linkPath;
-        this.targetFile = targetFile;
+        AbstractFile linkPath1 = linkPath;
+        AbstractFile targetFile1 = targetFile;
 
         Container contentPane = getContentPane();
 
         YBoxPanel yPanel = new YBoxPanel(10);
 
-        yPanel.add(new JLabel(Translator.get("symboliclinkeditor.target_file_create") + ':'));
+        yPanel.add(new JLabel(i18n("symboliclinkeditor.target_file_create") + ':'));
         edtTarget = new FilePathField();
         yPanel.add(edtTarget);
         yPanel.addSpace(10);
 
-        yPanel.add(new JLabel(Translator.get("symboliclinkeditor.link_name") + ':'));
+        yPanel.add(new JLabel(i18n("symboliclinkeditor.link_name") + ':'));
         edtName = new FilePathField();
         yPanel.add(edtName);
 
         contentPane.add(yPanel, BorderLayout.NORTH);
 
-        btnOk = new JButton(Translator.get("ok"));
-        JButton btnCancel = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("ok"));
+        JButton btnCancel = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
@@ -127,19 +125,19 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
                 // success
                 break;
             } catch (FileAlreadyExistsException e) {
-                errorMessage = Translator.get("cannot_write_symlink_already_exists", linkPath);
+                errorMessage = i18n("cannot_write_symlink_already_exists", linkPath);
             } catch (AccessDeniedException e) {
-                errorMessage = Translator.get("cannot_write_symlink_access_denied", linkPath);
+                errorMessage = i18n("cannot_write_symlink_access_denied", linkPath);
             } catch (IOException e) {
-                errorMessage = Translator.get("cannot_write_symlink", linkPath);
+                errorMessage = i18n("cannot_write_symlink", linkPath);
             }
 
             if (dialog == null) {
                 dialog = new QuestionDialog(mainFrame,
-                        Translator.get("error"),
+                        i18n("error"),
                         errorMessage,
                         mainFrame,
-                        new String[] {Translator.get("retry"), Translator.get("cancel")},
+                        new String[] {i18n("retry"), i18n("cancel")},
                         new int[] {RETRY_ACTION, CANCEL_ACTION},
                         0);
             }

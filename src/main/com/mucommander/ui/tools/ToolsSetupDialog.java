@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.tools;
 
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 
 import java.awt.Frame;
@@ -28,6 +27,6 @@ import java.awt.Frame;
  */
 public class ToolsSetupDialog extends FocusDialog {
     public ToolsSetupDialog(Frame owner) {
-        super(owner, Translator.get("tools_setup_dialog.title"), null);
+        super(owner, i18n("tools_setup_dialog.title"), null);
     }
 }
