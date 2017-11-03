@@ -70,7 +70,7 @@ public class OSXIntegration {
 
         // Catch 'About', 'Preferences' and 'Quit' events
         try {
-            if (JavaVersion.JAVA_1_9.isCurrentOrLower()) {
+            if (JavaVersion.JAVA_1_9.isCurrentOrHigher()) {
                 new Java9DesktopHandler();
             } else {
                 new EAWTHandler();

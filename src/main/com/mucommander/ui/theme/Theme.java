@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.theme;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import java.awt.*;
 import java.util.WeakHashMap;

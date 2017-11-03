@@ -20,13 +20,11 @@ package com.mucommander.ui.viewer.text;
 
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.io.BufferPool;
-import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
-import com.mucommander.tools.AvrAssemblerCommandsHelper;
+import com.mucommander.ui.viewer.text.tools.ExecPanel;
+import com.mucommander.ui.viewer.text.tools.ExecUtils;
+import com.mucommander.ui.viewer.text.tools.ProcessParams;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ViewAction;
@@ -39,15 +37,11 @@ import com.mucommander.ui.viewer.text.search.FindDialog;
 import com.mucommander.ui.viewer.text.search.ReplaceDialog;
 import com.mucommander.ui.viewer.text.search.SearchEvent;
 import com.mucommander.ui.viewer.text.search.SearchListener;
-import com.mucommander.ui.viewer.text.utils.CodeFormatException;
-import com.mucommander.ui.viewer.text.utils.CodeFormatter;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.fife.ui.rtextarea.SearchResult;
 
-import javax.swing.ImageIcon;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
+import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
@@ -57,7 +51,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
-import java.util.StringTokenizer;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -82,28 +75,35 @@ class TextEditorImpl implements ThemeListener {
     /**
      * Full path to editable file with slash at end
      */
-    private String fileLocation;
+    private AbstractFile file;
 
     /**
      * If not null then contains included file under cursor that will ber opened by Ctrl(Cmd)+Enter hotkey
      */
-    private AbstractFile selectedFile;
+    private AbstractFile selectedIncludeFile;
+
+    private JSplitPane splitPane;
+    private ExecPanel pnlBuild;
+    private int storedSplitDividerSize;
+    private int storedSplitterPos;
+    private ProcessParams buildParams;
+
 
     private KeyListener textAreaKeyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == KeyEvent.ALT_MASK) {
-                if (selectedFile == null) {
+                if (selectedIncludeFile == null) {
                     return;
                 }
                 if (textArea.isEditable()) {
                     ImageIcon icon = MuAction.getStandardIcon(EditAction.class);
                     Image img = icon == null ? null : icon.getImage();
-                    EditorRegistrar.createEditorFrame(frame.getMainFrame(), selectedFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
+                    EditorRegistrar.createEditorFrame(frame.getMainFrame(), selectedIncludeFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
                 } else {
                     ImageIcon icon = MuAction.getStandardIcon(ViewAction.class);
                     Image img = icon == null ? null : icon.getImage();
-                    ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
+                    ViewerRegistrar.createViewerFrame(frame.getMainFrame(), selectedIncludeFile, img, (fileFrame -> fileFrame.returnFocusTo(frame)));
                 }
                 return;
             }
@@ -116,167 +116,23 @@ class TextEditorImpl implements ThemeListener {
             }
         }
     };
-
-    private CaretListener caretListener = new CaretListener() {
-        @Override
-        public void caretUpdate(CaretEvent e) {
-            if (statusBar == null) {
-                return;
-            }
-            int line = textArea.getLine();
-            int col = textArea.getColumn();
-            statusBar.setPosition(line, col);
-            statusBar.setStatusMessage("");
-
-            // check if we have 6-digit hex-word on cursor (color)
-            String str = textArea.getLineStr(line);
-            if (str == null || str.isEmpty()) {
-                statusBar.setColor(-1);
-                //if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
-                selectedFile = null;
-                //}
-                return;
-            }
-            checkAssemblerInstruction(str);
-            checkColorOnCursor(str, col);
-            checkIncludeInstruction(str, col);
-        }
-    };
-
-    private void checkIncludeInstruction(String str, int col) {
-        if (!str.toLowerCase().contains("include")) {
-            selectedFile = null;
-            return;
-        }
-        if (col > 0) {
-            col--;
-        }
-        try {
-            int lastQuote2 = str.indexOf('"', col);
-            int lastQuote1 = str.indexOf('\'', col);
-            int lastBracket = str.indexOf(">", col);
-            String quotedName = null;
-            if (lastQuote2 > 0) {
-                int firstQuote2 = str.lastIndexOf('"', col);
-                if (firstQuote2 > 0) {
-                    quotedName = str.substring(firstQuote2 + 1, lastQuote2);
-                    if (quotedName.trim().isEmpty()) {
-                        quotedName = null;
-                    }
-                }
-            }
-            if (quotedName == null && lastBracket > 0) {
-                int firstBracket = str.lastIndexOf('<', col);
-                if (firstBracket > 0) {
-                    quotedName = str.substring(firstBracket + 1, lastBracket);
-                    if (quotedName.trim().isEmpty()) {
-                        quotedName = null;
-                    }
-                }
-            }
-            if (quotedName == null && lastQuote1 > 0) {
-                int firstQuote1 = str.lastIndexOf('\'', col);
-                if (firstQuote1 > 0) {
-                    quotedName = str.substring(firstQuote1 + 1, lastBracket);
-                    if (quotedName.trim().isEmpty()) {
-                        quotedName = null;
-                    }
-                }
-            }
-
-            if (quotedName != null) {
-                selectedFile = FileFactory.getFile(fileLocation + quotedName);
-                if (selectedFile != null && !selectedFile.exists()) {
-                    selectedFile = null;
-                }
-                if (selectedFile != null) {
-                    statusBar.setStatusMessage("<html>" + Translator.get("text_editor.press_alt_enter_to_open_file") + " <b>" + quotedName + "</b>");
-                }
-            } else {
-                statusBar.setStatusMessage(null);
-            }
-        } catch (StringIndexOutOfBoundsException ignore) {}
-    }
-
-    private void checkAssemblerInstruction(String str) {
-        if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
-            StringTokenizer tokenizer = new StringTokenizer(str, " \t\n\r");
-            boolean found = false;
-            while (tokenizer.hasMoreElements()) {
-                String instruction = tokenizer.nextToken();
-                if (instruction.endsWith(":") || instruction.startsWith(";") || instruction.startsWith("//")) {
-                    continue;
-                }
-                String description = AvrAssemblerCommandsHelper.getCommandDescription(instruction);
-                if (description != null) {
-                    statusBar.setStatusMessage(description);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                statusBar.setStatusMessage("");
-            }
-        }
-    }
+    private TextMenuHelper menuHelper;
 
 
-    private boolean checkColorOnCursor(String str, int col) {
-        if (str.length() < 6 || col >= str.length()) {
-            return false;
-        }
-        char ch = str.charAt(col);
-        if (isHexDigit(ch)) {
-            String word = "" + ch;
-            for (int pos = col-1; pos >= 0; pos--) {
-                char c = str.charAt(pos);
-                if (isHexDigit(c)) {
-                    word = c + word;
-                } else {
-                    break;
-                }
-            }
-            for (int pos = col+1; pos < str.length(); pos++) {
-                char c = str.charAt(pos);
-                if (isHexDigit(c)) {
-                    word = word + c;
-                } else {
-                    break;
-                }
-            }
-            if (word.length() == 6) {
-                statusBar.setColor(Integer.parseInt(word, 16));
-                return true;
-            } else {
-                statusBar.setColor(-1);
-            }
-        } else {
-            statusBar.setColor(-1);
-        }
-        return false;
-    }
-
-
-    private static boolean isHexDigit(char ch) {
-        return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
-    }
-
-
-	////////////////////
+    ////////////////////
 	// Initialization //
 	////////////////////
 
 	TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
-        initTextArea(isEditable);
+        this.textArea = createTextArea(isEditable);
         this.statusBar = statusBar;
-
-		// Listen to theme changes to update the text area if it is visible
+        // Listen to theme changes to update the text area if it is visible
 		ThemeManager.addCurrentThemeListener(this);
 	}
 
-	private void initTextArea(boolean isEditable) {
-        textArea = new TextArea() {
+	private TextArea createTextArea(boolean isEditable) {
+        TextArea textArea = new TextArea() {
             @Override
             public Insets getInsets() {
                 return INSETS;
@@ -325,7 +181,8 @@ class TextEditorImpl implements ThemeListener {
             }
 		});
 
-        textArea.addCaretListener(caretListener);
+        textArea.addCaretListener(new TextEditorCaretListener(this));
+        return textArea;
 	}
 
 	/////////////////
@@ -393,15 +250,15 @@ class TextEditorImpl implements ThemeListener {
     }
 
 	void findNext() {
-        if (searchContext == null) {
-            String last = FindDialog.getLastSearchStr();
-            if (last != null) {
-                setupSearchContext(FindDialog.getLastSearchStr());
-            }
-            find();
-        } else {
+        if (searchContext != null) {
             findMore(true);
+            return;
         }
+        String last = FindDialog.getLastSearchStr();
+        if (last != null) {
+            setupSearchContext(FindDialog.getLastSearchStr());
+        }
+        find();
 	}
 
     void replace() {
@@ -519,6 +376,15 @@ class TextEditorImpl implements ThemeListener {
 		return textArea;
 	}
 
+    JComponent getEditorComponent() {
+//        if (splitPane == null) {
+//            splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+//            splitPane.add(textArea);
+//        }
+//        return splitPane;
+        return textArea;
+    }
+
 	void addDocumentListener(DocumentListener documentListener) {
 		textArea.getDocument().addDocumentListener(documentListener);
 	}
@@ -591,79 +457,56 @@ class TextEditorImpl implements ThemeListener {
 	}
 
 
-    FileType detectFileFormat(AbstractFile file) {
-        byte bytes[] = BufferPool.getByteArray(256);
-        int readBytes;
-        try {
-            PushbackInputStream is = file.getPushBackInputStream(256);
-            BOMInputStream bomIs = new BOMInputStream(is);
-            readBytes = StreamUtils.readUpTo(bomIs, bytes);
-            is.unread(bytes, 0, readBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-            try {
-                file.closePushbackInputStream();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return FileType.NONE;
-        }
-        if (readBytes < 5) {
-            return FileType.NONE;
-        }
 
-        String str = new String(bytes, 0, readBytes).trim().toLowerCase();
-        if (str.startsWith("<?xml")) {
-            return FileType.XML;
-        } else if (str.startsWith("<?php")) {
-            return FileType.PHP;
-        } else if (str.startsWith("#!/usr/bin/python") | str.startsWith("#! /usr/bin/python")) {
-            return FileType.PYTHON;
-        } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash") || str.startsWith("#! /bin/bash") || str.startsWith("#! /bin/sh")) {
-            return FileType.UNIX_SHELL;
-        } else if (str.startsWith("<!DOCTYPE html")) {
-            return FileType.HTML;
-        } else if (str.startsWith("#!/usr/bin/ruby") || str.startsWith("#!/usr/bin/env ruby")) {
-            return FileType.RUBY;
+    void build() {
+	    if (buildParams == null) {
+	        return;
         }
-        return FileType.NONE;
+        showBuildPanel();
+
+        ProcessParams params = ExecUtils.getBuilderParams(getFile());
+        if (params != null) {
+            pnlBuild.runCommand(params.folder, params.command);
+        }
     }
 
+    private void showBuildPanel() {
+        if (splitPane == null) {
+            splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+            splitPane.add(frame.getFilePresenter());
+            splitPane.setDividerLocation(frame.getHeight()*2/3);
+            splitPane.setOneTouchExpandable(true);
+            pnlBuild = new ExecPanel(this::closeBuildPanel);
 
-    private void formatTextArea() throws CodeFormatException {
-        String src = textArea.getText();
-        String formatted = null;
-
-        switch (textArea.getFileType()) {
-            case XML:
-                formatted = CodeFormatter.formatXml(src);
-                break;
-            case JSON:
-                formatted = CodeFormatter.formatJson(src);
-                break;
+            splitPane.add(pnlBuild);
+            frame.getContentPane().remove(frame.getFilePresenter());
+            frame.getContentPane().add(splitPane, BorderLayout.CENTER);
+            frame.getContentPane().doLayout();
         }
-        if (formatted != null) {
-            textArea.setText(formatted);
+        if (splitPane.getDividerSize() <= 0) {
+            splitPane.setDividerSize(storedSplitDividerSize);
         }
+        if (storedSplitterPos > 0) {
 
+            splitPane.setDividerLocation(storedSplitterPos);
+        }
+        pnlBuild.setVisible(true);
+        splitPane.doLayout();
+        pnlBuild.doLayout();
     }
 
-    void formatCode() {
-        try {
-            formatTextArea();
-            setStatusMessage("");
-        } catch (CodeFormatException e) {
-            if (e.getLine() > 0 ) {
-                if (e.getRow() > 0) {
-                    textArea.gotoLine(e.getLine(), e.getRow());
-                } else {
-                    textArea.gotoLine(e.getLine());
-                }
-            }
-            setStatusMessage(e.getLocalizedMessage());
-        } catch (Exception e) {
-            setStatusMessage(Translator.get("error"));
+    private void closeBuildPanel() {
+	    if (splitPane == null || pnlBuild == null) {
+	        return;
         }
+        if (splitPane.getDividerSize() > 0) {
+	        storedSplitDividerSize = splitPane.getDividerSize();
+            storedSplitterPos = splitPane.getDividerLocation();
+        }
+	    if (pnlBuild != null) {
+	        pnlBuild.setVisible(false);
+        }
+        splitPane.setDividerSize(0);
     }
 
     public StatusBar getStatusBar() {
@@ -681,7 +524,7 @@ class TextEditorImpl implements ThemeListener {
         }
     }
 
-    private void setStatusMessage(String message) {
+    void setStatusMessage(String message) {
         if (getStatusBar() != null) {
             getStatusBar().setStatusMessage(message);
         }
@@ -702,10 +545,28 @@ class TextEditorImpl implements ThemeListener {
     }
 
     void prepareForEdit(AbstractFile file) {
-        fileLocation = file.getParent().getAbsolutePath();
+        this.file = file;
+        this.buildParams = ExecUtils.getBuilderParams(file);
+        if (menuHelper != null) {
+            menuHelper.setBuildable(buildParams != null);
+        }
     }
 
     public void setFrame(FileFrame frame) {
         this.frame = frame;
     }
+
+    void selectIncludeFile(AbstractFile file) {
+	    this.selectedIncludeFile = file;
+    }
+
+    AbstractFile getFile() {
+	    return file;
+    }
+
+
+    void setMenuHelper(TextMenuHelper menuHelper) {
+        this.menuHelper = menuHelper;
+    }
+
 }

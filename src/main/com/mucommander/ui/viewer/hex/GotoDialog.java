@@ -17,7 +17,7 @@
  */
 package com.mucommander.ui.viewer.hex;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import ru.trolsoft.ui.InputField;

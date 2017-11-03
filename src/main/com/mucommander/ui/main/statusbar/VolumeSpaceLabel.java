@@ -17,8 +17,8 @@
  */
 package com.mucommander.ui.main.statusbar;
 
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.border.MutableLineBorder;
 import com.mucommander.ui.theme.*;
 

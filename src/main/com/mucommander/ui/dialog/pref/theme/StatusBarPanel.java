@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.border.MutableLineBorder;
 import com.mucommander.ui.chooser.FontChooser;
 import com.mucommander.ui.chooser.PreviewLabel;

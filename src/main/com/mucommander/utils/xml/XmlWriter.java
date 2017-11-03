@@ -1,4 +1,4 @@
-package com.mucommander.xml;
+package com.mucommander.utils.xml;
 
 import java.io.*;
 import java.util.Iterator;

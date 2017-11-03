@@ -1,4 +1,4 @@
-package com.mucommander.xml;
+package com.mucommander.utils.xml;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

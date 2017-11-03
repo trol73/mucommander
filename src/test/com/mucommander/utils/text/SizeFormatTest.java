@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.text;
+package com.mucommander.utils.text;
 
 import org.testng.annotations.Test;
 

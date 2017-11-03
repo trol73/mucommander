@@ -19,7 +19,7 @@
 package com.mucommander.ui.layout;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.icon.SpinningDial;
 
 import javax.swing.*;

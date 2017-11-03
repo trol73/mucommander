@@ -37,7 +37,7 @@ import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
@@ -76,7 +76,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         textEditorImpl.setStatusBar(getStatusBar());
     }
     
-    TextViewer(TextEditorImpl textEditorImpl) {
+    protected TextViewer(TextEditorImpl textEditorImpl) {
     	this.textEditorImpl = textEditorImpl;
 
         initGutter();
@@ -175,7 +175,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         menuBar.add(menuHelper.getEditMenu());
         menuBar.add(menuHelper.getSearchMenu());
-        menuBar.add(menuHelper.getMenuView());
+        menuBar.add(menuHelper.getViewMenu());
         menuBar.add(encodingMenu, menuBar);
 
         textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
@@ -258,7 +258,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         }
         // detect XML and PHP files
         if (type == FileType.NONE) {
-            type = textEditorImpl.detectFileFormat(file);
+            type = TextEditorUtils.detectFileFormat(file);
         }
         startEditing(file, null);
         menuHelper.setSyntax(type);

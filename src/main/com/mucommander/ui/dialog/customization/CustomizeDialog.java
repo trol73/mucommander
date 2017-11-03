@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.customization;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XBoxPanel;
 

@@ -87,10 +87,12 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
 
         // Set null minimum size for both components so that divider can be moved all the way left/up and right/down
         Dimension nullDimension = new Dimension(0,0);
-        if(leftComponent!=null)
+        if (leftComponent != null) {
             leftComponent.setMinimumSize(nullDimension);
-        if(rightComponent!=null)
+        }
+        if (rightComponent != null) {
             rightComponent.setMinimumSize(nullDimension);
+        }
     }
 
 
@@ -98,8 +100,9 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
      * Updates the divider component's location to keep the current proportional divider location. 
      */
     public void updateDividerLocation() {
-        if(!window.isVisible())
+        if (!window.isVisible()) {
             return;
+        }
 
         // Reset the last divider location to make sure that the next call to moveComponent doesn't
         // needlessly recalculate the split ratio.
@@ -183,24 +186,24 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         if(e.getSource() == getDividerComponent()) {
             // Ignore this event if the divider's location hasn't changed, or if the initial divider's location
             // hasn't been set yet
-            if(lastDividerLocation == -1) {
+            if (lastDividerLocation == -1) {
                 lastDividerLocation = getDividerLocation();
                 return;
-            }
-            else if(lastDividerLocation==getDividerLocation())
+            } else if (lastDividerLocation == getDividerLocation()) {
                 return;
+            }
 
             // This is a bit tricky: we want to ignore events triggered by the divider moving because the window was
             // resized in such a way that it didn't have a choice (window width smaller than current divider location).
             // Such events are managed by the componentResized method.
-            if(windowWidth != window.getWidth()) {
+            if (windowWidth != window.getWidth()) {
                 windowWidth = window.getWidth();
                 return;
             }
 
             // Divider has been moved, calculate new split ratio
             lastDividerLocation = getDividerLocation();
-            splitRatio = lastDividerLocation / (float)(getOrientation()==HORIZONTAL_SPLIT?getWidth():getHeight());
+            splitRatio = lastDividerLocation / (float)(getOrientation() == HORIZONTAL_SPLIT?getWidth() : getHeight());
         }
     }
 

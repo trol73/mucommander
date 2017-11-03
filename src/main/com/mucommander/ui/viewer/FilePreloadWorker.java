@@ -20,7 +20,7 @@ package com.mucommander.ui.viewer;
 import com.mucommander.commons.HasProgress;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.EncodingDetector;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.statusbar.TaskWidget;
 

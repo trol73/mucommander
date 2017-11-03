@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import javax.swing.border.Border;

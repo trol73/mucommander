@@ -19,7 +19,7 @@
 package com.mucommander.ui.dialog.pref.theme;
 
 import com.mucommander.conf.MuSnapshot;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;

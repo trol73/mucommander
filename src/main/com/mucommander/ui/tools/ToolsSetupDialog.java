@@ -17,7 +17,7 @@
  */
 package com.mucommander.ui.tools;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 
 import java.awt.Frame;

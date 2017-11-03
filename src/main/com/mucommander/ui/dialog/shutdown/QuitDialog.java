@@ -23,7 +23,7 @@ import javax.swing.JCheckBox;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.QuitAction;
 import com.mucommander.ui.dialog.QuestionDialog;

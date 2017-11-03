@@ -27,7 +27,7 @@ import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.job.TempOpenWithJob;
 import com.mucommander.process.ProcessRunner;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;

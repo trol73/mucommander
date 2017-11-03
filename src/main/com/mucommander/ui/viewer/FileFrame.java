@@ -57,7 +57,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
         //initContentPane(file);
 	}
 	
-	protected void initContentPane(final AbstractFile file) {
+	void initContentPane(final AbstractFile file) {
 		try {
 			filePresenter = createFilePresenter(file);
 		} catch (UserCancelledException e) {

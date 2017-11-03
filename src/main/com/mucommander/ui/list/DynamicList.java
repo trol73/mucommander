@@ -20,7 +20,7 @@ package com.mucommander.ui.list;
 
 import com.mucommander.commons.collections.AlteredVector;
 import com.mucommander.commons.collections.VectorChangeListener;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

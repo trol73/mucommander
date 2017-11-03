@@ -17,7 +17,7 @@
  */
 
 
-package com.mucommander.text;
+package com.mucommander.utils.text;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

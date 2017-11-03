@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.mucommander.cache.WindowsStorage;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.text.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -379,5 +380,9 @@ public class FocusDialog extends JDialog implements WindowListener {
                 super.componentResized(e);
             }
         });
+    }
+
+    protected static String i18n(String key, String... params) {
+        return Translator.get(key, params);
     }
 }

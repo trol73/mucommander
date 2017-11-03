@@ -24,7 +24,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.io.security.MuProvider;
 import com.mucommander.job.CalculateChecksumJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CalculateChecksumAction;
 import com.mucommander.ui.combobox.MuComboBox;

@@ -41,7 +41,7 @@ import javax.swing.text.PlainDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.combobox.ComboBoxListener;
 import com.mucommander.ui.combobox.SaneComboBox;
 import com.mucommander.ui.text.KeyStrokeUtils;

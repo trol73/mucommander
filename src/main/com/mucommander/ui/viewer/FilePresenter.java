@@ -58,7 +58,7 @@ public abstract class FilePresenter extends JScrollPane {
 	 * 
 	 * @param component the component to be presented
 	 */
-	protected void setComponentToPresent(JComponent component) {
+	public void setComponentToPresent(JComponent component) {
 		getViewport().removeAll();
 		getViewport().add(component);
 	}

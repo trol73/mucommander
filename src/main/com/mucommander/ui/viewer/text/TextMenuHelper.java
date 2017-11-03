@@ -18,7 +18,7 @@
 package com.mucommander.ui.viewer.text;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import ru.trolsoft.calculator.CalculatorDialog;
@@ -44,6 +44,7 @@ public class TextMenuHelper {
     private JMenu menuView;
     private JMenu menuViewSyntax;
     private JMenu menuSearch;
+    private JMenu menuTools;
     // Items
     private JMenuItem miUndo;
     private JMenuItem miRedo;
@@ -60,8 +61,11 @@ public class TextMenuHelper {
     private JMenuItem miGotoLine;
     private JMenuItem miToggleLineWrap;
     private JMenuItem miToggleLineNumbers;
+
     private JMenuItem miCalculator;
+    private JMenuItem miBuild;
     private JMenuItem miFormat;
+
 
     TextMenuHelper(TextEditorImpl textEditorImpl, boolean editMode) {
         this.textEditorImpl = textEditorImpl;
@@ -93,6 +97,7 @@ public class TextMenuHelper {
             miFormat = MenuToolkit.addMenuItem(menuEdit, Translator.get("text_editor.format"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
         }
 
+        // Search menu
         menuSearch = new JMenu(Translator.get("text_editor.search"));
         miFind = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), actionListener);
         miFindNext = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), actionListener);
@@ -104,6 +109,7 @@ public class TextMenuHelper {
         menuSearch.addSeparator();
         miGotoLine = MenuToolkit.addMenuItem(menuSearch, Translator.get("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
 
+        // View menu
         menuView = new JMenu(Translator.get("text_editor.view"));
 
         miToggleLineWrap = MenuToolkit.addCheckBoxMenuItem(menuView, Translator.get("text_editor.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
@@ -112,7 +118,6 @@ public class TextMenuHelper {
         miToggleLineNumbers.setSelected(lineNumbers);
 
         menuView.addSeparator();
-        miCalculator = MenuToolkit.addMenuItem(menuView, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
         menuView.addSeparator();
         menuViewSyntax = new JMenu(Translator.get("text_editor.syntax"));
 
@@ -120,6 +125,11 @@ public class TextMenuHelper {
         for (FileType fileType : FileType.values()) {
             MenuToolkit.addCheckBoxMenuItem(menuViewSyntax, fileType.getName(), menuItemMnemonicHelper, null, actionListener);
         }
+
+        // Tools menu
+        menuTools = new JMenu(Translator.get("text_editor.tools"));
+        miCalculator = MenuToolkit.addMenuItem(menuTools, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
+        miBuild = MenuToolkit.addMenuItem(menuTools, Translator.get("text_editor.build"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_DOWN_MASK), actionListener);
     }
 
     private int getCtrlOrMetaMask() {
@@ -135,12 +145,16 @@ public class TextMenuHelper {
         return menuEdit;
     }
 
-    JMenu getMenuView() {
+    JMenu getViewMenu() {
         return menuView;
     }
 
     JMenu getSearchMenu() {
         return menuSearch;
+    }
+
+    JMenu getToolsMenu() {
+        return menuTools;
     }
 
     public boolean performAction(ActionEvent e, TextViewer textViewerDelegate) {
@@ -191,9 +205,11 @@ public class TextMenuHelper {
         } else if (source == miRedo) {
             textEditorImpl.redo();
         } else if (source == miFormat) {
-            textEditorImpl.formatCode();
+            TextEditorUtils.formatCode(textEditorImpl);
         } else if (source == miCalculator) {
             new CalculatorDialog(textEditorImpl.frame).showDialog();
+        } else if (source == miBuild) {
+            textEditorImpl.build();
         } else {
             return false;
         }
@@ -210,7 +226,7 @@ public class TextMenuHelper {
     }
 
 
-    /**
+    /*
      * Check if last editor change fired by syntax change event ant will be ignored in document listener
      * @return true if if last editor change fired by syntax change event ant will be ignored in document listener
      */
@@ -222,7 +238,7 @@ public class TextMenuHelper {
 //    }
 
 
-    public void updateEditActions() {
+    void updateEditActions() {
         if (!editMode) {
             return;
         }
@@ -233,5 +249,8 @@ public class TextMenuHelper {
         miFormat.setVisible(ft == FileType.XML || ft == FileType.JSON);
     }
 
+    void setBuildable(boolean canBuild){
+        miBuild.setEnabled(canBuild);
+    }
 
 }

@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.RuntimeConstants;
 import com.mucommander.io.backup.BackupOutputStream;
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 /**
  * This class is responsible for writing the tool-bar attributes (buttons and separators).

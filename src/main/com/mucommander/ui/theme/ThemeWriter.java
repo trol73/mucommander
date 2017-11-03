@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.theme;
 
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 import java.awt.Color;
 import java.awt.Font;

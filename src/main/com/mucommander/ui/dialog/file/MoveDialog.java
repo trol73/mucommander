@@ -24,7 +24,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.MoveJob;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.MoveAction;
 import com.mucommander.ui.main.MainFrame;

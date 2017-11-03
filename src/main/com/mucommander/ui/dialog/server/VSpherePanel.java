@@ -10,7 +10,7 @@ import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.vsphere.VSphereFile;
 import com.mucommander.commons.file.util.PathUtils;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 /**

@@ -20,7 +20,7 @@ package com.mucommander.ui.main.quicklist;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.DummyFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.ShowRecentViewedFilesQLAction;

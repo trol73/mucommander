@@ -18,8 +18,8 @@
 
 package com.mucommander.command;
 
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.SizeFormat;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.combobox.MuComboBox;
 
 import javax.swing.*;

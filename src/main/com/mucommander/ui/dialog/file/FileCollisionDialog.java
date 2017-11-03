@@ -21,9 +21,9 @@ package com.mucommander.ui.dialog.file;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.job.FileCollisionChecker;
-import com.mucommander.text.CustomDateFormat;
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.CustomDateFormat;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.layout.CompareImagesPanel;
 import com.mucommander.ui.layout.InformationPane;

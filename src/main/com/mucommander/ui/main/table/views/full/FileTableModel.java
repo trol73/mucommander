@@ -19,8 +19,8 @@
 package com.mucommander.ui.main.table.views.full;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.CustomDateFormat;
-import com.mucommander.text.SizeFormat;
+import com.mucommander.utils.text.CustomDateFormat;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
 

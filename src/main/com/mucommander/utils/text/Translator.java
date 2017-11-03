@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.text;
+package com.mucommander.utils.text;
 
 import java.io.*;
 import java.net.URL;
@@ -212,7 +212,7 @@ public class Translator {
     }
 
     /**
-     * Returns the localized text String for the given key expressd in the current language, or in the default language
+     * Returns the localized text String for the given key expressed in the current language, or in the default language
      * if there is no value for the current language. Entry parameters (%1, %2, ...), if any, are replaced by the
      * specified values.
      *

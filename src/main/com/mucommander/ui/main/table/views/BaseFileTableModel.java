@@ -26,7 +26,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.text.SizeFormat;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.main.table.CalculateDirectorySizeWorker;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.SortInfo;

@@ -19,7 +19,7 @@ package com.mucommander.ui.viewer.text.search;
 
 import com.jidesoft.hints.ListDataIntelliHints;
 import com.mucommander.cache.TextHistory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rtextarea.SearchContext;

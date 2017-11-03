@@ -20,8 +20,8 @@ package com.mucommander.job.progress;
 
 import com.mucommander.job.FileJob;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.text.DurationFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.DurationFormat;
+import com.mucommander.utils.text.Translator;
 
 /**
  * Contains information about job progress.

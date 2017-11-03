@@ -20,7 +20,6 @@ package com.mucommander.ui.viewer.hex;
 
 import com.jidesoft.hints.ListDataIntelliHints;
 import com.mucommander.cache.TextHistory;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
@@ -56,8 +55,8 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
      *
      * @param frame the parent frame
      */
-    public FindDialog(JFrame frame, String encoding) {
-        super(frame, Translator.get("hex_viewer.find"), frame);
+    FindDialog(JFrame frame, String encoding) {
+        super(frame, i18n("hex_viewer.find"), frame);
 
         Container contentPane = getContentPane();
 
@@ -66,7 +65,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
 
         textField = new InputField(60, InputField.FilterType.ANY_TEXT);
         textField.addActionListener(this);
-        compPanel.addRow(Translator.get("hex_view.text")+":", textField, 5);
+        compPanel.addRow(i18n("hex_view.text")+":", textField, 5);
         List<String> historyText = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
 //        new AutoCompletion(textField, historyText).setStrict(false);
         new ListDataIntelliHints<>(textField, historyText).setCaseSensitive(true);
@@ -75,7 +74,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
 
         hexField = new InputField(60, InputField.FilterType.HEX_DUMP);
         hexField.addActionListener(this);
-        compPanel.addRow(Translator.get("hex_viewer.hex") + ":", hexField, 10);
+        compPanel.addRow(i18n("hex_viewer.hex") + ":", hexField, 10);
         List<String> historyHex = TextHistory.getInstance().getList(TextHistory.Type.HEX_DATA_SEARCH);
 //        new AutoCompletion(hexField, historyHex).setStrict(false);
         new ListDataIntelliHints<>(hexField, historyHex).setCaseSensitive(false);
@@ -89,8 +88,8 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         contentPane.add(compPanel, BorderLayout.CENTER);
 
 
-        okButton = new JButton(Translator.get("ok"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("ok"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus
@@ -121,7 +120,7 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         TextHistory.getInstance().add(TextHistory.Type.HEX_DATA_SEARCH, hexField.getText(), true);
     }
 
-    public void setSearchBytes(byte[] searchBytes) {
+    void setSearchBytes(byte[] searchBytes) {
         hexField.setBytes(searchBytes);
     }
 

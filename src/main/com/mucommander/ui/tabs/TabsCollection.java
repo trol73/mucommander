@@ -119,6 +119,9 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
 	 * @return the tab in the given index
 	 */
 	public T get(int index) {
+		if (index < 0 || index >= collection.size()) {
+			return null;
+		}
 		return collection.get(index);
 	}
 	

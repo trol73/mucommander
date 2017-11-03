@@ -8,10 +8,12 @@ import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.WindowManager;
 
 import java.awt.*;
-import java.awt.desktop.*;
 import java.io.File;
 
-class Java9DesktopHandler implements AboutHandler, PreferencesHandler, QuitHandler, OpenFilesHandler {
+class Java9DesktopHandler {
+
+/*
+    implements AboutHandler, PreferencesHandler, QuitHandler, OpenFilesHandler {
     Java9DesktopHandler() {
         Desktop desktop = Desktop.getDesktop();
         desktop.setAboutHandler(this);
@@ -55,4 +57,5 @@ class Java9DesktopHandler implements AboutHandler, PreferencesHandler, QuitHandl
             }
         }
     }
+    */
 }

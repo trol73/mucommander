@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.action.impl.ShowDebugConsoleAction;

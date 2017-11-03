@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.CollapseExpandButton;
 import com.mucommander.ui.layout.InformationPane;
 import com.mucommander.ui.layout.YBoxPanel;

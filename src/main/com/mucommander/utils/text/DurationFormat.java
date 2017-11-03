@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.text;
+package com.mucommander.utils.text;
 
 /**
  * DurationFormat formats duration in milliseconds into localized string representations.
@@ -84,20 +84,20 @@ public class DurationFormat {
 
 //    public static void main(String args[]) {
 //        // 0s
-//        System.out.println(com.mucommander.text.DurationFormat.format(0));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(0));
 //        // 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format(1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(1000));
 //        // 1m 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format(61*1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(61*1000));
 //        // 1h 1m 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format(3661*1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(3661*1000));
 //        // 1d 1h 1m 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format(90061*1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(90061*1000));
 //        // 1m 1h 1m 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format((2592000+90061)*(long)1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format((2592000+90061)*(long)1000));
 //        // 1y 1m 1h 1m 1s
-//        System.out.println(com.mucommander.text.DurationFormat.format((31104000+2592000+90061)*(long)1000));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format((31104000+2592000+90061)*(long)1000));
 //        // Infinite
-//        System.out.println(com.mucommander.text.DurationFormat.format(1001l*Integer.MAX_VALUE));
+//        System.out.println(com.mucommander.utils.text.DurationFormat.format(1001l*Integer.MAX_VALUE));
 //    }
 }

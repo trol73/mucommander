@@ -27,7 +27,6 @@ import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.job.FileJob;
 import com.mucommander.job.FindFileJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.FindFileAction;
 import com.mucommander.ui.combobox.SaneComboBox;
@@ -167,7 +166,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
         new ListDataIntelliHints<>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
-        compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
+        compPanel.addRow(i18n("find_dialog.name")+":", edtFileName, 5);
 
         // Add contains field
         this.edtText = new InputField();
@@ -175,7 +174,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 //        List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
 //        new ListDataIntelliHints<>(edtText, textHistory).setCaseSensitive(false);
 //        edtText.setText("");
-        compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);
+        compPanel.addRow(i18n("find_dialog.contains")+":", edtText, 5);
 
         // Add encoding field
         this.cbEncoding = new SaneComboBox<>();
@@ -184,22 +183,22 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         for (String encoding: encodings) {
             cbEncoding.addItem(encoding);
         }
-        compPanel.addRow(Translator.get("find_dialog.encoding")+":", cbEncoding, 5);
+        compPanel.addRow(i18n("find_dialog.encoding")+":", cbEncoding, 5);
 
         // create a path field with auto-completion capabilities
         this.edtFromDirectory = new FilePathField();
         this.edtFromDirectory.setText(currentFolder.toString());
         edtFromDirectory.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("find_dialog.initial_directory")+":", edtFromDirectory, 10);
+        compPanel.addRow(i18n("find_dialog.initial_directory")+":", edtFromDirectory, 10);
 
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);
 
         // Checkboxes
-        this.cbSearchSubdirectories = new JCheckBox(Translator.get("find_dialog.search_subdirectories"));
-        this.cbSearchArchives = new JCheckBox(Translator.get("find_dialog.search_archives"));
-        this.cbCaseSensitive = new JCheckBox(Translator.get("find_dialog.case_sensitive"));
-        this.cbIgnoreHidden = new JCheckBox(Translator.get("find_dialog.ignore_hidden"));
-        this.cbSearchHex = new JCheckBox(Translator.get("find_dialog.search_hex"));
+        this.cbSearchSubdirectories = new JCheckBox(i18n("find_dialog.search_subdirectories"));
+        this.cbSearchArchives = new JCheckBox(i18n("find_dialog.search_archives"));
+        this.cbCaseSensitive = new JCheckBox(i18n("find_dialog.case_sensitive"));
+        this.cbIgnoreHidden = new JCheckBox(i18n("find_dialog.ignore_hidden"));
+        this.cbSearchHex = new JCheckBox(i18n("find_dialog.search_hex"));
 
         MuPreferencesAPI prefs = MuConfigurations.getPreferences();
         cbSearchSubdirectories.setSelected(prefs.getVariable(MuPreference.FIND_FILE_SUBDIRECTORIES, true));
@@ -224,7 +223,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
 
         // Search results
-        yPanel.add(new JLabel(Translator.get("find_dialog.search_results")));
+        yPanel.add(new JLabel(i18n("find_dialog.search_results")));
         list = new JList<>(listModel);
         list.addMouseListener(new MouseAdapter() {
             @Override
@@ -307,22 +306,22 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         buttonsPanel.add(new JLabel(dial = new SpinningDial()));
         buttonsPanel.add(Box.createHorizontalGlue());
 
-        btnNewSearch = new JButton(Translator.get("search"));
+        btnNewSearch = new JButton(i18n("search"));
         btnNewSearch.addActionListener(this);
         btnNewSearch.setMnemonic(mnemonicHelper.getMnemonic(btnNewSearch));
         buttonGroupPanel.add(btnNewSearch);
 
-        btnStop = new JButton(Translator.get("stop"));
+        btnStop = new JButton(i18n("stop"));
         btnStop.addActionListener(this);
         btnStop.setMnemonic(mnemonicHelper.getMnemonic(btnStop));
         buttonGroupPanel.add(btnStop);
 
-        btnClean = new JButton(Translator.get("clean"));
+        btnClean = new JButton(i18n("clean"));
         btnClean.addActionListener(this);
         btnClean.setMnemonic(mnemonicHelper.getMnemonic(btnClean));
         buttonGroupPanel.add(btnClean);
 
-        btnClose = new JButton(Translator.get("close"));
+        btnClose = new JButton(i18n("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);
@@ -459,7 +458,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
 
     private void updateResultLabel() {
-        lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
+        lblTotal.setText(i18n("find_dialog.found") + ": " + listModel.size() + " ");
     }
 
 

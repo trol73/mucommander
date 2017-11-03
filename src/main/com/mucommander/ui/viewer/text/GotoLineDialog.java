@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.viewer.text;
 
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import ru.trolsoft.ui.InputField;
@@ -42,20 +41,17 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
     private JButton btnOk;
     private JButton btnCancel;
 
-    private final int maxLines;
-
 
     /**
      * Creates a new FindDialog and shows it to the screen.
      *
      * @param editorFrame the parent editor frame
      */
-    public GotoLineDialog(JFrame editorFrame, final int maxLines) {
-        super(editorFrame, Translator.get("text_viewer.goto_line"), editorFrame);
-        this.maxLines = maxLines;
+    GotoLineDialog(JFrame editorFrame, final int maxLines) {
+        super(editorFrame, i18n("text_viewer.goto_line"), editorFrame);
 
         Container contentPane = getContentPane();
-        contentPane.add(new JLabel(Translator.get("text_viewer.line")+":"), BorderLayout.NORTH);
+        contentPane.add(new JLabel(i18n("text_viewer.line")+":"), BorderLayout.NORTH);
 
         edtLineNumber = new InputField(16, InputField.FilterType.DEC_LONG) {
             @Override
@@ -69,8 +65,8 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
 
         contentPane.add(edtLineNumber, BorderLayout.CENTER);
 
-        btnOk = new JButton(Translator.get("ok"));
-        btnCancel = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("ok"));
+        btnCancel = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus

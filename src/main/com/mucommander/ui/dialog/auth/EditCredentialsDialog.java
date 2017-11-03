@@ -38,7 +38,7 @@ import com.mucommander.auth.CredentialsManager;
 import com.mucommander.auth.CredentialsMapping;
 import com.mucommander.commons.collections.AlteredVector;
 import com.mucommander.commons.file.Credentials;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditCredentialsAction;
 import com.mucommander.ui.dialog.FocusDialog;

@@ -19,7 +19,7 @@
 package com.mucommander.ui.dialog.pref.general;
 
 import com.mucommander.commons.util.StringUtils;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;

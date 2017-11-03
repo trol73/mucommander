@@ -20,7 +20,7 @@ package com.mucommander.ui.main.quicklist;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 import com.mucommander.ui.viewer.FileFrame;

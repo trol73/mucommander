@@ -31,7 +31,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.progress.JobProgress;
 import com.mucommander.job.ui.DialogResult;
 import com.mucommander.job.ui.UserInputHelper;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.FolderPanel;

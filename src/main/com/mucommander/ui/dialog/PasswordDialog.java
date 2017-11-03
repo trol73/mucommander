@@ -17,7 +17,7 @@
  */
 package com.mucommander.ui.dialog;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.layout.YBoxPanel;
 

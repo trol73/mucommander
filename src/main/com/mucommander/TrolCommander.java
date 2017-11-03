@@ -50,7 +50,7 @@ import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.shell.ShellHistoryManager;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.startup.CheckVersionDialog;
@@ -602,7 +602,7 @@ public class TrolCommander {
         void run() throws Exception {
             // Inits CustomDateFormat to make sure that its ConfigurationListener is added
             // before FileTable, so CustomDateFormat gets notified of date format changes first
-            com.mucommander.text.CustomDateFormat.init();
+            com.mucommander.utils.text.CustomDateFormat.init();
         }
     }
 

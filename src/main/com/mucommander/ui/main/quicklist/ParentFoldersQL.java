@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import javax.swing.Icon;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowParentFoldersQLAction;
 import com.mucommander.ui.main.FolderPanel;

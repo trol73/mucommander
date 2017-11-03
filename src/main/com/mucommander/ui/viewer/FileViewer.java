@@ -19,7 +19,7 @@
 package com.mucommander.ui.viewer;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;

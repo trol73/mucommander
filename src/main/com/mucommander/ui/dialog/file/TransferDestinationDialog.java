@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.icon.SpinningDial;
 import com.mucommander.ui.layout.YBoxPanel;

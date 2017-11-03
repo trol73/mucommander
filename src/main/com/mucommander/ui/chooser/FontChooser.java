@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.combobox.MuComboBox;
 import com.mucommander.ui.layout.YBoxPanel;
 

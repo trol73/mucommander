@@ -31,7 +31,7 @@ import com.mucommander.commons.file.AbstractRWArchiveFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
 

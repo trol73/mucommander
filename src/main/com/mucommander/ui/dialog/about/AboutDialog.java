@@ -46,7 +46,7 @@ import javax.swing.text.StyledDocument;
 
 import com.mucommander.RuntimeConstants;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.GoToWebsiteAction;
 import com.mucommander.ui.action.impl.ShowAboutAction;
