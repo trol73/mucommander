@@ -29,7 +29,7 @@ import java.util.Vector;
  * with remembering which ones have already been assigned to another component.
  *
  * <p>To use it: simply create a new instance and keep calling {@link #getMnemonic(String)}
- * to get mnemonics from the giving pieces of text.</p>
+ * to get mnemonics from the giving pieces of text.
  * 
  * @author Maxence Bernard
  */
@@ -51,7 +51,7 @@ public class MnemonicHelper {
      * Finds and returns first character in the given string that's not already as a mnemonic.
      *
      * <p>Returned mnemonic will be added to current internal list of taken mnemonics
-     * and won't ever be used again by this instance.</p>
+     * and won't ever be used again by this instance.
      *
      * @return the character to be used as a mnemonic, always in lower case, 0 if no
      * mnemonic was available for this piece of text. 0 is returned if a <code>null</code> string is passed.

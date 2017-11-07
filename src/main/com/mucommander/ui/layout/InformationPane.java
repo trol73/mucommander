@@ -45,7 +45,7 @@ import java.awt.*;
  * |________|_______________|
  * 
  * </pre>
- * </p>
+
  *
  * @author Maxence Bernard
  */

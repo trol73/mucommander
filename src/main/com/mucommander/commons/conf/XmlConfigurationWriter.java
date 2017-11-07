@@ -34,7 +34,7 @@ import java.io.Writer;
  * Implementation of {@link ConfigurationBuilder} used to write XML configuration streams.
  * <p>
  * Information on the XML file format can be found {@link XmlConfigurationReader here}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class XmlConfigurationWriter implements ConfigurationBuilder {

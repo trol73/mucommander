@@ -34,9 +34,9 @@ import com.mucommander.conf.MuPreference;
  * This class takes care of all text localization issues by loading all text entries from a dictionary file on startup
  * and translating them into the current language on demand.
  *
- * <p>All public methods are static to make it easy to call them throughout the application.</p>
+ * <p>All public methods are static to make it easy to call them throughout the application.
  *
- * <p>See dictionary file for more information about th dictionary file format.</p>
+ * <p>See dictionary file for more information about th dictionary file format.
  *
  * @author Maxence Bernard, Arik Hadas
  */

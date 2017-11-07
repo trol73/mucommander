@@ -169,7 +169,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
      * This will not necessarily create a new instance - if a dialog is already in use, it
      * will be returned. This is an attempt to ensure that the preferences dialog is not opened
      * more than once.
-     * </p>
+     *
      * @return an instance of <code>GeneralPreferencesDialog</code>.
      */
     public static synchronized GeneralPreferencesDialog getDialog() {
@@ -185,7 +185,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
      * <p>
      * After this method has been called, calls to {@link #getDialog()} will
      * result in creating a new instance of <code>GeneralPreferencesDialog</code>.
-     * </p>
+     *
      * @param lastTab index of the last selected panel.
      */
     private static synchronized void releaseSingleton(int lastTab) {

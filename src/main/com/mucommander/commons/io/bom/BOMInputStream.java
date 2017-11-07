@@ -32,7 +32,6 @@ import java.io.InputStream;
  * the {@link BOM} instance returned by {@link #getBOM()} provides that information.<br>
  * 2) it allows to discard the BOM from a Unicode stream: the leading bytes corresponding to the BOM are swallowed by
  * the stream and never returned by the <code>read</code> methods.
- * </p>
  *
  *<p>
  * The following BOMs are supported by this class:

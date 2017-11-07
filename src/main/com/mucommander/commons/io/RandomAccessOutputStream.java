@@ -70,11 +70,11 @@ public abstract class RandomAccessOutputStream extends OutputStream implements R
      * <p>If the present length of the file as returned by the {@link #getLength()} method is greater than the
      * <code>newLength</code> argument then the file will be truncated. In this case, if the file offset as returned
      * by the {@link #getOffset()} method is greater than <code>newLength</code> then the
-     * offset will be equal to <code>newLength</code> after this method returns .</p>
+     * offset will be equal to <code>newLength</code> after this method returns.
      *
      * <p>If the present length of the file as returned by the {@link #getLength()} method is smaller than the 
      * <code>newLength</code> argument then the file will be extended. In this case, the contents of the extended
-     * portion of the file are not defined.</p>
+     * portion of the file are not defined.
      *
      * @param newLength the new file's length
      * @throws IOException If an I/O error occurred while trying to change the file's length

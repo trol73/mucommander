@@ -88,7 +88,7 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
      * to another. For example, on X11 windowing systems, there is no guarantee that
      * a window will be displayed on the same screen, let alone computer, as the one
      * the application is running on.
-     * </p>
+     *
      * @param window the window for which screen insets should be computed.
      * @return the screen's insets for the specified window
      */
@@ -103,7 +103,7 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
      * <p>
      * If <code>x</code> (resp. <code>y</code>) is <code>null</code>, this method won't test
      * whether the frame is within horizontal (resp. vertical) bounds.
-     * </p>
+     *
      * @param frame frame who's visibility should be tested.
      * @param x     horizontal coordinate of the upper-leftmost corner of the area to check for.
      * @param y     vertical coordinate of the upper-leftmost corner of the area to check for.

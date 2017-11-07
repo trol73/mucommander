@@ -49,7 +49,7 @@ import com.mucommander.ui.main.WindowManager;
  * notifier displays an icon in the systrem tray that recalls the current {@link com.mucommander.ui.main.MainFrame}
  * when double-clicked, or shows a popup menu with additional actions ('Bring all to front', 'Quit') when right-clicked.
  *
- * <p>This notifier is available only with Java 1.6 and up.</p>
+ * <p>This notifier is available only with Java 1.6 and up.
  *
  * @author Maxence Bernard
  */

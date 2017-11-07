@@ -29,7 +29,7 @@ public interface FileIconProvider {
      * The implementation is not expected to perform any rescaling (either up or down), this method should only return
      * icons in their 'native' resolutions, using the preferred resolution to choose between different native dimensions.
      * For example, if this provider is able to create icons both in 16x16 and 32x32 resolutions, and a 48x48 resolution
-     * is preferred, the 32x32 resolution should be favored as it is closer to 32x32.</p>
+     * is preferred, the 32x32 resolution should be favored as it is closer to 32x32.
      *
      * @param file the AbstractFile instance for which an icon is requested
      * @param preferredResolution the preferred icon resolution

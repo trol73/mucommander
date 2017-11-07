@@ -33,7 +33,7 @@ import java.util.Set;
  * This heavily borrows code from Technomage's <code>furbelow</code> package, distributed
  * under the GNU Lesser General Public License.<br>
  * The original source code can be found <a href="http://furbelow.svn.sourceforge.net/viewvc/furbelow/trunk/src/furbelow">here</a>.
- * </p>
+ *
  * @author twall, Nicolas Rinaudo
  */
 public abstract class AnimatedIcon implements Icon {
@@ -68,7 +68,6 @@ public abstract class AnimatedIcon implements Icon {
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>{@link #AnimatedIcon(int,int)}({@link #DEFAULT_FRAME_COUNT}, {@link #DEFAULT_FRAME_DELAY});</code>
-     * </p>
      */
     public AnimatedIcon() {this(DEFAULT_FRAME_COUNT, DEFAULT_FRAME_DELAY);}
 
@@ -77,7 +76,7 @@ public abstract class AnimatedIcon implements Icon {
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>{@link #AnimatedIcon(int,int)}(frameCount, {@link #DEFAULT_FRAME_DELAY});</code>
-     * </p>
+     *
      * @param frameCount number of frames in the animation.
      */
     public AnimatedIcon(int frameCount) {this(frameCount, DEFAULT_FRAME_DELAY);}
@@ -148,7 +147,7 @@ public abstract class AnimatedIcon implements Icon {
      * Sets the index of the current frame in the animation.
      * <p>
      * If the method does actually change the current frame, it will trigger a repaint.
-     * </p>
+     *
      * @param frame index of the current frame in the animation.
      */
     public synchronized void setFrame(int frame) {
@@ -166,7 +165,7 @@ public abstract class AnimatedIcon implements Icon {
      * <p>
      * This is a convenience method and is strictly equivalent to calling
      * <code>{@link #setFrame(int) setFrame}({@link #getFrame() getFrame()} + 1)</code>.
-     * </p>
+     *
      */
     public synchronized void nextFrame() {setFrame(currentFrame + 1);}
 
@@ -174,7 +173,7 @@ public abstract class AnimatedIcon implements Icon {
      * Sets the number of milliseconds the animation will sleep between each frame.
      * <p>
      * If set to 0, the animation will stop.
-     * </p>
+     *
      * @param delay number of milliseconds the animation will sleep between each frame.
      */
     public synchronized void setFrameDelay(int delay) {timer.setDelay(delay);}
@@ -201,7 +200,7 @@ public abstract class AnimatedIcon implements Icon {
      * <p>
      * Note that this method will return <code>true</code> if the animation is <b>meant</b> to be running,
      * for example if the icon is not visible but would be animated if it was.
-     * </p>
+     *
      * @return <code>true</code> if the animation is currently running, <code>false</code>.
      */
     public synchronized boolean isAnimated() {return animate;}

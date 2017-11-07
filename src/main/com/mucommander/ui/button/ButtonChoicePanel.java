@@ -69,10 +69,10 @@ public class ButtonChoicePanel extends JPanel implements KeyListener, FocusListe
      * Creates a new ButtonChoicePanel and lays out the given buttons on a grid
      * according to the provided number of colums.
      *
-     * <p>Initial focus will be given to the first button.</p>
+     * <p>Initial focus will be given to the first button.
      *
      * @param buttons  the JButton instances to layout
-     * @param nbCols   number of columns for the buttons grid, if <=0 all buttons will be put on a single row
+     * @param nbCols   number of columns for the buttons grid, if &lt;= 0 all buttons will be put on a single row
      * @param rootPane associated with this ButtonChoicePanel
      */
     public ButtonChoicePanel(JButton buttons[], int nbCols, JRootPane rootPane) {

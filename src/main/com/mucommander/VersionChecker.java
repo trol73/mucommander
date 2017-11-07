@@ -40,7 +40,6 @@ import com.mucommander.commons.file.FileFactory;
  * - where to download the latest version from.<br>
  * This class is used to access those informations and compare them with what is known
  * of the current one, making it possible to notify users of new releases.
- * </p>
  * <p>
  * Checking for new releases is a fairly straightforward process, and can be done
  * with a few lines of code:

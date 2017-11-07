@@ -9,7 +9,7 @@ import java.util.*;
  * It's used to hold a list of XML attributes that will be passed to one of
  * the {@link com.mucommander.utils.xml.XmlWriter#startElement(String,XmlAttributes) element opening}
  * methods.
- * </p>
+ *
  * @author Nicolas Rinaudo, Arik Hadas
  */
 public class XmlAttributes {

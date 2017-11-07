@@ -33,7 +33,7 @@ import java.awt.*;
  * subsequently needed by this list. This has a cost since all files will have to queried at init time, even if some
  * are not used (displayed) afterwards. On the other hand, navigation throughout the list will be faster.
  * Preloading can be enabled or disabled in the constructor but it should always enabled unless it is
- * known for certain that the underlying files are not I/O bound and cannot lock.</p>
+ * known for certain that the underlying files are not I/O bound and cannot lock.
  *
  * @author Maxence Bernard
  */

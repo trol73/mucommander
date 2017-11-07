@@ -62,11 +62,10 @@ import com.mucommander.ui.theme.ThemeManager;
  * <p>
  * Creates and displays a new dialog allowing the user to input a command which will be executed once the action is confirmed.
  * The command output of the user command is displayed in a text area
- * </p>
  * <p>
  * Note that even though this component is affected by themes, it's impossible to edit the current theme while it's being displayed.
  * For this reason, the RunDialog doesn't listen to theme modifications.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class RunDialog extends FocusDialog implements ActionListener, ProcessListener, KeyListener {
@@ -264,10 +263,10 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      *  <li>Printable characters are passed to the process and consumed.</li>
      *  <li>All other events are consumed.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * At the time of writing, <code>tab</code> characters do not seem to be caught.
-     * </p>
+     * 
      * @param event describes the key event.
      */
     public void keyPressed(KeyEvent event) {

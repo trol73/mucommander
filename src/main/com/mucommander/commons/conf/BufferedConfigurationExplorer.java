@@ -25,7 +25,7 @@ import java.util.Stack;
  * <p>
  * This behaves exactly as a {@link ConfigurationExplorer}, but keeps track of its own path. This is meant
  * for instances of {@link Configuration} to prune empty branches.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 class BufferedConfigurationExplorer extends ConfigurationExplorer {

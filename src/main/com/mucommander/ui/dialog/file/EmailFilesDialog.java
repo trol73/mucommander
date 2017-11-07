@@ -53,7 +53,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * <p>One or several recipients, as well as a mail subject and body can be input.
  * The dialog also allows the user to review the files that have been marked,
- * select/unselect some, and displays the total file size.</p>
+ * select/unselect some, and displays the total file size.
  *
  * @author Maxence Bernard
  */

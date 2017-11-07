@@ -25,7 +25,6 @@ public class FTPProtocolProvider implements ProtocolProvider {
      * <p>
      * This option is disabled by default. The reason for this is that the commons-net library will fail to properly
      * parse directory listings on some servers when 'LIST -al' is used (bug).
-     * </p>
      *
      * @param value <code>true</code> to force the listing of hidden files, <code>false</code> to leave it for the
      * server to decide whether to show hidden files or not.

@@ -18,7 +18,7 @@ import java.io.OutputStream;
  * unified access to a number of file protocols.
  *
  * <p>{@link ProtocolFile} is fully implemented by <code>HadoopFile</code>. All is left for subclasses is to implement
- * the abstract methods defined in this class.</p>
+ * the abstract methods defined in this class.
  *
  * @see HDFSFile
  * @author Maxence Bernard

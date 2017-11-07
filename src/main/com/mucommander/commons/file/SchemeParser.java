@@ -19,7 +19,7 @@ public interface SchemeParser {
      *
      * <p>Some parts such as the query and fragment have a meaning only for certain schemes such as HTTP, other schemes
      * may simply ignore the corresponding query/fragment delimiters ('?' and '#' resp.) and include them in the
-     * path part.</p>
+     * path part.
      *
      * @param url the URL to parse
      * @param fileURL the FileURL instance in which to set the different parsed parts

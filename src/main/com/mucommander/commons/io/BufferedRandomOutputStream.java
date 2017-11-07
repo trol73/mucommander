@@ -25,7 +25,7 @@ import java.io.IOException;
  * <code>java.io.BufferedOutputStream</code>, makes it safe to seek in the underlying <code>RandomAccessOutputStream</code>.
  *
  * <p>This class uses {@link BufferPool} to create the internal buffer, to avoid excessive memory allocation and
- * garbage collection. The buffer is released when this stream is closed.</p>
+ * garbage collection. The buffer is released when this stream is closed.
  *
  * @author Maxence Bernard
  */
@@ -117,7 +117,7 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      * needed. However, if the requested data length is equal or larger than this stream's
      * buffer, then this method will flush the buffer and write the
      * bytes directly to the underlying output stream. Thus redundant
-     * <code>RandomBufferedOutputStream</code>s will not copy data unnecessarily.</p>
+     * <code>RandomBufferedOutputStream</code>s will not copy data unnecessarily.
      *
      * @param b the data.
      * @param off the start offset in the data.

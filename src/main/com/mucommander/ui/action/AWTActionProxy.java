@@ -27,12 +27,11 @@ import java.awt.event.ActionListener;
  * <code>java.swing.Action</code>, transferring received action events to the Action's <code>actionPerformed</code>
  * method.
  * This class provides an easy way to use <code>java.swing.Action</code> instances in AWT components.
- *
  * <p>
- * Usage: after creating an <code>AWTActionProxy</code> instance, the <code>addActionListener</oode> method must be
+ * Usage: after creating an <code>AWTActionProxy</code> instance, the <code>addActionListener</code> method must be
  * called on the AWT component which action events are to be proxied, using the <code>AWTActionProxy</code> instance as
  * a parameter.
- * </p>
+ *
  *
  * @author Maxence Bernard
  */

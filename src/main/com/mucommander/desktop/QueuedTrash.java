@@ -35,7 +35,6 @@ import java.util.List;
  * for additional files to be added. If files were added during that period, the trash will wait another period and
  * so on. When no more files are added were added during the period, {@link #moveToTrash(java.util.List)} is called
  * with the list of queued files to move to the trash.
- * </p>
  *
  * <p>
  * This mechanism allows to group calls to the underlying trash. It is effective when the atomic operation
@@ -43,7 +42,6 @@ import java.util.List;
  * repeatedly. One thing to note is since the move is performed asynchroneously,
  * {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)} returns immediately without waiting for the file to be moved,
  * {@link #waitForPendingOperations()} can be used to wait for the files to have effectively been moved.
- * </p>
  *
  * @author Maxence Bernard
  */

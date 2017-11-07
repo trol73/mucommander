@@ -16,7 +16,7 @@ import java.awt.*;
  * to a {@link CacheableFileIconProvider} instance. All this class does is use the cache implementation to harness its
  * befinits and take all the credit for it.<br>
  * When an icon is requested, a cache lookup is performed. If a cached value is found, it is returned. If not, the icon
- * is fetched from the underlying provider and added to the cache.</p>
+ * is fetched from the underlying provider and added to the cache.
  *
  * @author Maxence Bernard
  */
@@ -59,10 +59,9 @@ public class CachedFileIconProvider implements FileIconProvider {
      * {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} is called on the <code>CacheableFileIconProvider</code>
      * to retrieve the icon. This icon is then added to the cache by calling
      * {@link CacheableFileIconProvider#addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon, java.awt.Dimension)}.
-     * </p>
      *
      * <p><b>If the file icon is not cacheable</b>, {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
-     * is simply called on the <code>CacheableFileIconProvider</code> and its value returned.</p>
+     * is simply called on the <code>CacheableFileIconProvider</code> and its value returned.
      */
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {
         boolean isCacheable = cacheableFip.isCacheable(file, preferredResolution);

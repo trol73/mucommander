@@ -9,7 +9,7 @@ import java.util.Iterator;
  * Application writers should keep in mind that this class does not perform any sort
  * of coherency check, and will not prevent them from closing elements they haven't opened yet,
  * or any other thing that would make the XML output invalid.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class XmlWriter {
@@ -53,7 +53,7 @@ public class XmlWriter {
      * <p>
      * This is a convenience constructor and is strictly equivalent to
      * <code>{@link #XmlWriter(OutputStream,String) XmlWriter}(new FileOutputStream(file), {@link #DEFAULT_ENCODING})</code>.
-     * </p>
+     *
      * @param  file                  where to write XML output to.
      * @throws FileNotFoundException if <code>file</code> could not be found.
      * @throws IOException           if an I/O error occurs.
@@ -65,7 +65,7 @@ public class XmlWriter {
      * <p>
      * This is a convenience constructor and is strictly equivalent to
      * <code>{@link #XmlWriter(OutputStream,String) XmlWriter}(new FileOutputStream(file), encoding)</code>.
-     * </p>
+     *
      * @param  file                         where to write XML output to.
      * @param  encoding                     encoding to use when writing the XML content.
      * @throws FileNotFoundException        if <code>file</code> could not be found.
@@ -79,7 +79,7 @@ public class XmlWriter {
      * <p>
      * This is a convenience constructor and is strictly equivalent to
      * <code>{@link #XmlWriter(OutputStream,String) XmlWriter}(stream, {@link #DEFAULT_ENCODING})</code>.
-     * </p>
+     *
      * @param  stream      where to write XML output to.
      * @throws IOException if an I/O error occurs.
      */
@@ -112,11 +112,10 @@ public class XmlWriter {
      * For the generated XML content to be valid, application writers should make sure that this
      * is the very first method they call. This class doesn't ensure coherency and won't
      * complain if the <code>DOCTYPE</code> statement is the last in the file.
-     * </p>
      * <p>
      * Both <code>description</code> and <code>url</code> can be set to <code>null</code>.
      * If so, they will just be ignored.
-     * </p>
+     *
      * @param  topElement   label of the top element in the XML file.
      * @param  availability availability of the document (expected to be either {@link #AVAILABILITY_PUBLIC}
      *                      or {@link #AVAILABILITY_SYSTEM}, but this is not enforced).
@@ -156,7 +155,7 @@ public class XmlWriter {
      * <p>
      * This is a convenience method and is strictly equivalent to calling
      * <code>{@link #startElement(String,boolean) startElement}(name, false)</code>.
-     * </p>
+     *
      * @param  name        name of the element to open.
      * @throws IOException if an I/O error occurs.
      * @see                #startElement(String,XmlAttributes)
@@ -170,7 +169,7 @@ public class XmlWriter {
      * <p>
      * Elements opened using this method will not have any attribute, and will
      * need to be closed using an {@link #endElement(String) endElement} call.
-     * </p>
+     *
      * @param  name        name of the element to open.
      * @param  lineBreak   if <code>true</code>, a line break will be printed after the element declaration.
      * @throws IOException if an I/O error occurs.
@@ -185,10 +184,9 @@ public class XmlWriter {
      * <p>
      * Elements opened using this method will not have any attributes, and will be
      * closed immediately.
-     * </p>
      * <p>
      * A line break will always be printed after a stand-alone element.
-     * </p>
+     *
      * @param  name        name of the element to write.
      * @throws IOException if an I/O error occurs.
      * @see                #startElement(String,XmlAttributes)
@@ -213,7 +211,7 @@ public class XmlWriter {
      * <p>
      * This is a covenience method and is stricly equivalent to calling
      * <code>{@link #startElement(String,XmlAttributes,boolean) startElement}(name, attributes, false)</code>.
-     * </p>
+     *
      * @param  name        name of the element to open.
      * @throws IOException if an I/O error occurs.
      * @param  attributes  attributes that this element will have.
@@ -227,7 +225,7 @@ public class XmlWriter {
      * Writes an element opening sequence.
      * <p>
      * Elements opened using this method will need to be closed using an {@link #endElement(String) endElement} call.
-     * </p>
+     *
      * @param name         name of the element to open.
      * @param  attributes  attributes that this element will have.
      * @param  lineBreak   if <code>true</code>, a line break will be printed after the element declaration.
@@ -242,10 +240,9 @@ public class XmlWriter {
      * Writes a stand-alone element.
      * <p>
      * Elements opened using this method will not need to be closed
-     * </p>
      * <p>
      * A line break will always be printed after a stand-alone element.
-     * </p>
+     *
      * @param name         name of the element to write.
      * @param attributes   attributes that this element will be closed immediately.
      * @throws IOException if an I/O error occurs.

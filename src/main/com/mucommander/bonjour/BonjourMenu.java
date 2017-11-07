@@ -33,7 +33,7 @@ import javax.swing.event.MenuListener;
  * the action returned by {@link #getMenuItemAction(BonjourService)} is returned.
  *
  * <p>Note: the items list is refreshed each time the menu is selected. In other words, a new instance of BonjourMenu
- * does not have to be created in order to see new Bonjour services.</p>
+ * does not have to be created in order to see new Bonjour services.
  *
  * @author Maxence Bernard
  */

@@ -36,7 +36,7 @@ import java.util.WeakHashMap;
  * <p>
  * It monitors any changes made to the bookmarks and when changes are made, fires change events to registered
  * listeners.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class BookmarkManager implements VectorChangeListener {
@@ -113,7 +113,7 @@ public class BookmarkManager implements VectorChangeListener {
      * <p>
      * If it hasn't been changed through a call to {@link #setBookmarksFile(String)},
      * this method will return the default, system dependant bookmarks file.
-     * </p>
+     *
      * @return             the path to the bookmark file.
      * @see    #setBookmarksFile(String)
      * @throws IOException if there was a problem locating the default bookmarks file.
@@ -129,7 +129,7 @@ public class BookmarkManager implements VectorChangeListener {
      * Sets the path to the bookmarks file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setBookmarksFile(FileFactory.getFile(file))</code>.
-     * </p>
+     *
      * @param     path                  path to the bookmarks file
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see       #getBookmarksFile()
@@ -148,7 +148,7 @@ public class BookmarkManager implements VectorChangeListener {
      * Sets the path to the bookmarks file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()))</code>.
-     * </p>
+     *
      * @param     file                  path to the bookmarks file
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see       #getBookmarksFile()
@@ -362,7 +362,7 @@ public class BookmarkManager implements VectorChangeListener {
      * to temporarily suspend events firing when a lot of them are made, for example when editing the bookmarks list.
      *
      * <p>If true is specified, any subsequent calls to fireBookmarksChanged will be ignored, until this method is
-     * called again with false.</p>
+     * called again with false.
      * @param b whether to fire events.
      */
     public static synchronized void setFireEvents(boolean b) {

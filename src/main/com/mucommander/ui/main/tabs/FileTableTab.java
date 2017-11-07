@@ -80,7 +80,7 @@ public abstract class FileTableTab implements Tab {
 	 *  the tab's fixed title will be returned if such title was assigned,
 	 *  otherwise, a string representation will be created based on the tab's location:
 	 *    for local file, the filename will be returned ("/" in case the root folder is presented)
-	 *    for remote file, the returned pattern will be "\<host\>:\<filename\>"
+	 *    for remote file, the returned pattern will be "\&lt;host\&gt;:\&lt;filename\&gt;"
 	 * 
 	 * @return String representation of the tab
 	 */

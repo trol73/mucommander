@@ -284,7 +284,7 @@ public abstract class MuAction extends AbstractAction {
      * from the main event thread.
      *
      * <p>Actions that have the potential to hold the caller thread for a substantial amount of time should perform the
-     * action in a separate thread, to avoid locking the event thread.</p>
+     * action in a separate thread, to avoid locking the event thread.
      *
      * @return <code>true</code> if {@link #performAction()} is called from a separate thread (and not from the event
      * thread) when this action is performed
@@ -299,7 +299,7 @@ public abstract class MuAction extends AbstractAction {
      * thread.
      *
      * <p>Actions that have the potential to hold the caller thread for a substantial amount of time should perform the
-     * action in a separate thread, to avoid locking the event thread.</p>
+     * action in a separate thread, to avoid locking the event thread.
      *
      * @param performActionInSeparateThread <code>true</code> to have {@link #performAction()} called from a separate
      * thread (and not from the event thread) when this action is performed

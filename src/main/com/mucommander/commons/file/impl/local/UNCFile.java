@@ -597,7 +597,7 @@ public class UNCFile extends ProtocolFile {
      *
      * <p>Using this method to retrieve both free space and volume space is more efficient than calling
      * {@link #getFreeSpace()} and {@link #getTotalSpace()} separately -- the underlying method retrieving both
-     * attributes at the same time.</p>
+     * attributes at the same time.
      *
      * @return a {totalSpace, freeSpace} long array, both values can be null if the information could not be retrieved
      * @throws IOException if an I/O error occurred

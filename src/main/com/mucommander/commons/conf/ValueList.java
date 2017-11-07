@@ -27,12 +27,11 @@ import java.util.StringTokenizer;
  * Provides support for variables whose value is a list of tokens.
  * <p>
  * Such values will simply be split using a <code>StringTokenizer</code> and stored as a <code>java.util.List</code>.
- * </p>
  * <p>
  * In addition to the regular <code>List</code> methods, this class provides the same value casting mechanisms as
  * {@link Configuration} and {@link ConfigurationEvent}. These have been extended to iterators through the
  * {@link #valueIterator()} method.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ValueList extends ArrayList<String> {

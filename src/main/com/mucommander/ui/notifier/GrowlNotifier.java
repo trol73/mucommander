@@ -36,7 +36,7 @@ import com.mucommander.ui.macosx.AppleScript;
  * <a href="http://growl.info">http://growl.info</a>.
  *
  * <p>This class communicates with Growl using {@link AppleScript}. More information about the AppleScript syntax can
- * be found <a href="http://growl.info/documentation/applescript-support.php"/>here</a>.
+ * be found <a href="http://growl.info/documentation/applescript-support.php">here</a>.
  * The Growl Java library part of the Growl SDK was previously used but it relied on the Cocoa-Java library which has
  * been deprecated by Apple since then.
  *

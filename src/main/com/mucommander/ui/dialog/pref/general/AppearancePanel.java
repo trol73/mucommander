@@ -622,7 +622,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      *   <li>It must be a custom look and feel.</li>
      *   <li>It cannot be the application's current look and feel.</li>
      * </ul>
-     * </p>
+     *
      * @return <code>true</code> if the specified look and feel is modifiable, <code>false</code> otherwise.
      */
     private boolean isLookAndFeelModifiable(UIManager.LookAndFeelInfo laf) {
@@ -685,7 +685,6 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      *   <li>Remove the look and feel from <code>UIManager</code>'s list of installed look and feels.</li>
      *   <li>Remove the look and feel from the list of custom look and feels.</li>
      * </ul>
-     * </p>
      */
     private void deleteSelectedLookAndFeel() {
         UIManager.LookAndFeelInfo selection; // Currently selected look and feel.
@@ -736,7 +735,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * <p>
      * If there is already a file with the same name in the extensions folder,
      * this method will ask the user for confirmation before overwriting it.
-     * </p>
+     *
      * @param  library     library to import in the extensions folder.
      * @return             <code>true</code> if the library was imported, <code>false</code> if the user cancelled the operation.
      * @throws IOException if an I/O error occurred while importing the library

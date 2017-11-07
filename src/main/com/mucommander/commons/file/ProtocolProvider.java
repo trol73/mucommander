@@ -7,7 +7,6 @@ import java.io.IOException;
  * <p>
  * For {@link AbstractFile} implementations to be automatically instantiated by {@link FileFactory}, this interface
  * needs to be implemented and an instance registered with {@link FileFactory} and binded to a protocol identifier.
- * </p>
  *
  * @author Nicolas Rinaudo, Maxence Bernard
  * @see FileFactory

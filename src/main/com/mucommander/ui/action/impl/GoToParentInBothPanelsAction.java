@@ -35,15 +35,13 @@ import java.util.Map;
  * <p>
  * When possible, this action will open the active panel's current folder's parent. Additionally,
  * if the inactive panel's current folder has a parent, it will open that one as well.
- * </p>
  * <p>
  * Note that this action's behavior is strictly equivalent to that of {@link GoToParentAction} in the
  * active panel. Differences will only occur in the inactive panel, and then again only when possible.
- * </p>
  * <p>
  * This action opens both files synchronously: it will wait for the active panel location change confirmation
  * before performing the inactive one.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class GoToParentInBothPanelsAction extends ActiveTabAction {

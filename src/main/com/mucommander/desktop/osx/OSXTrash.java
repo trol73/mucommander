@@ -36,7 +36,6 @@ import java.util.List;
  *
  * <p>
  *   <b>Implementation notes:</b><br>
- *   <br/>
  *   This trash is implemented as a {@link com.mucommander.desktop.QueuedTrash} for several reasons:
  *   <ul>
  *    <li>the Finder plays a sound when it has been told to move a file to the trash and is done with it.

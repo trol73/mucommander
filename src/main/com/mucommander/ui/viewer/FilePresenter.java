@@ -67,7 +67,7 @@ public abstract class FilePresenter extends JScrollPane {
      * Returns the frame which contains this presenter.
      * <p>
      * This method may return <code>null</code>if the presenter is not inside a FileFrame.
-     * </p>
+     *
      * @return the frame which contains this presenter.
      * @see    #setFrame(FileFrame)
      */

@@ -37,7 +37,7 @@ import com.mucommander.ui.main.table.FileTable;
  * <p>
  * This action is only enabled if the current selection is browsable as defined by
  * {@link com.mucommander.commons.file.AbstractFile#isBrowsable()}.
- * </p>
+ *
  * @author Arik Hadas
  */
 public class OpenInNewTabAction extends SelectedFileAction {

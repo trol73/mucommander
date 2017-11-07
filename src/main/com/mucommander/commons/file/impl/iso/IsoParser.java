@@ -24,7 +24,6 @@ import java.util.List;
  *      * add RockRidge, UDF and others extensions
  *      * add DiscJuggler & other weirdo file formats
  * </pre>
- * </p>
  *
  * @author Xavier Martin
  */

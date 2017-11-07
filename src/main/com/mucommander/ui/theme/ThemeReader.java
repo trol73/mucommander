@@ -931,7 +931,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Creates a font from the specified XML attributes.
      * <p>
      * Ignored attributes will be set to their default values.
-     * </p>
+     *
      * @param  attributes XML attributes describing the font to use.
      * @return            the resulting Font instance.
      */

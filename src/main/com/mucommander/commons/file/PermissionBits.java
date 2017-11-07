@@ -6,7 +6,7 @@ package com.mucommander.commons.file;
  * This interface also defines constants for commonly used permission values.
  *
  * <p>Permission bits can be queried individually using {@link #getBitValue(int, int)} or be represented altogether
- * as a UNIX-style permission int, using {@link #getIntValue()}.</p>
+ * as a UNIX-style permission int, using {@link #getIntValue()}.
  *
  * <p>Two implementations of this interface are provided:
  *   <ul>

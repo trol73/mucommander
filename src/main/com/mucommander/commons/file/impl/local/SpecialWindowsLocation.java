@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
  * Represents special Windows locations such as 'My Computer', 'Network Neighborhood', 'Recycle Bin', ... as dummy
  * <code>AbstractFile</code> instances.
  *
- * <p>This class is totally useless on platforms other than Windows.</p>
+ * <p>This class is totally useless on platforms other than Windows.
  *
  * @author Maxence Bernard
  */

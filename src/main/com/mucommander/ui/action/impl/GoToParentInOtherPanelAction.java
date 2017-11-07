@@ -36,7 +36,7 @@ import java.util.Map;
  * <p>
  * This action is only enabled when the active panel has a parent,
  * and the selected tab in the other panel is not locked.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class GoToParentInOtherPanelAction extends ParentFolderAction {
@@ -53,7 +53,7 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      * Goes to <code>sourcePanel</code>'s parent in <code>destPanel</code>.
      * <p>
      * If <code>sourcePanel</code> doesn't have a parent, nothing will happen.
-     * </p>
+     *
      * @param  sourcePanel panel whose parent should be used.
      * @param  destPanel   panel in which to change the location.
      * @return             <code>true</code> if <code>sourcePanel</code> has a parent, <code>false</code> otherwise.

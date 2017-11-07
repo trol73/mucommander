@@ -28,7 +28,7 @@ import java.util.*;
  * <code>ClassLoader</code> implementation capable of loading classes from instances of {@link AbstractFile}.
  * <p>
  * It's possible to modify this loader's classpath at runtime through the {@link #addFile(AbstractFile)} method.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class AbstractFileClassLoader extends ClassLoader {
@@ -69,7 +69,7 @@ public class AbstractFileClassLoader extends ClassLoader {
      * Adds the specified <code>file</code> to the class loader's classpath.
      * <p>
      * Note that the file will <b>not</b> be added if it's already in the classpath.
-     * </p>
+     *
      * @param  file                     file to add the class loader's classpath.
      * @throws IllegalArgumentException if <code>file</code> is not browsable.
      */

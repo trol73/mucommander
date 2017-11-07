@@ -37,7 +37,7 @@ import java.util.zip.ZipException;
  * <br>
  * This class is based off the <code>org.apache.tools.zip</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.0 of Ant.</p>
+ * file. It was forked at version 1.7.0 of Ant.
  *
  * @author Apache Ant, Maxence Bernard
  */
@@ -146,7 +146,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
      *
      * <p>For a list of possible values see <a
      * href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.
-     * Defaults to the platform's default character encoding.</p>
+     * Defaults to the platform's default character encoding.
      *
      * @param encoding the encoding value
      */
@@ -320,7 +320,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
     /**
      * Sets the compression level for subsequent entries.
      *
-     * <p>Default is Deflater.DEFAULT_COMPRESSION.</p>
+     * <p>Default is Deflater.DEFAULT_COMPRESSION.
      *
      * @param level the compression level.
      * @throws IllegalArgumentException if an invalid compression level is specified.
@@ -337,7 +337,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
     /**
      * Sets the default compression method for subsequent entries.
      *
-     * <p>Default is DEFLATED.</p>
+     * <p>Default is DEFLATED.
      *
      * @param method an <code>int</code> from java.util.zip.ZipEntry
      */
@@ -684,7 +684,7 @@ public class ZipOutputStream extends OutputStream implements ZipConstants {
      * compression method. If no entry is currently open, the bytes will be written as-is to the underlying
      * <code>OutputStream</code>.
      *
-     * <p>Delegates to the three arg method.</p>
+     * <p>Delegates to the three arg method.
      * @param b the byte to write
      * @throws IOException on error
      */

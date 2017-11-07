@@ -69,11 +69,10 @@ import com.mucommander.ui.icon.IconManager;
  * <code>
  *   frame.getContentPane().add(MoreButton.wrapToolBar(toolBar), BorderLayout.NORTH);
  * </code>
- * </p>
+ *
  * <p>
  * This class is based on the code of Santhosh Kumar T, see
  * <a href="http://www.jroller.com/santhosh/entry/jtoolbar_with_more_button">this link</a> for more information.
- * </p>
  *
  * @author Santhosh Kumar T, Leo Welsch
  */

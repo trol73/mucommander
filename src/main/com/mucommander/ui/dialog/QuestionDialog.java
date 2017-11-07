@@ -47,7 +47,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
     /** This value is returned by {@link #getActionValue()} when the dialog has been disposed without the user
      * selecting a custom action */
-    public final static int DIALOG_DISPOSED_ACTION = -1;
+    private final static int DIALOG_DISPOSED_ACTION = -1;
 
     /** Minimum dialog size */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
@@ -58,7 +58,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
     /**
      *
-     * @param actionValues values for actions, each of them must be >= 0
+     * @param actionValues values for actions, each of them must be &gt;= 0
      */
     public QuestionDialog(Frame owner, String title, String msg, Component locationRelative, String actionText[], int actionValues[], int maxNbCols) {
         super(owner, title, locationRelative);
@@ -67,7 +67,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
     /**
      *
-     * @param actionValues values for actions, each of them must be >= 0
+     * @param actionValues values for actions, each of them must be &gt;= 0
      */
     public QuestionDialog(Dialog owner, String title, String msg, Component locationRelative, String actionText[], int actionValues[], int maxNbCols) {
         super(owner, title, locationRelative);
@@ -76,7 +76,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
     /**
      *
-     * @param actionValues values for actions, each of them must be >= 0
+     * @param actionValues values for actions, each of them must be &gt;= 0
      */
     public QuestionDialog(Frame owner, String title, Component msgComp, Component locationRelative, String actionText[], int actionValues[], int maxNbCols) {
         super(owner, title, locationRelative);
@@ -85,7 +85,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
 
     /**
      *
-     * @param actionValues values for actions, each of them must be >= 0
+     * @param actionValues values for actions, each of them must be &gt;= 0
      */
     public QuestionDialog(Dialog owner, String title, Component msgComp, Component locationRelative, String actionText[], int actionValues[], int maxNbCols) {
         super(owner, title, locationRelative);

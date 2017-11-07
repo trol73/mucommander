@@ -38,20 +38,19 @@ import java.io.OutputStream;
  *
  * <p>The associated {@link FileURL} scheme is {@link FileProtocols#SFTP}. The host part of the URL designates the
  * SFTP server. Credentials must be specified in the login and password parts as SFTP servers require a login and
- * password. The path separator is <code>'/'</code>.</p>
+ * password. The path separator is <code>'/'</code>.
  *
  * <p>Here are a few examples of valid SFTP URLs:
  * <code>
  * sftp://server/pathto/somefile<br>
  * sftp://login:password@server/pathto/somefile<br>
  * </code>
- * </p>
  *
  * <p>Internally, SFTPFile uses {@link ConnectionPool} to create SFTP connections as needed and allows them to be
  * reused by SFTPFile instances located on the same server, dealing with concurrency issues. Connections are
- * thus managed transparently and need not be manually managed.</p>
+ * thus managed transparently and need not be manually managed.
  *
- * <p>Low-level SFTP implementation is provided by the <code>J2SSH</code> library distributed under the LGPL license.</p>
+ * <p>Low-level SFTP implementation is provided by the <code>J2SSH</code> library distributed under the LGPL license.
  *
  * @see ConnectionPool
  * @author Maxence Bernard

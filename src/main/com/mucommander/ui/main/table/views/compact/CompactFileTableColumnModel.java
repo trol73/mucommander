@@ -209,7 +209,7 @@ public class CompactFileTableColumnModel implements TableColumnModel, PropertyCh
      * <p>
      * Ideally, we'd like to return <code>null</code> here, but the table API takes a dim view
      * of this and we're forced to keep a useless reference.
-     * </p>
+     *
      * @return a default list selection model.
      */
     @Override

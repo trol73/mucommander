@@ -29,7 +29,6 @@ import java.io.IOException;
  * <p>
  * For {@link AbstractArchiveFile} implementations to be automatically instantiated by {@link FileFactory},
  * this interface needs to be implemented and an instance registered with {@link FileFactory}.
- * </p>
  *
  * @author Nicolas Rinaudo, Maxence Bernard
  * @see AbstractArchiveFile

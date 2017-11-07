@@ -28,10 +28,9 @@ import java.util.WeakHashMap;
  * Component meant to let users choose an integer value from a specific range.
  * <p>
  * An IntegerChooser is an compound-component created by associating a JSpinner and a JSlider.
- * </p>
  * <p>
  * In order to track the chooser's state, listeners can be registered through {@link #addChangeListener(ChangeListener)}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class IntegerChooser extends JPanel implements ChangeListener {

@@ -13,7 +13,7 @@ import java.io.InputStream;
  * Bzip2ArchiveFile provides read-only access to archives in the Bzip2 format.
  *
  * <p>The actual decompression work is performed by the <code>Apache Ant</code> library under the terms of the
- * Apache Software License.</p>
+ * Apache Software License.
  *
  * @see com.mucommander.commons.file.impl.bzip2.Bzip2FormatProvider
  * @author Maxence Bernard

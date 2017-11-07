@@ -33,7 +33,6 @@ import java.awt.event.MouseListener;
  * To 'rollover-enable' a button, the {@link #setButtonDecoration(javax.swing.JButton)} method must first be called to
  * set decoration properties. Then, the button must register an instance of <code>RolloverButtonAdapter</code> as a
  * mouse listener. Note that a single <code>RolloverButtonAdapter</code> instance can be registered with several buttons.  
- * </p>
  *
  * @author Maxence Bernard
  */

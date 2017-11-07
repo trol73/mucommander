@@ -33,7 +33,7 @@ import java.util.WeakHashMap;
  * Each time the value changes, a <code>ChangeEvent</code> is fired to registered listeners.
  *
  * <p>This component can also serve to enter a speed in byte/kilobyte/megabyte/... per second. This only affects the
- * units displayed, this component works in the exact same way otherwise.</p>
+ * units displayed, this component works in the exact same way otherwise.
  *
  * @author Maxence Bernard
  */

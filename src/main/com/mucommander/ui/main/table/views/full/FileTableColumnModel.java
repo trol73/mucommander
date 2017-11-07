@@ -470,7 +470,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * Ideally, we'd like to return <code>null</code> here, but the table API takes a dim view
      * of this and we're forced to keep a useless reference.
-     * </p>
+     *
      * @return a default list selection model.
      */
     public ListSelectionModel getSelectionModel() {return SELECTION_MODEL;}
@@ -501,7 +501,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * This will enumerate all the elements of {@link FileTableColumnModel#columns}, skipping
      * over any that's marked as invisible.
-     * </p>
+     *
      * @author Nicolas Rinaudo
      */
     private class ColumnEnumeration implements Enumeration<TableColumn> {
@@ -574,7 +574,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * The sort is done by first comparing each column's index as defined in the configuration and,
      * if there's a conflict, by comparing each column's identifier.
-     * </p>
+     *
      * @author Nicolas Rinaudo
      */
     private static class ColumnSorter implements Comparator<TableColumn> {

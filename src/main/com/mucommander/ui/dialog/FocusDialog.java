@@ -173,7 +173,6 @@ public class FocusDialog extends JDialog implements WindowListener {
      * This method is equivalent to a call to {@link #dispose()}. It's meant to be
      * overridden by those implementations of <code>FocusDialog</code> that need to init
      * code before canceling the dialog.
-     * </p>
      */
     public void cancel() {
         dispose();

@@ -227,7 +227,7 @@ public class LocalFile extends ProtocolFile {
      *
      * <p>Using this method to retrieve both free space and volume space is more efficient than calling
      * {@link #getFreeSpace()} and {@link #getTotalSpace()} separately -- the underlying method retrieving both
-     * attributes at the same time.</p>
+     * attributes at the same time.
      *
      * @return a {totalSpace, freeSpace} long array, both values can be null if the information could not be retrieved
      * @throws IOException if an I/O error occurred
@@ -446,7 +446,6 @@ public class LocalFile extends ProtocolFile {
      * <p>
      * The return list of volumes is purposively not cached so that new volumes will be returned as soon as they are
      * mounted.
-     * </p>
      *
      * @return all local volumes
      */
@@ -1297,7 +1296,7 @@ public class LocalFile extends ProtocolFile {
      * <p>This class simply delegates all its methods to a
      * {@link com.mucommander.commons.file.impl.local.LocalFile.LocalRandomAccessInputStream} instance. Therefore, this class
      * does not derive from {@link com.mucommander.commons.io.RandomAccessInputStream}, preventing random-access methods from
-     * being used.</p>
+     * being used.
      *
      */
     public static class LocalInputStream extends FilterInputStream {
@@ -1315,7 +1314,7 @@ public class LocalFile extends ProtocolFile {
      * <p>This class simply delegates all its methods to a
      * {@link com.mucommander.commons.file.impl.local.LocalFile.LocalRandomAccessOutputStream} instance. Therefore, this class
      * does not derive from {@link com.mucommander.commons.io.RandomAccessOutputStream}, preventing random-access methods from
-     * being used.</p>
+     * being used.
      *
      */
     public static class LocalOutputStream extends FilteredOutputStream {

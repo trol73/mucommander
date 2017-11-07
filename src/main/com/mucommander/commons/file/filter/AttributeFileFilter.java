@@ -34,7 +34,7 @@ import com.mucommander.commons.file.AbstractFile;
  * </ul>
  *
  * <p>Only one attribute can be matched at a time. To match several attributes, combine them using a
- * {@link com.mucommander.commons.file.filter.ChainedFileFilter}.</p>
+ * {@link com.mucommander.commons.file.filter.ChainedFileFilter}.
  *
  * @author Maxence Bernard
  */

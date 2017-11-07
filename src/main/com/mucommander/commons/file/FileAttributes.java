@@ -31,7 +31,7 @@ package com.mucommander.commons.file;
  *   <dd>the file's group, <code>null</code> by default</dd>
  * </dl>
  *
- * <p>See the {@link MutableFileAttributes} for an extended interface that include file attribute setters.</p>
+ * <p>See the {@link MutableFileAttributes} for an extended interface that include file attribute setters.
  *
  * @see MutableFileAttributes
  * @see SimpleFileAttributes
@@ -42,7 +42,7 @@ public interface FileAttributes {
     /**
      * Returns the file's path, <code>null</code> by default.
      *
-     * <p>The format and separator character of the path are filesystem-dependent.</p>
+     * <p>The format and separator character of the path are filesystem-dependent.
      *
      * @return the file's path, <code>null</code> by default
      */

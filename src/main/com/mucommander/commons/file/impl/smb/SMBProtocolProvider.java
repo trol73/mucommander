@@ -45,7 +45,6 @@ public class SMBProtocolProvider implements ProtocolProvider {
      * <p>
      * This configuration option is mapped onto jCIFS's <code>jcifs.smb.lmCompatibility</code> client property.
      * jCIFS's default will be used if this method is not called.
-     * </p>
      * <p>
      * Here's a list of allowed values ; refer to JCIFS's documentation for more information:
      * <dl>

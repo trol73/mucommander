@@ -46,10 +46,10 @@ import java.util.zip.ZipException;
  * </ul>
  *
  * <p>This class doesn't extend <code>java.util.zip.ZipFile</code> as it would have to reimplement all methods anyway.
- * Like <code>java.util.ZipFile</code>, it supports compressed (DEFLATED) and uncompressed (STORED) entries.</p>
+ * Like <code>java.util.ZipFile</code>, it supports compressed (DEFLATED) and uncompressed (STORED) entries.
  *
  * <p>Random read access is required to instantiate a <code>ZipFile</code> and retrieve its entries. Furthermore, random
- * write access is required for methods that modify the Zip file.</p>
+ * write access is required for methods that modify the Zip file.
  *
  * <p>The method signatures mimic the ones of <code>java.util.zip.ZipFile</code> with a few exceptions:
  * <ul>
@@ -61,8 +61,7 @@ import java.util.zip.ZipException;
  *   <li><code>size</code> has been renamed to {@link #getNbEntries()}.</li>
  * </ul>
  *
- * <p>--------------------------------------------------------------------------------------------------------------<br>
- * <br>
+ * <p>
  * This class is based off the <code>org.apache.tools.zip</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
  * file. It was forked at version 1.7.0 of Ant.
@@ -104,7 +103,7 @@ public class ZipFile implements ZipConstants {
      * Opens the given Zip file and parses information about the entries it contains.
      *
      * <p>The given {@link AbstractFile} must have random read access. If not, an <code>IOException</code> will be
-     * thrown.</p>
+     * thrown.
      *
      * @param f the archive file
      * @throws IOException if an error occurred while reading the Zip file.
@@ -193,11 +192,11 @@ public class ZipFile implements ZipConstants {
      *
      * <p>By default, this method returns <code>null</code> to indicate that automatic encoding detection is used. 
      * Although it is not 100% accurate, encoding detection is the preferred approach, unless the encoding is known
-     * in advance which is rather uncommon.</p>
+     * in advance which is rather uncommon.
      *
      * <p>Note that this value only affects entries <i>parsing</i>. Written entries are systematically encoded in
      * <code>UTF-8</code> and declared as such in the general purpose bit flag so that proper zip unpackers know what
-     * encoding to expect.</p>
+     * encoding to expect.
      *
      * @return the default encoding to use for parsing filenames and comments
      */
@@ -211,11 +210,11 @@ public class ZipFile implements ZipConstants {
      *
      * <p>By default, the encoding is <code>null</code> to indicate that automatic encoding detection is used.
      * Although it is not 100% accurate, encoding detection is the preferred approach, unless the encoding is known
-     * in advance which is rather uncommon.</p>
+     * in advance which is rather uncommon.
      *
      * <p>Note that this value only affects entries <i>parsing</i>. Written entries are systematically encoded in
      * <code>UTF-8</code> and declared as such in the general purpose bit flag so that proper zip unpackers know what
-     * encoding to expect.</p>
+     * encoding to expect.
      *
      * @param defaultEncoding the default encoding to use for parsing filenames and comments
      */
@@ -298,13 +297,13 @@ public class ZipFile implements ZipConstants {
      * can be called to reclaim the free space.
      *
      * <p>There is one case where this method reclaims the free space: when the specified entry is the last one in the
-     * zip file. In this case, the resulting zip file will be smaller.</p>
+     * zip file. In this case, the resulting zip file will be smaller.
      *
      * <p>Note that 'fragmented' zip files are perfectly valid zip files, any zip parser should be able to cope with
-     * such files.</p>
+     * such files.
      *
      * <p>The underlying {@link AbstractFile} must have random write access. If not, an <code>IOException</code> will be
-     * thrown.</p>
+     * thrown.
      *
      * @param ze the ZipEntry to delete
      * @throws IOException if an I/O error occurred
@@ -436,7 +435,7 @@ public class ZipFile implements ZipConstants {
      * properly modified. Not doing will leave this zip file in a inconsistent, corrupted state.
      *
      * <p>The underlying {@link AbstractFile} must have random write access. If not, an <code>IOException</code> will be
-     * thrown.</p>
+     * thrown.
      *
      * @param entry the entry to add to this zip file
      * @return an OutputStream to write the contents of the entry
@@ -536,7 +535,7 @@ public class ZipFile implements ZipConstants {
      * exist in this Zip file.
      *
      * <p>The underlying {@link AbstractFile} must have random write access. If not, an <code>IOException</code> will be
-     * thrown.</p>
+     * thrown.
      *
      * @param entry the entry to update
      * @throws IOException if an I/O error occurred
@@ -582,10 +581,10 @@ public class ZipFile implements ZipConstants {
      * not contain any free space fragments, the zip file is not modified.
      *
      * <p>Fragmentation occurs when deleting entries with {@link #deleteEntry(ZipEntry)}. When deleting several entries,
-     * this method should be called once after all entries have deleted.</p>
+     * this method should be called once after all entries have deleted.
      *
      * <p>The underlying {@link AbstractFile} must have random write access. If not, an <code>IOException</code> will be
-     * thrown.</p>
+     * thrown.
      *
      * @throws IOException if an I/O error occurred
      * @throws UnsupportedFileOperationException if a required operation is not supported by the underlying filesystem.
@@ -754,7 +753,7 @@ public class ZipFile implements ZipConstants {
      *
      * <p>The ZipEntrys will know all data that can be obtained from
      * the central directory alone, but not the data that requires the
-     * local file header or additional data to be read.</p>
+     * local file header or additional data to be read.
      *
      * @throws IOException if an I/O error occurred
      * @throws ZipException if this file is not a valid Zip file
@@ -934,15 +933,15 @@ public class ZipFile implements ZipConstants {
      * Zip specifications make it clear that '/' should always be used, even under FAT platforms, but some packers
      * (IZArc for instance) don't comply with the specs and use '/' anyway. We handle those paths only if the archive
      * was created under a FAT platform ; '\' is an allowed character under UNIX platforms: replacing them
-     * would be a bad idea.</p>
+     * would be a bad idea.
      *
      * @param ze the ZipEntry object in which to set the filename
      * @param filename the filename to set 
      */
     private static void setFilename(ZipEntry ze, String filename) {
-        if(ze.getPlatform()==ZipEntry.PLATFORM_FAT)
+        if (ze.getPlatform() == ZipEntry.PLATFORM_FAT) {
             filename = filename.replace('\\', '/');
-
+        }
         ze.setName(filename);
     }
 

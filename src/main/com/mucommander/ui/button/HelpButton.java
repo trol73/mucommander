@@ -35,7 +35,7 @@ import com.mucommander.ui.main.MainFrame;
  * constructor, the browser will open the said topic. If no topic is specified, the base documentation URL will be opened.
  *
  * <p>Unless explicitely set, this button has a standard help icon but no text label. A tooltip is displayed when
- * hovering over the button.</p>
+ * hovering over the button.
  *
  * @see com.mucommander.ui.action.impl.GoToDocumentationAction
  * @author Maxence Bernard

@@ -23,11 +23,10 @@ package com.mucommander.commons.conf;
  * <p>
  * This exception is mostly meant to be used by implementations of {@link ConfigurationReaderFactory},
  * as they're the ones who will configure instances of {@link ConfigurationReader}.
- * </p>
  * <p>
  * Since <code>ReaderConfigurationException</code> subclasses {@link ConfigurationException}, it
  * inherits his capacity to wrap other exceptions.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ReaderConfigurationException extends ConfigurationException {
@@ -42,7 +41,7 @@ public class ReaderConfigurationException extends ConfigurationException {
      * <p>
      * The existing exception will be embedded in the new one, and its message will
      * become the default message for the <code>ReaderConfigurationException</code>.
-     * </p>
+     *
      * @param cause the exception to be wrapped in a <code>ReaderConfigurationException</code>.
      */
     public ReaderConfigurationException(Throwable cause) {super(cause);}
@@ -51,7 +50,7 @@ public class ReaderConfigurationException extends ConfigurationException {
      * Creates a new reader configuration exception from an existing exception.
      * <p>
      * The existing exception will be embedded in the new one, but the new exception will have its own message.
-     * </p>
+     *
      * @param message the detail message.
      * @param cause   the exception to be wrapped in a <code>ReaderConfigurationException</code>.
      */

@@ -25,7 +25,7 @@ package com.mucommander.commons.conf;
  * of a configuration tree. It provides <i>no-op</i> implementations for the methods defined in
  * {@link ConfigurationBuilder}, and application writers can override the ones that are of use
  * to them and ignore the others.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class DefaultConfigurationBuilder implements ConfigurationBuilder {
@@ -35,7 +35,7 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the beginning of a document (such as allocating the root node of a tree
      * or creating an output file).
-     * </p>
+     *
      * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
     public void startConfiguration() throws ConfigurationException {}
@@ -45,7 +45,7 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * <p>
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the end of a document (such as finalising a tree or closing an output file).
-     * </p>
+     *
      * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
     public void endConfiguration() throws ConfigurationException {}
@@ -56,7 +56,7 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the start of each element (such as allocating a new tree node or writing
      * output to a file).
-     * </p>
+     *
      * @param  name                   name of the new section.
      * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
@@ -68,7 +68,7 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the end of each element (such as finalising a tree node or writing output
      * to a file).
-     * </p>
+     *
      * @param  name                   name of the finished section.
      * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
@@ -79,7 +79,7 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * <p>
      * By default, do nothing. Application writers may override this method to take specific actions for
      * each variable definition (such as adding a leaf to a tree node, or printing it to a file).
-     * </p>
+     *
      * @param  name                   name of the new variable.
      * @param  value                  value of the new variable.
      * @throws ConfigurationException thrown if an error occurs.

@@ -37,10 +37,8 @@ import java.io.StringWriter;
  * While this class is very similar to {@link JOptionPane}, it extends the functionality by adding optional caption
  * message and exception details to the dialog. It also allows to use generic title and messages for certain
  * dialog types.
- * </p>
  * <p>
  * This class uses {@link InformationPane} to display the icon and the main and caption messages.
- * </p>
  *
  * @see InformationPane
  * @author Maxence Bernard

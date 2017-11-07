@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
  * Iterator with support for value casting.
  * <p>
  * Instances of this class can only be retrieved through {@link ValueList#valueIterator()}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ValueIterator implements Iterator<String> {

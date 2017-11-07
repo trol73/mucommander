@@ -180,7 +180,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * <p>
      * This gives preference panels a chance to display warning or errors before changes are
      * commited.
-     * </p>
+     *
      * @return <code>true</code> if all preference panels are ok with commiting the changes, <code>false</code> otherwise.
      */
     public boolean checkCommit() {
@@ -234,7 +234,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
     }
     
     /**
-     * This function set the "commit buttons", i.e apply & ok buttons, enabled\disabled
+     * This function set the "commit buttons", i.e apply &amp; ok buttons, enabled\disabled
      * according to the given parameter.
      * 
      * @param enable - parameter that indicated if the commit button will turn to be

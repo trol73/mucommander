@@ -62,7 +62,7 @@ class InternalBrowse extends UrlOperation {
      *   <li>Desktops are supported by the current system (<code>Desktop.isDesktopSupported()</code> returns <code>true</code>).</li>
      *   <li>Browsing is supported by the desktop (<code>Desktop.isSupported(Desktop.Action.BROWSE)</code> returns <code>true</code>).</li>
      * </ul>
-     * </p>
+     *
      * @return <code>true</code> if this operations is available, <code>false</code> otherwise.
      */
     @Override

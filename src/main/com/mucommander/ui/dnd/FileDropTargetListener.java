@@ -150,7 +150,7 @@ public class FileDropTargetListener implements DropTargetListener {
      * <p>This method overrides the default drop action for drag-and-drop operations within muCommander to make it
      * <code>DnDConstants.ACTION_COPY</code> instead of <code>DnDConstants.ACTION_MOVE</code>.
      * For a move action to be performed when the mouse is released, the modifiers defined by
-     * {@link #MOVE_ACTION_MODIFIERS_EX} must be down.</p>
+     * {@link #MOVE_ACTION_MODIFIERS_EX} must be down.
      *
      * @return <code>true</code> if the event was accepted, false otherwise
      */

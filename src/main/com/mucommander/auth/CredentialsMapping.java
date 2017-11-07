@@ -68,7 +68,6 @@ public final class CredentialsMapping {
      * Returns the location associated with the credentials.
      * <p>
      * Note: the returned {@link FileURL} does not contain any credentials.
-     * </p>
      *
      * @return the location associated with the credentials.
      */

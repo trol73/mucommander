@@ -138,7 +138,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      *
      * <ul>
      *   <li>has any of the Alt, Ctrl or Meta modifier keys down (Shift is OK)</li>
-     *   <li>is an ASCII control character (<32 or ==127)</li>
+     *   <li>is an ASCII control character (&lt;32 or ==127)</li>
      *   <li>is not a valid Unicode character</li>
      * </ul>
      *

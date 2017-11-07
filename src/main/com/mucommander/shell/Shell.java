@@ -87,7 +87,7 @@ public class Shell implements ConfigurationListener {
      * The <code>currentFolder</code> folder parameter will only be used if it's neither a
      * remote directory nor an archive. Otherwise, the command will init from the user's
      * home directory.
-     * </p>
+     *
      * @param     command       command to init.
      * @param     currentFolder where to init the command from.
      * @return                  the resulting process.
@@ -103,10 +103,9 @@ public class Shell implements ConfigurationListener {
      * The <code>currentFolder</code> folder parameter will only be used if it's neither a
      * remote directory nor an archive. Otherwise, the command will init from the user's
      * home directory.
-     * </p>
      * <p>
      * Information about the resulting process will be sent to the specified <code>listener</code>.
-     * </p>
+     *
      * @param     command       command to init.
      * @param     currentFolder where to init the command from.
      * @param     listener      where to send information about the resulting process.

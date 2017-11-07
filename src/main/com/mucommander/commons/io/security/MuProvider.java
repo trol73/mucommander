@@ -26,7 +26,7 @@ import java.security.Security;
  * and the ones used aggregated from third party libraries.
  *
  * <p>The {@link #registerProvider()} method should be called once to register this <code>Provider</code> with the
- * Java Cryptography Extension and advertise the additional <code>MessageDigest</code> implementations.</p>
+ * Java Cryptography Extension and advertise the additional <code>MessageDigest</code> implementations.
  *
  * @author Maxence Bernard
  */

@@ -22,12 +22,12 @@ import java.util.Enumeration;
  * <p>The <code>getResourceAsURL</code> and <code>getResourceAsStream</code> methods are akin to those of
  * <code>java.lang.Class</code> and <code>java.lang.ClassLoader</code>, except that they are not sensitive to the
  * presence of a leading forward-slash separator in the resource path, and that they allow the search to be limited
- * to a particular classpath location.</p>
+ * to a particular classpath location.
  *
  * <p>But the real fun lies in the <code>getResourceAsFile</code> methods, which allow to manipulate resources as
  * regular files -- again, whether they be in a regular directory or in a JAR file. Likewise,
  * the {@link #getRootPackageAsFile(Class)} allows to dynamically explore and manipulate the resource files contained
- * in a particular classpath's location.</p>
+ * in a particular classpath's location.
  *
  * @author Maxence Bernard
  */
@@ -103,13 +103,13 @@ public class ResourceLoader {
      * if the resource couldn't be located. The given <code>ClassLoader</code> is used for locating the resource.
      *
      * <p>The given resource path must be forward slash (<code>/</code>) separated. It may or may not start with a
-     * leading forward slash character, this doesn't affect the way it is interpreted.</p>
+     * leading forward slash character, this doesn't affect the way it is interpreted.
      *
      * <p>The <code>rootPackageFile</code> argument can be used to limit the scope of the search to a specific
      * location (JAR file or directory) in the classpath: resources located outside of this location will not be matched.
      * This avoids potential ambiguities that can arise if the specified resource path exists in several locations.
      * If this parameter is <code>null</code>, the resource is looked up in the whole class path. In that case and if
-     * several resources with the specified path exist, the choice of the resource to return is arbitrary.</p>
+     * several resources with the specified path exist, the choice of the resource to return is arbitrary.
      *
      * @param path forward slash-separated path to the resource to look for, relative to the parent classpath
      * location (directory or JAR file) that contains it.
@@ -200,13 +200,13 @@ public class ResourceLoader {
      * if the resource couldn't be located. The given <code>ClassLoader</code> is used for locating the resource.
      *
      * <p>The given resource path must be forward slash (<code>/</code>) separated. It may or may not start with a
-     * leading forward slash character, this doesn't affect the way it is interpreted.</p>
+     * leading forward slash character, this doesn't affect the way it is interpreted.
      *
      * <p>The <code>rootPackageFile</code> argument can be used to limit the scope of the search to a specific
      * location (JAR file or directory) in the classpath: resources located outside of this location will not be matched.
      * This avoids potential ambiguities that can arise if the specified resource path exists in several locations.
      * If this parameter is <code>null</code>, the resource is looked up in the whole class path. In that case and if
-     * several resources with the specified path exist, the choice of the resource to return is arbitrary.</p>
+     * several resources with the specified path exist, the choice of the resource to return is arbitrary.
      *
      * @param path forward slash-separated path to the resource to look for, relative to the parent classpath
      * location (directory or JAR file) that contains it.
@@ -269,18 +269,18 @@ public class ResourceLoader {
      * the resource.
      *
      * <p>The given resource path must be forward slash (<code>/</code>) separated. It may or may not start with a 
-     * leading forward slash character, this doesn't affect the way it is interpreted.</p>
+     * leading forward slash character, this doesn't affect the way it is interpreted.
      *
      * <p>It is worth noting that this method may be slower than {@link #getResourceAsStream(String)} if
      * the resource is located inside a JAR file, because the Zip file headers will have to be parsed the first time
      * the archive is accessed. Therefore, the latter approach should be favored if the file is simply used for
-     * reading the resource.</p>
+     * reading the resource.
      *
      * <p>The <code>rootPackageFile</code> argument can be used to limit the scope of the search to a specific
      * location (JAR file or directory) in the classpath: resources located outside of this location will not be matched.
      * This avoids potential ambiguities that can arise if the specified resource path exists in several locations.
      * If this parameter is <code>null</code>, the resource is looked up in the whole class path. In that case and if
-     * several resources with the specified path exist, the choice of the resource to return is arbitrary.</p>
+     * several resources with the specified path exist, the choice of the resource to return is arbitrary.
      *
      * @param path forward slash-separated path to the resource to look for, relative to the parent classpath
      * location (directory or JAR file) that contains it.

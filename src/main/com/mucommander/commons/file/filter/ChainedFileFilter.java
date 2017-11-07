@@ -11,7 +11,7 @@ import java.util.List;
  * <code>FileFilter</code>, {@link #getFileFilterIterator()} to iterate through all the registered filters.
  *
  * <p>The {@link AndFileFilter} and {@link OrFileFilter} implementations match files that respectively match all of
- * the registered filters, or any of them</p>.
+ * the registered filters, or any of them.
  *
  * @see AndFileFilter
  * @see OrFileFilter

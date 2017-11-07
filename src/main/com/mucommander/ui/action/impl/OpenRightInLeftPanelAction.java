@@ -34,15 +34,12 @@ import java.util.Map;
  * <p>
  * If the right panel is the active panel and the selected file is browsable as defined by
  * {@link com.mucommander.commons.file.AbstractFile#isBrowsable()} then the selected file will be opened.
- * </p>
  *
  * <p>
  * Otherwise the right panel's location will be opened.
- * </p>
  *
  * <p>
  * If the left panel is locked then a new tab in the left panel will be opened first.
- * </p>
  *
  * @author Martin Kortkamp
  */

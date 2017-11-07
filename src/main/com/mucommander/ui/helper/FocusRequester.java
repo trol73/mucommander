@@ -54,7 +54,7 @@ public class FocusRequester implements Runnable {
      * Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
-     * In that case, calling {@link Component#requestFocus()} would have no effect.</p>
+     * In that case, calling {@link Component#requestFocus()} would have no effect.
      *
      * @param c the component on which to request focus
      * @see java.awt.Component#requestFocus()
@@ -72,7 +72,7 @@ public class FocusRequester implements Runnable {
      * currently queued Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
-     * In that case, calling {@link java.awt.Component#requestFocusInWindow()} would have no effect.</p>
+     * In that case, calling {@link java.awt.Component#requestFocusInWindow()} would have no effect.
      *
      * @param c the component on which to request focus
      * @see java.awt.Component#requestFocusInWindow()

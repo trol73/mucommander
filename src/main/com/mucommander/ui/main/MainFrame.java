@@ -424,9 +424,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * Returns the currently active table.
      *
      * <p>The returned table doesn't necessarily have focus, the focus can be in some other component
-     * of the active {@link FolderPanel}, or nowhere in the MainFrame if it is currently not in the foreground.</p>
+     * of the active {@link FolderPanel}, or nowhere in the MainFrame if it is currently not in the foreground.
      *
-     * <p>Use {@link FileTable#hasFocus()} to test if the table currently has focus.</p>
+     * <p>Use {@link FileTable#hasFocus()} to test if the table currently has focus.
      *
      * @return the currently active table
      * @see FileTable#isActiveTable()
@@ -439,7 +439,7 @@ public class MainFrame extends JFrame implements LocationListener {
      * Returns the currently active panel.
      *
      * <p>The returned panel doesn't necessarily have focus, for example if the MainFrame is currently not in the
-     * foreground.</p>
+     * foreground.
      *
      * @return the currently active panel
      */

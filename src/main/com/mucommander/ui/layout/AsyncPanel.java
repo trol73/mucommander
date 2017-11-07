@@ -44,7 +44,7 @@ import java.awt.*;
  * </ol>
  *
  * <p>This panel tries to be as 'transparent' as possible for the target component: the borders of this panel are empty
- * and its layout is a <code>BorderLayout</code> where the target component is added to the center.</p>
+ * and its layout is a <code>BorderLayout</code> where the target component is added to the center.
  *
  * @author Maxence Bernard
  */

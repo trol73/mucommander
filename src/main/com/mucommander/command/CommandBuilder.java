@@ -55,7 +55,7 @@ package com.mucommander.command;
  *
  * @author Nicolas Rinaudo
  * @see    CommandReader
- * @see    CommandManager@buildCommands(CommandBuilder)
+ * @see    CommandManager#buildCommands(CommandBuilder, CommandType)
  */
 public interface CommandBuilder {
     /**

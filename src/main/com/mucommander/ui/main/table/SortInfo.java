@@ -27,7 +27,7 @@ import com.mucommander.conf.MuPreferences;
  * ascending/descending order, whether directories are displayed first or mixed with regular files.
  *
  * <p>The values are not meant to be changed outside this package: all setters are package-protected.
- * Use {@link FileTable} methods to change how the table is sorted.</p>
+ * Use {@link FileTable} methods to change how the table is sorted.
  *
  * @author Maxence Bernard
  */

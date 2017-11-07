@@ -30,7 +30,7 @@ import java.io.IOException;
  *
  * <p><b>Disclaimer</b>: this obviously is weak encryption at most, the key used being static and public, and XOR
  * encryption being easy to crack. This doesn't aim or pretend to be anything more than a way to scramble text
- * without requiring a master password in the application.</p>
+ * without requiring a master password in the application.
  *
  * @author Maxence Bernard
  */

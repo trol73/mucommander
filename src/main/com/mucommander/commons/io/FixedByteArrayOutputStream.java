@@ -30,7 +30,6 @@ import java.io.OutputStream;
  * {@link ArrayIndexOutOfBoundsException}. To prevent {@link ArrayIndexOutOfBoundsException} from being thrown,
  * a <code>FixedByteArrayOutputStream</code> can be wrapped around a {@link BoundedOutputStream} with a limit set to
  * the byte array's length.
- * </p>
  *
  * @author Maxence Bernard
  */

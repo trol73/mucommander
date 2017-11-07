@@ -93,7 +93,6 @@ public class MultiOutputStream extends OutputStream {
      * <p>
      * Any IOException thrown by any of the destination output stream is immediately re-thrown, aborting the write
      * as a whole.
-     * </p>
      */
     @Override
     public synchronized void write(int b) throws IOException {
@@ -107,7 +106,6 @@ public class MultiOutputStream extends OutputStream {
      * <p>
      * Any IOException thrown by any of the destination output stream is immediately re-thrown, aborting the operation
      * as a whole.
-     * </p>
      */
     @Override
     public synchronized void write(byte b[], int off, int len) throws IOException {
@@ -121,7 +119,6 @@ public class MultiOutputStream extends OutputStream {
      * <p>
      * Any IOException thrown by any of the destination output stream is immediately re-thrown, aborting the operation
      * as a whole.
-     * </p>
      */
     @Override
     public synchronized void write(byte b[]) throws IOException {
@@ -135,7 +132,6 @@ public class MultiOutputStream extends OutputStream {
      * <p>
      * Any IOException thrown by any of the destination output stream is immediately re-thrown, aborting the operation
      * as a whole.
-     * </p>
      */
     @Override
     public synchronized void flush() throws IOException {
@@ -149,7 +145,6 @@ public class MultiOutputStream extends OutputStream {
      * <p>
      * Any IOException thrown by any of the destination output stream is immediately re-thrown, aborting the operation
      * as a whole.
-     * </p>
      */
     @Override
     public void close() throws IOException {

@@ -34,7 +34,7 @@ import java.util.List;
  *
  * <p>Native methods in the Shell32 Windows API are used to access the Recycle Bin. There is an overhead associated with
  * invoking those methods (via JNA), so for performance reasons, this trash is implemented as a {@link com.mucommander.desktop.QueuedTrash}
- * in order to group calls to {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)}.</p>
+ * in order to group calls to {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)}.
  *
  * @see WindowsTrashProvider
  * @author Maxence Bernard

@@ -43,7 +43,6 @@ import java.io.OutputStream;
  * <code>AbstractArchiveEntryFile</code> is agnostic to the actual archive format. In other words, there is no need to
  * extend this class for a particular archive format, <code>ArchiveEntry</code> and <code>AbstractArchiveFile</code>
  * provide a generic framework that isolates from the archive format's specifics.
- * </p>
  * <p>
  * This class is abstract (as the name implies) and implemented by two subclasses:
  * <ul>

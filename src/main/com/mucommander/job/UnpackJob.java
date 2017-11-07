@@ -61,7 +61,6 @@ public class UnpackJob extends AbstractCopyJob {
      * Creates a new UnpackJob without starting it.
      * <p>
      * The base destination folder will be created if it doesn't exist.
-     * </p>
      *
      * @param progressDialog dialog which shows this job's progress
      * @param mainFrame mainFrame this job has been triggered by

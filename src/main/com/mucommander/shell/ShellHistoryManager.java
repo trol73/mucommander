@@ -42,7 +42,7 @@ import com.mucommander.io.backup.BackupOutputStream;
  * <p>
  * Using this class is fairly basic: you can add elements to the shell history through
  * {@link #add(String)} and browse it through {@link #getHistoryIterator()}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ShellHistoryManager {
@@ -218,12 +218,11 @@ public class ShellHistoryManager {
      * <p>
      * This method cannot guarantee the file's existence, and it's up to the caller
      * to deal with the fact that the user might not actually have created a history file yet.
-     * </p>
      * <p>
      * This method's return value can be modified through {@link #setHistoryFile(String)}.
      * If this wasn't called, the default path will be used: {@link #DEFAULT_HISTORY_FILE_NAME}
      * in the {@link com.mucommander.PlatformManager#getPreferencesFolder() preferences} folder.
-     * </p>
+     *
      * @return             the path to the shell history file.
      * @throws IOException if an error occured while locating the default shell history file.
      * @see                #setHistoryFile(File)

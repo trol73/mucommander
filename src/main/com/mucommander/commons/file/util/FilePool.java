@@ -10,10 +10,10 @@ import org.apache.commons.collections4.map.ReferenceMap;
  * but a sensible choice is to use the {@link AbstractFile#getURL() file's URL}.
  *
  * <p>Files are stored as {@link java.lang.ref.WeakReference weak references} so they can be garbage collected
- * when they are no longer hard-referenced.</p>
+ * when they are no longer hard-referenced.
  *
  * <p>This class uses the {@link ReferenceMap} class part of the <code>Apache Commons Collection</code> library.
- * All accesses to the underlying map is synchronized, making this class thread-safe.</p>
+ * All accesses to the underlying map is synchronized, making this class thread-safe.
  *
  * @author Maxence Bernard
  */

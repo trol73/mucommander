@@ -42,7 +42,7 @@ import com.mucommander.ui.main.MainFrame;
  * and saves those locations, thus creating a global location history tracking.
  * 
  * <p>FolderHistory also keeps track of the last visited location so that it can be saved and recalled the next time the
- * application is started.</p>
+ * application is started.
  * 
  * @author Arik Hadas
  */

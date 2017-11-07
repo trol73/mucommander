@@ -31,7 +31,7 @@ public interface CriterionFilter<C> extends FileFilter {
     /**
      * Returns <code>true</code> if the given value was rejected by this filter, <code>false</code> if it was accepted.
      *
-     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.</p>
+     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.
      *
      * @param value the value to be tested
      * @return true if the given value was rejected by this filter

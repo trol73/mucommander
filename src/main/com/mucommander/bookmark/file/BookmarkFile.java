@@ -66,7 +66,7 @@ public class BookmarkFile extends ProtocolFile {
      * Some methods need to have access to the underlying file. This, however, requires
      * resolving the path which can be time consuming. Using this method ensures that the
      * path is only resolved if necessary, and at most once.
-     * </p>
+     *
      * @return the <code>AbstractFile</code> this instance wraps.
      */
     private synchronized AbstractFile getUnderlyingFile() {
@@ -161,7 +161,7 @@ public class BookmarkFile extends ProtocolFile {
      * Returns <code>true</code> if the specified bookmark exists.
      * <p>
      * A bookmark is said to exist if and only if it is known to the {@link com.mucommander.bookmark.BookmarkManager}.
-     * </p>
+     *
      * @return <code>true</code> if the specified bookmark exists, <code>false</code> otherwise.
      */
     @Override
@@ -230,7 +230,7 @@ public class BookmarkFile extends ProtocolFile {
 //     * Deletes the bookmark.
 //     * <p>
 //     * Deleting a bookmark means unregistering it from the {@link com.mucommander.bookmark.BookmarkManager}.
-//     * </p>
+//     *
 //     */
 //    @Override
 //    public void delete() {
@@ -253,7 +253,7 @@ public class BookmarkFile extends ProtocolFile {
      * <p>
      * If the specified destination is an instance of <code>BookmarkFile</code>,
      * this will duplicate the bookmark. Otherwise, this method will fail.
-     * </p>
+     *
      * @param  destination           where to copy the bookmark to.
      * @throws FileTransferException if the specified destination is not an instance of <code>BookmarkFile</code>.
      */

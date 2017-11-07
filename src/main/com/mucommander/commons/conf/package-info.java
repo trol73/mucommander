@@ -41,7 +41,7 @@
  * <p>
  * The <code>com.mucommander.commons.conf</code> package offers various ways of loading and storing configuration.<br>
  * The most obvious way is by using the {@link com.mucommander.commons.conf.Configuration#read(java.io.Reader) read} and
- * {@link com.mucommander.commons.conf.Configuration#write(java.io.Writer)) write} methods, but this has the disadvantage
+ * {@link com.mucommander.commons.conf.Configuration#write(java.io.Writer)} methods, but this has the disadvantage
  * of forcing application writers to manage streams themselves.<br>
  * The preferred method is to create a dedicated {@link com.mucommander.commons.conf.ConfigurationSource} class and
  * register it through {@link com.mucommander.commons.conf.Configuration#setSource(ConfigurationSource) setSource}.

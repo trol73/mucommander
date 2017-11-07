@@ -20,7 +20,6 @@ import java.util.zip.ZipInputStream;
  * <code>java.util.zip</code> but requires the underlying file to supply a <code>RandomAccessInputStream</code> for read
  * access and a <code>RandomAccessOutputStream</code> for write access. If the underlying file can't provide at least a
  * <code>RandomAccessInputStream</code>, the lesser <code>java.util.zip</code> package is used.
- * </p>
  *
  * @see com.mucommander.commons.file.impl.zip.ZipFormatProvider
  * @see com.mucommander.commons.file.impl.zip.provider.ZipFile

@@ -40,7 +40,7 @@ import java.util.Map;
  * reversed.
  *
  * <p>This action is enabled only if the corresponding column is currently visible. This prevents this action from being
- * performed when the column is not visible, which is an unsupported operation</p>.
+ * performed when the column is not visible, which is an unsupported operation.
  *
  * @author Maxence Bernard
  */

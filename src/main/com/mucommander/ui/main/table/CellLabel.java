@@ -33,7 +33,7 @@ import java.awt.*;
  * <p>CellLabel is basically a faster dumbed-down JLabel which overrides some JLabel to be no-ops (see below)
  * and some other (setText, setIcon) to call JLabel's super methods only if value has changed since last call,
  * as very often values don't change from one cell to another. Some methods were borrowed from Sun's 
- * <code>DefaultTableCellRender</code> implementation and are marked as much.</p>
+ * <code>DefaultTableCellRender</code> implementation and are marked as much.
  * 
  * <p>Quote from Sun's Javadoc : The table class defines a single cell renderer and uses it as a 
  * as a rubber-stamp for rendering all cells in the table;  it renders the first cell,

@@ -38,15 +38,12 @@ import com.mucommander.ui.main.tabs.FileTableTabs;
  * <p>
  * If the left panel is the active panel and the selected file is browsable as defined by
  * {@link com.mucommander.commons.file.AbstractFile#isBrowsable()} then the selected file will be opened.
- * </p>
  *
  * <p>
  * Otherwise the left panel's location will be opened.
- * </p>
  *
  * <p>
  * If the right panel is locked then a new tab in the right panel will be opened first.
- * </p>
  *
  * @author Martin Kortkamp
  */

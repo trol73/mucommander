@@ -264,7 +264,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      *
      * <p>The raw list of volumes is fetched using {@link LocalFile#getVolumes()} and then
      * filtered using the regexp defined in the {@link MuPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
-     * (if defined).</p>
+     * (if defined).
      *
      * @return the list of volumes to be displayed in the popup menu
      */

@@ -136,7 +136,7 @@ public class TextHistory {
      * Returns the path to the history file.
      * <p>
      * Will return the default, system dependant bookmarks file.
-     * </p>
+     *
      * @return             the path to the bookmark file.
      * @throws java.io.IOException if there was a problem locating the default history file.
      */

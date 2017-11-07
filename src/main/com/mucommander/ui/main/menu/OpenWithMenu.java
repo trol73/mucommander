@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
  * Open with menu.
  * <p>
  * Note that this class doesn't yet monitor modifications to the command list.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class OpenWithMenu extends JMenu {

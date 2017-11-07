@@ -62,7 +62,6 @@ import com.mucommander.ui.text.FilePathField;
  * path is a valid destination, a job instance is created using
  * {@link #createTransferFileJob(ProgressDialog, PathUtils.ResolvedDestination, int)} and started. If it isn't,
  * the user is notified with an error message.
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -274,11 +273,9 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * <p>
      * Returning <code>true</code> will cause the job to go ahead and be started. Returning <code>false</code> will
      * pop up an error dialog that notifies the user that the path is incorrect.
-     * </p>
      * <p>
      * This method is called from a dedicated thread so that it can safely perform I/O operations without any chance
      * of locking the event thread.
-     * </p>
      *
      * @param resolvedDest the resolved destination
      * @param destPath the path, as it was entered in the path field
@@ -404,7 +401,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * Called when the dialog has just been created to compute the initial path, based on the user file selection.
      *
      * <p>This method is called from a dedicated thread so that it can safely perform I/O operations without any chance
-     * of locking the event thread.</p>
+     * of locking the event thread.
      *
      * @param files files that were selected/marked by the user
      * @return a {@link PathFieldContent} containing the initial path to set in the path field
@@ -417,7 +414,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * {@link TransferFileJob} instance that will subsequently be started.
      *
      * <p>This method is called from a dedicated thread so that it can safely perform I/O operations without any chance
-     * of locking the event thread.</p>
+     * of locking the event thread.
      *
      * @param progressDialog the progress dialog that will show the job's progression
      * @param resolvedDest the resolved and validated destination
@@ -497,7 +494,6 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
      * If the destination is valid, the job is started using {@link TransferDestinationDialog#startJob(PathUtils.ResolvedDestination)}
      * and this dialog is disposed. Otherwise, a error dialog is displayed to notify the user that the path he has
      * entered is invalid and invite him to try again.
-     * </p>
      */
     private class PathResolver extends Thread {
 

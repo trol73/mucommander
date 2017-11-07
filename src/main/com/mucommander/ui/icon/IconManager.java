@@ -187,7 +187,7 @@ public class IconManager {
      *
      * <p>If the icon set has a cache, first looks for an existing instance in the cache, and if it couldn't be found, 
      * create an instance and store it in the cache for future access. Note that the cached icon is unscaled, i.e.
-     * the scaled icon is not cached.</p>
+     * the scaled icon is not cached.
      *
      * @param iconSet an icon set (see public constants for possible values)
      * @param iconName filename of the icon to retrieve

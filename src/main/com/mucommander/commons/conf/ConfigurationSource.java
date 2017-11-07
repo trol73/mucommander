@@ -27,19 +27,17 @@ import java.io.Writer;
  * <p>
  * Application writers that need to retrieve configuration data from a non-standard source (over the network, from a
  * database, ...) need to subclass this.
- * </p>
  * <p>
  * Implementations of this interface can be registered through {@link Configuration}'s
  * {@link Configuration#setSource(ConfigurationSource) setSource} method. Their purpose is
  * to provide the system with streams to a configuration source. This system allows applications
  * to retrieve their configuration information from non-standard sources, such as over the network,
  * in a database, ...
- * </p>
  * <p>
  * The <code>com.mucommander.commons.conf</code> package comes with a default implementation,
  * {@link FileConfigurationSource},
  * which will open input and output streams on a local file.
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    FileConfigurationSource
  */

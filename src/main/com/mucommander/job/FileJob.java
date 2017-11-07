@@ -50,11 +50,11 @@ import com.mucommander.ui.notifier.NotificationType;
  * {@link #start()}. The lifecycle of a FileJob is as follows:<br>
  * <br>
  * <pre>
- * {@link State#NOT_STARTED} -> {@link State#RUNNING} -> {@link State#FINISHED}
+ * {@link State#NOT_STARTED} -&gt; {@link State#RUNNING} -&gt; {@link State#FINISHED}
  *                         ^                |
- *                         |                -> {@link State#INTERRUPTED}
+ *                         |                -&gt; {@link State#INTERRUPTED}
  *                         |                |                      
- *                         |                -> {@link State#PAUSED} -|
+ *                         |                -&gt; {@link State#PAUSED} -|
  *                         |                                    |
  *                         -------------------------------------|
  * </pre>
@@ -307,7 +307,7 @@ public abstract class FileJob implements Runnable {
      * Registers a FileJobListener to receive notifications whenever state of this FileJob changes.
      *
      * <p>Listeners are stored as weak references so {@link #removeFileJobListener(FileJobListener)}
-     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.</p>
+     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.
      *
      * @param listener the FileJobListener to register
      */
@@ -545,9 +545,9 @@ public abstract class FileJob implements Runnable {
      * (without any call to {@link #interrupt()}).
      *
      * <p>The call happens after the last call to {@link #processFile(AbstractFile,Object)} is made.
-     * This method implementation does nothing but it can be overridden by subclasses to properly complete the job.</p>
+     * This method implementation does nothing but it can be overridden by subclasses to properly complete the job.
 	 
-     * <p>Note that this method will NOT be called if a call to {@link #interrupt()} was made before all files were processed.</p>
+     * <p>Note that this method will NOT be called if a call to {@link #interrupt()} was made before all files were processed.
      */
     protected void jobCompleted() {
         LOGGER.debug("called");
@@ -590,7 +590,7 @@ public abstract class FileJob implements Runnable {
      * This is where you want to close any opened connections.
      *
      * <p>Note that unlike {@link #jobCompleted()} this method is always called, whether the job has been completed (all
-     * files were processed) or has been interrupted in the middle.</p>
+     * files were processed) or has been interrupted in the middle.
      */
     protected void jobStopped() {
         LOGGER.debug("called");

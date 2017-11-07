@@ -47,7 +47,7 @@ import java.awt.event.ActionListener;
 /**
  * This dialog contains a list of all bookmarks and allows the user to edit, remove, duplicate, go to and reorder them.
  *
- * <p>If the contents of this list is modified, bookmarks will be saved to disk when this dialog is disposed.</p>
+ * <p>If the contents of this list is modified, bookmarks will be saved to disk when this dialog is disposed.
  *
  * @author Maxence Bernard
  */

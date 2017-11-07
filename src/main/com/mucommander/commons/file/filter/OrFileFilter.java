@@ -40,7 +40,7 @@ public class OrFileFilter extends ChainedFileFilter {
      * Calls {@link #match(com.mucommander.commons.file.AbstractFile)} on each of the registered filters, and returns
      * <code>true</code> if one of them matched the given file, <code>false</code> if none of them did.
      *
-     * <p>If this {@link ChainedFileFilter} contains no filter, this method will always return <code>true</code>.</p>
+     * <p>If this {@link ChainedFileFilter} contains no filter, this method will always return <code>true</code>.
      *
      * @param file the file to test against the registered filters
      * @return if the file was matched by one filter, false if none of them did

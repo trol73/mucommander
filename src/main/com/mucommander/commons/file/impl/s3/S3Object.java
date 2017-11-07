@@ -382,7 +382,6 @@ public class S3Object extends S3File {
      * requested to an offset that is less than 6666 bytes away from the current position going forward, the bytes
      * separating the current position to the new one are skipped (read and discarded), instead of closing the current
      * stream and opening a new one (which would cost 1 GET request). Doing so is cheaper (in $$$) and probably faster.
-     * </p>
      */
     private class S3ObjectRandomAccessInputStream extends RandomAccessInputStream {
 
@@ -513,7 +512,7 @@ public class S3Object extends S3File {
 //     * Reads an S3 object block by block. Each block is read by issuing a GET request with a specified Range.
 //     *
 //     * <p>Note: A GET request on Amazon S3 costs the equivalent of 6KB of data transferred. Setting the block size too
-//     * low will cause extra requests to be performed. Setting it too high will cause extra data to be transferred.</p>
+//     * low will cause extra requests to be performed. Setting it too high will cause extra data to be transferred.
 //     */
 //    private class S3ObjectRandomAccessInputStream extends BlockRandomInputStream {
 //

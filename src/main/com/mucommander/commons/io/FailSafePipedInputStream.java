@@ -31,7 +31,6 @@ import java.io.PipedOutputStream;
  *
  * <p>This class overcomes a limitation of <code>PipedInputStream</code> whose read/skip/available methods do not
  * throw an <code>IOException</code> when the stream is closed from another thread in the midst of their execution.
- * </p>
  *
  * @author Maxence Bernard
  */

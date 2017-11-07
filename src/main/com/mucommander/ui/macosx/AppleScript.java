@@ -34,7 +34,7 @@ import com.mucommander.process.ProcessRunner;
 /**
  * This class allows to init AppleScript code under Mac OS X, relying on the <code>osacript</code> command available
  * that comes with any install of Mac OS X. This command is used instead of the Cocoa-Java library which has been
- * deprecated by Apple.<br/>
+ * deprecated by Apple.<br>
  * Calls to {@link #execute(String, StringBuilder)} on any OS other than Mac OS X will always fail.
  *
  * <p>
@@ -42,14 +42,14 @@ import com.mucommander.process.ProcessRunner;
  * <ul>
  *   <li>AppleScript 1.10- (Mac OS X 10.4 or lower) expects <i>MacRoman</i> encoding, not <i>UTF-8</i>. <b>That
  *       means the script should only contain characters that are part of the MacRoman charset</b>; any character
- *       that cannot be expressed in MacRoman will not be propertly interpreted.<br/>
+ *       that cannot be expressed in MacRoman will not be properly interpreted.
  *       The only way to pass Unicode text to a script is by reading it from a file.
  *       See <a href="http://www.satimage.fr/software/en/unicode_and_applescript.html">http://www.satimage.fr/software/en/unicode_and_applescript.html</a>
  *       for more information on how to do so.
  *   </li>
  *   <li>AppleScript 2.0+ (Mac OS X 10.5 and up) is fully Unicode-aware and will properly interpret any Unicode
  *       character: "AppleScript is now entirely Unicode-based. Comments and text constants in scripts may contain
- *       any Unicode characters, and all text processing is done in Unicode".<br/>
+ *       any Unicode characters, and all text processing is done in Unicode".
  *       See <a href="http://www.apple.com/applescript/features/unicode.html">http://www.apple.com/applescript/features/unicode.html</a>
  *       for more information.
  *   </li>

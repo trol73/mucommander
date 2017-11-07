@@ -53,7 +53,7 @@ public class DesktopManager {
      * Represents "browse" operations.
      * <p>
      * These operations are used to open URL in a browser.
-     * </p>
+     *
      * @see #canBrowse()
      * @see #browse(URL)
      */
@@ -63,7 +63,7 @@ public class DesktopManager {
      * Represents "file manager" operations.
      * <p>
      * These operations are used to reveal local files in a file manager.
-     * </p>
+     *
      * @see #canOpenInFileManager()
      * @see #openInFileManager(File)
      */
@@ -73,7 +73,7 @@ public class DesktopManager {
      * Represents "open" operations.
      * <p>
      * These operations are used to open local files.
-     * </p>
+     *
      * @see #canOpen()
      * @see #open(File)
      */
@@ -88,7 +88,7 @@ public class DesktopManager {
      * <p>
      * These operations are for internal use only, and cannot be registered through the
      * {@link #registerOperation(String,int,DesktopOperation)} method.
-     * </p>
+     *
      */
     public static final int SYSTEM_OPERATION = 0;
 
@@ -98,7 +98,7 @@ public class DesktopManager {
      * These operations are treated with a lower priority than {@link #SYSTEM_OPERATION} ones, but higher
      * than {@link #FALLBACK_OPERATION} ones. They are meant for plugin specific operations and are expected
      * to be fairly reliable.
-     * </p>
+     *
      */
     public static final int CUSTOM_OPERATION = 1;
 
@@ -106,7 +106,7 @@ public class DesktopManager {
      * Last resort operations.
      * <p>
      * These operations will only ever be used if nothing else is available. They need only be a best-effort solution.
-     * </p>
+     *
      */
     public static final int FALLBACK_OPERATION = 2;
 
@@ -196,7 +196,7 @@ public class DesktopManager {
      * If <code>install</code> is set to <code>true</code>, this method
      * might result in installing desktop specific data such as bookmarks, keyboard
      * shortcuts...
-     * </p>
+     *
      * @param install                         whether or not to install desktop specific information.
      * @throws DesktopInitialisationException if an error occurred while initialising desktops.
      */
@@ -221,7 +221,6 @@ public class DesktopManager {
      * will find itself in a situation where it doesn't know which desktop it's running on.
      * Calling this method ensures that, if a {@link DesktopAdapter} instance is required,
      * we have at least the {@link DefaultDesktopAdapter} to work with.
-     * </p>
      */
     private static void checkInit() {
         if (desktop == null)
@@ -238,7 +237,7 @@ public class DesktopManager {
      * Note that the later an adapter is registered, the higher its priority. Since all
      * default adapters are registered at initialisation time, any call to this method
      * will result in the new adapter to be checked before them.
-     * </p>
+     *
      * @param adapter desktop adapter to register.
      */
     public static void registerAdapter(DesktopAdapter adapter) {desktops.add(adapter);}
@@ -500,7 +499,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -517,7 +516,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isMiddleMouseButton(MouseEvent)
@@ -534,7 +533,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -564,7 +563,7 @@ public class DesktopManager {
      * <p>
      * The returned command must set the shell in its 'init script' mode.
      * For example, for bash, the returned command should be <code>/bin/bash -l -c"</code>.
-     * </p>
+     *
      * @return the command used to start shell processes.
      */
     public static String getDefaultShell() {

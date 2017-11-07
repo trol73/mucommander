@@ -9,7 +9,7 @@ import java.util.zip.GZIPInputStream;
 /**
  * GzipArchiveFile provides read-only access to archives in the Gzip format.
  *
- * <p>The actual decompression work is performed by the {@link java.util.zip.GZIPInputStream} class.</p>
+ * <p>The actual decompression work is performed by the {@link java.util.zip.GZIPInputStream} class.
  *
  * @see com.mucommander.commons.file.impl.gzip.GzipFormatProvider
  * @author Maxence Bernard
@@ -39,10 +39,11 @@ public class GzipArchiveFile extends AbstractROArchiveFile {
             extension = extension.toLowerCase();
 			
             // Remove the 'gz' or 'tgz' extension from the entry's name
-            if (extension.equals("tgz"))
+            if (extension.equals("tgz")) {
                 name = name.substring(0, name.length()-3) + "tar";
-            else if (extension.equals("gz"))
+            } else if (extension.equals("gz")) {
                 name = name.substring(0, name.length()-3);
+            }
         }
 
         return new SingleArchiveEntryIterator(new ArchiveEntry("/"+name, false, getLastModifiedDate(), -1, true));

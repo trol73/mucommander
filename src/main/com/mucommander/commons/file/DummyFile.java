@@ -13,7 +13,7 @@ import java.io.OutputStream;
  * overridding the methods that are needed, for example as an anonymous class inside a method.
  *
  * <p>This class should NOT be subclassed for proper AbstractFile implementations. It should only be used in certain
- * circumstances that require creating a quick AbstractFile implementation where only a few methods will be used.</p>
+ * circumstances that require creating a quick AbstractFile implementation where only a few methods will be used.
  *
  * @author Maxence Bernard
  */

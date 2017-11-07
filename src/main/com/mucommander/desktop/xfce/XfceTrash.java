@@ -46,7 +46,6 @@ import com.mucommander.ui.main.WindowManager;
  * <br>
  * This trash is implemented as a {@link com.mucommander.desktop.QueuedTrash} as it spawns a process to move a file to
  * the trash and it is thus more effective to group files to be moved instead of spawning multiple processes.<br>
- * </p>
  * 
  * TODO: combine this trash and gnome trash to "freedesktop" trash
  * 
@@ -142,7 +141,7 @@ public class XfceTrash extends QueuedTrash {
      * Implementation of {@link com.mucommander.desktop.QueuedTrash} moveToTrash method.
      * <p>
      * Try to copy a collection of files to the Xfce's Trash.
-     * </p>
+     *
      * @param queuedFiles Collection of files to the trash
      * @return <code>true</code> if movement has been successful or <code>false</code> otherwise
      */
@@ -234,7 +233,6 @@ public class XfceTrash extends QueuedTrash {
      * <p>
      * <b>Implementation notes:</b><br>
      * Simply free the <code>TRASH_PATH</code> directory
-     * </p>
      * 
      * @return True if everything went well
      */

@@ -182,7 +182,7 @@ public abstract class ConnectionHandler {
      * calling {@link #closeConnection()}, <code>-1</code> to indicate that the connection should not be automatically
      * closed.
      *
-     * <p>By default, this value is 300 seconds (5 minutes).</p>
+     * <p>By default, this value is 300 seconds (5 minutes).
      *
      * @return the number of seconds of inactivity after which {@link ConnectionPool} will close the connection,
      * <code>-1</code> to indicate that the connection should not be automatically closed
@@ -195,7 +195,7 @@ public abstract class ConnectionHandler {
      * Sets the number of seconds of inactivity after which {@link ConnectionPool} will close the connection by calling
      * {@link #closeConnection()}, <code>-1</code> to prevent the connection from being automatically closed.
      *
-     * <p>By default, this value is 300 seconds (5 minutes).</p>
+     * <p>By default, this value is 300 seconds (5 minutes).
      *
      * @param nbSeconds the number of seconds of inactivity after which {@link ConnectionPool} will close the connection,
      * <code>-1</code> to indicate that the connection should not be automatically closed
@@ -209,7 +209,7 @@ public abstract class ConnectionHandler {
      * Returns the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection alive
      * by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive.
      *
-     * <p>By default, this value is -1 (keep alive disabled).</p>
+     * <p>By default, this value is -1 (keep alive disabled).
      *
      * @return the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection alive
      * by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive
@@ -222,7 +222,7 @@ public abstract class ConnectionHandler {
      * Returns the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection alive
      * by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive.
      *
-     * <p>By default, this value is -1 (keep alive disabled).</p>
+     * <p>By default, this value is -1 (keep alive disabled).
      *
      * @param nbSeconds the number of seconds of inactivity after which {@link ConnectionPool} will keep the connection
      * alive by calling {@link #keepAlive()}, <code>-1</code> to indicate that this connection should not be kept alive
@@ -307,7 +307,7 @@ public abstract class ConnectionHandler {
      * Returns <code>true</code> if the connection managed by this ConnectionHandler is currently active/established,
      * in a state that makes it possible to serve client requests.
      *
-     * <p>Implementation note: This method must not perform any I/O which could block the calling thread.</p>
+     * <p>Implementation note: This method must not perform any I/O which could block the calling thread.
      *
      * @return <code>true</code> if the connection managed by this ConnectionHandler is currently active/established
      */
@@ -317,7 +317,7 @@ public abstract class ConnectionHandler {
      * Closes the connection managed by this ConnectionHandler.
      *
      * <p>Implementation note: the implementation must guarantee that any calls to {@link #isConnected()} after this
-     * method has been called return false.</p>
+     * method has been called return false.
      */
     public abstract void closeConnection();
 
@@ -325,7 +325,7 @@ public abstract class ConnectionHandler {
      * Keeps this connection alive.
      *
      * <p>Implementation note: if keep alive is not available in the underlying protocol or
-     * simply unnecessary, this method should be implemented as a no-op (do nothing).</p>
+     * simply unnecessary, this method should be implemented as a no-op (do nothing).
      */
     public abstract void keepAlive();
 }

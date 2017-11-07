@@ -76,7 +76,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * <p>
      * This method is empty. See {@link DesktopAdapter#init(boolean)} for information on
      * how to override it.
-     * </p>
+     *
      * @param  install                        <code>true</code> if this is the application's first boot, <code>false</code> otherwise.
      * @throws DesktopInitialisationException if any error occurs.
      */
@@ -86,9 +86,9 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     /**
      * Returns <code>true</code> if the specified mouse event describes a left click.
      * <p>
-     * This method will return <code>true</code> if <code>(e.getModifiers() & MouseEvent.BUTTON1_MASK)</code>
+     * This method will return <code>true</code> if <code>(e.getModifiers() &amp; MouseEvent.BUTTON1_MASK)</code>
      * doesn't equal 0.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -99,7 +99,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     /**
      * Returns <code>true</code> if the specified mouse event describes a middle click.
      * <p>
-     * This method will return <code>true</code> if <code>(e.getModifiers() & MouseEvent.BUTTON3_MASK)</code>
+     * This method will return <code>true</code> if <code>(e.getModifiers() &amp; MouseEvent.BUTTON3_MASK)</code>
      * doesn't equal 0.
      *
      * @param  e event to check.
@@ -112,7 +112,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     /**
      * Returns <code>true</code> if the specified mouse event describes a right click.
      * <p>
-     * This method will return <code>true</code> if <code>(e.getModifiers() & MouseEvent.BUTTON2_MASK)</code>
+     * This method will return <code>true</code> if <code>(e.getModifiers() &amp; MouseEvent.BUTTON2_MASK)</code>
      * doesn't equal 0.
      *
      * @param  e event to check.

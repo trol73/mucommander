@@ -31,7 +31,7 @@ import java.awt.event.KeyListener;
  * the associated component making it visible/unvisible, and resizes the window that contains it so that it properly
  * fits.
  *
- * <p>This button shows an down/right arrow icon to reflect the current expanded/collapsed state.</p>
+ * <p>This button shows an down/right arrow icon to reflect the current expanded/collapsed state.
  *
  * @author Maxence Bernard
  */

@@ -57,7 +57,6 @@ public class MultiLineLabel extends JTextArea {
      *  <li>http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4924163</li>
      *  <li>http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4446522</li>
      * </ul>
-     * </p>
      *
      * @param text the initial label's text
      * @param autoRepack if <code>true</code>, an extra call to the <code>pack()</code> method of the Window that

@@ -28,7 +28,6 @@ import java.io.OutputStream;
  * and nothing more. In particular, {@link #write(byte[])} and {@link #write(byte[], int, int)} do <b>not</b>
  * call {@link #write(int)} repeatedly (very unefficient) but delegate to the corresponding OutputStream methods. This
  * makes this class much safer to use from a performance perspective than <code>java.io.FilteredOutputStream</code>.
- * </p>
  *
  * @author Maxence Bernard
  */

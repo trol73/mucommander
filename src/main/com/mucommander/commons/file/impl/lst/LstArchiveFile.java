@@ -28,7 +28,7 @@ import java.io.InputStream;
  * IsoArchiveFile provides read-only access to archives in the LST format made popular by Total Commander.
  *
  * <p>Entries are parsed from the .lst file and can be read (an InputStream to them can be opened) if the file exists
- * locally.</p>
+ * locally.
  *
  * <p>For reference, here's a short LST file:
  * <pre>

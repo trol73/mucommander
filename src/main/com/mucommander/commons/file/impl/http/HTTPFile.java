@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  *
  * <p>The associated {@link FileURL} schemes are {@link FileProtocols#HTTP} and {@link FileProtocols#HTTPS}.
  * The host part of the URL designates the HTTP server. Credentials can be specified in the login and password parts
- * and will be used for HTTP Basic Authentication.</p>
+ * and will be used for HTTP Basic Authentication.
  *
  * <p>Here are a few examples of valid HTTP URLs:
  * <code>
@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
  * http://www.mucommander.com/index.php?<br>
  * http://john:p4sswd@www.mucommander.com/restricted_area/<br>
  * </code>
- * </p>
  *
  * <p>
  * A notable feature of HTTPFile is that it handles HTML/XHTML files as archives: when any of the {@link #ls()} methods
@@ -44,10 +43,10 @@ import java.util.regex.Pattern;
  * its filename is performed to determine if the file is an HTML/XHTML file or not.
  * In practice, this works quite well for most sites but the algorithm will be confused by some non-conventional
  * file naming, for instance if an HTML file ends with the '.gif' extension.
- * <br>
+ * <p>
  * A HEAD request is then issued only for non-HTML files, to determine their size and last modified date.
  * HTML files will thus have a size returned by {@link #getSize()} of <code>-1</code> (undetermined), and a date
- * returned by {@link #getLastModifiedDate()} corresponding to 'now' (current time).</p>
+ * returned by {@link #getLastModifiedDate()} corresponding to 'now' (current time).
  *
  * <p>Access to HTTP files is provided by the <code>java.net</code> API. The {@link #getUnderlyingFileObject()} method
  * allows to retrieve a <code>java.net.URL</code> instance corresponding to this HTTPFile.

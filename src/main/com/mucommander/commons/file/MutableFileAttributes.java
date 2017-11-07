@@ -4,7 +4,7 @@ package com.mucommander.commons.file;
  * This interface extends <code>FileAttributes</code> to add attribute getters. Refer to {@link FileAttributes}'s
  * documentation for more information about attributes.
  *
- * <p>See the {@link SimpleFileAttributes} class for an implementation of this interface.</p>
+ * <p>See the {@link SimpleFileAttributes} class for an implementation of this interface.
  *
  * @author Maxence Bernard
  * @see SimpleFileAttributes
@@ -14,7 +14,7 @@ public interface MutableFileAttributes extends FileAttributes {
     /**
      * Sets the file's path.
      *
-     * <p>The format and separator character of the path are filesystem-dependent.</p>
+     * <p>The format and separator character of the path are filesystem-dependent.
      *
      * @param path the file's path
      */

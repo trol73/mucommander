@@ -55,9 +55,9 @@ public abstract class MainFrameBuilder {
      * If the path found in preferences is either illegal or does not exist, this method will
      * return the user's home directory - we assume this will always exist, which might be a bit
      * of a leap of faith.
-     * </p>
+     *
      * @param  folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
-     *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
+     *               {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#RIGHT}).
      * @return       the user's initial path for the specified frame.
      */ 
     protected AbstractFile[] getInitialPaths(FolderPanelType folderPanelType, int window) {
@@ -114,7 +114,7 @@ public abstract class MainFrameBuilder {
      * If the path found in preferences is either illegal or does not exist, this method will
      * return the user's home directory - we assume this will always exist, which might be a bit
      * of a leap of faith.
-     * </p>
+     *
      * @param  folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
      *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
      * @return       the user's initial path for the specified frame.

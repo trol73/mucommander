@@ -61,7 +61,7 @@ public class BOMWriter extends OutputStreamWriter {
      *
      * <p>It is important to note that a BOM will always be written for Unicode encodings,
      * even if the particular encoding specifies that no BOM should be written (<code>UnicodeLittleUnmarked</code> for
-     * instance). See {@link BOM#getInstance(String)} for more information about this.</p>
+     * instance). See {@link BOM#getInstance(String)} for more information about this.
      *
      * @param out the <code>OutputStream</code> to write the encoded data to
      * @param encoding character encoding to use for encoding characters.

@@ -24,7 +24,7 @@ package com.mucommander.commons.conf;
  * Implementations of this interface can register themselves to a {@link Configuration configuration} instance through
  * its {@link Configuration#addConfigurationListener(ConfigurationListener) addConfigurationListener} method to be
  * notified of configuration changes.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public interface ConfigurationListener {

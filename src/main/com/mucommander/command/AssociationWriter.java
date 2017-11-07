@@ -29,7 +29,7 @@ import java.io.OutputStream;
  * <p>
  * <code>AssociationWriter</code> is an {@link AssociationBuilder} that will send
  * all build messages it receives into an XML stream (as defined in {@link AssociationsXmlConstants}).
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class AssociationWriter implements AssociationsXmlConstants, AssociationBuilder {

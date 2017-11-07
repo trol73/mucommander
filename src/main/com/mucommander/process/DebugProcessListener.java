@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * In debug mode, instances of this listener will automatically be registered to non-monitored processes.
  * Its only goal is to output information about the process' state.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 class DebugProcessListener implements ProcessListener {

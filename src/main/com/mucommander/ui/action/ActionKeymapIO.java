@@ -66,7 +66,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * By default, this file is {@link #DEFAULT_ACTIONS_FILE_NAME} within the preferences folder.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setActionsFile(FileFactory.getFile(file))</code>.
-     * </p>
+     *
      * @param  path                  path to the actions file
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
@@ -85,7 +85,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * By default, this file is {@link #DEFAULT_ACTIONS_FILE_NAME} within the preferences folder.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setActionsFile(FileFactory.getFile(file.getAbsolutePath()))</code>.
-     * </p>
+     *
      * @param  file                  path to the actions file
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */

@@ -88,7 +88,6 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
      * Returns the muCommander version that was used to write the credentials file, <code>null</code> if it is unknown.
      * <p>
      * Note: the version attribute was introduced in muCommander 0.8.4.
-     * </p>
      *
      * @return the muCommander version that was used to write the credentials file, <code>null</code> if it is unknown.
      */

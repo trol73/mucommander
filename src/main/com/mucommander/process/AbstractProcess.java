@@ -31,11 +31,10 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Unlike normal instances of <code>java.lang.Process</code>, abstract processes
  * will empty their own streams, preventing deadlocks from occurring on some systems.
- * </p>
  * <p>
  * Note that abstract processes should not be created directly. They should be
  * instantiated through {@link com.mucommander.process.ProcessRunner#execute(String[], com.mucommander.commons.file.AbstractFile,ProcessListener)}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public abstract class AbstractProcess {
@@ -123,7 +122,7 @@ public abstract class AbstractProcess {
      * Some processes will use a single stream for their standard error and standard output streams. Such
      * processes should return <code>true</code> here to prevent both streams from being monitored.<br>
      * Note that if a process uses merged streams, {@link #getInputStream()} will be monitored.
-     * </p>
+     *
      * @return <code>true</code> if this process merges his output streams, <code>false</code> otherwise.
      */
     public abstract boolean usesMergedStreams();

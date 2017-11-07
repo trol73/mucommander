@@ -35,7 +35,7 @@ import com.mucommander.ui.main.WindowManager;
  * to cancel the operatoin in case the quit shortcut was hit by mistake. 
  * 
  * <p>A checkbox allows the user to disable this confirmation dialog for the next the application is quit. It can
- * later be re-enabled in the application preferences.</p>
+ * later be re-enabled in the application preferences.
  *
  * @author Maxence Bernard
  */

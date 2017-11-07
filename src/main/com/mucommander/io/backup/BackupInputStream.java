@@ -29,7 +29,7 @@ import java.io.*;
  * <p>
  * This class' role is to choose which of the original or backup file should be read in order to ensure
  * that the data is not corrupt.
- * </p>
+ *
  * @see BackupOutputStream
  * @author Nicolas Rinaudo
  */
@@ -67,7 +67,7 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
      * Opens a stream on the right file.
      * <p>
      * If a backup file is found, and is bigger than the target file, then it will be used.
-     * </p>
+     *
      * @param     file        file on which to open an input stream.
      * @return                a stream on the right file.
      * @exception IOException thrown if any IO related error occurs.
@@ -90,7 +90,7 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
      * Opens a stream on the right file.
      * <p>
      * If a backup file is found, and is bigger than the target file, then it will be used.
-     * </p>
+     *
      * @param     file        file on which to open an input stream.
      * @return                a stream on the right file.
      * @exception IOException thrown if any IO related error occurs.

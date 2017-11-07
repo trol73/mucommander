@@ -117,7 +117,7 @@ public class CommandManager implements CommandBuilder {
      * <p>
      * This is a convenience method and is strictly equivalent to calling
      * <code>{@link #getTokensForFile(AbstractFile,boolean) getTokensForFile(}file, true)</code>.
-     * </p>
+     *
      * @param file file for which the opening command's tokens must be returned.
      * @return the tokens that compose the command that must be executed to open the specified file.
      */
@@ -141,7 +141,7 @@ public class CommandManager implements CommandBuilder {
      * <p>
      * This is a convenience method and is stricly equivalent to calling
      * <code>{@link #getCommandForFile(AbstractFile,boolean) getCommandForFile(}file, true)</code>.
-     * </p>
+     *
      * @param  file file for which the opening command must be returned.
      * @return      the command that must be executed to open the specified file.
      */
@@ -337,7 +337,7 @@ public class CommandManager implements CommandBuilder {
      * {@link CommandBuilder#endBuilding() endBuilding()} methods will both be called even if an error occurs.
      * If that happens however, it is entirely possible that not all commands will be passed to
      * the builder.
-     * </p>
+     *
      * @param  builder          object that will receive commands list building messages.
      * @param type              if not null then build only commands with specified type
      * @throws CommandException if anything goes wrong.
@@ -405,7 +405,7 @@ public class CommandManager implements CommandBuilder {
      * {@link AssociationBuilder#endBuilding() endBuilding()} methods will both be called even if an error occurs.
      * If that happens however, it is entirely possible that not all associations will be passed to
      * the builder.
-     * </p>
+     *
      * @param  builder          object that will receive association list building messages.
      * @throws CommandException if anything goes wrong.
      */
@@ -444,12 +444,11 @@ public class CommandManager implements CommandBuilder {
      * This method cannot guarantee the file's existence, and it's up to the caller
      * to deal with the fact that the user might not actually have created custom
      * associations.
-     * </p>
      * <p>
      * This method's return value can be modified through {@link #setAssociationFile(String)}.
      * If this wasn't called, the default path will be used: {@link #DEFAULT_ASSOCIATION_FILE_NAME}
      * in the {@link com.mucommander.PlatformManager#getPreferencesFolder() preferences} folder.
-     * </p>
+     *
      * @return the path to the custom associations XML file.
      * @see    #setAssociationFile(String)
      * @see    #loadAssociations()
@@ -467,7 +466,7 @@ public class CommandManager implements CommandBuilder {
      * Sets the path to the custom associations file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setAssociationFile(FileFactory.getFile(file))</code>.
-     * </p>
+     *
      * @param  path                  path to the custom associations file.
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      * @see    #getAssociationFile()
@@ -486,7 +485,7 @@ public class CommandManager implements CommandBuilder {
      * Sets the path to the custom associations file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setAssociationFile(FileFactory.getFile(file.getAbsolutePath()))</code>.
-     * </p>
+     *
      * @param  file                  path to the custom associations file.
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      * @see    #getAssociationFile()
@@ -518,7 +517,7 @@ public class CommandManager implements CommandBuilder {
      * <p>
      * The command files will be loaded as a <i>backed-up file</i> (see {@link BackupInputStream}).
      * Its format is described {@link AssociationsXmlConstants here}.
-     * </p>
+     *
      * @throws IOException if an IO error occurs.
      * @throws CommandException thrown when errors occur while building custom commands
      * @see                #writeAssociations()
@@ -555,11 +554,10 @@ public class CommandManager implements CommandBuilder {
      * Data will be written to the path returned by {@link #getAssociationFile()}. Note, however,
      * that this method will not actually do anything if the association list hasn't been modified
      * since the last time it was saved.
-     * </p>
      * <p>
      * The association files will be saved as a <i>backed-up file</i> (see {@link BackupOutputStream}).
      * Its format is described {@link AssociationsXmlConstants here}.
-     * </p>
+     *
      * @throws IOException      if an I/O error occurs.
      * @throws CommandException if an error occurs.
      * @see                     #loadAssociations()
@@ -591,12 +589,11 @@ public class CommandManager implements CommandBuilder {
      * This method cannot guarantee the file's existence, and it's up to the caller
      * to deal with the fact that the user might not actually have created custom
      * commands.
-     * </p>
      * <p>
      * This method's return value can be modified through {@link #setCommandFile(String)}.
      * If this wasn't called, the default path will be used: {@link #DEFAULT_COMMANDS_FILE_NAME}
      * in the {@link com.mucommander.PlatformManager#getPreferencesFolder() preferences} folder.
-     * </p>
+     *
      * @return the path to the custom commands XML file.
      * @see    #setCommandFile(String)
      * @see    #loadCommands()
@@ -613,7 +610,7 @@ public class CommandManager implements CommandBuilder {
      * Sets the path to the custom commands file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setCommandFile(FileFactory.getFile(file));</code>.
-     * </p>
+     *
      * @param  path                  path to the custom commands file.
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      * @see    #getCommandFile()
@@ -635,7 +632,7 @@ public class CommandManager implements CommandBuilder {
      * Sets the path to the custom commands file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setCommandFile(FileFactory.getFile(file.getAbsolutePath()));</code>.
-     * </p>
+     *
      * @param  file                  path to the custom commands file.
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      * @see    #getCommandFile()
@@ -667,11 +664,10 @@ public class CommandManager implements CommandBuilder {
      * Data will be written to the path returned by {@link #getCommandFile()}. Note, however,
      * that this method will not actually do anything if the command list hasn't been modified
      * since the last time it was saved.
-     * </p>
      * <p>
      * The command files will be saved as a <i>backed-up file</i> (see {@link BackupOutputStream}).
      * Its format is described {@link CommandsXmlConstants here}.
-     * </p>
+     *
      * @throws IOException      if an I/O error occurs.
      * @throws CommandException if an error occurs.
      * @see                     #loadCommands()
@@ -708,7 +704,7 @@ public class CommandManager implements CommandBuilder {
      * <p>
      * The command files will be loaded as a <i>backed-up file</i> (see {@link BackupInputStream}).
      * Its format is described {@link CommandsXmlConstants here}.
-     * </p>
+     *
      * @throws IOException if an I/O error occurs.
      * @see                #writeCommands()
      * @see                #getCommandFile()

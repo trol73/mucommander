@@ -36,7 +36,6 @@ import com.mucommander.process.ProcessRunner;
  * <br>
  * This trash is implemented as a {@link com.mucommander.desktop.QueuedTrash} as it spawns a process to move a file to
  * the trash and it is thus more effective to group files to be moved instead of spawning multiple processes.<br>
- * </p>
  *
  * @see Kde3TrashProvider
  * @author Maxence Bernard

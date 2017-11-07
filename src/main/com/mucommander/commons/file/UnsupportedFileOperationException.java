@@ -15,7 +15,6 @@ import java.io.IOException;
  * This exception is to be thrown in a way that is independent of the actual file instance, and of I/O or
  * network conditions: an <code>AbstractFile</code> method that throws this exception once must throw it
  * always, for any file instance.
- * </p>
  *
  * @author Maxence Bernard
  * @see UnsupportedFileOperation

@@ -44,7 +44,6 @@ public interface ThemeId {
      * Font used in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> font.
-     * </p>
      */
     int FILE_TABLE_FONT = 0;
 
@@ -52,7 +51,6 @@ public interface ThemeId {
      * Font used to display shell output.
      * <p>
      * This defaults to the current <code>JTextArea</code> font.
-     * </p>
      */
     int SHELL_FONT = 1;
 
@@ -60,7 +58,6 @@ public interface ThemeId {
      * Font used in the file editor and viewer.
      * <p>
      * This defaults to the current <code>JTable</code> font.
-     * </p>
      */
     int EDITOR_FONT = 2;
 
@@ -68,7 +65,6 @@ public interface ThemeId {
      * Font used in the location bar.
      * <p>
      * This defaults to the current <code>JTextField</code> font.
-     * </p>
      */
     int LOCATION_BAR_FONT = 3;
 
@@ -76,7 +72,6 @@ public interface ThemeId {
      * Font used in the shell history widget.
      * <p>
      * This defaults to the current <code>JTextField</code> font.
-     * </p>
      */
     int SHELL_HISTORY_FONT = 4;
 
@@ -84,7 +79,6 @@ public interface ThemeId {
      * Font used in the status bar.
      * <p>
      * This defaults to the current <code>JLabel</code> font.
-     * </p>
      */
     int STATUS_BAR_FONT = 5;
 
@@ -92,7 +86,6 @@ public interface ThemeId {
      * Font used in the quick list header.
      * <p>
      * This defaults to a similar font of the current <code>JTable</code> font, but a little bigger.
-     * </p>
      */
     int QUICK_LIST_HEADER_FONT = 6;
 
@@ -100,7 +93,6 @@ public interface ThemeId {
      * Font used in the quick list item.
      * <p>
      * This defaults to the current <code>JTable</code> font.
-     * </p>
      */
     int QUICK_LIST_ITEM_FONT = 7;
 
@@ -110,7 +102,6 @@ public interface ThemeId {
      * Font used in the file editor and viewer.
      * <p>
      * This defaults to the current <code>JTable</code> font.
-     * </p>
      */
     int HEX_VIEWER_FONT = 9;
 
@@ -119,7 +110,6 @@ public interface ThemeId {
      * <p>
      * Since font identifiers are contiguous, it is possible to explore all fonts contained
      * by an instance of theme data by looping from 0 to this value.
-     * </p>
      */
     int FONT_COUNT  = 10;
 
@@ -131,7 +121,6 @@ public interface ThemeId {
      * Color used to paint the folder panels' borders.
      * <p>
      * This defaults to <code>Color.GRAY</code>.
-     * </p>
      */
     int FILE_TABLE_BORDER_COLOR = 0;
 
@@ -139,7 +128,6 @@ public interface ThemeId {
      * Color used to paint the folder panels' borders when it doesn't have the focus.
      * <p>
      * This defaults to <code>Color.GRAY</code>.
-     * </p>
      */
     int FILE_TABLE_INACTIVE_BORDER_COLOR = 56;
 
@@ -147,7 +135,6 @@ public interface ThemeId {
      * Color used to paint the folder panel's background color.
      * <p>
      * This defaults to the current <code>JTable</code> background color.
-     * </p>
      */
     int FILE_TABLE_BACKGROUND_COLOR = 1;
 
@@ -155,7 +142,6 @@ public interface ThemeId {
      * Color used to paint the folder panel's alternate background color.
      * <p>
      * This defaults to the current <code>JTable</code> background color.
-     * </p>
      */
     int FILE_TABLE_ALTERNATE_BACKGROUND_COLOR = 2;
 
@@ -164,7 +150,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FILE_TABLE_BACKGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int FILE_TABLE_INACTIVE_BACKGROUND_COLOR = 3;
 
@@ -172,7 +157,6 @@ public interface ThemeId {
      * Color used to paint the folder panel's alternate background color when inactive.
      * <p>
      * This defaults to the current <code>JTable</code> background color.
-     * </p>
      */
     int FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR = 4;
 
@@ -210,7 +194,6 @@ public interface ThemeId {
      * Color used to paint hidden files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int HIDDEN_FILE_FOREGROUND_COLOR = 9;
 
@@ -219,7 +202,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #HIDDEN_FILE_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR = 10;
 
@@ -227,7 +209,6 @@ public interface ThemeId {
      * Color used to paint selected hidden files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int HIDDEN_FILE_SELECTED_FOREGROUND_COLOR = 11;
 
@@ -236,7 +217,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #HIDDEN_FILE_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR = 12;
 
@@ -244,7 +224,6 @@ public interface ThemeId {
      * Color used to paint folders text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int FOLDER_FOREGROUND_COLOR = 13;
 
@@ -253,7 +232,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FOLDER_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int FOLDER_INACTIVE_FOREGROUND_COLOR = 14;
 
@@ -261,7 +239,6 @@ public interface ThemeId {
      * Color used to paint selected folders text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int FOLDER_SELECTED_FOREGROUND_COLOR = 15;
 
@@ -270,7 +247,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FOLDER_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR = 16;
 
@@ -278,7 +254,6 @@ public interface ThemeId {
      * Color used to paint archives text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int ARCHIVE_FOREGROUND_COLOR = 17;
 
@@ -287,7 +262,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #ARCHIVE_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int ARCHIVE_INACTIVE_FOREGROUND_COLOR = 18;
 
@@ -295,7 +269,6 @@ public interface ThemeId {
      * Color used to paint selected archives text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int ARCHIVE_SELECTED_FOREGROUND_COLOR = 19;
 
@@ -304,7 +277,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #ARCHIVE_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR = 20;
 
@@ -312,7 +284,6 @@ public interface ThemeId {
      * Color used to paint symlinks text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int SYMLINK_FOREGROUND_COLOR = 21;
 
@@ -321,7 +292,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #SYMLINK_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int SYMLINK_INACTIVE_FOREGROUND_COLOR = 22;
 
@@ -329,7 +299,6 @@ public interface ThemeId {
      * Color used to paint selected symlinks text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int SYMLINK_SELECTED_FOREGROUND_COLOR = 23;
 
@@ -338,7 +307,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #SYMLINK_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR = 24;
 
@@ -346,7 +314,6 @@ public interface ThemeId {
      * Color used to paint marked files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int MARKED_FOREGROUND_COLOR = 25;
 
@@ -355,7 +322,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #MARKED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int MARKED_INACTIVE_FOREGROUND_COLOR = 26;
 
@@ -363,7 +329,6 @@ public interface ThemeId {
      * Color used to paint selected marked files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int MARKED_SELECTED_FOREGROUND_COLOR = 27;
 
@@ -372,7 +337,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #MARKED_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR = 28;
 
@@ -380,7 +344,6 @@ public interface ThemeId {
      * Color used to paint plain files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int FILE_FOREGROUND_COLOR = 29;
 
@@ -389,7 +352,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FILE_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int FILE_INACTIVE_FOREGROUND_COLOR = 30;
 
@@ -397,7 +359,6 @@ public interface ThemeId {
      * Color used to paint selected plain files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int FILE_SELECTED_FOREGROUND_COLOR = 31;
 
@@ -406,7 +367,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FILE_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int FILE_INACTIVE_SELECTED_FOREGROUND_COLOR = 32;
 
@@ -414,7 +374,6 @@ public interface ThemeId {
      * Color used to paint shell commands output.
      * <p>
      * This defaults to the current <code>JTextArea</code> foreground color.
-     * </p>
      */
     int SHELL_FOREGROUND_COLOR = 33;
 
@@ -422,7 +381,6 @@ public interface ThemeId {
      * Color used to paint the background of shell commands output.
      * <p>
      * This defaults to the current <code>JTextArea</code> background color.
-     * </p>
      */
     int SHELL_BACKGROUND_COLOR = 34;
 
@@ -430,7 +388,6 @@ public interface ThemeId {
      * Color used to paint shell commands output when selected.
      * <p>
      * This defaults to the current <code>JTextArea</code> selection foreground color.
-     * </p>
      */
     int SHELL_SELECTED_FOREGROUND_COLOR = 35;
 
@@ -438,7 +395,6 @@ public interface ThemeId {
      * Color used to paint the background of shell commands output when selected.
      * <p>
      * This defaults to the current <code>JTextArea</code> selection background color.
-     * </p>
      */
     int SHELL_SELECTED_BACKGROUND_COLOR = 36;
 
@@ -446,7 +402,6 @@ public interface ThemeId {
      * Color used to paint the shell history's text.
      * <p>
      * This defaults to the current <code>JTextField</code> foreground color.
-     * </p>
      */
     int SHELL_HISTORY_FOREGROUND_COLOR = 37;
 
@@ -454,7 +409,6 @@ public interface ThemeId {
      * Color used to paint the shell history's background.
      * <p>
      * This defaults to the current <code>JTextField</code> background color.
-     * </p>
      */
     int SHELL_HISTORY_BACKGROUND_COLOR = 38;
 
@@ -462,7 +416,6 @@ public interface ThemeId {
      * Color used to paint the shell history's text when selected.
      * <p>
      * This defaults to the current <code>JTextField</code> selection foreground color.
-     * </p>
      */
     int SHELL_HISTORY_SELECTED_FOREGROUND_COLOR = 39;
 
@@ -470,7 +423,6 @@ public interface ThemeId {
      * Color used to paint the shell history's background when selected.
      * <p>
      * This defaults to the current <code>JTextField</code> selection background color.
-     * </p>
      */
     int SHELL_HISTORY_SELECTED_BACKGROUND_COLOR = 40;
 
@@ -478,7 +430,6 @@ public interface ThemeId {
      * Color used to paint the file editor / viewer's text.
      * <p>
      * This defaults to the current <code>JTextArea</code> foreground color.
-     * </p>
      */
     int EDITOR_FOREGROUND_COLOR = 41;
 
@@ -486,7 +437,6 @@ public interface ThemeId {
      * Color used to paint the file editor / viewer's background.
      * <p>
      * This defaults to the current <code>JTextArea</code> background color.
-     * </p>
      */
     int EDITOR_BACKGROUND_COLOR = 42;
 
@@ -494,7 +444,6 @@ public interface ThemeId {
      * Color used to paint the file editor / viewer's foreground when selected.
      * <p>
      * This defaults to the current <code>JTextArea</code> selection foreground color.
-     * </p>
      */
     int EDITOR_SELECTED_FOREGROUND_COLOR = 43;
 
@@ -502,7 +451,6 @@ public interface ThemeId {
      * Color used to paint the file editor / viewer's background when selected.
      * <p>
      * This defaults to the current <code>JTextArea</code> selection background color.
-     * </p>
      */
     int EDITOR_SELECTED_BACKGROUND_COLOR = 44;
 
@@ -510,7 +458,6 @@ public interface ThemeId {
      * Color used to paint the location's bar text.
      * <p>
      * This defaults to the current <code>JTextField</code> foreground color.
-     * </p>
      */
     int LOCATION_BAR_FOREGROUND_COLOR = 45;
 
@@ -518,7 +465,6 @@ public interface ThemeId {
      * Color used to paint the location's bar background.
      * <p>
      * This defaults to the current <code>JTextField</code> background color.
-     * </p>
      */
     int LOCATION_BAR_BACKGROUND_COLOR = 46;
 
@@ -526,7 +472,6 @@ public interface ThemeId {
      * Color used to paint the location's bar text when selected.
      * <p>
      * This defaults to the current <code>JTextField</code> selection foreground color.
-     * </p>
      */
     int LOCATION_BAR_SELECTED_FOREGROUND_COLOR = 47;
 
@@ -534,7 +479,6 @@ public interface ThemeId {
      * Color used to paint the location's bar background when selected.
      * <p>
      * This defaults to the current <code>JTextField</code> selection background color.
-     * </p>
      */
     int LOCATION_BAR_SELECTED_BACKGROUND_COLOR = 48;
 
@@ -543,11 +487,9 @@ public interface ThemeId {
      * <p>
      * Note that this color is painted over the location's bar background and foreground. In order
      * for anything to be visible under it, it needs to have an alpha transparency component.
-     * </p>
      * <p>
      * This defaults to the current <code>JTextField</code> selection background color, with an
      * alpha transparency value of 64.
-     * </p>
      */
     int LOCATION_BAR_PROGRESS_COLOR = 49;
 
@@ -555,7 +497,6 @@ public interface ThemeId {
      * Color used to paint the status bar's text.
      * <p>
      * This defaults to the current <code>JLabel</code> foreground color.
-     * </p>
      */
     int STATUS_BAR_FOREGROUND_COLOR = 50;
 
@@ -563,7 +504,6 @@ public interface ThemeId {
      * Color used to paint the status bar's background
      * <p>
      * This defaults to the current <code>JLabel</code> background color.
-     * </p>
      */
     int STATUS_BAR_BACKGROUND_COLOR = 51;
 
@@ -571,7 +511,6 @@ public interface ThemeId {
      * Color used to paint the status bar's border.
      * <p>
      * This defaults to <code>Color.GRAY</code>.
-     * </p>
      */
     int STATUS_BAR_BORDER_COLOR = 52;
 
@@ -579,7 +518,6 @@ public interface ThemeId {
      * Color used to paint the status bar's drive usage color when there's plenty of space left.
      * <p>
      * This defaults to <code>0x70EC2B</code>.
-     * </p>
      */
     int STATUS_BAR_OK_COLOR = 53;
 
@@ -587,7 +525,6 @@ public interface ThemeId {
      * Color used to paint the status bar's drive usage color when there's an average amount of space left.
      * <p>
      * This defaults to <code>0xFF7F00</code>.
-     * </p>
      */
     int STATUS_BAR_WARNING_COLOR = 54;
 
@@ -595,7 +532,6 @@ public interface ThemeId {
      * Color used to paint the status bar's drive usage color when there's dangerously little space left.
      * <p>
      * This defaults to <code>Color.RED</code>.
-     * </p>
      */
     int STATUS_BAR_CRITICAL_COLOR = 55;
 
@@ -647,8 +583,7 @@ public interface ThemeId {
     /**
      * Color used to paint current line in the file editor / viewer's background when selected.
      * <p>
-     * This defaults to the current <code>RTextArea</code> selection background color.
-     * </p>
+     * This defaults to the current <code>RTextArea</code> selection background color
      */
     int EDITOR_CURRENT_BACKGROUND_COLOR = 68;
 
@@ -672,7 +607,6 @@ public interface ThemeId {
      * Color used to paint plain files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> foreground color.
-     * </p>
      */
     int EXECUTABLE_FOREGROUND_COLOR = 83;
 
@@ -681,7 +615,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FILE_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int EXECUTABLE_INACTIVE_FOREGROUND_COLOR = 84;
 
@@ -689,7 +622,6 @@ public interface ThemeId {
      * Color used to paint selected plain files text in the folder panels.
      * <p>
      * This defaults to the current <code>JTable</code> selection foreground color.
-     * </p>
      */
     int EXECUTABLE_SELECTED_FOREGROUND_COLOR = 85;
 
@@ -698,7 +630,6 @@ public interface ThemeId {
      * <p>
      * This behaves in exactly the same fashion as {@link #FILE_SELECTED_FOREGROUND_COLOR}, and defaults
      * to the same value.
-     * </p>
      */
     int EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR = 86;
 
@@ -740,7 +671,6 @@ public interface ThemeId {
      * <p>
      * Since color identifiers are contiguous, it is possible to explore all colors contained
      * by an instance of theme data by looping from 0 to this color.
-     * </p>
      */
     int COLOR_COUNT = 95;
 

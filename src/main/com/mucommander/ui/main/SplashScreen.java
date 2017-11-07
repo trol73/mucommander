@@ -33,7 +33,7 @@ import java.awt.geom.Rectangle2D;
  *
  * <p>The splash screen is made of a logo image on top of which is displayed muCommander version number (in the top right corner)
  * and a loading message (in the lower left corner) which is updated by {@link com.mucommander.TrolCommander} to show startup progress.
- * It is then closed by {@link com.mucommander.TrolCommander} when muCommander is fully started and ready for use.</p>
+ * It is then closed by {@link com.mucommander.TrolCommander} when muCommander is fully started and ready for use.
  *
  * @author Maxence Bernard
  */

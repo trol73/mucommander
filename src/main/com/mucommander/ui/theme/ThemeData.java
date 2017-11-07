@@ -31,7 +31,7 @@ import java.util.WeakHashMap;
  * Base class for all things Theme.
  * <p>
  * The role of <code>ThemeData</code> is twofold:<br>
- * - theme data storage.<br/>
+ * - theme data storage.<br>
  * - default values retrievals and notification.<br>
  *
  * <p>

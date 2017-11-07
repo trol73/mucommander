@@ -148,7 +148,7 @@ public class StreamUtils {
      * are not supported by the JVM.
      *
      * <p>Apart from the transcoding part, this method operates exactly like {@link #copyStream(java.io.InputStream, java.io.OutputStream, int)}.
-     * In particular, none of the given streams are closed.</p>
+     * In particular, none of the given streams are closed.
      *
      * @param in the InputStream to read the data from
      * @param inCharset the source charset
@@ -315,7 +315,7 @@ public class StreamUtils {
      * starting at position <code>off</code>.
      *
      * <p>This method calls the <code>read()</code> method of the given stream until the requested number of bytes have
-     * been skipped, or throws an {@link EOFException} if the end of file has been reached prematurely.</p>
+     * been skipped, or throws an {@link EOFException} if the end of file has been reached prematurely.
      *
      * @param in the InputStream to read from
      * @param b the buffer into which the stream data is copied
@@ -344,7 +344,7 @@ public class StreamUtils {
      * Skips exactly <code>n</code>bytes from the given InputStream.
      *
      * <p>This method calls the <code>skip()</code> method of the given stream until the requested number of bytes have
-     * been skipped, or throws an {@link EOFException} if the end of file has been reached prematurely.</p>
+     * been skipped, or throws an {@link EOFException} if the end of file has been reached prematurely.
      *
      * @param in the InputStream to skip bytes from
      * @param n the number of bytes to skip
@@ -383,7 +383,6 @@ public class StreamUtils {
      * <p>This method differs from {@link #readFully(java.io.InputStream, byte[], int, int)} in that it does not throw
      * a <code>java.io.EOFException</code> if the end of stream is reached before all bytes have been read. In that
      * case (and in that case only), the number of bytes returned by this method will be lower than <code>len</code>.
-     * </p>
      *
      * @param in the InputStream to read from
      * @param b the buffer into which the stream data is copied

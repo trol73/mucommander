@@ -541,10 +541,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * Returns a {@link com.mucommander.commons.file.util.FileSet FileSet} with all currently marked files.
      * <p>
      * The returned <code>FileSet</code> is a freshly created instance, so it can be safely modified.
-     & However, it won't be kept current : the returned FileSet is just a snapshot
+     * However, it won't be kept current : the returned FileSet is just a snapshot
      * which might not reflect the current marked files state after this method has returned and additional
      * files have been marked/unmarked.
-     * </p>
      *
      * @return a FileSet containing all the files that are currently marked
      */
@@ -576,7 +575,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
      * 
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
-     * {@link #getFilesCount() getFilesCount()}.</p>
+     * {@link #getFilesCount() getFilesCount()}.
      *
      * @param row a row index, comprised between 0 and #getRowCount()-1
      * @param col a column index, comprised between 0 and #getColumnCount()-1
@@ -625,7 +624,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
      *
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
-     * {@link #getFilesCount() getFilesCount()}.</p>
+     * {@link #getFilesCount() getFilesCount()}.
      *
      * @param row a row index, comprised between 0 and #getRowCount()-1
      * @param col a column index, comprised between 0 and #getColumnCount()-1
@@ -645,11 +644,11 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 	
 
     /**
-     * Returns the index of the row where the given file is located, <code>-1<code> if the file is not in the
+     * Returns the index of the row where the given file is located, <code>-1</code> if the file is not in the
      * current folder.
      *
      * @param file the file for which to find the row index
-     * @return the index of the file where the given file is located, <code>-1<code> if the file is not in the
+     * @return the index of the file where the given file is located, <code>-1</code> if the file is not in the
      * current folder
      */
     public synchronized int getFileIndex(AbstractFile file) {

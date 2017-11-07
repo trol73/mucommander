@@ -450,7 +450,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * Being the active table doesn't necessarily mean that it currently has focus, the focus can be in some other component
      * of the active {@link FolderPanel}, or nowhere in the MainFrame if the window is not in the foreground.
      *
-     * <p>Use {@link #hasFocus()} to test if the table currently has focus.</p>
+     * <p>Use {@link #hasFocus()} to test if the table currently has focus.
      *
      * @return true if this table is the active one in the MainFrame
      * @see com.mucommander.ui.main.MainFrame#getActiveTable()
@@ -599,7 +599,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * This method returns only when the folder has actually been changed and the table refreshed.<br>
      * <b>Important:</b> This method should only be called by {@link FolderPanel} and in any case MUST be synchronized
      * externally to ensure this method is never called concurrently by different threads.
-     * </p>
      *
      * @param folder the new current folder
      * @param children children of the specified folder
@@ -785,7 +784,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * and notifies registered {@link com.mucommander.ui.event.TableSelectionListener} that the files currently marked
      * on this FileTable have changed.
      *
-     * <p>This method has no effect if the row corresponds to the parent folder row '..' .</p>
+     * <p>This method has no effect if the row corresponds to the parent folder row '..' .
      *
      * @param index index of the file to mark/unmark
      * @param marked true to mark the file, false to unmark it
@@ -970,7 +969,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
     /**
-     * Calls {@link #sortBy(Column, boolean, boolean)} with the sort information contained in the given {@link SortInfo}.
+     * Calls {@link #sortBy(Column, boolean, boolean, boolean)} with the sort information contained in the given {@link SortInfo}.
      *
      * @param sortInfo the information to use to sort this table.
      */
@@ -1121,7 +1120,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      *
      * <p>If the current sort criterion corresponds to the specified column and this
      * column is disabled, the sort criterion will be reset to {@link Column#NAME} to prevent the table from being
-     * sorted by an invisible column/criterion.</p>
+     * sorted by an invisible column/criterion.
      *
      * @param column column, see {@link Column} for possible values
      * @param enabled true to enable the column, false to disable it.

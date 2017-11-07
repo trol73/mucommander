@@ -64,7 +64,6 @@ class InternalOpen extends LocalFileOperation {
      *   <li>Desktops are supported by the current system (<code>Desktop.isDesktopSupported()</code> returns <code>true</code>).</li>
      *   <li>File opening is supported by the desktop (<code>Desktop.isSupported(Desktop.Action.OPEN)</code> returns <code>true</code>).</li>
      * </ul>
-     * </p>
      * @return <code>true</code> if this operations is available, <code>false</code> otherwise.
      */
     @Override

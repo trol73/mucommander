@@ -134,7 +134,7 @@ public class LocalProcess extends AbstractProcess {
      * On Java 1.5 or higher, this will throw an <code>java.io.IOException</code>, as we're using
      * merged output streams. Developers should protect themselves against this by checking
      * {@link #usesMergedStreams()} before accessing streams.
-     * </p>
+     *
      * @return             the process' error stream.
      * @throws IOException if this process is using merged streams.
      */

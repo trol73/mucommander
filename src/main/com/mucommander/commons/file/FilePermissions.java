@@ -10,7 +10,7 @@ package com.mucommander.commons.file;
  * For instance, a file implementation with support for the sole 'user' permissions (read/write/execute) will return a
  * mask whose int value is 448 (700 octal).
  *
- * <p>This interface also defines constants for commonly used file permissions.</p>
+ * <p>This interface also defines constants for commonly used file permissions.
  *
  * @see com.mucommander.commons.file.AbstractFile#getPermissions()
  * @author Maxence Bernard

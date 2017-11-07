@@ -33,7 +33,7 @@ import java.util.Map;
  * To minimize the impact this could have on performance, this operation is not systematically performed
  * for each call to <code>get()</code> and <code>set()</code> methods, unless the cache is full. 
  * That means this implementation is not as aggressive as it could be in terms of releasing expired items' memory
- * but favors performance instead, which is what caches are for.</p>
+ * but favors performance instead, which is what caches are for.
  *
  * @author Maxence Bernard
  */

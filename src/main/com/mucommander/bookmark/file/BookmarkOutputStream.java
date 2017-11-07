@@ -64,7 +64,7 @@ class BookmarkOutputStream extends ByteArrayOutputStream implements BookmarkBuil
      * Adds the specified bookmark to the bookmark manager
      * <p>
      * Note that this method will remove any previous bookmark of the same name.
-     * </p>
+     *
      * @param name     name of the new bookmark.
      * @Param location location of the new bookmark.
      */

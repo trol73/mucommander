@@ -48,7 +48,6 @@ import com.mucommander.ui.viewer.ViewerRegistrar;
  * The path of each file is relative to the checksum file's path. In the above example, <code>readme.txt</code> and
  * the checksum file are located in the same folder. Note that 2 space characters (and not just one as anyone in his
  * right mind would think) separate the hexadecimal checksum from the file path.
- * </p>
  *
  * <p>The above file format is used for all checksum algorithms but one: CRC32, which uses the special SFV format where
  * the checksum for each file is written as follow:
@@ -57,7 +56,6 @@ import com.mucommander.ui.viewer.ViewerRegistrar;
  * wne-ebai.r01 f80a8443
  * ...
  * </pre>
- * </p>
  *
  * @author Maxence Bernard
  */

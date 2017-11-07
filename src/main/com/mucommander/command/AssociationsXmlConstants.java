@@ -24,7 +24,6 @@ package com.mucommander.command;
  * This interface is only meant as a convenient way of sharing the XML
  * file format between the {@link AssociationWriter} and {@link AssociationReader}. It will be removed
  * at bytecode optimisation time.
- * </p>
  * <p>
  * Associations XML files must match the following DTD:
  * <pre>

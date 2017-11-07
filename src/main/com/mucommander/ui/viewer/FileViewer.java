@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * An abstract class to be subclassed by file viewer implementations.
  *
- * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.</p>
+ * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.
  *
  * @author Maxence Bernard, Arik Hadas
  */

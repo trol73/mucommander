@@ -25,7 +25,6 @@ package com.mucommander.command;
  * file format between the {@link com.mucommander.command.CommandWriter}
  * and {@link CommandReader}. It will be removed
  * at bytecode optimisation time.
- * </p>
  * <p>
  * Commands XML files must match the following DTD:
  * <pre>

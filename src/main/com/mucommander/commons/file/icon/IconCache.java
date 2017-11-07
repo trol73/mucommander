@@ -29,10 +29,10 @@ import javax.swing.*;
  * strategies to be implemented.
  *
  * <p>Icons are stored as {@link java.lang.ref.SoftReference soft references} so they can be garbage collected 
- * when the VM runs low on memory.</p>
+ * when the VM runs low on memory.
  *
  * <p>The implementation uses the {@link ReferenceMap} class part of the <code>Apache Commons Collection</code> library.
- * All accesses to the underlying map is synchronized, making this cache thread-safe.</p>
+ * All accesses to the underlying map is synchronized, making this cache thread-safe.
  *
  * @author Maxence Bernard
  */

@@ -340,7 +340,6 @@ public abstract class FileURLTestCase {
      * <p>
      * <b>Important:</b> this method must be overridden for protocols that have a specific realm notion (like SMB) or
      * else the test will fail.
-     * </p>
      *
      *
      * @throws MalformedURLException should not happen

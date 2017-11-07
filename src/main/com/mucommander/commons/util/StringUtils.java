@@ -42,10 +42,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     *
      * @param a string to test.
      * @param b suffix to test for.
      * @return <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case, <code>false</code> otherwise.
@@ -61,10 +60,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
      * @param  posA                           position in <code>a</code> at which to look for <code>b</code>
@@ -96,10 +94,8 @@ public final class StringUtils {
     /**
      * <p>
      * Checks if <code>str</code> contains a search string <code>searchStr</code> regardless of case, handling {@code null}.
-     * </p>
      * <p>
      * A {@code null} string will return {@code false}.
-     * </p>
      *
      * <pre>
      * StringUtils.contains(null, *) = false
@@ -134,10 +130,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     *
      * @param a string to test.
      * @param b suffix to test for.
      * @return <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case, <code>false</code> otherwise.
@@ -151,10 +146,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
      * @param  posA                           position in <code>a</code> at which to look for <code>b</code>
@@ -216,7 +210,7 @@ public final class StringUtils {
      * Returns <code>true</code> if <code>a</code> starts with <code>b</code> regardless of the case.
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     *
      * @param a string to test.
      * @param b prefix to test for.
      * @return <code>true</code> if <code>a</code> starts with <code>b</code> regardless of the case, <code>false</code> otherwise..
@@ -250,7 +244,7 @@ public final class StringUtils {
      *
      * <p>In other words, this method returns <code>true</code> if strings are either both <code>null</code>
      * or equal according to <code>String#equals(String)</code> for case-sensitive comparison, or
-     * <code>String#equalsIgnoreCase(String)</code> for case-insensitive comparison.</p> 
+     * <code>String#equalsIgnoreCase(String)</code> for case-insensitive comparison.
      *
      * @param s1 string to compare, potentially <code>null</code>
      * @param s2 string to compare, potentially <code>null</code>

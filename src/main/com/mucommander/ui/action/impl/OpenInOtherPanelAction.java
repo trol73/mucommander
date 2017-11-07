@@ -34,7 +34,7 @@ import java.util.Map;
  * <p>
  * This action is only enabled if the current selection is browsable as defined by
  * {@link com.mucommander.commons.file.AbstractFile#isBrowsable()}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class OpenInOtherPanelAction extends SelectedFileAction {

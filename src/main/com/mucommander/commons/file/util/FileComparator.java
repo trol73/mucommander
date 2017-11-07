@@ -89,7 +89,7 @@ public class FileComparator implements Comparator<AbstractFile> {
      *   <li>letters third</li>
      * </ul>
      *
-     * <p>This character order was suggested in ticket #282.</p> 
+     * <p>This character order was suggested in ticket #282.
      *
      * @param c character for which to return a value
      * @return a <code>value</code> for the given character

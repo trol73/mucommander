@@ -36,7 +36,6 @@ import static com.mucommander.conf.MuPreference.*;
  * <p>
  * This class is used for displaying the {@link FolderPanel} main folder panel and the
  * {@link FoldersTreePanel folder tree view}.
- * </p>
  *
  * @author Maxence Bernard, Mariusz Jakubowski
  */

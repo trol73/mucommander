@@ -39,10 +39,10 @@ public class HTTPProtocolProvider implements ProtocolProvider {
      * <code>javax.net.ssl.SSLException</code>.
      *
      * <p>This method needs to be called only once in the JVM lifetime and will impact all HTTPS connections made,
-     * i.e. not only the ones made by this class.</p>
+     * i.e. not only the ones made by this class.
      *
      * <p>This clearly is unsecure for the user, but arguably better from a feature standpoint than systematically
-     * failing untrusted connections.</p>
+     * failing untrusted connections.
      *
      * @throws Exception if an error occurred while installing the custom X509TrustManager.
 	 */

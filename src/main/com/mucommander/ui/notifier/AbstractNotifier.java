@@ -35,7 +35,6 @@ import com.mucommander.ui.main.WindowManager;
  * <p>
  * A notifier serves the purpose of displaying notifications to the screen, to inform the user of an event when
  * the application is not visible (in the background).
- * </p>
  * <p>
  * The notifier instance returned by {@link #getNotifier()} is platform-dependent. At this time, two notifier
  * implementations are available:
@@ -43,7 +42,6 @@ import com.mucommander.ui.main.WindowManager;
  *  <li>{@link GrowlNotifier}: for Mac OS X, requires Growl to be installed
  *  <li>{@link SystemTrayNotifier}: for Java 1.6 and up, using the java.awt.SystemTray API
  * </ul>
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -63,7 +61,7 @@ public abstract class AbstractNotifier {
     }
 
     /**
-     * Returns <code>true<code> if an AbstractNotifier instance is available. In other words, if <code>true</code> is
+     * Returns <code>true</code> if an AbstractNotifier instance is available. In other words, if <code>true</code> is
      * returned, {@link #getNotifier()} will return a non-null value.
      *
      * @return true if an AbstractNotifier instance is available
@@ -98,14 +96,12 @@ public abstract class AbstractNotifier {
      *  <li>this notifier is not enabled
      *  <li>the notification could not be delivered because of an error
      * </ul>
-     * </p>
      *
      * <p>
      * Note that this method is executed in a separate thread after all pending Swing events have been processed,
      * to ensure in the event of a window being made inactive that the notification will not be triggered. This method
      * immediately return s(i.e. does not wait for pending events) and thus is not be able to return if the notification
      * was displayed or not, unlike {@link #displayNotification(NotificationType, String, String)}.
-     * </p>
      *
      * @param notificationType one of the available notification types, see {@link NotificationType} for possible values
      * @param title the title of the notification to display
@@ -155,7 +151,6 @@ public abstract class AbstractNotifier {
      *  <li>this notifier is not enabled
      *  <li>the notification could not be delivered because of an error
      * </ul>
-     * </p>
      *
      * @param notificationType one of the available notification types, see {@link NotificationType} for possible values
      * @param title the title of the notification to display

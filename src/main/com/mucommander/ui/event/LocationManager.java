@@ -109,7 +109,7 @@ public class LocationManager {
      * has or is being changed.
      *
      * <p>Listeners are stored as weak references so {@link #removeLocationListener(LocationListener)}
-     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.</p>
+     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.
      *
      * @param listener the LocationListener to register
      */

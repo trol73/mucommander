@@ -16,7 +16,7 @@ import com.mucommander.ui.main.MainFrame;
 /**
  * This ServerPanel helps initiate VSpherePanel connections.
  * 
- * @author Yuval Kohavi <yuval@intigua.com> 
+ * @author Yuval Kohavi, yuval@intigua.com
  */
 public class VSpherePanel extends ServerPanel {
 

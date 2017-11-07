@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * in several components of a MainFrame at the same time; if an action's state changes, the change must be reflected
  * everywhere the action is used. It is also important for performance reasons: sharing one action throughout a
  * {@link com.mucommander.ui.main.MainFrame} saves some memory and also CPU cycles as some actions listen to particular events to change
- * their state accordingly.</p>
+ * their state accordingly.
  *
  * @see MuAction
  * @see ActionParameters

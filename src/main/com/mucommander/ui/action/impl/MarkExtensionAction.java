@@ -138,7 +138,7 @@ public class MarkExtensionAction extends MuAction {
      * will match that extension. Otherwise, the currently selected file's extension will be used. If it doesn't
      * have one, the returned IMAGE_FILTER will match all files such that
      * <code>file.getExtension() == null</code>.
-     * </p>
+     *
      * @param  file currently selected file.
      * @return      the IMAGE_FILTER that should be applied by this action.
      */

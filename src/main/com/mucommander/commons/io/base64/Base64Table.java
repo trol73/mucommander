@@ -81,10 +81,10 @@ class Base64Table {
      * Creates a new <code>Base64Table</code> using the specified character table and padding character.
      *
      * <p>An <code>IllegalArgumentException</code> if the specified table is not 64 bytes long, contains duplicate
-     * values, or if the specified padding character is present in the table.</p>
+     * values, or if the specified padding character is present in the table.
      *
      * <p>The given byte array is cloned before being stored, to avoid any side effect that could be caused by the
-     * byte array being modified inadvertently after this constructor is called.</p>
+     * byte array being modified inadvertently after this constructor is called.
      *
      * @param table the base64 character table. The array must be 64 bytes long and must not contain any duplicate values.
      * @param paddingChar the ASCII character used for padding. This character must not already be used in the table.

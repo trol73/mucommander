@@ -45,7 +45,6 @@ import com.mucommander.ui.main.WindowManager;
  * This Trash class has the same possibilities as <code>KDETrash</code>, but is adapted to a
  * GNOME environment, where the trash is simple directory ~/.Trash. So working with trash means
  * working with this directory.
- * </p>
  *
  * @see GnomeTrashProvider
  * @author David Kovar (kowy), Maxence Bernard
@@ -172,7 +171,6 @@ public class GnomeTrash extends QueuedTrash {
      * <p>
      * <b>Implementation notes:</b><br>
      * Simply free the <code>TRASH_PATH</code> directory
-     * </p>
      * 
      * @return True if everything went well
      */
@@ -237,7 +235,6 @@ public class GnomeTrash extends QueuedTrash {
      * Implementation of {@link com.mucommander.desktop.QueuedTrash} moveToTrash method.
      * <p>
      * Try to copy a collection of files to the GNOME's Trash.
-     * </p>
 	 * 
 	 * @param queuedFiles
 	 *          Collection of files to the trash

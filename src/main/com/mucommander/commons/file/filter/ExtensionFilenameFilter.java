@@ -4,7 +4,7 @@ package com.mucommander.commons.file.filter;
  * This {@link FilenameFilter} matches files whose path end with one of several specified extensions.
  *
  * <p>The extension(s) may be any string, but when used in the traditional sense of a file extension (e.g. zip extension)
- * the '.' character must be included in the specified extension (e.g. ".zip" must be used, not just "zip").</p>
+ * the '.' character must be included in the specified extension (e.g. ".zip" must be used, not just "zip").
  * 
  * @author Maxence Bernard, Nicolas Rinaudo
  */

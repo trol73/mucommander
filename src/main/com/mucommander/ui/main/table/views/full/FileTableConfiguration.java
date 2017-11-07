@@ -65,7 +65,7 @@ public class FileTableConfiguration {
      * Sets the enabled state of the specified column.
      * <p>
      * Note that the {@link Column#NAME} column's enabled state is ignored as it will always be enabled.
-     * </p>
+     *
      * @param column column whose enabled state should be set.
      * @param flag   whether the column should be enabled.
      */
@@ -91,7 +91,7 @@ public class FileTableConfiguration {
      * <p>
      * Note that the {@link Column#NAME} column's width will be ignored, as it depends on the frame's
      * initial dimensions.
-     * </p>
+     *
      * @param column column whose width should be set.
      * @param value  column's initial width.
      */
@@ -108,7 +108,7 @@ public class FileTableConfiguration {
      * <p>
      * Note that the returned value isn't necessarily a legal column position. It's used
      * as a comparison value rather than an index.
-     * </p>
+     *
      * @param  column column whose initial position will be returned.
      * @return        the desired initial position of the specified column.
      */

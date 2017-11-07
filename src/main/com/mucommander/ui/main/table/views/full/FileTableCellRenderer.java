@@ -41,7 +41,7 @@ import java.awt.Component;
  *
  * <p>Quote from Sun's Javadoc : The table class defines a single cell renderer and uses it as a 
  * as a rubber-stamp for rendering all cells in the table;  it renders the first cell,
- * changes the contents of that cell renderer, shifts the origin to the new location, re-draws it, and so on.</p>
+ * changes the contents of that cell renderer, shifts the origin to the new location, re-draws it, and so on.
  *
  * <p>This <code>TableCellRender</code> is written from scratch instead of overriding <code>DefaultTableCellRender</code>
  * to provide a more efficient (and more specialized) implementation: each column is rendered using a dedicated 

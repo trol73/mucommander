@@ -92,7 +92,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
     /**
      * Creates a new 'mark' or 'unmark' dialog.
      *
-     * @param addToSelection if <true>, files matching
+     * @param addToSelection if <code>true</code>, files matching
      */
     public FileSelectionDialog(MainFrame mainFrame, boolean addToSelection) {
 

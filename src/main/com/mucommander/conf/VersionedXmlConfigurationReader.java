@@ -38,7 +38,6 @@ public class VersionedXmlConfigurationReader extends XmlConfigurationReader {
      * Returns the muCommander version that was used to write the configuration file, <code>null</code> if it is unknown.
      * <p>
      * Note: the version attribute was introduced in muCommander 0.8.4.
-     * </p>
      *
      * @return the muCommander version that was used to write the configuration file, <code>null</code> if it is unknown.
      */

@@ -39,7 +39,7 @@ import java.util.zip.GZIPInputStream;
  * TarArchiveFile provides read-only access to archives in the Tar/Tgz format.
  *
  * <p>The actual decompression work is performed by the <code>Apache Ant</code> library under the terms of the
- * Apache Software License.</p>
+ * Apache Software License.
  *
  * @see com.mucommander.commons.file.impl.tar.TarFormatProvider
  * @author Maxence Bernard
