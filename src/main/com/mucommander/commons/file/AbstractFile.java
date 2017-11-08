@@ -170,7 +170,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * </ul>
      * <p>
      * This default implementation returns the string representation of this file's {@link #getURL() url}, without
-     * the login and password parts. File implementations overridding this method should always return a path free of
+     * the login and password parts. File implementations overriding this method should always return a path free of
      * any login and password, so that it can safely be displayed to the end user or stored, without risking to
      * compromise sensitive information.
      *
@@ -237,7 +237,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * Returns <code>true</code> if this file is hidden.
      *
      * <p>This default implementation is solely based on the filename and returns <code>true</code> if this
-     * file's name starts with '.'. This method should be overriden if the underlying filesystem has a notion 
+     * file's name starts with '.'. This method should be overridden if the underlying filesystem has a notion
      * of hidden files.
      *
      * @return true if this file is hidden
@@ -308,7 +308,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * unavailable. If the returned file does exist, it must always be a {@link #isDirectory() directory}.
      * In other words, archive files may not be considered as volumes.
      * <p>
-     * The notion of volume may or may not have a meaning depending on the kind of fileystem. On local filesystems,
+     * The notion of volume may or may not have a meaning depending on the kind of filesystem. On local filesystems,
      * the notion of volume can be assimilated into that of <i>mount point</i> for UNIX-based OSes, or <i>drive</i>
      * for the Windows platform. Volumes may also have a meaning for certain network filesystems such as SMB, for which
      * shares can be considered as volumes. Filesystems that don't have a notion of volume should return the
@@ -1970,7 +1970,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
     /**
      * Returns the file Object of the underlying API providing access to the filesystem. The returned Object may expose
-     * filesystem-specific functionalities that are not available in <code>AbstractFile</code>. Note however that the
+     * filesystem-specific functionality that are not available in <code>AbstractFile</code>. Note however that the
      * returned Object type may change over time, if the underlying API used to provide access to the filesystem
      * changes, so this method should be used only as a last resort.
      *

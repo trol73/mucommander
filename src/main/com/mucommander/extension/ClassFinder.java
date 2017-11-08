@@ -123,8 +123,9 @@ public class ClassFinder {
      */
     public List<Class<?>> find(AbstractFile browsable, ClassFilter classFilter, ClassLoader classLoader) throws IOException {
         // Ignore non-browsable files.
-        if(!browsable.isBrowsable())
+        if (!browsable.isBrowsable()) {
             return new Vector<>();
+        }
 
         // Initializes exploring.
         loader           = classLoader;
@@ -152,10 +153,8 @@ public class ClassFinder {
      * @throws IOException if an error occurs while exploring <code>browsable</code>.
      */
     public List<Class<?>> find(AbstractFile browsable, ClassFilter classFilter) throws IOException {
-        AbstractFileClassLoader classLoader; // Default class loader.
-
         // Initializes the default class loader.
-        classLoader = new AbstractFileClassLoader();
+        AbstractFileClassLoader classLoader = new AbstractFileClassLoader();
         classLoader.addFile(browsable);
 
         // Explores browsable.

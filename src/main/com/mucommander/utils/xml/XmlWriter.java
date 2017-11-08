@@ -28,9 +28,9 @@ public class XmlWriter {
 
     // - XML standard entities -------------------------------------------
     // -------------------------------------------------------------------
-    /** Forbiden XML characters. */
+    /** Forbidden XML characters. */
     private final static String[] ENTITIES            = new String[] {"&", "\"" , "'", "<", ">"};
-    /** What to replace forbiden XML characters with. */
+    /** What to replace forbidden XML characters with. */
     private final static String[] ENTITY_REPLACEMENTS = new String[] {"&amp;", "&quot;", "&apos;", "&lt;", "&gt;"};
 
 
@@ -99,8 +99,9 @@ public class XmlWriter {
         out.print("<?xml version=\"1.0\" encoding=\"");
         out.print(encoding);
         out.println("\"?>");
-        if(out.checkError())
+        if (out.checkError()) {
             throw new IOException();
+        }
     }
 
 
@@ -146,8 +147,9 @@ public class XmlWriter {
             out.print('\"');
         }
         out.println('>');
-        if (out.checkError())
+        if (out.checkError()) {
             throw new IOException();
+        }
     }
 
     /**
@@ -209,7 +211,7 @@ public class XmlWriter {
     /**
      * Writes an element opening sequence.
      * <p>
-     * This is a covenience method and is stricly equivalent to calling
+     * This is a convenience method and is strictly equivalent to calling
      * <code>{@link #startElement(String,XmlAttributes,boolean) startElement}(name, attributes, false)</code>.
      *
      * @param  name        name of the element to open.
@@ -368,8 +370,9 @@ public class XmlWriter {
     public void println() throws IOException {
         out.println();
         printIndentation = true;
-        if(out.checkError())
+        if (out.checkError()) {
             throw new IOException();
+        }
     }
 
     /**
@@ -377,13 +380,15 @@ public class XmlWriter {
      * @throws IOException if an I/O error occurs.
      */
     private void indent() throws IOException {
-        if(printIndentation) {
-            for(int i = 0; i < offset; i++)
+        if (printIndentation) {
+            for(int i = 0; i < offset; i++) {
                 out.print(' ');
+            }
             printIndentation = false;
         }
-        if(out.checkError())
+        if (out.checkError()) {
             throw new IOException();
+        }
     }
 
 
@@ -394,5 +399,7 @@ public class XmlWriter {
      * Closes the XML stream.
      * @throws IOException if an I/O error occurs.
      */
-    public void close() throws IOException {out.close();}
+    public void close() throws IOException {
+        out.close();
+    }
 }

@@ -38,7 +38,7 @@ import com.mucommander.commons.file.FileFactory;
  * - date of latest release.<br>
  * - latest official version.<br>
  * - where to download the latest version from.<br>
- * This class is used to access those informations and compare them with what is known
+ * This class is used to access that information and compare them with what is known
  * of the current one, making it possible to notify users of new releases.
  * <p>
  * Checking for new releases is a fairly straightforward process, and can be done
@@ -53,7 +53,7 @@ import com.mucommander.commons.file.FileFactory;
  *     else
  *         System.out.println("You've got the latest muCommander version");
  *    }
- * catch(Exception e) {System.err.println("An error occured.");}
+ * catch(Exception e) {System.err.println("An error occurred.");}
  * </pre>
  *
  * <p>

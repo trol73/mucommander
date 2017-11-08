@@ -128,9 +128,9 @@ public class OSXTrash extends QueuedTrash {
     @Override
     public int getItemCount() {
         StringBuilder output = new StringBuilder();
-        if(!AppleScript.execute(COUNT_TRASH_ITEMS_APPLESCRIPT, output))
+        if (!AppleScript.execute(COUNT_TRASH_ITEMS_APPLESCRIPT, output)) {
             return -1;
-
+        }
         try {
             return Integer.parseInt(output.toString().trim());
         } catch(NumberFormatException e) {
@@ -157,6 +157,64 @@ public class OSXTrash extends QueuedTrash {
     // QueuedTrash implementation //
     ////////////////////////////////
 
+    private boolean moveToTrashWithUnicode(List<AbstractFile> queuedFiles) {
+        int nbFiles = queuedFiles.size();
+        StringBuilder appleScript = new StringBuilder("tell application \"Finder\" to move {");
+        for (int i = 0; i < nbFiles; i++) {
+            appleScript.append("posix file \"").append(queuedFiles.get(i).getAbsolutePath()).append('"');
+            if (i < nbFiles - 1) {
+                appleScript.append(", ");
+            }
+        }
+        appleScript.append("} to the trash");
+        return AppleScript.execute(appleScript.toString(), null);
+    }
+
+    private boolean moveToTrashNoUnicode(List<AbstractFile> queuedFiles) {
+        AbstractFile tmpFile = null;
+        //OutputStreamWriter tmpOut = null;
+
+        try {
+            // create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
+            // EOL characters. The file must NOT end with a trailing EOL.
+
+            tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);
+            try (OutputStreamWriter tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), "utf-8")) {
+                final int nbFiles = queuedFiles.size();
+                for (int i = 0; i < nbFiles; i++) {
+                    tmpOut.write(queuedFiles.get(i).getAbsolutePath());
+                    if (i < nbFiles - 1) {
+                        tmpOut.write("\n");
+                    }
+                }
+            } catch (IOException e) {
+                throw e;
+            }
+
+            // Set the 'tmpFilePath' variable to the path of the temporary file we just created
+            String appleScript = "set tmpFilePath to \""+tmpFile.getAbsolutePath()+"\"\n";
+            appleScript += MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
+
+            boolean success = AppleScript.execute(appleScript, null);
+
+            // AppleScript has been executed, we can now safely close and delete the temporary file
+            tmpFile.delete();
+
+            return success;
+        } catch (IOException e) {
+            LOGGER.debug("Caught IOException", e);
+            if (tmpFile != null) {
+                try {
+                    tmpFile.delete();
+                } catch (IOException e2) {
+                    // There's not much we can do about it
+                }
+            }
+
+            return false;
+        }
+    }
+
     /**
      * Performs the actual job of moving files to the trash using AppleScript.
      *
@@ -176,74 +234,12 @@ public class OSXTrash extends QueuedTrash {
      */
     @Override
     protected boolean moveToTrash(List<AbstractFile> queuedFiles) {
-        String appleScript;
-
         // Simple script for AppleScript versions with Unicode support, i.e. that allows Unicode characters in the
         // script (AppleScript 2.0 / Mac OS X 10.5 or higher).
         if (AppleScript.getScriptEncoding().equals(AppleScript.UTF8)) {
-            int nbFiles = queuedFiles.size();
-            appleScript = "tell application \"Finder\" to move {";
-            for(int i=0; i<nbFiles; i++) {
-                appleScript += "posix file \""+queuedFiles.get(i).getAbsolutePath()+"\"";
-                if (i < nbFiles-1)
-                    appleScript += ", ";
-            }
-            appleScript += "} to the trash";
-            return AppleScript.execute(appleScript, null);
+            return moveToTrashWithUnicode(queuedFiles);
         }
         // Script for AppleScript versions without Unicode support (AppleScript 1.10 / Mac OS X 10.4 or lower)
-        else {
-            AbstractFile tmpFile = null;
-            OutputStreamWriter tmpOut = null;
-
-            try {
-                // create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
-                // EOL characters. The file must NOT end with a trailing EOL.
-                int nbFiles = queuedFiles.size();
-                tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);
-                tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), "utf-8");
-
-                for (int i=0; i<nbFiles; i++) {
-                    tmpOut.write(queuedFiles.get(i).getAbsolutePath());
-                    if (i < nbFiles-1) {
-                        tmpOut.write("\n");
-                    }
-                }
-
-                tmpOut.close();
-
-                // Set the 'tmpFilePath' variable to the path of the temporary file we just created
-                appleScript = "set tmpFilePath to \""+tmpFile.getAbsolutePath()+"\"\n";
-                appleScript += MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
-
-                boolean success = AppleScript.execute(appleScript, null);
-
-                // AppleScript has been executed, we can now safely close and delete the temporary file
-                tmpFile.delete();
-
-                return success;
-            } catch (IOException e) {
-                LOGGER.debug("Caught IOException", e);
-
-                if (tmpOut != null) {
-                    try {
-                        tmpOut.close();
-                    } catch (IOException e1) {
-                        // There's not much we can do about it
-                    }
-                }
-
-                if (tmpFile != null) {
-                    try {
-                        tmpFile.delete();
-                    } catch (IOException e2) {
-                        // There's not much we can do about it
-                    }
-                }
-
-                return false;
-            }
-        }
-
+        return moveToTrashNoUnicode(queuedFiles);
     }
 }

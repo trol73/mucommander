@@ -87,7 +87,7 @@ public class NFSFile extends ProtocolFile {
         // create the NFS URL used by XFile.
 
         // The general syntax for NFS URLs is : nfs://<host>:<port><url-path>, as specified by RFC 2054
-        // Additionaly, XFile allows some special flags to be used in the port part of the URL to specify connection
+        // Additionally, XFile allows some special flags to be used in the port part of the URL to specify connection
         // properties. Those flags must be placed after the port, and before the colon character delimiting the end of
         // the port part.
         // Here's the list of allowed flags (quoted from com.sun.nfs.NfsURL):
@@ -100,7 +100,7 @@ public class NFSFile extends ProtocolFile {
         //
         // The 'm' flag must be specified, otherwise regular NFS shares (i.e. non WebNFS-enabled ones) that don't
         // specify a public filehandle will fail. However, using this flag has two unfortunate consequences:
-        // - the NFS version fails to be properly negociated as it normally does (try v3 then fall back on v2): the
+        // - the NFS version fails to be properly negotiated as it normally does (try v3 then fall back on v2): the
         //  NFS version must be specified in the URL.
         // - an extra slash character must be added before the path part, otherwise it is considered as relative to
         //  the public filehandle and will thus fail to resolve.
@@ -109,8 +109,9 @@ public class NFSFile extends ProtocolFile {
 
         // Determines the NFS version (v2 or v3) to be used, based on the version property
         String nfsVersion = fileURL.getProperty(NFS_VERSION_PROPERTY_NAME);
-        if(nfsVersion==null)
+        if (nfsVersion == null) {
             nfsVersion = DEFAULT_NFS_VERSION;
+        }
 
         // Determines the NFS transport protocol (Auto, TCP or UDP) to be used, based on the protocol property
         String nfsProtocol = fileURL.getProperty(NFS_PROTOCOL_PROPERTY_NAME);
@@ -118,7 +119,7 @@ public class NFSFile extends ProtocolFile {
 
         // Omit port part if none is contained in the FileURL or if it is 2049
         int port = fileURL.getPort();
-        String portString = port==-1||port==2049?"":""+port;
+        String portString = port < 0 || port == 2049 ? "" : ""+port;
 
         // create the XFile instance with the weird NFS url
         this.file = new XFile("nfs://"+fileURL.getHost()+":"+portString+nfsVersion+nfsProtocol+"m"+"/"+fileURL.getPath());
@@ -316,8 +317,9 @@ public class NFSFile extends ProtocolFile {
         checkRenamePrerequisites(destFile, true, false);
 
         // Rename file
-        if(!file.renameTo(((NFSFile)destFile).file))
+        if (!file.renameTo(((NFSFile)destFile).file)) {
             throw new IOException();
+        }
     }
 
     /**
@@ -414,7 +416,7 @@ public class NFSFile extends ProtocolFile {
 
         private XRandomAccessFile raf;
 
-        public NFSRandomAccessInputStream(XRandomAccessFile raf) {
+        NFSRandomAccessInputStream(XRandomAccessFile raf) {
             this.raf = raf;
         }
 
@@ -456,7 +458,7 @@ public class NFSFile extends ProtocolFile {
 
         private XRandomAccessFile raf;
 
-        public NFSRandomAccessOutputStream(XRandomAccessFile raf) {
+        NFSRandomAccessOutputStream(XRandomAccessFile raf) {
             this.raf = raf;
         }
 
@@ -526,7 +528,7 @@ public class NFSFile extends ProtocolFile {
 
         private final static PermissionBits MASK = new GroupedPermissionBits(384);  // rw------- (300 octal)
 
-        public NFSFilePermissions(XFile file) {
+        NFSFilePermissions(XFile file) {
             this.file = file;
         }
 

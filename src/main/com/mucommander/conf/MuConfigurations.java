@@ -26,16 +26,16 @@ import com.mucommander.commons.conf.ConfigurationException;
 import com.mucommander.commons.conf.ConfigurationListener;
 
 /**
- * This class contains the configurations of muCommander and exposes their API methods.
+ * This class contains the configurations of trolCommander and exposes their API methods.
  * It provides global access to the configurations without using singletons.
  * 
  * @author Arik Hadas
  */
 public class MuConfigurations {
 
-	/** Static configurations of muCommander */
+	/** Static configurations of trolCommander */
 	private static final MuPreferences preferences = new MuPreferences();
-	/** Dynamic configurations of muCommander */
+	/** Dynamic configurations of trolCommander */
 	private static final MuSnapshot snapshot = new MuSnapshot();
 	
 	/////////////////////////

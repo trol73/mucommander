@@ -159,7 +159,7 @@ public class ExtensionManager {
     public static void setExtensionsFolder(String path) throws IOException {
         AbstractFile folder = FileFactory.getFile(path);
 
-        if(folder == null) {
+        if (folder == null) {
             setExtensionsFolder(new File(path));
         } else {
             setExtensionsFolder(folder);

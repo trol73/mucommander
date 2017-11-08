@@ -97,19 +97,19 @@ public enum OsFamily {
      *  <li>{@link #FREEBSD}</li>
      *  <li>{@link #AIX}</li>
      *  <li>{@link #HP_UX}</li>
-     *  <li>{@link #UNKNOWN_OS_FAMILY}: the reasonning for this being that most alternative OSes are Unix-based.</li>
+     *  <li>{@link #UNKNOWN_OS_FAMILY}: the reason for this being that most alternative OSes are Unix-based.</li>
      * </ul>
      *
      * @return <code>true</code> if the current OS is UNIX-based
      */
     public boolean isUnixBased() {
-        return this==MAC_OS_X
-                || this==LINUX
-                || this==SOLARIS
-                || this==FREEBSD
-                || this==AIX
-                || this==HP_UX
-                || this== UNKNOWN_OS_FAMILY;
+        return this == MAC_OS_X
+                || this == LINUX
+                || this == SOLARIS
+                || this == FREEBSD
+                || this == AIX
+                || this == HP_UX
+                || this == UNKNOWN_OS_FAMILY;
 
         // Not UNIX-based: WINDOWS, OS/2 and OpenVMS
     }
@@ -176,7 +176,7 @@ public enum OsFamily {
      * @return true if this instance is the same as the current runtime's value
      */
     public boolean isCurrent() {
-        return this==currentValue;
+        return this == currentValue;
     }
 
     ////////////////////////

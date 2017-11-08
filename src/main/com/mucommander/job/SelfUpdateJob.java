@@ -42,7 +42,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 
 /**
- * This job self-updates the muCommmander with a new JAR file that is fetched from a specified remote file.
+ * This job self-updates the trolCommander with a new JAR file that is fetched from a specified remote file.
  * The update process boils down to the following steps:
  * <ul>
  *  <li>First, all classes of the existing JAR files are loaded in memory, to ensure that the shutdown sequence has all
@@ -50,7 +50,7 @@ import com.mucommander.ui.main.WindowManager;
  *  <li>The new JAR file is downloaded (using {@link CopyJob}) to a temporary location</li>
  *  <li>The new JAR file is moved from the temporary location to the main application JAR file, overwriting the previous
  * JAR file.
- *  <li>muCommander is restarted: this involves starting a new application instance and shutting down the current one.
+ *  <li>trolCommander is restarted: this involves starting a new application instance and shutting down the current one.
  *  The specifics of this step are platform-dependant.</li>
  * </ul>
  *
@@ -135,10 +135,11 @@ public class SelfUpdateJob extends CopyJob {
      * @throws Exception if an error occurred while loading the classes
      */
     private void loadClassRecurse(AbstractFile file) throws Exception {
-        if(file.isBrowsable()) {
+        if (file.isBrowsable()) {
             AbstractFile[] children = file.ls(directoryOrClassFileFilter);
-            for (AbstractFile child : children)
+            for (AbstractFile child : children) {
                 loadClassRecurse(child);
+            }
         }
         else {          // .class file
 
@@ -201,16 +202,16 @@ public class SelfUpdateJob extends CopyJob {
                 parent = destJar.getParent();
 
                 // Look for an .app container that encloses the JAR file
-                if(parent.getName().equals("Java")
-                &&(parent=parent.getParent())!=null && parent.getName().equals("Resources")
-                &&(parent=parent.getParent())!=null && parent.getName().equals("Contents")
-                &&(parent=parent.getParent())!=null && "app".equals(parent.getExtension())) {
+                if ("Java".equals(parent.getName())
+                    && (parent = parent.getParent()) != null && "Resources".equals(parent.getName())
+                    && (parent = parent.getParent()) != null && "Contents".equals(parent.getName())
+                    && (parent = parent.getParent()) != null && "app".equals(parent.getExtension())) {
 
                     String appPath = parent.getAbsolutePath();
 
                     LOGGER.debug("Opening "+appPath);
 
-                    // Open -W wait for the current muCommander .app to terminate, before re-opening it
+                    // Open -W wait for the current trolCommander .app to terminate, before re-opening it
                     ProcessRunner.execute(new String[]{"/bin/sh", "-c", "open -W "+appPath+" && open "+appPath});
 
                     return;
@@ -222,13 +223,13 @@ public class SelfUpdateJob extends CopyJob {
 
                 // Windows
                 if (OsFamily.WINDOWS.isCurrent()) {
-                    // Look for a muCommander.exe launcher located in the same folder as the JAR file
+                    // Look for a trolCommander.exe launcher located in the same folder as the JAR file
                     launcherFilter = new EqualsFilenameFilter("trolCommander.exe", false);
 
                 }
                 // Other platforms, possibly Unix/Linux
                 else {
-                    // Look for a mucommander.sh located in the same folder as the JAR file
+                    // Look for a trolcommander.sh located in the same folder as the JAR file
                     launcherFilter = new EqualsFilenameFilter("trolcommander.sh", false);
                 }
 
@@ -256,8 +257,9 @@ public class SelfUpdateJob extends CopyJob {
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if(!super.processFile(file, recurseParams))
+        if (!super.processFile(file, recurseParams)) {
             return false;
+        }
 
         // Move the file from the temporary location to its final destination
         try {

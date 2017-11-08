@@ -43,7 +43,7 @@ public final class StringUtils {
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
      * @param a string to test.
      * @param b suffix to test for.
@@ -61,7 +61,7 @@ public final class StringUtils {
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
@@ -131,7 +131,7 @@ public final class StringUtils {
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
      * @param a string to test.
      * @param b suffix to test for.
@@ -147,7 +147,7 @@ public final class StringUtils {
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
@@ -209,7 +209,7 @@ public final class StringUtils {
     /**
      * Returns <code>true</code> if <code>a</code> starts with <code>b</code> regardless of the case.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
      * @param a string to test.
      * @param b prefix to test for.
@@ -277,19 +277,21 @@ public final class StringUtils {
 
     /**
      * Capitalizes the given string, making its first character upper case, and the rest of them lower case.
-     * This method reeturns an empty string if <code>null</code> or an empty string is passed.
+     * This method returns an empty string if <code>null</code> or an empty string is passed.
      *
      * @param s the string to capitalize
      * @return the capitalized string
      */
     public static String capitalize(String s) {
-        if (isNullOrEmpty(s))
+        if (isNullOrEmpty(s)) {
             return EMPTY;
+        }
 
         StringBuilder out = new StringBuilder(s.length());
         out.append(Character.toUpperCase(s.charAt(0)));
-        if (s.length() > 1)
+        if (s.length() > 1) {
             out.append(s.substring(1).toLowerCase());
+        }
         return out.toString();
     }
 

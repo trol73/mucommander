@@ -33,7 +33,7 @@ import java.util.List;
  *   <li>An {@link #getAlias() alias}, used to identify the command through the application.</li>
  *   <li>A {@link #getCommand() command}, which is what will be executed by the instance of <code>Command</code>.</li>
  *   <li>
- *     A {@link #getType() type}, which can be any of {@link CommandType#SYSTEM_COMMAND system} (invisible and inmutable),
+ *     A {@link #getType() type}, which can be any of {@link CommandType#SYSTEM_COMMAND system} (invisible and immutable),
  *     {@link CommandType#INVISIBLE_COMMAND invisible} (invisible and mutable) or {@link CommandType#NORMAL_COMMAND} (visible and mutable).
  *   </li>
  * </ul>
@@ -41,7 +41,7 @@ import java.util.List;
  * The basic command syntax is fairly simple:
  * <ul>
  *  <li>Any non-escaped <code>\</code> character will escape the following character and be removed from the tokens.</li>
- *  <li>Any non-escaped <code>"</code> character will escape all characters until the next occurence of <code>"</code>, except for <code>\</code>.</li>
+ *  <li>Any non-escaped <code>"</code> character will escape all characters until the next occurrence of <code>"</code>, except for <code>\</code>.</li>
  *  <li>Non-escaped space characters are used as token separators.</li>
  * </ul>
  * It is important to remember that <code>"</code> characters are <b>not</b> removed from the resulting tokens.

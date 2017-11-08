@@ -199,11 +199,12 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      */
     @Override
     public void write(int b) throws IOException {
-        if(error)
+        if (error) {
             out.write(b);
-        else {
-            try {out.write(b);}
-            catch(IOException e) {
+        } else {
+            try {
+                out.write(b);
+            } catch(IOException e) {
                 error = true;
                 throw e;
             }
