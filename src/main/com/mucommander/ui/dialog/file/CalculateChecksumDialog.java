@@ -24,7 +24,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.io.security.MuProvider;
 import com.mucommander.job.CalculateChecksumJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CalculateChecksumAction;
 import com.mucommander.ui.combobox.MuComboBox;
@@ -115,7 +114,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         FlowLayout flowLayout = new FlowLayout(FlowLayout.LEADING, 0, 0);
         JPanel tempPanel = new JPanel(flowLayout);
-        tempPanel.add(new JLabel(Translator.get("calculate_checksum_dialog.checksum_algorithm")+" : "));
+        tempPanel.add(new JLabel(i18n("calculate_checksum_dialog.checksum_algorithm")+" : "));
         tempPanel.add(algorithmComboBox);
 
         mainPanel.add(tempPanel);
@@ -123,10 +122,10 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         // create the components that allow to choose where the checksum file should be created
 
-        mainPanel.add(new JLabel(Translator.get("destination")+" :"));
+        mainPanel.add(new JLabel(i18n("destination")+" :"));
         mainPanel.addSpace(5);
 
-        JRadioButton tempLocationRadioButton = new JRadioButton(Translator.get("calculate_checksum_dialog.temporary_file"), true);
+        JRadioButton tempLocationRadioButton = new JRadioButton(i18n("calculate_checksum_dialog.temporary_file"), true);
         mainPanel.add(tempLocationRadioButton);
 
         specificLocationRadioButton = new JRadioButton("", false);
@@ -151,8 +150,8 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(Translator.get("ok"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("ok"));
+        JButton cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
                 DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
@@ -205,10 +204,10 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         algorithm = algorithm.toUpperCase();
 
-        if (algorithm.equals("SHA")) {
+        if ("SHA".equals(algorithm)) {
             return "SHA1SUMS";}
 
-        if (algorithm.equals("CRC32")) {
+        if ("CRC32".equals(algorithm)) {
             return (files.size() == 1 ? files.elementAt(0) : files.getBaseFolder()).getName() + ".sfv";
         }
 
@@ -241,7 +240,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
                 PathUtils.ResolvedDestination resolvedDest = PathUtils.resolveDestination(enteredPath, mainFrame.getActivePanel().getCurrentFolder());
                 // The path entered doesn't correspond to any existing folder
                 if (resolvedDest == null) {
-                    showErrorDialog(Translator.get("invalid_path", enteredPath));
+                    showErrorDialog(i18n("invalid_path", enteredPath));
                     return;
                 }
 
@@ -258,13 +257,13 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
             lastUsedAlgorithm = algorithm;
 
             // Start processing files
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("properties_dialog.calculating"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("properties_dialog.calculating"));
             CalculateChecksumJob job = new CalculateChecksumJob(progressDialog, mainFrame, files, checksumFile, digest);
             progressDialog.start(job);
         } catch (IOException ex) {
             // Note: FileFactory.getTemporaryFile() should never throw an IOException
 
-            showErrorDialog(Translator.get("invalid_path", specificLocationTextField.getText()));
+            showErrorDialog(i18n("invalid_path", specificLocationTextField.getText()));
         }
     }
 

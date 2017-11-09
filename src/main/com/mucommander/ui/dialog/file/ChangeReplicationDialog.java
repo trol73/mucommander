@@ -23,7 +23,6 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.ChangeFileAttributesJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ChangeReplicationAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -76,13 +75,13 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
         replication  = new IntTextField(lastReplication, 2);
 
         JPanel tempPanel = new FluentPanel(new FlowLayout(FlowLayout.LEFT));
-        tempPanel.add(new JLabel(Translator.get("replication.number")));
+        tempPanel.add(new JLabel(i18n("replication.number")));
         tempPanel.add(replication);
         mainPanel.add(tempPanel);
 
         mainPanel.addSpace(10);
 
-        recurseDirCheckBox = new JCheckBox(Translator.get("recurse_directories"));
+        recurseDirCheckBox = new JCheckBox(i18n("recurse_directories"));
         mainPanel.add(recurseDirCheckBox);
 
         mainPanel.addSpace(15);
@@ -90,8 +89,8 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(Translator.get("change"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("change"));
+        cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
                 DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
@@ -122,7 +121,7 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
             dispose();
 
             // Change replication
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             ChangeFileAttributesJob job = new ChangeFileAttributesJob(progressDialog, mainFrame, files,
                     (short)replication.getValue(),
                 recurseDirCheckBox.isSelected());
@@ -138,7 +137,7 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
     /////////////////////////////////
 
     class IntTextField extends JTextField {
-        public IntTextField(int defval, int size) {
+        IntTextField(int defval, int size) {
             super("" + defval, size);
         }
 
@@ -164,18 +163,16 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
         }
 
         class IntTextDocument extends PlainDocument {
-            public void insertString(int offs, String str, AttributeSet a)
-                    throws BadLocationException {
-                if (str == null)
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                if (str == null) {
                     return;
+                }
                 String oldString = getText(0, getLength());
-                String newString = oldString.substring(0, offs) + str
-                        + oldString.substring(offs);
+                String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
                 try {
                     Integer.parseInt(newString + "0");
                     super.insertString(offs, str, a);
-                } catch (NumberFormatException e) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
     }

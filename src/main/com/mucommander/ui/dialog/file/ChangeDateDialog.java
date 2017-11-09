@@ -23,7 +23,6 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.ChangeFileAttributesJob;
 import com.mucommander.utils.text.CustomDateFormat;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ChangeDateAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -48,11 +47,8 @@ import java.util.Date;
 public class ChangeDateDialog extends JobDialog implements ActionListener, ItemListener {
 
     private JRadioButton nowRadioButton;
-
     private JSpinner dateSpinner;
-
     private JCheckBox recurseDirCheckBox;
-    
     private JButton okButton;
     private JButton cancelButton;
 
@@ -70,14 +66,14 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
         AbstractFile destFile = files.size()==1?files.elementAt(0):files.getBaseFolder();
         boolean canChangeDate = destFile.isFileOperationSupported(FileOperation.CHANGE_DATE);
 
-        nowRadioButton = new JRadioButton(Translator.get("change_date_dialog.now"));
+        nowRadioButton = new JRadioButton(i18n("change_date_dialog.now"));
         nowRadioButton.setSelected(true);
         nowRadioButton.addItemListener(this);
 
         mainPanel.add(new FluentPanel(new FlowLayout(FlowLayout.LEFT)).add(nowRadioButton));
 
         buttonGroup.add(nowRadioButton);
-        JRadioButton specificDateRadioButton = new JRadioButton(Translator.get("change_date_dialog.specific_date"));
+        JRadioButton specificDateRadioButton = new JRadioButton(i18n("change_date_dialog.specific_date"));
         buttonGroup.add(specificDateRadioButton);
 
         this.dateSpinner = new JSpinner(new SpinnerDateModel());
@@ -92,7 +88,7 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
                           .add(dateSpinner));
 
         mainPanel.addSpace(10);
-        recurseDirCheckBox = new JCheckBox(Translator.get("recurse_directories"));
+        recurseDirCheckBox = new JCheckBox(i18n("recurse_directories"));
         mainPanel.add(recurseDirCheckBox);
 
         mainPanel.addSpace(15);
@@ -100,8 +96,8 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(Translator.get("change"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        okButton = new JButton(i18n("change"));
+        cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
                 DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
@@ -134,9 +130,9 @@ public class ChangeDateDialog extends JobDialog implements ActionListener, ItemL
             dispose();
 
             // Starts copying files
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             ChangeFileAttributesJob job = new ChangeFileAttributesJob(progressDialog, mainFrame, files,
-                nowRadioButton.isSelected()?System.currentTimeMillis():((SpinnerDateModel)dateSpinner.getModel()).getDate().getTime(),
+                nowRadioButton.isSelected() ? System.currentTimeMillis() : ((SpinnerDateModel)dateSpinner.getModel()).getDate().getTime(),
                 recurseDirCheckBox.isSelected());
             progressDialog.start(job);
         } else if (source == cancelButton) {

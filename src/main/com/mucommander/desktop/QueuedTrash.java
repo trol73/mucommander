@@ -51,10 +51,10 @@ public abstract class QueuedTrash extends AbstractTrash {
     private final static List<AbstractFile> queuedFiles = new ArrayList<>();
 
     /** Use to synchronize access to the trash */
-    protected final static Object moveToTrashLock = new Object();
+    private final static Object moveToTrashLock = new Object();
 
     /** Thread that performs the actual job of moving files to the trash */
-    protected static Thread moveToTrashThread;
+    private static Thread moveToTrashThread;
 
     /** Amount of time in milliseconds to wait for additional files before moving them to the trash */
     protected final static int QUEUE_PERIOD = 1000;
@@ -84,15 +84,16 @@ public abstract class QueuedTrash extends AbstractTrash {
      */
     @Override
     public boolean moveToTrash(AbstractFile file) {
-        if (!canMoveToTrash(file))
+        if (!canMoveToTrash(file)) {
             return false;
+        }
 
         synchronized(moveToTrashLock) {
             // Queue the given file
             queuedFiles.add(file);
 
             // create a new thread and start it if one isn't already running
-            if(moveToTrashThread ==null) {
+            if (moveToTrashThread == null) {
                 moveToTrashThread = new MoveToTrashThread();
                 moveToTrashThread.start();
             }
@@ -124,7 +125,7 @@ public abstract class QueuedTrash extends AbstractTrash {
      * <p>The thread starts by waiting {@link com.mucommander.desktop.osx.OSXTrash#QUEUE_PERIOD} milliseconds before moving them to give additional
      * files a chance to be queued and regrouped as a single call to {@link QueuedTrash#moveToTrash(java.util.List)}.
      * If more files were queued during that period, the thread will wait an additional {@link com.mucommander.desktop.osx.OSXTrash# QUEUE_PERIOD},
-     * and so on.<p>
+     * and so on.
      */
     private class MoveToTrashThread extends Thread {
 
@@ -139,7 +140,7 @@ public abstract class QueuedTrash extends AbstractTrash {
                     Thread.sleep(QUEUE_PERIOD);
                 } catch(InterruptedException ignore) {
                 }
-            } while(queueSize != queuedFiles.size());
+            } while (queueSize != queuedFiles.size());
 
             synchronized(moveToTrashLock) {     // Files can't be added to queue while files are moved to trash
                 if (!moveToTrash(queuedFiles)) {

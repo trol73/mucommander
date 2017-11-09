@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.macosx;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
@@ -64,7 +63,7 @@ public class AppleScript {
     public final static String UTF8 = "UTF-8";
 
     /** The MacRoman encoding */
-    public final static String MACROMAN = "MacRoman";
+    private final static String MACROMAN = "MacRoman";
 
 
     /**
@@ -98,15 +97,13 @@ public class AppleScript {
             "o",
         };
 
-        OutputStreamWriter pout = null;
         try {
             // Execute the osascript command.
             AbstractProcess process = ProcessRunner.execute(tokens, outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding()));
-
             // Pipe the script to the osascript process.
-            pout = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding());
-            pout.write(appleScript);
-            pout.close();
+            try (OutputStreamWriter pout  = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding())) {
+                pout.write(appleScript);
+            }
 
             // Wait for the process to die
             int returnCode = process.waitFor();
@@ -122,15 +119,6 @@ public class AppleScript {
         } catch(Exception e) {        // IOException, InterruptedException
             // Shouldn't normally happen
         	LOGGER.debug("Unexcepted exception while executing AppleScript", e);
-
-            try {
-                if (pout != null) {
-                    pout.close();
-                }
-            } catch(IOException e1) {
-                // Can't do much about it
-            }
-
             return false;
         }
     }

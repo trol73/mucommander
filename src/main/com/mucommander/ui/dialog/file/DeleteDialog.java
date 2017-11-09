@@ -23,7 +23,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.DeleteJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.DeleteAction;
@@ -85,7 +84,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         if (trash != null && !baseFolder.isArchive() && !trash.isTrashFile(baseFolder) && trash.canMoveToTrash(baseFolder)) {
             moveToTrash = !deletePermanently;
 
-            moveToTrashCheckBox = new JCheckBox(Translator.get("delete_dialog.move_to_trash.option"), moveToTrash);
+            moveToTrashCheckBox = new JCheckBox(i18n("delete_dialog.move_to_trash.option"), moveToTrash);
             moveToTrashCheckBox.addItemListener(this);
         }
 
@@ -100,8 +99,8 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         }
 
         // create file details button and OK/cancel buttons and lay them out a single row
-        deleteButton = new JButton(Translator.get("delete"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        deleteButton = new JButton(i18n("delete"));
+        JButton cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(files.size() > 1 ? createFileDetailsButton(fileDetailsPanel) : null,
                 DialogToolkit.createOKCancelPanel(deleteButton, cancelButton, getRootPane(), this)));
@@ -142,19 +141,20 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
      * Updates the information pane to reflect the current 'Move to trash' choice.
      */
     private void updateDialog() {
+        final boolean singleFileMode = files.size() == 1;
         String textId;
         if (moveToTrash) {
-            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.move_to_trash.confirmation";
+            textId = singleFileMode ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.move_to_trash.confirmation";
         } else {
-            textId = files.size() == 1 ? "delete_dialog.permanently_delete.confirmation_1" : "delete_dialog.permanently_delete.confirmation";
+            textId = singleFileMode ? "delete_dialog.permanently_delete.confirmation_1" : "delete_dialog.permanently_delete.confirmation";
         }
-        informationPane.getMainLabel().setText(Translator.get(textId));
+        informationPane.getMainLabel().setText(i18n(textId));
         if (moveToTrash) {
-            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_details_1" : "delete_dialog.move_to_trash.confirmation_details";
+            textId = singleFileMode ? "delete_dialog.move_to_trash.confirmation_details_1" : "delete_dialog.move_to_trash.confirmation_details";
         } else {
             textId = "this_operation_cannot_be_undone";
         }
-        informationPane.getCaptionLabel().setText(Translator.get(textId));
+        informationPane.getCaptionLabel().setText(i18n(textId));
         informationPane.setIcon(moveToTrash ? null: InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
         setTitle(ActionManager.getActionInstance(moveToTrash ? DeleteAction.Descriptor.ACTION_ID:PermanentDeleteAction.Descriptor.ACTION_ID, mainFrame).getLabel());
     }
@@ -181,7 +181,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
 
         if (e.getSource() == deleteButton) {
             // Starts deleting files
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("delete_dialog.deleting"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("delete_dialog.deleting"));
             if (getReturnFocusTo() != null) {
                 progressDialog.returnFocusTo(getReturnFocusTo());
             }

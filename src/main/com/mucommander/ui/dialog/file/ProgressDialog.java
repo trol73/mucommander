@@ -361,7 +361,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             
             if (transferFileJob != null) {
                 updateCurrentSpeedLabel("N/A");
-        }
+            }
         } else if (newState == State.RUNNING) {
             pauseResumeButton.setText(i18n("pause"));
             pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));

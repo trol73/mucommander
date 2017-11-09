@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.icon.SpinningDial;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -128,7 +127,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     };
 
 
-    public TransferDestinationDialog(MainFrame mainFrame, FileSet files, String title, String labelText, String okText, String errorDialogTitle, boolean enableTransferOptions) {
+    TransferDestinationDialog(MainFrame mainFrame, FileSet files, String title, String labelText, String okText, String errorDialogTitle, boolean enableTransferOptions) {
         super(mainFrame, title, files);
 
         this.errorDialogTitle = errorDialogTitle;
@@ -154,8 +153,8 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         if (enableTransferOptions) {
             // Combo box that allows the user to choose the default action when a file already exists in destination
-            mainPanel.add(new JLabel(Translator.get("destination_dialog.file_exists_action") + " :"));
-            fileExistsActionComboBox.addItem(Translator.get("ask"));
+            mainPanel.add(new JLabel(i18n("destination_dialog.file_exists_action") + " :"));
+            fileExistsActionComboBox.addItem(i18n("ask"));
             for (String s : DEFAULT_ACTIONS_TEXT) {
                 fileExistsActionComboBox.addItem(s);
             }
@@ -163,13 +162,13 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
             mainPanel.addSpace(10);
 
-            skipErrorsCheckBox = new JCheckBox(Translator.get("destination_dialog.skip_errors"));
+            skipErrorsCheckBox = new JCheckBox(i18n("destination_dialog.skip_errors"));
             mainPanel.add(skipErrorsCheckBox);
 
-            verifyIntegrityCheckBox = new JCheckBox(Translator.get("destination_dialog.verify_integrity"));
+            verifyIntegrityCheckBox = new JCheckBox(i18n("destination_dialog.verify_integrity"));
             mainPanel.add(verifyIntegrityCheckBox);
 
-            cbBackgroundMode = new JCheckBox(Translator.get("destination_dialog.background_mode"));
+            cbBackgroundMode = new JCheckBox(i18n("destination_dialog.background_mode"));
             cbBackgroundMode.setSelected(enableBackgroundMode);
             mainPanel.add(cbBackgroundMode);
 
@@ -186,7 +185,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         // Prevent the dialog from being validated while the initial path is being set.
         setEnabledOkButtons(false);
 
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        JButton cancelButton = new JButton(i18n("cancel"));
 
         YBoxPanel buttonsPanel = new YBoxPanel(10);
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
@@ -518,7 +517,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
                     dispose();
                     startJob(resolvedDest);
                 } else {
-                    showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
+                    showErrorDialog(i18n("invalid_path", destPath), errorDialogTitle);
                     // Re-enable the OK button and path field so that a new path can be entered
                     setEnabledOkButtons(true);
                     pathField.setEnabled(true);
