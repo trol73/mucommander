@@ -76,7 +76,7 @@ public class HTTPFile extends ProtocolFile {
     private final static FilePermissions PERMISSIONS = new SimpleFilePermissions(256, 448);
 
     /** User agent used for all HTTP connections made by HTTPFile */
-    // TODO: add file API version, like muCommander-file-API/1.0
+    // TODO: add file API version, like trolCommander-file-API/1.0
     private static final String USER_AGENT = "trolCommander-file-API (Java "+System.getProperty("java.vm.version")
                                             + "; " + System.getProperty("os.name") + " " +
                                             System.getProperty("os.version") + " " + System.getProperty("os.arch") + ")";
@@ -238,7 +238,7 @@ public class HTTPFile extends ProtocolFile {
      * @throws AuthException if the response code is 401 (Unauthorized)
      * @throws IOException if the response code is not in the 2xx - 3xx range (not a positive response)
      */
-    private void checkHTTPResponse(HttpURLConnection conn) throws AuthException, IOException {
+    private void checkHTTPResponse(HttpURLConnection conn) throws IOException {
         int responseCode = conn.getResponseCode();
         LOGGER.info("response code = {}", responseCode);
 
@@ -522,132 +522,13 @@ public class HTTPFile extends ProtocolFile {
     @Override
     public AbstractFile[] ls() throws IOException {
         // Implementation note: javax.swing.text.html.HTMLEditorKit isn't quite powerful enough to be used
-
-        BufferedReader br = null;
         try {
-            URL contextURL = this.url;
-            HttpURLConnection conn;
-            do {
-                // Get a connection instance
-                conn = getHttpURLConnection(contextURL);
+            HttpURLConnection conn = resolveAndConnect(this.url);
+            URL contextURL = conn.getURL();
 
-                // Disable automatic redirections to track URL change
-                conn.setInstanceFollowRedirects(false);
-
-                // Establish connection
-                conn.connect();
-
-                // Check HTTP response code and throw appropriate IOException if request failed
-                checkHTTPResponse(conn);
-
-                int responseCode = conn.getResponseCode();
-
-                // Test if reponse code is in the 3xx range (redirection) and if 'Location' field is set
-                String locationHeader = conn.getHeaderField("Location");
-                if(responseCode>=300 && responseCode<400 && locationHeader!=null) {
-                    // Redirect to Location field and remember context url
-                    LOGGER.info("Location header = {}", conn.getHeaderField("Location"));
-                    contextURL = new URL(contextURL, locationHeader);
-                    // One more time
-                    continue;
-                }
-
-                break;
-            } while(true);
-
-            // Retrieve content type and throw an IOException if doesn't correspond to a parsable type (HTML/XHTML)
-            String contentType = conn.getContentType();
-            if (contentType==null || !isParsableMimeType(contentType))
-                throw new IOException("Document cannot be parsed (not HTML or XHTML)");  // Todo: localize this message
-			
-            int pos;
-            String enc = null;
-            // Extract content type information (if any)
-            if((pos=contentType.indexOf("charset"))!=-1 || (pos=contentType.indexOf("Charset"))!=-1) {
-                StringTokenizer st = new StringTokenizer(contentType.substring(pos, contentType.length()));
-                enc = st.nextToken();
+            try (BufferedReader br = createReader(conn)) {
+                return findChildren(br, contextURL);
             }
-			
-            // Use the encoding reported in HTTP header if there was one, otherwise just use the default encoding
-            InputStream in = conn.getInputStream();
-            InputStreamReader ir;
-            if(enc==null)
-                ir = new InputStreamReader(in);
-            else {
-                try {
-                    ir = new InputStreamReader(in, enc);
-                }
-                catch(UnsupportedEncodingException e) {
-                    ir = new InputStreamReader(in);
-                }
-            }
-
-            br = new BufferedReader(ir);
-
-            List<AbstractFile> children = new ArrayList<>();
-            // List that contains children URL, a TreeSet for fast (log(n)) search operations
-            Set<String> childrenURL = new TreeSet<>();
-            URL childURL;
-            FileURL childFileURL;
-            Credentials credentials = fileURL.getCredentials();
-
-//            String parentPath = fileURL.getPath();
-//            if (!parentPath.endsWith("/")) {
-//                parentPath += "/";
-//            }
-
-            String parentHost = fileURL.getHost();
-
-            //FileURL tempChildURL = (FileURL)fileURL.clone();
-
-            Pattern pattern;
-            String line, match, link;
-            while((line=br.readLine())!=null) {
-                for(pattern=linkAttributePatternSQ;; pattern=linkAttributePatternDQ) {
-                    Matcher matcher = pattern.matcher(line);
-                    while(matcher.find()) {
-                        match = matcher.group();
-                        link = match.substring(match.indexOf(pattern==linkAttributePatternSQ?'\'':'\"')+1, match.length()-1);
-
-                        // These are not proper URLs, skip them
-                        if(link.startsWith("mailto") || link.startsWith("MAILTO")
-                        || link.startsWith("#")
-                        || link.startsWith("javascript:"))
-                            continue;
-
-                        // Don't add the same link more than once
-                        if(childrenURL.contains(link))
-                            continue;
-
-                        try {
-                            LOGGER.trace("creating child {} context={}", link, contextURL);
-                            childURL = new URL(contextURL, link);
-
-                            // create the child FileURL instance
-                            childFileURL = FileURL.getFileURL(childURL.toExternalForm());
-                            // Keep the parent's credentials (HTTP basic authentication), only if the host is the same.
-                            // It would otherwise be unsafe.
-                            if(parentHost.equals(childFileURL.getHost()))
-                                childFileURL.setCredentials(credentials);
-
-                            // TODO: resolve file here instead of in the constructor, and multiplex requests just like a browser
-
-                            children.add(FileFactory.getFile(childFileURL, null, childURL, childURL.toString()));
-                            childrenURL.add(link);
-                        } catch(IOException e) {
-                            LOGGER.info("Cannot create child: {}", e);
-                        }
-                    }
-
-                    if (pattern == linkAttributePatternDQ) {
-                        break;
-                    }
-                }
-            }
-
-            AbstractFile childrenArray[] = new AbstractFile[children.size()];
-            children.toArray(childrenArray);
-            return childrenArray;
         } catch (Exception e) {
             LOGGER.info("Exception caught while parsing HTML, throwing IOException", e);
 
@@ -656,14 +537,149 @@ public class HTTPFile extends ProtocolFile {
             }
 
             throw new IOException();
-        } finally {
-            try {
-                // Try and close URL connection
-                if (br != null) {
-                    br.close();
-                }
-            } catch(IOException ignore) {}
         }
+    }
+
+    private HttpURLConnection resolveAndConnect(URL url) throws IOException {
+        final int maxRedirects = 10;
+        for (int i = 0; i < maxRedirects; i++) {
+            // Get a connection instance
+            HttpURLConnection conn = getHttpURLConnection(url);
+
+            // Disable automatic redirections to track URL change
+            conn.setInstanceFollowRedirects(false);
+
+            // Establish connection
+            conn.connect();
+
+            // Check HTTP response code and throw appropriate IOException if request failed
+            checkHTTPResponse(conn);
+
+            int responseCode = conn.getResponseCode();
+
+            // Test if response code is in the 3xx range (redirection) and if 'Location' field is set
+
+            if (responseCode >= 300 && responseCode < 400) {
+                String locationHeader = conn.getHeaderField("Location");
+                if (locationHeader != null) {
+                    // Redirect to Location field and remember context url
+                    LOGGER.info("Location header = {}", locationHeader);
+                    url = new URL(url, locationHeader);
+                    // One more time
+                    continue;
+                }
+            }
+            return conn;
+        }
+        throw new IOException("too many redirects");
+    }
+
+    private AbstractFile[] findChildren(BufferedReader br, URL contextURL) throws IOException {
+        List<AbstractFile> children = new ArrayList<>();
+        // List that contains children URL, a TreeSet for fast (log(n)) search operations
+        Set<String> childrenURL = new TreeSet<>();
+        Credentials credentials = fileURL.getCredentials();
+
+//            String parentPath = fileURL.getPath();
+//            if (!parentPath.endsWith("/")) {
+//                parentPath += "/";
+//            }
+
+        String parentHost = fileURL.getHost();
+
+        //FileURL tempChildURL = (FileURL)fileURL.clone();
+
+        Pattern pattern;
+        String line;
+        final String parentPath = contextURL.toString();
+        while ((line = br.readLine()) != null) {
+            for (pattern = linkAttributePatternSQ; ; pattern = linkAttributePatternDQ) {
+                Matcher matcher = pattern.matcher(line);
+                while (matcher.find()) {
+                    String match = matcher.group();
+                    String link = match.substring(match.indexOf(pattern==linkAttributePatternSQ ? '\'' : '\"') + 1, match.length()-1);
+
+                    // These are not proper URLs, skip them
+                    // Don't add the same link more than once
+                    if (!linkCanBeDownloaded(link) || childrenURL.contains(link)) {
+                        continue;
+                    }
+
+                    try {
+                        LOGGER.trace("creating child {} context={}", link, contextURL);
+                        URL childURL = new URL(contextURL, link);
+
+                        // create the child FileURL instance
+                        FileURL childFileURL = FileURL.getFileURL(childURL.toExternalForm());
+                        // Keep the parent's credentials (HTTP basic authentication), only if the host is the same.
+                        // It would otherwise be unsafe.
+                        if (parentHost.equals(childFileURL.getHost())) {
+                            childFileURL.setCredentials(credentials);
+                        }
+
+                        // TODO: resolve file here instead of in the constructor, and multiplex requests just like a browser
+
+                        // skip parent
+                        if (!childURL.toString().contains(parentPath)) {
+                            continue;
+                        }
+                        children.add(FileFactory.getFile(childFileURL, null, childURL, childURL.toString()));
+                        childrenURL.add(link);
+                    } catch (IOException e) {
+                        LOGGER.info("Cannot create child: {}", e);
+                    }
+                }
+
+                if (pattern == linkAttributePatternDQ) {
+                    break;
+                }
+            }
+        }
+
+        AbstractFile childrenArray[] = new AbstractFile[children.size()];
+        children.toArray(childrenArray);
+        return childrenArray;
+    }
+
+
+    private boolean linkCanBeDownloaded(String link) {
+        link = link.toLowerCase();
+        return !(link.startsWith("mailto") || link.startsWith("#") || link.startsWith("javascript:"));
+    }
+
+    private String getContentEncoding(HttpURLConnection conn) throws IOException {
+        // Retrieve content type and throw an IOException if doesn't correspond to a parsable type (HTML/XHTML)
+        String contentType = conn.getContentType();
+        if (contentType == null || !isParsableMimeType(contentType)) {
+            throw new IOException("Document cannot be parsed (not HTML or XHTML)");  // Todo: localize this message
+        }
+        int pos;
+        String enc = null;
+        // Extract content type information (if any)
+        if ((pos = contentType.indexOf("charset")) >= 0 || (pos = contentType.indexOf("Charset")) >= 0) {
+            StringTokenizer st = new StringTokenizer(contentType.substring(pos, contentType.length()));
+            enc = st.nextToken();
+        }
+        return enc;
+    }
+
+    private BufferedReader createReader(HttpURLConnection conn) throws IOException {
+        // Use the encoding reported in HTTP header if there was one, otherwise just use the default encoding
+        String enc = getContentEncoding(conn);
+
+        InputStream in = conn.getInputStream();
+        InputStreamReader ir;
+        if (enc == null) {
+            ir = new InputStreamReader(in);
+        } else {
+            try {
+                ir = new InputStreamReader(in, enc);
+            } catch (UnsupportedEncodingException e) {
+                ir = new InputStreamReader(in);
+            }
+        }
+
+        return new BufferedReader(ir);
     }
 
 
