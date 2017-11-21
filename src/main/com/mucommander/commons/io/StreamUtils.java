@@ -100,10 +100,11 @@ public class StreamUtils {
      */
     public static long copyStream(InputStream in, OutputStream out, byte[] buffer, long length) throws FileTransferException {
         // Copies the InputStream's content to the OutputStream chunk by chunk
-        int nbRead;
         long totalRead = 0;
 
+        int failureCounter = 0;
         while (length > 0) {
+            int nbRead;
             try {
                 nbRead = in.read(buffer, 0, (int)Math.min(buffer.length, length));	// the result of min will be int
             } catch(IOException e) {
@@ -112,7 +113,16 @@ public class StreamUtils {
 
             if (nbRead < 0) {
                 break;
+            } else if (nbRead == 0) {
+                failureCounter++;
+                if (failureCounter > 10) {
+                    throw new FileTransferException(FileTransferException.UNKNOWN_REASON);
+                }
+                sleepIfNoRead();
+            } else {
+                failureCounter = 0;
             }
+
             try {
                 out.write(buffer, 0, nbRead);
             } catch(IOException e) {
@@ -171,7 +181,7 @@ public class StreamUtils {
             // Copies the InputStreamReader's content to the OutputStreamWriter chunk by chunk
             int nbRead;
             long totalRead = 0;
-
+            int failureCounter = 0;
             while (true) {
                 try {
                     nbRead = isr.read(buffer, 0, buffer.length);
@@ -179,8 +189,16 @@ public class StreamUtils {
                     throw new FileTransferException(FileTransferException.READING_SOURCE);
                 }
 
-                if (nbRead == -1) {
+                if (nbRead < 0) {
                     break;
+                } else if (nbRead == 0) {
+                    failureCounter++;
+                    if (failureCounter > 10) {
+                        throw new FileTransferException(FileTransferException.UNKNOWN_REASON);
+                    }
+                    sleepIfNoRead();
+                } else {
+                    failureCounter = 0;
                 }
 
                 try {
@@ -230,20 +248,19 @@ public class StreamUtils {
 
         // Fill the buffer with the constant byte value, not necessary if the value is zero
         if (value != 0) {
-            for(int i=0; i<bufferSize; i++) {
-                buffer[i] = value;}
+            for (int i = 0; i < bufferSize; i++) {
+                buffer[i] = value;
+            }
         }
 
         try {
             long remaining = len;
-            int nbWrite;
             while (remaining > 0) {
-                nbWrite = (int)(remaining>bufferSize?bufferSize:remaining);
+                int nbWrite = (int)(remaining > bufferSize ? bufferSize : remaining);
                 out.write(buffer, 0, nbWrite);
                 remaining -= nbWrite;
             }
-        }
-        finally {
+        } finally {
             BufferPool.releaseByteArray(buffer);
         }
     }
@@ -284,9 +301,8 @@ public class StreamUtils {
 
         try {
             long remaining = length;
-            int nbBytes;
-            while(remaining>0) {
-                nbBytes = (int)(remaining<bufferSize?remaining:bufferSize);
+            while (remaining>0) {
+                int nbBytes = (int)(remaining < bufferSize ? remaining : bufferSize);
                 rais.readFully(buffer, 0, nbBytes);
                 raos.write(buffer, 0, nbBytes);
                 remaining -= nbBytes;
@@ -328,10 +344,20 @@ public class StreamUtils {
     public static byte[] readFully(InputStream in, byte b[], int off, int len) throws EOFException, IOException {
         if (len > 0) {
             int totalRead = 0;
+            int failureCounter = 0;
             do {
                 int nbRead = in.read(b, off + totalRead, len - totalRead);
-                if (nbRead < 0)
+                if (nbRead < 0) {
                     throw new EOFException();
+                } else if (nbRead == 0) {
+                    failureCounter++;
+                    if (failureCounter > 10) {
+                        throw new FileTransferException(FileTransferException.UNKNOWN_REASON);
+                    }
+                    sleepIfNoRead();
+                } else {
+                    failureCounter = 0;
+                }
                 totalRead += nbRead;
             }
             while (totalRead < len);
@@ -355,13 +381,28 @@ public class StreamUtils {
         if (n <= 0) {
             return;
         }
+        int failureCounter = 0;
         do {
             long nbSkipped = in.skip(n);
             if (nbSkipped < 0) {
                 throw new EOFException();
+            } else if (nbSkipped == 0) {
+                failureCounter++;
+                if (failureCounter > 10) {
+                    throw new IOException("skipFully timeout");
+                }
+                sleepIfNoRead();
+            } else {
+                failureCounter = 0;
             }
             n -= nbSkipped;
-        } while(n > 0);
+        } while (n > 0);
+    }
+
+    private static void sleepIfNoRead() {
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ignore) {}
     }
 
     /**
@@ -393,11 +434,20 @@ public class StreamUtils {
      */
     public static int readUpTo(InputStream in, byte b[], int off, int len) throws IOException {
         int totalRead = 0;
+        int failureCounter = 0;
         if (len > 0) {
             do {
                 int nbRead = in.read(b, off + totalRead, len - totalRead);
                 if (nbRead < 0) {
                     break;
+                } else if (nbRead == 0) {
+                    failureCounter++;
+                    if (failureCounter > 10) {
+                        throw new FileTransferException(FileTransferException.UNKNOWN_REASON);
+                    }
+                    sleepIfNoRead();
+                } else {
+                    failureCounter = 0;
                 }
                 totalRead += nbRead;
             } while (totalRead < len);
@@ -427,16 +477,24 @@ public class StreamUtils {
      * @throws IOException if an I/O error occurs
      */
     public static void readUntilEOF(InputStream in, int bufferSize) throws IOException {
-        // Use BufferPool to avoid excessive memory allocation and garbage collection
+        // TUse BufferPool to avoid excessive memory allocation and garbage collection
         byte buffer[] = BufferPool.getByteArray(bufferSize);
 
         try {
-            int nbRead;
-            while(true) {
-                nbRead = in.read(buffer, 0, buffer.length);
-
-                if(nbRead==-1)
+            int failureCounter = 0;
+            while (true) {
+                int nbRead = in.read(buffer, 0, buffer.length);
+                if (nbRead < 0) {
                     break;
+                } else if (nbRead == 0) {
+                    failureCounter++;
+                    if (failureCounter > 10) {
+                        throw new FileTransferException(FileTransferException.UNKNOWN_REASON);
+                    }
+                    sleepIfNoRead();
+                } else {
+                    failureCounter = 0;
+                }
             }
         } finally {
             BufferPool.releaseByteArray(buffer);

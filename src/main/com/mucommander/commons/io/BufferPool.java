@@ -60,19 +60,19 @@ public class BufferPool {
     private static List<BufferContainer> bufferContainers = new ArrayList<>();
 
     /** The initial default buffer size */
-    public final static int INITIAL_DEFAULT_BUFFER_SIZE = 65536;
+    final static int INITIAL_DEFAULT_BUFFER_SIZE = 65536;
 
     /** Size of buffers returned by get*Buffer methods without a size argument */
-    public static int defaultBufferSize = INITIAL_DEFAULT_BUFFER_SIZE;
+    private static int defaultBufferSize = INITIAL_DEFAULT_BUFFER_SIZE;
 
     /** The initial max pool size */
-    public final static long INITIAL_POOL_LIMIT = 10485760;
+    final static long INITIAL_POOL_LIMIT = 10485760;
 
     /** Maximum combined size of all pooled buffers, in bytes */
-    public static long maxPoolSize = INITIAL_POOL_LIMIT;
+    private static long maxPoolSize = INITIAL_POOL_LIMIT;
 
     /** Current combined size of all pooled buffers, in bytes */
-    public static long poolSize;
+    private static long poolSize;
 
 
     /**

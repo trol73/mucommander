@@ -57,7 +57,7 @@ import java.io.*;
  *
  * @author Maxence Bernard, Mariusz Jakubowski, Nicolas Rinaudo, Arik Hadas, Oleg Trifonov
  */
-class TextEditorImpl implements ThemeListener {
+class TextEditorImpl implements ThemeListener, ThemeId {
 
     private static final Insets INSETS = new Insets(4, 3, 4, 3);
 
@@ -138,7 +138,7 @@ class TextEditorImpl implements ThemeListener {
                 return INSETS;
             }
         };
-        textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(Theme.EDITOR_CURRENT_BACKGROUND_COLOR));
+        textArea.setCurrentLineHighlightColor(ThemeManager.getCurrentColor(EDITOR_CURRENT_BACKGROUND_COLOR));
         textArea.setAntiAliasingEnabled(true);
 		textArea.setEditable(isEditable);
         textArea.addKeyListener(textAreaKeyListener);
@@ -151,17 +151,17 @@ class TextEditorImpl implements ThemeListener {
         //textArea.setCodeFoldingEnabled(true);
 
 		// Use theme colors and font
-		textArea.setForeground(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
-		textArea.setCaretColor(ThemeManager.getCurrentColor(Theme.EDITOR_FOREGROUND_COLOR));
-        Color background = ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR);
+		textArea.setForeground(ThemeManager.getCurrentColor(EDITOR_FOREGROUND_COLOR));
+		textArea.setCaretColor(ThemeManager.getCurrentColor(EDITOR_FOREGROUND_COLOR));
+        Color background = ThemeManager.getCurrentColor(EDITOR_BACKGROUND_COLOR);
         textArea.setBackground(background);
 
         for (int i = 1; i <= textArea.getSecondaryLanguageCount(); i++) {
             textArea.setSecondaryLanguageBackground(i, background);
         }
-		textArea.setSelectedTextColor(ThemeManager.getCurrentColor(Theme.EDITOR_SELECTED_FOREGROUND_COLOR));
-		textArea.setSelectionColor(ThemeManager.getCurrentColor(Theme.EDITOR_SELECTED_BACKGROUND_COLOR));
-		textArea.setFont(ThemeManager.getCurrentFont(Theme.EDITOR_FONT));
+		textArea.setSelectedTextColor(ThemeManager.getCurrentColor(EDITOR_SELECTED_FOREGROUND_COLOR));
+		textArea.setSelectionColor(ThemeManager.getCurrentColor(EDITOR_SELECTED_BACKGROUND_COLOR));
+		textArea.setFont(ThemeManager.getCurrentFont(EDITOR_FONT));
         textArea.setCodeFoldingEnabled(true);
 
 		textArea.setWrapStyleWord(true);
@@ -425,23 +425,23 @@ class TextEditorImpl implements ThemeListener {
 	 */
 	public void colorChanged(ColorChangedEvent event) {
 		switch (event.getColorId()) {
-            case Theme.EDITOR_FOREGROUND_COLOR:
+            case EDITOR_FOREGROUND_COLOR:
                 textArea.setForeground(event.getColor());
                 break;
 
-            case Theme.EDITOR_BACKGROUND_COLOR:
+            case EDITOR_BACKGROUND_COLOR:
                 textArea.setBackground(event.getColor());
                 break;
 
-            case Theme.EDITOR_SELECTED_FOREGROUND_COLOR:
+            case EDITOR_SELECTED_FOREGROUND_COLOR:
                 textArea.setSelectedTextColor(event.getColor());
                 break;
 
-            case Theme.EDITOR_SELECTED_BACKGROUND_COLOR:
+            case EDITOR_SELECTED_BACKGROUND_COLOR:
                 textArea.setSelectionColor(event.getColor());
                 break;
 
-            case Theme.EDITOR_CURRENT_BACKGROUND_COLOR:
+            case EDITOR_CURRENT_BACKGROUND_COLOR:
                 textArea.setCurrentLineHighlightColor(event.getColor());
                 break;
 		}
@@ -451,7 +451,7 @@ class TextEditorImpl implements ThemeListener {
 	 * Receives theme font changes notifications.
 	 */
 	public void fontChanged(FontChangedEvent event) {
-		if (event.getFontId() == Theme.EDITOR_FONT) {
+		if (event.getFontId() == EDITOR_FONT) {
             textArea.setFont(event.getFont());
         }
 	}
