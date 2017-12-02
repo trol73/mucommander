@@ -85,7 +85,7 @@ public class MuSnapshot {
     /** Section containing the visited location in each folder panel. */
     private static final String RECENT_LOCATIONS_SECTION           = "recent_locations";
     /** A location that was visited within the folder panel. */
-    public static final String  LOCATION                           = "location";
+    private static final String  LOCATION                           = "location";
     /** Describes the number of visited locations saved for the folder panel */
     private static final String LOCATIONS_COUNT                    = "count";
     
@@ -94,9 +94,9 @@ public class MuSnapshot {
     /** Section describing known information about last muCommander windows. */
     private static final String WINDOWS_SECTION                    = "windows";
     /** Describes the number of windows that were open. */
-    public static final String  WINDOWS_COUNT                      = WINDOWS_SECTION + '.' + "count";
+    private static final String  WINDOWS_COUNT                      = WINDOWS_SECTION + '.' + "count";
     /** Describes the index of the selected window. */
-    public static final String  WINDOWS_SELECTION                  = WINDOWS_SECTION + '.' + "selection";
+    private static final String  WINDOWS_SELECTION                  = WINDOWS_SECTION + '.' + "selection";
     /** Subsection describing information which is specific to a particular window. */
     private static final String WINDOW                             = "window";
     
@@ -144,7 +144,7 @@ public class MuSnapshot {
     /** Subsection describing the folders view CONFIGURATION. */
     private static final String  FILE_TABLE_SECTION                = "file_table";
     /** Describes an ascending sort order. */
-    public static final String  SORT_ORDER_ASCENDING               = "asc";
+    private static final String  SORT_ORDER_ASCENDING               = "asc";
     /** Describes a descending sort order. */
     public static final String  SORT_ORDER_DESCENDING              = "desc";
     /** Default 'sort order' column for the file table. */

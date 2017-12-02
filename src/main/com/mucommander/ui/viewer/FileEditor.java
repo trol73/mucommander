@@ -77,7 +77,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     	if (getFrame() == null || this.saveNeeded == saveNeeded) {
             return;
         }
-        if (!this.saveNeeded && saveNeeded) {
+        if (!this.saveNeeded) {
             getStatusBar().setStatusMessage(Translator.get("text_editor.modified"));
         }
         this.saveNeeded = saveNeeded;
@@ -177,7 +177,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
 
     // Returns true if the file does not have any unsaved change or if the user refused to save the changes,
     // false if the user canceled the dialog or the save failed.
-    public boolean askSave() {
+    protected boolean askSave() {
         if (!saveNeeded) {
             return true;
         }

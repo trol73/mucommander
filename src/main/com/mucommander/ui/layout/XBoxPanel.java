@@ -57,8 +57,9 @@ public class XBoxPanel extends JPanel {
      */
     @Override
     public Component add(Component comp) {
-        if(comp instanceof JComponent)
-            ((JComponent)comp).setAlignmentX(LEFT_ALIGNMENT);
+        if (comp instanceof JComponent) {
+            ((JComponent) comp).setAlignmentX(LEFT_ALIGNMENT);
+        }
 
         return super.add(comp);
     }
@@ -83,6 +84,6 @@ public class XBoxPanel extends JPanel {
      */
     @Override
     public Insets getInsets() {
-        return insets==null?super.getInsets():insets;
+        return insets == null ? super.getInsets() : insets;
     }
 }

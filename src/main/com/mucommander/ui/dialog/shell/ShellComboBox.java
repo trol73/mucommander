@@ -21,7 +21,7 @@ package com.mucommander.ui.dialog.shell;
 import com.mucommander.shell.ShellHistoryListener;
 import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.autocomplete.CompleterFactory;
-import com.mucommander.ui.combobox.AutocompletedEditableCombobox;
+import com.mucommander.ui.combobox.AutocompleteEditableCombobox;
 import com.mucommander.ui.combobox.EditableComboBox;
 import com.mucommander.ui.combobox.EditableComboBoxListener;
 import com.mucommander.ui.combobox.SaneComboBox;
@@ -45,7 +45,7 @@ import java.util.Iterator;
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class ShellComboBox extends AutocompletedEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
+public class ShellComboBox extends AutocompleteEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
     // - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** Input field used to type in commands. */

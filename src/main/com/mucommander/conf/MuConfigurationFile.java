@@ -52,7 +52,7 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @param path path to the configuration file.
      * @throws FileNotFoundException if <code>path</code> is not accessible.
      */
-    public MuConfigurationFile(String path, String defaultFilename) throws FileNotFoundException {
+    MuConfigurationFile(String path, String defaultFilename) throws FileNotFoundException {
     	DEFAULT_CONFIGURATION_FILE_NAME = defaultFilename;
     	if (path != null)
     		setConfigurationFile(path);

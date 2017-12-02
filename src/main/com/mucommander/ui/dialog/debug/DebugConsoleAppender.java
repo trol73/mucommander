@@ -68,7 +68,7 @@ public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
      *
      * @return the last records that were collected by this handler.
      */
-    public synchronized LoggingEvent[] getLogRecords() {
+    synchronized LoggingEvent[] getLogRecords() {
     	LogbackLoggingEvent[] records = new LogbackLoggingEvent[0];
     	records = loggingEventsList.toArray(records);
 
@@ -82,8 +82,9 @@ public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
 
     @Override
     protected void append(ILoggingEvent record) {
-		if(loggingEventsList.size()== bufferSize)
+		if (loggingEventsList.size()== bufferSize) {
             loggingEventsList.remove(0);
+        }
 
         loggingEventsList.add(new LogbackLoggingEvent(record));
 	}
@@ -126,8 +127,9 @@ public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
         }
         
         public LogLevel getLevel() {
-        	if (logLevel == null)
-        		logLevel = MuLogging.getLevel(loggingEvent);
+        	if (logLevel == null) {
+                logLevel = MuLogging.getLevel(loggingEvent);
+            }
         	return logLevel;
         }
     }

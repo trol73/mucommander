@@ -28,18 +28,18 @@ import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 /**
- * <code>AutocompletedEditableCombobox</code> is an editable combo-box that provides
+ * <code>AutocompleteEditableCombobox</code> is an editable combo-box that provides
  * auto-completion capabilities based on the given <code>Completer</code>.
  * 
  * @author Arik Hadas
  */
-public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
+public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
 
 	/**
      * Creates a new editable combo box and a JTextField to be used as the editor.
      * Has the same effect as calling {@link EditableComboBox#EditableComboBox(javax.swing.JTextField)} with a null value.
      */
-    public AutocompletedEditableCombobox(Completer completer) {
+    public AutocompleteEditableCombobox(Completer completer) {
         super();
         enableAutoCompletion(completer);
     }
@@ -50,7 +50,7 @@ public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
      * @param textField the text field to be used as the combo box's editor. If null, a new JTextField instance
      * will be created and used.
      */
-    public AutocompletedEditableCombobox(JTextField textField, Completer completer) {
+    public AutocompleteEditableCombobox(JTextField textField, Completer completer) {
         super(textField);
         enableAutoCompletion(completer);
     }
@@ -62,7 +62,7 @@ public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
      * will be created and used.
      * @param comboBoxModel the ComboBoxModel to use for this combo box
      */
-    public AutocompletedEditableCombobox(JTextField textField, ComboBoxModel<E> comboBoxModel, Completer completer) {
+    public AutocompleteEditableCombobox(JTextField textField, ComboBoxModel<E> comboBoxModel, Completer completer) {
         super(textField, comboBoxModel);
         enableAutoCompletion(completer);
     }
@@ -74,7 +74,7 @@ public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
      * will be created and used.
      * @param items items used to populate the initial items list.
      */
-    public AutocompletedEditableCombobox(JTextField textField, E[] items, Completer completer) {
+    public AutocompleteEditableCombobox(JTextField textField, E[] items, Completer completer) {
         super(textField, items);
         enableAutoCompletion(completer);
     }
@@ -86,7 +86,7 @@ public class AutocompletedEditableCombobox<E> extends EditableComboBox<E> {
      * will be created and used.
      * @param items items used to populate the initial items list.
      */
-    public AutocompletedEditableCombobox(JTextField textField, Vector<E> items, Completer completer) {
+    public AutocompleteEditableCombobox(JTextField textField, Vector<E> items, Completer completer) {
         super(textField, items);
         enableAutoCompletion(completer);
     }

@@ -84,7 +84,7 @@ public abstract class FileTableTab implements Tab {
 	 * 
 	 * @return String representation of the tab
 	 */
-	public String getDisplayableTitle() {
+	String getDisplayableTitle() {
 		String title = getTitle();
 
 		return title != null ? title : createDisplayableTitleFromLocation(getLocation());
@@ -104,8 +104,9 @@ public abstract class FileTableTab implements Tab {
 
 	private String getFilenameRepresentation(String filename, boolean local) {
 		// Under for OSes with 'root drives' (Windows, OS/2), remove the leading '/' character
-		if (local && LocalFile.hasRootDrives() && filename != null)
+		if (local && LocalFile.hasRootDrives() && filename != null) {
 			return PathUtils.removeLeadingSeparator(filename, "/");
+		}
 		// Under other OSes, if the filename is empty return "/"
 		return filename == null ? "/" : filename;
 	}

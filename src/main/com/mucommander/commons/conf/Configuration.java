@@ -186,7 +186,7 @@ public class Configuration {
      * @param f factory that will be used to create reader instances.
      * @see     #getReaderFactory()
      */
-    public void setReaderFactory(ConfigurationReaderFactory f) {
+    void setReaderFactory(ConfigurationReaderFactory f) {
         synchronized(readerLock) {
             readerFactory = f;
         }
@@ -201,7 +201,7 @@ public class Configuration {
      * @return the factory that is being used to create reader instances.
      * @see    #setReaderFactory(ConfigurationReaderFactory)
      */
-    public ConfigurationReaderFactory getReaderFactory() {
+    private ConfigurationReaderFactory getReaderFactory() {
         synchronized(readerLock) {
             if (readerFactory == null) {
                 return XmlConfigurationReader.FACTORY;
@@ -223,7 +223,7 @@ public class Configuration {
      * @param f factory that will be used to create writer instances.
      * @see     #getWriterFactory()
      */
-    public void setWriterFactory(ConfigurationWriterFactory f) {
+    void setWriterFactory(ConfigurationWriterFactory f) {
         synchronized(writerLock) {
             writerFactory = f;
         }
@@ -238,7 +238,7 @@ public class Configuration {
      * @return the factory that is being used to create writer instances.
      * @see    #setWriterFactory(ConfigurationWriterFactory)
      */
-    public ConfigurationWriterFactory getWriterFactory() {
+    private ConfigurationWriterFactory getWriterFactory() {
         synchronized(writerLock) {
             if (writerFactory == null) {
                 return XmlConfigurationWriter.FACTORY;
@@ -769,8 +769,9 @@ public class Configuration {
      */
     private void prune(BufferedConfigurationExplorer explorer) {
         // If we're at the root level, nothing to prune.
-        if (!explorer.hasSections())
+        if (!explorer.hasSections()) {
             return;
+        }
 
         ConfigurationSection current = explorer.popSection();
 
@@ -1088,8 +1089,9 @@ public class Configuration {
      * @param event event to propagate.
      */
     private void triggerEvent(ConfigurationEvent event) {
-        for (ConfigurationListener listener : LISTENERS.keySet())
+        for (ConfigurationListener listener : LISTENERS.keySet()) {
             listener.configurationChanged(event);
+        }
     }
 
 
@@ -1100,7 +1102,9 @@ public class Configuration {
      * Returns the configuration's root section.
      * @return the configuration's root section.
      */
-    ConfigurationSection getRoot() {return root;}
+    ConfigurationSection getRoot() {
+        return root;
+    }
 
 
 
@@ -1128,7 +1132,7 @@ public class Configuration {
          * Creates a new configuration loader.
          * @param root where to create the configuration in.
          */
-        public ConfigurationLoader(ConfigurationSection root) {
+        ConfigurationLoader(ConfigurationSection root) {
             currentSection = root;
         }
 
@@ -1150,8 +1154,9 @@ public class Configuration {
          */
         public void endConfiguration() throws ConfigurationException {
             // Makes sure currentSection is the root section.
-            if (!sections.empty())
+            if (!sections.empty()) {
                 throw new ConfigurationStructureException("Not all sections have been closed.");
+            }
             sections = null;
             sectionNames = null;
         }

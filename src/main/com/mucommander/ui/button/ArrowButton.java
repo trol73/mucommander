@@ -47,7 +47,7 @@ public class ArrowButton extends JButton {
     /**
      * Creates a new ArrowButton with no initial arrow icon.
      */
-    public ArrowButton() {
+    ArrowButton() {
         super();
     }
 
@@ -74,7 +74,7 @@ public class ArrowButton extends JButton {
      * @param direction can have one of the following values: {@link Direction#UP}, {@link Direction#DOWN},
      * {@link Direction#LEFT} or {@link Direction#RIGHT}
      */
-    public void setArrowDirection(Direction direction) {
+    void setArrowDirection(Direction direction) {
         setIcon(IconManager.getIcon(IconManager.IconSet.COMMON, direction.fileName));
     }
 }

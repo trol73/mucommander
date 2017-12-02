@@ -43,7 +43,7 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 500);
 
 
-    public PasswordDialog(Frame owner, String title, Component locationRelativeComp) {
+    private PasswordDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, locationRelativeComp);
         init();
     }
@@ -72,7 +72,6 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
         btnCancel = new JButton(i18n("cancel"));
         btnCancel.addActionListener(this);
         JButton buttons[] = new JButton[]{btnOk, btnCancel};
-
 
         setInitialFocusComponent(edtPassword);
         mainPanel.add(new ButtonChoicePanel(buttons, 2, getRootPane()));

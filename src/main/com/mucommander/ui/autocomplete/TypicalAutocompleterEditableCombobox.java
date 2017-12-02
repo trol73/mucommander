@@ -18,21 +18,21 @@
 
 package com.mucommander.ui.autocomplete;
 
-import com.mucommander.ui.combobox.AutocompletedEditableCombobox;
+import com.mucommander.ui.combobox.AutocompleteEditableCombobox;
 
 import java.awt.event.KeyEvent;
 
 /**
  * This <code>AutocompleterTextComponent</code> implements {@link #OnEnterPressed(java.awt.event.KeyEvent)}
- * and {@link #OnEscPressed(java.awt.event.KeyEvent)} as the typical AutocompletedEditableCombobox's ops. 
+ * and {@link #OnEscPressed(java.awt.event.KeyEvent)} as the typical AutocompleteEditableCombobox's ops.
  * 
  * @author Arik Hadas
  */
 
 public class TypicalAutocompleterEditableCombobox extends AutocompleterTextComponent {
-	protected AutocompletedEditableCombobox editableCombobox;
+	private AutocompleteEditableCombobox editableCombobox;
 	
-	public TypicalAutocompleterEditableCombobox(AutocompletedEditableCombobox editableCombobox) {
+	public TypicalAutocompleterEditableCombobox(AutocompleteEditableCombobox editableCombobox) {
 		super(editableCombobox);		
 		this.editableCombobox = editableCombobox;		
 	}

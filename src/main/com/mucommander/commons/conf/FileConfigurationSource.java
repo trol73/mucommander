@@ -63,7 +63,7 @@ public class FileConfigurationSource implements ConfigurationSource {
      * @param file file in which the configuration data is located.
      * @param charset charset in which the file is encoded.
      */
-    public FileConfigurationSource(File file, String charset) {
+    FileConfigurationSource(File file, String charset) {
         this(file, Charset.forName(charset));
     }
 
@@ -83,7 +83,7 @@ public class FileConfigurationSource implements ConfigurationSource {
      * @param path  path to the file in which the configuration data is located.
      * @param charset charset in which the file is encoded.
      */
-    public FileConfigurationSource(String path, String charset) {
+    FileConfigurationSource(String path, String charset) {
         this(new File(path), charset);
     }
 

@@ -102,8 +102,9 @@ public class AlteredVector<E> extends Vector<E> {
      * @param nbRemoved number of elements removed
      */
     private void fireElementsRemovedEvent(int startIndex, int nbRemoved) {
-        for(VectorChangeListener listener : listeners.keySet())
+        for (VectorChangeListener listener : listeners.keySet()) {
             listener.elementsRemoved(startIndex, nbRemoved);
+        }
     }
 
     /**
@@ -112,8 +113,9 @@ public class AlteredVector<E> extends Vector<E> {
      * @param index index of the element that has been changed
      */
     private void fireElementChangedEvent(int index) {
-        for(VectorChangeListener listener : listeners.keySet())
+        for (VectorChangeListener listener : listeners.keySet()) {
             listener.elementChanged(index);
+        }
     }
 
 

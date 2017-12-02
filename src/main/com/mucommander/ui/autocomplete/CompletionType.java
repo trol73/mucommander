@@ -232,7 +232,7 @@ public abstract class CompletionType {
 	        public void insertUpdate(DocumentEvent e){
 	        	// If text was inserted to the text component and carent is at the end of 
 	        	// the text, then start a showingThread to open auto-completion popup.
-	        	if (autocompletedtextComp.isCarentAtEndOfTextAtInsertion())
+	        	if (autocompletedtextComp.isCaretAtEndOfTextAtInsertion())
         			createNewShowingThread(popup.isVisible() ? 0 : POPUP_DELAY_AT_TEXT_INSERTION);	        	
 	        }
 	 

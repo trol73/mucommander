@@ -98,7 +98,7 @@ public abstract class AsyncPanel extends JPanel {
      *
      * @param waitComponent the component to display while the target component is being loaded
      */
-    protected AsyncPanel(JComponent waitComponent) {
+    private AsyncPanel(JComponent waitComponent) {
         super(new BorderLayout());
 
         this.waitComponent = waitComponent;

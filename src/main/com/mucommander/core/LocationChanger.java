@@ -515,7 +515,7 @@ public class LocationChanger {
 		 *
 		 * @param fileToSelect the file to be selected after the folder has been changed
 		 */
-		public void selectThisFileAfter(AbstractFile fileToSelect) {
+		void selectThisFileAfter(AbstractFile fileToSelect) {
 			this.fileToSelect = fileToSelect;
 		}
 
@@ -561,7 +561,7 @@ public class LocationChanger {
 					return false;
 				}
 
-				if(doNotKill) {
+				if (doNotKill) {
 					LOGGER.debug("Can't kill thread now, it's too late, returning");
 					return false;
 				}
@@ -719,8 +719,9 @@ public class LocationChanger {
 
 									int ret = dialog.getActionValue();
 
-									if (ret == -1 || ret == CANCEL_ACTION)
+									if (ret == -1 || ret == CANCEL_ACTION) {
 										break;
+									}
 
 									// Download file
 									if (ret == DOWNLOAD_ACTION) {
@@ -760,8 +761,7 @@ public class LocationChanger {
 								fileToSelect = null;
 
 								continue;
-							}
-							else {
+							} else {
 								showFolderDoesNotExistDialog();
 								break;
 							}
@@ -845,8 +845,7 @@ public class LocationChanger {
 						folderChangedSuccessfully = true;
 
 						break;
-					}
-					catch(Exception e) {
+					} catch(Exception e) {
 						LOGGER.debug("Caught exception", e);
 
 						if (killed) {
@@ -879,8 +878,7 @@ public class LocationChanger {
 								CredentialsManager.authenticate(folderURL, newCredentialsMapping);
 								continue;
 							}
-						}
-						else {
+						} else {
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
 							if (findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
@@ -949,10 +947,11 @@ public class LocationChanger {
 			if (!folderChangedSuccessfully) {
 				FileURL failedURL = folder == null ? folderURL : folder.getURL();
 				// Notifies listeners that location change has been cancelled by the user or has failed
-				if (killed)
+				if (killed) {
 					locationManager.fireLocationCancelled(failedURL);
-				else
+				} else {
 					locationManager.fireLocationFailed(failedURL);
+				}
 			}
 		}
 

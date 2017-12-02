@@ -18,11 +18,11 @@ public class XmlWriter {
     /** Number of space characters used for one level of indentation. */
     private static final int    OFFSET_INCREMENT    = 4;
     /** Identifier for publicly accessible objects. */
-    public  static final String AVAILABILITY_PUBLIC = "PUBLIC";
+    private static final String AVAILABILITY_PUBLIC = "PUBLIC";
     /** Identifier for system resources. */
-    public  static final String AVAILABILITY_SYSTEM = "SYSTEM";
+    private static final String AVAILABILITY_SYSTEM = "SYSTEM";
     /** Default output encoding. */
-    public static final String  DEFAULT_ENCODING    = "UTF-8";
+    private static final String  DEFAULT_ENCODING    = "UTF-8";
 
 
 
@@ -58,7 +58,7 @@ public class XmlWriter {
      * @throws FileNotFoundException if <code>file</code> could not be found.
      * @throws IOException           if an I/O error occurs.
      */
-    public XmlWriter(File file) throws IOException, FileNotFoundException {this(new FileOutputStream(file));}
+    public XmlWriter(File file) throws IOException {this(new FileOutputStream(file));}
 
     /**
      * Creates an <code>XmlWriter</code> that will write to the specified file using the specified encoding.
@@ -72,7 +72,7 @@ public class XmlWriter {
      * @throws UnsupportedEncodingException if <code>encoding</code> is not supported.
      * @throws IOException                  if an I/O error occurs.
      */
-    public XmlWriter(File file, String encoding) throws IOException, FileNotFoundException, UnsupportedEncodingException {this(new FileOutputStream(file), encoding);}
+    public XmlWriter(File file, String encoding) throws IOException {this(new FileOutputStream(file), encoding);}
 
     /**
      * Creates an <code>XmlWriter</code> that will write to the specified output stream.
@@ -92,7 +92,7 @@ public class XmlWriter {
      * @throws UnsupportedEncodingException if <code>encoding</code> is not supported.
      * @throws IOException                  if an I/O error occurs.
      */
-    public XmlWriter(OutputStream stream, String encoding) throws UnsupportedEncodingException, IOException {init(new OutputStreamWriter(stream, encoding), encoding);}
+    public XmlWriter(OutputStream stream, String encoding) throws IOException {init(new OutputStreamWriter(stream, encoding), encoding);}
 
     private void init(Writer writer, String encoding) throws IOException {
         out = new PrintWriter(writer, true);
@@ -334,8 +334,9 @@ public class XmlWriter {
     public void writeCData(String cdata) throws IOException {
         indent();
         out.print(escape(cdata));
-        if(out.checkError())
+        if (out.checkError()) {
             throw new IOException();
+        }
     }
 
     /**
@@ -347,11 +348,11 @@ public class XmlWriter {
     public String escape(String data) throws IOException {
         int position;
 
-        for(int i = 0; i < ENTITIES.length; i++) {
+        for (int i = 0; i < ENTITIES.length; i++) {
             position = 0;
-            while((position = data.indexOf(ENTITIES[i], position)) != -1) {
+            while ((position = data.indexOf(ENTITIES[i], position)) >= 0) {
                 data = data.substring(0, position) + ENTITY_REPLACEMENTS[i] +
-                    (position == data.length() -1 ? "" : data.substring(position + 1, data.length()));
+                    (position == data.length() - 1 ? "" : data.substring(position + 1, data.length()));
                 position = position + ENTITY_REPLACEMENTS[i].length();
             }
         }

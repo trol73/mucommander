@@ -178,7 +178,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
             if (button.getIcon() == null || button.getIcon().getIconHeight() <= 16) {
-            button.putClientProperty("JButton.buttonType", "segmentedTextured");
+                button.putClientProperty("JButton.buttonType", "segmentedTextured");
             }
             button.setRolloverEnabled(true);
         }

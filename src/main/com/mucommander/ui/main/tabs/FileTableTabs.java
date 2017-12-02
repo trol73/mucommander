@@ -55,8 +55,9 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 		folderPanel.getLocationManager().addLocationListener(this);
 
 		// Add the initial folders
-		for (FileTableTab tab : initialTabs)
+		for (FileTableTab tab : initialTabs) {
 			addTab(clonedTabsFactory.createTab(tab));
+		}
 	}
 
 	@Override

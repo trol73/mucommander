@@ -121,7 +121,7 @@ public class OtherTextComponentCompletion extends CompletionType {
                 case KeyEvent.VK_SPACE:
                 	if (keyEvent.isControlDown()) {
                 		if (!popup.isVisible()) {
-                    		autocompletedtextComp.moveCarentToEndOfText();
+                    		autocompletedtextComp.moveCaretToEndOfText();
                     		createNewShowingThread(0);
                     	}
                 	}

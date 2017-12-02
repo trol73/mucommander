@@ -110,7 +110,7 @@ public class TextFieldCompletion extends CompletionType {
                 	// The combination of cntrl+space makes open the auto-complete popup without delay.
                 	if (keyEvent.isControlDown()) {
                 		if (!popup.isVisible()) {
-                    		autocompletedtextComp.moveCarentToEndOfText();
+                    		autocompletedtextComp.moveCaretToEndOfText();
                     		createNewShowingThread(0);
                     	}
                 	}
@@ -122,7 +122,7 @@ public class TextFieldCompletion extends CompletionType {
                             keyEvent.consume();
                         }
                         else {                	
-                        	autocompletedtextComp.moveCarentToEndOfText();
+                        	autocompletedtextComp.moveCaretToEndOfText();
                     		createNewShowingThread(0);
                         }
                     }

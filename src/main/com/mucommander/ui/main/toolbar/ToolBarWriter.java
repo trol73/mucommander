@@ -42,8 +42,9 @@ public class ToolBarWriter extends ToolBarIO {
 	private static ToolBarWriter instance;
 	
 	public static ToolBarWriter create() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ToolBarWriter();
+		}
 		return instance;
 	}
 	

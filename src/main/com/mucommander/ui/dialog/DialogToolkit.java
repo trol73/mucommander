@@ -51,7 +51,7 @@ public class DialogToolkit {
         return fitToDimension(window, minD, true);
     }
 	
-    public static boolean fitToMaxDimension(Window window, Dimension maxD) {
+    static boolean fitToMaxDimension(Window window, Dimension maxD) {
         return fitToDimension(window, maxD, false);
     }
 
@@ -74,7 +74,7 @@ public class DialogToolkit {
                 changeSize = true;
             }
 				
-            if(windowHeight < maxHeight) {
+            if (windowHeight < maxHeight) {
                 windowHeight = maxHeight;
                 changeSize = true;
             }
@@ -125,11 +125,13 @@ public class DialogToolkit {
         int x = Math.max(0, window.getX() + (window.getWidth() - c.getWidth()) / 2);
         int y = Math.max(0, window.getY() + (window.getHeight() - c.getHeight()) / 2);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int       buffer;
-        if ((buffer = screenSize.width - (c.getWidth() + x)) < 0)
+        int buffer;
+        if ((buffer = screenSize.width - (c.getWidth() + x)) < 0) {
             x += buffer;
-        if ((buffer = screenSize.height - (c.getHeight() + y)) < 0)
+        }
+        if ((buffer = screenSize.height - (c.getHeight() + y)) < 0) {
             y += buffer;
+        }
         c.setLocation(x, y);
     }
     
@@ -181,12 +183,14 @@ public class DialogToolkit {
      *   <code>true</code>
      * @see java.awt.GraphicsEnvironment#isHeadless
      */
-    public static Window getWindowForComponent(Component parentComponent) throws HeadlessException {
+    static Window getWindowForComponent(Component parentComponent) throws HeadlessException {
         // Note: this method is a shameless rip from javax.swing.JOptionPane
-        if (parentComponent == null)
+        if (parentComponent == null) {
             return JOptionPane.getRootFrame();
-        if (parentComponent instanceof Frame || parentComponent instanceof Dialog)
-            return (Window)parentComponent;
+        }
+        if (parentComponent instanceof Frame || parentComponent instanceof Dialog) {
+            return (Window) parentComponent;
+        }
         return getWindowForComponent(parentComponent.getParent());
     }
 }

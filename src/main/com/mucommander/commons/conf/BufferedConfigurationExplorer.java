@@ -42,7 +42,7 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      * Creates a new explorer on the specified section.
      * @param root section from which to start exploring.
      */
-    public BufferedConfigurationExplorer(ConfigurationSection root) {
+    BufferedConfigurationExplorer(ConfigurationSection root) {
         super(root);
     }
 
@@ -54,13 +54,13 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      * Returns <code>true</code> if there are more sections in the history.
      * @return <code>true</code> if there are more sections in the history.
      */
-    public boolean hasSections() {return !sections.empty();}
+    boolean hasSections() {return !sections.empty();}
 
     /**
      * Returns the next section in history.
      * @return the next section in history.
      */
-    public ConfigurationSection popSection() {return sections.pop();}
+    ConfigurationSection popSection() {return sections.pop();}
 
 
 
@@ -74,7 +74,7 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      */
     @Override
     public boolean moveTo(String name, boolean create) {
-        if(super.moveTo(name, create)) {
+        if (super.moveTo(name, create)) {
             sections.push(getSection());
             return true;
         }

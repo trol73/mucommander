@@ -24,11 +24,11 @@ import java.io.FileNotFoundException;
  * 
  * @author Arik Hadas
  */
-public class MuSnapshotFile extends MuConfigurationFile {
+class MuSnapshotFile extends MuConfigurationFile {
 	
 	private static final String DEFAULT_SNAPSHOT_FILE_NAME = "snapshot.xml";
 	
-	public static MuSnapshotFile getSnapshotFile() {
+	static MuSnapshotFile getSnapshotFile() {
 		try {
 			return new MuSnapshotFile();
 		} catch (FileNotFoundException e) {

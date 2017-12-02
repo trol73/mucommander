@@ -96,15 +96,15 @@ public abstract class AutocompleterTextComponent {
 	
 	public int getHeight() { return textComponent.getHeight(); }
 	
-	public Rectangle modelToView() throws BadLocationException { return textComponent.getUI().modelToView(textComponent, textComponent.getCaretPosition()); }
+	Rectangle modelToView() throws BadLocationException { return textComponent.getUI().modelToView(textComponent, textComponent.getCaretPosition()); }
 
-	public void moveCarentToEndOfText() { textComponent.setCaretPosition(textComponent.getText().length()); }
+	void moveCaretToEndOfText() { textComponent.setCaretPosition(textComponent.getText().length()); }
 	
-	public boolean isCarentAtEndOfTextAtInsertion() { return textComponent.getCaretPosition() == textComponent.getText().length() - 1; }
+	boolean isCaretAtEndOfTextAtInsertion() { return textComponent.getCaretPosition() == textComponent.getText().length() - 1; }
 	
-	public boolean isCarentAtEndOfTextAtRemoval() { return textComponent.getCaretPosition() == textComponent.getText().length() + 1; }
+	boolean isCarentAtEndOfTextAtRemoval() { return textComponent.getCaretPosition() == textComponent.getText().length() + 1; }
 	
-	public JTextComponent getTextComponent() { return textComponent; }
+	JTextComponent getTextComponent() { return textComponent; }
 	
 	public void addKeyListener(KeyAdapter adapter) { textComponent.addKeyListener(adapter); }
 	
@@ -121,8 +121,9 @@ public abstract class AutocompleterTextComponent {
 		Vector<String> result = new Vector<>();
 		if (editableComboBox != null) {
 			int nbItems = editableComboBox.getItemCount();
-			for (int i=0; i < nbItems; i++)
+			for (int i=0; i < nbItems; i++) {
 				result.add(editableComboBox.getItemAt(i).toString());
+			}
 		}
 		return result;
 	}
@@ -140,8 +141,9 @@ public abstract class AutocompleterTextComponent {
 	/**
 	 * setPopupUnvisibe - make the combo-box list of items unvisible.
 	 */
-	public void setComponentsPopupUnvisibe() {
-		if (editableComboBox != null)
+	void setComponentsPopupInvisible() {
+		if (editableComboBox != null) {
 			editableComboBox.setPopupVisible(false);
+		}
 	}
 }

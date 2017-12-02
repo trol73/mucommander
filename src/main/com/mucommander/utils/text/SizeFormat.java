@@ -75,11 +75,11 @@ public class SizeFormat {
     /** One gigabyte: 2^30 */
     private final static int GB_1 = 1073741824;
     /** Ten gigabytes: (2^10)*10 */
-    private final static long GB_10 = 10737418240l;
+    private final static long GB_10 = 10737418240L;
     /** One terabyte: 2^40 */
-    private final static long TB_1 = 1099511627776l;
+    private final static long TB_1 = 1099511627776L;
     /** Ten terabytes: (2^40)*10 */
-    private final static long TB_10 = 10995116277760l;
+    private final static long TB_10 = 10995116277760L;
 
     /** DecimalFormat instance to localize thousands separators */
     private final static DecimalFormat DECIMAL_FORMAT = (DecimalFormat)NumberFormat.getInstance();
@@ -130,18 +130,17 @@ public class SizeFormat {
         boolean roundToKb = (format&ROUND_TO_KB)!=0;
 		
         // size < 1KB
-        if(size < KB_1) {
-            if(roundToKb) {
+        if (size < KB_1) {
+            if (roundToKb) {
                 // Note: ROUND_TO_KB must have precedence over DIGITS_FULL
                 digitsString = size == 0 ? "0" : "1";
                 unitString = noUnit ? "" : KB;
-            }
-            else {
+            } else {
                 digitsString = "" + size;
                 unitString = unitLong?(size<=1?BYTE:BYTES):unitShort?B:"";
             }
         }
-        else if((format&DIGITS_FULL)!=0) {
+        else if ((format & DIGITS_FULL)!=0) {
             // DecimalFormat localizes thousands separators
 
             // Calls to DecimalFormat must be synchronized.
@@ -155,56 +154,57 @@ public class SizeFormat {
         }
         else {
             // size < 10KB	-> "9.6 KB"
-            if(size<KB_10 && !digitsShort) {
+            if (size < KB_10 && !digitsShort) {
                 int nKB = (int)size/KB_1;
-                digitsString = nKB+DECIMAL_SEPARATOR+(int)((size-nKB*KB_1)/(float)KB_1*10);
-                unitString = noUnit?"":KB;
+                digitsString = nKB + DECIMAL_SEPARATOR+(int)((size-nKB*KB_1)/(float)KB_1*10);
+                unitString = noUnit ? "" : KB;
             }
             // size < 1MB -> "436 KB"
-            else if(size<MB_1) {
-                digitsString = ""+size/KB_1;
-                unitString = noUnit?"":KB;
+            else if (size < MB_1) {
+                digitsString = "" + size/KB_1;
+                unitString = noUnit ? "" : KB;
             }
             // size < 10MB -> "4.3 MB"
-            else if(size<MB_10 && !digitsShort) {
+            else if(size < MB_10 && !digitsShort) {
                 int nMB = (int)size/MB_1;
-                digitsString = nMB+DECIMAL_SEPARATOR+(int)((size-nMB*MB_1)/(float)MB_1*10);
-                unitString = noUnit?"":MB;
+                digitsString = nMB + DECIMAL_SEPARATOR+(int)((size-nMB*MB_1)/(float)MB_1*10);
+                unitString = noUnit? "" : MB;
             }
             // size < 1GB -> "548 MB"
-            else if(size<GB_1) {
-                digitsString = ""+size/MB_1;
-                unitString = noUnit?"":MB;
+            else if(size < GB_1) {
+                digitsString = "" + size/MB_1;
+                unitString = noUnit ? "" : MB;
             }	
             // size < 10GB -> "4.8 GB"
-            else if(size<GB_10 && !digitsShort) {
-                long nGB = size/GB_1;
-                digitsString = nGB+DECIMAL_SEPARATOR+(int)((size-nGB*GB_1)/(double)GB_1*10);
-                unitString = noUnit?"":GB;
+            else if(size < GB_10 && !digitsShort) {
+                long nGB = size / GB_1;
+                digitsString = nGB + DECIMAL_SEPARATOR+(int)((size-nGB*GB_1)/(double)GB_1*10);
+                unitString = noUnit ? "" : GB;
             }
             // size < 1TB -> "216 GB"
-            else if(size<TB_1) {
-                digitsString = ""+size/GB_1;
-                unitString = noUnit?"":GB;
+            else if(size < TB_1) {
+                digitsString = "" + size/GB_1;
+                unitString = noUnit ? "" : GB;
             }
             // size < 10TB -> "4.8 TB"
-            else if(size<TB_10 && !digitsShort) {
+            else if(size < TB_10 && !digitsShort) {
                 long nTB = size/TB_1;
-                digitsString = nTB+DECIMAL_SEPARATOR+(int)((size-nTB*TB_1)/(double)TB_1*10);
-                unitString = noUnit?"":TB;
+                digitsString = nTB + DECIMAL_SEPARATOR+(int)((size-nTB*TB_1)/(double)TB_1*10);
+                unitString = noUnit ? "" : TB;
             }
             else {
                 // Will I live long enough to see files that large ??
-                digitsString = ""+size/TB_1;
-                unitString = noUnit?"":TB;
+                digitsString = "" + size/TB_1;
+                unitString = noUnit ? "" : TB;
             }
         }
 
         // Add localized '/s' to unit string if unit is speed
-        if((format&UNIT_SPEED)!=0)
+        if ((format & UNIT_SPEED) != 0) {
             unitString = Translator.get(SPEED_KEY, unitString);
+        }
 
-        return digitsString+((format&INCLUDE_SPACE)!=0?" ":"")+unitString;
+        return digitsString + ((format&INCLUDE_SPACE) !=0 ? " " : "") + unitString;
     }
     
 

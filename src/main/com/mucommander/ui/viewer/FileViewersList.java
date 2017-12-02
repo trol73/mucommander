@@ -46,7 +46,7 @@ public class FileViewersList {
         final public Class viewerClass;
         final public WeakReference<FileFrame> fileFrameRef;
 
-        public FileRecord(String fileName, FileFrame fileFrame) {
+        FileRecord(String fileName, FileFrame fileFrame) {
             this.fileName = fileName;
             this.shortName = new File(fileName).getName();
             this.viewerClass = fileFrame.getFilePresenter().getClass();

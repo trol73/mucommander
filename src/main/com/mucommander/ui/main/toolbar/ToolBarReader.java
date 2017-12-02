@@ -88,10 +88,11 @@ public class ToolBarReader extends ToolBarIO {
                     // Resolve action class
                     String actionClassAttribute = attributes.getValue(ACTION_ATTRIBUTE);
                     String actionId = ActionManager.extrapolateId(actionClassAttribute);
-                    if (ActionManager.isActionExist(actionId))
+                    if (ActionManager.isActionExist(actionId)) {
                         actionIdsV.add(actionId);
-                    else
+                    } else {
                         getLogger().warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id for class " + actionClassAttribute + " was not found");
+                    }
                 }
                 break;
             case SEPARATOR_ELEMENT:
@@ -102,8 +103,9 @@ public class ToolBarReader extends ToolBarIO {
                 String fileVersion = attributes.getValue(VERSION_ATTRIBUTE);
 
                 // if the file's version is not up-to-date, update the file to the current version at quitting.
-                if (!RuntimeConstants.VERSION.equals(fileVersion))
+                if (!RuntimeConstants.VERSION.equals(fileVersion)) {
                     setModified();
+                }
                 break;
         }
     }

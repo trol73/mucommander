@@ -20,6 +20,7 @@ package com.mucommander.ui.main;
 
 import com.apple.eawt.FullScreenUtilities;
 import com.mucommander.commons.file.AbstractArchiveEntryFile;
+import com.mucommander.commons.file.AbstractArchiveFile;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.JavaVersion;
@@ -344,8 +345,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * @param folderPanel the new active panel
      */
     private void fireActivePanelChanged(FolderPanel folderPanel) {
-        for (ActivePanelListener listener : activePanelListeners.keySet())
+        for (ActivePanelListener listener : activePanelListeners.keySet()) {
             listener.activePanelChanged(folderPanel);
+        }
     }
 
 
@@ -617,7 +619,7 @@ public class MainFrame extends JFrame implements LocationListener {
     }
 
     /**
-     * Forces a refrehs of the frame's folder panel.
+     * Forces a refresh of the frame's folder panel.
      */
     public void tryRefreshCurrentFolders() {
         leftFolderPanel.tryRefreshCurrentFolder();
@@ -671,7 +673,8 @@ public class MainFrame extends JFrame implements LocationListener {
                 // If the current folder is an archive entry, display the archive file, this is the closest we can get
                 // with a java.io.File
                 if (currentFolder.hasAncestor(AbstractArchiveEntryFile.class)) {
-                    javaIoFile = currentFolder.getParentArchive().getUnderlyingFileObject();
+                    AbstractArchiveFile parent = currentFolder.getParentArchive();
+                    javaIoFile = parent != null ? parent.getUnderlyingFileObject() : null;
                 } else {
                     javaIoFile = currentFolder.getUnderlyingFileObject();
                 }

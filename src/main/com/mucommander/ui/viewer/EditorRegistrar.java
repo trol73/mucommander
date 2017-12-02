@@ -117,7 +117,7 @@ public class EditorRegistrar {
      * @return the created FileEditor, or null if no suitable editor was found
      * @throws UserCancelledException if the user has been asked to confirm the operation and canceled
      */
-    public static FileEditor createFileEditor(AbstractFile file, EditorFrame frame) throws UserCancelledException {
+    static FileEditor createFileEditor(AbstractFile file, EditorFrame frame) throws UserCancelledException {
         FileEditor editor = null;
     	for (EditorFactory factory : editorFactories) {
             try {
