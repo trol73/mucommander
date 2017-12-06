@@ -1481,6 +1481,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             lastSelectedEqCnt++;
 
             if (lastSelectedEqCnt == 10) {
+                getLogger().warn("Sticky cursor!");
                 System.out.println("Sticky cursor!");
                 throw new RuntimeException("Sticky cursor!");
                /*
@@ -1586,7 +1587,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 e.consume(); // and make sure this event is not sent anywhere else
             }
         } else {
-            /* reset the counter for the double click count */
+            // reset the counter for the double click count
             doubleClickTime = System.currentTimeMillis();
             doubleClickCounter = 1;
         }
@@ -1811,7 +1812,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /////////////////////////////////
 
     public void activePanelChanged(FolderPanel folderPanel) {
-        isActiveTable = folderPanel==getFolderPanel();
+        isActiveTable = folderPanel == getFolderPanel();
 
         // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
         // instead of a custom header renderer. These indicators change when the active table has changed. 
@@ -2327,7 +2328,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 if (markedFiles != null) {
                     // Restore previously marked files
                     int nbMarkedFiles = markedFiles.size();
-                    for(int i = 0; i < nbMarkedFiles; i++) {
+                    for (int i = 0; i < nbMarkedFiles; i++) {
                         int fileIndex = tableModel.getFileIndex(markedFiles.elementAt(i));
                         if (fileIndex != -1) {
                             tableModel.setFileMarked(fileIndex, true);
@@ -2341,6 +2342,10 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 // While no such thing should happen, we want to make absolutely sure no exception
                 // is propagated to the AWT event dispatch thread.
                 getLogger().warn("Caught exception while changing folder, this should not happen!", e);
+    getLogger().warn(e.getMessage());
+    for (StackTraceElement ste  : e.getStackTrace()) {
+        getLogger().warn(ste.toString());
+    }
             } finally {
                 // Notify #setCurrentFolder that we're done changing the folder.
                 synchronized(this) {

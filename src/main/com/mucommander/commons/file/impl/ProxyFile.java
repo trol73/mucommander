@@ -208,7 +208,7 @@ public abstract class ProxyFile extends AbstractFile {
     /////////////////////////////////////
 
     @Override
-    public final boolean isFileOperationSupported(FileOperation op) {
+    public boolean isFileOperationSupported(FileOperation op) {
         Class<? extends AbstractFile> thisClass = getClass();
         Method opMethod = op.getCorrespondingMethod(thisClass);
         // If the method corresponding to the file operation has been overridden by this class (a ProxyFile subclass),

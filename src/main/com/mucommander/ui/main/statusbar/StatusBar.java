@@ -112,7 +112,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     private final static int VOLUME_INFO_TIME_TO_LIVE = 60000;
 
     /** Number of milliseconds between each volume info update by auto-update thread */
-    private final static int AUTO_UPDATE_PERIOD = 6000;
+    private final static int AUTO_UPDATE_PERIOD = 60_000;
 
     /** Caches volume info strings (free/total space) for a while, since this information is expensive to retrieve
      * (I/O bound). This map uses folders' volume path as its key. */
@@ -538,9 +538,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         do {
             // Sleep for a while
             try { Thread.sleep(AUTO_UPDATE_PERIOD); }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            catch (InterruptedException ignore) {}
             
             // Update volume info if:
             // - status bar is visible

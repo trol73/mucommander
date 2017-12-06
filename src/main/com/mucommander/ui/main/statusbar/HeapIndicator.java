@@ -99,7 +99,7 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         setToolTipText("Memory used " + bytesToMb(usedMem) + "MB  from " + bytesToMb(totalMem) + "MB  " + percent + "%");
     }
 
-    protected void installTimer(int interval) {
+    private void installTimer(int interval) {
         if (timer == null) {
             timer = new Timer(interval, this);
         } else {
@@ -109,7 +109,7 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         timer.start();
     }
 
-    protected void uninstallTimer() {
+    private void uninstallTimer() {
         if (timer != null) {
             timer.stop();
             timer.removeActionListener(this);
@@ -117,7 +117,7 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         }
     }
 
-    public void setRefreshInterval(int interval) {
+    private void setRefreshInterval(int interval) {
         this.refreshInterval = interval;
         installTimer(interval);
     }

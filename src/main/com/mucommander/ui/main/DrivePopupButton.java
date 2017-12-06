@@ -218,7 +218,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                         temp = temp.toLowerCase();
 
                         int len = temp.length();
-                        if (currentPath.startsWith(temp) && len>bestLength) {
+                        if (currentPath.startsWith(temp) && len > bestLength) {
                             bestIndex = i;
                             bestLength = len;
                         }

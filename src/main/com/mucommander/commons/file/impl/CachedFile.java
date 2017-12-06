@@ -1,6 +1,7 @@
 package com.mucommander.commons.file.impl;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.FilePermissions;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.filter.FileFilter;
@@ -105,6 +106,13 @@ public class CachedFile extends ProxyFile {
     private AbstractFile getParent;
     private AbstractFile getRoot;
     private AbstractFile getCanonicalFile;
+
+    /**
+     * Cached values for <code>isFileOperationSupported</code> method
+     */
+    private int supportedOperationsValuesMask;
+    private int supportedOperationsCachedMask;
+
 
 
     static {
@@ -568,4 +576,18 @@ public class CachedFile extends ProxyFile {
         return files;
     }
 
+
+    @Override
+    public boolean isFileOperationSupported(FileOperation op) {
+        int bitMask = 1 << op.ordinal();
+        if ((supportedOperationsCachedMask & bitMask) != 0) {
+            return (supportedOperationsValuesMask & bitMask) != 0;
+        }
+        boolean result = super.isFileOperationSupported(op);
+        if (result) {
+            supportedOperationsValuesMask |= bitMask;
+        }
+        supportedOperationsCachedMask |= bitMask;
+        return result;
+    }
 }
