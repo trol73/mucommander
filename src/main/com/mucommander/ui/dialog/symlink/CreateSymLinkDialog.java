@@ -102,7 +102,7 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
 
-        edtName.setText(linkPath.getAbsolutePath() + targetFile.getBaseName());
+        edtName.setText(linkPath.getAbsolutePath() + targetFile.getName());
         edtTarget.setText(targetFile.getAbsolutePath());
     }
 
