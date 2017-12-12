@@ -19,9 +19,6 @@ package com.mucommander.ui.viewer.text.tools;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.process.AbstractProcess;
-import com.mucommander.process.ProcessListener;
-import com.mucommander.shell.Shell;
 
 import java.io.IOException;
 

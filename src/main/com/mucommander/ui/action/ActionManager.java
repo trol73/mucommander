@@ -245,6 +245,7 @@ public class ActionManager {
 		registerAction(new EjectDriveAction.Descriptor());
 		registerAction(new CompareFilesAction.Descriptor());
 		registerAction(new TogglePanelPreviewModeAction.Descriptor());
+		registerAction(new TextEditorsListAction.Descriptor());
     }
 
 	public static void registerCommandsActions() {
@@ -262,7 +263,6 @@ public class ActionManager {
      * @param actionDescriptor - ActionDescriptor instance of the action.
      */
     private static void registerAction(ActionDescriptor actionDescriptor) {
-    	//actionFactories.put(actionDescriptor.getId(), actionDescriptor);	// TODO
     	ActionProperties.addActionDescriptor(actionDescriptor);
     }
     
@@ -273,7 +273,6 @@ public class ActionManager {
      */
     public static Iterator<String> getActionIds() {
 		return ActionProperties.actionDescriptors.keySet().iterator();
-    	//return actionFactories.keySet().iterator();
     }
     
     /**
@@ -283,13 +282,12 @@ public class ActionManager {
      * @return String representing the id of the MuAction in the specified path. null is returned if the given path is invalid.
      */
     public static String extrapolateId(String actionClassPath) {
-    	if (actionClassPath == null)
-    		return null;
+    	if (actionClassPath == null) {
+			return null;
+		}
     	
     	Matcher matcher = PATTERN.matcher(actionClassPath);
-    	return matcher.matches() ? 
-    			matcher.group(1)
-    			: actionClassPath;
+    	return matcher.matches() ? matcher.group(1) : actionClassPath;
     }
     
     /**

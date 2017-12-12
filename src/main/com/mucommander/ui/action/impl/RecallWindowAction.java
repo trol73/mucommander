@@ -66,8 +66,9 @@ public class RecallWindowAction extends MuAction {
         super(mainFrame, properties);
 
         this.windowNumber = windowNumber;
-        if (windowNumber <= 0)
+        if (windowNumber <= 0) {
             throw new IllegalArgumentException("windowNumber ("+windowNumber+")");
+        }
     }
 
     @Override
@@ -75,7 +76,7 @@ public class RecallWindowAction extends MuAction {
         List<MainFrame> mainFrames = WindowManager.getMainFrames();
 
         // Checks that the window number currently exists
-        if(windowNumber<=0 || windowNumber>mainFrames.size()) {
+        if (windowNumber <= 0 || windowNumber > mainFrames.size()) {
             LOGGER.debug("Window number "+windowNumber+" does not exist");
             return;
         }
@@ -110,15 +111,16 @@ public class RecallWindowAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() {
-            if (windowNumber <= 0 || windowNumber > 10)
+            if (windowNumber <= 0 || windowNumber > 10) {
                 return null;
+            }
 
-            return KeyStroke.getKeyStroke(Character.forDigit(windowNumber==10 ? 0 : windowNumber, 10), KeyEvent.CTRL_DOWN_MASK);
+            return KeyStroke.getKeyStroke(Character.forDigit(windowNumber == 10 ? 0 : windowNumber, 10), KeyEvent.CTRL_DOWN_MASK);
         }
 
         @Override
         public String getLabel() {
-            return Translator.get(getLabelKey(), windowNumber==-1?"?":""+windowNumber);
+            return Translator.get(getLabelKey(), windowNumber < 0 ? "?" : ""+windowNumber);
         }
 
         @Override

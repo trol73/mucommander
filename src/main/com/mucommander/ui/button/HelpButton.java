@@ -34,7 +34,7 @@ import com.mucommander.ui.main.MainFrame;
  * muCommander's online documentation in the system's default browser. If a specified help topic is passed to the
  * constructor, the browser will open the said topic. If no topic is specified, the base documentation URL will be opened.
  *
- * <p>Unless explicitely set, this button has a standard help icon but no text label. A tooltip is displayed when
+ * <p>Unless explicitly set, this button has a standard help icon but no text label. A tooltip is displayed when
  * hovering over the button.
  *
  * @see com.mucommander.ui.action.impl.GoToDocumentationAction
@@ -63,8 +63,9 @@ public class HelpButton extends JButton {
         GoToDocumentationAction action = new GoToDocumentationAction(mainFrame, properties);
         setAction(action);
 
-        if(helpTopic!=null)
+        if (helpTopic != null) {
             setHelpTopic(helpTopic);
+        }
 
         // Note: the button's text and icon must be set after the action otherwise they'll be replaced by the action's
 
@@ -74,14 +75,13 @@ public class HelpButton extends JButton {
         // Use the action's label as a tooltip
         setToolTipText(action.getLabel());
 
-        if(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             // If running Mac OS X 10.5 (and up), use the special client property to have a standard help button.
             putClientProperty("JButton.buttonType", "help");
 
             // Remove the action's icon
             setIcon(null);
-        }
-        else {
+        } else {
             setContentAreaFilled(false);
             setBorderPainted(false);
             setBorder(new EmptyBorder(0, 0, 0, 0));

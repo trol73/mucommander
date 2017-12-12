@@ -92,6 +92,7 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
         super.show();
         if (currentFileIndex >= 0) {
             dataList.setSelectedIndex(currentFileIndex);
+            selectNext();
         }
     }
 
@@ -118,12 +119,17 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
     }
 
 
-    public void selectNext() {
+    private void selectNext() {
         int selected = dataList.getSelectedIndex();
         selected++;
         if (selected >= dataList.getModel().getSize()) {
             selected = 0;
         }
         dataList.setSelectedIndex(selected);
+    }
+
+
+    public boolean isEmpty() {
+        return files.isEmpty();
     }
 }
