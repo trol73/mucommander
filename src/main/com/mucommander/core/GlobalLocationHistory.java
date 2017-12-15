@@ -66,12 +66,14 @@ public class GlobalLocationHistory extends LocationAdapter {
 
 		// Restore the global history from last init
 		int nbLocations = snapshot.getIntegerVariable(MuSnapshot.getRecentLocationsCountVariable());
-    	for (int i=0; i<nbLocations; ++i) {
+    	for (int i = 0; i < nbLocations; ++i) {
     		String filePath = snapshot.getVariable(MuSnapshot.getRecentLocationVariable(i));
 			try {
 				history.add(FileURL.getFileURL(filePath));
 			} catch (MalformedURLException e) {
 				LOGGER.debug("Got invalid URL from the snapshot file: " + filePath, e);
+			} catch (Throwable t) {
+				LOGGER.debug("Can't process URL from the snapshot file: " + filePath, t);
 			}
     	}
 	}

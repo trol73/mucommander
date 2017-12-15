@@ -33,6 +33,9 @@ public class ExecUtils {
         if (folder == null || !folder.exists()) {
             return null;
         }
+        if ("py".equalsIgnoreCase(file.getExtension())) {
+            return new ProcessParams(folder, "python " + file.getName());
+        }
         while (true) {
             if (folderContainsBuilder(folder, "Makefile")) {
                 return new ProcessParams(folder, "make");
