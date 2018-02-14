@@ -220,7 +220,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     }
 
     @Override
-    public void show(AbstractFile file) throws IOException {
+    public void show(AbstractFile file) {
         TextArea textArea = textEditorImpl.getTextArea();
         textArea.discardAllEdits();
         textViewerDelegate.menuHelper.updateEditActions();

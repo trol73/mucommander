@@ -37,6 +37,7 @@ import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
+import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
@@ -76,7 +77,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         textEditorImpl.setStatusBar(getStatusBar());
     }
     
-    protected TextViewer(TextEditorImpl textEditorImpl) {
+    TextViewer(TextEditorImpl textEditorImpl) {
     	this.textEditorImpl = textEditorImpl;
 
         initGutter();
@@ -129,7 +130,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 		return lineNumbers;
 	}
 
-    void startEditing(AbstractFile file, DocumentListener documentListener) throws IOException {
+    void startEditing(AbstractFile file, DocumentListener documentListener) {
         //initHistoryRecord(file);
         // Auto-detect encoding
         try (PushbackInputStream in = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE)) {
@@ -176,6 +177,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         menuBar.add(menuHelper.getEditMenu());
         menuBar.add(menuHelper.getSearchMenu());
         menuBar.add(menuHelper.getViewMenu());
+        menuBar.add(menuHelper.getToolsMenu());
         menuBar.add(encodingMenu, menuBar);
 
         textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);

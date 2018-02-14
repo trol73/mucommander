@@ -217,24 +217,24 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
      */
     public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-        MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
+        //MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
+        MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_editor.file_menu"), menuMnemonicHelper, null);
+        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_editor.file_menu"), mnemonicHelper, null);
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-            miSave = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK), this);
+            miSave = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK), this);
         } else {
-            miSave = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
+            miSave = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
         }
-        miSaveAs = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), menuItemMnemonicHelper, null, this);
+        miSaveAs = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), mnemonicHelper, null, this);
         fileMenu.add(new TMenuSeparator());
         int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        miFiles = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        miMainFrame = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.show_file_manager"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
+        miFiles = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
+        miMainFrame = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
         fileMenu.add(miMainFrame);
         fileMenu.add(new TMenuSeparator());
-        miClose = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        miClose = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
 		
         menuBar.add(fileMenu);
 

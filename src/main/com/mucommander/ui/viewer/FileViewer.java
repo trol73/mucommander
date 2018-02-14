@@ -19,6 +19,7 @@
 package com.mucommander.ui.viewer;
 
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.main.WindowManager;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -27,10 +28,7 @@ import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +48,9 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     private Map<KeyStroke, JMenuItem> menuKeyStrokes;
 	
     /** Close menu item */
-    private JMenuItem closeItem;
-    private JMenuItem filesItem;
+    private JMenuItem miClose;
+    private JMenuItem miFiles;
+    private JMenuItem miMainFrame;
 
     /**
      * Creates a new FileViewer.
@@ -66,18 +65,21 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      */
     public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-        MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
+        MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), menuMnemonicHelper, null);
+        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), mnemonicHelper, null);
 
         int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
+        miFiles = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
+        miMainFrame = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
+        fileMenu.add(miMainFrame);
+
         fileMenu.add(new TMenuSeparator());
 
-        closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
-        fileMenu.add(closeItem);
+
+        miClose = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        fileMenu.add(miClose);
 
         menuBar.add(fileMenu);
 
@@ -89,14 +91,31 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == closeItem) {
+        Object source = e.getSource();
+        if (source == miClose) {
             getFrame().dispose();
-        } else if (e.getSource() == filesItem) {
+        } else if (source == miFiles) {
             ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
             viewedAndEditedFilesQL.show();
+        } else if (source == miMainFrame) {
+            WindowManager.getMainFrames().get(0).toFront();
         }
     }
 
+
+    private final KeyListener mainKeyListener = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+            JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
+            if (menuItem != null) {
+                actionPerformed(new ActionEvent(menuItem, 0, null));
+                e.consume();
+                return;
+            }
+            super.keyPressed(e);
+        }
+    };
 
     /**
      * Set main component that will be listen key codes to fix issue with not workings menu accelerators
@@ -106,27 +125,26 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      */
     public void setMainKeyListener(Component comp, JMenuBar menuBar) {
         fillMenuKeyStrokes(menuBar);
-        comp.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
-                JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
-                if (menuItem != null) {
-                    actionPerformed(new ActionEvent(menuItem, 0, null));
-                    e.consume();
-                    return;
-                }
-                super.keyPressed(e);
-            }
-        });
+        comp.addKeyListener(mainKeyListener);
     }
+
+    private boolean isProblemKey(KeyStroke keyStroke) {
+        if (keyStroke == null) {
+            return false;
+        }
+        int keyCode = keyStroke.getKeyCode();
+        return (keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) ||
+                (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN) ||
+                keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB;
+    }
+
 
     /**
      * Fills map for all keycodes that can be not processed properly in swing
      *
      * @param menuBar
      */
-    protected void fillMenuKeyStrokes(JMenuBar menuBar) {
+    private void fillMenuKeyStrokes(JMenuBar menuBar) {
         menuKeyStrokes = new HashMap<>();
         for (int menuIndex = 0; menuIndex < menuBar.getMenuCount(); menuIndex++) {
             JMenu menu = menuBar.getMenu(menuIndex);
@@ -136,12 +154,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
                     continue;
                 }
                 KeyStroke keyStroke = menuItem.getAccelerator();
-                if (keyStroke == null) {
-                    continue;
-                }
-                int keyCode = keyStroke.getKeyCode();
-                if ((keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) || (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN)
-                        || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB) {
+                if (isProblemKey(keyStroke)) {
                     menuKeyStrokes.put(keyStroke, menuItem);
                 }
             }
