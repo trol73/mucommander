@@ -259,7 +259,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         //
         // Note that the symlink test is performed last because it is the most expensive.
         //
-        if ((!(originalFile.getTopAncestor() instanceof LocalFile) || (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrent()))
+        if ((!(originalFile.getTopAncestor() instanceof LocalFile) || OsVersion.MAC_OS_X_10_5.isCurrent())
                 && originalFile.isSymlink()) {
             icon = getSymlinkIcon(icon);
         }

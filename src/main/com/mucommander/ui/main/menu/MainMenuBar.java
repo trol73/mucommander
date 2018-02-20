@@ -348,7 +348,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(FindFileAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(CalculatorAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(RunCommandAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             ejectDrivesMenu = MenuToolkit.addMenu(Translator.get("eject_menu"), menuMnemonicHelper, this);
             toolsMenu.add(ejectDrivesMenu);
 

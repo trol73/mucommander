@@ -75,7 +75,7 @@ public class NextTabAction extends MuAction {
 		public ActionCategory getCategory() { return ActionCategory.TAB; }
 
 		public KeyStroke getDefaultAltKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.META_DOWN_MASK);
@@ -83,7 +83,7 @@ public class NextTabAction extends MuAction {
         }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.META_DOWN_MASK);

@@ -76,7 +76,7 @@ public class CompareFilesAction extends SelectedFilesAction {
     }
 
     private static boolean supported() {
-        return OsFamily.getCurrent() == OsFamily.MAC_OS_X && new File("/usr/bin/opendiff").exists();
+        return OsFamily.MAC_OS_X.isCurrent() && new File("/usr/bin/opendiff").exists();
     }
 
     @Override

@@ -72,7 +72,7 @@ public class ExploreBookmarksAction extends ActiveTabAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);

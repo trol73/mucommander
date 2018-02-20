@@ -55,7 +55,7 @@ public class EjectDriveAction extends SelectedFilesAction {
     }
 
     public static void eject(MainFrame mainFrame, AbstractFile file) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             new EjectWorker(mainFrame, file.getName()).execute();
         }
     }

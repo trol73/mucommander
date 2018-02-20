@@ -108,7 +108,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
                 return;
             }
 
-            int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+            int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
             if (textArea.isEditable() && e.getKeyChar() == KeyEvent.VK_TAB && e.getModifiers() == mask) {
                 ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(frame, frame.getFilePresenter().getCurrentFile());
                 viewedAndEditedFilesQL.show();

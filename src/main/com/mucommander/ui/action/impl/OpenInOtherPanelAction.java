@@ -96,7 +96,7 @@ public class OpenInOtherPanelAction extends SelectedFileAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_DOWN_MASK);

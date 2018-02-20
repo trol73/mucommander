@@ -79,7 +79,7 @@ public class EmailAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK);

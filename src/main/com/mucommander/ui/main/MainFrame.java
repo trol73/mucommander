@@ -40,6 +40,7 @@ import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.layout.ProportionalSplitPane;
 import com.mucommander.ui.layout.YBoxPanel;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.menu.MainMenuBar;
 import com.mucommander.ui.main.statusbar.StatusBar;
@@ -65,7 +66,7 @@ import java.util.WeakHashMap;
  * 
  * @author Maxence Bernard
  */
-public class MainFrame extends JFrame implements LocationListener {
+public class MainFrame extends JFrame implements LocationListener, IMacOsWindow {
 	
     private ProportionalSplitPane splitPane;
 
@@ -152,6 +153,8 @@ public class MainFrame extends JFrame implements LocationListener {
     }
 
     private void init(FolderPanel leftFolderPanel, FolderPanel rightFolderPanel) {
+        initLookAndFeel();
+
         // Set the window icon
         setWindowIcon();
 
@@ -665,7 +668,7 @@ public class MainFrame extends JFrame implements LocationListener {
         setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             // Displays the document icon in the window title bar, works only for local files
             AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
             Object javaIoFile;

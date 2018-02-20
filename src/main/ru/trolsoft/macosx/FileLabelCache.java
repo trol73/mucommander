@@ -47,7 +47,7 @@ public class FileLabelCache {
         if (instance == null) {
             synchronized (FileIconsCache.class) {
                 if (instance == null) {
-                    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                    if (OsFamily.MAC_OS_X.isCurrent()) {
                         instance = new FileLabelCache();
                     } else {
                         instance = new FileLabelCache() {

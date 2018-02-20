@@ -56,7 +56,7 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
+                int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
                 if (e.getKeyCode() == mask) {
                     setVisible(false);
                     acceptListItem(dataList.getSelectedValue());

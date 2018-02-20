@@ -146,7 +146,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
 
 
     private String getDefaultShellPath() {
-        if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+        if (OsFamily.WINDOWS.isCurrent()) {
             return "cmd.exe";
         }
         if (defaultShell == null) {
@@ -165,7 +165,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
 
     public String getDefaultTerminalShellCommand() {
         String path = getDefaultShellPath();
-        if (OsFamily.getCurrent() != OsFamily.WINDOWS) {
+        if (!OsFamily.WINDOWS.isCurrent()) {
             return path + " --login";
         }
         return path;

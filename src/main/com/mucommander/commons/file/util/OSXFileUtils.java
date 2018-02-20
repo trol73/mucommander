@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 
 /**
@@ -61,7 +60,7 @@ public class OSXFileUtils {
      * @return the Spotlight/Finder comment of the specified file
      */
     public static String getSpotlightComment(AbstractFile file) {
-        if (!(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher()))
+        if (!OsVersion.MAC_OS_X_10_4.isCurrentOrHigher())
             return null;
 
         InputStream pin = null;
