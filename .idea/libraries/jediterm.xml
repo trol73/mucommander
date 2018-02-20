@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/lib/runtime/jediterm/jzlib-1.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/runtime/jediterm/pty4j-0.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/runtime/jediterm/jediterm-pty-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/runtime/jediterm/pty4j-native.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/runtime/jediterm/purejavacomm-0.0.22.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

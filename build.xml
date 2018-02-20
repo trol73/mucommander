@@ -158,6 +158,8 @@
             <classpath>
                 <pathelement location="${tmp.main}"/>
                 <path refid="lib.test"/>
+                <path refid="lib.runtime"/>
+                <path refid="lib.compile"/>
             </classpath>
         </javac>
 
@@ -194,6 +196,8 @@
                 <pathelement location="${tmp.main}"/>
                 <pathelement location="${tmp.test}"/>
                 <path refid="lib.test"/>
+                <path refid="lib.runtime"/>
+                <path refid="lib.compile"/>
             </classpath>
             <xmlfileset file="${testng.suite}"/>
         </testng>

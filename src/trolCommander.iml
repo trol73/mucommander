@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="JRebel" name="JRebel">
+      <configuration>
+        <option name="deleteUnindexed" value="true" />
+        <option name="httpAuthEnabled" value="false" />
+        <option name="httpPassword" />
+        <option name="httpUsername" />
+        <option name="ideModuleStorage">
+          <map>
+            <entry key="com.zeroturnaround.jrebel.FormatVersion" value="7.0.0" />
+            <entry key="com.zeroturnaround.jrebel.remoting.DeleteUnindexedFiles" value="true" />
+            <entry key="com.zeroturnaround.jrebel.remoting.ModuleRemoteServerPreviousEnabledSelection" value="instance" />
+            <entry key="com.zeroturnaround.jrebel.remoting.ModuleRemoteServerSelection" value="instance" />
+          </map>
+        </option>
+        <option name="manualXML" value="false" />
+        <option name="masterModuleName" />
+        <option name="overrideStandardXmlFolder" value="false" />
+        <option name="remotingEnabled" value="false" />
+        <option name="secure" value="true" />
+        <option name="url" />
+        <option name="xmlDir" value="res/runtime" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../tmp/main" />
+    <output-test url="file://$MODULE_DIR$/../tmp/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/..">
+      <sourceFolder url="file://$MODULE_DIR$/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../res/runtime" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="AppleJavaExtensions" level="project" />
+    <orderEntry type="library" name="jmdns" level="project" />
+    <orderEntry type="library" name="logback" level="project" />
+    <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="library" name="apache" level="project" />
+    <orderEntry type="library" name="runtime" level="project" />
+    <orderEntry type="library" name="icepdf" level="project" />
+    <orderEntry type="library" name="icu4j-charset-detect-52_1" level="project" />
+    <orderEntry type="library" name="image4j" level="project" />
+    <orderEntry type="library" name="batik" level="project" />
+    <orderEntry type="library" name="jets3t" level="project" />
+    <orderEntry type="library" name="vim25" level="project" />
+    <orderEntry type="library" name="jcifs" level="project" />
+    <orderEntry type="library" name="jna" level="project" />
+    <orderEntry type="library" name="junrar" level="project" />
+    <orderEntry type="library" name="yanfs" level="project" />
+    <orderEntry type="library" name="testng" level="project" />
+    <orderEntry type="library" name="jediterm" level="project" />
+    <orderEntry type="library" name="quaqua" level="project" />
+    <orderEntry type="library" name="j2ssh-maverick-1.5.5" level="project" />
+    <orderEntry type="library" name="iso9660-writer-2.0.0" level="project" />
+    <orderEntry type="library" name="sabre-2.0.0" level="project" />
+  </component>
+  <component name="sonarModuleSettings">
+    <option name="alternativeWorkingDirPath" value="" />
+    <option name="localAnalysisScripName" value="&lt;PROJECT&gt;" />
+    <option name="serverName" value="&lt;PROJECT&gt;" />
+    <option name="useAlternativeWorkingDir" value="false" />
+    <option name="workingDirSelection" value="&lt;MODULE&gt;" />
+  </component>
+</module>
