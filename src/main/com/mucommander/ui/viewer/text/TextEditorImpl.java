@@ -476,6 +476,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
             splitPane.add(frame.getFilePresenter());
             splitPane.setDividerLocation(frame.getHeight()*2/3);
             splitPane.setOneTouchExpandable(true);
+            splitPane.setContinuousLayout(true);
             pnlBuild = new ExecPanel(this::closeBuildPanel);
 
             splitPane.add(pnlBuild);

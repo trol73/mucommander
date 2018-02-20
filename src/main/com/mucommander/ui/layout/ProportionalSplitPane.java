@@ -93,6 +93,7 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         if (rightComponent != null) {
             rightComponent.setMinimumSize(nullDimension);
         }
+        setContinuousLayout(true);
     }
 
 
