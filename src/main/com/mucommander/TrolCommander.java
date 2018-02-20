@@ -766,7 +766,7 @@ public class TrolCommander {
      * @throws IOException if an unrecoverable error occurred during startup 
      */
     @SuppressWarnings({"unchecked"})
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
@@ -797,9 +797,10 @@ public class TrolCommander {
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
             LauncherTask taskPrepareKeystrokeClass = new PrepareKeystrokeClassTask(helper);
-            //LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
+            LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
-            LauncherTask taskStart = new StartTask(helper);
+            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
+            LauncherTask taskStart = new StartTask(helper, taskRegisterArchives);
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
             LauncherTask taskLoadTheme = new LoadThemesTask(helper, taskShowSplash, taskPrepareGraphics);
             LauncherTask taskInitDesktop = new InitDesktopTask(helper, taskLoadConfigs);
@@ -814,23 +815,21 @@ public class TrolCommander {
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
             LauncherTask enableNotificationsTask = new EnableNotificationsTask(helper, taskRegisterActions);
-            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions, taskLoadCustomCommands);
+            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskStart, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions, taskLoadCustomCommands);
             LauncherTask taskShowSetupWindow = new ShowSetupWindowTask(helper, taskLoadConfigs);
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
-            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
             LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
             LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
-            LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
+            LauncherTask taskLoadEnvironment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
-//            tasks.add(taskPrepareLogger);
-
+            tasks.add(taskPrepareLogger);
             tasks.add(taskPrepareGraphics);
             tasks.add(taskPrepareKeystrokeClass);
             tasks.add(taskRegisterActions);
-
             tasks.add(taskLoadConfigs);
+            tasks.add(taskRegisterArchives);
             tasks.add(taskStart);
             tasks.add(taskLoadIcons);
             tasks.add(taskShowSplash);
@@ -842,7 +841,6 @@ public class TrolCommander {
             tasks.add(taskLoadCredentials);
             tasks.add(taskLoadShellHistory);
             tasks.add(taskInitCustomDataFormat);
-            //    tasks.add(taskRegisterActions);
             tasks.add(taskStartBonjour);
             tasks.add(taskInitBars);
             tasks.add(taskCreateWindow);
@@ -850,11 +848,9 @@ public class TrolCommander {
             tasks.add(taskInitDesktop);
             tasks.add(taskDisposeSplash);
             tasks.add(taskShowSetupWindow);
-            tasks.add(taskRegisterArchives);
             tasks.add(taskRegisterNetwork);
             tasks.add(taskRegisterOtherProtocols);
-            tasks.add(taskLoadEnviroment);
-//System.out.println("Execute tasks");
+            tasks.add(taskLoadEnvironment);
 
             if (processors <= 1 ) {
                 for (LauncherTask t : tasks) {
