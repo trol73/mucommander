@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import static com.mucommander.ui.theme.ThemeData.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.BoxLayout;
@@ -81,84 +80,84 @@ class FilePanel extends ThemeEditorPanel {
 		// Background
 		gridPanel.add(createCaptionLabel("theme_editor.background"));
 		ColorButton backgroundButton = new ColorButton(parent, themeData,
-		        colors.getIdByActive(isActive, FILE_TABLE_BACKGROUND_COLOR),
+		        colors.getIdByActive(isActive, ThemeData.FILE_TABLE_BACKGROUND_COLOR),
 		        PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, preview);
 		gridPanel.add(backgroundButton);
 		ColorButton selectedBackgroundButton = new ColorButton(parent, themeData,
-		        colors.getIdByActive(isActive, FILE_TABLE_SELECTED_BACKGROUND_COLOR),
+		        colors.getIdByActive(isActive, ThemeData.FILE_TABLE_SELECTED_BACKGROUND_COLOR),
 		        PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, preview);
 		gridPanel.add(selectedBackgroundButton);
 
 		// Alternate background
 		gridPanel.add(createCaptionLabel("theme_editor.alternate_background"));
 		gridPanel.add(new ColorButton(parent, themeData,
-		        colors.getIdByActive(isActive, FILE_TABLE_ALTERNATE_BACKGROUND_COLOR),
+		        colors.getIdByActive(isActive, ThemeData.FILE_TABLE_ALTERNATE_BACKGROUND_COLOR),
 		        PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, preview));
 		gridPanel.add(new JLabel());
 
 		// Folders.
 		gridPanel.add(createCaptionLabel("theme_editor.folder"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, FOLDER_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.FOLDER_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, FOLDER_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.FOLDER_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Plain files.
 		gridPanel.add(createCaptionLabel("theme_editor.plain_file"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, FILE_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.FILE_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, FILE_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.FILE_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Archives.
 		gridPanel.add(createCaptionLabel("theme_editor.archive_file"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ARCHIVE_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.ARCHIVE_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ARCHIVE_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.ARCHIVE_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Hidden files.
 		gridPanel.add(createCaptionLabel("theme_editor.hidden_file"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, HIDDEN_FILE_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.HIDDEN_FILE_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, HIDDEN_FILE_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.HIDDEN_FILE_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Symlinks.
 		gridPanel.add(createCaptionLabel("theme_editor.symbolic_link"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, SYMLINK_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.SYMLINK_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, SYMLINK_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.SYMLINK_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Marked files.
 		gridPanel.add(createCaptionLabel("theme_editor.marked_file"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, MARKED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.MARKED_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, MARKED_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.MARKED_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Executable files.
 		gridPanel.add(createCaptionLabel("theme_editor.executable_file"));
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, EXECUTABLE_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.EXECUTABLE_FOREGROUND_COLOR),
 		        backgroundButton, fontChooser, preview);
-		addForegroundColor(gridPanel, colors.getIdByActive(isActive, EXECUTABLE_SELECTED_FOREGROUND_COLOR),
+		addForegroundColor(gridPanel, colors.getIdByActive(isActive, ThemeData.EXECUTABLE_SELECTED_FOREGROUND_COLOR),
 		        selectedBackgroundButton, fontChooser, preview);
 
 		// Border.
 		gridPanel.add(createCaptionLabel("theme_editor.border"));
 		ColorButton borderButton;
 		gridPanel.add(borderButton = new ColorButton(parent, themeData,
-		        colors.getIdByActive(isActive, FILE_TABLE_BORDER_COLOR),
+		        colors.getIdByActive(isActive, ThemeData.FILE_TABLE_BORDER_COLOR),
 		        PreviewLabel.BORDER_COLOR_PROPERTY_NAME));
 		borderButton.addUpdatedPreviewComponent(preview);
 		gridPanel.add(borderButton = new ColorButton(parent, themeData,
-		        colors.getIdByActive(isActive, FILE_TABLE_SELECTED_OUTLINE_COLOR),
+		        colors.getIdByActive(isActive, ThemeData.FILE_TABLE_SELECTED_OUTLINE_COLOR),
 		        PreviewLabel.BORDER_COLOR_PROPERTY_NAME));
 		borderButton.addUpdatedPreviewComponent(preview);
 
 		// Copy colors
-		// must be last when color buttons are alraedy added to gridPanel!
+		// must be last when color buttons are already added to gridPanel!
 		copyColorsButton = new CopyFilePanelColorsButton(gridPanel, isActive);
 		copyColorsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 

@@ -18,7 +18,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import static org.testng.Assert.assertEquals;
+
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -120,7 +121,7 @@ public class ISOArchiverNGTest {
                     assert invoke instanceof ISO9660Directory;
                     ISO9660Directory dir = (ISO9660Directory) invoke;
                     //assert the name is correct of the parent directory
-                    assertEquals(dir.getName(),split[i-1]);
+                    Assert.assertEquals(dir.getName(),split[i-1]);
                 }
             }
         }
@@ -154,7 +155,7 @@ public class ISOArchiverNGTest {
         for(File file : files.values()){
             totalSize += file.length();
         }
-        assertEquals(instance.totalWrittenBytes(), totalSize);
+        Assert.assertEquals(instance.totalWrittenBytes(), totalSize);
     }
 
     /**
@@ -215,10 +216,10 @@ public class ISOArchiverNGTest {
             FileInputStream fis = new FileInputStream(files.get(fileName));
             InputStream is = archiveEntryFile.getInputStream();
             //See if file content is equal
-            assertEquals(is.available(), fis.available());
+            Assert.assertEquals(is.available(), fis.available());
             while(fis.available() > 0){
                 //See if data is identical
-                assertEquals(is.read(), fis.read());
+                Assert.assertEquals(is.read(), fis.read());
             }
         }
     }

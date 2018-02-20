@@ -32,15 +32,13 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mucommander.ui.viewer.FileViewersList.FileRecord;
-
 /**
  * Created on 09/06/16.
  * @author Oleg Trifonov
  */
 public class FileWindowsListButton extends JideSplitButton {
     private long lastUpdateTime;
-    private FileRecord selectedRecord;
+    private FileViewersList.FileRecord selectedRecord;
     private MainFrame selectedMainFrame;
     private final boolean includeMainFrames;
 
@@ -72,7 +70,7 @@ public class FileWindowsListButton extends JideSplitButton {
     }
 
 
-    private void selectFile(FileRecord fileRecord) {
+    private void selectFile(FileViewersList.FileRecord fileRecord) {
         setText(fileRecord.shortName);
         setIcon(getIconFrom(fileRecord));
         selectedRecord = fileRecord;
@@ -93,8 +91,8 @@ public class FileWindowsListButton extends JideSplitButton {
 
         }
         boolean containsSelected = false;
-        List<FileRecord> list = new ArrayList<>(FileViewersList.getFiles());
-        for (FileRecord fr : list) {
+        List<FileViewersList.FileRecord> list = new ArrayList<>(FileViewersList.getFiles());
+        for (FileViewersList.FileRecord fr : list) {
             Window excludedFrame = SwingUtilities.getWindowAncestor(this);
             if (fr.fileFrameRef.get() == excludedFrame) {
                 continue;
@@ -141,7 +139,7 @@ public class FileWindowsListButton extends JideSplitButton {
         return FileIconsCache.getInstance().getIcon(mainFrame.getActivePanel().getCurrentFolder());
     }
 
-    private Icon getIconFrom(FileRecord fileRecord) {
+    private Icon getIconFrom(FileViewersList.FileRecord fileRecord) {
         return fileRecord == null ? null : fileRecord.getIcon();
     }
 

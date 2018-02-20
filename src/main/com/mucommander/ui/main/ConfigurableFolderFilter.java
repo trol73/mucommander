@@ -25,11 +25,10 @@ import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.ui.main.tree.FoldersTreePanel;
-
-import static com.mucommander.conf.MuPreference.*;
 
 /**
  * Filters out files that are unwanted when displaying a folder, based on user preferences.
@@ -55,16 +54,16 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
     private void configureFilters() {
         final MuPreferencesAPI pref = MuConfigurations.getPreferences();
         // Filters out hidden files, null when 'show hidden files' option is enabled
-        if (!pref.getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES)) {
+        if (!pref.getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES)) {
             // This IMAGE_FILTER is inverted and matches non-hidden files
             addFileFilter(hiddenFileFilter);
         }
 
         // Filters out Mac OS X .DS_Store files, null when 'show DS_Store files' option is enabled
-        if (!pref.getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES))
+        if (!pref.getVariable(MuPreference.SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES))
             addFileFilter(dsFileFilter);
 
-        if (!pref.getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS))
+        if (!pref.getVariable(MuPreference.SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS))
             addFileFilter(systemFileFilter);
     }
 

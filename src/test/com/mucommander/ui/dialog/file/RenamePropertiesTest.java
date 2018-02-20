@@ -4,9 +4,10 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import java.io.File;
 import java.io.IOException;
-import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
+
+import org.testng.Assert;
 
 public class RenamePropertiesTest {
 
@@ -30,7 +31,7 @@ public class RenamePropertiesTest {
         //creates a standard Java fil object from the muCommander file that was created before, this is the renamed file
         File newFile = new File(abstractFile.getParent().getAbsolutePath() + newFilename + ".tmp");
         //checks if the file exists using the exists() methode. 
-        assertTrue(newFile.exists()); 
+        Assert.assertTrue(newFile.exists());
         // cleans out the file from the drive after the test
         newFile.delete(); 
 
