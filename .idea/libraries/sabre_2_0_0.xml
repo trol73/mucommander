@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sabre-2.0.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runtime/java-iso-tools/sabre-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

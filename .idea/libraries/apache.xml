@@ -11,6 +11,8 @@
       <root url="jar://$PROJECT_DIR$/lib/runtime/apache/commons-codec-1.10.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/runtime/apache/commons-collections4-4.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/runtime/apache/commons-lang-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/runtime/apache/hadoop-hdfs-2.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/runtime/apache/commons-collections-3.2.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

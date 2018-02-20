@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="j2ssh-maverick-1.5.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runtime/sshtools/j2ssh-maverick-1.5.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
