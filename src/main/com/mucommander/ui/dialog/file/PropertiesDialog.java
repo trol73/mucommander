@@ -44,7 +44,6 @@ import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.OSXFileUtils;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.job.FileJob;
 import com.mucommander.job.PropertiesJob;
@@ -190,7 +189,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
             }
         }
 
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher() && isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
+        if (OsVersion.MAC_OS_X_10_4.isCurrentOrHigher() && isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
             String comment = OSXFileUtils.getSpotlightComment(singleFile);
             JLabel commentLabel = new JLabel(i18n("comment")+":");
             commentLabel.setAlignmentY(JLabel.TOP_ALIGNMENT);

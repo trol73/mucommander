@@ -17,7 +17,7 @@ public class DummyDecoratedFile extends DummyFile {
 
     static {
         String prefix = "file://" + FileURL.LOCALHOST;
-        LOCAL_FILE_PREFIX = OsFamily.getCurrent().equals(OsFamily.WINDOWS) ? prefix + '/' : prefix;
+        LOCAL_FILE_PREFIX = OsFamily.WINDOWS.isCurrent() ? prefix + '/' : prefix;
     }
 
     public DummyDecoratedFile(FileURL url) {

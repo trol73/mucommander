@@ -82,7 +82,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     }
 
     private int getCtrlOrMetaMask() {
-        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
             return KeyEvent.CTRL_MASK;
         } else {
             return KeyEvent.META_MASK;

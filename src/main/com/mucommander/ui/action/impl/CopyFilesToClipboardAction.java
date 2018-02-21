@@ -64,7 +64,7 @@ public class CopyFilesToClipboardAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK); }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+            if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK);

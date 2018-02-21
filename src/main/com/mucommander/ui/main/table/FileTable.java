@@ -54,7 +54,6 @@ import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
@@ -431,7 +430,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * headers by setting client properties.
      */
     public static boolean usesTableHeaderRenderingProperties() {
-        return OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
+        return OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
     }
 
 

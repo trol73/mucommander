@@ -26,7 +26,6 @@ import java.util.List;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
@@ -111,7 +110,7 @@ public class ViewerRegistrar {
             ViewerFrame frame = new ViewerFrame(mainFrame, file, icon, defaultFactory);
 
             // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-            if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+            if (OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
                 // Displays the document icon in the window title bar, works only for local files
                 if (file.getURL().getScheme().equals(FileProtocols.FILE)) {
                     frame.getRootPane().putClientProperty("Window.documentFile", file.getUnderlyingFileObject());

@@ -34,7 +34,6 @@ import javax.swing.JToolBar;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
@@ -68,11 +67,6 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
     /** Dimension of button separators */
     private final static Dimension SEPARATOR_DIMENSION = new Dimension(10, 16);
-
-    /** Whether to use the new JButton decorations introduced in Mac OS X 10.5 (Leopard) */
-    private final static boolean USE_MAC_OS_X_CLIENT_PROPERTIES =
-    		OsFamily.MAC_OS_X.isCurrent() &&
-            OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
 
     /** Current icon scale value */
     // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
@@ -121,7 +115,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
         }
 
-        if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
+        if (OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             int nbComponents = getComponentCount();
 
             // Set the 'segment position' required for the 'segmented capsule' style  
@@ -176,7 +170,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // Sets the button icon, taking into account the icon scale factor
         setButtonIcon(button);
 
-        if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
+        if (OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
             if (button.getIcon() == null || button.getIcon().getIconHeight() <= 16) {
                 button.putClientProperty("JButton.buttonType", "segmentedTextured");
             }
@@ -201,7 +195,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // Note: the action's icon must not be changed and remain in its original, non-scaled size
         ImageIcon icon = IconManager.getScaledIcon((ImageIcon)button.getAction().getValue(Action.SMALL_ICON), scaleFactor);
 
-        if (!USE_MAC_OS_X_CLIENT_PROPERTIES) {    // Add padding around the icon so the button feels less crowded
+        if (!OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {    // Add padding around the icon so the button feels less crowded
             icon = IconManager.getPaddedIcon(icon, new Insets(3, 4, 3, 4));
         }
 
