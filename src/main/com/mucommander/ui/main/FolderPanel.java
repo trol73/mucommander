@@ -169,13 +169,21 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
 
         // create location text field
         this.locationTextField = new LocationTextField(this);
-
         // Give location field all the remaining space until the PoupupsButton
         c.weightx = 1;
         c.gridx = 1;
         // Add some space between drive button and location combo box (none by default)
         c.insets = new Insets(0, 4, 0, 0);
         locationPanel.add(locationTextField, c);
+
+        final LocationBreadcrumbBar locationBreadcrumbBar = new LocationBreadcrumbBar(this);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.0;
+        c.gridwidth = 2;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(0, 0, 2, 0);
+        locationPanel.add(locationBreadcrumbBar, c);
 
         add(locationPanel, BorderLayout.NORTH);
 
