@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TrolCommander" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
+  <configuration default="false" name="TrolCommander" type="Application" factoryName="Application" singleton="true" nameIsGenerated="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
         <option name="PATTERN" value="com.mucommander.*" />
