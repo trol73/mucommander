@@ -42,7 +42,7 @@ class WindowsDesktopAdapter extends DefaultDesktopAdapter {
 
     @Override
     public boolean isAvailable() {
-        return OsFamily.getCurrent().equals(OsFamily.WINDOWS);
+        return OsFamily.WINDOWS.isCurrent();
     }
 
     /**

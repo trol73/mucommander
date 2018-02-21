@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import org.fife.ui.StatusBar;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import com.mucommander.ui.main.MainFrame;
  * 
  * @author Arik Hadas
  */
-public abstract class FileFrame extends JFrame implements QuickListContainer {
+public abstract class FileFrame extends JFrame implements QuickListContainer, IMacOsWindow {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileFrame.class);
 
 //	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
@@ -45,6 +46,8 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
 
     FileFrame(MainFrame mainFrame, Image icon) {
 		this.mainFrame = mainFrame;
+
+		initLookAndFeel();
 
 		setIconImage(icon);
 		

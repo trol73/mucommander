@@ -44,7 +44,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
 
     @Override
     public boolean isAvailable() {
-        return OsFamily.getCurrent().equals(OsFamily.MAC_OS_X);
+        return OsFamily.MAC_OS_X.isCurrent();
     }
 
     @Override

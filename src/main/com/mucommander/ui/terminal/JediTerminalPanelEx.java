@@ -45,7 +45,7 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
                         @NotNull StyleState styleState, MainFrame mainFrame) {
         super(settingsProvider, terminalTextBuffer, styleState);
         this.mainFrame = mainFrame;
-        this.keyModifier = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
+        this.keyModifier = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
     }
 
 

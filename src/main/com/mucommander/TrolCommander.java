@@ -20,7 +20,6 @@ package com.mucommander;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.*;
@@ -763,11 +762,9 @@ public class TrolCommander {
     /**
      * Main method used to startup muCommander.
      * @param args command line arguments.
-     * @throws IOException if an unrecoverable error occurred during startup 
      */
-    @SuppressWarnings({"unchecked"})
     public static void main(String args[]) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
 			System.setProperty("prism.order", "sw");

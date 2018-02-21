@@ -198,6 +198,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         treeSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, foldersTreePanel, tabs);
         treeSplitPane.setDividerSize(0);
         treeSplitPane.setDividerLocation(0);
+        treeSplitPane.setContinuousLayout(true);
         // Remove default border
         treeSplitPane.setBorder(null);
         add(treeSplitPane, BorderLayout.CENTER);
