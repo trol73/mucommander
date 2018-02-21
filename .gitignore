@@ -15,3 +15,6 @@
 # JRebel
 rebel.xml
 rebel-remote.xml
+
+# Sonar
+sonarIssues.xml

@@ -19,6 +19,7 @@ package com.mucommander.ui.viewer.hex;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -38,8 +39,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import static com.mucommander.ui.theme.ThemeManager.getCurrentColor;
-import static com.mucommander.ui.theme.ThemeManager.getCurrentFont;
 
 /**
  * Hex dump viewer
@@ -113,14 +112,14 @@ public class HexViewer extends FileViewer implements ThemeId {
             model = new ViewerHexTableModel(byteBuffer);
             model.load();
             hexTable = new HexTable(model);
-            hexTable.setBackground(getCurrentColor(HEX_VIEWER_BACKGROUND_COLOR));
-            hexTable.setForeground(getCurrentColor(HEX_VIEWER_HEX_FOREGROUND_COLOR));
-            hexTable.setAlternateBackground(getCurrentColor(HEX_VIEWER_ALTERNATE_BACKGROUND_COLOR));
-            hexTable.setOffsetColumnColor(getCurrentColor(HEX_VIEWER_OFFSET_FOREGROUND_COLOR));
-            hexTable.setAsciiColumnColor(getCurrentColor(HEX_VIEWER_ASCII_FOREGROUND_COLOR));
-            hexTable.setAsciiSelectionBackgroundColor(getCurrentColor(HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR));
-            hexTable.setSelectionBackground(getCurrentColor(HEX_VIEWER_SELECTED_BACKGROUND_COLOR));
-            hexTable.setFont(getCurrentFont(HEX_VIEWER_FONT));
+            hexTable.setBackground(ThemeManager.getCurrentColor(HEX_VIEWER_BACKGROUND_COLOR));
+            hexTable.setForeground(ThemeManager.getCurrentColor(HEX_VIEWER_HEX_FOREGROUND_COLOR));
+            hexTable.setAlternateBackground(ThemeManager.getCurrentColor(HEX_VIEWER_ALTERNATE_BACKGROUND_COLOR));
+            hexTable.setOffsetColumnColor(ThemeManager.getCurrentColor(HEX_VIEWER_OFFSET_FOREGROUND_COLOR));
+            hexTable.setAsciiColumnColor(ThemeManager.getCurrentColor(HEX_VIEWER_ASCII_FOREGROUND_COLOR));
+            hexTable.setAsciiSelectionBackgroundColor(ThemeManager.getCurrentColor(HEX_VIEWER_SELECTED_ASCII_BACKGROUND_COLOR));
+            hexTable.setSelectionBackground(ThemeManager.getCurrentColor(HEX_VIEWER_SELECTED_BACKGROUND_COLOR));
+            hexTable.setFont(ThemeManager.getCurrentFont(HEX_VIEWER_FONT));
             hexTable.setAlternateRowBackground(true);
 
             hexTable.getTableHeader().setFont(new Font("Monospaced", Font.PLAIN, 12));
