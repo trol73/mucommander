@@ -813,6 +813,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
                 terminalSplitPane = new JSplitPane();
                 terminalSplitPane.setBorder(null);
                 terminalSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                terminalSplitPane.setContinuousLayout(true);
             }
 
             terminalSplitPane.setTopComponent(splitPane);
