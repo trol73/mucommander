@@ -246,7 +246,8 @@ public class ActionManager {
 		registerAction(new CompareFilesAction.Descriptor());
 		registerAction(new TogglePanelPreviewModeAction.Descriptor());
 		registerAction(new TextEditorsListAction.Descriptor());
-    }
+		registerAction(new TogglePerformanceMonitorAction.Descriptor());
+	}
 
 	public static void registerCommandsActions() {
 		// register "open with" commands as actions, to allow for keyboard shortcuts for them
