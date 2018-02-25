@@ -59,7 +59,6 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
         private static final Color INFO_COLOR = Color.GREEN;
         private static final Color BACKGROUND = Color.BLACK;
         private static final Color DATA_COLOR = Color.YELLOW;
-        private static final Runtime RUNTIME = Runtime.getRuntime();
         private static final int HISTORY_SIZE = 20000;
 
         private Thread thread;
@@ -235,17 +234,6 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
      */
     private static class CpuPanel extends MemoryPanel {
 
-        private OperatingSystemMXBean operatingSystemMXBean;
-
-        CpuPanel() {
-            final MBeanServerConnection platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
-            try {
-                operatingSystemMXBean = ManagementFactory.newPlatformMXBeanProxy(platformMBeanServer, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
-
         @Override
         protected String createThreadName() {
             return "CpuMonitor";
@@ -253,7 +241,7 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
 
         @Override
         protected float getFreeData() {
-            return 100F - (float) operatingSystemMXBean.getSystemLoadAverage();
+            return 100F - (float) OPERATING_SYSTEM_MX_BEAN.getSystemLoadAverage();
         }
 
         @Override
@@ -297,6 +285,30 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
     private static final Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(300, 200);
 
     /**
+     * OperatingSystemMXBean reference
+     */
+    private static final OperatingSystemMXBean OPERATING_SYSTEM_MX_BEAN;
+
+    static {
+        final MBeanServerConnection platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
+        OperatingSystemMXBean operatingSystemMxBean = null;
+        try {
+            operatingSystemMxBean = ManagementFactory.newPlatformMXBeanProxy(platformMBeanServer, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
+            if (operatingSystemMxBean.getSystemLoadAverage() < 0) {
+                operatingSystemMxBean = null;
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        OPERATING_SYSTEM_MX_BEAN = operatingSystemMxBean;
+    }
+
+    /**
+     * Runtime reference
+     */
+    private static final Runtime RUNTIME = Runtime.getRuntime();
+
+    /**
      * Action that opens and closes this dialog (needed to update menu tet on close)
      */
     private final MuAction closeAction;
@@ -320,31 +332,32 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
         super(mainFrame, Translator.get("PerformanceMonitor.title"), mainFrame);
         setModal(false);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
         closeAction = ActionManager.getActionInstance(TogglePerformanceMonitorAction.Descriptor.ACTION_ID, mainFrame);
-
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout(5, 5));
-
-        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setContinuousLayout(true);
-        splitPane.add(createCpuPanel());
-        splitPane.add(createMemoryPanel());
-
-        contentPane.add(splitPane, BorderLayout.CENTER);
+        if (isSystemLoadAverageInfoAvailable()) {
+            splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+            splitPane.setOneTouchExpandable(true);
+            splitPane.setContinuousLayout(true);
+            splitPane.add(createCpuPanel());
+            splitPane.add(createMemoryPanel());
+            contentPane.add(splitPane, BorderLayout.CENTER);
+        } else {
+            splitPane = null;
+            contentPane.add(createMemoryPanel(), BorderLayout.CENTER);
+        }
         contentPane.add(createOkButton(), BorderLayout.SOUTH);
-
         setMinimumSizeDialog(MINIMUM_DIALOG_DIMENSION);
-
         setInitialFocusComponent(okButton);
     }
 
     @Override
     public void setVisible(boolean visible) {
-        if (visible && firstTime) {
-            firstTime = false;
-            SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5D));
+        if (isSystemLoadAverageInfoAvailable()) {
+            if (visible && firstTime) {
+                firstTime = false;
+                SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5D));
+            }
         }
         super.setVisible(visible);
     }
@@ -381,6 +394,10 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
     @Override
     public void windowClosing(WindowEvent e) {
         closeAction.performAction();
+    }
+
+    private static boolean isSystemLoadAverageInfoAvailable() {
+        return OPERATING_SYSTEM_MX_BEAN != null;
     }
 
 }
