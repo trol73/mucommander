@@ -157,6 +157,9 @@ public class TextEditorCaretListener implements CaretListener {
                     break;
                 }
             }
+            if (word.length() == 8) {
+                word = word.substring(2);
+            }
             if (word.length() == 6) {
                 try {
                     setStatusColor(Integer.parseInt(word, 16));
