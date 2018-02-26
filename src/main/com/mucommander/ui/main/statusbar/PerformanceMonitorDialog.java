@@ -23,26 +23,33 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class PerformanceMonitorDialog extends FocusDialog implements ActionListener {
 
     private static class GraphData {
 
-        private final float freeData;
-        private final float totalData;
+        private final long freeMemoryData;
+        private final long totalMemoryData;
+        private final double systemLoadAverage;
 
-        private GraphData(float freeData, float totalData) {
-            this.freeData = freeData;
-            this.totalData = totalData;
+        private GraphData() {
+            this.freeMemoryData = PerformanceMonitorDialog.getFreeMemoryData();
+            this.totalMemoryData = PerformanceMonitorDialog.getTotalMemoryData();
+            this.systemLoadAverage = PerformanceMonitorDialog.getSystemLoadAverage();
         }
 
-        private float getFreeData() {
-            return freeData;
+        private long getFreeMemoryData() {
+            return freeMemoryData;
         }
 
-        private float getTotalData() {
-            return totalData;
+        private long getTotalMemoryData() {
+            return totalMemoryData;
+        }
+
+        private double getSystemLoadAverage() {
+            return systemLoadAverage;
         }
 
     }
@@ -52,14 +59,12 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
      */
     private static class MemoryPanel extends JPanel implements Runnable {
 
-        private static final long SLEEP_AMOUNT = TimeUnit.SECONDS.toMillis(1);
         private static final Font FONT = new Font("Dialog", Font.PLAIN, 11);
         private static final Color GRAPH_COLOR = new Color(46, 139, 87);
         private static final Color FREE_DATA_COLOR = new Color(0, 100, 0);
         private static final Color INFO_COLOR = Color.GREEN;
         private static final Color BACKGROUND = Color.BLACK;
         private static final Color DATA_COLOR = Color.YELLOW;
-        private static final int HISTORY_SIZE = 20000;
 
         private Thread thread;
         private int w;
@@ -67,7 +72,6 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
         Graphics2D graphics;
         private BufferedImage bufferedImage;
         private int columnInc;
-        private final CircularFifoQueue<GraphData> data = new CircularFifoQueue<>(HISTORY_SIZE);
         int ascent;
         int descent;
         private Rectangle graphOutlineRect = new Rectangle();
@@ -79,12 +83,12 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
             setBackground(BACKGROUND);
         }
 
-        protected float getFreeData() {
-            return RUNTIME.freeMemory();
+        protected float getFreeData(GraphData graphData) {
+            return graphData.getFreeMemoryData();
         }
 
-        protected float getTotalData() {
-            return RUNTIME.totalMemory();
+        protected float getTotalData(GraphData graphData) {
+            return graphData.getTotalMemoryData();
         }
 
         protected String getMaxValueString(float max) {
@@ -104,9 +108,13 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
             graphics.setBackground(getBackground());
             graphics.clearRect(0, 0, w, h);
 
-            final float freeData = getFreeData();
-            final float totalData = getTotalData();
-            data.add(new GraphData(freeData, totalData));
+            java.util.List<GraphData> dataToPaint;
+            synchronized (GRAPH_DATA) {
+                dataToPaint = new ArrayList<>(GRAPH_DATA);
+            }
+            final GraphData currentGraphData = dataToPaint.get(dataToPaint.size() - 1);
+            final float freeData = getFreeData(currentGraphData);
+            final float totalData = getTotalData(currentGraphData);
 
             // .. Draw allocated and used strings ..
             graphics.setColor(INFO_COLOR);
@@ -167,13 +175,13 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
             --columnInc;
 
             graphics.setColor(DATA_COLOR);
-            final int size = data.size();
+            final int size = dataToPaint.size();
             if (size > 1) {
                 for (i = 0; i < size - 1 && i < graphW; i++) {
-                    final GraphData graphData = data.get(size - 1 - i);
-                    final GraphData graphDataPrev = data.get(size - 1 - i - 1);
-                    final int y = (int) (graphY + graphH * (graphData.getFreeData() / graphData.getTotalData()));
-                    final int yPrev = (int) (graphY + graphH * (graphDataPrev.getFreeData() / graphDataPrev.getTotalData()));
+                    final GraphData graphData = dataToPaint.get(size - 1 - i);
+                    final GraphData graphDataPrev = dataToPaint.get(size - 1 - i - 1);
+                    final int y = (int) (graphY + graphH * (getFreeData(graphData) / getTotalData(graphData)));
+                    final int yPrev = (int) (graphY + graphH * (getFreeData(graphDataPrev) / getTotalData(graphDataPrev)));
                     int j = graphX + graphW - i;
                     graphics.drawLine(j - 1, yPrev, j, y);
                 }
@@ -207,7 +215,7 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
             }
             while (thread == me) {
                 final Dimension d = getSize();
-                if (d.width != w || d.height != h) {
+                if ((d.width != w || d.height != h) && GRAPH_DATA.size() > 1) {
                     w = Math.max(d.width, 1);
                     h = Math.max(d.height, 1);
                     bufferedImage = (BufferedImage) createImage(w, h);
@@ -240,12 +248,12 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
         }
 
         @Override
-        protected float getFreeData() {
-            return 100F - (float) OPERATING_SYSTEM_MX_BEAN.getSystemLoadAverage();
+        protected float getFreeData(GraphData graphData) {
+            return 100F - (float) graphData.getSystemLoadAverage();
         }
 
         @Override
-        protected float getTotalData() {
+        protected float getTotalData(GraphData graphData) {
             return 100F;
         }
 
@@ -309,6 +317,44 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
     private static final Runtime RUNTIME = Runtime.getRuntime();
 
     /**
+     * History queue size
+     */
+    private static final int HISTORY_SIZE = 20000;
+
+    /**
+     * History queue
+     */
+    private static final CircularFifoQueue<GraphData> GRAPH_DATA = new CircularFifoQueue<>(HISTORY_SIZE);
+
+    /**
+     * Refresh period
+     */
+    private static final long SLEEP_AMOUNT = TimeUnit.SECONDS.toMillis(1);
+
+    static {
+        try {
+            final Thread thread = new Thread(() -> {
+                while (true) {
+                    GRAPH_DATA.add(new GraphData());
+                    try {
+                        Thread.sleep(SLEEP_AMOUNT);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                    if (Thread.currentThread().isInterrupted()) {
+                        break;
+                    }
+                }
+            });
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.setDaemon(true);
+            thread.start();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    /**
      * Action that opens and closes this dialog (needed to update menu tet on close)
      */
     private final MuAction closeAction;
@@ -316,7 +362,7 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
     /**
      * Button that closes the dialog.
      */
-    private JButton okButton;
+    private final JButton okButton;
 
     /**
      * Split pane that splits panels with graphs
@@ -346,9 +392,16 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
             splitPane = null;
             contentPane.add(createMemoryPanel(), BorderLayout.CENTER);
         }
-        contentPane.add(createOkButton(), BorderLayout.SOUTH);
+        okButton = new JButton(Translator.get("ok"));
+        okButton.addActionListener(this);
+        final FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.RIGHT);
+        final JPanel okPanel = new JPanel(layout);
+        okPanel.add(okButton);
+        contentPane.add(okPanel, BorderLayout.SOUTH);
         setMinimumSizeDialog(MINIMUM_DIALOG_DIMENSION);
         setInitialFocusComponent(okButton);
+        getRootPane().setDefaultButton(okButton);
     }
 
     @Override
@@ -374,16 +427,6 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
         return new BorderPanel(cpuPanel);
     }
 
-    private Component createOkButton() {
-        okButton = new JButton(Translator.get("ok"));
-        okButton.addActionListener(this);
-        final FlowLayout layout = new FlowLayout();
-        layout.setAlignment(FlowLayout.RIGHT);
-        final JPanel panel = new JPanel(layout);
-        panel.add(okButton);
-        return panel;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okButton) {
@@ -398,6 +441,18 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
 
     private static boolean isSystemLoadAverageInfoAvailable() {
         return OPERATING_SYSTEM_MX_BEAN != null;
+    }
+
+    private static long getFreeMemoryData() {
+        return RUNTIME.freeMemory();
+    }
+
+    private static long getTotalMemoryData() {
+        return RUNTIME.totalMemory();
+    }
+
+    private static double getSystemLoadAverage() {
+        return OPERATING_SYSTEM_MX_BEAN.getSystemLoadAverage();
     }
 
 }

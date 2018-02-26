@@ -739,7 +739,7 @@ public class MainFrame extends JFrame implements LocationListener {
                 if (performanceMonitorDialog == null) {
                     return;
                 }
-                performanceMonitorDialog.setVisible(false);
+                performanceMonitorDialog.cancel();
             }
         }
     }
