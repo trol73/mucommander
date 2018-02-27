@@ -53,29 +53,29 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
      * Dialog width should not exceed 360, height is not an issue (always the same)
      */
     private static final Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 320);
+    /**
+     * Retry action id
+     */
+    private static final int RETRY_ACTION = 1;
+    /**
+     * Cancel action id
+     */
+    private static final int CANCEL_ACTION = 0;
 
     private final Frame mainFrame;
     private final FilePathField edtTarget;
     private final JTextField edtName;
     private final JButton btnOk;
-
-
-    private static final int RETRY_ACTION = 1;
-    private static final int CANCEL_ACTION = 0;
-
-
+    private final JButton btnCancel;
 
     /**
-     *
-     * @param mainFrame
-     * @param linkPath path of root directory for created symbolic link or symbolic link itself
+     * @param mainFrame  reference to main frame
+     * @param linkPath   path of root directory for created symbolic link or symbolic link itself
      * @param targetFile existing filename (filename symlink will point to)
      */
     public CreateSymLinkDialog(Frame mainFrame, AbstractFile linkPath, AbstractFile targetFile) {
         super(mainFrame, i18n("symboliclinkeditor.create"), null);
         this.mainFrame = mainFrame;
-        AbstractFile linkPath1 = linkPath;
-        AbstractFile targetFile1 = targetFile;
 
         Container contentPane = getContentPane();
 
@@ -93,7 +93,7 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
         contentPane.add(yPanel, BorderLayout.NORTH);
 
         btnOk = new JButton(i18n("ok"));
-        JButton btnCancel = new JButton(i18n("cancel"));
+        btnCancel = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
@@ -110,9 +110,10 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk) {
             new Thread(this::execute).start();
-        } // btnOk
+        } else if (e.getSource() == btnCancel) {
+            dispose();
+        }
     }
-
 
     private void execute() {
         QuestionDialog dialog = null;
@@ -137,13 +138,13 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
                         i18n("error"),
                         errorMessage,
                         mainFrame,
-                        new String[] {i18n("retry"), i18n("cancel")},
-                        new int[] {RETRY_ACTION, CANCEL_ACTION},
+                        new String[]{i18n("retry"), i18n("cancel")},
+                        new int[]{RETRY_ACTION, CANCEL_ACTION},
                         0);
             }
 
             UserInputHelper jobUserInput = new UserInputHelper(null, dialog);
-            int action = (Integer)jobUserInput.getUserInput();
+            int action = (Integer) jobUserInput.getUserInput();
             if (action < 0 || action == CANCEL_ACTION) {
                 break;
             }
