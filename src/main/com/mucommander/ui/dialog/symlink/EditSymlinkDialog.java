@@ -34,11 +34,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * Action for symlink editing.
  * Created on 23/06/14.
  */
 public class EditSymlinkDialog extends FocusDialog implements ActionListener {
 
-    private final Frame mainFrame;
     private final AbstractFile linkPath;
     private final FilePathField edtTarget;
     private final JButton btnOk;
@@ -52,10 +52,8 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
      */
     private static final Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 320);
 
-
     public EditSymlinkDialog(Frame mainFrame, AbstractFile linkPath) {
         super(mainFrame, i18n("symboliclinkeditor.edit"), null);
-        this.mainFrame = mainFrame;
         this.linkPath = linkPath;
 
         Container contentPane = getContentPane();
@@ -64,7 +62,7 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
 
         edtTarget = new FilePathField();
         edtTarget.setDefaultLocation(linkPath.getParent());
-        String hint = String.format(i18n("symboliclinkeditor.target_file_edit"), linkPath.getBaseName())+ ':';
+        String hint = String.format(i18n("symboliclinkeditor.target_file_edit"), linkPath.getBaseName()) + ':';
         yPanel.add(new JLabel(hint));
         yPanel.add(edtTarget);
 
@@ -94,7 +92,5 @@ public class EditSymlinkDialog extends FocusDialog implements ActionListener {
         }
         cancel();
     }
-
-
 
 }
