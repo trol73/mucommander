@@ -64,7 +64,7 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
             volumeInfo = SizeFormat.format(totalSpace, VOLUME_INFO_SIZE_FORMAT);
             volumeInfo = Translator.get("status_bar.volume_capacity", volumeInfo);
         } else {
-            volumeInfo = "";
+            volumeInfo = Translator.get("status_bar.volume_capacity_na");
         }
         setText(volumeInfo);
 
