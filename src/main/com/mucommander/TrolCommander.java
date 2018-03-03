@@ -18,22 +18,6 @@
 
 package com.mucommander;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.event.KeyEvent;
-import java.lang.reflect.Constructor;
-import java.util.*;
-import java.util.concurrent.*;
-
-import com.mucommander.profiler.Profiler;
-import com.mucommander.ui.action.ActionKeymapIO;
-import com.mucommander.ui.icon.FileIcons;
-import com.mucommander.ui.main.frame.MainFrameBuilder;
-import com.mucommander.ui.theme.ThemeManager;
-import com.mucommander.ui.tools.ToolsEnvironment;
-import com.mucommander.utils.MuLogging;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
@@ -48,21 +32,42 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.extension.ExtensionManager;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.shell.ShellHistoryManager;
-import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.startup.CheckVersionDialog;
 import com.mucommander.ui.dialog.startup.InitialSetupDialog;
+import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.main.SplashScreen;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
 import com.mucommander.ui.main.frame.CommandLineMainFrameBuilder;
 import com.mucommander.ui.main.frame.DefaultMainFramesBuilder;
+import com.mucommander.ui.main.frame.MainFrameBuilder;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
+import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.tools.ToolsEnvironment;
+import com.mucommander.utils.MuLogging;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * trolCommander launcher.
@@ -474,11 +479,8 @@ public class TrolCommander {
 
         @Override
         void run() throws Exception {
-            // Shows the splash screen, if enabled in the preferences
             useSplash = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
-            if (useSplash) {
-                splashScreen = new SplashScreen(RuntimeConstants.VERSION, "Loading preferences...");
-            }
+            splashScreen = new SplashScreen(RuntimeConstants.VERSION, "Loading preferences...", useSplash);
         }
     }
 
@@ -490,7 +492,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             // Dispose splash screen.
-            if (useSplash) {
+            if (splashScreen != null) {
                 splashScreen.dispose();
             }
         }
