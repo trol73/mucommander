@@ -15,9 +15,6 @@
       <root url="jar://$PROJECT_DIR$/lib/runtime/apache/commons-collections-3.2.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.ideaLibSources/commons-collections4-4.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.ideaLibSources/commons-lang-2.6-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>
