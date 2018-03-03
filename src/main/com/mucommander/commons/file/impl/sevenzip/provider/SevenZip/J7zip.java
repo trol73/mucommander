@@ -111,7 +111,7 @@ public class J7zip {
                 System.out.println("ERROR !!");
             }
         } catch (java.io.IOException e) {
-            System.out.println("IO error : " + e.getLocalizedMessage());
+            System.out.println("IO error : " + e.getMessage());
         }
     }
     
