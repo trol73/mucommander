@@ -18,23 +18,9 @@
 
 package com.mucommander.ui.main;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-
-import com.mucommander.adb.AndroidMenu;
 import com.mucommander.adb.AdbUtils;
+import com.mucommander.adb.AndroidMenu;
 import com.mucommander.bonjour.BonjourDirectory;
-import com.mucommander.utils.FileIconsCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.bonjour.BonjourMenu;
 import com.mucommander.bonjour.BonjourService;
 import com.mucommander.bookmark.Bookmark;
@@ -53,7 +39,6 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
 import com.mucommander.ui.button.PopupButton;
@@ -70,7 +55,27 @@ import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.icon.CustomFileIconProvider;
 import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.icon.IconManager;
+import com.mucommander.ui.menu.JScrollMenu;
+import com.mucommander.utils.FileIconsCache;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trolsoft.ui.TMenuSeparator;
+
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
 
 /**
@@ -80,28 +85,96 @@ import ru.trolsoft.ui.TMenuSeparator;
  * @author Maxence Bernard
  */
 public class DrivePopupButton extends PopupButton implements BookmarkListener, ConfigurationListener, LocationListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DrivePopupButton.class);
-	
-    /** FolderPanel instance that contains this button */
+
+    ///////////////////
+    // Inner classes //
+    ///////////////////
+
+    /**
+     * This action pops up {@link com.mucommander.ui.dialog.server.ServerConnectDialog} for a specified
+     * protocol.
+     */
+    private class ServerConnectAction extends AbstractAction {
+        private Class<? extends ServerPanel> serverPanelClass;
+
+        private ServerConnectAction(String label, Class<? extends ServerPanel> serverPanelClass) {
+            super(label);
+            this.serverPanelClass = serverPanelClass;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            new ServerConnectDialog(folderPanel, serverPanelClass).showDialog();
+        }
+    }
+
+    /**
+     * This modified {@link OpenLocationAction} changes the current folder on the {@link FolderPanel} that contains
+     * this button, instead of the currently active {@link FolderPanel}.
+     */
+    private class CustomOpenLocationAction extends OpenLocationAction {
+
+        CustomOpenLocationAction(MainFrame mainFrame, Bookmark bookmark) {
+            super(mainFrame, new HashMap<>(), bookmark);
+        }
+
+        CustomOpenLocationAction(MainFrame mainFrame, AbstractFile file) {
+            super(mainFrame, new HashMap<>(), file);
+        }
+
+        CustomOpenLocationAction(MainFrame mainFrame, BonjourService bs) {
+            super(mainFrame, new HashMap<>(), bs);
+        }
+
+        CustomOpenLocationAction(MainFrame mainFrame, FileURL url) {
+            super(mainFrame, new HashMap<>(), url);
+        }
+
+        ////////////////////////
+        // Overridden methods //
+        ////////////////////////
+
+        @Override
+        protected FolderPanel getFolderPanel() {
+            return folderPanel;
+        }
+    }
+
+    /**
+     * Logger reference
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(DrivePopupButton.class);
+
+    /**
+     * FolderPanel instance that contains this button
+     */
     private FolderPanel folderPanel;
-	
-    /** Current volumes */
+
+    /**
+     * Current volumes
+     */
     private static AbstractFile volumes[];
 
-    /** static FileSystemView instance, has a (non-null) value only under Windows */
+    /**
+     * static FileSystemView instance, has a (non-null) value only under Windows
+     */
     private static FileSystemView fileSystemView;
 
-    /** Caches extended drive names, has a (non-null) value only under Windows */
+    /**
+     * Caches extended drive names, has a (non-null) value only under Windows
+     */
     private static Map<AbstractFile, String> extendedNameCache;
-    
-    /** Caches drive icons */
+
+    /**
+     * Caches drive icons
+     */
     private static Map<AbstractFile, Icon> iconCache = new HashMap<>();
-    
 
-    /** Filters out volumes from the list based on the exclude regexp defined in the configuration, null if the regexp
-     * is not defined. */
+    /**
+     * Filters out volumes from the list based on the exclude regexp defined in the configuration, null if the regexp
+     * is not defined.
+     */
     private static PathFilter volumeFilter;
-
 
     static {
         if (OsFamily.WINDOWS.isCurrent()) {
@@ -115,14 +188,13 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 volumeFilter = new RegexpPathFilter(excludeRegexp, true);
                 volumeFilter.setInverted(true);
             }
-        } catch(PatternSyntaxException e) {
-            LOGGER.info("Invalid regexp for conf variable "+MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
+        } catch (PatternSyntaxException e) {
+            LOGGER.info("Invalid regexp for conf variable " + MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
         // Initialize the volumes list
         volumes = getDisplayableVolumes();
     }
-
 
     /**
      * Creates a new <code>DrivePopupButton</code> which is to be added to the given FolderPanel.
@@ -131,7 +203,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     DrivePopupButton(FolderPanel folderPanel) {
         this.folderPanel = folderPanel;
-		
+
         // Listen to location events to update the button when the current folder changes
         folderPanel.getLocationManager().addLocationListener(this);
 
@@ -141,23 +213,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Listen to configuration changes to update the button if the system file icons policy has changed
         MuConfigurations.addPreferencesListener(this);
-
-        // Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
-        //if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
-            //setMargin(new Insets(6,8,6,8));
-            //putClientProperty("JComponent.sizeVariant", "small");
-            //putClientProperty("JComponent.sizeVariant", "large");
-            //putClientProperty("JButton.buttonType", "textured");
-        //}
     }
 
-
-   /**
+    /**
      * Updates the button's label and icon to reflect the current folder and match one of the current volumes:
      * <<ul>
-     *	<li>If the specified folder corresponds to a bookmark, the bookmark's name will be displayed
-     *	<li>If the specified folder corresponds to a local file, the enclosing volume's name will be displayed
-     *	<li>If the specified folder corresponds to a remote file, the protocol's name will be displayed
+     * <li>If the specified folder corresponds to a bookmark, the bookmark's name will be displayed
+     * <li>If the specified folder corresponds to a local file, the enclosing volume's name will be displayed
+     * <li>If the specified folder corresponds to a remote file, the protocol's name will be displayed
      * </ul>
      * The button's icon will be the current folder's one.
      */
@@ -167,7 +230,6 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         FileURL currentURL = currentFolder.getURL();
 
         String newLabel = null;
-//        String newToolTip = null;
 
         // First tries to find a bookmark matching the specified folder
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
@@ -179,7 +241,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 break;
             }
         }
-		
+
         // If no bookmark matched current folder
         if (newLabel == null) {
             String protocol = currentURL.getScheme();
@@ -224,20 +286,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                         }
                     }
                     newLabel = volumes[bestIndex].getName();
-
-                    // Not used because the call to FileSystemView is slow
-//                    if(fileSystemView!=null)
-//                        newToolTip = getWindowsExtendedDriveName(volumes[bestIndex]);
                 }
             }
         }
-		
+
         setText(newLabel);
-//        setToolTipText(newToolTip);
         // Set the folder icon based on the current system icons policy
         setIcon(FileIcons.getFileIcon(currentFolder));
     }
-
 
     /**
      * Returns the extended name of the given local file, e.g. "Local Disk (C:)" for C:\. The returned value is
@@ -249,7 +305,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     private static String getExtendedDriveName(AbstractFile localFile) {
         // Note: fileSystemView.getSystemDisplayName(java.io.File) is unfortunately very very slow
-        String name = fileSystemView.getSystemDisplayName((java.io.File)localFile.getUnderlyingFileObject());
+        String name = fileSystemView.getSystemDisplayName((java.io.File) localFile.getUnderlyingFileObject());
 
         if (name == null || name.isEmpty()) {   // This happens for CD/DVD drives when they don't contain any disc
             return localFile.getName();
@@ -258,10 +314,9 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         return name;
     }
 
-
     /**
      * Returns the list of volumes to be displayed in the popup menu.
-     *
+     * <p>
      * <p>The raw list of volumes is fetched using {@link LocalFile#getVolumes()} and then
      * filtered using the regexp defined in the {@link MuPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
      * (if defined).
@@ -277,7 +332,6 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         return volumes;
     }
-
 
     ////////////////////////////////
     // PopupButton implementation //
@@ -341,14 +395,19 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         // Add bookmarks
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
-            for (Bookmark b : bookmarks) {
-                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
-                    popupMenu.add(new TMenuSeparator());
+            final JScrollMenu bookmarksMenu = new JScrollMenu(Translator.get("bookmarks_menu"));
+            bookmarksMenu.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.BOOKMARK_ICON_NAME));
+            popupMenu.add(bookmarksMenu);
+            bookmarksMenu.getPopupMenu().setMaximumVisibleRows(20);
+
+            for (Bookmark bookmark : bookmarks) {
+                if (bookmark.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && bookmark.getLocation().isEmpty()) {
+                    bookmarksMenu.add(new TMenuSeparator());
                     continue;
                 }
 
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
-                String location = b.getLocation();
+                item = bookmarksMenu.add(new CustomOpenLocationAction(mainFrame, bookmark));
+                String location = bookmark.getLocation();
                 if (!location.contains("://")) {
                     AbstractFile file = FileFactory.getFile(location);
                     if (file != null) {
@@ -356,10 +415,6 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                         if (icon != null) {
                             item.setIcon(icon);
                         }
-//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
-//                        if (image != null) {
-//                            item.setIcon(new ImageIcon(image));
-//                        }
                     }
                 } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
                     item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
@@ -396,7 +451,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 public MuAction getMenuItemAction(String deviceSerial) {
                     FileURL url = null;
                     try {
-                        url = FileURL.getFileURL("adb://"+deviceSerial);
+                        url = FileURL.getFileURL("adb://" + deviceSerial);
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -417,16 +472,13 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         return popupMenu;
     }
 
-
-
-    
     /**
-     *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
-     *  to not lock the main even thread. The popup menu gets first displayed with the short drive names, and
-     * then refreshed with the extended names as they are retrieved.        
+     * Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
+     * to not lock the main even thread. The popup menu gets first displayed with the short drive names, and
+     * then refreshed with the extended names as they are retrieved.
      */
     private class RefreshDriveNamesAndIcons extends Thread {
-        
+
         private JPopupMenu popupMenu;
         private List<JMenuItem> items;
 
@@ -435,7 +487,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             this.popupMenu = popupMenu;
             this.items = items;
         }
-        
+
         @Override
         public void run() {
             final boolean useExtendedDriveNames = fileSystemView != null;
@@ -467,7 +519,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                         item.setIcon(icon);
                     }
                 });
-                
+
             }
 
             // Re-calculate the popup menu's dimensions
@@ -476,30 +528,28 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 popupMenu.pack();
             });
         }
-        
-    }
 
+    }
 
     /**
      * Convenience method that sets a mnemonic to the given JMenuItem, using the specified MnemonicHelper.
      *
-     * @param menuItem the menu item for which to set a mnemonic
+     * @param menuItem       the menu item for which to set a mnemonic
      * @param mnemonicHelper the MnemonicHelper instance to be used to determine the mnemonic's character.
      */
     private void setMnemonic(JMenuItem menuItem, MnemonicHelper mnemonicHelper) {
         menuItem.setMnemonic(mnemonicHelper.getMnemonic(menuItem.getText()));
     }
 
-
     //////////////////////////////
     // BookmarkListener methods //
     //////////////////////////////
-	
+
+    @Override
     public void bookmarksChanged() {
         // Refresh label in case a bookmark with the current location was changed
         updateButton();
     }
-
 
     ///////////////////////////////////
     // ConfigurationListener methods //
@@ -508,6 +558,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     /**
      * Listens to certain configuration variables.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
 
@@ -516,7 +567,6 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             updateButton();
         }
     }
-
 
     ////////////////////////
     // Overridden methods //
@@ -534,73 +584,26 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         return d;
     }
 
+    /**********************************
+     * LocationListener Implementation
+     **********************************/
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
-    /**
-     * This action pops up {@link com.mucommander.ui.dialog.server.ServerConnectDialog} for a specified
-     * protocol.
-     */
-    private class ServerConnectAction extends AbstractAction {
-        private Class<? extends ServerPanel> serverPanelClass;
-
-        private ServerConnectAction(String label, Class<? extends ServerPanel> serverPanelClass) {
-            super(label);
-            this.serverPanelClass = serverPanelClass;
-        }
-
-        public void actionPerformed(ActionEvent actionEvent) {
-            new ServerConnectDialog(folderPanel, serverPanelClass).showDialog();
-        }
-    }
-
-
-    /**
-     * This modified {@link OpenLocationAction} changes the current folder on the {@link FolderPanel} that contains
-     * this button, instead of the currently active {@link FolderPanel}.  
-     */
-    private class CustomOpenLocationAction extends OpenLocationAction {
-
-        CustomOpenLocationAction(MainFrame mainFrame, Bookmark bookmark) {
-            super(mainFrame, new HashMap<>(), bookmark);
-        }
-
-        CustomOpenLocationAction(MainFrame mainFrame, AbstractFile file) {
-            super(mainFrame, new HashMap<>(), file);
-        }
-
-        CustomOpenLocationAction(MainFrame mainFrame, BonjourService bs) {
-            super(mainFrame, new HashMap<>(), bs);
-        }
-
-        CustomOpenLocationAction(MainFrame mainFrame, FileURL url) {
-            super(mainFrame, new HashMap<>(), url);
-        }
-
-        ////////////////////////
-        // Overridden methods //
-        ////////////////////////
-
-        @Override
-        protected FolderPanel getFolderPanel() {
-            return folderPanel;
-        }
-    }
-
-	/**********************************
-	 * LocationListener Implementation
-	 **********************************/
-	
-	public void locationChanged(LocationEvent e) {
+    @Override
+    public void locationChanged(LocationEvent e) {
         // Update the button's label to reflect the new current folder
         updateButton();
     }
-    
-	public void locationChanging(LocationEvent locationEvent) { }
 
-	public void locationCancelled(LocationEvent locationEvent) { }
+    @Override
+    public void locationChanging(LocationEvent locationEvent) {
+    }
 
-	public void locationFailed(LocationEvent locationEvent) {}
+    @Override
+    public void locationCancelled(LocationEvent locationEvent) {
+    }
+
+    @Override
+    public void locationFailed(LocationEvent locationEvent) {
+    }
+
 }

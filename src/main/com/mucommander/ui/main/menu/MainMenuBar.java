@@ -18,19 +18,6 @@
 
 package com.mucommander.ui.main.menu;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import com.mucommander.bonjour.BonjourMenu;
 import com.mucommander.bonjour.BonjourService;
 import com.mucommander.bookmark.Bookmark;
@@ -42,7 +29,6 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionParameters;
 import com.mucommander.ui.action.MuAction;
@@ -55,11 +41,31 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.ui.menu.JScrollMenu;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.utils.text.Translator;
 import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TMenuSeparator;
+
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 
 /**
@@ -99,8 +105,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private int volumeOffset;
 
     // Bookmark menu
-    private JMenu bookmarksMenu;
-    private int bookmarksOffset;  // Index of the first bookmark menu item
+    private JScrollMenu bookmarksMenu;
 
     private JMenu ejectDrivesMenu;
 
@@ -111,7 +116,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private JCheckBoxMenuItem splitVerticallyItem;
 
     /** Maps window menu items onto weakly-referenced frames */
-    private WeakHashMap<JMenuItem, Frame> windowMenuFrames;
+    private Map<JMenuItem, Frame> windowMenuFrames;
 
 
     private final static String RECALL_WINDOW_ACTION_IDS[] = {
@@ -363,18 +368,19 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
         // Bookmark menu, menu items will be added when the menu gets selected
         menuItemMnemonicHelper.clear();
-        bookmarksMenu = MenuToolkit.addMenu(Translator.get("bookmarks_menu"), menuMnemonicHelper, this);
-        MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(AddBookmarkAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-        MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(EditBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-        MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(ExploreBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-        bookmarksMenu.add(new TMenuSeparator());
-        MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(EditCredentialsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-        bookmarksMenu.add(new TMenuSeparator());
+        JMenu bookmarksActionsMenu = MenuToolkit.addMenu(Translator.get("bookmarks_menu"), menuMnemonicHelper, this);
 
-        // Save the first bookmark menu item's offset for later (bookmarks will be added when menu becomes visible)
-        this.bookmarksOffset = bookmarksMenu.getItemCount();
+        MenuToolkit.addMenuItem(bookmarksActionsMenu, ActionManager.getActionInstance(AddBookmarkAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        MenuToolkit.addMenuItem(bookmarksActionsMenu, ActionManager.getActionInstance(EditBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        MenuToolkit.addMenuItem(bookmarksActionsMenu, ActionManager.getActionInstance(ExploreBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        bookmarksActionsMenu.add(new TMenuSeparator());
+        MenuToolkit.addMenuItem(bookmarksActionsMenu, ActionManager.getActionInstance(EditCredentialsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+        bookmarksActionsMenu.add(new TMenuSeparator());
+        bookmarksMenu = MenuToolkit.addScrollableMenu(Translator.get("bookmarks_menu"), menuMnemonicHelper, this);
+        bookmarksMenu.getPopupMenu().setMaximumVisibleRows(20);
+        bookmarksActionsMenu.add(bookmarksMenu);
 
-        add(bookmarksMenu);
+        add(bookmarksActionsMenu);
         
         // Window menu
         menuItemMnemonicHelper.clear();
@@ -525,9 +531,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         } else if (source == bookmarksMenu) {
             // Remove any previous bookmarks menu items from menu
             // as bookmarks might have changed since menu was last selected
-            for (int i=bookmarksMenu.getItemCount(); i>bookmarksOffset; i--) {
-                bookmarksMenu.remove(bookmarksOffset);
-            }
+            bookmarksMenu.removeAll();
 
             // Add bookmarks menu items
             List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
