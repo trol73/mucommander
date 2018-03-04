@@ -106,7 +106,7 @@ public class TextHistory {
     }
 
 
-    private LinkedList<String> load(AbstractFile file) throws IOException {
+    private LinkedList<String> load(AbstractFile file) {
         LinkedList<String> result = new LinkedList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"))) {
             String line;
