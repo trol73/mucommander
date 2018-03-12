@@ -24,8 +24,10 @@ import com.mucommander.ui.button.RolloverButtonAdapter;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.event.LocationListener;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -49,8 +51,7 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
      */
     private FolderPanel folderPanel;
 
-
-    public LocationBreadcrumbBar(FolderPanel folderPanel) {
+    LocationBreadcrumbBar(FolderPanel folderPanel) {
         // Decoration properties
         setBorderPainted(false);
         setFloatable(false);
@@ -128,7 +129,7 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
         setEnabled(true);
     }
 
-    public void setPath(AbstractFile path) {
+    private void setPath(AbstractFile path) {
         removeAll();
         final List<AbstractFile> pathList = new ArrayList<>();
         while (path != null) {
@@ -150,6 +151,7 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
             button.putClientProperty("JButton.buttonType", "square");
             add(button, 0);
         });
+        repaint();
     }
 
 }
