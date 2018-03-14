@@ -43,12 +43,16 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
 import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.dialog.server.FTPPanel;
+import com.mucommander.ui.dialog.server.HDFSPanel;
 import com.mucommander.ui.dialog.server.HTTPPanel;
 import com.mucommander.ui.dialog.server.NFSPanel;
+import com.mucommander.ui.dialog.server.S3Panel;
 import com.mucommander.ui.dialog.server.SFTPPanel;
 import com.mucommander.ui.dialog.server.SMBPanel;
 import com.mucommander.ui.dialog.server.ServerConnectDialog;
 import com.mucommander.ui.dialog.server.ServerPanel;
+import com.mucommander.ui.dialog.server.VSpherePanel;
+import com.mucommander.ui.dialog.server.WebDAVPanel;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -76,7 +80,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
-
 
 /**
  * <code>DrivePopupButton</code> is a button which, when clicked, pops up a menu with a list of volumes items that be used
@@ -416,7 +419,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                             item.setIcon(icon);
                         }
                     }
-                } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
+                } else if (FileProtocols.NETWORK_PROTOCOLS.stream().anyMatch(s -> location.startsWith(s + "://"))) {
                     item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
                 }
                 setMnemonic(item, mnemonicHelper);
@@ -463,11 +466,15 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         popupMenu.add(new TMenuSeparator());
 
         // Add 'connect to server' shortcuts
-        setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("FTP...", FTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("SFTP...", SFTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("HTTP...", HTTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("NFS...", NFSPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.FTP.toUpperCase() + " ...", FTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.HDFS.toUpperCase() + " ...", HDFSPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.HTTP.toUpperCase() + " ...", HTTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.NFS.toUpperCase() + " ...", NFSPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.S3.toUpperCase() + " ...", S3Panel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.SFTP.toUpperCase() + " ...", SFTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.SMB.toUpperCase() + " ...", SMBPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.WEBDAV.toUpperCase() + " ...", WebDAVPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction(FileProtocols.VSPHERE.toUpperCase() + " ...", VSpherePanel.class)), mnemonicHelper);
 
         return popupMenu;
     }
