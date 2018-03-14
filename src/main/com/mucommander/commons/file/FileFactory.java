@@ -19,15 +19,9 @@
 
 package com.mucommander.commons.file;
 
-import java.io.IOException;
-import java.util.*;
-
-import com.mucommander.commons.file.impl.avrdude.AvrdudeProtocolProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.icon.FileIconProvider;
 import com.mucommander.commons.file.icon.impl.SwingFileIconProvider;
+import com.mucommander.commons.file.impl.avrdude.AvrdudeProtocolProvider;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.impl.local.LocalProtocolProvider;
 import com.mucommander.commons.file.util.FilePool;
@@ -35,6 +29,17 @@ import com.mucommander.commons.file.util.PathTokenizer;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 
 /**
  * FileFactory is an abstract class that provides static methods to get a {@link AbstractFile} instance for
@@ -119,7 +124,6 @@ public class FileFactory {
         registerProtocol(FileProtocols.NFS, new com.mucommander.commons.file.impl.nfs.NFSProtocolProvider());
         registerProtocol(FileProtocols.SFTP, new com.mucommander.commons.file.impl.sftp.SFTPProtocolProvider());
         registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
-        //registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
         registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
         registerProtocol(FileProtocols.WEBDAV, new com.mucommander.commons.file.impl.webdav.WebDAVProvider());
         registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
@@ -159,7 +163,6 @@ public class FileFactory {
         if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             // Hadoop requires Java 1.6
             registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
-//            registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
         }
         registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
         registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
