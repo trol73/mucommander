@@ -475,9 +475,6 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                         }
                     }
 
-// For testing the free space indicator
-//volumeFree = (long)(volumeTotal * Math.random());
-
                     volumeSpaceLabel.setVolumeSpace(volumeTotal, volumeFree);
 
                     LOGGER.debug("Adding to cache");

@@ -52,9 +52,20 @@ import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
 import com.mucommander.ui.terminal.MuTerminal;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FocusTraversalPolicy;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -472,7 +483,7 @@ public class MainFrame extends JFrame implements LocationListener {
      *
      * @param table the currently active FileTable
      */
-    void setActiveTable(FileTable table) {
+    public void setActiveTable(FileTable table) {
         boolean activeTableChanged = activeTable != table;
 
         if (activeTableChanged) {
