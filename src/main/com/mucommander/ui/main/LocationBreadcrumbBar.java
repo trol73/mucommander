@@ -23,15 +23,23 @@ import com.mucommander.ui.button.NonFocusableButton;
 import com.mucommander.ui.button.RolloverButtonAdapter;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.event.LocationListener;
+import com.mucommander.ui.theme.ColorChangedEvent;
+import com.mucommander.ui.theme.FontChangedEvent;
+import com.mucommander.ui.theme.Theme;
+import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.ui.theme.ThemeManager;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +52,7 @@ import java.util.List;
  *
  * @author Mikhail Tikhomirov
  */
-public class LocationBreadcrumbBar extends JToolBar implements MouseListener, LocationListener {
+public class LocationBreadcrumbBar extends JToolBar implements MouseListener, LocationListener, ThemeListener {
 
     /**
      * FolderPanel this text field is displayed in
@@ -57,6 +65,10 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
         setFloatable(false);
         putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
+        setFont(ThemeManager.getCurrentFont(Theme.LOCATION_BAR_FONT));
+        setForeground(ThemeManager.getCurrentColor(Theme.LOCATION_BAR_FOREGROUND_COLOR));
+        setBackground(ThemeManager.getCurrentColor(Theme.LOCATION_BAR_BACKGROUND_COLOR));
+
         // Listen to mouse events in order to popup a menu when toolbar is right-clicked
         addMouseListener(this);
 
@@ -65,6 +77,8 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
         // Listen to location changes to update popup menu choices and disable this component while the location is
         // being changed
         folderPanel.getLocationManager().addLocationListener(this);
+
+        ThemeManager.addCurrentThemeListener(this);
     }
 
     @Override
@@ -149,9 +163,61 @@ public class LocationBreadcrumbBar extends JToolBar implements MouseListener, Lo
             RolloverButtonAdapter.decorateButton(button);
             button.setMargin(new Insets(0, 0, 0, 0));
             button.putClientProperty("JButton.buttonType", "square");
+
+
+            button.setFont(ThemeManager.getCurrentFont(Theme.LOCATION_BAR_FONT));
+            button.setForeground(ThemeManager.getCurrentColor(Theme.LOCATION_BAR_FOREGROUND_COLOR));
+            button.setBackground(ThemeManager.getCurrentColor(Theme.LOCATION_BAR_BACKGROUND_COLOR));
+
             add(button, 0);
         });
         repaint();
+    }
+
+    /**
+     * Receives theme color changes notifications.
+     */
+    @Override
+    public void colorChanged(ColorChangedEvent event) {
+        final Color color = event.getColor();
+
+        switch (event.getColorId()) {
+            case Theme.LOCATION_BAR_FOREGROUND_COLOR:
+                setForeground(color);
+                break;
+
+            case Theme.LOCATION_BAR_BACKGROUND_COLOR:
+                setBackground(color);
+                break;
+        }
+    }
+
+    /**
+     * Receives theme font changes notifications.
+     */
+    @Override
+    public void fontChanged(FontChangedEvent event) {
+        if (event.getFontId() == Theme.LOCATION_BAR_FONT) {
+            setFont(event.getFont());
+        }
+    }
+
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
+        Arrays.asList(getComponents()).forEach(component -> component.setForeground(fg));
+    }
+
+    @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        Arrays.asList(getComponents()).forEach(component -> component.setBackground(bg));
+    }
+
+    @Override
+    public void setFont(Font font) {
+        super.setFont(font);
+        Arrays.asList(getComponents()).forEach(component -> component.setFont(font));
     }
 
 }
