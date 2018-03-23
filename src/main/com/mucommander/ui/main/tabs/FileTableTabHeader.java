@@ -201,7 +201,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
          */
         @Override
         public void fontChanged(FontChangedEvent event) {
-            if (event.getFontId() == Theme.LOCATION_BAR_FONT) {
+            if (event.getFontId() == Theme.FILE_TABLE_FONT) {
                 setFont(createFont(event.getFont()));
             }
         }
