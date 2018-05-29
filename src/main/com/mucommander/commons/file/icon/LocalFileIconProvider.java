@@ -30,12 +30,14 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
      * @param nonLocalFile the non-local file for which to create a temporary file.
      * @return a temporary local file/directory with the same extension as the specified file/directory
      */
-    protected LocalFile createTempLocalFile(AbstractFile nonLocalFile) {
+    private LocalFile createTempLocalFile(AbstractFile nonLocalFile) {
         try {
             // Note: the returned temporary file may be an AbstractArchiveFile if the filename's extension corresponds
             // to a registered archive format
             LocalFile tempFile = FileFactory.getTemporaryFile(nonLocalFile.getName(), false).getAncestor(LocalFile.class);
-
+            if (tempFile == null) {
+                return null;
+            }
             // create a directory
             if (nonLocalFile.isDirectory()) {
                 tempFile.mkdir();
@@ -54,34 +56,34 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
     /////////////////////////////////////
 
     public Icon getFileIcon(AbstractFile originalFile, Dimension preferredResolution) {
+        if (originalFile == null) {
+            return null;
+        }
         // Specified file is a LocalFile or a ProxyFile proxying a LocalFile (e.g. an archive file): let's simply get
         // the icon using #getLocalFileIcon(LocalFile)
         AbstractFile topFile = originalFile.getTopAncestor();
-        Icon icon;
 
         if (topFile instanceof LocalFile) {
-            icon = getLocalFileIcon((LocalFile)topFile, originalFile, preferredResolution);
+            return getLocalFileIcon((LocalFile)topFile, originalFile, preferredResolution);
         }
         // File is a remote file: create a temporary local file (or directory) with the same extension to grab the icon
         // and then delete the file. This operation is I/O bound and thus expensive, so an LRU is used to cache
         // frequently-accessed file extensions.
-        else {
-            // create the temporary, local file
-            LocalFile tempFile = createTempLocalFile(topFile);
-            if (tempFile == null) {
-                // No temp file, no icon!
-                return null;
-            }
 
-            // Get the file icon
-            icon = getLocalFileIcon(tempFile, originalFile, preferredResolution);
+        LocalFile tempFile = createTempLocalFile(topFile);
+        if (tempFile == null) {
+            // No temp file, no icon!
+            return null;
+        }
 
-            // Delete the temporary file
-            try {
-                tempFile.delete();
-            } catch (IOException e) {
-                // Not much to do
-            }
+        // Get the file icon
+        Icon icon = getLocalFileIcon(tempFile, originalFile, preferredResolution);
+
+        // Delete the temporary file
+        try {
+            tempFile.delete();
+        } catch (IOException e) {
+            // Not much to do
         }
 
         return icon;

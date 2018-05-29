@@ -41,9 +41,13 @@ class BookmarkOutputStream extends ByteArrayOutputStream implements BookmarkBuil
     public void close() throws IOException {
         super.close();
 
-        try {BookmarkManager.readBookmarks(new ByteArrayInputStream(toByteArray()), this);}
-        catch(IOException e) {throw e;}
-        catch(Exception e) {throw new IOException(e.getMessage());}
+        try {
+            BookmarkManager.readBookmarks(new ByteArrayInputStream(toByteArray()), this);
+        } catch(IOException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
 
@@ -69,14 +73,13 @@ class BookmarkOutputStream extends ByteArrayOutputStream implements BookmarkBuil
      * @Param location location of the new bookmark.
      */
     public void addBookmark(String name, String location) {
-        Bookmark oldBookmark; // Old bookmark of the same name, if any.
-        Bookmark newBookmark; // Bookmark to create.
-
         // Creates the new bookmark and checks for conflicts.
-        newBookmark = new Bookmark(name, location);
-        if((oldBookmark = BookmarkManager.getBookmark(name)) != null)
+        Bookmark newBookmark = new Bookmark(name, location);
+        // Old bookmark of the same name, if any.
+        Bookmark oldBookmark = BookmarkManager.getBookmark(name);
+        if (oldBookmark != null) {
             BookmarkManager.removeBookmark(oldBookmark);
-
+        }
         // Adds the new bookmark.
         BookmarkManager.addBookmark(newBookmark);
     }
