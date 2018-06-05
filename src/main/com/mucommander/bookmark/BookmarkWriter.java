@@ -34,7 +34,9 @@ import java.io.OutputStream;
 class BookmarkWriter implements BookmarkConstants, BookmarkBuilder {
     private XmlWriter out;
 
-    BookmarkWriter(OutputStream stream) throws IOException {out = new XmlWriter(stream);}
+    BookmarkWriter(OutputStream stream) throws IOException {
+        out = new XmlWriter(stream);
+    }
 
     public void startBookmarks() throws BookmarkException {
         // Root element

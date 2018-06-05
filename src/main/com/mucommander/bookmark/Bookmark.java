@@ -67,13 +67,12 @@ public class Bookmark implements Cloneable {
      * @see           #getName()
      */
     public void setName(String newName) {
-        // Replace null values by empty strings
-        if(newName==null)
+        if (newName == null) {
             newName = "";
+        }
 
-        if(!newName.equals(this.name)) {
+        if (!newName.equals(this.name)) {
             this.name = newName;
-
             // Notify registered listeners of the change
             BookmarkManager.fireBookmarksChanged();
         }
@@ -99,8 +98,9 @@ public class Bookmark implements Cloneable {
      */
     public void setLocation(String newLocation) {
         // Replace null values by empty strings
-        if (newLocation == null)
+        if (newLocation == null) {
             newLocation = "";
+        }
 
         if (!newLocation.equals(this.location)) {
             this.location = newLocation;
@@ -115,7 +115,9 @@ public class Bookmark implements Cloneable {
      * Returns a clone of this bookmark.
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {return super.clone();}
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 
     /**
@@ -126,8 +128,9 @@ public class Bookmark implements Cloneable {
     }
 
     public boolean equals(Object object) {
-        if(!(object instanceof Bookmark))
+        if (!(object instanceof Bookmark)) {
             return false;
+        }
 
         Bookmark bookmark = (Bookmark)object;
         return bookmark.getName().equals(name);
