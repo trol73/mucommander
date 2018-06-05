@@ -222,7 +222,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      * creation.
      */
     public boolean isCacheable(AbstractFile file, Dimension preferredResolution) {
-        return !((file.getTopAncestor() instanceof LocalFile) || file.isSymlink());
+        return file != null && !((file.getTopAncestor() instanceof LocalFile) || file.isSymlink());
     }
 
     public Icon lookupCache(AbstractFile file, Dimension preferredResolution) {

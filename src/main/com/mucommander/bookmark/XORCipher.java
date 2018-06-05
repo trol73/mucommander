@@ -61,7 +61,7 @@ public class XORCipher {
         int keyLen = NOT_SO_PRIVATE_KEY.length;
 
         byte[] result = new byte[len];
-        for(int i=0; i<len; i++) {
+        for (int i = 0; i < len; i++) {
             result[i] = (byte) (b[i] ^ NOT_SO_PRIVATE_KEY[i % keyLen]);
         }
 
@@ -76,7 +76,7 @@ public class XORCipher {
      * @return a XOR-Base64 encrypted String
      */
     public static String encryptXORBase64(String s) {
-        // Todo:
+        // TODO:
         // Important: String.getBytes() returns bytes in the platform's default encoding, which might vary across
         // platforms. This may potentially cause problems when decrypting a string on a different platform from the one
         // which served to encrypt it.
@@ -95,7 +95,7 @@ public class XORCipher {
      * @throws IOException if the given String is not properly Base64-encoded
      */
     public static String decryptXORBase64(String s) throws IOException {
-        // Todo:
+        // TODO:
         // Important: new String() creates a string using the platform's default encoding, which might vary across
         // platforms. This may potentially cause problems when decrypting a string on a different platform from the one
         // which served to encrypt it.
