@@ -293,7 +293,7 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
                 setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
             }
         }
-
+        SwingUtilities.invokeLater(this::toFront);
         setVisible(true);
     }
 
