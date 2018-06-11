@@ -19,6 +19,9 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -36,9 +39,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class InvertSelectionAction extends MuAction {
+public class InvertMarkAction extends MuAction {
 
-    InvertSelectionAction(MainFrame mainFrame, Map<String, Object> properties) {
+    InvertMarkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -49,9 +52,14 @@ public class InvertSelectionAction extends MuAction {
 
         // Starts at 1 if current folder is not root so that '..' is not marked
         int nbFiles = fileTable.getFilesCount();
+        final boolean markFolders = MuConfigurations.getPreferences().getVariable(MuPreference.MARK_FOLDERS_WITH_FILES, MuPreferences.DEFAULT_MARK_FOLDERS_WITH_FILES);
+        boolean go = markFolders;
         for (int i = 0; i < nbFiles; i++) {
-            AbstractFile file = tableModel.getFileAt(i);
-            if (!file.isDirectory()) {
+            final AbstractFile file = tableModel.getFileAt(i);
+            if (!markFolders) {
+                go = !file.isDirectory();
+            }
+            if (go) {
                 tableModel.setFileMarked(i, !tableModel.isFileMarked(i));
             }
         }
@@ -61,25 +69,41 @@ public class InvertSelectionAction extends MuAction {
         fileTable.fireMarkedFilesChangedEvent();
     }
 
-	@Override
-	public ActionDescriptor getDescriptor() {
-		return new Descriptor();
-	}
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-    	public static final String ACTION_ID = "InvertSelection";
-    	
-		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+        public static final String ACTION_ID = "InvertSelection";
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
-
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_MULTIPLY, 0); }
-
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new InvertSelectionAction(mainFrame, properties);
+        @Override
+        public String getId() {
+            return ACTION_ID;
         }
+
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.SELECTION;
+        }
+
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
+
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_MULTIPLY, 0);
+        }
+
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+            return new InvertMarkAction(mainFrame, properties);
+        }
+
     }
+
 }

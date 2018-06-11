@@ -18,10 +18,6 @@
 
 package com.mucommander.conf;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
 import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.conf.Configuration;
 import com.mucommander.commons.conf.ConfigurationException;
@@ -30,6 +26,10 @@ import com.mucommander.commons.conf.ValueList;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.icon.FileIcons;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * muCommander specific wrapper for the <code>com.mucommander.conf</code> API which is used to save 'static' configurations.
@@ -260,7 +260,18 @@ public class MuPreferences implements MuPreferencesAPI {
 	public static final String CALCULATE_FOLDER_SIZE_ON_MARK       = FILE_TABLE_SECTION + '.' + "calculate_folder_size_on_mark";
 	/** Default value for 'Calculate folder size on mark' */
 	public static final boolean DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK = false;
-
+	/** Whether to mark folders with files */
+	public static final String MARK_FOLDERS_WITH_FILES             = FILE_TABLE_SECTION + '.' + "mark_folders_with_files";
+	/** Default value for 'Mark folders with files' */
+	public static final boolean DEFAULT_MARK_FOLDERS_WITH_FILES    = false;
+   /** Whether to mark files with case sensitive file filter */
+	public static final String MARK_FILES_CASE_SENSITIVE_FILTER   = FILE_TABLE_SECTION + '.' + "mark_files_case_sensitive_filter";
+	/** Default value for 'Mark files with case sensitive file filter' */
+	public static final boolean DEFAULT_MARK_FILES_CASE_SENSITIVE_FILTER   = false;
+	/** Block mark step size when marking files or folders */
+	public static final String BLOCK_MARK_STEP_SIZE                = FILE_TABLE_SECTION + '.' + "block_mark_step_size";
+	/** Default value for 'Block mark step size when marking files or folders' */
+	public static final int DEFAULT_BLOCK_MARK_STEP_SIZE           = 5;
 	/** Name of the root element's attribute that contains the version of muCommander used to write the CONFIGURATION file. */
 	static final String VERSION_ATTRIBUTE = "version";
 
