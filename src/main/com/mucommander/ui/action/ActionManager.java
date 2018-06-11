@@ -108,7 +108,7 @@ public class ActionManager {
     	registerAction(new GoToWebsiteAction.Descriptor());
     	registerAction(new InternalEditAction.Descriptor());
     	registerAction(new InternalViewAction.Descriptor());
-    	registerAction(new InvertSelectionAction.Descriptor());
+    	registerAction(new InvertMarkAction.Descriptor());
     	registerAction(new LocalCopyAction.Descriptor());
     	registerAction(new MarkAllAction.Descriptor());
     	registerAction(new MarkExtensionAction.Descriptor());

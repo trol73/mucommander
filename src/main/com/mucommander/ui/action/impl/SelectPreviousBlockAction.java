@@ -19,7 +19,13 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
@@ -34,36 +40,36 @@ import java.util.Map;
  */
 public class SelectPreviousBlockAction extends SelectBackwardAction {
 
-    /** Number of file/rows a block represents */
-    // TODO: make this value configurable
-    private static final int BLOCK_SIZE = 5;
-
     SelectPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     protected int getRowDecrement() {
-        return BLOCK_SIZE;
+        return MuConfigurations.getPreferences().getVariable(MuPreference.BLOCK_MARK_STEP_SIZE, MuPreferences.DEFAULT_BLOCK_MARK_STEP_SIZE);
     }
 
-	@Override
-	public ActionDescriptor getDescriptor() {
-		return new Descriptor();
-	}
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
+
         public static final String ACTION_ID = "SelectPreviousBlock";
 
+        @Override
         public String getId() {
             return ACTION_ID;
         }
 
+        @Override
         public ActionCategory getCategory() {
             return ActionCategory.SELECTION;
         }
 
+        @Override
         public KeyStroke getDefaultKeyStroke() {
             if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK);
@@ -72,12 +78,16 @@ public class SelectPreviousBlockAction extends SelectBackwardAction {
             }
         }
 
+        @Override
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new SelectPreviousBlockAction(mainFrame, properties);
         }
+
     }
+
 }

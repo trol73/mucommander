@@ -42,20 +42,31 @@ public class UnmarkAllAction extends MarkAllAction {
 
     @Override
     public ActionDescriptor getDescriptor() {
-    	return new Descriptor();
+        return new Descriptor();
     }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-    	public static final String ACTION_ID = "UnmarkAll";
-    	
-		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+        public static final String ACTION_ID = "UnmarkAll";
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+        @Override
+        public String getId() {
+            return ACTION_ID;
+        }
 
-		public KeyStroke getDefaultKeyStroke() {
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.SELECTION;
+        }
+
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
+
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
             if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK);
             } else {
@@ -63,8 +74,11 @@ public class UnmarkAllAction extends MarkAllAction {
             }
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new UnmarkAllAction(mainFrame, properties);
         }
+
     }
+
 }

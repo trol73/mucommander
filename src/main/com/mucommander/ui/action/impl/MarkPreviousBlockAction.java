@@ -19,6 +19,9 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -38,35 +41,41 @@ import java.util.Map;
  */
 public class MarkPreviousBlockAction extends MarkBackwardAction {
 
-    /** Number of file/rows a block represents */
-    // TODO: make this value configurable
-    private static final int BLOCK_SIZE = 5;
-
     MarkPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     protected int getRowDecrement() {
-        return BLOCK_SIZE;
+        return MuConfigurations.getPreferences().getVariable(MuPreference.BLOCK_MARK_STEP_SIZE, MuPreferences.DEFAULT_BLOCK_MARK_STEP_SIZE);
     }
 
-	@Override
-	public ActionDescriptor getDescriptor() {
-		return new Descriptor();
-	}
-
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
 
     public static final class Descriptor extends AbstractActionDescriptor {
-    	public static final String ACTION_ID = "MarkPreviousBlock";
 
-		public String getId() { return ACTION_ID; }
+        public static final String ACTION_ID = "MarkPreviousBlock";
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+        @Override
+        public String getId() {
+            return ACTION_ID;
+        }
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.SELECTION;
+        }
 
-		public KeyStroke getDefaultKeyStroke() {
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
+
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
             if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
             } else {
@@ -74,8 +83,11 @@ public class MarkPreviousBlockAction extends MarkBackwardAction {
             }
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new MarkPreviousBlockAction(mainFrame, properties);
         }
+
     }
+
 }

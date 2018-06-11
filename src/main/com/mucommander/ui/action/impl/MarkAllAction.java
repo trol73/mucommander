@@ -18,7 +18,11 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.MuPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -50,12 +54,21 @@ public class MarkAllAction extends MuAction {
 
     @Override
     public void performAction() {
+        final boolean markFolders = MuConfigurations.getPreferences().getVariable(MuPreference.MARK_FOLDERS_WITH_FILES, MuPreferences.DEFAULT_MARK_FOLDERS_WITH_FILES);
+
         FileTable fileTable = mainFrame.getActiveTable();
         BaseFileTableModel tableModel = fileTable.getFileTableModel();
 
         int nbFiles = tableModel.getFilesCount();
-        for (int i=tableModel.getFirstMarkableIndex(); i < nbFiles; i++) {
-            tableModel.setFileMarked(i, mark);
+        boolean go = markFolders;
+        for (int i = tableModel.getFirstMarkableIndex(); i < nbFiles; i++) {
+            if (!markFolders) {
+                final AbstractFile file = tableModel.getFileAt(i);
+                go = !file.isDirectory();
+            }
+            if (go) {
+                tableModel.setFileMarked(i, mark);
+            }
         }
         fileTable.repaint();
 
@@ -63,22 +76,33 @@ public class MarkAllAction extends MuAction {
         fileTable.fireMarkedFilesChangedEvent();
     }
 
-	@Override
-	public ActionDescriptor getDescriptor() {
-		return new Descriptor();
-	}
+    @Override
+    public ActionDescriptor getDescriptor() {
+        return new Descriptor();
+    }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-    	public static final String ACTION_ID = "MarkAll";
-    	
-		public String getId() { return ACTION_ID; }
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+        public static final String ACTION_ID = "MarkAll";
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+        @Override
+        public String getId() {
+            return ACTION_ID;
+        }
 
-		public KeyStroke getDefaultKeyStroke() {
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.SELECTION;
+        }
+
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
+
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
             if (!OsFamily.MAC_OS_X.isCurrent()) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK);
             } else {
@@ -86,8 +110,11 @@ public class MarkAllAction extends MuAction {
             }
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new MarkAllAction(mainFrame, properties);
         }
+
     }
+
 }
