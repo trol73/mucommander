@@ -18,19 +18,6 @@
 
 package com.mucommander.ui.main.menu;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import com.mucommander.bonjour.BonjourMenu;
 import com.mucommander.bonjour.BonjourService;
 import com.mucommander.bookmark.Bookmark;
@@ -42,7 +29,6 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionParameters;
 import com.mucommander.ui.action.MuAction;
@@ -51,6 +37,7 @@ import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.theme.ThemeEditorDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
+import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.table.Column;
@@ -58,8 +45,30 @@ import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.utils.text.Translator;
 import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TMenuSeparator;
+import ru.trolsoft.ui.TRadioButtonMenuItem;
+
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 
 /**
@@ -80,7 +89,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     // View menu
     private JMenu viewMenu;
     private JMenu themesMenu;
-    private JCheckBoxMenuItem[] sortByItems = new TCheckBoxMenuItem[Column.values().length];
+    private JRadioButtonMenuItem[] sortByItems = new TRadioButtonMenuItem[Column.values().length];
     private JMenu tableModeMenu;
     private JCheckBoxMenuItem[] tableModeItems = new TCheckBoxMenuItem[3];
     private JMenu columnsMenu;
@@ -107,14 +116,14 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     // Window menu
     private JMenu windowMenu;
     private int windowOffset; // Index of the first window menu item
-    private JCheckBoxMenuItem splitHorizontallyItem;
-    private JCheckBoxMenuItem splitVerticallyItem;
+    private JRadioButtonMenuItem splitHorizontallyItem;
+    private JRadioButtonMenuItem splitVerticallyItem;
 
     /** Maps window menu items onto weakly-referenced frames */
     private WeakHashMap<JMenuItem, Frame> windowMenuFrames;
 
 
-    private final static String RECALL_WINDOW_ACTION_IDS[] = {
+    private static final String RECALL_WINDOW_ACTION_IDS[] = {
         RecallWindow1Action.Descriptor.ACTION_ID,
         RecallWindow2Action.Descriptor.ACTION_ID,
         RecallWindow3Action.Descriptor.ACTION_ID,
@@ -127,6 +136,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         RecallWindow10Action.Descriptor.ACTION_ID
     };
 
+    private static final ImageIcon ASCENDING_ICON = IconManager.getIcon(IconManager.IconSet.ACTION, "SortAsc.png");
+    private static final ImageIcon DESCENDING_ICON = IconManager.getIcon(IconManager.IconSet.ACTION, "SortDesc.png");
 
     /**
      * Creates a new MenuBar for the given MainFrame.
@@ -258,10 +269,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         viewMenu.add(new TMenuSeparator());
         ButtonGroup buttonGroup = new ButtonGroup();
         for (Column c : Column.values()) {
-            buttonGroup.add(sortByItems[c.ordinal()] = MenuToolkit.addCheckBoxMenuItem(viewMenu, ActionManager.getActionInstance(c.getSortByColumnActionId(), mainFrame), menuItemMnemonicHelper));
+            buttonGroup.add(sortByItems[c.ordinal()] = MenuToolkit.addRadioButtonMenuItem(viewMenu, ActionManager.getActionInstance(c.getSortByColumnActionId(), mainFrame), menuItemMnemonicHelper));
         }
-
-        MenuToolkit.addMenuItem(viewMenu, ActionManager.getActionInstance(ReverseSortOrderAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
         viewMenu.add(new TMenuSeparator());
 
@@ -390,8 +399,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
         MenuToolkit.addMenuItem(windowMenu, ActionManager.getActionInstance(SplitEquallyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         buttonGroup = new ButtonGroup();
-        buttonGroup.add(splitVerticallyItem = MenuToolkit.addCheckBoxMenuItem(windowMenu, ActionManager.getActionInstance(SplitVerticallyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper));
-        buttonGroup.add(splitHorizontallyItem = MenuToolkit.addCheckBoxMenuItem(windowMenu, ActionManager.getActionInstance(SplitHorizontallyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper));
+        buttonGroup.add(splitVerticallyItem = MenuToolkit.addRadioButtonMenuItem(windowMenu, ActionManager.getActionInstance(SplitVerticallyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper));
+        buttonGroup.add(splitHorizontallyItem = MenuToolkit.addRadioButtonMenuItem(windowMenu, ActionManager.getActionInstance(SplitHorizontallyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper));
 
         windowMenu.add(new TMenuSeparator());
         themesMenu = MenuToolkit.addMenu(Translator.get("prefs_dialog.themes"), null, this);
@@ -466,7 +475,12 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             FileTable activeTable = mainFrame.getActiveTable();
 
             // Select the 'sort by' criterion currently in use in the active table
-            sortByItems[activeTable.getSortInfo().getCriterion().ordinal()].setSelected(true);
+            final JRadioButtonMenuItem sortItem = sortByItems[activeTable.getSortInfo().getCriterion().ordinal()];
+            sortItem.setSelected(true);
+            final ImageIcon sortIcon = activeTable.getSortInfo().getAscendingOrder() ? ASCENDING_ICON : DESCENDING_ICON;
+            for (JRadioButtonMenuItem item : sortByItems) {
+                item.setIcon(item == sortItem ? sortIcon : null);
+            }
 
             Boolean foldersFirst = activeTable.getSortInfo().getFoldersFirst();
             toggleShowFoldersFirstItem.setSelected(foldersFirst);
@@ -557,16 +571,17 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
 
             // This WeakHashMap maps menu items to frame instances. It has to be a weakly referenced hash map
             // and not a regular hash map, since it will not (and cannot) be emptied when the menu has been deselected
-            // and we really do not want this hash map to prevent the frames to be GCed 
+            // and we really do not want this hash map to prevent the frames to be GCed
             windowMenuFrames = new WeakHashMap<>();
-            
+
             // create a menu item for each of the MainFrame instances, that displays the MainFrame's path
             // and a keyboard accelerator to recall the frame (for the first 10 frames only).
             List<MainFrame> mainFrames = WindowManager.getMainFrames();
             int nbFrames = mainFrames.size();
             for (int i = 0; i < nbFrames; i++) {
                 MainFrame mainFrame = mainFrames.get(i);
-                JCheckBoxMenuItem checkBoxMenuItem = new TCheckBoxMenuItem();
+                JRadioButtonMenuItem item = new TRadioButtonMenuItem();
+                ButtonGroup buttonGroup = new ButtonGroup();
 
                 // If frame number is less than 10, use the corresponding action class (accelerator will be displayed in the menu item)
                 MuAction recallWindowAction;
@@ -579,18 +594,20 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
                     recallWindowAction = ActionManager.getActionInstance(new ActionParameters(RecallWindowAction.Descriptor.ACTION_ID, actionProps), this.mainFrame);
                 }
 
-                checkBoxMenuItem.setAction(recallWindowAction);
+                item.setAction(recallWindowAction);
 
                 // Replace the action's label and use the MainFrame's current folder path instead
-                checkBoxMenuItem.setText((i+1)+" "+mainFrame.getActiveTable().getFolderPanel().getCurrentFolder().getAbsolutePath());
+                item.setText((i+1)+" "+mainFrame.getActiveTable().getFolderPanel().getCurrentFolder().getAbsolutePath());
 
-                // Use the action's label as a tooltip 
-                checkBoxMenuItem.setToolTipText(recallWindowAction.getLabel());
+                // Use the action's label as a tooltip
+                item.setToolTipText(recallWindowAction.getLabel());
 
                 // Check current MainFrame (the one this menu bar belongs to)
-                checkBoxMenuItem.setSelected(mainFrame == this.mainFrame);
+                item.setSelected(mainFrame == this.mainFrame);
 
-                windowMenu.add(checkBoxMenuItem);
+                buttonGroup.add(item);
+
+                windowMenu.add(item);
             }
 
             // Add 'other' (non-MainFrame) windows : viewer and editor frames, no associated accelerator
@@ -623,7 +640,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             themesMenu.add(new TMenuSeparator());
             while (themes.hasNext()) {
                 Theme theme = themes.next();
-                JCheckBoxMenuItem item = new TCheckBoxMenuItem(new ChangeCurrentThemeAction(theme));
+                JRadioButtonMenuItem item = new TRadioButtonMenuItem(new ChangeCurrentThemeAction(theme));
                 buttonGroup.add(item);
                 if (ThemeManager.isCurrentTheme(theme)) {
                     item.setSelected(true);
