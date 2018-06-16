@@ -27,7 +27,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.FileTable;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -46,7 +46,9 @@ import java.util.Map;
  */
 public abstract class SortByAction extends MuAction implements ActivePanelListener, TableColumnModelListener {
 
-    /** FileTable column this action operates on */
+    /**
+     * FileTable column this action operates on
+     */
     protected Column column;
 
     SortByAction(MainFrame mainFrame, Map<String, Object> properties, Column column) {
@@ -85,6 +87,7 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
     // ActivePanelListener implementation //
     ////////////////////////////////////////
 
+    @Override
     public void activePanelChanged(FolderPanel folderPanel) {
         // Update this action's enabled state when the active panel has changed
         updateState(folderPanel.getFileTable());
@@ -95,27 +98,35 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
     // TableColumnModelListener implementation //
     /////////////////////////////////////////////
 
+    @Override
     public void columnAdded(TableColumnModelEvent event) {
         // Enable this action when the corresponding column has been made visible
-        if(event.getFromIndex()==column.ordinal())
+        if (event.getFromIndex() == column.ordinal()) {
             setEnabled(true);
+        }
     }
 
     public void columnRemoved(TableColumnModelEvent event) {
         // Disable this action when the corresponding column has been made invisible
-        if(event.getFromIndex()==column.ordinal())
+        if (event.getFromIndex() == column.ordinal()) {
             setEnabled(false);
+        }
     }
 
+    @Override
     public void columnMoved(TableColumnModelEvent event) {
+
     }
 
+    @Override
     public void columnMarginChanged(ChangeEvent event) {
+
     }
 
+    @Override
     public void columnSelectionChanged(ListSelectionEvent event) {
-    }
 
+    }
 
     ///////////////////
     // Inner classes //
@@ -131,12 +142,26 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
             this.defaultKeyStroke = defaultKeyStroke;
         }
 
-        public String getId() { return column.getSortByColumnActionId(); }
+        @Override
+        public String getId() {
+            return column.getSortByColumnActionId();
+        }
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.VIEW;
+        }
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-		public KeyStroke getDefaultKeyStroke() { return defaultKeyStroke; }
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
+            return defaultKeyStroke;
+        }
+
     }
+
 }

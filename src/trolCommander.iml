@@ -15,7 +15,6 @@
             <entry key="com.zeroturnaround.jrebel.remoting.ModuleRemoteServerSelection" value="instance" />
           </map>
         </option>
-        <option name="manualXML" value="false" />
         <option name="masterModuleName" />
         <option name="overrideStandardXmlFolder" value="false" />
         <option name="remotingEnabled" value="false" />
