@@ -18,45 +18,17 @@
 
 package com.mucommander.ui.dialog.pref.general;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import com.mucommander.conf.MuPreferencesAPI;
-import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
-import com.mucommander.utils.FileIconsCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.MuPreferencesAPI;
 import com.mucommander.extension.ClassFinder;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.extension.LookAndFeelFilter;
 import com.mucommander.job.FileCollisionChecker;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
@@ -73,6 +45,36 @@ import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
+import com.mucommander.utils.FileIconsCache;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * 'Appearance' preferences panel.
@@ -89,6 +91,8 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private UIManager.LookAndFeelInfo lookAndFeels[];
     /** 'Use brushed metal look' checkbox */
     private PrefCheckBox              brushedMetalCheckBox;
+    /** 'Use screen menu bar' checkbox */
+    private PrefCheckBox              screenMenuBarCheckBox;
     /** Triggers look and feel importing. */
     private JButton                   importLookAndFeelButton;
     /** Triggers look and feel deletion. */
@@ -162,8 +166,6 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private final static int       YES_ACTION = 0;
     /** Identifier of 'no' actions in question dialogs. */
     private final static int       NO_ACTION = 1;
-    /** Identifier of 'cancel' actions in question dialogs. */
-    private final static int       CANCEL_ACTION = 2;
     /** All known custom look and feels. */
     private List<String> customLookAndFeels;
 
@@ -224,7 +226,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         fileIconsSizeComboBox.addDialogListener(parent);
         if (brushedMetalCheckBox != null) {
         	brushedMetalCheckBox.addDialogListener(parent);
-    }
+        }
+        if (screenMenuBarCheckBox != null) {
+            screenMenuBarCheckBox.addDialogListener(parent);
+        }
     }
 
     /**
@@ -307,12 +312,18 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
         // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
         if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower() || OsVersion.MAC_OS_X_10_13.isCurrentOrHigher()) {
+            flowPanel = new YBoxPanel();
             // 'Use brushed metal look' option
             brushedMetalCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.use_brushed_metal"),
                     checkBox -> !String.valueOf(checkBox.isSelected()).equals(getVariable(MuPreference.USE_BRUSHED_METAL)));
             brushedMetalCheckBox.setSelected(getVariable(MuPreference.USE_BRUSHED_METAL, MuPreferences.DEFAULT_USE_BRUSHED_METAL));
-            flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             flowPanel.add(brushedMetalCheckBox);
+
+            screenMenuBarCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.screen_menu_bar"),
+                    checkBox -> !String.valueOf(checkBox.isSelected()).equals(getVariable(MuPreference.USE_SCREEN_MENU_BAR)));
+            screenMenuBarCheckBox.setSelected(getVariable(MuPreference.USE_SCREEN_MENU_BAR, MuPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
+            flowPanel.add(screenMenuBarCheckBox);
+
             lnfPanel.add(flowPanel);
         }
 
@@ -538,7 +549,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         }
 
         if (brushedMetalCheckBox != null) {
-            pref.setVariable(MuPreference.USE_BRUSHED_METAL,  brushedMetalCheckBox.isSelected());
+            pref.setVariable(MuPreference.USE_BRUSHED_METAL, brushedMetalCheckBox.isSelected());
+        }
+        if (screenMenuBarCheckBox != null) {
+            pref.setVariable(MuPreference.USE_SCREEN_MENU_BAR, screenMenuBarCheckBox.isSelected());
         }
 
         // Set ToolBar's icon size

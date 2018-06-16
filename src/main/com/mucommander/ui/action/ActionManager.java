@@ -165,7 +165,6 @@ public class ActionManager {
     	registerAction(new RenameAction.Descriptor());
     	registerAction(new ReportBugAction.Descriptor());
     	registerAction(new RevealInDesktopAction.Descriptor());
-    	registerAction(new ReverseSortOrderAction.Descriptor());
     	registerAction(new RunCommandAction.Descriptor());
         registerAction(new SelectPreviousBlockAction.Descriptor());
         registerAction(new SelectPreviousPageAction.Descriptor());
