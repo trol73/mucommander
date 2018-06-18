@@ -357,11 +357,11 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         JMenuItem item;
         MuAction action;
 
-        boolean  right = this.folderPanel.equals(mainFrame.getRightPanel());
+        final boolean right = this.folderPanel.equals(mainFrame.getRightPanel());
         final JMenuItem setSameFolderItem = new JMenuItem(ActionManager.getActionInstance(
                 right ?
-                        SetCurrentFolderToLeftAction.Descriptor.ACTION_ID :
-                        SetCurrentFolderToRightAction.Descriptor.ACTION_ID,
+                        SetCurrentFolderToRightAction.Descriptor.ACTION_ID :
+                        SetCurrentFolderToLeftAction.Descriptor.ACTION_ID,
                 mainFrame));
         setMnemonic(setSameFolderItem, mnemonicHelper);
         popupMenu.add(setSameFolderItem);
