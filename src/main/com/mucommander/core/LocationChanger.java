@@ -146,7 +146,6 @@ public class LocationChanger {
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder) {
-		/* TODO branch setBranchView(false); */
 		return tryChangeCurrentFolder(folder, null, false);
 	}
 
@@ -473,9 +472,6 @@ public class LocationChanger {
 		/** Lock object used to ensure consistency and thread safeness when killing the thread */
 		private final Object KILL_LOCK = new Object();
 
-		/* TODO branch private ArrayList childrenList; */
-
-
 		ChangeFolderThread(AbstractFile folder, boolean findWorkableFolder) {
 			// Ensure that we work on a raw file instance and not a cached one
 			this.folder = (folder instanceof CachedFile)?((CachedFile)folder).getProxiedFile():folder;
@@ -792,16 +788,6 @@ public class LocationChanger {
 						// File tested -> 50% complete
 						folderPanel.setProgressValue(50);
 
-						/* TODO branch 
-						AbstractFile children[] = new AbstractFile[0];
-						if (branchView) {
-							childrenList = new ArrayList();
-							readBranch(folder);
-							children = (AbstractFile[]) childrenList.toArray(children);
-						} else {
-							children = folder.ls(chainedFileFilter);                            
-						}*/ 
-
 						synchronized(KILL_LOCK) {
 							if (killed) {
 								LOGGER.debug("this thread has been killed, returning");
@@ -947,22 +933,5 @@ public class LocationChanger {
 			return super.toString()+" folderURL="+folderURL+" folder="+folder;
 		}
 	}
-	
-	/* TODO branch         
-	*//*
-	private void readBranch(AbstractFile parent) {
-		AbstractFile[] children;
-		try {
-			children = parent.ls(chainedFileFilter);
-			for (int i=0; i<children.length; i++) {
-				if (children[i].isDirectory()) {
-					readBranch(children[i]);
-				} else {
-					childrenList.add(children[i]);
-				}
-			}
-		} catch (IOException e) {
-			AppLogger.fine("Caught exception", e);
-		}
-	}*/
+
 }

@@ -147,8 +147,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         }
     };
 
-    /* TODO branch private boolean branchView; */
-
     /**
      * Constructor
      *

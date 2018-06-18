@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.mucommander.ui.main.menu;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -29,9 +28,9 @@ import ru.trolsoft.ui.TMenuSeparator;
 
 /**
  * Contextual popup menu invoked by FileTable when right-clicking on a file or a group of files.
- *
+ * <p>
  * The following items are displayed (see constructor code for conditions) :
- *
+ * <p>
  * Open
  * Open in new tab
  * Open natively
@@ -53,7 +52,7 @@ import ru.trolsoft.ui.TMenuSeparator;
  * Change date...
  * ----
  * Eject    [Mac OS only]
- * 
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class TablePopupMenu extends MuActionsPopupMenu {
@@ -61,15 +60,15 @@ public class TablePopupMenu extends MuActionsPopupMenu {
     /**
      * Creates a new TablePopupMenu.
      *
-     * @param mainFrame parent MainFrame instance
-     * @param currentFolder current folder in table
-     * @param clickedFile right-clicked file, can be null if user clicked on the folder table background
+     * @param mainFrame           parent MainFrame instance
+     * @param currentFolder       current folder in table
+     * @param clickedFile         right-clicked file, can be null if user clicked on the folder table background
      * @param parentFolderClicked true if user right-clicked on the parent '..' folder
-     * @param markedFiles list of marked files, can be empty but never null
+     * @param markedFiles         list of marked files, can be empty but never null
      */
     public TablePopupMenu(MainFrame mainFrame, AbstractFile currentFolder, AbstractFile clickedFile, boolean parentFolderClicked, FileSet markedFiles) {
         super(mainFrame);
-        
+
         // 'Open ...' actions displayed if a single file was clicked
         if (clickedFile != null || parentFolderClicked) {
             addAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID);
@@ -92,7 +91,7 @@ public class TablePopupMenu extends MuActionsPopupMenu {
             addAction(com.mucommander.ui.action.impl.CopyFileNamesAction.Descriptor.ACTION_ID);
             addAction(com.mucommander.ui.action.impl.CopyFileBaseNamesAction.Descriptor.ACTION_ID);
             addAction(com.mucommander.ui.action.impl.CopyFilePathsAction.Descriptor.ACTION_ID);
-            
+
             add(new TMenuSeparator());
         }
 
@@ -113,16 +112,16 @@ public class TablePopupMenu extends MuActionsPopupMenu {
             addAction(com.mucommander.ui.action.impl.LocateSymlinkAction.Descriptor.ACTION_ID);
         }
 
-        add(new TMenuSeparator());
-
-        addAction(com.mucommander.ui.action.impl.ShowFilePropertiesAction.Descriptor.ACTION_ID);
-        addAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID);
-        addAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID);
-
         if (new MountedDriveFilter().accept(clickedFile)) {
             add(new TMenuSeparator());
             addAction(com.mucommander.ui.action.impl.EjectDriveAction.Descriptor.ACTION_ID);
         }
 
+        add(new TMenuSeparator());
+
+        addAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID);
+        addAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID);
+        addAction(com.mucommander.ui.action.impl.ShowFilePropertiesAction.Descriptor.ACTION_ID);
     }
+
 }

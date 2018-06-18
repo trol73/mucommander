@@ -18,19 +18,18 @@
 
 package com.mucommander.ui.main.menu;
 
-import javax.swing.Action;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.text.Translator;
 
+import javax.swing.Action;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 /**
  * Open with menu.
@@ -40,21 +39,30 @@ import com.mucommander.ui.main.MainFrame;
  * @author Nicolas Rinaudo
  */
 public class OpenWithMenu extends JMenu {
+
     private MainFrame mainFrame;
 
     /**
      * Creates a new Open With menu.
      */
-    public OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
-        super(Translator.get("file_menu.open_with") + "...");
-        this.mainFrame = frame;
+    OpenWithMenu(MainFrame frame) {
+        this(frame, null);
+    }
+
+    /**
+     * Creates a new Open With menu.
+     */
+    OpenWithMenu(MainFrame mainFrame, AbstractFile clickedFile) {
+        super(Translator.get("file_menu.open_with"));
+        this.mainFrame = mainFrame;
         populate(clickedFile);
     }
 
     /**
      * Refreshes the content of the menu.
      */
-    private synchronized void populate(AbstractFile clickedFile) {
+    public synchronized void populate(AbstractFile clickedFile) {
+        removeAll();
         for (Command command : CommandManager.commands()) {
             if (command.getType() != CommandType.NORMAL_COMMAND) {
                 continue;
@@ -64,15 +72,13 @@ public class OpenWithMenu extends JMenu {
             }
             add(ActionManager.getActionInstance(command, mainFrame));
         }
-        if (getItemCount() == 0) {
-            setEnabled(false);
-        }
     }
 
     @Override
     public final JMenuItem add(Action a) {
-    	JMenuItem item = super.add(a);
-    	MenuToolkit.configureActionMenuItem(item);
-    	return item;
+        JMenuItem item = super.add(a);
+        MenuToolkit.configureActionMenuItem(item);
+        return item;
     }
+
 }
