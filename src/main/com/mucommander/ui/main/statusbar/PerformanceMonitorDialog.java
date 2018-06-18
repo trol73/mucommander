@@ -12,8 +12,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.management.MBeanServerConnection;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -452,7 +467,11 @@ public class PerformanceMonitorDialog extends FocusDialog implements ActionListe
     }
 
     private static double getSystemLoadAverage() {
-        return OPERATING_SYSTEM_MX_BEAN.getSystemLoadAverage();
+        if (isSystemLoadAverageInfoAvailable()) {
+            return OPERATING_SYSTEM_MX_BEAN.getSystemLoadAverage();
+        } else {
+            return 0D;
+        }
     }
 
 }
