@@ -177,6 +177,8 @@ public class ActionManager {
 		registerAction(new LeftArrowAction.Descriptor());
 		registerAction(new RightArrowAction.Descriptor());
     	registerAction(new SetSameFolderAction.Descriptor());
+    	registerAction(new SetCurrentFolderToLeftAction.Descriptor());
+    	registerAction(new SetCurrentFolderToRightAction.Descriptor());
     	registerAction(new SetTabTitleAction.Descriptor());
     	registerAction(new ShowAboutAction.Descriptor());
     	registerAction(new ShowBookmarksQLAction.Descriptor());

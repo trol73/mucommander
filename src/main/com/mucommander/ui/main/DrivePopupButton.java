@@ -39,8 +39,11 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
+import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
+import com.mucommander.ui.action.impl.SetCurrentFolderToLeftAction;
+import com.mucommander.ui.action.impl.SetCurrentFolderToRightAction;
 import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.dialog.server.FTPPanel;
 import com.mucommander.ui.dialog.server.HDFSPanel;
@@ -154,6 +157,11 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     private FolderPanel folderPanel;
 
     /**
+     * MainFrame instance that contains this button
+     */
+    private MainFrame mainFrame;
+
+    /**
      * Current volumes
      */
     private static AbstractFile volumes[];
@@ -206,6 +214,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     DrivePopupButton(FolderPanel folderPanel) {
         this.folderPanel = folderPanel;
+        mainFrame = this.folderPanel.getMainFrame();
 
         // Listen to location events to update the button when the current folder changes
         folderPanel.getLocationManager().addLocationListener(this);
@@ -344,17 +353,25 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     public JPopupMenu getPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
 
-        // Update the list of volumes in case new ones were mounted
-        volumes = getDisplayableVolumes();
-
-        // Add volumes
-        int nbVolumes = volumes.length;
-        final MainFrame mainFrame = folderPanel.getMainFrame();
-
-        MnemonicHelper mnemonicHelper = new MnemonicHelper();   // Provides mnemonics and ensures uniqueness
+        MnemonicHelper mnemonicHelper = new MnemonicHelper();
         JMenuItem item;
         MuAction action;
 
+        boolean  right = this.folderPanel.equals(mainFrame.getRightPanel());
+        final JMenuItem setSameFolderItem = new JMenuItem(ActionManager.getActionInstance(
+                right ?
+                        SetCurrentFolderToLeftAction.Descriptor.ACTION_ID :
+                        SetCurrentFolderToRightAction.Descriptor.ACTION_ID,
+                mainFrame));
+        setMnemonic(setSameFolderItem, mnemonicHelper);
+        popupMenu.add(setSameFolderItem);
+
+        popupMenu.add(new TMenuSeparator());
+
+        // Update the list of volumes in case new ones were mounted
+        volumes = getDisplayableVolumes();
+        // Add volumes
+        int nbVolumes = volumes.length;
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 

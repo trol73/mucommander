@@ -626,6 +626,27 @@ public class MainFrame extends JFrame implements LocationListener {
     }
 
     /**
+     * Makes both folders the same, changing left table location to right one.
+     */
+    public void setLeftToRightFolder() {
+        setToFolder(leftTable, rightTable);
+    }
+
+    /**
+     * Makes both folders the same, changing right table location to left one.
+     */
+    public void setRightToLeToFolder() {
+        setToFolder(rightTable, leftTable);
+    }
+
+    /**
+     * Makes both folders the same, changing tableTo's location to tableFrom.
+     */
+    private void setToFolder(FileTable tableFrom, FileTable tableTo) {
+        tableTo.getFolderPanel().tryChangeCurrentFolder(tableFrom.getFolderPanel().getCurrentFolder());
+    }
+
+    /**
      * Returns <code>true</code> if this MainFrame is currently active in the foreground.
      *
      * @return <code>true</code> if this MainFrame is currently active in the foreground
