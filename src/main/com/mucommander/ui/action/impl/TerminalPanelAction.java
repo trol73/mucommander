@@ -17,7 +17,10 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 /**
  * @author Oleg Trifonov
- *
+ * <p>
  * Created on 24/10/14.
  */
 public class TerminalPanelAction extends MuAction {
@@ -34,7 +37,6 @@ public class TerminalPanelAction extends MuAction {
     TerminalPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
-
 
     @Override
     public void performAction() {
@@ -46,29 +48,35 @@ public class TerminalPanelAction extends MuAction {
         return new Descriptor();
     }
 
-
-
     public static final class Descriptor extends AbstractActionDescriptor {
+
         public static final String ACTION_ID = "TerminalPanel";
 
+        @Override
         public String getId() {
             return ACTION_ID;
         }
 
+        @Override
         public ActionCategory getCategory() {
             return ActionCategory.ALL;
         }
 
+        @Override
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
         }
 
+        @Override
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK);
         }
 
+        @Override
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new TerminalPanelAction(mainFrame, properties);
         }
+
     }
+
 }

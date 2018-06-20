@@ -43,7 +43,7 @@ public class SystemVariablesService implements CompletionService {
 	}
 
 	public Vector<String> getPossibleCompletions(String path) {
-		return PrefixFilter.createPrefixFilter(path).filter(cachedKeyNames);
+		return CollectionFilter.createFilter(path).filter(cachedKeyNames);
 	}
 
 	public String complete(String selectedCompletion) {

@@ -19,6 +19,7 @@
 package com.mucommander.ui.dialog.pref.general;
 
 import com.mucommander.commons.util.StringUtils;
+import com.mucommander.conf.MuPreference;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.combobox.MuComboBox;
@@ -32,9 +33,6 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Locale;
-
-import static com.mucommander.conf.MuPreference.*;
-
 
 /**
  * 'Shortcuts' preferences panel.
@@ -268,7 +266,7 @@ public class ShortcutsPanel extends PreferencesPanel {
         final String filterText = searchText.getText();
 
         shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
-            Locale currentLang = Locale.forLanguageTag(getVariable(LANGUAGE));
+            Locale currentLang = Locale.forLanguageTag(getVariable(MuPreference.LANGUAGE));
             @Override
             public boolean accept(String actionId) {
                 return selectedActionCategory.contains(actionId) && (

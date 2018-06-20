@@ -18,13 +18,6 @@
 
 package com.mucommander.core;
 
-import java.awt.Cursor;
-import java.awt.EventQueue;
-import java.net.MalformedURLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.auth.CredentialsMapping;
 import com.mucommander.commons.file.AbstractFile;
@@ -39,7 +32,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.auth.AuthDialog;
@@ -48,6 +40,13 @@ import com.mucommander.ui.event.LocationManager;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.utils.Callback;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.Cursor;
+import java.awt.EventQueue;
+import java.net.MalformedURLException;
 
 /**
  * 
@@ -99,7 +98,7 @@ public class LocationChanger {
     	Thread setLocationThread = new Thread(() -> {
             AbstractFile folder = getWorkableLocation(folderURL);
             try {
-                locationManager.setCurrentFolder(folder, null, true);
+                locationManager.setCurrentFolder(folder, null);
             } finally {
                 mainFrame.setNoEventsMode(false);
                 // Restore default cursor
@@ -144,12 +143,10 @@ public class LocationChanger {
 	 * This method is <b>not</b> I/O-bound and returns immediately, without any chance of locking the calling thread.
 	 *
 	 * @param folder the folder to be made current folder
-	 * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
-	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder, boolean changeLockedTab) {
-		/* TODO branch setBranchView(false); */
-		return tryChangeCurrentFolder(folder, null, false, changeLockedTab);
+	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder) {
+		return tryChangeCurrentFolder(folder, null, false);
 	}
 
 	/**
@@ -169,10 +166,9 @@ public class LocationChanger {
 	 *
 	 * @param folder the folder to be made current folder
 	 * @param selectThisFileAfter the file to be selected after the folder has been changed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
-	 * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
-	 * @return the thread that performs the actual folder change, null if another folder change is already underway  
+	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
-	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder, AbstractFile selectThisFileAfter, boolean findWorkableFolder, boolean changeLockedTab) {
+	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder, AbstractFile selectThisFileAfter, boolean findWorkableFolder) {
 		LOGGER.debug("folder="+folder+" selectThisFileAfter="+selectThisFileAfter);
 
 		synchronized(FOLDER_CHANGE_LOCK) {
@@ -189,7 +185,7 @@ public class LocationChanger {
 			// changes the changeFolderThread field to null when finished, and it may do so before this method has
 			// returned (I've seen this happening). Relying solely on the changeFolderThread field could thus cause
 			// a null value to be returned, which is particularly problematic during startup (would cause an NPE).
-			ChangeFolderThread thread = new ChangeFolderThread(folder, findWorkableFolder, changeLockedTab);
+			ChangeFolderThread thread = new ChangeFolderThread(folder, findWorkableFolder);
 
 			if (selectThisFileAfter != null) {
 				thread.selectThisFileAfter(selectThisFileAfter);
@@ -216,7 +212,7 @@ public class LocationChanger {
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(String folderPath) {
 		try {
-			return tryChangeCurrentFolder(FileURL.getFileURL(folderPath), null, false);
+			return tryChangeCurrentFolder(FileURL.getFileURL(folderPath), null);
 		} catch (MalformedURLException e) {
 			// FileURL could not be resolved, notify the user that the folder doesn't exist
 			showFolderDoesNotExistDialog();
@@ -238,11 +234,7 @@ public class LocationChanger {
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL) {
-		return tryChangeCurrentFolder(folderURL, null, false);
-	}
-
-	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL, boolean changeLockedTab) {
-		return tryChangeCurrentFolder(folderURL, null, changeLockedTab);
+		return tryChangeCurrentFolder(folderURL, null);
 	}
 
 	/**
@@ -258,10 +250,9 @@ public class LocationChanger {
 	 *
 	 * @param folderURL folder's URL to be made current folder. If this URL does not resolve into an existing file, an error message will be displayed.
 	 * @param credentialsMapping the CredentialsMapping to use for authentication, can be null
-	 * @param changeLockedTab flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
-	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
+	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL, CredentialsMapping credentialsMapping) {
 		LOGGER.debug("folderURL="+folderURL);
 
 		synchronized(FOLDER_CHANGE_LOCK) {
@@ -278,7 +269,7 @@ public class LocationChanger {
 			// changes the changeFolderThread field to null when finished, and it may do so before this method has
 			// returned (I've seen this happening). Relying solely on the changeFolderThread field could thus cause
 			// a null value to be returned, which is particularly problematic during startup (would cause an NPE).
-			ChangeFolderThread thread = new ChangeFolderThread(folderURL, credentialsMapping, changeLockedTab);
+			ChangeFolderThread thread = new ChangeFolderThread(folderURL, credentialsMapping);
 			thread.start();
 
 			changeFolderThread = thread;
@@ -298,7 +289,7 @@ public class LocationChanger {
 
 	/**
 	 * Refreshes the current folder's contents. If the folder is no longer available, the folder will be changed to a
-	 * 'workable' folder (see {@link #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean, boolean)}.
+	 * 'workable' folder (see {@link #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean)}.
 	 *
 	 * <p>This method spawns a separate thread that takes care of the actual folder change and returns it.
 	 * It does nothing and returns <code>null</code> if another folder change is already underway.
@@ -308,11 +299,11 @@ public class LocationChanger {
 	 * @param selectThisFileAfter file to be selected after the folder has been refreshed (if it exists in the folder),
 	 * can be null in which case FileTable rules will be used to select current file
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
-	 * @see #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean, boolean)
+	 * @see #tryChangeCurrentFolder(AbstractFile, AbstractFile, boolean)
 	 */
 	public ChangeFolderThread tryRefreshCurrentFolder(AbstractFile selectThisFileAfter) {
 		folderPanel.getFoldersTreePanel().refreshFolder(locationManager.getCurrentFolder());
-		return tryChangeCurrentFolder(locationManager.getCurrentFolder(), selectThisFileAfter, true, true);
+		return tryChangeCurrentFolder(locationManager.getCurrentFolder(), selectThisFileAfter, true);
 	}
 	
 	 /**
@@ -324,14 +315,13 @@ public class LocationChanger {
      *
      * @param folder folder to be made current folder
      * @param fileToSelect file to be selected after the folder has been refreshed (if it exists in the folder), can be null in which case FileTable rules will be used to select current file
-     * @param changeLockedTab - flag that indicates whether to change the presented folder in the currently selected tab although it's locked
      */
-    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) {
+    private void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect) {
     	// Update the timestamp right before the folder is set in case FolderChangeMonitor checks the timestamp
         // while FileTable#setCurrentFolder is being called. 
         lastFolderChangeTime = System.currentTimeMillis();
         
-    	locationManager.setCurrentFolder(folder, fileToSelect, changeLockedTab);
+    	locationManager.setCurrentFolder(folder, fileToSelect);
     }
 
     /**
@@ -464,7 +454,6 @@ public class LocationChanger {
 
 		private AbstractFile folder;
 		private boolean findWorkableFolder;
-		private boolean changeLockedTab;
 		private FileURL folderURL;
 		private AbstractFile fileToSelect;
 		private CredentialsMapping credentialsMapping;
@@ -483,15 +472,11 @@ public class LocationChanger {
 		/** Lock object used to ensure consistency and thread safeness when killing the thread */
 		private final Object KILL_LOCK = new Object();
 
-		/* TODO branch private ArrayList childrenList; */
-
-
-		ChangeFolderThread(AbstractFile folder, boolean findWorkableFolder, boolean changeLockedTab) {
+		ChangeFolderThread(AbstractFile folder, boolean findWorkableFolder) {
 			// Ensure that we work on a raw file instance and not a cached one
 			this.folder = (folder instanceof CachedFile)?((CachedFile)folder).getProxiedFile():folder;
 			this.folderURL = folder.getURL();
 			this.findWorkableFolder = findWorkableFolder;
-			this.changeLockedTab = changeLockedTab;
 
 			setPriority(Thread.MAX_PRIORITY);
 		}
@@ -500,11 +485,9 @@ public class LocationChanger {
 		 * 
 		 * @param folderURL folder's URL to be made current folder. If this URL does not resolve into an existing file, an error message will be displayed.
 		 * @param credentialsMapping the CredentialsMapping to use for accessing the folder, <code>null</code> for none
-		 * @param changeLockedTab flag that indicates whether to change the presented folder in the currently selected tab although it's locked
 		 */
-		ChangeFolderThread(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
+		ChangeFolderThread(FileURL folderURL, CredentialsMapping credentialsMapping) {
 			this.folderURL = folderURL;
-			this.changeLockedTab = changeLockedTab;
 			this.credentialsMapping = credentialsMapping;
 
 			setPriority(Thread.MAX_PRIORITY);
@@ -805,16 +788,6 @@ public class LocationChanger {
 						// File tested -> 50% complete
 						folderPanel.setProgressValue(50);
 
-						/* TODO branch 
-						AbstractFile children[] = new AbstractFile[0];
-						if (branchView) {
-							childrenList = new ArrayList();
-							readBranch(folder);
-							children = (AbstractFile[]) childrenList.toArray(children);
-						} else {
-							children = folder.ls(chainedFileFilter);                            
-						}*/ 
-
 						synchronized(KILL_LOCK) {
 							if (killed) {
 								LOGGER.debug("this thread has been killed, returning");
@@ -830,7 +803,7 @@ public class LocationChanger {
 						LOGGER.trace("calling setCurrentFolder");
 
 						// Change the file table's current folder and select the specified file (if any)
-						setCurrentFolder(folder, fileToSelect, changeLockedTab);
+						setCurrentFolder(folder, fileToSelect);
 
 						// folder set -> 95% complete
 						folderPanel.setProgressValue(95);
@@ -960,22 +933,5 @@ public class LocationChanger {
 			return super.toString()+" folderURL="+folderURL+" folder="+folder;
 		}
 	}
-	
-	/* TODO branch         
-	*//*
-	private void readBranch(AbstractFile parent) {
-		AbstractFile[] children;
-		try {
-			children = parent.ls(chainedFileFilter);
-			for (int i=0; i<children.length; i++) {
-				if (children[i].isDirectory()) {
-					readBranch(children[i]);
-				} else {
-					childrenList.add(children[i]);
-				}
-			}
-		} catch (IOException e) {
-			AppLogger.fine("Caught exception", e);
-		}
-	}*/
+
 }

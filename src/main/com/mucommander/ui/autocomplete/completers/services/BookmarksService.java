@@ -32,6 +32,7 @@ import java.util.Vector;
  */
 
 public class BookmarksService implements CompletionService, BookmarkListener {
+
 	private String[] sortedBookmarkNames;
 	private String[] sortedBookmarkLocations;
 	
@@ -41,15 +42,17 @@ public class BookmarksService implements CompletionService, BookmarkListener {
 		// Register as a bookmark-listener, in order to be up-to-date with existing bookmarks.
         BookmarkManager.addBookmarkListener(this);
 	}
-	
+
+	@Override
 	public Vector<String> getPossibleCompletions(String path) {
 		Vector<String> result = new Vector<>();
-		PrefixFilter filter = PrefixFilter.createPrefixFilter(path);
+		CollectionFilter<String> filter = CollectionFilter.createFilter(path);
 		result.addAll(filter.filter(sortedBookmarkNames));
 		result.addAll(filter.filter(sortedBookmarkLocations)); 
 		return result;
 	}
-	
+
+	@Override
 	public String complete(String selectedCompletion) {
 		String result = null;
 		int nbBookmarks = sortedBookmarkNames.length;
@@ -107,7 +110,9 @@ public class BookmarksService implements CompletionService, BookmarkListener {
     }
     
     // Bookmarks listening:
+	@Override
 	public void bookmarksChanged() {
 		fetchBookmarks();
 	}
+
 }

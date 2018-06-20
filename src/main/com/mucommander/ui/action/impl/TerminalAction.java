@@ -17,17 +17,35 @@
  */
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.file.AbstractArchiveEntryFile;
+import com.mucommander.commons.file.AbstractArchiveFile;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileProtocols;
+import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.process.ProcessRunner;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.macosx.AppleScript;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.terminal.MuTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +53,12 @@ import java.util.Map;
  * Created on 17/12/13.
  */
 public class TerminalAction extends ParentFolderAction {
+
+    /**
+     * Logger reference
+     */
+    private static Logger logger;
+
     /**
      * Creates a new instance of <code>InternalViewAction</code>.
      *
@@ -47,13 +71,12 @@ public class TerminalAction extends ParentFolderAction {
 
     @Override
     public void performAction() {
-        AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
+        final AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
         String cmd = getConsoleCommand(currentFolder);
         try {
-            //ProcessRunner.execute(cmd);
             ProcessRunner.execute(cmd, currentFolder);
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -74,7 +97,51 @@ public class TerminalAction extends ParentFolderAction {
         if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL)) {
             cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
         } else {
-            cmd = getDefaultTerminalCommand();
+            final FileURL fileURL = folder.getURL();
+            if (OsFamily.MAC_OS_X.isCurrent()) {
+                try {
+                    final File startScript = File.createTempFile("muCommanderTerminalStart", ".scpt");
+                    startScript.deleteOnExit();
+                    final List<String> script = new ArrayList<>();
+
+                    script.add("tell application \"Terminal\"");
+                    script.add("activate");
+                    script.add("my makeTab()");
+
+                    final String scheme = fileURL.getScheme();
+                    String path = null;
+                    if (folder.isArchive()) {
+                        path = fileURL.getParent().getPath();
+                    } else if (folder.hasAncestor(AbstractArchiveEntryFile.class)) {
+                        final AbstractArchiveFile parentArchive = folder.getParentArchive();
+                        if (parentArchive != null) {
+                            path = parentArchive.getParent().getURL().getPath();
+                        }
+                    }
+                    if (path == null) {
+                        path = fileURL.getPath();
+                    }
+                    if (FileProtocols.FILE.equalsIgnoreCase(scheme)) {
+                        script.add("do script \"cd " + path + "\" in tab 1 of front window");
+                    } else if (FileProtocols.SFTP.equalsIgnoreCase(scheme)) {
+                        script.add("do script \"ssh " + fileURL.getCredentials().getLogin() + "@" + fileURL.getHost() + " -t 'cd " + path + "; bash --login'\" in tab 1 of front window");
+                    }
+
+                    script.add("end tell");
+                    script.add("on makeTab()");
+                    script.add("tell application \"System Events\" to keystroke \"t\" using {command down}");
+                    script.add("delay 0.2");
+                    script.add("end makeTab");
+
+                    Files.write(startScript.toPath(), script, Charset.forName(AppleScript.getScriptEncoding()), StandardOpenOption.CREATE);
+                    cmd = "osascript " + startScript.getAbsolutePath();
+                } catch (IOException e) {
+                    getLogger().error(e.getMessage(), e);
+                    cmd = getDefaultTerminalCommand();
+                }
+            } else {
+                cmd = getDefaultTerminalCommand();
+            }
         }
         return cmd.replace("$p", folder.getAbsolutePath());
     }
@@ -84,24 +151,44 @@ public class TerminalAction extends ParentFolderAction {
 
     }
 
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(MuTerminal.class);
+        }
+        return logger;
+    }
+
     @Override
     public ActionDescriptor getDescriptor() {
         return new Descriptor();
     }
 
-
     public static final class Descriptor extends AbstractActionDescriptor {
+
         public static final String ACTION_ID = "Terminal";
 
-        public String getId() { return ACTION_ID; }
+        @Override
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.MISC; }
+        @Override
+        public ActionCategory getCategory() {
+            return ActionCategory.MISC;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        @Override
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK); }
+        @Override
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
+        }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        @Override
+        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new TerminalAction(mainFrame, properties);
         }
 

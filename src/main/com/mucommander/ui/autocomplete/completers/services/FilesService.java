@@ -90,7 +90,7 @@ public abstract class FilesService implements CompletionService {
 		        }
 				
 		        final String prefix = index==path.length()-1 ? null : path.substring(index + 1).toLowerCase();
-		        result = PrefixFilter.createPrefixFilter(prefix).filter(cachedDirectoryFileNames);
+		        result = CollectionFilter.createFilter(prefix).filter(cachedDirectoryFileNames);
 	        }
 		}
 		return result;

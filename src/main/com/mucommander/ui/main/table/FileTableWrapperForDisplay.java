@@ -25,15 +25,25 @@ import com.mucommander.ui.dnd.FileDropTargetListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.menu.TablePopupMenu;
-import com.mucommander.ui.theme.*;
+import com.mucommander.ui.theme.ColorChangedEvent;
+import com.mucommander.ui.theme.FontChangedEvent;
+import com.mucommander.ui.theme.Theme;
+import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.ui.theme.ThemeManager;
 
-import javax.swing.*;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.dnd.DropTarget;
-import java.awt.event.*;
-
-import static com.mucommander.ui.theme.ThemeManager.getCurrentColor;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /**
  * This class is responsible for the viewing aspects of a FileTable component:
@@ -41,41 +51,36 @@ import static com.mucommander.ui.theme.ThemeManager.getCurrentColor;
  * 2. Sets the colors of the FileTable.
  * 3. Sets other presentation aspects of the FileTable component.
  * 4. Initiates a popup window on right click on the FileTable component.
- * 
+ *
  * @author Arik Hadas
  */
 public class FileTableWrapperForDisplay extends JScrollPane implements FocusListener, ThemeListener {
 
-	/** The FileTable being wrapped for display */
-	private final FileTable fileTable;
-	
-	/** Colors relevant for the FileTable or its ScrollPane wrapper */
-	private Color borderColor;
+    /**
+     * The FileTable being wrapped for display
+     */
+    private final FileTable fileTable;
+    /**
+     * Colors relevant for the FileTable or its ScrollPane wrapper
+     */
+    private Color borderColor;
     private Color unfocusedBorderColor;
     private Color backgroundColor;
     private Color unfocusedBackgroundColor;
     private Color unmatchedBackgroundColor;
-    
-//    /** Frame containing this file table. */
-//    private final MainFrame mainFrame;
-//    /** Panel containing this file table */
-//    private final FolderPanel folderPanel;
 
-	FileTableWrapperForDisplay(final FileTable fileTable, final FolderPanel folderPanel, final MainFrame mainFrame) {
-		super(fileTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-//		this.mainFrame = mainFrame;
-//		this.folderPanel = folderPanel;
-		this.fileTable = fileTable;
-		
-		backgroundColor          = getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR);
-        unmatchedBackgroundColor = getCurrentColor(Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR);
-        unfocusedBorderColor 	 = getCurrentColor(Theme.FILE_TABLE_INACTIVE_BORDER_COLOR);
-        unfocusedBackgroundColor = getCurrentColor(Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR);
-        
-		// Sets the table border.
+    FileTableWrapperForDisplay(final FileTable fileTable, final FolderPanel folderPanel, final MainFrame mainFrame) {
+        super(fileTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.fileTable = fileTable;
+
+        backgroundColor = ThemeManager.getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR);
+        unmatchedBackgroundColor = ThemeManager.getCurrentColor(Theme.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR);
+        unfocusedBorderColor = ThemeManager.getCurrentColor(Theme.FILE_TABLE_INACTIVE_BORDER_COLOR);
+        unfocusedBackgroundColor = ThemeManager.getCurrentColor(Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR);
+
+        // Sets the table border.
         setBorder(new MutableLineBorder(unfocusedBorderColor, 1));
-        borderColor = getCurrentColor(Theme.FILE_TABLE_BORDER_COLOR);
+        borderColor = ThemeManager.getCurrentColor(Theme.FILE_TABLE_BORDER_COLOR);
 
         // Set scroll pane's background color to match the one of this panel and FileTable
         getViewport().setBackground(unfocusedBackgroundColor);
@@ -85,18 +90,18 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.clear();
         inputMap.setParent(null);
-        
+
         fileTable.addFocusListener(this);
-        
-     // Enable drop support to copy/move/change current folder when files are dropped on the FileTable
+
+        // Enable drop support to copy/move/change current folder when files are dropped on the FileTable
         FileDropTargetListener dropTargetListener = new FileDropTargetListener(fileTable.getFolderPanel(), false);
         fileTable.setDropTarget(new DropTarget(fileTable, dropTargetListener));
         setDropTarget(new DropTarget(this, dropTargetListener));
-        
-     // Listens to theme events
+
+        // Listens to theme events
         ThemeManager.addCurrentThemeListener(this);
-        
-     // Catch mouse events on the ScrollPane
+
+        // Catch mouse events on the ScrollPane
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -119,11 +124,6 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int rotation = e.getWheelRotation();
-//                if (rotation > 0) {
-//                    move(1);
-//                } else if (rotation < 0) {
-//                    move(-1);
-//                }
                 if (rotation != 0) {
                     move(rotation);
                 }
@@ -146,19 +146,19 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 
     }
 
-	@Override
-	public void setVisible(boolean visible) {
-		if (visible) {
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
             super.setVisible(true);
         }
-	}
-	
-	@Override
-	public boolean requestFocusInWindow() {
-		return fileTable.requestFocusInWindow();
-	}
-	
-	/**
+    }
+
+    @Override
+    public boolean requestFocusInWindow() {
+        return fileTable.requestFocusInWindow();
+    }
+
+    /**
      * Dims the scrollpane's background, called by {@link com.mucommander.ui.quicksearch.QuickSearch} when a quick search is started.
      */
     void dimBackground() {
@@ -172,7 +172,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
      */
     void undimBackground() {
         // Identifies the new background color.
-    	Color newColor = fileTable.hasFocus() ?  backgroundColor : unfocusedBackgroundColor;
+        Color newColor = fileTable.hasFocus() ? backgroundColor : unfocusedBackgroundColor;
 
         // If the old and new background color differ, set the new background
         // color.
@@ -189,21 +189,23 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
     ///////////////////////////
     // FocusListener methods //
     ///////////////////////////
-    
+
+    @Override
     public void focusGained(FocusEvent e) {
-    	setBorderColor(borderColor);
-    	getViewport().setBackground(backgroundColor);
-    	fileTable.setBackground(backgroundColor);
-    	getViewport().repaint();
+        setBorderColor(borderColor);
+        getViewport().setBackground(backgroundColor);
+        fileTable.setBackground(backgroundColor);
+        getViewport().repaint();
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
-    	setBorderColor(unfocusedBorderColor);
-    	getViewport().setBackground(unfocusedBackgroundColor);
-    	fileTable.setBackground(unfocusedBackgroundColor);
+        setBorderColor(unfocusedBorderColor);
+        getViewport().setBackground(unfocusedBackgroundColor);
+        fileTable.setBackground(unfocusedBackgroundColor);
     }
-	
-	private void setBorderColor(Color color) {
+
+    private void setBorderColor(Color color) {
         Border border = getBorder();
         // Some (rather evil) look and feels will change borders outside of muCommander's control,
         // this check is necessary to ensure no exception is thrown.
@@ -211,12 +213,14 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
             ((MutableLineBorder) border).setLineColor(color);
         }
     }
-	
-	// - Theme listening -------------------------------------------------------------
+
+    // - Theme listening -------------------------------------------------------------
     // -------------------------------------------------------------------------------
+
     /**
      * Receives theme color changes notifications.
      */
+    @Override
     public void colorChanged(ColorChangedEvent event) {
         switch (event.getColorId()) {
             case Theme.FILE_TABLE_BORDER_COLOR:
@@ -257,6 +261,8 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
     /**
      * Not used.
      */
+    @Override
     public void fontChanged(FontChangedEvent event) {
     }
+
 }

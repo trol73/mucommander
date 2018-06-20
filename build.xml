@@ -158,6 +158,8 @@
             <classpath>
                 <pathelement location="${tmp.main}"/>
                 <path refid="lib.test"/>
+                <path refid="lib.runtime"/>
+                <path refid="lib.compile"/>
             </classpath>
         </javac>
 
@@ -194,6 +196,8 @@
                 <pathelement location="${tmp.main}"/>
                 <pathelement location="${tmp.test}"/>
                 <path refid="lib.test"/>
+                <path refid="lib.runtime"/>
+                <path refid="lib.compile"/>
             </classpath>
             <xmlfileset file="${testng.suite}"/>
         </testng>
@@ -280,8 +284,6 @@
 	    	copyright="trolCommander ${app.version}, (c) ${app.copyright} ${app.vendor}, ${url.homepage}"
 	    	icon="${res.package}/osx/icon.icns" >
 	        <classpath file="${dist.jar}" />
-	    	<option value="-Xmx128m"/>
-	    	<option value="-Xms128m"/>
 	    	<option value="-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader" />
 	    	<option value="-Dcom.apple.smallTabs=true" />
 	    	<option value="-Dcom.apple.hwaccel" />

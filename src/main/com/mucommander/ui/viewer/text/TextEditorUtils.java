@@ -99,7 +99,7 @@ public class TextEditorUtils {
                     textEditor.getTextArea().gotoLine(e.getLine());
                 }
             }
-            textEditor.setStatusMessage(e.getLocalizedMessage());
+            textEditor.setStatusMessage(e.getMessage());
         } catch (Exception e) {
             textEditor.setStatusMessage(Translator.get("error"));
         }

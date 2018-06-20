@@ -30,13 +30,15 @@ import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.cache.WindowsStorage;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trolsoft.utils.FileUtils;
 
 import javax.swing.JComponent;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.*;
+import java.io.IOException;
 
 /**
  * @author Oleg Trifonov
@@ -44,23 +46,23 @@ import java.io.*;
  */
 public class MuTerminal {
 
+    private static Logger logger;
+
     private final MainFrame mainFrame;
     private final TerminalWidget termWidget;
-    private final SettingsProvider settingsProvider;
-    private final MuTerminalTtyConnector ttyConnector;
 
     private static final String STORAGE_KEY = "TerminalPanel";
 
     public MuTerminal(final MainFrame mainFrame) {
         super();
         this.mainFrame = mainFrame;
-        this.settingsProvider = new TerminalSettingsProvider();
+        final SettingsProvider settingsProvider = new TerminalSettingsProvider();
         try {
             prepareLibraries();
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().error(e.getMessage(), e);
         }
-        this.ttyConnector = createTtyConnector(getCurrentFolder());
+        final MuTerminalTtyConnector ttyConnector = createTtyConnector(getCurrentFolder());
 
         BasicConfigurator.configureDefaultContext();
 
@@ -71,8 +73,8 @@ public class MuTerminal {
             }
         };
 
-
         termWidget.setTerminalPanelListener(new TerminalPanelListener() {
+            @Override
             public void onPanelResize(final Dimension pixelDimension, final RequestOrigin origin) {
             }
 
@@ -83,7 +85,7 @@ public class MuTerminal {
 
             @Override
             public void onTitleChanged(String title) {
-                updateTitle();//mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
+                updateTitle();
             }
         });
 
@@ -115,7 +117,7 @@ public class MuTerminal {
                 }
             };
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().error(e.getMessage(), e);
             // TODO
             return null;
         }
@@ -143,9 +145,6 @@ public class MuTerminal {
 
     public void show(boolean show) {
         termWidget.getComponent().setVisible(show);
-//        if (!show) {
-//            return;
-//        }
     }
 
 
@@ -179,5 +178,11 @@ public class MuTerminal {
         }
     }
 
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(MuTerminal.class);
+        }
+        return logger;
+    }
 
 }

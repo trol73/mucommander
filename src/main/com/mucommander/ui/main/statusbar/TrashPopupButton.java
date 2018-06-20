@@ -46,15 +46,11 @@ public class TrashPopupButton extends PopupButton {
 
     TrashPopupButton(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-
         setContentAreaFilled(false);
+        setPopupMenuLocation(SwingConstants.TOP);
         setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, "trash.png"));
-
-        // Rollover-enable the button and hold a reference to the RolloverButtonAdapter instance so that it doesn't
-        // get garbage-collected
-        RolloverButtonAdapter rolloverButtonAdapter = new RolloverButtonAdapter();
-        RolloverButtonAdapter.setButtonDecoration(this);
-        addMouseListener(rolloverButtonAdapter);
+        RolloverButtonAdapter.decorateButton(this);
+        putClientProperty("JButton.buttonType", "square");
     }
 
     @Override
@@ -77,7 +73,7 @@ public class TrashPopupButton extends PopupButton {
                     emptyTrashItem.setEnabled(false);
                 } else if (itemCount > 0) {
                     // Append the number of items to the menu item's label
-                    emptyTrashItem.setText(emptyTrashItem.getText()+" ("+itemCount+")");
+                    emptyTrashItem.setText(emptyTrashItem.getText() + " (" + itemCount + ")");
                 }
                 // Note: 'empty trash' is enabled if itemCount==-1
 
@@ -88,11 +84,6 @@ public class TrashPopupButton extends PopupButton {
         return popupMenu;
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Replace the default insets to be exactly (2,2,2,2).
      */
@@ -100,4 +91,5 @@ public class TrashPopupButton extends PopupButton {
     public Insets getInsets() {
         return new Insets(2, 2, 2, 2);
     }
+
 }

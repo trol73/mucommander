@@ -18,23 +18,6 @@
 
 package com.mucommander;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.*;
-import java.util.concurrent.*;
-
-import com.mucommander.profiler.Profiler;
-import com.mucommander.ui.action.ActionKeymapIO;
-import com.mucommander.ui.icon.FileIcons;
-import com.mucommander.ui.main.frame.MainFrameBuilder;
-import com.mucommander.ui.theme.ThemeManager;
-import com.mucommander.ui.tools.ToolsEnvironment;
-import com.mucommander.utils.MuLogging;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
@@ -49,21 +32,42 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.extension.ExtensionManager;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.shell.ShellHistoryManager;
-import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.startup.CheckVersionDialog;
 import com.mucommander.ui.dialog.startup.InitialSetupDialog;
+import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.main.SplashScreen;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
 import com.mucommander.ui.main.frame.CommandLineMainFrameBuilder;
 import com.mucommander.ui.main.frame.DefaultMainFramesBuilder;
+import com.mucommander.ui.main.frame.MainFrameBuilder;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
+import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.tools.ToolsEnvironment;
+import com.mucommander.utils.MuLogging;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * trolCommander launcher.
@@ -475,11 +479,8 @@ public class TrolCommander {
 
         @Override
         void run() throws Exception {
-            // Shows the splash screen, if enabled in the preferences
             useSplash = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
-            if (useSplash) {
-                splashScreen = new SplashScreen(RuntimeConstants.VERSION, "Loading preferences...");
-            }
+            splashScreen = new SplashScreen(RuntimeConstants.VERSION, "Loading preferences...", useSplash);
         }
     }
 
@@ -491,7 +492,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             // Dispose splash screen.
-            if (useSplash) {
+            if (splashScreen != null) {
                 splashScreen.dispose();
             }
         }
@@ -763,11 +764,9 @@ public class TrolCommander {
     /**
      * Main method used to startup muCommander.
      * @param args command line arguments.
-     * @throws IOException if an unrecoverable error occurred during startup 
      */
-    @SuppressWarnings({"unchecked"})
-    public static void main(String args[]) throws IOException {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+    public static void main(String args[]) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
 			System.setProperty("prism.order", "sw");
@@ -797,9 +796,10 @@ public class TrolCommander {
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
             LauncherTask taskPrepareKeystrokeClass = new PrepareKeystrokeClassTask(helper);
-            //LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
+            LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
-            LauncherTask taskStart = new StartTask(helper);
+            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
+            LauncherTask taskStart = new StartTask(helper, taskLoadConfigs, taskRegisterArchives);
             LauncherTask taskShowSplash = new ShowSplashTask(helper, taskLoadConfigs);
             LauncherTask taskLoadTheme = new LoadThemesTask(helper, taskShowSplash, taskPrepareGraphics);
             LauncherTask taskInitDesktop = new InitDesktopTask(helper, taskLoadConfigs);
@@ -814,23 +814,21 @@ public class TrolCommander {
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);
             LauncherTask enableNotificationsTask = new EnableNotificationsTask(helper, taskRegisterActions);
-            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions, taskLoadCustomCommands);
+            LauncherTask taskCreateWindow = new CreateWindowTask(helper, taskStart, taskLoadTheme, taskShowSplash, taskInitBars, taskRegisterActions, taskLoadCustomCommands);
             LauncherTask taskShowSetupWindow = new ShowSetupWindowTask(helper, taskLoadConfigs);
             LauncherTask taskLoadShellHistory = new LoadShellHistoryTask(helper);
             LauncherTask taskDisposeSplash = new DisposeSplashTask(helper, taskShowSplash, taskCreateWindow);
-            LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
             LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
             LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
-            LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
+            LauncherTask taskLoadEnvironment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
-//            tasks.add(taskPrepareLogger);
-
+            tasks.add(taskPrepareLogger);
             tasks.add(taskPrepareGraphics);
             tasks.add(taskPrepareKeystrokeClass);
             tasks.add(taskRegisterActions);
-
             tasks.add(taskLoadConfigs);
+            tasks.add(taskRegisterArchives);
             tasks.add(taskStart);
             tasks.add(taskLoadIcons);
             tasks.add(taskShowSplash);
@@ -842,7 +840,6 @@ public class TrolCommander {
             tasks.add(taskLoadCredentials);
             tasks.add(taskLoadShellHistory);
             tasks.add(taskInitCustomDataFormat);
-            //    tasks.add(taskRegisterActions);
             tasks.add(taskStartBonjour);
             tasks.add(taskInitBars);
             tasks.add(taskCreateWindow);
@@ -850,11 +847,9 @@ public class TrolCommander {
             tasks.add(taskInitDesktop);
             tasks.add(taskDisposeSplash);
             tasks.add(taskShowSetupWindow);
-            tasks.add(taskRegisterArchives);
             tasks.add(taskRegisterNetwork);
             tasks.add(taskRegisterOtherProtocols);
-            tasks.add(taskLoadEnviroment);
-//System.out.println("Execute tasks");
+            tasks.add(taskLoadEnvironment);
 
             if (processors <= 1 ) {
                 for (LauncherTask t : tasks) {

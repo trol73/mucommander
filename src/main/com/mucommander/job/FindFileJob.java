@@ -161,7 +161,7 @@ public class FindFileJob extends FileJob {
         this.searchSubdirectories = searchSubdirs;
         this.searchArchives = searchArchives;
         this.ignoreHidden = ignoreHidden;
-        IOCase filterCase = OsFamily.getCurrent() == OsFamily.MAC_OS_X || OsFamily.getCurrent() == OsFamily.WINDOWS ?
+        IOCase filterCase = OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent() ?
                 IOCase.INSENSITIVE : IOCase.SENSITIVE;
 
         if (fileMask.contains(",")) {

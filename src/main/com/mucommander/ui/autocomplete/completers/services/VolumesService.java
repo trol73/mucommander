@@ -52,7 +52,7 @@ public class VolumesService implements CompletionService {
 	    	for (int i=0; i<nbFolders; i++)
 	    		rootFolderNames[i] = fileRoots[i].getAbsolutePath();
 	    	Arrays.sort(rootFolderNames, String.CASE_INSENSITIVE_ORDER);
-	    	lastSuggestedCompletions = PrefixFilter.createPrefixFilter(path).filter(rootFolderNames);
+	    	lastSuggestedCompletions = CollectionFilter.createFilter(path).filter(rootFolderNames);
 		}
 		return lastSuggestedCompletions;
 	}

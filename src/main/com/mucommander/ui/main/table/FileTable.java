@@ -18,54 +18,30 @@
 
 package com.mucommander.ui.main.table;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Iterator;
-import java.util.WeakHashMap;
-
-import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-
-import com.mucommander.utils.text.SizeFormat;
-import com.mucommander.ui.action.impl.*;
-import com.mucommander.ui.main.table.views.BaseCellRenderer;
-import com.mucommander.ui.main.table.views.BaseFileTableModel;
-import com.mucommander.ui.main.table.views.TableViewMode;
-import com.mucommander.ui.main.table.views.compact.CompactFileTableColumnModel;
-import com.mucommander.ui.main.table.views.compact.CompactFileTableModel;
-import com.mucommander.ui.main.table.views.full.FileTableCellRenderer;
-import com.mucommander.ui.main.table.views.full.FileTableColumnModel;
-import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
-import com.mucommander.ui.main.table.views.full.FileTableModel;
-import com.mucommander.ui.text.FilePathFieldKeyListener;
-import com.mucommander.ui.theme.*;
-import com.mucommander.utils.FileIconsCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jidesoft.swing.DefaultOverlayable;
 import com.jidesoft.swing.StyledLabelBuilder;
-
 import com.mucommander.commons.collections.Enumerator;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.MoveJob;
-import com.mucommander.utils.text.CustomDateFormat;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.impl.ChangeDateAction;
+import com.mucommander.ui.action.impl.ChangePermissionsAction;
+import com.mucommander.ui.action.impl.MarkNextRowAction;
+import com.mucommander.ui.action.impl.MarkPreviousRowAction;
+import com.mucommander.ui.action.impl.MarkSelectedFileAction;
+import com.mucommander.ui.action.impl.OpenAction;
+import com.mucommander.ui.action.impl.OpenNativelyAction;
+import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.dialog.file.AbstractCopyDialog;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -76,7 +52,62 @@ import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.menu.TablePopupMenu;
+import com.mucommander.ui.main.table.views.BaseCellRenderer;
+import com.mucommander.ui.main.table.views.BaseFileTableModel;
+import com.mucommander.ui.main.table.views.TableViewMode;
+import com.mucommander.ui.main.table.views.compact.CompactFileTableColumnModel;
+import com.mucommander.ui.main.table.views.compact.CompactFileTableModel;
+import com.mucommander.ui.main.table.views.full.FileTableCellRenderer;
+import com.mucommander.ui.main.table.views.full.FileTableColumnModel;
+import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
+import com.mucommander.ui.main.table.views.full.FileTableModel;
 import com.mucommander.ui.quicksearch.QuickSearch;
+import com.mucommander.ui.text.FilePathFieldKeyListener;
+import com.mucommander.ui.theme.ColorChangedEvent;
+import com.mucommander.ui.theme.FontChangedEvent;
+import com.mucommander.ui.theme.Theme;
+import com.mucommander.ui.theme.ThemeCache;
+import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.utils.FileIconsCache;
+import com.mucommander.utils.text.CustomDateFormat;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Iterator;
+import java.util.WeakHashMap;
 
 
 /**
@@ -431,7 +462,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * headers by setting client properties.
      */
     public static boolean usesTableHeaderRenderingProperties() {
-        return OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
+        return OsVersion.MAC_OS_X_10_5.isCurrentOrHigher();
     }
 
 
@@ -1482,35 +1513,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
             if (lastSelectedEqCnt == 10) {
                 getLogger().warn("Sticky cursor!");
-                System.out.println("Sticky cursor!");
                 throw new RuntimeException("Sticky cursor!");
-               /*
-                 at com.mucommander.ui.main.table.FileTable.changeSelection(FileTable.java:1432)
-                 at javax.swing.plaf.basic.BasicTableUI$Handler.mouseDragged(BasicTableUI.java:1253)
-                 at javax.swing.plaf.basic.BasicTableUI$MouseInputHandler.mouseDragged(BasicTableUI.java:818)
-                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
-                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
-                 at java.awt.AWTEventMulticaster.mouseDragged(AWTEventMulticaster.java:319)
-                 at java.awt.Component.processMouseMotionEvent(Component.java:6573)
-                 at javax.swing.JComponent.superProcessMouseMotionEvent(JComponent.java:3348)
-                 at javax.swing.Autoscroller.actionPerformed(Autoscroller.java:176)
-                 at javax.swing.Timer.fireActionPerformed(Timer.java:313)
-                 at javax.swing.Timer$DoPostEvent.run(Timer.java:245)
-                 at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
-                 at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:749)
-                 at java.awt.EventQueue.access$500(EventQueue.java:97)
-                 at java.awt.EventQueue$3.run(EventQueue.java:702)
-                 at java.awt.EventQueue$3.run(EventQueue.java:696)
-                 at java.security.AccessController.doPrivileged(Native Method)
-                 at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)
-                 at java.awt.EventQueue.dispatchEvent(EventQueue.java:719)
-                 at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
-                 at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
-                 at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
-                 at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-                 at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
-                 at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
-               */
             }
         } else {
             lastSelectedEqCnt = 0;
