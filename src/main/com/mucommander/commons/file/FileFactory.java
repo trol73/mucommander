@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.icon.FileIconProvider;
@@ -49,18 +48,18 @@ import java.util.Vector;
  * In order to allow the <code>com.mucommander.commons.file</code> API to access new file protocols, developers must create
  * an implementation of {@link AbstractFile} that handles that protocol and register it to <code>FileFactory</code>.
  * This registration requires an implementation of {@link ProtocolProvider}, an instance of which will be passed to
- * {@link #registerProtocol(String,ProtocolProvider) registerProtocol}.
+ * {@link #registerProtocol(String, ProtocolProvider) registerProtocol}.
  *
  * <p>
  * Built-in file protocols are:
  * <ul>
- *   <li>{@link FileProtocols#FILE Local} files.</li>
- *   <li>{@link FileProtocols#FTP FTP}.</li>
- *   <li>{@link FileProtocols#SFTP SFTP}.</li>
- *   <li>{@link FileProtocols#HTTP HTTP}.</li>
- *   <li>{@link FileProtocols#HTTPS HTTPS}.</li>
- *   <li>{@link FileProtocols#NFS NFS}.</li>
- *   <li>{@link FileProtocols#SMB SMB}.</li>
+ * <li>{@link FileProtocols#FILE Local} files.</li>
+ * <li>{@link FileProtocols#FTP FTP}.</li>
+ * <li>{@link FileProtocols#SFTP SFTP}.</li>
+ * <li>{@link FileProtocols#HTTP HTTP}.</li>
+ * <li>{@link FileProtocols#HTTPS HTTPS}.</li>
+ * <li>{@link FileProtocols#NFS NFS}.</li>
+ * <li>{@link FileProtocols#SMB SMB}.</li>
  * </ul>
  *
  * <h3>Archive formats</h3>
@@ -73,15 +72,15 @@ import java.util.Vector;
  * <p>
  * Built-in file file formats are:
  * <ul>
- *   <li><code>ZIP</code>, registered to zip, jar, war, wal, wmz, xpi, ear, odt, ods and odp files.</li>
- *   <li><code>TAR</code>, registered to tar, tar.gz, tgz, tar.bz2 and tbz2 files.</li>
- *   <li><code>GZIP</code>, registered to gz files.</li>
- *   <li><code>BZip2</code>, registered to bz2 files.</li>
- *   <li><code>ISO</code>, registered to iso and nrg files.</li>
- *   <li><code>AR</code>, registered to ar, a and deb files.</li>
- *   <li><code>LST</code>, registered to lst files.</li>
- *   <li><code>RAR</code>, registered to rar files.</li>
- *   <li><code>SEVENZIP</code>, registered to 7z files.</li>
+ * <li><code>ZIP</code>, registered to zip, jar, war, wal, wmz, xpi, ear, odt, ods and odp files.</li>
+ * <li><code>TAR</code>, registered to tar, tar.gz, tgz, tar.bz2 and tbz2 files.</li>
+ * <li><code>GZIP</code>, registered to gz files.</li>
+ * <li><code>BZip2</code>, registered to bz2 files.</li>
+ * <li><code>ISO</code>, registered to iso and nrg files.</li>
+ * <li><code>AR</code>, registered to ar, a and deb files.</li>
+ * <li><code>LST</code>, registered to lst files.</li>
+ * <li><code>RAR</code>, registered to rar files.</li>
+ * <li><code>SEVENZIP</code>, registered to 7z files.</li>
  * </ul>
  *
  * @author Maxence Bernard, Nicolas Rinaudo
@@ -89,30 +88,45 @@ import java.util.Vector;
 public class FileFactory {
     private static Logger logger;
 
-    /** All registered protocol providers. */
+    /**
+     * All registered protocol providers.
+     */
     private static Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
 
-    /** Local file provider to avoid hashtable lookups (faster). */
+    /**
+     * Local file provider to avoid hashtable lookups (faster).
+     */
     private static ProtocolProvider localFileProvider;
 
-    /** Vector of registered ArchiveFormatMapping instances */
+    /**
+     * Vector of registered ArchiveFormatMapping instances
+     */
     private static List<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<>();
 
-    /** Array of registered FileProtocolMapping instances, for quicker access */
+    /**
+     * Array of registered FileProtocolMapping instances, for quicker access
+     */
     private static ArchiveFormatProvider[] archiveFormatProviders;
 
-    /** Contains a FilePool instance for each registered scheme */
+    /**
+     * Contains a FilePool instance for each registered scheme
+     */
     private static final Map<String, FilePool> FILE_POOL_MAP = new HashMap<>();
 
-    /** System temp directory */
+    /**
+     * System temp directory
+     */
     private static final AbstractFile TEMP_DIRECTORY;
 
-    /** Default file icon provider, initialized in static block */
+    /**
+     * Default file icon provider, initialized in static block
+     */
     private static FileIconProvider defaultFileIconProvider;
 
-    /** Default authenticator, used when none is specified */
+    /**
+     * Default authenticator, used when none is specified
+     */
     private static Authenticator defaultAuthenticator;
-
 
     public static void registerProtocolNetworks() {
         ProtocolProvider protocolProvider;
@@ -158,7 +172,6 @@ public class FileFactory {
 //        registerArchiveFormat(new com.mucommander.commons.file.impl.rpm.RpmFormatProvider());
     }
 
-
     public static void registerProtocolOthers() {
         if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             // Hadoop requires Java 1.6
@@ -182,13 +195,12 @@ public class FileFactory {
         TEMP_DIRECTORY = getFile(System.getProperty("java.io.tmpdir"));
     }
 
-
     /**
      * Makes sure no instance of <code>FileFactory</code> is created.
      */
     private FileFactory() {
-    }
 
+    }
 
     /**
      * Registers a new file protocol.
@@ -208,9 +220,9 @@ public class FileFactory {
      * <p>
      * Built-in file protocols are listed in {@link FileProtocols}.
      *
-     * @param  protocol identifier of the protocol to register.
-     * @param  provider object used to create instances of files using the specified protocol.
-     * @return          the previously registered protocol provider if any, <code>null</code> otherwise.
+     * @param protocol identifier of the protocol to register.
+     * @param provider object used to create instances of files using the specified protocol.
+     * @return the previously registered protocol provider if any, <code>null</code> otherwise.
      */
     public static ProtocolProvider registerProtocol(String protocol, ProtocolProvider provider) {
         protocol = protocol.toLowerCase();
@@ -232,8 +244,8 @@ public class FileFactory {
     /**
      * Unregisters the provider associated with the specified protocol.
      *
-     * @param  protocol identifier of the protocol whose provider should be unregistered.
-     * @return          the provider that has been unregistered, or <code>null</code> if none.
+     * @param protocol identifier of the protocol whose provider should be unregistered.
+     * @return the provider that has been unregistered, or <code>null</code> if none.
      */
     public static ProtocolProvider unregisterProtocol(String protocol) {
         protocol = protocol.toLowerCase();
@@ -255,7 +267,7 @@ public class FileFactory {
      * Returns the protocol provider associated with the specified protocol identifier, or <code>null</code> if there
      * is none.
      *
-     * @param  protocol identifier of the protocol whose provider should be retrieved.
+     * @param protocol identifier of the protocol whose provider should be retrieved.
      * @return the protocol provider registered to the specified protocol identifier, or <code>null</code> if none.
      */
     public static ProtocolProvider getProtocolProvider(String protocol) {
@@ -269,7 +281,7 @@ public class FileFactory {
      * @return <code>true</code> if the given protocol has a registered {@link ProtocolProvider}.
      */
     public static boolean isRegisteredProtocol(String protocol) {
-        return getProtocolProvider(protocol)!=null;
+        return getProtocolProvider(protocol) != null;
     }
 
     /**
@@ -353,7 +365,6 @@ public class FileFactory {
         return archiveFormatProvidersV.iterator();
     }
 
-
     /**
      * Returns an instance of AbstractFile for the given absolute path.
      *
@@ -366,7 +377,7 @@ public class FileFactory {
     public static AbstractFile getFile(String absPath) {
         try {
             return getFile(absPath, null);
-        } catch(IOException e) {
+        } catch (IOException e) {
             getLogger().info("Caught an exception", e);
             return null;
         }
@@ -377,16 +388,16 @@ public class FileFactory {
      *
      * <p>This method does not throw any IOException but returns <code>null</code> if the file could not be created.
      *
-     * @param absPath the absolute path to the file
+     * @param absPath        the absolute path to the file
      * @param throwException if set to <code>true</code>, an IOException will be thrown if something went wrong during file creation
      * @return <code>null</code> if the given path is not absolute or incorrect (doesn't correspond to any file)
-     * @throws java.io.IOException  and throwException param was set to <code>true</code>.
-     * @throws AuthException if additional authentication information is required to create the file
+     * @throws java.io.IOException and throwException param was set to <code>true</code>.
+     * @throws AuthException       if additional authentication information is required to create the file
      */
     public static AbstractFile getFile(String absPath, boolean throwException) throws AuthException, IOException {
         try {
             return getFile(absPath, null);
-        } catch(IOException e) {
+        } catch (IOException e) {
             getLogger().info("Caught an exception", e);
 
             if (throwException) {
@@ -398,14 +409,14 @@ public class FileFactory {
 
     /**
      * Returns an instance of AbstractFile for the given absolute path and use the given parent for the new file if
-     * not null. AbstractFile subclasses should as much as possible call this method rather than {@link #getFile(String)} 
+     * not null. AbstractFile subclasses should as much as possible call this method rather than {@link #getFile(String)}
      * because it is more efficient.
      *
      * @param absPath the absolute path to the file
-     * @param parent the returned file's parent
+     * @param parent  the returned file's parent
      * @return an instance of <code>AbstractFile</code> for the specified absolute path.
      * @throws java.io.IOException if something went wrong during file or file url creation.
-     * @throws AuthException if additional authentication information is required to create the file
+     * @throws AuthException       if additional authentication information is required to create the file
      */
     public static AbstractFile getFile(String absPath, AbstractFile parent) throws AuthException, IOException {
         return getFile(FileURL.getFileURL(absPath), parent);
@@ -420,7 +431,7 @@ public class FileFactory {
     public static AbstractFile getFile(FileURL fileURL) {
         try {
             return getFile(fileURL, null);
-        } catch(IOException e) {
+        } catch (IOException e) {
             getLogger().info("Caught an exception", e);
             return null;
         }
@@ -429,7 +440,7 @@ public class FileFactory {
     /**
      * Returns an instance of AbstractFile for the given FileURL instance.
      *
-     * @param fileURL the file URL
+     * @param fileURL        the file URL
      * @param throwException if set to <code>true</code>, an IOException will be thrown if something went wrong during file creation
      * @return the created file
      * @throws java.io.IOException if something went wrong during file creation
@@ -437,7 +448,7 @@ public class FileFactory {
     public static AbstractFile getFile(FileURL fileURL, boolean throwException) throws IOException {
         try {
             return getFile(fileURL, null);
-        } catch(IOException e) {
+        } catch (IOException e) {
             getLogger().info("Caught an exception", e);
 
             if (throwException) {
@@ -452,7 +463,7 @@ public class FileFactory {
      * {@link #getDefaultAuthenticator() default authenticator}.
      *
      * @param fileURL the file URL representing the file to be created
-     * @param parent the parent AbstractFile to use as the created file's parent, can be <code>null</code>
+     * @param parent  the parent AbstractFile to use as the created file's parent, can be <code>null</code>
      * @return an instance of {@link AbstractFile} for the given {@link FileURL}.
      * @throws java.io.IOException if something went wrong during file creation.
      */
@@ -467,11 +478,11 @@ public class FileFactory {
      * <p>Specifying the file parent if an instance already exists allows to recycle the AbstractFile instance
      * instead of creating a new one when the parent file is requested.
      *
-     * @param fileURL the file URL representing the file to be created
+     * @param fileURL       the file URL representing the file to be created
      * @param authenticator used to authenticate the specified location if its protocol
-     * {@link FileURL#getAuthenticationType() is authenticated} and the location contains no credentials already.
-     * If the value is <code>null</code>, no {@link Authenticator} will be used, not even the default one.
-     * @param parent the parent AbstractFile to use as the created file's parent, can be <code>null</code>
+     *                      {@link FileURL#getAuthenticationType() is authenticated} and the location contains no credentials already.
+     *                      If the value is <code>null</code>, no {@link Authenticator} will be used, not even the default one.
+     * @param parent        the parent AbstractFile to use as the created file's parent, can be <code>null</code>
      * @return an instance of {@link AbstractFile} for the given {@link FileURL}.
      * @throws java.io.IOException if something went wrong during file creation.
      */
@@ -521,7 +532,7 @@ public class FileFactory {
                 // protocol file
                 if (currentFile == null || !currentFile.isArchive()) {
                     // create a fresh FileURL with the current path
-                    FileURL clonedURL = (FileURL)fileURL.clone();
+                    FileURL clonedURL = (FileURL) fileURL.clone();
                     clonedURL.setPath(currentPath);
 
                     // Look for a cached file instance before creating a new one
@@ -535,7 +546,7 @@ public class FileFactory {
                     lastFileResolved = true;
                 } else {          // currentFile is an AbstractArchiveFile
                     // Note: wrapArchive() is already called by AbstractArchiveFile#createArchiveEntryFile()
-                    AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                    AbstractFile tempEntryFile = ((AbstractArchiveFile) currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
                     if (tempEntryFile.isArchive()) {
                         currentFile = tempEntryFile;
                         lastFileResolved = true;
@@ -556,7 +567,7 @@ public class FileFactory {
             String currentPath = pt.getCurrentPath();
 
             if (currentFile == null || !currentFile.isArchive()) {
-                FileURL clonedURL = (FileURL)fileURL.clone();
+                FileURL clonedURL = (FileURL) fileURL.clone();
                 clonedURL.setPath(currentPath);
 
                 // Note: no need to look a cached file instance, we have already looked for it at the very beginning.
@@ -564,7 +575,7 @@ public class FileFactory {
                 // Add the final file instance to the cache
                 filePool.put(currentFile.getURL(), currentFile);
             } else {          // currentFile is an AbstractArchiveFile
-                currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                currentFile = ((AbstractArchiveFile) currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
                 // Note: don't cache the entry file
             }
         }
@@ -637,19 +648,19 @@ public class FileFactory {
      * to a registered archive format.
      *
      * @param desiredFilename the desired filename for the temporary file. If a file with this name already exists
-     * in the temp directory, the filename's prefix (name without extension) will be appended an ID, but the filename's
-     * extension will always be preserved.
-     * @param deleteOnExit if <code>true</code>, the temporary file will be deleted upon normal termination of the JVM
+     *                        in the temp directory, the filename's prefix (name without extension) will be appended an ID, but the filename's
+     *                        extension will always be preserved.
+     * @param deleteOnExit    if <code>true</code>, the temporary file will be deleted upon normal termination of the JVM
      * @return the temporary file, may be a LocalFile or an AbstractArchiveFile if the filename's extension corresponds
      * to a registered archive format.
      * @throws IOException if an error occurred while instantiating the temporary file. This should not happen under
-     * normal circumstances.
+     *                     normal circumstances.
      */
     public static AbstractFile getTemporaryFile(String desiredFilename, boolean deleteOnExit) throws IOException {
         if (desiredFilename == null || desiredFilename.isEmpty()) {
             desiredFilename = "temp";
         }
-        
+
         // Attempt to use the desired name
         AbstractFile tempFile = TEMP_DIRECTORY.getDirectChild(desiredFilename);
 
@@ -657,7 +668,7 @@ public class FileFactory {
             tempFile = TEMP_DIRECTORY.getDirectChild(getFilenameVariation(desiredFilename));
 
         if (deleteOnExit)
-            ((java.io.File)tempFile.getUnderlyingFileObject()).deleteOnExit();
+            ((java.io.File) tempFile.getUnderlyingFileObject()).deleteOnExit();
 
         return tempFile;
     }
@@ -670,7 +681,7 @@ public class FileFactory {
      * @return the temporary file, may be a LocalFile or an AbstractArchiveFile if the filename's extension corresponds
      * to a registered archive format.
      * @throws IOException if an error occurred while instantiating the temporary file. This should not happen under
-     * normal circumstances.
+     *                     normal circumstances.
      */
     public static AbstractFile getTemporaryFile(boolean deleteOnExit) throws IOException {
         return getTemporaryFile(null, deleteOnExit);
@@ -703,7 +714,7 @@ public class FileFactory {
      * and returned. If it doesn't, the provided <code>AbstractFile</code> instance is simply returned.
      * <p>
      * Note that return {@link AbstractArchiveFile} instances may not actually be archives according to
-     * {@link AbstractFile#isArchive()}. An {@link AbstractArchiveFile} instance that is not currently an archive 
+     * {@link AbstractFile#isArchive()}. An {@link AbstractArchiveFile} instance that is not currently an archive
      * (either non-existent or a directory) will behave as a regular (non-archive) file. This allows file instances to
      * go from being an archive to not being an archive (and vice-versa), without having to re-resolve the file.
      */
@@ -724,6 +735,14 @@ public class FileFactory {
         return file;
     }
 
+    /**
+     * Same as wrapArchive(AbstractFile) but using the given extension rather than the file's extension.
+     */
+    public static AbstractFile wrapArchive(AbstractFile file, String extension) throws IOException {
+        String filename = "tmp" + extension;
+        ArchiveFormatProvider provider = getArchiveFormatProvider(filename);
+        return provider != null ? provider.getFile(file) : file;
+    }
 
     /**
      * Returns the default {@link com.mucommander.commons.file.icon.FileIconProvider} instance. The default provider class
@@ -743,8 +762,8 @@ public class FileFactory {
      * Sets the default {@link com.mucommander.commons.file.icon.FileIconProvider} implementation.
      *
      * <p>It is noteworthy that the provider returned by this method is used by {@link com.mucommander.commons.file.AbstractFile#getIcon()}
-      * to create and return the icon.
-      *
+     * to create and return the icon.
+     *
      * @param fip the new value for the default FileIconProvider
      */
     public static void setDefaultFileIconProvider(FileIconProvider fip) {
@@ -780,4 +799,5 @@ public class FileFactory {
         }
         return logger;
     }
+
 }
