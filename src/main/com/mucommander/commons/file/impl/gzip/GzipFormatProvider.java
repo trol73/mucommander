@@ -11,24 +11,29 @@ import java.io.IOException;
 /**
  * This class is the provider for the 'Gzip' archive format implemented by {@link GzipArchiveFile}.
  *
- * @see com.mucommander.commons.file.impl.gzip.GzipArchiveFile
  * @author Nicolas Rinaudo, Maxence Bernard
+ * @see com.mucommander.commons.file.impl.gzip.GzipArchiveFile
  */
 public class GzipFormatProvider implements ArchiveFormatProvider {
 
-    /** Static instance of the filename filter that matches archive filenames */
-    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(".gz");
+    public static final String[] EXTENSIONS = {".gz"};
 
+    /**
+     * Static instance of the filename filter that matches archive filenames
+     */
+    private static final ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     //////////////////////////////////////////
     // ArchiveFormatProvider implementation //
     //////////////////////////////////////////
-
+    @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
         return new GzipArchiveFile(file);
     }
 
+    @Override
     public FilenameFilter getFilenameFilter() {
-        return filenameFilter;
+        return FILENAME_FILTER;
     }
+
 }
