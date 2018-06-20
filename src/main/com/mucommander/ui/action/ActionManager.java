@@ -82,7 +82,7 @@ public class ActionManager {
         registerAction(new CloseOtherTabsAction.Descriptor());
         registerAction(new CloseWindowAction.Descriptor());
         registerAction(new CloseTabAction.Descriptor());
-//    	registerAction(new CommandAction.Descriptor());
+//      registerAction(new CommandAction.Descriptor());
         registerAction(new CompareFoldersAction.Descriptor());
         registerAction(new CompareFolderFilesAction.Descriptor());
         registerAction(new ConnectToServerAction.Descriptor());
@@ -102,7 +102,7 @@ public class ActionManager {
         registerAction(new EmailAction.Descriptor());
         registerAction(new EmptyTrashAction.Descriptor());
         registerAction(new ExploreBookmarksAction.Descriptor());
-//    	registerAction(new GarbageCollectAction.Descriptor());
+//      registerAction(new GarbageCollectAction.Descriptor());
         registerAction(new GoBackAction.Descriptor());
         registerAction(new GoForwardAction.Descriptor());
         registerAction(new GoToDocumentationAction.Descriptor());
@@ -145,7 +145,7 @@ public class ActionManager {
         registerAction(new OpenInOtherPanelAction.Descriptor());
         registerAction(new OpenLeftInRightPanelAction.Descriptor());
         registerAction(new OpenRightInLeftPanelAction.Descriptor());
-//    	registerAction(new OpenLocationAction.Descriptor());
+//      registerAction(new OpenLocationAction.Descriptor());
         registerAction(new OpenNativelyAction.Descriptor());
         registerAction(new OpenTrashAction.Descriptor());
         registerAction(new OpenURLInBrowserAction.Descriptor());
@@ -185,6 +185,8 @@ public class ActionManager {
         registerAction(new LeftArrowAction.Descriptor());
         registerAction(new RightArrowAction.Descriptor());
         registerAction(new SetSameFolderAction.Descriptor());
+        registerAction(new SetCurrentFolderToLeftAction.Descriptor());
+        registerAction(new SetCurrentFolderToRightAction.Descriptor());
         registerAction(new SetTabTitleAction.Descriptor());
         registerAction(new ShowAboutAction.Descriptor());
         registerAction(new ShowBookmarksQLAction.Descriptor());
@@ -218,7 +220,7 @@ public class ActionManager {
         registerAction(new SwapFoldersAction.Descriptor());
         registerAction(new SwitchActiveTableAction.Descriptor());
         registerAction(new ToggleAutoSizeAction.Descriptor());
-//    	registerAction(new ToggleColumnAction.Descriptor());
+//      registerAction(new ToggleColumnAction.Descriptor());
         registerAction(new ToggleCommandBarAction.Descriptor());
         registerAction(new ToggleDateColumnAction.Descriptor());
         registerAction(new ToggleExtensionColumnAction.Descriptor());
