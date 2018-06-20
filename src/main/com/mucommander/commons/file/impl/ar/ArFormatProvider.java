@@ -30,26 +30,30 @@ import java.io.IOException;
 /**
  * This class is the provider for the 'Ar' archive format implemented by {@link ArArchiveFile}.
  *
- * @see com.mucommander.commons.file.impl.ar.ArArchiveFile
  * @author Nicolas Rinaudo, Maxence Bernard
+ * @see com.mucommander.commons.file.impl.ar.ArArchiveFile
  */
 public class ArFormatProvider implements ArchiveFormatProvider {
 
-    /** Static instance of the filename filter that matches archive filenames */
-    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(new String[]
-        {".ar", ".a", ".deb", ".udeb"}
-    );
+    public static final String[] EXTENSIONS = {".ar", ".a", ".deb", ".udeb"};
 
+    /**
+     * Static instance of the filename filter that matches archive filenames
+     */
+    private static final ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     //////////////////////////////////////////
     // ArchiveFormatProvider implementation //
     //////////////////////////////////////////
 
+    @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
         return new ArArchiveFile(file);
     }
 
+    @Override
     public FilenameFilter getFilenameFilter() {
-        return filenameFilter;
+        return FILENAME_FILTER;
     }
+
 }
