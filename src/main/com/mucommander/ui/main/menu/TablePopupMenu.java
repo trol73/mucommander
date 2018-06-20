@@ -114,16 +114,16 @@ public class TablePopupMenu extends MuActionsPopupMenu {
             addAction(com.mucommander.ui.action.impl.LocateSymlinkAction.Descriptor.ACTION_ID);
         }
 
-        add(new TMenuSeparator());
-
-        addAction(com.mucommander.ui.action.impl.ShowFilePropertiesAction.Descriptor.ACTION_ID);
-        addAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID);
-        addAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID);
-
         if (new MountedDriveFilter().accept(clickedFile)) {
             add(new TMenuSeparator());
             addAction(com.mucommander.ui.action.impl.EjectDriveAction.Descriptor.ACTION_ID);
         }
+
+        add(new TMenuSeparator());
+
+        addAction(com.mucommander.ui.action.impl.ChangePermissionsAction.Descriptor.ACTION_ID);
+        addAction(com.mucommander.ui.action.impl.ChangeDateAction.Descriptor.ACTION_ID);
+        addAction(com.mucommander.ui.action.impl.ShowFilePropertiesAction.Descriptor.ACTION_ID);
     }
 
 }

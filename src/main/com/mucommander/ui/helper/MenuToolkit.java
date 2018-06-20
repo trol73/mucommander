@@ -18,6 +18,7 @@
 package com.mucommander.ui.helper;
 
 import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.menu.JScrollMenu;
 import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TRadioButtonMenuItem;
 
@@ -56,17 +57,33 @@ public class MenuToolkit {
      */
     public static JMenu addMenu(String title, MnemonicHelper mnemonicHelper, MenuListener menuListener) {
         JMenu menu = new JMenu(title);
+        initMenu(menu, title, mnemonicHelper, menuListener);
+        return menu;
+    }
 
+    /**
+     * Creates and returns a new JScrollMenu.
+     *
+     * @param title          title of the menu
+     * @param mnemonicHelper an optional (can be null) mnemonic helper which will be used along with
+     *                       the title to set a mnemonic to the menu.
+     * @param menuListener   an optional (can be null) menu listener which will listen to the events triggered by the menu.
+     */
+    public static JScrollMenu addScrollableMenu(String title, MnemonicHelper mnemonicHelper, MenuListener menuListener) {
+        final JScrollMenu menu = new JScrollMenu(title);
+        initMenu(menu, title, mnemonicHelper, menuListener);
+        return menu;
+    }
+
+    private static void initMenu(JMenu menu, String title, MnemonicHelper mnemonicHelper, MenuListener menuListener) {
         if (mnemonicHelper != null) {
             char mnemonic = mnemonicHelper.getMnemonic(title);
             if (mnemonic != 0)
                 menu.setMnemonic(mnemonic);
         }
-
-        if (menuListener != null)
+        if (menuListener != null) {
             menu.addMenuListener(menuListener);
-
-        return menu;
+        }
     }
 
     /**
