@@ -101,6 +101,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private JCheckBoxMenuItem toggleTreeItem;
     private JCheckBoxMenuItem toggleSinglePanel;
     private OpenWithMenu openWithMenu;
+    private OpenAsMenu openAsMenu;
+    private JMenu fileMenu;
 
     // Go menu
     private JMenu goMenu;
@@ -117,20 +119,22 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     private JRadioButtonMenuItem splitHorizontallyItem;
     private JRadioButtonMenuItem splitVerticallyItem;
 
-    /** Maps window menu items onto weakly-referenced frames */
+    /**
+     * Maps window menu items onto weakly-referenced frames
+     */
     private Map<JMenuItem, Frame> windowMenuFrames;
 
     private static final String RECALL_WINDOW_ACTION_IDS[] = {
-        RecallWindow1Action.Descriptor.ACTION_ID,
-        RecallWindow2Action.Descriptor.ACTION_ID,
-        RecallWindow3Action.Descriptor.ACTION_ID,
-        RecallWindow4Action.Descriptor.ACTION_ID,
-        RecallWindow5Action.Descriptor.ACTION_ID,
-        RecallWindow6Action.Descriptor.ACTION_ID,
-        RecallWindow7Action.Descriptor.ACTION_ID,
-        RecallWindow8Action.Descriptor.ACTION_ID,
-        RecallWindow9Action.Descriptor.ACTION_ID,
-        RecallWindow10Action.Descriptor.ACTION_ID
+            RecallWindow1Action.Descriptor.ACTION_ID,
+            RecallWindow2Action.Descriptor.ACTION_ID,
+            RecallWindow3Action.Descriptor.ACTION_ID,
+            RecallWindow4Action.Descriptor.ACTION_ID,
+            RecallWindow5Action.Descriptor.ACTION_ID,
+            RecallWindow6Action.Descriptor.ACTION_ID,
+            RecallWindow7Action.Descriptor.ACTION_ID,
+            RecallWindow8Action.Descriptor.ACTION_ID,
+            RecallWindow9Action.Descriptor.ACTION_ID,
+            RecallWindow10Action.Descriptor.ACTION_ID
     };
 
     private static final ImageIcon ASCENDING_ICON = IconManager.getIcon(IconManager.IconSet.ACTION, "SortAsc.png");
@@ -151,7 +155,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MnemonicHelper menuItemMnemonicHelper2 = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_menu"), menuMnemonicHelper, this);
+        fileMenu = MenuToolkit.addMenu(Translator.get("file_menu"), menuMnemonicHelper, this);
+        fileMenu.addMenuListener(this);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(NewWindowAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(AddTabAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
@@ -160,6 +165,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(OpenNativelyAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         fileMenu.add(openWithMenu = new OpenWithMenu(mainFrame));
         openWithMenu.addMenuListener(this);
+        fileMenu.add(openAsMenu = new OpenAsMenu(mainFrame));
+        openAsMenu.addMenuListener(this);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(OpenInNewTabAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(OpenInOtherPanelAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(fileMenu, ActionManager.getActionInstance(OpenInBothPanelsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
@@ -369,7 +376,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         bookmarksActionsMenu.add(bookmarksMenu);
 
         add(bookmarksActionsMenu);
-        
+
         // Window menu
         menuItemMnemonicHelper.clear();
 
@@ -423,16 +430,16 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             helpMenu.add(new TMenuSeparator());
             MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(CheckForUpdatesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         }
-		
+
         // Under Mac OS X, 'About' already appears in the application (muCommander) menu, do not display it again
         if (!OsFamily.MAC_OS_X.isCurrent()) {
             helpMenu.add(new TMenuSeparator());
             MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(ShowAboutAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         }
-		
+
         add(helpMenu);
     }
-	
+
 
     ///////////////////////////
     // ActionListener method //
@@ -574,14 +581,14 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
                 } else {    // Else use the generic RecallWindowAction
                     Map<String, Object> actionProps = new HashMap<>();
                     // Specify the window number using the dedicated property
-                    actionProps.put(RecallWindowAction.WINDOW_NUMBER_PROPERTY_KEY, ""+(i+1));
+                    actionProps.put(RecallWindowAction.WINDOW_NUMBER_PROPERTY_KEY, "" + (i + 1));
                     recallWindowAction = ActionManager.getActionInstance(new ActionParameters(RecallWindowAction.Descriptor.ACTION_ID, actionProps), this.mainFrame);
                 }
 
                 item.setAction(recallWindowAction);
 
                 // Replace the action's label and use the MainFrame's current folder path instead
-                item.setText((i+1)+" "+mainFrame.getActiveTable().getFolderPanel().getCurrentFolder().getAbsolutePath());
+                item.setText((i + 1) + " " + mainFrame.getActiveTable().getFolderPanel().getCurrentFolder().getAbsolutePath());
 
                 // Use the action's label as a tooltip
                 item.setToolTipText(recallWindowAction.getLabel());
@@ -637,6 +644,9 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             tableModeItems[mode].setSelected(true);
         } else if (source == openWithMenu) {
             openWithMenu.populate(mainFrame.getActiveTable().getSelectedFile());
+        } else if (source == fileMenu) {
+            final AbstractFile selectedFile = mainFrame.getActiveTable().getSelectedFile();
+            openAsMenu.setEnabled(selectedFile != null && !selectedFile.isDirectory());
         }
     }
 
@@ -667,7 +677,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         public void actionPerformed(ActionEvent actionEvent) {
             try {
                 ThemeManager.setCurrentTheme(theme);
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 InformationDialog.showErrorDialog(mainFrame, Translator.get("theme_could_not_be_loaded"));
             }
         }

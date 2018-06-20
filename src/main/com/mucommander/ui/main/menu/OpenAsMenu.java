@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of muCommander, http://www.mucommander.com
  * Copyright (C) 2002-2016 Maxence Bernard
  * <p>
@@ -69,9 +69,9 @@ public class OpenAsMenu extends JMenu {
     /**
      * Creates a new Open As menu.
      */
-    public OpenAsMenu(MainFrame frame) {
-        super(Translator.get("file_menu.open_as") + "...");
-        this.mainFrame = frame;
+    OpenAsMenu(MainFrame mainFrame) {
+        super(Translator.get("file_menu.open_as"));
+        this.mainFrame = mainFrame;
         populate();
     }
 
