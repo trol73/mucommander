@@ -13,7 +13,12 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class ArjFormatProvider implements ArchiveFormatProvider {
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(new String[] { ".arj" });
+    private static final String[] EXTENSIONS =  { ".arj" };
+
+    /**
+     * Static instance of the filename filter that matches archive filenames
+     */
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     private final static byte[] SIGNATURE = { 0x60, (byte) 0xEA };
 
@@ -25,6 +30,11 @@ public class ArjFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }

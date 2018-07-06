@@ -23,10 +23,14 @@ import com.mucommander.commons.file.WrapperArchiveEntryIterator;
  */
 public class RarArchiveFile extends AbstractROArchiveFile {
 
-	/** The RarFile object that actually reads the entries in the Rar file */
+	/**
+	 * The RarFile object that actually reads the entries in the Rar file
+	 */
 	private RarFile rarFile;
 	
-	/** The date at which the current RarFile object was created */
+	/**
+     * The date at which the current RarFile object was created
+     */
 	private long lastRarFileDate;	
 	
     

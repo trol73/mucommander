@@ -15,20 +15,25 @@ import java.io.IOException;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class GzipFormatProvider implements ArchiveFormatProvider {
+    private static final String[] EXTENSIONS = {".gz"};
 
-    /** Static instance of the filename filter that matches archive filenames */
-    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(".gz");
+    /**
+     * Static instance of the filename filter that matches archive filenames
+     */
+    private static final ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
-
-    //////////////////////////////////////////
-    // ArchiveFormatProvider implementation //
-    //////////////////////////////////////////
-
+    @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
         return new GzipArchiveFile(file);
     }
 
+    @Override
     public FilenameFilter getFilenameFilter() {
-        return filenameFilter;
+        return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 }

@@ -13,8 +13,9 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class UdfFormatProvider implements ArchiveFormatProvider {
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(
-            new String[] { ".udf" });
+    private static final String[] EXTENSIONS = { ".udf" };
+
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     private final static byte[] SIGNATURE = {};
 
@@ -26,6 +27,11 @@ public class UdfFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }

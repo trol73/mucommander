@@ -52,4 +52,6 @@ public interface ArchiveFormatProvider {
      * @return the <code>FilenameFilter</code> that matches filenames to be associated with this archive format
      */
     FilenameFilter getFilenameFilter();
+
+    String[] getFileExtensions();
 }

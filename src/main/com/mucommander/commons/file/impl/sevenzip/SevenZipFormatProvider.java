@@ -15,10 +15,12 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
  * @author Arik Hadas
  */
 public class SevenZipFormatProvider implements ArchiveFormatProvider {
-	/** Static instance of the filename filter that matches archive filenames */
-    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(new String[]
-        {".7z", ".cb7"}
-    );
+
+    private static final String[] EXTENSIONS = {".7z", ".cb7"};
+	/**
+     * Static instance of the filename filter that matches archive filenames
+     * */
+    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(EXTENSIONS);
 
     private static final byte[] SIGNATURE = { 0x37, 0x7A, (byte) 0xBC, (byte) 0xAF, 0x27, 0x1C };
 
@@ -32,5 +34,10 @@ public class SevenZipFormatProvider implements ArchiveFormatProvider {
 
     public FilenameFilter getFilenameFilter() {
         return filenameFilter;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 }

@@ -12,8 +12,9 @@ import com.mucommander.commons.file.impl.SevenZipJBindingROArchiveFile;
 import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class CabFormatProvider implements ArchiveFormatProvider {
+    private static final String[] EXTENSIONS = { ".cab" };
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(new String[] { ".cab" });
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     private final static byte[] SIGNATURE = { 0x4D, 0x53, 0x43, 0x46 };
 
@@ -25,6 +26,11 @@ public class CabFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }
