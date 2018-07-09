@@ -68,7 +68,7 @@ public class TCheckBoxMenuItem extends JCheckBoxMenuItem {
 
 
     private void init() {
-        if (OsFamily.getCurrent() == OsFamily.LINUX) {
+        if (OsFamily.LINUX.isCurrent()) {
             setOpaque(true);
             setForeground(Color.BLACK);
         }

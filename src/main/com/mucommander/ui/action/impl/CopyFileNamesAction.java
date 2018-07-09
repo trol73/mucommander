@@ -77,6 +77,7 @@ public class CopyFileNamesAction extends SelectedFilesAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
+
             if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
             } else {

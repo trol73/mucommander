@@ -55,7 +55,7 @@ public class EjectDriveAction extends SelectedFilesAction {
     }
 
     public static void eject(MainFrame mainFrame, AbstractFile file) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             new EjectWorker(mainFrame, file.getName()).execute();
         }
     }
@@ -71,11 +71,17 @@ public class EjectDriveAction extends SelectedFilesAction {
 
         public String getId() { return ACTION_ID; }
 
-        public ActionCategory getCategory() { return ActionCategory.FILES; }
+        public ActionCategory getCategory() {
+            return ActionCategory.FILES;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return null; }
+        public KeyStroke getDefaultKeyStroke() {
+            return null;
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new EjectDriveAction(mainFrame, properties);

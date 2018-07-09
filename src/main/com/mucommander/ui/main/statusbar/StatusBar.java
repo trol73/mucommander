@@ -216,7 +216,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         // Show/hide this status bar based on user preferences
         // Note: setVisible has to be called even with true for the auto-update thread to be initialized
-        setVisible(MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE));
+        setVisible(shouldBeVisible());
         
         // Catch location events to update status bar info when folder is changed
         FolderPanel leftPanel = mainFrame.getLeftPanel();
@@ -248,6 +248,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         volumeSpaceLabel.setFont(ThemeManager.getCurrentFont(Theme.STATUS_BAR_FONT));
         volumeSpaceLabel.setForeground(ThemeManager.getCurrentColor(Theme.STATUS_BAR_FOREGROUND_COLOR));
         ThemeManager.addCurrentThemeListener(this);
+    }
+
+    private static boolean shouldBeVisible() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE);
     }
 
 
@@ -304,69 +308,73 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             }
 	
             if (selectedFile != null) {
-                filesInfo.append(" - ");
-                filesInfo.append("<b>");
-                filesInfo.append(selectedFile.getName());
-                filesInfo.append("</b>");
-                if (selectedFile.isSymlink()) {
-                    String target = getFileLink(selectedFile);
-                    if (target != null) {
-                        filesInfo.append(" -> ");
-                        filesInfo.append(target);
-                    }
-                }
-                boolean local = selectedFile.getAncestor() instanceof LocalFile;
-                if (selectedFile.isDirectory()) {
-                    if (local) {
-                        filesInfo.append(" (");
-                        try {
-                            filesInfo.append(selectedFile.ls().length);
-                        } catch (IOException ignored) {}
-                        filesInfo.append(' ');
-                        filesInfo.append(Translator.get("files"));
-                        filesInfo.append(')');
-                    }
-                } else {
-                    filesInfo.append(" (");
-                    filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
-
-                    if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
-                        // Show image size
-                        try (InputStream is = selectedFile.getInputStream()) {
-                            ImageSizeDetector detector = new ImageSizeDetector(is);
-                            if (detector.getType() != null) {
-                                filesInfo.append(", ");
-                                filesInfo.append(detector.getWidth());
-                                filesInfo.append(" x ");
-                                filesInfo.append(detector.getHeight());
-                            }
-                        } catch (FileNotFoundException ignore) {
-                            // etc. if file was moved
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (JAVA_CLASS_FILTER.accept(selectedFile)) {
-                        try (InputStream is = selectedFile.getPushBackInputStream(16)) {
-                            JavaClassVersionDetector detector = new JavaClassVersionDetector(is);
-
-                            if (detector.getVersion() != JavaClassVersionDetector.Version.UNKNOWN) {
-                                filesInfo.append(", Java v").append(detector.getVersion().name);
-                            } else if (detector.getVersion() != JavaClassVersionDetector.Version.WRONG_FORMAT) {
-                                filesInfo.append(", Java major = ").append(detector.getMajor()).append(", minor = ").append(detector.getMinor());
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    filesInfo.append(")");
-
-                }
+                appendSelectedFileInfo(filesInfo, selectedFile);
             }
         }		
 
         // Update label
         setStatusInfo("<html>" + filesInfo.toString());
+    }
+
+    private void appendSelectedFileInfo(StringBuilder filesInfo, AbstractFile selectedFile) {
+        filesInfo.append(" - ");
+        filesInfo.append("<b>");
+        filesInfo.append(selectedFile.getName());
+        filesInfo.append("</b>");
+        if (selectedFile.isSymlink()) {
+            String target = getFileLink(selectedFile);
+            if (target != null) {
+                filesInfo.append(" -> ");
+                filesInfo.append(target);
+            }
+        }
+        boolean local = selectedFile.getAncestor() instanceof LocalFile;
+        if (selectedFile.isDirectory()) {
+            if (local) {
+                filesInfo.append(" (");
+                try {
+                    filesInfo.append(selectedFile.ls().length);
+                } catch (IOException ignored) {}
+                filesInfo.append(' ');
+                filesInfo.append(Translator.get("files"));
+                filesInfo.append(')');
+            }
+        } else {
+            filesInfo.append(" (");
+            filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
+
+            if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
+                // Show image size
+                try (InputStream is = selectedFile.getInputStream()) {
+                    ImageSizeDetector detector = new ImageSizeDetector(is);
+                    if (detector.getType() != null) {
+                        filesInfo.append(", ");
+                        filesInfo.append(detector.getWidth());
+                        filesInfo.append(" x ");
+                        filesInfo.append(detector.getHeight());
+                    }
+                } catch (FileNotFoundException ignore) {
+                    // etc. if file was moved
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (JAVA_CLASS_FILTER.accept(selectedFile)) {
+                try (InputStream is = selectedFile.getPushBackInputStream(16)) {
+                    JavaClassVersionDetector detector = new JavaClassVersionDetector(is);
+
+                    if (detector.getVersion() != JavaClassVersionDetector.Version.UNKNOWN) {
+                        filesInfo.append(", Java v").append(detector.getVersion().name);
+                    } else if (detector.getVersion() != JavaClassVersionDetector.Version.WRONG_FORMAT) {
+                        filesInfo.append(", Java major = ").append(detector.getMajor()).append(", minor = ").append(detector.getMinor());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            filesInfo.append(")");
+
+        }
     }
 
 

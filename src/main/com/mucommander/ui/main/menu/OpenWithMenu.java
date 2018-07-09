@@ -45,7 +45,7 @@ public class OpenWithMenu extends JMenu {
     /**
      * Creates a new Open With menu.
      */
-    public OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
+    OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
         super(Translator.get("file_menu.open_with") + "...");
         this.mainFrame = frame;
         populate(clickedFile);
@@ -54,7 +54,7 @@ public class OpenWithMenu extends JMenu {
     /**
      * Refreshes the content of the menu.
      */
-    private synchronized void populate(AbstractFile clickedFile) {
+    public void populate(AbstractFile clickedFile) {
         for (Command command : CommandManager.commands()) {
             if (command.getType() != CommandType.NORMAL_COMMAND) {
                 continue;

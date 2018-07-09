@@ -71,7 +71,7 @@ public abstract class AsyncPanel extends JPanel {
             add(targetComponent, BorderLayout.CENTER);
             updateLayout();
             // Force update viewer/editor window on Windows 8.1
-            if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            if (OsFamily.WINDOWS.isCurrent()) {
                 setSize(getSize());
             }
         }

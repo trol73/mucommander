@@ -191,7 +191,7 @@ public class ThemeData implements ThemeId {
             @Override
             public Font getFont(ThemeData data) {
                 Font font = super.getFont(data);
-                if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                if (OsFamily.MAC_OS_X.isCurrent()) {
                     return new Font("Menlo", font.getStyle(), font.getSize());
                 }
                 return font;

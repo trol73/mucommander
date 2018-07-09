@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import static com.mucommander.ui.theme.ThemeManager.*;
 /**
  * This label displays the amount of free and/or total space on a volume.
  */
@@ -50,12 +51,12 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
     VolumeSpaceLabel() {
         super("");
         setHorizontalAlignment(CENTER);
-        backgroundColor = ThemeManager.getCurrentColor(Theme.STATUS_BAR_BACKGROUND_COLOR);
-        //            borderColor     = ThemeManager.getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR);
-        okColor         = ThemeManager.getCurrentColor(Theme.STATUS_BAR_OK_COLOR);
-        warningColor    = ThemeManager.getCurrentColor(Theme.STATUS_BAR_WARNING_COLOR);
-        criticalColor   = ThemeManager.getCurrentColor(Theme.STATUS_BAR_CRITICAL_COLOR);
-        setBorder(new MutableLineBorder(ThemeManager.getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR)));
+        backgroundColor = getCurrentColor(Theme.STATUS_BAR_BACKGROUND_COLOR);
+        //borderColor     = getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR);
+        okColor = getCurrentColor(Theme.STATUS_BAR_OK_COLOR);
+        warningColor = getCurrentColor(Theme.STATUS_BAR_WARNING_COLOR);
+        criticalColor = getCurrentColor(Theme.STATUS_BAR_CRITICAL_COLOR);
+        setBorder(new MutableLineBorder(getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR)));
         ThemeManager.addCurrentThemeListener(this);
     }
 
@@ -72,6 +73,18 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
         this.totalSpace = totalSpace;
 
         // Set new label's text
+        setText(getVolumeInfo());
+
+        // Set tooltip
+        if (freeSpace < 0 || totalSpace < 0) {
+            setToolTipText(null);       // Removes any previous tooltip
+        } else {
+            setToolTipText((int) (100 * freeSpace / (float) totalSpace) + "%");
+        }
+        repaint();
+    }
+
+    private String getVolumeInfo() {
         String volumeInfo;
         if (freeSpace >= 0) {
             volumeInfo = SizeFormat.format(freeSpace, VOLUME_INFO_SIZE_FORMAT);
@@ -85,15 +98,7 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
         } else {
             volumeInfo = "";
         }
-        setText(volumeInfo);
-
-        // Set tooltip
-        if (freeSpace < 0 || totalSpace < 0) {
-            setToolTipText(null);       // Removes any previous tooltip
-        } else {
-            setToolTipText((int) (100 * freeSpace / (float) totalSpace) + "%");
-        }
-        repaint();
+        return volumeInfo;
     }
 
 

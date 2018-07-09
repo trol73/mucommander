@@ -866,7 +866,7 @@ public class FileURL implements Cloneable {
      * @return <code>true</code> if the path of this URL and the given URL are equal
      */
     public boolean pathEquals(FileURL url) {
-    	boolean isCaseSensitiveOS = !(OsFamily.getCurrent().equals(OsFamily.WINDOWS) || OsFamily.getCurrent().equals(OsFamily.OS_2));
+    	boolean isCaseSensitiveOS = !(OsFamily.WINDOWS.isCurrent() || OsFamily.OS_2.isCurrent());
     	
         String path1 = isCaseSensitiveOS ? this.getPath() : this.getPath().toLowerCase();
         String path2 = isCaseSensitiveOS ? url.getPath() : url.getPath().toLowerCase();
@@ -1014,8 +1014,9 @@ public class FileURL implements Cloneable {
      * @return true if both FileURL instances are equal
      */
     public boolean equals(Object o, boolean compareCredentials, boolean compareProperties) {
-        if (o == null || !(o instanceof FileURL))
+        if (!(o instanceof FileURL)) {
             return false;
+        }
 
         FileURL url = (FileURL)o;
 

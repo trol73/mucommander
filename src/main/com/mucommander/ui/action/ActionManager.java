@@ -132,6 +132,7 @@ public class ActionManager {
     	registerAction(new NewWindowAction.Descriptor());
     	registerAction(new NextTabAction.Descriptor());
     	registerAction(new OpenAction.Descriptor());
+		registerAction(new OpenAsAction.Descriptor());
     	registerAction(new OpenInBothPanelsAction.Descriptor());
     	registerAction(new OpenInNewTabAction.Descriptor());
     	registerAction(new OpenInOtherPanelAction.Descriptor());

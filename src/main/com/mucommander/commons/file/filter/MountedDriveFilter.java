@@ -28,7 +28,7 @@ import com.mucommander.commons.runtime.OsFamily;
 public class MountedDriveFilter extends AbstractFileFilter {
     @Override
     public boolean accept(AbstractFile file) {
-        if (file == null || OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+        if (file == null || !OsFamily.MAC_OS_X.isCurrent()) {
             return false;
         }
         for (AbstractFile f : LocalFile.getVolumes() ) {

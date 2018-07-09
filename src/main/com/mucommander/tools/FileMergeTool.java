@@ -27,7 +27,7 @@ public class FileMergeTool extends ExternalTool {
 
     @Override
     public boolean isActive() {
-        return OsFamily.getCurrent() == OsFamily.MAC_OS_X;
+        return OsFamily.MAC_OS_X.isCurrent();
     }
 
     @Override

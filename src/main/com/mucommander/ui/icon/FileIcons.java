@@ -64,7 +64,7 @@ public class FileIcons {
     public final static String USE_SYSTEM_ICONS_ALWAYS = "always";
 
     /** Default policy for system icons */
-    private final static String DEFAULT_SYSTEM_ICONS_POLICY = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? USE_SYSTEM_ICONS_ALWAYS : USE_SYSTEM_ICONS_APPLICATIONS;
+    private final static String DEFAULT_SYSTEM_ICONS_POLICY = OsFamily.MAC_OS_X.isCurrent() ? USE_SYSTEM_ICONS_ALWAYS : USE_SYSTEM_ICONS_APPLICATIONS;
 
     /** Default icon scale factor (no rescaling) */
     private final static float DEFAULT_SCALE_FACTOR = 1.0f;

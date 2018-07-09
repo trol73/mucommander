@@ -65,11 +65,7 @@ public class SelectNextBlockAction extends SelectForwardAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, CTRL_OR_META_DOWN_MASK);
         }
 
         public KeyStroke getDefaultAltKeyStroke() {

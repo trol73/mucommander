@@ -54,7 +54,7 @@ public class OSXIntegration {
         // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
         // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
         // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
-        if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
+        if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower() || OsVersion.MAC_OS_X_10_13.isCurrentOrHigher()) {
             // Turn on/off brush metal look (default is off because still buggy when scrolling and panning dialog windows) :
             //  "Allows you to display your main windows with the 'textured' Aqua window appearance.
             //   This property should be applied only to the primary application window,

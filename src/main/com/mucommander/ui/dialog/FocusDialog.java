@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.utils.text.Translator;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ import com.mucommander.ui.helper.FocusRequester;
  * </ul>
  * @author Maxence Bernard
  */
-public class FocusDialog extends JDialog implements WindowListener {
+public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FocusDialog.class);
     private static final EmptyBorder BORDER = new EmptyBorder(6, 8, 6, 8);
 	
@@ -136,6 +137,8 @@ public class FocusDialog extends JDialog implements WindowListener {
     private void init(Component locationRelativeComp) {
         this.locationRelativeComp = locationRelativeComp;
         setLocationRelativeTo(locationRelativeComp);
+
+        initLookAndFeel();
 
         JPanel contentPane = (JPanel)getContentPane();
         contentPane.setBorder(BORDER);

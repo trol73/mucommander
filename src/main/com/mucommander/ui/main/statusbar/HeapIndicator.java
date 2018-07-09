@@ -20,9 +20,8 @@ package com.mucommander.ui.main.statusbar;
 
 import com.mucommander.cache.TextHistory;
 import com.mucommander.cache.WindowsStorage;
-import com.mucommander.ui.theme.ColorChangedEvent;
-import com.mucommander.ui.theme.FontChangedEvent;
-import com.mucommander.ui.theme.ThemeListener;
+import com.mucommander.ui.border.MutableLineBorder;
+import com.mucommander.ui.theme.*;
 import com.mucommander.utils.FileIconsCache;
 
 import javax.swing.JLabel;
@@ -46,17 +45,18 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
 
     private long usedMem;
     private long totalMem;
-    private final Color colorBorder = new Color(0x555555);
-    private final Color colorForeground = new Color(0x8888ff);
+    private static final Color COLOR_BORDER = new Color(0x555555);
+    private static final Color COLOR_FOREGROUND = new Color(0x8888ff);
 
     HeapIndicator() {
         super("");
         setHorizontalAlignment(CENTER);
         setRefreshInterval(1000*10);
         update();
-        setMinimumSize(new Dimension(80, 0));
-        setMaximumSize(new Dimension(80, 100));
+//        setMinimumSize(new Dimension(80, 0));
+//        setMaximumSize(new Dimension(80, 100));
         addMouseListener(this);
+        setBorder(new MutableLineBorder(ThemeManager.getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR)));
     }
 
     @Override
@@ -70,9 +70,9 @@ public class HeapIndicator extends JLabel implements ActionListener, ThemeListen
         int width = getWidth();
         int height = getHeight();
 
-        g.setColor(colorBorder);
+        g.setColor(COLOR_BORDER);
         g.drawRect(0, 0, width-1, height-1);
-        g.setColor(colorForeground);
+        g.setColor(COLOR_FOREGROUND);
         int x2 = (int)(width*((float)usedMem/(float)totalMem));
         g.fillRect(1, 1, x2-1, height-2);
 

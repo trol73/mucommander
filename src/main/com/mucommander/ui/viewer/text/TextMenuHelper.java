@@ -133,11 +133,7 @@ public class TextMenuHelper {
     }
 
     private int getCtrlOrMetaMask() {
-        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-            return KeyEvent.CTRL_MASK;
-        } else {
-            return KeyEvent.META_MASK;
-        }
+        return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
     }
 
 

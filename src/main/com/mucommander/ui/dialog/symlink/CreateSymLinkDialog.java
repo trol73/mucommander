@@ -54,14 +54,15 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
      */
     private static final Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 320);
 
+    private static final int RETRY_ACTION = 1;
+    private static final int CANCEL_ACTION = 0;
+
     private final Frame mainFrame;
     private final FilePathField edtTarget;
     private final JTextField edtName;
     private final JButton btnOk;
+    private final JButton btnCancel;
 
-
-    private static final int RETRY_ACTION = 1;
-    private static final int CANCEL_ACTION = 0;
 
 
 
@@ -74,8 +75,6 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     public CreateSymLinkDialog(Frame mainFrame, AbstractFile linkPath, AbstractFile targetFile) {
         super(mainFrame, i18n("symboliclinkeditor.create"), null);
         this.mainFrame = mainFrame;
-        AbstractFile linkPath1 = linkPath;
-        AbstractFile targetFile1 = targetFile;
 
         Container contentPane = getContentPane();
 
@@ -93,7 +92,7 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
         contentPane.add(yPanel, BorderLayout.NORTH);
 
         btnOk = new JButton(i18n("ok"));
-        JButton btnCancel = new JButton(i18n("cancel"));
+        btnCancel = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
@@ -110,7 +109,9 @@ public class CreateSymLinkDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOk) {
             new Thread(this::execute).start();
-        } // btnOk
+        } else if (e.getSource() == btnCancel) {
+            dispose();
+        }
     }
 
 

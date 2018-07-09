@@ -156,7 +156,7 @@ public class MakeDirectoryFileJob extends FileJob {
                 boolean needAdminPermissions = e instanceof FileAccessDeniedException;
                 int action;
                 if (needAdminPermissions && !mkfileMode) {
-                    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                    if (OsFamily.MAC_OS_X.isCurrent()) {
                         if (!mkfileMode) {
                             tryMkDirAsAdministrator(file.getAbsolutePath(), null);
                         }
@@ -196,7 +196,7 @@ public class MakeDirectoryFileJob extends FileJob {
     }
 
     private void tryMkDirAsAdministrator(String path, String password) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             AppleScript.execute("do shell script \"mkdir -p + '" + path + "' \" with administrator privileges", new StringBuilder());
         }
     }

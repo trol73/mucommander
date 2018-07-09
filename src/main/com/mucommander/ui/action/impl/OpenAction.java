@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
@@ -88,60 +89,80 @@ public class OpenAction extends MuAction {
      * @param destination if <code>file</code> is browsable, folder panel in which to open the file.
      */
     protected void open(final AbstractFile file, FolderPanel destination) {
-    	AbstractFile resolvedFile;
-    	if (file.isSymlink()) {
-    		resolvedFile = resolveSymlink(file);
-
-    		if (resolvedFile == null) {
-    			InformationDialog.showErrorDialog(mainFrame, Translator.get("cannot_open_cyclic_symlink"));
-    			return;
-    		}
-    	} else {
-			resolvedFile = file;
-		}
+    	AbstractFile resolvedFile = resolveIfSymlink(file);
+    	if (resolvedFile == null) {
+    	    return;
+        }
 
         // Opens browsable files in the destination FolderPanel.
         if (resolvedFile.isBrowsable()) {
-        	resolvedFile = MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS) ? resolvedFile : file;
-
-        	FileTableTabs tabs = destination.getTabs();
-
-			if (BookmarkManager.isBookmark(resolvedFile)) {
-				String bookmarkLocation = BookmarkManager.getBookmark(resolvedFile.getName()).getLocation();
-				try {
-					FileURL bookmarkURL = FileURL.getFileURL(bookmarkLocation);
-					if (tabs.getCurrentTab().isLocked()) {
-						tabs.add(bookmarkURL);
-					} else {
-						destination.tryChangeCurrentFolder(bookmarkURL);
-					}
-				} catch (MalformedURLException ignore) {}
-			} else {
-				if (tabs.getCurrentTab().isLocked()) {
-					tabs.add(resolvedFile);
-				} else {
-					destination.tryChangeCurrentFolder(resolvedFile);
-				}
+			resolvedFile = cdFollowsSymlinks() ? resolvedFile : file;
+    		openBrowsable(resolvedFile, destination);
+        }
+		// Opens local files using their native associations.
+		else if (isLocalFile(resolvedFile)) {
+			try {
+				DesktopManager.open(resolvedFile);
+				RecentExecutedFilesQL.addFile(resolvedFile);
+			} catch (IOException e) {
+				InformationDialog.showErrorDialog(mainFrame);
 			}
-        }
-
-        // Opens local files using their native associations.
-        else if (resolvedFile.getURL().getScheme().equals(FileProtocols.FILE) && resolvedFile.hasAncestor(LocalFile.class)) {
-            try {
-            	DesktopManager.open(resolvedFile);
-            	RecentExecutedFilesQL.addFile(resolvedFile);
-    		} catch (IOException e) {
-                InformationDialog.showErrorDialog(mainFrame);
-            }
-        }
-
-        // Copies non-local file in a temporary local file and opens them using their native association.
+		}
+		// Copies non-local file in a temporary local file and opens them using their native association.
         else {
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
             TempExecJob job = new TempExecJob(progressDialog, mainFrame, resolvedFile);
             progressDialog.start(job);
         }
     }
+
+    AbstractFile resolveIfSymlink(AbstractFile file) {
+        if (!file.isSymlink()) {
+            return file;
+        }
+        AbstractFile resolvedFile = resolveSymlink(file);
+
+        if (resolvedFile == null) {
+            InformationDialog.showErrorDialog(mainFrame, Translator.get("cannot_open_cyclic_symlink"));
+            return null;
+        }
+        return resolvedFile;
+    }
+
+    private void openBrowsable(AbstractFile file, FolderPanel destination) {
+		FileTableTabs tabs = destination.getTabs();
+
+		if (BookmarkManager.isBookmark(file)) {
+			Bookmark bookmark = BookmarkManager.getBookmark(file.getName());
+			if (bookmark == null) {
+				return;
+			}
+			String bookmarkLocation = bookmark.getLocation();
+			try {
+				FileURL bookmarkURL = FileURL.getFileURL(bookmarkLocation);
+				if (tabs.getCurrentTab().isLocked()) {
+					tabs.add(bookmarkURL);
+				} else {
+					destination.tryChangeCurrentFolder(bookmarkURL);
+				}
+			} catch (MalformedURLException ignore) {}
+		} else {
+			if (tabs.getCurrentTab().isLocked()) {
+				tabs.add(file);
+			} else {
+				destination.tryChangeCurrentFolder(file);
+			}
+		}
+	}
+
+	private static boolean isLocalFile(AbstractFile file) {
+        return file.getURL().getScheme().equals(FileProtocols.FILE) && file.hasAncestor(LocalFile.class);
+    }
+
+
+    private static boolean cdFollowsSymlinks() {
+		return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
+	}
 
     private AbstractFile resolveSymlink(AbstractFile symlink) {
     	return resolveSymlink(symlink, new HashSet<>());
@@ -163,12 +184,9 @@ public class OpenAction extends MuAction {
 		// Retrieves the currently selected file, aborts if none.
 		// Note: a CachedFile instance is retrieved to avoid blocking the event thread.
 		AbstractFile file  = mainFrame.getActiveTable().getSelectedFile(true, true);
-        if (file == null) {
-			return;
+        if (file != null) {
+            open(file, mainFrame.getActivePanel());
 		}
-
-        // Opens the currently selected file.
-        open(file, mainFrame.getActivePanel());
     }
 
 	@Override

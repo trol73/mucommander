@@ -712,13 +712,21 @@ public class FileFactory {
         // the filename contains a dot '.' character, since most of the time this method is called with a filename that
         // doesn't match any of the filters.
         if (filename.indexOf('.') >= 0) {
-            ArchiveFormatProvider provider;
-            if ((provider = getArchiveFormatProvider(filename)) != null) {
+            ArchiveFormatProvider provider = getArchiveFormatProvider(filename);
+            if (provider != null) {
                 return provider.getFile(file);
             }
         }
 
         return file;
+    }
+
+    /**
+     * Same as wrapArchive(AbstractFile) but using the given extension rather than the file's extension.
+     */
+    public static AbstractFile wrapArchive(AbstractFile file, String extension) throws IOException {
+        ArchiveFormatProvider provider = getArchiveFormatProvider(file.getBaseName() + extension);
+        return provider != null ? provider.getFile(file) : file;
     }
 
 

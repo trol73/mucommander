@@ -767,7 +767,7 @@ public class TrolCommander {
      */
     @SuppressWarnings({"unchecked"})
     public static void main(String args[]) throws IOException {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
 			System.setProperty("prism.order", "sw");
@@ -821,7 +821,7 @@ public class TrolCommander {
             LauncherTask taskRegisterArchives = new RegisterArchiveProtocolsTask(helper);
             LauncherTask taskRegisterNetwork = new RegisterNetworkProtocolsTask(helper);
             LauncherTask taskRegisterOtherProtocols = new RegisterOtherProtocolsTask(helper);
-            LauncherTask taskLoadEnviroment = new LoadEnvironmentTask(helper);
+            LauncherTask taskLoadEnvironment = new LoadEnvironmentTask(helper);
 
             List<LauncherTask> tasks = new LinkedList<>();
 //            tasks.add(taskPrepareLogger);
@@ -853,7 +853,7 @@ public class TrolCommander {
             tasks.add(taskRegisterArchives);
             tasks.add(taskRegisterNetwork);
             tasks.add(taskRegisterOtherProtocols);
-            tasks.add(taskLoadEnviroment);
+            tasks.add(taskLoadEnvironment);
 //System.out.println("Execute tasks");
 
             if (processors <= 1 ) {

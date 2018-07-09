@@ -29,13 +29,14 @@ import ru.trolsoft.ui.TMenuSeparator;
 
 /**
  * Contextual popup menu invoked by FileTable when right-clicking on a file or a group of files.
- *
+ * <p>
  * The following items are displayed (see constructor code for conditions) :
- *
+ * <p>
  * Open
  * Open in new tab
  * Open natively
  * Open with...
+ * Open as...
  * Rename
  * Reveal in Finder
  * ----
@@ -75,6 +76,9 @@ public class TablePopupMenu extends MuActionsPopupMenu {
             addAction(com.mucommander.ui.action.impl.OpenAction.Descriptor.ACTION_ID);
             addAction(com.mucommander.ui.action.impl.OpenNativelyAction.Descriptor.ACTION_ID);
             add(new OpenWithMenu(mainFrame, clickedFile));
+            if (clickedFile != null && !clickedFile.isDirectory()) {
+                add(new OpenAsMenu(mainFrame));
+            }
 
             addAction(com.mucommander.ui.action.impl.OpenInNewTabAction.Descriptor.ACTION_ID);
         }

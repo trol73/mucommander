@@ -80,7 +80,7 @@ public class Avrdude {
         if (config.avrdudeLocation != null) {
             cmd = config.avrdudeLocation;
         } else {
-            cmd = OsFamily.getCurrent() == OsFamily.WINDOWS ? "avrdude.exe" : "avrdude";
+            cmd = OsFamily.WINDOWS.isCurrent() ? "avrdude.exe" : "avrdude";
         }
         cmd += " -p " + config.deviceName;
         if (config.baudrate != null) {

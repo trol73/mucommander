@@ -60,7 +60,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     public void performAction() {
         try {
-            if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            if (OsFamily.MAC_OS_X.isCurrent()) {
                 AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
                 if (currentFile == null) {
                     currentFile = mainFrame.getActivePanel().getCurrentFolder();
@@ -90,11 +90,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_L, CTRL_OR_META_DOWN_MASK);
         }
 
         @Override
@@ -105,7 +101,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
 
         @Override
         public ImageIcon getIcon() {
-		    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+		    if (OsFamily.MAC_OS_X.isCurrent()) {
                 return getStandardIcon("Finder");
             }
             return super.getIcon();

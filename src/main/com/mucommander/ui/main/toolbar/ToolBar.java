@@ -63,9 +63,6 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
     private final MainFrame mainFrame;
 
-    /** Holds a reference to the RolloverButtonAdapter instance so that it doesn't get garbage-collected */
-    private final RolloverButtonAdapter rolloverButtonAdapter;
-
     /** Dimension of button separators */
     private final static Dimension SEPARATOR_DIMENSION = new Dimension(10, 16);
 
@@ -96,10 +93,6 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         // Listen to configuration changes to reload toolbar buttons when icon size has changed
         MuConfigurations.addPreferencesListener(this);
-
-        // Rollover-enable the button and hold a reference to the RolloverButtonAdapter instance so that it doesn't
-        // get garbage-collected
-        rolloverButtonAdapter = new RolloverButtonAdapter();
 
         // create buttons for each actions and add them to the toolbar
         addButtons(ToolBarAttributes.getActions());
@@ -181,14 +174,9 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
                 button.putClientProperty("JButton.buttonType", "segmentedTextured");
             }
             button.setRolloverEnabled(true);
+        } else {
+            RolloverButtonAdapter.decorateButton(button);
         }
-        // On other platforms, use a custom rollover effect
-        else {
-            // Init rollover
-            RolloverButtonAdapter.setButtonDecoration(button);
-            button.addMouseListener(rolloverButtonAdapter);
-        }
-
         add(button);
     }
 

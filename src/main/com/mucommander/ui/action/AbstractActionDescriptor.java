@@ -19,10 +19,12 @@
 package com.mucommander.ui.action;
 
 import com.mucommander.commons.file.util.ResourceLoader;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.icon.IconManager;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 /**
  * AbstractActionDescriptor is an abstract class which implements ActionDescriptor interface.
@@ -34,6 +36,8 @@ import javax.swing.*;
  * @author Arik Hadas
  */
 public abstract class AbstractActionDescriptor implements ActionDescriptor {
+    protected static final int CTRL_OR_META_DOWN_MASK = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+
 //        static int count;
 //    public AbstractActionDescriptor() {
 //        count++;
