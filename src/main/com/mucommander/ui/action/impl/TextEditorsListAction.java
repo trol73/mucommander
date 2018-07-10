@@ -58,7 +58,11 @@ public class TextEditorsListAction extends MuAction {
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, CTRL_OR_META_DOWN_MASK);
+            if (OsFamily.MAC_OS_X.isCurrent()) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.ALT_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK);
+            }
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

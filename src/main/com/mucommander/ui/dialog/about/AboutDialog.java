@@ -478,9 +478,10 @@ public class AboutDialog extends FocusDialog implements ActionListener {
         if (e.getSource() == btnOk) {
             dispose();
         } else if(e.getSource() == btnHome) {
-            try {DesktopManager.browse(new URL(RuntimeConstants.HOMEPAGE_URL));}
-            // Ignores errors here as there really isn't anything we can do.
-            catch(IOException ignored) {}
+            try {
+                DesktopManager.browse(new URL(RuntimeConstants.HOMEPAGE_URL));
+            } catch(IOException ignored) {} // Ignores errors here as there really isn't anything we can do.
+
         } else if(e.getSource() == btnLicense) {
             new LicenseDialog(this).showDialog();
         }

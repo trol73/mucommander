@@ -45,7 +45,7 @@ import com.mucommander.desktop.xfce.GuessedXfceDesktopAdapter;
  * @author Nicolas Rinaudo
  */
 public class DesktopManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DesktopManager.class);
+	private static Logger logger;
 	
     // - Predefined operation types --------------------------------------
     // -------------------------------------------------------------------
@@ -175,7 +175,7 @@ public class DesktopManager {
         //   operations are user configurable).
         // - they are executed before any other operations (if available, they will
         //   provide safer and better integration than any other operation).
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             innerRegisterOperation(OPEN,   SYSTEM_OPERATION,  new InternalOpen());
             innerRegisterOperation(BROWSE, SYSTEM_OPERATION,  new InternalBrowse());
         }
@@ -207,7 +207,7 @@ public class DesktopManager {
             DesktopAdapter current = desktops.get(i);
             if (current.isAvailable()) {
                 desktop = current;
-                LOGGER.debug("Using desktop: " + desktop);
+                getLogger().debug("Using desktop: " + desktop);
                 desktop.init(install);
                 return;
             }
@@ -223,8 +223,9 @@ public class DesktopManager {
      * we have at least the {@link DefaultDesktopAdapter} to work with.
      */
     private static void checkInit() {
-        if (desktop == null)
+        if (desktop == null) {
             desktop = new DefaultDesktopAdapter();
+        }
     }
 
 
@@ -253,20 +254,23 @@ public class DesktopManager {
         List<DesktopOperation> container;
 
         // Makes sure we have a container for operations of the specified priority.
-        if(operations[priority] == null)
+        if (operations[priority] == null) {
             operations[priority] = new Hashtable<>();
+        }
 
         // Makes sure we have a container for operations of the specified type.
-        if((container = operations[priority].get(type)) == null)
+        if ((container = operations[priority].get(type)) == null) {
             operations[priority].put(type, container = new Vector<>());
+        }
 
         // Creates the requested entry.
         container.add(operation);
     }
 
     public static void registerOperation(String type, int priority, DesktopOperation operation) {
-        if(priority != FALLBACK_OPERATION && priority != CUSTOM_OPERATION)
+        if (priority != FALLBACK_OPERATION && priority != CUSTOM_OPERATION) {
             throw new IllegalArgumentException();
+        }
         innerRegisterOperation(type, priority, operation);
     }
 
@@ -275,8 +279,9 @@ public class DesktopManager {
     // - Operation support -----------------------------------------------
     // -------------------------------------------------------------------
     private static List<DesktopOperation> getOperations(String type, int priority) {
-        if (operations[priority] == null)
+        if (operations[priority] == null) {
             return null;
+        }
 
         return operations[priority].get(type);
     }
@@ -327,12 +332,15 @@ public class DesktopManager {
     private static DesktopOperation getAvailableOperation(String type) {
         DesktopOperation operation;
 
-        if ((operation = getAvailableOperation(type, SYSTEM_OPERATION)) != null)
+        if ((operation = getAvailableOperation(type, SYSTEM_OPERATION)) != null) {
             return operation;
-        if ((operation = getAvailableOperation(type, CUSTOM_OPERATION)) != null)
+        }
+        if ((operation = getAvailableOperation(type, CUSTOM_OPERATION)) != null) {
             return operation;
-        if ((operation = getAvailableOperation(type, FALLBACK_OPERATION)) != null)
+        }
+        if ((operation = getAvailableOperation(type, FALLBACK_OPERATION)) != null) {
             return operation;
+        }
         return null;
     }
 
@@ -376,19 +384,33 @@ public class DesktopManager {
 
     // - Browser helpers -------------------------------------------------
     // -------------------------------------------------------------------
-    public static boolean canBrowse() {return isOperationAvailable(BROWSE);}
+    public static boolean canBrowse() {
+        return isOperationAvailable(BROWSE);
+    }
 
-    public static boolean canBrowse(URL url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(URL url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static boolean canBrowse(String url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(String url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static boolean canBrowse(AbstractFile url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(AbstractFile url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(URL url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(URL url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(String url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(String url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(AbstractFile url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(AbstractFile url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
 
 
@@ -588,5 +610,12 @@ public class DesktopManager {
      */
     public static boolean isApplication(AbstractFile file) {
         return desktop.isApplication(file);
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(DesktopManager.class);
+        }
+        return logger;
     }
 }

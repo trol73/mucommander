@@ -58,14 +58,13 @@ class ShellHistoryWriter implements ShellHistoryConstants {
             out.println();
 
             // Writes the content of the shell history.
-            while(history.hasNext()) {
+            while (history.hasNext()) {
                 out.startElement(COMMAND_ELEMENT);
                 out.writeCData(history.next());
                 out.endElement(COMMAND_ELEMENT);
             }
             out.endElement(ROOT_ELEMENT);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.debug("Failed to write shell history", e);
         }
     }

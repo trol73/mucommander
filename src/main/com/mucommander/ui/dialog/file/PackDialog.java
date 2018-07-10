@@ -33,7 +33,6 @@ import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.ArchiveJob;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.PackAction;
 import com.mucommander.ui.layout.YBoxPanel;
@@ -62,7 +61,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
 
     public PackDialog(MainFrame mainFrame, FileSet files) {
-        super(mainFrame, files, ActionProperties.getActionLabel(PackAction.Descriptor.ACTION_ID), Translator.get("pack_dialog_description"), Translator.get("pack"), Translator.get("pack_dialog.error_title"), false);
+        super(mainFrame, files, ActionProperties.getActionLabel(PackAction.Descriptor.ACTION_ID), i18n("pack_dialog_description"), i18n("pack"), i18n("pack_dialog.error_title"), false);
 
         // Retrieve available formats for single file or many file archives
         int nbFiles = files.size();
@@ -84,7 +83,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
         // Archive formats combo box
 
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        tempPanel.add(new JLabel(Translator.get("pack_dialog.archive_format")));		
+        tempPanel.add(new JLabel(i18n("pack_dialog.archive_format")));
         this.formatsComboBox = new JComboBox<>();
         for (ArchiveFormat format : formats) {
             formatsComboBox.addItem(format.name);
@@ -101,12 +100,12 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 		
         // Comment area, enabled only if selected archive format has comment support
 		
-        mainPanel.add(new JLabel(Translator.get("comment")));
+        mainPanel.add(new JLabel(i18n("comment")));
         commentArea = new JTextArea();
         commentArea.setRows(4);
         mainPanel.add(commentArea);
 
-        cbBackgroundMode = new JCheckBox(Translator.get("destination_dialog.background_mode"));
+        cbBackgroundMode = new JCheckBox(i18n("destination_dialog.background_mode"));
         cbBackgroundMode.setSelected(enableBackgroundMode);
         mainPanel.add(cbBackgroundMode);
     }
@@ -147,7 +146,7 @@ public class PackDialog extends TransferDestinationDialog implements ItemListene
 
     @Override
     protected String getProgressDialogTitle() {
-        return Translator.get("pack_dialog.packing");
+        return i18n("pack_dialog.packing");
     }
 
 

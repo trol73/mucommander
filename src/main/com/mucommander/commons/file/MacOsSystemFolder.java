@@ -55,9 +55,11 @@ public enum MacOsSystemFolder {
 	}
 
 	public static boolean isSystemFile(AbstractFile file) {
-		for (MacOsSystemFolder folder : values())
-			if (folder.path.equals(file.getAbsolutePath()))
-				return true;
+		for (MacOsSystemFolder folder : values()) {
+            if (folder.path.equals(file.getAbsolutePath())) {
+                return true;
+            }
+        }
 		return false;
 	}
 }
