@@ -28,24 +28,27 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.LongConsumer;
 
 /**
  * Goto address dialog.
  * @author Oleg Trifonov
  */
-public abstract class GotoDialog extends FocusDialog implements ActionListener {
+public class GotoDialog extends FocusDialog implements ActionListener {
 
     private final long maxOffset;
 
-    private InputField edtOffset;
+    private final InputField edtOffset;
+    private final LongConsumer action;
 
     /** The 'OK' button */
     private JButton btnOk;
 
 
-    GotoDialog(Frame owner, long maxOffset) {
+    GotoDialog(Frame owner, long maxOffset, LongConsumer action) {
         super(owner, i18n("hex_viewer.goto"), owner);
         this.maxOffset = maxOffset;
+        this.action = action;
         Container contentPane = getContentPane();
         contentPane.add(new JLabel(i18n("hex_viewer.goto.offset")+":"), BorderLayout.NORTH);
 
@@ -72,10 +75,8 @@ public abstract class GotoDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if ((source == btnOk || source == edtOffset) && btnOk.isEnabled()) {
-            doGoto(edtOffset.getValue());
+            action.accept(edtOffset.getValue());
             dispose();
         }
     }
-
-    abstract protected void doGoto(long value);
 }

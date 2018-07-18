@@ -283,6 +283,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                         break;
 
                     case KeyEvent.VK_F8:
+                    case KeyEvent.VK_DELETE:
                         new DeleteDialog(mainFrame, getSelectedFiles(), false).returnFocusTo(getFocusOwner()).showDialog();
                         break;
 
@@ -407,8 +408,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         } else if (e.getSource() == btnStop) {
             if (job != null) {
                 job.interrupt();
+                job = null;
             }
-            job = null;
         } else if (e.getSource() == btnClean) {
             clearResults();
         } else if (e.getSource() == btnClose) {

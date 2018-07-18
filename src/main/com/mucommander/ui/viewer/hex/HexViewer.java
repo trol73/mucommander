@@ -71,14 +71,14 @@ public class HexViewer extends FileViewer implements ThemeId {
         super();
 
         MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-        menuView = MenuToolkit.addMenu(Translator.get("hex_viewer.view"), menuMnemonicHelper, null);
+        menuView = MenuToolkit.addMenu(i18n("hex_viewer.view"), menuMnemonicHelper, null);
 
-        gotoItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.goto"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), this);
-        findItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.search"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), this);
-        findNextItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchNext"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
-        findPrevItem = MenuToolkit.addMenuItem(menuView, Translator.get("hex_viewer.searchPrev"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
+        gotoItem = MenuToolkit.addMenuItem(menuView, i18n("hex_viewer.goto"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), this);
+        findItem = MenuToolkit.addMenuItem(menuView, i18n("hex_viewer.search"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), this);
+        findNextItem = MenuToolkit.addMenuItem(menuView, i18n("hex_viewer.searchNext"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), this);
+        findPrevItem = MenuToolkit.addMenuItem(menuView, i18n("hex_viewer.searchPrev"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), this);
         menuView.addSeparator();
-        calculatorItem = MenuToolkit.addMenuItem(menuView, Translator.get("Calculator.label"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), this);
+        calculatorItem = MenuToolkit.addMenuItem(menuView, i18n("Calculator.label"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), this);
     }
 
     private int getCtrlOrMetaMask() {
@@ -218,12 +218,11 @@ public class HexViewer extends FileViewer implements ThemeId {
             }
             if (lastSearchResult >= 0) {
                 hexTable.gotoOffset(lastSearchResult);
-                if (statusBar != null) {
-                    statusBar.clearStatusMessage();
-                }
+                clearStatusMessage();
             } else {
+
                 if (statusBar != null) {
-                    statusBar.setStatusMessage(Translator.get("hex_viewer.search_not_found"));
+                    statusBar.setStatusMessage(i18n("hex_viewer.search_not_found"));
                 }
             }
         } catch (IOException e1) {
@@ -247,16 +246,12 @@ public class HexViewer extends FileViewer implements ThemeId {
     }
 
     private void gotoOffset() {
-        if (dlgGoto != null && dlgGoto.isVisible()) {
-            return;
+        if (dlgGoto == null) {
+            dlgGoto = new GotoDialog(getFrame(), model.getSize() - 1, (offset) -> hexTable.gotoOffset(offset));
         }
-        dlgGoto = new GotoDialog(getFrame(), model.getSize() - 1) {
-            @Override
-            protected void doGoto(long value) {
-                hexTable.gotoOffset(value);
-            }
-        };
-        dlgGoto.showDialog();
+        if (!dlgGoto.isVisible()) {
+            dlgGoto.showDialog();
+        }
     }
 
 
@@ -274,5 +269,16 @@ public class HexViewer extends FileViewer implements ThemeId {
         if (searchedBytes != null) {
             lastSearchBytes = searchedBytes;
         }
+    }
+
+
+    private void setStatusMessage(String msg) {
+        if (statusBar != null) {
+            statusBar.setStatusMessage(msg);
+        }
+    }
+
+    private void clearStatusMessage() {
+        setStatusMessage("");
     }
 }

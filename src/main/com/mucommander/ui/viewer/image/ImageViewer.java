@@ -118,17 +118,17 @@ class ImageViewer extends FileViewer implements ActionListener {
     	
     	// create Go menu
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-    	controlsMenu = MenuToolkit.addMenu(Translator.get("image_viewer.controls_menu"), menuMnemonicHelper, null);
+    	controlsMenu = MenuToolkit.addMenu(i18n("image_viewer.controls_menu"), menuMnemonicHelper, null);
     	
-        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
-        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
+        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
+        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
         controlsMenu.add(new TMenuSeparator());
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), this);
-            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), this);
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), this);
         } else {
-            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
-            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
         }
     }
     
@@ -442,7 +442,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             }
             updateFrame();
         } catch (IOException e) {
-            InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));
+            InformationDialog.showErrorDialog(this, i18n("file_viewer.view_error_title"), i18n("file_viewer.view_error"));
             e.printStackTrace();
         }
     }

@@ -208,9 +208,10 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             int currentMainFrameIndex = getCurrentWindowIndex();
             
             // Dispose all MainFrames but the current one
-            for (int i=0; i<nbFrames; i++) {
-                if(i!=currentMainFrameIndex)
-                	instance.mainFrames.get(i).dispose();
+            for (int i = 0; i < nbFrames; i++) {
+                if (i != currentMainFrameIndex) {
+                    instance.mainFrames.get(i).dispose();
+                }
             }
 
             // Dispose current MainFrame last so that its attributes (last folders, window position...) are saved last
@@ -221,13 +222,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
 
         // Dispose all other frames (viewers, editors...)
-        Frame frames[] = Frame.getFrames();
-        nbFrames = frames.length;
-        Frame frame;
-        for (int i=0; i < nbFrames; i++) {
-            frame = frames[i];
+        for (Frame frame : Frame.getFrames()) {
             if (frame.isShowing()) {
-                getLogger().debug("disposing frame#"+i);
+                getLogger().debug("disposing frame " + frame.getTitle());
                 frame.dispose();
             }
         }
@@ -351,24 +348,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         Object source = e.getSource();
         if (source instanceof MainFrame) {
-            // Remove disposed MainFrame from the MainFrame list
-            int frameIndex = mainFrames.indexOf(source);
-
-            mainFrames.remove(source);
-
-            // Update following windows titles to reflect the MainFrame's disposal.
-            // Window titles show window number only if there is more than one window.
-            // So if there is only one window left, we update first window's title so that it removes window number (#1).
-            int nbFrames = mainFrames.size();
-            if (nbFrames == 1) {
-                mainFrames.get(0).updateWindowTitle();
-            } else {
-                if (frameIndex != -1) {
-                    for (int i = frameIndex; i < nbFrames; i++) {
-                        mainFrames.get(i).updateWindowTitle();
-                    }
-                }
-            }
+            closeMainFrame((MainFrame) source);
         } else if (source instanceof FileFrame) {
             FileFrame fileFrame = (FileFrame)source;
             if (fileFrame.getReturnFocusTo() != null) {
@@ -387,20 +367,47 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             return;
         }
 
-        // Test if there is at least one window (viewer, editor...) still showing
-        Frame frames[] = Frame.getFrames();
+        if (!hasMoreActiveFrames()) {
+            ShutdownHook.initiateShutdown();
+        }
+    }
 
-        int nbFrames = frames.length;
-        for (int i = 0; i<nbFrames; i++) {
-            Frame frame = frames[i];
-            if (frame.isShowing()) {
-                getLogger().debug("found active frame#"+i);
-                return;
+
+    /**
+     * Remove disposed MainFrame from the MainFrame list
+     */
+    private void closeMainFrame(MainFrame mainFrame) {
+        int frameIndex = mainFrames.indexOf(mainFrame);
+
+        mainFrames.remove(mainFrame);
+
+        // Update following windows titles to reflect the MainFrame's disposal.
+        // Window titles show window number only if there is more than one window.
+        // So if there is only one window left, we update first window's title so that it removes window number (#1).
+        int nbFrames = mainFrames.size();
+        if (nbFrames == 1) {
+            mainFrames.get(0).updateWindowTitle();
+        } else {
+            if (frameIndex >= 0) {
+                for (int i = frameIndex; i < nbFrames; i++) {
+                    mainFrames.get(i).updateWindowTitle();
+                }
             }
         }
+    }
 
-        // No more window showing, initiate shutdown sequence
-        ShutdownHook.initiateShutdown();
+    /**
+     * Test if there is at least one window (viewer, editor...) still showing
+     */
+    private boolean hasMoreActiveFrames() {
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame.isShowing()) {
+                getLogger().debug("found active frame");
+                return true;
+            }
+        }
+        return false;
     }
 
     public void windowIconified(WindowEvent e) {

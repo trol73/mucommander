@@ -94,8 +94,4 @@ public class StatusBar extends org.fife.ui.StatusBar {
         String s = StrUtils.byteToBinaryStr(val)  + " - " + StrUtils.byteToOctalStr(val);
         lblValue.setText(s);
     }
-
-    public void clearStatusMessage() {
-        setStatusMessage("");
-    }
 }

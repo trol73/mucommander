@@ -35,7 +35,7 @@ public class PdfViewer extends FileViewer {
 
     private SwingController controller;
 
-    public PdfViewer() {
+    PdfViewer() {
         // create a controller and a swing factory
         controller = new SwingController();
         SwingViewBuilder factory = new SwingViewBuilder(controller);

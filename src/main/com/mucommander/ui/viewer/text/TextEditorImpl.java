@@ -21,6 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.viewer.text.search.*;
 import com.mucommander.ui.viewer.text.tools.ExecPanel;
 import com.mucommander.ui.viewer.text.tools.ExecUtils;
 import com.mucommander.ui.viewer.text.tools.ProcessParams;
@@ -33,10 +34,6 @@ import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.ViewerRegistrar;
-import com.mucommander.ui.viewer.text.search.FindDialog;
-import com.mucommander.ui.viewer.text.search.ReplaceDialog;
-import com.mucommander.ui.viewer.text.search.SearchEvent;
-import com.mucommander.ui.viewer.text.search.SearchListener;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.fife.ui.rtextarea.SearchResult;
@@ -87,6 +84,8 @@ class TextEditorImpl implements ThemeListener, ThemeId {
     private int storedSplitDividerSize;
     private int storedSplitterPos;
     private ProcessParams buildParams;
+
+    boolean replaceDialogMode = false;
 
 
     private KeyListener textAreaKeyListener = new KeyAdapter() {
@@ -266,9 +265,16 @@ class TextEditorImpl implements ThemeListener, ThemeId {
             @Override
             public void searchEvent(SearchEvent e) {
                 searchContext = e.getSearchContext();
+
                 String searchString = searchContext.getSearchFor();
                 TextHistory.getInstance().add(TextHistory.Type.TEXT_SEARCH, searchString, true);
+                //frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                search(e);
+            }
+
+            private void search(SearchEvent e) {
                 SearchResult result;
+                replaceDialogMode = true;
                 switch (e.getType()) {
                     case FIND:
                         result = SearchEngine.find(textArea, searchContext);
@@ -282,6 +288,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
                     default:
                         result = null;
                 }
+                replaceDialogMode = false;
                 if (result == null) {
                     return;
                 }
@@ -321,13 +328,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 	}
 
     void gotoLine() {
-        GotoLineDialog dlgGoto = new GotoLineDialog(frame, textArea.getLineCount()) {
-            @Override
-            protected void doGoto(int value) {
-                textArea.gotoLine(value);
-            }
-        };
-        dlgGoto.showDialog();
+        new GotoLineDialog(frame, textArea.getLineCount(), (line) -> textArea.gotoLine(line)).showDialog();
     }
 
 
@@ -530,7 +531,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         }
     }
 
-    private void beep() {
+    static void beep() {
         // The beep method is called from a separate thread because this method seems to lock until the beep has
         // been played entirely. If the 'Find next' shortcut is left pressed, a series of beeps will be played when
         // the end of the file is reached, and we don't want those beeps to played one after the other as to:

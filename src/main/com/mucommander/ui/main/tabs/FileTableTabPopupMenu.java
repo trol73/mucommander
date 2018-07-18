@@ -36,7 +36,7 @@ import com.mucommander.ui.popup.MuActionsPopupMenu;
 */
 class FileTableTabPopupMenu extends MuActionsPopupMenu {
 
-	public FileTableTabPopupMenu(MainFrame mainFrame) {
+	FileTableTabPopupMenu(MainFrame mainFrame) {
 		super(mainFrame);
 
 		FileTableTab tab = mainFrame.getActivePanel().getTabs().getCurrentTab();

@@ -82,7 +82,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
     /**
      * The "mark all" check box.
      */
-    protected JCheckBox markAllCheckBox;
+    private JCheckBox markAllCheckBox;
 
     /**
      * Folks listening for events in this dialog.
@@ -91,7 +91,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
 
 
 
-    public AbstractSearchDialog(Frame owner, String title, Component locationRelativeComp) {
+    AbstractSearchDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, locationRelativeComp);
         init();
     }
@@ -350,7 +350,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
 
 
 
-    protected boolean matchesSearchFor(String text) {
+    boolean matchesSearchFor(String text) {
         if (text == null || text.isEmpty()) {
             return false;
         }
@@ -486,7 +486,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
      * @param event The <code>ActionEvent</code> object coming from a
      *        child component.
      */
-    protected void fireSearchEvent(ActionEvent event) {
+    void fireSearchEvent(ActionEvent event) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         SearchEvent e = null;

@@ -52,7 +52,7 @@ public class LauncherCmdHelper {
     private final String args[];
 
 
-    public LauncherCmdHelper(String[] args, boolean verbose, boolean fatalWarnings) {
+    LauncherCmdHelper(String[] args, boolean verbose, boolean fatalWarnings) {
         this.args = args;
         this.verbose = verbose;
         this.fatalWarnings = fatalWarnings;
@@ -334,13 +334,14 @@ public class LauncherCmdHelper {
         StringBuilder error;
 
         error = createErrorMessage(msg, exception, quit);
-        if (!quit)
+        if (!quit) {
             error.append(". Using default values.");
+        }
 
         printError(error.toString(), quit);
     }
 
-    public void printFileError(String msg, Throwable exception) {
+    void printFileError(String msg, Throwable exception) {
         printFileError(msg, exception, fatalWarnings);
     }
 
@@ -350,7 +351,7 @@ public class LauncherCmdHelper {
      * @param quit      whether or not to quit after printing the error message.
      * @param exception exception that triggered the error (for verbose output).
      */
-    public void printError(String msg, Exception exception, boolean quit) {
+    void printError(String msg, Exception exception, boolean quit) {
         printError(createErrorMessage(msg, exception, quit).toString(), quit);
     }
 
@@ -358,15 +359,13 @@ public class LauncherCmdHelper {
      * Creates an error message.
      */
     private StringBuilder createErrorMessage(String msg, Throwable exception, boolean quit) {
-        StringBuilder error;
-
-        error = new StringBuilder();
-        if(quit)
+        StringBuilder error = new StringBuilder();
+        if (quit) {
             error.append("Warning: ");
+        }
         error.append(msg);
-        if(verbose && (exception != null)) {
-            error.append(": ");
-            error.append(exception.getMessage());
+        if (verbose && (exception != null)) {
+            error.append(": ").append(exception.getMessage());
         }
 
         return error;

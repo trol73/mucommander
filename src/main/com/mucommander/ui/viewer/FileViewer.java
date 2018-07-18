@@ -35,7 +35,8 @@ import java.util.Map;
 /**
  * An abstract class to be subclassed by file viewer implementations.
  *
- * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.
+ * <p>
+ * <b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.
  *
  * @author Maxence Bernard, Arik Hadas
  */
@@ -68,17 +69,17 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), mnemonicHelper, null);
+        JMenu fileMenu = MenuToolkit.addMenu(i18n("file_viewer.file_menu"), mnemonicHelper, null);
 
         int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        miFiles = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        miMainFrame = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
+        miFiles = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
+        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
         fileMenu.add(miMainFrame);
 
         fileMenu.add(new TMenuSeparator());
 
 
-        miClose = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        miClose = MenuToolkit.addMenuItem(fileMenu, i18n("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
         fileMenu.add(miClose);
 
         menuBar.add(fileMenu);
@@ -95,11 +96,19 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
         if (source == miClose) {
             getFrame().dispose();
         } else if (source == miFiles) {
-            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
-            viewedAndEditedFilesQL.show();
+            showFilesQuickList();
         } else if (source == miMainFrame) {
-            WindowManager.getMainFrames().get(0).toFront();
+            showMainFrame();
         }
+    }
+
+    private void showFilesQuickList() {
+        ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
+        viewedAndEditedFilesQL.show();
+    }
+
+    private static void showMainFrame() {
+        WindowManager.getMainFrames().get(0).toFront();
     }
 
 
@@ -159,5 +168,9 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
                 }
             }
         }
+    }
+
+    protected static String i18n(String key, String... params) {
+        return Translator.get(key, params);
     }
 }

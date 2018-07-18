@@ -86,10 +86,21 @@ public class SplashScreen extends JWindow {
 
         // create a custom font
         this.customFont = new Font(FONT_NAME, FONT_STYLE, FONT_SIZE);
+        ImageIcon imageIcon = loadImageIcon();
 
+        setContentPane(new JLabel(imageIcon));
+		
+        setSizeFromImage(imageIcon);
+        DialogToolkit.centerOnScreen(this);
+
+        // Display the splash screen
+        setVisible(true);
+    }
+
+    private ImageIcon loadImageIcon() {
         // Resolve the URL of the splash logo image within the JAR file and create an ImageIcon
         // Note: DO NOT use IconManager to load the icon as it would trigger ConfigurationManager's initialization
-        // and we don't want that, we want SpashScreen to be displayed as soon as possible
+        // and we don't want that, we want SplashScreen to be displayed as soon as possible
         ImageIcon imageIcon = new ImageIcon(ResourceLoader.getResourceAsURL(SPLASH_IMAGE_PATH));
 
         // Wait for the image to be fully loaded
@@ -100,20 +111,15 @@ public class SplashScreen extends JWindow {
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
+        return imageIcon;
+    }
 
-        setContentPane(new JLabel(imageIcon));
-		
+    private void setSizeFromImage(ImageIcon imageIcon) {
         // Set size manually instead of using pack(), because of a bug under 1.3.1/Win32 which
         // eats a 1-pixel row of the image
-        //		pack();
         int width = imageIcon.getIconWidth();
         int height = imageIcon.getIconHeight();
         setSize(width, height);
-        
-        DialogToolkit.centerOnScreen(this);
-
-        // Display the splash screen
-        setVisible(true);
     }
 
 
@@ -139,7 +145,7 @@ public class SplashScreen extends JWindow {
 
         // Display loading message in the lower left corner
         int textX = LOADING_MSG_MARGIN_X;
-        int textY = getHeight()-LOADING_MSG_MARGIN_Y; 
+        int textY = getHeight() - LOADING_MSG_MARGIN_Y;
 
         g.setColor(SHADOW_TEXT_COLOR);
         g.drawString(loadingMessage, textX-1, textY-1);

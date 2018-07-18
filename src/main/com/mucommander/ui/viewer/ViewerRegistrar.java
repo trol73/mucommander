@@ -74,7 +74,7 @@ public class ViewerRegistrar {
      * Registers a FileViewer.
      * @param factory file viewer factory to register.
      */
-    public static void registerFileViewer(ViewerFactory factory) {
+    private static void registerFileViewer(ViewerFactory factory) {
         viewerFactories.add(factory);
     }
         

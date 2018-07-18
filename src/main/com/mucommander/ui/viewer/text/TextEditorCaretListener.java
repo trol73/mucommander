@@ -35,6 +35,9 @@ public class TextEditorCaretListener implements CaretListener {
 
     @Override
     public void caretUpdate(CaretEvent e) {
+        if (textEditor.replaceDialogMode) {
+            return;
+        }
         StatusBar statusBar = textEditor.getStatusBar();
         TextArea textArea = textEditor.getTextArea();
         if (statusBar == null) {

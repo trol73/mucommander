@@ -298,7 +298,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             textArea.gotoLine(line, column);
             getViewport().setViewPosition(new java.awt.Point(horizontalPos, verticalPos));
     	} catch (IOException ex) {
-    		InformationDialog.showErrorDialog(getFrame(), Translator.get("read_error"), Translator.get("file_editor.cannot_read_file", getCurrentFile().getName()));
+    		InformationDialog.showErrorDialog(getFrame(), i18n("read_error"), i18n("file_editor.cannot_read_file", getCurrentFile().getName()));
     	}   
     }
 

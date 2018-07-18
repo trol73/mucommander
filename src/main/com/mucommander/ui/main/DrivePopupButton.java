@@ -80,7 +80,7 @@ import ru.trolsoft.ui.TMenuSeparator;
  * @author Maxence Bernard
  */
 public class DrivePopupButton extends PopupButton implements BookmarkListener, ConfigurationListener, LocationListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DrivePopupButton.class);
+	private static Logger logger;
 	
     /** FolderPanel instance that contains this button */
     private FolderPanel folderPanel;
@@ -116,7 +116,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 volumeFilter.setInverted(true);
             }
         } catch(PatternSyntaxException e) {
-            LOGGER.info("Invalid regexp for conf variable "+MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
+            getLogger().info("Invalid regexp for conf variable " + MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
         // Initialize the volumes list
@@ -295,14 +295,12 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         final MainFrame mainFrame = folderPanel.getMainFrame();
 
         MnemonicHelper mnemonicHelper = new MnemonicHelper();   // Provides mnemonics and ensures uniqueness
-        JMenuItem item;
-        MuAction action;
 
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 
         for (int i = 0; i < nbVolumes; i++) {
-            action = new CustomOpenLocationAction(mainFrame, volumes[i]);
+            MuAction action = new CustomOpenLocationAction(mainFrame, volumes[i]);
             String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -314,7 +312,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 }
             }
 
-            item = popupMenu.add(action);
+            JMenuItem item = popupMenu.add(action);
             setMnemonic(item, mnemonicHelper);
 
             // Set icon from cache
@@ -347,7 +345,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     continue;
                 }
 
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
+                JMenuItem item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
                 String location = b.getLocation();
                 if (!location.contains("://")) {
                     AbstractFile file = FileFactory.getFile(location);
@@ -375,7 +373,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Add 'Network shares' shortcut
         if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
+            MuAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
@@ -603,4 +601,11 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 	public void locationCancelled(LocationEvent locationEvent) { }
 
 	public void locationFailed(LocationEvent locationEvent) {}
+
+	private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(DrivePopupButton.class);
+        }
+        return logger;
+    }
 }

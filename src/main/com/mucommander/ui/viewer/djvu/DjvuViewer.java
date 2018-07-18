@@ -32,7 +32,7 @@ public class DjvuViewer extends FileViewer {
 
     private DjVuBean djvuBean;
 
-    public DjvuViewer() {
+    DjvuViewer() {
         super();
         djvuBean = new DjVuBean();
         setComponentToPresent(new JScrollPane(djvuBean));

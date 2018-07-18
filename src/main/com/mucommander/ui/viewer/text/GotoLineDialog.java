@@ -22,24 +22,25 @@ import com.mucommander.ui.dialog.FocusDialog;
 import ru.trolsoft.ui.InputField;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.IntConsumer;
 
 /**
  * This dialog allows the user to enter a line number to be jumped for in the text editor.
  *
  * @author Oleg Trifonov
  */
-public abstract class GotoLineDialog extends FocusDialog implements ActionListener {
+public class GotoLineDialog extends FocusDialog implements ActionListener {
 
     /** The text field where a search string can be entered */
     private InputField edtLineNumber;
 
     /** The 'OK' button */
-    private JButton btnOk;
-    private JButton btnCancel;
+    private final JButton btnOk;
+    private final JButton btnCancel;
+    private final IntConsumer action;
 
 
     /**
@@ -47,8 +48,9 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
      *
      * @param editorFrame the parent editor frame
      */
-    GotoLineDialog(JFrame editorFrame, final int maxLines) {
+    GotoLineDialog(JFrame editorFrame, int maxLines, IntConsumer action) {
         super(editorFrame, i18n("text_viewer.goto_line"), editorFrame);
+        this.action = action;
 
         Container contentPane = getContentPane();
         contentPane.add(new JLabel(i18n("text_viewer.line")+":"), BorderLayout.NORTH);
@@ -84,12 +86,11 @@ public abstract class GotoLineDialog extends FocusDialog implements ActionListen
         Object source = e.getSource();
 
         if ( (source == btnOk || source == edtLineNumber) && btnOk.isEnabled() ) {
-            doGoto((int)edtLineNumber.getValue());
+            int line = (int)edtLineNumber.getValue();
+            action.accept(line);
             dispose();
         } else if (source == btnCancel) {
             cancel();
         }
     }
-
-    abstract protected void doGoto(int value);
 }

@@ -162,6 +162,13 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         }
     }
 
+    private void forceOverwriteFile(AbstractFile file) throws IOException {
+        FilePermissions savedPermissions = file.getPermissions();
+        file.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
+        saveAs(file);
+        file.changePermissions(savedPermissions);
+    }
+
 
     private boolean trySaveReadOnly(AbstractFile destFile) {
         QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get("file_editor.overwrite_readonly"), getFrame(),
@@ -171,9 +178,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         int ret = dialog.getActionValue();
         if (ret == 0) { // Overwrite
             try {
-                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
-                saveAs(destFile);
-                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
+                forceOverwriteFile(destFile);
                 return true;
             } catch (IOException e) {
                 getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
