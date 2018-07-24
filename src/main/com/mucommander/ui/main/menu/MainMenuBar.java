@@ -42,6 +42,7 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.DesktopManager;
+import com.mucommander.ui.menu.JScrollMenu;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionParameters;
@@ -368,6 +369,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         // Bookmark menu, menu items will be added when the menu gets selected
         menuItemMnemonicHelper.clear();
         bookmarksMenu = MenuToolkit.addMenu(Translator.get("bookmarks_menu"), menuMnemonicHelper, this);
+        //bookmarksMenu = MenuToolkit.addScrollableMenu(Translator.get("bookmarks_menu"), menuMnemonicHelper, this);
+
         MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(AddBookmarkAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(EditBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         MenuToolkit.addMenuItem(bookmarksMenu, ActionManager.getActionInstance(ExploreBookmarksAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
@@ -379,6 +382,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         this.bookmarksOffset = bookmarksMenu.getItemCount();
 
         add(bookmarksMenu);
+
         
         // Window menu
         menuItemMnemonicHelper.clear();

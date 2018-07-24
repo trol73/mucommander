@@ -22,11 +22,9 @@ import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import ru.trolsoft.calculator.CalculatorDialog;
+import ru.trolsoft.ui.TRadioButtonMenuItem;
 
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -121,15 +119,21 @@ public class TextMenuHelper {
         menuView.addSeparator();
         menuViewSyntax = new JMenu(Translator.get("text_editor.syntax"));
 
-        menuView.add(menuViewSyntax);
-        for (FileType fileType : FileType.values()) {
-            MenuToolkit.addCheckBoxMenuItem(menuViewSyntax, fileType.getName(), menuItemMnemonicHelper, null, actionListener);
-        }
+        addSyntaxMenu(actionListener, menuItemMnemonicHelper);
 
         // Tools menu
         menuTools = new JMenu(Translator.get("text_editor.tools"));
         miCalculator = MenuToolkit.addMenuItem(menuTools, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
         miBuild = MenuToolkit.addMenuItem(menuTools, Translator.get("text_editor.build"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_DOWN_MASK), actionListener);
+    }
+
+    private void addSyntaxMenu(ActionListener actionListener, MnemonicHelper menuItemMnemonicHelper) {
+        menuView.add(menuViewSyntax);
+        ButtonGroup group = new ButtonGroup();
+        for (FileType fileType : FileType.values()) {
+            MenuToolkit.addRadioButtonMenuItem(menuViewSyntax, fileType.getName(), menuItemMnemonicHelper,null,
+                    actionListener, group);
+        }
     }
 
     private int getCtrlOrMetaMask() {
@@ -158,41 +162,32 @@ public class TextMenuHelper {
         if (source == null) {
             return false;
         }
-        // check style picker
-        if (source instanceof JCheckBoxMenuItem) {
-            for (int i = 0; i < menuViewSyntax.getItemCount(); i++) {
-                JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuViewSyntax.getItem(i);
-                if (source == item) {
-                    FileType fileType = FileType.getByName(item.getText());
-                    textEditorImpl.setSyntaxType(fileType);
-                    setSyntax(fileType);
-                    return true;
-                }
-            }
+        if (checkSyntaxChangeAction(source)) {
+            return true;
         }
 
         if (source == miCopy) {
             textEditorImpl.copy();
-        } else if(source == miCut) {
+        } else if (source == miCut) {
             textEditorImpl.cut();
-        } else if(source == miPaste) {
+        } else if (source == miPaste) {
             textEditorImpl.paste();
-        } else if(source == miSelectAll) {
+        } else if (source == miSelectAll) {
             textEditorImpl.selectAll();
-        } else if(source == miFind) {
+        } else if (source == miFind) {
             textEditorImpl.find();
         } else if (source == miReplace) {
             textEditorImpl.replace();
-        } else if(source == miFindNext) {
+        } else if (source == miFindNext) {
             textEditorImpl.findNext();
-        } else if(source == miFindPrevious) {
+        } else if (source == miFindPrevious) {
             textEditorImpl.findPrevious();
-        } else if(source == miToggleLineWrap) {
+        } else if (source == miToggleLineWrap) {
             if (e.getWhen() == 0) {  
                 miToggleLineWrap.setSelected(!miToggleLineWrap.isSelected());
             }
             textViewerDelegate.wrapLines(miToggleLineWrap.isSelected());
-        } else if(source == miToggleLineNumbers) {
+        } else if (source == miToggleLineNumbers) {
             textViewerDelegate.showLineNumbers(miToggleLineNumbers.isSelected());
         } else if (source == miGotoLine) {
             textEditorImpl.gotoLine();
@@ -213,9 +208,24 @@ public class TextMenuHelper {
         return true;
     }
 
+    private boolean checkSyntaxChangeAction(Object source) {
+        if (source instanceof TRadioButtonMenuItem) {
+            for (int i = 0; i < menuViewSyntax.getItemCount(); i++) {
+                JMenuItem item = menuViewSyntax.getItem(i);
+                if (source == item) {
+                    FileType fileType = FileType.getByName(item.getText());
+                    textEditorImpl.setSyntaxType(fileType);
+                    setSyntax(fileType);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void setSyntax(FileType fileType) {
         for (int i = 0; i < menuViewSyntax.getItemCount(); i++) {
-            JCheckBoxMenuItem item = (JCheckBoxMenuItem) menuViewSyntax.getItem(i);
+            JMenuItem item = menuViewSyntax.getItem(i);
             item.setSelected(item.getText().equals(fileType.getName()));
         }
         updateEditActions();
@@ -245,7 +255,7 @@ public class TextMenuHelper {
         miFormat.setVisible(ft == FileType.XML || ft == FileType.JSON);
     }
 
-    void setBuildable(boolean canBuild){
+    void setBuildable(boolean canBuild) {
         miBuild.setEnabled(canBuild);
     }
 
