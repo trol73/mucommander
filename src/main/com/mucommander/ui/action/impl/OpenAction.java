@@ -100,7 +100,7 @@ public class OpenAction extends MuAction {
     		openBrowsable(resolvedFile, destination);
         }
 		// Opens local files using their native associations.
-		else if (isLocalFile(resolvedFile)) {
+		else if (resolvedFile.isLocalFile()) {
 			try {
 				DesktopManager.open(resolvedFile);
 				RecentExecutedFilesQL.addFile(resolvedFile);
@@ -154,11 +154,6 @@ public class OpenAction extends MuAction {
 			}
 		}
 	}
-
-	private static boolean isLocalFile(AbstractFile file) {
-        return file.getURL().getScheme().equals(FileProtocols.FILE) && file.hasAncestor(LocalFile.class);
-    }
-
 
     private static boolean cdFollowsSymlinks() {
 		return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);

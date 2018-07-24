@@ -66,16 +66,20 @@ public class CompareFilesAction extends SelectedFilesAction {
     public void performAction(FileSet files) {
         String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
         String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
+        compareTwoFiles(leftFile, rightFile);
+    }
+
+    public static void compareTwoFiles(String fiel1, String file2) {
         new Thread(() -> {
             try {
-                ExecutorUtils.execute("/usr/bin/opendiff " + leftFile + " " + rightFile);
+                ExecutorUtils.execute("/usr/bin/opendiff " + fiel1 + " " + file2);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
     }
 
-    private static boolean supported() {
+    public static boolean supported() {
         return OsFamily.MAC_OS_X.isCurrent() && new File("/usr/bin/opendiff").exists();
     }
 
