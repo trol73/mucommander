@@ -194,6 +194,7 @@ public class ActionManager {
     	registerAction(new ShowRootFoldersQLAction.Descriptor());
         registerAction(new ShowRecentViewedFilesQLAction.Descriptor());
         registerAction(new ShowRecentEditedFilesQLAction.Descriptor());
+		registerAction(new ShowEditorBookmarksQLAction.Descriptor());
     	registerAction(new ShowServerConnectionsAction.Descriptor());
     	registerAction(new ShowTabsQLAction.Descriptor());
     	registerAction(new SortByDateAction.Descriptor());

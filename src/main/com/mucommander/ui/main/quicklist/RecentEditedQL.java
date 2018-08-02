@@ -42,10 +42,9 @@ import java.util.List;
  */
 public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
 
-
     private static final LinkedList<AbstractFile> list = new LinkedList<>();
 
-    private static final int MAX_FILES_IN_LIST = 50;
+    private static final int MAX_FILES_IN_LIST = 100;
 
     private final MainFrame mainFrame;
 
@@ -63,7 +62,7 @@ public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
     @Override
     protected AbstractFile[] getData() {
         List<AbstractFile> list = TextFilesHistory.getInstance().getLastList(MAX_FILES_IN_LIST);
-        return list.toArray(new AbstractFile[list.size()]);
+        return list.toArray(new AbstractFile[0]);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
         if (item instanceof DummyFile) {
             item = FileFactory.getFile(item.getURL());
         }
-        if (item.exists()) {
+        if (item != null && item.exists()) {
             EditorRegistrar.createEditorFrame(mainFrame, item, ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage());
         } else {
             // TODO error message

@@ -17,38 +17,36 @@
  */
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.QuickLists;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
-/**
- * This action shows RecentEditedFilesQL on the current active FileTable.
- *
- * @author Oleg Trifonov
- */
-public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
+public class ShowEditorBookmarksQLAction extends ShowQuickListAction {
 
-    ShowRecentEditedFilesQLAction(MainFrame mainFrame, Map<String, Object> properties) {
+    ShowEditorBookmarksQLAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     public void performAction() {
-        openQuickList(QuickLists.RECENT_EDITED_FILES);
+        openQuickList(QuickLists.EDITOR_BOOKMARKS);
     }
 
     @Override
     public ActionDescriptor getDescriptor() {
-        return new Descriptor();
+        return new ShowRecentEditedFilesQLAction.Descriptor();
     }
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-        public static final String ACTION_ID = "ShowRecentEditedFilesQL";
+        public static final String ACTION_ID = "ShowEditorBookmarksQL";
 
         public String getId() { return ACTION_ID; }
 
@@ -56,10 +54,10 @@ public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_8, KeyEvent.ALT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_9, KeyEvent.ALT_DOWN_MASK); }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new ShowRecentEditedFilesQLAction(mainFrame, properties);
+            return new ShowEditorBookmarksQLAction(mainFrame, properties);
         }
     }
 

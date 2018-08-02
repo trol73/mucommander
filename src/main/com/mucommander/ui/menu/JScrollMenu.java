@@ -1,5 +1,7 @@
 package com.mucommander.ui.menu;
 
+import ru.trolsoft.ui.TMenuSeparator;
+
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -105,7 +107,7 @@ public class JScrollMenu extends JMenu {
     @Override
     public void addSeparator() {
         ensurePopupMenuCreated();
-        popupMenu.addSeparator();
+        popupMenu.add(new TMenuSeparator());
     }
 
     @Override

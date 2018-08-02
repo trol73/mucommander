@@ -448,7 +448,8 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
                     new RootFoldersQL(this),
                     new TabsQL(this),
                     new RecentViewedQL(this),
-                    new RecentEditedQL(this)
+                    new RecentEditedQL(this),
+                    new EditorBookmarksQL(this)
             };
         }
     	fileTablePopups[index].show();

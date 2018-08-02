@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.FileCollisionChecker;
@@ -63,7 +65,9 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     private JMenuItem miClose;
     private JMenuItem miFiles;
     private JMenuItem miMainFrame;
-    
+    private JMenuItem miAddToBookmarks;
+    private JMenuItem miRemoveFromBookmarks;
+
     /** Serves to indicate if saving is needed before closing the window, value should only be modified using the setSaveNeeded() method */
     private boolean saveNeeded;
 
@@ -222,7 +226,6 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
      */
     public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        //MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
@@ -237,7 +240,11 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
         miFiles = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
         miMainFrame = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
-        fileMenu.add(miMainFrame);
+
+        miAddToBookmarks = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.add_to_bookmark"), mnemonicHelper, null, this);
+        miRemoveFromBookmarks = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.remove_from_bookmark"), mnemonicHelper, null, this);
+        updateFileBookmarksMenuItems();
+
         fileMenu.add(new TMenuSeparator());
         miClose = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
 		
@@ -245,11 +252,20 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
 
         return menuBar;
     }
+
+    private void updateFileBookmarksMenuItems() {
+        AbstractFile file = getCurrentFile();
+        if (file == null) {
+            miAddToBookmarks.setVisible(false);
+            miRemoveFromBookmarks.setVisible(false);
+            return;
+        }
+        boolean inBookmarks = getBookmarkFilesList().contains(file.getURL().toString());
+        miAddToBookmarks.setVisible(!inBookmarks);
+        miRemoveFromBookmarks.setVisible(inBookmarks);
+    }
     
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
-	
+
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
@@ -261,12 +277,34 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         } else if (source == miClose) {
         	getFrame().dispose();
         } else if (source == miFiles) {
-            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
-            viewedAndEditedFilesQL.show();
+            new ViewedAndEditedFilesQL(getFrame(), getCurrentFile()).show();
         } else if (source == miMainFrame) {
             WindowManager.getMainFrames().get(0).toFront();
+        } else if (source == miAddToBookmarks) {
+            addFileToBookmarks();
+        } else if (source == miRemoveFromBookmarks) {
+            removeFileFromBookmarks();
         }
     }
+
+    private static LinkedList<String> getBookmarkFilesList() {
+        return TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
+    }
+
+    private void addFileToBookmarks() {
+        getBookmarkFilesList().addLast(getCurrentFile().getURL().toString());
+        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
+        miAddToBookmarks.setVisible(false);
+        miRemoveFromBookmarks.setVisible(true);
+    }
+
+    private void removeFileFromBookmarks() {
+        getBookmarkFilesList().remove(getCurrentFile().getURL().toString());
+        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
+        miAddToBookmarks.setVisible(true);
+        miRemoveFromBookmarks.setVisible(false);
+    }
+
 
     //////////////////////
     // Abstract methods //

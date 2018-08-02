@@ -116,12 +116,15 @@ public class TextMenuHelper {
         miToggleLineNumbers.setSelected(lineNumbers);
 
         menuView.addSeparator();
-        menuView.addSeparator();
         menuViewSyntax = new JMenu(Translator.get("text_editor.syntax"));
 
         addSyntaxMenu(actionListener, menuItemMnemonicHelper);
 
         // Tools menu
+        addToolsMenu(actionListener, menuItemMnemonicHelper);
+    }
+
+    private void addToolsMenu(ActionListener actionListener, MnemonicHelper menuItemMnemonicHelper) {
         menuTools = new JMenu(Translator.get("text_editor.tools"));
         miCalculator = MenuToolkit.addMenuItem(menuTools, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
         miBuild = MenuToolkit.addMenuItem(menuTools, Translator.get("text_editor.build"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_DOWN_MASK), actionListener);

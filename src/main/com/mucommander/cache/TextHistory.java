@@ -37,7 +37,8 @@ public class TextHistory {
         TEXT_SEARCH("search-text.history"),
         HEX_DATA_SEARCH("search-hex.history"),
         FILE_NAME("search-files.history"),
-        CALCULATOR("calculator.history");
+        CALCULATOR("calculator.history"),
+        EDITOR_BOOKMARKS("editor.bookmarks");
 
         private final String fileName;
         Type(String fileName) {
@@ -108,6 +109,9 @@ public class TextHistory {
 
     private LinkedList<String> load(AbstractFile file) {
         LinkedList<String> result = new LinkedList<>();
+        if (!file.exists()) {
+            return result;
+        }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"))) {
             String line;
             while ( (line = reader.readLine() ) != null) {
@@ -140,7 +144,7 @@ public class TextHistory {
      * @return             the path to the bookmark file.
      * @throws java.io.IOException if there was a problem locating the default history file.
      */
-    private static synchronized AbstractFile getHistoryFile(Type type) throws IOException {
+    public static synchronized AbstractFile getHistoryFile(Type type) throws IOException {
         return PlatformManager.getPreferencesFolder().getChild(type.fileName);
     }
 
