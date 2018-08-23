@@ -230,6 +230,7 @@ public class ActionManager {
     	registerAction(new ToggleTreeAction.Descriptor());
     	registerAction(new UnmarkAllAction.Descriptor());
     	registerAction(new UnmarkGroupAction.Descriptor());
+		registerAction(new MarkEmptyFilesAction.Descriptor());
     	registerAction(new UnpackAction.Descriptor());
     	registerAction(new ViewAction.Descriptor());
         registerAction(new ViewAsAction.Descriptor());

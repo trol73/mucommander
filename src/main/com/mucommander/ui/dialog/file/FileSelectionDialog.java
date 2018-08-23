@@ -158,7 +158,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         FileTable activeTable = mainFrame.getActiveTable();
 
         // Action coming from the selection dialog
-        if ((source==okButton || source==selectionField)) {
+        if (source == okButton || source == selectionField) {
             // Save values for next time this dialog is invoked
             caseSensitive = caseSensitiveCheckBox.isSelected();
             includeFolders = includeFoldersCheckBox.isSelected();
