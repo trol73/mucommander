@@ -98,6 +98,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
                 menuHelper = new TextMenuHelper(textEditorImpl, true);
                 //menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
                 menuHelper.initMenu(TextEditor.this, TextViewer.isLineNumbers());
+                //menuHelper.setupFileMenu(menuFile, TextEditor.this, getCurrentFile());
                 textEditorImpl.setMenuHelper(menuHelper);
     		}
     	};
@@ -139,6 +140,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 
         textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
         textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
+        textViewerDelegate.menuHelper.setupFileMenu(menuFile, TextEditor.this, getCurrentFile());
     	return menuBar;
     }
 

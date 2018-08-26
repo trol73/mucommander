@@ -18,21 +18,14 @@
 
 package com.mucommander.ui.viewer;
 
-import com.mucommander.cache.TextHistory;
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.main.WindowManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
-import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
-import ru.trolsoft.ui.TMenuSeparator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -50,14 +43,10 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      * properly in menu
      */
     private Map<KeyStroke, JMenuItem> menuKeyStrokes;
-	
+
+    protected JMenu menuFile;
     /** Close menu item */
     private JMenuItem miClose;
-    private JMenuItem miFiles;
-    private JMenuItem miMainFrame;
-    private JMenuItem miAddToBookmarks;
-    private JMenuItem miRemoveFromBookmarks;
-
 
     /**
      * Creates a new FileViewer.
@@ -75,80 +64,21 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(i18n("file_viewer.file_menu"), mnemonicHelper, null);
+        menuFile = MenuToolkit.addMenu(i18n("file_viewer.file_menu"), mnemonicHelper, null);
 
-        int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        miFiles = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), this);
-        miAddToBookmarks = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.add_to_bookmark"), mnemonicHelper, null, this);
-        miRemoveFromBookmarks = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.remove_from_bookmark"), mnemonicHelper, null, this);
-        updateFileBookmarksMenuItems();
+        miClose = MenuToolkit.addMenuItem(menuFile, i18n("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        menuFile.add(miClose);
 
-        fileMenu.add(miMainFrame);
-
-        fileMenu.add(new TMenuSeparator());
-
-
-        miClose = MenuToolkit.addMenuItem(fileMenu, i18n("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
-        fileMenu.add(miClose);
-
-        menuBar.add(fileMenu);
+        menuBar.add(menuFile);
 
         return menuBar;
     }
-
-    private void updateFileBookmarksMenuItems() {
-        AbstractFile file = getCurrentFile();
-        if (file == null) {
-            miAddToBookmarks.setVisible(false);
-            miRemoveFromBookmarks.setVisible(false);
-            return;
-        }
-        boolean inBookmarks = getBookmarkFilesList().contains(file.getURL().toString());
-        miAddToBookmarks.setVisible(!inBookmarks);
-        miRemoveFromBookmarks.setVisible(inBookmarks);
-    }
-    
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == miClose) {
             getFrame().dispose();
-        } else if (source == miFiles) {
-            showFilesQuickList();
-        } else if (source == miMainFrame) {
-            showMainFrame();
-        } else if (source == miAddToBookmarks) {
-            addFileToBookmarks();
-        } else if (source == miRemoveFromBookmarks) {
-            removeFileFromBookmarks();
         }
-    }
-
-    private static LinkedList<String> getBookmarkFilesList() {
-        return TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
-    }
-
-    private void addFileToBookmarks() {
-        getBookmarkFilesList().addLast(getCurrentFile().getURL().toString());
-        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
-        miAddToBookmarks.setVisible(false);
-        miRemoveFromBookmarks.setVisible(true);
-    }
-
-    private void removeFileFromBookmarks() {
-        getBookmarkFilesList().remove(getCurrentFile().getURL().toString());
-        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
-        miAddToBookmarks.setVisible(true);
-        miRemoveFromBookmarks.setVisible(false);
-    }
-    private void showFilesQuickList() {
-        ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
-        viewedAndEditedFilesQL.show();
-    }
-
-    private static void showMainFrame() {
-        WindowManager.getMainFrames().get(0).toFront();
     }
 
 

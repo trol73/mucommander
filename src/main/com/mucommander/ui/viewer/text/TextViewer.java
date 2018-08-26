@@ -18,27 +18,11 @@
 
 package com.mucommander.ui.viewer.text;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Stack;
-
-import javax.swing.*;
-import javax.swing.event.DocumentListener;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuSnapshot;
-import com.mucommander.ui.helper.MenuToolkit;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
@@ -46,6 +30,17 @@ import com.mucommander.ui.encoding.EncodingMenu;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
 import org.fife.ui.rtextarea.GutterEx;
+
+import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Stack;
 
 
 /**
@@ -109,6 +104,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     @Override
     public void setFrame(final FileFrame frame) {
         super.setFrame(frame);
+        textEditorImpl.setFrame(frame);
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
     }
@@ -182,6 +178,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
         textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
         setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
+        menuHelper.setupFileMenu(menuFile, TextViewer.this, getCurrentFile());
         return menuBar;
     }
 
@@ -244,6 +241,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         menuHelper = new TextMenuHelper(textEditorImpl, false);
         //menuHelper.initMenu(TextViewer.this, getRowHeader().getView() != null);
         menuHelper.initMenu(TextViewer.this, lineNumbers);
+        //menuHelper.setupFileMenu(menuFile, TextViewer.this, getCurrentFile());
     }
 
     ///////////////////////////////
@@ -264,6 +262,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         }
         startEditing(file, null);
         menuHelper.setSyntax(type);
+        textEditorImpl.prepareForView(file);
         textEditorImpl.setSyntaxType(type);
     }
     

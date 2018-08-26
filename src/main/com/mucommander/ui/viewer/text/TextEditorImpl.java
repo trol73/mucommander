@@ -21,6 +21,8 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.action.ActionProperties;
+import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.viewer.text.search.*;
 import com.mucommander.ui.viewer.text.tools.ExecPanel;
 import com.mucommander.ui.viewer.text.tools.ExecUtils;
@@ -48,6 +50,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.LinkedList;
 
 /**
  * Text editor implementation used by {@link TextViewer} and {@link TextEditor}.
@@ -553,6 +556,10 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         }
     }
 
+    void prepareForView(AbstractFile file) {
+        this.file = file;
+    }
+
     public void setFrame(FileFrame frame) {
         this.frame = frame;
     }
@@ -569,5 +576,66 @@ class TextEditorImpl implements ThemeListener, ThemeId {
     void setMenuHelper(TextMenuHelper menuHelper) {
         this.menuHelper = menuHelper;
     }
+
+    void addCurrentFileToBookmarks() {
+	    AbstractFile currentFile = getFile();
+        getBookmarkFilesList().addLast(currentFile.getURL().toString());
+        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
+    }
+
+    void removeCurrentFileFromBookmarks() {
+        AbstractFile currentFile = getFile();
+        getBookmarkFilesList().remove(currentFile.getURL().toString());
+        TextHistory.getInstance().save(TextHistory.Type.EDITOR_BOOKMARKS);
+    }
+
+    void showFilesQuickList() {
+        AbstractFile currentFile = getFile();
+        ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(frame, currentFile);
+        viewedAndEditedFilesQL.show();
+    }
+
+    private static LinkedList<String> getBookmarkFilesList() {
+        return TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
+    }
+
+
+    private static AbstractFile getFileWithSameNameAndExt(AbstractFile file, String ...extensions) {
+        String fileName = file.getNameWithoutExtension();
+	    for (String ext : extensions) {
+            try {
+                AbstractFile selectedFile = file.getParent().getChild(fileName + ext);
+                if (selectedFile != null && selectedFile.exists()) {
+                    return selectedFile;
+                }
+            } catch (IOException ignore) {}
+        }
+        return null;
+    }
+
+
+    void switchBetweenHeaderAndSource() {
+	    AbstractFile currentFile = getFile();
+        String ext = file.getExtension().toLowerCase();
+	    boolean isSource = "c".equals(ext) || "cpp".equals(ext) || "cc".equals(ext);
+        boolean isHeader = "h".equals(ext) || "hpp".equals(ext);
+        AbstractFile fileToOpen;
+        if (isSource) {
+            fileToOpen = getFileWithSameNameAndExt(currentFile, ".h", ".hpp");
+        } else if (isHeader) {
+            fileToOpen = getFileWithSameNameAndExt(currentFile, ".c", ".cpp", ".cc");
+        } else {
+            return;
+        }
+        if (fileToOpen != null) {
+            MainFrame mainFrame = frame.getMainFrame();
+            if (textArea.isEditable()) {
+                EditorRegistrar.createEditorFrame(mainFrame, fileToOpen, ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage());
+            } else {
+                ViewerRegistrar.createViewerFrame(mainFrame, fileToOpen, ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage());
+            }
+        }
+    }
+
 
 }
