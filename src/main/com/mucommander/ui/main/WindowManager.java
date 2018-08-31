@@ -109,7 +109,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         
         // Sets custom lookAndFeel if different from current lookAndFeel
         String lnfName = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
-        if (lnfName!=null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
+        if (lnfName != null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
             setLookAndFeel(lnfName);
         }
 

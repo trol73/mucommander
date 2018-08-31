@@ -271,15 +271,7 @@ public class CellLabel extends JLabel {
         }
 
         if (markerColor != null) {
-            setSize(w - h, h);
-            super.paint(g);
-            setSize(w, h);
-            if (gradientColor == null) {
-                g.setColor(lastBackgroundColor);
-                g.fillRect(w - h, 1, h, h - 2);
-            }
-            g.setColor(markerColor);
-            g.fillArc(w - h, h/6, h*2/3, h*2/3, 0, 360);
+            drawMarker(g, w, h);
         } else {
             // Normal painting
             super.paint(g);
@@ -297,22 +289,38 @@ public class CellLabel extends JLabel {
         }
         // TODO improve it
         if (progressValue > 0) {
-            int a = -progressValue*20 % 360;
-            int r = h - 4;
-            if (r % 2 != 0) {
-                r--;
-            }
-            g.setColor(lastForegroundColor);
-            g.fillArc(w - r, 2, r, r, a+100, 200);
-            g.setColor(lastBackgroundColor);
-            int r2 = r/2;
-            if (r2 % 2 != 0) {
-                r2++;
-            }
-            int d = (r - r2) / 2;
-            g.fillOval(w - r + d, 2 + d, r2, r2);
-            //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
+            drawProgress(g, w, h);
         }
+    }
+
+    private void drawMarker(Graphics g, int w, int h) {
+        setSize(w - h, h);
+        super.paint(g);
+        setSize(w, h);
+        if (gradientColor == null) {
+            g.setColor(lastBackgroundColor);
+            g.fillRect(w - h, 1, h, h - 2);
+        }
+        g.setColor(markerColor);
+        g.fillArc(w - h, h/6, h*2/3, h*2/3, 0, 360);
+    }
+
+    private void drawProgress(Graphics g, int w, int h) {
+        int a = -progressValue*20 % 360;
+        int r = h - 4;
+        if (r % 2 != 0) {
+            r--;
+        }
+        g.setColor(lastForegroundColor);
+        g.fillArc(w - r, 2, r, r, a+100, 200);
+        g.setColor(lastBackgroundColor);
+        int r2 = r/2;
+        if (r2 % 2 != 0) {
+            r2++;
+        }
+        int d = (r - r2) / 2;
+        g.fillOval(w - r + d, 2 + d, r2, r2);
+        //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
     }
 
     protected void paintOutline(Graphics g) {

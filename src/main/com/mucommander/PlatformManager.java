@@ -124,7 +124,12 @@ public class PlatformManager {
      * @see                #setPreferencesFolder(String)
      * @see                #setPreferencesFolder(AbstractFile)
      */
-    public static void setPreferencesFolder(File folder) throws IOException {setPreferencesFolder(FileFactory.getFile(folder.getAbsolutePath()));}
+    public static void setPreferencesFolder(File folder) throws IOException {
+        AbstractFile file = FileFactory.getFile(folder.getAbsolutePath());
+        if (file != null) {
+            setPreferencesFolder(file);
+        }
+    }
 
     /**
      * Sets the path to the folder in which trolCommander will look for its preferences.

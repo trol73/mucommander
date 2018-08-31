@@ -72,7 +72,7 @@ public class DefaultPathCanonizer implements PathCanonizer {
                 }
 
                 // Discard '.' and empty directories
-                if((dirWS.equals("") && pathV.size()>0) || dirWS.equals(".")) {
+                if((dirWS.isEmpty() && pathV.size()>0) || dirWS.equals(".")) {
                     continue;
                 }
                 // Remove last directory

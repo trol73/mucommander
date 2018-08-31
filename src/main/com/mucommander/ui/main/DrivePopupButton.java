@@ -296,6 +296,44 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         MnemonicHelper mnemonicHelper = new MnemonicHelper();   // Provides mnemonics and ensures uniqueness
 
+        addVolumes(popupMenu, nbVolumes, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        addBookmarks(popupMenu, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        // Add 'Network shares' shortcut
+        if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
+            MuAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///", null));
+            action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
+            setMnemonic(popupMenu.add(action), mnemonicHelper);
+        }
+
+        if (BonjourDirectory.isActive()) {
+            // Add Bonjour services menu
+            setMnemonic(popupMenu.add(new BonjourMenu() {
+                @Override
+                public MuAction getMenuItemAction(BonjourService bs) {
+                    return new CustomOpenLocationAction(mainFrame, bs);
+                }
+            }), mnemonicHelper);
+        }
+
+        addAdbDevices(popupMenu, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        // Add 'connect to server' shortcuts
+        setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("FTP...", FTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("SFTP...", SFTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("HTTP...", HTTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("NFS...", NFSPanel.class)), mnemonicHelper);
+
+        return popupMenu;
+    }
+
+
+    private void addVolumes(JPopupMenu popupMenu, int nbVolumes, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 
@@ -333,61 +371,71 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         }
 
         new RefreshDriveNamesAndIcons(popupMenu, itemsV).start();
+    }
 
-        popupMenu.add(new TMenuSeparator());
-
+    private void addBookmarks(JPopupMenu popupMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         // Add bookmarks
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
-            for (Bookmark b : bookmarks) {
-                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
-                    popupMenu.add(new TMenuSeparator());
-                    continue;
-                }
-
-                JMenuItem item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
-                String location = b.getLocation();
-                if (!location.contains("://")) {
-                    AbstractFile file = FileFactory.getFile(location);
-                    if (file != null) {
-                        Icon icon = FileIconsCache.getInstance().getIcon(file);
-                        if (icon != null) {
-                            item.setIcon(icon);
-                        }
-//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
-//                        if (image != null) {
-//                            item.setIcon(new ImageIcon(image));
-//                        }
-                    }
-                } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
-                    item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
-                }
-                setMnemonic(item, mnemonicHelper);
-            }
+            addBookmarksGroup(popupMenu, mainFrame, mnemonicHelper, bookmarks, null);
         } else {
             // No bookmark : add a disabled menu item saying there is no bookmark
             popupMenu.add(Translator.get("bookmarks_menu.no_bookmark")).setEnabled(false);
         }
+    }
 
-        popupMenu.add(new TMenuSeparator());
-
-        // Add 'Network shares' shortcut
-        if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            MuAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
-            action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
-            setMnemonic(popupMenu.add(action), mnemonicHelper);
-        }
-
-        if (BonjourDirectory.isActive()) {
-            // Add Bonjour services menu
-            setMnemonic(popupMenu.add(new BonjourMenu() {
-                @Override
-                public MuAction getMenuItemAction(BonjourService bs) {
-                    return new CustomOpenLocationAction(mainFrame, bs);
+    private void addBookmarksGroup(JComponent parentMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper,
+                                   List<Bookmark> bookmarks, String parent) {
+        for (Bookmark b : bookmarks) {
+            if ((b.getParent() == null && parent == null) || (parent != null && parent.equals(b.getParent()))) {
+                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
+                    parentMenu.add(new TMenuSeparator());
+                    continue;
                 }
-            }), mnemonicHelper);
+                if (b.getLocation().isEmpty()) {
+                    JMenu groupMenu = new JMenu(b.getName());
+                    parentMenu.add(groupMenu);
+                    addBookmarksGroup(groupMenu, mainFrame, mnemonicHelper, bookmarks, b.getName());
+                    setMnemonic(groupMenu, mnemonicHelper);
+                } else {
+                    JMenuItem item = createBookmarkMenuItem(parentMenu, mainFrame, b);
+                    setMnemonic(item, mnemonicHelper);
+                }
+            }
         }
+    }
 
+    private JMenuItem createBookmarkMenuItem(JComponent parentMenu, MainFrame mainFrame, Bookmark b) {
+        JMenuItem item;
+        if (parentMenu instanceof JPopupMenu) {
+            item = ((JPopupMenu)parentMenu).add(new CustomOpenLocationAction(mainFrame, b));
+        } else {
+            item = ((JMenu)parentMenu).add(new CustomOpenLocationAction(mainFrame, b));
+        }
+        //JMenuItem item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
+        String location = b.getLocation();
+        if (!location.contains("://")) {
+            AbstractFile file = FileFactory.getFile(location);
+            if (file != null) {
+                Icon icon = FileIconsCache.getInstance().getIcon(file);
+                if (icon != null) {
+                    item.setIcon(icon);
+                }
+//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
+//                        if (image != null) {
+//                            item.setIcon(new ImageIcon(image));
+//                        }
+            }
+        } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
+            item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
+        } else if (location.startsWith("adb://")) {
+            item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.ANDROID_ICON_NAME));
+        }
+        return item;
+    }
+
+
+    private void addAdbDevices(JPopupMenu popupMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         if (AdbUtils.checkAdb()) {
             setMnemonic(popupMenu.add(new AndroidMenu() {
                 @Override
@@ -402,22 +450,10 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 }
             }), mnemonicHelper);
         }
-
-        popupMenu.add(new TMenuSeparator());
-
-        // Add 'connect to server' shortcuts
-        setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("FTP...", FTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("SFTP...", SFTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("HTTP...", HTTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("NFS...", NFSPanel.class)), mnemonicHelper);
-
-        return popupMenu;
     }
 
 
 
-    
     /**
      *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
      *  to not lock the main even thread. The popup menu gets first displayed with the short drive names, and

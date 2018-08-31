@@ -42,12 +42,13 @@ public class AbstractExtensionFilter extends AbstractStringCriterionFilter {
      * @param caseSensitive if true, this filter will be case-sensitive
      * @param inverted if true, this filter will operate in inverted mode.
      */
-    public AbstractExtensionFilter(CriterionValueGenerator<String> generator, String[] extensions, boolean caseSensitive, boolean inverted) {
+    AbstractExtensionFilter(CriterionValueGenerator<String> generator, String[] extensions, boolean caseSensitive, boolean inverted) {
         super(generator, caseSensitive, inverted);
 
         this.extensions = new char[extensions.length][];
-        for(int i = 0; i < extensions.length; i++)
+        for (int i = 0; i < extensions.length; i++) {
             this.extensions[i] = extensions[i].toCharArray();
+        }
     }
 
 
@@ -56,25 +57,26 @@ public class AbstractExtensionFilter extends AbstractStringCriterionFilter {
     //////////////////////////////////////////////////
 
     public boolean accept(String value) {
-        int i;
-        int len;
-
-        len = value.length();
+        int len = value.length();
 
         // If case isn't important, a simple String.endsWith is enough.
-        if(isCaseSensitive()) {
-            for(i = 0; i < extensions.length; i++)
-                if(StringUtils.matches(value, extensions[i], len))
+        if (isCaseSensitive()) {
+            for (char[] extension : extensions) {
+                if (StringUtils.matches(value, extension, len)) {
                     return true;
+                }
+            }
         }
 
         // If case is important, we have to be a bit more creative and
         // use String.regionMatches.
         else {
             // Matches the value to each extension.
-            for(i = 0; i < extensions.length; i++)
-                if(StringUtils.matchesIgnoreCase(value, extensions[i], len))
+            for (char[] extension : extensions) {
+                if (StringUtils.matchesIgnoreCase(value, extension, len)) {
                     return true;
+                }
+            }
         }
         return false;
     }

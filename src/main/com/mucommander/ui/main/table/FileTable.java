@@ -1841,7 +1841,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         switch (event.getVariable()) {
             case MuPreferences.DISPLAY_COMPACT_FILE_SIZE:
             	FileTableModel.setSizeFormat(event.getBooleanValue());
-            	tableModel.fillCellCache();
+            	tableModel.fillCellCache(mainFrame.getActiveTable());
             	resizeAndRepaint();
                 break;
             case MuPreferences.DATE_FORMAT:
@@ -1852,7 +1852,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 // Since listeners are stored by MuConfiguration in a hash map, order is pretty much random.
                 // So CustomDateFormat#updateDateFormat() has to be called before to ensure that is uses the new date format.
                 CustomDateFormat.updateDateFormat();
-                tableModel.fillCellCache();
+                tableModel.fillCellCache(mainFrame.getActiveTable());
                 resizeAndRepaint();
                 break;
             case MuPreferences.TABLE_ICON_SCALE:
@@ -2284,7 +2284,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         public void run() {
             try {
                 // Set the new current folder.
-                tableModel.setCurrentFolder(folder, children);
+                tableModel.setCurrentFolder(folder, children, FileTable.this);
                 // Update the visibility state of conditional columns
                 FileTableColumnModel columnModel = getFileTableColumnModel();
 

@@ -257,7 +257,7 @@ public class DynamicList<E> extends JList<E> {
      * @return true if the given index is without the bounds of the items.
      */
     public boolean isIndexValid(int index) {
-        return index>=0 && index<items.size();
+        return index >= 0 && index < items.size();
     }
 
 

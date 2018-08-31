@@ -21,6 +21,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.tabs.FileTableTab;
+import com.mucommander.ui.main.tabs.FileTableTabs;
 
 import javax.swing.KeyStroke;
 import java.util.Map;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 public class MoveTabToOtherPanelAction extends ActiveTabAction {
 
-    MoveTabToOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MoveTabToOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     
@@ -43,8 +44,8 @@ public class MoveTabToOtherPanelAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
-        setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getTabs().getTabsCount() > 1);
+        FileTableTabs tabs = mainFrame.getActivePanel().getTabs();
+        setEnabled(!tabs.getCurrentTab().isLocked() && tabs.getTabsCount() > 1);
     }
 
     @Override
@@ -62,13 +63,21 @@ public class MoveTabToOtherPanelAction extends ActiveTabAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MoveTabToOtherPanel";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.TAB; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.TAB;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MoveTabToOtherPanelAction(mainFrame, properties);

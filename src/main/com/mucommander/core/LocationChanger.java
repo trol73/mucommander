@@ -18,28 +18,15 @@
 
 package com.mucommander.core;
 
-import java.awt.Cursor;
-import java.awt.EventQueue;
-import java.net.MalformedURLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.auth.CredentialsMapping;
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.AuthException;
-import com.mucommander.commons.file.AuthenticationType;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.file.FileURL;
+import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.auth.AuthDialog;
@@ -47,7 +34,12 @@ import com.mucommander.ui.dialog.file.DownloadDialog;
 import com.mucommander.ui.event.LocationManager;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.utils.Callback;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.net.MalformedURLException;
 
 /**
  * 
@@ -89,9 +81,9 @@ public class LocationChanger {
 	 * folder to the given folder
 	 *
 	 * @param folderURL the URL of the folder to switch to
-	 * @param callback the {@link Callback#call()} method will be called when folder has changed
+	 * @param callback the {@link Runnable#run()} method will be called when folder has changed
 	 */
-	public void tryChangeCurrentFolderInternal(final FileURL folderURL, final Callback callback) {
+	public void tryChangeCurrentFolderInternal(final FileURL folderURL, Runnable callback) {
 		mainFrame.setNoEventsMode(true);
 		// Set cursor to hourglass/wait
 		mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -105,14 +97,15 @@ public class LocationChanger {
                 // Restore default cursor
                 mainFrame.setCursor(Cursor.getDefaultCursor());
                 // Notify callback that the folder has been set
-                callback.call();
+                callback.run();
             }
         });
 
-    	if (EventQueue.isDispatchThread())
-    		setLocationThread.start();
-    	else
-    		setLocationThread.run();
+    	if (EventQueue.isDispatchThread()) {
+			setLocationThread.start();
+		} else {
+			setLocationThread.run();
+		}
 	}
 
 	/**

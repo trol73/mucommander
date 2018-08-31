@@ -39,13 +39,13 @@ public class FocusRequester implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FocusRequester.class);
 	
     /** The component on which to request focus */
-    private Component c;
+    private Component component;
 
     /** If true, focus will be requested using Component#requestFocusInWindow() instead of Component#requestFocus() */
     private boolean requestFocusInWindow;
 	
     private FocusRequester(Component c, boolean requestFocusInWindow) {
-        this.c = c;
+        this.component = c;
         this.requestFocusInWindow = requestFocusInWindow;
     }
 	
@@ -93,22 +93,22 @@ public class FocusRequester implements Runnable {
     public void run() {
         // Request focus on the component
         if (requestFocusInWindow) {
-            c.requestFocusInWindow();
+            component.requestFocusInWindow();
         } else {
-            c.requestFocus();
+            component.requestFocus();
         }
-        if (c instanceof Frame) {
-            Frame f = (Frame)c;
+        if (component instanceof Frame) {
+            Frame f = (Frame) component;
             f.toFront();
         }
-        if (c instanceof MainFrame) {
-            MainFrame mainFrame = (MainFrame)c;
+        if (component instanceof MainFrame) {
+            MainFrame mainFrame = (MainFrame) component;
             mainFrame.getActiveTable().requestFocus();
         }
 
 
-        LOGGER.debug("focus requested on " + (c.getClass().getName()));
+        LOGGER.debug("focus requested on " + (component.getClass().getName()));
 
-        this.c = null;
+        this.component = null;
     }
 }

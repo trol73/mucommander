@@ -25,6 +25,7 @@ import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -66,7 +67,7 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    OpenInBothPanelsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private OpenInBothPanelsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform this action in a separate thread, to avoid locking the event thread
@@ -77,8 +78,9 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
     public void activePanelChanged(FolderPanel folderPanel) {
         super.activePanelChanged(folderPanel);
         
-        if (mainFrame.getInactivePanel().getTabs().getCurrentTab().isLocked())
-        	setEnabled(false);
+        if (mainFrame.getInactivePanel().getTabs().getCurrentTab().isLocked()) {
+            setEnabled(false);
+        }
     }
 
     /**
@@ -87,8 +89,7 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
     @Override
     protected boolean getFileTableCondition(FileTable fileTable) {
         AbstractFile selectedFile = fileTable.getSelectedFile(true, true);
-
-        return selectedFile!=null && selectedFile.isBrowsable();
+        return selectedFile != null && selectedFile.isBrowsable();
     }
 
 
@@ -99,37 +100,13 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
      */
     @Override
     public void performAction() {
-        AbstractFile otherFile = null;
-
         // Retrieves the current selection, aborts if none (should not normally happen).
         AbstractFile selectedFile = mainFrame.getActiveTable().getSelectedFile(true, true);
         if (selectedFile == null || !selectedFile.isBrowsable()) {
             return;
         }
 
-        try {
-            BaseFileTableModel otherTableModel = mainFrame.getInactiveTable().getFileTableModel();
-
-            if (mainFrame.getActiveTable().isParentFolderSelected()) {
-                otherFile = otherTableModel.getParentFolder();
-            } else {
-                // Look for a file in the other table with the same name as the selected one (case insensitive)
-                int fileCount = otherTableModel.getFileCount();
-                String targetFilename = selectedFile.getName();
-                for (int i = 0; i < fileCount; i++) {
-                    otherFile = otherTableModel.getCachedFileAt(i);
-                    if (otherFile.getName().equalsIgnoreCase(targetFilename)) {
-                        break;
-                    }
-
-                    if (i == fileCount-1) {
-                        otherFile = null;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            otherFile = null;
-        }
+        AbstractFile otherFile = findOtherFile(selectedFile);
 
         // Opens 'file' in the active panel.
         Thread openThread = mainFrame.getActivePanel().tryChangeCurrentFolder(selectedFile);
@@ -148,7 +125,35 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
         }
     }
 
-	@Override
+    @Nullable
+    private AbstractFile findOtherFile(AbstractFile selectedFile) {
+        try {
+            BaseFileTableModel otherTableModel = mainFrame.getInactiveTable().getFileTableModel();
+
+            if (mainFrame.getActiveTable().isParentFolderSelected()) {
+                return otherTableModel.getParentFolder();
+            } else {
+                // Look for a file in the other table with the same name as the selected one (case insensitive)
+                int fileCount = otherTableModel.getFileCount();
+                String targetFilename = selectedFile.getName();
+                AbstractFile otherFile = null;
+                for (int i = 0; i < fileCount; i++) {
+                    otherFile = otherTableModel.getCachedFileAt(i);
+                    if (otherFile.getName().equalsIgnoreCase(targetFilename)) {
+                        break;
+                    }
+                    if (i == fileCount-1) {
+                        otherFile = null;
+                    }
+                }
+                return otherFile;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
 	public ActionDescriptor getDescriptor() {
 		return new Descriptor();
 	}
@@ -157,11 +162,17 @@ public class OpenInBothPanelsAction extends SelectedFileAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenInBothPanels";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);

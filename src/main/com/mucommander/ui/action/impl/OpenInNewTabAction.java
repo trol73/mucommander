@@ -42,7 +42,7 @@ import com.mucommander.ui.main.table.FileTable;
  */
 public class OpenInNewTabAction extends SelectedFileAction {
 
-	OpenInNewTabAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private OpenInNewTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 	
@@ -88,11 +88,17 @@ public class OpenInNewTabAction extends SelectedFileAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenInNewTab";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, CTRL_OR_META_DOWN_MASK);

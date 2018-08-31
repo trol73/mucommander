@@ -102,8 +102,9 @@ public class QuickListDataList<T> extends JList<T> {
 	}
 
 	protected T getListItem(int index) {
-		if (index > getModel().getSize() || index < 0)
+		if (index > getModel().getSize() || index < 0) {
 			return null;
+		}
 
 		return getModel().getElementAt(index);
 	}
@@ -138,7 +139,7 @@ public class QuickListDataList<T> extends JList<T> {
 	/**
 	 * 
 	 */
-	protected class DataListItemRenderer extends DefaultListCellRenderer implements ThemeListener {
+	protected class DataListItemRenderer<E> extends DefaultListCellRenderer implements ThemeListener {
 
 		private Color selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
 		private Color selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
@@ -147,7 +148,7 @@ public class QuickListDataList<T> extends JList<T> {
 
 		private Font itemFont = ThemeManager.getCurrentFont(ThemeData.QUICK_LIST_ITEM_FONT);
 
-		protected DataListItemRenderer() { }
+		DataListItemRenderer() { }
 
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int rowIndex, boolean isSelected, boolean cellHasFocus) {

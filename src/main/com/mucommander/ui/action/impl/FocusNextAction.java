@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -28,10 +27,8 @@ import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -43,7 +40,7 @@ import java.util.Map;
  */
 public class FocusNextAction extends MuAction {
 
-    FocusNextAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private FocusNextAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Perform the action also when in 'no events' mode
@@ -88,11 +85,17 @@ public class FocusNextAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "FocusNext";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, CTRL_OR_META_DOWN_MASK);

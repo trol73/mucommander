@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class SwitchActiveTableAction extends MuAction {
 
-    SwitchActiveTableAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SwitchActiveTableAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -43,10 +43,11 @@ public class SwitchActiveTableAction extends MuAction {
         FileTable activeTable = mainFrame.getActiveTable();
         FileTable leftTable = mainFrame.getLeftPanel().getFileTable();
         FileTable rightTable = mainFrame.getRightPanel().getFileTable();
-        if(activeTable == leftTable)
+        if (activeTable == leftTable) {
             rightTable.requestFocus();
-        else if(activeTable == rightTable)
+        } else if(activeTable == rightTable) {
             leftTable.requestFocus();
+        }
     }
 
 	@Override
@@ -58,13 +59,21 @@ public class SwitchActiveTableAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "SwitchActiveTable";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SwitchActiveTableAction(mainFrame, properties);

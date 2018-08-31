@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class MoveAction extends SelectedFilesAction {
 
-    MoveAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MoveAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new OrFileFilter(
@@ -65,13 +65,21 @@ public class MoveAction extends SelectedFilesAction {
     public static class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Move";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MoveAction(mainFrame, properties);

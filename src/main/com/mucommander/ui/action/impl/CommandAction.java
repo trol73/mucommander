@@ -60,7 +60,7 @@ public class CommandAction extends MuAction {
      * @param properties ignored.
      * @param command    command to init when this action is called.
      */
-    CommandAction(MainFrame mainFrame, Map<String, Object> properties, Command command) {
+    private CommandAction(MainFrame mainFrame, Map<String, Object> properties, Command command) {
         super(mainFrame, properties);
         this.command = command;
         setLabel(command.getDisplayName());
@@ -119,15 +119,25 @@ public class CommandAction extends MuAction {
     				command.getDisplayName());
     	}
 
-    	public String getId() { return ACTION_ID; }
+    	public String getId() {
+    	    return ACTION_ID;
+    	}
 
-    	public String getLabel() { return label; }
+    	public String getLabel() {
+    	    return label;
+    	}
 
-    	public ActionCategory getCategory() { return ActionCategory.COMMANDS; }
+    	public ActionCategory getCategory() {
+    	    return ActionCategory.COMMANDS;
+    	}
 
-    	public KeyStroke getDefaultAltKeyStroke() { return null; }
+    	public KeyStroke getDefaultAltKeyStroke() {
+    	    return null;
+    	}
 
-    	public KeyStroke getDefaultKeyStroke() { return null; }
+    	public KeyStroke getDefaultKeyStroke() {
+    	    return null;
+    	}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CommandAction(mainFrame, properties, command);

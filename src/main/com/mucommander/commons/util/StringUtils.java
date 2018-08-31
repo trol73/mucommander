@@ -80,13 +80,16 @@ public final class StringUtils {
         while (posB > 0) {
             char cA = a.charAt(--posA);   // Current character in a.
             // Works on lower-case characters only.
-            if (!Character.isLowerCase(cA))
+            if (!Character.isLowerCase(cA)) {
                 cA = Character.toLowerCase(cA);
+            }
             char cB = b.charAt(--posB);   // Current character in b.
-            if (!Character.isLowerCase(cB))
+            if (!Character.isLowerCase(cB)) {
                 cB = Character.toLowerCase(cB);
-            if (cA != cB)
+            }
+            if (cA != cB) {
                 return false;
+            }
         }
         return true;
     }

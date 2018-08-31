@@ -36,7 +36,7 @@ public class ToggleSinglePanelAction extends MuAction {
     private static final float TWO_PANELS_DEFAULT_RATIO = 0.5f;
     private float previousRatio = TWO_PANELS_DEFAULT_RATIO;
 
-    ToggleSinglePanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleSinglePanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

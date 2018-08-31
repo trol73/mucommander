@@ -33,7 +33,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class ToggleDateColumnAction extends ToggleColumnAction {
 
-    ToggleDateColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleDateColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.DATE);
     }
 

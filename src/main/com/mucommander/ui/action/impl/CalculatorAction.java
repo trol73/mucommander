@@ -32,7 +32,7 @@ import java.util.Map;
 @InvokesDialog
 public class CalculatorAction extends MuAction {
 
-    CalculatorAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CalculatorAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

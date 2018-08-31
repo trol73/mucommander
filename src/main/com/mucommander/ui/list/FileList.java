@@ -67,10 +67,11 @@ public class FileList extends JList<AbstractFile> {
 
         // Very important: allows the JList to operate in fixed cell height mode, which makes it substantially faster
         // to initialize when there is a large number of rows.
-        if(nbFiles>0)
+        if (nbFiles > 0) {
             setPrototypeCellValue(files.elementAt(0));
+        }
 
-        if(preloadFileAttributes) {
+        if (preloadFileAttributes) {
             filenames = new String[nbFiles];
             icons = new Icon[nbFiles];
             AbstractFile file;
@@ -105,11 +106,10 @@ public class FileList extends JList<AbstractFile> {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 label.setFont(customFont);
 
-                if(FileList.this.fileAttributesPreloaded) {
+                if (FileList.this.fileAttributesPreloaded) {
                     label.setText(filenames[index]);
                     label.setIcon(icons[index]);
-                }
-                else {
+                } else {
                     AbstractFile file = (AbstractFile)value;
                     label.setText(file.getName());
                     label.setIcon(file.getIcon());

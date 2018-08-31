@@ -128,21 +128,22 @@ public class ThemeManager {
             type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);
             name = MuPreferences.DEFAULT_THEME_NAME;
 
-            if (type == Theme.Type.USER)
+            if (type == Theme.Type.USER) {
                 wasUserThemeLoaded = true;
+            }
 
             // If the default theme can be loaded, tries to load the user theme if we haven't done so yet.
             // If we have, or if it fails, defaults to an empty user theme.
             try {
                 currentTheme = readTheme(type, name);
             } catch(Exception e2) {
-                if(!wasUserThemeLoaded) {
+                if (!wasUserThemeLoaded) {
                     try {currentTheme = readTheme(Theme.Type.USER, null);}
                     catch(Exception e3) {
                         e3.printStackTrace();
                     }
                 }
-                if(currentTheme == null) {
+                if (currentTheme == null) {
                     currentTheme         = new Theme(listener);
                     wasUserThemeModified = true;
                 }
@@ -1124,8 +1125,9 @@ public class ThemeManager {
      */
     private static void triggerFontEvent(FontChangedEvent event) {
         synchronized (listeners) {
-            for(ThemeListener listener : listeners.keySet())
+            for (ThemeListener listener : listeners.keySet()) {
                 listener.fontChanged(event);
+            }
         }
     }
 
@@ -1136,8 +1138,9 @@ public class ThemeManager {
      */
     private static void triggerColorEvent(ColorChangedEvent event) {
         synchronized (listeners) {
-            for(ThemeListener listener : listeners.keySet())
+            for (ThemeListener listener : listeners.keySet()) {
                 listener.colorChanged(event);
+            }
         }
     }
 
@@ -1175,19 +1178,23 @@ public class ThemeManager {
      */
     private static class CurrentThemeListener implements ThemeListener {
         public void fontChanged(FontChangedEvent event) {
-            if(event.getSource().getType() == Theme.Type.USER)
+            if (event.getSource().getType() == Theme.Type.USER) {
                 wasUserThemeModified = true;
+            }
 
-            if(event.getSource() == currentTheme)
+            if (event.getSource() == currentTheme) {
                 triggerFontEvent(event);
+            }
         }
 
         public void colorChanged(ColorChangedEvent event) {
-            if(event.getSource().getType() == Theme.Type.USER)
+            if (event.getSource().getType() == Theme.Type.USER) {
                 wasUserThemeModified = true;
+            }
 
-            if(event.getSource() == currentTheme)
+            if (event.getSource() == currentTheme) {
                 triggerColorEvent(event);
+            }
         }
     }
 

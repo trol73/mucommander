@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class ShowFilePopupMenuAction extends SelectedFilesAction {
 
-    ShowFilePopupMenuAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ShowFilePopupMenuAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -58,13 +58,21 @@ public class ShowFilePopupMenuAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ShowFilePopupMenu";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.FILES; }
+        public ActionCategory getCategory() {
+            return ActionCategory.FILES;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK); }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK);
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_CONTEXT_MENU, 0); }
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_CONTEXT_MENU, 0);
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ShowFilePopupMenuAction(mainFrame, properties);

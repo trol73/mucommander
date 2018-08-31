@@ -174,14 +174,15 @@ public class MuLogging {
 		
 		// and add ours
 		Appender<ILoggingEvent>[] appenders = createAppenders(loggerContext);
-		for (Appender<ILoggingEvent> appender : appenders)
+		for (Appender<ILoggingEvent> appender : appenders) {
 			rootLogger.addAppender(appender);
+		}
 		
 		// Set the log level to the value defined in the configuration
 		updateLogLevel(getLogLevel());
 	}
 	
-	private static Appender<ILoggingEvent>[] createAppenders(LoggerContext loggerContext) {
+	private static Appender[] createAppenders(LoggerContext loggerContext) {
 		Layout<ILoggingEvent> layout = new CustomLoggingLayout();
 
 		consoleAppender = createConsoleAppender(loggerContext, layout);
@@ -221,21 +222,21 @@ public class MuLogging {
 		public String doLayout(ILoggingEvent event) {
 			StackTraceElement stackTraceElement = event.getCallerData()[0];
 			
-			StringBuilder sbuf = new StringBuilder(128);
-			sbuf.append("[");
-			sbuf.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
-			sbuf.append("] ");
-			sbuf.append(getLevel(event));
-			sbuf.append(" ");
-			sbuf.append(stackTraceElement.getFileName());
-			sbuf.append("#");
-			sbuf.append(stackTraceElement.getMethodName());
-			sbuf.append(",");
-			sbuf.append(stackTraceElement.getLineNumber());
-			sbuf.append(" ");
-			sbuf.append(event.getFormattedMessage());
-			sbuf.append(CoreConstants.LINE_SEPARATOR);
-			return sbuf.toString();
+			StringBuilder sb = new StringBuilder(128);
+			sb.append("[");
+			sb.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
+			sb.append("] ");
+			sb.append(getLevel(event));
+			sb.append(" ");
+			sb.append(stackTraceElement.getFileName());
+			sb.append("#");
+			sb.append(stackTraceElement.getMethodName());
+			sb.append(",");
+			sb.append(stackTraceElement.getLineNumber());
+			sb.append(" ");
+			sb.append(event.getFormattedMessage());
+			sb.append(CoreConstants.LINE_SEPARATOR);
+			return sb.toString();
 		}
 	}
 }

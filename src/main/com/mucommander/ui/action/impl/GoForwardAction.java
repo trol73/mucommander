@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class GoForwardAction extends ActiveTabAction {
 
-    GoForwardAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private GoForwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -64,13 +64,21 @@ public class GoForwardAction extends ActiveTabAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoForward";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new GoForwardAction(mainFrame, properties);

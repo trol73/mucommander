@@ -34,7 +34,7 @@ import java.util.Map;
 @InvokesDialog
 public class EditBookmarksAction extends MuAction {
 
-    EditBookmarksAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditBookmarksAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -52,13 +52,21 @@ public class EditBookmarksAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "EditBookmarks";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new EditBookmarksAction(mainFrame, properties);

@@ -59,14 +59,14 @@ public class CalculateDirectorySizeWorker extends SwingWorker<Long, Long> {
     @Override
     protected void done() {
         fileTableModel.addProcessedDirectory(path, table, size, true);
-        fileTableModel.fillCellCache();
+        fileTableModel.fillCellCache(table);
         table.repaint();
     }
 
     @Override
     protected void process(List<Long> chunks) {
         fileTableModel.addProcessedDirectory(path, table, size, false);
-        fileTableModel.fillCellCache();
+        fileTableModel.fillCellCache(table);
         table.repaint();
         table.updateSelectedFilesStatusBar();
     }

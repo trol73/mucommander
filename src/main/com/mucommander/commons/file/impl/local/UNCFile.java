@@ -660,7 +660,7 @@ public class UNCFile extends ProtocolFile {
                         String lastLine = null;
                         // Retrieves last line of dir
                         while((line=br.readLine())!=null) {
-                            if(!line.trim().equals(""))
+                            if(!line.trim().isEmpty())
                                 lastLine = line;
                         }
 
@@ -679,7 +679,7 @@ public class UNCFile extends ProtocolFile {
                                 char c = token.charAt(0);
                                 if(c>='0' && c<='9')
                                     freeSpace += token;
-                                else if(!freeSpace.equals(""))
+                                else if(!freeSpace.isEmpty())
                                     break;
                             }
 

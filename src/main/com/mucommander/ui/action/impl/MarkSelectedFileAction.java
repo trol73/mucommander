@@ -49,7 +49,7 @@ import java.util.Map;
  */
 public class MarkSelectedFileAction extends MuAction {
 
-    MarkSelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkSelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -82,13 +82,21 @@ public class MarkSelectedFileAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkSelectedFile";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0); }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0);
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkSelectedFileAction(mainFrame, properties);

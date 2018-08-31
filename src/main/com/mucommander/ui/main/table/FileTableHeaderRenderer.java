@@ -70,11 +70,11 @@ public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
             }
 
             FileTable fileTable = (FileTable)table;
-            if (fileTable.getSortInfo().getCriterion()== Column.valueOf(fileTable.convertColumnIndexToModel(column))) {
+            if (fileTable.getSortInfo().getCriterion() == Column.valueOf(fileTable.convertColumnIndexToModel(column))) {
                 // This header is the currently selected one
-                label.setIcon(fileTable.getSortInfo().getAscendingOrder()? ASCENDING_ICON : DESCENDING_ICON);
+                label.setIcon(getSortingIcon(fileTable));
             } else {
-                // The renderer component acts as a rubber-stamp, therefore the icon value needs to be set to null explicitely
+                // The renderer component acts as a rubber-stamp, therefore the icon value needs to be set to null explicitly
                 // as it might still hold a previous value
                 label.setIcon(null);
             }
@@ -88,5 +88,9 @@ public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
         label.setToolTipText((String)value);
 
         return label;
+    }
+
+    private static ImageIcon getSortingIcon(FileTable fileTable) {
+        return fileTable.getSortInfo().getAscendingOrder() ? ASCENDING_ICON : DESCENDING_ICON;
     }
 }

@@ -36,7 +36,7 @@ public class OpenAsAction extends OpenAction {
 
     private String extension;
 
-    public OpenAsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private OpenAsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         extension = (String) properties.get("extension");
     }

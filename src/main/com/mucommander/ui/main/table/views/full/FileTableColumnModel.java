@@ -188,7 +188,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @param column column, see {@link Column} for possible values
      * @return <code>true</code> if the specified column is visible, <code>false</code> otherwise.
      */
-    public synchronized boolean isColumnVisible(Column column) {
+    public boolean isColumnVisible(Column column) {
         return visibility[column.ordinal()];
     }
 

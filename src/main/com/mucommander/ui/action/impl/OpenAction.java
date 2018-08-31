@@ -94,29 +94,28 @@ public class OpenAction extends MuAction {
     	    return;
         }
 
-        // Opens browsable files in the destination FolderPanel.
-        if (resolvedFile.isBrowsable()) {
+        if (resolvedFile.isBrowsable()) {				// Opens browsable files in the destination FolderPanel.
 			resolvedFile = cdFollowsSymlinks() ? resolvedFile : file;
     		openBrowsable(resolvedFile, destination);
-        }
-		// Opens local files using their native associations.
-		else if (resolvedFile.isLocalFile()) {
-			try {
-				DesktopManager.open(resolvedFile);
-				RecentExecutedFilesQL.addFile(resolvedFile);
-			} catch (IOException e) {
-				InformationDialog.showErrorDialog(mainFrame);
-			}
-		}
-		// Copies non-local file in a temporary local file and opens them using their native association.
-        else {
+        } else if (resolvedFile.isLocalFile()) {		// Opens local files using their native associations.
+			openLocalFile(resolvedFile);
+		} else {			// Copies non-local file in a temporary local file and opens them using their native association.
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
             TempExecJob job = new TempExecJob(progressDialog, mainFrame, resolvedFile);
             progressDialog.start(job);
         }
     }
 
-    AbstractFile resolveIfSymlink(AbstractFile file) {
+	private void openLocalFile(AbstractFile file) {
+		try {
+			DesktopManager.open(file);
+			RecentExecutedFilesQL.addFile(file);
+		} catch (IOException e) {
+			InformationDialog.showErrorDialog(mainFrame);
+		}
+	}
+
+	AbstractFile resolveIfSymlink(AbstractFile file) {
         if (!file.isSymlink()) {
             return file;
         }
@@ -130,23 +129,10 @@ public class OpenAction extends MuAction {
     }
 
     private void openBrowsable(AbstractFile file, FolderPanel destination) {
-		FileTableTabs tabs = destination.getTabs();
-
 		if (BookmarkManager.isBookmark(file)) {
-			Bookmark bookmark = BookmarkManager.getBookmark(file.getName());
-			if (bookmark == null) {
-				return;
-			}
-			String bookmarkLocation = bookmark.getLocation();
-			try {
-				FileURL bookmarkURL = FileURL.getFileURL(bookmarkLocation);
-				if (tabs.getCurrentTab().isLocked()) {
-					tabs.add(bookmarkURL);
-				} else {
-					destination.tryChangeCurrentFolder(bookmarkURL);
-				}
-			} catch (MalformedURLException ignore) {}
+			openBookmark(file, destination);
 		} else {
+			FileTableTabs tabs = destination.getTabs();
 			if (tabs.getCurrentTab().isLocked()) {
 				tabs.add(file);
 			} else {
@@ -155,7 +141,24 @@ public class OpenAction extends MuAction {
 		}
 	}
 
-    private static boolean cdFollowsSymlinks() {
+	private void openBookmark(AbstractFile file, FolderPanel destination) {
+		Bookmark bookmark = BookmarkManager.getBookmark(file.getName());
+		if (bookmark == null) {
+			return;
+		}
+		String bookmarkLocation = bookmark.getLocation();
+		try {
+			FileURL bookmarkURL = FileURL.getFileURL(bookmarkLocation);
+			FileTableTabs tabs = destination.getTabs();
+			if (tabs.getCurrentTab().isLocked()) {
+				tabs.add(bookmarkURL);
+			} else {
+				destination.tryChangeCurrentFolder(bookmarkURL);
+			}
+		} catch (MalformedURLException ignore) {}
+	}
+
+	private static boolean cdFollowsSymlinks() {
 		return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
 	}
 
@@ -193,13 +196,21 @@ public class OpenAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Open";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new OpenAction(mainFrame, properties);

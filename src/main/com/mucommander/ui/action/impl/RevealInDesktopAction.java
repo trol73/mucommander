@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class RevealInDesktopAction extends ParentFolderAction {
 
-    RevealInDesktopAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private RevealInDesktopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setEnabled(DesktopManager.canOpenInFileManager());

@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
@@ -29,7 +28,7 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class ToggleHiddenFilesAction extends MuAction {
     /**
      * Creates a new <code>ToggleHiddenFilesAction</code>.
      */
-    ToggleHiddenFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleHiddenFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -69,14 +68,20 @@ public class ToggleHiddenFilesAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ToggleHiddenFiles";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, CTRL_OR_META_DOWN_MASK);
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, CTRL_OR_META_DOWN_MASK);
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

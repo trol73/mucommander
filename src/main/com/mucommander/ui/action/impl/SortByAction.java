@@ -131,12 +131,20 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
             this.defaultKeyStroke = defaultKeyStroke;
         }
 
-        public String getId() { return column.getSortByColumnActionId(); }
+        public String getId() {
+            return column.getSortByColumnActionId();
+        }
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+            return ActionCategory.VIEW;
+        }
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-		public KeyStroke getDefaultKeyStroke() { return defaultKeyStroke; }
+		public KeyStroke getDefaultKeyStroke() {
+            return defaultKeyStroke;
+        }
     }
 }

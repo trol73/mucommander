@@ -89,14 +89,18 @@ public class AbstractFileClassLoader extends ClassLoader {
      * Returns an iterator on all files in this loader's classpath.
      * @return an iterator on all files in this loader's classpath.
      */
-    public Iterator<AbstractFile> files() {return files.iterator();}
+    public Iterator<AbstractFile> files() {
+        return files.iterator();
+    }
 
     /**
      * Returns <code>true</code> if this loader's classpath already contains the specified file.
      * @param  file file to look for.
      * @return      <code>true</code> if this loader's classpath already contains the specified file.
      */
-    public boolean contains(AbstractFile file) {return files.contains(file);}
+    public boolean contains(AbstractFile file) {
+        return files.contains(file);
+    }
 
 
 
@@ -229,24 +233,15 @@ public class AbstractFileClassLoader extends ClassLoader {
         // Initialisation.
         byte[] buffer = new byte[(int)file.getSize()];      // Buffer for the class' bytecode.
         int offset = 0;                                     // Current offset in buffer.
-        InputStream in = null;                              // Stream on the class' bytecode.
 
-        try {
+        try (InputStream in = file.getInputStream()) {
             // Loads the content of file in buffer.
-            in = file.getInputStream();
             while (offset != buffer.length) {
                 offset += in.read(buffer, offset, buffer.length - offset);
             }
-
             // Loads the class.
             return defineClass(name, buffer, 0, buffer.length);
         }
-
-        // Frees resources.
-        finally {
-            if (in != null)
-                in.close();
-        }                
     }
 
     /**

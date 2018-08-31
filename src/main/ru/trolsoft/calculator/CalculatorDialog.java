@@ -197,7 +197,11 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
     }
 
     private boolean calculate() {
-        String expression = cbExpression.getSelectedItem().toString().trim();
+        Object selectedItem = cbExpression.getSelectedItem();
+        if (selectedItem == null) {
+            return false;
+        }
+        String expression = selectedItem.toString().trim();
         boolean success;
         try {
             double res = evaluate(expression);
@@ -215,27 +219,35 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
             success = true;
         } catch (Exception e) {
             e.printStackTrace();
-            edtDec.setText("");
-            edtHex.setText("");
-            edtOct.setText("");
-            edtBin.setText("");
-            edtExp.setText("");
+            clearResultFields();
             success = false;
         }
-        edtDec.setEnabled(success);
-        edtHex.setEnabled(success);
-        edtOct.setEnabled(success);
-        edtBin.setEnabled(success);
-        edtOct.setEnabled(success);
-        edtExp.setEnabled(success);
-        btnDec.setEnabled(success);
-        btnHex.setEnabled(success);
-        btnOct.setEnabled(success);
-        btnBin.setEnabled(success);
-        btnOct.setEnabled(success);
-        btnExp.setEnabled(success);
+        enableControls(success);
         lblError.setText(success ? "" : i18n("calculator.error"));
         return success;
+    }
+
+    private void enableControls(boolean enable) {
+        edtDec.setEnabled(enable);
+        edtHex.setEnabled(enable);
+        edtOct.setEnabled(enable);
+        edtBin.setEnabled(enable);
+        edtOct.setEnabled(enable);
+        edtExp.setEnabled(enable);
+        btnDec.setEnabled(enable);
+        btnHex.setEnabled(enable);
+        btnOct.setEnabled(enable);
+        btnBin.setEnabled(enable);
+        btnOct.setEnabled(enable);
+        btnExp.setEnabled(enable);
+    }
+
+    private void clearResultFields() {
+        edtDec.setText("");
+        edtHex.setText("");
+        edtOct.setText("");
+        edtBin.setText("");
+        edtExp.setText("");
     }
 
     private double evaluate(String expression) throws Exception {

@@ -37,7 +37,7 @@ import java.util.Map;
 @InvokesDialog
 public class ChangeReplicationAction extends SelectedFilesAction {
 
-    ChangeReplicationAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ChangeReplicationAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.CHANGE_REPLICATION));
@@ -58,13 +58,21 @@ public class ChangeReplicationAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ChangeReplication";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ChangeReplicationAction(mainFrame, properties);

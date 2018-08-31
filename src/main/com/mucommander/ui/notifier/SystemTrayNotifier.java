@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,42 +103,23 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
 
     @Override
     public boolean setEnabled(boolean enabled) {
-        if(enabled) {
+        if (enabled) {
             // No need to bother if the current Java runtime version is not 1.6 or up, or if SystemTray is not available
-            if(JavaVersion.JAVA_1_6.isCurrentLower() || !SystemTray.isSupported())
+            if (JavaVersion.JAVA_1_6.isCurrentLower() || !SystemTray.isSupported()) {
                 return false;
+            }
 
             // If System Tray has already been initialized
-            if(trayIcon!=null) {
+            if (trayIcon != null) {
                 return (isEnabled = true);
             }
 
             SystemTray systemTray = SystemTray.getSystemTray();
 
-            Image iconImage = IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, TRAY_ICON_NAME).getImage();
-            Dimension trayIconSize = systemTray.getTrayIconSize();
-            // If the sytem tray icon size is larger than the icon size, center the icon as the default is to display
-            // the icon in the top left corner which is plain ugly
-            if(trayIconSize.width>TRAY_ICON_WIDTH || trayIconSize.height>TRAY_ICON_HEIGHT) {
-                // The buffered image uses ARGB for transparency
-                BufferedImage bi = new BufferedImage(trayIconSize.width, trayIconSize.height, BufferedImage.TYPE_INT_ARGB);
-                bi.getGraphics().drawImage(iconImage, (trayIconSize.width-TRAY_ICON_WIDTH)/2, (trayIconSize.height-TRAY_ICON_HEIGHT)/2, null);
-                iconImage = bi;
-            }
-
             // create the tray icon and disable image auto-size which shouldn't be used anyway but just in case
-            trayIcon = new TrayIcon(iconImage);
+            trayIcon = new TrayIcon(createIconImage(systemTray.getTrayIconSize()));
             trayIcon.setImageAutoSize(false);
-
-            // create the popup (AWT!) menu. Note there is no way with java.awt.Menu to know when the menu is selected
-            // and thus it makes it hard to have contextual menu items such as the list of open windows.
-            PopupMenu menu = new PopupMenu();
-            addMenuItem(menu, NewWindowAction.Descriptor.ACTION_ID);
-            addMenuItem(menu, BringAllToFrontAction.Descriptor.ACTION_ID);
-            menu.addSeparator();
-            addMenuItem(menu, QuitAction.Descriptor.ACTION_ID);
-
-            trayIcon.setPopupMenu(menu);
+            trayIcon.setPopupMenu(createPopupMenu());
 
             // Add the tray icon to the system tray. If an exception is caught, clean things up and leave this notifier
             // disabled.
@@ -147,15 +129,12 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
                 trayIcon.addActionListener(this);
 
                 return (isEnabled = true);
-            }
-            catch(java.awt.AWTException e) {
+            } catch(java.awt.AWTException e) {
                 trayIcon = null;
-
                 return (isEnabled = false);
             }
-        }
-        else {
-            if(trayIcon!=null) {
+        } else {
+            if (trayIcon != null) {
                 // Remove tray icon from the system tray
                 SystemTray.getSystemTray().remove(trayIcon);
                 trayIcon.removeActionListener(this);
@@ -167,16 +146,41 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
         }
     }
 
+    private Image createIconImage(Dimension trayIconSize) {
+        Image iconImage = IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, TRAY_ICON_NAME).getImage();
+        // If the sytem tray icon size is larger than the icon size, center the icon as the default is to display
+        // the icon in the top left corner which is plain ugly
+        if (trayIconSize.width > TRAY_ICON_WIDTH || trayIconSize.height > TRAY_ICON_HEIGHT) {
+            // The buffered image uses ARGB for transparency
+            BufferedImage bi = new BufferedImage(trayIconSize.width, trayIconSize.height, BufferedImage.TYPE_INT_ARGB);
+            bi.getGraphics().drawImage(iconImage, (trayIconSize.width-TRAY_ICON_WIDTH)/2, (trayIconSize.height-TRAY_ICON_HEIGHT)/2, null);
+            iconImage = bi;
+        }
+        return iconImage;
+    }
+
+    @NotNull
+    private PopupMenu createPopupMenu() {
+        // create the popup (AWT!) menu. Note there is no way with java.awt.Menu to know when the menu is selected
+        // and thus it makes it hard to have contextual menu items such as the list of open windows.
+        PopupMenu menu = new PopupMenu();
+        addMenuItem(menu, NewWindowAction.Descriptor.ACTION_ID);
+        addMenuItem(menu, BringAllToFrontAction.Descriptor.ACTION_ID);
+        menu.addSeparator();
+        addMenuItem(menu, QuitAction.Descriptor.ACTION_ID);
+        return menu;
+    }
+
     @Override
     public boolean isEnabled() {
-        return trayIcon!=null && isEnabled;
+        return trayIcon != null && isEnabled;
     }
 
     @Override
     public boolean displayNotification(NotificationType notificationType, String title, String description) {
         LOGGER.debug("notificationType="+notificationType+" title="+title+" description="+description);
 
-        if(!isEnabled()) {
+        if (!isEnabled()) {
             LOGGER.debug("Ignoring notification, this notifier is not enabled");
 
             return false;
@@ -213,8 +217,9 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
         // Even though this is a bit of a shot in the dark, this may fix a problem reported under Linux where the
         // tray icon stayed after the application had quit:
         /// http://www.mucommander.com/forums/viewtopic.php?t=604
-        if(isEnabled())
+        if (isEnabled()) {
             setEnabled(false);
+        }
 
         super.finalize();
     }

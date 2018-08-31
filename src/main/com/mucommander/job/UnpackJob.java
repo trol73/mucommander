@@ -222,11 +222,9 @@ public class UnpackJob extends AbstractCopyJob {
                             processEntry = true;
                             selectedEntries.remove(i);
                             break;
+                        } else {
                         }
-
-                        else {
                     }
-                }
                 }
 
                 if (!processEntry) {
@@ -261,7 +259,7 @@ public class UnpackJob extends AbstractCopyJob {
                 // Do nothing if the file is a symlink (skip file and return)
                 if (entryFile.isSymlink()) {
                     // TODO !!! implement me
-System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
+//System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
 
                     return true;
                 }
@@ -463,7 +461,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
         private AbstractArchiveFile archiveFile;
         private ArchiveEntryIterator iterator;
 
-        public ProxiedEntryFile(AbstractFile entryFile, ArchiveEntry entry, AbstractArchiveFile archiveFile, ArchiveEntryIterator iterator) {
+        ProxiedEntryFile(AbstractFile entryFile, ArchiveEntry entry, AbstractArchiveFile archiveFile, ArchiveEntryIterator iterator) {
             super(entryFile);
 
             this.entry = entry;

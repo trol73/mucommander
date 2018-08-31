@@ -19,7 +19,7 @@ import java.util.Map;
 @InvokesDialog
 public class CreateSymlinkAction extends ParentFolderAction {
 
-    CreateSymlinkAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CreateSymlinkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -55,13 +55,21 @@ public class CreateSymlinkAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "CreateSymlink";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.FILES; }
+        public ActionCategory getCategory() {
+            return ActionCategory.FILES;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.ALT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.ALT_DOWN_MASK);
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CreateSymlinkAction(mainFrame, properties);

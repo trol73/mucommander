@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ReverseSortOrderAction extends MuAction {
 
-    ReverseSortOrderAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ReverseSortOrderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -50,13 +50,21 @@ public class ReverseSortOrderAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ReverseSortOrder";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+			return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ReverseSortOrderAction(mainFrame, properties);

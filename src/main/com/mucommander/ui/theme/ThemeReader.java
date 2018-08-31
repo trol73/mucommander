@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -40,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 	private static Logger logger;
 
-	// TODO !!! add previous state to enum instead off terrible if-else list
+	// TODO !!! add previous state to enum insteadof terrible if-else list
     private enum State {
     /** Parsing hasn't started yet. */
         UNKNOWN,
@@ -936,26 +937,20 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * @return            the resulting Font instance.
      */
     private static Font createFont(Attributes attributes) {
-        String buffer; // Buffer for attribute values.
-
         // Computes the font style.
-        int style = 0;
-        if (((buffer = attributes.getValue(ATTRIBUTE_BOLD)) != null) && buffer.equals(VALUE_TRUE)) {
-            style |= Font.BOLD;
-        }
-        if (((buffer = attributes.getValue(ATTRIBUTE_ITALIC)) != null) && buffer.equals(VALUE_TRUE)) {
-            style |= Font.ITALIC;
-        }
+        int style = getFontStyle(attributes);
 
         // Computes the font size.
-        if ((buffer = attributes.getValue(ATTRIBUTE_SIZE)) == null) {
+        String buffer = attributes.getValue(ATTRIBUTE_SIZE);
+        if (buffer == null) {
             getLogger().debug("Missing font size attribute in theme, ignoring.");
             return null;
 	    }
         int size = Integer.parseInt(buffer);
 
-            // Computes the font family.
-        if ((buffer = attributes.getValue(ATTRIBUTE_FAMILY)) == null) {
+        // Computes the font family.
+        buffer = attributes.getValue(ATTRIBUTE_FAMILY);
+        if (buffer == null) {
             getLogger().debug("Missing font family attribute in theme, ignoring.");
             return null;
         }
@@ -974,6 +969,20 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
         // No font was found, instructs the ThemeManager to use the system default.
         getLogger().debug("Requested font families are not installed on the system, using default.");
         return null;
+    }
+
+    @MagicConstant(flags = {Font.BOLD, Font.ITALIC})
+    private static int getFontStyle(Attributes attributes) {
+        int style = 0;
+        String buffer = attributes.getValue(ATTRIBUTE_BOLD);
+        if (VALUE_TRUE.equals(buffer)) {
+            style |= Font.BOLD;
+        }
+        buffer = attributes.getValue(ATTRIBUTE_ITALIC);
+        if (VALUE_TRUE.equals(buffer)) {
+            style |= Font.ITALIC;
+        }
+        return style;
     }
 
     /**

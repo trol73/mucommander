@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class RecallWindow9Action extends RecallWindowAction {
 
-    RecallWindow9Action(MainFrame mainFrame, Map<String, Object> properties) {
+    private RecallWindow9Action(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, 9);
     }
 

@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class CopyFileBaseNamesAction extends SelectedFilesAction {
 
-	CopyFileBaseNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private CopyFileBaseNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 
@@ -73,11 +73,17 @@ public class CopyFileBaseNamesAction extends SelectedFilesAction {
 	public static final class Descriptor extends AbstractActionDescriptor {
 		public static final String ACTION_ID = "CopyFileBaseNames";
 
-		public String getId() {	return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() {	return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);

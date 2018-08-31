@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SelectNextPageAction extends SelectForwardAction {
 
-    SelectNextPageAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SelectNextPageAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

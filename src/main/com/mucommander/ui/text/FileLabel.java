@@ -45,10 +45,9 @@ public class FileLabel extends JLabel {
     public FileLabel(AbstractFile file, boolean showFullPath) {
         String path = file.getCanonicalPath();
 
-        if(showFullPath) {
+        if (showFullPath) {
             setText(path);
-        }
-        else {
+        } else {
             setText(file.getName());
             setToolTipText(path);
         }

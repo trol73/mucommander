@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class EjectDriveAction extends SelectedFilesAction {
 
-    EjectDriveAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EjectDriveAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         setSelectedFileFilter(new MountedDriveFilter());
     }
@@ -69,7 +69,9 @@ public class EjectDriveAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "EjectDrive";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
         public ActionCategory getCategory() {
             return ActionCategory.FILES;

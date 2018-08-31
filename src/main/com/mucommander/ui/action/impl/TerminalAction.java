@@ -41,7 +41,7 @@ public class TerminalAction extends ParentFolderAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -93,13 +93,21 @@ public class TerminalAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "Terminal";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.MISC; }
+        public ActionCategory getCategory() {
+            return ActionCategory.MISC;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK);
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new TerminalAction(mainFrame, properties);

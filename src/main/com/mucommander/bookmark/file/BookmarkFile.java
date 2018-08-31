@@ -230,7 +230,7 @@ public class BookmarkFile extends ProtocolFile {
         }
 
         // Creates the new bookmark and checks for conflicts.
-        Bookmark newBookmark = new Bookmark(destination.getName(), bookmark.getLocation());
+        Bookmark newBookmark = new Bookmark(destination.getName(), bookmark.getLocation(), bookmark.getParent());
         Bookmark oldBookmark = BookmarkManager.getBookmark(newBookmark.getName());
         if (oldBookmark != null) {
             BookmarkManager.removeBookmark(oldBookmark);
@@ -281,7 +281,7 @@ public class BookmarkFile extends ProtocolFile {
             throw new IOException();
         }
         // Copies this bookmark to the specified destination.
-        BookmarkManager.addBookmark(new Bookmark(destination.getName(), bookmark.getLocation()));
+        BookmarkManager.addBookmark(new Bookmark(destination.getName(), bookmark.getLocation(), bookmark.getParent()));
     }
 
 
@@ -324,7 +324,7 @@ public class BookmarkFile extends ProtocolFile {
         BookmarkBuilder builder = BookmarkManager.getBookmarkWriter(stream);
         try {
             builder.startBookmarks();
-            builder.addBookmark(bookmark.getName(), bookmark.getLocation());
+            builder.addBookmark(bookmark.getName(), bookmark.getLocation(), bookmark.getParent());
             builder.endBookmarks();
         } catch (Throwable e) {
             // If an exception occurred, we have to look for its root cause.

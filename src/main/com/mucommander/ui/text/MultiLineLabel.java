@@ -74,13 +74,14 @@ public class MultiLineLabel extends JTextArea {
         setForeground((Color) UIManager.get("Label.foreground"));
         setFont((Font) UIManager.get("Label.font"));
 
-        if(autoRepack) {
+        if (autoRepack) {
             addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     Container tla = getTopLevelAncestor();
-                    if(tla instanceof Window)
+                    if(tla instanceof Window) {
                         ((Window)tla).pack();
+                    }
 
                     removeComponentListener(this);
                 }

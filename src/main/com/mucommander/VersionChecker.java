@@ -148,8 +148,8 @@ public class VersionChecker extends DefaultHandler {
         // Makes sure we retrieved the information we were looking for.
         // We're not checking the release date as older version of muCommander
         // didn't use it.
-        if(instance.latestVersion == null || instance.latestVersion.equals("") ||
-           instance.downloadURL == null   || instance.downloadURL.equals(""))
+        if(instance.latestVersion == null || instance.latestVersion.isEmpty() ||
+           instance.downloadURL == null   || instance.downloadURL.isEmpty())
             throw new Exception();
 
         return instance;

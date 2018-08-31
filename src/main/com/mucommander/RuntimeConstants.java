@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.ResourceLoader;
@@ -88,16 +90,7 @@ public class RuntimeConstants {
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes attributes = null; // JAR file's manifest's attributes.
-        try (InputStream in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) {
-            if (in != null) {
-                Manifest manifest = new Manifest();
-                manifest.read(in);
-                attributes = manifest.getMainAttributes();
-            }
-        } catch (IOException e) {
-            LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
-        }
+        Attributes attributes = getManifestAttributes();
 
         if (attributes == null) {   // No MANIFEST.MF found, use default values.
             VERSION = "?";
@@ -108,15 +101,29 @@ public class RuntimeConstants {
             VERSION_URL  = HOMEPAGE_URL + "/version/version.xml";
             BUILD_NUMBER = "?";
         } else {    // A MANIFEST.MF file was found, extract data from it.
-            VERSION      = getAttribute(attributes, "Specification-Version");
+            VERSION = getAttribute(attributes, "Specification-Version");
             BUILD_DATE = getAttribute(attributes, "Build-Date");
-            VERSION_URL  = getAttribute(attributes, "Build-URL");
+            VERSION_URL = getAttribute(attributes, "Build-URL");
             BUILD_NUMBER = getAttribute(attributes, "Implementation-Version");
             // Protection against corrupt manifest files.
-            COPYRIGHT    = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
+            COPYRIGHT = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
 
         }
         APP_STRING = "trolCommander v" + VERSION;
+    }
+
+    @Nullable
+    private static Attributes getManifestAttributes() {
+        try (InputStream in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) {
+            if (in != null) {
+                Manifest manifest = new Manifest();
+                manifest.read(in);
+                return manifest.getMainAttributes();
+            }
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
+        }
+        return null;
     }
 
     /**

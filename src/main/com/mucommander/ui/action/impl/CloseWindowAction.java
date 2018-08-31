@@ -36,18 +36,18 @@ import java.util.Map;
  */
 public class CloseWindowAction extends MuAction {
 
-    CloseWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CloseWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     public void performAction() {
         // Closing the last window is equivalent to quitting the application: perform QuitAction in that case
-        if (WindowManager.getMainFrames().size()==1)
+        if (WindowManager.getMainFrames().size() == 1) {
             ActionManager.performAction(QuitAction.Descriptor.ACTION_ID, mainFrame);
-        // Simply dispose the MainFrame
-        else
+        } else {
             mainFrame.dispose();
+        }
     }
 
 	@Override
@@ -59,13 +59,21 @@ public class CloseWindowAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CloseWindow";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.WINDOW; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.WINDOW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK); }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK);
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CloseWindowAction(mainFrame, properties);

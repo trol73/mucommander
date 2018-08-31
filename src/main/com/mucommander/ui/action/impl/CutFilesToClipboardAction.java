@@ -40,7 +40,7 @@ import java.util.Map;
 public class CutFilesToClipboardAction extends SelectedFilesAction {
     
 
-    CutFilesToClipboardAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CutFilesToClipboardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -54,13 +54,21 @@ public class CutFilesToClipboardAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CutFilesToClipboard";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK); }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK);
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CutFilesToClipboardAction(mainFrame, properties);

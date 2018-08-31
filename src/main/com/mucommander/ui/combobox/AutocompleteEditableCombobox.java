@@ -61,6 +61,7 @@ public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
      * @param textField the text field to be used as the combo box's editor. If null, a new JTextField instance
      * will be created and used.
      * @param comboBoxModel the ComboBoxModel to use for this combo box
+     * @param completer Completer object
      */
     public AutocompleteEditableCombobox(JTextField textField, ComboBoxModel<E> comboBoxModel, Completer completer) {
         super(textField, comboBoxModel);
@@ -73,6 +74,7 @@ public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
      * @param textField the text field to be used as the combo box's editor. If null, a new JTextField instance
      * will be created and used.
      * @param items items used to populate the initial items list.
+     * @param completer Completer object
      */
     public AutocompleteEditableCombobox(JTextField textField, E[] items, Completer completer) {
         super(textField, items);
@@ -85,6 +87,7 @@ public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
      * @param textField the text field to be used as the combo box's editor. If null, a new JTextField instance
      * will be created and used.
      * @param items items used to populate the initial items list.
+     * @param completer Completer object
      */
     public AutocompleteEditableCombobox(JTextField textField, Vector<E> items, Completer completer) {
         super(textField, items);
@@ -102,7 +105,7 @@ public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
      */
 	public void respondToEnterKeyPressing(KeyEvent keyEvent) {
 		// Combo popup menu is visible
-		if(isPopupVisible()) {
+		if (isPopupVisible()) {
 			// Under Java 1.5 or lower, we need to explicitely hide the popup.
 			if(JavaVersion.JAVA_1_5.isCurrentOrLower())
 				hidePopup();

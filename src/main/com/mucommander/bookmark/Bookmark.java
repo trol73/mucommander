@@ -35,6 +35,7 @@ package com.mucommander.bookmark;
 public class Bookmark implements Cloneable {
     private String name;
     private String location;
+    private String parent;
 
 
     /**
@@ -43,10 +44,11 @@ public class Bookmark implements Cloneable {
      * @param name name given to this bookmark
      * @param location location (path or URL) this bookmark points to
      */
-    public Bookmark(String name, String location) {
+    public Bookmark(String name, String location, String parent) {
         // Use setters to checks for null values
         setName(name);
         setLocation(location);
+        setParent(parent);
     }
 
 
@@ -110,6 +112,17 @@ public class Bookmark implements Cloneable {
         }
     }
 
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        if (parent != null && parent.trim().isEmpty()) {
+            parent = null;
+        }
+        this.parent = parent;
+    }
+
 
     /**
      * Returns a clone of this bookmark.
@@ -124,6 +137,9 @@ public class Bookmark implements Cloneable {
      * Returns the bookmark's name.
      */
     public String toString() {
+        if (parent != null) {
+            return parent + " -> " + name;
+        }
         return name;
     }
 

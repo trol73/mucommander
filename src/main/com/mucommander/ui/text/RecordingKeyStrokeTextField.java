@@ -86,8 +86,10 @@ public class RecordingKeyStrokeTextField extends JTextField implements FocusList
 	////////////////////////////////
 	
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() != KeyEvent.VK_ESCAPE)
-			setText(KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(lastKeyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), 0)));
+		if (e.getKeyCode() != KeyEvent.VK_ESCAPE) {
+			lastKeyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), 0);
+			setText(KeyStrokeUtils.getKeyStrokeDisplayableRepresentation(lastKeyStroke));
+		}
 		e.consume();
 	}
 

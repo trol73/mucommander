@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class CompareFoldersAction extends MuAction {
 
-    CompareFoldersAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CompareFoldersAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -97,11 +97,17 @@ public class CompareFoldersAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CompareFolders";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
 //            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {

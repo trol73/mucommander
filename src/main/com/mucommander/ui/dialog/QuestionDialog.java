@@ -147,6 +147,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
      * Shows this dialog, waits for an action/button to be selected and returns the selected action's value.
      * The dialog may be closed without the user selecting a custom action. In this case,
      * {@link #DIALOG_DISPOSED_ACTION} (-1) will be returned.
+     * @return action value
      */
     public int getActionValue() {
 //        // Beep !

@@ -7,8 +7,10 @@ import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
+import com.mucommander.commons.runtime.OsFamily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.trolsoft.jni.NativeFileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class CachedFile extends ProxyFile {
     private static final Method M_GET_BOOLEAN_ATTRIBUTES;
     private static final int BA_DIRECTORY, BA_EXISTS, BA_HIDDEN;
     private static final Object FS;
+    private static final boolean NATIVE_FILE_UTILS_AVAILABLE = OsFamily.MAC_OS_X.isCurrent() && NativeFileUtils.init();
 
     // set-flags
     private static final int SIZE_SET_MASK = 1;
@@ -127,44 +130,53 @@ public class CachedFile extends ProxyFile {
         //
         // This hack was made for Windows, but is now used for other platforms as well as it is necessarily faster than
         // retrieving file attributes individually.
-
         boolean getFileAttributesAvailable;
         Method mGetBooleanAttributes;
         int baExists, baDirectory, baHidden;
         Object fs;
-        try {
-            // Resolve FileSystem class, 'getBooleanAttributes' method and fields
-            Class<?> cFile = File.class;
-            Class<?> cFileSystem = Class.forName("java.io.FileSystem");
-            mGetBooleanAttributes = cFileSystem.getDeclaredMethod("getBooleanAttributes", cFile);
-            Field fBA_EXISTS = cFileSystem.getDeclaredField("BA_EXISTS");
-            Field fBA_DIRECTORY = cFileSystem.getDeclaredField("BA_DIRECTORY");
-            Field fBA_HIDDEN = cFileSystem.getDeclaredField("BA_HIDDEN");
-            Field fFs = cFile.getDeclaredField("fs");
 
-            // Allow access to the 'getBooleanAttributes' method and to the fields we're interested in
-            mGetBooleanAttributes.setAccessible(true);
-            fFs.setAccessible(true);
-            fBA_EXISTS.setAccessible(true);
-            fBA_DIRECTORY.setAccessible(true);
-            fBA_HIDDEN.setAccessible(true);
-
-            // Retrieve constant field values once for all
-            baExists = (Integer) fBA_EXISTS.get(null);
-            baDirectory = (Integer) fBA_DIRECTORY.get(null);
-            baHidden = (Integer) fBA_HIDDEN.get(null);
-            fs = fFs.get(null);
-
+        if (NATIVE_FILE_UTILS_AVAILABLE) {
             getFileAttributesAvailable = true;
-            LOGGER.trace("Access to java.io.FileSystem granted");
-        } catch(Exception e) {
-            getFileAttributesAvailable = false;
             mGetBooleanAttributes = null;
             baExists = 0;
             baDirectory = 0;
             baHidden = 0;
             fs = null;
-            LOGGER.info("Error while allowing access to java.io.FileSystem", e);
+        } else {
+            try {
+                // Resolve FileSystem class, 'getBooleanAttributes' method and fields
+                Class<?> cFile = File.class;
+                Class<?> cFileSystem = Class.forName("java.io.FileSystem");
+                mGetBooleanAttributes = cFileSystem.getDeclaredMethod("getBooleanAttributes", cFile);
+                Field fBA_EXISTS = cFileSystem.getDeclaredField("BA_EXISTS");
+                Field fBA_DIRECTORY = cFileSystem.getDeclaredField("BA_DIRECTORY");
+                Field fBA_HIDDEN = cFileSystem.getDeclaredField("BA_HIDDEN");
+                Field fFs = cFile.getDeclaredField("fs");
+
+                // Allow access to the 'getBooleanAttributes' method and to the fields we're interested in
+                mGetBooleanAttributes.setAccessible(true);
+                fFs.setAccessible(true);
+                fBA_EXISTS.setAccessible(true);
+                fBA_DIRECTORY.setAccessible(true);
+                fBA_HIDDEN.setAccessible(true);
+
+                // Retrieve constant field values once for all
+                baExists = (Integer) fBA_EXISTS.get(null);
+                baDirectory = (Integer) fBA_DIRECTORY.get(null);
+                baHidden = (Integer) fBA_HIDDEN.get(null);
+                fs = fFs.get(null);
+
+                getFileAttributesAvailable = true;
+                LOGGER.trace("Access to java.io.FileSystem granted");
+            } catch (Exception e) {
+                getFileAttributesAvailable = false;
+                mGetBooleanAttributes = null;
+                baExists = 0;
+                baDirectory = 0;
+                baHidden = 0;
+                fs = null;
+                LOGGER.info("Error while allowing access to java.io.FileSystem", e);
+            }
         }
         GET_FILE_ATTRIBUTES_AVAILABLE = getFileAttributesAvailable;
         M_GET_BOOLEAN_ATTRIBUTES = mGetBooleanAttributes;
@@ -214,29 +226,57 @@ public class CachedFile extends ProxyFile {
         file = file.getTopAncestor();
 
         if (file instanceof LocalFile) {
-            try {
-                int ba = (Integer) M_GET_BOOLEAN_ATTRIBUTES.invoke(FS, file.getUnderlyingFileObject());
-
-                if ((ba & BA_DIRECTORY) != 0) {
-                    bitmask |= DIRECTORY_VALUE_MASK;
-                } else {
-                    bitmask &= ~DIRECTORY_VALUE_MASK;
-                }
-                if ((ba & BA_EXISTS) != 0) {
-                    bitmask |= EXISTS_VALUE_MASK;
-                } else {
-                    bitmask &= ~EXISTS_VALUE_MASK;
-                }
-                if ((ba & BA_HIDDEN) != 0) {
-                    bitmask |= HIDDEN_VALUE_MASK;
-                } else {
-                    bitmask &= ~HIDDEN_VALUE_MASK;
-            }
-                bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
-            } catch(Exception e) {
-                LOGGER.info("Could not retrieve file attributes for {}", file, e);
+            if (NATIVE_FILE_UTILS_AVAILABLE) {
+                initAttributesNativeCall(file);
+            } else {
+                initAttributesReflectionCall(file);
             }
         }
+    }
+
+    private void initAttributesReflectionCall(AbstractFile file) {
+        try {
+            int ba = (Integer) M_GET_BOOLEAN_ATTRIBUTES.invoke(FS, file.getUnderlyingFileObject());
+
+            if ((ba & BA_DIRECTORY) != 0) {
+                bitmask |= DIRECTORY_VALUE_MASK;
+            } else {
+                bitmask &= ~DIRECTORY_VALUE_MASK;
+            }
+            if ((ba & BA_EXISTS) != 0) {
+                bitmask |= EXISTS_VALUE_MASK;
+            } else {
+                bitmask &= ~EXISTS_VALUE_MASK;
+            }
+            if ((ba & BA_HIDDEN) != 0) {
+                bitmask |= HIDDEN_VALUE_MASK;
+            } else {
+                bitmask &= ~HIDDEN_VALUE_MASK;
+            }
+            bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
+        } catch (Exception e) {
+            LOGGER.info("Could not retrieve file attributes for {}", file, e);
+        }
+    }
+
+    private void initAttributesNativeCall(AbstractFile file) {
+        int attr = NativeFileUtils.getLocalFileAttributes(file.getAbsolutePath());
+        if ((attr & NativeFileUtils.FA_MASK_DIRECTORY) != 0) {
+            bitmask |= DIRECTORY_VALUE_MASK;
+        } else {
+            bitmask &= ~DIRECTORY_VALUE_MASK;
+        }
+        if ((attr & NativeFileUtils.FA_MASK_EXISTS) != 0) {
+            bitmask |= EXISTS_VALUE_MASK;
+        } else {
+            bitmask &= ~EXISTS_VALUE_MASK;
+        }
+        if ((attr & NativeFileUtils.FA_MASK_HIDDEN) != 0) {
+            bitmask |= HIDDEN_VALUE_MASK;
+        } else {
+            bitmask &= ~HIDDEN_VALUE_MASK;
+        }
+        bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
     }
 
 
@@ -296,8 +336,8 @@ public class CachedFile extends ProxyFile {
     @Override
     public boolean isDirectory() {
         if ((bitmask & DIRECTORY_SET_MASK) == 0) {
-            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-            getFileAttributes(file);
+            if (isFileAttributesSupported()) {
+                getFileAttributes(file);
             }
         // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & DIRECTORY_SET_MASK) == 0) {
@@ -310,6 +350,10 @@ public class CachedFile extends ProxyFile {
             }
         }
         return (bitmask & DIRECTORY_VALUE_MASK) != 0;
+    }
+
+    private boolean isFileAttributesSupported() {
+        return GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme());
     }
 
     @Override
@@ -328,8 +372,8 @@ public class CachedFile extends ProxyFile {
     @Override
     public boolean isHidden() {
         if ((bitmask & HIDDEN_SET_MASK) == 0) {
-            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-            getFileAttributes(file);
+            if (isFileAttributesSupported()) {
+                getFileAttributes(file);
             }
         // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & HIDDEN_SET_MASK) == 0) {
@@ -414,8 +458,8 @@ public class CachedFile extends ProxyFile {
     @Override
     public boolean exists() {
         if ((bitmask & EXISTS_SET_MASK) == 0) {
-            if (GET_FILE_ATTRIBUTES_AVAILABLE && FileProtocols.FILE.equals(file.getURL().getScheme())) {
-            getFileAttributes(file);
+            if (isFileAttributesSupported()) {
+                getFileAttributes(file);
             }
         // Note: getFileAttributes() might fail to retrieve file attributes, so we need to test isDirectorySet again
             if ((bitmask & EXISTS_SET_MASK) == 0) {

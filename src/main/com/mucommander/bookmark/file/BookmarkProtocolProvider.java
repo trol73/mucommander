@@ -58,7 +58,7 @@ public class BookmarkProtocolProvider implements ProtocolProvider {
                 if (!url.getPath().equals("/")) {
                     throw new IOException();
                 }
-                return new BookmarkFile(new Bookmark(url.getHost(), url.getPath()));
+                return new BookmarkFile(new Bookmark(url.getHost(), url.getPath(), null));
             }
 
             // If the bookmark exists, and a path is specified, creates a new path

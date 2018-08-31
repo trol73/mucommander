@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MaximizeWindowAction extends MuAction {
 
-    MaximizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MaximizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -53,20 +53,29 @@ public class MaximizeWindowAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MaximizeWindow";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.WINDOW; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.WINDOW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         @Override
         public String getLabel() {
             // Use a special label for Mac OS X, if it exists, use the standard action label otherwise
             String macLabelKey = ActionProperties.getActionLabelKey(ACTION_ID)+".mac_os_x";
-            if(OsFamily.MAC_OS_X.isCurrent() && Translator.hasValue(macLabelKey, false))
+            if (OsFamily.MAC_OS_X.isCurrent() && Translator.hasValue(macLabelKey, false)) {
                 return Translator.get(macLabelKey);
+            }
 
             return super.getLabel();
         }

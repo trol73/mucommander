@@ -98,8 +98,9 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
     /**
      */
     protected synchronized void fireActiveTabChanged() {
-        for(ActiveTabListener listener : activeTabChangedListener.keySet())
-            listener.activeTabChanged();
+        for (ActiveTabListener listener : activeTabChangedListener.keySet()) {
+			listener.activeTabChanged();
+		}
     }
 
 	/**
@@ -119,10 +120,11 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	public void selectTab(T tab) {
 		int index = tabsCollection.indexOf(tab);
 
-		if (index != -1)
+		if (index != -1) {
 			selectTab(index);
-		else
+		} else {
 			LOGGER.error("Was requested to change to non-existing tab, ignoring");
+		}
 	}
 
 	/**

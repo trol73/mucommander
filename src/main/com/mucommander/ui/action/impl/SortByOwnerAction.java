@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByOwnerAction extends SortByAction {
 
-    SortByOwnerAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SortByOwnerAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.OWNER);
     }
 

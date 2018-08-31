@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByDateAction extends SortByAction {
 
-    SortByDateAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SortByDateAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.DATE);
     }
 

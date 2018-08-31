@@ -74,14 +74,14 @@ public enum FileType {
 
 
     private final String contentType;
-    private final String fileMasks;
+    //private final String fileMasks;
     private final WildcardFileFilter fileFilters[];
     private final String name;
 
     FileType(String name, String contentType, String fileMasks) {
         this.name = name;
         this.contentType = contentType;
-        this.fileMasks = fileMasks;
+        //this.fileMasks = fileMasks;
         this.fileFilters = buildFileFilters(fileMasks);
     }
 

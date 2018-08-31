@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -26,7 +25,7 @@ import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class MarkPreviousBlockAction extends MarkBackwardAction {
     // TODO: make this value configurable
     private static final int BLOCK_SIZE = 5;
 
-    MarkPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkPreviousBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -60,11 +59,17 @@ public class MarkPreviousBlockAction extends MarkBackwardAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkPreviousBlock";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);

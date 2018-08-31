@@ -104,6 +104,7 @@ public class DialogToolkit {
     
     /**
      * Sets the given component's (JFrame, JDialog...) location to be centered on screen.
+     * @param c component to center on screen
      */
     public static void centerOnScreen(Component c) {
         Dimension screenSize = MuSnapshot.getScreenSize();
@@ -138,6 +139,10 @@ public class DialogToolkit {
 	
     /**
      * Creates an OK/Cancel panel using the given buttons, and register the given listener for button actions.
+     * @param okButton OK button
+     * @param cancelButton Cancel button
+     * @param actionListener action listener
+     * @param rootPane root panel
      */
     public static JPanel createOKCancelPanel(JButton okButton, JButton cancelButton, JRootPane rootPane, ActionListener actionListener) {
         return createButtonPanel(rootPane, actionListener, okButton, cancelButton);
@@ -145,6 +150,9 @@ public class DialogToolkit {
 
     /**
      * Creates an OK panel using the given button, and register the given listener for button actions.
+     * @param okButton OK button
+     * @param actionListener action listener
+     * @param rootPane root panel
      */
     public static JPanel createOKPanel(JButton okButton, JRootPane rootPane, ActionListener actionListener) {
         return createButtonPanel(rootPane, actionListener, okButton);
@@ -153,6 +161,9 @@ public class DialogToolkit {
     /**
      * Creates a button panel using the given buttons, and register the given listener for button actions.
      * Buttons are disposed horizontally, aligned to the right.
+     * @param rootPane root panel
+     * @param actionListener action listener
+     * @param buttons buttons
      */
     public static JPanel createButtonPanel(JRootPane rootPane, ActionListener actionListener, JButton ... buttons) {
         JPanel panel = new ButtonChoicePanel(buttons, 0, rootPane);

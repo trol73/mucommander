@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
 
-    ShowRecentEditedFilesQLAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ShowRecentEditedFilesQLAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -50,13 +50,21 @@ public class ShowRecentEditedFilesQLAction extends ShowQuickListAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ShowRecentEditedFilesQL";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+        public ActionCategory getCategory() {
+            return ActionCategory.NAVIGATION;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_8, KeyEvent.ALT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_8, KeyEvent.ALT_DOWN_MASK);
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ShowRecentEditedFilesQLAction(mainFrame, properties);

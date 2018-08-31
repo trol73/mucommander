@@ -61,26 +61,27 @@ class BookmarkWriter implements BookmarkConstants, BookmarkBuilder {
         }
     }
 
-    public void addBookmark(String name, String location) throws BookmarkException {
+    public void addBookmark(String name, String location, String parent) throws BookmarkException {
         try {
-            // Start bookmark element
             out.startElement(ELEMENT_BOOKMARK);
             out.println();
 
-            // Write the bookmark's name
-            out.startElement(ELEMENT_NAME);
-            out.writeCData(name);
-            out.endElement(ELEMENT_NAME);
+            writeElement(ELEMENT_NAME, name);
+            writeElement(ELEMENT_LOCATION, location);
+            writeElement(ELEMENT_PARENT, parent);
 
-            // Write the bookmark's location
-            out.startElement(ELEMENT_LOCATION);
-            out.writeCData(location);
-            out.endElement(ELEMENT_LOCATION);
-
-            // End bookmark element
             out.endElement(ELEMENT_BOOKMARK);
         } catch(IOException e) {
             throw new BookmarkException(e);
+        }
+    }
+
+
+    private void writeElement(String name, String value) throws IOException {
+        if (value != null) {
+            out.startElement(name);
+            out.writeCData(value);
+            out.endElement(name);
         }
     }
 }

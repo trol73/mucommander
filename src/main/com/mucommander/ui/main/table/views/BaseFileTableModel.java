@@ -117,12 +117,16 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     static {
         // Initialize the size column format based on the configuration
-        setSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        setSizeFormat(getFileSizeFormat());
+    }
+
+    private static boolean getFileSizeFormat() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
+                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE);
     }
 
 
-    public abstract void fillCellCache();
+    public abstract void fillCellCache(FileTable fileTable);
     public abstract int getFileRow(int index);
 
     /**
@@ -260,7 +264,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public synchronized AbstractFile[] getFiles() {
         int nbFiles = cachedFiles.length;
         AbstractFile[] files = new AbstractFile[nbFiles];
-        for (int i=0; i<nbFiles; i++) {
+        for (int i = 0; i < nbFiles; i++) {
             files[i] = cachedFiles[i] == null ? null : ((CachedFile) cachedFiles[i]).getProxiedFile();
         }
 
@@ -373,7 +377,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
 
     /**
-     * Returns the current folder, i.e. the last folder set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[])}.
+     * Returns the current folder, i.e. the last folder set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[], FileTable table)}.
      *
      * @return the current folder
      */
@@ -403,7 +407,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * @param folder the current folder
      * @param children the current folder's children
      */
-    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[]) {
+    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[], FileTable table) {
         int nbFiles = children.length;
         this.currentFolder = (folder instanceof CachedFile) ? folder : new CachedFile(folder, true);
 
@@ -444,11 +448,12 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         // Init and fill cell cache to speed up table even more
         initCellValuesCache();
 
-        fillCellCache();
+        fillCellCache(table);
     }
 
     /**
-     * Returns the date of the current folder, when it was set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[])}.
+     * Returns the date of the current folder, when it was set using
+     * {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[], FileTable table)}.
      * In other words, the returned date is a snapshot of the current folder's date which is never updated.
      *
      * @return Returns the date of the current folder, when it was set using #setCurrentFolder(Abstract, Abstract[])

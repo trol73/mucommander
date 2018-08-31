@@ -31,6 +31,9 @@ import com.mucommander.ui.action.impl.ShowBookmarksQLAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This quick list shows existing bookmarks.
  * 
@@ -65,8 +68,20 @@ public class BookmarksQL extends QuickListWithIcons<Bookmark> implements Bookmar
 	}
 
 	public void bookmarksChanged() {
+		cachedBookmarks = prepareBookmarks();
+	}
+
+	private static Bookmark[] prepareBookmarks() {
+		List<Bookmark> outList = new ArrayList<>();
 		AlteredVector<Bookmark> bookmarks = BookmarkManager.getBookmarks();
-		cachedBookmarks = new Bookmark[bookmarks.size()];
-		bookmarks.toArray(cachedBookmarks);
+		for (Bookmark bookmark : bookmarks) {
+			if (!bookmark.getLocation().isEmpty() && !bookmark.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR)) {
+				outList.add(bookmark);
+			}
+		}
+
+		Bookmark[] result = new Bookmark[outList.size()];
+		outList.toArray(result);
+		return result;
 	}
 }

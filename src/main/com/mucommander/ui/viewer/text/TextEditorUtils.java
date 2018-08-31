@@ -28,7 +28,7 @@ import com.mucommander.utils.text.Translator;
 import java.io.IOException;
 import java.io.PushbackInputStream;
 
-public class TextEditorUtils {
+class TextEditorUtils {
 
     static FileType detectFileFormat(AbstractFile file) {
         byte bytes[] = BufferPool.getByteArray(256);

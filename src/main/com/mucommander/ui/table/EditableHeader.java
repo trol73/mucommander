@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.table;
 
-import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.JTableHeader;
@@ -30,7 +29,7 @@ import java.util.EventObject;
 
 public class EditableHeader extends JTableHeader implements CellEditorListener {
 
-	public final int HEADER_ROW = -10;
+	private final int HEADER_ROW = -10;
 
 	transient protected int editingColumn;
 
@@ -108,21 +107,17 @@ public class EditableHeader extends JTableHeader implements CellEditorListener {
 
 		// firePropertyChange
 
-		if (oldEditor != null && oldEditor instanceof TableCellEditor) {
+		if (oldEditor != null) {
 			oldEditor.removeCellEditorListener(this);
 		}
-		if (newEditor != null && newEditor instanceof TableCellEditor) {
+		if (newEditor != null) {
 			newEditor.addCellEditorListener(this);
 		}
 	}
 
 	public Component prepareEditor(TableCellEditor editor, int index) {
 		Object value = columnModel.getColumn(index).getHeaderValue();
-		boolean isSelected = true;
-		int row = HEADER_ROW;
-		JTable table = getTable();
-		return editor.getTableCellEditorComponent(table, value,
-				isSelected, row, index);
+		return editor.getTableCellEditorComponent(getTable(), value, true, HEADER_ROW, index);
 	}
 
 	public TableCellEditor getCellEditor() { return cellEditor; }

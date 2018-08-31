@@ -97,8 +97,9 @@ public class ArchiveEntry extends SimpleFileAttributes {
         String path = getPath();
         int len = path.length();
         // Remove trailing '/' if any
-        if (path.charAt(len-1) == SEPARATOR_CHAR)
+        if (path.charAt(len-1) == SEPARATOR_CHAR) {
             path = path.substring(0, --len);
+        }
 
         int lastSlash = path.lastIndexOf(SEPARATOR_CHAR);
         return lastSlash == -1 ? path : path.substring(lastSlash+1, len);
@@ -177,15 +178,14 @@ public class ArchiveEntry extends SimpleFileAttributes {
      * so that <code>url1.equals(url2)</code> implies <code>url1.hashCode()==url2.hashCode()</code>.
      */
     public int hashCode() {
-        if (hashCode != 0)         // Return any previously computed hashCode. Note that setPath invalidates the hashCode.
+        if (hashCode != 0) {         // Return any previously computed hashCode. Note that setPath invalidates the hashCode.
             return hashCode;
+        }
 
         String path = getPath();
 
         // #equals(Object) is trailing separator insensitive, so the hashCode must be trailing separator invariant
-        hashCode = path.endsWith(SEPARATOR_STRING)
-                ?path.substring(0, path.length()-1).hashCode()
-                :path.hashCode();
+        hashCode = path.endsWith(SEPARATOR_STRING) ? path.substring(0, path.length()-1).hashCode() : path.hashCode();
 
         return hashCode;
     }

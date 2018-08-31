@@ -99,15 +99,15 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     /**
      * Set main component that will be listen key codes to fix issue with not workings menu accelerators
      *
-     * @param comp
-     * @param menuBar
+     * @param comp main component for listing
+     * @param menuBar menu bar
      */
     public void setMainKeyListener(Component comp, JMenuBar menuBar) {
         fillMenuKeyStrokes(menuBar);
         comp.addKeyListener(mainKeyListener);
     }
 
-    private boolean isProblemKey(KeyStroke keyStroke) {
+    private static boolean isProblemKey(KeyStroke keyStroke) {
         if (keyStroke == null) {
             return false;
         }
@@ -117,11 +117,15 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
                 keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB;
     }
 
+    private static boolean isProblemMenuItem(JMenuItem menuItem) {
+        return menuItem != null && isProblemKey(menuItem.getAccelerator());
+    }
+
 
     /**
      * Fills map for all keycodes that can be not processed properly in swing
      *
-     * @param menuBar
+     * @param menuBar menu bar
      */
     private void fillMenuKeyStrokes(JMenuBar menuBar) {
         menuKeyStrokes = new HashMap<>();
@@ -129,12 +133,8 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
             JMenu menu = menuBar.getMenu(menuIndex);
             for (int itemIndex = 0; itemIndex < menu.getItemCount(); itemIndex++) {
                 JMenuItem menuItem = menu.getItem(itemIndex);
-                if (menuItem == null) {
-                    continue;
-                }
-                KeyStroke keyStroke = menuItem.getAccelerator();
-                if (isProblemKey(keyStroke)) {
-                    menuKeyStrokes.put(keyStroke, menuItem);
+                if (isProblemMenuItem(menuItem)) {
+                    menuKeyStrokes.put(menuItem.getAccelerator(), menuItem);
                 }
             }
         }

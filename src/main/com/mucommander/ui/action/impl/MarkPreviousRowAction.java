@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MarkPreviousRowAction extends MarkBackwardAction {
 
-    MarkPreviousRowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkPreviousRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -53,13 +53,21 @@ public class MarkPreviousRowAction extends MarkBackwardAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkPreviousRow";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkPreviousRowAction(mainFrame, properties);

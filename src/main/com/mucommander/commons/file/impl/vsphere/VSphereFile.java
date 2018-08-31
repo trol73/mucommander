@@ -387,10 +387,7 @@ public class VSphereFile extends ProtocolFile implements
 				.getConnectionHandler(this, fileURL, true);
 		try {
 			connHandler.checkConnection();
-		} catch (RuntimeException e) {
-			releaseConnHandler(connHandler);
-			throw e;
-		} catch (IOException e) {
+		} catch (RuntimeException | IOException e) {
 			releaseConnHandler(connHandler);
 			throw e;
 		}
@@ -408,32 +405,16 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public void setLastModifiedDate(long lastModified) throws IOException,
-			UnsupportedFileOperationException {
+	public void setLastModifiedDate(long lastModified) throws IOException {
 
 		VsphereConnHandler connHandler = null;
 		try {
 			GuestFileAttributes gfa = new GuestFileAttributes();
 			gfa.setModificationTime(getTimeToXmlTime(lastModified));
 			connHandler = getConnHandler();
-			connHandler
-					.getClient()
-					.getVimPort()
-					.changeFileAttributesInGuest(getFileManager(connHandler),
-							vm, credentials, getPathInVm(), gfa);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (DatatypeConfigurationException e) {
+			connHandler.getClient().getVimPort().changeFileAttributesInGuest(
+					getFileManager(connHandler), vm, credentials, getPathInVm(), gfa);
+		} catch (FileFaultFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | InvalidStateFaultMsg | TaskInProgressFaultMsg | InvalidPropertyFaultMsg | DatatypeConfigurationException e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -441,17 +422,10 @@ public class VSphereFile extends ProtocolFile implements
 
 	}
 
-	private XMLGregorianCalendar getTimeToXmlTime(long lastModified)
-			throws DatatypeConfigurationException {
-
-		GregorianCalendar gc = new GregorianCalendar(
-				TimeZone.getTimeZone("UTC"));
-
+	private XMLGregorianCalendar getTimeToXmlTime(long lastModified) throws DatatypeConfigurationException {
+		GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
 		gc.setTime(new Date(lastModified));
-
-		XMLGregorianCalendar xmlTime = DatatypeFactory.newInstance()
-				.newXMLGregorianCalendar(gc);
-		return xmlTime;
+		return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
 	}
 
 	@Override

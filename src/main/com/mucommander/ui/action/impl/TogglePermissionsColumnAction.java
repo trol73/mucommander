@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class TogglePermissionsColumnAction extends ToggleColumnAction {
 
-    TogglePermissionsColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TogglePermissionsColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.PERMISSIONS);
     }
 

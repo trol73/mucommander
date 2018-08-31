@@ -72,9 +72,9 @@ public class DurationFormat {
         // Don't add second part if equal to 0, unless this is the only part
         if (remainderSec > 0 || s.length() == 0) {
             if (remainderSec == 0) {
-                if (s.length() > 0) {
-                    s.delete(0, s.length() - 1);
-                }
+//                if (s.length() > 0) {
+//                    s.delete(0, s.length() - 1);
+//                }
                 s.append('<').append(Translator.get(SECONDS_KEY, "1"));
                 //s = "<" + Translator.get(SECONDS_KEY, "1");
             } else {

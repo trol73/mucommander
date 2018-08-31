@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class GarbageCollectAction extends MuAction {
 
-    GarbageCollectAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private GarbageCollectAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -52,13 +52,21 @@ public class GarbageCollectAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GarbageCollect";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return null; }
+		public ActionCategory getCategory() {
+			return null;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new GarbageCollectAction(mainFrame, properties);

@@ -39,7 +39,7 @@ import java.util.Map;
 @InvokesDialog
 public class UnpackAction extends SelectedFilesAction {
 
-    UnpackAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private UnpackAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Unpack job operates on archives and directories
@@ -63,11 +63,17 @@ public class UnpackAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Unpack";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_P, CTRL_OR_META_DOWN_MASK);

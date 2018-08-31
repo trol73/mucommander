@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
  */
 public class AddTabAction extends MuAction {
 
-	AddTabAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private AddTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -53,11 +53,17 @@ public class AddTabAction extends MuAction {
 
 	public static final class Descriptor extends AbstractActionDescriptor {
 		public static final String ACTION_ID = "AddTab";
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.TAB; }
+		public ActionCategory getCategory() {
+			return ActionCategory.TAB;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);

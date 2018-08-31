@@ -67,7 +67,7 @@ public class HDFSFile extends HadoopFile {
     private static String getUsername(FileURL url) {
         Credentials credentials = url.getCredentials();
         String username;
-        if(credentials==null||(username=credentials.getLogin()).equals(""))
+        if (credentials == null || (username = credentials.getLogin()).isEmpty())
             username = getDefaultUsername();
 
         return username;
@@ -76,7 +76,7 @@ public class HDFSFile extends HadoopFile {
     private static String getGroup(FileURL url) {
 //        // Import the group from the URL's 'group' property, if set
 //        String group = url.getProperty(GROUP_PROPERTY_NAME);
-//        if(group==null || group.equals(""))
+//        if(group==null || group.isEmpty()
 //            group = getDefaultGroup();
 //
 //        return group;

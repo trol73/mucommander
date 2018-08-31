@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class TerminalPanelAction extends MuAction {
 
-    TerminalPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TerminalPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

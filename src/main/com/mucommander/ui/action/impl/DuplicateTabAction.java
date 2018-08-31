@@ -53,7 +53,7 @@ import java.util.Map;
  */
 public class DuplicateTabAction extends MuAction {
 	
-	DuplicateTabAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private DuplicateTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -71,13 +71,21 @@ public class DuplicateTabAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "DuplicateTab";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.TAB; }
+		public ActionCategory getCategory() {
+			return ActionCategory.TAB;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.ALT_DOWN_MASK);
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new DuplicateTabAction(mainFrame, properties);

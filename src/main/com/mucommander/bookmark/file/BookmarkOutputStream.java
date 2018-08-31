@@ -72,9 +72,9 @@ class BookmarkOutputStream extends ByteArrayOutputStream implements BookmarkBuil
      * @param name     name of the new bookmark.
      * @Param location location of the new bookmark.
      */
-    public void addBookmark(String name, String location) {
+    public void addBookmark(String name, String location, String parent) {
         // Creates the new bookmark and checks for conflicts.
-        Bookmark newBookmark = new Bookmark(name, location);
+        Bookmark newBookmark = new Bookmark(name, location, parent);
         // Old bookmark of the same name, if any.
         Bookmark oldBookmark = BookmarkManager.getBookmark(name);
         if (oldBookmark != null) {

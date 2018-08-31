@@ -24,7 +24,7 @@ public class SMBFileTest extends AbstractFileTest {
 
     static {
         // Configure jCIFS for maximum compatibility
-        SMBProtocolProvider.setLmCompatibility(0);
+        SMBProtocolProvider.setSmbLmCompatibility(0);
         SMBProtocolProvider.setExtendedSecurity(false);
 
         // Turn off attribute caching completely, otherwise tests will fail

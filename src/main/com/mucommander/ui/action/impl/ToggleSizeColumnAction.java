@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ToggleSizeColumnAction extends ToggleColumnAction {
 
-    ToggleSizeColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleSizeColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.SIZE);
     }
 

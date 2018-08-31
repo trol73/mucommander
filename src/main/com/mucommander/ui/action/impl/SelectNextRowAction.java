@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SelectNextRowAction extends SelectForwardAction {
 
-    SelectNextRowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SelectNextRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

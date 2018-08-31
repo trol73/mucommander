@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class CopyFileNamesAction extends SelectedFilesAction {
 
-    CopyFileNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CopyFileNamesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -70,15 +70,20 @@ public class CopyFileNamesAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CopyFileNames";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
+		    if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
             } else {
                 return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);

@@ -108,6 +108,8 @@ public class FileFactory {
     /** Default authenticator, used when none is specified */
     private static Authenticator defaultAuthenticator;
 
+    private static Set<String> archiveExtensions;
+
 
     public static void registerProtocolNetworks() {
         ProtocolProvider protocolProvider;
@@ -592,8 +594,9 @@ public class FileFactory {
         else {
             // If an Authenticator has been specified and the specified FileURL's protocol is authenticated and the
             // FileURL doesn't contain any credentials, use it to authenticate the FileURL.
-            if (authenticator != null && fileURL.getAuthenticationType() != AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials())
+            if (authenticator != null && fileURL.getAuthenticationType() != AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials()) {
                 authenticator.authenticate(fileURL);
+            }
 
             // Finds the right file protocol provider
             ProtocolProvider provider = getProtocolProvider(scheme);
@@ -691,7 +694,24 @@ public class FileFactory {
      * @return <code>true</code> if the specified filename is a known archive file name, <code>false</code> otherwise.
      */
     public static boolean isArchiveFilename(String filename) {
-        return getArchiveFormatProvider(filename) != null;
+        if (archiveExtensions == null) {
+            if (archiveFormatProviders == null) {
+                return false;
+            }
+            archiveExtensions = new HashSet<>();
+            for (ArchiveFormatProvider provider : archiveFormatProviders) {
+                if (provider != null) {
+                    String[] extensions = provider.getFileExtensions();
+                    for (String ext : extensions) {
+                        String extWithoutDot = ext.startsWith(".") ? ext.substring(1) : ext;
+                        archiveExtensions.add(extWithoutDot.toLowerCase());
+                    }
+                }
+            }
+        }
+        String ext = AbstractFile.getExtension(filename);
+        return ext != null && archiveExtensions.contains(ext.toLowerCase());
+        //return getArchiveFormatProvider(filename) != null;
     }
 
     /**

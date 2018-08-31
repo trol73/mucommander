@@ -82,7 +82,7 @@ public class MarkExtensionAction extends MuAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    MarkExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -210,13 +210,21 @@ public class MarkExtensionAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkExtension";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new MarkExtensionAction(mainFrame, properties);

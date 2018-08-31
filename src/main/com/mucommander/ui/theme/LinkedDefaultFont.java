@@ -64,7 +64,8 @@ public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
     }
 
     public void fontChanged(FontChangedEvent event) {
-        if(event.getFontId() == id)
+        if (event.getFontId() == id) {
             notifyChange(event.getFont());
+        }
     }
 }

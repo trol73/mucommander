@@ -18,10 +18,6 @@
 
 package com.mucommander.bookmark;
 
-import com.mucommander.auth.CredentialsManager;
-import com.mucommander.auth.CredentialsMapping;
-import com.mucommander.commons.file.Credentials;
-import com.mucommander.commons.file.FileURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -30,7 +26,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 
 
 /**
@@ -45,6 +40,8 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
     private String bookmarkName;
     /** Variable used for XML parsing */
     private String bookmarkLocation;
+    /** Variable used for XML parsing */
+    private String bookmarkParent;
     /** Variable used for XML parsing */
     private StringBuilder characters;
     /** Receives bookmarks events. */
@@ -63,7 +60,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
      */
     void parse(InputStream in, BookmarkBuilder builder) throws Exception {
         this.builder = builder;
-        characters   = new StringBuilder();
+        characters = new StringBuilder();
         SAXParserFactory.newInstance().newSAXParser().parse(in, this);
     }
 
@@ -85,21 +82,29 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
 
     @Override
     public void startDocument() throws SAXException {
-        try {builder.startBookmarks();}
-        catch(BookmarkException e) {throw new SAXException(e);}
+        try {
+            builder.startBookmarks();
+        } catch (BookmarkException e) {
+            throw new SAXException(e);
+        }
     }
 
     @Override
     public void endDocument() throws SAXException {
-        try {builder.endBookmarks();}
-        catch(BookmarkException e) {throw new SAXException(e);}
+        try {
+            builder.endBookmarks();
+        } catch (BookmarkException e) {
+            throw new SAXException(e);
+        }
     }
 
     /**
      * Method called when some PCDATA has been found in an XML node.
      */
     @Override
-    public void characters(char[] ch, int start, int length) {characters.append(ch, start, length);}
+    public void characters(char[] ch, int start, int length) {
+        characters.append(ch, start, length);
+    }
 
     /**
      * Notifies the parser that a new XML node has been found.
@@ -108,13 +113,13 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         characters.setLength(0);
 
-        if(qName.equals(ELEMENT_ROOT)) {
+        if (qName.equals(ELEMENT_ROOT)) {
             version = attributes.getValue(ATTRIBUTE_VERSION);
-        }
-        else if(qName.equals(ELEMENT_BOOKMARK)) {
+        } else if (qName.equals(ELEMENT_BOOKMARK)) {
             // Reset parsing variables
             bookmarkName = null;
             bookmarkLocation = null;
+            bookmarkParent = null;
         }
     }
 
@@ -125,16 +130,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case ELEMENT_BOOKMARK:
-                if (bookmarkName == null || bookmarkLocation == null) {
-                    getLogger().info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
-                    return;
-                }
-
-                try {
-                    builder.addBookmark(bookmarkName, bookmarkLocation);
-                } catch (BookmarkException e) {
-                    throw new SAXException(e);
-                }
+                addBookmark();
                 break;
             case ELEMENT_NAME:
                 bookmarkName = characters.toString().trim();
@@ -142,27 +138,43 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
             case ELEMENT_LOCATION:
                 bookmarkLocation = characters.toString().trim();
                 break;
-            // Note: url element has been deprecated in 0.8 beta3 but is still checked against for upward compatibility.
-            case ELEMENT_URL:
-                // Until early 0.8 beta3 nightly builds, credentials were stored directly in the bookmark's url.
-                // Now bookmark locations are free of credentials, these are stored in a dedicated credentials file where
-                // the password is encrypted.
-                try {
-                    FileURL url = FileURL.getFileURL(characters.toString().trim());
-                    Credentials credentials = url.getCredentials();
-
-                    // If the URL contains credentials, import them into CredentialsManager and remove credentials
-                    // from the bookmark's location
-                    if (credentials != null) {
-                        CredentialsManager.addCredentials(new CredentialsMapping(credentials, url, true));
-                        bookmarkLocation = url.toString(false);
-                    } else {
-                        bookmarkLocation = characters.toString().trim();
-                    }
-                } catch (MalformedURLException e) {
-                    bookmarkLocation = characters.toString().trim();
-                }
+            case ELEMENT_PARENT:
+                bookmarkParent = characters.toString().trim();
                 break;
+            // Note: url element has been deprecated in 0.8 beta3 but is still checked against for upward compatibility.
+//            case ELEMENT_URL:
+//                // Until early 0.8 beta3 nightly builds, credentials were stored directly in the bookmark's url.
+//                // Now bookmark locations are free of credentials, these are stored in a dedicated credentials file where
+//                // the password is encrypted.
+//                try {
+//                    FileURL url = FileURL.getFileURL(characters.toString().trim());
+//                    Credentials credentials = url.getCredentials();
+//
+//                    // If the URL contains credentials, import them into CredentialsManager and remove credentials
+//                    // from the bookmark's location
+//                    if (credentials != null) {
+//                        CredentialsManager.addCredentials(new CredentialsMapping(credentials, url, true));
+//                        bookmarkLocation = url.toString(false);
+//                    } else {
+//                        bookmarkLocation = characters.toString().trim();
+//                    }
+//                } catch (MalformedURLException e) {
+//                    bookmarkLocation = characters.toString().trim();
+//                }
+//                break;
+        }
+    }
+
+    private void addBookmark() throws SAXException {
+        if (bookmarkName == null || bookmarkLocation == null) {
+            getLogger().info("Missing value, bookmark ignored: name=" + bookmarkName + " location=" + bookmarkLocation);
+            return;
+        }
+
+        try {
+            builder.addBookmark(bookmarkName, bookmarkLocation, bookmarkParent);
+        } catch (BookmarkException e) {
+            throw new SAXException(e);
         }
     }
 

@@ -111,7 +111,6 @@ public class ExecPanel extends JPanel implements ProcessListener {
 
             // No new command can be entered while a process is running.
             //inputCombo.setEnabled(false);
-System.out.println(folder + " " + command);
             currentProcess = Shell.execute(command, folder, this);
             processInput = new PrintStream(currentProcess.getOutputStream(), true);
 

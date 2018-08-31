@@ -41,8 +41,12 @@ public class FileUtils {
     }
 
     public static void copyJarFile(String name, String jarPath) throws IOException {
+        copyJarFile(name, jarPath, false);
+    }
+
+    public static void copyJarFile(String name, String jarPath, boolean overwrite) throws IOException {
         final String outFile = jarPath + File.separatorChar + name;
-        if (!new File(outFile).exists()) {
+        if (overwrite || !new File(outFile).exists()) {
             FileUtils.copyFileFromJar('/' + name, outFile);
         }
     }

@@ -42,13 +42,13 @@ import java.util.Map;
  */
 public class ToggleCommandBarAction extends MuAction {
 
-    ToggleCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_VISIBLE, MuPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
     }
 
     private void updateLabel(boolean visible) {
-        setLabel(Translator.get(visible?Descriptor.ACTION_ID+".hide":Descriptor.ACTION_ID+".show"));
+        setLabel(Translator.get(visible ? Descriptor.ACTION_ID + ".hide" : Descriptor.ACTION_ID + ".show"));
     }
 
     @Override
@@ -73,16 +73,26 @@ public class ToggleCommandBarAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ToggleCommandBar";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-        public ActionCategory getCategory() { return ActionCategory.VIEW; }
+        public ActionCategory getCategory() {
+		    return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         @Override
-        public String getLabelKey() { return ACTION_ID+".show"; }
+        public String getLabelKey() {
+		    return ACTION_ID + ".show";
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleCommandBarAction(mainFrame, properties);

@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ShowParentFoldersQLAction extends ShowQuickListAction {
 	
-	ShowParentFoldersQLAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private ShowParentFoldersQLAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 	
@@ -52,13 +52,21 @@ public class ShowParentFoldersQLAction extends ShowQuickListAction {
 	public static final class Descriptor extends AbstractActionDescriptor {
 		public static final String ACTION_ID = "ShowParentFoldersQL";
 		
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.ALT_DOWN_MASK);
+		}
 
 		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowParentFoldersQLAction(mainFrame, properties);

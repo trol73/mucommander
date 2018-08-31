@@ -54,7 +54,7 @@ public class GnomeConfig {
 
             LOGGER.debug(CONFIG_COMMAND+" returned '"+line+"' for "+key);
 
-            if(line==null || (line=line.trim()).equals("") || line.startsWith("No value set for"))
+            if(line==null || (line=line.trim()).isEmpty() || line.startsWith("No value set for"))
                 return null;
 
             return line;

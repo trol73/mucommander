@@ -101,48 +101,48 @@ public class GrowlNotifier extends AbstractNotifier {
 
     @Override
     public boolean setEnabled(boolean enabled) {
-        if(enabled) {
-            // No need to bother if the OS is not Mac OS X
-            if(!OsFamily.MAC_OS_X.isCurrent())
-                return false;
-
-            // Nothing else to do if the application has already been registered
-            if(isRegistered)
-                return (isEnabled = true);
-
-            // Test if Growl is currently running and abort if it is not
-            StringBuilder outputBuffer = new StringBuilder();
-            if(!(AppleScript.execute(IS_GROWL_RUNNING_APPLESCRIPT, outputBuffer) && outputBuffer.toString().equals("true"))) {
-            	LOGGER.debug("Growl is not running, aborting");
-
-                return false;
-            }
-
-            // Register the application (muCommander) with Growl
-
-            // The list of notification types muCommander uses
-            String notificationTypes =
-                "{"+
-                    "\""+Translator.get(NOTIFICATION_KEYS.get(NotificationType.JOB_COMPLETED))+"\","+
-                    "\""+Translator.get(NOTIFICATION_KEYS.get(NotificationType.JOB_ERROR))+"\""+
-                "}";
-
-            // Register muCommander with Growl, declare the notifications types and enable all of them by default
-            isRegistered = tellGrowl(
-                "register as application \""+APP_NAME+"\""+
-                " all notifications "+notificationTypes+
-                " default notifications "+notificationTypes+
-                " icon of application \""+APP_NAME+"\"");
-
-            LOGGER.info(isRegistered?
-                "Successfully registered "+APP_NAME+" with Growl":
-                "Error while registering "+APP_NAME+" with Growl");
-
-            return isEnabled = isRegistered;
-        }
-        else {
+        if (!enabled) {
             return (isEnabled = false);
         }
+        // No need to bother if the OS is not Mac OS X
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
+            return false;
+        }
+
+        // Nothing else to do if the application has already been registered
+        if (isRegistered) {
+            return (isEnabled = true);
+        }
+
+        // Test if Growl is currently running and abort if it is not
+        StringBuilder outputBuffer = new StringBuilder();
+        if (!(AppleScript.execute(IS_GROWL_RUNNING_APPLESCRIPT, outputBuffer) && outputBuffer.toString().equals("true"))) {
+            LOGGER.debug("Growl is not running, aborting");
+
+            return false;
+        }
+
+        // Register the application (muCommander) with Growl
+
+        // The list of notification types muCommander uses
+        String notificationTypes =
+            "{"+
+                "\""+Translator.get(NOTIFICATION_KEYS.get(NotificationType.JOB_COMPLETED))+"\","+
+                "\""+Translator.get(NOTIFICATION_KEYS.get(NotificationType.JOB_ERROR))+"\""+
+            "}";
+
+        // Register muCommander with Growl, declare the notifications types and enable all of them by default
+        isRegistered = tellGrowl(
+            "register as application \""+APP_NAME+"\""+
+            " all notifications "+notificationTypes+
+            " default notifications "+notificationTypes+
+            " icon of application \""+APP_NAME+"\"");
+
+        LOGGER.info(isRegistered?
+            "Successfully registered "+APP_NAME+" with Growl":
+            "Error while registering "+APP_NAME+" with Growl");
+
+        return isEnabled = isRegistered;
     }
 
     @Override

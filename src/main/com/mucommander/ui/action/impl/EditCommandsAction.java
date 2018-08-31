@@ -38,7 +38,7 @@ public class EditCommandsAction extends MuAction {
      * @param mainFrame  the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      */
-    EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 

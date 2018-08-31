@@ -30,7 +30,7 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 
 public class TextEditorsListAction extends MuAction {
-    TextEditorsListAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TextEditorsListAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -51,11 +51,17 @@ public class TextEditorsListAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "TextEditorsList";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.WINDOW; }
+        public ActionCategory getCategory() {
+            return ActionCategory.WINDOW;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
         public KeyStroke getDefaultKeyStroke() {
             if (OsFamily.MAC_OS_X.isCurrent()) {

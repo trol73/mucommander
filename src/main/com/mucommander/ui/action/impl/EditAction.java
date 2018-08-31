@@ -43,7 +43,7 @@ public class EditAction extends InternalEditAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    EditAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -66,13 +66,21 @@ public class EditAction extends InternalEditAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Edit";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0);
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new EditAction(mainFrame, properties);

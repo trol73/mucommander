@@ -18,23 +18,6 @@
 
 package com.mucommander;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.*;
-import java.util.concurrent.*;
-
-import com.mucommander.profiler.Profiler;
-import com.mucommander.ui.action.ActionKeymapIO;
-import com.mucommander.ui.icon.FileIcons;
-import com.mucommander.ui.main.frame.MainFrameBuilder;
-import com.mucommander.ui.theme.ThemeManager;
-import com.mucommander.ui.tools.ToolsEnvironment;
-import com.mucommander.utils.MuLogging;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
@@ -49,21 +32,38 @@ import com.mucommander.conf.MuConfigurations;
 import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.extension.ExtensionManager;
+import com.mucommander.profiler.Profiler;
 import com.mucommander.shell.ShellHistoryManager;
-import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.startup.CheckVersionDialog;
 import com.mucommander.ui.dialog.startup.InitialSetupDialog;
+import com.mucommander.ui.icon.FileIcons;
 import com.mucommander.ui.main.SplashScreen;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
 import com.mucommander.ui.main.frame.CommandLineMainFrameBuilder;
 import com.mucommander.ui.main.frame.DefaultMainFramesBuilder;
+import com.mucommander.ui.main.frame.MainFrameBuilder;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
+import com.mucommander.ui.notifier.AbstractNotifier;
+import com.mucommander.ui.theme.ThemeManager;
+import com.mucommander.ui.tools.ToolsEnvironment;
+import com.mucommander.utils.MuLogging;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.*;
 
 /**
  * trolCommander launcher.
@@ -333,12 +333,17 @@ public class TrolCommander {
         void run() throws Exception {
             // Enable system notifications, only after MainFrame is created as SystemTrayNotifier needs to retrieve
             // a MainFrame instance
-            if (MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS)) {
+            if (isNotificationsEnabled()) {
                 printStartupMessage("Enabling system notifications...");
-                if (com.mucommander.ui.notifier.AbstractNotifier.isAvailable())
-                    com.mucommander.ui.notifier.AbstractNotifier.getNotifier().setEnabled(true);
+                if (AbstractNotifier.isAvailable()) {
+                    AbstractNotifier.getNotifier().setEnabled(true);
+                }
             }
 
+        }
+
+        private static boolean isNotificationsEnabled() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS);
         }
     }
 
@@ -372,11 +377,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Loading dictionary...");
-            try {
-                Translator.init();
-            } catch(Exception e) {
-                helper.printError("Could not load dictionary", e, true);
-            }
+            Translator.init();
         }
     }
 
@@ -388,7 +389,11 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             printStartupMessage("Starting Bonjour services discovery...");
-            com.mucommander.bonjour.BonjourDirectory.setActive(MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY));
+            com.mucommander.bonjour.BonjourDirectory.setActive(isBonjourEnabled());
+        }
+
+        private static boolean isBonjourEnabled() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY);
         }
     }
 
@@ -508,12 +513,12 @@ public class TrolCommander {
             // NTLM v2 authentication such as Samba 3.0.x, which still is widely used and comes pre-installed on
             // Mac OS X Leopard.
             // Since jCIFS 1.3.0, the default is to use NTLM v2 authentication and extended security.
-            SMBProtocolProvider.setLmCompatibility(MuConfigurations.getPreferences().getVariable(MuPreference.SMB_LM_COMPATIBILITY, MuPreferences.DEFAULT_SMB_LM_COMPATIBILITY));
-            SMBProtocolProvider.setExtendedSecurity(MuConfigurations.getPreferences().getVariable(MuPreference.SMB_USE_EXTENDED_SECURITY, MuPreferences.DEFAULT_SMB_USE_EXTENDED_SECURITY));
+            SMBProtocolProvider.setSmbLmCompatibility(isSmbLmCompatibilityEnabled());
+            SMBProtocolProvider.setExtendedSecurity(isSmbExtendedSecurityEnabled());
 
             // Use the FTP configuration option that controls whether to force the display of hidden files, or leave it for
             // the servers to decide whether to show them.
-            FTPProtocolProvider.setForceHiddenFilesListing(MuConfigurations.getPreferences().getVariable(MuPreference.LIST_HIDDEN_FILES, MuPreferences.DEFAULT_LIST_HIDDEN_FILES));
+            FTPProtocolProvider.setForceHiddenFilesListing(isListHiddenFiles());
 
 //            FileFactory.registerProtocolFile();
             // Use CredentialsManager for file URL authentication
@@ -521,6 +526,18 @@ public class TrolCommander {
 
             // Register the application-specific 'bookmark' protocol.
             FileFactory.registerProtocol(BookmarkProtocolProvider.BOOKMARK, new com.mucommander.bookmark.file.BookmarkProtocolProvider());
+        }
+
+        private static boolean isListHiddenFiles() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.LIST_HIDDEN_FILES, MuPreferences.DEFAULT_LIST_HIDDEN_FILES);
+        }
+
+        private static boolean isSmbExtendedSecurityEnabled() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.SMB_USE_EXTENDED_SECURITY, MuPreferences.DEFAULT_SMB_USE_EXTENDED_SECURITY);
+        }
+
+        private static int isSmbLmCompatibilityEnabled() {
+            return MuConfigurations.getPreferences().getVariable(MuPreference.SMB_LM_COMPATIBILITY, MuPreferences.DEFAULT_SMB_LM_COMPATIBILITY);
         }
     }
 
@@ -763,10 +780,9 @@ public class TrolCommander {
     /**
      * Main method used to startup muCommander.
      * @param args command line arguments.
-     * @throws IOException if an unrecoverable error occurred during startup 
      */
-    @SuppressWarnings({"unchecked"})
-    public static void main(String args[]) throws IOException {
+    //@SuppressWarnings({"unchecked"})
+    public static void main(String args[]) {
         if (OsFamily.MAC_OS_X.isCurrent()) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare
@@ -809,7 +825,7 @@ public class TrolCommander {
             LauncherTask taskLoadBookmarks = new LoadBookmarksTask(helper);
             LauncherTask taskLoadCredentials = new LoadCredentialsTask(helper);
             LauncherTask taskInitCustomDataFormat = new InitCustomDateFormatTask(helper, taskLoadConfigs);
-            LauncherTask taskRegisterActions = new LoadActionsTask(helper, taskPrepareKeystrokeClass);
+            LauncherTask taskRegisterActions = new LoadActionsTask(helper, taskPrepareKeystrokeClass, taskLoadDict);
             LauncherTask taskLoadIcons = new LoadIconsTask(helper);
             LauncherTask taskInitBars = new InitBarsTask(helper, taskRegisterActions);
             LauncherTask taskStartBonjour = new StartBonjourTask(helper);

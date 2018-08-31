@@ -84,7 +84,7 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      */
     private final int type;
     /** Current default color value. */
-    private Color           color;
+    private Color color;
      /** Used to create instance of the component whose color will be retrieved (in case {@link #property} isn't set). */
     private final ComponentMapper mapper;
 
@@ -116,26 +116,21 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      * @return           the color of the right {@link #type type} used by the specified component.
      */
     private Color getColor(JComponent component) {
-        // Foreground color.
         if (type == FOREGROUND) {
             return component.getForeground();
-        }// Background color.
-        else if(type == BACKGROUND)
+        } else if(type == BACKGROUND) {
             return component.getBackground();
+        }
 
         // Text component specific colors.
-        else if(component instanceof JTextComponent) {
-            JTextComponent comp;
+        else if (component instanceof JTextComponent) {
+            JTextComponent comp = (JTextComponent)component;
 
-            comp = (JTextComponent)component;
-
-            // Selection foreground color.
-            if(type == SELECTION_FOREGROUND)
+            if (type == SELECTION_FOREGROUND) {
                 return comp.getSelectedTextColor();
-
-            // Selection background color.
-            else if(type == SELECTION_BACKGROUND)
+            } else if(type == SELECTION_BACKGROUND) {
                 return comp.getSelectionColor();
+            }
         }
         return null;
     }

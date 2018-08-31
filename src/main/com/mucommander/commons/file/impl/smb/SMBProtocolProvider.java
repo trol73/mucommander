@@ -57,7 +57,7 @@ public class SMBProtocolProvider implements ProtocolProvider {
      *
      * @param value one of the allowed values, refer to JCIFS's documentation for more information.
      */
-    public static void setLmCompatibility(int value) {
+    public static void setSmbLmCompatibility(int value) {
         // Since jCIFS 1.3.0, the default is to use NTLM v2 authentication (value=3).
         // Note: jCIFS configuration is unfortunately global and cannot be set per connection.
         System.setProperty("jcifs.smb.lmCompatibility", Integer.toString(value));

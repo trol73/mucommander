@@ -18,13 +18,15 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -36,7 +38,7 @@ import java.util.Map;
  */
 public class SetSameFolderAction extends MuAction implements ActivePanelListener {
 
-    SetSameFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SetSameFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         mainFrame.addActivePanelListener(this);
@@ -70,14 +72,20 @@ public class SetSameFolderAction extends MuAction implements ActivePanelListener
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "SetSameFolder";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_E, CTRL_OR_META_DOWN_MASK);
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_E, CTRL_OR_META_DOWN_MASK);
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

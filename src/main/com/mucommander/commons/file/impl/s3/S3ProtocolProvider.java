@@ -18,8 +18,9 @@ import java.util.StringTokenizer;
 public class S3ProtocolProvider implements ProtocolProvider {
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
         Credentials credentials = url.getCredentials();
-        if(credentials==null || credentials.getLogin().equals("") || credentials.getPassword().equals(""))
+        if (credentials == null || credentials.getLogin().isEmpty() || credentials.getPassword().isEmpty()) {
             throw new AuthException(url);
+        }
 
         S3Service service;
         String bucketName;

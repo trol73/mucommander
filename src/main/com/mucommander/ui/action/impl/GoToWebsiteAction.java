@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class GoToWebsiteAction extends OpenURLInBrowserAction {
 
-    GoToWebsiteAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private GoToWebsiteAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         putValue(URL_PROPERTY_KEY, com.mucommander.RuntimeConstants.HOMEPAGE_URL);
@@ -43,13 +43,21 @@ public class GoToWebsiteAction extends OpenURLInBrowserAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToWebsite";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.MISC; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.MISC;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new GoToWebsiteAction(mainFrame, properties);

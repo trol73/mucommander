@@ -43,7 +43,7 @@ public class MarkAllAction extends MuAction {
         this.mark = mark;
     }
 
-    MarkAllAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkAllAction(MainFrame mainFrame, Map<String, Object> properties) {
         this(mainFrame, properties, true);
     }
 
@@ -71,14 +71,20 @@ public class MarkAllAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkAll";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_A, CTRL_OR_META_DOWN_MASK);
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_A, CTRL_OR_META_DOWN_MASK);
         }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {

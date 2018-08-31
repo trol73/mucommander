@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class MkdirAction extends ParentFolderAction {
 
-	MkdirAction(MainFrame mainFrame, Map<String, Object> properties) {
+	private MkdirAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);
 	}
 

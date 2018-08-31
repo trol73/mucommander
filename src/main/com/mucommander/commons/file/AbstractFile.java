@@ -21,6 +21,7 @@ package com.mucommander.commons.file;
 
 import java.awt.Dimension;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -440,15 +441,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
             try {
                 copyRemotelyTo(destFile);
-                // Operation was a success, all done.
-                return;
-            } catch(IOException e) {
-                // Fail silently
-            }
+                return; // Operation was a success, all done.
+            } catch (IOException ignore) {}
         }
 
         // Fall back to copying the file manually
-
         checkCopyPrerequisites(destFile, false);
 
         // Copy the file and its contents if the file is a directory
@@ -490,9 +487,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 renameTo(destFile);
                 // Rename was a success, all done.
                 return;
-            } catch(IOException e) {
-                // Fail silently
-            }
+            } catch (IOException ignore) {}
         }
 
         // Fall back to moving the file manually
@@ -629,8 +624,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         FilePermissions permissions = getPermissions();
         int supportedPerms = permissions.getMask().getIntValue();
 
-        String s = "";
-        s += isSymlink() ? 'l' : isDirectory() ? 'd' : '-';
+        StringBuilder sb = new StringBuilder();
+        sb.append(isSymlink() ? 'l' : isDirectory() ? 'd' : '-');
 
         int perms = permissions.getIntValue();
 
@@ -640,21 +635,19 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // The first one ('owner') will always be displayed, regardless of the permission bit mask. 'Group' and 'other'
         // will be displayed only if the permission mask contains information about them (at least one permission bit).
         for (int a = USER_ACCESS; a >= OTHER_ACCESS; a--) {
-
             if (a == USER_ACCESS || (supportedPerms & (7<<bitShift)) != 0) {
                 for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p >> 1) {
                     if ((perms & (p<<bitShift)) == 0) {
-                        s += '-';
+                        sb.append('-');
                     } else {
-                        s += p == READ_PERMISSION ? 'r' : p == WRITE_PERMISSION ? 'w' : 'x';
+                        sb.append(p == READ_PERMISSION ? 'r' : p == WRITE_PERMISSION ? 'w' : 'x');
                     }
                 }
             }
-
             bitShift -= 3;
         }
 
-        return s;
+        return sb.toString();
     }
 
 
@@ -913,7 +906,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             }
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        } while(lastAncestor != ancestor);
+        } while (lastAncestor != ancestor);
 
         return null;
     }
@@ -997,7 +990,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (hasAncestor(AbstractArchiveFile.class)) {
             return getAncestor(AbstractArchiveFile.class);
         } else if (hasAncestor(AbstractArchiveEntryFile.class)) {
-            return getAncestor(AbstractArchiveEntryFile.class).getArchiveFile();
+            AbstractArchiveEntryFile ancestor = getAncestor(AbstractArchiveEntryFile.class);
+            return ancestor != null ? ancestor.getArchiveFile() : null;
         }
 
         return null;
@@ -1141,21 +1135,25 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             if (allowCaseVariations) {
                 String sourceFileName = getName();
                 String destFileName = destFile.getName();
-                if (sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName))
+                if (sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName)) {
                     isAllowedCaseVariation = true;
+                }
             }
 
-            if (!isAllowedCaseVariation)
+            if (!isAllowedCaseVariation) {
                 throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
+            }
         }
 
         // Throw an exception if source is a parent of destination
-        if (!filesEqual && isParentOf(destFile))      // Note: isParentOf(destFile) returns true if both files are equal
+        if (!filesEqual && isParentOf(destFile)) {      // Note: isParentOf(destFile) returns true if both files are equal
             throw new FileTransferException(FileTransferException.SOURCE_PARENT_OF_DESTINATION);
+        }
 
         // Throw an exception if the source file does not exist
-        if (!exists())
+        if (!exists()) {
             throw new FileTransferException(FileTransferException.FILE_NOT_FOUND);
+        }
     }
 
     /**
@@ -1313,7 +1311,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public final void importPermissions(AbstractFile sourceFile) throws IOException {
-        importPermissions(sourceFile,isDirectory()
+        importPermissions(sourceFile, isDirectory()
                 ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS
                 : FilePermissions.DEFAULT_FILE_PERMISSIONS);
     }
@@ -1354,7 +1352,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see FileOperation
      */
     public static boolean isFileOperationSupported(FileOperation op, Class<? extends AbstractFile> c) {
-        return !op.getCorrespondingMethod(c).isAnnotationPresent(UnsupportedFileOperation.class);
+        Method method = op.getCorrespondingMethod(c);
+        return method != null && !method.isAnnotationPresent(UnsupportedFileOperation.class);
     }
 
     /**

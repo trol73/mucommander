@@ -21,9 +21,9 @@ package com.mucommander.ui.theme;
 import java.awt.*;
 
 public class FontChangedEvent {
-    private Theme source;
-    private int   fontId;
-    private Font  font;
+    private final Theme source;
+    private final int fontId;
+    private final Font font;
 
     FontChangedEvent(Theme source, int fontId, Font font) {
         this.source = source;
@@ -31,8 +31,19 @@ public class FontChangedEvent {
         this.font   = font;
     }
 
-    public boolean isDefaultFont() {return source == null;}
-    public Theme getSource() {return source;}
-    public int getFontId() {return fontId;}
-    public Font getFont() {return font;}
+    public boolean isDefaultFont() {
+        return source == null;
+    }
+
+    public Theme getSource() {
+        return source;
+    }
+
+    public int getFontId() {
+        return fontId;
+    }
+
+    public Font getFont() {
+        return font;
+    }
 }

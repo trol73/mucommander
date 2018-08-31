@@ -63,8 +63,9 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
     // - ThemeListener implementation ----------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     public void colorChanged(ColorChangedEvent event) {
-        if(event.getColorId() == colorId)
+        if (event.getColorId() == colorId) {
             notifyChange(event.getColor());
+        }
     }
 
     public void fontChanged(FontChangedEvent event) {

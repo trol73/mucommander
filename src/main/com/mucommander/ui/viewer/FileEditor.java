@@ -126,10 +126,8 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             // User chose to overwrite the file
             if (action == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Do nothing, simply continue and file will be overwritten
-            }
-            // User chose to cancel or closed the dialog
-            else {
-                return false;
+            } else {
+                return false;   // User chose to cancel or closed the dialog
             }
         }
         return true;

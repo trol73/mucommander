@@ -42,7 +42,7 @@ import java.util.Map;
 @InvokesDialog
 public class EmailAction extends SelectedFilesAction {
 
-    EmailAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EmailAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));
@@ -72,11 +72,17 @@ public class EmailAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Email";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_OR_META_DOWN_MASK);

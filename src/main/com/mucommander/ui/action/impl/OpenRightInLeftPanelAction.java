@@ -49,7 +49,7 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -70,13 +70,21 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "OpenRightInLeftPanel";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+        public ActionCategory getCategory() {
+            return ActionCategory.NAVIGATION;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return null; }
+        public KeyStroke getDefaultKeyStroke() {
+            return null;
+        }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenRightInLeftPanelAction(mainFrame, properties);

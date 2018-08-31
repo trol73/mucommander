@@ -21,6 +21,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.ui.icon.FileIcons;
+import org.jetbrains.annotations.NotNull;
 import ru.trolsoft.macosx.RetinaImageIcon;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ import java.util.*;
 
 /**
  * Created on 07.01.15.
- * @author Oleg trifonov
+ * @author Oleg Trifonov
  *
  * Cache of system file icons
  */
@@ -103,17 +104,22 @@ public class FileIconsCache {
         } else if (icon instanceof ImageIcon) {
             return ((ImageIcon)icon).getImage();
         } else {
-            int w = icon.getIconWidth();
-            int h = icon.getIconHeight();
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gd = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gd.getDefaultConfiguration();
-            BufferedImage image = gc.createCompatibleImage(w, h);
-            Graphics2D g = image.createGraphics();
-            icon.paintIcon(null, g, 0, 0);
-            g.dispose();
-            return image;
+            return iconToImage(icon);
         }
+    }
+
+    @NotNull
+    private static Image iconToImage(Icon icon) {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage image = gc.createCompatibleImage(w, h);
+        Graphics2D g = image.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
+        return image;
     }
 
 

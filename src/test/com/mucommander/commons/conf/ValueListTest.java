@@ -49,7 +49,7 @@ public class ValueListTest {
 
         data = new Vector<>();
         for(int i = 1; i < 8; i++)
-            data.add(new Float(i + 0.5));
+            data.add((float) (i + 0.5));
         return data;
     }
 
