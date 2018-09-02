@@ -68,11 +68,13 @@ public class LocationTextField extends ProgressTextField implements LocationList
     private String locationFieldTextSave;
 
     /** For windows path, regex that finds trailing space characters at the end of a path */
-    private static Pattern windowsTrailingSpacePattern;
+    private static final Pattern windowsTrailingSpacePattern;
 
     static {
         if (OsFamily.WINDOWS.isCurrent()) {
             windowsTrailingSpacePattern = Pattern.compile("[ ]+[\\\\]*$");
+        } else {
+            windowsTrailingSpacePattern = null;
         }
     }
 

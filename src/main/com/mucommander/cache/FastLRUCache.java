@@ -40,21 +40,31 @@ import java.util.Map;
 public class FastLRUCache<K, V> extends LRUCache<K,V> {
 
     /** Cache key->value/expirationDate map */
-    private LinkedHashMap<K, Object[]> cacheMap;
+    private LinkedHashMap<K, Value<V>> cacheMap;
 
     /** Timestamp of last expired items purge */
     private long lastExpiredPurge;
 
     /** Number of millisecond to wait between 2 expired items purges, if cache is not full */
     private final static int PURGE_EXPIRED_DELAY = 1000;
+
+    private static final class Value<V> {
+        private V val;
+        private Long expiration;
+
+        public Value(V value, Long expirationDate) {
+            this.val = value;
+            this.expiration = expirationDate;
+        }
+    }
 		
 
     public FastLRUCache(int capacity) {
         super(capacity);
-        this.cacheMap = new LinkedHashMap<K, Object[]>(16, 0.75f, true) {
+        this.cacheMap = new LinkedHashMap<K, Value<V>>(16, 0.75f, true) {
                 // Override this method to automatically remove eldest entry before insertion when cache is full
                 @Override
-                protected final boolean removeEldestEntry(Map.Entry<K, Object[]> eldest) {
+                protected final boolean removeEldestEntry(Map.Entry<K, Value<V>> eldest) {
                     return cacheMap.size() > FastLRUCache.this.capacity;
                 }
             };
@@ -65,21 +75,24 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
      * Returns a String representation of this cache.
      */
     public String toString() {
-        String s = super.toString()+" size="+cacheMap.size()+" capacity="+capacity+" eldestExpirationDate="+eldestExpirationDate+"\n";
+        StringBuilder sb = new StringBuilder(super.toString()).
+                append(" size=").append(cacheMap.size()).
+                append(" capacity=").append(capacity).
+                append(" eldestExpirationDate=").append(eldestExpirationDate).append('\n');
 
-        Object key;
-        Object value[];
-        int i=0;
-        for(Map.Entry<K, Object[]> mapEntry : cacheMap.entrySet()) {
-            key = mapEntry.getKey();
-            value = mapEntry.getValue();
-            s += (i++)+"- key="+key+" value="+value[0]+" expirationDate="+value[1]+"\n";
+        int i = 0;
+        for (Map.Entry<K, Value<V>> mapEntry : cacheMap.entrySet()) {
+            Object key = mapEntry.getKey();
+            Value<V> value = mapEntry.getValue();
+            sb.append(i++).append("-key=").append(key).append(" value=").append(value.val).
+                    append(" expirationDate=").append(value.expiration).append('\n');
         }
 		
-        if(UPDATE_CACHE_COUNTERS)
-            s += "nbCacheHits="+nbHits+" nbCacheMisses="+nbMisses+"\n";
+        if (UPDATE_CACHE_COUNTERS) {
+            sb.append("nbCacheHits=").append(nbHits).append(" nbCacheMisses=").append(nbMisses).append('\n');
+        }
 		
-        return s;
+        return sb.toString();
     }
 
 
@@ -99,10 +112,10 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         this.eldestExpirationDate = Long.MAX_VALUE;
         Long expirationDateL;
         long expirationDate;
-        Iterator<Object[]> iterator = cacheMap.values().iterator();
+        Iterator<Value<V>> iterator = cacheMap.values().iterator();
         // Iterate on all cached values
         while (iterator.hasNext()) {
-            expirationDateL = (Long)iterator.next()[1];
+            expirationDateL = iterator.next().expiration;
 			
             // No expiration date for this value
             if (expirationDateL == null) {
@@ -135,7 +148,7 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         purgeExpiredItems();	
 
         // Look for a value correponding to the specified key in the cache map
-        Object[] value = cacheMap.get(key);
+        Value<V> value = cacheMap.get(key);
 
         if (value == null) {
             // No value matching key, better luck next time!
@@ -148,8 +161,7 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         // Since expired items purge is not performed on every call to this method for
         // performance reason, we can end with an expired cached value so we need
         // to check this
-        Long expirationDateL = (Long)value[1];
-        if (expirationDateL != null && System.currentTimeMillis() > expirationDateL) {
+        if (value.expiration != null && System.currentTimeMillis() > value.expiration) {
             // Value has expired, let's remove it
             if (UPDATE_CACHE_COUNTERS) {
                 nbMisses++;    // Increase cache miss counter
@@ -163,7 +175,7 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
             nbHits++;    // Increase cache hit counter
         }
 
-        return (V)value[0];
+        return value.val;
     }
 
 	
@@ -185,7 +197,7 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
             expirationDateL = expirationDate;
         }
 
-        cacheMap.put(key, new Object[]{value, expirationDateL});
+        cacheMap.put(key, new Value<>(value, expirationDateL));
     }
 
 
@@ -211,22 +223,17 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
      */
     @Override
     protected void testCorruption() throws RuntimeException {
-        Object value[];
-        long expirationDate;
-        Long expirationDateL;
-
         for (K key : cacheMap.keySet()) {
-            value = cacheMap.get(key);
+            Value<V> value = cacheMap.get(key);
             if (value == null) {
                 throw new RuntimeException("cache corrupted: value could not be found for key="+key);
             }
 
-            expirationDateL = (Long)value[1];
-            if (expirationDateL == null) {
+            if (value.expiration == null) {
                 continue;
             }
 			
-            expirationDate = expirationDateL;
+            Long expirationDate = value.expiration;
             if (expirationDate < eldestExpirationDate) {
                 throw new RuntimeException("cache corrupted: expiration date for key="+key+" older than eldestExpirationDate");
             }
