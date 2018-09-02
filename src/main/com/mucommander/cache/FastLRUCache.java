@@ -91,8 +91,9 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         // No need to go any further if eldestExpirationDate is in the future.
         // Also, since iterating on the values is an expensive operation (especially for LinkedHashMap),
         // wait PURGE_EXPIRED_DELAY between two purges, unless cache is full
-        if(this.eldestExpirationDate>now || (cacheMap.size()<capacity && now-lastExpiredPurge<PURGE_EXPIRED_DELAY))
+        if (this.eldestExpirationDate > now || (cacheMap.size()<capacity && now-lastExpiredPurge<PURGE_EXPIRED_DELAY)) {
             return;
+        }
 
         // Look for expired items and remove them and recalculate eldestExpirationDate for next time
         this.eldestExpirationDate = Long.MAX_VALUE;
@@ -100,20 +101,20 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         long expirationDate;
         Iterator<Object[]> iterator = cacheMap.values().iterator();
         // Iterate on all cached values
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             expirationDateL = (Long)iterator.next()[1];
 			
             // No expiration date for this value
-            if(expirationDateL==null)
+            if (expirationDateL == null) {
                 continue;
+            }
 
             expirationDate = expirationDateL;
             // Test if the item has an expiration date and check if has passed
-            if(expirationDate<now) {
+            if (expirationDate < now) {
                 // Remove expired item
                 iterator.remove();
-            }
-            else if(expirationDate<this.eldestExpirationDate) {
+            } else if(expirationDate < this.eldestExpirationDate) {
                 // update eldestExpirationDate
                 this.eldestExpirationDate = expirationDate;
             }
@@ -136,10 +137,11 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         // Look for a value correponding to the specified key in the cache map
         Object[] value = cacheMap.get(key);
 
-        if(value==null) {
+        if (value == null) {
             // No value matching key, better luck next time!
-            if(UPDATE_CACHE_COUNTERS)
+            if (UPDATE_CACHE_COUNTERS) {
                 nbMisses++;	// Increase cache miss counter
+            }
             return null;
         }
 
@@ -171,13 +173,12 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         purgeExpiredItems();	
 
         Long expirationDateL;
-        if(timeToLive==-1) {
+        if (timeToLive == -1) {
             expirationDateL = null;
-        }
-        else {
+        } else {
             long expirationDate = System.currentTimeMillis()+timeToLive;
             // Update eledestExpirationDate if new element's expiration date is older
-            if(expirationDate<this.eldestExpirationDate) {
+            if (expirationDate<this.eldestExpirationDate) {
                 // update eldestExpirationDate
                 this.eldestExpirationDate = expirationDate;
             }
@@ -214,18 +215,21 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
         long expirationDate;
         Long expirationDateL;
 
-        for(K key : cacheMap.keySet()) {
+        for (K key : cacheMap.keySet()) {
             value = cacheMap.get(key);
-            if(value==null)
+            if (value == null) {
                 throw new RuntimeException("cache corrupted: value could not be found for key="+key);
+            }
 
             expirationDateL = (Long)value[1];
-            if(expirationDateL==null)
+            if (expirationDateL == null) {
                 continue;
+            }
 			
             expirationDate = expirationDateL;
-            if(expirationDate<eldestExpirationDate)
+            if (expirationDate < eldestExpirationDate) {
                 throw new RuntimeException("cache corrupted: expiration date for key="+key+" older than eldestExpirationDate");
+            }
         }
     }
 	

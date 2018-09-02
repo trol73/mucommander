@@ -1300,7 +1300,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 if (c == Column.EXTENSION) {
                     columnWidth = (int) FileIcons.getIconDimension().getWidth();
                 } else if (c == Column.DATE) {
-                    String val = CustomDateFormat.format(currentFolder.getLastModifiedDate());
+                    String val = currentFolder != null ? CustomDateFormat.format(currentFolder.getLastModifiedDate()) : "";
                     columnWidth = Math.max(MIN_COLUMN_AUTO_WIDTH, fm.stringWidth(val));
                     columnWidth *= 1.1;
                 } else if (c == Column.SIZE) {
@@ -1310,7 +1310,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     columnWidth *= 1.1;
                 } else if (c == Column.PERMISSIONS) {
                     try {
-                        columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(currentFolder.getPermissionsString()));
+                        String permissionStr = currentFolder != null ? currentFolder.getPermissionsString() : "----";
+                        columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(permissionStr));
                     } catch (Exception e) {
                         columnWidth = fm.stringWidth("WWWW");
                     }

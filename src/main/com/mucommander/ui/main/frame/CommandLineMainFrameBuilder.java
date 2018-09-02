@@ -119,18 +119,22 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
         }
 
         // If the specified path does not work out,
-        if(file == null)
+        if (file == null) {
             // Tries the specified path as a relative path.
-            if((file = FileFactory.getFile(new File(path).getAbsolutePath())) == null || !file.exists())
+            if ((file = FileFactory.getFile(new File(path).getAbsolutePath())) == null || !file.exists()) {
                 // Defaults to home.
                 return getHomeFolder().getURL();
+            }
+        }
 
         // If the specified path is a non-browsable, uses its parent.
-        if(!file.isBrowsable())
+        if (!file.isBrowsable()) {
             // This is just playing things safe, as I doubt there might ever be a case of
             // a file without a parent directory.
-            if((file = file.getParent()) == null)
+            if ((file = file.getParent()) == null) {
                 return getHomeFolder().getURL();
+            }
+        }
 
         return file.getURL();
     }

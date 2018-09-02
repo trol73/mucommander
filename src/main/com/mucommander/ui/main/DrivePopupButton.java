@@ -163,8 +163,8 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     private void updateButton() {
         AbstractFile currentFolder = folderPanel.getCurrentFolder();
-        String currentPath = currentFolder.getAbsolutePath();
-        FileURL currentURL = currentFolder.getURL();
+        String currentPath = currentFolder != null ? currentFolder.getAbsolutePath() : null;
+        FileURL currentURL = currentFolder !=null ? currentFolder.getURL() : null;
 
         String newLabel = null;
 //        String newToolTip = null;
@@ -173,7 +173,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
 
         for (Bookmark b : bookmarks) {
-            if (currentPath.equals(b.getLocation())) {
+            if (currentPath != null && currentPath.equals(b.getLocation())) {
                 // Note: if several bookmarks match current folder, the first one will be used
                 newLabel = b.getName();
                 break;
@@ -182,10 +182,10 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 		
         // If no bookmark matched current folder
         if (newLabel == null) {
-            String protocol = currentURL.getScheme();
+            String protocol = currentURL != null ? currentURL.getScheme() : null;
             // Remote file, use the protocol's name
-            if (!protocol.equals(FileProtocols.FILE)) {
-                newLabel = protocol.toUpperCase();
+            if (!FileProtocols.FILE.equals(protocol)) {
+                newLabel = protocol != null ? protocol.toUpperCase() : "";
             }
             // Local file, use volume's name 
             else {

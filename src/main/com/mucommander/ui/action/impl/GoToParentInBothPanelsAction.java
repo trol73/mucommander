@@ -44,8 +44,7 @@ import java.util.Map;
  * @author Nicolas Rinaudo
  */
 public class GoToParentInBothPanelsAction extends ActiveTabAction {
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
+
     /**
      * Creates a new <code>GoToParentInBothPanelsAction</code> instance with the specified parameters.
      * @param mainFrame  frame to which the action is attached.
@@ -65,13 +64,12 @@ public class GoToParentInBothPanelsAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
+        AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
         		   !mainFrame.getInactivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent()!=null);
+        		    currentFolder != null && currentFolder.getParent() != null);
     }
 
-    // - Action code ---------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Opens both the active and inactive folder panel's parent directories.
      */

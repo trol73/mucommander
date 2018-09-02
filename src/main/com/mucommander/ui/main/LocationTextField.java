@@ -173,19 +173,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
 
             String locationText;
             if (folderURL.getScheme().equals(FileProtocols.FILE)) {
-                // Do not display the URL's scheme & host for local files
-            	if (FileURL.LOCALHOST.equals(folderURL.getHost())) {
-            		locationText = folderURL.getPath();
-            		// Under for OSes with 'root drives' (Windows, OS/2), remove the leading '/' character
-            		if(LocalFile.hasRootDrives())
-            			locationText = PathUtils.removeLeadingSeparator(locationText, "/");
-            	}
-            	// For network files with FILE scheme display the URL in UNC format
-            	else {
-            		locationText = "\\\\" + folderURL.getHost() + folderURL.getPath().replace('/', '\\');
-            		if (!locationText.endsWith(UNCFile.SEPARATOR))
-                        locationText += UNCFile.SEPARATOR;
-            	}
+                locationText = urlToFileLocationString(folderURL);
             }
             // Display the full URL for protocols other than 'file'
             else {
@@ -198,6 +186,25 @@ public class LocationTextField extends ProgressTextField implements LocationList
         // Note: if the focus currently is in the location field, the focus manager will release focus and give it
         // to the next component (i.e. FileTable)
         setEnabled(false);
+    }
+
+    private String urlToFileLocationString(FileURL folderURL) {
+        String locationText;
+        if (FileURL.LOCALHOST.equals(folderURL.getHost())) {
+            // Do not display the URL's scheme & host for local files
+            locationText = folderURL.getPath();
+            // Under for OSes with 'root drives' (Windows, OS/2), remove the leading '/' character
+            if (LocalFile.hasRootDrives()) {
+                locationText = PathUtils.removeLeadingSeparator(locationText, "/");
+            }
+        } else {
+            // For network files with FILE scheme display the URL in UNC format
+            locationText = "\\\\" + folderURL.getHost() + folderURL.getPath().replace('/', '\\');
+            if (!locationText.endsWith(UNCFile.SEPARATOR)) {
+                locationText += UNCFile.SEPARATOR;
+            }
+        }
+        return locationText;
     }
 
     public void locationChanged(LocationEvent e) {
@@ -258,7 +265,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
 
         // Look for a volume whose name is the entered string (case insensitive)
         AbstractFile volumes[] = LocalFile.getVolumes();
-        for (int i=0; tryToInterpretEnteredString && i<volumes.length; i++) {
+        for (int i = 0; tryToInterpretEnteredString && i < volumes.length; i++) {
             if (volumes[i].getName().equalsIgnoreCase(location)) {
                 // Change the current folder to the volume folder
             	setText(location = volumes[i].getAbsolutePath());
@@ -284,7 +291,8 @@ public class LocationTextField extends ProgressTextField implements LocationList
     }
 
     private void textFieldCancelled() {
-        setText(folderPanel.getCurrentFolder().getAbsolutePath());
+        AbstractFile currentFolder = folderPanel.getCurrentFolder();
+        setText(currentFolder != null ? currentFolder.getAbsolutePath() : "");
         transferFocus();
     }
 
@@ -316,27 +324,27 @@ public class LocationTextField extends ProgressTextField implements LocationList
      * Receives theme color changes notifications.
      */
     public void colorChanged(ColorChangedEvent event) {
-        switch(event.getColorId()) {
-        case Theme.LOCATION_BAR_PROGRESS_COLOR:
-            setProgressColor(event.getColor());
-            break;
+        switch (event.getColorId()) {
+            case Theme.LOCATION_BAR_PROGRESS_COLOR:
+                setProgressColor(event.getColor());
+                break;
 
-        case Theme.LOCATION_BAR_FOREGROUND_COLOR:
-            setDisabledTextColor(event.getColor());
-            setForeground(event.getColor());
-            break;
+            case Theme.LOCATION_BAR_FOREGROUND_COLOR:
+                setDisabledTextColor(event.getColor());
+                setForeground(event.getColor());
+                break;
 
-        case Theme.LOCATION_BAR_BACKGROUND_COLOR:
-            setBackground(event.getColor());
-            break;
+            case Theme.LOCATION_BAR_BACKGROUND_COLOR:
+                setBackground(event.getColor());
+                break;
 
-        case Theme.LOCATION_BAR_SELECTED_FOREGROUND_COLOR:
-        	setSelectedTextColor(event.getColor());
-            break;
+            case Theme.LOCATION_BAR_SELECTED_FOREGROUND_COLOR:
+                setSelectedTextColor(event.getColor());
+                break;
 
-        case Theme.LOCATION_BAR_SELECTED_BACKGROUND_COLOR:
-        	setSelectionColor(event.getColor());
-            break;
+            case Theme.LOCATION_BAR_SELECTED_BACKGROUND_COLOR:
+                setSelectionColor(event.getColor());
+                break;
         }
     }
 

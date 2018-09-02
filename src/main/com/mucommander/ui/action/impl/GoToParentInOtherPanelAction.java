@@ -75,8 +75,9 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      */
     @Override
     protected void toggleEnabledState() {
+        AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         setEnabled(!mainFrame.getInactivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent()!=null);
+        		    currentFolder != null && currentFolder.getParent() != null);
     }
     
     /**

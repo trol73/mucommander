@@ -654,7 +654,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      */
     public void updateWindowTitle() {
         // Update window title
-        String title = activeTable.getFolderPanel().getCurrentFolder().getAbsolutePath();
+        AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
+        String title = currentFolder != null ? currentFolder.getAbsolutePath() : "";
 
 	// Add the application name to window title on all OSs except MAC
         if (!OsFamily.MAC_OS_X.isCurrent()) {
@@ -668,9 +669,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher() && currentFolder != null) {
             // Displays the document icon in the window title bar, works only for local files
-            AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
             Object javaIoFile;
             if (currentFolder.getURL().getScheme().equals(FileProtocols.FILE)) {
                 // If the current folder is an archive entry, display the archive file, this is the closest we can get

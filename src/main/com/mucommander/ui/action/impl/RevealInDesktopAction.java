@@ -51,7 +51,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     protected void toggleEnabledState() {
         AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
-        setEnabled(currentFolder.getURL().getScheme().equals(FileProtocols.FILE)
+        setEnabled(currentFolder != null && currentFolder.isLocalFile()
                && !currentFolder.isArchive()
                && !currentFolder.hasAncestor(AbstractArchiveEntryFile.class)
         );
@@ -60,18 +60,23 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     public void performAction() {
         try {
-            if (OsFamily.MAC_OS_X.isCurrent()) {
-                AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
-                if (currentFile == null) {
-                    currentFile = mainFrame.getActivePanel().getCurrentFolder();
-                }
-                DesktopManager.openInFileManager(currentFile);
-            } else {
-                DesktopManager.openInFileManager(mainFrame.getActivePanel().getCurrentFolder());
-            }
+            DesktopManager.openInFileManager(getCurrentFolder());
         } catch(Exception e) {
             InformationDialog.showErrorDialog(mainFrame);
         }
+    }
+
+    private AbstractFile getCurrentFolder() {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
+            if (currentFile == null) {
+                currentFile = mainFrame.getActivePanel().getCurrentFolder();
+            }
+            return currentFile;
+        } else {
+            return mainFrame.getActivePanel().getCurrentFolder();
+        }
+
     }
 
 	@Override
@@ -83,9 +88,13 @@ public class RevealInDesktopAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "RevealInDesktop";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 

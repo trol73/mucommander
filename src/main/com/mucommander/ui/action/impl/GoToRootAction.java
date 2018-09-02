@@ -49,8 +49,9 @@ public class GoToRootAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
+        AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent()!=null);
+        		    currentFolder != null && currentFolder.getParent() != null);
     }
     
     @Override

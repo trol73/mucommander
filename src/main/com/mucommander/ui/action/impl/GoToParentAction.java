@@ -54,8 +54,10 @@ public class GoToParentAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
-        setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent() != null);
+        FolderPanel activePanel = mainFrame.getActivePanel();
+        boolean isLocked = activePanel.getTabs().getCurrentTab().isLocked();
+        AbstractFile currentFolder = activePanel.getCurrentFolder();
+        setEnabled(!isLocked && currentFolder != null && currentFolder.getParent() != null);
     }
 
 
@@ -70,7 +72,7 @@ public class GoToParentAction extends ActiveTabAction {
      * @param  panel in which to change the location.
      * @return <code>true</code> if <code>panel</code> has a parent, <code>false</code> otherwise.
      */
-    protected boolean goToParent(FolderPanel panel) {
+    private boolean goToParent(FolderPanel panel) {
     	AbstractFile parent = panel.getCurrentFolder().getParent();
         if (parent != null) {
         	panel.tryChangeCurrentFolder(parent, null, true);

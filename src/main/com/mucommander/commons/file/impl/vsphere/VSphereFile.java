@@ -836,7 +836,7 @@ public class VSphereFile extends ProtocolFile implements
 	@Override
 	@UnsupportedFileOperation
 	public OutputStream getAppendOutputStream() throws IOException,	UnsupportedFileOperationException {
-		throw new UnsupportedFileOperationException(FileOperation.WRITE_FILE);
+		throw new UnsupportedFileOperationException(FileOperation.APPEND_FILE);
 	}
 
 	@Override
@@ -851,8 +851,7 @@ public class VSphereFile extends ProtocolFile implements
 	@UnsupportedFileOperation
 	public RandomAccessOutputStream getRandomAccessOutputStream()
 			throws IOException, UnsupportedFileOperationException {
-		throw new UnsupportedFileOperationException(
-				FileOperation.RANDOM_WRITE_FILE);
+		throw new UnsupportedFileOperationException(FileOperation.RANDOM_WRITE_FILE);
 	}
 
 	@Override
