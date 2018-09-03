@@ -86,8 +86,9 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
      */
     @Override
     public void characters(char[] ch, int start, int length) {
-        if(status == STATUS_COMMAND)
+        if (status == STATUS_COMMAND) {
             command.append(ch, start, length);
+        }
     }
 
     /**
@@ -95,15 +96,13 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
      */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        // Root element declaration.
-        if(qName.equals(ROOT_ELEMENT) && (status == STATUS_UNKNOWN)) {
+
+        if (qName.equals(ROOT_ELEMENT) && (status == STATUS_UNKNOWN)) {     // Root element declaration.
             status = STATUS_ROOT;
             version = attributes.getValue(ATTRIBUTE_VERSION);
-        }
-
-        // Command element declaration.
-        else if(qName.equals(COMMAND_ELEMENT) && status == STATUS_ROOT)
+        } else if(qName.equals(COMMAND_ELEMENT) && status == STATUS_ROOT) { // Command element declaration.
             status = STATUS_COMMAND;
+        }
     }
 
     /**
@@ -111,12 +110,9 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
      */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        // Root element finished.
-        if(qName.equals(ROOT_ELEMENT) && (status == STATUS_ROOT))
+        if (qName.equals(ROOT_ELEMENT) && (status == STATUS_ROOT)) {    // Root element finished.
             status = STATUS_UNKNOWN;
-
-        // Command element finished.
-        else if(qName.equals(COMMAND_ELEMENT) && (status == STATUS_COMMAND)) {
+        } else if(qName.equals(COMMAND_ELEMENT) && (status == STATUS_COMMAND)) {    // Command element finished.
             status = STATUS_ROOT;
 
             // Adds the current command to shell history.

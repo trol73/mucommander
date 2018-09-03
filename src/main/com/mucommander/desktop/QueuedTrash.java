@@ -109,8 +109,7 @@ public abstract class QueuedTrash extends AbstractTrash {
                 try {
                     // Wait until moveToTrashThread wakes this thread up
                     moveToTrashLock.wait();
-                } catch(InterruptedException ignore) {
-                }
+                } catch(InterruptedException ignore) {}
             }
         }
     }
@@ -138,8 +137,7 @@ public abstract class QueuedTrash extends AbstractTrash {
 
                 try {
                     Thread.sleep(QUEUE_PERIOD);
-                } catch(InterruptedException ignore) {
-                }
+                } catch(InterruptedException ignore) {}
             } while (queueSize != queuedFiles.size());
 
             synchronized(moveToTrashLock) {     // Files can't be added to queue while files are moved to trash

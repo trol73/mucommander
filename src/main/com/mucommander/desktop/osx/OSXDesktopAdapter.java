@@ -39,7 +39,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
     private static final String FINDER_NAME    = "Finder";
 
     public String toString() {
-        return "MAC OS X Desktop";
+        return "Mac OS X Desktop";
     }
 
     @Override

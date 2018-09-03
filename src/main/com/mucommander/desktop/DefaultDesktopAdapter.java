@@ -94,7 +94,9 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isRightMouseButton(MouseEvent)
      * @see      #isMiddleMouseButton(MouseEvent)
      */
-    public boolean isLeftMouseButton(MouseEvent e) {return (e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0;}
+    public boolean isLeftMouseButton(MouseEvent e) {
+        return (e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0;
+    }
 
     /**
      * Returns <code>true</code> if the specified mouse event describes a middle click.
@@ -107,7 +109,9 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isRightMouseButton(MouseEvent)
      * @see      #isLeftMouseButton(MouseEvent)
      */
-    public boolean isRightMouseButton(MouseEvent e) {return (e.getModifiers() & MouseEvent.BUTTON3_MASK) !=0;}
+    public boolean isRightMouseButton(MouseEvent e) {
+        return (e.getModifiers() & MouseEvent.BUTTON3_MASK) !=0;
+    }
 
     /**
      * Returns <code>true</code> if the specified mouse event describes a right click.
@@ -120,7 +124,9 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isLeftMouseButton(MouseEvent)
      * @see      #isMiddleMouseButton(MouseEvent)
      */
-    public boolean isMiddleMouseButton(MouseEvent e) {return (e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0;}
+    public boolean isMiddleMouseButton(MouseEvent e) {return (
+            e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0;
+    }
 
     /**
      * Returns the value of the <code>"awt.multiClickInterval"</code> desktop property that AWT/Swing uses internally

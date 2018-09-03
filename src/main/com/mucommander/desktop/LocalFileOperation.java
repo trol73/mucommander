@@ -65,7 +65,9 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * @param  file file to check against.
      * @return      <code>true</code> if the operation is supported for the specified file, <code>false</code> otherwise.
      */
-    public boolean canExecute(AbstractFile file) {return isAvailable();}
+    public boolean canExecute(AbstractFile file) {
+        return isAvailable();
+    }
 
 
 

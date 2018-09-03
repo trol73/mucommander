@@ -128,7 +128,7 @@ public class ClassFinder {
         }
 
         // Initializes exploring.
-        loader           = classLoader;
+        loader = classLoader;
         this.classFilter = classFilter;
 
         // Looks for all matched classes in browsable.        

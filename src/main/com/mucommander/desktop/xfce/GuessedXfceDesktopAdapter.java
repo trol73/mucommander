@@ -34,7 +34,8 @@ public class GuessedXfceDesktopAdapter extends XfceDesktopAdapter {
         try {
             ProcessRunner.execute("exo-open");
             return true;
+        } catch(Exception e) {
+            return false;
         }
-        catch(Exception e) {return false;}
     }
 }

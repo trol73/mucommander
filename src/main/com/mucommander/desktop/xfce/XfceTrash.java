@@ -100,20 +100,19 @@ public class XfceTrash extends QueuedTrash {
 		AbstractFile userHome = LocalFile.getUserHome();
 
 		AbstractFile trashDir = userHome.getChildSilently(".local/share/Trash/");
-		if(isTrashFolder(trashDir)) {
+		if (isTrashFolder(trashDir)) {
 			return trashDir;
 		}
 
 		// No existing user trash was found: create the folder, only if it doesn't already exist.
-		if(!trashDir.exists()) {
+		if (!trashDir.exists()) {
 			try {
 				trashDir.mkdirs();
 				trashDir.getChild("info").mkdir();
 				trashDir.getChild("files").mkdir();
 
 				return trashDir;
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				// Will return null
 			}
 		}
@@ -131,8 +130,7 @@ public class XfceTrash extends QueuedTrash {
 	private static boolean isTrashFolder(AbstractFile file) {
 		try {
 			return file.isDirectory() && file.getChild("info").isDirectory() && file.getChild("files").isDirectory();
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			return false;
 		}
 	}
@@ -213,7 +211,7 @@ public class XfceTrash extends QueuedTrash {
      */
     @Override
     public boolean canMoveToTrash(AbstractFile file) {
-        return TRASH_FOLDER!=null
+        return TRASH_FOLDER != null
             && file.getTopAncestor() instanceof LocalFile
             && file.getVolume().equals(TRASH_VOLUME);
     }
@@ -239,8 +237,9 @@ public class XfceTrash extends QueuedTrash {
     @Override
     public boolean empty() {
         // Abort if there is no usable trash folder
-        if(TRASH_FOLDER==null)
+        if (TRASH_FOLDER == null) {
             return false;
+        }
 
         FileSet filesToDelete = new FileSet(TRASH_FOLDER);
 
@@ -267,7 +266,7 @@ public class XfceTrash extends QueuedTrash {
 
     @Override
     public boolean isTrashFile(AbstractFile file) {
-        return TRASH_FOLDER!=null
+        return TRASH_FOLDER != null
             && (file.getTopAncestor() instanceof LocalFile)
             && TRASH_FOLDER.isParentOf(file);
     }
@@ -283,8 +282,9 @@ public class XfceTrash extends QueuedTrash {
     @Override
     public int getItemCount() {
         // Abort if there is no usable trash folder
-        if(TRASH_FOLDER==null)
+        if (TRASH_FOLDER == null) {
             return -1;
+        }
 
         try {
             return TRASH_INFO_SUBFOLDER.ls().length;
@@ -335,23 +335,24 @@ public class XfceTrash extends QueuedTrash {
      */
     private String getUniqueFilename(AbstractFile file) throws IOException {
         // try if no previous file in trash exists
-        if (!TRASH_FILES_SUBFOLDER.getChild(file.getName()).exists())
+        if (!TRASH_FILES_SUBFOLDER.getChild(file.getName()).exists()) {
             return file.getName();
+        }
 
         String rawName = file.getNameWithoutExtension();
         String extension = file.getExtension();
 
         // find first empty filename in format filename_N.ext
-        String filename;
         int count = 1;
         while (true) {
-            filename = rawName + "_" + count++;
+            String filename = rawName + "_" + count++;
             if (extension != null) {
                 filename += "." + extension;
             }
 
-            if(!TRASH_FILES_SUBFOLDER.getChild(filename).exists())
+            if (!TRASH_FILES_SUBFOLDER.getChild(filename).exists()) {
                 return filename;
+            }
         }
     }
 }

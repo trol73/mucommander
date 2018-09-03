@@ -40,13 +40,14 @@ class InternalBrowse extends UrlOperation {
     /**
      * Creates a new <code>InternalOpenUrl</code> instance.
      */
-    public InternalBrowse() {
+    InternalBrowse() {
     }
 
     private Desktop getDesktop() {
         if (!initialized) {
-            if(Desktop.isDesktopSupported())
+            if (Desktop.isDesktopSupported()) {
                 desktop = Desktop.getDesktop();
+            }
             initialized = true;
         }
         return desktop;
@@ -66,7 +67,9 @@ class InternalBrowse extends UrlOperation {
      * @return <code>true</code> if this operations is available, <code>false</code> otherwise.
      */
     @Override
-    public boolean isAvailable() {return getDesktop() != null && getDesktop().isSupported(Desktop.Action.BROWSE);}
+    public boolean isAvailable() {
+        return getDesktop() != null && getDesktop().isSupported(Desktop.Action.BROWSE);
+    }
 
     /**
      * Opens the specified URL in the system's default browser.
@@ -76,9 +79,12 @@ class InternalBrowse extends UrlOperation {
     @Override
     public void execute(URL url) throws IOException {
         // If java.awt.Desktop browsing is available, use it.
-        if(isAvailable()) {
-            try {getDesktop().browse(url.toURI());}
-            catch(URISyntaxException e) {throw new IOException(e.getMessage());}
+        if (isAvailable()) {
+            try {
+                getDesktop().browse(url.toURI());
+            } catch(URISyntaxException e) {
+                throw new IOException(e.getMessage());
+            }
         }
 
         throw new UnsupportedOperationException();
@@ -89,5 +95,7 @@ class InternalBrowse extends UrlOperation {
      * @return the action's label.
      */
     @Override
-    public String getName() {return "java.awt.Desktop open URL";}
+    public String getName() {
+        return "java.awt.Desktop open URL";
+    }
 }

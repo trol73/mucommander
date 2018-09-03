@@ -289,7 +289,7 @@ public class FileFactory {
      *
      * @param provider the <code>ArchiveFormatProvider</code> to register.
      */
-    public static void registerArchiveFormat(ArchiveFormatProvider provider) {
+    private static void registerArchiveFormat(ArchiveFormatProvider provider) {
         archiveFormatProvidersV.add(provider);
         updateArchiveFormatProviderArray();
     }

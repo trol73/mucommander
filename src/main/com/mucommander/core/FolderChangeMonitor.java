@@ -211,7 +211,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         }
         // By checking FolderPanel.getLastFolderChangeTime(), we ensure that we don't check right after
         // the folder has been refreshed.
-        if (System.currentTimeMillis() - Math.max(monitor.lastCheckTimestamp, monitor.folderPanel.getLastFolderChangeTime())>monitor.waitBeforeCheckTime) {
+        if (System.currentTimeMillis() - Math.max(monitor.lastCheckTimestamp, monitor.folderPanel.getLastFolderChangeTime()) > monitor.waitBeforeCheckTime) {
             // Checks folder contents and refreshes view if necessary
             boolean folderRefreshed = monitor.checkAndRefresh();
             monitor.lastCheckTimestamp = System.currentTimeMillis();

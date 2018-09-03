@@ -40,6 +40,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,8 +116,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
 		tree.setFont(ThemeCache.tableFont);
         tree.setBackground(ThemeCache.backgroundColors[ThemeCache.INACTIVE][ThemeCache.NORMAL]);
 
-        tree.getSelectionModel().setSelectionMode(
-                TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setExpandsSelectedPaths(true);
         tree.getModel().addTreeModelListener(this);
 
@@ -213,33 +213,25 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
         final AbstractFile currentFolder = folderPanel.getCurrentFolder();
 
         // get selected directory (ignore archives - TODO make archives browsable (option))
-        AbstractFile tempFolder = currentFolder;
-        AbstractFile tempParent;
-        while (!tempFolder.isDirectory()) {
-            tempParent = tempFolder.getParent();
-            if(tempParent==null)
-                break;
-
-            tempFolder = tempParent;
-        }
+        final AbstractFile parentFolder = getParentFolder(currentFolder);
 
         // compare selection on tree and panel
-        final AbstractFile selectedFolder = tempFolder;
         TreePath selectionPath = tree.getSelectionPath();
         if (selectionPath != null) {
-            if (selectionPath.getLastPathComponent() == currentFolder)
+            if (selectionPath.getLastPathComponent() == currentFolder) {
                 return;
+            }
         }
 
         // check if root has changed
-        final AbstractFile currentRoot = selectedFolder.getRoot();
+        final AbstractFile currentRoot = parentFolder.getRoot();
         if (!currentRoot.equals(model.getRoot())) {
             model.setRoot(currentRoot);
         }
         // refresh selection on tree
         SwingUtilities.invokeLater(() -> {
             try {
-                TreePath path = new TreePath(model.getPathToRoot(selectedFolder));
+                TreePath path = new TreePath(model.getPathToRoot(parentFolder));
                 tree.expandPath(path);
                 tree.setSelectionPath(path);
                 tree.scrollPathToVisible(path);
@@ -249,13 +241,27 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
          });
     }
 
+    @NotNull
+    private AbstractFile getParentFolder(AbstractFile currentFolder) {
+        AbstractFile tempFolder = currentFolder;
+        while (!tempFolder.isDirectory()) {
+            AbstractFile tempParent = tempFolder.getParent();
+            if (tempParent == null) {
+                break;
+            }
+            tempFolder = tempParent;
+        }
+        return tempFolder;
+    }
+
     /**
      * Refreshes folder after a change (e.g. mkdir).
      * @param folder a folder to refresh on the tree
      */
     public void refreshFolder(AbstractFile folder) {
-        if (!isVisible())
+        if (!isVisible()) {
             return;
+        }
         model.fireTreeStructureChanged(tree, new TreePath(model.getPathToRoot(folder)));
     }
     
@@ -354,11 +360,8 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
     // -------------------------------------------------------------------------
 	
 	public void colorChanged(ColorChangedEvent event) {
-		if (tree.hasFocus()) {
-			tree.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL]);	
-		} else {
-			tree.setBackground(ThemeCache.backgroundColors[ThemeCache.INACTIVE][ThemeCache.NORMAL]);	
-		}
+        int type = tree.hasFocus()  ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
+        tree.setBackground(ThemeCache.backgroundColors[type][ThemeCache.NORMAL]);
 		tree.repaint();
 	}
 

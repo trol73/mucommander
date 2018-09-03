@@ -220,12 +220,13 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * @return the file located at the given index, not including the parent file
      */
     public synchronized AbstractFile getFileAt(int fileIndex) {
-        if (fileIndex == 0 && parent != null) {
-            return parent;
-        }
         if (parent != null) {
+            if (fileIndex == 0) {
+                return parent;
+            }
             fileIndex--;
         }
+
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.

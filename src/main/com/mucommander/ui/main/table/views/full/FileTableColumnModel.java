@@ -61,6 +61,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private int           countCache;
     /** Whether the column sizes were set already. */
     private boolean       columnSizesSet;
+    private int internalIndexCache[];
 
 
 
@@ -180,6 +181,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 countCache--;
                 triggerColumnRemoved(new TableColumnModelEvent(this, columnVal, columnVal));
             }
+            internalIndexCache = null;
         }
     }
 
@@ -212,19 +214,39 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     // - Column retrieval ----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
-    private synchronized int getInternalIndex(int index) {
-        // Looks for the visible column of index 'index'.
-        int visibleIndex = -1;
+    private int getInternalIndex(int index) {
+        if (internalIndexCache != null) {
+            return internalIndexCache[index];
+        }
+//            // Looks for the visible column of index 'index'.
+//            int visibleIndex = -1;
+//            for (int i = 0; i < visibility.length; i++) {
+//                TableColumn column = columns.get(i);
+//                if (visibility[column.getModelIndex()]) {
+//                    if (++visibleIndex == index) {
+//                        return i;
+//                    }
+//                }
+//            }
+//            // Index doesn't exist.
+//            throw new ArrayIndexOutOfBoundsException(Integer.toString(index));
+            // Looks for the visible column of index 'index'.
+        buildColumnIndexCache();
+        return internalIndexCache[index];
+    }
+
+    private synchronized void buildColumnIndexCache() {
+        internalIndexCache = new int[visibility.length];
+        int visibleIndex = 0;
         for (int i = 0; i < visibility.length; i++) {
             TableColumn column = columns.get(i);
             if (visibility[column.getModelIndex()]) {
-                if (++visibleIndex == index) {
-                    return i;
-                }
+                internalIndexCache[visibleIndex++] = i;
             }
         }
-        // Index doesn't exist.
-        throw new ArrayIndexOutOfBoundsException(Integer.toString(index));
+        while (visibleIndex < visibility.length) {
+            internalIndexCache[visibleIndex++] = -1;
+        }
     }
 
     /**
@@ -236,7 +258,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         return columns.get(getInternalIndex(index));
     }
 
-    public synchronized TableColumn getColumnFromId(int id) {return columns.get(id);}
+    public synchronized TableColumn getColumnFromId(int id) {
+        return columns.get(id);
+    }
 
     public synchronized int getColumnPosition(int id) {
         for (int i = 0; i < visibility.length; i++) {
@@ -282,6 +306,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
         // Notifies listeners and stores the new configuration.
         triggerColumnMoved(new TableColumnModelEvent(this, from, to));
+        internalIndexCache = null;
     }
 
     public int getColumnIndex(Object identifier) {
@@ -542,7 +567,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
          * Returns <code>true</code> if there's a next element in the enumeration.
          * @return <code>true</code> if there's a next element in the enumeration, <code>false</code> otherwise.
          */
-        public boolean hasMoreElements() {return nextIndex < visibility.length;}
+        public boolean hasMoreElements() {
+            return nextIndex < visibility.length;
+        }
 
         /**
          * Returns the next element in the enumeration.

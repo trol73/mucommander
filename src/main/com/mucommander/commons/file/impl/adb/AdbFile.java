@@ -136,9 +136,8 @@ public class AdbFile extends ProtocolFile {
 		return device;
 	}
 
-	private void closeConnection() throws IOException {
+	private void closeConnection() {
 		if (jadbConnection != null) {
-			//jadbConnection.close();
 			jadbConnection = null;
 		}
 	}

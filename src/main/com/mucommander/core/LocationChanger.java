@@ -117,14 +117,15 @@ public class LocationChanger {
 	 */
 	private AbstractFile getWorkableLocation(FileURL folderURL) {
 		AbstractFile folder = FileFactory.getFile(folderURL);
-		if (folder != null && folder.exists())
+		if (folder != null && folder.exists()) {
 			return folder;
+		}
 		
-		if (folder == null)
+		if (folder == null) {
 			folder = new NullableFile(folderURL);
+		}
 		
-		return FileProtocols.FILE.equals(folderURL.getScheme()) ?
-				getWorkableFolder(folder) : folder;
+		return FileProtocols.FILE.equals(folderURL.getScheme()) ? getWorkableFolder(folder) : folder;
 	}
 
 	/**

@@ -31,6 +31,7 @@ import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.layout.InformationPane;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,22 +142,40 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
      * Updates the information pane to reflect the current 'Move to trash' choice.
      */
     private void updateDialog() {
-        final boolean singleFileMode = files.size() == 1;
-        String textId;
-        if (moveToTrash) {
-            textId = singleFileMode ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.move_to_trash.confirmation";
-        } else {
-            textId = singleFileMode ? "delete_dialog.permanently_delete.confirmation_1" : "delete_dialog.permanently_delete.confirmation";
-        }
+        String textId = buildTitleId();
         informationPane.getMainLabel().setText(i18n(textId));
-        if (moveToTrash) {
-            textId = singleFileMode ? "delete_dialog.move_to_trash.confirmation_details_1" : "delete_dialog.move_to_trash.confirmation_details";
-        } else {
-            textId = "this_operation_cannot_be_undone";
-        }
-        informationPane.getCaptionLabel().setText(i18n(textId));
-        informationPane.setIcon(moveToTrash ? null: InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
+        String messageId = buildMessageId();
+        informationPane.getCaptionLabel().setText(i18n(messageId));
+        informationPane.setIcon(moveToTrash ? null : InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
         setTitle(ActionManager.getActionInstance(moveToTrash ? DeleteAction.Descriptor.ACTION_ID:PermanentDeleteAction.Descriptor.ACTION_ID, mainFrame).getLabel());
+    }
+
+    @NotNull
+    private String buildMessageId() {
+        if (moveToTrash) {
+            if (files.size() == 1) {
+                AbstractFile file = files.get(0);
+                return file.isSymlink() ? "this_operation_cannot_be_undone" : "delete_dialog.move_to_trash.confirmation_details_1";
+            } else {
+                return "delete_dialog.move_to_trash.confirmation_details";
+            }
+        } else {
+            return "this_operation_cannot_be_undone";
+        }
+    }
+
+    @NotNull
+    private String buildTitleId() {
+        boolean singleFileMode = files.size() == 1;
+        if (singleFileMode) {
+            AbstractFile file = files.get(0);
+            if (file.isSymlink()) {
+                return "delete_dialog.permanently_delete.symlink_confirmation_1";
+            } else {
+                return moveToTrash ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.permanently_delete.confirmation_1";
+            }
+        }
+        return moveToTrash ? "delete_dialog.move_to_trash.confirmation" : "delete_dialog.permanently_delete.confirmation";
     }
 
 

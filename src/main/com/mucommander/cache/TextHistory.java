@@ -22,6 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -112,7 +113,7 @@ public class TextHistory {
         if (!file.exists()) {
             return result;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ( (line = reader.readLine() ) != null) {
                 String trim = line.trim();
@@ -128,7 +129,7 @@ public class TextHistory {
     }
 
     private void save(AbstractFile file, List<String> list) throws  IOException {
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), "UTF8"))) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8))) {
             for (String s : list) {
                 writer.write(s);
                 writer.write('\n');
