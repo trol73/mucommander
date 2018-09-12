@@ -249,6 +249,7 @@ public class ActionManager {
 		registerAction(new CompareFilesAction.Descriptor());
 		registerAction(new TogglePanelPreviewModeAction.Descriptor());
 		registerAction(new TextEditorsListAction.Descriptor());
+		registerAction(new UserMenuAction.Descriptor());
     }
 
 	public static void registerCommandsActions() {

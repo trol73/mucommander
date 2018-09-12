@@ -653,11 +653,13 @@ public class FileFactory {
         // Attempt to use the desired name
         AbstractFile tempFile = TEMP_DIRECTORY.getDirectChild(desiredFilename);
 
-        if (tempFile.exists())
+        if (tempFile.exists()) {
             tempFile = TEMP_DIRECTORY.getDirectChild(getFilenameVariation(desiredFilename));
+        }
 
-        if (deleteOnExit)
+        if (deleteOnExit) {
             ((java.io.File)tempFile.getUnderlyingFileObject()).deleteOnExit();
+        }
 
         return tempFile;
     }

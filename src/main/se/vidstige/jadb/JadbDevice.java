@@ -8,10 +8,10 @@ import java.util.List;
 
 public class JadbDevice {
     public enum State {
-        Unknown,
-        Offline,
-        Device,
-        BootLoader
+        UNKNOWN,
+        OFFLINE,
+        DEVICE,
+        BOOTLOADER
     }
 
     private final String serial;
@@ -33,10 +33,14 @@ public class JadbDevice {
 
     private State convertState(String type) {
         switch (type) {
-            case "device":     return State.Device;
-            case "offline":    return State.Offline;
-            case "bootloader": return State.BootLoader;
-            default:           return State.Unknown;
+            case "device":
+                return State.DEVICE;
+            case "offline":
+                return State.OFFLINE;
+            case "bootloader":
+                return State.BOOTLOADER;
+            default:
+                return State.UNKNOWN;
         }
     }
 
@@ -140,6 +144,7 @@ public class JadbDevice {
         return shellLine;
     }
 
+
     public List<RemoteFile> list(String remotePath) throws IOException, JadbException {
         Transport transport = getTransport();
         SyncTransport sync = transport.startSync();
@@ -216,8 +221,7 @@ public class JadbDevice {
             return false;
         JadbDevice other = (JadbDevice) obj;
         if (serial == null) {
-            if (other.serial != null)
-                return false;
+            return other.serial == null;
         } else if (!serial.equals(other.serial))
             return false;
         return true;

@@ -46,6 +46,9 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     private int color = -1;
 
+    private String forcedStatusMessage;
+    private long forcedStatusMessageTimeout;
+
 
     public StatusBar() {
         super("");
@@ -97,5 +100,20 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     public void setSyntax(String syntax) {
         lblSyntax.setText(syntax);
+    }
+
+    public void clearStatusMessage() {
+        if (forcedStatusMessage != null) {
+            if (System.currentTimeMillis() > forcedStatusMessageTimeout) {
+                forcedStatusMessage = null;
+            }
+        }
+        setStatusMessage(forcedStatusMessage != null ? forcedStatusMessage : "");
+    }
+
+    public void showMessage(String msg, long timeInMillis) {
+        forcedStatusMessage = msg;
+        forcedStatusMessageTimeout = System.currentTimeMillis() + timeInMillis;
+        setStatusMessage(msg);
     }
 }

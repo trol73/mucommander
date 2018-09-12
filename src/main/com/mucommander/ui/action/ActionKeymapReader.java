@@ -68,19 +68,10 @@ class ActionKeymapReader extends ActionKeymapIO {
      */
     ActionKeymapReader(AbstractFile file) throws SAXException, IOException, ParserConfigurationException {
     	this.file = file;
-    	
-    	InputStream in = null;
-    	try {
-			in = new BackupInputStream(file);
+
+    	try (InputStream in = new BackupInputStream(file)) {
 			SAXParserFactory.newInstance().newSAXParser().parse(in, this);
-		} finally {
-    		if (in != null) {
-    			try {
-                    in.close();
-                } catch(IOException ignore) {
-                }
-    		}
-    	}
+		}
     }
 	
     /**
@@ -97,36 +88,36 @@ class ActionKeymapReader extends ActionKeymapIO {
      * @param actionId the action id to associate the keystroke with
      * @param attributes the attributes map that holds the value
      */
-    private void processKeystrokeAttribute(String actionId, Attributes attributes) {    	
-    	String keyStrokeString;
-    	KeyStroke alternateKeyStroke = null;
-    	KeyStroke primaryKeyStroke = null;
-    	
+    private void processKeystrokeAttribute(String actionId, Attributes attributes) {
     	// Parse the primary keystroke and retrieve the corresponding KeyStroke instance
-    	keyStrokeString = attributes.getValue(PRIMARY_KEYSTROKE_ATTRIBUTE);
-    	
+    	String keyStrokeString = attributes.getValue(PRIMARY_KEYSTROKE_ATTRIBUTE);
+
+        KeyStroke primaryKeyStroke = null;
     	if (keyStrokeString != null) {
     		primaryKeyStroke = KeyStroke.getKeyStroke(keyStrokeString);
-    		if (primaryKeyStroke == null)
-    			LOGGER.info("Action keymap file contains a keystroke which could not be resolved: " + keyStrokeString);
-    		else {
+    		if (primaryKeyStroke == null) {
+                LOGGER.info("Action keymap file contains a keystroke which could not be resolved: " + keyStrokeString);
+            } else {
     			String prevAssignedActionId = ActionKeymap.getRegisteredActionIdForKeystroke(primaryKeyStroke);
-    			if (prevAssignedActionId != null && !prevAssignedActionId.equals(actionId))
-    				LOGGER.debug("Canceling previous association of keystroke " + keyStrokeString + ", reassign it to action: " + actionId);
+    			if (prevAssignedActionId != null && !prevAssignedActionId.equals(actionId)) {
+                    LOGGER.debug("Canceling previous association of keystroke " + keyStrokeString + ", reassign it to action: " + actionId);
+                }
     		}
     	}
 
     	// Parse the alternate keystroke and retrieve the corresponding KeyStroke instance
     	keyStrokeString = attributes.getValue(ALTERNATE_KEYSTROKE_ATTRIBUTE);
-    	
+
+        KeyStroke alternateKeyStroke = null;
     	if (keyStrokeString != null) {
     		alternateKeyStroke = KeyStroke.getKeyStroke(keyStrokeString);
-    		if (alternateKeyStroke == null)
-    			LOGGER.info("Action keymap file contains a keystroke which could not be resolved: " + keyStrokeString);
-    		else {
+    		if (alternateKeyStroke == null) {
+                LOGGER.info("Action keymap file contains a keystroke which could not be resolved: " + keyStrokeString);
+            } else {
     			String prevAssignedActionId = ActionKeymap.getRegisteredActionIdForKeystroke(alternateKeyStroke);
-    			if (prevAssignedActionId != null && !prevAssignedActionId.equals(actionId))
-    				LOGGER.debug("Canceling previous association of keystroke " + keyStrokeString + ", reassign it to action: " + actionId);
+    			if (prevAssignedActionId != null && !prevAssignedActionId.equals(actionId)) {
+                    LOGGER.debug("Canceling previous association of keystroke " + keyStrokeString + ", reassign it to action: " + actionId);
+                }
     		}
     	}
 
@@ -149,11 +140,11 @@ class ActionKeymapReader extends ActionKeymapIO {
     ///// getters /////
     ///////////////////
     
-    public Map<String, KeyStroke> getPrimaryActionsKeymap() {
+    Map<String, KeyStroke> getPrimaryActionsKeymap() {
 		return primaryActionsReadKeymap;
 	}
     
-    public Map<String, KeyStroke> getAlternateActionsKeymap() {
+    Map<String, KeyStroke> getAlternateActionsKeymap() {
 		return alternateActionsReadKeymap;
 	}
     
@@ -175,15 +166,15 @@ class ActionKeymapReader extends ActionKeymapIO {
     }
     
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-    	if(qName.equals(ACTION_ELEMENT)) {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
+    	if (qName.equals(ACTION_ELEMENT)) {
     		// Retrieve the action id
     		String actionId = attributes.getValue(ID_ATTRIBUTE);
     		// if id attribute not exits, read class attribute
     		if (actionId == null) {
     			String actionClassPath = attributes.getValue(CLASS_ATTRIBUTE);
     			
-    			if(actionClassPath==null) {
+    			if (actionClassPath == null) {
     				LOGGER.warn("Error in action keymap file: no 'class' or 'id' attribute specified in 'action' element");
         			return;
         		}
@@ -192,20 +183,20 @@ class ActionKeymapReader extends ActionKeymapIO {
     		}
     		
     		if (!ActionManager.isActionExist(actionId)) {
-    			LOGGER.warn("Error in action keymap file: could not resolve action "+actionId);
+    			LOGGER.warn("Error in action keymap file: could not resolve action " + actionId);
     			return;
     		}
 
     		// Load the action's accelerators (if any)
     		processKeystrokeAttribute(actionId, attributes);
-    	}
-    	else if (qName.equals(ROOT_ELEMENT)) {
+    	} else if (qName.equals(ROOT_ELEMENT)) {
     		// Note: early 0.8 beta3 nightly builds did not have version attribute, so the attribute may be null
             String fileVersion = attributes.getValue(VERSION_ATTRIBUTE);
     		
     		// if the file's version is not up-to-date, update the file to the current version at quitting.
-    		if (!RuntimeConstants.VERSION.equals(fileVersion))
-    			setModified();
+    		if (!RuntimeConstants.VERSION.equals(fileVersion)) {
+                setModified();
+            }
     	}
     }
 }

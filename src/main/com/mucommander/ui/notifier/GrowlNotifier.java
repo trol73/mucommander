@@ -138,7 +138,7 @@ public class GrowlNotifier extends AbstractNotifier {
             " default notifications "+notificationTypes+
             " icon of application \""+APP_NAME+"\"");
 
-        LOGGER.info(isRegistered?
+        LOGGER.info(isRegistered ?
             "Successfully registered "+APP_NAME+" with Growl":
             "Error while registering "+APP_NAME+" with Growl");
 

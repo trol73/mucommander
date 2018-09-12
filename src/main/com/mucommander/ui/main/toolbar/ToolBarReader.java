@@ -74,7 +74,7 @@ public class ToolBarReader extends ToolBarIO {
     public void endDocument() {}
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         switch (qName) {
             case BUTTON_ELEMENT:
                 // Resolve action id

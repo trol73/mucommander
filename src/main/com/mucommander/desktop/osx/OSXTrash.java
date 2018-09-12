@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -179,7 +180,7 @@ public class OSXTrash extends QueuedTrash {
             // EOL characters. The file must NOT end with a trailing EOL.
 
             tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);
-            try (OutputStreamWriter tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), "utf-8")) {
+            try (OutputStreamWriter tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), StandardCharsets.UTF_8)) {
                 final int nbFiles = queuedFiles.size();
                 for (int i = 0; i < nbFiles; i++) {
                     tmpOut.write(queuedFiles.get(i).getAbsolutePath());
@@ -192,7 +193,7 @@ public class OSXTrash extends QueuedTrash {
             }
 
             // Set the 'tmpFilePath' variable to the path of the temporary file we just created
-            String appleScript = "set tmpFilePath to \""+tmpFile.getAbsolutePath()+"\"\n";
+            String appleScript = "set tmpFilePath to \"" + tmpFile.getAbsolutePath() + "\"\n";
             appleScript += MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
 
             boolean success = AppleScript.execute(appleScript, null);

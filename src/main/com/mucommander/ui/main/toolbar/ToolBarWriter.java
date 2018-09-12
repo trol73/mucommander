@@ -50,7 +50,7 @@ public class ToolBarWriter extends ToolBarIO {
 	
 	private ToolBarWriter() {}
 	
-	void write() throws IOException {
+	void write() {
 		String[] actionIds = ToolBarAttributes.getActions();
 
 		try (BackupOutputStream bos = new BackupOutputStream(getDescriptionFile())) {
@@ -62,7 +62,7 @@ public class ToolBarWriter extends ToolBarIO {
 	}
 	
 	private static class Writer {
-		private XmlWriter writer = null;
+		private XmlWriter writer;
 		
 		private Writer(OutputStream stream) throws IOException {
     		this.writer = new XmlWriter(stream);
@@ -87,9 +87,9 @@ public class ToolBarWriter extends ToolBarIO {
 		}
 		
 		private void write(String actionId) throws IOException {
-			if (actionId == null)
+			if (actionId == null) {
 				writer.writeStandAloneElement(SEPARATOR_ELEMENT);
-			else {
+			} else {
 				XmlAttributes attributes = new XmlAttributes();
 				attributes.add(ACTION_ID_ATTRIBUTE, actionId);
 

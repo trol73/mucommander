@@ -63,12 +63,17 @@ public class AdbFile extends ProtocolFile {
 			if (path.isEmpty() || "\\".equals(path)) {
 				path = "/";
 			}
-
 			remoteFile = tryLs(device, path);
 			if (remoteFile == null && "/".equals(path)) {
 				remoteFile = tryLs(device, "/sdcard/");
 				if (remoteFile != null) {
 					rootFolder = "/sdcard/";
+				}
+			}
+			if (remoteFile == null && "/".equals(path)) {
+				remoteFile = tryLs(device, "/mnt/sdcard/");
+				if (remoteFile != null) {
+					rootFolder = "/mnt/sdcard/";
 				}
 			}
 			closeConnection();
@@ -253,7 +258,7 @@ public class AdbFile extends ProtocolFile {
 
 	@Override
 	public boolean isDirectory() {
-		return remoteFile != null && remoteFile.isDirectory();
+		return remoteFile == null || remoteFile.isDirectory();
 	}
 
 	@Override

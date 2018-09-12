@@ -57,25 +57,25 @@ public class AbstractExtensionFilter extends AbstractStringCriterionFilter {
     //////////////////////////////////////////////////
 
     public boolean accept(String value) {
-        int len = value.length();
+        return isCaseSensitive() ? containsCaseSensitive(value) : containsIgnoreCase(value);
+    }
 
-        // If case isn't important, a simple String.endsWith is enough.
-        if (isCaseSensitive()) {
-            for (char[] extension : extensions) {
-                if (StringUtils.matches(value, extension, len)) {
-                    return true;
-                }
+    private boolean containsIgnoreCase(String value) {
+        int len = value.length();
+        for (char[] extension : extensions) {
+            if (StringUtils.matchesIgnoreCase(value, extension, len)) {
+                return true;
             }
         }
+        return false;
+    }
 
-        // If case is important, we have to be a bit more creative and
-        // use String.regionMatches.
-        else {
-            // Matches the value to each extension.
-            for (char[] extension : extensions) {
-                if (StringUtils.matchesIgnoreCase(value, extension, len)) {
-                    return true;
-                }
+    private boolean containsCaseSensitive(String value) {
+        int len = value.length();
+        // If case isn't important, a simple String.endsWith is enough.
+        for (char[] extension : extensions) {
+            if (StringUtils.matches(value, extension, len)) {
+                return true;
             }
         }
         return false;

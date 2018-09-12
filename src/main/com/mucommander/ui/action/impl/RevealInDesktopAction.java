@@ -21,13 +21,12 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractArchiveEntryFile;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -51,10 +50,13 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     protected void toggleEnabledState() {
         AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
-        setEnabled(currentFolder != null && currentFolder.isLocalFile()
+        setEnabled(isLocalRegularFolder(currentFolder));
+    }
+
+    private static boolean isLocalRegularFolder(AbstractFile currentFolder) {
+        return currentFolder != null && currentFolder.isLocalFile()
                && !currentFolder.isArchive()
-               && !currentFolder.hasAncestor(AbstractArchiveEntryFile.class)
-        );
+               && !currentFolder.hasAncestor(AbstractArchiveEntryFile.class);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
         if (OsFamily.MAC_OS_X.isCurrent()) {
             AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
             if (currentFile == null) {
-                currentFile = mainFrame.getActivePanel().getCurrentFolder();
+                return mainFrame.getActivePanel().getCurrentFolder();
             }
             return currentFile;
         } else {
@@ -96,7 +98,9 @@ public class RevealInDesktopAction extends ParentFolderAction {
 		    return ActionCategory.NAVIGATION;
 		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_L, CTRL_OR_META_DOWN_MASK);

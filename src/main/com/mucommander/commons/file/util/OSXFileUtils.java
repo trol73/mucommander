@@ -19,19 +19,17 @@
 
 package com.mucommander.commons.file.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class contains methods for file operations that are specific to Mac OS X.
@@ -61,10 +59,10 @@ public class OSXFileUtils {
      * @return the Spotlight/Finder comment of the specified file
      */
     public static String getSpotlightComment(AbstractFile file) {
-        if (!(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher()))
+        if (!(OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrHigher())) {
             return null;
+        }
 
-        InputStream pin = null;
         try {
             Process process = Runtime.getRuntime().exec(new String[]{"mdls", "-name", "kMDItemFinderComment", file.getAbsolutePath()});
             process.waitFor();
@@ -74,35 +72,29 @@ public class OSXFileUtils {
             }
 
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            pin = process.getInputStream();
-            StreamUtils.copyStream(pin, bout);
 
-            // Sample output when there is a comment:
-            // kMDItemFinderComment = "This is a spotlight comment"
-            //
-            // Sample output when there is no comment:
-            // kMDItemFinderComment = (null)
-            String output = new String(bout.toByteArray());
-            Matcher matcher = MDLS_COMMENT_PATTERN.matcher(output);
+            try (InputStream pin = process.getInputStream()) {
+                StreamUtils.copyStream(pin, bout);
 
-            if (matcher.find()) {
-                // Strip off the quotes surrounding the comment
-                String group = matcher.group();
-                return group.substring(1, group.length()-1);
+                // Sample output when there is a comment:
+                // kMDItemFinderComment = "This is a spotlight comment"
+                //
+                // Sample output when there is no comment:
+                // kMDItemFinderComment = (null)
+                String output = new String(bout.toByteArray());
+                Matcher matcher = MDLS_COMMENT_PATTERN.matcher(output);
+
+                if (matcher.find()) {
+                    // Strip off the quotes surrounding the comment
+                    String group = matcher.group();
+                    return group.substring(1, group.length()-1);
+                }
             }
-
             return null;
         } catch(Exception e) {
             LOGGER.info("Caught exception", e);
 
             return null;
-        } finally {
-            if (pin != null) {
-                try {
-                    pin.close();
-                } catch (IOException ignore) {
-                }
-            }
         }
     }
 }

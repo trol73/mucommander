@@ -20,14 +20,13 @@ package com.mucommander.ui.viewer.text;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * @author Oleg Trifonov
@@ -71,7 +70,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
             }
             return true;
         } catch (IllegalArgumentException | BadLocationException e) {
-            System.out.println("Invalid line: " + line + ":" + column);
+            System.out.println("Invalid line: " + line + ":" + column + " (" + e.getMessage() + ")");
             return false;
         }
     }
@@ -79,6 +78,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
     boolean gotoLine(int line) {
         return gotoLine(line, 1);
     }
+
 
     /**
      *

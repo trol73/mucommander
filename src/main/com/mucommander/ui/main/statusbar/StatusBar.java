@@ -575,14 +575,16 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     public void selectedFileChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive()) {
             updateSelectedFilesInfo();
+        }
     }
 
     public void markedFilesChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if(source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive()) {
             updateSelectedFilesInfo();
+        }
     }
 
 

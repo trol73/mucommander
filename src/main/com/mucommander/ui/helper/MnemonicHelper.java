@@ -20,8 +20,8 @@
 package com.mucommander.ui.helper;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -43,7 +43,7 @@ public class MnemonicHelper {
      * Creates a new blank MnemonicHelper.
      */
     public MnemonicHelper() {
-        takenMnemonics = new Vector<>();
+        takenMnemonics = new ArrayList<>();
     }
 	
 	
@@ -65,17 +65,15 @@ public class MnemonicHelper {
 		
         // Find first letter available for mnemonic (keyboard shortcut)
         int mnemonicPos = 0;
-        char mnemonic;
         text = text.toLowerCase();
         int textLength = text.length();
         do {
-            mnemonic = text.charAt(mnemonicPos++);
-            if(!isMnemonicUsed(mnemonic)) {
+            char mnemonic = text.charAt(mnemonicPos++);
+            if (!isMnemonicUsed(mnemonic)) {
                 takenMnemonics.add(mnemonic);
                 return mnemonic;
             }
-        }
-        while(mnemonicPos<textLength);
+        } while (mnemonicPos < textLength);
 
         return 0;
     }
@@ -101,8 +99,8 @@ public class MnemonicHelper {
      * @param ch the character which will be tested for an existing mnemonic.
      * @return whether or not the character is already used in the mnemonics array.
      */
-    public boolean isMnemonicUsed(char ch) {
-        return takenMnemonics.indexOf(ch) >= 0;
+    private boolean isMnemonicUsed(char ch) {
+        return takenMnemonics.contains(ch);
     }
 
 

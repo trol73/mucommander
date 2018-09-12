@@ -91,33 +91,39 @@ public class KeyStrokeUtils {
      * @return a String representations of the given modifiers bitwise mask
      */
     public static String getModifiersDisplayableRepresentation(int modifiers) {
-        String modifiersString = "";
+        StringBuilder result = new StringBuilder();
 
         if ((modifiers&KeyEvent.SHIFT_MASK) != 0) {
-            modifiersString += SHIFT_MODIFIER_STRING;
+            result.append(SHIFT_MODIFIER_STRING);
         }
 
         if ((modifiers&KeyEvent.CTRL_MASK) != 0) {
-            modifiersString += (modifiersString.isEmpty() ? "" : "+") + CTRL_MODIFIER_STRING;
+            appendModifier(result, CTRL_MODIFIER_STRING);
         }
 
         if (OsFamily.MAC_OS_X.isCurrent()) {
             if ((modifiers&KeyEvent.ALT_MASK) != 0) {
-                modifiersString += (modifiersString.isEmpty() ? "" : "+") + ALT_MODIFIER_STRING;
+                appendModifier(result, ALT_MODIFIER_STRING);
             }
             if ((modifiers&KeyEvent.META_MASK) != 0) {
-                modifiersString += (modifiersString.isEmpty() ? "" : "+") + META_MODIFIER_STRING;
+                appendModifier(result, META_MODIFIER_STRING);
             }
         } else {
             if ((modifiers&KeyEvent.META_MASK) != 0) {
-                modifiersString += (modifiersString.isEmpty() ? "" : "+") + META_MODIFIER_STRING;
+                appendModifier(result, META_MODIFIER_STRING);
             }
-
             if ((modifiers&KeyEvent.ALT_MASK) != 0) {
-                modifiersString += (modifiersString.isEmpty() ? "" : "+") + ALT_MODIFIER_STRING;
+                appendModifier(result, ALT_MODIFIER_STRING);
             }
         }
 
-        return modifiersString;
+        return result.toString();
+    }
+
+    private static void appendModifier(StringBuilder sb, String s) {
+        if (sb.length() != 0) {
+            sb.append('+');
+        }
+        sb.append(s);
     }
 }

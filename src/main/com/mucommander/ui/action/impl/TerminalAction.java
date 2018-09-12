@@ -50,7 +50,6 @@ public class TerminalAction extends ParentFolderAction {
         AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
         String cmd = getConsoleCommand(currentFolder);
         try {
-            //ProcessRunner.execute(cmd);
             ProcessRunner.execute(cmd, currentFolder);
         } catch(Exception e) {
             e.printStackTrace();
@@ -70,13 +69,20 @@ public class TerminalAction extends ParentFolderAction {
     }
 
     private static String getConsoleCommand(AbstractFile folder) {
-        String cmd;
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL)) {
-            cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
-        } else {
-            cmd = getDefaultTerminalCommand();
-        }
+        String cmd = getTerminalCommand();
         return cmd.replace("$p", folder.getAbsolutePath());
+    }
+
+    private static String getTerminalCommand() {
+        return useCustomExternalTerminal() ? getCustomExternalTerminal() : getDefaultTerminalCommand();
+    }
+
+    private static String getCustomExternalTerminal() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
+    }
+
+    private static boolean useCustomExternalTerminal() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
     }
 
     @Override

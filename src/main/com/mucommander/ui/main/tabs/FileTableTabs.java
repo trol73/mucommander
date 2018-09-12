@@ -173,15 +173,24 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	 **********************************/
 	
 	public void locationChanged(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 
 	public void locationCancelled(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 
 	public void locationFailed(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 	
 	public void locationChanging(LocationEvent locationEvent) { }

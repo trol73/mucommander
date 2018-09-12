@@ -114,8 +114,9 @@ public abstract class AbstractNotifier {
                 return;
             }
 
-            if (!displayNotification(notificationType, title, description))
+            if (!displayNotification(notificationType, title, description)) {
                 LOGGER.debug("Notification failed to be displayed");
+            }
         });
     }
 

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 public class TextEditorCaretListener implements CaretListener {
-    final TextEditorImpl textEditor;
+    private final TextEditorImpl textEditor;
 
     TextEditorCaretListener(TextEditorImpl textEditor) {
         this.textEditor = textEditor;
@@ -46,15 +46,13 @@ public class TextEditorCaretListener implements CaretListener {
         int line = textArea.getLine();
         int col = textArea.getColumn();
         statusBar.setPosition(line, col);
-        statusBar.setStatusMessage("");
+        statusBar.clearStatusMessage();
 
         // check if we have 6-digit hex-word on cursor (color)
         String str = textArea.getLineStr(line);
         if (str == null || str.isEmpty()) {
             statusBar.setColor(-1);
-            //if (textArea.getFileType() == FileType.ASSEMBLER_AVR) {
             textEditor.selectIncludeFile(null);
-            //}
             return;
         }
         checkAssemblerInstruction(str);

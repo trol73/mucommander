@@ -30,6 +30,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.utils.text.Translator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -48,7 +49,7 @@ public class EditorBookmarksQL extends QuickListWithIcons<AbstractFile> {
 
     public EditorBookmarksQL(FolderPanel folderPanel)  {
         super(folderPanel, ActionProperties.getActionLabel(ShowEditorBookmarksQLAction.Descriptor.ACTION_ID),
-                Translator.get("editor_bookmarks_quick_list.empty_message"));
+                i18n("editor_bookmarks_quick_list.empty_message"));
         mainFrame = folderPanel.getMainFrame();
     }
 
@@ -59,7 +60,12 @@ public class EditorBookmarksQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected AbstractFile[] getData() {
-        List<String> list =  TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
+        List<String> list = TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
+        return buildFilesArray(list);
+    }
+
+    @NotNull
+    private static AbstractFile[] buildFilesArray(List<String> list) {
         AbstractFile[] result = new AbstractFile[list.size()];
         for (int i = 0; i < list.size(); i++) {
             result[i] = FileFactory.getFile(list.get(i));
@@ -69,14 +75,22 @@ public class EditorBookmarksQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected void acceptListItem(AbstractFile item) {
-        if (item instanceof DummyFile) {
-            item = FileFactory.getFile(item.getURL());
-        }
         if (item != null && item.exists()) {
             openFileInEditor(item);
         } else {
-            // TODO error message
+            mainFrame.getStatusBar().setStatusInfo(i18n("editor_bookmarks_quick_list.file_not_found"));
         }
+    }
+
+    @Override
+    protected void onShow() {
+        super.onShow();
+        mainFrame.getStatusBar().setStatusInfo(i18n("editor_bookmarks_quick_list.press_f4_to_edit_list"));
+    }
+
+    protected void onHide() {
+        super.onHide();
+        mainFrame.getStatusBar().activePanelChanged(mainFrame.getActivePanel());
     }
 
     private void openFileInEditor(AbstractFile file) {

@@ -33,6 +33,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.LineBorder;
 
 import com.mucommander.ui.quicklist.item.QuickListHeaderItem;
+import com.mucommander.utils.text.Translator;
 
 /**
  * This abstract class contains some common features to all file table's popups:
@@ -107,9 +108,14 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 			height += item.getPreferredSize().getHeight();
 		}
 
-		return new Dimension((int) Math.ceil(
-				Math.max(container == null ? 0 : container.getWidth() / 2, width * 1.05)), (int) Math.ceil(height));
+		width = Math.ceil(Math.max(container == null ? 0 : container.getWidth() / 2.0, width * 1.05));
+		height = Math.ceil(height);
+		return new Dimension((int)width, (int)height);
 	}
+
+	static protected String i18n(String key, String ...paramValues) {
+	    return Translator.get(key, paramValues);
+    }
 
 	@Override
 	public void focusGained(FocusEvent arg0) {}

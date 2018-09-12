@@ -116,6 +116,37 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
     private final static String HOUR_24_TIME_FORMAT_WITH_SECONDS = "HH:mm:ss";
     private final static String YYYY = "yyyy";
 
+    private class LangComboBox extends PrefComboBox<Locale> {
+        LangComboBox() {
+            // Use a custom combo box renderer to display language icons
+            class LanguageComboBoxRenderer extends BasicComboBoxRenderer<Locale> {
+
+                @Override
+                public Component getListCellRendererComponent(JList<? extends Locale> list, Locale value, int index, boolean isSelected, boolean cellHasFocus) {
+                    JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                    label.setText(Translator.get("language." + value.toLanguageTag()));
+                    label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value.toLanguageTag() + ".png"));
+
+                    return label;
+                }
+            }
+            setRenderer(new LanguageComboBoxRenderer());
+
+            // Add combo items and select current language (defaults to EN if current language can't be found)
+            for (Locale language : languages) {
+                addItem(language);
+            }
+            Locale currentLang = Locale.forLanguageTag(getVariable(MuPreference.LANGUAGE));
+            setSelectedItem(currentLang);
+
+        }
+
+        public boolean hasChanged() {
+            String lang = languages.get(getSelectedIndex()).toLanguageTag();
+            return !lang.equals(getVariable(MuPreference.LANGUAGE));
+        }
+    }
 
 
     GeneralPanel(PreferencesDialog parent) {
@@ -124,43 +155,13 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         setLayout(new BorderLayout());
         
         YBoxPanel mainPanel = new YBoxPanel();
-        JPanel tempPanel;
 
         // Language
         JPanel languagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         languagePanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.language")));
         this.languages = Translator.getAvailableLanguages();
 
-        Locale currentLang = Locale.forLanguageTag(getVariable(MuPreference.LANGUAGE));
-
-        languageComboBox = new PrefComboBox<Locale>() {
-			public boolean hasChanged() {
-			    String lang = languages.get(getSelectedIndex()).toLanguageTag();
-				return !lang.equals(getVariable(MuPreference.LANGUAGE));
-			}
-        };
-
-        // Use a custom combo box renderer to display language icons
-        class LanguageComboBoxRenderer extends BasicComboBoxRenderer<Locale> {
-
-            @Override
-            public Component getListCellRendererComponent(JList<? extends Locale> list, Locale value, int index, boolean isSelected, boolean cellHasFocus) {
-                JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                label.setText(Translator.get("language." + value.toLanguageTag()));
-                label.setIcon(IconManager.getIcon(IconManager.IconSet.LANGUAGE, value.toLanguageTag() + ".png"));
-
-                return label;
-            }
-        }
-        languageComboBox.setRenderer(new LanguageComboBoxRenderer());
-		
-        // Add combo items and select current language (defaults to EN if current language can't be found)
-        for (Locale language : languages) {
-            languageComboBox.addItem(language);
-        }
-        languageComboBox.setSelectedItem(currentLang);
-
+        languageComboBox = new LangComboBox();
         languagePanel.add(languageComboBox);
         mainPanel.add(languagePanel);
         mainPanel.addSpace(10);
@@ -182,18 +183,11 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         };
         String dateFormat = getVariable(MuPreference.DATE_FORMAT);
         String separator = getVariable(MuPreference.DATE_SEPARATOR, MuPreferences.DEFAULT_DATE_SEPARATOR);
-        int dateFormatIndex = 0;
-        String buffer = dateFormat.replace(separator.charAt(0), '/');
-        for (int i = 0; i < DATE_FORMATS.length; i++) {
-            dateFormatComboBox.addItem(DATE_FORMAT_LABELS[i]);
-            if (buffer.equals(DATE_FORMATS[i]) || buffer.equals(DATE_FORMATS_WITH_CENTURY[i])) {
-                dateFormatIndex = i;
-            }
-        }        
+        int dateFormatIndex = getDateFormatIndex(dateFormat, separator);
         dateFormatComboBox.setSelectedIndex(dateFormatIndex);
         dateFormatComboBox.addItemListener(this);
 
-        tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tempPanel.add(dateFormatComboBox);
         tempPanel.add(Box.createHorizontalGlue());
         dateFormatPanel.add(tempPanel);
@@ -208,19 +202,19 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         };
         // Limit the number of characters in the text field to 1 and enforces only non-alphanumerical characters
         PlainDocument doc = new PlainDocument() {
-                @Override
-                public void insertString(int param, String str, javax.swing.text.AttributeSet attributeSet) throws javax.swing.text.BadLocationException {
-                    // Limit field to 1 character max
-                    if (str != null && this.getLength() + str.length() > 1) {
-                        return;
-                    }
-				
-                    // Reject letters and digits, as they don't make much sense, plus letters would be misinterpreted by SimpleDateFormat
-                    if (!strContainsLetterOrDigit(str)) {
-                        super.insertString(param, str, attributeSet);
-                    }
+            @Override
+            public void insertString(int param, String str, javax.swing.text.AttributeSet attributeSet) throws javax.swing.text.BadLocationException {
+                // Limit field to 1 character max
+                if (str != null && this.getLength() + str.length() > 1) {
+                    return;
                 }
-            };
+
+                // Reject letters and digits, as they don't make much sense, plus letters would be misinterpreted by SimpleDateFormat
+                if (!strContainsLetterOrDigit(str)) {
+                    super.insertString(param, str, attributeSet);
+                }
+            }
+        };
         dateSeparatorField.setDocument(doc);
         dateSeparatorField.setText(separator);
         doc.addDocumentListener(this);
@@ -306,6 +300,18 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
         showCenturyCheckBox.addDialogListener(parent);
     }
 
+    private int getDateFormatIndex(String dateFormat, String separator) {
+        int dateFormatIndex = 0;
+        String buffer = dateFormat.replace(separator.charAt(0), '/');
+        for (int i = 0; i < DATE_FORMATS.length; i++) {
+            dateFormatComboBox.addItem(DATE_FORMAT_LABELS[i]);
+            if (buffer.equals(DATE_FORMATS[i]) || buffer.equals(DATE_FORMATS_WITH_CENTURY[i])) {
+                dateFormatIndex = i;
+            }
+        }
+        return dateFormatIndex;
+    }
+
     private static boolean strContainsLetterOrDigit(String str) {
         if (str == null) {
             return false;
@@ -335,9 +341,7 @@ class GeneralPanel extends PreferencesPanel implements ItemListener, ActionListe
     }
 
     private void updatePreviewLabel() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                                                           getDateFormatString()
-                                                           +" "+getTimeFormatString());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(getDateFormatString() + " " + getTimeFormatString());
         previewLabel.setText(dateFormat.format(exampleDate));
         previewLabel.repaint();
     }

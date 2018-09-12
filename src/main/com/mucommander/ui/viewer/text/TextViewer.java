@@ -52,7 +52,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private final static String CUSTOM_FULL_SCREEN_EVENT = "CUSTOM_FULL_SCREEN_EVENT";
 
-	private TextEditorImpl textEditorImpl;
+    private TextEditorImpl textEditorImpl;
 
 	private static boolean lineWrap = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, MuSnapshot.DEFAULT_LINE_WRAP);
 
@@ -149,7 +149,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             in = new BOMInputStream(in);
         }
 
-        // If the given encoding is invalid (null or not supported), default to "UTF-8" 
+        // If the given encoding is invalid (null or not supported), default to "UTF-8"
         this.encoding = encoding == null || !Charset.isSupported(encoding) ? "UTF-8" : encoding;
         if (getStatusBar() != null) {
             getStatusBar().setEncoding(encoding);

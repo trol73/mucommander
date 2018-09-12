@@ -523,7 +523,9 @@ public class DesktopManager {
      * Sets the object that is used to create instances of {@link com.mucommander.desktop.AbstractTrash}.
      * @param provider object that will be used to create instances of {@link com.mucommander.desktop.AbstractTrash}.
      */
-    public static void setTrashProvider(TrashProvider provider) {trashProvider = provider;}
+    public static void setTrashProvider(TrashProvider provider) {
+        trashProvider = provider;
+    }
 
 
     // - Mouse management ------------------------------------------------

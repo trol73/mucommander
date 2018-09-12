@@ -217,12 +217,21 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
             monitor.lastCheckTimestamp = System.currentTimeMillis();
 
             // If folder change check took an average of N milliseconds, we will wait at least N*WAIT_MULTIPLIER before next check
-            monitor.waitBeforeCheckTime = monitor.nbSamples == 0 ? checkPeriod :
-                    Math.max(folderRefreshed ? waitAfterRefresh : checkPeriod, (int) (WAIT_MULTIPLIER * (monitor.totalCheckTime / (float) monitor.nbSamples)));
+            monitor.waitBeforeCheckTime = calcWaitBeforeCheckTime(monitor, folderRefreshed);
         }
     }
 
-	
+    private long calcWaitBeforeCheckTime(FolderChangeMonitor monitor, boolean folderRefreshed) {
+        if (monitor.nbSamples == 0) {
+            return checkPeriod;
+        } else {
+            long refreshPeriod = folderRefreshed ? waitAfterRefresh : checkPeriod;
+            long perSamplePeriod = (long) (WAIT_MULTIPLIER * (monitor.totalCheckTime / (float) monitor.nbSamples));
+            return Math.max(refreshPeriod, perSamplePeriod);
+        }
+    }
+
+
     /**
      * Stops monitoring (stops monitoring thread).
      */

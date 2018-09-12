@@ -86,16 +86,16 @@ public class LocationChanger {
 	public void tryChangeCurrentFolderInternal(final FileURL folderURL, Runnable callback) {
 		mainFrame.setNoEventsMode(true);
 		// Set cursor to hourglass/wait
-		mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-    	Thread setLocationThread = new Thread(() -> {
+        showWaitCursor();
+
+        Thread setLocationThread = new Thread(() -> {
             AbstractFile folder = getWorkableLocation(folderURL);
             try {
                 locationManager.setCurrentFolder(folder, null, true);
             } finally {
                 mainFrame.setNoEventsMode(false);
                 // Restore default cursor
-                mainFrame.setCursor(Cursor.getDefaultCursor());
+                restoreDefaultCursor();
                 // Notify callback that the folder has been set
                 callback.run();
             }
@@ -108,7 +108,15 @@ public class LocationChanger {
 		}
 	}
 
-	/**
+    private void restoreDefaultCursor() {
+        mainFrame.setCursor(Cursor.getDefaultCursor());
+    }
+
+    private void showWaitCursor() {
+        mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+    }
+
+    /**
 	 * Return a workable location according the following logic:
 	 * - If the given folder exists, return it
 	 * - if the given folder is local file, find workable location
@@ -142,7 +150,7 @@ public class LocationChanger {
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder, boolean changeLockedTab) {
-		/* TODO branch setBranchView(false); */
+		// TODO branch setBranchView(false);
 		return tryChangeCurrentFolder(folder, null, false, changeLockedTab);
 	}
 
@@ -256,13 +264,13 @@ public class LocationChanger {
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(FileURL folderURL, CredentialsMapping credentialsMapping, boolean changeLockedTab) {
-		LOGGER.debug("folderURL="+folderURL);
+		LOGGER.debug("folderURL=" + folderURL);
 
 		synchronized(FOLDER_CHANGE_LOCK) {
 			// Make sure a folder change is not already taking place. This can happen under rare but normal
 			// circumstances, if this method is called before the folder change thread has had the time to call
 			// MainFrame#setNoEventsMode.
-			if(changeFolderThread!=null) {
+			if (changeFolderThread != null) {
 				LOGGER.debug("A folder change is already taking place ("+changeFolderThread+"), returning null");
 				return null;
 			}
@@ -359,14 +367,18 @@ public class LocationChanger {
     }
 
 	private void showFailedToReadFolderDialog() {
-		InformationDialog.showErrorDialog(mainFrame, Translator.get("table.folder_access_error_title"), Translator.get("failed_to_read_folder"));
+		InformationDialog.showErrorDialog(mainFrame,
+                Translator.get("table.folder_access_error_title"),
+                Translator.get("failed_to_read_folder"));
 	}
     
 	/**
      * Displays a popup dialog informing the user that the requested folder doesn't exist or isn't available.
      */
     private void showFolderDoesNotExistDialog() {
-        InformationDialog.showErrorDialog(mainFrame, Translator.get("table.folder_access_error_title"), Translator.get("folder_does_not_exist"));
+        InformationDialog.showErrorDialog(mainFrame,
+                Translator.get("table.folder_access_error_title"),
+                Translator.get("folder_does_not_exist"));
     }
 
 
@@ -376,7 +388,10 @@ public class LocationChanger {
      * @param e the Exception that was caught while changing the folder
      */
     private void showAccessErrorDialog(Exception e) {
-        InformationDialog.showErrorDialog(mainFrame, Translator.get("table.folder_access_error_title"), Translator.get("table.folder_access_error"), e==null?null:e.getMessage(), e);
+        InformationDialog.showErrorDialog(mainFrame,
+                Translator.get("table.folder_access_error_title"),
+                Translator.get("table.folder_access_error"),
+                e == null ? null : e.getMessage(), e);
     }
 
 
@@ -424,16 +439,17 @@ public class LocationChanger {
 		AbstractFile newFolder = folder;
 		do {
 			newFolder = newFolder.getParent();
-			if (newFolder != null && newFolder.exists())
-				return newFolder;
-		}
-		while (newFolder != null);
+			if (newFolder != null && newFolder.exists()) {
+                return newFolder;
+            }
+		} while (newFolder != null);
 
 		// Fall back to the first existing volume
 		AbstractFile[] localVolumes = LocalFile.getVolumes();
-		for(AbstractFile volume : localVolumes) {
-			if(volume.exists())
-				return volume;
+		for (AbstractFile volume : localVolumes) {
+			if (volume.exists()) {
+                return volume;
+            }
 		}
 
 		// No volume could be found, return null
@@ -524,9 +540,8 @@ public class LocationChanger {
 		 * @return <code>true</code> if the given file should have its canonical path followed
 		 */
 		private boolean followCanonicalPath(AbstractFile file) {
-			return (MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS)
-					|| file.getURL().getScheme().equals(FileProtocols.HTTP))
-					&& !file.getAbsolutePath(false).equals(file.getCanonicalPath(false));
+			return (followsSymlinkEnabled() || file.getURL().getScheme().equals(FileProtocols.HTTP)) &&
+                    !file.getAbsolutePath(false).equals(file.getCanonicalPath(false));
 		}
 
 		/**
@@ -574,13 +589,12 @@ public class LocationChanger {
 					// This field needs to be set before actually interrupting the thread, #init() relies on it
 					killedByInterrupt = true;
 					interrupt();
-				}
-				// Call Thread#stop() the first time this method is called
-				else {
-					LOGGER.debug("Killing thread using #stop()");
-
-					killedByStop = true;
+				} else {
+					// Call Thread#stop() the first time this method is called
 					super.stop();
+					LOGGER.debug("Killing thread using #stop()");
+					killedByStop = true;
+
 					// Execute #cleanup() as it would have been done by #init() had the thread not been stopped.
 					// Note that #init() may end pseudo-gracefully and catch the underlying Exception. In this case
 					// it will also call #cleanup() but the (2nd) call to #cleanup() will be ignored.
@@ -609,33 +623,26 @@ public class LocationChanger {
 			// Show some progress in the progress bar to give hope
 			folderPanel.setProgressValue(10);
 
-			boolean userCancelled = false;
 			CredentialsMapping newCredentialsMapping = null;
 			// True if Guest authentication was selected in the authentication dialog (guest credentials must not be
 			// added to CredentialsManager)
 			boolean guestCredentialsSelected = false;
 
-			AuthenticationType authenticationType = folderURL.getAuthenticationType();
+            boolean userCancelled = false;
 			if (credentialsMapping != null) {
 				newCredentialsMapping = credentialsMapping;
 				CredentialsManager.authenticate(folderURL, newCredentialsMapping);
-			}
-			// If the URL doesn't contain any credentials and authentication for this file protocol is required, or
-			// optional and CredentialsManager has credentials for this location, popup the authentication dialog to
-			// avoid waiting for an AuthException to be thrown.
-			else if(!folderURL.containsCredentials() &&
-					( (authenticationType==AuthenticationType.AUTHENTICATION_REQUIRED)
-							|| (authenticationType==AuthenticationType.AUTHENTICATION_OPTIONAL && CredentialsManager.getMatchingCredentials(folderURL).length>0))) {
+			} else if (shouldDisplayAuthDialog()) {
 				AuthDialog authDialog = popAuthDialog(folderURL, false, null);
 				newCredentialsMapping = authDialog.getCredentialsMapping();
 				guestCredentialsSelected = authDialog.guestCredentialsSelected();
 
 				// User cancelled the authentication dialog, stop
-				if (newCredentialsMapping == null)
-					userCancelled = true;
-				// Use the provided credentials and invalidate the folder AbstractFile instance (if any) so that
-				// it gets recreated with the new credentials
-				else {
+				if (newCredentialsMapping == null) {
+                    userCancelled = true;
+                } else {
+                    // Use the provided credentials and invalidate the folder AbstractFile instance (if any) so that
+                    // it gets recreated with the new credentials
 					CredentialsManager.authenticate(folderURL, newCredentialsMapping);
 					folder = null;
 				}
@@ -645,104 +652,26 @@ public class LocationChanger {
 				boolean canonicalPathFollowed = false;
 
 				do {
-					// Set cursor to hourglass/wait
-					mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    showWaitCursor();
 
-					// Render all actions inactive while changing folder
+                    // Render all actions inactive while changing folder
 					mainFrame.setNoEventsMode(true);
 
 					try {
 						// 2 cases here :
 						// - Thread was created using an AbstractFile instance
 						// - Thread was created using a FileURL, corresponding AbstractFile needs to be resolved
-
-						// Thread was created using a FileURL
 						if (folder == null) {
-							AbstractFile file = FileFactory.getFile(folderURL, true);
-
-							synchronized(KILL_LOCK) {
-								if (killed) {
-									LOGGER.debug("this thread has been killed, returning");
-									break;
-								}
-							}
-
-							// File resolved -> 25% complete
-							folderPanel.setProgressValue(25);
-
-							// Popup an error dialog and abort folder change if the file could not be resolved
-							// or doesn't exist
-							if (file == null || !file.exists()) {
-								// Restore default cursor
-								mainFrame.setCursor(Cursor.getDefaultCursor());
-
-								showFolderDoesNotExistDialog();
-								break;
-							}
-							if (!file.canRead()) {
-								// Restore default cursor
-								mainFrame.setCursor(Cursor.getDefaultCursor());
-								showFailedToReadFolderDialog();
-								break;
-							}
-
-							// File is a regular directory, all good
-							if (file.isDirectory()) {
-								// Just continue
-							}
-							// File is a browsable file (Zip archive for instance) but not a directory : Browse or Download ? => ask the user
-							else if (file.isBrowsable()) {
-								// If history already contains this file, do not ask the question again and assume
-								// the user wants to 'browse' the file. In particular, this prevent the 'Download or browse'
-								// dialog from popping up when going back or forward in history.
-								// The dialog is also not displayed if the file corresponds to the currently selected file,
-								// which is a weak (and not so accurate) way to know if the folder change is the result
-								// of the OpenAction (enter pressed on the file). This works well enough in practice.
-								if (!globalHistory.historyContains(folderURL) && !file.equals(folderPanel.getFileTable().getSelectedFile())) {
-									// Restore default cursor
-									mainFrame.setCursor(Cursor.getDefaultCursor());
-
-									// Download or browse file ?
-									QuestionDialog dialog = new QuestionDialog(mainFrame,
-											null,
-											Translator.get("table.download_or_browse"),
-											mainFrame,
-											new String[] {BROWSE_TEXT, DOWNLOAD_TEXT, CANCEL_TEXT},
-											new int[] {BROWSE_ACTION, DOWNLOAD_ACTION, CANCEL_ACTION},
-											0);
-
-									int ret = dialog.getActionValue();
-
-									if (ret == -1 || ret == CANCEL_ACTION) {
-										break;
-									}
-
-									// Download file
-									if (ret == DOWNLOAD_ACTION) {
-										showDownloadDialog(file);
-										break;
-									}
-									// Continue if BROWSE_ACTION
-									// Set cursor to hourglass/wait
-									mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-								}
-								// else just continue and browse file's contents
-							}
-							// File is a regular file: show download dialog which allows to download (copy) the file
-							// to a directory specified by the user
-							else {
-								showDownloadDialog(file);
-								break;
-							}
-
-							this.folder = file;
-						}
-						// Thread was created using an AbstractFile instance, check file existence
-						else if (!folder.exists()) {
+                            // Thread was created using a FileURL
+                            if (processFile(FileFactory.getFile(folderURL, true))) {
+                                break;
+                            }
+                        } else if (!folder.exists()) {
+                            // Thread was created using an AbstractFile instance, check file existence
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
 							if (findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
-								if (newFolder.equals(folder)) {
+								if (folder.equals(newFolder)) {
 									// If we've already tried the returned folder, give up (avoids a potentially endless loop)
 									showFolderDoesNotExistDialog();
 									break;
@@ -750,7 +679,7 @@ public class LocationChanger {
 
 								// Try again with the new folder
 								folder = newFolder;
-								folderURL = folder.getURL();
+								folderURL = folder != null ? folder.getURL() : null;
 								// Discard the file to select, if any
 								fileToSelect = null;
 
@@ -832,8 +761,9 @@ public class LocationChanger {
 						// If new credentials were entered by the user, these can now be considered valid
 						// (folder was changed successfully), so we add them to the CredentialsManager.
 						// Do not add the credentials if guest credentials were selected by the user.
-						if (newCredentialsMapping != null && !guestCredentialsSelected)
-							CredentialsManager.addCredentials(newCredentialsMapping);
+						if (newCredentialsMapping != null && !guestCredentialsSelected) {
+                            CredentialsManager.addCredentials(newCredentialsMapping);
+                        }
 
 						// All good !
 						folderChangedSuccessfully = true;
@@ -856,7 +786,7 @@ public class LocationChanger {
 						}
 
 						// Restore default cursor
-						mainFrame.setCursor(Cursor.getDefaultCursor());
+						restoreDefaultCursor();
 
 						if (e instanceof AuthException) {
 							AuthException authException = (AuthException)e;
@@ -876,7 +806,7 @@ public class LocationChanger {
 							// Find a 'workable' folder if the requested folder doesn't exist anymore
 							if (findWorkableFolder) {
 								AbstractFile newFolder = getWorkableFolder(folder);
-								if (newFolder.equals(folder)) {
+								if (folder.equals(newFolder)) {
 									// If we've already tried the returned folder, give up (avoids a potentially endless loop)
 									showFolderDoesNotExistDialog();
 									break;
@@ -884,7 +814,7 @@ public class LocationChanger {
 
 								// Try again with the new folder
 								folder = newFolder;
-								folderURL = folder.getURL();
+								folderURL = folder != null ? folder.getURL() : null;
 								// Discard the file to select, if any
 								fileToSelect = null;
 
@@ -902,15 +832,106 @@ public class LocationChanger {
 			}
 
 			synchronized(KILL_LOCK) {
-				// Clean things up
 				cleanup(folderChangedSuccessfully);
 			}
 		}
 
-		void cleanup(boolean folderChangedSuccessfully) {
+        private boolean processFile(AbstractFile file) {
+            synchronized(KILL_LOCK) {
+                if (killed) {
+                    LOGGER.debug("this thread has been killed, returning");
+                    return true;
+                }
+            }
+
+            // File resolved -> 25% complete
+            folderPanel.setProgressValue(25);
+
+            // Popup an error dialog and abort folder change if the file could not be resolved
+            // or doesn't exist
+            if (file == null || !file.exists()) {
+                // Restore default cursor
+                restoreDefaultCursor();
+
+                showFolderDoesNotExistDialog();
+                return true;
+            }
+            if (!file.canRead()) {
+                // Restore default cursor
+                restoreDefaultCursor();
+                showFailedToReadFolderDialog();
+                return true;
+            }
+
+            // File is a regular directory, all good
+            if (file.isDirectory()) {
+                // Just continue
+            } else if (file.isBrowsable()) {
+                // File is a browsable file (Zip archive for instance) but not a directory : Browse or Download ? => ask the user
+
+                // If history already contains this file, do not ask the question again and assume
+                // the user wants to 'browse' the file. In particular, this prevent the 'Download or browse'
+                // dialog from popping up when going back or forward in history.
+                // The dialog is also not displayed if the file corresponds to the currently selected file,
+                // which is a weak (and not so accurate) way to know if the folder change is the result
+                // of the OpenAction (enter pressed on the file). This works well enough in practice.
+                if (!globalHistory.historyContains(folderURL) && !file.equals(folderPanel.getFileTable().getSelectedFile())) {
+                    restoreDefaultCursor();
+
+                    // Download or browse file ?
+                    QuestionDialog dialog = new QuestionDialog(mainFrame,
+                            null,
+                            Translator.get("table.download_or_browse"),
+                            mainFrame,
+                            new String[] {BROWSE_TEXT, DOWNLOAD_TEXT, CANCEL_TEXT},
+                            new int[] {BROWSE_ACTION, DOWNLOAD_ACTION, CANCEL_ACTION},
+                            0);
+
+                    int ret = dialog.getActionValue();
+
+                    if (ret == -1 || ret == CANCEL_ACTION) {
+                        return true;
+                    }
+
+                    // Download file
+                    if (ret == DOWNLOAD_ACTION) {
+                        showDownloadDialog(file);
+                        return true;
+                    }
+                    // Continue if BROWSE_ACTION
+                    // Set cursor to hourglass/wait
+                    showWaitCursor();
+                }
+                // else just continue and browse file's contents
+            } else {
+                // File is a regular file: show download dialog which allows to download (copy) the file
+                // to a directory specified by the user
+                showDownloadDialog(file);
+                return true;
+            }
+
+            this.folder = file;
+            return false;
+        }
+
+        private boolean shouldDisplayAuthDialog() {
+            // If the URL doesn't contain any credentials and authentication for this file protocol is required, or
+            // optional and CredentialsManager has credentials for this location, popup the authentication dialog to
+            // avoid waiting for an AuthException to be thrown.
+            if (folderURL.containsCredentials()) {
+		        return false;
+            }
+            AuthenticationType authenticationType = folderURL.getAuthenticationType();
+		    if (authenticationType == AuthenticationType.AUTHENTICATION_REQUIRED) {
+		        return true;
+            }
+            return authenticationType == AuthenticationType.AUTHENTICATION_OPTIONAL && CredentialsManager.getMatchingCredentials(folderURL).length > 0;
+        }
+
+        void cleanup(boolean folderChangedSuccessfully) {
 			// Ensures that this method is called only once
 			synchronized(KILL_LOCK) {
-				if(disposed) {
+				if (disposed) {
 					LOGGER.debug("already called, returning");
 					return;
 				}
@@ -929,7 +950,7 @@ public class LocationChanger {
 			folderPanel.setProgressValue(0);
 
 			// Restore normal mouse cursor
-			mainFrame.setCursor(Cursor.getDefaultCursor());
+			restoreDefaultCursor();
 
 			synchronized(FOLDER_CHANGE_LOCK) {
 				changeFolderThread = null;
@@ -951,11 +972,15 @@ public class LocationChanger {
 
 		// For debugging purposes
 		public String toString() {
-			return super.toString()+" folderURL="+folderURL+" folder="+folder;
+			return super.toString() + " folderURL=" + folderURL + " folder=" + folder;
 		}
 	}
-	
-	/* TODO branch         
+
+    private boolean followsSymlinkEnabled() {
+        return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
+    }
+
+    /* TODO branch
 	*//*
 	private void readBranch(AbstractFile parent) {
 		AbstractFile[] children;

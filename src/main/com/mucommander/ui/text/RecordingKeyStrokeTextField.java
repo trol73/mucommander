@@ -39,7 +39,7 @@ public class RecordingKeyStrokeTextField extends JTextField implements FocusList
 	/** The default border of JTextField */
 	private final Border defaultTextFieldBorder = getBorder();
 	
-	public RecordingKeyStrokeTextField(int columns, KeyStroke keyStroke) {
+	protected RecordingKeyStrokeTextField(int columns, KeyStroke keyStroke) {
 		// set text field's length
 		setColumns(columns);
 		// The text will be shown at the center of the text field

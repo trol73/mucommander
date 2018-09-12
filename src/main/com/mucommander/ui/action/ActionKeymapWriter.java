@@ -46,7 +46,7 @@ class ActionKeymapWriter extends ActionKeymapIO {
 	
 	ActionKeymapWriter() {}
 	
-	public void create() throws IOException {
+	public void create() {
 
 		try (BackupOutputStream bos = new BackupOutputStream(getActionsFile())) {
 			new Writer(bos).writeKeyMap(null);
@@ -55,7 +55,7 @@ class ActionKeymapWriter extends ActionKeymapIO {
 		}
 	}
 	
-	void write() throws IOException {
+	void write() {
 		Map<String, KeyStroke[]> combinedMapping = new Hashtable<>();
 		Iterator<String> modifiedActionsIterator = ActionKeymap.getCustomizedActions();
 
@@ -77,7 +77,7 @@ class ActionKeymapWriter extends ActionKeymapIO {
 	}
 	
     private static class Writer {
-    	private XmlWriter writer = null;
+    	private XmlWriter writer;
 
     	private Writer(OutputStream stream) throws IOException {
     		this.writer = new XmlWriter(stream);
@@ -93,8 +93,9 @@ class ActionKeymapWriter extends ActionKeymapIO {
     			writer.startElement(ROOT_ELEMENT, rootElementAttributes, true);
 
     			if (actionMap != null) {
-                    for(String actionId: actionMap.keySet())
-    					addMapping(actionId, actionMap.get(actionId));
+                    for (String actionId: actionMap.keySet()) {
+						addMapping(actionId, actionMap.get(actionId));
+					}
     			}
 
     		} finally {
@@ -108,11 +109,13 @@ class ActionKeymapWriter extends ActionKeymapIO {
 
     	    LOGGER.trace("     Writing mapping of "  + actionId + " to " + keyStrokes[0] + " and " + keyStrokes[1]);
 
-    		if (keyStrokes[0] != null)
-    			attributes.add(PRIMARY_KEYSTROKE_ATTRIBUTE, KeyStrokeUtils.getKeyStrokeRepresentation(keyStrokes[0]));
+    		if (keyStrokes[0] != null) {
+				attributes.add(PRIMARY_KEYSTROKE_ATTRIBUTE, KeyStrokeUtils.getKeyStrokeRepresentation(keyStrokes[0]));
+			}
 
-    		if (keyStrokes[1] != null)
-    			attributes.add(ALTERNATE_KEYSTROKE_ATTRIBUTE, KeyStrokeUtils.getKeyStrokeRepresentation(keyStrokes[1]));
+    		if (keyStrokes[1] != null) {
+				attributes.add(ALTERNATE_KEYSTROKE_ATTRIBUTE, KeyStrokeUtils.getKeyStrokeRepresentation(keyStrokes[1]));
+			}
     		
     		writer.writeStandAloneElement(ACTION_ELEMENT, attributes);
     	}
