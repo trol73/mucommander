@@ -24,7 +24,6 @@ import com.mucommander.conf.MuPreference;
 import com.mucommander.conf.MuPreferences;
 import com.mucommander.desktop.osx.OSXTerminal;
 import com.mucommander.process.ExecutorUtils;
-import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.main.MainFrame;
@@ -69,7 +68,6 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
         }
         propertiesMap.put(item, properties);
         item.addActionListener(this);
-        selectFirstItem();
         if (firstItem == null) {
             firstItem = item;
         }
@@ -113,12 +111,21 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
 
     private void executeInNewTerminalTabs(UserMenuItem properties) {
         if (properties.command.isSingle()) {
-            OSXTerminal.addNewTabWithCommands(properties.command.singleCommand);
+            OSXTerminal.addNewTabWithCommands(menuFile.getParent(), properties.command.singleCommand);
         } else {
             for (List<String> group : properties.command.commandsList) {
                 String[] list = new String[group.size()];
-                OSXTerminal.addNewTabWithCommands(group.toArray(list));
+                OSXTerminal.addNewTabWithCommands(menuFile.getParent(), group.toArray(list));
+                sleep(200);
             }
+        }
+    }
+
+    private void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -150,12 +157,14 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     }
 
     private void executeInTerminal(UserMenuItem properties) {
-        final AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
-        String cmd = getConsoleCommand(currentFolder);
-        try {
-            ProcessRunner.execute(cmd, currentFolder);
-        } catch(Exception e) {
-            e.printStackTrace();
+        if (properties.command.isSingle()) {
+            OSXTerminal.openNewWindowAndRun(menuFile.getParent(), properties.command.singleCommand);
+        } else {
+            for (List<String> group : properties.command.commandsList) {
+                String[] list = new String[group.size()];
+                OSXTerminal.openNewWindowAndRun(menuFile.getParent(), group.toArray(list));
+                sleep(200);
+            }
         }
     }
 
@@ -210,6 +219,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
         int x = (invoker.getWidth() - size.width)/2;
         int y = (invoker.getHeight() - size.height)/2;
         show(invoker, x, y);
+        selectFirstItem();
         requestFocus();
     }
 

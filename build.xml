@@ -717,6 +717,12 @@
             <libraryjar path="${java.lib}"/>
             <libraryjar path="${jsse.lib}"/>
             <libraryjar path="${jce.lib}"/>
+<!--
+            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/rt.jar"/>
+            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/classes.jar"/>
+            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/jsse.jar"/>
+            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/jce.jar"/>
+-->            
 
             <libraryjar refid="lib.compile"/>
 

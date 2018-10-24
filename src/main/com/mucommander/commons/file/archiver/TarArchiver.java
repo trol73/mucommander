@@ -78,5 +78,5 @@ class TarArchiver extends Archiver {
     }
     
     @Override
-    public void postProcess() throws IOException {}
+    public void postProcess() {}
 }

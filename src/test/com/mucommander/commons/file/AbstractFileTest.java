@@ -90,8 +90,7 @@ public abstract class AbstractFileTest {
 
     public static AbstractFile getTemporaryFolder(String propertyName) {
         String property = System.getProperty(propertyName);
-		AbstractFile tempFolder = FileFactory.getFile(property);
-		return tempFolder;
+        return FileFactory.getFile(property);
     }
 	/**
      * Cleans up test files after each test execution so as to leave the filesystem in the same state as it was
@@ -146,9 +145,8 @@ public abstract class AbstractFileTest {
      * @param maxChunkSize maximum size of a data chunk written to the file. Size of chunks is comprised between 1 and
      * this value (inclusive).
      * @throws IOException if an error occurred while writing to the OutputStream
-     * @throws NoSuchAlgorithmException should not happen
      */
-    protected void writeRandomData(OutputStream out, long length, int maxChunkSize) throws IOException, NoSuchAlgorithmException {
+    protected void writeRandomData(OutputStream out, long length, int maxChunkSize) throws IOException {
         long remaining = length;
         byte bytes[];
         int chunkSize;
@@ -445,8 +443,7 @@ public abstract class AbstractFileTest {
 
             // Assert that children of the volume are located on the volume (test the first children only)
             AbstractFile[] children = volume.ls();
-            if(children.length>0)
-                assert volume.equals(children[0].getVolume());
+            assert children.length <= 0 || volume.equals(children[0].getVolume());
         }
     }
 
@@ -1655,8 +1652,7 @@ public abstract class AbstractFileTest {
         assert root.isBrowsable();
         assert root.getParent() == null;
 
-        if(!tempFile.equals(root))
-            assert !tempFile.isRoot();
+        assert tempFile.equals(root) || !tempFile.isRoot();
 
         // Assert that getRoot() on the root file returns the same file
         AbstractFile rootRoot = root.getRoot();
@@ -1964,10 +1960,8 @@ public abstract class AbstractFileTest {
                 canGetPermission = (getPermMaskInt & bitMask)!=0;
                 assert getPermMask.getBitValue(a, p)==canGetPermission: "inconsistent bit and int value for ("+a+", "+p+")";
 
-                if(canGetPermission) {
-                    assert permissions.getBitValue(a, p)==((permissions.getIntValue() & bitMask)!=0):
-                            "inconsistent bit and int value for ("+a+", "+p+")";
-                }
+                assert !canGetPermission || permissions.getBitValue(a, p) == ((permissions.getIntValue() & bitMask) != 0) :
+                        "inconsistent bit and int value for ("+a+", "+p+")";
 
                 bitShift++;
             }
@@ -2196,12 +2190,10 @@ public abstract class AbstractFileTest {
         tempFile.mkfile();
 
         icon = tempFile.getIcon();
-        if(!isHeadless)
-            assert icon != null;
+        assert isHeadless || icon != null;
 
         icon = tempFile.getIcon(new Dimension(16, 16));
-        if(!isHeadless)
-            assert icon != null;
+        assert isHeadless || icon != null;
     }
 
     /**

@@ -60,7 +60,9 @@ public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefCompo
 
     @Override
     public E getSelectedItem() {
-        return (E) super.getSelectedItem();
+        @SuppressWarnings({"unchecked"})
+	    E selected = (E)super.getSelectedItem();
+        return selected;
     }
 
 }

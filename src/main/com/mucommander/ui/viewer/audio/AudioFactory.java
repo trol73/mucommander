@@ -35,7 +35,7 @@ public class AudioFactory implements ViewerFactory {
 
 
     @Override
-    public boolean canViewFile(AbstractFile file) throws WarnUserException {
+    public boolean canViewFile(AbstractFile file) {
         return false;
 //        if (file.isDirectory()) {
 //            return false;

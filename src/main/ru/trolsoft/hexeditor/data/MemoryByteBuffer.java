@@ -31,17 +31,17 @@ public class MemoryByteBuffer extends AbstractByteBuffer {
     }
 
     @Override
-    protected void closeStream() throws IOException {
+    protected void closeStream() {
 
     }
 
     @Override
-    protected long getStreamSize() throws IOException {
+    protected long getStreamSize() {
         return capacity;
     }
 
     @Override
-    protected void loadBuffer() throws IOException {
+    protected void loadBuffer() {
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MemoryByteBuffer extends AbstractByteBuffer {
     }
 
     @Override
-    public long getFileSize() throws IOException {
+    public long getFileSize() {
         return capacity;
     }
 

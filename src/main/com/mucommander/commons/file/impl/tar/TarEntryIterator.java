@@ -27,9 +27,8 @@ class TarEntryIterator implements ArchiveEntryIterator {
      * Creates a new TarEntryIterator that iterates through the entries of the given {@link TarInputStream}.
      *
      * @param tin the TarInputStream to iterate through
-     * @throws IOException if an error occurred while fetching the first entry
      */
-    TarEntryIterator(TarInputStream tin) throws IOException {
+    TarEntryIterator(TarInputStream tin) {
         this.tin = tin;
     }
 

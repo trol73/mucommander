@@ -28,7 +28,7 @@ import com.mucommander.utils.text.Translator;
  *
  */
 public class JobProgress {
-	private FileJob job;
+	private final FileJob job;
 	private TransferFileJob transferFileJob;
 
 	private long effectiveJobTime;

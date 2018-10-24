@@ -36,9 +36,8 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * specific actions at the beginning of a document (such as allocating the root node of a tree
      * or creating an output file).
      *
-     * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
-    public void startConfiguration() throws ConfigurationException {}
+    public void startConfiguration() {}
 
     /**
      * Receive notification at the end of the configuration.
@@ -46,9 +45,8 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the end of a document (such as finalising a tree or closing an output file).
      *
-     * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
-    public void endConfiguration() throws ConfigurationException {}
+    public void endConfiguration() {}
 
     /**
      * Receive notification at the beginning of a section.
@@ -58,9 +56,8 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * output to a file).
      *
      * @param  name                   name of the new section.
-     * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
-    public void startSection(String name) throws ConfigurationException {}
+    public void startSection(String name) {}
 
     /**
      * Receive notification at the end of a section.
@@ -70,9 +67,8 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      * to a file).
      *
      * @param  name                   name of the finished section.
-     * @throws ConfigurationException any Configuration error, possible wrapping another exception.
      */
-    public void endSection(String name) throws ConfigurationException {}
+    public void endSection(String name) {}
 
     /**
      * Receive notification of variable definition.
@@ -82,7 +78,6 @@ public class DefaultConfigurationBuilder implements ConfigurationBuilder {
      *
      * @param  name                   name of the new variable.
      * @param  value                  value of the new variable.
-     * @throws ConfigurationException thrown if an error occurs.
      */
-    public void addVariable(String name, String value) throws ConfigurationException {}
+    public void addVariable(String name, String value) {}
 }

@@ -76,8 +76,7 @@ public class PathTokenizerTest {
                     reconstructedPath += nextToken+lastSeparator;
             }
 
-            if(!reverseOrder)
-                assert reconstructedPath.equals(path);
+            assert reverseOrder || reconstructedPath.equals(path);
 
             if(reverseOrder)
                 break;

@@ -51,7 +51,7 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() {
         try {
             publish();
             final PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);

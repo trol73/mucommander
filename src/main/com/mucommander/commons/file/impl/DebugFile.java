@@ -127,7 +127,7 @@ public class DebugFile extends ProxyFile {
     }
 
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+    public long getFreeSpace() throws IOException {
         LOGGER.trace(getDebugString());
         lag();
 
@@ -135,7 +135,7 @@ public class DebugFile extends ProxyFile {
     }
 
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+    public long getTotalSpace() throws IOException {
         LOGGER.trace(getDebugString());
         lag();
 

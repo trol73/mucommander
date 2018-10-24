@@ -21,6 +21,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import org.slf4j.Logger;
@@ -126,7 +127,7 @@ public class CalculateChecksumJob extends TransferFileJob {
             try {
                 // Determine the path relative to the base source folder
                 String relativePath = file.getAbsolutePath();
-                relativePath = relativePath.substring(baseSourcePath.length(), relativePath.length());
+                relativePath = relativePath.substring(baseSourcePath.length());
 
                 // Resets the digest before use
                 digest.reset();
@@ -147,7 +148,7 @@ public class CalculateChecksumJob extends TransferFileJob {
 
                 line += '\n';
 
-                checksumFileOut.write(line.getBytes("utf-8"));
+                checksumFileOut.write(line.getBytes(StandardCharsets.UTF_8));
 
                 return true;
             } catch (IOException e) {

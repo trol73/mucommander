@@ -58,7 +58,7 @@ public class MimeTypes extends Hashtable<String, String> {
 			return null;
 		}
 
-		return MIME_TYPES.get(name.substring(pos+1, name.length()).toLowerCase());
+		return MIME_TYPES.get(name.substring(pos+1).toLowerCase());
 	}
 
 }

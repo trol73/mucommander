@@ -33,7 +33,7 @@ public class BufferPoolTest {
     public final static int TEST_BUFFER_SIZE_2 = 28;
     public final static int TEST_MAX_POOL_SIZE = 1000;
     @BeforeClass
-    public void setup() throws Exception {
+    public void setup() {
     	BufferPool.releaseAll();
     }
 

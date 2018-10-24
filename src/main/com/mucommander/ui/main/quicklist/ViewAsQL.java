@@ -52,7 +52,7 @@ public class ViewAsQL extends QuickListWithDataList<ViewerFactory> {
         }
 
         @Override
-        public boolean canViewFile(AbstractFile file) throws WarnUserException {
+        public boolean canViewFile(AbstractFile file) {
             return CommandManager.checkFileMask(cmd, file);
         }
 

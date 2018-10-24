@@ -55,7 +55,7 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
     }
 
     @Override
-    public ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+    public ArchiveEntryIterator getEntryIterator() throws IOException {
         try {
             final IInArchive sevenZipFile = openInArchive();
             int nbEntries = sevenZipFile.getNumberOfItems();
@@ -79,7 +79,7 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
     }
 
     @Override
-    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) {
         final int[] in = new int[1];
         in[0] = (Integer)entry.getEntryObject();
         final CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);

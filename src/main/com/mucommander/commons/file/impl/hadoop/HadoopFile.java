@@ -314,7 +314,7 @@ public abstract class HadoopFile extends ProtocolFile {
 
     @Override
     @UnsupportedFileOperation
-    public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException, UnsupportedFileOperationException {
+    public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException {
         throw new UnsupportedFileOperationException(FileOperation.RANDOM_WRITE_FILE);
     }
 
@@ -387,7 +387,7 @@ public abstract class HadoopFile extends ProtocolFile {
     }
 
     @Override
-    public void changePermissions(int permissions) throws IOException, UnsupportedFileOperationException {
+    public void changePermissions(int permissions) throws IOException {
        fs.setPermission(path, new FsPermission((short)permissions));
 
         // Update local attributes
@@ -529,7 +529,7 @@ public abstract class HadoopFile extends ProtocolFile {
             return in.getPos();
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return length;
         }
 

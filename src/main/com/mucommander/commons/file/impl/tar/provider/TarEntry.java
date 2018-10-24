@@ -127,7 +127,7 @@ public class TarEntry implements TarConstants {
         this.userId = 0;
         this.groupId = 0;
         this.userName = new StringBuffer(user);
-        this.groupName = new StringBuffer("");
+        this.groupName = new StringBuffer();
     }
 
     /**
@@ -150,9 +150,9 @@ public class TarEntry implements TarConstants {
         this.groupId = 0;
         this.size = 0;
         this.modTime = (new Date()).getTime() / MILLIS_PER_SECOND;
-        this.linkName = new StringBuffer("");
-        this.userName = new StringBuffer("");
-        this.groupName = new StringBuffer("");
+        this.linkName = new StringBuffer();
+        this.userName = new StringBuffer();
+        this.groupName = new StringBuffer();
         this.devMajor = 0;
         this.devMinor = 0;
 

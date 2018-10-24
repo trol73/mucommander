@@ -21,6 +21,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -269,7 +270,7 @@ public class SplitFileJob extends AbstractCopyJob {
 					AbstractFile crcFile = baseDestFolder.getDirectChild(crcFileName);
 					OutputStream crcStream = crcFile.getOutputStream();
 					String line = sourceFile.getName() + " " + sourceChecksum;
-					crcStream.write(line.getBytes("utf-8"));
+					crcStream.write(line.getBytes(StandardCharsets.UTF_8));
 					crcStream.close();
 				} catch (Exception e) {
                     LOGGER.debug("Caught exception", e);

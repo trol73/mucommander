@@ -47,7 +47,9 @@ public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
      * @param  stream      where to write the XML data.
      * @throws IOException if an IO error occurs.
      */
-    public CommandWriter(OutputStream stream) throws IOException {out = new XmlWriter(stream);}
+    CommandWriter(OutputStream stream) throws IOException {
+        out = new XmlWriter(stream);
+    }
 
 
 

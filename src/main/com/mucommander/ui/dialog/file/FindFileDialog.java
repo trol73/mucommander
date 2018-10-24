@@ -102,7 +102,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private class UpdateRunner extends SwingWorker<List<AbstractFile>, AbstractFile> {
 
         @Override
-        protected List<AbstractFile> doInBackground() throws Exception {
+        protected List<AbstractFile> doInBackground() {
             btnNewSearch.setEnabled(false);
             while (job != null && job.getState() != FileJob.State.FINISHED) {
                 checkUpdates();

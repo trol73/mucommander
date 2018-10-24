@@ -336,7 +336,7 @@ public class UNCFile extends ProtocolFile {
     }
 	
     @Override
-    public void renameTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void renameTo(AbstractFile destFile) throws IOException {
         // Throw an exception if the file cannot be renamed to the specified destination.
         // Fail in some situations where java.io.File#renameTo() doesn't.
         // Note that java.io.File#renameTo()'s implementation is system-dependant, so it's always a good idea to

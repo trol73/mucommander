@@ -16,13 +16,13 @@ class CompatURLConnection extends URLConnection {
 
     protected AbstractFile file;
 
-    public CompatURLConnection(URL url) throws IOException {
+    public CompatURLConnection(URL url) {
         super(url);
 
         // Not connected yet
     }
 
-    public CompatURLConnection(URL url, AbstractFile file) throws IOException {
+    public CompatURLConnection(URL url, AbstractFile file) {
         super(url);
 
         if(file!=null) {

@@ -238,7 +238,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         } else if (source == miSaveAs) {
             trySaveAs();
         } else if (source == miClose) {
-        	getFrame().dispose();
+            getFrame().dispose();
         }
     }
 

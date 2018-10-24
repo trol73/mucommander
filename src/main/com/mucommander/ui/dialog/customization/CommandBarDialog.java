@@ -267,27 +267,27 @@ public class CommandBarDialog extends CustomizeDialog {
 	}
 	
 	private int addCommandBarButtonAtLocation(Point dropLocation, JButton button) {
-		int index;
 		if (getNumberOfButtons() == 0) {
-			index = 0;
+			int index = 0;
 			commandBarButtons.set(index, button);
 			commandBarAlternateButtons.add(index, null);
 			commandBarButtonsList.setDropMode(DropMode.INSERT);
-		}
-		else {
-			index = commandBarButtonsList.locationToIndex(dropLocation);
+			return index;
+		} else {
+			int index = commandBarButtonsList.locationToIndex(dropLocation);
 			index += dropLocation.x > commandBarButtonsList.indexToLocation(index).x + CommandBarButtonForDisplay.PREFERRED_SIZE.width/2 ? 1 : 0;
 			commandBarButtons.add(index, button);
 			commandBarAlternateButtons.add(index, null);
+			return index;
 		}
-		return index;
 	}
 	
 	private Collection<String> initCommandBarAlternateActionsList() {
 		String[] commandBarActionIds = CommandBarAttributes.getAlternateActions();
 		//int nbCommandBarActionIds = commandBarActionIds.length;
-        for (String commandBarActionId : commandBarActionIds)
+        for (String commandBarActionId : commandBarActionIds) {
             commandBarAlternateButtons.add(CommandBarButtonForDisplay.create(commandBarActionId));
+        }
 		
 		commandBarAlternateButtonsList = new DynamicList<>(commandBarAlternateButtons);
 		
@@ -338,8 +338,9 @@ public class CommandBarDialog extends CustomizeDialog {
 					Point dropLocation = support.getDropLocation().getDropPoint();
 					int index = commandBarButtonsList.locationToIndex(dropLocation);
 					JButton prevButton = commandBarAlternateButtons.get(index);
-					if (prevButton != null)
-						insertInOrder(commandBarAvailableButtons, prevButton);
+					if (prevButton != null) {
+                        insertInOrder(commandBarAvailableButtons, prevButton);
+                    }
 
 					commandBarAlternateButtons.set(index, (JButton) support.getTransferable().getTransferData(TransferableButton.buttonFlavor));
 					commandBarAlternateButtonsList.ensureIndexIsVisible(index);
@@ -392,7 +393,14 @@ public class CommandBarDialog extends CustomizeDialog {
 			public void exportDone(JComponent c, Transferable t, int action) {
 				if (action == TransferHandler.MOVE) {
 					if (c instanceof JList) {
-						commandBarAvailableButtons.remove(((JList<JButton>) c).getSelectedValue());
+                        JList list = (JList) c;
+                        Object button = list.getSelectedValue();
+                        if (button instanceof JButton) {
+                            commandBarAvailableButtons.remove(button);
+                        } else {
+                            throw new RuntimeException("JButton expected");
+                        }
+						//commandBarAvailableButtons.remove(((JList<JButton>) c).getSelectedValue());
                     }
 					componentChanged();
 				}
@@ -424,7 +432,7 @@ public class CommandBarDialog extends CustomizeDialog {
 		commandBarAvailableButtonsList.setDropMode(DropMode.ON);
 	}
 	
-	protected JPanel createAvailableButtonsPanel() {
+	private JPanel createAvailableButtonsPanel() {
 		JPanel panel = new JPanel(new GridLayout(1,0));
 		panel.setBorder(BorderFactory.createTitledBorder(Translator.get("command_bar_customize_dialog.available_actions")));
 		
@@ -482,15 +490,15 @@ public class CommandBarDialog extends CustomizeDialog {
 	}
 	
 	private static class TransferableButton implements Transferable {
-    	public static DataFlavor buttonFlavor = new DataFlavor(CommandBarButtonForDisplay.class, null);
+    	static DataFlavor buttonFlavor = new DataFlavor(CommandBarButtonForDisplay.class, null);
     	
     	private JButton button;
     	
-    	public TransferableButton(JButton button) {
+    	TransferableButton(JButton button) {
     		this.button = button;
     	}
     	
-    	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            public Object getTransferData(DataFlavor flavor) {
     		return button;
     	}
     	

@@ -72,13 +72,14 @@ public class TabsQL extends QuickListWithIcons<FileTableTab> {
 		List<FileTableTab> tabsList = new ArrayList<>();
 		Iterator<FileTableTab> tabsIterator = folderPanel.getTabs().iterator();
 		
-		while (tabsIterator.hasNext())
+		while (tabsIterator.hasNext()) {
 			tabsList.add(tabsFactory.createTab(tabsIterator.next()));
+		}
 		
 		// Remove the selected tab from the list
 		tabsList.remove(folderPanel.getTabs().getSelectedIndex());
 		
-		return tabsList.toArray(new FileTableTab[tabsList.size()]);
+		return tabsList.toArray(new FileTableTab[0]);
 	}
 
 	@Override

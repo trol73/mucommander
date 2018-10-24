@@ -89,7 +89,7 @@ public class OtherTextComponentCompletion extends CompletionType {
                     // Notify listeners that the text field has been validated
                 	if (itemSelected) {
                 		hideAutocompletionPopup();
-                		acceptListItem((String)list.getSelectedValue());
+                		acceptListItem(list.getSelectedValue());
                 		keyEvent.consume();
                 	}
                 	else

@@ -56,7 +56,7 @@ import com.mucommander.commons.runtime.OsFamily;
 public abstract class AbstractFile implements FileAttributes, PermissionTypes, PermissionAccesses {
 
     /** URL representing this file */
-    protected FileURL fileURL;
+    protected final FileURL fileURL;
 
     /** Default path separator */
     protected final static String DEFAULT_SEPARATOR = "/";
@@ -1245,6 +1245,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 copyRecursively(child, destChild);
             }
         } else {
+//            try (InputStream in = sourceFile.getInputStream()) {
+//                destFile.copyStream(in, false, sourceFile.getSize());
+//            } catch (IOException e) {
+//                throw new FileTransferException(FileTransferException.OPENING_SOURCE);
+//            }
             InputStream in;
 
             try {
@@ -1373,12 +1378,13 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public static String getExtension(String filename) {
         int lastDotPos = filename.lastIndexOf('.');
-
-        int len;
-        if (lastDotPos <= 0 || lastDotPos==(len=filename.length())-1) {
+        if (lastDotPos <= 0) {
             return null;
         }
-
+        int len = filename.length();
+        if (lastDotPos == len-1) {
+            return null;
+        }
         return filename.substring(lastDotPos+1, len);
     }
 
@@ -1396,7 +1402,6 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public String getBaseName() {
         String fileName = getName();
         int lastDotPos = fileName.lastIndexOf('.');
-    	 
         if (lastDotPos <= 0 || lastDotPos == fileName.length()-1) {
             return fileName;
         }

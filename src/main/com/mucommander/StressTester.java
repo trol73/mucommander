@@ -109,9 +109,8 @@ public class StressTester implements Runnable, ActionListener {
     /**
      * Method used to start the stress tester.
      * @param args command line arguments.
-     * @throws IOException if an unrecoverable error occurred during startup
      */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         TrolCommander.main(args);
 
         StressTester instance = new StressTester();

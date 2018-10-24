@@ -38,7 +38,7 @@ public class PdfFactory implements ViewerFactory {
     }
 
     @Override
-    public boolean canViewFile(AbstractFile file) throws WarnUserException {
+    public boolean canViewFile(AbstractFile file) {
         return !file.isDirectory() && PDF_FILTER.accept(file);
     }
 

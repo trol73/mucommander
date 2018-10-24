@@ -57,7 +57,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
      *
      * @throws IOException if an error occurred while reloading
      */
-    private void checkZipFile() throws IOException, UnsupportedFileOperationException {
+    private void checkZipFile() throws IOException {
         long currentDate = file.getLastModifiedDate();
 
         if(zipFile==null || currentDate!=lastZipFileDate) {
@@ -138,7 +138,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
     //////////////////////////////////////////
 
     @Override
-    public synchronized ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+    public synchronized ArchiveEntryIterator getEntryIterator() throws IOException {
         // If the underlying AbstractFile has random read access, use our own ZipFile implementation to read entries
         if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
             checkZipFile();
@@ -146,7 +146,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
             final Iterator<ZipEntry> iterator = zipFile.getEntries();
 
             return new ArchiveEntryIterator() {
-                public ArchiveEntry nextEntry() throws IOException {
+                public ArchiveEntry nextEntry() {
                     ZipEntry entry;
 
                     if(!iterator.hasNext() || (entry = iterator.next())==null)
@@ -155,7 +155,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
                     return createArchiveEntry(entry);
                 }
 
-                public void close() throws IOException {
+                public void close() {
                 }
             };
         }
@@ -169,7 +169,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
 
 
     @Override
-    public synchronized InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public synchronized InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
         // If the underlying AbstractFile has random read access, use our own ZipFile implementation to read the entry
         if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
             checkZipFile();
@@ -194,7 +194,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
                     // we don't want the ZipInputStream to be closed when the caller closes the entry's stream.
                     return new FilterInputStream(((JavaUtilZipEntryIterator)entryIterator).getZipInputStream()) {
                         @Override
-                        public void close() throws IOException {
+                        public void close() {
                             // No-op
                         }
                     };
@@ -221,7 +221,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
     //////////////////////////////////////////
 
     @Override
-    public synchronized OutputStream addEntry(final ArchiveEntry entry) throws IOException, UnsupportedFileOperationException {
+    public synchronized OutputStream addEntry(final ArchiveEntry entry) throws IOException {
         checkZipFile();
 
         final ZipEntry zipEntry = createZipEntry(entry);
@@ -255,7 +255,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
     }
 
     @Override
-    public synchronized void deleteEntry(ArchiveEntry entry) throws IOException, UnsupportedFileOperationException {
+    public synchronized void deleteEntry(ArchiveEntry entry) throws IOException {
         ZipEntry zipEntry = (com.mucommander.commons.file.impl.zip.provider.ZipEntry)entry.getEntryObject();
 
         // Most of the time, the ZipEntry will not be null. However, it can be null in some rare cases, when directory
@@ -283,7 +283,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
     }
 
     @Override
-    public void updateEntry(ArchiveEntry entry) throws IOException, UnsupportedFileOperationException {
+    public void updateEntry(ArchiveEntry entry) throws IOException {
         ZipEntry zipEntry = (com.mucommander.commons.file.impl.zip.provider.ZipEntry)entry.getEntryObject();
 
         // Most of the time, the ZipEntry will not be null. However, it can be null in some rare cases, when directory
@@ -307,7 +307,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
     }
 
     @Override
-    public synchronized void optimizeArchive() throws IOException, UnsupportedFileOperationException {
+    public synchronized void optimizeArchive() throws IOException {
         checkZipFile();
 
         // Defragment the zip file
@@ -340,7 +340,7 @@ public class ZipArchiveFile extends AbstractRWArchiveFile {
      * Creates an empty, valid Zip file. The resulting file is 22 bytes long.
      */
     @Override
-    public void mkfile() throws IOException, UnsupportedFileOperationException {
+    public void mkfile() throws IOException {
         if(exists())
             throw new IOException();
 

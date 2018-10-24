@@ -267,7 +267,7 @@ System.out.println("--------- ");
 
 
 
-    public static void main(String args[]) throws IOException, InterruptedException {
+    public static void main(String args[]) throws IOException {
         AvrdudeConfiguration config = new AvrdudeConfiguration("m8", null, null, null, "usbasp", true, null, null, true, false, null,
                 "/Users/trol/-avrdude/avrdude-6.3/avrdude");
         //OutputStream os = new FileOutputStream("/Users/trol/--------.bin");//System.out;

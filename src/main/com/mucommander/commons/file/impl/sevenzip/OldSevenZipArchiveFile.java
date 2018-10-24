@@ -47,7 +47,7 @@ public class OldSevenZipArchiveFile extends AbstractROArchiveFile {
 
     private IInArchive sevenZipFile;
 	
-	public OldSevenZipArchiveFile(AbstractFile file) throws IOException {
+	public OldSevenZipArchiveFile(AbstractFile file) {
 		super(file);
 	}
 	

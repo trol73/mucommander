@@ -1015,11 +1015,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             return nbRead;
         }
 
-        public long getOffset() throws IOException {
+        public long getOffset() {
             return offset;
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return FTPFile.this.getSize();
         }
 

@@ -143,10 +143,9 @@ public class TarInputStream extends InputStream {
      * bytes are left in the current entry in the archive.
      *
      * @return The number of available bytes for the current entry.
-     * @throws IOException for signature
      */
     @Override
-    public int available() throws IOException {
+    public int available() {
         if (entrySize - entryOffset > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
         }

@@ -54,10 +54,10 @@ public class HTTPProtocolProvider implements ProtocolProvider {
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-            public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
             }
 
-            public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
             }
         };
 

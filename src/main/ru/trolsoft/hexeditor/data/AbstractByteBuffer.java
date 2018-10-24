@@ -42,7 +42,7 @@ public abstract class AbstractByteBuffer {
     /**
      * Size of buffer
      */
-    protected int capacity;
+    protected final int capacity;
 
     /**
      * Number of bytes in buffer

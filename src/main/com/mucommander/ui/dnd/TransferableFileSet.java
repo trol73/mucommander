@@ -323,7 +323,7 @@ public class TransferableFileSet implements Transferable {
     }
 
 
-    public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException, IOException {
+    public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException {
         int nbFiles = fileSet.size();
 
         // Return files stored in a FileSet instance (the one that was passed to the constructor)

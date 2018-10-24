@@ -43,7 +43,7 @@ public class HtmlFactory implements ViewerFactory {
 
 
     @Override
-    public boolean canViewFile(AbstractFile file) throws WarnUserException {
+    public boolean canViewFile(AbstractFile file) {
         if (webViewIsAvailable == null) {
             webViewIsAvailable = isWebViewIsAvailable();
         }

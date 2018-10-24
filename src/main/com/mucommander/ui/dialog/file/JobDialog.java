@@ -95,7 +95,7 @@ public abstract class JobDialog extends FocusDialog {
             }
 
             @Override
-            public void initTargetComponent() throws Exception {
+            public void initTargetComponent() {
             }
 
             @Override

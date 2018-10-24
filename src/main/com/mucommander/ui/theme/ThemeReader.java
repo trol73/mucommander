@@ -172,7 +172,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Notifies the reader that a new XML element is starting.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         // Ignores the content of unknown elements.
         if (unknownElement != null) {
             getLogger().debug("Ignoring element " + qName);
@@ -772,7 +772,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Notifies the reader that the current element declaration is over.
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         // If we're in an unknown element....
         if (unknownElement != null) {
             // If it just closed, resume normal parsing.

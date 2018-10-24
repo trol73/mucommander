@@ -95,7 +95,7 @@ public class ArchiveJob extends TransferFileJob {
         }
 
         String filePath = file.getAbsolutePath(false);
-        String entryRelativePath = filePath.substring(baseFolderPath.length()+1, filePath.length());
+        String entryRelativePath = filePath.substring(baseFolderPath.length()+1);
 
         // Process current file
         do {		// Loop for retry

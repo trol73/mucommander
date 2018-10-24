@@ -51,7 +51,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param generator generates criterion values for files as requested
      * @param inverted if true, this filter will operate in inverted mode.
      */
-    public AbstractCriterionFilter(CriterionValueGenerator<C> generator, boolean inverted) {
+    AbstractCriterionFilter(CriterionValueGenerator<C> generator, boolean inverted) {
         super(inverted);
 
         this.generator = generator;
@@ -71,8 +71,9 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if this filter matched the given value, according to the current inverted mode
      */
     public boolean match(C value) {
-        if(inverted)
+        if (inverted) {
             return reject(value);
+        }
 
         return accept(value);
     }
@@ -97,14 +98,16 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return an array of accepted AbstractFile instances
      */
     public C[] filter(C values[]) {
-        List<C> filteredValuesV = new ArrayList<>();
+        List<C> filteredValuesList = new ArrayList<>();
 
         for (C value : values) {
-            if (accept(value))
-                filteredValuesV.add(value);
+            if (accept(value)) {
+                filteredValuesList.add(value);
+            }
         }
-        C filteredValues[] = (C[]) new Object[filteredValuesV.size()];
-        return filteredValuesV.toArray(filteredValues);
+        @SuppressWarnings({"unchecked"})
+        C filteredValues[] = (C[]) new Object[filteredValuesList.size()];
+        return filteredValuesList.toArray(filteredValues);
     }
 
     /**

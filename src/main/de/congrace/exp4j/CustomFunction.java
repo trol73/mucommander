@@ -44,7 +44,7 @@ public abstract class CustomFunction {
 	 * @param name
 	 *            the name of the function (e.g. foo)
 	 */
-	protected CustomFunction(String name, int argumentCount) throws InvalidCustomFunctionException {
+	protected CustomFunction(String name, int argumentCount) {
 		this.argc = argumentCount;
 		this.name = name;
 	}

@@ -66,7 +66,7 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
          *
          * @see IArchiveOpenVolumeCallback#getProperty(PropID)
          */
-        public Object getProperty(PropID propID) throws SevenZipException {
+        public Object getProperty(PropID propID) {
             return null;
         }
 
@@ -83,7 +83,7 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
          * </pre>
          *
          */
-        public IInStream getStream(String filename) throws SevenZipException {
+        public IInStream getStream(String filename) {
             try {
                 // We use caching of opened streams, so check cache first
                 RandomAccessFile randomAccessFile = openedRandomAccessFileList.get(filename);
@@ -158,11 +158,11 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
             };
         }
 
-        public void prepareOperation(ExtractAskMode extractAskMode) throws SevenZipException {
+        public void prepareOperation(ExtractAskMode extractAskMode) {
 //System.out.println("prepare  " + index);
         }
 
-        public void setOperationResult(ExtractOperationResult extractOperationResult) throws SevenZipException {
+        public void setOperationResult(ExtractOperationResult extractOperationResult) {
             if (skipExtraction) {
                 return;
             }
@@ -175,11 +175,11 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
             }
         }
 
-        public void setCompleted(long completeValue) throws SevenZipException {
+        public void setCompleted(long completeValue) {
 //System.out.println("completed  " + completeValue);
         }
 
-        public void setTotal(long total) throws SevenZipException {
+        public void setTotal(long total) {
 //System.out.println("total  " + index + "   " + total);
         }
     }

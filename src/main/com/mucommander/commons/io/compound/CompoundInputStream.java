@@ -163,8 +163,7 @@ public abstract class CompoundInputStream extends InputStream {
             return true;
 
         if(currentIn==null)
-            if(!advanceInputStream())
-                return true;
+            return !advanceInputStream();
 
         return false;
     }

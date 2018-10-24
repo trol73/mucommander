@@ -54,7 +54,7 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
     }
     
     public void PrintNewLine() {
-        System.out.println("");
+        System.out.println();
     }
     public int PrepareOperation(int askExtractMode) {
     	System.out.println("askExtractMode = " + askExtractMode);
@@ -120,7 +120,7 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
     
     public int GetStream(int index,
             java.io.OutputStream [] outStream,
-            int askExtractMode) throws java.io.IOException {
+            int askExtractMode) {
         
         outStream[0] = null;
         

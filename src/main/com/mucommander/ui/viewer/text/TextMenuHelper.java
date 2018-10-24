@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2013-2014 Oleg Trifonov
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2014-2018 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,10 +20,13 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.action.impl.UserMenuAction;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
-import com.mucommander.ui.main.WindowManager;
+import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.menu.UserPopupMenu;
 import com.mucommander.utils.text.Translator;
+import org.intellij.lang.annotations.MagicConstant;
 import ru.trolsoft.calculator.CalculatorDialog;
 import ru.trolsoft.ui.TMenuSeparator;
 import ru.trolsoft.ui.TRadioButtonMenuItem;
@@ -34,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
+import static javax.swing.KeyStroke.getKeyStroke;
 /**
  * Helping class for menu creation in viewer and editor
  */
@@ -77,6 +81,7 @@ public class TextMenuHelper {
 
     private JMenuItem miCalculator;
     private JMenuItem miBuild;
+    private JMenuItem miUserMenu;
     private JMenuItem miFormat;
     private FileType fileType;
 
@@ -111,25 +116,25 @@ public class TextMenuHelper {
         menuEdit.addSeparator();
 
         if (editMode) {
-            miFormat = MenuToolkit.addMenuItem(menuEdit, i18n("text_editor.format"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
+            miFormat = MenuToolkit.addMenuItem(menuEdit, i18n("text_editor.format"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F, KeyEvent.SHIFT_DOWN_MASK|getCtrlOrMetaMask()), actionListener);
         }
 
         // Search menu
         menuSearch = new JMenu(Translator.get("text_editor.search"));
-        miFind = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), actionListener);
-        miFindNext = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find_next"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), actionListener);
-        miFindPrevious = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find_previous"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), actionListener);
+        miFind = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()), actionListener);
+        miFindNext = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find_next"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F3, 0), actionListener);
+        miFindPrevious = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find_previous"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), actionListener);
         if (editMode) {
             menuSearch.addSeparator();
-            miReplace = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.replace_menu"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()|KeyEvent.ALT_MASK), actionListener);
+            miReplace = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.replace_menu"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()|KeyEvent.ALT_MASK), actionListener);
         }
         menuSearch.addSeparator();
-        miGotoLine = MenuToolkit.addMenuItem(menuSearch, i18n("text_viewer.goto_line"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
+        miGotoLine = MenuToolkit.addMenuItem(menuSearch, i18n("text_viewer.goto_line"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
 
         // View menu
         menuView = new JMenu(i18n("text_editor.view"));
 
-        miToggleLineWrap = MenuToolkit.addCheckBoxMenuItem(menuView, i18n("text_editor.line_wrap"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
+        miToggleLineWrap = MenuToolkit.addCheckBoxMenuItem(menuView, i18n("text_editor.line_wrap"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F2, 0), actionListener);
         miToggleLineWrap.setSelected(textEditorImpl.isWrap());
         miToggleLineNumbers = MenuToolkit.addCheckBoxMenuItem(menuView, i18n("text_editor.line_numbers"), menuItemMnemonicHelper, null, actionListener);
         miToggleLineNumbers.setSelected(lineNumbers);
@@ -150,13 +155,13 @@ public class TextMenuHelper {
         JMenuItem lastItem = fileMenu.getItemCount() > 0 ? fileMenu.getItem(fileMenu.getItemCount()-1) : null;
 
         int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        miFiles = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.files"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), actionListener);
-        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), actionListener);
+        miFiles = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.files"), mnemonicHelper, getKeyStroke(KeyEvent.VK_TAB, mask), actionListener);
+        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), actionListener);
         miAddToBookmarks = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.add_to_bookmark"), mnemonicHelper, null, actionListener);
         miRemoveFromBookmarks = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.remove_from_bookmark"), mnemonicHelper, null, actionListener);
 
         mask = getCtrlOrMetaMask() | KeyEvent.SHIFT_MASK;
-        miGotoHeaderSource = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.goto_header_source"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_A, mask), actionListener);
+        miGotoHeaderSource = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.goto_header_source"), mnemonicHelper, getKeyStroke(KeyEvent.VK_A, mask), actionListener);
         fileMenu.add(new TMenuSeparator());
         if (lastItem != null) {
             fileMenu.add(lastItem);
@@ -179,8 +184,9 @@ public class TextMenuHelper {
 
     private void addToolsMenu(ActionListener actionListener, MnemonicHelper menuItemMnemonicHelper) {
         menuTools = new JMenu(Translator.get("text_editor.tools"));
-        miCalculator = MenuToolkit.addMenuItem(menuTools, Translator.get("Calculator.label"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
-        miBuild = MenuToolkit.addMenuItem(menuTools, Translator.get("text_editor.build"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_DOWN_MASK), actionListener);
+        miCalculator = MenuToolkit.addMenuItem(menuTools, Translator.get("Calculator.label"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F6, 0), actionListener);
+        miBuild = MenuToolkit.addMenuItem(menuTools, Translator.get("text_editor.build"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_B, KeyEvent.META_DOWN_MASK), actionListener);
+        miUserMenu = MenuToolkit.addMenuItem(menuTools, Translator.get("UserMenu.label"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F1, 0), actionListener);
     }
 
     private void addSyntaxMenu(ActionListener actionListener, MnemonicHelper menuItemMnemonicHelper) {
@@ -192,6 +198,7 @@ public class TextMenuHelper {
         }
     }
 
+    @MagicConstant(flags = {KeyEvent.META_MASK, KeyEvent.CTRL_MASK})
     private int getCtrlOrMetaMask() {
         return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
     }
@@ -275,11 +282,18 @@ public class TextMenuHelper {
             new CalculatorDialog(textEditorImpl.frame).showDialog();
         } else if (source == miBuild) {
             textEditorImpl.build();
+        } else if (source == miUserMenu) {
+            UserPopupMenu menu = UserMenuAction.createMenu(getMainFrame());
+            menu.show(textEditorImpl.frame);
         } else {
             return false;
         }
         updateEditActions();
         return true;
+    }
+
+    private MainFrame getMainFrame() {
+        return textEditorImpl.frame.getMainFrame();
     }
 
     private void updateInvisibleChars() {
@@ -353,8 +367,8 @@ public class TextMenuHelper {
         return TextHistory.getInstance().getList(TextHistory.Type.EDITOR_BOOKMARKS);
     }
 
-    private static void showMainFrame() {
-        WindowManager.getMainFrames().get(0).toFront();
+    private void showMainFrame() {
+        getMainFrame().toFront();
     }
 
 

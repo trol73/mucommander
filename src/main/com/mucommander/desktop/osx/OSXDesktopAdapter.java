@@ -30,6 +30,8 @@ import com.mucommander.desktop.DefaultDesktopAdapter;
 import com.mucommander.desktop.DesktopInitialisationException;
 import com.mucommander.desktop.DesktopManager;
 
+import static com.mucommander.command.CommandManager.registerDefaultCommand;
+
 /**
  * @author Nicolas Rinaudo
  */
@@ -54,9 +56,9 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
 
         // Registers OS X specific commands.
         try {
-            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
-            CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FINDER_COMMAND, CommandType.SYSTEM_COMMAND, FINDER_NAME, null));
+            registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
+            registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
+            registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FINDER_COMMAND, CommandType.SYSTEM_COMMAND, FINDER_NAME, null));
         } catch(CommandException e) {
             throw new DesktopInitialisationException(e);
         }
@@ -85,6 +87,6 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
         String extension = file.getExtension();
 
         // the isDirectory() test comes last as it is I/O bound
-        return extension != null && extension.equalsIgnoreCase("app") && file.isDirectory();
+        return "app".equalsIgnoreCase(extension) && file.isDirectory();
     }
 }

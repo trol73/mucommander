@@ -47,5 +47,5 @@ class SingleFileArchiver extends Archiver {
     }
 
     @Override
-    public void postProcess() throws IOException {}
+    public void postProcess() {}
 }

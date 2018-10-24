@@ -61,13 +61,14 @@ public class RecentLocationsQL extends QuickListWithIcons<RecentLocationsQL.Rece
         List<RecentLocation> list = new LinkedList<>();
         for (FileURL url : GlobalLocationHistory.getInstance().getHistory()) {
             // Don't include the currently presented location in the list
-            if (url.equals(folderPanel.getCurrentFolder().getURL()))
+            if (url.equals(folderPanel.getCurrentFolder().getURL())) {
                 continue;
+            }
 
             list.add(0, new RecentLocation(url));
         }
 
-        return list.toArray(new RecentLocation[list.size()]);
+        return list.toArray(new RecentLocation[0]);
     }
 
     @Override
@@ -84,20 +85,23 @@ public class RecentLocationsQL extends QuickListWithIcons<RecentLocationsQL.Rece
 
         @Override
         public String toString() {
-            if (!FileProtocols.FILE.equals(url.getScheme()))
+            if (!FileProtocols.FILE.equals(url.getScheme())) {
                 return url.toString();
+            }
 
             String path = url.getPath();
-            if (LocalFile.USES_ROOT_DRIVES && !path.isEmpty())
+            if (LocalFile.USES_ROOT_DRIVES && !path.isEmpty()) {
                 path = path.substring(1);
+            }
 
             return path;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof RecentLocation)
+            if (obj instanceof RecentLocation) {
                 return url.equals(((RecentLocation) obj).url);
+            }
             return false;
         }
     }

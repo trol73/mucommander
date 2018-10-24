@@ -167,13 +167,16 @@ public final class StringUtils {
 
         while (posB > 0) {
             char cA = a.charAt(--posA);   // Current character in a.
-            if (!Character.isLowerCase(cA))
+            if (!Character.isLowerCase(cA)) {
                 cA = Character.toLowerCase(cA);
+            }
             char cB = b[--posB];          // Current character in b.
-            if (!Character.isLowerCase(cB))
+            if (!Character.isLowerCase(cB)) {
                 cB = Character.toLowerCase(cB);
-            if (cA != cB)
+            }
+            if (cA != cB) {
                 return false;
+            }
         }
         return true;
     }
@@ -366,5 +369,14 @@ public final class StringUtils {
      */
     public static boolean isNullOrBlank(String string) {
         return isNullOrEmpty(string) || string.trim().isEmpty();
+    }
+
+    public static boolean isNumber(String string) {
+        try {
+            Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

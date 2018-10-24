@@ -28,7 +28,7 @@ import com.mucommander.commons.file.filter.AbstractFileFilter;
  * @author Nicolas Rinaudo
  */
 public class PermissionsFileFilter extends AbstractFileFilter implements PermissionTypes, PermissionAccesses {
-    private int     permission;
+    private int permission;
     private boolean filter;
 
     /**

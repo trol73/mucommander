@@ -18,8 +18,10 @@
 
 package com.mucommander.ui.event;
 
+import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.mucommander.commons.file.filter.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,7 @@ public class LocationManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocationManager.class);
 
     /** Contains all registered location listeners, stored as weak references */
-    private final WeakHashMap<LocationListener, ?> locationListeners = new WeakHashMap<>();
+    private final Map<LocationListener, ?> locationListeners = new WeakHashMap<>();
 
     /** The FolderPanel instance this LocationManager manages location events for */
     private final FolderPanel folderPanel;
@@ -69,16 +71,9 @@ public class LocationManager {
      * @param folder the {@link AbstractFile} that is going to be presented in the {@link FolderPanel}
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) {
-    	LOGGER.trace("calling ls()");
-    	AbstractFile[] children;
-		try {
-			children = folder.ls(configurableFolderFilter);
-		} catch (Exception e) {
-			LOGGER.debug("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
-			children = new AbstractFile[0];
-		}
+        AbstractFile[] children = safeLs(folder, configurableFolderFilter);
 
-    	folderPanel.setCurrentFolder(folder, children, fileToSelect, changeLockedTab);
+        folderPanel.setCurrentFolder(folder, children, fileToSelect, changeLockedTab);
 
     	this.currentFolder = folder;
 
@@ -88,6 +83,16 @@ public class LocationManager {
     	// After the initial folder is set, initialize the monitoring thread
     	if (folderChangeMonitor == null) {
             folderChangeMonitor = new FolderChangeMonitor(folderPanel);
+        }
+    }
+
+    private static AbstractFile[] safeLs(AbstractFile folder, FileFilter filter) {
+        LOGGER.trace("calling ls()");
+        try {
+            return folder.ls(filter);
+        } catch (Exception e) {
+            LOGGER.debug("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
+            return new AbstractFile[0];
         }
     }
 

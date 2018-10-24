@@ -328,19 +328,15 @@ public class DesktopManager {
     }
 
     private static DesktopOperation getAvailableOperation(String type) {
-        DesktopOperation operation = getAvailableOperation(type, SYSTEM_OPERATION);
-        if (operation != null) {
-            return operation;
+        DesktopOperation systemOperation = getAvailableOperation(type, SYSTEM_OPERATION);
+        if (systemOperation != null) {
+            return systemOperation;
         }
-        operation = getAvailableOperation(type, CUSTOM_OPERATION);
-        if (operation != null) {
-            return operation;
+        DesktopOperation customOperation = getAvailableOperation(type, CUSTOM_OPERATION);
+        if (customOperation != null) {
+            return customOperation;
         }
-        operation = getAvailableOperation(type, FALLBACK_OPERATION);
-        if (operation != null) {
-            return operation;
-        }
-        return null;
+        return getAvailableOperation(type, FALLBACK_OPERATION);
     }
 
     public static boolean isOperationAvailable(String type) {
@@ -354,29 +350,26 @@ public class DesktopManager {
     public static void executeOperation(String type, Object[] target) throws IOException, UnsupportedOperationException {
         DesktopOperation operation = getSupportedOperation(type, target);
 
-        if (operation != null) {
-            operation.execute(target);
-        } else {
+        if (operation == null) {
             throw new UnsupportedOperationException();
         }
+        operation.execute(target);
     }
 
     public static String getOperationName(String type) throws UnsupportedOperationException {
         DesktopOperation operation = getAvailableOperation(type);
-        if (operation != null) {
-            return operation.getName();
+        if (operation == null) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
-
-   }
+        return operation.getName();
+    }
 
     public static String getOperationName(String type, Object[] target) throws UnsupportedOperationException {
         DesktopOperation operation = getSupportedOperation(type, target);
-
-        if (operation != null) {
-            return operation.getName();
+        if (operation == null) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
+        return operation.getName();
     }
 
 

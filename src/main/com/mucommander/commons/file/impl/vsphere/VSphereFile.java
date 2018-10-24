@@ -1,48 +1,6 @@
 package com.mucommander.commons.file.impl.vsphere;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.soap.Detail;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.NodeList;
-
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.FileOperation;
-import com.mucommander.commons.file.FilePermissions;
-import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.PermissionBits;
-import com.mucommander.commons.file.ProtocolFile;
-import com.mucommander.commons.file.UnsupportedFileOperation;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
+import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.connection.ConnectionHandler;
 import com.mucommander.commons.file.connection.ConnectionHandlerFactory;
 import com.mucommander.commons.file.connection.ConnectionPool;
@@ -51,19 +9,21 @@ import com.mucommander.commons.io.FileTransferException;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.io.StreamUtils;
-import com.vmware.vim25.FileFaultFaultMsg;
-import com.vmware.vim25.FileTransferInformation;
-import com.vmware.vim25.GuestFileAttributes;
-import com.vmware.vim25.GuestFileInfo;
-import com.vmware.vim25.GuestFileType;
-import com.vmware.vim25.GuestListFileInfo;
-import com.vmware.vim25.GuestOperationsFaultFaultMsg;
-import com.vmware.vim25.InvalidPropertyFaultMsg;
-import com.vmware.vim25.InvalidStateFaultMsg;
-import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.NamePasswordAuthentication;
-import com.vmware.vim25.RuntimeFaultFaultMsg;
-import com.vmware.vim25.TaskInProgressFaultMsg;
+import com.vmware.vim25.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.NodeList;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.soap.Detail;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.io.*;
+import java.net.*;
+import java.rmi.RemoteException;
+import java.util.*;
 
 /**
  * VSphereFile provides access to files on virtual machines on vSphere 5+
@@ -194,8 +154,7 @@ public class VSphereFile extends ProtocolFile implements
 
 	public VSphereFile(FileURL url, VSphereFile parent,
 			GuestFileInfo guestFileInfo) throws RuntimeFaultFaultMsg,
-			IOException, FileFaultFaultMsg, GuestOperationsFaultFaultMsg,
-			InvalidStateFaultMsg, TaskInProgressFaultMsg,
+			IOException,
 			InvalidPropertyFaultMsg, URISyntaxException {
 		super(url);
 		setPath(url.getPath());
@@ -228,8 +187,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	private void fixPathInVmIfNeeded(VsphereConnHandler connHandler)
-			throws RuntimeFaultFaultMsg, RemoteException,
-			InvalidPropertyFaultMsg {
+			throws RuntimeFaultFaultMsg, RemoteException, InvalidPropertyFaultMsg {
 
 		if (this.guestOsId == null) {
 			if (connHandler != null) {
@@ -307,8 +265,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	private ManagedObjectReference getFileManager(VsphereConnHandler connHandler)
-			throws RemoteException, InvalidPropertyFaultMsg,
-			RuntimeFaultFaultMsg {
+			throws RemoteException, InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 		ManagedObjectReference fileManager = (ManagedObjectReference) connHandler
 				.getClient().getProperties(guestOperationsManager,
 						"fileManager")[0];
@@ -322,7 +279,7 @@ public class VSphereFile extends ProtocolFile implements
 			InvalidPropertyFaultMsg {
 
 		ManagedObjectReference fileManager = getFileManager(connHandler);
-		GuestListFileInfo res = null;
+		GuestListFileInfo res;
 		try {
 			res = connHandler
 					.getClient()
@@ -370,15 +327,12 @@ public class VSphereFile extends ProtocolFile implements
 		if (guestFileInfo.getType().equals(GuestFileType.FILE.value())) {
 			isFile = true;
 			size = guestFileInfo.getSize();
-		} else if (guestFileInfo.getType()
-				.equals(GuestFileType.SYMLINK.value())) {
+		} else if (guestFileInfo.getType().equals(GuestFileType.SYMLINK.value())) {
 			isSymLink = true;
-		} else if (guestFileInfo.getType().equals(
-				GuestFileType.DIRECTORY.value())) {
+		} else if (guestFileInfo.getType().equals(GuestFileType.DIRECTORY.value())) {
 			isDir = true;
 		}
-		date = guestFileInfo.getAttributes().getModificationTime()
-				.toGregorianCalendar().getTimeInMillis();
+		date = guestFileInfo.getAttributes().getModificationTime().toGregorianCalendar().getTimeInMillis();
 
 	}
 
@@ -477,7 +431,7 @@ public class VSphereFile extends ProtocolFile implements
 	@Override
 	@UnsupportedFileOperation
 	public void changePermission(int access, int permission, boolean enabled)
-			throws IOException, UnsupportedFileOperationException {
+			throws IOException {
 		throw new UnsupportedFileOperationException(
 				FileOperation.CHANGE_PERMISSION);
 	}
@@ -518,8 +472,7 @@ public class VSphereFile extends ProtocolFile implements
     }
 
 	@Override
-	public AbstractFile[] ls() throws IOException,
-			UnsupportedFileOperationException {
+	public AbstractFile[] ls() throws IOException {
 		List<GuestFileInfo> fileInfos = new ArrayList<>();
 		int index = 0;
 		VsphereConnHandler connHandler = null;
@@ -557,20 +510,8 @@ public class VSphereFile extends ProtocolFile implements
 				AbstractFile newFile = new VSphereFile(childURL, this, f);
 				res.add(newFile);
 			}
-			return res.toArray(new AbstractFile[res.size()]);
-		} catch (FileFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (GuestOperationsFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidStateFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
-			translateandLogException(e);
-		} catch (TaskInProgressFaultMsg e) {
-			translateandLogException(e);
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (URISyntaxException e) {
+			return res.toArray(new AbstractFile[0]);
+		} catch (FileFaultFaultMsg | GuestOperationsFaultFaultMsg | InvalidStateFaultMsg | RuntimeFaultFaultMsg | TaskInProgressFaultMsg | InvalidPropertyFaultMsg | URISyntaxException e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -593,7 +534,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public void mkdir() throws IOException, UnsupportedFileOperationException {
+	public void mkdir() throws IOException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -610,7 +551,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
+	public InputStream getInputStream() throws IOException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -694,7 +635,7 @@ public class VSphereFile extends ProtocolFile implements
 		public VSphereOutputStream(VsphereConnHandler connHandler,
 				ManagedObjectReference fileManager, ManagedObjectReference vm,
 				NamePasswordAuthentication credentials, String fileName)
-				throws FileNotFoundException, IOException {
+				throws IOException {
 			this(connHandler, fileManager, vm, credentials, File
 					.createTempFile("tmpVixCopy", ".tmp"), fileName);
 		}
@@ -702,7 +643,7 @@ public class VSphereFile extends ProtocolFile implements
 		private VSphereOutputStream(VsphereConnHandler connHandler,
 				ManagedObjectReference fileManager, ManagedObjectReference vm,
 				NamePasswordAuthentication credentials, File tmpFile,
-				String fileName) throws FileNotFoundException, IOException {
+				String fileName) throws IOException {
 			super(tmpFile);
 			this.tmpFile = tmpFile;
 			this.connHandler = connHandler;
@@ -728,19 +669,16 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	private void copyFileToRemote(String fileName, InputStream in, long length,
-			VsphereConnHandler connHandler, ManagedObjectReference fileManager)
-			throws RemoteException, MalformedURLException, ProtocolException,
-			IOException {
+			VsphereConnHandler connHandler, ManagedObjectReference fileManager)	throws IOException {
 		try {
-			String fileUploadUrl = getFileUploadUrl(fileName, length,
-					connHandler, fileManager);
+			String fileUploadUrl = getFileUploadUrl(fileName, length, connHandler, fileManager);
 			URLConnection conn = prepareConnection(fileUploadUrl, length);
 
 			sendFile(in, conn);
 
 			parseResponse(conn);
 
-		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg
+		} catch (RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg
 				| TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
 			translateandLogException(e);
 		}
@@ -769,11 +707,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	private URLConnection prepareConnection(String fileUploadUrl, long fileSize)
-			throws RemoteException, InvalidPropertyFaultMsg,
-			RuntimeFaultFaultMsg, FileFaultFaultMsg,
-			GuestOperationsFaultFaultMsg, InvalidStateFaultMsg,
-			TaskInProgressFaultMsg, MalformedURLException, IOException,
-			ProtocolException {
+			throws TaskInProgressFaultMsg, IOException {
 
 		// http://stackoverflow.com/questions/3386832/upload-a-file-using-http-put-in-java
 		URL url = new URL(fileUploadUrl);
@@ -793,8 +727,8 @@ public class VSphereFile extends ProtocolFile implements
 
 	private String getFileUploadUrl(String remotePathName, long fileSize,
 			VsphereConnHandler connHandler, ManagedObjectReference fileManager)
-			throws RemoteException, InvalidPropertyFaultMsg,
-			RuntimeFaultFaultMsg, FileFaultFaultMsg,
+			throws
+            RuntimeFaultFaultMsg, FileFaultFaultMsg,
 			GuestOperationsFaultFaultMsg, InvalidStateFaultMsg,
 			TaskInProgressFaultMsg {
 
@@ -812,7 +746,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
+	public OutputStream getOutputStream() throws IOException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -823,9 +757,7 @@ public class VSphereFile extends ProtocolFile implements
 			// passed owner ship
 			connHandler = null;
 			return c;
-		} catch (InvalidPropertyFaultMsg e) {
-			translateandLogException(e);
-		} catch (RuntimeFaultFaultMsg e) {
+		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -835,14 +767,14 @@ public class VSphereFile extends ProtocolFile implements
 
 	@Override
 	@UnsupportedFileOperation
-	public OutputStream getAppendOutputStream() throws IOException,	UnsupportedFileOperationException {
+	public OutputStream getAppendOutputStream() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.APPEND_FILE);
 	}
 
 	@Override
 	@UnsupportedFileOperation
 	public RandomAccessInputStream getRandomAccessInputStream()
-			throws IOException, UnsupportedFileOperationException {
+			throws IOException {
 		throw new UnsupportedFileOperationException(
 				FileOperation.RANDOM_READ_FILE);
 	}
@@ -850,12 +782,12 @@ public class VSphereFile extends ProtocolFile implements
 	@Override
 	@UnsupportedFileOperation
 	public RandomAccessOutputStream getRandomAccessOutputStream()
-			throws IOException, UnsupportedFileOperationException {
+			throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.RANDOM_WRITE_FILE);
 	}
 
 	@Override
-	public void delete() throws IOException, UnsupportedFileOperationException {
+	public void delete() throws IOException {
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
@@ -886,8 +818,7 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	@Override
-	public void renameTo(AbstractFile destFile) throws IOException,
-			UnsupportedFileOperationException {
+	public void renameTo(AbstractFile destFile) throws IOException {
 
 		// can't copy\rename to a different host
 		// os might be windows, so can't rename with different case.
@@ -929,21 +860,20 @@ public class VSphereFile extends ProtocolFile implements
 
 	@Override
 	@UnsupportedFileOperation
-	public void copyRemotelyTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+	public void copyRemotelyTo(AbstractFile destFile) throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.COPY_REMOTELY);
 	}
 
 	@Override
 	@UnsupportedFileOperation
-	public long getFreeSpace() throws IOException,
-			UnsupportedFileOperationException {
+	public long getFreeSpace() throws IOException {
 		throw new UnsupportedFileOperationException(
 				FileOperation.GET_FREE_SPACE);
 	}
 
 	@Override
 	@UnsupportedFileOperation
-	public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+	public long getTotalSpace() throws IOException {
 
 		throw new UnsupportedFileOperationException(
 				FileOperation.GET_TOTAL_SPACE);

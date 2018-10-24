@@ -34,7 +34,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
 	private long lastRarFileDate;	
 	
     
-	RarArchiveFile(AbstractFile file) throws IOException {
+	RarArchiveFile(AbstractFile file) {
 		super(file);
 	}
 	
@@ -112,7 +112,7 @@ public class RarArchiveFile extends AbstractROArchiveFile {
     }
 
     @Override
-    public synchronized InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public synchronized InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
 		try {
 			checkRarFile();
 		} catch (RarException e) {

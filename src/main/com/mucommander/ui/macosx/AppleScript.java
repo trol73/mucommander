@@ -21,6 +21,7 @@ package com.mucommander.ui.macosx;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
+import com.mucommander.commons.file.AbstractFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +82,11 @@ public class AppleScript {
      * @return true if the script was successfully executed, false if the
      */
     public static boolean execute(String appleScript, StringBuilder outputBuffer) {
+        return execute(appleScript, outputBuffer, null);
+    }
+
+
+    public static boolean execute(String appleScript, StringBuilder outputBuffer, AbstractFile currentDirectory) {
         // No point in going any further if the current OS is not Mac OS X
         if (!OsFamily.MAC_OS_X.isCurrent()) {
             return false;
@@ -99,7 +105,8 @@ public class AppleScript {
 
         try {
             // Execute the osascript command.
-            AbstractProcess process = ProcessRunner.execute(tokens, outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding()));
+            ProcessListener processListener = outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding());
+            AbstractProcess process = ProcessRunner.execute(tokens, currentDirectory, processListener, null);
             // Pipe the script to the osascript process.
             try (OutputStreamWriter pout  = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding())) {
                 pout.write(appleScript);
@@ -148,8 +155,8 @@ public class AppleScript {
      */
     private static class ScriptOutputListener implements ProcessListener {
 
-        private StringBuilder outputBuffer;
-        private String outputEncoding;
+        private final StringBuilder outputBuffer;
+        private final String outputEncoding;
 
         private ScriptOutputListener(StringBuilder outputBuffer, String outputEncoding) {
             this.outputBuffer = outputBuffer;

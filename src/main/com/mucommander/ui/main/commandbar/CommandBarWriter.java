@@ -52,7 +52,7 @@ class CommandBarWriter extends CommandBarIO {
 	
 	private CommandBarWriter() {}
 	
-	void write() throws IOException {
+	void write() {
 		String[] commandBarActionIds = CommandBarAttributes.getActions();
 		String[] commandBarAlterativeActionIds = CommandBarAttributes.getAlternateActions();
 		KeyStroke commandBarModifier = CommandBarAttributes.getModifier();

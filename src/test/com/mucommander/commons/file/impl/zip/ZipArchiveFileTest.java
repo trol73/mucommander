@@ -93,7 +93,7 @@ public class ZipArchiveFileTest extends AbstractFileTest {
     }
 
     @Override
-    public void testCanonicalPath() throws IOException, NoSuchAlgorithmException {
+    public void testCanonicalPath() {
         // TODO
         // Test temporarily disabled because if fails. The failure seems to be caused by archive file caching:
         // the change is made to the archive file denoted by its absolute path ; when accessed by the canonical path,

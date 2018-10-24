@@ -433,7 +433,7 @@ public class ResourceLoader {
 
         // Remove the leading "file:" (if any)
         if(path.startsWith("file:"))
-            path = path.substring(5, path.length());
+            path = path.substring(5);
 
         // Under platforms that use root drives (Windows and OS/2), strip out the leading '/'
         if(LocalFile.hasRootDrives() && path.startsWith("/"))

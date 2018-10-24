@@ -38,7 +38,7 @@ public class ISOArchiver extends Archiver {
     private boolean enableElTorito = false;
     private MuCreateISO createISOProcess = null;
 
-    ISOArchiver(AbstractFile file) throws FileNotFoundException {
+    ISOArchiver(AbstractFile file) {
         super(null);
         supportStream = false;
         
@@ -71,7 +71,7 @@ public class ISOArchiver extends Archiver {
     // Archiver implementation //
     /////////////////////////////
     @Override
-    public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
+    public OutputStream createEntry(String entryPath, FileAttributes attributes) {
         try {
             if (attributes.isDirectory()) {
                 String[] split = entryPath.split("\\\\");

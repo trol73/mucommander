@@ -736,9 +736,8 @@ public class ThemeManager {
      * Returns an input stream on the requested predefined theme.
      * @param  name        name of the predefined theme on which to open an input stream.
      * @return             an input stream on the requested predefined theme.
-     * @throws IOException if an I/O related error occurs.
      */
-    private static InputStream getPredefinedThemeInputStream(String name) throws IOException {
+    private static InputStream getPredefinedThemeInputStream(String name) {
         return ResourceLoader.getResourceAsStream(RuntimeConstants.THEMES_PATH + "/" + name + ".xml");
     }
 
@@ -746,9 +745,8 @@ public class ThemeManager {
      * Returns an input stream on the requested predefined theme for editor.
      * @param  name        name of the predefined editor theme on which to open an input stream.
      * @return             an input stream on the requested predefined theme.
-     * @throws IOException if an I/O related error occurs.
      */
-    private static InputStream getPredefinedEditorThemeInputStream(String name) throws IOException {
+    private static InputStream getPredefinedEditorThemeInputStream(String name) {
         return ResourceLoader.getResourceAsStream(RuntimeConstants.TEXT_SYNTAX_THEMES_PATH + "/" + name + ".xml");
     }
 

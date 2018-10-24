@@ -87,7 +87,7 @@ public class RandomGeneratorInputStream extends InputStream {
      * Always returns {@link Integer#MAX_VALUE}: this stream is bottomless.
      */
     @Override
-    public int available() throws IOException {
+    public int available() {
         return Integer.MAX_VALUE;
     }
 

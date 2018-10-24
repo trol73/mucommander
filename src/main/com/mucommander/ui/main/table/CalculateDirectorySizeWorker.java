@@ -45,7 +45,7 @@ public class CalculateDirectorySizeWorker extends SwingWorker<Long, Long> {
     }
 
     @Override
-    protected Long doInBackground() throws Exception {
+    protected Long doInBackground() {
         size = 0;
         try {
             calcDirectorySize(path);

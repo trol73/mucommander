@@ -163,8 +163,7 @@ public abstract class CompoundReader extends Reader {
             return true;
 
         if(currentReader ==null)
-            if(!advanceReader())
-                return true;
+            return !advanceReader();
 
         return false;
     }

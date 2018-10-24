@@ -201,8 +201,7 @@ public abstract class FileURLTestCase {
         Assert.assertTrue(url2.equals(url1, compareCredentials, compareProperties));
 
         // Compare hash codes only if both flags are true.
-        if(compareCredentials && compareProperties)
-            assert url1.hashCode()==url2.hashCode();
+        assert !compareCredentials || !compareProperties || url1.hashCode() == url2.hashCode();
     }
 
     /**
@@ -312,8 +311,7 @@ public abstract class FileURLTestCase {
                 || expectedAuthenticationType==AuthenticationType.AUTHENTICATION_REQUIRED
                 || expectedAuthenticationType==AuthenticationType.AUTHENTICATION_OPTIONAL;
 
-        if(expectedAuthenticationType== AuthenticationType.NO_AUTHENTICATION)
-            assert url.getGuestCredentials() == null;
+        assert expectedAuthenticationType != AuthenticationType.NO_AUTHENTICATION || url.getGuestCredentials() == null;
      }
 
     /**
@@ -702,10 +700,9 @@ public abstract class FileURLTestCase {
     /**
      * Tests a few invalid URLs and makes sure {@link FileURL#getFileURL} throws a <code>MalformedURLException</code>.
      *
-     * @throws MalformedURLException should not happen
      */
     @Test
-    public void testInvalidURLs() throws MalformedURLException {
+    public void testInvalidURLs() {
         // relative URLs
         assert !canParse("relative");
         assert !canParse("C:");

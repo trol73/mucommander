@@ -37,7 +37,7 @@ public class DjvuFactory implements ViewerFactory {
     }
 
     @Override
-    public boolean canViewFile(AbstractFile file) throws WarnUserException {
+    public boolean canViewFile(AbstractFile file) {
         return !file.isDirectory() && DJVU_FILTER.accept(file);
     }
 

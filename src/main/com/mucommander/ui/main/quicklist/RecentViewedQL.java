@@ -57,7 +57,7 @@ public class RecentViewedQL extends QuickListWithIcons<AbstractFile> {
     @Override
     protected AbstractFile[] getData() {
         List<AbstractFile> list = TextFilesHistory.getInstance().getLastList(MAX_FILES_IN_LIST);
-        return list.toArray(new AbstractFile[list.size()]);
+        return list.toArray(new AbstractFile[0]);
     }
 
     @Override

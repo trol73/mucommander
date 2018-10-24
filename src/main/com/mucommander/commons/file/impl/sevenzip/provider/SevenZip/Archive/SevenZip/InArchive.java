@@ -97,7 +97,7 @@ class InArchive extends Header {
         return value;
     }
     
-    int ReadBytes(byte data[], int size)  throws IOException {
+    int ReadBytes(byte data[], int size) {
         if (!_inByteBack.ReadBytes(data, size))
             return HRESULT.E_FAIL;
         return HRESULT.S_OK;

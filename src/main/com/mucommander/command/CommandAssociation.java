@@ -42,7 +42,7 @@ class CommandAssociation {
      * @param command command that must be executed if the association is matched.
      * @param filter  IMAGE_FILTER that files must match in order to be taken into account by the association.
      */
-    public CommandAssociation(Command command, FileFilter filter) {
+    CommandAssociation(Command command, FileFilter filter) {
         this.command    = command;
         this.fileFilter = filter;
     }

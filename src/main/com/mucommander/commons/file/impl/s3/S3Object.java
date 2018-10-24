@@ -51,7 +51,7 @@ public class S3Object extends S3File {
     private String getObjectKey() {
         String urlPath = fileURL.getPath();
         // Strip out the bucket name from the path
-        return urlPath.substring(bucketName.length()+2, urlPath.length());
+        return urlPath.substring(bucketName.length()+2);
     }
 
     private String getObjectKey(boolean wantTrailingSeparator) {
@@ -480,11 +480,11 @@ public class S3Object extends S3File {
             return i;
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return length;
         }
 
-        public synchronized long getOffset() throws IOException {
+        public synchronized long getOffset() {
             return offset;
         }
 
@@ -591,7 +591,7 @@ public class S3Object extends S3File {
             updateExpirationDate(); // declare the attributes as 'fresh'
         }
 
-        private S3ObjectFileAttributes(org.jets3t.service.model.S3Object object) throws AuthException {
+        private S3ObjectFileAttributes(org.jets3t.service.model.S3Object object) {
             super(TTL, false);      // no initial update
 
             setAttributes(object);

@@ -56,7 +56,7 @@ public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> {
 	@Override
     public AbstractFile[] getData() {
         List<AbstractFile> abstractFiles = populateParentFolders(folderPanel.getCurrentFolder());
-        return abstractFiles.toArray(new AbstractFile[abstractFiles.size()]);
+        return abstractFiles.toArray(new AbstractFile[0]);
 	}
 
 	@Override

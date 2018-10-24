@@ -55,7 +55,7 @@ public class MuTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
     }
 
 
-    private MuTerminalTtyConnector(PtyProcess process) throws IOException {
+    private MuTerminalTtyConnector(PtyProcess process) {
         super(process, Charset.forName("UTF-8"));
         this.process = process;
     }

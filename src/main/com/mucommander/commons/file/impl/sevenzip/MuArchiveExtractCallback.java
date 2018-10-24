@@ -126,7 +126,7 @@ public class MuArchiveExtractCallback implements IArchiveExtractCallback { // , 
     
     public int GetStream(int index,
             java.io.OutputStream [] outStream,
-            int askExtractMode) throws java.io.IOException {
+            int askExtractMode) {
 
     	SevenZipEntry item = _archiveHandler.getEntry(index);
         _filePath = item.getName();

@@ -134,7 +134,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
             getLogger().debug("Action keymap not modified, not saving");
     }
     
-    protected static void createEmptyFile() throws IOException {
+    protected static void createEmptyFile() {
     	writer.create();
     }
     

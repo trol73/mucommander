@@ -132,7 +132,7 @@ public class DeleteJob extends FileJob {
         int ret;
         if(!moveToTrash && file.isDirectory()) {
             String filePath = file.getAbsolutePath();
-            filePath = filePath.substring(getBaseSourceFolder().getAbsolutePath(false).length()+1, filePath.length());
+            filePath = filePath.substring(getBaseSourceFolder().getAbsolutePath(false).length()+1);
 
             // Important: symlinks must *not* be followed -- following symlinks could have disastrous effects.
             if(!file.isSymlink()) {

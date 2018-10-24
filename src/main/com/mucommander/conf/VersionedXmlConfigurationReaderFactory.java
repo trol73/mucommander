@@ -32,7 +32,7 @@ public class VersionedXmlConfigurationReaderFactory implements ConfigurationRead
     ///////////////////////////////////////////////
 
 
-    public ConfigurationReader getReaderInstance() throws ReaderConfigurationException {
+    public ConfigurationReader getReaderInstance() {
         return new VersionedXmlConfigurationReader();
     }
 }

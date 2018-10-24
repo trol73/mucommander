@@ -31,7 +31,7 @@ public class GzipArchiveFile extends AbstractROArchiveFile {
     ////////////////////////////////////////
 
     @Override
-    public ArchiveEntryIterator getEntryIterator() throws IOException {
+    public ArchiveEntryIterator getEntryIterator() {
         String extension = getExtension();
         String name = getName();
 		
@@ -51,7 +51,7 @@ public class GzipArchiveFile extends AbstractROArchiveFile {
 
 
     @Override
-    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
         return new GZIPInputStream(getInputStream());
     }
 }

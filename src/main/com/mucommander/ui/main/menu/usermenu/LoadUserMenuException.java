@@ -15,13 +15,16 @@ public class LoadUserMenuException extends Exception {
 
     private static String extractMessage(JSONException e) {
         String msg = e.getMessage();
+        if (!msg.contains("[character ") || !msg.contains(" line ") || !msg.contains("]")) {
+            return msg;
+        }
         int pos = msg.lastIndexOf('[');
         if (pos < 0) {
             return msg;
         } else {
-            msg = msg.substring(0, pos-1);
-            int posAt = msg.lastIndexOf("at ");
-            return posAt < 0 ? msg : msg.substring(0, posAt);
+            String firstPart = msg.substring(0, pos-1);
+            int posAt = firstPart.lastIndexOf("at ");
+            return posAt < 0 ? firstPart : firstPart.substring(0, posAt);
         }
     }
 

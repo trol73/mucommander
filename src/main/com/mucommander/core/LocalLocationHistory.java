@@ -100,8 +100,8 @@ public class LocalLocationHistory {
 		historyIndex++;
 
 		// Delete 'forward' history items if any
-		for (int i=historyIndex; i<historySize; i++) {
-			history.remove(historyIndex);
+		if (historySize > historyIndex) {
+			history.subList(historyIndex, historySize).clear();
 		}
 
 		// If capacity is reached, remove first folder

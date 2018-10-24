@@ -110,7 +110,7 @@ class BookmarkParser extends DefaultHandler implements BookmarkConstants {
      * Notifies the parser that a new XML node has been found.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         characters.setLength(0);
 
         if (qName.equals(ELEMENT_ROOT)) {

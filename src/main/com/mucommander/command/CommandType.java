@@ -56,12 +56,15 @@ public enum CommandType {
      * @return <code>type</code>'s integer equivalent.
      */
     public static CommandType parseCommandType(String value) {
-    	if (value == null)
-    		return NORMAL_COMMAND;
+    	if (value == null) {
+            return NORMAL_COMMAND;
+        }
 
-    	for (CommandType type : CommandType.values())
-    		if (value.equals(type.value))
-    			return type;
+    	for (CommandType type : CommandType.values()) {
+            if (value.equals(type.value)) {
+                return type;
+            }
+        }
 
     	return NORMAL_COMMAND;
     }

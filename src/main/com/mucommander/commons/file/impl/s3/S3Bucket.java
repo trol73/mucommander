@@ -174,7 +174,7 @@ public class S3Bucket extends S3File {
             updateExpirationDate(); // declare the attributes as 'fresh'
         }
 
-        private S3BucketFileAttributes(org.jets3t.service.model.S3Bucket bucket) throws AuthException {
+        private S3BucketFileAttributes(org.jets3t.service.model.S3Bucket bucket) {
             super(TTL, false);      // no initial update
 
             setAttributes(bucket);

@@ -33,5 +33,6 @@
     <orderEntry type="library" name="j2ssh-maverick-1.5.5" level="project" />
     <orderEntry type="library" name="iso9660-writer-2.0.0" level="project" />
     <orderEntry type="library" name="sabre-2.0.0" level="project" />
+    <orderEntry type="library" name="org.json:json:20180813" level="project" />
   </component>
 </module>

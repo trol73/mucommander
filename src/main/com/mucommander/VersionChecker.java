@@ -238,7 +238,7 @@ public class VersionChecker extends DefaultHandler {
      * Notifies the parser that a new tag is starting.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         // Checks whether we know the tag and updates the current state.
         switch (qName) {
             case VERSION_ELEMENT:
@@ -263,7 +263,7 @@ public class VersionChecker extends DefaultHandler {
      * Notifies the parser that the current element is finished.
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {state = STATE_UNKNOWN;}
+    public void endElement(String uri, String localName, String qName) {state = STATE_UNKNOWN;}
 
     /**
      * Notifies the parser that XML parsing is finished.

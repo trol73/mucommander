@@ -157,7 +157,7 @@ public class MuLogging {
 		return consoleAppender;
 	}
 
-	public static void configureLogging() throws IOException {
+	public static void configureLogging() {
 		// We're no longer using LogManager and a logging.properties file to initialize java.util.logging, because of
 		// a limitation with Webstart limiting the use of handlers and formatters residing in the system's classpath,
 		// i.e. built-in ones.

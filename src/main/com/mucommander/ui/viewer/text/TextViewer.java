@@ -249,7 +249,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     ///////////////////////////////
 
     @Override
-    public void show(AbstractFile file) throws IOException {
+    public void show(AbstractFile file) {
         initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {

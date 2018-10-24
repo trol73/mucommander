@@ -308,9 +308,11 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
     }
     
     static String GetStringForSizeValue(int value) {
-        for (int i = 31; i >= 0; i--)
-            if ((1 << i) == value)
+        for (int i = 31; i >= 0; i--) {
+            if ((1 << i) == value) {
                 return "" + i;
+            }
+        }
         String result = "";
         if (value % (1 << 20) == 0) {
             result += "" + (value >> 20);
@@ -326,59 +328,33 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
     }
     
     String getMethods(int index2) {
-        String ret = "";
-        
         int folderIndex = _database.fileIndexToFolderIndexMap.get(index2);
         if (folderIndex != InArchive.kNumNoIndex) {
             Folder folderInfo = _database.Folders.get(folderIndex);
-            String methodsString = "";
+            StringBuilder methodsString = new StringBuilder();
             for (int i = folderInfo.Coders.size() - 1; i >= 0; i--) {
                 CoderInfo coderInfo = folderInfo.Coders.get(i);
-                if (!methodsString.isEmpty())
-                    methodsString += ' ';
+                if (methodsString.length() != 0) {
+                    methodsString.append(' ');
+                }
                 
                 // MethodInfo methodInfo;
-                
-                boolean methodIsKnown;
-                
+
                 for (int j = 0; j < coderInfo.AltCoders.size(); j++) {
-                    if (j > 0)
-                        methodsString += "|";
+                    if (j > 0) {
+                        methodsString.append("|");
+                    }
                     AltCoderInfo altCoderInfo = coderInfo.AltCoders.get(j);
                     
-                    String methodName = "";
-                    
-                    methodIsKnown = true;
-                    
-                    if (altCoderInfo.MethodID.equals(MethodID.k_Copy))
-                        methodName = "Copy";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_LZMA))
-                        methodName = "LZMA";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_BCJ))
-                        methodName = "BCJ";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_BCJ2))
-                        methodName = "BCJ2";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_PPMD))
-                        methodName = "PPMD";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_Deflate))
-                        methodName = "Deflate";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_Deflate64))
-                        methodName = "Deflate64";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_BZip2))
-                        methodName = "BZip2";
-                    else if (altCoderInfo.MethodID.equals(MethodID.k_7zAES))
-                        methodName = "7zAES";
-                    else
-                        methodIsKnown = false;
-                    
-                    if (methodIsKnown) {
-                        methodsString += methodName;
+                    String methodName = getMethodName(altCoderInfo);
+                    if (methodName != null) {
+                        methodsString.append(methodName);
                         
                         if (altCoderInfo.MethodID.equals(MethodID.k_LZMA)) {
                             if (altCoderInfo.Properties.GetCapacity() >= 5) {
-                                methodsString += ":";
+                                methodsString.append(":");
                                 int dicSize = GetUInt32FromMemLE(altCoderInfo.Properties.data(),1);
-                                methodsString += GetStringForSizeValue(dicSize);
+                                methodsString.append(GetStringForSizeValue(dicSize));
                             }
                         }
                         /* else if (altCoderInfo.MethodID == k_PPMD) {
@@ -418,12 +394,36 @@ public class Handler implements com.mucommander.commons.file.impl.sevenzip.provi
                     }
                 }
             }
-            ret = methodsString;
+            return methodsString.toString();
         }
         
-        return ret;
+        return "";
     }
-    
+
+    private String getMethodName(AltCoderInfo altCoderInfo) {
+        if (altCoderInfo.MethodID.equals(MethodID.k_Copy)) {
+            return "Copy";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_LZMA)) {
+            return "LZMA";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_BCJ)) {
+            return "BCJ";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_BCJ2)) {
+            return "BCJ2";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_PPMD)) {
+            return "PPMD";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_Deflate)) {
+            return "Deflate";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_Deflate64)) {
+            return "Deflate64";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_BZip2)) {
+            return "BZip2";
+        } else if (altCoderInfo.MethodID.equals(MethodID.k_7zAES)) {
+            return "7zAES";
+        } else {
+            return null;
+        }
+    }
+
     public SevenZipEntry getEntry(int index) {
         com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.SevenZip.FileItem item = _database.Files.get(index);
 

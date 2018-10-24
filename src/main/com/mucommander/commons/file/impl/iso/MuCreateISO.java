@@ -44,7 +44,7 @@ public class MuCreateISO {
     private StreamHandler streamHandler;
     private MuFileHandler fileHandler;
 
-    public MuCreateISO(StreamHandler streamHandler, ISO9660RootDirectory root) throws FileNotFoundException {
+    public MuCreateISO(StreamHandler streamHandler, ISO9660RootDirectory root) {
         this.streamHandler = new LogicalSectorPaddingHandler(streamHandler, streamHandler);
         this.root = root;
     }

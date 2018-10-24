@@ -94,9 +94,10 @@ public class BOMWriter extends OutputStreamWriter {
      * @throws IOException if an error occurred while writing the BOM
      */
     protected void checkWriteBOM() throws IOException {
-        if(!bomWriteChecked) {
-            if(bom!=null)
+        if (!bomWriteChecked) {
+            if (bom != null) {
                 out.write(bom.getSignature());
+            }
 
             bomWriteChecked = true;
         }

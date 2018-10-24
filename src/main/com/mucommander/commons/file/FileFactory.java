@@ -534,7 +534,7 @@ public class FileFactory {
                     lastFileResolved = true;
                 } else {          // currentFile is an AbstractArchiveFile
                     // Note: wrapArchive() is already called by AbstractArchiveFile#createArchiveEntryFile()
-                    AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                    AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length()), pathSeparator));
                     if (tempEntryFile.isArchive()) {
                         currentFile = tempEntryFile;
                         lastFileResolved = true;
@@ -563,7 +563,7 @@ public class FileFactory {
                 // Add the final file instance to the cache
                 filePool.put(currentFile.getURL(), currentFile);
             } else {          // currentFile is an AbstractArchiveFile
-                currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length()), pathSeparator));
                 // Note: don't cache the entry file
             }
         }

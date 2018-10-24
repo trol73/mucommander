@@ -103,7 +103,7 @@ public class HexViewer extends FileViewer implements ThemeId {
 
 
     @Override
-    protected void show(AbstractFile file) throws IOException {
+    protected void show(AbstractFile file) {
         try {
             byteBuffer = new MuCommanderByteBuffer(file);
             model = new ViewerHexTableModel(byteBuffer);

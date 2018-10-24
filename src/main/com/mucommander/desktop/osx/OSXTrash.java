@@ -179,7 +179,7 @@ public class OSXTrash extends QueuedTrash {
             // create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
             // EOL characters. The file must NOT end with a trailing EOL.
 
-            tmpFile = FileFactory.getTemporaryFile("trash_files.muco", false);
+            tmpFile = FileFactory.getTemporaryFile("trash_files.trolcmd", false);
             try (OutputStreamWriter tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), StandardCharsets.UTF_8)) {
                 final int nbFiles = queuedFiles.size();
                 for (int i = 0; i < nbFiles; i++) {
@@ -193,8 +193,8 @@ public class OSXTrash extends QueuedTrash {
             }
 
             // Set the 'tmpFilePath' variable to the path of the temporary file we just created
-            String appleScript = "set tmpFilePath to \"" + tmpFile.getAbsolutePath() + "\"\n";
-            appleScript += MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
+            String appleScript = "set tmpFilePath to \"" + tmpFile.getAbsolutePath() + "\"\n"
+                + MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
 
             boolean success = AppleScript.execute(appleScript, null);
 

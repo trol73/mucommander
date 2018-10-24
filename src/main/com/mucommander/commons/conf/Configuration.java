@@ -1165,7 +1165,7 @@ public class Configuration {
          * Creates a new sub-section to the current section.
          * @param name name of the new section.
          */
-        public void startSection(String name) throws ConfigurationException {
+        public void startSection(String name) {
             ConfigurationSection buffer;
 
             buffer = currentSection.addSection(name);

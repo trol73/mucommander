@@ -36,7 +36,7 @@ public class Bzip2ArchiveFile extends AbstractROArchiveFile {
     ////////////////////////////////////////
 
     @Override
-    public ArchiveEntryIterator getEntryIterator() throws IOException {
+    public ArchiveEntryIterator getEntryIterator() {
         String extension = getExtension();
         String name = getName();
 		

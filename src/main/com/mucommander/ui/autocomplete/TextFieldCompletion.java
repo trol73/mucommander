@@ -85,7 +85,7 @@ public class TextFieldCompletion extends CompletionType {
                 case KeyEvent.VK_ENTER:
                 	if (isItemSelectedAtPopupList()) {
                 		hideAutocompletionPopup();
-                		acceptListItem((String)list.getSelectedValue());
+                		acceptListItem(list.getSelectedValue());
                 		keyEvent.consume();
                 	}
                 	else

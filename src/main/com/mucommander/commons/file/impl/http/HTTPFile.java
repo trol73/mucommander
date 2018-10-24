@@ -657,7 +657,7 @@ public class HTTPFile extends ProtocolFile {
         String enc = null;
         // Extract content type information (if any)
         if ((pos = contentType.indexOf("charset")) >= 0 || (pos = contentType.indexOf("Charset")) >= 0) {
-            StringTokenizer st = new StringTokenizer(contentType.substring(pos, contentType.length()));
+            StringTokenizer st = new StringTokenizer(contentType.substring(pos));
             enc = st.nextToken();
         }
         return enc;
@@ -785,7 +785,7 @@ public class HTTPFile extends ProtocolFile {
             }
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return length;
         }
 

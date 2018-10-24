@@ -106,7 +106,7 @@ public class EjectDriveAction extends SelectedFilesAction {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             try {
                 publish();
                 StringBuilder sb = new StringBuilder();

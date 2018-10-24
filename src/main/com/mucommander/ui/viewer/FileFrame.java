@@ -106,6 +106,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
                     // key dispatcher for Esc detection
                     final KeyEventDispatcher keyEventDispatcher = e -> {
                         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                            e.consume();
                             cancel();
                             setVisible(false);
                             dispose();
@@ -198,6 +199,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
             if (returnFocusTo != null) {
                 FocusRequester.requestFocus(returnFocusTo);
                 if (returnFocusTo instanceof FileFrame) {
+                    //SwingUtilities.invokeLater(() -> FocusRequester.requestFocus(((FileFrame)returnFocusTo).filePresenter));
                     FocusRequester.requestFocus(((FileFrame)returnFocusTo).filePresenter);
                     //((FileFrame)returnFocusTo).filePresenter
                 }

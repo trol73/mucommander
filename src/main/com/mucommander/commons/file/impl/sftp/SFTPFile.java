@@ -936,16 +936,16 @@ public class SFTPFile extends ProtocolFile {
             return in.read();
         }
 
-        public long getOffset() throws IOException {
+        public long getOffset() {
             // Custom method, not part of the official J2SSH API
             return in.getPosition();
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return getSize();
         }
 
-        public void seek(long offset) throws IOException {
+        public void seek(long offset) {
             // Custom method, not part of the official J2SSH API
             in.setPosition(offset);
         }

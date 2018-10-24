@@ -59,7 +59,7 @@ public class CompareImagesPanel extends JPanel {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             if (file == null) {
                 return null;
             }

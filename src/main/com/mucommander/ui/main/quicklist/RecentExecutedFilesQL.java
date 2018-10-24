@@ -81,7 +81,7 @@ public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
 
 	@Override
     protected AbstractFile[] getData() {
-		return list.toArray(new AbstractFile[list.size()]);
+		return list.toArray(new AbstractFile[0]);
 	}
 
 	@Override

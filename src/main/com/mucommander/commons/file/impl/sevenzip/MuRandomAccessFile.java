@@ -24,7 +24,7 @@ public class MuRandomAccessFile extends IInStream {
 	
 	private long position;
 	
-	public MuRandomAccessFile(AbstractFile file) throws UnsupportedFileOperationException {
+	public MuRandomAccessFile(AbstractFile file) {
 		super();
 		position = 0;
 		this.file = file;

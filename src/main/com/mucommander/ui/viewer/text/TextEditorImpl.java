@@ -28,6 +28,7 @@ import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
 import com.mucommander.ui.theme.*;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.FileFrame;
+import com.mucommander.ui.viewer.FileFrameCreateListener;
 import com.mucommander.ui.viewer.ViewerRegistrar;
 import com.mucommander.ui.viewer.text.search.FindDialog;
 import com.mucommander.ui.viewer.text.search.ReplaceDialog;
@@ -475,7 +476,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
             splitPane.add(frame.getFilePresenter());
             splitPane.setDividerLocation(frame.getHeight()*2/3);
             splitPane.setOneTouchExpandable(true);
-            pnlBuild = new ExecPanel(this::closeBuildPanel);
+            pnlBuild = new ExecPanel(this::closeBuildPanel, this::gotoBuildError);
 
             splitPane.add(pnlBuild);
             frame.getContentPane().remove(frame.getFilePresenter());
@@ -494,6 +495,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         pnlBuild.doLayout();
     }
 
+
     private void closeBuildPanel() {
 	    if (splitPane == null || pnlBuild == null) {
 	        return;
@@ -507,6 +509,21 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         }
         splitPane.setDividerSize(0);
     }
+
+    private void gotoBuildError(AbstractFile file, int line, int column) {
+	    if (this.file.getAbsolutePath().equals(file.getAbsolutePath())) {
+	        textArea.gotoLine(line, column);
+        } else {
+            TextFilesHistory.FileRecord historyRecord = TextFilesHistory.getInstance().get(file);
+            historyRecord.update(line, line, column >= 0 ? column : 0, historyRecord.getFileType(), historyRecord.getEncoding());
+            openOtherFile(file, fileFrame -> {
+                fileFrame.returnFocusTo(fileFrame);
+                TextArea newTextArea = ((TextEditor)fileFrame.getFilePresenter()).getTextArea();
+                SwingUtilities.invokeLater(() -> newTextArea.gotoLine(line, column));
+            });
+        }
+    }
+
 
     public StatusBar getStatusBar() {
         return statusBar;
@@ -627,12 +644,18 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         }
     }
 
-    private void openOtherFile(AbstractFile path) {
+    private void openOtherFile(AbstractFile path, FileFrameCreateListener createListener) {
         if (textArea.isEditable()) {
-            EditorRegistrar.createEditorFrame(frame.getMainFrame(), path, ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage());
+            EditorRegistrar.createEditorFrame(frame.getMainFrame(), path,
+                    ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage(), createListener);
         } else {
-            ViewerRegistrar.createViewerFrame(frame.getMainFrame(), path, ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage());
+            ViewerRegistrar.createViewerFrame(frame.getMainFrame(), path,
+                    ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage(), createListener);
         }
+    }
+
+    private void openOtherFile(AbstractFile path) {
+	    openOtherFile(path, null);
     }
 
 

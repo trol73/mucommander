@@ -290,8 +290,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
         int bestMatch = startsWithCaseMatch != -1 ? startsWithCaseMatch
             : startsWithNoCaseMatch != -1 ? startsWithNoCaseMatch
             : containsCaseMatch !=-1 ? containsCaseMatch
-            : containsNoCaseMatch != -1 ? containsNoCaseMatch
-            : -1;
+            : containsNoCaseMatch;
         LOGGER.trace("startsWithCaseMatch="+startsWithCaseMatch+" containsCaseMatch="+containsCaseMatch+" startsWithNoCaseMatch="+startsWithNoCaseMatch+" containsNoCaseMatch="+containsNoCaseMatch);
         LOGGER.trace("bestMatch="+bestMatch);
 

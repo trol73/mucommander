@@ -19,6 +19,20 @@
 
 package com.mucommander.commons.file.impl.local;
 
+import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.filter.FilenameFilter;
+import com.mucommander.commons.file.util.Kernel32;
+import com.mucommander.commons.file.util.Kernel32API;
+import com.mucommander.commons.file.util.PathUtils;
+import com.mucommander.commons.io.BufferPool;
+import com.mucommander.commons.io.FilteredOutputStream;
+import com.mucommander.commons.io.RandomAccessInputStream;
+import com.mucommander.commons.io.RandomAccessOutputStream;
+import com.mucommander.commons.runtime.JavaVersion;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.commons.runtime.OsVersion;
+import ru.trolsoft.jni.NativeFileUtils;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -32,21 +46,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.mucommander.commons.file.*;
-import com.mucommander.commons.file.filter.FilenameFilter;
-import com.mucommander.commons.file.util.Kernel32;
-import com.mucommander.commons.file.util.Kernel32API;
-import com.mucommander.commons.file.util.PathUtils;
-import com.mucommander.commons.io.BufferPool;
-import com.mucommander.commons.io.FilteredOutputStream;
-import com.mucommander.commons.io.RandomAccessInputStream;
-import com.mucommander.commons.io.RandomAccessOutputStream;
-import com.mucommander.commons.runtime.JavaVersion;
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.commons.runtime.OsVersion;
-import com.sun.jna.ptr.LongByReference;
-import ru.trolsoft.jni.NativeFileUtils;
 
 
 /**
@@ -82,7 +81,11 @@ import ru.trolsoft.jni.NativeFileUtils;
  */
 public class LocalFile extends ProtocolFile {
 	private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(LocalFile.class);
+
     private static final boolean IS_UNIX_BASED = OsFamily.getCurrent().isUnixBased();
+    /** Are we running Windows ? */
+    private static final boolean IS_WINDOWS = OsFamily.WINDOWS.isCurrent();
+
 
     protected File file;
     private FilePermissions permissions;
@@ -93,20 +96,18 @@ public class LocalFile extends ProtocolFile {
     /** Caches the parent folder, initially null until getParent() gets called */
     protected AbstractFile parent;
     /** Indicates whether the parent folder instance has been retrieved and cached or not (parent can be null) */
-    protected boolean parentValueSet;
+    private boolean parentValueSet;
 	
     /** Underlying local filesystem's path separator: "/" under UNIX systems, "\" under Windows and OS/2 */
     public final static String SEPARATOR = File.separator;
 
-    /** Are we running Windows ? */
-    private final static boolean IS_WINDOWS =  OsFamily.WINDOWS.isCurrent();
 
     /** True if the underlying local filesystem uses drives assigned to letters (e.g. A:\, C:\, ...) instead
      * of having single a root folder '/' */
     public final static boolean USES_ROOT_DRIVES = IS_WINDOWS || OsFamily.OS_2.isCurrent();
 
     /** Pattern matching Windows-like drives' root, e.g. C:\ */
-    final static Pattern DRIVE_ROOT_PATTERN = Pattern.compile("^[a-zA-Z]{1}[:]{1}[\\\\]{1}");
+    final static Pattern DRIVE_ROOT_PATTERN = Pattern.compile("^[a-zA-Z][:][\\\\]");
 
     // Permissions can only be changed under Java 1.6 and up and are limited to 'user' access.
     // Note: 'read' and 'execute' permissions have no meaning under Windows (files are either read-only or
@@ -118,13 +119,15 @@ public class LocalFile extends ProtocolFile {
     /** Changeable permissions mask for Java 1.6 and up, on Windows OS (any version) */
     private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS = new GroupedPermissionBits(128);   // -w------- (200 octal)
 
-    /** Changeable permissions mask for Java 1.5 or below */
-    private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_5 = PermissionBits.EMPTY_PERMISSION_BITS;   // --------- (0)
+//    /** Changeable permissions mask for Java 1.5 or below */
+//    private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_5 = PermissionBits.EMPTY_PERMISSION_BITS;   // --------- (0)
 
     /** Bit mask that indicates which permissions can be changed */
-    private final static PermissionBits CHANGEABLE_PERMISSIONS = JavaVersion.JAVA_1_6.isCurrentOrHigher()
-            ?(IS_WINDOWS?CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS:CHANGEABLE_PERMISSIONS_JAVA_1_6_NON_WINDOWS)
-            : CHANGEABLE_PERMISSIONS_JAVA_1_5;
+    private final static PermissionBits CHANGEABLE_PERMISSIONS =
+            IS_WINDOWS ? CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS : CHANGEABLE_PERMISSIONS_JAVA_1_6_NON_WINDOWS;
+//            JavaVersion.JAVA_1_6.isCurrentOrHigher()
+//            ? (IS_WINDOWS ? CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS : CHANGEABLE_PERMISSIONS_JAVA_1_6_NON_WINDOWS)
+//            : CHANGEABLE_PERMISSIONS_JAVA_1_5;
 
     /**
  	 * List of known UNIX filesystems.
@@ -171,7 +174,7 @@ public class LocalFile extends ProtocolFile {
 
             // Remove the leading '/' for Windows-like paths
             if (USES_ROOT_DRIVES) {
-                path = path.substring(1, path.length());
+                path = path.substring(1);
             }
             
             // create the java.io.File instance and throw an exception if the path is not absolute.
@@ -193,7 +196,7 @@ public class LocalFile extends ProtocolFile {
 
             // Remove the leading '/' for Windows-like paths
             if (USES_ROOT_DRIVES) {
-                absPath = absPath.substring(1, absPath.length());
+                absPath = absPath.substring(1);
             }
         }
 
@@ -229,171 +232,187 @@ public class LocalFile extends ProtocolFile {
      */
     public long[] getVolumeInfo() throws IOException {
         // Under Java 1.6 and up, use the (new) java.io.File methods
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+//        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             return new long[] {
                 getTotalSpace(),
                 getFreeSpace()
             };
-        }
+//        }
 
         // Under Java 1.5 or lower, use native methods
-        return getNativeVolumeInfo();
+//        return getNativeVolumeInfo();
     }
 
-    /**
-     * Uses platform dependent functions to retrieve the total and free space on the volume where this file resides.
-     *
-     * @return a {totalSpace, freeSpace} long array, both values can be <code>null</code> if the information could not
-     * be retrieved.
-     * @throws IOException if an I/O error occurred
-     */
-    protected long[] getNativeVolumeInfo() throws IOException {
-        BufferedReader br = null;
-        String absPath = getAbsolutePath();
-        long dfInfo[] = new long[]{-1, -1};
+//    /**
+//     * Uses platform dependent functions to retrieve the total and free space on the volume where this file resides.
+//     *
+//     * @return a {totalSpace, freeSpace} long array, both values can be <code>null</code> if the information could not
+//     * be retrieved.
+//     * @throws IOException if an I/O error occurred
+//     */
+//    protected long[] getNativeVolumeInfo() throws IOException {
+//        if (IS_WINDOWS) {
+//            return getWindowsVolumeInfo(getAbsolutePath());
+//        } else if (IS_UNIX_BASED) {
+//            return getUnixVolumeInfo(getAbsolutePath());
+//        }
+//
+//        return new long[]{-1, -1};
+//    }
 
-        try {
-            // OS is Windows
-            if(IS_WINDOWS) {
-                // Use the Kernel32 DLL if it is available
-                if(Kernel32.isAvailable()) {
-                    // Retrieves the total and free space information using the GetDiskFreeSpaceEx function of the
-                    // Kernel32 API.
-                    LongByReference totalSpaceLBR = new LongByReference();
-                    LongByReference freeSpaceLBR = new LongByReference();
 
-                    if (Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
-                        dfInfo[0] = totalSpaceLBR.getValue();
-                        dfInfo[1] = freeSpaceLBR.getValue();
-                    } else {
-                        logger.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
-                    }
-                }
-                // Otherwise, parse the output of 'dir "filePath"' command to retrieve free space information, if
-                // running Window NT or higher.
-                // Note: no command invocation under Windows 95/98/Me, because it causes a shell window to
-                // appear briefly every time this method is called (See ticket #63).
-                else if (OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
-                    // 'dir' command returns free space on the last line
-                    Process process = Runtime.getRuntime().exec(
-                            (OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT)>=0 ? "cmd /c" : "command.com /c")
-                            + " dir \""+absPath+"\"");
 
-                    // Check that the process was correctly started
-                    if (process != null) {
-                        br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line;
-                        String lastLine = null;
-                        // Retrieves last line of dir
-                        while((line=br.readLine())!=null) {
-                            if (!line.trim().isEmpty()) {
-                                lastLine = line;
-                            }
-                        }
-
-                        // Last dir line may look like something this (might vary depending on system's language, below in French):
-                        // 6 Rep(s)  14 767 521 792 octets libres
-                        if(lastLine!=null) {
-                            StringTokenizer st = new StringTokenizer(lastLine, " \t\n\r\f,.");
-                            // Discard first token
-                            st.nextToken();
-
-                            // Concatenates as many contiguous groups of numbers
-                            String token;
-                            String freeSpace = "";
-                            while(st.hasMoreTokens()) {
-                                token = st.nextToken();
-                                char c = token.charAt(0);
-                                if(c>='0' && c<='9')
-                                    freeSpace += token;
-                                else if(!freeSpace.isEmpty())
-                                    break;
-                            }
-
-                            dfInfo[1] = Long.parseLong(freeSpace);
-                        }
-                    }
-                }
-            } else if (IS_UNIX_BASED) {
-                // Parses the output of 'df -P -k "filePath"' command on UNIX-based systems to retrieve free and total space information
-
-                // 'df -P -k' returns totals in block of 1K = 1024 bytes, -P uses the POSIX output format, ensures that line won't break
-                Process process = Runtime.getRuntime().exec(new String[]{"df", "-P", "-k", absPath}, null, file);
-
-                // Check that the process was correctly started
-                if (process!=null) {
-                    br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    // Discard the first line ("Filesystem   1K-blocks     Used    Avail Capacity  Mounted on");
-                    br.readLine();
-                    String line = br.readLine();
-
-                    // Sample lines:
-                    // /dev/disk0s2            116538416 109846712  6179704    95%    /
-                    // automount -fstab [202]          0         0        0   100%    /automount/Servers
-                    // /dev/disk2s2                 2520      1548      972    61%    /Volumes/muCommander 0.8
-
-                    // We're interested in the '1K-blocks' and 'Avail' fields (only).
-                    // The 'Filesystem' and 'Mounted On' fields can contain spaces (e.g. 'automount -fstab [202]' and
-                    // '/Volumes/muCommander 0.8' resp.) and therefore be made of several tokens. A stable way to
-                    // determine the position of the fields we're interested in is to look for the last token that
-                    // starts with a '/' character which should necessarily correspond to the first token of the
-                    // 'Mounted on' field. The '1K-blocks' and 'Avail' fields are 4 and 2 tokens away from it
-                    // respectively.
-
-                    // Start by tokenizing the whole line
-                    List<String> tokenV = new ArrayList<>();
-                    if(line!=null) {
-                        StringTokenizer st = new StringTokenizer(line);
-                        while(st.hasMoreTokens())
-                            tokenV.add(st.nextToken());
-                    }
-
-                    int nbTokens = tokenV.size();
-                    if (nbTokens < 6) {
-                        // This shouldn't normally happen
-                    	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
-                        return dfInfo;
-                    }
-
-                    // Find the last token starting with '/'
-                    int pos = nbTokens-1;
-                    while (!tokenV.get(pos).startsWith("/")) {
-                        if (pos == 0) {
-                            // This shouldn't normally happen
-                        	logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
-                            return dfInfo;
-                        }
-
-                        --pos;
-                    }
-
-                    // '1-blocks' field (total space)
-                    dfInfo[0] = Long.parseLong(tokenV.get(pos - 4)) * 1024;
-                    // 'Avail' field (free space)
-                    dfInfo[1] = Long.parseLong(tokenV.get(pos - 2)) * 1024;
-                }
-
-//                // Retrieves the total and free space information using the POSIX statvfs function
-//                POSIX.STATVFSSTRUCT struct = new POSIX.STATVFSSTRUCT();
-//                if(POSIX.INSTANCE.statvfs(absPath, struct)==0) {
-//                    dfInfo[0] = struct.f_blocks * (long)struct.f_frsize;
-//                    dfInfo[1] = struct.f_bfree * (long)struct.f_frsize;
+//    private long[] getWindowsVolumeInfo(String absPath) throws IOException {
+//        long dfInfo[] = new long[]{-1, -1};
+//        // Use the Kernel32 DLL if it is available
+//        if (Kernel32.isAvailable()) {
+//            // Retrieves the total and free space information using the GetDiskFreeSpaceEx function of the
+//            // Kernel32 API.
+//            LongByReference totalSpaceLBR = new LongByReference();
+//            LongByReference freeSpaceLBR = new LongByReference();
+//
+//            if (Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
+//                dfInfo[0] = totalSpaceLBR.getValue();
+//                dfInfo[1] = freeSpaceLBR.getValue();
+//            } else {
+//                logger.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
+//            }
+//        } else if (OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
+//            // Otherwise, parse the output of 'dir "filePath"' command to retrieve free space information, if
+//            // running Window NT or higher.
+//            // Note: no command invocation under Windows 95/98/Me, because it causes a shell window to
+//            // appear briefly every time this method is called (See ticket #63).
+//
+//            // 'dir' command returns free space on the last line
+//            Process process = Runtime.getRuntime().exec(
+//                    (OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT)>=0 ? "cmd /c" : "command.com /c")
+//                            + " dir \""+absPath+"\"");
+//
+//            // Check that the process was correctly started
+//            if (process != null) {
+//                String lastLine = readLastLine(process.getInputStream());
+//
+//                // Last dir line may look like something this (might vary depending on system's language, below in French):
+//                // 6 Rep(s)  14 767 521 792 octets libres
+//                if (lastLine != null) {
+//                    StringTokenizer st = new StringTokenizer(lastLine, " \t\n\r\f,.");
+//                    // Discard first token
+//                    st.nextToken();
+//
+//                    // Concatenates as many contiguous groups of numbers
+//                    String token;
+//                    String freeSpace = "";
+//                    while(st.hasMoreTokens()) {
+//                        token = st.nextToken();
+//                        char c = token.charAt(0);
+//                        if (c >= '0' && c <= '9') {
+//                            freeSpace += token;
+//                        } else if(!freeSpace.isEmpty()) {
+//                            break;
+//                        }
+//                    }
+//
+//                    dfInfo[1] = Long.parseLong(freeSpace);
 //                }
-            }
-        } finally {
-            // TODO use autoclose
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ignore) {
-                }
-            }
-        }
+//            }
+//        }
+//        return dfInfo;
+//    }
+//
+//    private long[] getUnixVolumeInfo(String absPath) throws IOException {
+//        long dfInfo[] = new long[]{-1, -1};
+//        // Parses the output of 'df -P -k "filePath"' command on UNIX-based systems to retrieve free and total space information
+//
+//        // 'df -P -k' returns totals in block of 1K = 1024 bytes, -P uses the POSIX output format, ensures that line won't break
+//        Process process = Runtime.getRuntime().exec(new String[]{"df", "-P", "-k", absPath}, null, file);
+//
+//        // Check that the process was correctly started
+//        if (process != null) {
+//            // Discard the first line ("Filesystem   1K-blocks     Used    Avail Capacity  Mounted on");
+//            String line = readSecondLine(process.getInputStream());
+//
+//            // Sample lines:
+//            // /dev/disk0s2            116538416 109846712  6179704    95%    /
+//            // automount -fstab [202]          0         0        0   100%    /automount/Servers
+//            // /dev/disk2s2                 2520      1548      972    61%    /Volumes/muCommander 0.8
+//
+//            // We're interested in the '1K-blocks' and 'Avail' fields (only).
+//            // The 'Filesystem' and 'Mounted On' fields can contain spaces (e.g. 'automount -fstab [202]' and
+//            // '/Volumes/muCommander 0.8' resp.) and therefore be made of several tokens. A stable way to
+//            // determine the position of the fields we're interested in is to look for the last token that
+//            // starts with a '/' character which should necessarily correspond to the first token of the
+//            // 'Mounted on' field. The '1K-blocks' and 'Avail' fields are 4 and 2 tokens away from it
+//            // respectively.
+//
+//            // Start by tokenizing the whole line
+//            List<String> tokenV = new ArrayList<>();
+//            if (line != null) {
+//                StringTokenizer st = new StringTokenizer(line);
+//                while(st.hasMoreTokens()) {
+//                    tokenV.add(st.nextToken());
+//                }
+//            }
+//
+//            int nbTokens = tokenV.size();
+//            if (nbTokens < 6) {
+//                // This shouldn't normally happen
+//                logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
+//                return dfInfo;
+//            }
+//
+//            // Find the last token starting with '/'
+//            int pos = nbTokens-1;
+//            while (!tokenV.get(pos).startsWith("/")) {
+//                if (pos == 0) {
+//                    // This shouldn't normally happen
+//                    logger.warn("Failed to parse output of df -k {} line={}", absPath, line);
+//                    return dfInfo;
+//                }
+//
+//                --pos;
+//            }
+//
+//            // '1-blocks' field (total space)
+//            dfInfo[0] = Long.parseLong(tokenV.get(pos - 4)) * 1024;
+//            // 'Avail' field (free space)
+//            dfInfo[1] = Long.parseLong(tokenV.get(pos - 2)) * 1024;
+//        }
+//
+////                // Retrieves the total and free space information using the POSIX statvfs function
+////                POSIX.STATVFSSTRUCT struct = new POSIX.STATVFSSTRUCT();
+////                if(POSIX.INSTANCE.statvfs(absPath, struct)==0) {
+////                    dfInfo[0] = struct.f_blocks * (long)struct.f_frsize;
+////                    dfInfo[1] = struct.f_bfree * (long)struct.f_frsize;
+////                }
+//
+//        return dfInfo;
+//    }
+//
+//
+//    @Nullable
+//    private String readLastLine(InputStream is) throws IOException {
+//        String lastLine = null;
+//        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+//            String line;
+//            // Retrieves last line of dir
+//            while ((line = br.readLine()) != null) {
+//                if (!line.trim().isEmpty()) {
+//                    lastLine = line;
+//                }
+//            }
+//            return lastLine;
+//        }
+//    }
+//
+//    private static String readSecondLine(InputStream is) throws IOException {
+//        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+//            br.readLine();
+//            return br.readLine();
+//        }
+//    }
 
-        return dfInfo;
-    }
 
-	
+
     /**
      * Attemps to detect if this file is the root of a removable media drive (floppy, CD, DVD, USB drive...).
      * This method produces accurate results only under Windows.
@@ -403,7 +422,7 @@ public class LocalFile extends ProtocolFile {
     public boolean guessRemovableDrive() {
         if (IS_WINDOWS && Kernel32.isAvailable()) {
             int driveType = Kernel32.getInstance().GetDriveType(getAbsolutePath(true));
-            if (driveType!=Kernel32API.DRIVE_UNKNOWN) {
+            if (driveType != Kernel32API.DRIVE_UNKNOWN) {
                 return driveType == Kernel32API.DRIVE_REMOVABLE || driveType == Kernel32API.DRIVE_CDROM;
             }
         }
@@ -686,9 +705,9 @@ public class LocalFile extends ProtocolFile {
     public AbstractFile getParent() {
         // Retrieve the parent AbstractFile instance and cache it
         if (!parentValueSet) {
-            if(!isRoot()) {
+            if (!isRoot()) {
                 FileURL parentURL = getURL().getParent();
-                if(parentURL != null) {
+                if (parentURL != null) {
                     parent = FileFactory.getFile(parentURL);
                 }
             }
@@ -881,9 +900,7 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public void delete() throws IOException {
-        boolean ret = file.delete();
-		
-        if (!ret) {
+        if (!file.delete()) {
             throw new IOException();
         }
     }
@@ -947,15 +964,15 @@ public class LocalFile extends ProtocolFile {
                 if (destFile.exists()) {
                     if (!destJavaIoFile.delete()) {
                         throw new IOException();
-            }
+                    }
                 }
-            }
-            // Windows NT: Kernel32's MoveFileEx can be used, if the Kernel32 DLL is available.
-            else if (Kernel32.isAvailable()) {
+            } else if (Kernel32.isAvailable()) {
+                // Windows NT: Kernel32's MoveFileEx can be used, if the Kernel32 DLL is available.
+
                 // Note: MoveFileEx is always used, even if the destination file does not exist, to avoid having to
                 // call #exists() on the destination file which has a cost.
                 if (!Kernel32.getInstance().MoveFileEx(absPath, destFile.getAbsolutePath(),
-                        Kernel32API.MOVEFILE_REPLACE_EXISTING|Kernel32API.MOVEFILE_WRITE_THROUGH)) {
+                        Kernel32API.MOVEFILE_REPLACE_EXISTING | Kernel32API.MOVEFILE_WRITE_THROUGH)) {
                 	String errorMessage = Integer.toString(Kernel32.getInstance().GetLastError());
                 	// TODO: use Kernel32.FormatMessage
                     throw new IOException("Rename using Kernel32 API failed: " + errorMessage);
@@ -969,7 +986,7 @@ public class LocalFile extends ProtocolFile {
 
         if (!file.renameTo(destJavaIoFile)) {
             throw new IOException();
-    }
+        }
     }
 
     @Override
@@ -1065,9 +1082,9 @@ public class LocalFile extends ProtocolFile {
         try {
             String canonicalPath = file.getCanonicalPath();
             // Append separator for directories
-            if (isDirectory() && !canonicalPath.endsWith(SEPARATOR))
-                canonicalPath = canonicalPath + SEPARATOR;
-
+            if (isDirectory() && !canonicalPath.endsWith(SEPARATOR)) {
+                return canonicalPath + SEPARATOR;
+            }
             return canonicalPath;
         } catch(IOException e) {
             return absPath;
@@ -1092,12 +1109,12 @@ public class LocalFile extends ProtocolFile {
         int nbFiles = files.length;
         AbstractFile children[] = new AbstractFile[nbFiles];
 
-        for(int i=0; i<nbFiles; i++) {
+        for(int i = 0; i < nbFiles; i++) {
             // Clone the FileURL of this file and set the child's path, this is more efficient than creating a new
             // FileURL instance from scratch.
             FileURL childURL = (FileURL)fileURL.clone();
 
-			childURL.setPath(absPath+SEPARATOR+files[i].getName());
+			childURL.setPath(absPath + SEPARATOR + files[i].getName());
 
             // Retrieves an AbstractFile (LocalFile or AbstractArchiveFile) instance that's potentially already in
             // the cache, reuse this file as the file's parent, and the already-created java.io.File instance.
@@ -1137,7 +1154,7 @@ public class LocalFile extends ProtocolFile {
     @Override
     public AbstractFile getRoot() {
         if (USES_ROOT_DRIVES) {
-            Matcher matcher = DRIVE_ROOT_PATTERN.matcher(absPath+SEPARATOR);
+            Matcher matcher = DRIVE_ROOT_PATTERN.matcher(absPath + SEPARATOR);
 
             // Test if this file already is the root folder
             if (matcher.matches()) {
@@ -1347,11 +1364,10 @@ public class LocalFile extends ProtocolFile {
 
         @Override
         public void write(byte b[], int off, int len) throws IOException {
-            int nbToWrite;
             synchronized(bb) {
                 do {
                     bb.position(0);
-                    nbToWrite = Math.min(bb.capacity(), len);
+                    int nbToWrite = Math.min(bb.capacity(), len);
                     bb.limit(nbToWrite);
 
                     bb.put(b, off, nbToWrite);
@@ -1362,7 +1378,7 @@ public class LocalFile extends ProtocolFile {
                     len -= nbToWrite;
                     off += nbToWrite;
                 }
-                while(len>0);
+                while(len > 0);
             }
         }
 
@@ -1379,8 +1395,9 @@ public class LocalFile extends ProtocolFile {
             if (newLength<currentLength) {
                 // Truncate the file and position the offset to the new EOF if it was beyond
                 channel.truncate(newLength);
-                if(currentPos>newLength)
+                if (currentPos > newLength) {
                     channel.position(newLength);
+                }
             } else {
                 // Expand the file by positionning the offset at the new EOF and writing a byte, and reposition the
                 // offset to where it was

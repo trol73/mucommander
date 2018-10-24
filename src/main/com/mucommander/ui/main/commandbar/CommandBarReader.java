@@ -109,7 +109,7 @@ class CommandBarReader extends CommandBarIO {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         if(qName.equals(BUTTON_ELEMENT)) {
         	// Resolve action id
         	String actionIdAttribute = attributes.getValue(ACTION_ID_ATTRIBUTE);

@@ -231,7 +231,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    private static byte[] loadFile(AbstractFile file) throws IOException {
+    private static byte[] loadFile(AbstractFile file) {
         byte[] data = new byte[(int) file.getSize()];
         try (InputStream is = file.getInputStream()) {
             int readTotal = 0;

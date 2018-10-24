@@ -187,7 +187,7 @@ public class BoundedReader extends FilterReader {
      * Always throws an <code>IOException</code>: the call is *not* delegated to the underlying reader.
      */
     @Override
-    public synchronized void reset() throws IOException {
+    public synchronized void reset() {
         // Todo: in theory we could support mark/reset
         // No-op
     }

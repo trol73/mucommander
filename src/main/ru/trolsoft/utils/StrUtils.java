@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2018 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,10 @@ public class StrUtils {
     private static final String[] HEX_BYTE_STRINGS = new String[256];
     private static final String[] BINARY_BYTE_STRINGS = new String[256];
     private static final String[] OCTAL_BYTE_STRINGS = new String[256];
+
+    private static final char UTF_16_BE_MARKER = 0xFEFF;
+    private static final char UTF_16_LE_MARKER = 0xFFFE;
+
 
     /**
      *
@@ -155,6 +159,20 @@ public class StrUtils {
         return DatatypeConverter.parseHexBinary(text);
     }
 
+    public static boolean hasUtfMarker(String s) {
+        if (s == null || s.isEmpty()) {
+            return false;
+        }
+        char firstChar = s.charAt(0);
+        return firstChar == UTF_16_BE_MARKER || firstChar == UTF_16_LE_MARKER;
+    }
+
+    public static String removeUtfMarker(String s) {
+        if (s == null) {
+            return null;
+        }
+        return hasUtfMarker(s) ? s.substring(1) : s;
+    }
 
 
 }

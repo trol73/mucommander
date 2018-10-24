@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2017 Oleg Trifonov
+ * Copyright (C) 2013-2018 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,19 @@ import com.mucommander.process.AbstractProcess;
 import com.mucommander.process.ProcessListener;
 import com.mucommander.shell.Shell;
 import com.mucommander.ui.icon.SpinningDial;
-import com.mucommander.ui.theme.Theme;
-import com.mucommander.ui.theme.ThemeManager;
+import ru.trolsoft.utils.StringStream;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.PrintStream;
+
 
 public class ExecPanel extends JPanel implements ProcessListener {
 
-    private JTextArea outputTextArea;
+    private ExecOutputTextPane outputPane;
     private SpinningDial dial;
     private JLabel lblDial;
-    private final Runnable onClose;
+    private final StringStream stringStream = new StringStream();
 
     /** Stream used to send characters to the process' stdin process. */
     private PrintStream processInput;
@@ -44,54 +42,14 @@ public class ExecPanel extends JPanel implements ProcessListener {
     private AbstractProcess currentProcess;
 
 
-    public ExecPanel(Runnable onClose) {
+    public ExecPanel(Runnable onClose, OnClickFileHandler onFileClickHandler) {
         super();
-        this.onClose = onClose;
         setLayout(new BorderLayout());
-        //this.add(new JLabel("top"), BorderLayout.NORTH);
-        this.add(createOutputArea(), BorderLayout.CENTER);
-        //this.add(new JLabel("south"), BorderLayout.SOUTH);
+        outputPane = new ExecOutputTextPane(onClose, onFileClickHandler);
+        JScrollPane scrollPane = new JScrollPane(outputPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.add(scrollPane, BorderLayout.CENTER);
         lblDial = new JLabel(dial = new SpinningDial());
         this.add(lblDial, BorderLayout.SOUTH);
-    }
-
-    private JScrollPane createOutputArea() {
-        // Creates and initialises the output area.
-        outputTextArea = new JTextArea();
-        outputTextArea.setLineWrap(true);
-        outputTextArea.setCaretPosition(0);
-        outputTextArea.setRows(10);
-        outputTextArea.setEditable(false);
-        //outputTextArea.addKeyListener(this);
-
-        // Applies the current theme to the shell output area.
-        outputTextArea.setForeground(ThemeManager.getCurrentColor(Theme.SHELL_FOREGROUND_COLOR));
-        outputTextArea.setCaretColor(ThemeManager.getCurrentColor(Theme.SHELL_FOREGROUND_COLOR));
-        outputTextArea.setBackground(ThemeManager.getCurrentColor(Theme.SHELL_BACKGROUND_COLOR));
-        outputTextArea.setSelectedTextColor(ThemeManager.getCurrentColor(Theme.SHELL_SELECTED_FOREGROUND_COLOR));
-        outputTextArea.setSelectionColor(ThemeManager.getCurrentColor(Theme.SHELL_SELECTED_BACKGROUND_COLOR));
-        outputTextArea.setFont(ThemeManager.getCurrentFont(Theme.SHELL_FONT));
-        outputTextArea.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    e.consume();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    if (onClose != null) {
-                        onClose.run();
-                    }
-                    e.consume();
-                }
-            }
-        });
-
-        // Creates a scroll pane on the shell output area.
-        return new JScrollPane(outputTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
     public void runCommand(AbstractFile folder, String command) {
@@ -103,11 +61,9 @@ public class ExecPanel extends JPanel implements ProcessListener {
             // Change 'Run' button to 'Stop'
             //this.btnRunStop.setText(i18n("run_dialog.stop"));
 
-            // Resets the process output area.
-            outputTextArea.setText("");
-            outputTextArea.setCaretPosition(0);
-            outputTextArea.getCaret().setVisible(true);
-            outputTextArea.requestFocus();
+            // Resets the process outputPane area.
+            outputPane.clear();
+            stringStream.clear();
 
             // No new command can be entered while a process is running.
             //inputCombo.setEnabled(false);
@@ -119,31 +75,27 @@ public class ExecPanel extends JPanel implements ProcessListener {
         } catch (Exception e) {
             // Notifies the user that an error occurred and resets to normal state.
             e.printStackTrace();
-            addToTextArea("generic_error " + e.getMessage());
+            outputPane.addLine("generic_error " + e.getMessage()); // TODO
 //            switchToRunState();
         }
     }
 
-    /**
-     * Appends the specified string to the shell output area.
-     * @param s string to append to the shell output area.
-     */
-    private void addToTextArea(String s) {
-        outputTextArea.append(s);
-        outputTextArea.setCaretPosition(outputTextArea.getText().length());
-        outputTextArea.getCaret().setVisible(true);
-        outputTextArea.repaint();
-    }
 
     @Override
     public void processDied(int returnValue) {
         dial.setAnimated(false);
         lblDial.setVisible(false);
+        if (stringStream.hasRemains()) {
+            outputPane.addLine(stringStream.getRemains());
+        }
     }
 
     @Override
     public void processOutput(String output) {
-        addToTextArea(output);
+        stringStream.add(output);
+        while (stringStream.hasCompleted()) {
+            outputPane.addLine(stringStream.getNext());
+        }
     }
 
     @Override

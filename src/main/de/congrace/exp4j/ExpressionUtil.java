@@ -8,7 +8,7 @@ public abstract class ExpressionUtil {
 	 * e.g. normalizing "314e-2" yields "3.14"
 	 * @param number
 	 */
-	public static String normalizeNumber(String number,Locale loc) throws UnparsableExpressionException{
+	public static String normalizeNumber(String number,Locale loc) {
 		String result=number.replaceAll("e|E", "*10^");
 		return result;
 	}

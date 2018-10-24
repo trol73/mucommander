@@ -35,7 +35,7 @@ public class AudioViewer extends FileViewer {
     private static SourceDataLine mLine;
 
     @Override
-    protected void show(AbstractFile file) throws IOException {
+    protected void show(AbstractFile file) {
         setComponentToPresent(new AudioPlayer());
         System.out.println("PLAY " + file.getURL().toString());
 

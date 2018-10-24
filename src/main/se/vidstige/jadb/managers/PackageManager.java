@@ -59,7 +59,7 @@ public class PackageManager {
         arguments.add("install");
         arguments.addAll(extraArguments);
         arguments.add(remote.getPath());
-        InputStream s = device.executeShell("pm", arguments.toArray(new String[arguments.size()]));
+        InputStream s = device.executeShell("pm", arguments.toArray(new String[0]));
         String result = Stream.readAll(s, Charset.forName("UTF-8"));
         remove(remote);
         verifyOperation("install", apkFile.getName(), result);

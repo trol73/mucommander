@@ -95,7 +95,7 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
      * Notifies the reader that a new XML element is starting.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
         if (qName.equals(ROOT_ELEMENT) && (status == STATUS_UNKNOWN)) {     // Root element declaration.
             status = STATUS_ROOT;
@@ -109,7 +109,7 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
      * Notifies the reader that the current element declaration is over.
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         if (qName.equals(ROOT_ELEMENT) && (status == STATUS_ROOT)) {    // Root element finished.
             status = STATUS_UNKNOWN;
         } else if(qName.equals(COMMAND_ELEMENT) && (status == STATUS_COMMAND)) {    // Command element finished.

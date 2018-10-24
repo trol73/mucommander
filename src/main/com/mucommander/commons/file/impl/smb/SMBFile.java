@@ -121,7 +121,7 @@ import java.net.MalformedURLException;
         int domainStart = login.indexOf(";");
         if (domainStart != -1) {
             domain = login.substring(0, domainStart);
-            login = login.substring(domainStart+1, login.length());
+            login = login.substring(domainStart+1);
         } else {
             domain = null;
         }
@@ -678,7 +678,7 @@ import java.net.MalformedURLException;
         // jicfs.smb.SmbFilenameFilter implementation //
         ////////////////////////////////////////////////
 
-        public boolean accept(SmbFile dir, String name) throws SmbException {
+        public boolean accept(SmbFile dir, String name) {
             return filter.accept(name);
         }
     }

@@ -222,8 +222,6 @@ public class JadbDevice {
         JadbDevice other = (JadbDevice) obj;
         if (serial == null) {
             return other.serial == null;
-        } else if (!serial.equals(other.serial))
-            return false;
-        return true;
+        } else return serial.equals(other.serial);
     }
 }

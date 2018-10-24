@@ -54,7 +54,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 
 	@Override
 	public MainFrame[] build() {
-		return mainFrames.toArray(new MainFrame[mainFrames.size()]);
+		return mainFrames.toArray(new MainFrame[0]);
 	}
 	
 	/**

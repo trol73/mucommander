@@ -36,22 +36,22 @@ import java.util.zip.ZipException;
 public class ZipEntry implements Cloneable {
 
     /** Name/path of this entry */
-    protected String name = null;
+    protected String name;
 
     /** Uncompressed size of the entry data */
     protected long size = -1;
 
     /** Compressed size of the entry data */
-    protected long compressedSize = -1;
+    private long compressedSize = -1;
 
     /** CRC-32 checksum of the uncompressed entry data */
     protected long crc = -1;
 
     /** Data/time of this entry, in the DOS time format */
-    protected long dosTime = -1;
+    private long dosTime = -1;
 
     /** Data/time of this entry, in the Java time format */
-    protected long javaTime = -1;
+    private long javaTime = -1;
 
     /** Compression method that was used for the entry data */
     protected int method = -1;
@@ -63,40 +63,40 @@ public class ZipEntry implements Cloneable {
     protected int platform = PLATFORM_FAT;
 
     /** Internal attributes (2 bytes) */
-    protected int internalAttributes = 0;
+    private int internalAttributes = 0;
 
     /** External attributes (4 bytes) */
-    protected long externalAttributes = 0;
+    private long externalAttributes = 0;
 
     /** List of extra fields, as ZipEntraField instances */
-    protected Vector<ZipExtraField> extraFields;
+    private Vector<ZipExtraField> extraFields;
 
     /** Contains info about how this entry is stored in the zip file */
-    protected ZipEntryInfo entryInfo;
+    private ZipEntryInfo entryInfo;
 
     /** An instance of Calendar shared through all instances of this class and used for Java &lt;-&gt; DOS time conversion */
-    protected final static Calendar CALENDAR = Calendar.getInstance();
+    private final static Calendar CALENDAR = Calendar.getInstance();
 
     /** Smallest DOS time (Epoch 1980) */
-    protected final static long MIN_DOS_TIME = 0x00002100L;
+    private final static long MIN_DOS_TIME = 0x00002100L;
 
     /** Value of the bit flag that denotes a Unix directory in the external attributes */
-    protected final static int UNIX_DIRECTORY_FLAG = 16384;
+    private final static int UNIX_DIRECTORY_FLAG = 16384;
     /** Value of the bit flag that denotes a Unix file in the external attributes */
-    protected final static int UNIX_FILE_FLAG = 32768;
+    private final static int UNIX_FILE_FLAG = 32768;
 
     /** Value of the bit flag that denotes an MS-DOS directory in the external attributes */
-    protected final static int MSDOS_DIRECTORY_FLAG = 0x10;
+    private final static int MSDOS_DIRECTORY_FLAG = 0x10;
     /** Value of the bit flag that denotes a read-only MS-DOS file in the external attributes */
-    protected final static int MSDOS_READ_ONLY_FLAG = 1;
+    private final static int MSDOS_READ_ONLY_FLAG = 1;
 
     /** Value of the user write permission bit */
-    protected final static int USER_WRITE_PERMISSION_BIT = 128;
+    private final static int USER_WRITE_PERMISSION_BIT = 128;
 
     /** Value of the Unix platform used in the 'version made by' central directory field */
-    protected static final int PLATFORM_UNIX = 3;
+    private static final int PLATFORM_UNIX = 3;
     /** Value of the MSDOS/OS-2 platform (FAT filesystem) used in the 'version made by' central directory field */
-    protected static final int PLATFORM_FAT  = 0;
+    static final int PLATFORM_FAT  = 0;
 
 
     /**
@@ -119,9 +119,8 @@ public class ZipEntry implements Cloneable {
      * Creates a new Zip entry with fields taken from the specified zip entry.
      *
      * @param entry the entry to get fields from
-     * @throws ZipException on error
      */
-    public ZipEntry(java.util.zip.ZipEntry entry) throws ZipException {
+    public ZipEntry(java.util.zip.ZipEntry entry) {
         this.name = entry.getName();
         this.crc = entry.getCrc();
         this.size = entry.getSize();
@@ -238,8 +237,9 @@ public class ZipEntry implements Cloneable {
      */
     public void setExtraFields(ZipExtraField[] fields) {
         extraFields = new Vector<>();
-        for (ZipExtraField field : fields)
+        for (ZipExtraField field : fields) {
             extraFields.addElement(field);
+        }
     }
 
     /**
@@ -248,8 +248,9 @@ public class ZipEntry implements Cloneable {
      * @return the extra fields of this entry
      */
     public ZipExtraField[] getExtraFields() {
-        if (extraFields == null)
+        if (extraFields == null) {
             return new ZipExtraField[0];
+        }
 
         ZipExtraField[] result = new ZipExtraField[extraFields.size()];
         extraFields.copyInto(result);
@@ -262,11 +263,12 @@ public class ZipEntry implements Cloneable {
      * @param ze the extra field to add
      */
     public void addExtraField(ZipExtraField ze) {
-        if (extraFields == null)
+        if (extraFields == null) {
             extraFields = new Vector<>();
+        }
 
         ZipShort type = ze.getHeaderId();
-        for (int i=0, nbFields=extraFields.size(); i<nbFields; i++) {
+        for (int i = 0, nbFields = extraFields.size(); i < nbFields; i++) {
             if (extraFields.elementAt(i).getHeaderId().equals(type)) {
                 extraFields.setElementAt(ze, i);
                 return;
@@ -379,8 +381,9 @@ public class ZipEntry implements Cloneable {
      * @throws IllegalArgumentException if the specified size is less than 0 or greater than 0xFFFFFFFF bytes
      */
     public void setSize(long size) {
-        if(!isValidUnsignedInt(size))
-	        throw new IllegalArgumentException("Invalid entry size");
+        if (!isValidUnsignedInt(size)) {
+            throw new IllegalArgumentException("Invalid entry size");
+        }
 
 	    this.size = size;
     }
@@ -401,8 +404,9 @@ public class ZipEntry implements Cloneable {
      * @param csize the compressed size to set to
      */
     public void setCompressedSize(long csize) {
-        if(!isValidUnsignedInt(csize))
-	        throw new IllegalArgumentException("Invalid entry size");
+        if (!isValidUnsignedInt(csize)) {
+            throw new IllegalArgumentException("Invalid entry size");
+        }
 
         this.compressedSize = csize;
     }
@@ -423,8 +427,9 @@ public class ZipEntry implements Cloneable {
      * @throws IllegalArgumentException if the specified CRC-32 value is less than 0 or greater than 0xFFFFFFFF
      */
     public void setCrc(long crc) {
-        if(!isValidUnsignedInt(crc))
+        if (!isValidUnsignedInt(crc)) {
             throw new IllegalArgumentException("invalid entry crc-32");
+        }
 
         this.crc = crc;
     }
@@ -447,7 +452,7 @@ public class ZipEntry implements Cloneable {
      */
     public void setTime(long javaTime) {
         this.javaTime = javaTime;
-        this.dosTime = javaTime==-1?-1:javaToDosTime(javaTime);
+        this.dosTime = javaTime == -1 ? -1 : javaToDosTime(javaTime);
     }
 
     /**
@@ -485,8 +490,9 @@ public class ZipEntry implements Cloneable {
      * @throws IllegalArgumentException if the specified compression method is invalid
      */
     public void setMethod(int method) {
-        if (method != ZipConstants.STORED && method != ZipConstants.DEFLATED)
+        if (method != ZipConstants.STORED && method != ZipConstants.DEFLATED) {
             throw new IllegalArgumentException("Invalid compression method");
+        }
 
         this.method = method;
     }
@@ -507,9 +513,9 @@ public class ZipEntry implements Cloneable {
      * @throws IllegalArgumentException if the length of the specified comment string is greater than 0xFFFF bytes
      */
     public void setComment(String comment) {
-        if (comment != null && comment.length() > 0xffff/3 && getUTF8Length(comment) > 0xffff)
+        if (comment != null && comment.length() > 0xffff/3 && getUTF8Length(comment) > 0xffff) {
             throw new IllegalArgumentException("invalid entry comment length");
-
+        }
         this.comment = comment;
     }
 
@@ -520,14 +526,12 @@ public class ZipEntry implements Cloneable {
      * @throws IllegalArgumentException if the byte array cannot be parsed into extra fields
      */
     public void setExtra(byte[] extra) throws IllegalArgumentException {
-        if(extra==null || extra.length==0) {
+        if (extra == null || extra.length == 0) {
             extraFields = null;
-        }
-        else {
+        } else {
             try {
                 setExtraFields(ExtraFieldUtils.parse(extra));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new IllegalArgumentException(e.getMessage());
             }
         }

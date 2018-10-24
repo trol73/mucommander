@@ -55,36 +55,43 @@ public class UserPopupMenuLoader {
             return;
         }
         for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            String type = getItemProp(item, "type");
-
-            if ("separator".equalsIgnoreCase(type)) {
+            Object obj = items.get(i);
+            if (obj instanceof String) {
                 menu.add(new TMenuSeparator());
-            } else if (type == null || "item".equalsIgnoreCase(type)) {
-                String name = getItemProp(item,"name");
+            } else if (obj instanceof JSONObject) {
+                JSONObject item = items.getJSONObject(i);
+                String type = getItemProp(item, "type");
 
-                UserMenuItem.Command command = getItemCommand(item);
-                String console = getItemProp(item, "console");
-                String key = getItemProp(item,"key");
-                UserMenuItem properties = new UserMenuItem(
-                        command,
-                        UserMenuItem.ConsoleType.fromStr(console));
-                JMenuItem mi = menu.add(parent, name, properties);
-                mi.setMnemonic(mnemonicHelper.getMnemonic(name));
-                if (key != null) {
-                    KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
-                    mi.setAccelerator(keyStroke);
+                if ("separator".equalsIgnoreCase(type)) {
+                    menu.add(new TMenuSeparator());
+                } else if (type == null || "item".equalsIgnoreCase(type)) {
+                    String name = getItemProp(item,"name");
+
+                    UserMenuItem.Command command = getItemCommand(item);
+                    String console = getItemProp(item, "console");
+                    String key = getItemProp(item,"key");
+                    UserMenuItem properties = new UserMenuItem(
+                            command,
+                            UserMenuItem.ConsoleType.fromStr(console));
+                    JMenuItem mi = menu.add(parent, name, properties);
+                    mi.setMnemonic(mnemonicHelper.getMnemonic(name));
+                    if (key != null) {
+                        KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
+                        mi.setAccelerator(keyStroke);
+                    }
+                } else if ("menu".equalsIgnoreCase(type)) {
+                    String name = getItemProp(item,"name");
+                    JMenu submenu = new JMenu(name);
+                    submenu.setMnemonic(mnemonicHelper.getMnemonic(name));
+                    if (parent == null) {
+                        menu.add(submenu);
+                    } else {
+                        parent.add(submenu);
+                    }
+                    loadMenu(menu, submenu, item.getJSONArray("items"), new MnemonicHelper());
                 }
-            } else if ("menu".equalsIgnoreCase(type)) {
-                String name = getItemProp(item,"name");
-                JMenu submenu = new JMenu(name);
-                submenu.setMnemonic(mnemonicHelper.getMnemonic(name));
-                if (parent == null) {
-                    menu.add(submenu);
-                } else {
-                    parent.add(submenu);
-                }
-                loadMenu(menu, submenu, item.getJSONArray("items"), new MnemonicHelper());
+            } else {
+                throw new JSONException("Not JSON object found at index " + i);
             }
         }
     }

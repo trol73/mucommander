@@ -57,13 +57,13 @@ import java.io.OutputStream;
 public abstract class AbstractArchiveEntryFile extends AbstractFile {
 
     /** The archive file that contains this entry */
-    AbstractArchiveFile archiveFile;
+    final AbstractArchiveFile archiveFile;
 
     /** This entry file's parent, can be the archive file itself if this entry is located at the top level */
     protected AbstractFile parent;
 
     /** The ArchiveEntry object that contains information about this entry */
-    protected ArchiveEntry entry;
+    final protected ArchiveEntry entry;
 
 
     /**

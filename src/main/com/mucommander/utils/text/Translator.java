@@ -243,7 +243,7 @@ public class Translator {
             int pos = -1;
             for (int i = 0; i<paramValues.length; i++) {
                 while (++pos < text.length()-1 && (pos = text.indexOf("%"+(i+1), pos)) != -1) {
-                    text = text.substring(0, pos) + paramValues[i] + text.substring(pos + 2, text.length());
+                    text = text.substring(0, pos) + paramValues[i] + text.substring(pos + 2);
                 }
             }
         }

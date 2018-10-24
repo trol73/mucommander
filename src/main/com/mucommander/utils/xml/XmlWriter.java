@@ -343,16 +343,15 @@ public class XmlWriter {
      * Escapes XML content, replacing special characters by their proper value.
      * @param   data       data to escape.
      * @return             the escaped content.
-     * @throws IOException if an I/O error occurs.
      */
-    public String escape(String data) throws IOException {
+    public String escape(String data) {
         int position;
 
         for (int i = 0; i < ENTITIES.length; i++) {
             position = 0;
             while ((position = data.indexOf(ENTITIES[i], position)) >= 0) {
                 data = data.substring(0, position) + ENTITY_REPLACEMENTS[i] +
-                    (position == data.length() - 1 ? "" : data.substring(position + 1, data.length()));
+                    (position == data.length() - 1 ? "" : data.substring(position + 1));
                 position = position + ENTITY_REPLACEMENTS[i].length();
             }
         }

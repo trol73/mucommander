@@ -144,7 +144,7 @@ public abstract class BlockRandomInputStream extends RandomAccessInputStream {
         return nbBytes;
     }
 
-    public long getOffset() throws IOException {
+    public long getOffset() {
         return offset;
     }
 

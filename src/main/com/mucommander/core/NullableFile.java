@@ -108,7 +108,7 @@ class NullableFile extends AbstractFile {
 
 	@Override
 	public RandomAccessInputStream getRandomAccessInputStream()
-			throws IOException, UnsupportedFileOperationException {
+			throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.RANDOM_WRITE_FILE);
 	}
 
@@ -153,16 +153,16 @@ class NullableFile extends AbstractFile {
 	}
 
 	@Override
-	public AbstractFile[] ls() throws IOException, UnsupportedFileOperationException {
+	public AbstractFile[] ls() throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.LIST_CHILDREN);
 	}
 
 	@Override
-	public void mkdir() throws IOException, UnsupportedFileOperationException {
+	public void mkdir() throws IOException {
 	}
 
 	@Override
-	public void renameTo(AbstractFile arg0) throws IOException, UnsupportedFileOperationException {
+	public void renameTo(AbstractFile arg0) throws IOException {
 		throw new UnsupportedFileOperationException(FileOperation.RENAME);
 	}
 

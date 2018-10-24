@@ -26,7 +26,6 @@ import com.mucommander.ui.main.menu.usermenu.UserPopupMenuLoader;
 import com.mucommander.ui.notifier.AbstractNotifier;
 import com.mucommander.ui.notifier.NotificationType;
 import com.mucommander.ui.viewer.EditorRegistrar;
-import com.mucommander.ui.viewer.text.TextArea;
 import com.mucommander.ui.viewer.text.TextEditor;
 import com.mucommander.ui.viewer.text.TextFilesHistory;
 import org.jetbrains.annotations.Nullable;
@@ -48,14 +47,20 @@ public class UserMenuAction extends ParentFolderAction {
 
     @Override
     public void performAction() {
+        UserPopupMenu menu = createMenu(mainFrame);
+        if (menu != null) {
+            menu.show(mainFrame);
+        }
+    }
+
+    public static UserPopupMenu createMenu(MainFrame mainFrame) {
         AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
         AbstractFile localMenu = findLocalMenu(currentFolder);
         if (localMenu != null) {
             try {
-                UserPopupMenu menu = UserPopupMenuLoader.loadMenu(mainFrame, localMenu);
-                menu.show(mainFrame);
+                return UserPopupMenuLoader.loadMenu(mainFrame, localMenu);
             } catch (LoadUserMenuException ej) {
-                openEditorAndShowError(localMenu, ej);
+                openEditorAndShowError(mainFrame, localMenu, ej);
             } catch (IOException e) {
                 // TODO status bar
                 e.printStackTrace();
@@ -67,9 +72,10 @@ public class UserMenuAction extends ParentFolderAction {
                 t.printStackTrace();
             }
         }
+        return null;
     }
 
-    private AbstractFile findLocalMenu(AbstractFile folder) {
+    private static AbstractFile findLocalMenu(AbstractFile folder) {
         if (folder == null) {
             return null;
         }
@@ -78,7 +84,7 @@ public class UserMenuAction extends ParentFolderAction {
     }
 
     @Nullable
-    private AbstractFile getMenuFile(AbstractFile folder) {
+    private static AbstractFile getMenuFile(AbstractFile folder) {
         if (folder == null || !folder.exists()) {
             return null;
         }
@@ -90,7 +96,7 @@ public class UserMenuAction extends ParentFolderAction {
         }
     }
 
-    private void openEditorAndShowError(AbstractFile localMenu, LoadUserMenuException e) {
+    private static void openEditorAndShowError(MainFrame mainFrame, AbstractFile localMenu, LoadUserMenuException e) {
         Image image = ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage();
         System.out.println("open frame " + e.getMessage() + " " + e.getLine() + ":" + e.getColumn());
         EditorRegistrar.createEditorFrame(mainFrame, localMenu, image,
