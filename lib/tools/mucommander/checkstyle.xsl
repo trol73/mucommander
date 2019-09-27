@@ -1,1 +1,0 @@
-/Users/trol/.ivy2/cache/mucommander/code-metrics/confs/checkstyle-1.0.2.xsl

@@ -38,7 +38,7 @@ public class RarFile {
     RarFile(AbstractFile file) throws IOException, RarException {
         this.file = file;
         //try (InputStream fileIn = file.getInputStream()) {
-        archive = new Archive(new File(file.getPath()));
+        archive = new Archive(new FileInputStream(file.getPath()));
         //}
     }
 
@@ -53,7 +53,7 @@ public class RarFile {
         // reopen archive to prevent crc error on reading if the file was reopened (issue for text files only)
         try {
             archive.close();
-            archive = new Archive(new File(file.getPath()));
+            archive = new Archive(new FileInputStream(file.getPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
