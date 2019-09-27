@@ -45,4 +45,11 @@ public interface EditorFactory {
      * @return a new instance of {@link FileEditor}.
      */
     FileEditor createFileEditor();
+
+    /**
+     * Returns a name for EditAs list
+     *
+     * @return
+     */
+    String getName();
 }

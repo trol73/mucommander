@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -25,27 +24,23 @@ import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.quicklist.EditAsQL;
 import com.mucommander.ui.main.quicklist.ViewAsQL;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
-/**
- *
- * @author Oleg Trifonov
- */
-public class ViewAsAction extends SelectedFilesAction {
+public class EditAsAction extends SelectedFilesAction {
     /**
-     * Creates a new instance of <code>ViewAsAction</code>.
+     * Creates a new instance of <code>EditAsAction</code>.
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    private ViewAsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditAsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
-        ImageIcon icon = getStandardIcon(ViewAction.class);
+        ImageIcon icon = getStandardIcon(EditAction.class);
         if (icon != null) {
             setIcon(icon);
         }
@@ -54,7 +49,7 @@ public class ViewAsAction extends SelectedFilesAction {
 
     @Override
     public ActionDescriptor getDescriptor() {
-        return new Descriptor();
+        return new EditAsAction.Descriptor();
     }
 
     @Override
@@ -66,13 +61,13 @@ public class ViewAsAction extends SelectedFilesAction {
         if (file == null || file.isDirectory()) {
             return;
         }
-        new ViewAsQL(mainFrame, file).show();
+        new EditAsQL(mainFrame, file).show();
     }
 
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-        public static final String ACTION_ID = "ViewAs";
+        public static final String ACTION_ID = "EditAs";
 
         public String getId() { return ACTION_ID; }
 
@@ -80,10 +75,10 @@ public class ViewAsAction extends SelectedFilesAction {
 
         public KeyStroke getDefaultAltKeyStroke() { return null; }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.SHIFT_DOWN_MASK); }
 
         public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new ViewAsAction(mainFrame, properties);
+            return new EditAsAction(mainFrame, properties);
         }
     }
 }

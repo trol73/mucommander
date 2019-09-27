@@ -167,4 +167,17 @@ public class EditorRegistrar {
             throw new UserCancelledException();
         }
     }
+
+    public static List<EditorFactory> getAllEditors(AbstractFile file) {
+        List<EditorFactory> result = new ArrayList<>();
+        for (EditorFactory factory : editorFactories) {
+            try {
+                if (!factory.canEditFile(file)) {
+                    continue;
+                }
+            } catch (WarnUserException ignore) {}
+            result.add(factory);
+        }
+        return result;
+    }
 }

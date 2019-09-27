@@ -35,14 +35,14 @@ import java.util.WeakHashMap;
 public class CommandBarAttributes {
 
 	/** Command bar actions */
-    private static String actionIds[];
+    private static String[] actionIds;
     /** Command bar alternate actions */
-    private static String alternateActionIds[];
+    private static String[] alternateActionIds;
     /** Modifier key that triggers the display of alternate actions when pressed */
     private static KeyStroke modifier;
     
     /** Command bar default actions */
-    private static final String DEFAULT_ACTION_IDS[] = 
+    private static final String[] DEFAULT_ACTION_IDS =
     {
         TerminalAction.Descriptor.ACTION_ID,
     	ViewAction.Descriptor.ACTION_ID,
@@ -55,11 +55,11 @@ public class CommandBarAttributes {
     	CloseWindowAction.Descriptor.ACTION_ID
     };
     /** Command bar default alternate actions */
-    private static final String DEFAULT_ALTERNATE_ACTION_IDS[] =
+    private static final String[] DEFAULT_ALTERNATE_ACTION_IDS =
     {
         TerminalPanelAction.Descriptor.ACTION_ID,
         ViewAsAction.Descriptor.ACTION_ID,
-        null,//MakeFileAction.$.ACTION_ID,
+        EditAsAction.Descriptor.ACTION_ID,
     	LocalCopyAction.Descriptor.ACTION_ID,
     	RenameAction.Descriptor.ACTION_ID,
     	MkfileAction.Descriptor.ACTION_ID,
@@ -110,16 +110,18 @@ public class CommandBarAttributes {
     /**
      * @return true if command-bar attributes equal to the default attributes.
      */
-    public static boolean areDefaultAttributes() {
+    static boolean areDefaultAttributes() {
     	if (actionIds != DEFAULT_ACTION_IDS) {
     		int nbActions = actionIds.length;
     		
     		if (nbActions != DEFAULT_ACTION_IDS.length)
     			return false;
     		
-    		for (int i=0; i<nbActions; ++i)
-    			if (!equals(actionIds[i], DEFAULT_ACTION_IDS[i]))
-    				return false;
+    		for (int i=0; i<nbActions; ++i) {
+                if (!equals(actionIds[i], DEFAULT_ACTION_IDS[i])) {
+                    return false;
+                }
+            }
     	}
     	
     	if (alternateActionIds != DEFAULT_ALTERNATE_ACTION_IDS) {
@@ -155,17 +157,13 @@ public class CommandBarAttributes {
      * @param modifier           command-bar modifier.
      */
     public static void setAttributes(String[] actionIds, String[] alternateActionIds, KeyStroke modifier) {
-//System.out.println("!!! setAttributes " + actionIds);
     	CommandBarAttributes.actionIds = actionIds;
     	CommandBarAttributes.alternateActionIds = alternateActionIds;
     	CommandBarAttributes.modifier = modifier;
     	fireAttributesChanged();
     }
     
-    ///////////////
-    /// getters ///
-    ///////////////
-    
+
     public static String[] getActions() {
         return actionIds;
     }
@@ -181,19 +179,22 @@ public class CommandBarAttributes {
     
     // - Listeners -------------------------------------------------------------
     // -------------------------------------------------------------------------
-    public static void addCommandBarAttributesListener(CommandBarAttributesListener listener) {
+    static void addCommandBarAttributesListener(CommandBarAttributesListener listener) {
     	synchronized(listeners) {listeners.put(listener, null);}
     }
     
     public static void removeCommandBarAttributesListener(CommandBarAttributesListener listener) {
-    	synchronized(listeners) {listeners.remove(listener);}
+    	synchronized(listeners) {
+    	    listeners.remove(listener);
+    	}
     }
     
-    protected static void fireAttributesChanged() {
+    private static void fireAttributesChanged() {
     	synchronized(listeners) {
             // Iterate on all listeners
-            for (CommandBarAttributesListener listener : listeners.keySet())
+            for (CommandBarAttributesListener listener : listeners.keySet()) {
                 listener.commandBarAttributeChanged();
+            }
         }
     }
 }

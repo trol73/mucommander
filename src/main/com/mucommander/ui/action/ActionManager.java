@@ -234,6 +234,7 @@ public class ActionManager {
     	registerAction(new UnpackAction.Descriptor());
     	registerAction(new ViewAction.Descriptor());
         registerAction(new ViewAsAction.Descriptor());
+		registerAction(new EditAsAction.Descriptor());
         registerAction(new TerminalAction.Descriptor());
         registerAction(new FindFileAction.Descriptor());
         registerAction(new CalculatorAction.Descriptor());

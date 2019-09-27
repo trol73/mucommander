@@ -131,11 +131,11 @@ public class ZxSpectrumScrImage {
                 int attrIndex = ((y/8)*32)+(x/8);
                 int inkIndex = ink[attrIndex];
                 int paperIndex = paper[attrIndex];
-                boolean istBright = bright[attrIndex];
+                boolean isBright = bright[attrIndex];
                 if (((data[address]&(0x1<<bit))>>bit) != 0) {
                     g.setColor(PALETTE_BRIGHT_0[inkIndex]);
                 } else {
-                    if (istBright) {
+                    if (isBright) {
                         g.setColor(PALETTE_BRIGHT_1[paperIndex]);
                     } else {
                         g.setColor(PALETTE_BRIGHT_0[paperIndex]);
