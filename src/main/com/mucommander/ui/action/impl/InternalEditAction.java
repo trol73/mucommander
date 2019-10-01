@@ -43,8 +43,6 @@ import java.util.Map;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class InternalEditAction extends AbstractViewerAction {
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>EditAction</code>.
      * @param mainFrame  frame to which the action is attached.
@@ -66,8 +64,6 @@ public class InternalEditAction extends AbstractViewerAction {
     }
 
 
-    // - AbstractViewerAction implementation ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Opens the internal editor on the specified file.
      * @param file file to edit.

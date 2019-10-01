@@ -26,6 +26,8 @@ import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.MuAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.viewer.EditorFactory;
+import com.mucommander.ui.viewer.EditorRegistrar;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -36,8 +38,6 @@ import java.util.Map;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class EditAction extends InternalEditAction {
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>EditAction</code>.
      * @param mainFrame  frame to which the action is attached.
@@ -48,9 +48,11 @@ public class EditAction extends InternalEditAction {
     }
 
 
+    @Override
+    protected boolean preferInternalAction(AbstractFile file) {
+        return !EditorRegistrar.getAllEditors(file).isEmpty();
+    }
 
-    // - AbstractViewerAction implementation ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     protected Command getCustomCommand(AbstractFile file) {
         return CommandManager.getCommandForAlias(CommandManager.EDITOR_ALIAS, file);

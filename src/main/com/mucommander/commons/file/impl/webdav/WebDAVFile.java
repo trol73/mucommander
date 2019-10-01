@@ -170,7 +170,7 @@ public class WebDAVFile extends ProtocolFile {
             return new AbstractFile[]{};
         }
 
-        AbstractFile children[] = new AbstractFile[files.size()];
+        AbstractFile[] children = new AbstractFile[files.size()];
         AbstractFile child;
         FileURL childURL;
         String childName;
@@ -203,7 +203,7 @@ public class WebDAVFile extends ProtocolFile {
 
         // Create new array of the exact file count
         if (fileCount < nbFiles) {
-            AbstractFile newChildren[] = new AbstractFile[fileCount];
+            AbstractFile[] newChildren = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
             return newChildren;
         }

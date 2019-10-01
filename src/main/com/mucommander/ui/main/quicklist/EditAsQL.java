@@ -24,13 +24,14 @@ import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.EditAsAction;
-import com.mucommander.ui.action.impl.ViewAction;
-import com.mucommander.ui.action.impl.ViewAsAction;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.quicklist.QuickListWithDataList;
 import com.mucommander.ui.quicklist.item.QuickListDataList;
-import com.mucommander.ui.viewer.*;
+import com.mucommander.ui.viewer.EditorFactory;
+import com.mucommander.ui.viewer.EditorRegistrar;
+import com.mucommander.ui.viewer.FileEditor;
+import com.mucommander.ui.viewer.WarnUserException;
 
 import java.awt.*;
 import java.util.ArrayList;

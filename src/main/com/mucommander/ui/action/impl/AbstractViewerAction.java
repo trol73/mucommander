@@ -38,8 +38,6 @@ import com.mucommander.ui.main.MainFrame;
  */
 abstract class AbstractViewerAction extends SelectedFileAction {
 
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>AbstractViewerAction</code>.
      * @param mainFrame  frame to which the action is attached.
@@ -54,8 +52,6 @@ abstract class AbstractViewerAction extends SelectedFileAction {
 
 
 
-    // - AbstractAction implementation ---------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Edits the currently selected file.
      */
@@ -69,7 +65,7 @@ abstract class AbstractViewerAction extends SelectedFileAction {
             return;
         }
         Command customCommand = getCustomCommand(file);
-        if (customCommand == null) {
+        if (preferInternalAction(file) || customCommand == null) {
             // If we're not using a custom editor, this action behaves exactly like its parent.
             performInternalAction(file);
             return;
@@ -90,9 +86,10 @@ abstract class AbstractViewerAction extends SelectedFileAction {
     }
 
 
+    protected boolean preferInternalAction(AbstractFile file) {
+        return false;
+    }
 
-    // - Abstract methods ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Opens the specified file without a custom command.
      * @param file file to open.
