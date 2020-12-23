@@ -544,11 +544,6 @@
 			<version>20140107</version>
 		</dependency>
 		<dependency>
-			<groupId>org.raisercostin</groupId>
-			<artifactId>jedi-io_2.10</artifactId>
-			<version>0.20</version>
-		</dependency>
-		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.7.13</version>
@@ -895,18 +890,6 @@
 			<name>Bintray JCenter Maven Repository</name>
 			<layout>default</layout>
 			<url>https://jcenter.bintray.com/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>raisercostin-bintray</id>
-			<name>Bintray raisercostin Maven Repository</name>
-			<layout>default</layout>
-			<url>https://dl.bintray.com/raisercostin/maven</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>

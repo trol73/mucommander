@@ -622,6 +622,9 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public String getPermissionsString() {
         FilePermissions permissions = getPermissions();
+        if (permissions == null) {
+            return isSymlink() ? "l???" : isDirectory() ? "d???" : "-???";
+        }
         int supportedPerms = permissions.getMask().getIntValue();
 
         StringBuilder sb = new StringBuilder();

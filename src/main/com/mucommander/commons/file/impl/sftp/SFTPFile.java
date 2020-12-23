@@ -244,7 +244,7 @@ public class SFTPFile extends ProtocolFile {
             // Update local attribute copy
             fileAttributes.setDate(lastModified);
         } catch (SshException | SftpStatusException e) {
-            e.printStackTrace();
+            LOGGER.error("failed to change the modification date of " + absPath, e);
             throw new IOException(e);
         } finally {
             // Close SftpFile instance to release its handle
