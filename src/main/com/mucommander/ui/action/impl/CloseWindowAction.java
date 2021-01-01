@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class CloseWindowAction extends MuAction {
+public class CloseWindowAction extends TcAction {
 
     private CloseWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -75,7 +75,7 @@ public class CloseWindowAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CloseWindowAction(mainFrame, properties);
         }
     }

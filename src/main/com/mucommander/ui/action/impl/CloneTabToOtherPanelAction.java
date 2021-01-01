@@ -22,7 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * @author Arik Hadas
  */
-public class CloneTabToOtherPanelAction extends MuAction {
+public class CloneTabToOtherPanelAction extends TcAction {
 
     private CloneTabToOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -70,7 +70,7 @@ public class CloneTabToOtherPanelAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new CloneTabToOtherPanelAction(mainFrame, properties);
 		}
     }

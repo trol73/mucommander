@@ -18,13 +18,13 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  * A simple action that toggles hidden files visibility on and off.
  * @author Nicolas Rinaudo
  */
-public class ToggleHiddenFilesAction extends MuAction {
+public class ToggleHiddenFilesAction extends TcAction {
     // - Initialization ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
@@ -54,8 +54,8 @@ public class ToggleHiddenFilesAction extends MuAction {
      */
     @Override
     public void performAction() {
-        boolean show = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES);
-    	MuConfigurations.getPreferences().setVariable(MuPreference.SHOW_HIDDEN_FILES, !show);
+        boolean show = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_HIDDEN_FILES, TcPreferences.DEFAULT_SHOW_HIDDEN_FILES);
+    	TcConfigurations.getPreferences().setVariable(TcPreference.SHOW_HIDDEN_FILES, !show);
         WindowManager.tryRefreshCurrentFolders();
     }
 
@@ -84,7 +84,7 @@ public class ToggleHiddenFilesAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleHiddenFilesAction(mainFrame, properties);
         }
     }

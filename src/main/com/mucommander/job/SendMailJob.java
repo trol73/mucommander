@@ -23,9 +23,9 @@ import com.mucommander.commons.file.MimeTypes;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.io.base64.Base64OutputStream;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -95,9 +95,9 @@ public class SendMailJob extends TransferFileJob {
         this.mailSubject = mailSubject;
         this.mailBody = mailBody+"\n\n"+"Sent by trolCommander - http://www.mucommander.com\n";
 
-        this.mailServer = MuConfigurations.getPreferences().getVariable(MuPreference.SMTP_SERVER);
-        this.fromName = MuConfigurations.getPreferences().getVariable(MuPreference.MAIL_SENDER_NAME);
-        this.fromAddress = MuConfigurations.getPreferences().getVariable(MuPreference.MAIL_SENDER_ADDRESS);
+        this.mailServer = TcConfigurations.getPreferences().getVariable(TcPreference.SMTP_SERVER);
+        this.fromName = TcConfigurations.getPreferences().getVariable(TcPreference.MAIL_SENDER_NAME);
+        this.fromAddress = TcConfigurations.getPreferences().getVariable(TcPreference.MAIL_SENDER_ADDRESS);
     
         this.errorDialogTitle = Translator.get("email_dialog.error_title");
     }
@@ -106,9 +106,9 @@ public class SendMailJob extends TransferFileJob {
      * Returns true if mail preferences have been set.
      */
     public static boolean mailPreferencesSet() {
-        return MuConfigurations.getPreferences().isVariableSet(MuPreference.SMTP_SERVER)
-            && MuConfigurations.getPreferences().isVariableSet(MuPreference.MAIL_SENDER_NAME)
-            && MuConfigurations.getPreferences().isVariableSet(MuPreference.MAIL_SENDER_ADDRESS);
+        return TcConfigurations.getPreferences().isVariableSet(TcPreference.SMTP_SERVER)
+            && TcConfigurations.getPreferences().isVariableSet(TcPreference.MAIL_SENDER_NAME)
+            && TcConfigurations.getPreferences().isVariableSet(TcPreference.MAIL_SENDER_ADDRESS);
     }
 
 
@@ -126,7 +126,7 @@ public class SendMailJob extends TransferFileJob {
     /////////////////////////////////////////////
 
     private void openConnection() throws IOException {
-        this.socket = new Socket(mailServer, MuConfigurations.getPreferences().getVariable(MuPreference.SMTP_PORT, MuPreferences.DEFAULT_SMTP_PORT));
+        this.socket = new Socket(mailServer, TcConfigurations.getPreferences().getVariable(TcPreference.SMTP_PORT, TcPreferences.DEFAULT_SMTP_PORT));
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         this.out = socket.getOutputStream();
         this.out64 = new Base64OutputStream(out, true);

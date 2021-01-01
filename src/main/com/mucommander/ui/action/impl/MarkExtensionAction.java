@@ -25,7 +25,7 @@ import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
@@ -64,7 +64,7 @@ import java.util.Map;
  *
  * @author Nicolas Rinaudo
  */
-public class MarkExtensionAction extends MuAction {
+public class MarkExtensionAction extends TcAction {
     // - Property names ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Key that controls which extension should be matched. */
@@ -226,7 +226,7 @@ public class MarkExtensionAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.SHIFT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new MarkExtensionAction(mainFrame, properties);
         }
     }

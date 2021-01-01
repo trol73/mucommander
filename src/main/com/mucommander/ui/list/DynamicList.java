@@ -44,20 +44,20 @@ import java.awt.event.KeyEvent;
 public class DynamicList<E> extends JList<E> {
 
     /** Items displayed in the JList */
-    private AlteredVector<E> items;
+    private final AlteredVector<E> items;
 
     /** Custom ListModel that handles modifications made to the AlteredVector */
-    private DynamicListModel model;
+    private final DynamicListModel model;
 
     /** Action instance which moves the currently selected item up when triggered */
-    private MoveUpAction moveUpAction;
+    private final MoveUpAction moveUpAction;
 
     /** Action instance which moves the currently selected item down when triggered */
-    private MoveDownAction moveDownAction;
+    private final MoveDownAction moveDownAction;
 
     /** Action instance which, when triggered, removes the currently selected item from the list
      * and selects the previous item (if any). */
-    private RemoveAction removeAction;
+    private final RemoveAction removeAction;
 
 
     /**

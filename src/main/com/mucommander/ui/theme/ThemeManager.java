@@ -35,9 +35,9 @@ import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.commons.file.util.ResourceLoader;
 import com.mucommander.commons.io.StreamUtils;
 import com.mucommander.commons.util.StringUtils;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.io.backup.BackupOutputStream;
 import com.mucommander.utils.text.Translator;
@@ -105,16 +105,16 @@ public class ThemeManager {
 
         // Loads the current theme type as defined in configuration.
         try {
-            type = getThemeTypeFromLabel(MuConfigurations.getPreferences().getVariable(MuPreference.THEME_TYPE, MuPreferences.DEFAULT_THEME_TYPE));
+            type = getThemeTypeFromLabel(TcConfigurations.getPreferences().getVariable(TcPreference.THEME_TYPE, TcPreferences.DEFAULT_THEME_TYPE));
         } catch(Exception e) {
             e.printStackTrace();
-            type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);
+            type = getThemeTypeFromLabel(TcPreferences.DEFAULT_THEME_TYPE);
         }
 
         // Loads the current theme name as defined in configuration.
         if (type != Theme.Type.USER) {
             wasUserThemeLoaded = false;
-            name = MuConfigurations.getPreferences().getVariable(MuPreference.THEME_NAME, MuPreferences.DEFAULT_THEME_NAME);
+            name = TcConfigurations.getPreferences().getVariable(TcPreference.THEME_NAME, TcPreferences.DEFAULT_THEME_NAME);
         } else {
             name = null;
             wasUserThemeLoaded = true;
@@ -125,8 +125,8 @@ public class ThemeManager {
             currentTheme = readTheme(type, name);
         } catch(Exception e1) {
             e1.printStackTrace();
-            type = getThemeTypeFromLabel(MuPreferences.DEFAULT_THEME_TYPE);
-            name = MuPreferences.DEFAULT_THEME_NAME;
+            type = getThemeTypeFromLabel(TcPreferences.DEFAULT_THEME_TYPE);
+            name = TcPreferences.DEFAULT_THEME_NAME;
 
             if (type == Theme.Type.USER) {
                 wasUserThemeLoaded = true;
@@ -150,7 +150,7 @@ public class ThemeManager {
             }
             setConfigurationTheme(currentTheme);
         }
-        currentSyntaxThemeName = MuConfigurations.getPreferences().getVariable(MuPreference.SYNTAX_THEME_NAME, MuPreferences.DEFAULT_SYNTAX_THEME_NAME);
+        currentSyntaxThemeName = TcConfigurations.getPreferences().getVariable(TcPreference.SYNTAX_THEME_NAME, TcPreferences.DEFAULT_SYNTAX_THEME_NAME);
     }
 
 
@@ -854,18 +854,18 @@ public class ThemeManager {
         // Sets configuration depending on the new theme's type.
         switch(type) {
             case USER:
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_TYPE, MuPreferences.THEME_USER);
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_NAME, null);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_TYPE, TcPreferences.THEME_USER);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_NAME, null);
                 break;
 
             case PREDEFINED:
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_TYPE, MuPreferences.THEME_PREDEFINED);
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_NAME, name);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_TYPE, TcPreferences.THEME_PREDEFINED);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_NAME, name);
                 break;
 
             case CUSTOM:
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_TYPE, MuPreferences.THEME_CUSTOM);
-                MuConfigurations.getPreferences().setVariable(MuPreference.THEME_NAME, name);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_TYPE, TcPreferences.THEME_CUSTOM);
+                TcConfigurations.getPreferences().setVariable(TcPreference.THEME_NAME, name);
                 break;
 
                 // Error.
@@ -939,7 +939,7 @@ public class ThemeManager {
      */
     public synchronized static void setCurrentSyntaxTheme(String name) {
         currentSyntaxThemeName = name;
-        MuConfigurations.getPreferences().setVariable(MuPreference.SYNTAX_THEME_NAME, name);
+        TcConfigurations.getPreferences().setVariable(TcPreference.SYNTAX_THEME_NAME, name);
     }
 
     public synchronized static Font getCurrentFont(int id) {return currentTheme.getFont(id);}
@@ -1148,16 +1148,16 @@ public class ThemeManager {
     // -----------------------------------------------------------------------------------
     /**
      * Returns a valid type identifier from the specified configuration type definition.
-     * @param  label label of the theme type as defined in {@link MuPreferences}.
+     * @param  label label of the theme type as defined in {@link TcPreferences}.
      * @return       a valid theme type identifier.
      */
     private static Theme.Type getThemeTypeFromLabel(String label) {
         switch (label) {
-            case MuPreferences.THEME_USER:
+            case TcPreferences.THEME_USER:
                 return Theme.Type.USER;
-            case MuPreferences.THEME_PREDEFINED:
+            case TcPreferences.THEME_PREDEFINED:
                 return Theme.Type.PREDEFINED;
-            case MuPreferences.THEME_CUSTOM:
+            case TcPreferences.THEME_CUSTOM:
                 return Theme.Type.CUSTOM;
         }
         throw new IllegalStateException("Unknown theme type: " + label);

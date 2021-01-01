@@ -64,10 +64,6 @@ public class NonFocusableButton extends JButton {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public boolean isFocusable() {
         return false;

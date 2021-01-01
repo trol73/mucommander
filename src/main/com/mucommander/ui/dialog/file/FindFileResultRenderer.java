@@ -31,7 +31,7 @@ import java.awt.*;
  */
 public class FindFileResultRenderer implements ListCellRenderer<AbstractFile> {
 
-    private CellLabel cellLabel = new CellLabel();
+    private final CellLabel cellLabel = new CellLabel();
 
     @Override
     public Component getListCellRendererComponent(JList<? extends AbstractFile> list, AbstractFile value, int index, boolean isSelected, boolean cellHasFocus) {

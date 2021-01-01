@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class AddBookmarkAction extends MuAction {
+public class AddBookmarkAction extends TcAction {
 
     private AddBookmarkAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -63,7 +63,7 @@ public class AddBookmarkAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_B, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new AddBookmarkAction(mainFrame, properties);
         }
     }

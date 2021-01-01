@@ -27,7 +27,9 @@ import com.mucommander.process.ProcessRunner;
  * @author Nicolas Rinaudo
  */
 public class GuessedGnomeDesktopAdapter extends GnomeDesktopAdapter {
-    public String toString() {return "Gnome Desktop (guessed)";}
+    public String toString() {
+        return "Gnome Desktop (guessed)";
+    }
 
     @Override
     public boolean isAvailable() {

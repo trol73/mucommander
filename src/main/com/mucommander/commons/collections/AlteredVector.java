@@ -39,7 +39,7 @@ import java.util.WeakHashMap;
 public class AlteredVector<E> extends Vector<E> {
 
     /** Contains all registered listeners, stored as weak references */
-    private WeakHashMap<VectorChangeListener, Object> listeners = new WeakHashMap<>();
+    private final WeakHashMap<VectorChangeListener, Object> listeners = new WeakHashMap<>();
 
 
     public AlteredVector() {
@@ -118,10 +118,6 @@ public class AlteredVector<E> extends Vector<E> {
         }
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public void setElementAt(E o, int i) {

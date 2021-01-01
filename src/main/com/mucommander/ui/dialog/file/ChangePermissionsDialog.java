@@ -52,19 +52,19 @@ import java.awt.event.ItemListener;
 public class ChangePermissionsDialog extends JobDialog
         implements ActionListener, ItemListener, DocumentListener, PermissionTypes, PermissionAccesses {
 
-    private JCheckBox permCheckBoxes[][];
+    private final JCheckBox[][] permCheckBoxes;
 
-    private JTextField octalPermTextField;
+    private final JTextField octalPermTextField;
 
-    private JCheckBox recurseDirCheckBox;
+    private final JCheckBox recurseDirCheckBox;
 
     /** If true, ItemEvent events should be ignored */
     private boolean ignoreItemEvent;
     /** If true, DocumentEvent events should be ignored */
     private boolean ignoreDocumentEvent;
 
-    private JButton okButton;
-    private JButton cancelButton;
+    private final JButton btnOk;
+    private JButton btnCancel;
 
 
     public ChangePermissionsDialog(MainFrame mainFrame, FileSet files) {
@@ -152,21 +152,21 @@ public class ChangePermissionsDialog extends JobDialog
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(i18n("change"));
-        cancelButton = new JButton(i18n("cancel"));
+        btnOk = new JButton(i18n("change"));
+        btnCancel = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this)));
         mainPanel.add(fileDetailsPanel);
 
         getContentPane().add(mainPanel, BorderLayout.NORTH);
 
         if (!canSetPermission) {
             // Disable OK button if no permission bit can be set
-            okButton.setEnabled(false);
+            btnOk.setEnabled(false);
         }
 
-        getRootPane().setDefaultButton(canSetPermission ? okButton : cancelButton);
+        getRootPane().setDefaultButton(canSetPermission ? btnOk : btnCancel);
         setResizable(false);
     }
 
@@ -231,14 +231,14 @@ public class ChangePermissionsDialog extends JobDialog
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton) {
+        if (source == btnOk) {
             dispose();
 
             // Starts copying files
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             ChangeFileAttributesJob job = new ChangeFileAttributesJob(progressDialog, mainFrame, files, getPermInt(), recurseDirCheckBox.isSelected());
             progressDialog.start(job);
-        } else if (source == cancelButton) {
+        } else if (source == btnCancel) {
             dispose();
         }
     }

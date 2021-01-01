@@ -22,8 +22,8 @@ import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
@@ -43,7 +43,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     private static GeneralPreferencesDialog singleton;
     /** Stores the components in the dialog that were changed and their current value is different 
      *  then their saved value at MuConfiguration **/
-    private Set<PrefComponent> modifiedComponents = new LinkedHashSet<>();
+    private final Set<PrefComponent> modifiedComponents = new LinkedHashSet<>();
 
 
     // - Dimensions -------------------------------------------------------------
@@ -114,7 +114,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
         addPreferencesPanel(new MiscPanel(this),       MISC_ICON);
 
         // Sets the dialog's size.
-        Dimension screenSize = MuSnapshot.getScreenSize();
+        Dimension screenSize = TcSnapshot.getScreenSize();
         Dimension minimumSize = new Dimension(580, 300);
         Dimension maximumSize = new Dimension(screenSize);
         if (screenSize.getWidth() >= 1024 && screenSize.getHeight() > 700) {
@@ -143,7 +143,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     public void commit() {
         super.commit();
         try {
-            MuConfigurations.savePreferences();
+            TcConfigurations.savePreferences();
         }
         catch(Exception e) {
             InformationDialog.showErrorDialog(this);

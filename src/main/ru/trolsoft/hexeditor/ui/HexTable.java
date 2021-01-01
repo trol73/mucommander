@@ -224,6 +224,7 @@ public class HexTable extends JTable {
             model.setAsciiCharVisible(ch, fm.charWidth(ch) <= widthOfW);
         }
 
+        setRowHeight(fontHeight);
         setPreferredScrollableViewportSize(new Dimension(width, 25 * getRowHeight()));
     }
 

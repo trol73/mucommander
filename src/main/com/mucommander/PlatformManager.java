@@ -36,8 +36,7 @@ import com.mucommander.commons.runtime.OsFamily;
 public class PlatformManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformManager.class);
 	
-    // - Preferences folder -----------------------------------------------------
-    // --------------------------------------------------------------------------
+
     /** Folder in which to store the preferences. */
     private static AbstractFile prefFolder;
 

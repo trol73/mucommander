@@ -22,8 +22,8 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 
 import com.mucommander.commons.io.EncodingDetector;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 import com.mucommander.process.ProcessListener;
 
 /**
@@ -49,11 +49,11 @@ class ShellEncodingListener implements ProcessListener {
 
         // Checks whether the detected charset is supported.
         if (Charset.isSupported(encoding)) {
-            oldEncoding = MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_ENCODING);
+            oldEncoding = TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_ENCODING);
 
             // If no encoding was previously set, or we have found a new encoding, change the current shell encoding.
             if(!encoding.equals(oldEncoding)) {
-                MuConfigurations.getPreferences().setVariable(MuPreference.SHELL_ENCODING, encoding);
+                TcConfigurations.getPreferences().setVariable(TcPreference.SHELL_ENCODING, encoding);
             }
 
             // Stop listening for new byte input if we have gathered a large enough sample set.

@@ -102,7 +102,7 @@ public class GnomeTrash extends QueuedTrash {
 			AbstractFile secondaryTrashDir = userHome.getChildSilently("Trash/");
 			if (isTrashFolder(secondaryTrashDir)) {
 				return secondaryTrashDir;
-        }
+            }
         }
         // No existing user trash was found: create the folder, only if it doesn't already exist.
 		if (!primaryTrashDir.exists()) {
@@ -128,7 +128,7 @@ public class GnomeTrash extends QueuedTrash {
      */
 	private static boolean isTrashFolder(final AbstractFile file) {
         try {
-            return file.isDirectory() && file.getChild("info").isDirectory() && file.getChild("files").isDirectory();
+            return file != null && file.isDirectory() && file.getChild("info").isDirectory() && file.getChild("files").isDirectory();
 		} catch (IOException e) {
             return false;
         }

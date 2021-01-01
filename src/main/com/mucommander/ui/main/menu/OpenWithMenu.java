@@ -40,7 +40,7 @@ import com.mucommander.ui.main.MainFrame;
  * @author Nicolas Rinaudo
  */
 public class OpenWithMenu extends JMenu {
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new Open With menu.

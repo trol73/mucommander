@@ -50,12 +50,12 @@ public class SFTPPanel extends ServerPanel {
 
     private final static int STANDARD_PORT = FileURL.getRegisteredHandler(FileProtocols.SFTP).getStandardPort();
 
-    private JTextField serverField;
-    private JTextField privateKeyPathField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JTextField initialDirField;
-    private JSpinner portSpinner;
+    private final JTextField serverField;
+    private final JTextField privateKeyPathField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JTextField initialDirField;
+    private final JSpinner portSpinner;
 
     private static String lastServer = "";
     private static String lastKeyPath = "";

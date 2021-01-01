@@ -57,16 +57,16 @@ import java.util.Vector;
  */
 public class ServerConnectDialog extends FocusDialog implements ActionListener, ChangeListener {
 
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 	
-    private JButton cancelButton;
+    private final JButton cancelButton;
     private ServerPanel currentServerPanel;
 
-    private JTabbedPane tabbedPane;
-    private List<ServerPanel> serverPanels = new Vector<>();
+    private final JTabbedPane tabbedPane;
+    private final List<ServerPanel> serverPanels = new Vector<>();
 
-    private JLabel urlLabel;
-    private JCheckBox saveCredentialsCheckBox;
+    private final JLabel urlLabel;
+    private final JCheckBox saveCredentialsCheckBox;
 
     // Dialog's width has to be at least 320
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(520, 0);
@@ -175,11 +175,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     private ServerPanel getCurrentServerPanel() {
         return serverPanels.get(tabbedPane.getSelectedIndex());
     }
-	
-	
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
+
 	
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -213,11 +209,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
         }
     }
 	
-	
-    ///////////////////////////
-    // ChangeListener method //
-    ///////////////////////////
-	
+
     public void stateChanged(ChangeEvent e) {
         currentServerPanel = getCurrentServerPanel();
         lastPanelClass = currentServerPanel.getClass();

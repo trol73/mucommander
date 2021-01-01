@@ -18,14 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.statusbar.StatusBar;
 
@@ -43,11 +43,11 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ToggleStatusBarAction extends MuAction {
+public class ToggleStatusBarAction extends TcAction {
 
     private ToggleStatusBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
-        updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE));
+        updateLabel(TcConfigurations.getPreferences().getVariable(TcPreference.STATUS_BAR_VISIBLE, TcPreferences.DEFAULT_STATUS_BAR_VISIBLE));
     }
 
     private void updateLabel(boolean visible) {
@@ -59,7 +59,7 @@ public class ToggleStatusBarAction extends MuAction {
         StatusBar statusBar = mainFrame.getStatusBar();
         boolean visible = !statusBar.isVisible();
         // Save the last status bar visible state in the configuration, this will become the default for new MainFrame windows.
-        MuConfigurations.getPreferences().setVariable(MuPreference.STATUS_BAR_VISIBLE, visible);
+        TcConfigurations.getPreferences().setVariable(TcPreference.STATUS_BAR_VISIBLE, visible);
         // Change the label to reflect the new status bar state
         updateLabel(visible);
         // Show/hide the status bar
@@ -97,7 +97,7 @@ public class ToggleStatusBarAction extends MuAction {
 		    return ACTION_ID+  ".show";
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleStatusBarAction(mainFrame, properties);
         }
 

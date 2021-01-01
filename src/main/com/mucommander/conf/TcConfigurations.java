@@ -31,18 +31,18 @@ import com.mucommander.commons.conf.ConfigurationListener;
  * 
  * @author Arik Hadas
  */
-public class MuConfigurations {
+public class TcConfigurations {
 
 	/** Static configurations of trolCommander */
-	private static final MuPreferences preferences = new MuPreferences();
+	private static final TcPreferences preferences = new TcPreferences();
 	/** Dynamic configurations of trolCommander */
-	private static final MuSnapshot snapshot = new MuSnapshot();
+	private static final TcSnapshot snapshot = new TcSnapshot();
 	
 	/////////////////////////
 	// API for preferences //
 	/////////////////////////
 	
-	public static MuPreferencesAPI getPreferences() {
+	public static TcPreferencesAPI getPreferences() {
 		return preferences;
 	}
 	

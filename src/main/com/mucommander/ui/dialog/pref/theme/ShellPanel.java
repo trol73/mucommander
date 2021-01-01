@@ -44,8 +44,6 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
     private JLabel lblRun, lblOutput;
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent   dialog containing the panel.
@@ -165,14 +163,11 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
 
 
     public void propertyChange(final PropertyChangeEvent event) {
-//System.out.println(event);
-        // Background color changed.
-        if (event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
+        if (event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME)) {
             setBackgroundColors();
-
-        // Foreground color changed.
-        else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
+        } else if(event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME)) {
             setForegroundColors();
+        }
     }
 
     private void setBackgroundColors() {
@@ -185,8 +180,7 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
         } else {
             shellPreview.setBackground(themeData.getColor(ThemeData.TERMINAL_BACKGROUND_COLOR));
             shellPreview.setSelectionColor(themeData.getColor(ThemeData.TERMINAL_SELECTED_BACKGROUND_COLOR));
-    }
-
+        }
     }
 
     private void setForegroundColors() {
@@ -205,9 +199,6 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
     }
 
 
-
-    // - Modification management ---------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     @Override
     public void commit() {}
 }

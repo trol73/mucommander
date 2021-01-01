@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ReverseSortOrderAction extends MuAction {
+public class ReverseSortOrderAction extends TcAction {
 
     private ReverseSortOrderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -66,7 +66,7 @@ public class ReverseSortOrderAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ReverseSortOrderAction(mainFrame, properties);
 		}
     }

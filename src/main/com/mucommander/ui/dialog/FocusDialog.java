@@ -80,7 +80,7 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
 
     private static long lastCreateTime;
     private static String lastCreateTitle;
-    private static Class lastTreateClass;
+    private static Class lastCreateClass;
     /**
      * Saved to restore focus
      */
@@ -97,13 +97,13 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+            if (dt < 250 && lastCreateClass != null && lastCreateClass.equals(getClass())) {
                 kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastTreateClass = getClass();
+        lastCreateClass = getClass();
         if (kill) {
             dispose();
             throw new RuntimeException("EventDispatchThread error");
@@ -121,13 +121,13 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+            if (dt < 250 && lastCreateClass != null && lastCreateClass.equals(getClass())) {
                 kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastTreateClass = getClass();
+        lastCreateClass = getClass();
         if (kill) {
             dispose();
             throw new RuntimeException("EventDispatchThread error");

@@ -28,7 +28,7 @@ public class JavaClassVersionDetector {
 
     private int major;
     private int minor;
-    private Version version;
+    private final Version version;
 
 
     public enum Version {
@@ -45,8 +45,8 @@ public class JavaClassVersionDetector {
         VER_1_9(53, 0, "1.9"),
         UNKNOWN(-1, -1, "unknown");
 
-        private int major;
-        private int minor;
+        private final int major;
+        private final int minor;
         public String name;
 
         Version(int major, int minor, String name) {

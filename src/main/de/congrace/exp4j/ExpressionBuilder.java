@@ -28,7 +28,7 @@ public class ExpressionBuilder {
 
 	private final Map<String, CustomOperator> builtInOperators;
 
-	private Map<String, CustomOperator> customOperators = new HashMap<>();
+	private final Map<String, CustomOperator> customOperators = new HashMap<>();
 
 	private final List<Character> validOperatorSymbols;
 

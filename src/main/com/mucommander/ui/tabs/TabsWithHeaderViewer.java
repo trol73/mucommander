@@ -146,11 +146,13 @@ public class TabsWithHeaderViewer<T extends Tab> extends TabsViewer<T> {
 	public void removeOtherTabs() {
 		int selectedTabIndex = getSelectedTabIndex();
 
-		for (int i=0; i<selectedTabIndex; ++i)
+		for (int i = 0; i < selectedTabIndex; ++i) {
 			tabsCollection.remove(0);
+		}
 
-		for(int i=tabsCollection.count()-1; i>0; --i)
-			tabsCollection.remove(1);		
+		for(int i = tabsCollection.count()-1; i>0; --i) {
+			tabsCollection.remove(1);
+		}
 	}
 
 	@Override

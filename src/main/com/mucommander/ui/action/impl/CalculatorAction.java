@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  */
 @InvokesDialog
-public class CalculatorAction extends MuAction {
+public class CalculatorAction extends TcAction {
 
     private CalculatorAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -67,7 +67,7 @@ public class CalculatorAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new CalculatorAction(mainFrame, properties);
         }
     }

@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.conf.Configuration;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.event.LocationAdapter;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.main.FolderPanel;
@@ -62,12 +62,12 @@ public class GlobalLocationHistory extends LocationAdapter {
 	 * Private Constructor
 	 */
 	private GlobalLocationHistory() {
-		Configuration snapshot = MuConfigurations.getSnapshot();
+		Configuration snapshot = TcConfigurations.getSnapshot();
 
 		// Restore the global history from last init
-		int nbLocations = snapshot.getIntegerVariable(MuSnapshot.getRecentLocationsCountVariable());
+		int nbLocations = snapshot.getIntegerVariable(TcSnapshot.getRecentLocationsCountVariable());
     	for (int i = 0; i < nbLocations; ++i) {
-    		String filePath = snapshot.getVariable(MuSnapshot.getRecentLocationVariable(i));
+    		String filePath = snapshot.getVariable(TcSnapshot.getRecentLocationVariable(i));
 			try {
 				history.add(FileURL.getFileURL(filePath));
 			} catch (MalformedURLException e) {

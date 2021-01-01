@@ -39,7 +39,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -51,7 +51,7 @@ import java.util.Map;
  * 
  * @author Arik Hadas
  */
-public class DuplicateTabAction extends MuAction {
+public class DuplicateTabAction extends TcAction {
 	
 	private DuplicateTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -87,7 +87,7 @@ public class DuplicateTabAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.ALT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new DuplicateTabAction(mainFrame, properties);
 		}
     }

@@ -77,7 +77,7 @@ public class ShowFoldersSizeAction extends ParentFolderAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new ShowFoldersSizeAction(mainFrame, properties);
         }
     }

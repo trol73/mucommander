@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabListener {
+public class PopupLeftDriveButtonAction extends TcAction implements ActiveTabListener {
 
     private PopupLeftDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -80,7 +80,7 @@ public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabLis
 			return KeyStroke.getKeyStroke(KeyEvent.VK_F1, KeyEvent.ALT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new PopupLeftDriveButtonAction(mainFrame, properties);
 		}
     }

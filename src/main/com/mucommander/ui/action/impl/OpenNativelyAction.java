@@ -27,7 +27,7 @@ import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class OpenNativelyAction extends MuAction {
+public class OpenNativelyAction extends TcAction {
 
     private OpenNativelyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -99,7 +99,7 @@ public class OpenNativelyAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenNativelyAction(mainFrame, properties);
         }
     }

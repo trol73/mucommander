@@ -120,7 +120,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
             return super.getIcon();
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RevealInDesktopAction(mainFrame, properties);
         }
     }

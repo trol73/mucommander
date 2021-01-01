@@ -17,9 +17,9 @@
  */
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferencesAPI;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferencesAPI;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.chooser.PreviewLabel;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
@@ -42,10 +42,8 @@ public class FileGroupsPanel extends ThemeEditorPanel implements ThemeId {
 
     private static final int NUMBER_OF_GROUPS = 10;
 
-    private JTextField[] fileMasks = new JTextField[NUMBER_OF_GROUPS];
+    private final JTextField[] fileMasks = new JTextField[NUMBER_OF_GROUPS];
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new <code>FilePanel</code>.
      * @param parent   dialog containing the panel
@@ -77,9 +75,9 @@ public class FileGroupsPanel extends ThemeEditorPanel implements ThemeId {
         gridPanel.add(new JLabel());
         gridPanel.add(createCaptionLabel("theme_editor.normal_color"));
         gridPanel.add(createCaptionLabel("theme_editor.filemask"));
-        MuPreferencesAPI prefs = MuConfigurations.getPreferences();
+        TcPreferencesAPI prefs = TcConfigurations.getPreferences();
         for (int i = 0; i < NUMBER_OF_GROUPS; i++) {
-            MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
+            TcPreference preference = TcPreference.values()[TcPreference.FILE_GROUP_1_MASK.ordinal() + i];
             String mask = prefs.getVariable(preference);
             gridPanel.add(createCaptionLabelWithTitle(Translator.get("theme_editor.group_") + " " + (i+1)));
             ColorButton colorButton  = new ColorButton(parent, themeData, FILE_GROUP_1_FOREGROUND_COLOR + i, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, preview);
@@ -99,15 +97,14 @@ public class FileGroupsPanel extends ThemeEditorPanel implements ThemeId {
 
     @Override
     protected void commit() {
-        MuPreferencesAPI prefs = MuConfigurations.getPreferences();
+        TcPreferencesAPI prefs = TcConfigurations.getPreferences();
         for (int i = 0; i < NUMBER_OF_GROUPS; i++) {
-            MuPreference preference = MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + i];
+            TcPreference preference = TcPreference.values()[TcPreference.FILE_GROUP_1_MASK.ordinal() + i];
             prefs.setVariable(preference, fileMasks[i].getText().trim());
         }
         try {
-            MuConfigurations.savePreferences();
-        } catch(Exception e) {
-            // TODO
+            TcConfigurations.savePreferences();
+        } catch(Exception ignore) {
         }
         FileGroupResolver.getInstance().init();
     }

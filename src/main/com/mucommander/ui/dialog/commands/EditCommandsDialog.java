@@ -56,8 +56,7 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
         initUI();
     }
 
-    // - UI code ----------------------------------------------------------------
-    // --------------------------------------------------------------------------
+
     /**
      * Initializes the tabbed panel's UI.
      */

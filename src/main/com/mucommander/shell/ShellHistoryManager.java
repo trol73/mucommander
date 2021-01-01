@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.io.backup.BackupOutputStream;
 
@@ -78,7 +78,7 @@ public class ShellHistoryManager {
     private ShellHistoryManager() {}
 
     static {
-        HISTORY = new String[MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_HISTORY_SIZE, MuPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
+        HISTORY = new String[TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_HISTORY_SIZE, TcPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
         LISTENERS = new WeakHashMap<>();
     }
 

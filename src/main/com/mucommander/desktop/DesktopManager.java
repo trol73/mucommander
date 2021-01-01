@@ -112,12 +112,11 @@ public class DesktopManager {
 
 
 
-    // - Class fields ----------------------------------------------------
-    // -------------------------------------------------------------------
+
     /** All available desktop operations. */
-    private static Map<String, List<DesktopOperation>>[] operations;
+    private static final Map<String, List<DesktopOperation>>[] operations;
     /** All known desktops. */
-    private static List<DesktopAdapter> desktops;
+    private static final List<DesktopAdapter> desktops;
     /** Current desktop. */
     private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
@@ -138,8 +137,6 @@ public class DesktopManager {
      * the earlier they are registered, the lower their priority.
      */
     static {
-        // - Adapters initialisation -------------------------------------
-        // ---------------------------------------------------------------
         desktops = new ArrayList<>();
 
         // The default desktop adapter must be registered first, as we only want to use
@@ -601,11 +598,16 @@ public class DesktopManager {
         return desktop.getDefaultShell();
     }
 
-
     public static String getDefaultTerminalShellCommand() {
         checkInit();
         return desktop.getDefaultTerminalShellCommand();
     }
+
+    public static String getDefaultTerminalAppCommand() {
+        checkInit();
+        return desktop.getDefaultTerminalAppCommand();
+    }
+
 
     /**
      * Returns <code>true</code> if the given file is an application file. What an application file actually is

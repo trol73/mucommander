@@ -32,12 +32,12 @@ import ru.trolsoft.ui.TMenuSeparator;
  * 
  * @author Maxence Bernard, Nicolas Rinaudo, Arik Hadas
  */
-public abstract class MuActionsPopupMenu extends JPopupMenu {
+public abstract class TcActionsPopupMenu extends JPopupMenu {
 
 	/** Parent MainFrame instance */
     private final MainFrame mainFrame;
     
-    public MuActionsPopupMenu(MainFrame mainFrame) {
+    public TcActionsPopupMenu(MainFrame mainFrame) {
     	this.mainFrame = mainFrame;
     }
     

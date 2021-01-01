@@ -69,7 +69,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private static final int COL_CHANGED_NAME = 1;
     private static final int COL_CHANGE_BLOCK = 2;    
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     private JTextField edtFileNameMask;
     private JTable tblNames;
     private JButton btnRename;
@@ -91,19 +91,19 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private TableColumn colBlock;
 
     /** files to rename */
-    private FileSet files;
+    private final FileSet files;
 
     /** a map of old file names used to check for name conflicts */
-    private Map<String, AbstractFile> oldNames = new HashMap<>();
+    private final Map<String, AbstractFile> oldNames = new HashMap<>();
 
     /** a list of generated names */
-    private List<String> newNames = new ArrayList<>();
+    private final List<String> newNames = new ArrayList<>();
 
     /** a list of flags to block file rename */
-    private List<Boolean> blockNames = new ArrayList<>();
+    private final List<Boolean> blockNames = new ArrayList<>();
     
     /** a list of parsed tokens */
-    private List<AbstractToken> tokens = new ArrayList<>();
+    private final List<AbstractToken> tokens = new ArrayList<>();
 
 
 
@@ -1061,8 +1061,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      *
      */
     static class DateToken extends AbstractToken {
-        private NumberFormat year;
-        private NumberFormat digits2;
+        private final NumberFormat year;
+        private final NumberFormat digits2;
 
         DateToken(String token) {
             super(token);

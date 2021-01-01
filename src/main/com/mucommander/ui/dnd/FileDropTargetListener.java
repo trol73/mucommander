@@ -74,10 +74,10 @@ public class FileDropTargetListener implements DropTargetListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileDropTargetListener.class);
 	
     /** the FolderPanel instance used to change the current folder when a file is dropped */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** Mode that specifies what to do when files are dropped */
-    private boolean changeFolderOnlyMode;
+    private final boolean changeFolderOnlyMode;
 
     /** Drop action (copy or move) currenlty specified by the user */
     private int currentDropAction;

@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class FileTableModel extends BaseFileTableModel {
 
     /** Cell values cache */
-    private Object cellValuesCache[][];
+    private Object[][] cellValuesCache;
 
     private int columnsVisibilityMask;
 

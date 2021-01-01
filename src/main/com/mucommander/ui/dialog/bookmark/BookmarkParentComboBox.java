@@ -19,14 +19,14 @@ package com.mucommander.ui.dialog.bookmark;
 
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.utils.text.Translator;
 
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.util.List;
 
-public class BookmarkParentComboBox extends MuComboBox<String> implements PopupMenuListener {
+public class BookmarkParentComboBox extends TcComboBox<String> implements PopupMenuListener {
 
     private String childName;
 

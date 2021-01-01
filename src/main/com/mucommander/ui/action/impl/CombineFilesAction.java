@@ -84,7 +84,7 @@ public class CombineFilesAction extends SelectedFilesAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CombineFilesAction(mainFrame, properties);
         }
 

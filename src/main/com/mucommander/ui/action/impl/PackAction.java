@@ -21,7 +21,6 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.filter.FileOperationFilter;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.PackDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -74,7 +73,7 @@ public class PackAction extends SelectedFilesAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_I, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new PackAction(mainFrame, properties);
         }
     }

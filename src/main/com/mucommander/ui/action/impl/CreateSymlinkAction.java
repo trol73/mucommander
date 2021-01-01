@@ -71,7 +71,7 @@ public class CreateSymlinkAction extends ParentFolderAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.ALT_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CreateSymlinkAction(mainFrame, properties);
         }
 

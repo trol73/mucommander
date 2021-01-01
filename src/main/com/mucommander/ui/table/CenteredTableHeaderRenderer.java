@@ -44,10 +44,13 @@ public class CenteredTableHeaderRenderer extends JLabel implements TableCellRend
     // The following methods override the defaults for performance reasons
     @Override
     public void validate() {}
+
     @Override
     public void revalidate() {}
+
     @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {}
+
     @Override
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {}
 }

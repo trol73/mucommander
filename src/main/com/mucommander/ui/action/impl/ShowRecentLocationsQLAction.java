@@ -68,7 +68,7 @@ public class ShowRecentLocationsQLAction extends ShowQuickListAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.ALT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowRecentLocationsQLAction(mainFrame, properties);
 		}
     }

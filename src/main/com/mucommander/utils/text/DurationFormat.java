@@ -40,10 +40,10 @@ public class DurationFormat {
     private final static int SECONDS_IN_MONTH = 2592000;
     private final static int SECONDS_IN_YEAR = 31104000;
 
-    private static final String KEYS[] = new String[] {
+    private static final String[] KEYS = new String[] {
             YEARS_KEY, MONTHS_KEY, DAYS_KEY, HOURS_KEY, MINUTES_KEY
     };
-    private static final int SECONDS[] = new int[] {
+    private static final int[] SECONDS = new int[] {
             SECONDS_IN_YEAR, SECONDS_IN_MONTH, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE
     };
 

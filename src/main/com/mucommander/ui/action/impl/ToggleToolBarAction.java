@@ -18,14 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.JPanel;
@@ -43,11 +43,11 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ToggleToolBarAction extends MuAction {
+public class ToggleToolBarAction extends TcAction {
 
     private ToggleToolBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
-        updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.TOOLBAR_VISIBLE, MuPreferences.DEFAULT_TOOLBAR_VISIBLE));
+        updateLabel(TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_VISIBLE, TcPreferences.DEFAULT_TOOLBAR_VISIBLE));
     }
 
     private void updateLabel(boolean visible) {
@@ -59,7 +59,7 @@ public class ToggleToolBarAction extends MuAction {
         JPanel toolBarPanel = mainFrame.getToolBarPanel();
         boolean visible = !toolBarPanel.isVisible();
         // Save the last toolbar visible state in the configuration, this will become the default for new MainFrame windows.
-        MuConfigurations.getPreferences().setVariable(MuPreference.TOOLBAR_VISIBLE, visible);
+        TcConfigurations.getPreferences().setVariable(TcPreference.TOOLBAR_VISIBLE, visible);
         // Change the label to reflect the new toolbar state
         updateLabel(visible);
         // Show/hide the toolbar
@@ -97,7 +97,7 @@ public class ToggleToolBarAction extends MuAction {
 		    return ACTION_ID + ".show";
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleToolBarAction(mainFrame, properties);
         }
     }

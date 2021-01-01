@@ -23,7 +23,7 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.file.MakeDirectoryFileDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -82,7 +82,7 @@ public class MkfileAction extends ParentFolderAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MkfileAction(mainFrame, properties);
         }
     }

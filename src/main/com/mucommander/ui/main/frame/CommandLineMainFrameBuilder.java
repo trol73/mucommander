@@ -43,7 +43,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 	private final List<MainFrame> mainFrames = new LinkedList<>();
 	
 	public CommandLineMainFrameBuilder(String[] folders) {
-		for(int i=0; i < folders.length; i += 2) {
+		for (int i = 0; i < folders.length; i += 2) {
 			mainFrames.add(new MainFrame(
 					new ConfFileTableTab(getInitialAbstractPaths(folders[i], FolderPanelType.LEFT)),
 					getFileTableConfiguration(FolderPanelType.LEFT, mainFrames.size()),

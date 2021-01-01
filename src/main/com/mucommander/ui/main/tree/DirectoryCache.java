@@ -38,13 +38,13 @@ public class DirectoryCache {
     private final Map<AbstractFile, CachedDirectory> cache = new HashMap<>();
     
     /** Comparator used to sort folders */
-    private FileComparator sort;
+    private final FileComparator sort;
 
     /** A file IMAGE_FILTER */
-    private FileFilter filter;
+    private final FileFilter filter;
 
     /** Listeners. */
-    private EventListenerList listenerList = new EventListenerList();
+    private final EventListenerList listenerList = new EventListenerList();
 
 
     /**

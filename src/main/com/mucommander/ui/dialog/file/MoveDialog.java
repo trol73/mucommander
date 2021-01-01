@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 package com.mucommander.ui.dialog.file;
 
 import com.mucommander.commons.file.util.FileSet;
@@ -28,7 +26,6 @@ import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.MoveAction;
 import com.mucommander.ui.main.MainFrame;
-
 
 /**
  * Dialog invoked when the user wants to move or rename currently selected files.
@@ -48,9 +45,6 @@ public class MoveDialog extends AbstractCopyDialog {
     }
 
 
-    //////////////////////////////////////////////
-    // TransferDestinationDialog implementation //
-    //////////////////////////////////////////////
 
     @Override
     protected TransferFileJob createTransferFileJob(ProgressDialog progressDialog, PathUtils.ResolvedDestination resolvedDest, int defaultFileExistsAction) {

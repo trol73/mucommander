@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Arik Hadas
  */
 @InvokesDialog
-public class CustomizeCommandBarAction extends MuAction {
+public class CustomizeCommandBarAction extends TcAction {
 	
 	private CustomizeCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -65,7 +65,7 @@ public class CustomizeCommandBarAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new CustomizeCommandBarAction(mainFrame, properties);
 		}
     }

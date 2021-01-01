@@ -27,7 +27,6 @@ import javax.swing.KeyStroke;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
@@ -104,7 +103,7 @@ public class OpenInNewTabAction extends SelectedFileAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenInNewTabAction(mainFrame, properties);
         }
     }

@@ -81,7 +81,7 @@ public class MoveAction extends SelectedFilesAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MoveAction(mainFrame, properties);
         }
     }

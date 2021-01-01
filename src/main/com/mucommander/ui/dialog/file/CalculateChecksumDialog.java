@@ -26,7 +26,7 @@ import com.mucommander.commons.io.security.MuProvider;
 import com.mucommander.job.CalculateChecksumJob;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CalculateChecksumAction;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -56,13 +56,13 @@ import java.util.TreeSet;
  */
 public class CalculateChecksumDialog extends JobDialog implements ActionListener, ItemListener {
 
-    private MuComboBox<String> algorithmComboBox = new MuComboBox<>();
-    private JRadioButton specificLocationRadioButton;
-    private JTextField specificLocationTextField;
-    private JButton okButton;
+    private final TcComboBox<String> algorithmComboBox = new TcComboBox<>();
+    private final JRadioButton specificLocationRadioButton;
+    private final JTextField specificLocationTextField;
+    private final JButton btnOk;
 
     /** An instance of all MessageDigest implementations */
-    private MessageDigest[] messageDigests;
+    private final MessageDigest[] messageDigests;
 
     /** Default checksum algorithm (most commonly used) */
     private final static String DEFAULT_ALGORITHM = "MD5";
@@ -150,11 +150,11 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
 
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(i18n("ok"));
+        btnOk = new JButton(i18n("ok"));
         JButton cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this)));
 
         mainPanel.addSpace(3);
 
@@ -223,7 +223,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
         // Start by disposing this dialog
         dispose();
 
-        if (e.getSource() != okButton) {
+        if (e.getSource() != btnOk) {
             return;
         }
         try {
@@ -268,10 +268,7 @@ public class CalculateChecksumDialog extends JobDialog implements ActionListener
     }
 
 
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
-
+    @Override
     public void itemStateChanged(ItemEvent e) {
         Object source = e.getSource();
 

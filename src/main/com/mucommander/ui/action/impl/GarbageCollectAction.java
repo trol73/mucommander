@@ -21,7 +21,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class GarbageCollectAction extends MuAction {
+public class GarbageCollectAction extends TcAction {
 
     private GarbageCollectAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class GarbageCollectAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new GarbageCollectAction(mainFrame, properties);
 		}
     }

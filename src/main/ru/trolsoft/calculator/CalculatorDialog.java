@@ -49,11 +49,19 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
 
     private static final Dimension MIN_DIMENSION = new Dimension(520, 300);
 
-    private HistoryComboBox cbExpression;
-    private JTextField edtDec, edtHex, edtBin, edtOct, edtExp;
-    private JButton btnDec, btnHex, btnBin, btnOct, btnExp;
-    private JButton btnClose;
-    private JLabel lblError;
+    private final HistoryComboBox cbExpression;
+    private final JTextField edtDec;
+    private final JTextField edtHex;
+    private final JTextField edtBin;
+    private final JTextField edtOct;
+    private final JTextField edtExp;
+    private final JButton btnDec;
+    private final JButton btnHex;
+    private final JButton btnBin;
+    private final JButton btnOct;
+    private final JButton btnExp;
+    private final JButton btnClose;
+    private final JLabel lblError;
 
     private final CustomOperator OP_SHL = new CustomOperator("<<", true, 10, 2) {
         @Override
@@ -101,7 +109,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
     private final DecimalFormat FORMAT_EXP = new DecimalFormat("0.00000000000000E0000");
 
 
-    private final CustomOperator OPERATORS[] = {
+    private final CustomOperator[] OPERATORS = {
         OP_SHL, OP_SHR, OP_AND, OP_OR, OP_NOT, OP_XOR
     };
 

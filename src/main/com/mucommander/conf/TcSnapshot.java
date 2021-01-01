@@ -51,7 +51,7 @@ import com.mucommander.ui.viewer.text.TextViewer;
  * 
  * @author Arik Hadas
  */
-public class MuSnapshot {
+public class TcSnapshot {
 	private static Logger logger;
 	
 	// - Last screen variables -----------------------------------------------
@@ -537,8 +537,8 @@ public class MuSnapshot {
     /**
      * Prevents instantiation of this class from outside of this package.
      */
-    MuSnapshot() {
-    	configuration = new Configuration(MuSnapshotFile.getSnapshotFile(), new VersionedXmlConfigurationReaderFactory(),
+    TcSnapshot() {
+    	configuration = new Configuration(TcSnapshotFile.getSnapshotFile(), new VersionedXmlConfigurationReaderFactory(),
     			new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
     }
 
@@ -550,7 +550,7 @@ public class MuSnapshot {
         if (screenSize != null) {
             return screenSize;
         }
-        synchronized (MuSnapshot.class) {
+        synchronized (TcSnapshot.class) {
             if (screenSize == null) {
                 // Getting DefaultToolkit and screen sizes
                 try {
@@ -611,8 +611,8 @@ public class MuSnapshot {
     		setFrameAttributes(mainFrames.get(i), i);
     	
     	if (getScreenSize() != null) {
-        	configuration.setVariable(MuSnapshot.SCREEN_WIDTH, screenSize.width);
-        	configuration.setVariable(MuSnapshot.SCREEN_HEIGHT, screenSize.height);
+        	configuration.setVariable(TcSnapshot.SCREEN_WIDTH, screenSize.width);
+        	configuration.setVariable(TcSnapshot.SCREEN_HEIGHT, screenSize.height);
         }
     	
     	setGlobalHistory();
@@ -624,8 +624,8 @@ public class MuSnapshot {
 
     private void setTextPresenterProperties() {
 //    	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_FULL_SCREEN, TextViewer.isFullScreen());
-    	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TextViewer.isLineWrap());
-    	configuration.setVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TextViewer.isLineNumbers());
+    	configuration.setVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TextViewer.isLineWrap());
+    	configuration.setVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TextViewer.isLineNumbers());
     }
 
     private void setFrameAttributes(MainFrame mainFrame, int index) {
@@ -684,33 +684,33 @@ public class MuSnapshot {
     
     private void setTableAttributes(int index, boolean isLeft, FileTable table) {
     	// Saves table sort order.
-    	configuration.setVariable(MuSnapshot.getFileTableSortByVariable(index, isLeft), table.getSortInfo().getCriterion().toString().toLowerCase());
-    	configuration.setVariable(MuSnapshot.getFileTableSortOrderVariable(index, isLeft), table.getSortInfo().getAscendingOrder() ? MuSnapshot.SORT_ORDER_ASCENDING : MuSnapshot.SORT_ORDER_DESCENDING);
+    	configuration.setVariable(TcSnapshot.getFileTableSortByVariable(index, isLeft), table.getSortInfo().getCriterion().toString().toLowerCase());
+    	configuration.setVariable(TcSnapshot.getFileTableSortOrderVariable(index, isLeft), table.getSortInfo().getAscendingOrder() ? TcSnapshot.SORT_ORDER_ASCENDING : TcSnapshot.SORT_ORDER_DESCENDING);
     	
     	// Loop on columns
 		for (Column c : Column.values()) {
 			if (c != Column.NAME) {       // Skip the special name column (always enabled, width automatically calculated)
-				MuConfigurations.getSnapshot().setVariable(
-						MuSnapshot.getShowColumnVariable(index, c, isLeft),
+				TcConfigurations.getSnapshot().setVariable(
+						TcSnapshot.getShowColumnVariable(index, c, isLeft),
 						table.isColumnEnabled(c)
 						);
 
-				MuConfigurations.getSnapshot().setVariable(
-						MuSnapshot.getColumnWidthVariable(index, c, isLeft),
+				TcConfigurations.getSnapshot().setVariable(
+						TcSnapshot.getColumnWidthVariable(index, c, isLeft),
 						table.getColumnWidth(c)
 						);
 			}
 
-			MuConfigurations.getSnapshot().setVariable(
-					MuSnapshot.getColumnPositionVariable(index, c, isLeft),
+			TcConfigurations.getSnapshot().setVariable(
+					TcSnapshot.getColumnPositionVariable(index, c, isLeft),
 					table.getColumnPosition(c)
 					);
 		}
     }
     
     private void setTreeAttributes(int index, boolean isLeft, FolderPanel panel) {
-    	configuration.setVariable(MuSnapshot.getTreeVisiblityVariable(index, isLeft), panel.isTreeVisible());
-        configuration.setVariable(MuSnapshot.getTreeWidthVariable(index, isLeft), panel.getTreeWidth());
+    	configuration.setVariable(TcSnapshot.getTreeVisiblityVariable(index, isLeft), panel.isTreeVisible());
+        configuration.setVariable(TcSnapshot.getTreeWidthVariable(index, isLeft), panel.getTreeWidth());
     }
     
     private void setWindowAttributes(int index, MainFrame currentMainFrame) {
@@ -723,12 +723,12 @@ public class MuSnapshot {
         // Save split pane orientation
         // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
         // in JSplitPane which is anti-natural / confusing
-    	configuration.setVariable(getSplitOrientation(index), currentMainFrame.getSplitPane().getOrientation()==JSplitPane.HORIZONTAL_SPLIT?MuSnapshot.VERTICAL_SPLIT_ORIENTATION:MuSnapshot.HORIZONTAL_SPLIT_ORIENTATION);
+    	configuration.setVariable(getSplitOrientation(index), currentMainFrame.getSplitPane().getOrientation()==JSplitPane.HORIZONTAL_SPLIT? TcSnapshot.VERTICAL_SPLIT_ORIENTATION: TcSnapshot.HORIZONTAL_SPLIT_ORIENTATION);
     }
 
     private static Logger getLogger() {
         if (logger == null) {
-            logger = LoggerFactory.getLogger(MuSnapshot.class);
+            logger = LoggerFactory.getLogger(TcSnapshot.class);
         }
         return logger;
     }

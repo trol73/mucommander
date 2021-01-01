@@ -37,8 +37,7 @@ import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuSnapshot;
-import com.mucommander.utils.text.Translator;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -208,7 +207,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
 
         this.zoomFactor = 1.0;
-        Dimension screen = MuSnapshot.getScreenSize();
+        Dimension screen = TcSnapshot.getScreenSize();
 
         double zoomFactorX = 1.0 * screen.width / imageWidth;
         double zoomFactorY = 1.0 * screen.height / imageHeight;

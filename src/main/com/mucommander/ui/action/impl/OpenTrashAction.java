@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class OpenTrashAction extends MuAction {
+public class OpenTrashAction extends TcAction {
 
     private OpenTrashAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -72,7 +72,7 @@ public class OpenTrashAction extends MuAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenTrashAction(mainFrame, properties);
         }
     }

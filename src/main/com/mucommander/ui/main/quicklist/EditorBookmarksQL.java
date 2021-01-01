@@ -19,17 +19,15 @@ package com.mucommander.ui.main.quicklist;
 
 import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.DummyFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.ui.action.ActionProperties;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ShowEditorBookmarksQLAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 import com.mucommander.ui.viewer.EditorRegistrar;
-import com.mucommander.utils.text.Translator;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -55,7 +53,7 @@ public class EditorBookmarksQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected Icon itemToIcon(AbstractFile item) {
-        return MuAction.getStandardIcon(EditAction.class);
+        return TcAction.getStandardIcon(EditAction.class);
     }
 
     @Override

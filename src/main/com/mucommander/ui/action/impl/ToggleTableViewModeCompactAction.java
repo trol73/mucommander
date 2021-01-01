@@ -20,7 +20,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.views.TableViewMode;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  * Created on 15/04/15.
  */
-public class ToggleTableViewModeCompactAction extends MuAction {
+public class ToggleTableViewModeCompactAction extends TcAction {
 
     /**
      * Creates a new <code>ToggleTableViewModeCompactAction</code>
@@ -75,7 +75,7 @@ public class ToggleTableViewModeCompactAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.CTRL_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new ToggleTableViewModeCompactAction(mainFrame, properties);
         }
     }

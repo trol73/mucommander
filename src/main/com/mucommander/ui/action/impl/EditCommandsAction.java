@@ -29,7 +29,7 @@ import java.util.Map;
  * Created on 09/10/14.
  */
 @InvokesDialog
-public class EditCommandsAction extends MuAction {
+public class EditCommandsAction extends TcAction {
 
     /**
      * Creates a new <code>MuAction</code> associated with the specified {@link com.mucommander.ui.main.MainFrame}. The properties contained by
@@ -73,7 +73,7 @@ public class EditCommandsAction extends MuAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new EditCommandsAction(mainFrame, properties);
         }
     }

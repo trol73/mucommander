@@ -18,9 +18,9 @@
 
 package com.mucommander.ui.main.table;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 
 /**
  * This class holds information describes how a {@link FileTable} is currently sorted: sort criterion,
@@ -40,12 +40,12 @@ public class SortInfo implements Cloneable {
     private boolean ascendingOrder = true;
 
     /** Should folders be displayed first, or mixed with regular files */
-    private boolean showFoldersFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_FOLDERS_FIRST, MuPreferences.DEFAULT_SHOW_FOLDERS_FIRST);
+    private boolean showFoldersFirst = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_FOLDERS_FIRST, TcPreferences.DEFAULT_SHOW_FOLDERS_FIRST);
 
     /** Should Folders also get sorted or alway alphabetical ... only possible if Folders First enabled */
-    private boolean foldersAlwaysAlphabetical = MuConfigurations.getPreferences().getVariable(MuPreference.FOLDERS_ALWAYS_ALPHABETICAL, MuPreferences.DEFAULT_FOLDERS_ALWAYS_ALPHABETICAL);
+    private boolean foldersAlwaysAlphabetical = TcConfigurations.getPreferences().getVariable(TcPreference.FOLDERS_ALWAYS_ALPHABETICAL, TcPreferences.DEFAULT_FOLDERS_ALWAYS_ALPHABETICAL);
 
-    private boolean showQuickSearchMatchesFirst = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
+    private boolean showQuickSearchMatchesFirst = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
 
     SortInfo() {
     }

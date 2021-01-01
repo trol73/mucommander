@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class AdbServerLauncher {
     private final String executable;
-    private Subprocess subprocess;
+    private final Subprocess subprocess;
 
     /**
      * Creates a new launcher loading ADB from the environment.

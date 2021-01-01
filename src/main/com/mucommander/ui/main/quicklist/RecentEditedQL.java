@@ -22,7 +22,7 @@ import com.mucommander.commons.file.DummyFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ShowRecentEditedFilesQLAction;
 import com.mucommander.ui.action.impl.ViewAction;
@@ -56,7 +56,7 @@ public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected Icon itemToIcon(AbstractFile item) {
-        return MuAction.getStandardIcon(EditAction.class);
+        return TcAction.getStandardIcon(EditAction.class);
     }
 
     @Override

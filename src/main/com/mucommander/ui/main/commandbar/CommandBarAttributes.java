@@ -144,11 +144,7 @@ public class CommandBarAttributes {
         }
     	return action1.equals(action2);
     }
-    
-    ///////////////
-    /// setters ///
-    ///////////////
-    
+
     /**
      * This method sets command bar actions and modifiers.
      * 

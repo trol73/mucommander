@@ -62,18 +62,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MakeDirectoryFileDialog extends FocusDialog implements ActionListener, ItemListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 	
-    private JTextField pathField;
+    private final JTextField pathField;
 
-    private JCheckBox allocateSpaceCheckBox;
-    private JCheckBox openTextEditorCheckBox;
-    private JCheckBox makeExecutableCheckBox;
+    private JCheckBox cbAllocateSpace;
+    private JCheckBox cbOpenTextEditor;
+    private JCheckBox cbMakeExecutable;
     private SizeChooser allocateSpaceChooser;
 
-    private JButton okButton;
+    private final JButton btnOk;
 
-    private boolean mkfileMode;
+    private final boolean mkfileMode;
     private boolean autoExecutableSelect;
     private static boolean openInTextEditor = true;
 
@@ -130,9 +130,9 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         if (mkfileMode) {
             JPanel allocPanel = new JPanel(new BorderLayout());
 
-            allocateSpaceCheckBox = new JCheckBox(i18n("mkfile_dialog.allocate_space")+":", false);
-            allocateSpaceCheckBox.addItemListener(this);
-            allocPanel.add(allocateSpaceCheckBox, BorderLayout.WEST);
+            cbAllocateSpace = new JCheckBox(i18n("mkfile_dialog.allocate_space")+":", false);
+            cbAllocateSpace.addItemListener(this);
+            allocPanel.add(cbAllocateSpace, BorderLayout.WEST);
 
             allocateSpaceChooser = new SizeChooser(false);
             allocateSpaceChooser.setEnabled(false);
@@ -140,15 +140,15 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
 
             mainPanel.add(allocPanel);
 
-            openTextEditorCheckBox = new JCheckBox(i18n("mkfile_dialog.open_in_editor"), false);
-            openTextEditorCheckBox.addItemListener(this);
-            openTextEditorCheckBox.setSelected(openInTextEditor);
-            mainPanel.add(openTextEditorCheckBox);
+            cbOpenTextEditor = new JCheckBox(i18n("mkfile_dialog.open_in_editor"), false);
+            cbOpenTextEditor.addItemListener(this);
+            cbOpenTextEditor.setSelected(openInTextEditor);
+            mainPanel.add(cbOpenTextEditor);
 
             if (OsFamily.getCurrent().isUnixBased()) {
-                makeExecutableCheckBox = new JCheckBox(i18n("mkfile_dialog.make_executable"), false);
-                makeExecutableCheckBox.addItemListener(this);
-                mainPanel.add(makeExecutableCheckBox);
+                cbMakeExecutable = new JCheckBox(i18n("mkfile_dialog.make_executable"), false);
+                cbMakeExecutable.addItemListener(this);
+                mainPanel.add(cbMakeExecutable);
 
                 pathField.getDocument().addDocumentListener(new DocumentListener() {
                     @Override
@@ -168,7 +168,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
 
                     private void check() {
                         if (!autoExecutableSelect && pathField.getText().endsWith(".sh")) {
-                            makeExecutableCheckBox.setSelected(true);
+                            cbMakeExecutable.setSelected(true);
                             autoExecutableSelect = true;
                         }
                     }
@@ -193,9 +193,9 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         mainPanel.addSpace(10);
         contentPane.add(mainPanel, BorderLayout.NORTH);
         
-        okButton = new JButton(i18n("create"));
+        btnOk = new JButton(i18n("create"));
         JButton cancelButton = new JButton(i18n("cancel"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
         setInitialFocusComponent(pathField);
@@ -252,9 +252,9 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
     @NotNull
     private MakeDirectoryFileJob buildJob(FileSet fileSet, ProgressDialog progressDialog) {
         if (mkfileMode) {
-            long allocateSpace = allocateSpaceCheckBox.isSelected() ? allocateSpaceChooser.getValue() : -1;
-            boolean executable = makeExecutableCheckBox != null && makeExecutableCheckBox.isSelected();
-            openInTextEditor = openTextEditorCheckBox.isSelected();
+            long allocateSpace = cbAllocateSpace.isSelected() ? allocateSpaceChooser.getValue() : -1;
+            boolean executable = cbMakeExecutable != null && cbMakeExecutable.isSelected();
+            openInTextEditor = cbOpenTextEditor.isSelected();
             return new MakeDirectoryFileJob(progressDialog, mainFrame, fileSet, allocateSpace, executable) {
                 @Override
                 protected boolean processFile(AbstractFile file, Object recurseParams) {
@@ -277,18 +277,18 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         dispose();
 		
         // OK Button
-        if (source == okButton || source == pathField) {
+        if (source == btnOk || source == pathField) {
             startJob();
         }
     }
 
 
     public void itemStateChanged(ItemEvent e) {
-        allocateSpaceChooser.setEnabled(allocateSpaceCheckBox.isSelected());
-        if (e.getItem() == allocateSpaceCheckBox && allocateSpaceCheckBox.isSelected()) {
-            openTextEditorCheckBox.setSelected(false);
-        } else if (e.getItem() == openTextEditorCheckBox && openTextEditorCheckBox.isSelected()) {
-            allocateSpaceCheckBox.setSelected(false);
+        allocateSpaceChooser.setEnabled(cbAllocateSpace.isSelected());
+        if (e.getItem() == cbAllocateSpace && cbAllocateSpace.isSelected()) {
+            cbOpenTextEditor.setSelected(false);
+        } else if (e.getItem() == cbOpenTextEditor && cbOpenTextEditor.isSelected()) {
+            cbAllocateSpace.setSelected(false);
         }
     }
 }

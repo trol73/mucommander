@@ -27,6 +27,7 @@ import com.mucommander.io.backup.BackupOutputStream;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This abstract package-protected class represents configuration file of muCommander as configuration source 
@@ -35,7 +36,7 @@ import java.nio.charset.Charset;
  * 
  * @author Nicolas Rinaudo, Arik Hadas
  */
-abstract class MuConfigurationFile implements ConfigurationSource {
+abstract class TcConfigurationFile implements ConfigurationSource {
     // - Class fields ---------------------------------------------------------------
     // ------------------------------------------------------------------------------
     /** Path to the configuration file. */
@@ -52,10 +53,11 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      * @param path path to the configuration file.
      * @throws FileNotFoundException if <code>path</code> is not accessible.
      */
-    MuConfigurationFile(String path, String defaultFilename) throws FileNotFoundException {
+    TcConfigurationFile(String path, String defaultFilename) throws FileNotFoundException {
     	DEFAULT_CONFIGURATION_FILE_NAME = defaultFilename;
-    	if (path != null)
-    		setConfigurationFile(path);
+    	if (path != null) {
+            setConfigurationFile(path);
+        }
     }
 
 
@@ -122,7 +124,7 @@ abstract class MuConfigurationFile implements ConfigurationSource {
 
     public synchronized Reader getReader() throws IOException {
         InputStream is = new BackupInputStream(getConfigurationFile());
-        Reader reader = new InputStreamReader(is, Charset.forName("utf-8"));
+        Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         return new BufferedReader(reader);
     }
 
@@ -132,7 +134,7 @@ abstract class MuConfigurationFile implements ConfigurationSource {
      */
     public synchronized Writer getWriter() throws IOException {
         OutputStream os = new BackupOutputStream(getConfigurationFile());
-        Writer writer = new OutputStreamWriter(os, Charset.forName("utf-8"));
+        Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         return new BufferedWriter(writer);
     }
     

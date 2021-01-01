@@ -77,7 +77,7 @@ public class ConnectToServerAction extends ActiveTabAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_K, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ConnectToServerAction(mainFrame, properties);
         }
 

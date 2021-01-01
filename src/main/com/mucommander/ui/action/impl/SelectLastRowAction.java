@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SelectLastRowAction extends MuAction {
+public class SelectLastRowAction extends TcAction {
 
     private SelectLastRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class SelectLastRowAction extends MuAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_END, 0);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SelectLastRowAction(mainFrame, properties);
         }
     }

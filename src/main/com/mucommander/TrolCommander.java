@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -28,9 +28,9 @@ import com.mucommander.commons.file.icon.impl.SwingFileIconProvider;
 import com.mucommander.commons.file.impl.ftp.FTPProtocolProvider;
 import com.mucommander.commons.file.impl.smb.SMBProtocolProvider;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.profiler.Profiler;
 import com.mucommander.shell.ShellHistoryManager;
@@ -138,10 +138,10 @@ public class TrolCommander {
     private static void migrateCommand(String useName, String commandName, String alias) {
         String command;
 
-        if (MuConfigurations.getPreferences().getBooleanVariable(useName) && (command = MuConfigurations.getPreferences().getVariable(commandName)) != null) {
+        if (TcConfigurations.getPreferences().getBooleanVariable(useName) && (command = TcConfigurations.getPreferences().getVariable(commandName)) != null) {
             CommandManager.registerCommand(new Command(alias, command, CommandType.SYSTEM_COMMAND));
-            MuConfigurations.getPreferences().removeVariable(useName);
-            MuConfigurations.getPreferences().removeVariable(commandName);
+            TcConfigurations.getPreferences().removeVariable(useName);
+            TcConfigurations.getPreferences().removeVariable(commandName);
         }
     }
 
@@ -235,21 +235,21 @@ public class TrolCommander {
             // Load snapshot data before loading configuration as until version 0.9 the snapshot properties
             // were stored as preferences so when loading such preferences they could overload snapshot properties
             try {
-                MuConfigurations.loadSnapshot();
+                TcConfigurations.loadSnapshot();
             } catch(Exception e) {
                 helper.printFileError("Could not load snapshot", e);
             }
             // Configuration needs to be loaded before any sort of GUI creation is performed : under Mac OS X, if we're
             // to use the metal look, we need to know about it right about now.
             try {
-                MuConfigurations.loadPreferences();
+                TcConfigurations.loadPreferences();
             } catch(Exception e) {
                 helper.printFileError("Could not load configuration", e);
             }
 
             // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-            FileIcons.setScaleFactor(Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TABLE_ICON_SCALE, MuPreferences.DEFAULT_TABLE_ICON_SCALE)));
-            FileIcons.setSystemIconsPolicy(MuConfigurations.getPreferences().getVariable(MuPreference.USE_SYSTEM_FILE_ICONS, MuPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
+            FileIcons.setScaleFactor(Math.max(1.0f, TcConfigurations.getPreferences().getVariable(TcPreference.TABLE_ICON_SCALE, TcPreferences.DEFAULT_TABLE_ICON_SCALE)));
+            FileIcons.setSystemIconsPolicy(TcConfigurations.getPreferences().getVariable(TcPreference.USE_SYSTEM_FILE_ICONS, TcPreferences.DEFAULT_USE_SYSTEM_FILE_ICONS));
         }
     }
 
@@ -343,7 +343,7 @@ public class TrolCommander {
         }
 
         private static boolean isNotificationsEnabled() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_SYSTEM_NOTIFICATIONS, MuPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.ENABLE_SYSTEM_NOTIFICATIONS, TcPreferences.DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS);
         }
     }
 
@@ -393,7 +393,7 @@ public class TrolCommander {
         }
 
         private static boolean isBonjourEnabled() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.ENABLE_BONJOUR_DISCOVERY, MuPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.ENABLE_BONJOUR_DISCOVERY, TcPreferences.DEFAULT_ENABLE_BONJOUR_DISCOVERY);
         }
     }
 
@@ -405,7 +405,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             try {
-                boolean install = !MuConfigurations.isPreferencesFileExists();
+                boolean install = !TcConfigurations.isPreferencesFileExists();
                 com.mucommander.desktop.DesktopManager.init(install);
             } catch(Exception e) {
                 helper.printError("Could not initialize desktop", e, true);
@@ -481,7 +481,7 @@ public class TrolCommander {
         @Override
         void run() throws Exception {
             // Shows the splash screen, if enabled in the preferences
-            useSplash = MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_SPLASH_SCREEN, MuPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
+            useSplash = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_SPLASH_SCREEN, TcPreferences.DEFAULT_SHOW_SPLASH_SCREEN);
             if (useSplash) {
                 splashScreen = new SplashScreen(RuntimeConstants.VERSION, "Loading preferences...");
             }
@@ -529,15 +529,15 @@ public class TrolCommander {
         }
 
         private static boolean isListHiddenFiles() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.LIST_HIDDEN_FILES, MuPreferences.DEFAULT_LIST_HIDDEN_FILES);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.LIST_HIDDEN_FILES, TcPreferences.DEFAULT_LIST_HIDDEN_FILES);
         }
 
         private static boolean isSmbExtendedSecurityEnabled() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.SMB_USE_EXTENDED_SECURITY, MuPreferences.DEFAULT_SMB_USE_EXTENDED_SECURITY);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.SMB_USE_EXTENDED_SECURITY, TcPreferences.DEFAULT_SMB_USE_EXTENDED_SECURITY);
         }
 
         private static int isSmbLmCompatibilityEnabled() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.SMB_LM_COMPATIBILITY, MuPreferences.DEFAULT_SMB_LM_COMPATIBILITY);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.SMB_LM_COMPATIBILITY, TcPreferences.DEFAULT_SMB_LM_COMPATIBILITY);
         }
     }
 
@@ -630,7 +630,7 @@ public class TrolCommander {
 
         @Override
         void run() throws Exception {
-            boolean showSetup = MuConfigurations.getPreferences().getVariable(MuPreference.THEME_TYPE) == null;
+            boolean showSetup = TcConfigurations.getPreferences().getVariable(TcPreference.THEME_TYPE) == null;
             if (showSetup) {
                 new InitialSetupDialog(WindowManager.getCurrentMainFrame()).showDialog();
             }
@@ -950,11 +950,11 @@ public class TrolCommander {
         }
 
         // Check for newer version unless it was disabled
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE, MuPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
+        if (TcConfigurations.getPreferences().getVariable(TcPreference.CHECK_FOR_UPDATE, TcPreferences.DEFAULT_CHECK_FOR_UPDATE)) {
             SwingUtilities.invokeLater(() -> {
                 try {
                     VersionChecker versionChecker = VersionChecker.getInstance();
-                    if (versionChecker.isNewVersionAvailable()) {
+                    if (versionChecker != null && versionChecker.isNewVersionAvailable()) {
                         new CheckVersionDialog(WindowManager.getCurrentMainFrame(), versionChecker, false);
                     }
                 } catch (Exception e) {

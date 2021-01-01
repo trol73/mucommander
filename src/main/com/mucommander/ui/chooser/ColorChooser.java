@@ -59,7 +59,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
     /** Currently selected color. */
     private Color          currentColor;
     /** Color on which the dialog was initialised. */
-    private Color initialColor;
+    private final Color initialColor;
     /** Property to change in the preview component when the current color changes */
     private String previewColorPropertyName;
 

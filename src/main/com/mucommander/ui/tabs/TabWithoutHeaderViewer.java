@@ -50,8 +50,9 @@ public class TabWithoutHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	@Override
 	public void add(T tab, int index) {
-		if (index > 0)
+		if (index > 0) {
 			throw new IllegalArgumentException("Unable to add tab at index > 0 to single tab display");
+		}
 		add(tab);
 	}
 

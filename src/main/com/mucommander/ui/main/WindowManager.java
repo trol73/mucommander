@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.ShutdownHook;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.frame.MainFrameBuilder;
@@ -61,7 +61,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     // The following constants are used to compute the proper position of a new MainFrame.
 
     /** MainFrame (main muCommander window) instances */
-    private List<MainFrame> mainFrames = new Vector<>();
+    private final List<MainFrame> mainFrames = new Vector<>();
     
     /** MainFrame currently being used (that has focus),
      * or last frame to have been used if muCommander doesn't have focus */	
@@ -77,7 +77,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      */
     private static void installCustomLookAndFeels() {
         // Get all available custom look and feels
-        List<String> plafs = MuConfigurations.getPreferences().getListVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+        List<String> plafs = TcConfigurations.getPreferences().getListVariable(TcPreference.CUSTOM_LOOK_AND_FEELS, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
 
         // Tries to retrieve the custom look and feels list.
         if (plafs == null) {
@@ -108,7 +108,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         installCustomLookAndFeels();
         
         // Sets custom lookAndFeel if different from current lookAndFeel
-        String lnfName = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
+        String lnfName = TcConfigurations.getPreferences().getVariable(TcPreference.LOOK_AND_FEEL);
         if (lnfName != null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
             setLookAndFeel(lnfName);
         }
@@ -117,7 +117,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             getLogger().debug("Could load look'n feel from preferences");
         }
         
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
     }
 
     /**
@@ -400,7 +400,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * Test if there is at least one window (viewer, editor...) still showing
      */
     private boolean hasMoreActiveFrames() {
-        Frame frames[] = Frame.getFrames();
+        Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
             if (frame.isShowing()) {
                 getLogger().debug("found active frame");
@@ -432,7 +432,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
     	// /!\ font.size is set after font.family in AppearancePrefPanel
     	// that's why we only listen to this one in order not to change Font twice
-    	if (MuPreferences.LOOK_AND_FEEL.equals(var)) {
+    	if (TcPreferences.LOOK_AND_FEEL.equals(var)) {
     		String lnfName = event.getValue();
 
     		if (!UIManager.getLookAndFeel().getClass().getName().equals(lnfName)) {

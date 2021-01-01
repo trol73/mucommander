@@ -17,10 +17,11 @@
  */
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  *
  * Created on 26/09/2016.
  */
-public class TogglePanelPreviewModeAction extends MuAction {
+public class TogglePanelPreviewModeAction extends TcAction {
 
     /**
      * Creates a new <code>ToggleTableViewModeShortAction</code>
@@ -78,10 +79,14 @@ public class TogglePanelPreviewModeAction extends MuAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK);
+            if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK);
+            } else {
+                return KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK);
+            }
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new TogglePanelPreviewModeAction(mainFrame, properties);
         }
     }

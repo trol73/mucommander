@@ -55,7 +55,7 @@ public class VersionedXmlConfigurationReader extends XmlConfigurationReader {
         super.startElement(uri, localName, qName, attributes);
 
         if (isRootElement) {
-            version = attributes.getValue(MuPreferences.VERSION_ATTRIBUTE);
+            version = attributes.getValue(TcPreferences.VERSION_ATTRIBUTE);
             isRootElement = false;
         }
     }

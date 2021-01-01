@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import java.awt.Font;
  * Created on 27/10/14.
  */
 public class TerminalSettingsProvider extends DefaultSettingsProvider {
-
 
     @Override
     public TextStyle getDefaultStyle() {

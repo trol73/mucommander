@@ -19,9 +19,9 @@ import javax.swing.JTextField;
  */
 public class WebDAVPanel extends ServerPanel {
 
-    private JTextField serverField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private final JTextField serverField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
 
     private static String lastServer = "";
     private static String lastUsername = System.getProperty("user.name");
@@ -63,7 +63,6 @@ public class WebDAVPanel extends ServerPanel {
     @Override
     FileURL getServerURL() throws MalformedURLException {
         updateValues();
-
         
         int port = FileURL.getRegisteredHandler(FileProtocols.WEBDAV).getStandardPort();
         
@@ -71,8 +70,8 @@ public class WebDAVPanel extends ServerPanel {
         
         try {
             URI uri = new URI(lastServer);
-            if(uri.getScheme() != null){
-                if(uri.getScheme().equalsIgnoreCase("http")){
+            if (uri.getScheme() != null){
+                if (uri.getScheme().equalsIgnoreCase("http")){
                     port = 80;
                 } else if(uri.getScheme().equalsIgnoreCase("https")){
                     port = 443;
@@ -87,7 +86,6 @@ public class WebDAVPanel extends ServerPanel {
 
         fileUrl.setCredentials(new Credentials(lastUsername, lastPassword));
 
-        // Set port
         fileUrl.setPort(port);
 
         return fileUrl;

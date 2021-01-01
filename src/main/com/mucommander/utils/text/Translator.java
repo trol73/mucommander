@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 
 
 /**
@@ -94,7 +94,7 @@ public class Translator {
 
 
     private static Locale loadLocale() {
-        String localeNameFromConf = MuConfigurations.getPreferences().getVariable(MuPreference.LANGUAGE);
+        String localeNameFromConf = TcConfigurations.getPreferences().getVariable(TcPreference.LANGUAGE);
         if (localeNameFromConf == null) {
             // language is not set in preferences, use system's language
             // Try to match language with the system's language, only if the system's language
@@ -171,7 +171,7 @@ public class Translator {
             getLogger().debug("Language " + locale + " is not available, falling back to English");
         }
         // Set preferred language in configuration file
-        MuConfigurations.getPreferences().setVariable(MuPreference.LANGUAGE, locale.toLanguageTag());
+        TcConfigurations.getPreferences().setVariable(TcPreference.LANGUAGE, locale.toLanguageTag());
 
         Translator.language = locale;
         getLogger().debug("Current language has been set to " + Translator.language);

@@ -30,9 +30,9 @@ import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.impl.sftp.SFTPFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.commons.runtime.JavaVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.utils.text.Translator;
@@ -135,8 +135,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     static {
         // Initialize the size column format based on the configuration
-        setSelectedFileSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        setSelectedFileSizeFormat(TcConfigurations.getPreferences().getVariable(TcPreference.DISPLAY_COMPACT_FILE_SIZE,
+                                                  TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
 
         // Listens to configuration changes and updates static fields accordingly.
         // Note: a reference to the listener must be kept to prevent it from being garbage-collected.
@@ -144,12 +144,12 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             public synchronized void configurationChanged(ConfigurationEvent event) {
                 String var = event.getVariable();
 
-                if (var.equals(MuPreferences.DISPLAY_COMPACT_FILE_SIZE)) {
+                if (var.equals(TcPreferences.DISPLAY_COMPACT_FILE_SIZE)) {
                     setSelectedFileSizeFormat(event.getBooleanValue());
                 }
             }
         };
-        MuConfigurations.addPreferencesListener(CONFIGURATION_ADAPTER);
+        TcConfigurations.addPreferencesListener(CONFIGURATION_ADAPTER);
     }
 
 
@@ -251,7 +251,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     }
 
     private static boolean shouldBeVisible() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.STATUS_BAR_VISIBLE, TcPreferences.DEFAULT_STATUS_BAR_VISIBLE);
     }
 
 

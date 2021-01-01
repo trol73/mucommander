@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class EditBookmarksAction extends MuAction {
+public class EditBookmarksAction extends TcAction {
 
     private EditBookmarksAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class EditBookmarksAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new EditBookmarksAction(mainFrame, properties);
 		}
     }

@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2014-2016 Oleg Trifonov
+ * Copyright (C) 2014-2020 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@ package com.mucommander.ui.combobox;
 
 import com.mucommander.ui.dialog.FocusDialog;
 
-import javax.swing.JComboBox;
-import java.awt.Container;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
@@ -29,7 +29,25 @@ import java.awt.event.KeyEvent;
  * Created on 20/10/14.
  * @author Oleg Trifonov
  */
-public class MuComboBox<E> extends JComboBox<E> {
+public class TcComboBox<E> extends JComboBox<E> {
+
+    public TcComboBox() {
+        super();
+    }
+
+    public TcComboBox(java.util.List<E> items) {
+        super();
+        for (E item : items) {
+            addItem(item);
+        }
+    }
+
+    public TcComboBox(E[] items) {
+        super();
+        for (E item : items) {
+            addItem(item);
+        }
+    }
 
     @Override
     public void processKeyEvent(KeyEvent e) {
@@ -37,14 +55,18 @@ public class MuComboBox<E> extends JComboBox<E> {
         super.processKeyEvent(e);
         // Close parent FocusDialog if ESC pressed
         if (!popupVisible && e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            Container container = getParent();
-            while (container != null) {
-                if (container instanceof FocusDialog) {
-                    ((FocusDialog) container).dispose();
-                    break;
-                }
-                container = container.getParent();
+            disposeParentFocusDialog();
+        }
+    }
+
+    private void disposeParentFocusDialog() {
+        Container container = getParent();
+        while (container != null) {
+            if (container instanceof FocusDialog) {
+                ((FocusDialog) container).dispose();
+                break;
             }
+            container = container.getParent();
         }
     }
 

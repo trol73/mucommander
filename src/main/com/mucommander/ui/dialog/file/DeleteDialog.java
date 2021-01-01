@@ -56,13 +56,13 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     private boolean moveToTrash;
 
     /** Allows to control whether files should be moved to trash when deleted or permanently erased */
-    private JCheckBox moveToTrashCheckBox;
+    private JCheckBox cbMoveToTrash;
 
     /** Informs the user about the consequences of deleting files, based on the current 'Move to trash' choice */
-    private InformationPane informationPane;
+    private final InformationPane informationPane;
 
     /** The button that confirms deletion */
-    private JButton deleteButton;
+    private final JButton btnDelete;
 
     /** Dialog size constraints */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
@@ -85,8 +85,8 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         if (trash != null && !baseFolder.isArchive() && !trash.isTrashFile(baseFolder) && trash.canMoveToTrash(baseFolder)) {
             moveToTrash = !deletePermanently;
 
-            moveToTrashCheckBox = new JCheckBox(i18n("delete_dialog.move_to_trash.option"), moveToTrash);
-            moveToTrashCheckBox.addItemListener(this);
+            cbMoveToTrash = new JCheckBox(i18n("delete_dialog.move_to_trash.option"), moveToTrash);
+            cbMoveToTrash.addItemListener(this);
         }
 
         informationPane = new InformationPane();
@@ -100,25 +100,25 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         }
 
         // create file details button and OK/cancel buttons and lay them out a single row
-        deleteButton = new JButton(i18n("delete"));
+        btnDelete = new JButton(i18n("delete"));
         JButton cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(files.size() > 1 ? createFileDetailsButton(fileDetailsPanel) : null,
-                DialogToolkit.createOKCancelPanel(deleteButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnDelete, cancelButton, getRootPane(), this)));
 
         // add panel with multiple fil list below buttons
         if (files.size() > 1) {
             mainPanel.add(fileDetailsPanel);
         }
 
-        if (moveToTrashCheckBox != null) {
-            mainPanel.add(moveToTrashCheckBox);
+        if (cbMoveToTrash != null) {
+            mainPanel.add(cbMoveToTrash);
         }
 
         getContentPane().add(mainPanel);
 
         // Give initial keyboard focus to the 'Delete' button
-        setInitialFocusComponent(deleteButton);
+        setInitialFocusComponent(btnDelete);
 
         // Call dispose() when dialog is closed
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -184,7 +184,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     /////////////////////////////////
 
     public void itemStateChanged(ItemEvent e) {
-        moveToTrash = moveToTrashCheckBox.isSelected();
+        moveToTrash = cbMoveToTrash.isSelected();
         updateDialog();
         pack();
     }
@@ -198,7 +198,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         // Start by disposing this dialog
         dispose();
 
-        if (e.getSource() == deleteButton) {
+        if (e.getSource() == btnDelete) {
             // Starts deleting files
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("delete_dialog.deleting"));
             if (getReturnFocusTo() != null) {

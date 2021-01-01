@@ -42,7 +42,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
 import com.mucommander.ui.action.ActionProperties;
@@ -64,22 +64,22 @@ import com.mucommander.ui.main.MainFrame;
 public class DebugConsoleDialog extends FocusDialog implements ActionListener, ItemListener {
 
     /** Displays log events, and allows to copy their values to the clipboard */
-    private JList<LoggingEvent> loggingEventsList = new JList<>();
+    private final JList<LoggingEvent> loggingEventsList = new JList<>();
 
     /** Allows the log level to be changed */
-    private JComboBox<LogLevel> levelComboBox = new MuComboBox<>();
+    private final JComboBox<LogLevel> levelComboBox = new TcComboBox<>(LogLevel.values());
 
     /** Closes the debug console when pressed */
-    private JButton closeButton;
+    private final JButton btnClose;
 
     /** Refreshes the list with the latest log records when pressed */
-    private JButton refreshButton;
+    private final JButton btnRefresh;
 
     /** Show threads tree */
-    private JButton threadsButton;
+    private final JButton btnThreads;
 
     /** Show active threads tree */
-    private JButton activeThreadsButton;
+    private final JButton btnActiveThreads;
 
     /** Dialog size constraints */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600, 400);
@@ -111,30 +111,30 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        threadsButton = new JButton(i18n("debug_console_dialog.threads"));
-        threadsButton.addActionListener(this);
-        buttonPanel.add(threadsButton);
+        btnThreads = new JButton(i18n("debug_console_dialog.threads"));
+        btnThreads.addActionListener(this);
+        buttonPanel.add(btnThreads);
 
-        activeThreadsButton = new JButton(i18n("debug_console_dialog.active_threads"));
-        activeThreadsButton.addActionListener(this);
-        buttonPanel.add(activeThreadsButton);
+        btnActiveThreads = new JButton(i18n("debug_console_dialog.active_threads"));
+        btnActiveThreads.addActionListener(this);
+        buttonPanel.add(btnActiveThreads);
 
-        refreshButton = new JButton(new RefreshAction.Descriptor().getLabel());
-        refreshButton.addActionListener(this);
-        buttonPanel.add(refreshButton);
+        btnRefresh = new JButton(new RefreshAction.Descriptor().getLabel());
+        btnRefresh.addActionListener(this);
+        buttonPanel.add(btnRefresh);
 
-        closeButton = new JButton(i18n("close"));
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+        btnClose = new JButton(i18n("close"));
+        btnClose.addActionListener(this);
+        buttonPanel.add(btnClose);
 
         southPanel.add(buttonPanel, BorderLayout.EAST);
         contentPane.add(southPanel, BorderLayout.SOUTH);
 
-        setInitialFocusComponent(closeButton);
+        setInitialFocusComponent(btnClose);
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
 
-        setInitialFocusComponent(closeButton);
+        setInitialFocusComponent(btnClose);
     }
 
     /**
@@ -147,12 +147,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         comboPanel.add(new JLabel(i18n("debug_console_dialog.level")+":"));
         LogLevel logLevel = MuLogging.getLogLevel();
 
-        for (LogLevel level:LogLevel.values()) {
-            levelComboBox.addItem(level);
-        }
-        		
         levelComboBox.setSelectedItem(logLevel);
-        		
         levelComboBox.addItemListener(this);
 
         comboPanel.add(levelComboBox);
@@ -190,20 +185,17 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     }
 
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == refreshButton) {
+        if (source == btnRefresh) {
             refreshLogRecords();
-        } else if (source == closeButton) {
+        } else if (source == btnClose) {
             dispose();
-        } else if (source == threadsButton) {
+        } else if (source == btnThreads) {
             printThreads(false);
-        } else if (source == activeThreadsButton) {
+        } else if (source == btnActiveThreads) {
             printThreads(true);
         }
     }
@@ -244,9 +236,6 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         };
     }
 
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
 
     public void itemStateChanged(ItemEvent e) {
         // Refresh the log records displayed in the JList whenever the selected level has been changed.
@@ -258,9 +247,6 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     /**
      * Custom {@link ListCellRenderer} that renders {@link LoggingEvent} instances.

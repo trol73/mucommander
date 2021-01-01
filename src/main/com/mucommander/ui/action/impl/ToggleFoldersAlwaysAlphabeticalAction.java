@@ -18,12 +18,12 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ToggleFoldersAlwaysAlphabeticalAction extends MuAction {
+public class ToggleFoldersAlwaysAlphabeticalAction extends TcAction {
 
     private ToggleFoldersAlwaysAlphabeticalAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -47,7 +47,7 @@ public class ToggleFoldersAlwaysAlphabeticalAction extends MuAction {
         FileTable activeTable = mainFrame.getActiveTable();
         boolean foldersAlwaysAlphabetical = !activeTable.getSortInfo().getFoldersAlwaysAlphabetical();
         activeTable.setFoldersAlwaysAlphabetical(foldersAlwaysAlphabetical);
-        MuConfigurations.getPreferences().setVariable(MuPreference.FOLDERS_ALWAYS_ALPHABETICAL, foldersAlwaysAlphabetical);
+        TcConfigurations.getPreferences().setVariable(TcPreference.FOLDERS_ALWAYS_ALPHABETICAL, foldersAlwaysAlphabetical);
     }
 
 	@Override
@@ -75,7 +75,7 @@ public class ToggleFoldersAlwaysAlphabeticalAction extends MuAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleFoldersAlwaysAlphabeticalAction(mainFrame, properties);
         }
     }

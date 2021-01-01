@@ -57,16 +57,16 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.MoveJob;
 import com.mucommander.utils.text.CustomDateFormat;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.file.AbstractCopyDialog;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -231,7 +231,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         addMouseMotionListener(this);
         addKeyListener(this);
         mainFrame.addActivePanelListener(this);
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
 
         // Mac OS X 10.5 (Leopard) and up uses JTableHeader properties to render sort indicators on table headers
         // instead of a custom header renderer.
@@ -275,7 +275,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     setColumnModel(new FileTableColumnModel(conf));
                 }
                 getColumnModel().getColumn(convertColumnIndexToView(Column.NAME.ordinal())).setCellEditor(filenameEditor);
-                setAutoSizeColumnsEnabled(MuConfigurations.getPreferences().getVariable(MuPreference.AUTO_SIZE_COLUMNS, MuPreferences.DEFAULT_AUTO_SIZE_COLUMNS));
+                setAutoSizeColumnsEnabled(TcConfigurations.getPreferences().getVariable(TcPreference.AUTO_SIZE_COLUMNS, TcPreferences.DEFAULT_AUTO_SIZE_COLUMNS));
                 break;
 
             case COMPACT:
@@ -333,7 +333,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
             private JLabel createRefreshNonExistingLocationLabel() {
                 JLabel label = StyledLabelBuilder.createStyledLabel("{Refresh to reconnect:f:darkGray}");
-                label.setIcon(MuAction.getStandardIcon(RefreshAction.class));
+                label.setIcon(TcAction.getStandardIcon(RefreshAction.class));
                 return label;
             }
 
@@ -1841,14 +1841,14 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public void configurationChanged(ConfigurationEvent event) {
         switch (event.getVariable()) {
-            case MuPreferences.DISPLAY_COMPACT_FILE_SIZE:
+            case TcPreferences.DISPLAY_COMPACT_FILE_SIZE:
             	FileTableModel.setSizeFormat(event.getBooleanValue());
             	tableModel.fillCellCache(mainFrame.getActiveTable());
             	resizeAndRepaint();
                 break;
-            case MuPreferences.DATE_FORMAT:
-            case MuPreferences.DATE_SEPARATOR:
-            case MuPreferences.TIME_FORMAT:
+            case TcPreferences.DATE_FORMAT:
+            case TcPreferences.DATE_SEPARATOR:
+            case TcPreferences.TIME_FORMAT:
                 // Note: for the update to work properly, CustomDateFormat's configurationChanged() method has to be called
                 // before FileTable's, so that CustomDateFormat gets notified of date format first.
                 // Since listeners are stored by MuConfiguration in a hash map, order is pretty much random.
@@ -1857,12 +1857,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 tableModel.fillCellCache(mainFrame.getActiveTable());
                 resizeAndRepaint();
                 break;
-            case MuPreferences.TABLE_ICON_SCALE:
+            case TcPreferences.TABLE_ICON_SCALE:
                 // Repaint file icons if their size has changed
                 // Recalculate row height, revalidate and repaint the table
                 setRowHeight();
                 break;
-            case MuPreferences.USE_SYSTEM_FILE_ICONS:
+            case TcPreferences.USE_SYSTEM_FILE_ICONS:
                 // Repaint file icons if the system file icons policy has changed
                 repaint();
         }
@@ -2395,8 +2395,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
     private static boolean isQuickSearchMatchesFirst() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST,
-                MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST,
+                TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
     }
 
 

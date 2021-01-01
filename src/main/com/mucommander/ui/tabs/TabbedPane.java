@@ -28,7 +28,7 @@ import javax.swing.JTabbedPane;
 public abstract class TabbedPane<T extends Tab> extends JTabbedPane {
 
 	/**
-	 * Add tab to the end of the tabbedpane 
+	 * Add tab to the end of the tabbed pane
 	 * 
 	 * @param tab - implementation of Tab interface
 	 */

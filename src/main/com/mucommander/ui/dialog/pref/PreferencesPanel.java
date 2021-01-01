@@ -19,8 +19,8 @@
 package com.mucommander.ui.dialog.pref;
 
 import com.mucommander.commons.conf.ValueList;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 
 import javax.swing.*;
 
@@ -67,23 +67,23 @@ public abstract class PreferencesPanel extends JPanel {
         return true;
     }
 
-    protected String getVariable(MuPreference preference) {
-        return MuConfigurations.getPreferences().getVariable(preference);
+    protected String getVariable(TcPreference preference) {
+        return TcConfigurations.getPreferences().getVariable(preference);
     }
 
-    protected boolean getVariable(MuPreference preference, boolean value) {
-        return MuConfigurations.getPreferences().getVariable(preference, value);
+    protected boolean getVariable(TcPreference preference, boolean value) {
+        return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected String getVariable(MuPreference preference, String value) {
-        return MuConfigurations.getPreferences().getVariable(preference, value);
+    protected String getVariable(TcPreference preference, String value) {
+        return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected float getVariable(MuPreference preference, float value) {
-        return MuConfigurations.getPreferences().getVariable(preference, value);
+    protected float getVariable(TcPreference preference, float value) {
+        return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected ValueList getListVariable(MuPreference preference, String separator) {
-        return MuConfigurations.getPreferences().getListVariable(preference, separator);
+    protected ValueList getListVariable(TcPreference preference, String separator) {
+        return TcConfigurations.getPreferences().getListVariable(preference, separator);
     }
 }

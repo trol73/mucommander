@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class ShowServerConnectionsAction extends MuAction {
+public class ShowServerConnectionsAction extends TcAction {
 
     private ShowServerConnectionsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class ShowServerConnectionsAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ShowServerConnectionsAction(mainFrame, properties);
         }
     }

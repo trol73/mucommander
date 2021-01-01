@@ -37,16 +37,12 @@ import java.util.*;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class FileTableColumnModel implements TableColumnModel, PropertyChangeListener {
-    // - Class constants -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** If {@link #widthCache} is set to this, it needs to be recalculated. */
     private static final int                CACHE_OUT_OF_DATE = -1;
     /** Even though we're not using column selection, the table API forces us to return this instance or will crash. */
     private static final ListSelectionModel SELECTION_MODEL   = new DefaultListSelectionModel();
 
 
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** All registered listeners. */
     private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<>();
     /** Cache for the table's total width. */
@@ -61,12 +57,10 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     private int           countCache;
     /** Whether the column sizes were set already. */
     private boolean       columnSizesSet;
-    private int internalIndexCache[];
+    private int[] internalIndexCache;
 
 
 
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table column model.
      */
@@ -117,8 +111,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
 
 
-    // - Configuration -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     public synchronized FileTableConfiguration getConfiguration() {
         FileTableConfiguration conf = new FileTableConfiguration();
         for (Column c : Column.values()) {
@@ -134,9 +126,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     }
 
 
-
-    // - Enabled state -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     /**
      * Returns <code>true</code> if the specified column is enabled.
@@ -156,9 +145,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         this.enabled[column.ordinal()] = enabled;
     }
 
-
-    // - Visibility state ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     /**
      * Sets the specified column's visibility state.

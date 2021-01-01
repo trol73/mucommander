@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class RefreshAction extends MuAction {
+public class RefreshAction extends TcAction {
 
     private RefreshAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -67,7 +67,7 @@ public class RefreshAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new RefreshAction(mainFrame, properties);
 		}
     }

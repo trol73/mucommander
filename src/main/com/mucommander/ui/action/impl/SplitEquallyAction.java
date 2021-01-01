@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SplitEquallyAction extends MuAction {
+public class SplitEquallyAction extends TcAction {
 
     private SplitEquallyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -65,7 +65,7 @@ public class SplitEquallyAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new SplitEquallyAction(mainFrame, properties);
 		}
     }

@@ -27,18 +27,18 @@ import ch.qos.logback.core.Layout;
 
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 
 /**
  * This <code>java.util.logging</code> <code>Handler</code> collects the last log messages that were published by
  * the different muCommander loggers, so they can be displayed at any time in the {@link DebugConsoleDialog}.
  * Log records are kept in memory as a sliding window. The number of log records is controlled by the
- * {@link MuPreferences#LOG_BUFFER_SIZE} configuration variable: the more records, the more memory is used.
+ * {@link TcPreferences#LOG_BUFFER_SIZE} configuration variable: the more records, the more memory is used.
  *
  * @see DebugConsoleDialog
- * @see MuPreferences#LOG_BUFFER_SIZE
+ * @see TcPreferences#LOG_BUFFER_SIZE
  * @author Maxence Bernard, Arik Hadas
  */
 public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
@@ -59,7 +59,7 @@ public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
     public DebugConsoleAppender(Layout<ILoggingEvent> loggingEventsLayout) {
     	this.loggingEventLayout = loggingEventsLayout;
     	
-        bufferSize = MuConfigurations.getPreferences().getVariable(MuPreference.LOG_BUFFER_SIZE, MuPreferences.DEFAULT_LOG_BUFFER_SIZE);
+        bufferSize = TcConfigurations.getPreferences().getVariable(TcPreference.LOG_BUFFER_SIZE, TcPreferences.DEFAULT_LOG_BUFFER_SIZE);
         loggingEventsList = new LinkedList<>();
     }
 

@@ -25,8 +25,6 @@ import com.mucommander.ui.main.table.Column;
  * @author Nicolas Rinaudo
  */
 public class FileTableConfiguration {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Each column's enabled state. */
     private final boolean[] enabled;
     /** Initial width of each column. */
@@ -36,8 +34,6 @@ public class FileTableConfiguration {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table configuration.
      */
@@ -49,9 +45,6 @@ public class FileTableConfiguration {
     }
 
 
-
-    // - Enabled access ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the specified column is enabled.
      * @param  column column whose enabled state should be returned.
@@ -75,8 +68,6 @@ public class FileTableConfiguration {
 
 
 
-    // - Width access --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the initial width of the specified column.
      * @param  column column whose width should be retrieved.
@@ -101,8 +92,6 @@ public class FileTableConfiguration {
 
 
 
-    // - Order access --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the desired initial position of the specified column.
      * <p>

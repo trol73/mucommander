@@ -21,7 +21,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SetSameFolderAction extends MuAction implements ActivePanelListener {
+public class SetSameFolderAction extends TcAction implements ActivePanelListener {
 
     private SetSameFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -88,7 +88,7 @@ public class SetSameFolderAction extends MuAction implements ActivePanelListener
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_E, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SetSameFolderAction(mainFrame, properties);
         }
     }

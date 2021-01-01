@@ -27,14 +27,14 @@ import com.mucommander.ui.action.impl.MoveTabToOtherPanelAction;
 import com.mucommander.ui.action.impl.SetTabTitleAction;
 import com.mucommander.ui.action.impl.ToggleLockTabAction;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.popup.MuActionsPopupMenu;
+import com.mucommander.ui.popup.TcActionsPopupMenu;
 
 /**
 * Contextual popup menu invoked by {@link FileTableTabbedPane} when right-clicking on a tab's title.
 * 
 * @author Arik Hadas
 */
-class FileTableTabPopupMenu extends MuActionsPopupMenu {
+class FileTableTabPopupMenu extends TcActionsPopupMenu {
 
 	FileTableTabPopupMenu(MainFrame mainFrame) {
 		super(mainFrame);

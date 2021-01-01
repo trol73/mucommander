@@ -28,7 +28,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
 import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -111,7 +111,7 @@ public class InternalEditAction extends AbstractViewerAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new InternalEditAction(mainFrame, properties);
         }
 

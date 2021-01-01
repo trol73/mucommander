@@ -37,7 +37,7 @@ public class CompactFileTableModel extends BaseFileTableModel {
     private int offset;
 
     /** Cell values cache */
-    private String cellValuesCache[];
+    private String[] cellValuesCache;
 
     public CompactFileTableModel(int columns, int visibleRows) {
         super();

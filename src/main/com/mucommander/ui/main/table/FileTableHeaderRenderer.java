@@ -52,10 +52,6 @@ public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         // Note: the label is returned by DefaultTableHeaderRenderer#getTableCellRendererComponent() is in fact this

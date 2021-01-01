@@ -35,7 +35,7 @@ public class LoadUserMenuException extends Exception {
         if (pos < 0) {
             return -1;
         }
-        String parts[] = msg.substring(pos, msg.length()-1).split(" ");
+        String[] parts = msg.substring(pos, msg.length()-1).split(" ");
         try {
             return Integer.parseInt(parts[3]);
         } catch (NumberFormatException nfe) {
@@ -49,7 +49,7 @@ public class LoadUserMenuException extends Exception {
         if (pos < 0) {
             return -1;
         }
-        String parts[] = msg.substring(pos, msg.length()-1).split(" ");
+        String[] parts = msg.substring(pos, msg.length()-1).split(" ");
         try {
             return Integer.parseInt(parts[1]);
         } catch (NumberFormatException nfe) {

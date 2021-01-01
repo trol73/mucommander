@@ -24,24 +24,24 @@ import java.io.FileNotFoundException;
  * 
  * @author Arik Hadas
  */
-class MuPreferencesFile extends MuConfigurationFile {
+class TcPreferencesFile extends TcConfigurationFile {
 	
 	private static final String DEFAULT_PREFERENCES_FILE_NAME = "preferences.xml";
 	
-	static MuPreferencesFile getPreferencesFile(String path) throws FileNotFoundException {
-		return new MuPreferencesFile(path);
+	static TcPreferencesFile getPreferencesFile(String path) throws FileNotFoundException {
+		return new TcPreferencesFile(path);
 	}
 	
-	static MuPreferencesFile getPreferencesFile() {
+	static TcPreferencesFile getPreferencesFile() {
 		try {
-			return new MuPreferencesFile(null);
+			return new TcPreferencesFile(null);
 		} catch (FileNotFoundException e) {
 			// Not possible exception
 			return null;
 		}
 	}
 	
-	private MuPreferencesFile(String path) throws FileNotFoundException {
+	private TcPreferencesFile(String path) throws FileNotFoundException {
 		super(path, DEFAULT_PREFERENCES_FILE_NAME);
 	}
 }

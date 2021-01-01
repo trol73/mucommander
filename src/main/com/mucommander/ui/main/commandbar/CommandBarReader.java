@@ -67,10 +67,7 @@ class CommandBarReader extends CommandBarIO {
             SAXParserFactory.newInstance().newSAXParser().parse(in, this);
         }
     }
-
-    ////////////////////
-    ///// getters //////
-    ////////////////////
+    
     
     String[] getActionsRead() {
     	int nbActions = actionsIdsV.size();

@@ -1,13 +1,13 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2017 Oleg Trifonov
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -29,7 +29,7 @@ import com.mucommander.process.ExecutorUtils;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -43,6 +43,28 @@ import java.util.Map;
  */
 public class CompareFilesAction extends SelectedFilesAction {
 
+    private static final String OPENDIFF_PATH = "/usr/bin/opendiff";
+    private static final String MELD_PATH = "/usr/bin/meld";
+
+    public enum Method {
+        MAC_OS_X_DIFF {
+            @Override
+            void exec(String file1, String file2) throws IOException, InterruptedException {
+                ExecutorUtils.execute(new String[]{OPENDIFF_PATH,  file1, file2});
+            }
+        },
+        LINUX_MELD {
+            @Override
+            void exec(String file1, String file2) throws IOException, InterruptedException {
+                ExecutorUtils.execute(new String[]{MELD_PATH,  file1, file2});
+            }
+        };
+
+        abstract void exec(String file1, String file2) throws IOException, InterruptedException;
+    }
+
+    private static Method method;
+
     private CompareFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         setSelectedFileFilter(new AndFileFilter(
@@ -53,8 +75,7 @@ public class CompareFilesAction extends SelectedFilesAction {
                     if (supported()) {
                         AbstractFile leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile();
                         AbstractFile rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile();
-                        return  leftFile != null && !leftFile.isDirectory() && rightFile != null && !rightFile.isDirectory() &&
-                                leftFile instanceof LocalFile && rightFile instanceof LocalFile;
+                        return isLocalFile(leftFile) && isLocalFile(rightFile);
                     }
                     return false;
                 }
@@ -62,17 +83,29 @@ public class CompareFilesAction extends SelectedFilesAction {
         ));
     }
 
-    @Override
-    public void performAction(FileSet files) {
-        String leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
-        String rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile().getAbsolutePath().replace(" ", "\\ ");
-        compareTwoFiles(leftFile, rightFile);
+    private static boolean isLocalFile(AbstractFile file) {
+        return file != null && !file.isDirectory() && file instanceof LocalFile;
     }
 
-    public static void compareTwoFiles(String fiel1, String file2) {
+    @Override
+    public void performAction(FileSet files) {
+        AbstractFile leftFile = mainFrame.getLeftPanel().getFileTable().getSelectedFile();
+        AbstractFile rightFile = mainFrame.getRightPanel().getFileTable().getSelectedFile();
+        if (leftFile == null || rightFile == null) {
+            return;
+        }
+        String leftFilePath = leftFile.getAbsolutePath().replace(" ", "\\ ");
+        String rightFilePath = rightFile.getAbsolutePath().replace(" ", "\\ ");
+        compareTwoFiles(leftFilePath, rightFilePath);
+    }
+
+    public static void compareTwoFiles(String file1, String file2) {
+        if (method == null || file1 == null || file2 == null) {
+            return;
+        }
         new Thread(() -> {
             try {
-                ExecutorUtils.execute("/usr/bin/opendiff " + fiel1 + " " + file2);
+                method.exec(file1, file2);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -80,7 +113,25 @@ public class CompareFilesAction extends SelectedFilesAction {
     }
 
     public static boolean supported() {
-        return OsFamily.MAC_OS_X.isCurrent() && new File("/usr/bin/opendiff").exists();
+        if (method != null) {
+            return true;
+        }
+
+        switch (OsFamily.getCurrent()) {
+            case MAC_OS_X:
+                if (new File(OPENDIFF_PATH).exists()) {
+                    method = Method.MAC_OS_X_DIFF;
+                    return true;
+                }
+                break;
+            case LINUX:
+                if (new File(MELD_PATH).exists()) {
+                    method = Method.LINUX_MELD;
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     @Override
@@ -107,7 +158,7 @@ public class CompareFilesAction extends SelectedFilesAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new CompareFilesAction(mainFrame, properties);
         }
 

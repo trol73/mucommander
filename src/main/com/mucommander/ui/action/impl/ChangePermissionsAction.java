@@ -73,7 +73,7 @@ public class ChangePermissionsAction extends SelectedFilesAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ChangePermissionsAction(mainFrame, properties);
         }
     }

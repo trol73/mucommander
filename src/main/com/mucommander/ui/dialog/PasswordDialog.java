@@ -71,7 +71,7 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
         btnOk.addActionListener(this);
         btnCancel = new JButton(i18n("cancel"));
         btnCancel.addActionListener(this);
-        JButton buttons[] = new JButton[]{btnOk, btnCancel};
+        JButton[] buttons = new JButton[]{btnOk, btnCancel};
 
         setInitialFocusComponent(edtPassword);
         mainPanel.add(new ButtonChoicePanel(buttons, 2, getRootPane()));

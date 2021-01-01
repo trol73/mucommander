@@ -38,7 +38,7 @@ import com.mucommander.ui.icon.FileIcons;
  * 
  * @author Nicolas Rinaudo, Maxence Bernard, Arik Hadas
  */
-public class MuPreferences implements MuPreferencesAPI {
+public class TcPreferences implements TcPreferencesAPI {
 
 	// - Misc. variables -----------------------------------------------------
 	// -----------------------------------------------------------------------
@@ -444,8 +444,8 @@ public class MuPreferences implements MuPreferencesAPI {
 	/**
 	 * Prevents instantiation of this class from outside of this package.
 	 */
-	MuPreferences() {
-		MuPreferencesFile muPreferencesFile = MuPreferencesFile.getPreferencesFile();
+	TcPreferences() {
+		TcPreferencesFile muPreferencesFile = TcPreferencesFile.getPreferencesFile();
 
         configuration = new Configuration(muPreferencesFile, new VersionedXmlConfigurationReaderFactory(),
 				new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
@@ -490,10 +490,10 @@ public class MuPreferences implements MuPreferencesAPI {
 	void write() throws IOException, ConfigurationException {
 		if (configurationVersion != null && !configurationVersion.equals(RuntimeConstants.VERSION)) {
 			// Clear the configuration before saving to drop preferences which are unused anymore
-			Configuration conf = new Configuration(MuPreferencesFile.getPreferencesFile(), new VersionedXmlConfigurationReaderFactory(),
+			Configuration conf = new Configuration(TcPreferencesFile.getPreferencesFile(), new VersionedXmlConfigurationReaderFactory(),
 					new VersionedXmlConfigurationWriterFactory(ROOT_ELEMENT));
 
-			for (MuPreference preference : MuPreference.values())
+			for (TcPreference preference : TcPreference.values())
 				conf.setVariable(preference.toString(), configuration.getVariable(preference.toString()));
 			
 			// Remove preferences which are not relevant if we're not using MAC
@@ -533,7 +533,7 @@ public class MuPreferences implements MuPreferencesAPI {
 	 * @throws FileNotFoundException if the specified file is not a valid file.
 	 */
 	void setConfigurationFile(String file) throws FileNotFoundException {
-		configuration.setSource(MuPreferencesFile.getPreferencesFile(file));
+		configuration.setSource(TcPreferencesFile.getPreferencesFile(file));
 	}
 
 	/**
@@ -549,68 +549,68 @@ public class MuPreferences implements MuPreferencesAPI {
 	// MuPreferencesAPI implementation //
 	/////////////////////////////////////
 
-	public boolean setVariable(MuPreference preference, String value) {
+	public boolean setVariable(TcPreference preference, String value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(MuPreference preference, int value) {
+	public boolean setVariable(TcPreference preference, int value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(MuPreference preference, List<String> value,
-			String separator) {
+	public boolean setVariable(TcPreference preference, List<String> value,
+							   String separator) {
 		return configuration.setVariable(preference.toString(), value, separator);
 	}
 
-	public boolean setVariable(MuPreference preference, float value) {
+	public boolean setVariable(TcPreference preference, float value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(MuPreference preference, boolean value) {
+	public boolean setVariable(TcPreference preference, boolean value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(MuPreference preference, long value) {
+	public boolean setVariable(TcPreference preference, long value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(MuPreference preference, double value) {
+	public boolean setVariable(TcPreference preference, double value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public String getVariable(MuPreference preference) {
+	public String getVariable(TcPreference preference) {
 		return configuration.getVariable(preference.toString());
 	}
 	
-	public String getVariable(MuPreference preference, String value) {
+	public String getVariable(TcPreference preference, String value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
-	public int getVariable(MuPreference preference, int value) {
+	public int getVariable(TcPreference preference, int value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
-	public List<String> getVariable(MuPreference preference, List<String> value, String separator) {
+	public List<String> getVariable(TcPreference preference, List<String> value, String separator) {
 		return configuration.getVariable(preference.toString(), value, separator);
 	}
 
-	public float getVariable(MuPreference preference, float value) {
+	public float getVariable(TcPreference preference, float value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
-	public boolean getVariable(MuPreference preference, boolean value) { 
+	public boolean getVariable(TcPreference preference, boolean value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
-	public long getVariable(MuPreference preference, long value) {
+	public long getVariable(TcPreference preference, long value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
-	public double getVariable(MuPreference preference, double value) {
+	public double getVariable(TcPreference preference, double value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 	
-	public ValueList getListVariable(MuPreference preference, String separator) {
+	public ValueList getListVariable(TcPreference preference, String separator) {
 		return configuration.getListVariable(preference.toString(), separator);
 	}
 	
@@ -622,7 +622,7 @@ public class MuPreferences implements MuPreferencesAPI {
 		return configuration.getVariable(name);
 	}
 	
-	public boolean isVariableSet(MuPreference preference) {
+	public boolean isVariableSet(TcPreference preference) {
 		return configuration.isVariableSet(preference.toString());
 	}
 	

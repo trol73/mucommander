@@ -24,9 +24,9 @@ import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.dialog.auth.AuthDialog;
@@ -977,7 +977,7 @@ public class LocationChanger {
 	}
 
     private boolean followsSymlinkEnabled() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.CD_FOLLOWS_SYMLINKS, TcPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
     }
 
     /* TODO branch

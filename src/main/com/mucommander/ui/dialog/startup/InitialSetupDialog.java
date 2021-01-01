@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,26 +18,25 @@
 
 package com.mucommander.ui.dialog.startup;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.RuntimeConstants;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
+
+import static com.mucommander.conf.TcPreference.*;
+import static com.mucommander.conf.TcPreference.LOOK_AND_FEEL;
 
 /**
  * Dialog box allowing users to select misc. setup options for muCommander.
@@ -47,24 +46,21 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
     // - Instance fields -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** All available look and feels. */
-    private UIManager.LookAndFeelInfo lfInfo[];
+    private UIManager.LookAndFeelInfo[] lfInfo;
     /** Used to select a startup theme. */
-    private JComboBox<Theme> themeComboBox;
+    private TcComboBox<Theme> cbTheme;
     /** Used to select a look and feel. */
-    private JComboBox<String> lfComboBox;
+    private TcComboBox<String> cbLookAndFeel;
+    private TcComboBox<String> cbEditorTheme;
     /** Used to validate the user's choice. */
     private JButton   okButton;
 
 
-
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates the dialog's theme panel.
      * @return the dialog's theme panel.
      */
-    private JPanel createThemePanel() {
-		// Initialises the theme panel.
+    private JPanel createThemesPanel() {
 		JPanel themePanel = new YBoxPanel();
 		themePanel.setAlignmentX(LEFT_ALIGNMENT);
         themePanel.setBorder(BorderFactory.createTitledBorder(i18n("prefs_dialog.themes")));
@@ -72,31 +68,48 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
 		// Adds the panel description.
 		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		tempPanel.add(new JLabel(i18n("setup.theme") + ':'));
+
+		// Adds the theme combo box.
+		cbTheme = createThemeComboBox();
+		tempPanel.add(cbTheme);
 		themePanel.add(tempPanel);
 
-	// Adds the theme combo box.
-        themeComboBox = new JComboBox<>();
-		Iterator<Theme> themes = ThemeManager.availableThemes();
-		int index = 0;				// Index of the currently analyzed theme.
-		int selectedIndex = 0;		// Index of the current theme in the combo box.
+		// Adds the panel description.
+		tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		tempPanel.add(new JLabel(i18n("prefs_dialog.syntax_themes") + ':'));
 
-		// Adds all themes to the combo box.
-        while(themes.hasNext()) {
-			Theme theme = themes.next();
-			themeComboBox.addItem(theme);
-            if (ThemeManager.isCurrentTheme(theme))
-                selectedIndex = index;
-            index++;
-        }
-	// Selects the current theme.
-        themeComboBox.setSelectedIndex(selectedIndex);
-	themeComboBox.addActionListener(this);
-	themePanel.add(themeComboBox);
+		cbEditorTheme = new TcComboBox<>(ThemeManager.predefinedSyntaxThemeNames());
+		cbEditorTheme.addActionListener(this);
 
-	return themePanel;
+		tempPanel.add(cbEditorTheme);
+		themePanel.add(tempPanel);
+
+		return themePanel;
     }
 
-    /**
+	private TcComboBox<Theme> createThemeComboBox() {
+		TcComboBox<Theme> themeComboBox = new TcComboBox<>();
+		Iterator<Theme> themes = ThemeManager.availableThemes();
+
+		int index = 0;				// Index of the currently analyzed theme.
+		int selectedIndex = 0;		// Index of the current theme in the combo box.
+		// Adds all themes to the combo box.
+		while (themes.hasNext()) {
+			Theme theme = themes.next();
+			themeComboBox.addItem(theme);
+			if (ThemeManager.isCurrentTheme(theme)) {
+				selectedIndex = index;
+			}
+			index++;
+		}
+		// Selects the current theme.
+		themeComboBox.setSelectedIndex(selectedIndex);
+		themeComboBox.addActionListener(this);
+
+		return themeComboBox;
+	}
+
+	/**
      * Creates the dialog's look and feel panel.
      * @return the dialog's look and feel panel.
      */
@@ -112,7 +125,7 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
 		lfPanel.add(tempPanel);
 
 		// Initialises the l&f combo box.
-		lfComboBox = new JComboBox<>();
+		cbLookAndFeel = new TcComboBox<>();
 		lfInfo = UIManager.getInstalledLookAndFeels();
 		String currentLf = UIManager.getLookAndFeel().getName();
 		int selectedIndex = -1;
@@ -128,16 +141,16 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
             else if (selectedIndex == -1 && (currentLf.startsWith(buffer) || buffer.startsWith(currentLf))) {
 				selectedIndex = i;
 			}
-            lfComboBox.addItem(buffer);
+            cbLookAndFeel.addItem(buffer);
         }
 
         // If no match, selects first one
         if (selectedIndex == -1) {
 			selectedIndex = 0;
 		}
-        lfComboBox.setSelectedIndex(selectedIndex);
-		lfComboBox.addActionListener(this);
-		lfPanel.add(lfComboBox);
+        cbLookAndFeel.setSelectedIndex(selectedIndex);
+		cbLookAndFeel.addActionListener(this);
+		lfPanel.add(cbLookAndFeel);
 
 		return lfPanel;
     }
@@ -147,10 +160,10 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
      * @return the dialog's main panel.
      */
     private JPanel createMainPanel() {
-		YBoxPanel mainPanel   = new YBoxPanel();
+		YBoxPanel mainPanel = new YBoxPanel();
 		mainPanel.add(new JLabel(i18n("setup.intro")));
 		mainPanel.addSpace(10);
-		mainPanel.add(createThemePanel());
+		mainPanel.add(createThemesPanel());
 		mainPanel.addSpace(10);
 		mainPanel.add(createLookAndFeelPanel());
 		mainPanel.addSpace(10);
@@ -165,32 +178,61 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
 		return mainPanel;
     }
 
-    /**
+
+	/**
      * Creates a new InitialSetupDialog.
      * @param owner dialog's owner.
      */
     public InitialSetupDialog(Frame owner) {
 		super(owner, i18n("setup.title"), owner);
+		initDefault();
 
 		getContentPane().add(createMainPanel(), BorderLayout.CENTER);
+		pack();
 		setResizable(false);
-        setInitialFocusComponent(themeComboBox);
+        setInitialFocusComponent(cbTheme);
 		setKeyboardDisposalEnabled(false);
         getRootPane().setDefaultButton(okButton);
     }
 
 
-    // - ActionListener code -------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
+	@Override
     public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == themeComboBox) {
-			ThemeManager.setCurrentTheme((Theme) themeComboBox.getSelectedItem());
-		} else if(e.getSource() == lfComboBox) {
-			MuConfigurations.getPreferences().setVariable(MuPreference.LOOK_AND_FEEL, lfInfo[lfComboBox.getSelectedIndex()].getClassName());
-		} else if(e.getSource() == okButton) {
-			ThemeManager.setCurrentTheme((Theme)themeComboBox.getSelectedItem());
-			MuConfigurations.getPreferences().setVariable(MuPreference.LOOK_AND_FEEL, lfInfo[lfComboBox.getSelectedIndex()].getClassName());
+    	Object src = e.getSource();
+		if (src == cbTheme) {
+			ThemeManager.setCurrentTheme((Theme) cbTheme.getSelectedItem());
+		} else if (src == cbLookAndFeel) {
+			setVariable(LOOK_AND_FEEL, lfInfo[cbLookAndFeel.getSelectedIndex()].getClassName());
+		} else if (src == cbEditorTheme) {
+			setVariable(SYNTAX_THEME_NAME, cbEditorTheme.getSelectedIndex());
+		} else if (src == okButton) {
+			ThemeManager.setCurrentTheme((Theme) cbTheme.getSelectedItem());
+			setVariable(LOOK_AND_FEEL, lfInfo[cbLookAndFeel.getSelectedIndex()].getClassName());
+			System.out.println(UIManager.get("MenuItem.margin"));
+			UIManager.put("MenuItem.margin", new javax.swing.plaf.InsetsUIResource(3, 10, 3, 20));
+			System.out.println(UIManager.get("MenuItem.margin"));
 			dispose();
 		}
     }
+
+	private void initDefault() {
+    	boolean isGnome = OsFamily.LINUX.isCurrent() && new com.mucommander.desktop.gnome.GuessedGnomeDesktopAdapter().isAvailable();
+    	if (isGnome && RuntimeConstants.DISPLAY_4K) {
+			setVariable(TOOLBAR_ICON_SCALE, 2.0f);
+			setVariable(COMMAND_BAR_ICON_SCALE, 2.0f);
+			setVariable(TABLE_ICON_SCALE, 3.0f);
+		}
+	}
+
+	private static void setVariable(TcPreference preference, String value) {
+		TcConfigurations.getPreferences().setVariable(preference, value);
+	}
+
+	private static void setVariable(TcPreference preference, int value) {
+		TcConfigurations.getPreferences().setVariable(preference, value);
+	}
+
+	private static void setVariable(TcPreference preference, float value) {
+		TcConfigurations.getPreferences().setVariable(preference, value);
+	}
 }

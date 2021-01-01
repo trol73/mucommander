@@ -52,8 +52,6 @@ import java.awt.*;
  * @author Maxence Bernard, Sun Microsystems
  */
 public class CellLabel extends JLabel {
-    // - Constants -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Amount of border space on the left and right of the cell */
     public static final int CELL_BORDER_WIDTH = 4;
     /** Amount of border space on the top and bottom of the cell */
@@ -156,8 +154,6 @@ public class CellLabel extends JLabel {
 
 
 
-    // - Label content -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Overrides <code>JLabel.setText</code> to call 
      * the super method only if the value has changed since last call.
@@ -239,8 +235,6 @@ public class CellLabel extends JLabel {
 
 
 
-    // - Painting ------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Paints the label.
      * @param g where to paint the label.

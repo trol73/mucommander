@@ -22,9 +22,9 @@ import com.mucommander.auth.CredentialsMapping;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.core.FolderChangeMonitor;
 import com.mucommander.core.LocalLocationHistory;
 import com.mucommander.core.LocationChanger;
@@ -73,24 +73,24 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     /** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private LocationManager locationManager = new LocationManager(this);
+    private final LocationManager locationManager = new LocationManager(this);
 
     /*  We're NOT using JComboBox anymore because of its strange behavior:
         it calls actionPerformed() each time an item is highlighted with the arrow (UP/DOWN) keys,
         so there is no way to tell if it's the final selection (ENTER) or not.
     */
-    private DrivePopupButton driveButton;
-    private LocationTextField locationTextField;
-    private FileTable fileTable;
-    private FileTableTabs tabs;
-    private FoldersTreePanel foldersTreePanel;
-    private JSplitPane treeSplitPane;
+    private final DrivePopupButton driveButton;
+    private final LocationTextField locationTextField;
+    private final FileTable fileTable;
+    private final FileTableTabs tabs;
+    private final FoldersTreePanel foldersTreePanel;
+    private final JSplitPane treeSplitPane;
 
-    private FileDragSourceListener fileDragSourceListener;
+    private final FileDragSourceListener fileDragSourceListener;
 
-    private LocationChanger locationChanger;
+    private final LocationChanger locationChanger;
 
     /** Is directory tree visible */
     private boolean treeVisible = false;
@@ -101,11 +101,11 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     /** Array of all the existing pop ups for this panel's FileTable **/
     private QuickList[] fileTablePopups;
 
-    private JPanel locationPanel;
+    private final JPanel locationPanel;
 
     private PreviewPanel previewPanel;
 
-    private TableSelectionListener previewTableSelectionListener = new TableSelectionListener() {
+    private final TableSelectionListener previewTableSelectionListener = new TableSelectionListener() {
         @Override
         public void selectedFileChanged(FileTable source) {
             if (previewMode) {
@@ -520,7 +520,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
     public void focusLost(FocusEvent e) {
-        if (!MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
+        if (!TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
             fileTable.getQuickSearch().stop();
         }
     }

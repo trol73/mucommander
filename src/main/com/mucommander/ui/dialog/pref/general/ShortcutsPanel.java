@@ -21,7 +21,7 @@ package com.mucommander.ui.dialog.pref.general;
 import com.mucommander.commons.util.StringUtils;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 import com.mucommander.ui.text.KeyStrokeUtils;
@@ -33,7 +33,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Locale;
 
-import static com.mucommander.conf.MuPreference.*;
+import static com.mucommander.conf.TcPreference.*;
 
 
 /**
@@ -43,7 +43,7 @@ import static com.mucommander.conf.MuPreference.*;
  */
 public class ShortcutsPanel extends PreferencesPanel {
 
-    private class Filter extends ShortcutsTable.ActionFilter {
+    private static class Filter extends ShortcutsTable.ActionFilter {
 
         private ActionCategory actionCategory;
         private String text;
@@ -69,7 +69,7 @@ public class ShortcutsPanel extends PreferencesPanel {
         }
     }
 
-    private Filter filter = new Filter();
+    private final Filter filter = new Filter();
 	
 	// The table with action mappings
 	private ShortcutsTable shortcutsTable;
@@ -85,8 +85,6 @@ public class ShortcutsPanel extends PreferencesPanel {
 		shortcutsTable.addDialogListener(parent);
 	}
 	
-	// - UI initialization ------------------------------------------------------
-    // --------------------------------------------------------------------------
 	private void initUI() {
 		setLayout(new BorderLayout());
 
@@ -146,7 +144,6 @@ public class ShortcutsPanel extends PreferencesPanel {
 		
 		final JButton restoreDefaultButton = new JButton();
 		restoreDefaultButton.setAction(new AbstractAction(Translator.get("shortcuts_panel" + ".restore_defaults")) {
-			
 			public void actionPerformed(ActionEvent e) {
 				shortcutsTable.restoreDefaults();
 			}
@@ -164,7 +161,7 @@ public class ShortcutsPanel extends PreferencesPanel {
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		panel.add(new JLabel(Translator.get("shortcuts_panel.show") + ":"));
 		
-		final MuComboBox<ActionCategory> combo = new MuComboBox<>();
+		final TcComboBox<ActionCategory> combo = new TcComboBox<>();
 		combo.addItem(ActionCategory.ALL);
 	    for (ActionCategory category : ActionProperties.getActionCategories()) {
             combo.addItem(category);
@@ -242,7 +239,7 @@ public class ShortcutsPanel extends PreferencesPanel {
     private void addCategoryFilter(final JTextField searchText, final JComboBox<ActionCategory> combo, final JTextField shortcutText) {
         combo.addActionListener(e -> updateFilter(searchText, combo, shortcutText));
         resetShortcutFilterWhenFocusGained(combo, searchText, combo, shortcutText);
-            }
+	}
 
 
     private void addSearchTextFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, final JTextField shortcutText) {
@@ -261,14 +258,14 @@ public class ShortcutsPanel extends PreferencesPanel {
         });
 
         resetShortcutFilterWhenFocusGained(searchText, searchText, categoryCombo, shortcutText);
-            }
+	}
 
     private void updateFilter(final JTextField searchText, final JComboBox<ActionCategory> categoryCombo, JTextField shortcutText) {
         final ActionCategory selectedActionCategory = (ActionCategory) categoryCombo.getSelectedItem();
         final String filterText = searchText.getText();
 
         shortcutsTable.updateModel(new ShortcutsTable.ActionFilter() {
-            Locale currentLang = Locale.forLanguageTag(getVariable(LANGUAGE));
+            final Locale currentLang = Locale.forLanguageTag(getVariable(LANGUAGE));
             @Override
             public boolean accept(String actionId) {
                 return selectedActionCategory.contains(actionId) && (
@@ -281,8 +278,8 @@ public class ShortcutsPanel extends PreferencesPanel {
             }
         });
         resetShortcutFilterText(shortcutText);
-                tooltipBar.showDefaultMessage();
-            }
+        tooltipBar.showDefaultMessage();
+	}
 
    	private void updateFilter(final KeyStroke pressedKeyStroke) {
         shortcutsTable.updateModel(shortcutsTable.createCurrentAcceleratorsActionFilter(pressedKeyStroke));
@@ -298,9 +295,9 @@ public class ShortcutsPanel extends PreferencesPanel {
 		ActionKeymapIO.setModified();
 	}
 	
-	class TooltipBar extends JLabel {
+	static class TooltipBar extends JLabel {
 		private String lastActionTooltipShown;
-		private String DEFAULT_MESSAGE;
+		private final String DEFAULT_MESSAGE;
 		private static final int MESSAGE_SHOWING_TIME = 3000;
 		private MessageRemoverThread currentRemoverThread;
 		
@@ -343,12 +340,12 @@ public class ShortcutsPanel extends PreferencesPanel {
             public void run() {
 				try {
 					Thread.sleep(MESSAGE_SHOWING_TIME);
-				} catch (InterruptedException e) {
-                    //
+				} catch (InterruptedException ignore) {
                 }
 				
-				if (!stopped)
+				if (!stopped) {
 					showActionTooltip(lastActionTooltipShown);
+				}
 			}
 		}
 	}

@@ -29,9 +29,9 @@ import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 
 /**
@@ -59,7 +59,7 @@ public class Shell implements ConfigurationListener {
     // - Initialization ------------------------------------------------------
     // -----------------------------------------------------------------------
     static {
-    	MuConfigurations.addPreferencesListener(confListener = new Shell());
+    	TcConfigurations.addPreferencesListener(confListener = new Shell());
 
         // This could in theory also be written without the confListener reference.
         // It turns out, however, that proGuard is a bit too keen when removing fields
@@ -155,8 +155,8 @@ public class Shell implements ConfigurationListener {
         String shellCommand;
 
         // Retrieves the configuration defined shell command.
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_SHELL, MuPreferences.DEFAULT_USE_CUSTOM_SHELL))
-            shellCommand = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_SHELL, DesktopManager.getDefaultShell());
+        if (TcConfigurations.getPreferences().getVariable(TcPreference.USE_CUSTOM_SHELL, TcPreferences.DEFAULT_USE_CUSTOM_SHELL))
+            shellCommand = TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_SHELL, DesktopManager.getDefaultShell());
         else
             shellCommand = DesktopManager.getDefaultShell();
 
@@ -166,15 +166,15 @@ public class Shell implements ConfigurationListener {
         System.arraycopy(buffer, 0, tokens, 0, buffer.length);
 
         // Retrieves encoding configuration.
-        encoding = MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_ENCODING);
-        autoDetectEncoding = MuConfigurations.getPreferences().getVariable(MuPreference.AUTODETECT_SHELL_ENCODING, MuPreferences.DEFAULT_AUTODETECT_SHELL_ENCODING);
+        encoding = TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_ENCODING);
+        autoDetectEncoding = TcConfigurations.getPreferences().getVariable(TcPreference.AUTODETECT_SHELL_ENCODING, TcPreferences.DEFAULT_AUTODETECT_SHELL_ENCODING);
     }
 
     /**
      * Reacts to configuration changes.
      */
     public void configurationChanged(ConfigurationEvent event) {
-        if (event.getVariable().startsWith(MuPreferences.SHELL_SECTION)) {
+        if (event.getVariable().startsWith(TcPreferences.SHELL_SECTION)) {
             setShellCommand();
         }
     }

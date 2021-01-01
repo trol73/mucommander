@@ -24,15 +24,15 @@ public class VSpherePanel extends ServerPanel {
 
 	private static final long serialVersionUID = -3850165192515539062L;
 	
-	private JTextField vsphereField;
-	private JTextField usernameField;
-	private JPasswordField passwordField;
+	private final JTextField vsphereField;
+	private final JTextField usernameField;
+	private final JPasswordField passwordField;
 
-	private JTextField guestField;
-	private JTextField guestUsernameField;
-	private JPasswordField guestPasswordField;
+	private final JTextField guestField;
+	private final JTextField guestUsernameField;
+	private final JPasswordField guestPasswordField;
 
-	private JTextField dirField;
+	private final JTextField dirField;
 	private static String lastVsphere = "";
 	private static String lastGuest = "";
 	private static String lastDir = "";
@@ -52,8 +52,7 @@ public class VSpherePanel extends ServerPanel {
 		usernameField = new JTextField(lastUsername);
 		usernameField.selectAll();
 		addTextFieldListeners(usernameField, false);
-		addRow(Translator.get("server_connect_dialog.username"), usernameField,
-				5);
+		addRow(Translator.get("server_connect_dialog.username"), usernameField, 5);
 
 		// Password field
 		passwordField = new JPasswordField();
@@ -64,14 +63,13 @@ public class VSpherePanel extends ServerPanel {
 		guestField = new JTextField(lastGuest);
 		guestField.selectAll();
 		addTextFieldListeners(guestField, true);
-		addRow(Translator.get("vsphere_connections_dialog.guest_server",  IP_UUID_INSTANCE_UUID), guestField, 5);
+		addRow(Translator.get("vsphere_connections_dialog.guest_server", IP_UUID_INSTANCE_UUID), guestField, 5);
 
 		// Username field
 		guestUsernameField = new JTextField(lastGuestUsername);
 		guestUsernameField.selectAll();
 		addTextFieldListeners(guestUsernameField, false);
-		addRow(Translator.get("vsphere_connections_dialog.guest_user"),
-				guestUsernameField, 5);
+		addRow(Translator.get("vsphere_connections_dialog.guest_user"), guestUsernameField, 5);
 
 		// Password field
 		guestPasswordField = new JPasswordField();
@@ -82,8 +80,7 @@ public class VSpherePanel extends ServerPanel {
 		dirField = new JTextField(lastDir);
 		dirField.selectAll();
 		addTextFieldListeners(dirField, true);
-		addRow(Translator.get("server_connect_dialog.initial_dir"), dirField,
-				15);
+		addRow(Translator.get("server_connect_dialog.initial_dir"), dirField,15);
 
 	}
 
@@ -95,9 +92,7 @@ public class VSpherePanel extends ServerPanel {
 		lastDir = dirField.getText();
 	}
 
-	// //////////////////////////////
-	// ServerPanel implementation //
-	// //////////////////////////////
+
 
 	@Override
 	FileURL getServerURL() throws MalformedURLException {

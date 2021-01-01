@@ -21,12 +21,10 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.TempExecJob;
 import com.mucommander.utils.text.Translator;
@@ -57,7 +55,7 @@ import java.util.Set;
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class OpenAction extends MuAction {
+public class OpenAction extends TcAction {
     /**
      * Creates a new <code>OpenAction</code> with the specified parameters.
      * @param mainFrame  frame to which the action is attached.
@@ -159,7 +157,7 @@ public class OpenAction extends MuAction {
 	}
 
 	private static boolean cdFollowsSymlinks() {
-		return MuConfigurations.getPreferences().getVariable(MuPreference.CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
+		return TcConfigurations.getPreferences().getVariable(TcPreference.CD_FOLLOWS_SYMLINKS, TcPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS);
 	}
 
     private AbstractFile resolveSymlink(AbstractFile symlink) {
@@ -212,7 +210,7 @@ public class OpenAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new OpenAction(mainFrame, properties);
 		}
     }

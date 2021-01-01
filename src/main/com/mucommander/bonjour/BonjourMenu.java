@@ -19,7 +19,7 @@
 package com.mucommander.bonjour;
 
 import com.mucommander.utils.text.Translator;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.icon.IconManager;
 
@@ -59,7 +59,7 @@ public abstract class BonjourMenu extends JMenu implements MenuListener {
      * @param bs the BonjourService
      * @return the action to perform for the given BonjourService
      */
-    public abstract MuAction getMenuItemAction(BonjourService bs);
+    public abstract TcAction getMenuItemAction(BonjourService bs);
 
 
     /////////////////////////////////

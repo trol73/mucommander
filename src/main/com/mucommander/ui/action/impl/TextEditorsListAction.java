@@ -21,7 +21,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
 
@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
-public class TextEditorsListAction extends MuAction {
+public class TextEditorsListAction extends TcAction {
     private TextEditorsListAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
@@ -71,7 +71,7 @@ public class TextEditorsListAction extends MuAction {
             }
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new TextEditorsListAction(mainFrame, properties);
         }
     }

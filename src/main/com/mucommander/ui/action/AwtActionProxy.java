@@ -35,10 +35,10 @@ import java.awt.event.ActionListener;
  *
  * @author Maxence Bernard
  */
-public class AWTActionProxy implements ActionListener {
+public class AwtActionProxy implements ActionListener {
 
     /** Proxied Action */
-    private Action proxiedAction;
+    private final Action proxiedAction;
 
     /**
      * Creates a new AWTActionProxy instance that will transfer ActionEvents caught by {@link #actionPerformed(java.awt.event.ActionEvent)}
@@ -46,7 +46,7 @@ public class AWTActionProxy implements ActionListener {
      *
      * @param action the Action instance to transfer the ActionEvents to.
      */
-    public AWTActionProxy(Action action) {
+    public AwtActionProxy(Action action) {
         this.proxiedAction = action;
     }
 

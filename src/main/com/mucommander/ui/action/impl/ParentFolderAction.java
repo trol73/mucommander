@@ -20,7 +20,7 @@ package com.mucommander.ui.action.impl;
 
 import java.util.Map;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.event.LocationListener;
@@ -28,13 +28,13 @@ import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
 /**
- * This class is an abstract {@link MuAction} that operates on the current folder. It monitors changes in the active
+ * This class is an abstract {@link TcAction} that operates on the current folder. It monitors changes in the active
  * panel's location and calls {@link #toggleEnabledState()} when the location has changed, or when the active panel
  * itself has changed, in order to enable or disable this action.
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public abstract class ParentFolderAction extends MuAction implements ActivePanelListener, LocationListener {
+public abstract class ParentFolderAction extends TcAction implements ActivePanelListener, LocationListener {
 
     ParentFolderAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);

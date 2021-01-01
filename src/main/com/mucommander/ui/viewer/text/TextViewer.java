@@ -21,8 +21,8 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.commons.io.bom.BOMInputStream;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
@@ -54,9 +54,9 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
     private TextEditorImpl textEditorImpl;
 
-	private static boolean lineWrap = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, MuSnapshot.DEFAULT_LINE_WRAP);
+	private static boolean lineWrap = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TcSnapshot.DEFAULT_LINE_WRAP);
 
-	private static boolean lineNumbers = MuConfigurations.getSnapshot().getVariable(MuSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, MuSnapshot.DEFAULT_LINE_NUMBERS);
+	private static boolean lineNumbers = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TcSnapshot.DEFAULT_LINE_NUMBERS);
 
     TextMenuHelper menuHelper;
 

@@ -25,7 +25,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.impl.CompareFilesAction;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.popup.MuActionsPopupMenu;
+import com.mucommander.ui.popup.TcActionsPopupMenu;
 import com.mucommander.utils.text.Translator;
 
 /**
@@ -59,7 +59,7 @@ import com.mucommander.utils.text.Translator;
  * 
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class TablePopupMenu extends MuActionsPopupMenu {
+public class TablePopupMenu extends TcActionsPopupMenu {
 
     /**
      * Creates a new TablePopupMenu.

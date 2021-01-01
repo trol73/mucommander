@@ -21,7 +21,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  */
 
-public class CompareFolderFilesAction extends MuAction {
+public class CompareFolderFilesAction extends TcAction {
 
     private CompareFolderFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -141,7 +141,7 @@ public class CompareFolderFilesAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CompareFolderFilesAction(mainFrame, properties);
         }
 

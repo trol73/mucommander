@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.swing.KeyStroke;
 
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -34,7 +33,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * @author Arik Hadas
  */
-public class AddTabAction extends MuAction {
+public class AddTabAction extends TcAction {
 
 	private AddTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -69,7 +68,7 @@ public class AddTabAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);
         }
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new AddTabAction(mainFrame, properties);
 		}
     }

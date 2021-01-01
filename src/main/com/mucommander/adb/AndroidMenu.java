@@ -19,7 +19,7 @@ package com.mucommander.adb;
 
 
 import com.mucommander.utils.text.Translator;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.icon.IconManager;
 
@@ -58,7 +58,7 @@ public abstract class AndroidMenu extends JMenu implements MenuListener {
      * @param deviceSerial the serial number of the device
      * @return the action to perform for the given Android device
      */
-    public abstract MuAction getMenuItemAction(String deviceSerial);
+    public abstract TcAction getMenuItemAction(String deviceSerial);
 
 
     @Override

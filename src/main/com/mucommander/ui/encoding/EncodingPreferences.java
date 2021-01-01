@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.encoding;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -60,10 +60,10 @@ public class EncodingPreferences {
      * @return a user-defined list of preferred encodings.
      */
     public static List<String> getPreferredEncodings() {
-        List<String> vector = MuConfigurations.getPreferences().getListVariable(MuPreference.PREFERRED_ENCODINGS, ",");
+        List<String> vector = TcConfigurations.getPreferences().getListVariable(TcPreference.PREFERRED_ENCODINGS, ",");
         if(vector==null) {
             vector = getDefaultPreferredEncodings();
-            MuConfigurations.getPreferences().setVariable(MuPreference.PREFERRED_ENCODINGS, vector, ",");
+            TcConfigurations.getPreferences().setVariable(TcPreference.PREFERRED_ENCODINGS, vector, ",");
         }
 
         return vector;
@@ -91,6 +91,6 @@ public class EncodingPreferences {
      * @param encodings the user-defined list of preferred encodings
      */
     public static void setPreferredEncodings(List<String> encodings) {
-    	MuConfigurations.getPreferences().setVariable(MuPreference.PREFERRED_ENCODINGS, encodings, ",");
+    	TcConfigurations.getPreferences().setVariable(TcPreference.PREFERRED_ENCODINGS, encodings, ",");
     }
 }

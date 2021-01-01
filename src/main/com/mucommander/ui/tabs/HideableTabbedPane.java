@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 
 /**
  * This component acts like a tabbedpane in which multiple tabs are presented in a JTabbedPane layout 
@@ -80,7 +80,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		// Register for tabs changes
 		tabsCollection.addTabsListener(this);
 
-		MuConfigurations.addPreferencesListener(this);
+		TcConfigurations.addPreferencesListener(this);
 	}
 
 	/**
@@ -293,7 +293,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	}
 
 	protected boolean showSingleTabHeader() {
-		return MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER);
+		return TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_TAB_HEADER, TcPreferences.DEFAULT_SHOW_TAB_HEADER);
 	}
 
 	protected void show(int tabIndex) {
@@ -334,7 +334,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 		String var = event.getVariable();
 
         // Update the button's icon if the system file icons policy has changed
-        if (var.equals(MuPreferences.SHOW_SINGLE_TAB_HEADER))
+        if (var.equals(TcPreferences.SHOW_SINGLE_TAB_HEADER))
             refreshViewer();
 	}
 

@@ -68,7 +68,7 @@ public class ShowFilePropertiesAction extends SelectedFilesAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowFilePropertiesAction(mainFrame, properties);
 		}
     }

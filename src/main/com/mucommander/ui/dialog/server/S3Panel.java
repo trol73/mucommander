@@ -37,11 +37,11 @@ import java.text.ParseException;
  */
 public class S3Panel extends ServerPanel {
 
-    private JTextField serverField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JTextField initialDirField;
-    private JSpinner portSpinner;
+    private final JTextField serverField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JTextField initialDirField;
+    private final JSpinner portSpinner;
 
     private static String lastServer = "s3.amazonaws.com";
     private static String lastUsername = "";
@@ -105,11 +105,7 @@ public class S3Panel extends ServerPanel {
             lastInitialDir = "/"+lastInitialDir;
 
         FileURL url = FileURL.getFileURL(FileProtocols.S3+"://"+lastServer+lastInitialDir);
-
-        // Set credentials
         url.setCredentials(new Credentials(lastUsername, lastPassword));
-
-        // Set port
         url.setPort(lastPort);
 
         return url;
@@ -124,8 +120,9 @@ public class S3Panel extends ServerPanel {
     public void dialogValidated() {
         // Commits the current spinner value in case it was being edited and 'enter' was pressed
         // (the spinner value would otherwise not be committed)
-        try { portSpinner.commitEdit(); }
-        catch(ParseException e) { }
+        try {
+            portSpinner.commitEdit();
+        } catch(ParseException ignored) { }
 
         updateValues();
     }

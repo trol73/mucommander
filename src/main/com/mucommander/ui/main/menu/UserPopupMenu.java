@@ -19,9 +19,9 @@ package com.mucommander.ui.main.menu;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.osx.OSXTerminal;
 import com.mucommander.process.ExecutorUtils;
 import com.mucommander.ui.action.ActionProperties;
@@ -194,11 +194,11 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     }
 
     private static String getCustomExternalTerminal() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL);
     }
 
     private static boolean useCustomExternalTerminal() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.USE_CUSTOM_EXTERNAL_TERMINAL, TcPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
     }
 
 

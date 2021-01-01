@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2014-2016 Oleg Trifonov
+ * Copyright (C) 2014-2020 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,13 +41,13 @@ import java.util.List;
 public abstract class FindDialog extends FocusDialog implements ActionListener {
 
     /** The text field where a search dump can be entered */
-    private InputField hexField;
+    private final InputField hexField;
 
     /** The text field where a search string can be entered */
-    private InputField textField;
+    private final InputField textField;
 
     /** The 'OK' button */
-    private JButton okButton;
+    private final JButton okButton;
 
 
     /**
@@ -101,10 +101,6 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         return hexField.getBytes();
     }
 
-
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
     @Override
     public void actionPerformed(ActionEvent e) {

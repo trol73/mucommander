@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Maxence Bernard
  * @see com.mucommander.ui.action.impl.MinimizeWindowAction
  */
-public class MaximizeWindowAction extends MuAction {
+public class MaximizeWindowAction extends TcAction {
 
     private MaximizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -80,7 +80,7 @@ public class MaximizeWindowAction extends MuAction {
             return super.getLabel();
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MaximizeWindowAction(mainFrame, properties);
         }
     }

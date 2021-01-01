@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Arik Hadas
  */
 @InvokesDialog
-public class SetTabTitleAction extends MuAction {
+public class SetTabTitleAction extends TcAction {
 
 	private SetTabTitleAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class SetTabTitleAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new SetTabTitleAction(mainFrame, properties);
 		}
     }

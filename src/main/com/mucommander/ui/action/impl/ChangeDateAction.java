@@ -74,7 +74,7 @@ public class ChangeDateAction extends SelectedFilesAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ChangeDateAction(mainFrame, properties);
         }
     }

@@ -51,8 +51,8 @@ import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.util.FileComparator;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.event.LocationEvent;
@@ -78,13 +78,13 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
 	private static final Logger LOGGER = LoggerFactory.getLogger(FoldersTreePanel.class);
 	
     /** Directory tree */
-    private JTree tree;
+    private final JTree tree;
 
     /** Folder panel to which this tree is attached */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** A model with a directory tree */
-    private FilesTreeModel model;
+    private final FilesTreeModel model;
 
     /** A timer that fires a directory change */
     private final ChangeTimer changeTimer = new ChangeTimer();
@@ -166,7 +166,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
         
         ThemeCache.addThemeListener(this);
         
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
     }
 
     
@@ -176,9 +176,9 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
      */
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
-        if (var.equals(MuPreferences.SHOW_HIDDEN_FILES) ||
-                var.equals(MuPreferences.SHOW_DS_STORE_FILES) ||
-                var.equals(MuPreferences.SHOW_SYSTEM_FOLDERS)) {
+        if (var.equals(TcPreferences.SHOW_HIDDEN_FILES) ||
+                var.equals(TcPreferences.SHOW_DS_STORE_FILES) ||
+                var.equals(TcPreferences.SHOW_SYSTEM_FOLDERS)) {
             Object root = model.getRoot();
             if (root != null) {
                 TreePath path = new TreePath(root);

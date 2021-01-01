@@ -127,7 +127,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
     }
     
     /**
-     * Returns the standard path to the icon image for the specified {@link MuAction} id. 
+     * Returns the standard path to the icon image for the specified {@link TcAction} id.
      * The returned path is relative to the application's JAR file.
      *
      * @param actionId a String identification of MuAction

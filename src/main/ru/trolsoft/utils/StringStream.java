@@ -20,7 +20,7 @@ package ru.trolsoft.utils;
 import java.util.LinkedList;
 
 public class StringStream {
-    private LinkedList<String> lines = new LinkedList<>();
+    private final LinkedList<String> lines = new LinkedList<>();
     private StringBuffer lastIncomplete;
 
     public void add(String s) {

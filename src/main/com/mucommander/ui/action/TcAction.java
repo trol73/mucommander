@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * <p>The MuAction class is abstract. MuAction subclasses must implement the {@link #performAction()} method
  * to provide a response to the action trigger, and must provide a constructor with the
- * {@link #MuAction(MainFrame, Map)} signature.
+ * {@link #TcAction(MainFrame, Map)} signature.
  *
  * <p>MuAction subclasses should not be instantiated directly, {@link ActionManager}'s <code>getActionInstance</code>
  * methods should be used instead. Using {@link ActionManager} to retrieve a MuAction ensures that only one instance
@@ -49,9 +49,9 @@ import java.util.Map;
  * @see ActionKeymap
  * @author Maxence Bernard
  */
-public abstract class MuAction extends AbstractAction {
+public abstract class TcAction extends AbstractAction {
 
-    MuAction() {
+    TcAction() {
         mainFrame = null;
     }
 
@@ -76,7 +76,7 @@ public abstract class MuAction extends AbstractAction {
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      * properties are specified.
      */
-    public MuAction(MainFrame mainFrame, Map<String, Object> properties) {
+    public TcAction(MainFrame mainFrame, Map<String, Object> properties) {
         this.mainFrame = mainFrame;
         // Add properties to this Action.
         for (String key : properties.keySet()) {
@@ -338,7 +338,7 @@ public abstract class MuAction extends AbstractAction {
      * @param action a MuAction class descriptor
      * @return the standard icon image corresponding to the specified MuAction class, <code>null</code> if none was found
      */
-    public static ImageIcon getStandardIcon(Class<? extends MuAction> action) {
+    public static ImageIcon getStandardIcon(Class<? extends TcAction> action) {
         // Look for an icon image file with the /action/<classname>.png path and use it if it exists
     	String iconPath = getStandardIconPath(action);
         if (ResourceLoader.getResourceAsURL(iconPath) == null) {
@@ -348,17 +348,17 @@ public abstract class MuAction extends AbstractAction {
     }
 
     /**
-     * Returns the standard path to the icon image for the specified {@link MuAction} class. The returned path is
+     * Returns the standard path to the icon image for the specified {@link TcAction} class. The returned path is
      * relative to the application's JAR file.
      *
      * @param action a MuAction class descriptor
      * @return the standard path to the icon image corresponding to the specified MuAction class
      */
-    private static String getStandardIconPath(Class<? extends MuAction> action) {
+    private static String getStandardIconPath(Class<? extends TcAction> action) {
         return IconManager.IconSet.ACTION.getFolder() + getActionName(action) + ".png";
     }
 
-    private static String getActionName(Class<? extends MuAction> action) {
+    private static String getActionName(Class<? extends TcAction> action) {
     	return action.getSimpleName().replace("Action", "");
     }
 

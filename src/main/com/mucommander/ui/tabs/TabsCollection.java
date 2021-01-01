@@ -168,8 +168,9 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      */
     private synchronized void fireTabAdded(int index) {
     	Set<TabsEventListener> listeners = new HashSet<>(tabsListeners.keySet());
-    	for(TabsEventListener listener : listeners)
-            listener.tabAdded(index);
+    	for (TabsEventListener listener : listeners) {
+			listener.tabAdded(index);
+		}
     }
     
     /**
@@ -179,8 +180,9 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      */
     private synchronized void fireTabRemoved(int index) {
     	Set<TabsEventListener> listeners = tabsListeners.keySet();
-        for(TabsEventListener listener : listeners)
-            listener.tabRemoved(index);
+        for (TabsEventListener listener : listeners) {
+			listener.tabRemoved(index);
+		}
     }
     
     /**
@@ -190,8 +192,9 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
      */
     private synchronized void fireTabUpdated(int index) {
     	Set<TabsEventListener> listeners = tabsListeners.keySet();
-        for(TabsEventListener listener : listeners)
-            listener.tabUpdated(index);
+        for (TabsEventListener listener : listeners) {
+			listener.tabUpdated(index);
+		}
     }
     
 	/**************************

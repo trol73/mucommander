@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class MarkGroupAction extends MuAction {
+public class MarkGroupAction extends TcAction {
 
     private MarkGroupAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -68,7 +68,7 @@ public class MarkGroupAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkGroupAction(mainFrame, properties);
 		}
     }

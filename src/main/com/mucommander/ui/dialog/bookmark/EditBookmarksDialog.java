@@ -53,24 +53,24 @@ import java.awt.event.ActionListener;
  */
 public class EditBookmarksDialog extends FocusDialog implements ActionListener, ListSelectionListener, DocumentListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private JButton btnNew;
-    private JButton btnDuplicate;
-    private JButton btnRemove;
-    private JButton btnGoto;
-    private JButton btnClose;
+    private final JButton btnNew;
+    private final JButton btnDuplicate;
+    private final JButton btnRemove;
+    private final JButton btnGoto;
+    private final JButton btnClose;
 
-    private JTextField edtName;
-    private JLabel locationLabel;
-    private JTextField edtLocation;
-    private BookmarkParentComboBox cbParent;
+    private final JTextField edtName;
+    private final JLabel locationLabel;
+    private final JTextField edtLocation;
+    private final BookmarkParentComboBox cbParent;
     // separatorNoticePrefix is required to keep the size of the 1st column
-    private JLabel separatorNoticePrefix;
-    private JLabel separatorNoticeLabel;
+    private final JLabel separatorNoticePrefix;
+    private final JLabel separatorNoticeLabel;
 
-    private AlteredVector<Bookmark> bookmarks;
-    private DynamicList<Bookmark> bookmarkList;
+    private final AlteredVector<Bookmark> bookmarks;
+    private final DynamicList<Bookmark> bookmarkList;
 
     private int currentListIndex;
     private Bookmark currentBookmarkSave;
@@ -386,11 +386,8 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         }
     }
 
-	
-    ///////////////////////////
-    // ActionListener method //
-    ///////////////////////////
-	
+
+	@Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
@@ -411,6 +408,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
             modifyBookmark(null);
         }
     }
+
 
     private void addBookmark(boolean duplicate) {
         Bookmark newBookmark;
@@ -437,11 +435,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         edtName.requestFocus();
     }
 
-
-    ///////////////////////////////////
-    // ListSelectionListener methods //
-    ///////////////////////////////////
-	
+	@Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;
@@ -456,14 +450,12 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
     }
 
 
-    //////////////////////////////
-    // DocumentListener methods //
-    //////////////////////////////
-
+    @Override
     public void changedUpdate(DocumentEvent e) {
         modifyBookmark(e.getDocument());
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         modifyBookmark(e.getDocument());
     }

@@ -37,7 +37,7 @@ import java.util.Map;
  * @see com.mucommander.ui.main.WindowManager
  * @author Maxence Bernard
  */
-public class RecallWindowAction extends MuAction {
+public class RecallWindowAction extends TcAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RecallWindowAction.class);
 	
     /** Window number this action operates on */
@@ -127,7 +127,7 @@ public class RecallWindowAction extends MuAction {
             return windowNumber == -1;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RecallWindowAction(mainFrame, properties);
         }
     }

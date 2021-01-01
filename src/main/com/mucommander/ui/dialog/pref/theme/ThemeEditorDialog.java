@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.QuestionDialog;
@@ -74,7 +74,7 @@ public class ThemeEditorDialog extends PreferencesDialog {
         addPreferencesPanel(new QuickListPanel(this, data));
 
         // Sets the dialog's size.
-        Dimension screenSize = MuSnapshot.getScreenSize();
+        Dimension screenSize = TcSnapshot.getScreenSize();
         Dimension minimumSize = new Dimension(580, 300);
         Dimension maximumSize = new Dimension(screenSize);
         if (screenSize.getWidth() >= 1024 && screenSize.getHeight() > 700) {

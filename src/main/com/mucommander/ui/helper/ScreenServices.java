@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.helper;
 
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcSnapshot;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -65,7 +65,7 @@ public class ScreenServices {
      */
     public static boolean isInsideUsableScreen(Frame frame, int x, int y) {
         Insets screenInsets = getScreenInsets(frame);
-        Dimension screenSize = MuSnapshot.getScreenSize();
+        Dimension screenSize = TcSnapshot.getScreenSize();
 
         return (x < 0 || (x >= screenInsets.left && x < screenSize.width - screenInsets.right))
             && (y < 0 || (y >= screenInsets.top && y < screenSize.height - screenInsets.bottom));

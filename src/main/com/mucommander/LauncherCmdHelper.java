@@ -20,7 +20,7 @@ package com.mucommander;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.TcConfigurations;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
@@ -49,7 +49,7 @@ public class LauncherCmdHelper {
      */
     private int index;
 
-    private final String args[];
+    private final String[] args;
 
 
     LauncherCmdHelper(String[] args, boolean verbose, boolean fatalWarnings) {
@@ -134,8 +134,6 @@ public class LauncherCmdHelper {
 
 
     public void parseArgs() {
-        // - Command line parsing -------------------------------------
-        // ------------------------------------------------------------
         label:
         for (index = 0; index < args.length; index++) {
             // Print version.
@@ -193,7 +191,7 @@ public class LauncherCmdHelper {
                     if (index >= args.length - 1)
                         printError("Missing FILE parameter to " + args[index], null, true);
                     try {
-                        MuConfigurations.setPreferencesFile(args[++index]);
+                        TcConfigurations.setPreferencesFile(args[++index]);
                     } catch (Exception e) {
                         printError("Could not set configuration file", e, fatalWarnings);
                     }

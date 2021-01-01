@@ -17,7 +17,7 @@
  */
 package com.mucommander.ui.viewer;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ViewAction;
 import com.mucommander.ui.viewer.text.TextEditor;
@@ -61,9 +61,9 @@ public class FileViewersList {
         public Icon getIcon() {
             //Icon icon = FileIconsCache.getInstance().getIcon(fileRecord.fileName);
             if (viewerClass == TextEditor.class) {
-                return MuAction.getStandardIcon(EditAction.class);
+                return TcAction.getStandardIcon(EditAction.class);
             } else {
-                return MuAction.getStandardIcon(ViewAction.class);
+                return TcAction.getStandardIcon(ViewAction.class);
             }
         }
 

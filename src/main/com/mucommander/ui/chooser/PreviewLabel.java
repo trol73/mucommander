@@ -88,10 +88,6 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public void setForeground(Color color) {
         putClientProperty(FOREGROUND_COLOR_PROPERTY_NAME, color);

@@ -15,7 +15,7 @@ import java.util.*;
 public class OpenAsMenu extends JMenu {
 
     private final static List<String> EXTENSIONS = new ArrayList<>();
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     static {
         for (Iterator<ArchiveFormatProvider> it = FileFactory.archiveFormats(); it.hasNext(); ) {

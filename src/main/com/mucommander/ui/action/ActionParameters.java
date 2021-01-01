@@ -21,7 +21,7 @@ package com.mucommander.ui.action;
 import java.util.Map;
 
 /**
- * A descriptor class for {@link MuAction} instances. An ActionParameters is the combination of a MuAction
+ * A descriptor class for {@link TcAction} instances. An ActionParameters is the combination of a MuAction
  * class (a class extending MuAction and following its conventions) and a set of properties used for instantiation.
  * Thus, it not only identifies an action class but also the way it is instantiated.
  *
@@ -38,7 +38,7 @@ import java.util.Map;
  * and/or behavior.
  *
  * @see ActionManager
- * @see MuAction
+ * @see TcAction
  *
  * @author Maxence Bernard
  */
@@ -97,7 +97,7 @@ public class ActionParameters {
 
     /**
      * Returns <code>true</code> if the given object is an ActionParameters that is equal to this one.
-     * ActionParameters instances are considered equal if they refer to the same {@link MuAction} class and
+     * ActionParameters instances are considered equal if they refer to the same {@link TcAction} class and
      * set of initialization properties.
      */
     public boolean equals(Object o) {

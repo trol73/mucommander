@@ -29,7 +29,7 @@ package com.mucommander.ui.text;
 public class SizeConstrainedDocument extends javax.swing.text.PlainDocument {
 
     /** Maximum number of characters allowed */
-    private int maxLen;
+    private final int maxLen;
 
     /**
      * Creates a new instance of SizeConstrainedDocument, using the specified length
@@ -41,10 +41,6 @@ public class SizeConstrainedDocument extends javax.swing.text.PlainDocument {
         this.maxLen = maxLen;
     }
 
-
-    //////////////////////////////////
-    // PlainDocument implementation //
-    //////////////////////////////////
 
     @Override
     public void insertString(int offset, String str, javax.swing.text.AttributeSet attributeSet) throws javax.swing.text.BadLocationException {

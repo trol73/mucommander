@@ -49,10 +49,6 @@ public class EditorFrame extends FileFrame {
         initContentPane(file);
     }
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public Dimension getMinimumSize() {
         return MIN_DIMENSION;

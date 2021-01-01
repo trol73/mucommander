@@ -25,11 +25,11 @@ import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.button.NonFocusableButton;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.main.MainFrame;
@@ -49,8 +49,8 @@ public class CommandBarButton extends NonFocusableButton implements Configuratio
 	
 	/** Current icon scale factor */
     // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-    static float scaleFactor = Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_ICON_SCALE,
-                                                                        MuPreferences.DEFAULT_COMMAND_BAR_ICON_SCALE));
+    static float scaleFactor = Math.max(1.0f, TcConfigurations.getPreferences().getVariable(TcPreference.COMMAND_BAR_ICON_SCALE,
+                                                                        TcPreferences.DEFAULT_COMMAND_BAR_ICON_SCALE));
 	
     public static CommandBarButton create(String actionId, MainFrame mainFrame) {
 		return actionId == null ? null : new CommandBarButton(actionId, mainFrame);
@@ -74,14 +74,14 @@ public class CommandBarButton extends NonFocusableButton implements Configuratio
         setMinimumSize(new Dimension(40, (int) getPreferredSize().getHeight()));
         
         // Listen to configuration changes to reload command bar buttons when icon size has changed
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
 	}
 	
 	/**
      * Sets the given button's action, custom label showing the accelerator and icon taking into account the scale factor.
      */
 	public void setButtonAction(String actionId, MainFrame mainFrame) {
-    	MuAction action = ActionManager.getActionInstance(actionId, mainFrame);
+    	TcAction action = ActionManager.getActionInstance(actionId, mainFrame);
     	
     	setAction(action);
     	
@@ -124,11 +124,11 @@ public class CommandBarButton extends NonFocusableButton implements Configuratio
         String var = event.getVariable();
 
         // Reload butons icon if the icon scale factor has changed
-        if (var.equals(MuPreferences.COMMAND_BAR_ICON_SCALE)) {
+        if (var.equals(TcPreferences.COMMAND_BAR_ICON_SCALE)) {
             scaleFactor = event.getFloatValue();
 
             // Change the button's icon but NOT the action's icon which has to remain in its original non-scaled size
-            setIcon(IconManager.getScaledIcon(((MuAction) getAction()).getIcon(), scaleFactor));
+            setIcon(IconManager.getScaledIcon(((TcAction) getAction()).getIcon(), scaleFactor));
         }
     }
 }

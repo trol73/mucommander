@@ -29,10 +29,6 @@ import com.mucommander.commons.file.filter.FilenameFilter;
  */
 public class DSStoreFileFilter extends AbstractFilenameFilter {
 
-    ///////////////////////////////////
-    // FilenameFilter implementation //
-    ///////////////////////////////////
-
     public boolean accept(String filename) {
         return !".DS_Store".equals(filename);
     }

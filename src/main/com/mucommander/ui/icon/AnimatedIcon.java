@@ -37,8 +37,6 @@ import java.util.Set;
  * @author twall, Nicolas Rinaudo
  */
 public abstract class AnimatedIcon implements Icon {
-    // - Default values ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Default number of frames per animation. */
     public static final int DEFAULT_FRAME_COUNT = 8;
     /** Default number of milliseconds between each frame. */
@@ -46,12 +44,10 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** All tracked components. */
-    private Set<TrackedComponent> components = new HashSet<>();
+    private final Set<TrackedComponent> components = new HashSet<>();
     /** Timer used to take the animation from one frame to the next. */
-    private Timer   timer;
+    private final Timer   timer;
     /** Index of the current frame. */
     private int     currentFrame;
     /** Total number of frames in the animation. */
@@ -61,8 +57,6 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new animated icon.
      * <p>
@@ -98,8 +92,6 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Abstract methods ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the icon's width.
      * @return the icon's width.
@@ -123,8 +115,6 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Frame management ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Sets the total number of frames in the animation.
      * @param count total number of frames in the animation.
@@ -151,11 +141,12 @@ public abstract class AnimatedIcon implements Icon {
      * @param frame index of the current frame in the animation.
      */
     public synchronized void setFrame(int frame) {
-        if(frame != currentFrame) {
-            if(frame == 0)
+        if (frame != currentFrame) {
+            if (frame == 0) {
                 currentFrame = 0;
-            else
+            } else {
                 currentFrame = frame % frameCount;
+            }
             repaint();
         }
     }
@@ -184,14 +175,16 @@ public abstract class AnimatedIcon implements Icon {
      */
     public synchronized void setAnimated(boolean a) {
         // Starts the animation if necessary.
-        if(a) {
-            if(!timer.isRunning())
+        if (a) {
+            if (!timer.isRunning()) {
                 timer.restart();
+            }
         }
 
         // Stops the animation if necessary.
-        else if(timer.isRunning())
+        else if (timer.isRunning()) {
             timer.stop();
+        }
         animate = a;
     }
 
@@ -213,8 +206,6 @@ public abstract class AnimatedIcon implements Icon {
 
 
 
-    // - Painting ------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Paints the icon's current frame.
      * @param c component in which to paint the icon.
@@ -227,15 +218,16 @@ public abstract class AnimatedIcon implements Icon {
         paintFrame(c, g, x, y);
 
         // Stores the component and starts / restarts the timer if necessary.
-        if(c != null) {
+        if (c != null) {
             AffineTransform transform;
 
             transform = ((Graphics2D)g).getTransform();
             components.add(new TrackedComponent(c, x, y, (int)(getIconWidth() * transform.getScaleX()), (int)(getIconHeight() * transform.getScaleY())));
 
             // Restarts the timer if necessary.
-            if(!timer.isRunning() && animate)
+            if (!timer.isRunning() && animate) {
                 timer.restart();
+            }
         }
     }
 
@@ -272,17 +264,17 @@ public abstract class AnimatedIcon implements Icon {
      */
     private static class TrackedComponent {
         /** Component in which the icon must be painted. */
-        private Component component;
+        private final Component component;
         /** Horizontal coordinate at which the icon should be painted. */
-        private int       x;
+        private final int       x;
         /** Vertical coordinate at which the icon should be painted. */
-        private int       y;
+        private final int       y;
         /** Width of the icon (used for clipping). */
-        private int       width;
+        private final int       width;
         /** Height of the icon (used for clipping). */
-        private int       height;
+        private final int       height;
         /** Component's hashcode. */
-        private int       hashCode;
+        private final int       hashCode;
 
         /**
          * Creates a new tracked component.
@@ -343,7 +335,7 @@ public abstract class AnimatedIcon implements Icon {
      */
     private static class AnimationUpdater implements ActionListener {
         /** Weak reference to the animation. */
-        private WeakReference<AnimatedIcon> icon;
+        private final WeakReference<AnimatedIcon> icon;
 
         /**
          * Creates a new animation updater on the specified icon.
@@ -359,8 +351,9 @@ public abstract class AnimatedIcon implements Icon {
             AnimatedIcon i = icon.get();
 
             // Makes sure the animation hasn't been garbage collected.
-            if (i != null)
+            if (i != null) {
                 i.nextFrame();
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.event.MenuListener;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.menu.JScrollMenu;
 import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TRadioButtonMenuItem;
@@ -195,19 +195,19 @@ public class MenuToolkit {
                 (stroke.getKeyCode() == KeyEvent.VK_ENTER || stroke.getKeyCode() == KeyEvent.VK_SPACE || stroke.getKeyCode() == KeyEvent.VK_ESCAPE);
     }
 
-    public static JMenuItem addMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper) {
+    public static JMenuItem addMenuItem(JMenu menu, TcAction action, MnemonicHelper mnemonicHelper) {
         return addMenuItem(menu, action, mnemonicHelper, TYPE_ITEM);
     }
 
-    public static JCheckBoxMenuItem addCheckBoxMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper) {
+    public static JCheckBoxMenuItem addCheckBoxMenuItem(JMenu menu, TcAction action, MnemonicHelper mnemonicHelper) {
         return (JCheckBoxMenuItem) addMenuItem(menu, action, mnemonicHelper, TYPE_CHECKBOX);
     }
 
-    public static JRadioButtonMenuItem addRadioButtonMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper) {
+    public static JRadioButtonMenuItem addRadioButtonMenuItem(JMenu menu, TcAction action, MnemonicHelper mnemonicHelper) {
         return (JRadioButtonMenuItem) addMenuItem(menu, action, mnemonicHelper, TYPE_RADIOBUTTON);
     }
 
-    private static JMenuItem addMenuItem(JMenu menu, MuAction action, MnemonicHelper mnemonicHelper, int menuType) {
+    private static JMenuItem addMenuItem(JMenu menu, TcAction action, MnemonicHelper mnemonicHelper, int menuType) {
         final JMenuItem menuItem = construct(menuType, action);
 
 

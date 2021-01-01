@@ -73,7 +73,7 @@ public class MarkToLastRowAction extends MarkForwardAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.SHIFT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MarkToLastRowAction(mainFrame, properties);
         }
     }

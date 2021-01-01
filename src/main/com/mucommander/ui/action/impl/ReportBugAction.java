@@ -57,7 +57,7 @@ public class ReportBugAction extends OpenURLInBrowserAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ReportBugAction(mainFrame, properties);
         }
     }

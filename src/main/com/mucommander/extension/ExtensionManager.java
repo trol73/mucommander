@@ -64,15 +64,9 @@ import java.util.StringTokenizer;
  * @author Nicolas Rinaudo
  */
 public class ExtensionManager {
-    // - Class fields -----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** ClassLoader used to load all extensions. */
     private static AbstractFileClassLoader loader;
 
-
-
-    // - Extensions folder ------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Path to the extensions folder. */
     private static AbstractFile extensionsFolder;
     /** Default name of the extensions folder. */
@@ -80,8 +74,6 @@ public class ExtensionManager {
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     public static void init() {
         ClassLoader temp = ClassLoader.getSystemClassLoader();
 

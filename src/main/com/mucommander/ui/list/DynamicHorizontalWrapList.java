@@ -40,7 +40,7 @@ import java.awt.*;
 public class DynamicHorizontalWrapList<E> extends DynamicList<E> {
 
 	// The width of each item in the list
-	private int itemWidth;
+	private final int itemWidth;
 	// Saves the last width of the parent container to detect if there
 	// should be a change in the number of items per-row.
 	private int lastParentWidth;

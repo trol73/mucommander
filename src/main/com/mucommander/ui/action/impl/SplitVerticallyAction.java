@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SplitVerticallyAction extends MuAction {
+public class SplitVerticallyAction extends TcAction {
 
     private SplitVerticallyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -66,7 +66,7 @@ public class SplitVerticallyAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new SplitVerticallyAction(mainFrame, properties);
 		}
     }

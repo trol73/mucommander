@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class StopAction extends MuAction implements LocationListener {
+public class StopAction extends TcAction implements LocationListener {
 
     private StopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -106,7 +106,7 @@ public class StopAction extends MuAction implements LocationListener {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new StopAction(mainFrame, properties);
         }
     }

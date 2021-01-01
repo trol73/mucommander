@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class CheckForUpdatesAction extends MuAction {
+public class CheckForUpdatesAction extends TcAction {
 
     private CheckForUpdatesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -67,7 +67,7 @@ public class CheckForUpdatesAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new CheckForUpdatesAction(mainFrame, properties);
 		}
     }

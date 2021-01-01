@@ -54,9 +54,9 @@ public class InformationPane extends JPanel {
     /** Label used to display the icon, can be null if no icon is used */
     private JLabel iconLabel;
     /** Label used to display the main message */
-    private MultiLineLabel mainLabel;
+    private final MultiLineLabel mainLabel;
     /** Label used to display the caption message */
-    private MultiLineLabel captionLabel;
+    private final MultiLineLabel captionLabel;
 
     /** Designates the 'error' predefined icon */
     public final static int ERROR_ICON = 1;

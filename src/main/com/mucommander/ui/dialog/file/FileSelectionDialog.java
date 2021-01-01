@@ -55,16 +55,16 @@ import com.mucommander.ui.main.table.FileTable;
 public class FileSelectionDialog extends FocusDialog implements ActionListener {
 
     /** Add to or remove from selection ? */	 
-    private boolean addToSelection;
+    private final boolean addToSelection;
 
-    private JTextField selectionField;
+    private final JTextField selectionField;
 
-    private JCheckBox caseSensitiveCheckBox;
-    private JCheckBox includeFoldersCheckBox;
+    private final JCheckBox cbCaseSensitive;
+    private final JCheckBox cbIncludeFolders;
 
-    private JButton okButton;
+    private final JButton btnOk;
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 	
     /** 
      * Is selection case sensitive? (initially false)
@@ -126,19 +126,19 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         // Add some vertical space
         northPanel.addSpace(10);
 		
-        caseSensitiveCheckBox = new JCheckBox(i18n("file_selection_dialog.case_sensitive"), caseSensitive);
-        northPanel.add(caseSensitiveCheckBox);
+        cbCaseSensitive = new JCheckBox(i18n("file_selection_dialog.case_sensitive"), caseSensitive);
+        northPanel.add(cbCaseSensitive);
 
-        includeFoldersCheckBox = new JCheckBox(i18n("file_selection_dialog.include_folders"), includeFolders);
-        northPanel.add(includeFoldersCheckBox);
+        cbIncludeFolders = new JCheckBox(i18n("file_selection_dialog.include_folders"), includeFolders);
+        northPanel.add(cbIncludeFolders);
 		
         northPanel.addSpace(10);
         northPanel.add(Box.createVerticalGlue());
 
         contentPane.add(northPanel, BorderLayout.NORTH);
 
-        okButton = new JButton(i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, new JButton(i18n("cancel")), getRootPane(), this), BorderLayout.SOUTH);
+        btnOk = new JButton(i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"));
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, new JButton(i18n("cancel")), getRootPane(), this), BorderLayout.SOUTH);
 
         // Selection field receives initial keyboard focus
         setInitialFocusComponent(selectionField);
@@ -158,10 +158,10 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
         FileTable activeTable = mainFrame.getActiveTable();
 
         // Action coming from the selection dialog
-        if (source == okButton || source == selectionField) {
+        if (source == btnOk || source == selectionField) {
             // Save values for next time this dialog is invoked
-            caseSensitive = caseSensitiveCheckBox.isSelected();
-            includeFolders = includeFoldersCheckBox.isSelected();
+            caseSensitive = cbCaseSensitive.isSelected();
+            includeFolders = cbIncludeFolders.isSelected();
 
             keywordString = selectionField.getText();
 

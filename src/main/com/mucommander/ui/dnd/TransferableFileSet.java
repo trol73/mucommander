@@ -30,7 +30,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -65,7 +64,7 @@ public class TransferableFileSet implements Transferable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransferableFileSet.class);
 	
     /** Transferred FileSet */
-    private FileSet fileSet;
+    private final FileSet fileSet;
 
     /** Is FileSet DataFlavor supported ? */
     private boolean fileSetFlavorSupported = true;

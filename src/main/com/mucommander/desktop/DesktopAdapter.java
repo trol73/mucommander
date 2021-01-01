@@ -20,6 +20,7 @@ package com.mucommander.desktop;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.FileFilter;
+import com.mucommander.ui.action.TcAction;
 
 import java.awt.event.MouseEvent;
 
@@ -51,8 +52,7 @@ import java.awt.event.MouseEvent;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public interface DesktopAdapter {
-    // - Detection / Initialisation --------------------------------------
-    // -------------------------------------------------------------------
+
     /**
      * Checks whether or not the desktop is available on the current platform.
      * @return <code>true</code> if the desktop is available on the current platform, <code>false</code> otherwise.
@@ -65,7 +65,7 @@ public interface DesktopAdapter {
      * This method is called when an instance of <code>DesktopAdapter</code> has been chosen as the
      * best fit for the current system.<br>
      * This gives the instance an opportunity to set itself up -
-     * default {@link com.mucommander.command.Command} and {@link com.mucommander.ui.action.MuAction} registration, 
+     * default {@link com.mucommander.command.Command} and {@link TcAction} registration,
      * trash management...
      * <p>
      * If the <code>install</code> parameter is set to <code>true</code>, this is the first time the
@@ -155,4 +155,6 @@ public interface DesktopAdapter {
      * @return <code>true</code> if the given file is an application file
      */
     boolean isApplication(AbstractFile file);
+
+    String getDefaultTerminalAppCommand();
 }

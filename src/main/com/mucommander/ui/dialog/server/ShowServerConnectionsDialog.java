@@ -45,14 +45,14 @@ import java.util.List;
  */
 public class ShowServerConnectionsDialog extends FocusDialog implements ActionListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private JList connectionList;
-    private List<ConnectionHandler> connections;
+    private final JList<String> connectionList;
+    private final List<ConnectionHandler> connections;
 
-    private JButton btnDisconnect;
-    private JButton btnGoto;
-    private JButton btnClose;
+    private final JButton btnDisconnect;
+    private final JButton btnGoto;
+    private final JButton btnClose;
 
     // Dialog's size has to be at least 400x300
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(400,300);
@@ -69,7 +69,6 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         Container contentPane = getContentPane();
 
         // Add the list of server connections
-
         connections = ConnectionPool.getConnectionHandlersSnapshot();
 
         connectionList = new JList<>(new AbstractListModel<String>() {

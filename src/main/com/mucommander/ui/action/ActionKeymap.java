@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class manages keyboard associations with {@link MuAction} ids.
+ * This class manages keyboard associations with {@link TcAction} ids.
  *
  * @author Maxence Bernard, Arik Hadas
  */
@@ -71,7 +71,7 @@ public class ActionKeymap {
      * @param comp - JComponent to which the action would be registered
      * @param condition - condition in which the action could be invoked. 
      */
-    public static void registerActionAccelerators(MuAction action, JComponent comp, int condition) {
+    public static void registerActionAccelerators(TcAction action, JComponent comp, int condition) {
     	registerActionAccelerator(action, action.getAccelerator(), comp, condition);
     	registerActionAccelerator(action, action.getAlternateAccelerator(), comp, condition);
     }
@@ -235,7 +235,7 @@ public class ActionKeymap {
     /**
      * Register MuAction instance to MainFrame instance.
      */
-    private static void registerAction(MainFrame mainFrame, MuAction action) {
+    private static void registerAction(MainFrame mainFrame, TcAction action) {
         registerActionAccelerators(action, mainFrame.getLeftPanel().getFileTable(), JComponent.WHEN_FOCUSED);
         registerActionAccelerators(action, mainFrame.getRightPanel().getFileTable(), JComponent.WHEN_FOCUSED);
     }
@@ -243,7 +243,7 @@ public class ActionKeymap {
     /**
      * Register accelerator of MuAction to JComponent with a condition that states when the action can be invoked.
      */
-    private static void registerActionAccelerator(MuAction action, KeyStroke accelerator, JComponent comp, int condition) {
+    private static void registerActionAccelerator(TcAction action, KeyStroke accelerator, JComponent comp, int condition) {
     	if (accelerator != null) {
     		InputMap inputMap = comp.getInputMap(condition);
     		ActionMap actionMap = comp.getActionMap();
@@ -256,7 +256,7 @@ public class ActionKeymap {
     /**
      * Unregister MuAction instance from MainFrame instance.
      */
-    private static void unregisterAction(MainFrame mainFrame, MuAction action) {
+    private static void unregisterAction(MainFrame mainFrame, TcAction action) {
         unregisterActionAccelerators(action, mainFrame.getLeftPanel().getFileTable(), JComponent.WHEN_FOCUSED);
         unregisterActionAccelerators(action, mainFrame.getRightPanel().getFileTable(), JComponent.WHEN_FOCUSED);
     }
@@ -264,7 +264,7 @@ public class ActionKeymap {
     /**
      * Unregister MuAction from JComponent.
      */
-    private static void unregisterActionAccelerators(MuAction action, JComponent comp, int condition) {
+    private static void unregisterActionAccelerators(TcAction action, JComponent comp, int condition) {
     	unregisterActionAccelerator(action, action.getAccelerator(), comp, condition);
     	unregisterActionAccelerator(action, action.getAlternateAccelerator(), comp, condition);
     }
@@ -272,7 +272,7 @@ public class ActionKeymap {
     /**
      * Unregister accelerator of MuAction from JComponent.
      */
-    private static void unregisterActionAccelerator(MuAction action, KeyStroke accelerator, JComponent comp, int condition) {
+    private static void unregisterActionAccelerator(TcAction action, KeyStroke accelerator, JComponent comp, int condition) {
     	if (accelerator != null) {
     		InputMap inputMap = comp.getInputMap(condition);
     		ActionMap actionMap = comp.getActionMap();
@@ -311,7 +311,7 @@ public class ActionKeymap {
     	}
     	
     	// Update each MainFrame's action instance and input map
-    	for(MuAction action : ActionManager.getActionInstances(actionId)) {
+    	for(TcAction action : ActionManager.getActionInstances(actionId)) {
     		MainFrame mainFrame = action.getMainFrame();
 
     		// Remove action from MainFrame's action and input maps

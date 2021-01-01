@@ -151,10 +151,6 @@ public class EncodingSelectBox extends JPanel {
     }
     
 
-    //////////////////////
-    // Listener methods //
-    //////////////////////
-
     public void addEncodingListener(EncodingListener listener) {
         synchronized(listeners) {
             listeners.put(listener, null);
@@ -174,11 +170,6 @@ public class EncodingSelectBox extends JPanel {
         }
 
     }
-
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public void setEnabled(boolean enabled) {

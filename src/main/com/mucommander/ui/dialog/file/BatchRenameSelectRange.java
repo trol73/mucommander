@@ -38,9 +38,9 @@ import java.awt.event.ActionListener;
  */
 public class BatchRenameSelectRange extends FocusDialog implements ActionListener {
 
-    private JTextField edtRange;
-    private JButton btnCancel;
-    private JButton btnOK;
+    private final JTextField edtRange;
+    private final JButton btnCancel;
+    private final JButton btnOK;
     private String range = null;
     
 
@@ -69,9 +69,9 @@ public class BatchRenameSelectRange extends FocusDialog implements ActionListene
         if (source == btnCancel) {
             dispose();
         } else if (source == btnOK) {
-            range = "[N" + Integer.toString(edtRange.getSelectionStart()+1);
+            range = "[N" + (edtRange.getSelectionStart() + 1);
             if (edtRange.getSelectionEnd() > 0 && edtRange.getSelectionEnd() > edtRange.getSelectionStart()+1) {
-                range += "-" + Integer.toString(edtRange.getSelectionEnd());
+                range += "-" + edtRange.getSelectionEnd();
             }
             range += "]";
             dispose();

@@ -19,7 +19,7 @@
 package com.mucommander.ui.chooser;
 
 import com.mucommander.utils.text.Translator;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.layout.YBoxPanel;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     // - Class fields -----------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Legal font sizes. */
-    private final static int FONT_SIZES[] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28};
+    private final static int[] FONT_SIZES = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28, 32, 36, 40};
 
 
 
@@ -57,7 +57,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     /** Currently selected font. */
     private Font        font;
     /** List of all registered state change listeners. */
-    private WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
+    private final WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
 
 
     // - Initialisation ---------------------------------------------------------
@@ -79,10 +79,10 @@ public class FontChooser extends YBoxPanel implements ActionListener {
         setAlignmentX(LEFT_ALIGNMENT);
 
         // Font families.
-        families = new MuComboBox<>();
+        families = new TcComboBox<>();
         String[] familyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         int selectedIndex = 0;
-        for(int i = 0; i < familyNames.length; i++) {
+        for (int i = 0; i < familyNames.length; i++) {
             families.addItem(familyNames[i]);
             if (selection.getFamily().equalsIgnoreCase(familyNames[i])) {
                 selectedIndex = i;
@@ -97,7 +97,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
         add(panel);
 
         // Font sizes.
-        sizes = new MuComboBox<>();
+        sizes = new TcComboBox<>();
         for (int fontSize : FONT_SIZES) {
             sizes.addItem(Integer.toString(fontSize));
         }

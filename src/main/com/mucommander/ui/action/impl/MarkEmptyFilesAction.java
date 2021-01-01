@@ -22,7 +22,7 @@ import com.mucommander.commons.file.filter.EmptyFileFilter;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
@@ -31,7 +31,7 @@ import javax.swing.*;
 import java.util.Map;
 
 
-public class MarkEmptyFilesAction extends MuAction {
+public class MarkEmptyFilesAction extends TcAction {
 
     private MarkEmptyFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -76,7 +76,7 @@ public class MarkEmptyFilesAction extends MuAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MarkEmptyFilesAction(mainFrame, properties);
         }
     }

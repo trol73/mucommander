@@ -80,7 +80,7 @@ public class MkdirAction extends ParentFolderAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
 			return new MkdirAction(mainFrame, properties);
 		}
 	}

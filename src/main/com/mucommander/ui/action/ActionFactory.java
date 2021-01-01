@@ -36,5 +36,5 @@ public interface ActionFactory {
 	 * @param properties - a hashtable of arguments for the action. 
 	 * @return an instance of MuAction subclass.
 	 */
-	MuAction createAction(MainFrame mainFrame, Map<String,Object> properties);
+	TcAction createAction(MainFrame mainFrame, Map<String,Object> properties);
 }

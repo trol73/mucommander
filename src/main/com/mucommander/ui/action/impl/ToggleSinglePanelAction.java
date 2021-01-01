@@ -25,13 +25,13 @@ import javax.swing.KeyStroke;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 /**
  * Toggles isVisible state of the right panel, imitating single/two panel view switch.
  */
-public class ToggleSinglePanelAction extends MuAction {
+public class ToggleSinglePanelAction extends TcAction {
 
     private static final float TWO_PANELS_DEFAULT_RATIO = 0.5f;
     private float previousRatio = TWO_PANELS_DEFAULT_RATIO;
@@ -92,7 +92,7 @@ public class ToggleSinglePanelAction extends MuAction {
         }
 
         @Override
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new ToggleSinglePanelAction(mainFrame, properties);
         }
     }

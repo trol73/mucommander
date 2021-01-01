@@ -37,8 +37,6 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public abstract class PreferencesDialog extends FocusDialog implements ActionListener {
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Displays the different panels. */
     private JTabbedPane tabbedPane;
     /** Stores the different panels. */
@@ -52,8 +50,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - Initialization ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new preferences dialog.
      * @param parent parent of the dialog.
@@ -76,8 +72,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - UI code ----------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Initializes the tabbed panel's UI.
      */
@@ -179,7 +173,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Notifies all panels that changes are about to be commited.
      * <p>
      * This gives preference panels a chance to display warning or errors before changes are
-     * commited.
+     * committed.
      *
      * @return <code>true</code> if all preference panels are ok with commiting the changes, <code>false</code> otherwise.
      */
@@ -203,8 +197,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - Listener code ----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Reacts to buttons being pushed.
      */

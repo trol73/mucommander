@@ -52,11 +52,11 @@ import com.mucommander.commons.file.filter.PathFilter;
 import com.mucommander.commons.file.filter.RegexpPathFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.utils.text.Translator;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
 import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.dialog.server.FTPPanel;
@@ -112,13 +112,13 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         }
 
         try {
-            String excludeRegexp = MuConfigurations.getPreferences().getVariable(MuPreference.VOLUME_EXCLUDE_REGEXP);
+            String excludeRegexp = TcConfigurations.getPreferences().getVariable(TcPreference.VOLUME_EXCLUDE_REGEXP);
             if (excludeRegexp != null) {
                 volumeFilter = new RegexpPathFilter(excludeRegexp, true);
                 volumeFilter.setInverted(true);
             }
         } catch(PatternSyntaxException e) {
-            getLogger().info("Invalid regexp for conf variable " + MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
+            getLogger().info("Invalid regexp for conf variable " + TcPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
         // Initialize the volumes list
@@ -142,7 +142,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         BookmarkManager.addBookmarkListener(this);
 
         // Listen to configuration changes to update the button if the system file icons policy has changed
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
 
         // Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
         //if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
@@ -270,7 +270,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      * Returns the list of volumes to be displayed in the popup menu.
      *
      * <p>The raw list of volumes is fetched using {@link LocalFile#getVolumes()} and then
-     * filtered using the regexp defined in the {@link MuPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
+     * filtered using the regexp defined in the {@link TcPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
      * (if defined).
      *
      * @return the list of volumes to be displayed in the popup menu
@@ -310,7 +310,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         // Add 'Network shares' shortcut
         if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            MuAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///", null));
+            TcAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///", null));
             action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
             setMnemonic(popupMenu.add(action), mnemonicHelper);
         }
@@ -319,7 +319,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             // Add Bonjour services menu
             setMnemonic(popupMenu.add(new BonjourMenu() {
                 @Override
-                public MuAction getMenuItemAction(BonjourService bs) {
+                public TcAction getMenuItemAction(BonjourService bs) {
                     return new CustomOpenLocationAction(mainFrame, bs);
                 }
             }), mnemonicHelper);
@@ -345,7 +345,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         int nbVolumes = volumes.length;
         for (int i = 0; i < nbVolumes; i++) {
-            MuAction action = new CustomOpenLocationAction(mainFrame, volumes[i]);
+            TcAction action = new CustomOpenLocationAction(mainFrame, volumes[i]);
             String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -446,7 +446,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         if (AdbUtils.checkAdb()) {
             setMnemonic(popupMenu.add(new AndroidMenu() {
                 @Override
-                public MuAction getMenuItemAction(String deviceSerial) {
+                public TcAction getMenuItemAction(String deviceSerial) {
                     FileURL url = getDeviceURL(deviceSerial);
                     return new CustomOpenLocationAction(mainFrame, url);
                 }
@@ -567,7 +567,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         String var = event.getVariable();
 
         // Update the button's icon if the system file icons policy has changed
-        if (var.equals(MuPreferences.USE_SYSTEM_FILE_ICONS)) {
+        if (var.equals(TcPreferences.USE_SYSTEM_FILE_ICONS)) {
             updateButton();
         }
     }

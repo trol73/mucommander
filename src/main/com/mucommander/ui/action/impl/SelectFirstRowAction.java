@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SelectFirstRowAction extends MuAction {
+public class SelectFirstRowAction extends TcAction {
 
     private SelectFirstRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -66,7 +66,7 @@ public class SelectFirstRowAction extends MuAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new SelectFirstRowAction(mainFrame, properties);
 		}
     }

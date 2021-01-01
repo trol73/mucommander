@@ -50,8 +50,8 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 	private static final int PADDING = 2;
 
 	private QuickListHeaderItem headerMenuItem;
-	private List<Component> items = new ArrayList<>();
-	private QuickListContainer container;
+	private final List<Component> items = new ArrayList<>();
+	private final QuickListContainer container;
 	
 	QuickList(QuickListContainer container, String header) {
 		super();
@@ -59,7 +59,7 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 		this.container = container;
 		
 		setBorder(new PopupsBorder());
-		add(headerMenuItem = new QuickListHeaderItem(header));		
+		add(headerMenuItem = new QuickListHeaderItem(header));
 		setFocusTraversalKeysEnabled(false);
 	}
 	

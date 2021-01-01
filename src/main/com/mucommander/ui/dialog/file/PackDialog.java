@@ -48,10 +48,10 @@ import com.mucommander.ui.text.FilePathField;
  */
 public class PackDialog extends TransferDestinationDialog implements ItemListener {
 
-    private JComboBox<String> formatsComboBox;
-    private ArchiveFormat formats[];
+    private final JComboBox<String> formatsComboBox;
+    private final ArchiveFormat[] formats;
 	
-    private JTextArea commentArea;
+    private final JTextArea commentArea;
 
     /** Used to keep track of the last selected archive format. */
     private int lastFormatIndex;

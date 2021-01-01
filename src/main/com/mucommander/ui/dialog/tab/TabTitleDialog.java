@@ -51,17 +51,15 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
 	/** Ensure the dialog width is at least 300 */
 	private static final Dimension MINIMUM_SIZE = new Dimension(250, 0);
 	
-	/** OK button. */
     private JButton okButton;
     
-    /** Cancel button. */
     private JButton cancelButton;
 
     /** The text field in which the title is entered */
     private JTextField titleTextField;
 
     /** The FolderPanel to which this tab belongs */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
 	public TabTitleDialog(MainFrame mainFrame, FolderPanel folderPanel) {
         super(mainFrame, ActionProperties.getActionLabel(SetTabTitleAction.Descriptor.ACTION_ID), folderPanel);
@@ -107,9 +105,7 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
     	String title = titleTextField.getText().trim();
     	folderPanel.getTabs().setTitle(title.isEmpty() ? null : title);
     }
-    
-    // - Listener code ----------------------------------------------------------
-    // --------------------------------------------------------------------------
+
     /**
      * Reacts to buttons being pushed.
      */

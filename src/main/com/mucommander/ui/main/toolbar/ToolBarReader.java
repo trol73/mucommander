@@ -18,21 +18,18 @@
 
 package com.mucommander.ui.main.toolbar;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Vector;
-
-import javax.xml.parsers.SAXParserFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.ui.action.ActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * This class parses the XML file describing the toolbar's buttons and associated actions.

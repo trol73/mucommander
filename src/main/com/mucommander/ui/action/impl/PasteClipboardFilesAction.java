@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class PasteClipboardFilesAction extends MuAction {
+public class PasteClipboardFilesAction extends TcAction {
 
     private PasteClipboardFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -96,7 +96,7 @@ public class PasteClipboardFilesAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_V, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new PasteClipboardFilesAction(mainFrame, properties);
         }
     }

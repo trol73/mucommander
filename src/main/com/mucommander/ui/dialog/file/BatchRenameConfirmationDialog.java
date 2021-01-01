@@ -34,7 +34,7 @@ import java.awt.event.ActionListener;
 
 public class BatchRenameConfirmationDialog extends FocusDialog implements ActionListener {
 
-    private JButton btnRename;
+    private final JButton btnRename;
     
     private boolean proceedWithRename = false;
  

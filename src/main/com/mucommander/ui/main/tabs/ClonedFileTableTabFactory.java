@@ -30,7 +30,7 @@ import com.mucommander.ui.tabs.TabFactory;
  */
 public class ClonedFileTableTabFactory implements TabFactory<FileTableTab, FileTableTab> {
 
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 	
 	ClonedFileTableTabFactory(FolderPanel folderPanel) {
 		this.folderPanel = folderPanel;
@@ -44,7 +44,7 @@ public class ClonedFileTableTabFactory implements TabFactory<FileTableTab, FileT
 		return new ClonedFileTableTab(tab, folderPanel);
 	}
 
-	class ClonedFileTableTab extends FileTableTab {
+	static class ClonedFileTableTab extends FileTableTab {
 		
 		/** The location presented in this tab */
 		private FileURL location;

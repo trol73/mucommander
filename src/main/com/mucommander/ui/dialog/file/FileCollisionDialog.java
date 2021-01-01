@@ -153,10 +153,10 @@ public class FileCollisionDialog extends QuestionDialog {
         // Convert choice vectors into arrays
         int nbChoices = choicesActionsV.size();
 
-        String choicesText[] = new String[nbChoices];
+        String[] choicesText = new String[nbChoices];
         choicesTextV.toArray(choicesText);
 
-        int choicesActions[] = new int[nbChoices];
+        int[] choicesActions = new int[nbChoices];
         for (int i = 0; i < nbChoices; i++) {
             choicesActions[i] = choicesActionsV.get(i);
         }

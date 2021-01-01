@@ -70,7 +70,7 @@ public class MarkToFirstRowAction extends MarkBackwardAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkToFirstRowAction(mainFrame, properties);
 		}
     }

@@ -13,8 +13,6 @@ import java.util.Iterator;
  * @author Nicolas Rinaudo
  */
 public class XmlWriter {
-    // - Constants -------------------------------------------------------
-    // -------------------------------------------------------------------
     /** Number of space characters used for one level of indentation. */
     private static final int    OFFSET_INCREMENT    = 4;
     /** Identifier for publicly accessible objects. */
@@ -35,8 +33,6 @@ public class XmlWriter {
 
 
 
-    // - Instance fields -------------------------------------------------
-    // -------------------------------------------------------------------
     /** Where to write the XML content to. */
     private PrintWriter out;
     /** Current indentation offset. */
@@ -46,8 +42,6 @@ public class XmlWriter {
 
 
 
-    // - Initialisation --------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Creates an <code>XmlWriter</code> that will write to the specified file.
      * <p>

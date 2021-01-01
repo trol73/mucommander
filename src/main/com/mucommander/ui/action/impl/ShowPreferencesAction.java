@@ -31,14 +31,16 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class ShowPreferencesAction extends MuAction {
+public class ShowPreferencesAction extends TcAction {
 
     private ShowPreferencesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
-    public void performAction() {GeneralPreferencesDialog.getDialog().showDialog();}
+    public void performAction() {
+    	GeneralPreferencesDialog.getDialog().showDialog();
+    }
 
 	@Override
 	public ActionDescriptor getDescriptor() {
@@ -65,7 +67,7 @@ public class ShowPreferencesAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowPreferencesAction(mainFrame, properties);
 		}
     }

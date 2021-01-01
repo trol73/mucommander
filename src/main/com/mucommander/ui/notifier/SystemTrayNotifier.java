@@ -36,9 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.runtime.JavaVersion;
-import com.mucommander.ui.action.AWTActionProxy;
+import com.mucommander.ui.action.AwtActionProxy;
 import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.BringAllToFrontAction;
 import com.mucommander.ui.action.impl.NewWindowAction;
 import com.mucommander.ui.action.impl.QuitAction;
@@ -87,12 +87,12 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
 
     /**
      * Creates and adds a menu item that triggers the MuAction denoted by the given Class. The menu item's label
-     * is set to the value returned by {@link MuAction#getLabel()}.
+     * is set to the value returned by {@link TcAction#getLabel()}.
      */
     private void addMenuItem(Menu menu, String muActionId) {
-        MuAction action = ActionManager.getActionInstance(muActionId, WindowManager.getCurrentMainFrame());
+        TcAction action = ActionManager.getActionInstance(muActionId, WindowManager.getCurrentMainFrame());
         MenuItem menuItem = new MenuItem(action.getLabel());
-        menuItem.addActionListener(new AWTActionProxy(action));
+        menuItem.addActionListener(new AwtActionProxy(action));
         menu.add(menuItem);
     }
 
@@ -148,7 +148,7 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
 
     private Image createIconImage(Dimension trayIconSize) {
         Image iconImage = IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, TRAY_ICON_NAME).getImage();
-        // If the sytem tray icon size is larger than the icon size, center the icon as the default is to display
+        // If the system tray icon size is larger than the icon size, center the icon as the default is to display
         // the icon in the top left corner which is plain ugly
         if (trayIconSize.width > TRAY_ICON_WIDTH || trayIconSize.height > TRAY_ICON_HEIGHT) {
             // The buffered image uses ARGB for transparency

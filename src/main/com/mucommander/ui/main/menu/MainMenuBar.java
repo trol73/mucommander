@@ -25,13 +25,13 @@ import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionParameters;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.pref.theme.ThemeEditorDialog;
@@ -71,48 +71,48 @@ import java.util.List;
  */
 public class MainMenuBar extends JMenuBar implements ActionListener, MenuListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     // View menu
-    private JMenu viewMenu;
-    private JMenu themesMenu;
-    private JCheckBoxMenuItem[] cbSortByItems = new TCheckBoxMenuItem[Column.values().length];
-    private JMenu tableModeMenu;
-    private JCheckBoxMenuItem[] cbTableModeItems = new TCheckBoxMenuItem[3];
-    private JMenu columnsMenu;
-    private JCheckBoxMenuItem[] cbToggleColumnItems = new TCheckBoxMenuItem[Column.values().length];
-    private JCheckBoxMenuItem cbToggleToggleAutoSizeItem;
-    private JCheckBoxMenuItem cbToggleShowFoldersFirstItem;
-    private JCheckBoxMenuItem cbToggleFoldersAlwaysAlphabeticalItem;
-    private JCheckBoxMenuItem cbToggleShowHiddenFilesItem;
-    private JCheckBoxMenuItem cbToggleTreeItem;
-    private JCheckBoxMenuItem cbToggleSinglePanel;
-    private OpenWithMenu openWithMenu;
-    private OpenAsMenu openAsMenu;
+    private final JMenu viewMenu;
+    private final JMenu themesMenu;
+    private final JCheckBoxMenuItem[] cbSortByItems = new TCheckBoxMenuItem[Column.values().length];
+    private final JMenu tableModeMenu;
+    private final JCheckBoxMenuItem[] cbTableModeItems = new TCheckBoxMenuItem[3];
+    private final JMenu columnsMenu;
+    private final JCheckBoxMenuItem[] cbToggleColumnItems = new TCheckBoxMenuItem[Column.values().length];
+    private final JCheckBoxMenuItem cbToggleToggleAutoSizeItem;
+    private final JCheckBoxMenuItem cbToggleShowFoldersFirstItem;
+    private final JCheckBoxMenuItem cbToggleFoldersAlwaysAlphabeticalItem;
+    private final JCheckBoxMenuItem cbToggleShowHiddenFilesItem;
+    private final JCheckBoxMenuItem cbToggleTreeItem;
+    private final JCheckBoxMenuItem cbToggleSinglePanel;
+    private final OpenWithMenu openWithMenu;
+    private final OpenAsMenu openAsMenu;
     /* TODO branch private JCheckBoxMenuItem toggleBranchView; */
 
 
     // Go menu
-    private JMenu goMenu;
-    private int volumeOffset;
+    private final JMenu goMenu;
+    private final int volumeOffset;
 
     // Bookmark menu
-    private JMenu bookmarksMenu;
-    private int bookmarksOffset;  // Index of the first bookmark menu item
+    private final JMenu bookmarksMenu;
+    private final int bookmarksOffset;  // Index of the first bookmark menu item
 
     private JMenu ejectDrivesMenu;
 
     // Window menu
-    private JMenu windowMenu;
-    private int windowOffset; // Index of the first window menu item
-    private JCheckBoxMenuItem splitHorizontallyItem;
-    private JCheckBoxMenuItem splitVerticallyItem;
+    private final JMenu windowMenu;
+    private final int windowOffset; // Index of the first window menu item
+    private final JCheckBoxMenuItem splitHorizontallyItem;
+    private final JCheckBoxMenuItem splitVerticallyItem;
 
     /** Maps window menu items onto weakly-referenced frames */
     private WeakHashMap<JMenuItem, Frame> windowMenuFrames;
 
 
-    private final static String RECALL_WINDOW_ACTION_IDS[] = {
+    private final static String[] RECALL_WINDOW_ACTION_IDS = {
         RecallWindow1Action.Descriptor.ACTION_ID,
         RecallWindow2Action.Descriptor.ACTION_ID,
         RecallWindow3Action.Descriptor.ACTION_ID,
@@ -131,7 +131,6 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
      */
     public MainMenuBar(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-
         // Disable menu bar (NOT menu item) mnemonics under Mac OS X because of a bug: when screen menu bar is enabled
         // and a menu is triggered by a mnemonic, the menu pops up where it would appear with a regular menu bar
         // (i.e. with screen menu bar disabled).
@@ -327,7 +326,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         goMenu.add(new TMenuSeparator());
         BonjourMenu bonjourMenu = new BonjourMenu() {
             @Override
-            public MuAction getMenuItemAction(BonjourService bs) {
+            public TcAction getMenuItemAction(BonjourService bs) {
                 return new OpenLocationAction(MainMenuBar.this.mainFrame, new HashMap<>(), bs);
             }
         };
@@ -355,7 +354,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         if (OsFamily.MAC_OS_X.isCurrent()) {
             ejectDrivesMenu = MenuToolkit.addMenu(Translator.get("eject_menu"), menuMnemonicHelper, this);
             toolsMenu.add(ejectDrivesMenu);
-
+        }
+        if (CompareFilesAction.supported()) {
             MenuToolkit.addMenuItem(toolsMenu, ActionManager.getActionInstance(CompareFilesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
         }
         toolsMenu.add(new TMenuSeparator());
@@ -500,11 +500,11 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         // Select the 'sort by' criterion currently in use in the active table
         cbSortByItems[activeTable.getSortInfo().getCriterion().ordinal()].setSelected(true);
 
-        Boolean foldersFirst = activeTable.getSortInfo().getFoldersFirst();
+        boolean foldersFirst = activeTable.getSortInfo().getFoldersFirst();
         cbToggleShowFoldersFirstItem.setSelected(foldersFirst);
         cbToggleFoldersAlwaysAlphabeticalItem.setEnabled(foldersFirst);
         cbToggleFoldersAlwaysAlphabeticalItem.setSelected(foldersFirst && activeTable.getSortInfo().getFoldersAlwaysAlphabetical());
-        cbToggleShowHiddenFilesItem.setSelected(MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+        cbToggleShowHiddenFilesItem.setSelected(TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_HIDDEN_FILES, TcPreferences.DEFAULT_SHOW_HIDDEN_FILES));
         cbToggleTreeItem.setSelected(activeTable.getFolderPanel().isTreeVisible());
         cbToggleToggleAutoSizeItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());
         cbToggleSinglePanel.setSelected(mainFrame.isSinglePanel());
@@ -534,7 +534,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             goMenu.remove(volumeOffset);
         }
 
-        AbstractFile volumes[] = LocalFile.getVolumes();
+        AbstractFile[] volumes = LocalFile.getVolumes();
         for (AbstractFile volume : volumes) {
             goMenu.add(new OpenLocationAction(mainFrame, new Hashtable<>(), volume));
         }
@@ -625,7 +625,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             JCheckBoxMenuItem checkBoxMenuItem = new TCheckBoxMenuItem();
 
             // If frame number is less than 10, use the corresponding action class (accelerator will be displayed in the menu item)
-            MuAction recallWindowAction;
+            TcAction recallWindowAction;
             if (i < 10) {
                 recallWindowAction = ActionManager.getActionInstance(RECALL_WINDOW_ACTION_IDS[i], this.mainFrame);
             } else {    // Else use the generic RecallWindowAction
@@ -650,7 +650,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
         }
 
         // Add 'other' (non-MainFrame) windows : viewer and editor frames, no associated accelerator
-        Frame frames[] = Frame.getFrames();
+        Frame[] frames = Frame.getFrames();
         nbFrames = frames.length;
         boolean firstFrame = true;
         for (int i = 0; i < nbFrames; i++) {
@@ -704,7 +704,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
      */
     private class ChangeCurrentThemeAction extends AbstractAction {
 
-        private Theme theme;
+        private final Theme theme;
 
         ChangeCurrentThemeAction(Theme theme) {
             super(theme.getName());

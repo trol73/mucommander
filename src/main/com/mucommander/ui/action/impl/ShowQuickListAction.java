@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.QuickLists;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Arik Hadas
  */
-abstract class ShowQuickListAction extends MuAction {
+abstract class ShowQuickListAction extends TcAction {
 
 	ShowQuickListAction(MainFrame mainFrame, Map<String, Object> properties) {
 		super(mainFrame, properties);		

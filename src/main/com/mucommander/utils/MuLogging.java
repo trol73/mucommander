@@ -23,14 +23,13 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.*;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.dialog.debug.DebugConsoleAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -135,7 +134,7 @@ public class MuLogging {
 	 * @return the current log level used by all <code>org.slf4j</code> loggers.
 	 */
 	public static LogLevel getLogLevel() {
-		return LogLevel.valueOf(MuConfigurations.getPreferences().getVariable(MuPreference.LOG_LEVEL, MuPreferences.DEFAULT_LOG_LEVEL));
+		return LogLevel.valueOf(TcConfigurations.getPreferences().getVariable(TcPreference.LOG_LEVEL, TcPreferences.DEFAULT_LOG_LEVEL));
 	}
 
 	/**
@@ -145,7 +144,7 @@ public class MuLogging {
 	 * @param level the new log level to be used by all <code>org.slf4j</code> loggers.
 	 */
 	public static void setLogLevel(LogLevel level) {
-		MuConfigurations.getPreferences().setVariable(MuPreference.LOG_LEVEL, level.toString());
+		TcConfigurations.getPreferences().setVariable(TcPreference.LOG_LEVEL, level.toString());
 		updateLogLevel(level);
 	}
 	

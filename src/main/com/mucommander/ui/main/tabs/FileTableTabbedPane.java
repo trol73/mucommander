@@ -49,9 +49,9 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 	/** The FileTable instance presented in each tab */
 	private final JComponent fileTableComponent;
 	
-	private MainFrame mainFrame;
-	private FolderPanel folderPanel;
-	private FileTableTabHeaderFactory headersFactory;
+	private final MainFrame mainFrame;
+	private final FolderPanel folderPanel;
+	private final FileTableTabHeaderFactory headersFactory;
 	
 
 	FileTableTabbedPane(MainFrame mainFrame, FolderPanel folderPanel, JComponent fileTableComponent, FileTableTabHeaderFactory headersFactory) {

@@ -61,8 +61,9 @@ public class LocalProcess extends AbstractProcess {
         // Safeguard: makes sure that an exception is raised if the process could not be created.
         // This might not be strictly necessary, but the Runtime.exec documentation is not very precise
         // on what happens in case of an error.
-        if (process == null)
+        if (process == null) {
             throw new IOException();
+        }
     }
 
     private boolean isQuotedWith(String string, String quotationMark) {

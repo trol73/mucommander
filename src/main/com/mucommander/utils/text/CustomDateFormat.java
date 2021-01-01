@@ -20,9 +20,9 @@ package com.mucommander.utils.text;
 
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,7 +56,7 @@ public class CustomDateFormat implements ConfigurationListener {
         // Not doing it so would cause the garbage collector to GC it as MuConfiguration holds
         // weak references of its listeners.
         singleton = new CustomDateFormat();
-        MuConfigurations.addPreferencesListener(singleton);
+        TcConfigurations.addPreferencesListener(singleton);
 
         dateFormat = createDateFormat();
     }
@@ -82,9 +82,9 @@ public class CustomDateFormat implements ConfigurationListener {
      */
     public static String getDateFormatString() {
         return replaceDateSeparator(
-        		MuConfigurations.getPreferences().getVariable(MuPreference.DATE_FORMAT, MuPreferences.DEFAULT_DATE_FORMAT),
-        		MuConfigurations.getPreferences().getVariable(MuPreference.DATE_SEPARATOR, MuPreferences.DEFAULT_DATE_SEPARATOR))
-        + " " + MuConfigurations.getPreferences().getVariable(MuPreference.TIME_FORMAT, MuPreferences.DEFAULT_TIME_FORMAT);
+        		TcConfigurations.getPreferences().getVariable(TcPreference.DATE_FORMAT, TcPreferences.DEFAULT_DATE_FORMAT),
+        		TcConfigurations.getPreferences().getVariable(TcPreference.DATE_SEPARATOR, TcPreferences.DEFAULT_DATE_SEPARATOR))
+        + " " + TcConfigurations.getPreferences().getVariable(TcPreference.TIME_FORMAT, TcPreferences.DEFAULT_TIME_FORMAT);
     }
 
 
@@ -138,7 +138,7 @@ public class CustomDateFormat implements ConfigurationListener {
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
 
-        if (var.equals(MuPreferences.TIME_FORMAT) || var.equals(MuPreferences.DATE_FORMAT) || var.equals(MuPreferences.DATE_SEPARATOR))
+        if (var.equals(TcPreferences.TIME_FORMAT) || var.equals(TcPreferences.DATE_FORMAT) || var.equals(TcPreferences.DATE_SEPARATOR))
             updateDateFormat();
     }
 }

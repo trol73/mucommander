@@ -68,7 +68,7 @@ public class ShowParentFoldersQLAction extends ShowQuickListAction {
 			return KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.ALT_DOWN_MASK);
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowParentFoldersQLAction(mainFrame, properties);
 		}
     }

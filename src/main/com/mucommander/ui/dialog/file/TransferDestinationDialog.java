@@ -35,7 +35,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.main.statusbar.TaskWidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,24 +82,19 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
 
     protected String errorDialogTitle;
-    private boolean enableTransferOptions;
-    private YBoxPanel mainPanel;
-    private FilePathField pathField;
-    private SpinningDial spinningDial;
+    private final boolean enableTransferOptions;
+    private final YBoxPanel mainPanel;
+    private final FilePathField pathField;
+    private final SpinningDial spinningDial;
 
-    private JComboBox<String> fileExistsActionComboBox = new MuComboBox<>();
-    private JCheckBox skipErrorsCheckBox;
-    private JCheckBox verifyIntegrityCheckBox;
+    private final JComboBox<String> cbFileExistsAction = new TcComboBox<>();
+    private JCheckBox cbSkipErrors;
+    private JCheckBox cbVerifyIntegrity;
     JCheckBox cbBackgroundMode;
-    private final JButton okButton;
+    private final JButton btnOk;
 
     /** Background thread that is currently being executed, <code>null</code> if there is none. */
     private Thread thread;
-
-    /**
-     * Background mode flag, operation will be performed in background mode if true
-     */
-    private boolean backgroundMode;
 
     /**
      * for background operations
@@ -108,7 +103,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
 
 	
-    private final static int DEFAULT_ACTIONS[] = {
+    private final static int[] DEFAULT_ACTIONS = {
         FileCollisionDialog.CANCEL_ACTION,
         FileCollisionDialog.SKIP_ACTION,
         FileCollisionDialog.OVERWRITE_ACTION,
@@ -117,7 +112,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         FileCollisionDialog.RENAME_ACTION
     };
 
-    private final static String DEFAULT_ACTIONS_TEXT[] = {
+    private final static String[] DEFAULT_ACTIONS_TEXT = {
         FileCollisionDialog.CANCEL_TEXT,
         FileCollisionDialog.SKIP_TEXT,
         FileCollisionDialog.OVERWRITE_TEXT,
@@ -154,19 +149,19 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         if (enableTransferOptions) {
             // Combo box that allows the user to choose the default action when a file already exists in destination
             mainPanel.add(new JLabel(i18n("destination_dialog.file_exists_action") + " :"));
-            fileExistsActionComboBox.addItem(i18n("ask"));
+            cbFileExistsAction.addItem(i18n("ask"));
             for (String s : DEFAULT_ACTIONS_TEXT) {
-                fileExistsActionComboBox.addItem(s);
+                cbFileExistsAction.addItem(s);
             }
-            mainPanel.add(fileExistsActionComboBox);
+            mainPanel.add(cbFileExistsAction);
 
             mainPanel.addSpace(10);
 
-            skipErrorsCheckBox = new JCheckBox(i18n("destination_dialog.skip_errors"));
-            mainPanel.add(skipErrorsCheckBox);
+            cbSkipErrors = new JCheckBox(i18n("destination_dialog.skip_errors"));
+            mainPanel.add(cbSkipErrors);
 
-            verifyIntegrityCheckBox = new JCheckBox(i18n("destination_dialog.verify_integrity"));
-            mainPanel.add(verifyIntegrityCheckBox);
+            cbVerifyIntegrity = new JCheckBox(i18n("destination_dialog.verify_integrity"));
+            mainPanel.add(cbVerifyIntegrity);
 
             cbBackgroundMode = new JCheckBox(i18n("destination_dialog.background_mode"));
             cbBackgroundMode.setSelected(enableBackgroundMode);
@@ -180,7 +175,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(okText);
+        btnOk = new JButton(okText);
 
         // Prevent the dialog from being validated while the initial path is being set.
         setEnabledOkButtons(false);
@@ -189,7 +184,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
         YBoxPanel buttonsPanel = new YBoxPanel(10);
         buttonsPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-            DialogToolkit.createButtonPanel(getRootPane(), this, okButton, cancelButton)
+            DialogToolkit.createButtonPanel(getRootPane(), this, btnOk, cancelButton)
         //    DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this)
         ));
         buttonsPanel.add(fileDetailsPanel);
@@ -297,7 +292,7 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         if (enableTransferOptions) {
             // Retrieve default action when a file exists in destination, default choice
             // (if not specified by the user) is 'Ask'
-            defaultFileExistsAction = fileExistsActionComboBox.getSelectedIndex();
+            defaultFileExistsAction = cbFileExistsAction.getSelectedIndex();
             if (defaultFileExistsAction == 0) {
                 defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
             } else {
@@ -306,8 +301,8 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
             // Note: we don't remember default action on purpose: we want the user to specify it each time,
             // it would be too dangerous otherwise.
 
-            skipErrors = skipErrorsCheckBox.isSelected();
-            verifyIntegrity = verifyIntegrityCheckBox.isSelected();
+            skipErrors = cbSkipErrors.isSelected();
+            verifyIntegrity = cbVerifyIntegrity.isSelected();
         } else {
             defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
             skipErrors = false;
@@ -345,31 +340,27 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     }
 
 
-    //////////////////////////////
-    // DocumentListener methods //
-    //////////////////////////////
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         textUpdated();
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         textUpdated();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
-
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton) {
-            backgroundMode = cbBackgroundMode != null && cbBackgroundMode.isSelected();
+        if (source == btnOk) {
+            boolean backgroundMode = cbBackgroundMode != null && cbBackgroundMode.isSelected();
             enableBackgroundMode = backgroundMode;
 
             // Disable the OK buttons and path field while the current path is being resolved
@@ -391,10 +382,6 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
         }
     }
 
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Called when the dialog has just been created to compute the initial path, based on the user file selection.
@@ -430,9 +417,6 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
     protected abstract String getProgressDialogTitle();
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     /**
      * Retrieves the initial path to be set in the path field by calling {@link TransferDestinationDialog#computeInitialPath(FileSet)}.
@@ -544,6 +528,6 @@ public abstract class TransferDestinationDialog extends JobDialog implements Act
 
 
     private void setEnabledOkButtons(boolean enabled) {
-        okButton.setEnabled(enabled);
+        btnOk.setEnabled(enabled);
     }
 }

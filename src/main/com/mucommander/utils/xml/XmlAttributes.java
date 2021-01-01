@@ -13,16 +13,11 @@ import java.util.*;
  * @author Nicolas Rinaudo, Arik Hadas
  */
 public class XmlAttributes {
-    // - Instance fields -------------------------------------------------
-    // -------------------------------------------------------------------
     /** Contains the XML attributes. */
-    private Map<String, String> attributes = new HashMap<>();
+    private final Map<String, String> attributes = new HashMap<>();
     /** Contains the XML attribute names in the order they were added */
-    private LinkedList<String> names = new LinkedList<>();
+    private final LinkedList<String> names = new LinkedList<>();
 
-
-    // - Content handling ------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Returns the value associated with the specified attribute name.
      * @param name name of the attribute whose value should be retrieved.

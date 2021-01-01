@@ -24,20 +24,20 @@ import java.io.FileNotFoundException;
  * 
  * @author Arik Hadas
  */
-class MuSnapshotFile extends MuConfigurationFile {
+class TcSnapshotFile extends TcConfigurationFile {
 	
 	private static final String DEFAULT_SNAPSHOT_FILE_NAME = "snapshot.xml";
 	
-	static MuSnapshotFile getSnapshotFile() {
+	static TcSnapshotFile getSnapshotFile() {
 		try {
-			return new MuSnapshotFile();
+			return new TcSnapshotFile();
 		} catch (FileNotFoundException e) {
 			// Not possible exception??
 			return null;
 		}
 	}
 	
-	private MuSnapshotFile() throws FileNotFoundException {
+	private TcSnapshotFile() throws FileNotFoundException {
 		super(null, DEFAULT_SNAPSHOT_FILE_NAME);
 	}
 }

@@ -17,9 +17,9 @@
  */
 package ru.trolsoft.calculator;
 
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.FocusDialog;
 
-import javax.swing.JComboBox;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Oleg Trifonov
  * Created on 06/06/14.
  */
-public class HistoryComboBox extends JComboBox<String> {
+public class HistoryComboBox extends TcComboBox<String> {
     private final FocusDialog parent;
 
     public HistoryComboBox(FocusDialog parent, List<String> values) {

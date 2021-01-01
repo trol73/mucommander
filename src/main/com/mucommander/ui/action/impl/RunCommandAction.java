@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class RunCommandAction extends MuAction {
+public class RunCommandAction extends TcAction {
 
     private RunCommandAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -67,7 +67,7 @@ public class RunCommandAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_R, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RunCommandAction(mainFrame, properties);
         }
     }

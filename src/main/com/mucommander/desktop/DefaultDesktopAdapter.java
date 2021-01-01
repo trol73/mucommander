@@ -56,20 +56,24 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
         try {
             Integer value = ((Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval"));
             multiClickInterval = value == null ? DEFAULT_MULTICLICK_INTERVAL : value;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.debug("Error while retrieving multi-click interval value desktop property", e);
 
             multiClickInterval = DEFAULT_MULTICLICK_INTERVAL;
         }
     }
 
-    public String toString() {return "Default Desktop";}
+    public String toString() {
+        return "Default Desktop";
+    }
 
     /**
      * Returns <code>true</code>.
      * @return <code>true</code>.
      */
-    public boolean isAvailable() {return true;}
+    public boolean isAvailable() {
+        return true;
+    }
 
     /**
      * Initialises this desktop.
@@ -183,5 +187,18 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      */
     public boolean isApplication(AbstractFile file) {
         return false;
+    }
+
+    @Override
+    public String getDefaultTerminalAppCommand() {
+        switch (OsFamily.getCurrent()) {
+            case WINDOWS:
+                return "cmd /c start cmd.exe /K \"cd /d $p\"";
+            case LINUX:
+                return "gnome-terminal --working-directory=$p";
+            case MAC_OS_X:
+                return "open -a Terminal .";
+        }
+        return "";
     }
 }

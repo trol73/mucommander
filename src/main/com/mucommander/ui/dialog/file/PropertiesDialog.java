@@ -70,22 +70,23 @@ import com.mucommander.utils.Convert;
  * @author Maxence Bernard
  */
 public class PropertiesDialog extends FocusDialog implements Runnable, ActionListener {
-    private PropertiesJob job;
+    private final PropertiesJob job;
     private Thread repaintThread;
-    private SpinningDial dial;
+    private final SpinningDial dial;
 	
-	private JTextField textfield;
-    private JLabel counterLabel;
-    private JLabel sizeLabel;
+	private final JTextField textfield;
+    private final JLabel lblCounter;
+    private final JLabel lblSize;
     private JLabel ownerLabel;
     private JLabel groupLabel;
-	private JLabel lastMod;
-	private JLabel createTimeLabel;
-	private JLabel lastAccessLabel;
+	private final JLabel lblLastMod;
+	private final JLabel lblCreateTime;
+	private final JLabel lblLastAccess;
+
 	AbstractFile file;
 	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-    private JButton okCancelButton;
+    private final JButton btnOkCancel;
 	private String newName;
 	private JTextField edtNewName;
     // Dialog width is constrained to 320, height is not an issue (always the same)
@@ -136,8 +137,8 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 		textfield.addActionListener(this);
 		textfield.setEditable(true);
         // Contents (set later)
-        counterLabel = new JLabel("");
-        labelPanel.addRow(i18n("properties_dialog.contents")+":", counterLabel, 6);
+        lblCounter = new JLabel("");
+        labelPanel.addRow(i18n("properties_dialog.contents")+":", lblCounter, 6);
 
         // Location (set here)
         labelPanel.addRow(i18n("location")+":", new FileLabel(files.getBaseFolder(), true), 6);
@@ -145,17 +146,17 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         // Combined size (set later)
         JPanel sizePanel;
         sizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        sizePanel.add(sizeLabel = new JLabel(""));
+        sizePanel.add(lblSize = new JLabel(""));
         sizePanel.add(new JLabel(dial = new SpinningDial()));
         labelPanel.addRow(i18n("size") + ":", sizePanel, 6);
 
 		// more information
-		lastMod = new JLabel("");
-		labelPanel.addRow("Last Modified" + ":", lastMod, 6);
-		createTimeLabel = new JLabel("");
-		labelPanel.addRow("Created" + ":", createTimeLabel, 6);
-		lastAccessLabel = new JLabel("");
-		labelPanel.addRow("Last Accessed" + ":", lastAccessLabel, 6);
+		lblLastMod = new JLabel("");
+		labelPanel.addRow("Last Modified" + ":", lblLastMod, 6);
+		lblCreateTime = new JLabel("");
+		labelPanel.addRow("Created" + ":", lblCreateTime, 6);
+		lblLastAccess = new JLabel("");
+		labelPanel.addRow("Last Accessed" + ":", lblLastAccess, 6);
 
         if (isSingleFile) {
             if (singleFile.canGetOwner()) {
@@ -171,7 +172,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                 }
             }
             if (singleFile.isFileOperationSupported(FileOperation.GET_REPLICATION)) {
-                short replication = 0;
+                short replication;
                 try {
                     replication = singleFile.getReplication();
                     labelPanel.addRow(i18n("replication") + ":", new JLabel(Short.toString(replication)), 6);
@@ -180,7 +181,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
                 }
             }
             if (singleFile.isFileOperationSupported(FileOperation.GET_BLOCKSIZE)) {
-                long blocksize = 0;
+                long blocksize;
                 try {
                     blocksize = singleFile.getBlocksize();
                     labelPanel.addRow(i18n("blocksize") + ":", new JLabel(Convert.readableFileSize(blocksize)), 6);
@@ -207,11 +208,11 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         yPanel.add(fileDetailsPanel);
         contentPane.add(yPanel, BorderLayout.NORTH);
 
-        okCancelButton = new JButton(i18n("cancel"));
-        contentPane.add(DialogToolkit.createOKPanel(okCancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        btnOkCancel = new JButton(i18n("cancel"));
+        contentPane.add(DialogToolkit.createOKPanel(btnOkCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // OK button will receive initial focus
-        setInitialFocusComponent(okCancelButton);		
+        setInitialFocusComponent(btnOkCancel);
 		
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
@@ -223,17 +224,17 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
     private void updateLabels() {
         int nbFiles = job.getNbFilesRecurse();
         int nbFolders = job.getNbFolders();
-        counterLabel.setText(
+        lblCounter.setText(
                              (nbFiles > 0 ? i18n("nb_files", ""+nbFiles) : "")
                              +(nbFiles > 0 && nbFolders > 0 ? ", ":"")
                              +(nbFolders > 0 ? i18n("nb_folders", ""+nbFolders):"")
                              );
-        sizeLabel.setText(SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE| SizeFormat.ROUND_TO_KB) +
+        lblSize.setText(SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE| SizeFormat.ROUND_TO_KB) +
 			  " (" + SizeFormat.format(job.getTotalBytes(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE) + ")");
 
 		
 		//adding last modification time and date
-		lastMod.setText(sdf.format(file.getLastModifiedDate()));
+		lblLastMod.setText(sdf.format(file.getLastModifiedDate()));
 
 
 		
@@ -249,16 +250,16 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         } catch (IOException e) {
             lastAccessTime = -1;
         }
-        lastAccessLabel.setText(lastAccessTime > 0 ? sdf.format(lastAccessTime) : i18n("unknown"));
+        lblLastAccess.setText(lastAccessTime > 0 ? sdf.format(lastAccessTime) : i18n("unknown"));
         long createTime;
         try {
             createTime = file.getCreationDate();
         } catch (IOException e) {
             createTime = -1;
         }
-        createTimeLabel.setText(createTime > 0 ? sdf.format(createTime) : i18n("unknown"));
-        counterLabel.repaint(REFRESH_RATE);
-        sizeLabel.repaint(REFRESH_RATE);
+        lblCreateTime.setText(createTime > 0 ? sdf.format(createTime) : i18n("unknown"));
+        lblCounter.repaint(REFRESH_RATE);
+        lblSize.repaint(REFRESH_RATE);
     }
 
 		protected AbstractFile createDestinationFile(AbstractFile destFolder, String destFileName) {
@@ -291,11 +292,7 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         repaintThread.start();
     }
 
-	
-    //////////////////////
-    // Runnable methods //
-    //////////////////////
-
+	@Override
     public void run() {
         dial.setAnimated(true);
         while (repaintThread != null && job.getState()!= FileJob.State.FINISHED) {
@@ -308,26 +305,19 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
         // Updates button labels and stops spinning dial.
         updateLabels();
-        okCancelButton.setText(i18n("ok"));
+        btnOkCancel.setText(i18n("ok"));
         dial.setAnimated(false);
     }
 
 
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == okCancelButton) {
+        if (e.getSource() == btnOkCancel) {
             renameFile(file,textfield.getText());
 		}
 		dispose();
     }
 
-
-    ///////////////////////////////////////
-    // Overridden WindowListener methods // 
-    ///////////////////////////////////////
 
     @Override
     public void windowClosed(WindowEvent e) {

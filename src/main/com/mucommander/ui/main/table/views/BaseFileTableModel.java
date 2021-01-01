@@ -23,9 +23,9 @@ import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileComparator;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.main.table.CalculateDirectorySizeWorker;
 import com.mucommander.ui.main.table.FileTable;
@@ -121,8 +121,8 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     }
 
     private static boolean getFileSizeFormat() {
-        return MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.DISPLAY_COMPACT_FILE_SIZE,
+                                                  TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE);
     }
 
 

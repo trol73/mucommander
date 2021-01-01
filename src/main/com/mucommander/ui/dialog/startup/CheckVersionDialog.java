@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.VersionChecker;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.SelfUpdateJob;
 import com.mucommander.ui.action.ActionProperties;
@@ -56,11 +56,11 @@ public class CheckVersionDialog extends QuestionDialog {
 	private static Logger logger;
 	
     /** Parent MainFrame instance */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /** true if the user manually clicked on the 'Check for updates' menu item,
      * false if the update check was automatically triggered on startup */
-    private boolean userInitiated;
+    private final boolean userInitiated;
 
     /** Dialog's width has to be at least 240 */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320,0);	
@@ -176,8 +176,8 @@ public class CheckVersionDialog extends QuestionDialog {
 
         // Turn the vectors into arrays
         int nbChoices = actionsV.size();
-        int actions[] = new int[nbChoices];
-        String labels[] = new String[nbChoices];
+        int[] actions = new int[nbChoices];
+        String[] labels = new String[nbChoices];
         for (int i=0; i < nbChoices; i++) {
             actions[i] = actionsV.get(i);
             labels[i] = labelsV.get(i);
@@ -189,8 +189,8 @@ public class CheckVersionDialog extends QuestionDialog {
              0);
 			
         JCheckBox showNextTimeCheckBox = new JCheckBox(i18n("prefs_dialog.check_for_updates_on_startup"),
-        												MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE,
-                                                                                        MuPreferences.DEFAULT_CHECK_FOR_UPDATE));
+        												TcConfigurations.getPreferences().getVariable(TcPreference.CHECK_FOR_UPDATE,
+                                                                                        TcPreferences.DEFAULT_CHECK_FOR_UPDATE));
         addComponent(showNextTimeCheckBox);
 
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
@@ -211,7 +211,7 @@ public class CheckVersionDialog extends QuestionDialog {
         }
 		
         // Remember user preference
-        MuConfigurations.getPreferences().setVariable(MuPreference.CHECK_FOR_UPDATE, showNextTimeCheckBox.isSelected());
+        TcConfigurations.getPreferences().setVariable(TcPreference.CHECK_FOR_UPDATE, showNextTimeCheckBox.isSelected());
     }
 
     private static Logger getLogger() {

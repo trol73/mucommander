@@ -34,23 +34,16 @@ import java.util.WeakHashMap;
  * @author Nicolas Rinaudo
  */
 public class IntegerChooser extends JPanel implements ChangeListener {
-    // - Instance variables --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** List of all registered state change listeners. */
-    private WeakHashMap<ChangeListener, ?> listeners;
+    private final WeakHashMap<ChangeListener, ?> listeners;
 
 
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Integer slider. */
-    private JSlider  slider;
+    private final JSlider  slider;
     /** Integer spinner. */
-    private JSpinner spinner;
+    private final JSpinner spinner;
 
 
-
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new integer chooser.
      * @param min          chooser's minimum value.
@@ -139,8 +132,6 @@ public class IntegerChooser extends JPanel implements ChangeListener {
 
 
 
-    // - State changing code ----------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Registers the specified object as a change listener.
      */

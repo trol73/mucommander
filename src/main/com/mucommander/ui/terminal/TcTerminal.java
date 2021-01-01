@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,16 +42,16 @@ import java.io.*;
  * @author Oleg Trifonov
  * Created on 24/10/14.
  */
-public class MuTerminal {
+public class TcTerminal {
 
     private final MainFrame mainFrame;
     private final TerminalWidget termWidget;
     private final SettingsProvider settingsProvider;
-    private final MuTerminalTtyConnector ttyConnector;
+    private final TcTerminalTtyConnector ttyConnector;
 
     private static final String STORAGE_KEY = "TerminalPanel";
 
-    public MuTerminal(final MainFrame mainFrame) {
+    public TcTerminal(final MainFrame mainFrame) {
         super();
         this.mainFrame = mainFrame;
         this.settingsProvider = new TerminalSettingsProvider();
@@ -105,9 +105,9 @@ public class MuTerminal {
     }
 
 
-    private MuTerminalTtyConnector createTtyConnector(String directory) {
+    private TcTerminalTtyConnector createTtyConnector(String directory) {
         try {
-            return new MuTerminalTtyConnector(directory) {
+            return new TcTerminalTtyConnector(directory) {
                 @Override
                 public void close() {
                     super.close();

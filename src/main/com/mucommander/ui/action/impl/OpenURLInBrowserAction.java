@@ -34,7 +34,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * @author Maxence Bernard
  */
-public class OpenURLInBrowserAction extends MuAction {
+public class OpenURLInBrowserAction extends TcAction {
 
     /** Key to the URL property */
     final static String URL_PROPERTY_KEY = "url";
@@ -89,7 +89,7 @@ public class OpenURLInBrowserAction extends MuAction {
 		    return true;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenURLInBrowserAction(mainFrame, properties);
         }
     }

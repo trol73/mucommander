@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * @author Maxence Bernard
  */
-public class ShowDebugConsoleAction extends MuAction {
+public class ShowDebugConsoleAction extends TcAction {
 
     private ShowDebugConsoleAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -64,7 +64,7 @@ public class ShowDebugConsoleAction extends MuAction {
 			return null;
 		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowDebugConsoleAction(mainFrame, properties);
 		}
     }

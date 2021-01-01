@@ -18,7 +18,6 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.FindFileDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -74,7 +73,7 @@ public class FindFileAction extends ParentFolderAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_F, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new FindFileAction(mainFrame, properties);
         }
     }

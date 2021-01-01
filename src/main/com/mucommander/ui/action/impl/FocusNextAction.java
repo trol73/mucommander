@@ -21,7 +21,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.helper.FocusRequester;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class FocusNextAction extends MuAction {
+public class FocusNextAction extends TcAction {
 
     private FocusNextAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -101,7 +101,7 @@ public class FocusNextAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_TAB, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new FocusNextAction(mainFrame, properties);
         }
     }

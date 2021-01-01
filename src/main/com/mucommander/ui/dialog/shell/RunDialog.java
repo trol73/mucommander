@@ -71,10 +71,8 @@ import com.mucommander.ui.theme.ThemeManager;
 public class RunDialog extends FocusDialog implements ActionListener, ProcessListener, KeyListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RunDialog.class);
 	
-    // - UI components -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Main frame this dialog depends on. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /** Editable combo box used for shell input and history. */
     private ShellComboBox inputCombo;
     /** Run/stop button. */
@@ -90,8 +88,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - Process management --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Stream used to send characters to the process' stdin process. */
     private PrintStream     processInput;
     /** Process currently running, <code>null</code> if none. */
@@ -99,15 +95,11 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - Misc. class variables -----------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Minimum dimensions for the dialog. */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600, 400);
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates the dialog's shell output area.
      * @return a scroll pane containing the dialog's shell output area.
@@ -222,8 +214,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - ProcessListener code ------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Notifies the RunDialog that the current process has died.
      * @param retValue process' return code (not used).
@@ -252,8 +242,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
     }
 
 
-    // - KeyListener code ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Notifies the RunDialog that a key has been pressed.
      * <p>
@@ -321,11 +309,9 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         switchToRunState();
     }
 
-    // - ActionListener code -------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Notifies the RunDialog that an action has been performed.
-     * @param e describes the action that occured.
+     * @param e describes the action that occurred.
      */
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -349,8 +335,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - Misc. ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Switches the UI back to 'Run command' state.
      */

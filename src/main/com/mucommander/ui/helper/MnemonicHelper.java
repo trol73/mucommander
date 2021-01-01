@@ -36,7 +36,7 @@ import java.util.List;
 public class MnemonicHelper {
 
     /** Current list of previously assigned mnemonics */
-    private List<Character> takenMnemonics;
+    private final List<Character> takenMnemonics;
 	
 	
     /**

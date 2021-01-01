@@ -40,7 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.mucommander.conf.MuPreferencesAPI;
+import com.mucommander.conf.TcPreferencesAPI;
 import com.mucommander.ui.widgets.render.BasicComboBoxRenderer;
 import com.mucommander.utils.FileIconsCache;
 import org.slf4j.Logger;
@@ -50,9 +50,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.extension.ClassFinder;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.extension.LookAndFeelFilter;
@@ -75,7 +75,7 @@ import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
 
-import static com.mucommander.conf.MuPreference.*;
+import static com.mucommander.conf.TcPreference.*;
 
 
 /**
@@ -90,7 +90,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Combo box containing the list of available look&feels. */
     private PrefComboBox<String> lookAndFeelComboBox;
     /** All available look&feels. */
-    private UIManager.LookAndFeelInfo lookAndFeels[];
+    private UIManager.LookAndFeelInfo[] lookAndFeels;
     /** 'Use brushed metal look' checkbox */
     private PrefCheckBox              brushedMetalCheckBox;
     /** Triggers look and feel importing. */
@@ -111,11 +111,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Displays the list of available sizes for command bar icons. */
     private PrefComboBox<String> commandBarIconsSizeComboBox;
     /** Displays the list of available sizes for file icons. */
-    private PrefComboBox<String>fileIconsSizeComboBox;
+    private PrefComboBox<String> fileIconsSizeComboBox;
     /** All icon sizes label. */
-    private final static String ICON_SIZES[]                = {"100%", "125%", "150%", "175%", "200%", "300%"};
+    private final static String[] ICON_SIZES = {"100%", "125%", "150%", "175%", "200%", "300%"};
     /** All icon sizes scale factors. */
-    private final static float  ICON_SCALE_FACTORS[]        = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
+    private final static float[] ICON_SCALE_FACTORS = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f};
 
 
 
@@ -133,19 +133,19 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     /** Lists all available themes. */
     private PrefComboBox<Theme> themeComboBox;
     /** Triggers the theme editor. */
-    private JButton      editThemeButton;
+    private JButton btnEditTheme;
     /** Triggers the theme duplication dialog. */
-    private JButton      duplicateThemeButton;
+    private JButton btnDuplicate;
     /** Triggers the theme import dialog. */
-    private JButton      importThemeButton;
+    private JButton btnImportTheme;
     /** Triggers the theme export dialog. */
-    private JButton      exportThemeButton;
+    private JButton btnExportTheme;
     /** Triggers the theme rename dialog. */
-    private JButton      renameThemeButton;
+    private JButton btnRenameTheme;
     /** Triggers the theme delete dialog. */
-    private JButton      deleteThemeButton;
+    private JButton btnDeleteTheme;
     /** Used to display the currently selected theme's type. */
-    private JLabel       typeLabel;
+    private JLabel lblType;
     /** Whether or not to ignore theme combobox related events. */
     private boolean      ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
@@ -173,8 +173,6 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new appearance panel with the specified parent.
      * @param parent dialog in which this panel is placed.
@@ -183,14 +181,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         super(parent, Translator.get("prefs_dialog.appearance_tab"));
         initUI();
 
-        // Initialises the known custom look and feels
         initializeCustomLookAndFeels();
     }
 
 
 
-    // - UI initialisation ------------------------------------------------------
-    // --------------------------------------------------------------------------
     private void initUI() {
         YBoxPanel mainPanel;
 
@@ -228,7 +223,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         fileIconsSizeComboBox.addDialogListener(parent);
         if (brushedMetalCheckBox != null) {
         	brushedMetalCheckBox.addDialogListener(parent);
-    }
+        }
     }
 
     /**
@@ -314,7 +309,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             // 'Use brushed metal look' option
             brushedMetalCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.use_brushed_metal"),
                     checkBox -> !String.valueOf(checkBox.isSelected()).equals(getVariable(USE_BRUSHED_METAL)));
-            brushedMetalCheckBox.setSelected(getVariable(USE_BRUSHED_METAL, MuPreferences.DEFAULT_USE_BRUSHED_METAL));
+            brushedMetalCheckBox.setSelected(getVariable(USE_BRUSHED_METAL, TcPreferences.DEFAULT_USE_BRUSHED_METAL));
             flowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             flowPanel.add(brushedMetalCheckBox);
             lnfPanel.add(flowPanel);
@@ -331,13 +326,13 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(2);
 
         gridPanel.add(new JLabel(Translator.get("prefs_dialog.toolbar_icons")));
-        gridPanel.add(toolbarIconsSizeComboBox = createIconSizeCombo(TOOLBAR_ICON_SCALE, MuPreferences.DEFAULT_TOOLBAR_ICON_SCALE));
+        gridPanel.add(toolbarIconsSizeComboBox = createIconSizeCombo(TOOLBAR_ICON_SCALE, TcPreferences.DEFAULT_TOOLBAR_ICON_SCALE));
 
         gridPanel.add(new JLabel(Translator.get("prefs_dialog.command_bar_icons")));
-        gridPanel.add(commandBarIconsSizeComboBox = createIconSizeCombo(COMMAND_BAR_ICON_SCALE, MuPreferences.DEFAULT_COMMAND_BAR_ICON_SCALE));
+        gridPanel.add(commandBarIconsSizeComboBox = createIconSizeCombo(COMMAND_BAR_ICON_SCALE, TcPreferences.DEFAULT_COMMAND_BAR_ICON_SCALE));
 
         gridPanel.add(new JLabel(Translator.get("prefs_dialog.file_icons")));
-        gridPanel.add(fileIconsSizeComboBox = createIconSizeCombo(TABLE_ICON_SCALE, MuPreferences.DEFAULT_TABLE_ICON_SCALE));
+        gridPanel.add(fileIconsSizeComboBox = createIconSizeCombo(TABLE_ICON_SCALE, TcPreferences.DEFAULT_TABLE_ICON_SCALE));
 
         JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.icons_size")));
@@ -354,21 +349,21 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         JPanel gridPanel = new ProportionalGridPanel(4);
 
         // Creates the various panel's buttons.
-        editThemeButton      = new JButton(Translator.get("edit") + "...");
-        importThemeButton    = new JButton(Translator.get("prefs_dialog.import") + "...");
-        exportThemeButton    = new JButton(Translator.get("prefs_dialog.export") + "...");
-        renameThemeButton    = new JButton(Translator.get("rename"));
-        deleteThemeButton    = new JButton(Translator.get("delete"));
-        duplicateThemeButton = new JButton(Translator.get("duplicate"));
-        editThemeButton.addActionListener(this);
-        importThemeButton.addActionListener(this);
-        exportThemeButton.addActionListener(this);
-        renameThemeButton.addActionListener(this);
-        deleteThemeButton.addActionListener(this);
-        duplicateThemeButton.addActionListener(this);
+        btnEditTheme = new JButton(Translator.get("edit") + "...");
+        btnImportTheme = new JButton(Translator.get("prefs_dialog.import") + "...");
+        btnExportTheme = new JButton(Translator.get("prefs_dialog.export") + "...");
+        btnRenameTheme = new JButton(Translator.get("rename"));
+        btnDeleteTheme = new JButton(Translator.get("delete"));
+        btnDuplicate = new JButton(Translator.get("duplicate"));
+        btnEditTheme.addActionListener(this);
+        btnImportTheme.addActionListener(this);
+        btnExportTheme.addActionListener(this);
+        btnRenameTheme.addActionListener(this);
+        btnDeleteTheme.addActionListener(this);
+        btnDuplicate.addActionListener(this);
 
         // Creates the panel's 'type label'.
-        typeLabel = new JLabel("");
+        lblType = new JLabel("");
 
         // Creates the theme combo box.
         themeComboBox = new PrefComboBox<Theme>() {
@@ -385,10 +380,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                 @Override
                 public Component getListCellRendererComponent(JList<? extends Theme> list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
                     JLabel label = (JLabel)super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
-                    if(ThemeManager.isCurrentTheme(theme))
+                    if (ThemeManager.isCurrentTheme(theme)) {
                         label.setText(theme.getName() +  " (" + Translator.get("theme.current") + ")");
-                    else
+                    } else {
                         label.setText(theme.getName());
+                    }
 
                     label.setIcon(theme.getType() == Theme.Type.PREDEFINED ? lockIcon : transparentIcon);
 
@@ -400,14 +396,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         populateThemes(ThemeManager.getCurrentTheme());
 
         gridPanel.add(themeComboBox);
-        gridPanel.add(editThemeButton);
-        gridPanel.add(importThemeButton);
-        gridPanel.add(exportThemeButton);
+        gridPanel.add(btnEditTheme);
+        gridPanel.add(btnImportTheme);
+        gridPanel.add(btnExportTheme);
 
-        gridPanel.add(typeLabel);
-        gridPanel.add(renameThemeButton);
-        gridPanel.add(deleteThemeButton);
-        gridPanel.add(duplicateThemeButton);
+        gridPanel.add(lblType);
+        gridPanel.add(btnRenameTheme);
+        gridPanel.add(btnDeleteTheme);
+        gridPanel.add(btnDuplicate);
 
         JPanel flowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         flowPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.themes")));
@@ -508,7 +504,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * @param defaultValue the default value for the icon scale factor if the configuration variable has no value
      * @return a combo box that allows to choose a size for a certain type of icon
      */
-    private PrefComboBox<String> createIconSizeCombo(final MuPreference preference, float defaultValue) {
+    private PrefComboBox<String> createIconSizeCombo(final TcPreference preference, float defaultValue) {
     	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>(ICON_SIZES) {
 			public boolean hasChanged() {
 				return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(getVariable(preference));
@@ -528,12 +524,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
 
-    ///////////////////////
-    // PrefPanel methods //
-    ///////////////////////
+
     @Override
     protected void commit() {
-        final MuPreferencesAPI pref = MuConfigurations.getPreferences();
+        final TcPreferencesAPI pref = TcConfigurations.getPreferences();
 
         // Look and Feel
         if (pref.setVariable(LOOK_AND_FEEL, lookAndFeels[lookAndFeelComboBox.getSelectedIndex()].getClassName())) {
@@ -589,7 +583,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Initialises the list of custom look&feels.
      */
     private void initializeCustomLookAndFeels() {
-        customLookAndFeels = getListVariable(CUSTOM_LOOK_AND_FEELS, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+        customLookAndFeels = getListVariable(CUSTOM_LOOK_AND_FEELS, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
     }
 
     /**
@@ -671,7 +665,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private void deleteCustomLookAndFeel(UIManager.LookAndFeelInfo selection) {
         if (customLookAndFeels != null) {
             if (customLookAndFeels.remove(selection.getClassName())) {
-                MuConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+                TcConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
             }
         }
     }
@@ -798,7 +792,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                 if (customLookAndFeels.isEmpty())
                     customLookAndFeels = null;
                 else
-                	MuConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+                	TcConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
 
                 populateLookAndFeels();
             }
@@ -851,7 +845,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             label = Translator.get("theme.add_on");
         }
 
-        typeLabel.setText(Translator.get("prefs_dialog.theme_type", label));
+        lblType.setText(Translator.get("prefs_dialog.theme_type", label));
     }
 
     private void resetThemeButtons(Theme theme) {
@@ -862,11 +856,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         setTypeLabel(theme);
 
         if (theme.getType() != Theme.Type.CUSTOM) {
-            renameThemeButton.setEnabled(false);
-            deleteThemeButton.setEnabled(false);
+            btnRenameTheme.setEnabled(false);
+            btnDeleteTheme.setEnabled(false);
         } else {
-            renameThemeButton.setEnabled(true);
-            deleteThemeButton.setEnabled(!ThemeManager.isCurrentTheme(theme));
+            btnRenameTheme.setEnabled(true);
+            btnDeleteTheme.setEnabled(!ThemeManager.isCurrentTheme(theme));
         }
     }
 
@@ -1068,27 +1062,27 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             importLookAndFeel();
 
         // Rename button was pressed.
-        else if(e.getSource() == renameThemeButton)
+        else if(e.getSource() == btnRenameTheme)
             renameTheme(theme);
 
         // Delete button was pressed.
-        else if(e.getSource() == deleteThemeButton)
+        else if(e.getSource() == btnDeleteTheme)
             deleteTheme(theme);
 
         // Edit button was pressed.
-        else if(e.getSource() == editThemeButton)
+        else if(e.getSource() == btnEditTheme)
             editTheme(theme);
 
         // Import button was pressed.
-        else if(e.getSource() == importThemeButton)
+        else if(e.getSource() == btnImportTheme)
             importTheme();
 
         // Export button was pressed.
-        else if(e.getSource() == exportThemeButton)
+        else if(e.getSource() == btnExportTheme)
             exportTheme(theme);
 
         // Export button was pressed.
-        else if(e.getSource() == duplicateThemeButton)
+        else if(e.getSource() == btnDuplicate)
             duplicateTheme(theme);
     }
 

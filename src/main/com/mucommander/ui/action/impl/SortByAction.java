@@ -20,7 +20,7 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -44,7 +44,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public abstract class SortByAction extends MuAction implements ActivePanelListener, TableColumnModelListener {
+public abstract class SortByAction extends TcAction implements ActivePanelListener, TableColumnModelListener {
 
     /** FileTable column this action operates on */
     protected Column column;

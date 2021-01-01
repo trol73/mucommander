@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ToggleAutoSizeAction extends MuAction {
+public class ToggleAutoSizeAction extends TcAction {
 
     private ToggleAutoSizeAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -43,7 +43,7 @@ public class ToggleAutoSizeAction extends MuAction {
         boolean enabled;
 
         mainFrame.setAutoSizeColumnsEnabled(enabled = !mainFrame.isAutoSizeColumnsEnabled());
-        MuConfigurations.getPreferences().setVariable(MuPreference.AUTO_SIZE_COLUMNS, enabled);
+        TcConfigurations.getPreferences().setVariable(TcPreference.AUTO_SIZE_COLUMNS, enabled);
     }
 
 	@Override
@@ -71,7 +71,7 @@ public class ToggleAutoSizeAction extends MuAction {
 		    return null;
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleAutoSizeAction(mainFrame, properties);
         }
     }

@@ -83,7 +83,7 @@ public class BatchRenameAction extends SelectedFilesAction {
 		    return KeyStroke.getKeyStroke(KeyEvent.VK_F6, KeyEvent.ALT_DOWN_MASK);
 		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new BatchRenameAction(mainFrame, properties);
         }
     }

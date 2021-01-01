@@ -43,7 +43,7 @@ public class EncodingMenu extends JMenu {
     protected final WeakHashMap<EncodingListener, ?> listeners = new WeakHashMap<>();
 
     /** the dialog/frame that owns this component */
-    private DialogOwner dialogOwner;
+    private final DialogOwner dialogOwner;
 
     /** The encoding that is currently selected, may be null */
     private String selectedEncoding;
@@ -145,10 +145,6 @@ public class EncodingMenu extends JMenu {
         return selectedEncoding;
     }
 
-
-    //////////////////////
-    // Listener methods //
-    //////////////////////
 
     public void addEncodingListener(EncodingListener listener) {
         synchronized (listeners) {

@@ -34,10 +34,10 @@ import javax.swing.plaf.basic.BasicTextFieldUI;
 import javax.swing.text.JTextComponent;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.conf.MuPreferencesAPI;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.conf.TcPreferencesAPI;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
@@ -50,7 +50,7 @@ import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.WindowManager;
 
-import static com.mucommander.conf.MuPreference.*;
+import static com.mucommander.conf.TcPreference.*;
 
 
 /**
@@ -109,14 +109,14 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         lastFoldersRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.last_folder")) {
 			public boolean hasChanged() {
 				return !(isSelected() ? 
-						MuPreferences.STARTUP_FOLDERS_LAST	: MuPreferences.STARTUP_FOLDERS_CUSTOM).equals(
+						TcPreferences.STARTUP_FOLDERS_LAST	: TcPreferences.STARTUP_FOLDERS_CUSTOM).equals(
                         getVariable(STARTUP_FOLDERS));
 			}
 		};
 		customFoldersRadioButton = new PrefRadioButton(Translator.get("prefs_dialog.custom_folder")) {
 			public boolean hasChanged() {
 				return !(isSelected() ? 
-						MuPreferences.STARTUP_FOLDERS_CUSTOM : MuPreferences.STARTUP_FOLDERS_LAST).equals(
+						TcPreferences.STARTUP_FOLDERS_CUSTOM : TcPreferences.STARTUP_FOLDERS_LAST).equals(
                         getVariable(STARTUP_FOLDERS));
 			}
         };
@@ -177,7 +177,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         
         startupFolderPanel.add(container);
         
-        if (getVariable(STARTUP_FOLDERS, "").equals(MuPreferences.STARTUP_FOLDERS_LAST)) {
+        if (getVariable(STARTUP_FOLDERS, "").equals(TcPreferences.STARTUP_FOLDERS_LAST)) {
             lastFoldersRadioButton.setSelected(true);
             setCustomFolderComponentsEnabled(false);
         } else {
@@ -201,8 +201,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         pnlQuickSearch.add(comboQuickSearchTimeout);
 
         cbShowQuickSearchMatchesFirst = new PrefCheckBox(Translator.get("prefs_dialog.show_quick_search_matches_first"),
-                checkBox -> checkBox.isSelected() != getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
-        cbShowQuickSearchMatchesFirst.setSelected(getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
+        cbShowQuickSearchMatchesFirst.setSelected(getVariable(SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST));
         pnlQuickSearch.add(cbShowQuickSearchMatchesFirst);
         pnlQuickSearch.add(Box.createHorizontalGlue());
 
@@ -217,8 +217,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         // ----- checkboxes ----
 
         cbShowHiddenFiles = new PrefCheckBox(Translator.get("prefs_dialog.show_hidden_files"),
-                checkBox -> checkBox.isSelected() != getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
-        cbShowHiddenFiles.setSelected(getVariable(SHOW_HIDDEN_FILES, MuPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_HIDDEN_FILES, TcPreferences.DEFAULT_SHOW_HIDDEN_FILES));
+        cbShowHiddenFiles.setSelected(getVariable(SHOW_HIDDEN_FILES, TcPreferences.DEFAULT_SHOW_HIDDEN_FILES));
         northPanel.add(cbShowHiddenFiles);
 
         // Mac OS X-only options
@@ -228,9 +228,9 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
             cbShowHiddenFiles.addItemListener(this);
 
             cbShowDSStoreFiles = new PrefCheckBox(Translator.get("prefs_dialog.show_ds_store_files"),
-                    checkBox -> checkBox.isSelected() != getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
+                    checkBox -> checkBox.isSelected() != getVariable(SHOW_DS_STORE_FILES, TcPreferences.DEFAULT_SHOW_DS_STORE_FILES));
 
-            cbShowDSStoreFiles.setSelected(getVariable(SHOW_DS_STORE_FILES, MuPreferences.DEFAULT_SHOW_DS_STORE_FILES));
+            cbShowDSStoreFiles.setSelected(getVariable(SHOW_DS_STORE_FILES, TcPreferences.DEFAULT_SHOW_DS_STORE_FILES));
             cbShowDSStoreFiles.setEnabled(cbShowHiddenFiles.isSelected());
             // Shift the check box to the right to indicate that it is a sub-option
             northPanel.add(cbShowDSStoreFiles, 20);
@@ -238,30 +238,30 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 
         if (OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent()) {
         	cbShowSystemFolders = new PrefCheckBox(Translator.get("prefs_dialog.show_system_folders"),
-                    checkBox -> checkBox.isSelected() != getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
-        	cbShowSystemFolders.setSelected(getVariable(SHOW_SYSTEM_FOLDERS, MuPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
+                    checkBox -> checkBox.isSelected() != getVariable(SHOW_SYSTEM_FOLDERS, TcPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
+        	cbShowSystemFolders.setSelected(getVariable(SHOW_SYSTEM_FOLDERS, TcPreferences.DEFAULT_SHOW_SYSTEM_FOLDERS));
         	northPanel.add(cbShowSystemFolders);
         }
 
         cbCompactSize = new PrefCheckBox(Translator.get("prefs_dialog.compact_file_size"),
-                checkBox -> checkBox.isSelected() != getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+                checkBox -> checkBox.isSelected() != getVariable(DISPLAY_COMPACT_FILE_SIZE, TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
 
-        cbCompactSize.setSelected(getVariable(DISPLAY_COMPACT_FILE_SIZE, MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        cbCompactSize.setSelected(getVariable(DISPLAY_COMPACT_FILE_SIZE, TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
         northPanel.add(cbCompactSize);
 
         cbFollowSymlinks = new PrefCheckBox(Translator.get("prefs_dialog.follow_symlinks_when_cd"),
-                checkBox -> checkBox.isSelected() != getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
-        cbFollowSymlinks.setSelected(getVariable(CD_FOLLOWS_SYMLINKS, MuPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
+                checkBox -> checkBox.isSelected() != getVariable(CD_FOLLOWS_SYMLINKS, TcPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
+        cbFollowSymlinks.setSelected(getVariable(CD_FOLLOWS_SYMLINKS, TcPreferences.DEFAULT_CD_FOLLOWS_SYMLINKS));
         northPanel.add(cbFollowSymlinks);
 
         cbShowTabHeader = new PrefCheckBox(Translator.get("prefs_dialog.show_tab_header"),
-                checkBox -> checkBox.isSelected() != getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
-        cbShowTabHeader.setSelected(getVariable(SHOW_TAB_HEADER, MuPreferences.DEFAULT_SHOW_TAB_HEADER));
+                checkBox -> checkBox.isSelected() != getVariable(SHOW_TAB_HEADER, TcPreferences.DEFAULT_SHOW_TAB_HEADER));
+        cbShowTabHeader.setSelected(getVariable(SHOW_TAB_HEADER, TcPreferences.DEFAULT_SHOW_TAB_HEADER));
         northPanel.add(cbShowTabHeader);
 
 		cbCalculateFolderSizeOnMark = new PrefCheckBox(Translator.get("prefs_dialog.calculate_folder_size_on_mark"),
-			checkBox -> checkBox.isSelected() != getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
-		cbCalculateFolderSizeOnMark.setSelected(getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
+			checkBox -> checkBox.isSelected() != getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, TcPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
+		cbCalculateFolderSizeOnMark.setSelected(getVariable(CALCULATE_FOLDER_SIZE_ON_MARK, TcPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK));
 		northPanel.add(cbCalculateFolderSizeOnMark);
 
 
@@ -300,8 +300,8 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 
     @Override
     protected void commit() {
-        final MuPreferencesAPI pref = MuConfigurations.getPreferences();
-    	pref.setVariable(STARTUP_FOLDERS, lastFoldersRadioButton.isSelected() ? MuPreferences.STARTUP_FOLDERS_LAST : MuPreferences.STARTUP_FOLDERS_CUSTOM);
+        final TcPreferencesAPI pref = TcConfigurations.getPreferences();
+    	pref.setVariable(STARTUP_FOLDERS, lastFoldersRadioButton.isSelected() ? TcPreferences.STARTUP_FOLDERS_LAST : TcPreferences.STARTUP_FOLDERS_CUSTOM);
 
     	pref.setVariable(LEFT_CUSTOM_FOLDER, leftCustomFolderTextField.getFilePath());
 
@@ -543,7 +543,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
         }
 
         long getPrefValue() {
-            return MuConfigurations.getPreferences().getVariable(MuPreference.QUICK_SEARCH_TIMEOUT, MuPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
+            return TcConfigurations.getPreferences().getVariable(TcPreference.QUICK_SEARCH_TIMEOUT, TcPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
         }
 
         long getMilliseconds() {

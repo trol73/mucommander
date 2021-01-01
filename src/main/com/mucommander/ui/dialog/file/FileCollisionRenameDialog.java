@@ -41,9 +41,9 @@ import java.awt.event.ActionListener;
  */
 public class FileCollisionRenameDialog extends FocusDialog implements ActionListener, DialogResult {
 	
-    private JTextField edtNewName;
+    private final JTextField edtNewName;
 
-    private JButton okButton;
+    private final JButton btnOk;
 
 	private String newName;
 
@@ -76,9 +76,9 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
         mainPanel.addSpace(10);
         contentPane.add(mainPanel, BorderLayout.NORTH);
         
-        okButton = new JButton(i18n("rename"));
+        btnOk = new JButton(i18n("rename"));
         JButton cancelButton = new JButton(i18n("cancel"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Path field will receive initial focus
         setInitialFocusComponent(edtNewName);
@@ -96,7 +96,7 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
         Object source = e.getSource();
 		
         // OK Button
-        if (source == okButton || source == edtNewName) {
+        if (source == btnOk || source == edtNewName) {
         	newName = edtNewName.getText();
         } else {
             newName = null;
