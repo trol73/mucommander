@@ -43,8 +43,7 @@ import static com.mucommander.conf.TcPreference.LOOK_AND_FEEL;
  * @author Nicolas Rinaudo
  */
 public class InitialSetupDialog extends FocusDialog implements ActionListener {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
+
     /** All available look and feels. */
     private UIManager.LookAndFeelInfo[] lfInfo;
     /** Used to select a startup theme. */
@@ -53,7 +52,7 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
     private TcComboBox<String> cbLookAndFeel;
     private TcComboBox<String> cbEditorTheme;
     /** Used to validate the user's choice. */
-    private JButton   okButton;
+    private JButton btnOk;
 
 
     /**
@@ -170,8 +169,8 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
 
 		JPanel okPanel = new JPanel();
 		okPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
-		okPanel.add(okButton = new JButton(i18n("ok")));
-		okButton.addActionListener(this);
+		okPanel.add(btnOk = new JButton(i18n("ok")));
+		btnOk.addActionListener(this);
 
 		mainPanel.add(okPanel);
 
@@ -185,14 +184,14 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
      */
     public InitialSetupDialog(Frame owner) {
 		super(owner, i18n("setup.title"), owner);
-		initDefault();
+		preInitDefault();
 
 		getContentPane().add(createMainPanel(), BorderLayout.CENTER);
 		pack();
 		setResizable(false);
         setInitialFocusComponent(cbTheme);
 		setKeyboardDisposalEnabled(false);
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().setDefaultButton(btnOk);
     }
 
 
@@ -205,23 +204,38 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
 			setVariable(LOOK_AND_FEEL, lfInfo[cbLookAndFeel.getSelectedIndex()].getClassName());
 		} else if (src == cbEditorTheme) {
 			setVariable(SYNTAX_THEME_NAME, cbEditorTheme.getSelectedIndex());
-		} else if (src == okButton) {
+		} else if (src == btnOk) {
 			ThemeManager.setCurrentTheme((Theme) cbTheme.getSelectedItem());
 			setVariable(LOOK_AND_FEEL, lfInfo[cbLookAndFeel.getSelectedIndex()].getClassName());
-			System.out.println(UIManager.get("MenuItem.margin"));
-			UIManager.put("MenuItem.margin", new javax.swing.plaf.InsetsUIResource(3, 10, 3, 20));
-			System.out.println(UIManager.get("MenuItem.margin"));
+			postInitDefault();
 			dispose();
 		}
     }
 
-	private void initDefault() {
+	private void preInitDefault() {
+    	initFileGroups();
     	boolean isGnome = OsFamily.LINUX.isCurrent() && new com.mucommander.desktop.gnome.GuessedGnomeDesktopAdapter().isAvailable();
     	if (isGnome && RuntimeConstants.DISPLAY_4K) {
 			setVariable(TOOLBAR_ICON_SCALE, 2.0f);
 			setVariable(COMMAND_BAR_ICON_SCALE, 2.0f);
 			setVariable(TABLE_ICON_SCALE, 3.0f);
 		}
+	}
+
+	private static void initFileGroups() {
+		setVariable(FILE_GROUP_1_MASK, "*.png,*.jpg,*.gif,*.bmp,*.pcx,*.ico,*.jpeg,*.psd");
+		setVariable(FILE_GROUP_2_MASK, "*.java,*.pas,*.cpp,*.hpp,*.h,*.c,*.m,*.kt,*.s,*.asm,*.inc,*.go,*.rs,*.art");
+		setVariable(FILE_GROUP_3_MASK, "*.htm,*.html,*.css");
+		setVariable(FILE_GROUP_4_MASK, "*.py,*.php,*.js,*.gradle");
+		setVariable(FILE_GROUP_5_MASK, "*.xml,*.svg");
+		setVariable(FILE_GROUP_6_MASK, "*.doc,*.rtf,*.txt,*.pdf,*.djvu");
+		setVariable(FILE_GROUP_7_MASK, "*.mpg,*.mp4,*.avi");
+		setVariable(FILE_GROUP_8_MASK, "");
+		setVariable(FILE_GROUP_9_MASK, "");
+		setVariable(FILE_GROUP_10_MASK, "");
+	}
+
+	private void postInitDefault() {
 	}
 
 	private static void setVariable(TcPreference preference, String value) {

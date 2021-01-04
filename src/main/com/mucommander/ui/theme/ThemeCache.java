@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.theme;
 
+import com.mucommander.ui.main.table.FileGroupResolver;
+
 import java.awt.*;
 import java.util.WeakHashMap;
 
@@ -45,9 +47,7 @@ public class ThemeCache implements ThemeListener {
     public static final int EXECUTABLE           = 5;
     public static final int PLAIN_FILE           = 6;
 
-    
-    // - Color definitions -----------------------------------------------------------
-    // -------------------------------------------------------------------------------
+
     public static Color[][][] foregroundColors;
     public static Color[][]   backgroundColors;
     public static Color[]     groupColors;
@@ -57,19 +57,15 @@ public class ThemeCache implements ThemeListener {
     public static Color       inactiveOutlineColor;
 
 
-    // - Font definitions ------------------------------------------------------------
-    // -------------------------------------------------------------------------------
     public static Font tableFont;
     
     /** Theme cache instance */
     public static final ThemeCache instance = new ThemeCache();
   
-    // - Initialisation --------------------------------------------------------------
-    // -------------------------------------------------------------------------------
     static {
         foregroundColors = new Color[2][2][7];
         backgroundColors = new Color[2][4];
-        groupColors = new Color[10];
+        groupColors = new Color[FileGroupResolver.MAX_GROUPS];
 
         // Active background colors.
         backgroundColors[ACTIVE][NORMAL]    = ThemeManager.getCurrentColor(Theme.FILE_TABLE_BACKGROUND_COLOR);
@@ -135,7 +131,7 @@ public class ThemeCache implements ThemeListener {
 
    
     /** Listeners. */
-    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
+    private static final WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
     
 
     private ThemeCache() {
@@ -155,16 +151,16 @@ public class ThemeCache implements ThemeListener {
     }
     
     private static void fireFontChanged(FontChangedEvent event) {
-        for(ThemeListener listener : listeners.keySet())
+        for (ThemeListener listener : listeners.keySet()) {
             listener.fontChanged(event);
+        }
     }
     
 
-    // - Theme listening -------------------------------------------------------------
-    // -------------------------------------------------------------------------------
     /**
      * Receives theme color changes notifications.
      */
+    @Override
     public void colorChanged(ColorChangedEvent event) {
         int colorId = event.getColorId();
         if (colorId >= Theme.FILE_GROUP_1_FOREGROUND_COLOR && colorId <= Theme.FILE_GROUP_10_FOREGROUND_COLOR) {

@@ -37,8 +37,7 @@ import java.nio.charset.StandardCharsets;
  * @author Nicolas Rinaudo, Arik Hadas
  */
 abstract class TcConfigurationFile implements ConfigurationSource {
-    // - Class fields ---------------------------------------------------------------
-    // ------------------------------------------------------------------------------
+
     /** Path to the configuration file. */
     private AbstractFile configurationFile;
     /** Default configuration file name. */
@@ -46,8 +45,6 @@ abstract class TcConfigurationFile implements ConfigurationSource {
 
 
 
-    // - Initialization -------------------------------------------------------------
-    // ------------------------------------------------------------------------------
     /**
      * Creates a new <code>MuConfigurationSource</code> on the specified file.
      * @param path path to the configuration file.
@@ -115,13 +112,11 @@ abstract class TcConfigurationFile implements ConfigurationSource {
 
 
 
-    // - Streams handling -----------------------------------------------------------
-    // ------------------------------------------------------------------------------
     /**
      * Returns an input stream on the configuration file.
      * @return an input stream on the configuration file.
      */
-
+    @Override
     public synchronized Reader getReader() throws IOException {
         InputStream is = new BackupInputStream(getConfigurationFile());
         Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -132,12 +127,14 @@ abstract class TcConfigurationFile implements ConfigurationSource {
      * Returns an output stream on the configuration file.
      * @return an output stream on the configuration file.
      */
+    @Override
     public synchronized Writer getWriter() throws IOException {
         OutputStream os = new BackupOutputStream(getConfigurationFile());
         Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         return new BufferedWriter(writer);
     }
-    
+
+    @Override
 	public boolean isExists() throws IOException {
 		return getConfigurationFile().exists();
 	}

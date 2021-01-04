@@ -82,14 +82,14 @@ class ImageViewer extends FileViewer implements ActionListener {
 	
     /** Menu bar */
     // Menus //
-    private JMenu controlsMenu;
+    private final JMenu controlsMenu;
     // Items //
-    private JMenuItem prevImageItem;
-    private JMenuItem nextImageItem;
-    private JMenuItem zoomInItem;
-    private JMenuItem zoomOutItem;
+    private final JMenuItem prevImageItem;
+    private final JMenuItem nextImageItem;
+    private final JMenuItem zoomInItem;
+    private final JMenuItem zoomOutItem;
 
-    private ImageViewerImpl imageViewerImpl;
+    private final ImageViewerImpl imageViewerImpl;
     private List<AbstractFile> filesInDirectory;
     private int indexInDirectory = -1;
 
@@ -345,10 +345,6 @@ class ImageViewer extends FileViewer implements ActionListener {
         nextImageItem.setEnabled(getNextFileIndex() >= 0);
     }
 
-    ///////////////////////////////
-    // FileViewer implementation //
-    ///////////////////////////////
-
     @Override
     public void show(AbstractFile file) throws IOException {
         if (filesInDirectory == null) {
@@ -379,16 +375,13 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
     }
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
     @Override
     public String getTitle() {
         return filesInDirectory.get(indexInDirectory).toString();
         //return file.getAbsolutePath()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
@@ -544,9 +537,6 @@ class ImageViewer extends FileViewer implements ActionListener {
             addMouseMotionListener(this);
         }
     	
-    	////////////////////////
-        // Overridden methods //
-        ////////////////////////
 
         @Override
         public void paint(Graphics g) {
@@ -602,13 +592,11 @@ class ImageViewer extends FileViewer implements ActionListener {
             return image == null ? new Dimension(320, 200) : new Dimension(getScaledWidth(), getScaledHeight());
         }
     	
-    	//////////////////////////////////
-        // ThemeListener implementation //
-        //////////////////////////////////
 
         /**
          * Receives theme color changes notifications.
          */
+        @Override
         public void colorChanged(ColorChangedEvent event) {
             if (event.getColorId() == Theme.EDITOR_BACKGROUND_COLOR) {
                 backgroundColor = event.getColor();

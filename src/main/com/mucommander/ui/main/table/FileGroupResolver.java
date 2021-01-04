@@ -33,6 +33,8 @@ import java.util.Map;
  */
 public class FileGroupResolver {
 
+    public static final int MAX_GROUPS = 10;
+
     private static class ResolverRecord {
         final int group;
         final WildcardFileFilter filter;
@@ -68,7 +70,7 @@ public class FileGroupResolver {
         filtersList.clear();
 
         TcPreferencesAPI prefs = TcConfigurations.getPreferences();
-        for (int group = 0; group < 10; group++) {
+        for (int group = 0; group < MAX_GROUPS; group++) {
             String masks = prefs.getVariable(TcPreference.values()[TcPreference.FILE_GROUP_1_MASK.ordinal() + group]);
             if (masks == null) {
                 continue;

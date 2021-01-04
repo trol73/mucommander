@@ -39,8 +39,6 @@ import java.util.List;
  */
 public class EditCommandsDialog extends FocusDialog implements ActionListener {
 
-    /** Displays the different panels. */
-    private JTabbedPane tabbedPane;
     /** Apply button. */
     private JButton btnApply;
     /** OK button. */
@@ -48,7 +46,7 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
     /** Cancel button. */
     private JButton btnCancel;
 
-    private List<CommandsPanel> panels = new ArrayList<>();
+    private final List<CommandsPanel> panels = new ArrayList<>();
 
 
     public EditCommandsDialog(Frame owner, Component locationRelativeComp) {
@@ -63,7 +61,8 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
     private void initUI() {
         // Initializes the tabbed pane.
         //prefPanels = new ArrayList<>();
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        // Displays the different panels
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
         CommandsPanel panel = new CommandsPanel(this, CommandManager.VIEWER_ALIAS);
         tabbedPane.addTab(i18n("EditCommands.group.view"), panel);
