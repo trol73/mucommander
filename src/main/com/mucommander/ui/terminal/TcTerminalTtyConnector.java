@@ -89,10 +89,14 @@ public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
 
         cmd = cmd.replaceAll("\t", " ").replaceAll(" +", " ");
         String[] command = cmd.split(" ");
+//        PtyProcessOptions options = new PtyProcessOptions(command, envs, directory, false, null, null, true, true);
+
         if (Platform.isWindows()) {
-            return new WinPtyProcess(command, PtyUtil.toStringArray(envs), directory);
+            return new WinPtyProcess(command, PtyUtil.toStringArray(envs), directory, true);
         }
-        return new UnixPtyProcess(command, PtyUtil.toStringArray(envs), directory, new Pty(false));
+        Pty pty = new Pty(false);
+        return new UnixPtyProcess(command, PtyUtil.toStringArray(envs), directory, pty, pty);
+        //return new UnixPtyProcess(command, PtyUtil.toStringArray(envs), directory, new Pty(false));
 //        return PtyProcess.exec(command, envs, null);
     }
 

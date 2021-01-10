@@ -55,11 +55,6 @@ public class TcTerminal {
         super();
         this.mainFrame = mainFrame;
         this.settingsProvider = new TerminalSettingsProvider();
-        try {
-            prepareLibraries();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         this.ttyConnector = createTtyConnector(getCurrentFolder());
 
         BasicConfigurator.configureDefaultContext();
@@ -157,26 +152,6 @@ public class TcTerminal {
 
     public void updateTitle() {
         mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
-    }
-
-
-    private void prepareLibraries() throws IOException {
-        String jarPath = FileUtils.getJarPath();
-
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                FileUtils.copyJarFile("win/x86/libwinpty.dll", jarPath);
-                FileUtils.copyJarFile("win/x86/winpty-agent.exe", jarPath);
-                break;
-            case MAC_OS_X:
-                FileUtils.copyJarFile("macosx/x86/libpty.dylib", jarPath);
-                FileUtils.copyJarFile("macosx/x86_64/libpty.dylib", jarPath);
-                break;
-            default:
-                FileUtils.copyJarFile("linux/x86/libpty.so", jarPath);
-                FileUtils.copyJarFile("linux/x86_64/libpty.so", jarPath);
-                break;
-        }
     }
 
 
