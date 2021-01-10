@@ -91,8 +91,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                                                  ActivePanelListener, ConfigurationListener, ThemeListener {
 	private static Logger logger;
 	
-    // - Column sizes --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Minimum width for 'name' column when in automatic column sizing mode */
     private final static int RESERVED_NAME_COLUMN_WIDTH = 40;
     /** Minimum column width when in automatic column sizing mode */
@@ -102,16 +100,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private static final Dimension INTERCELL_SPACING = new Dimension(0, 0);
 
 
-    // - Containers ----------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Frame containing this file table. */
     private final MainFrame mainFrame;
     /** Folder panel containing this frame. */
     private final FolderPanel folderPanel;
 
 
-    // - UI components -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** TableModel instance used by this JTable to get cells' values */
     private BaseFileTableModel tableModel;
     /** TableCellRender instance used by this JTable to render cells */
