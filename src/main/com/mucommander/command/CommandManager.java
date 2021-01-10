@@ -99,10 +99,6 @@ public class CommandManager implements CommandBuilder {
     private static       Command              defaultCommand;
 
 
-
-    // - Initialization --------------------------------------------------------
-    // -------------------------------------------------------------------------
-
     /**
      * Prevents instances of CommandManager from being created.
      */
@@ -171,11 +167,12 @@ public class CommandManager implements CommandBuilder {
         }
 
         // Goes through all system associations and checks whether file matches any.
-        if ((command = getCommandForFile(file, systemAssociations)) != null) {
+        command = getCommandForFile(file, systemAssociations);
+        if (command != null) {
             return command;
         }
 
-        // We haven't found a command explicitely associated with 'file',
+        // We haven't found a command explicitly associated with 'file',
         // but we might have a generic file opener.
         if (defaultCommand != null) {
             return defaultCommand;
@@ -274,7 +271,7 @@ public class CommandManager implements CommandBuilder {
         commands.get(alias).add(command);
         if (mark) {
             wereCommandsModified = true;
-    }
+        }
 //        Command oldCommand = commands.put(command.getAlias(), command);
 //        if (mark && !command.equals(oldCommand)) {
 //            wereCommandsModified = true;

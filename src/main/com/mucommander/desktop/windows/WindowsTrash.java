@@ -41,10 +41,6 @@ import java.util.List;
  */
 public class WindowsTrash extends QueuedTrash {
 
-    //////////////////////////////////
-    // AbstractTrash implementation //
-    //////////////////////////////////
-
     /**
      * Implementation notes: returns <code>true</code> only for local files that are not archive entries.
      */
@@ -142,7 +138,7 @@ public class WindowsTrash extends QueuedTrash {
         int nbFiles = queuedFiles.size();
 
         String[] paths = new String[nbFiles];
-        for (int i=0; i<nbFiles; i++) {
+        for (int i = 0; i<nbFiles; i++) {
             // Directories (and regular files) must not end with a trailing slash or the operation will fail.
             paths[i] = queuedFiles.get(i).getAbsolutePath(false);
         }

@@ -162,7 +162,6 @@ public class TcTerminal {
 
     private void prepareLibraries() throws IOException {
         String jarPath = FileUtils.getJarPath();
-
         switch (OsFamily.getCurrent()) {
             case WINDOWS:
                 FileUtils.copyJarFile("win/x86/libwinpty.dll", jarPath);
