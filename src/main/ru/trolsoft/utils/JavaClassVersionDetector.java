@@ -43,6 +43,8 @@ public class JavaClassVersionDetector {
         VER_1_7(51, 0, "1.7"),
         VER_1_8(52, 0, "1.8"),
         VER_1_9(53, 0, "1.9"),
+        VER_1_10(54, 0, "1.10"),
+        VER_1_11(55, 0, "1.11"),
         UNKNOWN(-1, -1, "unknown");
 
         private final int major;

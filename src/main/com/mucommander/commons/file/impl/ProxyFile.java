@@ -377,14 +377,17 @@ public abstract class ProxyFile extends AbstractFile {
     public void changeReplication(short replication) throws IOException {
         file.changeReplication(replication);
     }
+
     @Override
     public boolean isExecutable() {
     	return file.isExecutable();
     }
+
     @Override
     public PushbackInputStream getPushBackInputStream(int bufferSize) throws IOException {
     	return file.getPushBackInputStream(bufferSize);
     }
+
     @Override
     public void closePushbackInputStream() throws IOException {
     	file.closePushbackInputStream();

@@ -35,8 +35,6 @@ class FolderPanePanel extends ThemeEditorPanel {
 
     private FileGroupsPanel fileGroupsPanel;
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent dialog containing the panel.
@@ -48,9 +46,6 @@ class FolderPanePanel extends ThemeEditorPanel {
     }
 
 
-
-    // - UI initialisation ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Initialises the panel's UI.
      */
@@ -110,10 +105,8 @@ class FolderPanePanel extends ThemeEditorPanel {
     }
 
 
-
-    // - Modification management ---------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
+     * Modification management.
      * Ignored.
      */
     @Override

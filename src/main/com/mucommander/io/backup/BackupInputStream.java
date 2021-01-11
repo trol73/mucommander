@@ -34,8 +34,6 @@ import java.io.*;
  * @author Nicolas Rinaudo
  */
 public class BackupInputStream extends FilterInputStream implements BackupConstants {
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Opens a backup input stream on the specified file.
      * @param     file        file to open for reading.
@@ -78,8 +76,9 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
         // Checks whether the backup file is a better choice than the target one.
         AbstractFile backup = FileFactory.getFile(test);
 
-        if (backup != null && backup.exists() && (file.getSize() < backup.getSize()))
+        if (backup != null && backup.exists() && (file.getSize() < backup.getSize())) {
             return backup.getInputStream();
+        }
 
         // Opens a stream on the target file.
         return file.getInputStream();

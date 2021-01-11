@@ -45,10 +45,6 @@ public abstract class AbstractROArchiveFile extends AbstractArchiveFile {
     }
 
 
-    ////////////////////////////////////////
-    // AbstractArchiveFile implementation //
-    ////////////////////////////////////////
-
     /**
      * Returns <code>false</code>: <code>AbstractROArchiveFile</code> implementations are not capable of adding or
      * deleting entries.

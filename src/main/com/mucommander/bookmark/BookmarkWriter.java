@@ -32,7 +32,7 @@ import java.io.OutputStream;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 class BookmarkWriter implements BookmarkConstants, BookmarkBuilder {
-    private XmlWriter out;
+    private final XmlWriter out;
 
     BookmarkWriter(OutputStream stream) throws IOException {
         out = new XmlWriter(stream);

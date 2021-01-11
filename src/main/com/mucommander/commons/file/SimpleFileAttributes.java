@@ -63,70 +63,82 @@ public class SimpleFileAttributes implements MutableFileAttributes {
     }
 
 
-    //////////////////////////////////////////
-    // MutableFileAttributes implementation //
-    //////////////////////////////////////////
-
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public void setPath(String path) {
         this.path = path;
     }
 
+    @Override
     public boolean exists() {
         return exists;
     }
 
+    @Override
     public void setExists(boolean exists) {
         this.exists = exists;
     }
 
+    @Override
     public long getLastModifiedDate() {
         return date;
     }
 
+    @Override
     public void setDate(long date) {
         this.date = date;
     }
 
+    @Override
     public long getSize() {
         return size;
     }
 
+    @Override
     public void setSize(long size) {
         this.size = size;
     }
 
+    @Override
     public boolean isDirectory() {
         return directory;
     }
 
+    @Override
     public void setDirectory(boolean directory) {
         this.directory = directory;
     }
 
+    @Override
     public FilePermissions getPermissions() {
         return permissions;
     }
 
+    @Override
     public void setPermissions(FilePermissions permissions) {
         this.permissions = permissions;
     }
 
+    @Override
     public String getOwner() {
         return owner;
     }
 
+    @Override
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
+    @Override
     public String getGroup() {
         return group;
     }
 
+    @Override
     public void setGroup(String group) {
         this.group = group;
     }

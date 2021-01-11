@@ -31,7 +31,7 @@ import java.io.PushbackInputStream;
 class TextEditorUtils {
 
     static FileType detectFileFormat(AbstractFile file) {
-        byte bytes[] = BufferPool.getByteArray(256);
+        byte[] bytes = BufferPool.getByteArray(256);
         int readBytes;
         try {
             PushbackInputStream is = file.getPushBackInputStream(256);
@@ -39,6 +39,7 @@ class TextEditorUtils {
             readBytes = StreamUtils.readUpTo(bomIs, bytes);
             is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
+            BufferPool.releaseByteArray(bytes);
             e.printStackTrace();
             try {
                 file.closePushbackInputStream();
@@ -48,10 +49,12 @@ class TextEditorUtils {
             return FileType.NONE;
         }
         if (readBytes < 5) {
+            BufferPool.releaseByteArray(bytes);
             return FileType.NONE;
         }
 
         String str = new String(bytes, 0, readBytes).trim().toLowerCase();
+        BufferPool.releaseByteArray(bytes);
         if (str.startsWith("<?xml")) {
             return FileType.XML;
         } else if (str.startsWith("<?php")) {
@@ -60,7 +63,7 @@ class TextEditorUtils {
             return FileType.PYTHON;
         } else if (str.startsWith("#!/bin/bash") || str.startsWith("#!/bin/sh") || str.startsWith("#!/usr/bin/env bash") || str.startsWith("#! /bin/bash") || str.startsWith("#! /bin/sh")) {
             return FileType.UNIX_SHELL;
-        } else if (str.startsWith("<!DOCTYPE html")) {
+        } else if (str.startsWith("<!doctype html")) {
             return FileType.HTML;
         } else if (str.startsWith("#!/usr/bin/ruby") || str.startsWith("#!/usr/bin/env ruby")) {
             return FileType.RUBY;

@@ -61,9 +61,9 @@ public abstract class BaseCellRenderer implements TableCellRenderer, ThemeListen
         if (file.isSymlink()) {
             return ThemeCache.SYMLINK;
         }
-        // Hidden file
+        // Hidden file/folder
         if (file.isHidden()) {
-            return ThemeCache.HIDDEN_FILE;
+            return file.isDirectory() ? ThemeCache.HIDDEN_FOLDER : ThemeCache.HIDDEN_FILE;
         }
         // Directory
         if (file.isDirectory()) {

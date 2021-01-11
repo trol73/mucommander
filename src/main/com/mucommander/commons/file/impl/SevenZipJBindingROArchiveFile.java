@@ -1,5 +1,11 @@
 package com.mucommander.commons.file.impl;
 
+import com.mucommander.commons.file.*;
+import com.mucommander.commons.file.impl.sevenzip.SevenZipArchiveFile.ExtractCallback;
+import com.mucommander.commons.file.impl.sevenzip.SignatureCheckedRandomAccessFile;
+import com.mucommander.commons.util.CircularByteBuffer;
+import net.sf.sevenzipjbinding.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,26 +13,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.AbstractROArchiveFile;
-import com.mucommander.commons.file.ArchiveEntry;
-import com.mucommander.commons.file.ArchiveEntryIterator;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
-import com.mucommander.commons.file.WrapperArchiveEntryIterator;
-import com.mucommander.commons.file.impl.sevenzip.SevenZipArchiveFile.ExtractCallback;
-import com.mucommander.commons.file.impl.sevenzip.SignatureCheckedRandomAccessFile;
-import com.mucommander.commons.util.CircularByteBuffer;
-
-import net.sf.sevenzipjbinding.ArchiveFormat;
-import net.sf.sevenzipjbinding.IInArchive;
-import net.sf.sevenzipjbinding.PropID;
-import net.sf.sevenzipjbinding.SevenZip;
-import net.sf.sevenzipjbinding.SevenZipException;
-
 public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
    
     protected IInArchive inArchive;
     private ArchiveFormat sevenZipJBindingFormat;
+    private final SevenZipArchiveFormatDetector formatDetector;
 
     private final byte[] formatSignature;
 
@@ -42,12 +33,23 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
         super(file);
         this.sevenZipJBindingFormat = sevenZipJBindingFormat;
         this.formatSignature = formatSignature;
+        this.formatDetector = null;
+    }
+
+    public SevenZipJBindingROArchiveFile(AbstractFile file, SevenZipArchiveFormatDetector formatDetector) {
+        super(file);
+        this.sevenZipJBindingFormat = null;
+        this.formatSignature = new byte[] {};
+        this.formatDetector = formatDetector;
     }
 
 
 
-    private IInArchive openInArchive() throws IOException, SevenZipException {
+    private IInArchive openInArchive() throws IOException {
         if (inArchive == null) {
+            if (formatDetector != null) {
+                sevenZipJBindingFormat = formatDetector.detect(file);
+            }
             SignatureCheckedRandomAccessFile in = new SignatureCheckedRandomAccessFile(file, formatSignature);
             inArchive = SevenZip.openInArchive(sevenZipJBindingFormat, in);
         }
@@ -117,7 +119,7 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
      * @param i the index of entry
      * @return an ArchiveEntry whose attributes are fetched from the given SevenZipEntry
      */
-    private ArchiveEntry createArchiveEntry(int i) throws IOException, SevenZipException {
+    private ArchiveEntry createArchiveEntry(int i) throws IOException {
         final IInArchive sevenZipFile = openInArchive();
         String path = sevenZipFile.getStringProperty(i, PropID.PATH);
         boolean isDirectory = (Boolean)sevenZipFile.getProperty(i, PropID.IS_FOLDER);

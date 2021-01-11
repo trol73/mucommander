@@ -20,7 +20,7 @@ public class DebFormatProvider implements ArchiveFormatProvider {
 
     @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
-        return new SevenZipJBindingROArchiveFile(file, ArchiveFormat.DEB, SIGNATURE);
+        return new SevenZipJBindingROArchiveFile(file, ArchiveFormat.AR, SIGNATURE);
     }
 
     @Override

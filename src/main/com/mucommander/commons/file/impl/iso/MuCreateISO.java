@@ -36,11 +36,10 @@ import com.github.stephenc.javaisotools.joliet.impl.JolietHandler;
 import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import java.io.FileNotFoundException;
 
 public class MuCreateISO {
 
-    private ISO9660RootDirectory root;
+    private final ISO9660RootDirectory root;
     private StreamHandler streamHandler;
     private MuFileHandler fileHandler;
 

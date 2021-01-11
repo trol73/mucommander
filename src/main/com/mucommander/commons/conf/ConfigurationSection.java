@@ -25,8 +25,6 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 class ConfigurationSection {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Contains all the variables defined in the section. */
     private final Map<String, String> variables = new HashMap<>();
     /** Contains all the subsections defined the section. */
@@ -69,8 +67,9 @@ class ConfigurationSection {
         // If the specified value is empty, deletes the variable.
         if (value == null || value.trim().isEmpty()) {
             // If the variable wasn't set, we haven't changed its value.
-            if(getVariable(name) == null)
+            if (getVariable(name) == null) {
                 return false;
+            }
 
             // Otherwise, deletes it and returns true.
             removeVariable(name);

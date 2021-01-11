@@ -2,12 +2,12 @@
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2018 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class NativeFileUtils {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public static final int FA_MASK_EXISTS = 1;
     public static final int FA_MASK_DIRECTORY =	2;
@@ -50,10 +50,9 @@ public class NativeFileUtils {
             prepareLibrary(false);
             try {
                 String path = FileUtils.getJarPath() + File.separator;
-                //System.loadLibrary("trolsoft");
                 System.load(path + "libtrolsoft.jnilib");
                 installed = true;
-                if (getLibraryVersion() < VERSION) {
+                if (getLibraryVersion() != VERSION) {
                     prepareLibrary(true);
                 }
             } catch (Throwable t) {

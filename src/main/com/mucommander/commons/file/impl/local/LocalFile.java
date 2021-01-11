@@ -88,7 +88,7 @@ public class LocalFile extends ProtocolFile {
 
 
     protected File file;
-    private FilePermissions permissions;
+    private final FilePermissions permissions;
 
     /** Absolute file path, free of trailing separator */
     protected String absPath;
@@ -114,10 +114,10 @@ public class LocalFile extends ProtocolFile {
     // read-write) and as such can't be changed.
 
     /** Changeable permissions mask for Java 1.6 and up, on OSes other than Windows */
-    private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_NON_WINDOWS = new GroupedPermissionBits(448);   // rwx------ (700 octal)
+    private static final PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_NON_WINDOWS = new GroupedPermissionBits(448);   // rwx------ (700 octal)
 
     /** Changeable permissions mask for Java 1.6 and up, on Windows OS (any version) */
-    private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS = new GroupedPermissionBits(128);   // -w------- (200 octal)
+    private static final PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS = new GroupedPermissionBits(128);   // -w------- (200 octal)
 
 //    /** Changeable permissions mask for Java 1.5 or below */
 //    private static PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_5 = PermissionBits.EMPTY_PERMISSION_BITS;   // --------- (0)
@@ -204,10 +204,6 @@ public class LocalFile extends ProtocolFile {
         this.permissions = new LocalFilePermissions(file);
     }
 
-
-    ////////////////////////////////
-    // LocalFile-specific methods //
-    ////////////////////////////////
 
     /**
      * Returns the user home folder. Most if not all OSes have one, but in the unlikely event that the OS doesn't have
@@ -488,16 +484,12 @@ public class LocalFile extends ProtocolFile {
             volumesV.add(homeFolder);
         }
 
-        AbstractFile volumes[] = new AbstractFile[volumesV.size()];
+        AbstractFile[] volumes = new AbstractFile[volumesV.size()];
         volumesV.toArray(volumes);
 
         return volumes;
     }
 
-
-    ////////////////////
-    // Helper methods //
-    ////////////////////
 
     /**
      * Resolves the root folders returned by {@link File#listRoots()} and adds them to the given <code>Vector</code>.
@@ -507,7 +499,7 @@ public class LocalFile extends ProtocolFile {
     private static void addJavaIoFileRoots(List<AbstractFile> v) {
         // Warning : No file operation should be performed on the resolved folders as under Win32, this would cause a
         // dialog to appear for removable drives such as A:\ if no disk is present.
-        File fileRoots[] = File.listRoots();
+        File[] fileRoots = File.listRoots();
 
         for (File fileRoot : fileRoots) {
             try {
@@ -571,7 +563,7 @@ public class LocalFile extends ProtocolFile {
 
         // Adds subfolders
         try {
-            AbstractFile volumesFiles[] = volumesFolder.ls();
+            AbstractFile[] volumesFiles = volumesFolder.ls();
 
             for (AbstractFile folder : volumesFiles) {
                 if (folder.isDirectory()) {
@@ -589,10 +581,6 @@ public class LocalFile extends ProtocolFile {
         }
     }
 
-
-    /////////////////////////////////
-    // AbstractFile implementation //
-    /////////////////////////////////
 
     /**
      * Returns a <code>java.io.File</code> instance corresponding to this file.
@@ -1100,14 +1088,14 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls(FilenameFilter filenameFilter) throws IOException {
-        File files[] = file.listFiles(filenameFilter == null ? null : new LocalFilenameFilter(filenameFilter));
+        File[] files = file.listFiles(filenameFilter == null ? null : new LocalFilenameFilter(filenameFilter));
 
         if (files == null) {
             throw new IOException();
         }
 
         int nbFiles = files.length;
-        AbstractFile children[] = new AbstractFile[nbFiles];
+        AbstractFile[] children = new AbstractFile[nbFiles];
 
         for(int i = 0; i < nbFiles; i++) {
             // Clone the FileURL of this file and set the child's path, this is more efficient than creating a new
@@ -1258,7 +1246,7 @@ public class LocalFile extends ProtocolFile {
         }
 
         @Override
-        public int read(byte b[], int off, int len) throws IOException {
+        public int read(byte[] b, int off, int len) throws IOException {
             synchronized(bb) {
                 bb.position(0);
                 bb.limit(Math.min(bb.capacity(), len));
@@ -1358,12 +1346,12 @@ public class LocalFile extends ProtocolFile {
         }
 
         @Override
-        public void write(byte b[]) throws IOException {
+        public void write(byte[] b) throws IOException {
             write(b, 0, b.length);
         }
 
         @Override
-        public void write(byte b[], int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) throws IOException {
             synchronized(bb) {
                 do {
                     bb.position(0);
@@ -1433,7 +1421,7 @@ public class LocalFile extends ProtocolFile {
      */
     private static class LocalFilePermissions extends IndividualPermissionBits implements FilePermissions {
         
-        private File file;
+        private final File file;
 
         // Permissions are limited to the user access type. Executable permission flag is only available under Java 1.6
         // and up.
@@ -1481,9 +1469,11 @@ public class LocalFile extends ProtocolFile {
 
             if (getBitValue(USER_ACCESS, READ_PERMISSION)) {
                 userPerms |= READ_PERMISSION;
-            } if (getBitValue(USER_ACCESS, WRITE_PERMISSION)) {
+            }
+            if (getBitValue(USER_ACCESS, WRITE_PERMISSION)) {
                 userPerms |= WRITE_PERMISSION;
-            } if (getBitValue(USER_ACCESS, EXECUTE_PERMISSION)) {
+            }
+            if (getBitValue(USER_ACCESS, EXECUTE_PERMISSION)) {
                 userPerms |= EXECUTE_PERMISSION;
             }
             return userPerms<<6;
@@ -1500,17 +1490,13 @@ public class LocalFile extends ProtocolFile {
      */
     private static class LocalFilenameFilter implements java.io.FilenameFilter {
 
-        private FilenameFilter filter;
+        private final FilenameFilter filter;
 
         private LocalFilenameFilter(FilenameFilter filter) {
             this.filter = filter;
         }
 
-
-        ///////////////////////////////////////////
-        // java.io.FilenameFilter implementation //
-        ///////////////////////////////////////////
-
+        @Override
         public boolean accept(File dir, String name) {
             return filter.accept(name);
         }

@@ -30,7 +30,6 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 
@@ -75,9 +74,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
         SHELL_HISTORY_SELECTED,
     /** Parsing the volume_label element. */
         STATUS_BAR,
-        HIDDEN,
-        HIDDEN_NORMAL,
-        HIDDEN_SELECTED,
+        HIDDEN_FILE,
+        HIDDEN_FILE_NORMAL,
+        HIDDEN_FILE_SELECTED,
+        HIDDEN_FOLDER,
+        HIDDEN_FOLDER_NORMAL,
+        HIDDEN_FOLDER_SELECTED,
         FOLDER,
         FOLDER_NORMAL,
         FOLDER_SELECTED,
@@ -191,8 +193,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY_NORMAL;
             } else if (state == State.TERMINAL) {
                 state = State.TERMINAL_NORMAL;
-            } else if (state == State.HIDDEN) {
-                state = State.HIDDEN_NORMAL;
+            } else if (state == State.HIDDEN_FILE) {
+                state = State.HIDDEN_FILE_NORMAL;
+            } else if (state == State.HIDDEN_FOLDER) {
+                state = State.HIDDEN_FOLDER_NORMAL;
             } else if (state == State.FOLDER) {
                 state = State.FOLDER_NORMAL;
             } else if (state == State.ARCHIVE) {
@@ -280,8 +284,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY_SELECTED;
             } else if (state == State.TERMINAL) {
                 state = State.TERMINAL_SELECTED;
-            } else if (state == State.HIDDEN) {
-                state = State.HIDDEN_SELECTED;
+            } else if (state == State.HIDDEN_FILE) {
+                state = State.HIDDEN_FILE_SELECTED;
+            } else if (state == State.HIDDEN_FOLDER) {
+                state = State.HIDDEN_FOLDER_SELECTED;
             } else if (state == State.FOLDER) {
                 state = State.FOLDER_SELECTED;
             } else if (state == State.ARCHIVE) {
@@ -315,8 +321,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 setColor(ARCHIVE_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.SYMLINK_NORMAL) {
                 setColor(SYMLINK_INACTIVE_FOREGROUND_COLOR, attributes);
-            } else if(state == State.HIDDEN_NORMAL) {
+            } else if(state == State.HIDDEN_FILE_NORMAL) {
                 setColor(HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, attributes);
+            } else if(state == State.HIDDEN_FOLDER_NORMAL) {
+                setColor(HIDDEN_FOLDER_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.MARKED_NORMAL) {
                 setColor(MARKED_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.EXECUTABLE_NORMAL) {
@@ -329,7 +337,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 setColor(ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
             } else if(state == State.SYMLINK_SELECTED) {
                 setColor(SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
-            } else if(state == State.HIDDEN_SELECTED) {
+            } else if(state == State.HIDDEN_FOLDER_SELECTED) {
+                setColor(HIDDEN_FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
+            } else if(state == State.HIDDEN_FILE_SELECTED) {
                 setColor(HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
             } else if(state == State.MARKED_SELECTED) {
                 setColor(MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
@@ -445,11 +455,18 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
             state = State.STATUS_BAR;
         }
 
-        else if (ELEMENT_HIDDEN.equals(qName)) {
+        else if (ELEMENT_HIDDEN_FILE.equals(qName)) {
             if (state != State.TABLE) {
                 traceIllegalDeclaration(qName);
             }
-            state = State.HIDDEN;
+            state = State.HIDDEN_FILE;
+        }
+
+        else if (ELEMENT_HIDDEN_FOLDER.equals(qName)) {
+            if (state != State.TABLE) {
+                traceIllegalDeclaration(qName);
+            }
+            state = State.HIDDEN_FOLDER;
         }
 
         else if (ELEMENT_FOLDER.equals(qName)) {
@@ -662,10 +679,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 
         // Text color.
         else if (ELEMENT_FOREGROUND.equals(qName)) {
-            if (state == State.HIDDEN_NORMAL) {
+            if (state == State.HIDDEN_FILE_NORMAL) {
                 setColor(HIDDEN_FILE_FOREGROUND_COLOR, attributes);
-            } else if (state == State.HIDDEN_SELECTED) {
+            } else if (state == State.HIDDEN_FILE_SELECTED) {
                 setColor(HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, attributes);
+            } else if (state == State.HIDDEN_FOLDER_NORMAL) {
+                setColor(HIDDEN_FOLDER_FOREGROUND_COLOR, attributes);
+            } else if (state == State.HIDDEN_FOLDER_SELECTED) {
+                setColor(HIDDEN_FOLDER_SELECTED_FOREGROUND_COLOR, attributes);
             } else if (state == State.TABLE_UNMATCHED) {
                 setColor(FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, attributes);
             } else if (state == State.FOLDER_NORMAL) {
@@ -793,7 +814,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
             state = State.TABLE;
         } else if (ELEMENT_UNMATCHED.equals(qName)) {
             state = State.TABLE;
-        } else if (qName.equals(ELEMENT_HIDDEN)) {
+        } else if (qName.equals(ELEMENT_HIDDEN_FILE)) {
+            state = State.TABLE;
+        } else if (qName.equals(ELEMENT_HIDDEN_FOLDER)) {
             state = State.TABLE;
         } else if (ELEMENT_FOLDER.equals(qName)) {
             state = State.TABLE;
@@ -836,8 +859,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY;
             } else if (state == State.TERMINAL_NORMAL) {
                 state = State.TERMINAL;
-            } else if (state == State.HIDDEN_NORMAL) {
-                state = State.HIDDEN;
+            } else if (state == State.HIDDEN_FILE_NORMAL) {
+                state = State.HIDDEN_FILE;
+            } else if (state == State.HIDDEN_FOLDER_NORMAL) {
+                state = State.HIDDEN_FOLDER;
             } else if (state == State.FOLDER_NORMAL) {
                 state = State.FOLDER;
             } else if (state == State.ARCHIVE_NORMAL) {
@@ -871,8 +896,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY;
             } else if (state == State.TERMINAL_SELECTED) {
                 state = State.TERMINAL;
-            } else if (state == State.HIDDEN_SELECTED) {
-                state = State.HIDDEN;
+            } else if (state == State.HIDDEN_FILE_SELECTED) {
+                state = State.HIDDEN_FILE;
+            } else if (state == State.HIDDEN_FOLDER_SELECTED) {
+                state = State.HIDDEN_FOLDER;
             } else if (state == State.FOLDER_SELECTED) {
                 state = State.FOLDER;
             } else if (state == State.ARCHIVE_SELECTED) {

@@ -139,6 +139,7 @@ public class FileFactory {
         registerArchiveFormat(new com.mucommander.commons.file.impl.lst.LstFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.rar.RarFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.sevenzip.SevenZipFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.rpm.RpmFormatProvider());
 
         registerArchiveFormat(new com.mucommander.commons.file.impl.arj.ArjFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.cab.CabFormatProvider());

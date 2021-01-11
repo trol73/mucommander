@@ -745,11 +745,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				
 				// If component's preferred width is bigger than column width then the component is not entirely
 	            // visible so we set a tooltip text that will display the whole text when mouse is over the component
-	            if (table.getColumnModel().getColumn(vColIndex).getWidth() < label.getPreferredSize().getWidth())
-	                label.setToolTipText(text);
-	            // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
-	            else
-	                label.setToolTipText(null);
+	            if (table.getColumnModel().getColumn(vColIndex).getWidth() < label.getPreferredSize().getWidth()) {
+					label.setToolTipText(text);
+				} else { // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
+					label.setToolTipText(null);
+				}
 	            
 	            // Set label's text
 				label.setText(text);

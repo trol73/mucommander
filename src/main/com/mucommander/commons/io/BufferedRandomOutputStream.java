@@ -32,10 +32,10 @@ import java.io.IOException;
 public class BufferedRandomOutputStream extends RandomAccessOutputStream {
 
     /** The underlying random access output stream */
-    private RandomAccessOutputStream raos;
+    private final RandomAccessOutputStream raos;
 
     /** The buffer where written bytes are accumulated before being sent to the underlying output stream */
-    private byte buffer[];
+    private byte[] buffer;
 
     /** The current number of bytes waiting to be flushed to the underlying output stream */
     private int count;
@@ -104,7 +104,7 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public synchronized void write(byte b[]) throws IOException {
+    public synchronized void write(byte[] b) throws IOException {
         write(b, 0, b.length);
     }
 
@@ -125,7 +125,7 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public synchronized void write(byte b[], int off, int len) throws IOException {
+    public synchronized void write(byte[] b, int off, int len) throws IOException {
         if (len >= buffer.length) {
             /* If the request length exceeds the size of the output buffer,
             flush the output buffer and then write the data directly.
@@ -181,10 +181,6 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * This method is overridden to release the internal buffer when this stream is closed.
      */
@@ -193,9 +189,7 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
         if(buffer!=null) {      // buffer is null if close() was already called
             try {
                 flush();
-            }
-            catch(IOException e) {
-                // Continue anyway
+            } catch(IOException ignore) {
             }
 
             // Release the buffer
@@ -213,9 +207,9 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
     @Override
     protected void finalize() throws Throwable {
         // If this stream hasn't been closed, release the buffer before finalizing the object
-        if(buffer!=null)
+        if (buffer != null) {
             BufferPool.releaseByteArray(buffer);
-
+        }
         super.finalize();
     }
 }

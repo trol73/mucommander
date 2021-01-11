@@ -96,8 +96,23 @@ class ThemeWriter implements ThemeXmlConstants, ThemeId {
         writeColor(theme, out, FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         out.endElement(ELEMENT_UNMATCHED);
 
+        // Hidden folders.
+        out.startElement(ELEMENT_HIDDEN_FOLDER);
+        out.println();
+        out.startElement(ELEMENT_NORMAL);
+        out.println();
+        writeColor(theme, out, HIDDEN_FOLDER_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HIDDEN_FOLDER_INACTIVE_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        out.endElement(ELEMENT_NORMAL);
+        out.startElement(ELEMENT_SELECTED);
+        out.println();
+        writeColor(theme, out, HIDDEN_FOLDER_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
+        writeColor(theme, out, HIDDEN_FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
+        out.endElement(ELEMENT_SELECTED);
+        out.endElement(ELEMENT_HIDDEN_FOLDER);
+
         // Hidden files.
-        out.startElement(ELEMENT_HIDDEN);
+        out.startElement(ELEMENT_HIDDEN_FILE);
         out.println();
         out.startElement(ELEMENT_NORMAL);
         out.println();
@@ -109,7 +124,7 @@ class ThemeWriter implements ThemeXmlConstants, ThemeId {
         writeColor(theme, out, HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, ELEMENT_FOREGROUND);
         writeColor(theme, out, HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, ELEMENT_INACTIVE_FOREGROUND);
         out.endElement(ELEMENT_SELECTED);
-        out.endElement(ELEMENT_HIDDEN);
+        out.endElement(ELEMENT_HIDDEN_FILE);
 
         // Folders.
         out.startElement(ELEMENT_FOLDER);

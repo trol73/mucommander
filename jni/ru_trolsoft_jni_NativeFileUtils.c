@@ -7,8 +7,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <limits.h>
 
-#define VERSION				1
+#define VERSION				2
 
 
 #define FA_MASK_EXISTS			1
@@ -36,6 +37,22 @@ static bool is_executable_file(const char *path) {
 
 static bool is_hidden_file(const char *path) {
   	char *name = strrchr(path, '/');
+  	char folderName[PATH_MAX];
+  	if (name && name[0] == '/' && name[1] == 0) {
+  		uint len = strlen(path);
+  		if (!len || len < 2) {
+  			return false;
+  		}
+  		folderName[len-1] = 0;
+  		for (uint i = len-2; i != 0; i--) {
+  			folderName[i] = path[i];
+  			if (path[i] == '/') {
+  				name = &folderName[i];
+  				break;
+  			}
+  		}
+  		
+  	}  	
   	if (name) {
   	  	if (name[1] == 0) {
   			return false;

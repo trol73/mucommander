@@ -87,9 +87,9 @@ public class FindFileResultRenderer implements ListCellRenderer<AbstractFile> {
             return ThemeCache.SYMLINK;
         }
 
-        // Hidden file.
+        // Hidden file/folder.
         if (file.isHidden()) {
-            return ThemeCache.HIDDEN_FILE;
+            return file.isDirectory() ? ThemeCache.HIDDEN_FOLDER : ThemeCache.HIDDEN_FILE;
         }
 
         // Directory.

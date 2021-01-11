@@ -49,15 +49,15 @@ public class SevenZipArchiveFile extends SevenZipJBindingROArchiveFile {
 
     public SevenZipArchiveFile(AbstractFile file, ArchiveFormat sevenZipJBindingFormat, byte[] formatSignature) {
         super(file, sevenZipJBindingFormat, formatSignature);
-
     }
+
 
     private static class ArchiveOpenVolumeCallback implements IArchiveOpenVolumeCallback {
 
         /**
          * Cache for opened file streams
          */
-        private Map<String, RandomAccessFile> openedRandomAccessFileList = new HashMap<>();
+        private final Map<String, RandomAccessFile> openedRandomAccessFileList = new HashMap<>();
 
         /**
          * This method doesn't needed, if using with VolumedArchiveInStream

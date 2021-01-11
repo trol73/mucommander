@@ -83,6 +83,10 @@ public abstract class PreferencesPanel extends JPanel {
         return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
+    protected int getVariable(TcPreference preference, int value) {
+        return TcConfigurations.getPreferences().getVariable(preference, value);
+    }
+
     protected ValueList getListVariable(TcPreference preference, String separator) {
         return TcConfigurations.getPreferences().getListVariable(preference, separator);
     }

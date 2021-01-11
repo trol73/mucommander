@@ -89,7 +89,7 @@ public class EncodingDetector {
      * @param bytes the bytes for which to detect the encoding
      * @return the best guess at the character encoding, null if there is none (not enough data or confidence)
      */
-    public static String detectEncoding(byte bytes[]) {
+    public static String detectEncoding(byte[] bytes) {
         return detectEncoding(bytes, 0, bytes.length);
     }
 
@@ -107,7 +107,7 @@ public class EncodingDetector {
      * @param len length of the data in the array
      * @return the best guess at the encoding, null if there is none (not enough data or confidence)
      */
-    public static String detectEncoding(byte bytes[], int off, int len) {
+    public static String detectEncoding(byte[] bytes, int off, int len) {
         // The current ICU CharsetDetector class will throw an ArrayIndexOutOfBoundsException exception if the
         // supplied array is less than 4 bytes long. In that case, return null.
         if (len < 4) {
@@ -123,7 +123,7 @@ public class EncodingDetector {
         // CharsetDetector will process the array fully, so if the data does not start at 0 or ends before the array's
         // length, create a new array that fits the data exactly
         if (off > 0 || len < bytes.length) {
-            byte tmp[] = new byte[len];
+            byte[] tmp = new byte[len];
             System.arraycopy(bytes, off, tmp, 0, len);
             bytes = tmp;
         }
@@ -134,17 +134,12 @@ public class EncodingDetector {
 
         CharsetMatch[] matches = cd.detectAll();
 
-        CharsetMatch cm;
-        if (matches == null || matches.length == 0) {
-            cm = null;
-        } else {
-            cm = matches[0];
-        }
+        CharsetMatch cm = matches == null || matches.length == 0 ? null : matches[0];
 //for (CharsetMatch match : matches) {
 //    System.out.println("> " + match.getName() + "  " + match.getConfidence());
 //}
         // detect win-1251 for case latin + cyrillic
-        if (matches.length > 1) {
+        if (matches != null && matches.length > 1) {
             String detectedName = cm.getName().toLowerCase();
             if (detectedName.startsWith("iso-8859-")) {
                 for (CharsetMatch match : matches) {
@@ -185,7 +180,7 @@ public class EncodingDetector {
      * @throws IOException if an error occurred while reading the stream
      */
     public static String detectEncoding(InputStream in) throws IOException {
-        byte buf[] = BufferPool.getByteArray(MAX_RECOMMENDED_BYTE_SIZE);
+        byte[] buf = BufferPool.getByteArray(MAX_RECOMMENDED_BYTE_SIZE);
 
         try {
             return detectEncoding(buf, 0, StreamUtils.readUpTo(in, buf));
@@ -196,7 +191,7 @@ public class EncodingDetector {
     }
 
     public static String detectEncoding(PushbackInputStream in) throws IOException {
-        byte buf[] = BufferPool.getByteArray(MAX_RECOMMENDED_BYTE_SIZE);
+        byte[] buf = BufferPool.getByteArray(MAX_RECOMMENDED_BYTE_SIZE);
         try {
             int readBytes = StreamUtils.readUpTo(in, buf);
             String result = detectEncoding(buf, 0, readBytes);
@@ -221,10 +216,11 @@ public class EncodingDetector {
      * Lists all detectable encodings as returned by {@link #getDetectableEncodings()} to the standard output.
      * @param args command line arguments.
      */
-    public static void main(String args[]) {
-        String encodings[] = getDetectableEncodings();
+    public static void main(String[] args) {
+        String[] encodings = getDetectableEncodings();
 
-        for (String encoding : encodings)
+        for (String encoding : encodings) {
             System.out.println(encoding);
+        }
     }
 }

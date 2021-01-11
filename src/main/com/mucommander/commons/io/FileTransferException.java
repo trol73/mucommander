@@ -75,7 +75,7 @@ public class FileTransferException extends IOException {
 
     protected int reason;
 
-	private long bytesWritten;
+	private final long bytesWritten;
 
 
     public FileTransferException(int reason) {

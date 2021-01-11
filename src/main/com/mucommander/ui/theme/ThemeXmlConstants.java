@@ -102,7 +102,8 @@ interface ThemeXmlConstants {
     String ELEMENT_BACKGROUND                    = "background";
     String ELEMENT_SECONDARY_BACKGROUND          = "secondary_background";
     String ELEMENT_FOREGROUND                    = "foreground";
-    String ELEMENT_HIDDEN                        = "hidden";
+    String ELEMENT_HIDDEN_FILE                   = "hidden_file";
+    String ELEMENT_HIDDEN_FOLDER                 = "hidden_folder";
     String ELEMENT_FOLDER                        = "folder";
     String ELEMENT_ARCHIVE                       = "archive";
     String ELEMENT_SYMLINK                       = "symlink";

@@ -66,13 +66,11 @@ public class FailSafePipedInputStream extends PipedInputStream {
     public void setExternalFailure(IOException failure) {
         this.failure = failure;
 
-        if(failure!=null) {
+        if (failure!=null) {
             // Close the PipedInputStream to have any other thread blocked in a read/skip/available return immediately
             try {
                 super.close();
-            }
-            catch(IOException e) {
-                // Swallow the exception
+            } catch(IOException ignore) {
             }
         }
     }
@@ -83,39 +81,30 @@ public class FailSafePipedInputStream extends PipedInputStream {
      * @throws java.io.IOException if an external failure has been registered
      */
     protected void checkExternalFailure() throws IOException {
-        if (failure != null)
+        if (failure != null) {
             throw failure;
+        }
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public synchronized int read() throws IOException {
         int ret = super.read();
-
         checkExternalFailure();
-
         return ret;
     }
 
     @Override
     public synchronized int read(byte b[], int off, int len) throws IOException {
         int ret = super.read(b, off, len);
-
         checkExternalFailure();
-
         return ret;
     }
 
     @Override
     public synchronized int read(byte b[]) throws IOException {
         int ret = super.read(b);
-
         checkExternalFailure();
-
         return ret;
     }
 
@@ -123,25 +112,20 @@ public class FailSafePipedInputStream extends PipedInputStream {
     @Override
     public long skip(long n) throws IOException {
         long ret = super.skip(n);
-
         checkExternalFailure();
-
         return ret;
     }
 
     @Override
     public synchronized int available() throws IOException {
         int ret = super.available();
-
         checkExternalFailure();
-
         return ret;
     }
 
     @Override
     public void close() throws IOException {
         super.close();
-
         checkExternalFailure();
     }
 }

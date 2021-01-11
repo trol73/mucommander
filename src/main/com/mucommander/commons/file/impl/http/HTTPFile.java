@@ -57,14 +57,14 @@ public class HTTPFile extends ProtocolFile {
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPFile.class);
 
     /** java.net.URL corresponding to this */
-    private URL url;
+    private final URL url;
 
     /** Contains the attributes of the remote HTTP resource. Contains default values until the file has been resolved */
-    private SimpleFileAttributes attributes;
+    private final SimpleFileAttributes attributes;
 
     /** True if the file should be resolved on the remote HTTP server to fetch attribute values, false if these are
      * guessed. */
-    private boolean resolve;
+    private final boolean resolve;
 
     /** True if file has been resolved on the remote HTTP server, either successfully or unsuccessfully */
     private boolean fileResolved;
@@ -142,7 +142,7 @@ public class HTTPFile extends ProtocolFile {
      * @return <code>true</code> if the given mime type corresponds to HTML or XHTML and can be parsed
      */
     private boolean isParsableMimeType(String mimeType) {
-        return mimeType!=null
+        return mimeType != null
            && (mimeType.startsWith("text/html") || mimeType.startsWith("application/xhtml+xml") || mimeType.startsWith("application/xml"));
     }
 
@@ -636,7 +636,7 @@ public class HTTPFile extends ProtocolFile {
             }
         }
 
-        AbstractFile childrenArray[] = new AbstractFile[children.size()];
+        AbstractFile[] childrenArray = new AbstractFile[children.size()];
         children.toArray(childrenArray);
         return childrenArray;
     }
@@ -650,7 +650,7 @@ public class HTTPFile extends ProtocolFile {
     private String getContentEncoding(HttpURLConnection conn) throws IOException {
         // Retrieve content type and throw an IOException if doesn't correspond to a parsable type (HTML/XHTML)
         String contentType = conn.getContentType();
-        if (contentType == null || !isParsableMimeType(contentType)) {
+        if (!isParsableMimeType(contentType)) {
             throw new IOException("Document cannot be parsed (not HTML or XHTML)");  // Todo: localize this message
         }
         int pos;
@@ -738,7 +738,7 @@ public class HTTPFile extends ProtocolFile {
         private final static int CHUNK_SIZE = 1024;
 
         /** Length of the HTTP resource */
-        private long length;
+        private final long length;
 
 
         private HTTPRandomAccessInputStream() throws IOException {
@@ -760,7 +760,7 @@ public class HTTPFile extends ProtocolFile {
         ///////////////////////////////////////////
 
         @Override
-        protected int readBlock(long fileOffset, byte block[], int blockLen) throws IOException {
+        protected int readBlock(long fileOffset, byte[] block, int blockLen) throws IOException {
             HttpURLConnection conn = getHttpURLConnection(url);
 
             // Note: 'Range' may not be supported by the HTTP server, in that case an IOException will be thrown

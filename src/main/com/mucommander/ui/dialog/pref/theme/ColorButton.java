@@ -34,31 +34,28 @@ import java.util.ArrayList;
  */
 class ColorButton extends JPanel implements ActionListener, ColorChangeListener {
 
-    // - Instance variables -----------------------------------------------------
-    // --------------------------------------------------------------------------
-
     /** ThemeData from which to retrieve the color chooser's values. */
-    private ThemeData themeData;
+    private final ThemeData themeData;
 
     /** Identifier of the color that's being edited. */
-    private int colorId;
+    private final int colorId;
 
     /** Dialog on which the color chooser should be centered and modal to. */
-    private PreferencesDialog parent;
+    private final PreferencesDialog parent;
 
     /** The preview component that is repainted when the current color changes (can be null) */
-    private JComponent previewComponent;
+    private final JComponent previewComponent;
 
     /** Name of the preview component's property that gets updated with the current color of this button (can be null) */
-    private String previewColorPropertyName;
+    private final String previewColorPropertyName;
 
     private java.util.List<JComponent> updatedPreviewComponents;
 
     /** Button's border. */
-    private Border border = BorderFactory.createEtchedBorder();
+    private final Border border = BorderFactory.createEtchedBorder();
 
     /** The color button */
-    private JButton button;
+    private final JButton button;
 
     /** Current color displayed in the button */
     private Color currentColor;
@@ -169,21 +166,14 @@ class ColorButton extends JPanel implements ActionListener, ColorChangeListener 
     }
 
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
-        ColorChooser chooser;
-        ColorChooser.createDialog(parent, chooser = createColorChooser()).showDialog();
+        ColorChooser chooser = createColorChooser();
+        ColorChooser.createDialog(parent, chooser).showDialog();
 
         setCurrentColor(chooser.getColor(), true);
     }
 
-
-    ////////////////////////////////////////
-    // ColorChangeListener implementation //
-    ////////////////////////////////////////
-
+    @Override
     public void colorChanged(ColorChangeEvent event) {setCurrentColor(event.getColor(), true);}
 }

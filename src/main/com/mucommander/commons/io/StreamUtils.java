@@ -68,7 +68,7 @@ public class StreamUtils {
      */
     public static long copyStream(InputStream in, OutputStream out, int bufferSize, long length) throws FileTransferException {
         // Use BufferPool to reuse any available buffer of the same size
-        byte buffer[] = BufferPool.getByteArray(bufferSize);
+        byte[] buffer = BufferPool.getByteArray(bufferSize);
         try {
             return copyStream(in, out, buffer, length);
         } finally {
@@ -176,7 +176,7 @@ public class StreamUtils {
         OutputStreamWriter osw = new OutputStreamWriter(out, outCharset);
 
         // Use BufferPool to reuse any available buffer of the same size
-        char buffer[] = BufferPool.getCharArray(bufferSize);
+        char[] buffer = BufferPool.getCharArray(bufferSize);
         try {
             // Copies the InputStreamReader's content to the OutputStreamWriter chunk by chunk
             int nbRead;
@@ -244,7 +244,7 @@ public class StreamUtils {
      */
     public static void fillWithConstant(OutputStream out, byte value, long len, int bufferSize) throws IOException {
         // Use BufferPool to avoid excessive memory allocation and garbage collection
-        byte buffer[] = BufferPool.getByteArray(bufferSize);
+        byte[] buffer = BufferPool.getByteArray(bufferSize);
 
         // Fill the buffer with the constant byte value, not necessary if the value is zero
         if (value != 0) {
@@ -297,7 +297,7 @@ public class StreamUtils {
         raos.seek(destOffset);
 
         // Use BufferPool to avoid excessive memory allocation and garbage collection
-        byte buffer[] = BufferPool.getByteArray(bufferSize);
+        byte[] buffer = BufferPool.getByteArray(bufferSize);
 
         try {
             long remaining = length;
@@ -322,7 +322,7 @@ public class StreamUtils {
      * @throws java.io.EOFException if EOF is reached before all bytes have been read
      * @throws IOException if an I/O error occurs
      */
-    public static byte[] readFully(InputStream in, byte b[]) throws EOFException, IOException {
+    public static byte[] readFully(InputStream in, byte[] b) throws EOFException, IOException {
         return readFully(in, b, 0, b.length);
     }
 
@@ -341,7 +341,7 @@ public class StreamUtils {
      * @throws java.io.EOFException if EOF is reached before all bytes have been read
      * @throws IOException if an I/O error occurs
      */
-    public static byte[] readFully(InputStream in, byte b[], int off, int len) throws EOFException, IOException {
+    public static byte[] readFully(InputStream in, byte[] b, int off, int len) throws EOFException, IOException {
         if (len > 0) {
             int totalRead = 0;
             int failureCounter = 0;
@@ -413,7 +413,7 @@ public class StreamUtils {
      * @return the number of bytes that have been read, can be less than len if EOF has been reached prematurely
      * @throws IOException if an I/O error occurs
      */
-    public static int readUpTo(InputStream in, byte b[]) throws IOException {
+    public static int readUpTo(InputStream in, byte[] b) throws IOException {
         return readUpTo(in, b, 0, b.length);
     }
 
@@ -432,7 +432,7 @@ public class StreamUtils {
      * @return the number of bytes that have been read, can be less than len if EOF has been reached prematurely
      * @throws IOException if an I/O error occurs
      */
-    public static int readUpTo(InputStream in, byte b[], int off, int len) throws IOException {
+    public static int readUpTo(InputStream in, byte[] b, int off, int len) throws IOException {
         int totalRead = 0;
         int failureCounter = 0;
         if (len > 0) {
@@ -478,7 +478,7 @@ public class StreamUtils {
      */
     public static void readUntilEOF(InputStream in, int bufferSize) throws IOException {
         // TUse BufferPool to avoid excessive memory allocation and garbage collection
-        byte buffer[] = BufferPool.getByteArray(bufferSize);
+        byte[] buffer = BufferPool.getByteArray(bufferSize);
 
         try {
             int failureCounter = 0;

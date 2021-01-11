@@ -38,10 +38,6 @@ public class FilterRandomAccessInputStream extends RandomAccessInputStream {
     }
 
 
-    ////////////////////////////////////////////
-    // RandomAccessInputStream implementation //
-    ////////////////////////////////////////////
-
     @Override
     public int read() throws IOException {
         return rais.read();

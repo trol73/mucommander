@@ -149,7 +149,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                         return false;
                     }
 
-                    for (int i=0; i<prompts.length; i++) {
+                    for (int i = 0; i < prompts.length; i++) {
                         LOGGER.trace("prompts[{}]={}", i, prompts[i].getPrompt());
                         prompts[i].setResponse(credentials.getPassword());
                     }
@@ -169,20 +169,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                 authClient = pwd;
             }
 
-            try {
-                int authResult = sshClient.authenticate(authClient);
-
-                // Throw an AuthException if authentication failed
-                if (authResult != SshAuthentication.COMPLETE) {
-                    throwAuthException("Login or password rejected");   // Todo: localize this entry
-                }
-
-                LOGGER.info("authentication complete, authResult={}", authResult);
-            } catch(AuthException e) {
-                LOGGER.info("Caught exception while authenticating", e);
-                e.printStackTrace();
-                throw  e;//throwAuthException(e.getMessage());
-            }
+            authenticate(authClient);
             // Init SFTP connections
             sftpClient = new SftpClient(sshClient);
             SshSession session = sshClient.openSessionChannel();
@@ -209,6 +196,23 @@ class SFTPConnectionHandler extends ConnectionHandler {
             } else {
                 throw new IOException(e);
             }
+        }
+    }
+
+    private void authenticate(SshAuthentication authClient) throws SshException, AuthException {
+        try {
+            int authResult = sshClient.authenticate(authClient);
+
+            // Throw an AuthException if authentication failed
+            if (authResult != SshAuthentication.COMPLETE) {
+                throwAuthException("Login or password rejected");   // Todo: localize this entry
+            }
+
+            LOGGER.info("authentication complete, authResult={}", authResult);
+        } catch(AuthException e) {
+            LOGGER.info("Caught exception while authenticating", e);
+            e.printStackTrace();
+            throw  e;//throwAuthException(e.getMessage());
         }
     }
 

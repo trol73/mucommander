@@ -68,7 +68,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 
 	FileFrame frame;
 
-    private TextArea textArea;
+    private final TextArea textArea;
 
     private SearchContext searchContext;
 
@@ -114,12 +114,10 @@ class TextEditorImpl implements ThemeListener, ThemeId {
             }
         }
     };
+
     private TextMenuHelper menuHelper;
 
 
-    ////////////////////
-	// Initialization //
-	////////////////////
 
 	TextEditorImpl(boolean isEditable, StatusBar statusBar) {
 		// Initialize text area
@@ -416,13 +414,11 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 		}
 	}
 
-	//////////////////////////////////
-	// ThemeListener implementation //
-	//////////////////////////////////
 
 	/**
 	 * Receives theme color changes notifications.
 	 */
+	@Override
 	public void colorChanged(ColorChangedEvent event) {
 		switch (event.getColorId()) {
             case EDITOR_FOREGROUND_COLOR:

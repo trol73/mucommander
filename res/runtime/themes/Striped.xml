@@ -38,10 +38,9 @@
         </unmatched>
 
 
-
-        <!-- = Hidden files ================================ -->
+        <!-- = Hidden folders ================================ -->
         <!-- =============================================== -->
-        <hidden>
+        <hidden_folder>
             <normal>
                 <foreground                  color="666666"/>
                 <inactive_foreground         color="666666"/>
@@ -50,7 +49,21 @@
                 <foreground                  color="ffffff"/>
                 <inactive_foreground         color="666666"/>
             </selected>
-        </hidden>
+        </hidden_folder>
+
+
+        <!-- = Hidden files ================================ -->
+        <!-- =============================================== -->
+        <hidden_file>
+            <normal>
+                <foreground                  color="666666"/>
+                <inactive_foreground         color="666666"/>
+            </normal>
+            <selected>
+                <foreground                  color="ffffff"/>
+                <inactive_foreground         color="666666"/>
+            </selected>
+        </hidden_file>
 
 
 

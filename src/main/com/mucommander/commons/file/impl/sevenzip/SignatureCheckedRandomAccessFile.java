@@ -41,28 +41,25 @@ public class SignatureCheckedRandomAccessFile implements IInStream, ISequentialI
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignatureCheckedRandomAccessFile.class);
 
-    private AbstractFile file;
+    private final AbstractFile file;
 
     private InputStream stream;
 
     private long position;
 
-    private byte[] signature;
-
-    public SignatureCheckedRandomAccessFile(AbstractFile file, byte[] signature)
-            throws UnsupportedFileOperationException {
+    public SignatureCheckedRandomAccessFile(AbstractFile file, byte[] signature) throws UnsupportedFileOperationException {
         super();
-        this.signature = signature;
         this.position = 0;
         this.file = file;
         try {
-            this.stream = openStreamAndCheckSignature(file);
+            this.stream = openStreamAndCheckSignature(file, signature);
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.trace("Error", e);
             throw new UnsupportedFileOperationException(FileOperation.READ_FILE);
         }
     }
+
 
     @Override
     public synchronized long seek(long offset, int seekOrigin) throws SevenZipException {
@@ -172,16 +169,16 @@ public class SignatureCheckedRandomAccessFile implements IInStream, ISequentialI
         }
     }
 
-    private InputStream openStreamAndCheckSignature(AbstractFile file) throws IOException {
+    private InputStream openStreamAndCheckSignature(AbstractFile file, byte[] signature) throws IOException {
         byte[] buf = new byte[signature.length];
 
-        InputStream iStream = null;
+        InputStream is = null;
 
         int read = 0;
         try {
             if (file.isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
                 RandomAccessInputStream raiStream = file.getRandomAccessInputStream();
-                iStream = raiStream;
+                is = raiStream;
                 if (buf.length > 0) {
                     raiStream.seek(0);
                     read = StreamUtils.readUpTo(raiStream, buf);
@@ -191,10 +188,10 @@ public class SignatureCheckedRandomAccessFile implements IInStream, ISequentialI
                 PushbackInputStream pushbackInputStream = null;
                 if (buf.length > 0) {
                     pushbackInputStream = file.getPushBackInputStream(buf.length);
-                    iStream = pushbackInputStream;
+                    is = pushbackInputStream;
                     read = StreamUtils.readUpTo(pushbackInputStream, buf);
                 } else {
-                    iStream = file.getInputStream();
+                    is = file.getInputStream();
                 }
                 // TODO sometimes reading from pushbackInputStream returns 0
                 if (read <= 0 && file.getSize() > 0) {
@@ -202,19 +199,19 @@ public class SignatureCheckedRandomAccessFile implements IInStream, ISequentialI
                 }
                 pushbackInputStream.unread(buf, 0, read);
             }
-            if (!checkSignature(buf)) {
+            if (signature != null && !checkSignature(buf, signature)) {
                 throw new IOException("Wrong file signature was " + StrUtils.bytesToHexStr(buf, 0, read)
                 + " but should be " + StrUtils.bytesToHexStr(signature, 0, signature.length));
             }
         } catch (IOException e) {
-            IOUtils.closeQuietly(iStream);
+            IOUtils.closeQuietly(is);
             throw e;
         }
 
-        return iStream;
+        return is;
     }
 
-    private boolean checkSignature(byte[] data) {
+    private static boolean checkSignature(byte[] data, byte[] signature) {
         for (int i = 0; i < signature.length; i++) {
             if (data[i] != signature[i]) {
                 return false;

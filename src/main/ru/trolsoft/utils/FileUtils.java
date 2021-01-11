@@ -27,9 +27,9 @@ import java.net.URISyntaxException;
  */
 public class FileUtils {
 
-    public static void copyFileFromJar(String src, String dest) throws IOException {
+    public static void copyFileFromJar(String src, String dest, boolean overwrite) throws IOException {
         File fileDest = new File(dest);
-        if (fileDest.exists() && fileDest.length() > 0) {
+        if (!overwrite && fileDest.exists() && fileDest.length() > 0) {
             return;
         }
         fileDest.getParentFile().mkdirs();
@@ -47,7 +47,7 @@ public class FileUtils {
     public static void copyJarFile(String name, String jarPath, boolean overwrite) throws IOException {
         final String outFile = jarPath + File.separatorChar + name;
         if (overwrite || !new File(outFile).exists()) {
-            FileUtils.copyFileFromJar('/' + name, outFile);
+            FileUtils.copyFileFromJar('/' + name, outFile, overwrite);
         }
     }
 

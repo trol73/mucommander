@@ -54,19 +54,11 @@ public class RandomGeneratorInputStream extends InputStream {
     }
 
 
-    ////////////////////////////////
-    // InputStream implementation //
-    ////////////////////////////////
-
     @Override
     public int read() throws IOException {
         return random.nextInt();
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public int read(byte[] b) throws IOException {

@@ -5,18 +5,21 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.ArchiveFormatProvider;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
+import com.mucommander.commons.file.impl.SevenZipJBindingROArchiveFile;
+import net.sf.sevenzipjbinding.ArchiveFormat;
 
 import java.io.IOException;
 
 /**
- * This class is the provider for the 'Bzip2' archive format implemented by {@link Bzip2ArchiveFile}.
+ * This class is the provider for the 'Bzip2' archive format.
  *
- * @see com.mucommander.commons.file.impl.bzip2.Bzip2ArchiveFile
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class Bzip2FormatProvider implements ArchiveFormatProvider {
 
     private static final String[] EXTENSIONS = {".bz2"};
+
+    private static final byte[] SIGNATURE = {};
 
     /**
      * Static instance of the filename filter that matches archive filenames
@@ -25,7 +28,8 @@ public class Bzip2FormatProvider implements ArchiveFormatProvider {
 
     @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
-        return new Bzip2ArchiveFile(file);
+        return new SevenZipJBindingROArchiveFile(file, ArchiveFormat.BZIP2, SIGNATURE);
+        //return new Bzip2ArchiveFile(file);
     }
 
     @Override

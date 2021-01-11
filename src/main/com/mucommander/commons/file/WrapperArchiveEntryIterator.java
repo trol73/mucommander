@@ -25,10 +25,7 @@ public class WrapperArchiveEntryIterator implements ArchiveEntryIterator {
     }
 
 
-    /////////////////////////////////////////
-    // ArchiveEntryIterator implementation //
-    //////////////////////////////////////////
-
+    @Override
     public ArchiveEntry nextEntry() {
         if (!iterator.hasNext()) {
             return null;
@@ -39,6 +36,7 @@ public class WrapperArchiveEntryIterator implements ArchiveEntryIterator {
     /**
      * Implemented as a no-op (nothing to close).
      */
+    @Override
     public void close() throws IOException {
     }
 }
