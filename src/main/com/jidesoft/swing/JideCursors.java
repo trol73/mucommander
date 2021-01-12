@@ -333,8 +333,7 @@ public class JideCursors {
                 }
             }
             return null;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Cursor.getDefaultCursor(); // mainly for HeadlessException.
         }
     }

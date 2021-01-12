@@ -22,7 +22,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.viewer.FileViewer;
 import org.fife.ui.StatusBar;
 
-import javax.swing.JScrollPane;
+import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 /**
@@ -30,12 +32,29 @@ import java.io.IOException;
  */
 public class DjvuViewer extends FileViewer {
 
-    private DjVuBean djvuBean;
+    private final DjVuBean djvuBean;
+
+    private final KeyAdapter keyAdapter = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            boolean shift = e.isShiftDown();
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    djvuBean.setPage(djvuBean.getPage() - (shift ? 10 : 1));
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    djvuBean.setPage(djvuBean.getPage() + (shift ? 10 : 1));
+                    break;
+            }
+        }
+    };
 
     DjvuViewer() {
         super();
         djvuBean = new DjVuBean();
-        setComponentToPresent(new JScrollPane(djvuBean));
+        JScrollPane scrollPane = new JScrollPane(djvuBean);
+        djvuBean.addKeyListener(keyAdapter);
+        setComponentToPresent(scrollPane);
     }
     @Override
     protected void show(AbstractFile file) throws IOException {

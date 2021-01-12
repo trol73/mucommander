@@ -123,13 +123,12 @@ public class AlphanumFileComparator implements Comparator<File> {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 result = isCaseSensitive() ? thisChunk.compareTo(thatChunk) : thisChunk.compareToIgnoreCase(thatChunk);
             }
-
-            if (result != 0)
+            if (result != 0) {
                 return result;
+            }
         }
 
         return s1Length - s2Length;

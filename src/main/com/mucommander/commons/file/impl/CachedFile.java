@@ -206,7 +206,7 @@ public class CachedFile extends ProxyFile {
     /**
      * Creates a CachedFile instance for each of the AbstractFile instances in the given array.
      */
-    private AbstractFile[] createCachedFiles(AbstractFile files[]) {
+    private AbstractFile[] createCachedFiles(AbstractFile[] files) {
         int nbFiles = files.length;
         for (int i = 0; i < nbFiles; i++) {
             files[i] = new CachedFile(files[i], true);
@@ -569,25 +569,11 @@ public class CachedFile extends ProxyFile {
         return getCanonicalFile;
     }
 
-    /*
-    @Override
-    public short getReplication() {
-        return file.getReplication();
-    }
-
-    @Override
-    public long getBlocksize() {
-        return file.getBlocksize();
-    }*/
-    
-    ////////////////////////////////////////////////
-    // Overridden for recursion only (no caching) //
-    ////////////////////////////////////////////////
 
     @Override
     public AbstractFile[] ls() throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
-        AbstractFile files[] = file.ls();
+        AbstractFile[] files = file.ls();
 
         if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);
@@ -599,7 +585,7 @@ public class CachedFile extends ProxyFile {
     @Override
     public AbstractFile[] ls(FileFilter filter) throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
-        AbstractFile files[] = file.ls(filter);
+        AbstractFile[] files = file.ls(filter);
 
         if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);
@@ -611,7 +597,7 @@ public class CachedFile extends ProxyFile {
     @Override
     public AbstractFile[] ls(FilenameFilter filter) throws IOException {
         // Don't cache ls() result but create a CachedFile instance around each of the files if recursion is enabled
-        AbstractFile files[] = file.ls(filter);
+        AbstractFile[] files = file.ls(filter);
 
         if ((bitmask & RECURSE_INSTANCES_MASK) != 0) {
             return createCachedFiles(files);

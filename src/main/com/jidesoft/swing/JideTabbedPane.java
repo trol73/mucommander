@@ -19,7 +19,6 @@ import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -150,7 +149,6 @@ public class JideTabbedPane extends JTabbedPane {
 
     /**
      * @see #getUIClassID
-     * @see #readObject
      */
     private static final String uiClassID = "JideTabbedPaneUI";
 
@@ -169,9 +167,9 @@ public class JideTabbedPane extends JTabbedPane {
     /**
      * The Set for the tab closable. If there is an entry in the Set, it means the tab is NOT closable.
      */
-    private Set<Object> _closableSet = new HashSet<Object>();
+    private final Set<Object> _closableSet = new HashSet<>();
 
-    private Hashtable<Component, Object> _pageLastFocusTrackers = new Hashtable<Component, Object>();
+    private final Hashtable<Component, Object> _pageLastFocusTrackers = new Hashtable<>();
 
     private Font _selectedTabFont;
 
@@ -1461,7 +1459,7 @@ public class JideTabbedPane extends JTabbedPane {
     /**
      * An interface to provide colors for tab background and foreground.
      */
-    public static interface ColorProvider {
+    public interface ColorProvider {
         /**
          * Gets the tab background for the tab at the specified index.
          *
@@ -1493,7 +1491,7 @@ public class JideTabbedPane extends JTabbedPane {
      * color has to be be a lighter or darker version of the color of getBackgroundAt. GradientColorProvider allows you
      * to specify an independent color as the start color.
      */
-    public static interface GradientColorProvider extends ColorProvider {
+    public interface GradientColorProvider extends ColorProvider {
         /**
          * Gets the tab background at the top (or other direction depending on the tab placement) of the tab. The
          * JideTabbedPaneUI will paint a gradient using this color and the color of getBackgroundAt.
@@ -1504,7 +1502,7 @@ public class JideTabbedPane extends JTabbedPane {
         Color getTopBackgroundAt(int tabIndex);
     }
 
-    private static Color[] ONENOTE_COLORS = {
+    private static final Color[] ONENOTE_COLORS = {
             new Color(138, 168, 228), // blue
             new Color(238, 149, 151), // pink
             new Color(180, 158, 222), // purple
@@ -1603,13 +1601,11 @@ public class JideTabbedPane extends JTabbedPane {
     protected PropertyChangeListener _focusChangeListener;
 
     protected PropertyChangeListener createFocusChangeListener() {
-        return new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                final boolean hadFocus = JideTabbedPane.this.isAncestorOf((Component) evt.getOldValue()) || JideTabbedPane.this == evt.getOldValue();
-                boolean hasFocus = JideTabbedPane.this == evt.getNewValue() || JideTabbedPane.this.hasFocusComponent();
-                if (hasFocus != hadFocus) {
-                    repaintTabAreaAndContentBorder();
-                }
+        return evt -> {
+            final boolean hadFocus = JideTabbedPane.this.isAncestorOf((Component) evt.getOldValue()) || JideTabbedPane.this == evt.getOldValue();
+            boolean hasFocus = JideTabbedPane.this == evt.getNewValue() || JideTabbedPane.this.hasFocusComponent();
+            if (hasFocus != hadFocus) {
+                repaintTabAreaAndContentBorder();
             }
         };
     }
@@ -2252,8 +2248,7 @@ public class JideTabbedPane extends JTabbedPane {
         int max = (PortingUtils.getLocalScreenSize(this).height - insets.top - insets.bottom) / list.getCellBounds(0, 0).height;
         if (listModel.getSize() > max) {
             list.setVisibleRowCount(max);
-        }
-        else {
+        } else {
             list.setVisibleRowCount(listModel.getSize());
         }
         new Sticky(list);
@@ -2266,11 +2261,7 @@ public class JideTabbedPane extends JTabbedPane {
         if (tabIndex != -1 && isEnabledAt(tabIndex)) {
             if (tabIndex == getSelectedIndex() && JideSwingUtilities.isAncestorOfFocusOwner(this)) {
                 if (isAutoFocusOnTabHideClose() && isRequestFocusEnabled()) {
-                    Runnable runnable = new Runnable() {
-                        public void run() {
-                            requestFocus();
-                        }
-                    };
+                    Runnable runnable = this::requestFocus;
                     SwingUtilities.invokeLater(runnable);
                 }
             }
@@ -2285,14 +2276,12 @@ public class JideTabbedPane extends JTabbedPane {
                             comp.removeComponentListener(this);
 
                             final Component lastFocused = getLastFocusedComponent(comp);
-                            Runnable runnable = new Runnable() {
-                                public void run() {
-                                    if (lastFocused != null) {
-                                        lastFocused.requestFocus();
-                                    }
-                                    else if (isRequestFocusEnabled()) {
-                                        requestFocus();
-                                    }
+                            Runnable runnable = () -> {
+                                if (lastFocused != null) {
+                                    lastFocused.requestFocus();
+                                }
+                                else if (isRequestFocusEnabled()) {
+                                    requestFocus();
                                 }
                             };
                             SwingUtilities.invokeLater(runnable);
@@ -2302,11 +2291,7 @@ public class JideTabbedPane extends JTabbedPane {
                 else {
                     final Component lastFocused = getLastFocusedComponent(comp);
                     if (lastFocused != null) {
-                        Runnable runnable = new Runnable() {
-                            public void run() {
-                                lastFocused.requestFocus();
-                            }
-                        };
+                        Runnable runnable = lastFocused::requestFocus;
                         SwingUtilities.invokeLater(runnable);
                     }
                     else {
@@ -2333,12 +2318,7 @@ public class JideTabbedPane extends JTabbedPane {
                             focusComponent = comp;
                         }
                         if (focusComponent != null) {
-                            final Component theComponent = focusComponent;
-                            Runnable runnable = new Runnable() {
-                                public void run() {
-                                    theComponent.requestFocus();
-                                }
-                            };
+                            Runnable runnable = focusComponent::requestFocus;
                             SwingUtilities.invokeLater(runnable);
                         }
                     }

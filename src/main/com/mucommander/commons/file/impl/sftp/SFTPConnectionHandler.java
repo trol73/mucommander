@@ -17,7 +17,6 @@ import com.sshtools.ssh2.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,10 +49,6 @@ class SFTPConnectionHandler extends ConnectionHandler {
         super(location);
     }
 
-
-    //////////////////////////////////////
-    // ConnectionHandler implementation //
-    //////////////////////////////////////
 
     @Override
     public void startConnection() throws IOException {
@@ -115,7 +110,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
 
                 // Throw an AuthException if problems with private key file
                 try {
-                    SshPrivateKeyFile pkfile = SshPrivateKeyFileFactory.parse(new FileInputStream(new File(privateKeyPath)));
+                    SshPrivateKeyFile pkfile = SshPrivateKeyFileFactory.parse(new FileInputStream(privateKeyPath));
                     SshKeyPair pair = pkfile.toKeyPair(pkfile.isPassphraseProtected() ? credentials.getPassword() : null);
                     pk.setPrivateKey(pair.getPrivateKey());
                     pk.setPublicKey(pair.getPublicKey());

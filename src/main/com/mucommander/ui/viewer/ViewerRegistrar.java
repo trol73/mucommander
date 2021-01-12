@@ -54,17 +54,11 @@ public class ViewerRegistrar {
 
     static {
         registerFileViewer(new com.mucommander.ui.viewer.pdf.PdfFactory());
-
-        //registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
-
+        registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
         registerFileViewer(new com.mucommander.ui.viewer.image.ImageFactory());
-
         registerFileViewer(new AudioFactory());
-
         registerFileViewer(new com.mucommander.ui.viewer.html.HtmlFactory());
-
         registerFileViewer(new com.mucommander.ui.viewer.text.TextFactory());
-
         // The HexFactory must be the last FileViewer to be registered (otherwise it would open other factories file types)
         registerFileViewer(new com.mucommander.ui.viewer.hex.HexFactory());
     }

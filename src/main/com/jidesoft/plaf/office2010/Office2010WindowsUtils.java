@@ -96,7 +96,7 @@ public class Office2010WindowsUtils extends VsnetWindowsUtils {
             }
         };
 
-        Object uiDefaults[] = new Object[]{
+        Object[] uiDefaults = new Object[]{
                 "MenuItem.checkIcon", new MenuCheckIcon(IconsFactory.getImageIcon(Office2007Painter.class, "icons/menu_checkbox.png")),
                 "MenuItem.shadowColor", new ColorUIResource(0xFFFFFF),
 
@@ -199,11 +199,7 @@ public class Office2010WindowsUtils extends VsnetWindowsUtils {
         UIDefaultsLookup.put(table, "Theme.painter", Office2010Painter.getInstance());
 
         // since it used BasicPainter, make sure it is after Theme.Painter is set first.
-        Object popupMenuBorder = new ExtWindowsDesktopProperty(new String[]{"null"}, new Object[]{((ThemePainter) UIDefaultsLookup.get("Theme.painter")).getMenuItemBorderColor()}, toolkit, new ConvertListener() {
-            public Object convert(Object[] obj) {
-                return new BorderUIResource(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder((Color) obj[0]), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-            }
-        });
+        Object popupMenuBorder = new ExtWindowsDesktopProperty(new String[]{"null"}, new Object[]{((ThemePainter) UIDefaultsLookup.get("Theme.painter")).getMenuItemBorderColor()}, toolkit, obj -> new BorderUIResource(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder((Color) obj[0]), BorderFactory.createEmptyBorder(1, 1, 1, 1))));
         table.put("PopupMenu.border", popupMenuBorder);
     }
 }

@@ -80,19 +80,17 @@ public class FileIntelliHints extends AbstractListIntelliHints {
             return false;
         String dir = s.substring(0, index + 1);
         final String prefix = index == s.length() - 1 ? null : s.substring(index + 1).toLowerCase();
-        String[] files = new File(dir).list(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                if (isFolderOnly()) {
-                    if (new File(dir.getAbsolutePath() + File.separator + name).isFile()) {
-                        return false;
-                    }
+        String[] files = new File(dir).list((dir1, name) -> {
+            if (isFolderOnly()) {
+                if (new File(dir1.getAbsolutePath() + File.separator + name).isFile()) {
+                    return false;
                 }
-                boolean result = prefix == null || name.toLowerCase().startsWith(prefix);
-                if (result && getFilter() != null) {
-                    return getFilter().accept(dir, name);
-                }
-                return result;
             }
+            boolean result = prefix == null || name.toLowerCase().startsWith(prefix);
+            if (result && getFilter() != null) {
+                return getFilter().accept(dir1, name);
+            }
+            return result;
         });
 
         if (files == null || files.length == 0 || (files.length == 1 && files[0].equalsIgnoreCase(prefix))) {
@@ -108,9 +106,9 @@ public class FileIntelliHints extends AbstractListIntelliHints {
 
     @Override
     public void acceptHint(Object selected) {
-        if (selected == null)
+        if (selected == null) {
             return;
-
+        }
         String selectedValue = "" + selected;
 
         String value = getTextComponent().getText();
@@ -151,8 +149,8 @@ public class FileIntelliHints extends AbstractListIntelliHints {
         _filter = filter;
     }
 
-    private class PrefixListCellRenderer extends DefaultListCellRenderer {
-        private String _prefix;
+    private static class PrefixListCellRenderer extends DefaultListCellRenderer {
+        private final String _prefix;
 
         public PrefixListCellRenderer(String prefix) {
             _prefix = prefix;

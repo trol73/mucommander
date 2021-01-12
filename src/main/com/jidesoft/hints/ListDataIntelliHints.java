@@ -72,7 +72,7 @@ public class ListDataIntelliHints<T> extends AbstractListIntelliHints {
         if (context == null) {
             return false;
         }
-        List<T> possibleHints = new ArrayList<T>();
+        List<T> possibleHints = new ArrayList<>();
         for (T o : getCompletionList()) {
             if (compare(context, o)) possibleHints.add(o);
         }

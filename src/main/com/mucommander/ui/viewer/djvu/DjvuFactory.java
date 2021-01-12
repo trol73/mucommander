@@ -48,6 +48,6 @@ public class DjvuFactory implements ViewerFactory {
 
     @Override
     public String getName() {
-        return Translator.get("viewer_type.pdf");
+        return Translator.get("viewer_type.djvu");
     }
 }

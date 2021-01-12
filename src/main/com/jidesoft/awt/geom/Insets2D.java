@@ -170,28 +170,28 @@ public abstract class Insets2D implements Serializable {
          * {@inheritDoc}
          */
         public double getBottom() {
-            return (double) bottom;
+            return bottom;
         }
 
         /**
          * {@inheritDoc}
          */
         public double getLeft() {
-            return (double) left;
+            return left;
         }
 
         /**
          * {@inheritDoc}
          */
         public double getRight() {
-            return (double) right;
+            return right;
         }
 
         /**
          * {@inheritDoc}
          */
         public double getTop() {
-            return (double) top;
+            return top;
         }
 
     }

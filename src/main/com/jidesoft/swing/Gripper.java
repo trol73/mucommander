@@ -25,7 +25,6 @@ public class Gripper extends JComponent implements SwingConstants, Alignable, Dr
 
     /**
      * @see #getUIClassID
-     * @see #readObject
      */
     private static final String uiClassID = "GripperUI";
 
@@ -153,8 +152,7 @@ public class Gripper extends JComponent implements SwingConstants, Alignable, Dr
     public Cursor getCursor() {
         if (isEnabled()) {
             return Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
-        }
-        else {
+        } else {
             return super.getCursor();
         }
     }

@@ -15,8 +15,7 @@ import java.io.IOException;
 public class SFTPProtocolProvider implements ProtocolProvider {
 
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
-        return instantiationParams.length==0
-            ?new SFTPFile(url)
-            :new SFTPFile(url, (SFTPFile.SFTPFileAttributes)instantiationParams[0]);
+        return instantiationParams.length == 0 ?
+                new SFTPFile(url) : new SFTPFile(url, (SFTPFile.SFTPFileAttributes)instantiationParams[0]);
     }
 }

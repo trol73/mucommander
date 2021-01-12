@@ -187,18 +187,10 @@ public class SFTPFile extends ProtocolFile {
     }
 
 
-    /////////////////////////////////////////////
-    // ConnectionHandlerFactory implementation //
-    /////////////////////////////////////////////
-
     public ConnectionHandler createConnectionHandler(FileURL location) {
         return new SFTPConnectionHandler(location);
     }
 
-
-    /////////////////////////////////
-    // AbstractFile implementation //
-    /////////////////////////////////
 
     /**
      * Implementation note: the value returned by this method will always be <code>false</code> if this file was
@@ -406,28 +398,13 @@ public class SFTPFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls() throws IOException {
-        // Retrieve a ConnectionHandler and lock it
-        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
-        SftpFile[] files;
-        try {
-            // Makes sure the connection is started, if not starts it
-            connHandler.checkConnection();
-    //        connHandler.sftpSubsystem.listChildren(file, files);        // Modified J2SSH method to remove the 100 files limitation
-            // Use SftpClient.ls() rather than SftpChannel.listChildren() as it seems to be working better
-            files = connHandler.sftpClient.ls(absPath);
-        } catch (SftpStatusException | SshException e) {
-            e.printStackTrace();
-            throw new IOException(e);
-        } finally {
-            // Release the lock on the ConnectionHandler
-            connHandler.releaseLock();
-        }
-
+        SftpFile[] files = getSftpFiles();
         int nbFiles = files.length;
 
         // File doesn't exist, return an empty file array
-        if (nbFiles == 0)
+        if (nbFiles == 0) {
             return new AbstractFile[] {};
+        }
 
         AbstractFile[] children = new AbstractFile[nbFiles];
 
@@ -441,8 +418,9 @@ public class SFTPFile extends ProtocolFile {
         for (SftpFile file : files) {
             String filename = file.getFilename();
             // Discard '.' and '..' files, dunno why these are returned
-            if (filename.equals(".") || filename.equals(".."))
+            if (filename.equals(".") || filename.equals("..")) {
                 continue;
+            }
 
             FileURL childURL = (FileURL) fileURL.clone();
             childURL.setPath(parentPath + filename);
@@ -465,7 +443,26 @@ public class SFTPFile extends ProtocolFile {
         return children;
     }
 
-	
+    private SftpFile[] getSftpFiles() throws IOException {
+        // Retrieve a ConnectionHandler and lock it
+        SFTPConnectionHandler connHandler = (SFTPConnectionHandler)ConnectionPool.getConnectionHandler(CONN_HANDLER_FACTORY, fileURL, true);
+        SftpFile[] files;
+        try {
+            connHandler.checkConnection();  // Makes sure the connection is started, if not starts it
+    //        connHandler.sftpSubsystem.listChildren(file, files);        // Modified J2SSH method to remove the 100 files limitation
+            // Use SftpClient.ls() rather than SftpChannel.listChildren() as it seems to be working better
+            files = connHandler.sftpClient.ls(absPath);
+        } catch (SftpStatusException | SshException e) {
+            e.printStackTrace();
+            throw new IOException(e);
+        } finally {
+            // Release the lock on the ConnectionHandler
+            connHandler.releaseLock();
+        }
+        return files;
+    }
+
+
     @Override
     public void mkdir() throws IOException {
         // Retrieve a ConnectionHandler and lock it
@@ -536,8 +533,9 @@ public class SFTPFile extends ProtocolFile {
             fileAttributes.setSize(0);
         } finally {
             // Release the lock on the ConnectionHandler
-            if (connHandler != null)
+            if (connHandler != null) {
                 connHandler.releaseLock();
+            }
         }
     }
 

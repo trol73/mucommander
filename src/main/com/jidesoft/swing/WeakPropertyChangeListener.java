@@ -42,11 +42,11 @@ import java.lang.reflect.Method;
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
  */
 public class WeakPropertyChangeListener implements PropertyChangeListener {
-    private WeakReference<PropertyChangeListener> _listenerRef;
-    private Object _src;
+    private final WeakReference<PropertyChangeListener> _listenerRef;
+    private final Object _src;
 
     public WeakPropertyChangeListener(PropertyChangeListener listener, Object src) {
-        _listenerRef = new WeakReference(listener);
+        _listenerRef = new WeakReference<>(listener);
         _src = src;
     }
 
@@ -69,11 +69,9 @@ public class WeakPropertyChangeListener implements PropertyChangeListener {
 
     private void removeListener() {
         try {
-            Method method = _src.getClass().getMethod("removePropertyChangeListener"
-                    , new Class[]{PropertyChangeListener.class});
+            Method method = _src.getClass().getMethod("removePropertyChangeListener", new Class[]{PropertyChangeListener.class});
             method.invoke(_src, new Object[]{this});
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

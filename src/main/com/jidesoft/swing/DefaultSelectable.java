@@ -119,12 +119,8 @@ public class DefaultSelectable implements Selectable {
                 return false;
             }
             return getObject().equals(((DefaultSelectable) obj).getObject());
-        }
-        else if (obj == null && getObject() == null) {
-            return true;
-        }
-        else {
-            return false;
+        } else {
+            return obj == null && getObject() == null;
         }
     }
 }

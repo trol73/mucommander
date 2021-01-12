@@ -500,20 +500,17 @@ public class JideScrollPane extends JScrollPane implements JideScrollPaneConstan
             key = isLeftToRight ? HORIZONTAL_RIGHT : HORIZONTAL_LEFT;
         }
 
-        if (key.equals(HORIZONTAL_LEFT)) {
-            return _hLeft;
-        }
-        else if (key.equals(HORIZONTAL_RIGHT)) {
-            return _hRight;
-        }
-        else if (key.equals(VERTICAL_BOTTOM)) {
-            return _vBottom;
-        }
-        else if (key.equals(VERTICAL_TOP)) {
-            return _vTop;
-        }
-        else {
-            return null;
+        switch (key) {
+            case HORIZONTAL_LEFT:
+                return _hLeft;
+            case HORIZONTAL_RIGHT:
+                return _hRight;
+            case VERTICAL_BOTTOM:
+                return _vBottom;
+            case VERTICAL_TOP:
+                return _vTop;
+            default:
+                return null;
         }
     }
 
@@ -543,24 +540,25 @@ public class JideScrollPane extends JScrollPane implements JideScrollPaneConstan
             key = isLeftToRight ? HORIZONTAL_RIGHT : HORIZONTAL_LEFT;
         }
 
-        if (key.equals(HORIZONTAL_LEFT)) {
-            old = _hLeft;
-            _hLeft = corner;
-        }
-        else if (key.equals(HORIZONTAL_RIGHT)) {
-            old = _hRight;
-            _hRight = corner;
-        }
-        else if (key.equals(VERTICAL_TOP)) {
-            old = _vTop;
-            _vTop = corner;
-        }
-        else if (key.equals(VERTICAL_BOTTOM)) {
-            old = _vBottom;
-            _vBottom = corner;
-        }
-        else {
-            throw new IllegalArgumentException("invalid scroll bar corner key");
+        switch (key) {
+            case HORIZONTAL_LEFT:
+                old = _hLeft;
+                _hLeft = corner;
+                break;
+            case HORIZONTAL_RIGHT:
+                old = _hRight;
+                _hRight = corner;
+                break;
+            case VERTICAL_TOP:
+                old = _vTop;
+                _vTop = corner;
+                break;
+            case VERTICAL_BOTTOM:
+                old = _vBottom;
+                _vBottom = corner;
+                break;
+            default:
+                throw new IllegalArgumentException("invalid scroll bar corner key");
         }
 
         if (null != old) {

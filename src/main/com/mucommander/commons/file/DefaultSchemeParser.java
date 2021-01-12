@@ -66,10 +66,10 @@ public class DefaultSchemeParser implements SchemeParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSchemeParser.class);
 
     /** True if query should be parsed and not considered as part of the path */
-    private boolean parseQuery;
+    private final boolean parseQuery;
 
     /** <code>PathCanonizer</code> instance to be used for canonizing the path part */
-    private PathCanonizer pathCanonizer;
+    private final PathCanonizer pathCanonizer;
 
 
     /**
@@ -220,12 +220,13 @@ public class DefaultSchemeParser implements SchemeParser {
             // The question mark character (if any) marks the beginning of the query part, only if it should be parsed.
             int questionMarkPos = parseQuery?url.indexOf('?', pos):-1;
             int hostEndPos;         // Contains the position of the beginning of the path/query part
-            if(separatorPos != -1)    // Separator is necessarily before question mark
+            if (separatorPos != -1) {    // Separator is necessarily before question mark
                 hostEndPos = separatorPos;
-            else if (questionMarkPos != -1)
+            } else if (questionMarkPos != -1) {
                 hostEndPos = questionMarkPos;
-            else
+            } else {
                 hostEndPos = urlLen;
+            }
 
             // The authority part is the one between scheme:// and the path/query. It includes the user information
             // (login/password), host and port. 
@@ -241,11 +242,11 @@ public class DefaultSchemeParser implements SchemeParser {
                 colonPos = authority.indexOf(':');
                 String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), "UTF-8");
                 String password;
-                if (colonPos != -1)
+                if (colonPos != -1) {
                     password = URLDecoder.decode(authority.substring(colonPos+1, atPos), "UTF-8");
-                else
+                } else {
                     password = null;
-
+                }
                 if (!login.isEmpty() || !(password == null || password.isEmpty())) {
                     fileURL.setCredentials(new Credentials(login, password));
                 }
@@ -293,13 +294,13 @@ public class DefaultSchemeParser implements SchemeParser {
             LOGGER.debug("Warning: path should not be empty, url={}", url);
 
             // Parse query part (if any)
-            if (questionMarkPos != -1)
+            if (questionMarkPos != -1) {
                 fileURL.setQuery(url.substring(questionMarkPos+1));     // Do not include the question mark
+            }
         } catch (MalformedURLException e) {
             throw e;
         } catch (Exception e2) {
             LOGGER.info("Unexpected exception in FileURL() with "+url, e2);
-
             throw new MalformedURLException();
         }
     }

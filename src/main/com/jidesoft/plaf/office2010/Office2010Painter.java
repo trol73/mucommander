@@ -11,7 +11,6 @@ import com.jidesoft.plaf.UIDefaultsLookup;
 import com.jidesoft.plaf.basic.BasicJideButtonUI;
 import com.jidesoft.plaf.basic.BasicPainter;
 import com.jidesoft.plaf.basic.ThemePainter;
-import com.jidesoft.plaf.office2003.Office2003Painter;
 import com.jidesoft.swing.ComponentStateSupport;
 import com.jidesoft.swing.JideButton;
 import com.jidesoft.swing.JideSplitButton;
@@ -60,14 +59,14 @@ public class Office2010Painter extends BasicPainter {
     }
 
     public void installDefaults() {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.installDefaults();
         }
     }
 
     public void uninstallDefaults() {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.uninstallDefaults();
         }
@@ -173,7 +172,7 @@ public class Office2010Painter extends BasicPainter {
     }
 
     public void paintButtonBackground(JComponent c, Graphics g, Rectangle rect, int orientation, int state, boolean showBorder) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintButtonBackground(c, g, rect, orientation, state, showBorder);
             return;
@@ -427,7 +426,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintCommandBarBackground(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCommandBarBackground(c, g, rect, orientation, state);
             return;
@@ -512,7 +511,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintDockableFrameTitlePane(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintDockableFrameTitlePane(c, g, rect, orientation, state);
             return;
@@ -552,7 +551,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintCollapsiblePaneTitlePaneBackground(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCollapsiblePaneTitlePaneBackground(c, g, rect, orientation, state);
             return;
@@ -566,7 +565,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintCollapsiblePaneTitlePaneBackgroundEmphasized(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCollapsiblePaneTitlePaneBackgroundEmphasized(c, g, rect, orientation, state);
             return;
@@ -580,7 +579,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintCollapsiblePaneTitlePaneBackgroundSeparatorEmphasized(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCollapsiblePaneTitlePaneBackgroundSeparatorEmphasized(c, g, rect, orientation, state);
             return;
@@ -594,7 +593,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintCollapsiblePaneTitlePaneBackgroundSeparator(JComponent c, Graphics g, Rectangle rect, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCollapsiblePaneTitlePaneBackgroundSeparator(c, g, rect, orientation, state);
             return;
@@ -716,7 +715,7 @@ public class Office2010Painter extends BasicPainter {
         if (!c.isOpaque()) {
             return;
         }
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast) {
             super.paintCollapsiblePanesBackground(c, g, rect, orientation, state);
             return;
@@ -740,7 +739,7 @@ public class Office2010Painter extends BasicPainter {
 
     @Override
     public void paintSidePaneItemBackground(JComponent c, Graphics g, Rectangle rect, Color[] colors, int orientation, int state) {
-        Boolean highContrast = UIManager.getBoolean("Theme.highContrast");
+        boolean highContrast = UIManager.getBoolean("Theme.highContrast");
         if (highContrast || (colors != null && colors.length >= 1 && colors[0] != null && !(colors[0] instanceof UIResource))) {
             super.paintSidePaneItemBackground(c, g, rect, colors, orientation, state);
             return;
