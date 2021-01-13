@@ -69,7 +69,7 @@ public class GrowlNotifier extends AbstractNotifier {
     }
 
 
-    GrowlNotifier() {
+    public GrowlNotifier() {
     }
 
 
@@ -88,10 +88,6 @@ public class GrowlNotifier extends AbstractNotifier {
             null);
     }
 
-
-    /////////////////////////////////////
-    // AbstractNotifier implementation //
-    /////////////////////////////////////
 
     @Override
     public String getPrettyName() {
@@ -118,7 +114,6 @@ public class GrowlNotifier extends AbstractNotifier {
         StringBuilder outputBuffer = new StringBuilder();
         if (!(AppleScript.execute(IS_GROWL_RUNNING_APPLESCRIPT, outputBuffer) && outputBuffer.toString().equals("true"))) {
             LOGGER.debug("Growl is not running, aborting");
-
             return false;
         }
 
@@ -144,6 +139,12 @@ public class GrowlNotifier extends AbstractNotifier {
 
         return isEnabled = isRegistered;
     }
+
+    public static boolean isGrowlRunning() {
+        StringBuilder outputBuffer = new StringBuilder();
+        return AppleScript.execute(IS_GROWL_RUNNING_APPLESCRIPT, outputBuffer) && outputBuffer.toString().equals("true");
+    }
+
 
     @Override
     public boolean isEnabled() {

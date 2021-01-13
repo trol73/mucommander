@@ -40,7 +40,7 @@ import java.util.Map;
 public class FastLRUCache<K, V> extends LRUCache<K,V> {
 
     /** Cache key->value/expirationDate map */
-    private LinkedHashMap<K, Value<V>> cacheMap;
+    private final LinkedHashMap<K, Value<V>> cacheMap;
 
     /** Timestamp of last expired items purge */
     private long lastExpiredPurge;
@@ -49,8 +49,8 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
     private final static int PURGE_EXPIRED_DELAY = 1000;
 
     private static final class Value<V> {
-        private V val;
-        private Long expiration;
+        private final V val;
+        private final Long expiration;
 
         public Value(V value, Long expirationDate) {
             this.val = value;
@@ -110,19 +110,15 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
 
         // Look for expired items and remove them and recalculate eldestExpirationDate for next time
         this.eldestExpirationDate = Long.MAX_VALUE;
-        Long expirationDateL;
-        long expirationDate;
         Iterator<Value<V>> iterator = cacheMap.values().iterator();
         // Iterate on all cached values
         while (iterator.hasNext()) {
-            expirationDateL = iterator.next().expiration;
-			
+            Long expirationDateL = iterator.next().expiration;
             // No expiration date for this value
             if (expirationDateL == null) {
                 continue;
             }
-
-            expirationDate = expirationDateL;
+            long expirationDate = expirationDateL;
             // Test if the item has an expiration date and check if has passed
             if (expirationDate < now) {
                 // Remove expired item
@@ -138,16 +134,12 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
     }
 
 
-    /////////////////////////////////////
-    // LRUCache methods implementation //
-    /////////////////////////////////////	
-
     @Override
     public synchronized V get(K key) {
         // Look for expired items and purge them (if any)
         purgeExpiredItems();	
 
-        // Look for a value correponding to the specified key in the cache map
+        // Look for a value corresponding to the specified key in the cache map
         Value<V> value = cacheMap.get(key);
 
         if (value == null) {
@@ -169,12 +161,9 @@ public class FastLRUCache<K, V> extends LRUCache<K,V> {
             cacheMap.remove(key);
             return null;
         }
-			
-
         if (UPDATE_CACHE_COUNTERS) {
             nbHits++;    // Increase cache hit counter
         }
-
         return value.val;
     }
 

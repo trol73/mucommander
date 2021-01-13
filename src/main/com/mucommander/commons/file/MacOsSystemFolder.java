@@ -1,6 +1,13 @@
 package com.mucommander.commons.file;
 
 
+import com.mucommander.commons.file.util.PathUtils;
+import com.mucommander.commons.runtime.OsFamily;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Top-level Mac OS X system folders hidden by Finder. For more info about those files:
  * http://www.westwind.com/reference/OS-X/invisibles.html
@@ -8,7 +15,6 @@ package com.mucommander.commons.file;
  * @author Arik Hadas. Maxence Bernard 
  */
 public enum MacOsSystemFolder {
-	// Mac OS X system folders
     TRASHES("/.Trashes"),
     VOL("/.vol"),
     DEV("/dev"),
@@ -50,16 +56,21 @@ public enum MacOsSystemFolder {
     /** file path */
 	String path;
 
+    static Set<String> paths;
+
+    static {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            paths = Stream.of(values()).map(f -> f.path).collect(Collectors.toSet());
+        }
+    }
+
 	MacOsSystemFolder(String path) {
 		this.path = path;
 	}
 
 	public static boolean isSystemFile(AbstractFile file) {
-		for (MacOsSystemFolder folder : values()) {
-            if (folder.path.equals(file.getAbsolutePath())) {
-                return true;
-            }
-        }
-		return false;
+        String path = file.getAbsolutePath();
+        path = PathUtils.removeTrailingSeparator(path);
+        return paths.contains(path);
 	}
 }

@@ -82,9 +82,10 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 				}
 			}
 		});
-        if (OsFamily.MAC_OS_X.isCurrent()) {
-            TabbedPaneUICustomizer.customizeTabbedPaneUI(this);
-        }
+//        if (OsFamily.MAC_OS_X.isCurrent()) {
+//            TabbedPaneUICustomizer.customizeTabbedPaneUI(this);
+//        }
+		DesktopManager.customizeTabbedPaneUI(this);
 
 		addFocusListener(this);
 	}

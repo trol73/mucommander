@@ -48,8 +48,8 @@ public class DefaultOverlayable extends JPanel implements Overlayable, Component
 
     private void initComponents() {
         setLayout(null);
-        _overlayComponents = new Vector<JComponent>();
-        _overlayLocations = new Hashtable<JComponent, Integer>();
+        _overlayComponents = new Vector<>();
+        _overlayLocations = new Hashtable<>();
     }
 
     /**
@@ -279,8 +279,7 @@ public class DefaultOverlayable extends JPanel implements Overlayable, Component
         if (index == -1) {
             _overlayComponents.add(component);
             add(component, getComponentCount() - 1); // add it before the the actual component
-        }
-        else {
+        } else {
             _overlayComponents.add(index, component);
             add(component, index);
         }
@@ -296,7 +295,7 @@ public class DefaultOverlayable extends JPanel implements Overlayable, Component
     }
 
     public JComponent[] getOverlayComponents() {
-        return _overlayComponents.toArray(new JComponent[_overlayComponents.size()]);
+        return _overlayComponents.toArray(new JComponent[0]);
     }
 
     public JComponent getActualComponent() {

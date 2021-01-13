@@ -33,15 +33,10 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
-    // - Instance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Where to write the custom command associations to. */
-    private XmlWriter out;
+    private final XmlWriter out;
 
 
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Builds a new writer that will send data to the specified output stream.
      * @param  stream      where to write the XML data.
@@ -52,9 +47,6 @@ public class CommandWriter implements CommandsXmlConstants, CommandBuilder {
     }
 
 
-
-    // - Builder methods ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Opens the root XML element.
      */

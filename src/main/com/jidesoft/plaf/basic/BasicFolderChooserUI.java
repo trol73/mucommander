@@ -45,7 +45,7 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
     protected JPanel _buttonPanel;
     protected JPanel _navigationPanel;
 
-    private Action _approveSelectionAction = new ApproveSelectionAction();
+    private final Action _approveSelectionAction = new ApproveSelectionAction();
     public BasicFolderChooserUI.FolderChooserSelectionListener _selectionListener;
     private FolderToolBarListener _folderToolbarListener;
 
@@ -86,31 +86,20 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
         chooser.add(holdingPanel, JideBoxLayout.VARY);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-        if (_folderChooser.isNavigationFieldVisible()) {
-            setNavigationFieldVisible(true);
-        }
-        else {
-            setNavigationFieldVisible(false);
-        }
+        setNavigationFieldVisible(_folderChooser.isNavigationFieldVisible());
 
         updateView(chooser);
 
-        Runnable runnable = new Runnable() {
-            public void run() {
-                _fileSystemTree.requestFocusInWindow();
-            }
-        };
+        Runnable runnable = () -> _fileSystemTree.requestFocusInWindow();
         SwingUtilities.invokeLater(runnable);
 
         /*
          * _folderChooser ultimately extends JComponent (and not JDialog) and thus has no root pane.
          * As such, we need to do the following to set the default button.
          */
-        _folderChooser.addHierarchyListener(new HierarchyListener() {
-            public void hierarchyChanged(HierarchyEvent e) {
-                if (_folderChooser.getRootPane() != null) {
-                    _folderChooser.getRootPane().setDefaultButton(_approveButton);
-                }
+        _folderChooser.addHierarchyListener(e -> {
+            if (_folderChooser.getRootPane() != null) {
+                _folderChooser.getRootPane().setDefaultButton(_approveButton);
             }
         });
     }
@@ -218,7 +207,7 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
                 // make sure user really wants to do this
                 String text;
                 TreePath path = _fileSystemTree.getSelectionPaths()[0];
-                List selection = getSelectedFolders(new TreePath[]{path});
+                List<File> selection = getSelectedFolders(new TreePath[]{path});
 
                 final ResourceBundle resourceBundle = FolderChooserResource.getResourceBundle(Locale.getDefault());
                 if (selection.size() > 1) {
@@ -285,15 +274,16 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
             public void newFolderButtonClicked() {
                 // get the selected folder
                 TreePath[] paths = _fileSystemTree.getSelectionPaths();
-                List selection = getSelectedFolders(paths);
-                if (selection.size() > 1 || selection.size() == 0)
+                List<File> selection = getSelectedFolders(paths);
+                if (selection.size() != 1) {
                     return; // should never happen
+                }
 
-                File parent = (File) selection.get(0);
+                File parent = selection.get(0);
 
                 final ResourceBundle resourceBundle = FolderChooserResource.getResourceBundle(Locale.getDefault());
                 String folderName = JOptionPane.showInputDialog(_folderChooser, resourceBundle.getString("FolderChooser.new.folderName"),
-                        resourceBundle.getString("FolderChooser.new.title"), JOptionPane.OK_CANCEL_OPTION | JOptionPane.QUESTION_MESSAGE);
+                        resourceBundle.getString("FolderChooser.new.title"), JOptionPane.QUESTION_MESSAGE);
 
                 if (folderName != null && folderName.trim().length() > 0) {
                     folderName = eraseBlankInTheEnd(folderName);
@@ -366,15 +356,13 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
             }
 
             public void recentFolderSelected(final File file) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        setWaitCursor(true);
-                        try {
-                            ensureFileIsVisible(file, true);
-                        }
-                        finally {
-                            setWaitCursor(false);
-                        }
+                new Thread(() -> {
+                    setWaitCursor(true);
+                    try {
+                        ensureFileIsVisible(file, true);
+                    }
+                    finally {
+                        setWaitCursor(false);
                     }
                 }).start();
             }
@@ -397,16 +385,16 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
             }
 
 
-            public List getSelectedFolders() {
+            public List <File> getSelectedFolders() {
                 TreePath[] paths = _fileSystemTree.getSelectionPaths();
                 return getSelectedFolders(paths);
             }
 
-            public List getSelectedFolders(TreePath[] paths) {
-                if (paths == null || paths.length == 0)
-                    return new ArrayList();
-
-                List<File> folders = new ArrayList<File>(paths.length);
+            public List<File> getSelectedFolders(TreePath[] paths) {
+                if (paths == null || paths.length == 0) {
+                    return new ArrayList<>();
+                }
+                List<File> folders = new ArrayList<>(paths.length);
                 for (TreePath path : paths) {
                     BasicFileSystemTreeNode f = (BasicFileSystemTreeNode) path.getLastPathComponent();
                     folders.add(f.getFile());
@@ -557,8 +545,8 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
         if (!file.isDirectory()) {
             return null;
         }
-        Stack<File> stack = new Stack<File>();
-        List<Object> list = new ArrayList<Object>();
+        Stack<File> stack = new Stack<>();
+        List<Object> list = new ArrayList<>();
         list.add(_fileSystemTree.getModel().getRoot());
         FileSystemView view = _folderChooser.getFileSystemView();
         File[] alternativeRoots = null;
@@ -598,11 +586,7 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
             _fileSystemTree.setSelectionPath(path);
             _fileSystemTree.expandPath(path);
             if (scroll) {
-                Runnable runnable = new Runnable() {
-                    public void run() {
-                        _fileSystemTree.scrollPathToVisible(path);
-                    }
-                };
+                Runnable runnable = () -> _fileSystemTree.scrollPathToVisible(path);
                 SwingUtilities.invokeLater(runnable);
             }
         }
@@ -642,12 +626,7 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
                 updateView(_folderChooser);
             }
             else if (FolderChooser.PROPERTY_NAVIGATION_FIELD_VISIBLE.equals(evt.getPropertyName())) {
-                if (_folderChooser.isNavigationFieldVisible()) {
-                    setNavigationFieldVisible(true);
-                }
-                else {
-                    setNavigationFieldVisible(false);
-                }
+                setNavigationFieldVisible(_folderChooser.isNavigationFieldVisible());
             }
             else if (FolderChooser.PROPERTY_AVAILABLE_BUTTONS.equals(evt.getPropertyName())) {
                 Component[] components = _toolbar.getComponents();
@@ -720,13 +699,13 @@ public class BasicFolderChooserUI extends BasicFileChooserUI implements FolderCh
             return;
         }
 
-        List<File> files = new ArrayList<File>();
-        for (int i = 0, c = selectedPaths.length; i < c; i++) {
-            File f = ((BasicFileSystemTreeNode) selectedPaths[i].getLastPathComponent()).getFile();
+        List<File> files = new ArrayList<>();
+        for (TreePath selectedPath : selectedPaths) {
+            File f = ((BasicFileSystemTreeNode) selectedPath.getLastPathComponent()).getFile();
             files.add(f);
         }
 
-        _folderChooser.setSelectedFiles(files.toArray(new File[files.size()]));
+        _folderChooser.setSelectedFiles(files.toArray(new File[0]));
     }
 
     @Override

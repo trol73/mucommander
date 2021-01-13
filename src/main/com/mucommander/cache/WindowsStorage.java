@@ -141,7 +141,7 @@ public class WindowsStorage {
 
 
     private String getKey(Window window, String suffix) {
-        Class c = window.getClass();
+        Class<?> c = window.getClass();
         String key = c.getCanonicalName();
         if (key == null) {
             key = c.getPackage().getName() + '.' + c.getName();

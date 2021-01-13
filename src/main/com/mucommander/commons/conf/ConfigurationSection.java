@@ -31,9 +31,6 @@ class ConfigurationSection {
     private final Map<String, ConfigurationSection> sections = new HashMap<>();
 
 
-
-    // - Variables access ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Removes the specified variable from the section.
      * @param name name of the variable to remove.
@@ -103,8 +100,6 @@ class ConfigurationSection {
 
 
 
-    // - Value helpers -------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Casts the specified value into an integer.
      * <p>
@@ -321,9 +316,6 @@ class ConfigurationSection {
     }
 
 
-
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the section doesn't contain either variables or sub-sections.
      * <p>

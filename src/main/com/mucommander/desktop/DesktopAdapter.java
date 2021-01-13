@@ -20,9 +20,16 @@ package com.mucommander.desktop;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.FileFilter;
+import com.mucommander.commons.util.Pair;
 import com.mucommander.ui.action.TcAction;
+import com.mucommander.ui.notifier.AbstractNotifier;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Contract for classes that provide desktop integration features.
@@ -157,4 +164,28 @@ public interface DesktopAdapter {
     boolean isApplication(AbstractFile file);
 
     String getDefaultTerminalAppCommand();
+
+    default TrashProvider getTrash() {
+        return null;
+    }
+
+    default AbstractNotifier getNotifier() {
+        return null;
+    }
+
+    default Consumer<JTabbedPane> getTabbedPaneCustomizer() {
+        return null;
+    }
+
+    default void postCopy(AbstractFile source, AbstractFile target) {
+
+    }
+
+    default void customizeMainFrame(Window window) {
+
+    }
+
+    default List<Pair<JLabel, JComponent>> getExtendedFileProperties(AbstractFile file) {
+        return Collections.emptyList();
+    }
 }

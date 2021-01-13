@@ -18,12 +18,17 @@
 
 package com.mucommander.desktop;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
+import java.util.function.Consumer;
 
+import com.mucommander.commons.util.Pair;
+import com.mucommander.ui.notifier.AbstractNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +45,8 @@ import com.mucommander.desktop.osx.OSXDesktopAdapter;
 import com.mucommander.desktop.windows.Win9xDesktopAdapter;
 import com.mucommander.desktop.windows.WinNtDesktopAdapter;
 import com.mucommander.desktop.xfce.GuessedXfceDesktopAdapter;
+
+import javax.swing.*;
 
 /**
  * @author Nicolas Rinaudo
@@ -78,6 +85,7 @@ public class DesktopManager {
      * @see #open(File)
      */
     static final String OPEN = "open";
+
 
 
 
@@ -121,11 +129,11 @@ public class DesktopManager {
     private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
     private static TrashProvider trashProvider;
+    /** AbstractNotifier instance, null if none is available on the current platform */
+    private static AbstractNotifier notifier;
+    private static Consumer<JTabbedPane> tabbedPaneCustomizer;
 
 
-
-    // - Initialisation --------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Prevents instantiation of the class.
      */
@@ -206,6 +214,9 @@ public class DesktopManager {
                 desktop = current;
                 getLogger().debug("Using desktop: " + desktop);
                 desktop.init(install);
+                setTrashProvider(desktop.getTrash());
+                setNotifier(desktop.getNotifier());
+                setTabbedPaneCustomizer(desktop.getTabbedPaneCustomizer());
                 return;
             }
         }
@@ -517,6 +528,18 @@ public class DesktopManager {
         trashProvider = provider;
     }
 
+    private static void setTabbedPaneCustomizer(Consumer<JTabbedPane> tabbedPaneCustomizer) {
+        DesktopManager.tabbedPaneCustomizer = tabbedPaneCustomizer;
+    }
+
+    private static void setNotifier(AbstractNotifier notifier) {
+        DesktopManager.notifier = notifier;
+    }
+
+    public static AbstractNotifier getNotifier() {
+        return notifier;
+    }
+
 
     // - Mouse management ------------------------------------------------
     // -------------------------------------------------------------------
@@ -620,6 +643,23 @@ public class DesktopManager {
      */
     public static boolean isApplication(AbstractFile file) {
         return desktop.isApplication(file);
+    }
+
+    public static void customizeTabbedPaneUI(JTabbedPane tabbedPane) {
+        if (tabbedPaneCustomizer != null)
+            tabbedPaneCustomizer.accept(tabbedPane);
+    }
+
+    public static void postCopy(AbstractFile source, AbstractFile target) {
+        desktop.postCopy(source, target);
+    }
+
+    public static void customizeMainFrame(Window window) {
+        desktop.customizeMainFrame(window);
+    }
+
+    public static List<Pair<JLabel, JComponent>> getExtendedFileProperties(AbstractFile file) {
+        return desktop.getExtendedFileProperties(file);
     }
 
     private static Logger getLogger() {

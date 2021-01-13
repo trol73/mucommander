@@ -38,15 +38,13 @@ import com.mucommander.ui.main.MainFrame;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -59,14 +57,14 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 
     private final FolderPanel folderPanel;
 	
-    private final JButton cancelButton;
-    private ServerPanel currentServerPanel;
+    private final JButton btnCancel;
+    private ServerPanel pnlCurrentServer;
 
     private final JTabbedPane tabbedPane;
-    private final List<ServerPanel> serverPanels = new Vector<>();
+    private final List<ServerPanel> serverPanels = new ArrayList<>();
 
-    private final JLabel urlLabel;
-    private final JCheckBox saveCredentialsCheckBox;
+    private final JLabel lblUrl;
+    private final JCheckBox cbSaveCredentials;
 
     // Dialog's width has to be at least 320
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(520, 0);
@@ -111,7 +109,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
         addTab(FileProtocols.WEBDAV, new WebDAVPanel(this, mainFrame), selectPanelClass);
         addTab(FileProtocols.VSPHERE, new VSpherePanel(this, mainFrame), selectPanelClass);
 
-        currentServerPanel = getCurrentServerPanel();
+        pnlCurrentServer = getCurrentServerPanel();
 
         // Listen to tab change events
         tabbedPane.addChangeListener(this);
@@ -121,26 +119,26 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
         XBoxPanel xPanel = new XBoxPanel();
         xPanel.add(new JLabel(i18n("server_connect_dialog.server_url")+":"));
         xPanel.addSpace(5);
-        urlLabel = new JLabel("");
+        lblUrl = new JLabel("");
         updateURLLabel();
-        xPanel.add(urlLabel);
+        xPanel.add(lblUrl);
         yPanel.add(xPanel);
 
         yPanel.addSpace(10);
 
-        this.saveCredentialsCheckBox = new JCheckBox(i18n("auth_dialog.store_credentials"), false);
+        this.cbSaveCredentials = new JCheckBox(i18n("auth_dialog.store_credentials"), false);
         // Enables 'save credentials' checkbox only if server panel/protocol uses credentials
-        saveCredentialsCheckBox.setEnabled(currentServerPanel.usesCredentials());
-        yPanel.add(saveCredentialsCheckBox);
+        cbSaveCredentials.setEnabled(pnlCurrentServer.usesCredentials());
+        yPanel.add(cbSaveCredentials);
 
         JButton okButton = new JButton(i18n("server_connect_dialog.connect"));
-        cancelButton = new JButton(i18n("cancel"));
-        yPanel.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this));
+        btnCancel = new JButton(i18n("cancel"));
+        yPanel.add(DialogToolkit.createOKCancelPanel(okButton, btnCancel, getRootPane(), this));
 
         contentPane.add(yPanel, BorderLayout.SOUTH);
 		
         // initial focus
-        setInitialFocusComponent(currentServerPanel);		
+        setInitialFocusComponent(pnlCurrentServer);
 		
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
     }
@@ -155,20 +153,20 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
         northPanel.add(serverPanel, BorderLayout.NORTH);
         tabbedPane.addTab(protocol.toUpperCase(), northPanel);
 
-        if(selectPanelClass.equals(serverPanel.getClass()))
+        if (selectPanelClass.equals(serverPanel.getClass())) {
             tabbedPane.setSelectedComponent(northPanel);
-
+        }
         serverPanels.add(serverPanel);
     }
 
 
     void updateURLLabel() {
         try {
-            FileURL url = currentServerPanel.getServerURL();
-            urlLabel.setText(url == null ? " " : url.toString(false));
+            FileURL url = pnlCurrentServer.getServerURL();
+            lblUrl.setText(url == null ? " " : url.toString(false));
         }
         catch(MalformedURLException ex) {
-            urlLabel.setText(" ");
+            lblUrl.setText(" ");
         }
     }
 
@@ -180,22 +178,22 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == cancelButton) {
+        if (source == btnCancel) {
             dispose();
             return;
         }
 
         try {
-            currentServerPanel.dialogValidated();
+            pnlCurrentServer.dialogValidated();
 
-            FileURL serverURL = currentServerPanel.getServerURL();	// Can throw a MalformedURLException
+            FileURL serverURL = pnlCurrentServer.getServerURL();	// Can throw a MalformedURLException
 
             // create a CredentialsMapping instance and pass to Folder so that it uses it to connect to the folder and
             // adds to CredentialsManager once the folder has been successfully changed
             Credentials credentials = serverURL.getCredentials();
             CredentialsMapping credentialsMapping;
             if (credentials != null) {
-                credentialsMapping = new CredentialsMapping(credentials, serverURL, saveCredentialsCheckBox.isSelected());
+                credentialsMapping = new CredentialsMapping(credentials, serverURL, cbSaveCredentials.isSelected());
             } else {
                 credentialsMapping = null;
             }
@@ -211,13 +209,13 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
 	
 
     public void stateChanged(ChangeEvent e) {
-        currentServerPanel = getCurrentServerPanel();
-        lastPanelClass = currentServerPanel.getClass();
+        pnlCurrentServer = getCurrentServerPanel();
+        lastPanelClass = pnlCurrentServer.getClass();
 
         // Enables 'save credentials' checkbox only if server panel/protocol uses credentials
-        saveCredentialsCheckBox.setEnabled(currentServerPanel.usesCredentials());
+        cbSaveCredentials.setEnabled(pnlCurrentServer.usesCredentials());
 
         updateURLLabel();
-        FocusRequester.requestFocus(currentServerPanel);
+        FocusRequester.requestFocus(pnlCurrentServer);
     }
 }

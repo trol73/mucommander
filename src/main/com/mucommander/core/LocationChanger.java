@@ -53,7 +53,7 @@ public class LocationChanger {
 
 	private ChangeFolderThread changeFolderThread;
 
-	private GlobalLocationHistory globalHistory = GlobalLocationHistory.getInstance();
+	private final GlobalLocationHistory globalHistory = GlobalLocationHistory.getInstance();
 
 	/** The lock object used to prevent simultaneous folder change operations */
 	private final Object FOLDER_CHANGE_LOCK = new Object();
@@ -66,9 +66,9 @@ public class LocationChanger {
 	private final static String BROWSE_TEXT = Translator.get("browse");
 	private final static String DOWNLOAD_TEXT = Translator.get("download");
 	
-	private MainFrame mainFrame;
-	private FolderPanel folderPanel;
-	private LocationManager locationManager;
+	private final MainFrame mainFrame;
+	private final FolderPanel folderPanel;
+	private final LocationManager locationManager;
 	
 	public LocationChanger(MainFrame mainFrame, FolderPanel folderPanel, LocationManager locationManager) {
 		this.mainFrame = mainFrame;
@@ -474,7 +474,7 @@ public class LocationChanger {
 
 		private AbstractFile folder;
 		private boolean findWorkableFolder;
-		private boolean changeLockedTab;
+		private final boolean changeLockedTab;
 		private FileURL folderURL;
 		private AbstractFile fileToSelect;
 		private CredentialsMapping credentialsMapping;

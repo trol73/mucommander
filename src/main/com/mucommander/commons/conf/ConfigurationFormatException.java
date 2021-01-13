@@ -38,24 +38,16 @@ package com.mucommander.commons.conf;
  * @author Nicolas Rinaudo
  */
 public class ConfigurationFormatException extends ConfigurationException {
-    // - Class constants -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Describes an unknown {@link #getLineNumber() line} or {@link #getColumnNumber() column} value.*/
     public static final int UNKNOWN_LOCATION = -1;
 
 
-
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Line at which the error occurred. */
     private int line   = UNKNOWN_LOCATION;
     /** Column at which the error occurred. */
     private int column = UNKNOWN_LOCATION;
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new configuration format exception.
      * @param message the error message.
@@ -137,8 +129,6 @@ public class ConfigurationFormatException extends ConfigurationException {
     }
 
 
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Sets the position in the stream at which the error occurred.
      * @param line   line at which the error occurred.

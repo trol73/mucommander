@@ -30,7 +30,6 @@ public class JideSplitButton extends JideMenu implements ButtonStyle, ComponentS
 
     /**
      * @see #getUIClassID
-     * @see #readObject
      */
     private static final String uiClassID = "JideSplitButtonUI";
 

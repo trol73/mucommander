@@ -74,74 +74,82 @@ public abstract class AbstractFileFilter implements FileFilter {
         return !accept(file);
     }
 
-    public AbstractFile[] filter(AbstractFile files[]) {
+    public AbstractFile[] filter(AbstractFile[] files) {
         List<AbstractFile> filteredFilesV = new ArrayList<>();
         for (AbstractFile file : files) {
-            if (match(file))
+            if (match(file)) {
                 filteredFilesV.add(file);
+            }
         }
 
-        AbstractFile filteredFiles[] = new AbstractFile[filteredFilesV.size()];
+        AbstractFile[] filteredFiles = new AbstractFile[filteredFilesV.size()];
         filteredFilesV.toArray(filteredFiles);
         return filteredFiles;
     }
 
     public void filter(FileSet files) {
-        for(int i=0; i<files.size();) {
-            if(reject(files.elementAt(i)))
+        for (int i = 0; i < files.size();) {
+            if (reject(files.elementAt(i))) {
                 files.removeElementAt(i);
-            else
+            } else {
                 i++;
+            }
         }
     }
 
-    public boolean match(AbstractFile files[]) {
-        for (AbstractFile file : files)
-            if (!match(file))
+    public boolean match(AbstractFile[] files) {
+        for (AbstractFile file : files) {
+            if (!match(file)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
     public boolean match(FileSet files) {
         int nbFiles = files.size();
-        for(int i=0; i<nbFiles; i++)
-            if(!match(files.elementAt(i)))
+        for (int i=0; i<nbFiles; i++) {
+            if (!match(files.elementAt(i))) {
                 return false;
-
+            }
+        }
         return true;
     }
 
-    public boolean accept(AbstractFile files[]) {
-        for (AbstractFile file : files)
-            if (!accept(file))
+    public boolean accept(AbstractFile[] files) {
+        for (AbstractFile file : files) {
+            if (!accept(file)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
     public boolean accept(FileSet files) {
         int nbFiles = files.size();
-        for(int i=0; i<nbFiles; i++)
-            if(!accept(files.elementAt(i)))
+        for (int i=0; i<nbFiles; i++) {
+            if (!accept(files.elementAt(i))) {
                 return false;
-
+            }
+        }
         return true;
     }
 
-    public boolean reject(AbstractFile files[]) {
-        for (AbstractFile file : files)
-            if (!reject(file))
+    public boolean reject(AbstractFile[] files) {
+        for (AbstractFile file : files) {
+            if (!reject(file)) {
                 return false;
-
+            }
+        }
         return true;
     }
 
     public boolean reject(FileSet files) {
         int nbFiles = files.size();
-        for(int i=0; i<nbFiles; i++)
-            if(!reject(files.elementAt(i)))
+        for (int i = 0; i < nbFiles; i++)
+            if (!reject(files.elementAt(i))) {
                 return false;
+            }
 
         return true;
     }

@@ -29,15 +29,10 @@ import java.util.Stack;
  * @author Nicolas Rinaudo
  */
 class BufferedConfigurationExplorer extends ConfigurationExplorer {
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Sections that have been passed through. */
     private final Stack<ConfigurationSection> sections = new Stack<>();
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new explorer on the specified section.
      * @param root section from which to start exploring.
@@ -48,8 +43,6 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
 
 
 
-    // - History browsing ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if there are more sections in the history.
      * @return <code>true</code> if there are more sections in the history.
@@ -63,9 +56,6 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
     ConfigurationSection popSection() {return sections.pop();}
 
 
-
-    // - Exploration methods -------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Move to the specified section.
      * @param  name   name of the current section's subsection in which to move.

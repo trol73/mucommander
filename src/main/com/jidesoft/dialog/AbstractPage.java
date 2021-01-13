@@ -182,7 +182,6 @@ public abstract class AbstractPage extends JPanel implements Laziness {
         if ((getInvokeCondition() & INVOKE_ON_REPAINT) != 0) {
             initialize();
         }
-
         super.repaint(l, i1, i2, i3, i4);
     }
 
@@ -242,8 +241,7 @@ public abstract class AbstractPage extends JPanel implements Laziness {
      * @return all of the <code>PageListener</code>s added, or an empty array if no listeners have been added
      */
     public PageListener[] getPageListeners() {
-        return listenerList.getListeners(
-                PageListener.class);
+        return listenerList.getListeners(PageListener.class);
     }
 
     /**

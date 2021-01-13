@@ -42,15 +42,10 @@ import java.io.InputStream;
  * @author Nicolas Rinaudo
  */
 public class CommandReader extends DefaultHandler implements CommandsXmlConstants {
-    // - getInstance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Where to send building messages. */
-    private CommandBuilder builder;
+    private final CommandBuilder builder;
 
 
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new command reader.
      * @param b where to send custom command events.
@@ -61,8 +56,6 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
 
 
 
-    // - XML interaction -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Parses the content of the specified input stream.
      * <p>
@@ -93,8 +86,6 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
 
 
 
-    // - XML methods ---------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * This method is public as an implementation side effect and should not be called directly.
      */

@@ -170,17 +170,14 @@ public class BannerPanel extends JPanel {
         _titleLabel.setForeground(getTitleColor());
         if (getSubtitle() != null && getSubtitle().length() != 0) {
             _textPanel.add(_titleLabel, BorderLayout.BEFORE_FIRST_LINE);
-        }
-        else {
+        } else {
             _textPanel.add(_titleLabel, BorderLayout.CENTER);
         }
 
         if (getTitleIcon() == null && _iconComponent == null) {
             _iconComponent = new JLabel("");
-        }
-        else if (getTitleIcon() == null && _iconComponent != null) {
-        }
-        else {
+        } else if (getTitleIcon() == null && _iconComponent != null) {
+        } else {
             _iconComponent = new JLabel(getTitleIcon());
         }
         _iconComponent.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -189,53 +186,45 @@ public class BannerPanel extends JPanel {
         add(_textPanel, BorderLayout.CENTER);
         addIconComponent(_iconComponent);
 
-        _propertyListener = new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (_titleLabel != null && TITLE_PROPERTY.equals(evt.getPropertyName())) {
-                    _titleLabel.setText((String) evt.getNewValue());
+        _propertyListener = evt -> {
+            if (_titleLabel != null && TITLE_PROPERTY.equals(evt.getPropertyName())) {
+                _titleLabel.setText((String) evt.getNewValue());
+            }
+            else if (_subtitleLabel != null && SUBTITLE_PROPERTY.equals(evt.getPropertyName())) {
+                String text = (String) evt.getNewValue();
+                if (_subtitleLabel instanceof JTextArea) {
+                    ((JTextArea) _subtitleLabel).setText(text);
+                } else if (_subtitleLabel instanceof JLabel) {
+                    ((JLabel) _subtitleLabel).setText(text);
                 }
-                else if (_subtitleLabel != null && SUBTITLE_PROPERTY.equals(evt.getPropertyName())) {
-                    String text = (String) evt.getNewValue();
-                    if (_subtitleLabel instanceof JTextArea) {
-                        ((JTextArea) _subtitleLabel).setText(text);
-                    }
-                    else if (_subtitleLabel instanceof JLabel) {
-                        ((JLabel) _subtitleLabel).setText(text);
-                    }
-                    if (text != null && text.length() != 0) {
-                        _textPanel.add(_titleLabel, BorderLayout.BEFORE_FIRST_LINE);
-                        _textPanel.add(_subtitleLabel, BorderLayout.CENTER);
-                    }
-                    else {
-                        _textPanel.add(_titleLabel, BorderLayout.CENTER);
-                    }
+                if (text != null && text.length() != 0) {
+                    _textPanel.add(_titleLabel, BorderLayout.BEFORE_FIRST_LINE);
+                    _textPanel.add(_subtitleLabel, BorderLayout.CENTER);
+                } else {
+                    _textPanel.add(_titleLabel, BorderLayout.CENTER);
                 }
-                else if (ICON_PROPERTY.equals(evt.getPropertyName())) {
-                    if (_iconComponent instanceof JLabel) {
-                        ((JLabel) _iconComponent).setIcon(getTitleIcon());
-                    }
+            }
+            else if (ICON_PROPERTY.equals(evt.getPropertyName())) {
+                if (_iconComponent instanceof JLabel) {
+                    ((JLabel) _iconComponent).setIcon(getTitleIcon());
                 }
-                else if (ICON_COMPONENT_PROPERTY.equals(evt.getPropertyName())) {
-                    if (evt.getOldValue() instanceof JComponent) {
-                        _textPanel.remove((JComponent) evt.getOldValue());
-                    }
-                    if (evt.getNewValue() instanceof JComponent) {
-                        addIconComponent((JComponent) evt.getNewValue());
-                    }
+            } else if (ICON_COMPONENT_PROPERTY.equals(evt.getPropertyName())) {
+                if (evt.getOldValue() instanceof JComponent) {
+                    _textPanel.remove((JComponent) evt.getOldValue());
                 }
-                else if (PROPERTY_TITLE_FONT.equals(evt.getPropertyName())) {
-                    if (_titleLabel != null) {
-                        _titleLabel.setFont((Font) evt.getNewValue());
-                    }
+                if (evt.getNewValue() instanceof JComponent) {
+                    addIconComponent((JComponent) evt.getNewValue());
                 }
-                else if (PROPERTY_SUBTITLE_FONT.equals(evt.getPropertyName())) {
-                    if (_subtitleLabel != null) {
-                        _subtitleLabel.setFont((Font) evt.getNewValue());
-                    }
+            } else if (PROPERTY_TITLE_FONT.equals(evt.getPropertyName())) {
+                if (_titleLabel != null) {
+                    _titleLabel.setFont((Font) evt.getNewValue());
                 }
-                else if (PROPERTY_TITLE_ICON_LOCATION.equals(evt.getPropertyName())) {
-                    addIconComponent(_iconComponent);
+            } else if (PROPERTY_SUBTITLE_FONT.equals(evt.getPropertyName())) {
+                if (_subtitleLabel != null) {
+                    _subtitleLabel.setFont((Font) evt.getNewValue());
                 }
+            } else if (PROPERTY_TITLE_ICON_LOCATION.equals(evt.getPropertyName())) {
+                addIconComponent(_iconComponent);
             }
         };
         addPropertyChangeListener(_propertyListener);
@@ -332,8 +321,7 @@ public class BannerPanel extends JPanel {
         super.paintComponent(g);
         if (getStartColor() != null && getEndColor() != null) {
             JideSwingUtilities.fillGradient((Graphics2D) g, new Rectangle(0, 0, getWidth(), getHeight()), getStartColor(), getEndColor(), isVertical());
-        }
-        else if (getBackgroundPaint() != null) {
+        } else if (getBackgroundPaint() != null) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setPaint(getBackgroundPaint());
             g2d.fillRect(0, 0, getWidth(), getHeight());

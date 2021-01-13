@@ -54,10 +54,10 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.formats.pnm.PNMImageParser;
-import org.apache.sanselan.formats.psd.PsdImageParser;
-import org.apache.sanselan.formats.tiff.TiffImageParser;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.formats.pnm.PnmImageParser;
+import org.apache.commons.imaging.formats.psd.PsdImageParser;
+import org.apache.commons.imaging.formats.tiff.TiffImageParser;
 import ru.trolsoft.ui.TMenuSeparator;
 
 //import org.apache.commons.imaging.Imaging;
@@ -186,7 +186,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             //this.image = (BufferedImage) (new IcoImageParser().getAllBufferedImages(loadFile(file)).get(0));
         } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
             // TODO pBm raw format reading error
-            this.image = (BufferedImage) (new PNMImageParser().getAllBufferedImages(loadFile(file)).get(0));
+            this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).get(0);
         } else if ("svg".equals(ext)) {
             this.image = transcodeSVGDocument(file, 0, 0);
         } else {

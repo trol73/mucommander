@@ -53,7 +53,7 @@ public class GlobalLocationHistory extends LocationAdapter {
 	private static GlobalLocationHistory instance;
 	
 	/** Locations that were accessed */
-	private Set<FileURL> history = new LinkedHashSet<>();
+	private final Set<FileURL> history = new LinkedHashSet<>();
 	
 	/** Maximum number of location that would be saved */
 	private static final int MAX_CAPACITY = 100;

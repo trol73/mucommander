@@ -30,6 +30,7 @@ import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
 import com.mucommander.conf.TcSnapshot;
+import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.CloseWindowAction;
@@ -51,7 +52,7 @@ import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
 import com.mucommander.ui.terminal.TcTerminal;
-
+;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -156,6 +157,9 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
     private void init(FolderPanel leftFolderPanel, FolderPanel rightFolderPanel) {
         // Set the window icon
         setWindowIcon();
+
+        DesktopManager.customizeMainFrame(this);
+
         //initLookAndFeel();
 
         if (OsFamily.MAC_OS_X.isCurrent()) {

@@ -101,10 +101,6 @@ public abstract class LRUCache<K, V> {
     }
 
 
-    ///////////////////////
-    // Abstract methods //
-    ///////////////////////
-
     /**
      * Returns the cached object value corresponding to the given key and marks the cached item as the most
      * recently used one.
@@ -164,10 +160,6 @@ public abstract class LRUCache<K, V> {
     public abstract int size();
 
 
-    //////////////////
-    // Test methods //
-    //////////////////
-
     /**
      * Tests this LRUCache for corruption and throws a RuntimeException if something is wrong.
      */
@@ -179,7 +171,7 @@ public abstract class LRUCache<K, V> {
      *
      * @param args command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         LRUCache<Integer, Integer> cache;
         /*
         // Simple test case

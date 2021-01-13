@@ -28,8 +28,8 @@ import com.mucommander.commons.file.filter.AbstractFileFilter;
  * @author Nicolas Rinaudo
  */
 public class PermissionsFileFilter extends AbstractFileFilter implements PermissionTypes, PermissionAccesses {
-    private int permission;
-    private boolean filter;
+    private final int permission;
+    private final boolean filter;
 
     /**
      * Creates a new <code>PermissionsFileFilter</code>.
@@ -42,8 +42,6 @@ public class PermissionsFileFilter extends AbstractFileFilter implements Permiss
     }
 
     public boolean accept(AbstractFile file) {
-//        if(permission== EXECUTE_PERMISSION && JavaVersion.JAVA_1_5.isCurrentOrLower())
-//            return true;
         return filter == file.getPermissions().getBitValue(USER_ACCESS, permission);
     }
 

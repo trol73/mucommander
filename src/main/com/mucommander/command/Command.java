@@ -70,8 +70,6 @@ import java.util.List;
  * @see    com.mucommander.process.AbstractProcess
  */
 public class Command implements Comparable<Command> {
-    // - Keywords ------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Header of replacement keywords. */
     private static final char KEYWORD_HEADER                      = '$';
     /** Instances of this keyword will be replaced by the file's full path. */
@@ -88,9 +86,6 @@ public class Command implements Comparable<Command> {
     private static final char KEYWORD_NAME_WITHOUT_EXTENSION      = 'b';
 
 
-
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Command's alias. */
     private final String alias;
     /** Original command. */
@@ -104,8 +99,6 @@ public class Command implements Comparable<Command> {
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new command.
      * @param alias       alias of the command.
@@ -162,8 +155,6 @@ public class Command implements Comparable<Command> {
     }
 
 
-    // - Token retrieval -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns this command's tokens without performing keyword substitution.
      * @return this command's tokens without performing keyword substitution.
@@ -442,8 +433,8 @@ public class Command implements Comparable<Command> {
     }
 
     /**
-     * Returns the original, un-tokenised command.
-     * @return the original, un-tokenised command.
+     * Returns the original, un-tokenized command.
+     * @return the original, un-tokenized command.
      */
     public synchronized String getCommand() {
     	return command;

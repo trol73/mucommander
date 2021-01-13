@@ -35,26 +35,19 @@ import java.util.StringTokenizer;
  * @author Nicolas Rinaudo
  */
 public class ValueList extends ArrayList<String> {
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new <code>ValueList</code> initialised with the specified data.
      * @param data      data contained by the list.
      * @param separator string used to separate <code>data</code> in tokens.
      */
     public ValueList(String data, String separator) {
-        StringTokenizer tokenizer;
-
-        tokenizer = new StringTokenizer(data, separator);
+        StringTokenizer tokenizer = new StringTokenizer(data, separator);
         while(tokenizer.hasMoreTokens()) {
             add(tokenizer.nextToken());
         }
     }
 
 
-
-    // - Value casting -------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the value found at the specified index of the list as a string.
      * @param  index index of the value to retrieve.
@@ -133,8 +126,6 @@ public class ValueList extends ArrayList<String> {
 
 
 
-    // - Helper methods ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns a string representation of the specified list.
      * @param  data      values to represent as a string.

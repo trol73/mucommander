@@ -49,7 +49,11 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     /** Java 1.8.x */
     JAVA_1_8("1.8"),
     /** Java 1.9.x */
-    JAVA_1_9("1.9");
+    JAVA_1_9("1.9"),
+    /** Java 1.10.x */
+    JAVA_1_10("1.10"),
+    /** Java 1.9.x */
+    JAVA_1_11("1.11");
 
 
     /** Logger used by this class. */
@@ -76,9 +80,6 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     	this.stringRepresentation = stringRepresentation;
     }
 
-    ////////////////////
-    // Static methods //
-    ////////////////////
 
     /**
      * Returns <code>true</code> if the JVM architecture is amd64
@@ -125,7 +126,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
             }
         }
         // Newer version we don't know of yet, assume latest supported Java version
-        return JavaVersion.JAVA_1_9;
+        return JavaVersion.JAVA_1_11;
     }
 
     /**
@@ -137,29 +138,26 @@ public enum JavaVersion implements ComparableRuntimeProperty {
         return this == CURRENT_VALUE;
     }
 
-    //////////////////////////////////////////////
-    // ComparableRuntimeProperty implementation //
-    //////////////////////////////////////////////
 
+    @Override
 	public boolean isCurrentOrLower() {
 		return CURRENT_VALUE.compareTo(this) <= 0;
 	}
 
+	@Override
 	public boolean isCurrentLower() {
 		return CURRENT_VALUE.compareTo(this) < 0;
 	}
 
+	@Override
 	public boolean isCurrentOrHigher() {
 		return CURRENT_VALUE.compareTo(this) >= 0;
 	}
 
+	@Override
 	public boolean isCurrentHigher() {
 		return CURRENT_VALUE.compareTo(this) > 0;
 	}
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public String toString() {

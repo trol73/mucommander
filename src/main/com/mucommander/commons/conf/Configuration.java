@@ -68,8 +68,6 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 public class Configuration {
-    // - Class variables -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Used to get access to the configuration source's input and output streams. */
     private ConfigurationSource                                source;
     /** Used to create objects that will read from the configuration source. */
@@ -148,9 +146,6 @@ public class Configuration {
     }
 
 
-
-    // - Configuration source ------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Sets the source that will be used to read and write configuration information.
      * @param s new configuration source.
@@ -211,9 +206,6 @@ public class Configuration {
     }
 
 
-
-    // - Writer handling -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Sets the factory that will be used to create writer instances.
      * <p>

@@ -509,13 +509,14 @@ public class LocalFile extends ProtocolFile {
     }
 
     /**
-     * Parses <code>/proc/mounts</code> kernel virtual file, resolves all the mount points that look like regular
-     * filesystems it contains and adds them to the given <code>Vector</code>.
+     * Parses the output of <code>/sbin/mount -p</code> on FreeBSD or the <code>/proc/mounts</code> kernel virtual file
+     * otherwise, resolves all the mount points that look like regular filesystems it contains and adds them to
+     * the given <code>List</code>.
      *
-     * @param v the <code>Vector</code> to add mount points to
+     * @param list the <code>List</code> to add mount points to
      */
-    private static void addMountEntries(List<AbstractFile> v) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/proc/mounts")))) {
+    private static void addMountEntries(List<AbstractFile> list) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(streamMountPoints()))) {
             String line;
 
             // read each line in file and parse it
@@ -529,15 +530,22 @@ public class LocalFile extends ProtocolFile {
                 String fsType = st.nextToken();
                 if (isKnownFileSystem(fsType)) {
                     AbstractFile file = FileFactory.getFile(mountPoint);
-                    if (file != null && !v.contains(file)) {
-                        v.add(file);
+                    if (file != null && !list.contains(file)) {
+                        list.add(file);
                     }
                 }
             }
         } catch (Exception e) {
-            logger.warn("Error parsing /proc/mounts entries", e);
+            String warning = "Error parsing" + (OsFamily.FREEBSD.isCurrent() ? "/sbin/mount -p output" : "/proc/mounts entries");
+            logger.warn(warning, e);
         }
     }
+
+    private static InputStream streamMountPoints() throws IOException {
+        return OsFamily.FREEBSD.isCurrent() ?
+                new ProcessBuilder("/sbin/mount", "-p").start().getInputStream() : new FileInputStream("/proc/mounts");
+    }
+
 
     private static boolean isKnownFileSystem(String fsType) {
         for (String fs : KNOWN_UNIX_FS) {

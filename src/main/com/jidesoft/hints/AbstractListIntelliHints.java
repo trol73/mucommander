@@ -23,8 +23,8 @@ import java.util.Vector;
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
  * @author JIDE Software, Inc.
  */
-public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
-    private JList _list;
+public abstract class AbstractListIntelliHints<E> extends AbstractIntelliHints {
+    private JList<E> _list;
     protected KeyStroke[] _keyStrokes;
     private JideScrollPane _scroll;
 
@@ -76,20 +76,19 @@ public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
      *
      * @return the list.
      */
-    protected JList createList() {
-        return new JList() {
+    protected JList<E> createList() {
+        return new JList<E>() {
             @Override
             public int getVisibleRowCount() {
                 int size = getModel().getSize();
-                return size < super.getVisibleRowCount() ? size : super.getVisibleRowCount();
+                return Math.min(size, super.getVisibleRowCount());
             }
 
             @Override
             public Dimension getPreferredScrollableViewportSize() {
                 if (getModel().getSize() == 0) {
                     return new Dimension(0, 0);
-                }
-                else {
+                } else {
                     return super.getPreferredScrollableViewportSize();
                 }
             }
@@ -101,7 +100,7 @@ public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
      *
      * @return the list.
      */
-    protected JList getList() {
+    protected JList<E> getList() {
         return _list;
     }
 
@@ -110,7 +109,7 @@ public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
      *
      * @param objects
      */
-    protected void setListData(Object[] objects) {
+    protected void setListData(E[] objects) {
         if (getList() == null) {
             return;
         }
@@ -121,7 +120,6 @@ public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
         if (_scroll != null) {
             _scroll.setViewportView(getList());
         }
-
     }
 
     /**
@@ -129,7 +127,7 @@ public abstract class AbstractListIntelliHints extends AbstractIntelliHints {
      *
      * @param objects
      */
-    protected void setListData(Vector<?> objects) {
+    protected void setListData(Vector<E> objects) {
         if (getList() == null) {
             return;
         }

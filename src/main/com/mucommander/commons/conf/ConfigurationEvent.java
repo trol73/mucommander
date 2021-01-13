@@ -30,8 +30,6 @@ package com.mucommander.commons.conf;
  * @author Nicolas Rinaudo
  */
 public class ConfigurationEvent {
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Name of the variable that has been modified. */
     private final String        name;
     /** Variable's new value. */
@@ -40,9 +38,6 @@ public class ConfigurationEvent {
     private  final Configuration configuration;
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new configuration event.
      * <p>
@@ -64,9 +59,6 @@ public class ConfigurationEvent {
     }
 
 
-
-    // - Variable access -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the configuration to which the event relates.
      * @return the configuration to which the event relates.

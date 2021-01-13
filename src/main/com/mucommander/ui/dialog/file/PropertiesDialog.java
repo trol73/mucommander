@@ -27,14 +27,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.commons.file.AbstractFile;
@@ -46,6 +41,8 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.OSXFileUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
+import com.mucommander.commons.util.Pair;
+import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.FileJob;
 import com.mucommander.job.PropertiesJob;
 import com.mucommander.utils.text.SizeFormat;
@@ -150,6 +147,8 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
         sizePanel.add(new JLabel(dial = new SpinningDial()));
         labelPanel.addRow(i18n("size") + ":", sizePanel, 6);
 
+
+
 		// more information
 		lblLastMod = new JLabel("");
 		labelPanel.addRow("Last Modified" + ":", lblLastMod, 6);
@@ -198,6 +197,11 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
             commentLabel.setVerticalAlignment(SwingConstants.TOP);
 
             labelPanel.addRow(commentLabel, new MultiLineLabel(comment), 6);
+        }
+
+        if (isSingleFile && singleFile.hasAncestor(LocalFile.class)) {
+            List<Pair<JLabel, JComponent>> infos = DesktopManager.getExtendedFileProperties(singleFile);
+            infos.forEach(info -> labelPanel.addRow(info.first, info.second, 6));
         }
 
         updateLabels();

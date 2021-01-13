@@ -29,15 +29,10 @@ import java.util.NoSuchElementException;
  * @author Nicolas Rinaudo
  */
 public class ValueIterator implements Iterator<String> {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Wrapped iterator. */
     private final Iterator<String> iterator;
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new <code>ValueIterator</code> wrapping the specified <code>iterator</code>.
      * @param iterator iterator to wrap.
@@ -47,14 +42,12 @@ public class ValueIterator implements Iterator<String> {
     }
 
 
-
-    // - Iterator implementation ---------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the iteration has more elements.
      * (In other words, returns <code>true</code> if next would return an element rather than throwing an exception.)
      * @return <code>true</code> if the iteration has more elements.
      */
+    @Override
     public boolean hasNext() {
         return iterator.hasNext();
     }
@@ -64,6 +57,7 @@ public class ValueIterator implements Iterator<String> {
      * @return                        the next element in the iteration.
      * @throws NoSuchElementException if the iteration has no more elements.
      */
+    @Override
     public String next() {
         return iterator.next();
     }
@@ -71,14 +65,13 @@ public class ValueIterator implements Iterator<String> {
     /**
      * Throws an <code>UnsupportedOperationException</code>.
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }
 
 
 
-    // - Value casting -------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the next value in the iterator as a string.
      * @return                        the next value in the iterator as a string.

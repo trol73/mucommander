@@ -46,13 +46,13 @@ public class LocalLocationHistory {
 	private final static int HISTORY_CAPACITY = 100;
 
 	/** List of visited locations, ordered by last visit date */
-	private List<FileURL> history = new Vector<>(HISTORY_CAPACITY+1);
+	private final List<FileURL> history = new Vector<>(HISTORY_CAPACITY+1);
 
 	/** Index of current folder in history */
 	private int historyIndex = -1;
 
 	/** FolderPanel which is being monitored */
-	private FolderPanel folderPanel; 
+	private final FolderPanel folderPanel;
 
 	/** Last folder which can be recalled on next startup */
 	private String lastRecallableFolder;
@@ -168,7 +168,7 @@ public class LocalLocationHistory {
 		}
 
 		int backLen = historyIndex;
-		FileURL urls[] = new FileURL[backLen];
+		FileURL[] urls = new FileURL[backLen];
 
 		int cur = 0;
 		for (int i = historyIndex-1; i >= 0; i--) {
@@ -191,7 +191,7 @@ public class LocalLocationHistory {
 		}
 
 		int historySize = history.size();
-		FileURL urls[] = new FileURL[historySize-historyIndex-1];
+		FileURL[] urls = new FileURL[historySize-historyIndex-1];
 
 		int cur = 0;
 		for(int i=historyIndex+1; i<historySize; i++) {
