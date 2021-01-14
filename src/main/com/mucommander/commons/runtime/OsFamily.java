@@ -72,10 +72,6 @@ public enum OsFamily {
     }
 
 
-    ////////////////////
-    // Static methods //
-    ////////////////////
-
     /**
      * Returns the OS family of the current runtime environment.
      *
@@ -179,9 +175,6 @@ public enum OsFamily {
         return this == currentValue;
     }
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public String toString() {

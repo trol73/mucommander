@@ -273,7 +273,7 @@ class ConfigurationSection {
     public boolean removeSection(ConfigurationSection section) {
         Set<String> sectionNames = sectionNames();
 
-        // Goes through each key / value pair and checks whether we've found the sectioon
+        // Goes through each key / value pair and checks whether we've found the section
         // we were looking for.
         for (String name : sectionNames) {
             // If we have, remove it and break.
