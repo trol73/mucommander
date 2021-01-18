@@ -190,7 +190,13 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         if (old != null) {
             old.removeDocumentListener(this);
         }
-        super.setDocument(doc);
+        try {
+            super.setDocument(doc);
+        } catch (Exception e) {
+            // Sometime RSyntaxTextArea can crash for python files on code folding parsing
+            setCodeFoldingEnabled(false);
+            super.setDocument(doc);
+        }
         doc.addDocumentListener(this);
     }
 

@@ -40,7 +40,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
     /**
      * The main frame from which this frame was initiated
      */
-	private MainFrame mainFrame;
+	private final MainFrame mainFrame;
 	
     private Component returnFocusTo;
 
@@ -126,6 +126,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
                 @Override
                 public JComponent getTargetComponent(Exception e) {
                     if (e != null) {
+                        e.printStackTrace();
                         LOGGER.debug("Exception caught", e);
                         showGenericErrorDialog();
                         dispose();
@@ -172,10 +173,6 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
 		return (getExtendedState() & Frame.MAXIMIZED_BOTH) != 0;
 	}
 
-	////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
 
 
     @Override
@@ -218,17 +215,6 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
         return returnFocusTo;
     }
 
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
-    
-    protected abstract String getGenericErrorDialogTitle();
-
-    protected abstract String getGenericErrorDialogMessage();
-    
-    protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
-
     public void setSearchedText(String searchedText) {
         filePresenter.setSearchedText(searchedText);
     }
@@ -265,5 +251,15 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
     public Component nextFocusableComponent() {
         return this;
     }
+
+
+
+
+    protected abstract String getGenericErrorDialogTitle();
+
+    protected abstract String getGenericErrorDialogMessage();
+
+    protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
+
 
 }
