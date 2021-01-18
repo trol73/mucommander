@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 public class WebDAVFile extends ProtocolFile {
 
     private final Sardine sardine = SardineFactory.begin();
-    private URI PATH;
+    private final URI PATH;
 
     protected AbstractFile parent;
     private boolean parentSet;

@@ -673,10 +673,11 @@ public class UNCFile extends ProtocolFile {
                             while(st.hasMoreTokens()) {
                                 token = st.nextToken();
                                 char c = token.charAt(0);
-                                if(c>='0' && c<='9')
+                                if (c >= '0' && c <= '9') {
                                     freeSpace += token;
-                                else if(!freeSpace.isEmpty())
+                                } else if(!freeSpace.isEmpty()) {
                                     break;
+                                }
                             }
 
                             dfInfo[1] = Long.parseLong(freeSpace);

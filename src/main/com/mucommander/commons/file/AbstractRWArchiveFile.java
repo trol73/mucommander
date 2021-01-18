@@ -47,9 +47,6 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
     }
 
 
-    ////////////////////////////////////////
-    // AbstractArchiveFile implementation //
-    ////////////////////////////////////////
 
     /**
      * Returns <code>true</code>: <code>AbstractRWArchiveFile</code> implementations are by definition capable of adding
@@ -65,10 +62,6 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
         return true;
     }
 
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Adds the given entry to the archive and returns an <code>OutputStream</code> to write the entry's contents

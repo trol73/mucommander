@@ -47,13 +47,17 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      * Returns <code>true</code> if there are more sections in the history.
      * @return <code>true</code> if there are more sections in the history.
      */
-    boolean hasSections() {return !sections.empty();}
+    boolean hasSections() {
+        return !sections.empty();
+    }
 
     /**
      * Returns the next section in history.
      * @return the next section in history.
      */
-    ConfigurationSection popSection() {return sections.pop();}
+    ConfigurationSection popSection() {
+        return sections.pop();
+    }
 
 
     /**

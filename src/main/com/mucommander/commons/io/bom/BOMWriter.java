@@ -104,10 +104,6 @@ public class BOMWriter extends OutputStreamWriter {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public void write(int c) throws IOException {
         checkWriteBOM();

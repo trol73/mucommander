@@ -102,19 +102,20 @@ class Base64Table {
         for(c=0; c<256; c++)
             decodingTable[c] = -1;
 
-        // Fill the decoding table and snsure that characters are used only once
-        byte val;
-        for(int i=0; i<64; i++) {
-            val= table[i];
-            if(decodingTable[val]!=-1)
+        // Fill the decoding table and ensure that characters are used only once
+        for (int i = 0; i < 64; i++) {
+            byte val = table[i];
+            if (decodingTable[val] != -1) {
                 throw new IllegalArgumentException("Base64 table contains duplicate values");
+            }
 
             decodingTable[val] = i;
         }
 
         // Ensure that the padding character is not already used in the table
-        if(decodingTable[paddingChar]!=-1)
+        if (decodingTable[paddingChar] != -1) {
             throw new IllegalArgumentException("Padding char is already used in Base64 table");
+        }
 
         this.paddingChar = paddingChar;
 

@@ -46,10 +46,7 @@ public class FileOperationFilter extends AbstractFileFilter {
     }
 
 
-    ///////////////////////////////
-    // FileFilter implementation //
-    ///////////////////////////////
-
+    @Override
     public boolean accept(AbstractFile file) {
         return file.isFileOperationSupported(op);
     }

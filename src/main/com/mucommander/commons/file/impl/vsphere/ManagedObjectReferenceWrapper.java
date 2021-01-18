@@ -9,7 +9,7 @@ import com.vmware.vim25.ManagedObjectReference;
  *
  */
 public class ManagedObjectReferenceWrapper {
-	private ManagedObjectReference mor;
+	private final ManagedObjectReference mor;
 
 	public ManagedObjectReferenceWrapper(ManagedObjectReference mor) {
 		this.mor = mor;

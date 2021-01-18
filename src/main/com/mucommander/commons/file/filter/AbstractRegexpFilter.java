@@ -30,7 +30,7 @@ import java.util.regex.PatternSyntaxException;
 public abstract class AbstractRegexpFilter extends AbstractStringCriterionFilter {
 
     /** Pattern against which criteria values will be compared. */
-    private Pattern pattern;
+    private final Pattern pattern;
 
     /**
      * Creates a new <code>AbstractRegexpFilter</code> matching the specified regexp and operating in the specified
@@ -58,10 +58,6 @@ public abstract class AbstractRegexpFilter extends AbstractStringCriterionFilter
     }
 
 
-    ////////////////////////////////////
-    // CriterionFilter implementation //
-    ////////////////////////////////////
-
     /**
      * Returns <code>true</code> if the specified value matches the filter's regular expression.
      *
@@ -69,6 +65,7 @@ public abstract class AbstractRegexpFilter extends AbstractStringCriterionFilter
      * @return <code>true</code> if the specified value matches the filter's regular expression,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept(String value) {
         return pattern.matcher(value).matches();
     }

@@ -42,10 +42,6 @@ class CompatURLConnection extends URLConnection {
     }
 
 
-    //////////////////////////////////
-    // URLConnection implementation //
-    //////////////////////////////////
-
     /**
      * Creates the {@link AbstractFile} instance corresponding to the URL location, only if no <code>AbstractFile</code>
      * has been specified when this <code>CompatURLConnection</code> was created.
@@ -54,28 +50,22 @@ class CompatURLConnection extends URLConnection {
      */
     @Override
     public void connect() throws IOException {
-        if(!connected) {
+        if (!connected) {
             file = FileFactory.getFile(url.toString(), true);
             connected = true;
         }
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public InputStream getInputStream() throws IOException {
         checkConnected();
-
         return file.getInputStream();
     }
 
     @Override
     public OutputStream getOutputStream() throws IOException {
         checkConnected();
-
         return file.getOutputStream();
     }
 
@@ -83,10 +73,8 @@ class CompatURLConnection extends URLConnection {
     public long getLastModified() {
         try {
             checkConnected();
-
             return file.getLastModifiedDate();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return 0;
         }
     }
@@ -100,10 +88,8 @@ class CompatURLConnection extends URLConnection {
     public int getContentLength() {
         try {
             checkConnected();
-
             return (int)file.getSize();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return -1;
         }
     }

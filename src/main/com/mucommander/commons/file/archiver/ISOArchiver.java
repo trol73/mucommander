@@ -28,14 +28,14 @@ import java.util.logging.Logger;
  */
 public class ISOArchiver extends Archiver {
     private StreamHandler streamHandler;
-    private ISO9660Config config;
+    private final ISO9660Config config;
     private final ISO9660RootDirectory root;
     //Adds support for longer file names & wider range of characters
-    private boolean enableJoliet = true;
+    private final boolean enableJoliet = true;
     //Adds support for deeper directory hierarchies and even bigger file names (up to 255 bytes)
-    private boolean enableRockRidge = true;
+    private final boolean enableRockRidge = true;
     //Adds support for creation of bootable iso files (not implemented)
-    private boolean enableElTorito = false;
+    private final boolean enableElTorito = false;
     private MuCreateISO createISOProcess = null;
 
     ISOArchiver(AbstractFile file) {
@@ -67,9 +67,6 @@ public class ISOArchiver extends Archiver {
     }
 
 
-    /////////////////////////////
-    // Archiver implementation //
-    /////////////////////////////
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) {
         try {
@@ -158,7 +155,7 @@ public class ISOArchiver extends Archiver {
     
     @Override
     public void postProcess() throws IOException {
-        if (root.hasSubDirs() || !root.getFiles().isEmpty()){
+        if (root.hasSubDirs() || !root.getFiles().isEmpty()) {
             createISOProcess = new MuCreateISO(streamHandler, root);
 
             RockRidgeConfig rrConfig = null;

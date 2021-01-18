@@ -42,7 +42,7 @@ import com.vmware.vim25.VimService;
 public class VSphereClient implements Closeable {
 
 	private static final String TYPE_SERVICE_INSTANCE = "ServiceInstance";
-	private static Logger log = LoggerFactory.getLogger(VSphereClient.class);
+	private static final Logger log = LoggerFactory.getLogger(VSphereClient.class);
 
 	private final String server;
 	private final String user;

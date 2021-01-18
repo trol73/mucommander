@@ -27,10 +27,7 @@ public class PassThroughFileFilter extends AbstractFileFilter {
     }
 
 
-    ///////////////////////////////
-    // FileFilter implementation //
-    ///////////////////////////////
-
+    @Override
     public boolean accept(AbstractFile file) {
         return true;
     }

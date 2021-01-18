@@ -16,7 +16,7 @@ import java.io.OutputStream;
  */
 class ZipArchiver extends Archiver {
 
-    private ZipOutputStream zos;
+    private final ZipOutputStream zos;
     private boolean firstEntry = true;
 
 
@@ -37,9 +37,6 @@ class ZipArchiver extends Archiver {
     } 
 	
 
-    /////////////////////////////
-    // Archiver implementation //
-    /////////////////////////////
 
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
@@ -71,7 +68,7 @@ class ZipArchiver extends Archiver {
         }
 		
         // Return the OutputStream that allows to write to the entry, only if it isn't a directory 
-        return isDirectory?null:zos;
+        return isDirectory ? null : zos;
     }
 
 

@@ -20,7 +20,7 @@ public class ConnectionPool implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPool.class);
 
     /** Singleton instance */
-    private static ConnectionPool instance = new ConnectionPool();
+    private static final ConnectionPool instance = new ConnectionPool();
 
     /** List of registered ConnectionHandler */
     private final static List<ConnectionHandler> connectionHandlers = new ArrayList<>();
@@ -241,7 +241,7 @@ public class ConnectionPool implements Runnable {
      */
     private static class CloseConnectionThread extends Thread {
 
-        private ConnectionHandler connHandler;
+        private final ConnectionHandler connHandler;
 
         private CloseConnectionThread(ConnectionHandler connHandler) {
             this.connHandler = connHandler;

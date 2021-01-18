@@ -55,10 +55,6 @@ public class LstArchiveFile extends AbstractROArchiveFile {
     }
 
 
-    ////////////////////////////////////////
-    // AbstractArchiveFile implementation //
-    ////////////////////////////////////////
-
     @Override
     public ArchiveEntryIterator getEntryIterator() throws IOException {
         return new LstArchiveEntryIterator(getInputStream());

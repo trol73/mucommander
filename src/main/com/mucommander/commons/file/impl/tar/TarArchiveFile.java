@@ -64,10 +64,8 @@ public class TarArchiveFile extends AbstractROArchiveFile {
      * <code>0</code> to start at the first entry.
      * @return a TarInputStream which can be used to read TAR entries
      * @throws IOException if an error occurred while create the stream
-     * @throws UnsupportedFileOperationException if this operation is not supported by the underlying filesystem,
-     * or is not implemented.
      */
-    private TarInputStream createTarStream(long entryOffset) throws IOException, UnsupportedFileOperationException {
+    private TarInputStream createTarStream(long entryOffset) throws IOException {
         InputStream in = file.getInputStream();
 
         String name = getName();
@@ -115,14 +113,14 @@ public class TarArchiveFile extends AbstractROArchiveFile {
 
     @Override
     public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
-        if (entry.isDirectory())
+        if (entry.isDirectory()) {
             throw new IOException();
-
+        }
         // Optimization: first check if the specified iterator is positionned at the beginning of the entry.
         // This will typically be the case if an iterator is being used to read all the archive's entries
         // (unpack operation). In that case, we save the cost of looking for the entry in the archive, which is all
         // the more expensive if the TAR archive is GZipped.
-        if (entryIterator != null && (entryIterator instanceof TarEntryIterator)) {
+        if ((entryIterator instanceof TarEntryIterator)) {
             ArchiveEntry currentEntry = ((TarEntryIterator)entryIterator).getCurrentEntry();
             if (currentEntry.getPath().equals(entry.getPath())) {
                 // The entry/tar stream is wrapped in a FilterInputStream where #close is implemented as a no-op:
@@ -134,7 +132,6 @@ public class TarArchiveFile extends AbstractROArchiveFile {
                     }
                 };
             }
-
             // This is not the one, look for the entry from the beginning of the archive
         }
 

@@ -133,10 +133,6 @@ public class NFSFile extends ProtocolFile {
     }
 
 
-    /////////////////////////////////////////
-    // AbstractFile methods implementation //
-    /////////////////////////////////////////
-
     @Override
     public long getLastModifiedDate() {
         return file.lastModified();
@@ -164,11 +160,10 @@ public class NFSFile extends ProtocolFile {
         // Retrieve parent AbstractFile and cache it
         if (!parentValueSet) {
             FileURL parentURL = getURL().getParent();
-            if(parentURL != null) {
+            if (parentURL != null) {
                 parent = FileFactory.getFile(parentURL);
                 // Note: parent may be null if it can't be resolved
             }
-
             parentValueSet = true;
         }
         return parent;
@@ -303,8 +298,9 @@ public class NFSFile extends ProtocolFile {
     public void delete() throws IOException {
         boolean ret = file.delete();
 
-        if(!ret)
+        if (!ret) {
             throw new IOException();
+        }
     }
 
     /**
@@ -388,7 +384,7 @@ public class NFSFile extends ProtocolFile {
             baseURLPath += SEPARATOR;
         }
 
-        for (int i=0; i<names.length; i++) {
+        for (int i = 0; i < names.length; i++) {
             // Clone this file's URL with the connection properties and set the child file's path
             childURL = (FileURL)fileURL.clone();
             childURL.setPath(baseURLPath+names[i]);
@@ -498,11 +494,13 @@ public class NFSFile extends ProtocolFile {
         public void setLength(long newLength) throws IOException {
             // This operation is supported only if the new length is greater (or equal) than the current length
             long currentLength = getLength();
-            if(newLength<currentLength)
+            if (newLength < currentLength) {
                 throw new IOException();
+            }
 
-            if(newLength==currentLength)
+            if (newLength == currentLength) {
                 return;
+            }
 
             // Extend the file's length by seeking to the end and writing a byte
             seek(newLength-1);

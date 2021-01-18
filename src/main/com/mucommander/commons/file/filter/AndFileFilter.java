@@ -49,10 +49,6 @@ public class AndFileFilter extends ChainedFileFilter {
     }
 
 
-    
-    ///////////////////////////////
-    // FileFilter implementation //
-    ///////////////////////////////
 
     /**
      * Calls {@link #match(com.mucommander.commons.file.AbstractFile)} on each of the registered filters, and returns
@@ -63,6 +59,7 @@ public class AndFileFilter extends ChainedFileFilter {
      * @param file the file to test against the registered filters
      * @return if the file was matched by all filters, false if one of them didn't 
      */
+    @Override
     public boolean accept(AbstractFile file) {
         for (FileFilter filter : filters) {
             if (!filter.match(file)) {

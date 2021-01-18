@@ -32,7 +32,7 @@ import java.io.InputStream;
 public class Base64InputStream extends InputStream {
 
     /** Underlying stream data is read from */
-    private InputStream in;
+    private final InputStream in;
 
     /** The Base64 decoding table */
     private final int[] decodingTable;
@@ -41,7 +41,7 @@ public class Base64InputStream extends InputStream {
     private final byte paddingChar;
 
     /** Decoded bytes available for reading */
-    private int readBuffer[] = new int[3];
+    private final int[] readBuffer = new int[3];
 
     /** Index of the next byte available for reading in the buffer */
     private int readOffset;
@@ -50,7 +50,7 @@ public class Base64InputStream extends InputStream {
     private int bytesLeft;
 
     /** Buffer used temporarily for decoding */
-    private int decodeBuffer[] = new int[4];
+    private final int[] decodeBuffer = new int[4];
 
 
     /**
@@ -77,18 +77,14 @@ public class Base64InputStream extends InputStream {
     }
 
 
-    ////////////////////////////////
-    // InputStream implementation //
-    ////////////////////////////////
-
     @Override
     public int read() throws IOException {
         // Read buffer empty: read and decode a new base64-encoded 4-byte group
-        if(bytesLeft==0) {
+        if (bytesLeft == 0) {
             int read;
             int nbRead = 0;
 
-            while(nbRead<4) {
+            while (nbRead<4) {
                 read = in.read();
                 // EOF reached
                 if(read==-1) {
@@ -118,12 +114,12 @@ public class Base64InputStream extends InputStream {
             readBuffer[bytesLeft++] = ((decodeBuffer[0]<<2)&0xFC | ((decodeBuffer[1]>>4)&0x03));
 
             // Test if the character is not a padding character
-            if(decodeBuffer[2]!=-1) {
+            if (decodeBuffer[2]!=-1) {
                 // Decode byte 1
                 readBuffer[bytesLeft++] = (decodeBuffer[1]<<4)&0xF0 | ((decodeBuffer[2]>>2)&0x0F);
 
                 // Test if the character is a padding character
-                if(decodeBuffer[3]!=-1)
+                if (decodeBuffer[3]!=-1)
                     // Decode byte 2
                     readBuffer[bytesLeft++] = ((decodeBuffer[2]<<6)&0xC0) | (decodeBuffer[3]&0x3F);
             }

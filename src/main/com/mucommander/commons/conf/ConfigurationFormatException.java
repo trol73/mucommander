@@ -107,7 +107,9 @@ public class ConfigurationFormatException extends ConfigurationException {
      * @param message the detail message.
      * @param cause   the exception to be wrapped in a <code>ConfigurationFormatException</code>.
      */
-    public ConfigurationFormatException(String message, Throwable cause) {super(message, cause);}
+    public ConfigurationFormatException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
     /**
      * Creates a new configuration format exception from an existing exception.

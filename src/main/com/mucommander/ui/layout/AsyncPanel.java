@@ -176,11 +176,7 @@ public abstract class AsyncPanel extends JPanel {
         return tempPanel;
     }
 
-
-    /////////////////////////
-    // Overridable methods //
-    /////////////////////////
-
+    
     /**
      * Packs the parent Window that contains this component, if any. This method is called once the target component
      * has been made initialized and added to this panel. This method can be overridden by subclasses if additional work

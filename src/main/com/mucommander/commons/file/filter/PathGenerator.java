@@ -10,10 +10,7 @@ import com.mucommander.commons.file.AbstractFile;
  */
 public class PathGenerator implements CriterionValueGenerator<String> {
 
-    ////////////////////////////////////////////
-    // CriterionValueGenerator implementation //
-    ////////////////////////////////////////////
-
+    @Override
     public String getCriterionValue(AbstractFile file) {
         return file.getPath();
     }

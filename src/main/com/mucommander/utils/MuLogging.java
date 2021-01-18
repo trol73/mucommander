@@ -181,7 +181,7 @@ public class MuLogging {
 		updateLogLevel(getLogLevel());
 	}
 	
-	private static Appender[] createAppenders(LoggerContext loggerContext) {
+	private static Appender<ILoggingEvent>[] createAppenders(LoggerContext loggerContext) {
 		Layout<ILoggingEvent> layout = new CustomLoggingLayout();
 
 		consoleAppender = createConsoleAppender(loggerContext, layout);

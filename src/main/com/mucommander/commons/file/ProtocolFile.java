@@ -14,10 +14,6 @@ public abstract class ProtocolFile extends AbstractFile {
     }
     
 
-    /////////////////////////////////////////
-    // Partial AbstractFile implementation //
-    /////////////////////////////////////////
-
     /**
      * This implementation always returns <code>false</code>.
      *

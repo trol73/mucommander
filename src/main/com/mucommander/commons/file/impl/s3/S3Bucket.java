@@ -19,8 +19,8 @@ import java.io.OutputStream;
 public class S3Bucket extends S3File {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3File.class);
 
-    private String bucketName;
-    private S3BucketFileAttributes atts;
+    private final String bucketName;
+    private final S3BucketFileAttributes atts;
 
     // TODO: add support for ACL ? (would cost an extra request per bucket)
     /** Default permissions for S3 buckets */
@@ -34,7 +34,7 @@ public class S3Bucket extends S3File {
         atts = new S3BucketFileAttributes();
     }
 
-    protected S3Bucket(FileURL url, S3Service service, org.jets3t.service.model.S3Bucket bucket) throws AuthException {
+    protected S3Bucket(FileURL url, S3Service service, org.jets3t.service.model.S3Bucket bucket) {
         super(url, service);
 
         this.bucketName = bucket.getName();
@@ -42,19 +42,12 @@ public class S3Bucket extends S3File {
     }
 
 
-    ///////////////////////////
-    // S3File implementation //
-    ///////////////////////////
 
     @Override
     public FileAttributes getFileAttributes() {
         return atts;
     }
 
-
-    /////////////////////////////////
-    // ProtocolFile implementation //
-    /////////////////////////////////
 
     @Override
     public String getOwner() {
@@ -75,8 +68,7 @@ public class S3Bucket extends S3File {
     public void delete() throws IOException {
         try {
             service.deleteBucket(bucketName);
-        }
-        catch(S3ServiceException e) {
+        } catch(S3ServiceException e) {
             throw getIOException(e);
         }
     }
@@ -85,8 +77,7 @@ public class S3Bucket extends S3File {
     public void mkdir() throws IOException {
         try {
             service.createBucket(bucketName);
-        }
-        catch(S3ServiceException e) {
+        } catch(S3ServiceException e) {
             throw getIOException(e);
         }
     }
@@ -152,10 +143,6 @@ public class S3Bucket extends S3File {
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     /**
      * S3BucketFileAttributes provides getters and setters for S3 bucket attributes. By extending
      * <code>SyncedFileAttributes</code>, this class caches attributes for a certain amount of time
@@ -197,18 +184,16 @@ public class S3Bucket extends S3File {
                 // Note: unlike getObjectDetails, getBucket returns null when the bucket does not exist
                 // (that is because the corresponding request is a GET on the root resource, not a HEAD on the bucket).
                 bucket = service.getBucket(bucketName);
-            }
-            catch(S3ServiceException ex) {
+            } catch(S3ServiceException ex) {
                 e = ex;
                 bucket = null;
             }
 
-            if(bucket!=null) {
+            if (bucket!=null) {
                 // Bucket exists
                 setExists(true);
                 setAttributes(bucket);
-            }
-            else {
+            } else {
                 // Bucket doesn't exist on the server, or could not be retrieved
                 setExists(false);
 
@@ -217,22 +202,18 @@ public class S3Bucket extends S3File {
                 setPermissions(FilePermissions.EMPTY_FILE_PERMISSIONS);
                 setOwner(null);
 
-                if(e!=null)
+                if (e != null) {
                     handleAuthException(e, fileURL);
+                }
             }
         }
 
-
-        /////////////////////////////////////////
-        // SyncedFileAttributes implementation //
-        /////////////////////////////////////////
 
         @Override
         public void updateAttributes() {
             try {
                 fetchAttributes();
-            }
-            catch(Exception e) {        // AuthException
+            } catch(Exception e) {        // AuthException
                 LOGGER.info("Failed to update attributes", e);
             }
         }

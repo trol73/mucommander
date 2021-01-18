@@ -43,14 +43,12 @@ public class AbstractEqualsFilter extends AbstractStringCriterionFilter {
     }
 
 
-    //////////////////////////////////////////////////
-    // AbstractStringCriterionFilter implementation //
-    //////////////////////////////////////////////////
 
+    @Override
     public boolean accept(String value) {
-        if(isCaseSensitive())
+        if (isCaseSensitive()) {
             return value.equals(s);
-
+        }
         return value.equalsIgnoreCase(s);
     }
 }

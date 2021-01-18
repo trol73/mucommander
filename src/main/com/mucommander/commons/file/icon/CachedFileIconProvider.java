@@ -56,11 +56,11 @@ public class CachedFileIconProvider implements FileIconProvider {
      *
      * <p><b>If the file icon is cacheable</b>, {@link CacheableFileIconProvider#lookupCache(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * is called to look for a previously cached icon. If a value is found, it is returned. If not,
-     * {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} is called on the <code>CacheableFileIconProvider</code>
+     * {#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} is called on the <code>CacheableFileIconProvider</code>
      * to retrieve the icon. This icon is then added to the cache by calling
      * {@link CacheableFileIconProvider#addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon, java.awt.Dimension)}.
      *
-     * <p><b>If the file icon is not cacheable</b>, {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
+     * <p><b>If the file icon is not cacheable</b>, {#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * is simply called on the <code>CacheableFileIconProvider</code> and its value returned.
      */
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {

@@ -36,15 +36,10 @@ public class AbstractFileClassLoader extends ClassLoader {
     private final static org.slf4j.Logger LOGGER = null;//org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
 
 	
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** All abstract files in which to look for classes and resources. */
-    private Vector<AbstractFile> files;
+    private final Vector<AbstractFile> files;
 
 
-
-    // - Initialisation -------------------------------------------------------
-    // ------------------------------------------------------------------------
     /**
      * Creates a new <code>AbstractFileClassLoader</code>.
      * @param parent parent of the class loader.
@@ -62,9 +57,6 @@ public class AbstractFileClassLoader extends ClassLoader {
     }
 
 
-
-    // - File list access ------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Adds the specified <code>file</code> to the class loader's classpath.
      * <p>
@@ -78,7 +70,6 @@ public class AbstractFileClassLoader extends ClassLoader {
         if (!file.isBrowsable()) {
             throw new IllegalArgumentException();
         }
-
         // Only adds the file if it's not already there.
         if (!contains(file)) {
             files.add(file);

@@ -31,7 +31,7 @@ import com.mucommander.commons.util.StringUtils;
 public class AbstractExtensionFilter extends AbstractStringCriterionFilter {
 
     /** File extensions to match against criterion values */
-    private char[][] extensions;
+    private final char[][] extensions;
 
     /**
      * Creates a new <code>AbstractExtensionFilter</code> using the specified generator and string, and operating in the
@@ -52,10 +52,7 @@ public class AbstractExtensionFilter extends AbstractStringCriterionFilter {
     }
 
 
-    //////////////////////////////////////////////////
-    // AbstractStringCriterionFilter implementation //
-    //////////////////////////////////////////////////
-
+    @Override
     public boolean accept(String value) {
         return isCaseSensitive() ? containsCaseSensitive(value) : containsIgnoreCase(value);
     }

@@ -28,7 +28,7 @@ import com.mucommander.commons.util.StringUtils;
 public class AbstractStartsWithFilter extends AbstractStringCriterionFilter {
 
     /** The string to match against criterion values */
-    private String s;
+    private final String s;
 
     /**
      * Creates a new <code>AbstractStartsWithFilter</code> using the specified generator and string, and operating in the
@@ -45,14 +45,12 @@ public class AbstractStartsWithFilter extends AbstractStringCriterionFilter {
     }
 
 
-    //////////////////////////////////////////////////
-    // AbstractStringCriterionFilter implementation //
-    //////////////////////////////////////////////////
 
+    @Override
     public boolean accept(String value) {
-        if(isCaseSensitive())
+        if (isCaseSensitive()) {
             return value.startsWith(s);
-
+        }
         return StringUtils.startsWithIgnoreCase(value, s);
     }
 }
