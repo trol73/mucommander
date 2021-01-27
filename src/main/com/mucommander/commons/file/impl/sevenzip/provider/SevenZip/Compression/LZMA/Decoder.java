@@ -239,7 +239,7 @@ public class Decoder
     
     // #endif // _ST_MODE
     
-    void Init() throws IOException {
+    void Init() {
         m_OutWindow.Init(false);
         
         com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsMatchDecoders);

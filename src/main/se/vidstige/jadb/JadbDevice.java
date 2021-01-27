@@ -8,10 +8,10 @@ import java.util.List;
 
 public class JadbDevice {
     public enum State {
-        Unknown,
-        Offline,
-        Device,
-        BootLoader
+        UNKNOWN,
+        OFFLINE,
+        DEVICE,
+        BOOTLOADER
     }
 
     private final String serial;
@@ -33,10 +33,14 @@ public class JadbDevice {
 
     private State convertState(String type) {
         switch (type) {
-            case "device":     return State.Device;
-            case "offline":    return State.Offline;
-            case "bootloader": return State.BootLoader;
-            default:           return State.Unknown;
+            case "device":
+                return State.DEVICE;
+            case "offline":
+                return State.OFFLINE;
+            case "bootloader":
+                return State.BOOTLOADER;
+            default:
+                return State.UNKNOWN;
         }
     }
 
@@ -71,9 +75,9 @@ public class JadbDevice {
         return state;
     }
 
-    /** <p>Execute a shell command.</p>
+    /** <p>Execute a shell command.
      *
-     * <p>For Lollipop and later see: {@link #execute(String, String...)}</p>
+     * <p>For Lollipop and later see: {@link #execute(String, String...)}
      *
      * @param command main command to run. E.g. "ls"
      * @param args arguments to the command.
@@ -105,11 +109,11 @@ public class JadbDevice {
         }
     }
 
-    /** <p>Execute a command with raw binary output.</p>
+    /** <p>Execute a command with raw binary output.
      *
      * <p>Support for this command was added in Lollipop (Android 5.0), and is the recommended way to transmit binary
      * data with that version or later. For earlier versions of Android, use
-     * {@link #executeShell(String, String...)}.</p>
+     * {@link #executeShell(String, String...)}.
      *
      * @param command main command to run, e.g. "screencap"
      * @param args arguments to the command, e.g. "-p".
@@ -139,6 +143,7 @@ public class JadbDevice {
         }
         return shellLine;
     }
+
 
     public List<RemoteFile> list(String remotePath) throws IOException, JadbException {
         Transport transport = getTransport();
@@ -216,10 +221,7 @@ public class JadbDevice {
             return false;
         JadbDevice other = (JadbDevice) obj;
         if (serial == null) {
-            if (other.serial != null)
-                return false;
-        } else if (!serial.equals(other.serial))
-            return false;
-        return true;
+            return other.serial == null;
+        } else return serial.equals(other.serial);
     }
 }

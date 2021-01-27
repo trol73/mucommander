@@ -30,7 +30,7 @@ import java.util.Map;
  * and that is enabled only when a file other than the parent folder file '..' is selected.
  *
  * <p>Optionally, a FileFilter can be specified using {@link #setSelectedFileFilter(com.mucommander.commons.file.filter.FileFilter) setSelectedFileFilter}
- * to further restrict the enabled condition to files that match the IMAGE_FILTER.</p>
+ * to further restrict the enabled condition to files that match the IMAGE_FILTER.
  *
  * @author Maxence Bernard
  */
@@ -62,7 +62,7 @@ public abstract class SelectedFileAction extends FileAction {
     @Override
     protected boolean getFileTableCondition(FileTable fileTable) {
         AbstractFile selectedFile = fileTable.getSelectedFile(false, true);
-        boolean enable = selectedFile!=null;
+        boolean enable = selectedFile != null;
 
         if (enable && filter != null) {
             enable = filter.match(selectedFile);

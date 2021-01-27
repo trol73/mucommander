@@ -61,8 +61,7 @@ public class RetinaImageIcon extends ImageIcon {
                     isRetina = true;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
         return isRetina;
     }

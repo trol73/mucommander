@@ -62,9 +62,10 @@ public class StressTester implements Runnable, ActionListener {
         Random random = new Random();
         MainFrame mainFrame = WindowManager.getCurrentMainFrame();
 
-        while(run) {
-            if(random.nextInt(2)==0)
-                ActionManager.performAction(com.mucommander.ui.action.impl.SwitchActiveTableAction.Descriptor.ACTION_ID, mainFrame);    
+        while (run) {
+            if(random.nextInt(2)==0) {
+                ActionManager.performAction(com.mucommander.ui.action.impl.SwitchActiveTableAction.Descriptor.ACTION_ID, mainFrame);
+            }
 
             FolderPanel folderPanel = mainFrame.getActivePanel();
             FileTable fileTable = mainFrame.getActiveTable();
@@ -95,8 +96,7 @@ public class StressTester implements Runnable, ActionListener {
             LOGGER.trace("Sleeping for a bit...");
             try {
                 Thread.sleep(100+random.nextInt(200));
-            }
-            catch(InterruptedException e) {
+            } catch(InterruptedException e) {
                 LOGGER.debug("Caught InterruptedException", e);
             }
         }
@@ -109,9 +109,8 @@ public class StressTester implements Runnable, ActionListener {
     /**
      * Method used to start the stress tester.
      * @param args command line arguments.
-     * @throws IOException if an unrecoverable error occurred during startup
      */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         TrolCommander.main(args);
 
         StressTester instance = new StressTester();

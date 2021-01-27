@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -87,10 +87,6 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
         g.drawString(getText(), (getWidth() - metrics.stringWidth(getText())) / 2, (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent());
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public void setForeground(Color color) {

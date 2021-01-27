@@ -42,7 +42,7 @@ public class KeyStrokeUtils {
      * <code>modifier+modifier+...+key</code>
      *
      * <p>For example, <code>KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK|InputEvent.ALT_MASK)</code>
-     * will return <code>Ctrl+Alt+C</code>.</p>
+     * will return <code>Ctrl+Alt+C</code>.
      *
      * @param ks the KeyStroke for which to return a String representation
      * @return a String representation of the given KeyStroke for display, in the <code>[modifier]+[modifier]+...+key</code> format
@@ -52,23 +52,24 @@ public class KeyStrokeUtils {
 	}
 	
 	/**
-     * Returns a String representation for the given KeyStroke <bold>for display</bold>, in the following format:<br>
+     * Returns a String representation for the given KeyStroke <b>for display</b>, in the following format:<br>
      * <code>modifier+modifier+...+key</code>
      *
      * <p>For example, <code>KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK|InputEvent.ALT_MASK)</code>
-     * will return <code>Ctrl+Alt+C</code>.</p>
+     * will return <code>Ctrl+Alt+C</code>.
      *
      * @param ks the KeyStroke for which to return a String representation
-     * @return a String representation of the given KeyStroke <bold>for display</bold>, in the <code>[modifier]+[modifier]+...+key</code> format
+     * @return a String representation of the given KeyStroke <b>for display</b>, in the <code>[modifier]+[modifier]+...+key</code> format
      */
     public static String getKeyStrokeDisplayableRepresentation(KeyStroke ks) {
-    	if (ks == null)
-    		return null;
+    	if (ks == null) {
+            return null;
+        }
     	
         int modifiers = ks.getModifiers();
         String keyText = KeyEvent.getKeyText(ks.getKeyCode());
 
-        if(modifiers!=0) {
+        if (modifiers != 0) {
             return getModifiersDisplayableRepresentation(modifiers)+"+"+keyText;
         }
         return keyText;
@@ -76,42 +77,53 @@ public class KeyStrokeUtils {
 
     /**
      * Returns a String representations of the given modifiers bitwise mask, in the following format:<br>
-     * <code>modifier+...+modifier
+     * <code>modifier+...+modifier</code>
      *
      * <p>The modifiers' order in the returned String tries to mimick the keyboard layout of the current platform as
      * much as possible:
-     * <ul>
+     *
+     * <p><ul>
      *  <li>Under Mac OS X, the order is: <code>Shift, Ctrl, Alt, Meta</code>
      *  <li>Under other platforms, the order is <code>Shift, Ctrl, Meta, Alt</code>
-     * </ul>
+     * </ul><p>
      *
      * @param modifiers a modifiers bitwise mask
      * @return a String representations of the given modifiers bitwise mask
      */
     public static String getModifiersDisplayableRepresentation(int modifiers) {
-        String modifiersString = "";
+        StringBuilder result = new StringBuilder();
 
-        if((modifiers&KeyEvent.SHIFT_MASK)!=0)
-            modifiersString += SHIFT_MODIFIER_STRING;
-
-        if((modifiers&KeyEvent.CTRL_MASK)!=0)
-            modifiersString += (modifiersString.equals("")?"":"+")+CTRL_MODIFIER_STRING;
-
-        if(OsFamily.MAC_OS_X.isCurrent()) {
-            if((modifiers&KeyEvent.ALT_MASK)!=0)
-                modifiersString += (modifiersString.equals("")?"":"+")+ALT_MODIFIER_STRING;
-
-            if((modifiers&KeyEvent.META_MASK)!=0)
-                modifiersString += (modifiersString.equals("")?"":"+")+META_MODIFIER_STRING;
-        }
-        else {
-            if((modifiers&KeyEvent.META_MASK)!=0)
-                modifiersString += (modifiersString.equals("")?"":"+")+META_MODIFIER_STRING;
-
-            if((modifiers&KeyEvent.ALT_MASK)!=0)
-                modifiersString += (modifiersString.equals("")?"":"+")+ALT_MODIFIER_STRING;
+        if ((modifiers&KeyEvent.SHIFT_MASK) != 0) {
+            result.append(SHIFT_MODIFIER_STRING);
         }
 
-        return modifiersString;
+        if ((modifiers&KeyEvent.CTRL_MASK) != 0) {
+            appendModifier(result, CTRL_MODIFIER_STRING);
+        }
+
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            if ((modifiers&KeyEvent.ALT_MASK) != 0) {
+                appendModifier(result, ALT_MODIFIER_STRING);
+            }
+            if ((modifiers&KeyEvent.META_MASK) != 0) {
+                appendModifier(result, META_MODIFIER_STRING);
+            }
+        } else {
+            if ((modifiers&KeyEvent.META_MASK) != 0) {
+                appendModifier(result, META_MODIFIER_STRING);
+            }
+            if ((modifiers&KeyEvent.ALT_MASK) != 0) {
+                appendModifier(result, ALT_MODIFIER_STRING);
+            }
+        }
+
+        return result.toString();
+    }
+
+    private static void appendModifier(StringBuilder sb, String s) {
+        if (sb.length() != 0) {
+            sb.append('+');
+        }
+        sb.append(s);
     }
 }

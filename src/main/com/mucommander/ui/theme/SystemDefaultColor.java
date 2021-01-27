@@ -49,44 +49,44 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
     // - Fallbacks -----------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Foreground color used in case no system default could be identified. */
-    public static Color DEFAULT_FOREGROUND           = Color.BLACK;
+    private static final Color DEFAULT_FOREGROUND           = Color.BLACK;
     /** Background color used in case no system default could be identified. */
-    public static Color DEFAULT_BACKGROUND           = Color.WHITE;
+    private static final Color DEFAULT_BACKGROUND           = Color.WHITE;
     /** Selection foreground color used in case no system default could be identified. */
-    public static Color DEFAULT_SELECTION_FOREGROUND = Color.WHITE;
+    private static final Color DEFAULT_SELECTION_FOREGROUND = Color.WHITE;
     /** Selection background color used in case no system default could be identified. */
-    public static Color DEFAULT_SELECTION_BACKGROUND = Color.BLUE;
+    private static final Color DEFAULT_SELECTION_BACKGROUND = Color.BLUE;
 
 
 
     // - Color types ---------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Identifies a foreground color (linked to {@link JComponent#getForeground()}). */
-    public static final int FOREGROUND = 1;
+    static final int FOREGROUND = 1;
     /** Identifies a background color (linked to {@link JComponent#getBackground()}). */
-    public static final int BACKGROUND = 2;
+    static final int BACKGROUND = 2;
     /** Identifies a selection foreground color (linked to {@link JTextComponent#getSelectedTextColor()}). */
-    public static final int SELECTION_FOREGROUND = 3;
+    static final int SELECTION_FOREGROUND = 3;
     /** Identifies a selection background color (linked to {@link JTextComponent#getSelectionColor()}). */
-    public static final int SELECTION_BACKGROUND = 4;
+    static final int SELECTION_BACKGROUND = 4;
     /** Identifies a current line background color. */
-    public static final int CURRENT_LINE_BACKGROUND = 5;
+    static final int CURRENT_LINE_BACKGROUND = 5;
 
 
 
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** {@link UIManager} property to look for. */
-    private String          property;
+    private final String property;
     /**
      * Type of the default color (can be one of {@link #FOREGROUND}, {@link #BACKGROUND}, {@link #SELECTION_FOREGROUND}
      * or {@link #SELECTION_BACKGROUND}). 
      */
-    private int             type;
+    private final int type;
     /** Current default color value. */
-    private Color           color;
+    private Color color;
      /** Used to create instance of the component whose color will be retrieved (in case {@link #property} isn't set). */
-    private ComponentMapper mapper;
+    private final ComponentMapper mapper;
 
 
 
@@ -116,26 +116,21 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      * @return           the color of the right {@link #type type} used by the specified component.
      */
     private Color getColor(JComponent component) {
-        // Foreground color.
         if (type == FOREGROUND) {
             return component.getForeground();
-        }// Background color.
-        else if(type == BACKGROUND)
+        } else if(type == BACKGROUND) {
             return component.getBackground();
+        }
 
         // Text component specific colors.
-        else if(component instanceof JTextComponent) {
-            JTextComponent comp;
+        else if (component instanceof JTextComponent) {
+            JTextComponent comp = (JTextComponent)component;
 
-            comp = (JTextComponent)component;
-
-            // Selection foreground color.
-            if(type == SELECTION_FOREGROUND)
+            if (type == SELECTION_FOREGROUND) {
                 return comp.getSelectedTextColor();
-
-            // Selection background color.
-            else if(type == SELECTION_BACKGROUND)
+            } else if(type == SELECTION_BACKGROUND) {
                 return comp.getSelectionColor();
+            }
         }
         return null;
     }
@@ -181,12 +176,13 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
     public void propertyChange(PropertyChangeEvent evt) {
         String name = evt.getPropertyName().toLowerCase();
 
-        if (name.equals("lookandfeel") || name.equalsIgnoreCase(property)) {
-            color = null;
+        if ("lookandfeel".equals(name) || name.equalsIgnoreCase(property)) {
+            //color = null;
             Color oldColor = color;
             color = getColor((ThemeData)null);
-            if (!color.equals(oldColor))
+            if (!color.equals(oldColor)) {
                 notifyChange(color);
+            }
         }
     }
 }

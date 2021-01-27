@@ -30,7 +30,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -65,7 +64,7 @@ public class TransferableFileSet implements Transferable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransferableFileSet.class);
 	
     /** Transferred FileSet */
-    private FileSet fileSet;
+    private final FileSet fileSet;
 
     /** Is FileSet DataFlavor supported ? */
     private boolean fileSetFlavorSupported = true;
@@ -243,8 +242,9 @@ public class TransferableFileSet implements Transferable {
                 for (File aFileList : fileList) {
                     file = FileFactory.getFile(aFileList.getAbsolutePath());
 
-                    if (file != null)
+                    if (file != null) {
                         files.add(file);
+                    }
                 }
             }
             // Text plain DataFlavor: assume that lines designate file paths
@@ -322,7 +322,7 @@ public class TransferableFileSet implements Transferable {
     }
 
 
-    public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException, IOException {
+    public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException {
         int nbFiles = fileSet.size();
 
         // Return files stored in a FileSet instance (the one that was passed to the constructor)

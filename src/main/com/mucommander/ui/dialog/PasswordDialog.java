@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.dialog;
 
-import com.mucommander.text.Translator;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.layout.YBoxPanel;
 
@@ -44,7 +43,7 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
     private final static Dimension MAXIMUM_DIALOG_DIMENSION = new Dimension(1024, 500);
 
 
-    public PasswordDialog(Frame owner, String title, Component locationRelativeComp) {
+    private PasswordDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, locationRelativeComp);
         init();
     }
@@ -63,17 +62,16 @@ public class PasswordDialog extends FocusDialog implements ActionListener {
 
         YBoxPanel mainPanel = new YBoxPanel();
         edtPassword = new JPasswordField(10);
-        mainPanel.add(new JLabel(Translator.get("password")));
+        mainPanel.add(new JLabel(i18n("password")));
         mainPanel.addSpace(5);
         mainPanel.add(edtPassword);
         mainPanel.addSpace(10);
 
-        btnOk = new JButton(Translator.get("ok"));
+        btnOk = new JButton(i18n("ok"));
         btnOk.addActionListener(this);
-        btnCancel = new JButton(Translator.get("cancel"));
+        btnCancel = new JButton(i18n("cancel"));
         btnCancel.addActionListener(this);
-        JButton buttons[] = new JButton[]{btnOk, btnCancel};
-
+        JButton[] buttons = new JButton[]{btnOk, btnCancel};
 
         setInitialFocusComponent(edtPassword);
         mainPanel.add(new ButtonChoicePanel(buttons, 2, getRootPane()));

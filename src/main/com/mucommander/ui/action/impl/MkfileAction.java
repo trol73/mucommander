@@ -23,7 +23,7 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.file.MakeDirectoryFileDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class MkfileAction extends ParentFolderAction {
 
-    MkfileAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MkfileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -49,7 +49,7 @@ public class MkfileAction extends ParentFolderAction {
         // would be incorrect for some filesystems which do not support operations consistently across the
         // filesystem (e.g. S3). In that case, err on the safe side and enable the action, even if the operation
         // end up not being supported.
-        setEnabled(firstFile==null || firstFile.isFileOperationSupported(FileOperation.WRITE_FILE));
+        setEnabled(firstFile == null || firstFile.isFileOperationSupported(FileOperation.WRITE_FILE));
     }
 
     @Override
@@ -66,15 +66,23 @@ public class MkfileAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "Mkfile";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MkfileAction(mainFrame, properties);
         }
     }

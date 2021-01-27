@@ -6,6 +6,8 @@
 */
 package com.ibm.icu.text;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +87,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      * @throws IOException if an IO error occurs.
      *
      */
-    public String getString(int maxLength) throws IOException {
+    String getString(int maxLength) throws IOException {
         String result;
         if (fInputStream != null) {
             StringBuilder sb = new StringBuilder();
@@ -172,7 +174,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      *          the argument.
      * @throws ClassCastException if the argument is not a CharsetMatch.
      */
-    public int compareTo (CharsetMatch other) {
+    public int compareTo (@NotNull CharsetMatch other) {
         if (this.fConfidence > other.fConfidence) {
             return 1;
         } else if (this.fConfidence < other.fConfidence) {

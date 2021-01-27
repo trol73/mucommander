@@ -28,7 +28,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
@@ -54,17 +54,11 @@ public class ViewerRegistrar {
 
     static {
         registerFileViewer(new com.mucommander.ui.viewer.pdf.PdfFactory());
-
-        //registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
-
+        registerFileViewer(new com.mucommander.ui.viewer.djvu.DjvuFactory());
         registerFileViewer(new com.mucommander.ui.viewer.image.ImageFactory());
-
         registerFileViewer(new AudioFactory());
-
         registerFileViewer(new com.mucommander.ui.viewer.html.HtmlFactory());
-
         registerFileViewer(new com.mucommander.ui.viewer.text.TextFactory());
-
         // The HexFactory must be the last FileViewer to be registered (otherwise it would open other factories file types)
         registerFileViewer(new com.mucommander.ui.viewer.hex.HexFactory());
     }
@@ -74,7 +68,7 @@ public class ViewerRegistrar {
      * Registers a FileViewer.
      * @param factory file viewer factory to register.
      */
-    public static void registerFileViewer(ViewerFactory factory) {
+    private static void registerFileViewer(ViewerFactory factory) {
         viewerFactories.add(factory);
     }
         

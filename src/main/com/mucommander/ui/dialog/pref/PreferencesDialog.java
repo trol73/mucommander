@@ -19,7 +19,6 @@
 
 package com.mucommander.ui.dialog.pref;
 
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.pref.component.PrefComponent;
 import com.mucommander.ui.icon.IconManager;
@@ -38,8 +37,6 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public abstract class PreferencesDialog extends FocusDialog implements ActionListener {
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Displays the different panels. */
     private JTabbedPane tabbedPane;
     /** Stores the different panels. */
@@ -53,8 +50,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - Initialization ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new preferences dialog.
      * @param parent parent of the dialog.
@@ -77,8 +72,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - UI code ----------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Initializes the tabbed panel's UI.
      */
@@ -94,10 +87,10 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
         // Buttons panel.
         XBoxPanel buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(btnApply = new JButton(Translator.get("apply")));
+        buttonsPanel.add(btnApply = new JButton(i18n("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(btnOk = new JButton(Translator.get("ok")));
-        buttonsPanel.add(btnCancel = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(btnOk = new JButton(i18n("ok")));
+        buttonsPanel.add(btnCancel = new JButton(i18n("cancel")));
         
         // Disable "commit buttons".
         btnOk.setEnabled(false);
@@ -180,8 +173,8 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
      * Notifies all panels that changes are about to be commited.
      * <p>
      * This gives preference panels a chance to display warning or errors before changes are
-     * commited.
-     * </p>
+     * committed.
+     *
      * @return <code>true</code> if all preference panels are ok with commiting the changes, <code>false</code> otherwise.
      */
     public boolean checkCommit() {
@@ -204,8 +197,6 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
 
 
 
-    // - Listener code ----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Reacts to buttons being pushed.
      */
@@ -235,7 +226,7 @@ public abstract class PreferencesDialog extends FocusDialog implements ActionLis
     }
     
     /**
-     * This function set the "commit buttons", i.e apply & ok buttons, enabled\disabled
+     * This function set the "commit buttons", i.e apply &amp; ok buttons, enabled\disabled
      * according to the given parameter.
      * 
      * @param enable - parameter that indicated if the commit button will turn to be

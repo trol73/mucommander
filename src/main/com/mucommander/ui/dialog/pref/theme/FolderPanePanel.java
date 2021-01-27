@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.chooser.FontChooser;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.layout.ProportionalGridPanel;
@@ -35,8 +35,6 @@ class FolderPanePanel extends ThemeEditorPanel {
 
     private FileGroupsPanel fileGroupsPanel;
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent dialog containing the panel.
@@ -48,9 +46,6 @@ class FolderPanePanel extends ThemeEditorPanel {
     }
 
 
-
-    // - UI initialisation ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Initialises the panel's UI.
      */
@@ -110,10 +105,8 @@ class FolderPanePanel extends ThemeEditorPanel {
     }
 
 
-
-    // - Modification management ---------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
+     * Modification management.
      * Ignored.
      */
     @Override

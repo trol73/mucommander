@@ -72,10 +72,6 @@ public class CounterOutputStream extends OutputStream {
     }
 
 
-    /////////////////////////////////
-    // OutputStream implementation //
-    /////////////////////////////////
-
     @Override
     public void write(int b) throws IOException {
         out.write(b);

@@ -18,12 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -38,7 +40,7 @@ public class SelectNextBlockAction extends SelectForwardAction {
     // TODO: make this value configurable
     private static final int BLOCK_SIZE = 5;
 
-    SelectNextBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SelectNextBlockAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -65,18 +67,14 @@ public class SelectNextBlockAction extends SelectForwardAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, CTRL_OR_META_DOWN_MASK);
         }
 
         public KeyStroke getDefaultAltKeyStroke() {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SelectNextBlockAction(mainFrame, properties);
         }
     }

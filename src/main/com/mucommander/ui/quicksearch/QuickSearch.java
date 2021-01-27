@@ -24,9 +24,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
     private int quickSearchTimeout;
 
 
-    private JComponent component;
+    private final JComponent component;
     private volatile boolean active;
     
     protected QuickSearch(JComponent component) {
@@ -83,7 +83,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
             // Reset search string
             searchString = "";
             // Start the thread that's responsible for canceling the quick search on timeout
-            quickSearchTimeout = MuConfigurations.getPreferences().getVariable(MuPreference.QUICK_SEARCH_TIMEOUT, MuPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
+            quickSearchTimeout = TcConfigurations.getPreferences().getVariable(TcPreference.QUICK_SEARCH_TIMEOUT, TcPreferences.DEFAULT_QUICK_SEARCH_TIMEOUT);
             if (quickSearchTimeout > 0) {
                 timeoutThread = new Thread(this, "QuickSearch timeout thread");
                 timeoutThread.start();
@@ -138,7 +138,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
      *
      * <ul>
      *   <li>has any of the Alt, Ctrl or Meta modifier keys down (Shift is OK)</li>
-     *   <li>is an ASCII control character (<32 or ==127)</li>
+     *   <li>is an ASCII control character (&lt;32 or ==127)</li>
      *   <li>is not a valid Unicode character</li>
      * </ul>
      *
@@ -290,8 +290,7 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
         int bestMatch = startsWithCaseMatch != -1 ? startsWithCaseMatch
             : startsWithNoCaseMatch != -1 ? startsWithNoCaseMatch
             : containsCaseMatch !=-1 ? containsCaseMatch
-            : containsNoCaseMatch != -1 ? containsNoCaseMatch
-            : -1;
+            : containsNoCaseMatch;
         LOGGER.trace("startsWithCaseMatch="+startsWithCaseMatch+" containsCaseMatch="+containsCaseMatch+" startsWithNoCaseMatch="+startsWithNoCaseMatch+" containsNoCaseMatch="+containsNoCaseMatch);
         LOGGER.trace("bestMatch="+bestMatch);
 

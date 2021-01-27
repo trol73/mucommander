@@ -23,7 +23,7 @@ import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.KeyStroke;
@@ -36,9 +36,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class EmptyTrashAction extends MuAction {
+public class EmptyTrashAction extends TcAction {
 
-    EmptyTrashAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EmptyTrashAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         AbstractTrash trash = DesktopManager.getTrash();
@@ -62,15 +62,23 @@ public class EmptyTrashAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "EmptyTrash";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new EmptyTrashAction(mainFrame, properties);
         }
     }

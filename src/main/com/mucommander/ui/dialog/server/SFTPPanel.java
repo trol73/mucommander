@@ -37,7 +37,7 @@ import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.sftp.SFTPFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 
@@ -50,12 +50,12 @@ public class SFTPPanel extends ServerPanel {
 
     private final static int STANDARD_PORT = FileURL.getRegisteredHandler(FileProtocols.SFTP).getStandardPort();
 
-    private JTextField serverField;
-    private JTextField privateKeyPathField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JTextField initialDirField;
-    private JSpinner portSpinner;
+    private final JTextField serverField;
+    private final JTextField privateKeyPathField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JTextField initialDirField;
+    private final JSpinner portSpinner;
 
     private static String lastServer = "";
     private static String lastKeyPath = "";

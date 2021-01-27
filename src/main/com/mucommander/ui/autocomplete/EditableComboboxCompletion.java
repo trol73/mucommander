@@ -125,8 +125,8 @@ public class EditableComboboxCompletion extends CompletionType {
                 	// The combination of cntrl+space makes open the auto-complete popup without delay.
                 	if (keyEvent.isControlDown()) {
                 		if (!popup.isVisible()) {
-                			autocompletedtextComp.setComponentsPopupUnvisibe();
-                    		autocompletedtextComp.moveCarentToEndOfText();
+                			autocompletedtextComp.setComponentsPopupInvisible();
+                    		autocompletedtextComp.moveCaretToEndOfText();
                     		createNewShowingThread(0);
                     	}
                 	}

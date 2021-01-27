@@ -99,7 +99,7 @@ public class CodeFormatter {
     }
 
 
-    public static String formatJson(String json) throws CodeFormatException {
+    public static String formatJson(String json) {
         JsonParser parser = new JsonParser();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement el = parser.parse(json);

@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.action;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 /**
  * ActionCategory represent category that can be associated with MuAction action.

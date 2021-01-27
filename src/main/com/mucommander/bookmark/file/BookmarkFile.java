@@ -51,7 +51,7 @@ public class BookmarkFile extends ProtocolFile {
      * @param  bookmark    bookmark to wrap.
      * @throws IOException if the specified bookmark's URL cannot be resolved.
      */
-    protected BookmarkFile(Bookmark bookmark) throws IOException {
+    BookmarkFile(Bookmark bookmark) throws IOException {
         super(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://" + java.net.URLEncoder.encode(bookmark.getName(), "UTF-8")));
         this.bookmark = bookmark;
     }
@@ -66,13 +66,14 @@ public class BookmarkFile extends ProtocolFile {
      * Some methods need to have access to the underlying file. This, however, requires
      * resolving the path which can be time consuming. Using this method ensures that the
      * path is only resolved if necessary, and at most once.
-     * </p>
+     *
      * @return the <code>AbstractFile</code> this instance wraps.
      */
     private synchronized AbstractFile getUnderlyingFile() {
         // Resolves the file if necessary.
-        if(file == null)
+        if (file == null) {
             file = FileFactory.getFile(bookmark.getLocation());
+        }
 
         return file;
     }
@@ -81,7 +82,9 @@ public class BookmarkFile extends ProtocolFile {
      * Returns the underlying bookmark.
      * @return the underlying bookmark.
      */
-    public Bookmark getBookmark() {return bookmark;}
+    public Bookmark getBookmark() {
+        return bookmark;
+    }
 
 
 
@@ -92,7 +95,9 @@ public class BookmarkFile extends ProtocolFile {
      * @return the underlying bookmark's name.
      */
     @Override
-    public String getName() {return bookmark.getName();}
+    public String getName() {
+        return bookmark.getName();
+    }
 
     /**
      * Returns the wrapped file's descendants.
@@ -115,8 +120,7 @@ public class BookmarkFile extends ProtocolFile {
     public AbstractFile getParent() {
         try {
             return new BookmarkRoot();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             return null;
         }
     }
@@ -129,7 +133,9 @@ public class BookmarkFile extends ProtocolFile {
      * or is not implemented.
      */
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {return getUnderlyingFile().getFreeSpace();}
+    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+        return getUnderlyingFile().getFreeSpace();
+    }
 
     /**
      * Returns the result of the wrapped file's <code>getTotalSpace()</code> methods.
@@ -139,14 +145,18 @@ public class BookmarkFile extends ProtocolFile {
      * or is not implemented.
      */
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {return getUnderlyingFile().getTotalSpace();}
+    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+        return getUnderlyingFile().getTotalSpace();
+    }
 
     /**
      * Returns <code>false</code>.
      * @return <code>false</code>.
      */
     @Override
-    public boolean isDirectory() {return true;}
+    public boolean isDirectory() {
+        return true;
+    }
 
     /**
      * Sets the wrapped file's parent.
@@ -161,19 +171,24 @@ public class BookmarkFile extends ProtocolFile {
      * Returns <code>true</code> if the specified bookmark exists.
      * <p>
      * A bookmark is said to exist if and only if it is known to the {@link com.mucommander.bookmark.BookmarkManager}.
-     * </p>
+     *
      * @return <code>true</code> if the specified bookmark exists, <code>false</code> otherwise.
      */
     @Override
-    public boolean exists() {return BookmarkManager.getBookmark(bookmark.getName()) != null;}
+    public boolean exists() {
+        return BookmarkManager.getBookmark(bookmark.getName()) != null;
+    }
 
     @Override
-    public void mkfile() {BookmarkManager.addBookmark(bookmark);}
+    public void mkfile() {
+        BookmarkManager.addBookmark(bookmark);
+    }
 
     public boolean equals(Object o) {
         // Makes sure we're working with an abstract file.
-        if(!(o instanceof AbstractFile))
+        if (!(o instanceof AbstractFile)) {
             return false;
+        }
 
         // Retrieves the actual file instance.
         // We might have received a Proxied or Cached file, so we need to make sure
@@ -181,8 +196,9 @@ public class BookmarkFile extends ProtocolFile {
         AbstractFile file = ((AbstractFile)o).getAncestor();
 
         // We only know how to compare one bookmark file to the other.
-        if(file instanceof BookmarkFile)
+        if (file instanceof BookmarkFile) {
             return bookmark.equals(((BookmarkFile)file).getBookmark());
+        }
         return false;
     }
 
@@ -206,19 +222,19 @@ public class BookmarkFile extends ProtocolFile {
     public void renameTo(AbstractFile destination) throws IOException {
         checkRenamePrerequisites(destination, true, true);
 
-        Bookmark oldBookmark;
-        Bookmark newBookmark;
-
         destination = destination.getTopAncestor();
 
         // Makes sure we're working with a bookmark.
-        if(!(destination instanceof BookmarkFile))
+        if (!(destination instanceof BookmarkFile)) {
             throw new IOException();
+        }
 
         // Creates the new bookmark and checks for conflicts.
-        newBookmark = new Bookmark(destination.getName(), bookmark.getLocation());
-        if((oldBookmark = BookmarkManager.getBookmark(newBookmark.getName())) != null)
+        Bookmark newBookmark = new Bookmark(destination.getName(), bookmark.getLocation(), bookmark.getParent());
+        Bookmark oldBookmark = BookmarkManager.getBookmark(newBookmark.getName());
+        if (oldBookmark != null) {
             BookmarkManager.removeBookmark(oldBookmark);
+        }
 
         // Adds the new bookmark and deletes its 'old' version.
         BookmarkManager.addBookmark(newBookmark);
@@ -230,7 +246,7 @@ public class BookmarkFile extends ProtocolFile {
 //     * Deletes the bookmark.
 //     * <p>
 //     * Deleting a bookmark means unregistering it from the {@link com.mucommander.bookmark.BookmarkManager}.
-//     * </p>
+//     *
 //     */
 //    @Override
 //    public void delete() {
@@ -253,7 +269,7 @@ public class BookmarkFile extends ProtocolFile {
      * <p>
      * If the specified destination is an instance of <code>BookmarkFile</code>,
      * this will duplicate the bookmark. Otherwise, this method will fail.
-     * </p>
+     *
      * @param  destination           where to copy the bookmark to.
      * @throws FileTransferException if the specified destination is not an instance of <code>BookmarkFile</code>.
      */
@@ -261,11 +277,11 @@ public class BookmarkFile extends ProtocolFile {
     public void copyRemotelyTo(AbstractFile destination) throws IOException {
         // Makes sure we're working with a bookmark.
         destination = destination.getTopAncestor();
-        if(!(destination instanceof BookmarkFile))
+        if (!(destination instanceof BookmarkFile)) {
             throw new IOException();
-
+        }
         // Copies this bookmark to the specified destination.
-        BookmarkManager.addBookmark(new Bookmark(destination.getName(), bookmark.getLocation()));
+        BookmarkManager.addBookmark(new Bookmark(destination.getName(), bookmark.getLocation(), bookmark.getParent()));
     }
 
 
@@ -280,7 +296,9 @@ public class BookmarkFile extends ProtocolFile {
      * @see               #changePermission(int,int,boolean)
      */
     @Override
-    public FilePermissions getPermissions() {return PERMISSIONS;}
+    public FilePermissions getPermissions() {
+        return PERMISSIONS;
+    }
 
     /**
      * Always throws an {@link UnsupportedFileOperationException} when called: bookmarks always have all permissions,
@@ -302,26 +320,25 @@ public class BookmarkFile extends ProtocolFile {
     // -------------------------------------------------------------------------
     @Override
     public InputStream getInputStream() throws IOException {
-        BookmarkBuilder       builder;
-        ByteArrayOutputStream stream;
-
-        builder = BookmarkManager.getBookmarkWriter(stream = new ByteArrayOutputStream());
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        BookmarkBuilder builder = BookmarkManager.getBookmarkWriter(stream);
         try {
             builder.startBookmarks();
-            builder.addBookmark(bookmark.getName(), bookmark.getLocation());
+            builder.addBookmark(bookmark.getName(), bookmark.getLocation(), bookmark.getParent());
             builder.endBookmarks();
-        }
-        // If an exception occured, we have to look for its root cause.
-        catch(Throwable e) {
+        } catch (Throwable e) {
+            // If an exception occurred, we have to look for its root cause.
             Throwable e2;
 
             // Looks for the cause.
-            while((e2 = e.getCause()) != null)
+            while ((e2 = e.getCause()) != null) {
                 e = e2;
+            }
 
             // If the cause is an IOException, thow it.
-            if(e instanceof IOException)
+            if (e instanceof IOException) {
                 throw (IOException)e;
+            }
 
             // Otherwise, throw the exception as an IOException with a the underlying cause's message.
             throw new IOException(e.getMessage());
@@ -334,7 +351,7 @@ public class BookmarkFile extends ProtocolFile {
     public OutputStream getOutputStream() throws IOException {return new BookmarkOutputStream();}
 
 
-// - Unused methods --------------------------------------------------------
+    // - Unused methods --------------------------------------------------------
     // -------------------------------------------------------------------------
     // The following methods are not used by BookmarkFile. They will throw an exception or
     // return an 'operation non supported' / default value.

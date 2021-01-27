@@ -19,7 +19,6 @@
 package com.mucommander.ui.dialog.file;
 
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.BatchRenameAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -35,21 +34,21 @@ import java.awt.event.ActionListener;
 
 public class BatchRenameConfirmationDialog extends FocusDialog implements ActionListener {
 
-    private JButton btnRename;
+    private final JButton btnRename;
     
     private boolean proceedWithRename = false;
  
-    public BatchRenameConfirmationDialog(MainFrame mainFrame, FileSet files, int changed, int unchanged) {
+    BatchRenameConfirmationDialog(MainFrame mainFrame, FileSet files, int changed, int unchanged) {
         super(mainFrame, ActionProperties.getActionLabel(BatchRenameAction.Descriptor.ACTION_ID), mainFrame);
 
         YBoxPanel mainPanel = new YBoxPanel();
-        String msg = Translator.get("batch_rename_dialog.proceed_renaming", Integer.toString(changed), Integer.toString(unchanged));
+        String msg = i18n("batch_rename_dialog.proceed_renaming", Integer.toString(changed), Integer.toString(unchanged));
         mainPanel.add(new InformationPane(msg,
-                Translator.get("this_operation_cannot_be_undone"),
+                i18n("this_operation_cannot_be_undone"),
                 Font.BOLD, InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON)));
         mainPanel.addSpace(10);
-        btnRename = new JButton(Translator.get("rename"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        btnRename = new JButton(i18n("rename"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         mainPanel.add(DialogToolkit.createOKCancelPanel(btnRename, cancelButton, getRootPane(), this));
         getContentPane().add(mainPanel);
         setInitialFocusComponent(btnRename);
@@ -74,7 +73,7 @@ public class BatchRenameConfirmationDialog extends FocusDialog implements Action
         dispose();
     }
     
-    public boolean isProceedWithRename() {
+    boolean isProceedWithRename() {
         return proceedWithRename;
     }
 

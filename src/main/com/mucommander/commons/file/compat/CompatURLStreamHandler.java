@@ -22,10 +22,6 @@ public class CompatURLStreamHandler extends URLStreamHandler {
         this.file = file;
     }
 
-    
-    /////////////////////////////////////
-    // URLStreamHandler implementation //
-    /////////////////////////////////////
 
     @Override
     protected URLConnection openConnection(URL url) throws IOException {

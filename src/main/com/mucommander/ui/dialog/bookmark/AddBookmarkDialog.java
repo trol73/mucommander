@@ -21,7 +21,6 @@ package com.mucommander.ui.dialog.bookmark;
 import com.mucommander.bookmark.Bookmark;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.AddBookmarkAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -47,8 +46,9 @@ import java.awt.event.ActionListener;
  */
 public class AddBookmarkDialog extends FocusDialog implements ActionListener, DocumentListener {
 
-    private JTextField nameField;
-    private JTextField locationField;
+    private JTextField edtName;
+    private JTextField edtLocation;
+    private BookmarkParentComboBox cbParent;
 
     private JButton addButton;
     private JButton cancelButton;
@@ -72,27 +72,30 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
         // Add name field, editable
-        this.nameField = new JTextField(currentFolder.getName());
-        nameField.setEditable(true);
+        this.edtName = new JTextField(currentFolder.getName());
+        edtName.setEditable(true);
         // Monitors text changes to disable 'Add' button if name field is empty
-        nameField.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("name")+":", nameField, 10);
+        edtName.getDocument().addDocumentListener(this);
+        compPanel.addRow(i18n("name")+":", edtName, 10);
 		
         // Add URL field, non editable
-        this.locationField = new JTextField(currentFolder.getCanonicalPath());
-        compPanel.addRow(Translator.get("location")+":", locationField, 10);
+        this.edtLocation = new JTextField(currentFolder.getCanonicalPath());
+        compPanel.addRow(i18n("location")+":", edtLocation, 10);
+
+        this.cbParent = new BookmarkParentComboBox();
+        compPanel.addRow(i18n("parent")+":", cbParent, 10);
 
         mainPanel.add(compPanel);
 
         contentPane.add(mainPanel, BorderLayout.NORTH);
 				
-        addButton = new JButton(Translator.get("add_bookmark_dialog.add"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        addButton = new JButton(i18n("add_bookmark_dialog.add"));
+        cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(addButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // Select text in name field and transfer focus to it for immediate user change
-        nameField.selectAll();
-        setInitialFocusComponent(nameField);
+        edtName.selectAll();
+        setInitialFocusComponent(edtName);
 
         // Packs dialog
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
@@ -107,13 +110,15 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
      * accordingly, in order to prevent user from adding a bookmark with an empty name.
      */
     private void checkEmptyName() {
-        if(nameField.getText().trim().equals("")) {
-            if(addButton.isEnabled())
+        if (edtName.getText().trim().isEmpty()) {
+            if (addButton.isEnabled()) {
                 addButton.setEnabled(false);
+            }
         }
         else {
-            if(!addButton.isEnabled())
+            if (!addButton.isEnabled()) {
                 addButton.setEnabled(true);
+            }
         }
     }
 	
@@ -125,17 +130,18 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
-        if (source==addButton)  {
+        if (source == addButton)  {
             // Starts by disposing the dialog
             dispose();
 
             // Add bookmark and write bookmarks file to disk
-            BookmarkManager.addBookmark(new Bookmark(nameField.getText(), locationField.getText()));
-            try {BookmarkManager.writeBookmarks(false);}
-            // We should probably pop an error dialog here.
-            catch(Exception e2) {}
-        }
-        else if (source==cancelButton)  {
+            BookmarkManager.addBookmark(new Bookmark(edtName.getText(), edtLocation.getText(), cbParent.getSelectedParent()));
+            try {
+                BookmarkManager.writeBookmarks(false);
+            } catch (Exception ex) {
+                // We should probably pop an error dialog here.
+            }
+        } else if (source == cancelButton)  {
             dispose();			
         }
     }

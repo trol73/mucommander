@@ -25,7 +25,7 @@ import com.mucommander.desktop.DefaultDesktopAdapter;
  * A desktop adapter for OpenVMS.
  *
  * <p>This adapter currently doesn't bring any improvement over {@link com.mucommander.desktop.DefaultDesktopAdapter} 
- * -- its purpose is simply to bypass other desktop adapters tests, some of which are costly.</p>
+ * -- its purpose is simply to bypass other desktop adapters tests, some of which are costly.
  *
  * @author Maxence Bernard
  */

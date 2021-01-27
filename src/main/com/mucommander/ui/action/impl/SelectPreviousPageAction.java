@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class SelectPreviousPageAction extends SelectBackwardAction {
 
-    SelectPreviousPageAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SelectPreviousPageAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -68,7 +68,7 @@ public class SelectPreviousPageAction extends SelectBackwardAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SelectPreviousPageAction(mainFrame, properties);
         }
     }

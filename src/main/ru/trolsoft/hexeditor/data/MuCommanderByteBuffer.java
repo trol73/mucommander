@@ -45,7 +45,7 @@ public class MuCommanderByteBuffer extends AbstractByteBuffer {
     }
 
     @Override
-    protected long getStreamSize() throws IOException {
+    protected long getStreamSize() {
         return file.getSize();
     }
 

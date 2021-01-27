@@ -42,7 +42,7 @@ import com.vmware.vim25.VimService;
 public class VSphereClient implements Closeable {
 
 	private static final String TYPE_SERVICE_INSTANCE = "ServiceInstance";
-	private static Logger log = LoggerFactory.getLogger(VSphereClient.class);
+	private static final Logger log = LoggerFactory.getLogger(VSphereClient.class);
 
 	private final String server;
 	private final String user;
@@ -148,7 +148,7 @@ public class VSphereClient implements Closeable {
 		HostnameVerifier hv = (urlHostName, session) -> true;
 		try {
 			trustAllHttpsCertificates();
-		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalStateException("SSL init problems", e);
 		}
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
@@ -188,8 +188,8 @@ public class VSphereClient implements Closeable {
 
 	/* taken from vmware samples */
 	public Object[] getProperties(ManagedObjectReference moRef,
-			String... properties) throws RemoteException,
-			InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+			String... properties) throws
+            InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
 		// PropertySpec specifies what properties to
 		// retrieve and from type of Managed Object
 		PropertySpec pSpec = new PropertySpec();
@@ -236,8 +236,7 @@ public class VSphereClient implements Closeable {
 		return ret;
 	}
 
-	private void trustAllHttpsCertificates() throws NoSuchAlgorithmException,
-			KeyManagementException {
+	private void trustAllHttpsCertificates() throws NoSuchAlgorithmException {
 		javax.net.ssl.SSLContext sc = getSSLContext();
 		javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc
 				.getSocketFactory());
@@ -271,14 +270,12 @@ public class VSphereClient implements Closeable {
 
 		@Override
 		public void checkServerTrusted(
-				java.security.cert.X509Certificate[] certs, String authType)
-				throws java.security.cert.CertificateException {
+				java.security.cert.X509Certificate[] certs, String authType) {
 		}
 
 		@Override
 		public void checkClientTrusted(
-				java.security.cert.X509Certificate[] certs, String authType)
-				throws java.security.cert.CertificateException {
+				java.security.cert.X509Certificate[] certs, String authType) {
 		}
 	}
 

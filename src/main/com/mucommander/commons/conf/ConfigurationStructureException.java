@@ -24,15 +24,13 @@ package com.mucommander.commons.conf;
  * Within the scope of the <code>com.mucommander.commons.conf</code> API, structure errors
  * are inconsistencies in the structure of the configuration tree - a section closed more
  * than once, for example, or never closed at all.
- * </p>
  * <p>
  * This exception is mostly meant to be used by implementations of {@link ConfigurationBuilder},
  * as they have to analyse the structure of the configuration they're receiving events for.
- * </p>
  * <p>
  * Since <code>ConfigurationStructureException</code> subclasses {@link ConfigurationException}, it
  * inherits his capacity to wrap other exceptions.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ConfigurationStructureException extends ConfigurationException {
@@ -47,7 +45,7 @@ public class ConfigurationStructureException extends ConfigurationException {
      * <p>
      * The existing exception will be embedded in the new one, and its message will
      * become the default message for the <code>ConfigurationStructureException</code>.
-     * </p>
+     *
      * @param cause the exception to be wrapped in a <code>ConfigurationStructureException</code>.
      */
     public ConfigurationStructureException(Throwable cause) {super(cause);}
@@ -56,7 +54,7 @@ public class ConfigurationStructureException extends ConfigurationException {
      * Creates a new configuration structure exception from an existing exception.
      * <p>
      * The existing exception will be embedded in the new one, but the new exception will have its own message.
-     * </p>
+     *
      * @param message the detail message.
      * @param cause   the exception to be wrapped in a <code>ConfigurationStructureException</code>.
      */

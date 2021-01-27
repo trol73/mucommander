@@ -30,12 +30,12 @@ import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.impl.sftp.SFTPFile;
 import com.mucommander.commons.file.util.SymLinkUtils;
 import com.mucommander.commons.runtime.JavaVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.event.LocationEvent;
@@ -112,11 +112,11 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
     private final static int VOLUME_INFO_TIME_TO_LIVE = 60000;
 
     /** Number of milliseconds between each volume info update by auto-update thread */
-    private final static int AUTO_UPDATE_PERIOD = 6000;
+    private final static int AUTO_UPDATE_PERIOD = 60_000;
 
     /** Caches volume info strings (free/total space) for a while, since this information is expensive to retrieve
      * (I/O bound). This map uses folders' volume path as its key. */
-    private static LRUCache<String, Long[]> volumeInfoCache = new FastLRUCache<>(VOLUME_INFO_CACHE_CAPACITY);
+    private static final LRUCache<String, Long[]> volumeInfoCache = new FastLRUCache<>(VOLUME_INFO_CACHE_CAPACITY);
 	
     /** Icon that is displayed when folder is changing */
     public final static String WAITING_ICON = "waiting.png";
@@ -135,8 +135,8 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     static {
         // Initialize the size column format based on the configuration
-        setSelectedFileSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        setSelectedFileSizeFormat(TcConfigurations.getPreferences().getVariable(TcPreference.DISPLAY_COMPACT_FILE_SIZE,
+                                                  TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
 
         // Listens to configuration changes and updates static fields accordingly.
         // Note: a reference to the listener must be kept to prevent it from being garbage-collected.
@@ -144,12 +144,12 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             public synchronized void configurationChanged(ConfigurationEvent event) {
                 String var = event.getVariable();
 
-                if (var.equals(MuPreferences.DISPLAY_COMPACT_FILE_SIZE)) {
+                if (var.equals(TcPreferences.DISPLAY_COMPACT_FILE_SIZE)) {
                     setSelectedFileSizeFormat(event.getBooleanValue());
                 }
             }
         };
-        MuConfigurations.addPreferencesListener(CONFIGURATION_ADAPTER);
+        TcConfigurations.addPreferencesListener(CONFIGURATION_ADAPTER);
     }
 
 
@@ -216,7 +216,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         // Show/hide this status bar based on user preferences
         // Note: setVisible has to be called even with true for the auto-update thread to be initialized
-        setVisible(MuConfigurations.getPreferences().getVariable(MuPreference.STATUS_BAR_VISIBLE, MuPreferences.DEFAULT_STATUS_BAR_VISIBLE));
+        setVisible(shouldBeVisible());
         
         // Catch location events to update status bar info when folder is changed
         FolderPanel leftPanel = mainFrame.getLeftPanel();
@@ -248,6 +248,10 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         volumeSpaceLabel.setFont(ThemeManager.getCurrentFont(Theme.STATUS_BAR_FONT));
         volumeSpaceLabel.setForeground(ThemeManager.getCurrentColor(Theme.STATUS_BAR_FOREGROUND_COLOR));
         ThemeManager.addCurrentThemeListener(this);
+    }
+
+    private static boolean shouldBeVisible() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.STATUS_BAR_VISIBLE, TcPreferences.DEFAULT_STATUS_BAR_VISIBLE);
     }
 
 
@@ -304,69 +308,73 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             }
 	
             if (selectedFile != null) {
-                filesInfo.append(" - ");
-                filesInfo.append("<b>");
-                filesInfo.append(selectedFile.getName());
-                filesInfo.append("</b>");
-                if (selectedFile.isSymlink()) {
-                    String target = getFileLink(selectedFile);
-                    if (target != null) {
-                        filesInfo.append(" -> ");
-                        filesInfo.append(target);
-                    }
-                }
-                boolean local = selectedFile.getAncestor() instanceof LocalFile;
-                if (selectedFile.isDirectory()) {
-                    if (local) {
-                        filesInfo.append(" (");
-                        try {
-                            filesInfo.append(selectedFile.ls().length);
-                        } catch (IOException ignored) {}
-                        filesInfo.append(' ');
-                        filesInfo.append(Translator.get("files"));
-                        filesInfo.append(')');
-                    }
-                } else {
-                    filesInfo.append(" (");
-                    filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
-
-                    if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
-                        // Show image size
-                        try (InputStream is = selectedFile.getInputStream()) {
-                            ImageSizeDetector detector = new ImageSizeDetector(is);
-                            if (detector.getType() != null) {
-                                filesInfo.append(", ");
-                                filesInfo.append(detector.getWidth());
-                                filesInfo.append(" x ");
-                                filesInfo.append(detector.getHeight());
-                            }
-                        } catch (FileNotFoundException ignore) {
-                            // etc. if file was moved
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (JAVA_CLASS_FILTER.accept(selectedFile)) {
-                        try (InputStream is = selectedFile.getPushBackInputStream(16)) {
-                            JavaClassVersionDetector detector = new JavaClassVersionDetector(is);
-
-                            if (detector.getVersion() != JavaClassVersionDetector.Version.UNKNOWN) {
-                                filesInfo.append(", Java v").append(detector.getVersion().name);
-                            } else if (detector.getVersion() != JavaClassVersionDetector.Version.WRONG_FORMAT) {
-                                filesInfo.append(", Java major = ").append(detector.getMajor()).append(", minor = ").append(detector.getMinor());
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    filesInfo.append(")");
-
-                }
+                appendSelectedFileInfo(filesInfo, selectedFile);
             }
         }		
 
         // Update label
         setStatusInfo("<html>" + filesInfo.toString());
+    }
+
+    private void appendSelectedFileInfo(StringBuilder filesInfo, AbstractFile selectedFile) {
+        filesInfo.append(" - ");
+        filesInfo.append("<b>");
+        filesInfo.append(selectedFile.getName());
+        filesInfo.append("</b>");
+        if (selectedFile.isSymlink()) {
+            String target = getFileLink(selectedFile);
+            if (target != null) {
+                filesInfo.append(" -> ");
+                filesInfo.append(target);
+            }
+        }
+        boolean local = selectedFile.getAncestor() instanceof LocalFile;
+        if (selectedFile.isDirectory()) {
+            if (local) {
+                filesInfo.append(" (");
+                try {
+                    filesInfo.append(selectedFile.ls().length);
+                } catch (IOException ignored) {}
+                filesInfo.append(' ');
+                filesInfo.append(Translator.get("files"));
+                filesInfo.append(')');
+            }
+        } else {
+            filesInfo.append(" (");
+            filesInfo.append(SizeFormat.format(selectedFile.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE));
+
+            if (local && SUPPORTED_IMAGE_FILTER.accept(selectedFile)) {
+                // Show image size
+                try (InputStream is = selectedFile.getInputStream()) {
+                    ImageSizeDetector detector = new ImageSizeDetector(is);
+                    if (detector.getType() != null) {
+                        filesInfo.append(", ");
+                        filesInfo.append(detector.getWidth());
+                        filesInfo.append(" x ");
+                        filesInfo.append(detector.getHeight());
+                    }
+                } catch (FileNotFoundException ignore) {
+                    // etc. if file was moved
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (JAVA_CLASS_FILTER.accept(selectedFile)) {
+                try (InputStream is = selectedFile.getPushBackInputStream(16)) {
+                    JavaClassVersionDetector detector = new JavaClassVersionDetector(is);
+
+                    if (detector.getVersion() != JavaClassVersionDetector.Version.UNKNOWN) {
+                        filesInfo.append(", Java v").append(detector.getVersion().name);
+                    } else if (detector.getVersion() != JavaClassVersionDetector.Version.WRONG_FORMAT) {
+                        filesInfo.append(", Java major = ").append(detector.getMajor()).append(", minor = ").append(detector.getMinor());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            filesInfo.append(")");
+
+        }
     }
 
 
@@ -399,7 +407,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
         final AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         // Resolve the current folder's volume and use its path as a key for the volume info cache
-        final String volumePath = currentFolder.exists() ? currentFolder.getVolume().getAbsolutePath(true) : "";
+        final String volumePath = currentFolder != null && currentFolder.exists() ? currentFolder.getVolume().getAbsolutePath(true) : "";
 
         Long cachedVolumeInfo[] = volumeInfoCache.get(volumePath);
         if (cachedVolumeInfo != null) {
@@ -432,13 +440,13 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
                     // Java 1.6 and up or any other file type
                     else {
                         try {
-                            volumeFree = currentFolder.getFreeSpace();
+                            volumeFree = currentFolder != null ? currentFolder.getFreeSpace() : -1;
                         } catch(IOException e) {
                             volumeFree = -1;
                         }
 
                         try {
-                            volumeTotal = currentFolder.getTotalSpace();
+                            volumeTotal = currentFolder != null ? currentFolder.getTotalSpace() : -1;
                         } catch(IOException e) {
                             volumeTotal = -1;
                         }
@@ -538,9 +546,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         do {
             // Sleep for a while
             try { Thread.sleep(AUTO_UPDATE_PERIOD); }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            catch (InterruptedException ignore) {}
             
             // Update volume info if:
             // - status bar is visible
@@ -569,14 +575,16 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
 
     public void selectedFileChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive()) {
             updateSelectedFilesInfo();
+        }
     }
 
     public void markedFilesChanged(FileTable source) {
         // No need to update if the originating FileTable is not the currently active one
-        if(source == mainFrame.getActiveTable() && mainFrame.isForegroundActive())
+        if (source == mainFrame.getActiveTable() && mainFrame.isForegroundActive()) {
             updateSelectedFilesInfo();
+        }
     }
 
 
@@ -684,7 +692,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         return taskPanel;
     }
 
-    public void showProgress(int progress) {
+    private void showProgress(int progress) {
         if (progress >= 0) {
             progressBar.setVisible(true);
             progressBar.setValue(progress);

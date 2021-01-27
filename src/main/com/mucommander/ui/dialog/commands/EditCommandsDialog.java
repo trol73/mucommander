@@ -20,7 +20,6 @@ package com.mucommander.ui.dialog.commands;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.layout.XBoxPanel;
 
@@ -40,8 +39,6 @@ import java.util.List;
  */
 public class EditCommandsDialog extends FocusDialog implements ActionListener {
 
-    /** Displays the different panels. */
-    private JTabbedPane tabbedPane;
     /** Apply button. */
     private JButton btnApply;
     /** OK button. */
@@ -49,32 +46,32 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
     /** Cancel button. */
     private JButton btnCancel;
 
-    private List<CommandsPanel> panels = new ArrayList<>();
+    private final List<CommandsPanel> panels = new ArrayList<>();
 
 
     public EditCommandsDialog(Frame owner, Component locationRelativeComp) {
-        super(owner, Translator.get("EditCommands.label"), locationRelativeComp);
+        super(owner, i18n("EditCommands.label"), locationRelativeComp);
         initUI();
     }
 
-    // - UI code ----------------------------------------------------------------
-    // --------------------------------------------------------------------------
+
     /**
      * Initializes the tabbed panel's UI.
      */
     private void initUI() {
         // Initializes the tabbed pane.
         //prefPanels = new ArrayList<>();
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        // Displays the different panels
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
         CommandsPanel panel = new CommandsPanel(this, CommandManager.VIEWER_ALIAS);
-        tabbedPane.addTab(Translator.get("EditCommands.group.view"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.view"), panel);
         panels.add(panel);
         panel = new CommandsPanel(this, CommandManager.EDITOR_ALIAS);
-        tabbedPane.addTab(Translator.get("EditCommands.group.edit"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.edit"), panel);
         panels.add(panel);
         panel = new CommandsPanel(this, null);
-        tabbedPane.addTab(Translator.get("EditCommands.group.others"), panel);
+        tabbedPane.addTab(i18n("EditCommands.group.others"), panel);
         panels.add(panel);
 
 
@@ -85,10 +82,10 @@ public class EditCommandsDialog extends FocusDialog implements ActionListener {
 
         // Buttons panel.
         XBoxPanel buttonsPanel = new XBoxPanel();
-        buttonsPanel.add(btnApply = new JButton(Translator.get("apply")));
+        buttonsPanel.add(btnApply = new JButton(i18n("apply")));
         buttonsPanel.addSpace(20);
-        buttonsPanel.add(btnOk = new JButton(Translator.get("ok")));
-        buttonsPanel.add(btnCancel = new JButton(Translator.get("cancel")));
+        buttonsPanel.add(btnOk = new JButton(i18n("ok")));
+        buttonsPanel.add(btnCancel = new JButton(i18n("cancel")));
 
         // Disable "commit buttons".
         btnOk.setEnabled(false);

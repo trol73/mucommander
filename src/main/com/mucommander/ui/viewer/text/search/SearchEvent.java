@@ -32,7 +32,7 @@ public class SearchEvent extends EventObject {
     private SearchContext context;
     private Type type;
 
-    public SearchEvent(Object source, Type type, SearchContext context) {
+    SearchEvent(Object source, Type type, SearchContext context) {
         super(source);
         this.type = type;
         this.context = context;

@@ -39,7 +39,7 @@ class VersionedXmlConfigurationWriterFactory extends ConfigurationWriterFactory<
 	}
 	
 	@Override
-	public ConfigurationBuilder getWriterInstance(Writer out) throws WriterConfigurationException {
+	public ConfigurationBuilder getWriterInstance(Writer out) {
         return new VersionedXmlConfigurationWriter(out, getRootElementName());
     }
 }

@@ -43,7 +43,6 @@ import java.io.OutputStream;
  * <code>AbstractArchiveEntryFile</code> is agnostic to the actual archive format. In other words, there is no need to
  * extend this class for a particular archive format, <code>ArchiveEntry</code> and <code>AbstractArchiveFile</code>
  * provide a generic framework that isolates from the archive format's specifics.
- * </p>
  * <p>
  * This class is abstract (as the name implies) and implemented by two subclasses:
  * <ul>
@@ -58,13 +57,13 @@ import java.io.OutputStream;
 public abstract class AbstractArchiveEntryFile extends AbstractFile {
 
     /** The archive file that contains this entry */
-    AbstractArchiveFile archiveFile;
+    final AbstractArchiveFile archiveFile;
 
     /** This entry file's parent, can be the archive file itself if this entry is located at the top level */
     protected AbstractFile parent;
 
     /** The ArchiveEntry object that contains information about this entry */
-    protected ArchiveEntry entry;
+    final protected ArchiveEntry entry;
 
 
     /**

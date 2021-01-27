@@ -40,6 +40,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +51,8 @@ import com.mucommander.commons.file.filter.AndFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter;
 import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
 import com.mucommander.commons.file.util.FileComparator;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.event.LocationEvent;
@@ -77,16 +78,16 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
 	private static final Logger LOGGER = LoggerFactory.getLogger(FoldersTreePanel.class);
 	
     /** Directory tree */
-    private JTree tree;
+    private final JTree tree;
 
     /** Folder panel to which this tree is attached */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** A model with a directory tree */
-    private FilesTreeModel model;
+    private final FilesTreeModel model;
 
     /** A timer that fires a directory change */
-    private ChangeTimer changeTimer = new ChangeTimer();
+    private final ChangeTimer changeTimer = new ChangeTimer();
 
     static {
         TreeIOThreadManager.getInstance().start();
@@ -109,14 +110,13 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
             new ConfigurableFolderFilter()
         );
 
-        FileComparator sort = new FileComparator(FileComparator.NAME_CRITERION, true, true);
+        FileComparator sort = new FileComparator(FileComparator.NAME_CRITERION, true, true, false);
         model = new FilesTreeModel(treeFileFilter, sort);
         tree = new JTree(model);
 		tree.setFont(ThemeCache.tableFont);
         tree.setBackground(ThemeCache.backgroundColors[ThemeCache.INACTIVE][ThemeCache.NORMAL]);
 
-        tree.getSelectionModel().setSelectionMode(
-                TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setExpandsSelectedPaths(true);
         tree.getModel().addTreeModelListener(this);
 
@@ -166,7 +166,7 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
         
         ThemeCache.addThemeListener(this);
         
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
     }
 
     
@@ -176,9 +176,9 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
      */
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
-        if (var.equals(MuPreferences.SHOW_HIDDEN_FILES) ||
-                var.equals(MuPreferences.SHOW_DS_STORE_FILES) ||
-                var.equals(MuPreferences.SHOW_SYSTEM_FOLDERS)) {
+        if (var.equals(TcPreferences.SHOW_HIDDEN_FILES) ||
+                var.equals(TcPreferences.SHOW_DS_STORE_FILES) ||
+                var.equals(TcPreferences.SHOW_SYSTEM_FOLDERS)) {
             Object root = model.getRoot();
             if (root != null) {
                 TreePath path = new TreePath(root);
@@ -213,33 +213,25 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
         final AbstractFile currentFolder = folderPanel.getCurrentFolder();
 
         // get selected directory (ignore archives - TODO make archives browsable (option))
-        AbstractFile tempFolder = currentFolder;
-        AbstractFile tempParent;
-        while (!tempFolder.isDirectory()) {
-            tempParent = tempFolder.getParent();
-            if(tempParent==null)
-                break;
-
-            tempFolder = tempParent;
-        }
+        final AbstractFile parentFolder = getParentFolder(currentFolder);
 
         // compare selection on tree and panel
-        final AbstractFile selectedFolder = tempFolder;
         TreePath selectionPath = tree.getSelectionPath();
         if (selectionPath != null) {
-            if (selectionPath.getLastPathComponent() == currentFolder)
+            if (selectionPath.getLastPathComponent() == currentFolder) {
                 return;
+            }
         }
 
         // check if root has changed
-        final AbstractFile currentRoot = selectedFolder.getRoot();
+        final AbstractFile currentRoot = parentFolder.getRoot();
         if (!currentRoot.equals(model.getRoot())) {
             model.setRoot(currentRoot);
         }
         // refresh selection on tree
         SwingUtilities.invokeLater(() -> {
             try {
-                TreePath path = new TreePath(model.getPathToRoot(selectedFolder));
+                TreePath path = new TreePath(model.getPathToRoot(parentFolder));
                 tree.expandPath(path);
                 tree.setSelectionPath(path);
                 tree.scrollPathToVisible(path);
@@ -249,13 +241,27 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
          });
     }
 
+    @NotNull
+    private AbstractFile getParentFolder(AbstractFile currentFolder) {
+        AbstractFile tempFolder = currentFolder;
+        while (!tempFolder.isDirectory()) {
+            AbstractFile tempParent = tempFolder.getParent();
+            if (tempParent == null) {
+                break;
+            }
+            tempFolder = tempParent;
+        }
+        return tempFolder;
+    }
+
     /**
      * Refreshes folder after a change (e.g. mkdir).
      * @param folder a folder to refresh on the tree
      */
     public void refreshFolder(AbstractFile folder) {
-        if (!isVisible())
+        if (!isVisible()) {
             return;
+        }
         model.fireTreeStructureChanged(tree, new TreePath(model.getPathToRoot(folder)));
     }
     
@@ -354,11 +360,8 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
     // -------------------------------------------------------------------------
 	
 	public void colorChanged(ColorChangedEvent event) {
-		if (tree.hasFocus()) {
-			tree.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL]);	
-		} else {
-			tree.setBackground(ThemeCache.backgroundColors[ThemeCache.INACTIVE][ThemeCache.NORMAL]);	
-		}
+        int type = tree.hasFocus()  ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
+        tree.setBackground(ThemeCache.backgroundColors[type][ThemeCache.NORMAL]);
 		tree.repaint();
 	}
 

@@ -32,6 +32,8 @@ import com.mucommander.adb.AndroidMenu;
 import com.mucommander.adb.AdbUtils;
 import com.mucommander.bonjour.BonjourDirectory;
 import com.mucommander.utils.FileIconsCache;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +52,11 @@ import com.mucommander.commons.file.filter.PathFilter;
 import com.mucommander.commons.file.filter.RegexpPathFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.text.Translator;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
 import com.mucommander.ui.button.PopupButton;
 import com.mucommander.ui.dialog.server.FTPPanel;
@@ -80,7 +82,7 @@ import ru.trolsoft.ui.TMenuSeparator;
  * @author Maxence Bernard
  */
 public class DrivePopupButton extends PopupButton implements BookmarkListener, ConfigurationListener, LocationListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DrivePopupButton.class);
+	private static Logger logger;
 	
     /** FolderPanel instance that contains this button */
     private FolderPanel folderPanel;
@@ -110,13 +112,13 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         }
 
         try {
-            String excludeRegexp = MuConfigurations.getPreferences().getVariable(MuPreference.VOLUME_EXCLUDE_REGEXP);
+            String excludeRegexp = TcConfigurations.getPreferences().getVariable(TcPreference.VOLUME_EXCLUDE_REGEXP);
             if (excludeRegexp != null) {
                 volumeFilter = new RegexpPathFilter(excludeRegexp, true);
                 volumeFilter.setInverted(true);
             }
         } catch(PatternSyntaxException e) {
-            LOGGER.info("Invalid regexp for conf variable "+MuPreferences.VOLUME_EXCLUDE_REGEXP, e);
+            getLogger().info("Invalid regexp for conf variable " + TcPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
         // Initialize the volumes list
@@ -140,7 +142,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         BookmarkManager.addBookmarkListener(this);
 
         // Listen to configuration changes to update the button if the system file icons policy has changed
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
 
         // Use new JButton decorations introduced in Mac OS X 10.5 (Leopard)
         //if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
@@ -163,79 +165,84 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      */
     private void updateButton() {
         AbstractFile currentFolder = folderPanel.getCurrentFolder();
-        String currentPath = currentFolder.getAbsolutePath();
-        FileURL currentURL = currentFolder.getURL();
 
-        String newLabel = null;
+        setText(buildLabel(currentFolder));
+//        setToolTipText(newToolTip);
+        // Set the folder icon based on the current system icons policy
+        setIcon(FileIcons.getFileIcon(currentFolder));
+    }
+
+    private String buildLabel(AbstractFile currentFolder) {
+        String currentPath = currentFolder != null ? currentFolder.getAbsolutePath() : null;
+        FileURL currentURL = currentFolder != null ? currentFolder.getURL() : null;
+
 //        String newToolTip = null;
 
         // First tries to find a bookmark matching the specified folder
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
 
+        String newLabel = null;
         for (Bookmark b : bookmarks) {
-            if (currentPath.equals(b.getLocation())) {
+            if (currentPath != null && currentPath.equals(b.getLocation())) {
                 // Note: if several bookmarks match current folder, the first one will be used
                 newLabel = b.getName();
                 break;
             }
         }
-		
+        if (newLabel != null) {
+            return newLabel;
+        }
+
         // If no bookmark matched current folder
-        if (newLabel == null) {
-            String protocol = currentURL.getScheme();
+        String protocol = currentURL != null ? currentURL.getScheme() : null;
+        if (!FileProtocols.FILE.equals(protocol)) {
             // Remote file, use the protocol's name
-            if (!protocol.equals(FileProtocols.FILE)) {
-                newLabel = protocol.toUpperCase();
-            }
-            // Local file, use volume's name 
-            else {
-                // Patch for Windows UNC network paths (weakly characterized by having a host different from 'localhost'):
-                // display 'SMB' which is the underlying protocol
-                if (OsFamily.WINDOWS.isCurrent() && !FileURL.LOCALHOST.equals(currentURL.getHost())) {
-                    newLabel = "SMB";
-                } else {
-                    // getCanonicalPath() must be avoided under Windows for the following reasons:
-                    // a) it is not necessary, Windows doesn't have symlinks
-                    // b) it triggers the dreaded 'No disk in drive' error popup dialog.
-                    // c) when network drives are present but not mounted (e.g. X:\ mapped onto an SMB share),
-                    // getCanonicalPath which is I/O bound will take a looooong time to execute
+            return protocol != null ? protocol.toUpperCase() : "";
+        } else {
+            // Local file, use volume's name
 
-                    if (OsFamily.WINDOWS.isCurrent()) {
-                        currentPath = currentFolder.getAbsolutePath(false).toLowerCase();
-                    } else {
-                        currentPath = currentFolder.getCanonicalPath(false).toLowerCase();
-                    }
+            // Patch for Windows UNC network paths (weakly characterized by having a host different from 'localhost'):
+            // display 'SMB' which is the underlying protocol
+            if (OsFamily.WINDOWS.isCurrent() && !FileURL.LOCALHOST.equals(currentURL.getHost())) {
+                return "SMB";
+            } else {
+                // getCanonicalPath() must be avoided under Windows for the following reasons:
+                // a) it is not necessary, Windows doesn't have symlinks
+                // b) it triggers the dreaded 'No disk in drive' error popup dialog.
+                // c) when network drives are present but not mounted (e.g. X:\ mapped onto an SMB share),
+                // getCanonicalPath which is I/O bound will take a looooong time to execute
 
-                    int bestLength = -1;
-                    int bestIndex = 0;
-                    for (int i = 0; i < volumes.length; i++) {
-                        String temp;
-                        if (OsFamily.WINDOWS.isCurrent()) {
-                            temp = volumes[i].getAbsolutePath(false);
-                        } else {
-                            temp = volumes[i].getCanonicalPath(false);
-                        }
-                        temp = temp.toLowerCase();
+                int bestIndex = getBestIndex(getVolumePath(currentFolder));
+                return volumes[bestIndex].getName();
 
-                        int len = temp.length();
-                        if (currentPath.startsWith(temp) && len>bestLength) {
-                            bestIndex = i;
-                            bestLength = len;
-                        }
-                    }
-                    newLabel = volumes[bestIndex].getName();
-
-                    // Not used because the call to FileSystemView is slow
+                // Not used because the call to FileSystemView is slow
 //                    if(fileSystemView!=null)
 //                        newToolTip = getWindowsExtendedDriveName(volumes[bestIndex]);
-                }
             }
         }
-		
-        setText(newLabel);
-//        setToolTipText(newToolTip);
-        // Set the folder icon based on the current system icons policy
-        setIcon(FileIcons.getFileIcon(currentFolder));
+    }
+
+    private int getBestIndex(String currentPath) {
+        int bestLength = -1;
+        int bestIndex = 0;
+        for (int i = 0; i < volumes.length; i++) {
+            String volumePath = getVolumePath(volumes[i]).toLowerCase();
+            int len = volumePath.length();
+            if (currentPath.startsWith(volumePath) && len > bestLength) {
+                bestIndex = i;
+                bestLength = len;
+            }
+        }
+        return bestIndex;
+    }
+
+    @NotNull
+    private String getVolumePath(AbstractFile file) {
+        if (OsFamily.WINDOWS.isCurrent()) {
+            return file.getAbsolutePath(false);
+        } else {
+            return file.getCanonicalPath(false);
+        }
     }
 
 
@@ -263,8 +270,8 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      * Returns the list of volumes to be displayed in the popup menu.
      *
      * <p>The raw list of volumes is fetched using {@link LocalFile#getVolumes()} and then
-     * filtered using the regexp defined in the {@link MuPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
-     * (if defined).</p>
+     * filtered using the regexp defined in the {@link TcPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
+     * (if defined).
      *
      * @return the list of volumes to be displayed in the popup menu
      */
@@ -291,18 +298,54 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         volumes = getDisplayableVolumes();
 
         // Add volumes
-        int nbVolumes = volumes.length;
         final MainFrame mainFrame = folderPanel.getMainFrame();
 
         MnemonicHelper mnemonicHelper = new MnemonicHelper();   // Provides mnemonics and ensures uniqueness
-        JMenuItem item;
-        MuAction action;
 
+        addVolumes(popupMenu, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        addBookmarks(popupMenu, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        // Add 'Network shares' shortcut
+        if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
+            TcAction action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///", null));
+            action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
+            setMnemonic(popupMenu.add(action), mnemonicHelper);
+        }
+
+        if (BonjourDirectory.isActive()) {
+            // Add Bonjour services menu
+            setMnemonic(popupMenu.add(new BonjourMenu() {
+                @Override
+                public TcAction getMenuItemAction(BonjourService bs) {
+                    return new CustomOpenLocationAction(mainFrame, bs);
+                }
+            }), mnemonicHelper);
+        }
+
+        addAdbDevices(popupMenu, mainFrame, mnemonicHelper);
+        popupMenu.add(new TMenuSeparator());
+
+        // Add 'connect to server' shortcuts
+        setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("FTP...", FTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("SFTP...", SFTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("HTTP...", HTTPPanel.class)), mnemonicHelper);
+        setMnemonic(popupMenu.add(new ServerConnectAction("NFS...", NFSPanel.class)), mnemonicHelper);
+
+        return popupMenu;
+    }
+
+
+    private void addVolumes(JPopupMenu popupMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         boolean useExtendedDriveNames = fileSystemView != null;
         List<JMenuItem> itemsV = new ArrayList<>();
 
+        int nbVolumes = volumes.length;
         for (int i = 0; i < nbVolumes; i++) {
-            action = new CustomOpenLocationAction(mainFrame, volumes[i]);
+            TcAction action = new CustomOpenLocationAction(mainFrame, volumes[i]);
             String volumeName = volumes[i].getName();
 
             // If several volumes have the same filename, use the volume's path for the action's label instead of the
@@ -314,7 +357,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 }
             }
 
-            item = popupMenu.add(action);
+            JMenuItem item = popupMenu.add(action);
             setMnemonic(item, mnemonicHelper);
 
             // Set icon from cache
@@ -335,91 +378,94 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         }
 
         new RefreshDriveNamesAndIcons(popupMenu, itemsV).start();
+    }
 
-        popupMenu.add(new TMenuSeparator());
-
+    private void addBookmarks(JPopupMenu popupMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         // Add bookmarks
         List<Bookmark> bookmarks = BookmarkManager.getBookmarks();
         if (!bookmarks.isEmpty()) {
-            for (Bookmark b : bookmarks) {
-                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
-                    popupMenu.add(new TMenuSeparator());
-                    continue;
-                }
-
-                item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
-                String location = b.getLocation();
-                if (!location.contains("://")) {
-                    AbstractFile file = FileFactory.getFile(location);
-                    if (file != null) {
-                        Icon icon = FileIconsCache.getInstance().getIcon(file);
-                        if (icon != null) {
-                            item.setIcon(icon);
-                        }
-//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
-//                        if (image != null) {
-//                            item.setIcon(new ImageIcon(image));
-//                        }
-                    }
-                } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
-                    item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
-                }
-                setMnemonic(item, mnemonicHelper);
-            }
+            addBookmarksGroup(popupMenu, mainFrame, mnemonicHelper, bookmarks, null);
         } else {
             // No bookmark : add a disabled menu item saying there is no bookmark
             popupMenu.add(Translator.get("bookmarks_menu.no_bookmark")).setEnabled(false);
         }
+    }
 
-        popupMenu.add(new TMenuSeparator());
-
-        // Add 'Network shares' shortcut
-        if (FileFactory.isRegisteredProtocol(FileProtocols.SMB)) {
-            action = new CustomOpenLocationAction(mainFrame, new Bookmark(Translator.get("drive_popup.network_shares"), "smb:///"));
-            action.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
-            setMnemonic(popupMenu.add(action), mnemonicHelper);
-        }
-
-        if (BonjourDirectory.isActive()) {
-            // Add Bonjour services menu
-            setMnemonic(popupMenu.add(new BonjourMenu() {
-                @Override
-                public MuAction getMenuItemAction(BonjourService bs) {
-                    return new CustomOpenLocationAction(mainFrame, bs);
+    private void addBookmarksGroup(JComponent parentMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper,
+                                   List<Bookmark> bookmarks, String parent) {
+        for (Bookmark b : bookmarks) {
+            if ((b.getParent() == null && parent == null) || (parent != null && parent.equals(b.getParent()))) {
+                if (b.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR) && b.getLocation().isEmpty()) {
+                    parentMenu.add(new TMenuSeparator());
+                    continue;
                 }
-            }), mnemonicHelper);
+                if (b.getLocation().isEmpty()) {
+                    JMenu groupMenu = new JMenu(b.getName());
+                    parentMenu.add(groupMenu);
+                    addBookmarksGroup(groupMenu, mainFrame, mnemonicHelper, bookmarks, b.getName());
+                    setMnemonic(groupMenu, mnemonicHelper);
+                } else {
+                    JMenuItem item = createBookmarkMenuItem(parentMenu, mainFrame, b);
+                    setMnemonic(item, mnemonicHelper);
+                }
+            }
         }
+    }
 
+    private JMenuItem createBookmarkMenuItem(JComponent parentMenu, MainFrame mainFrame, Bookmark b) {
+        JMenuItem item;
+        if (parentMenu instanceof JPopupMenu) {
+            item = ((JPopupMenu)parentMenu).add(new CustomOpenLocationAction(mainFrame, b));
+        } else {
+            item = ((JMenu)parentMenu).add(new CustomOpenLocationAction(mainFrame, b));
+        }
+        //JMenuItem item = popupMenu.add(new CustomOpenLocationAction(mainFrame, b));
+        String location = b.getLocation();
+        if (!location.contains("://")) {
+            AbstractFile file = FileFactory.getFile(location);
+            if (file != null) {
+                Icon icon = FileIconsCache.getInstance().getIcon(file);
+                if (icon != null) {
+                    item.setIcon(icon);
+                }
+//                        Image image = FileIconsCache.getInstance().getImageIcon(file);
+//                        if (image != null) {
+//                            item.setIcon(new ImageIcon(image));
+//                        }
+            }
+        } else if (location.startsWith("ftp://") || location.startsWith("sftp://") || location.startsWith("http://")) {
+            item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.NETWORK_ICON_NAME));
+        } else if (location.startsWith("adb://")) {
+            item.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.ANDROID_ICON_NAME));
+        }
+        return item;
+    }
+
+
+    private void addAdbDevices(JPopupMenu popupMenu, MainFrame mainFrame, MnemonicHelper mnemonicHelper) {
         if (AdbUtils.checkAdb()) {
             setMnemonic(popupMenu.add(new AndroidMenu() {
                 @Override
-                public MuAction getMenuItemAction(String deviceSerial) {
-                    FileURL url = null;
+                public TcAction getMenuItemAction(String deviceSerial) {
+                    FileURL url = getDeviceURL(deviceSerial);
+                    return new CustomOpenLocationAction(mainFrame, url);
+                }
+
+                @Nullable
+                private FileURL getDeviceURL(String deviceSerial) {
                     try {
-                        url = FileURL.getFileURL("adb://"+deviceSerial);
+                        return FileURL.getFileURL("adb://" + deviceSerial);
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
+                        return null;
                     }
-                    return new CustomOpenLocationAction(mainFrame, url);
                 }
             }), mnemonicHelper);
         }
-
-        popupMenu.add(new TMenuSeparator());
-
-        // Add 'connect to server' shortcuts
-        setMnemonic(popupMenu.add(new ServerConnectAction("SMB...", SMBPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("FTP...", FTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("SFTP...", SFTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("HTTP...", HTTPPanel.class)), mnemonicHelper);
-        setMnemonic(popupMenu.add(new ServerConnectAction("NFS...", NFSPanel.class)), mnemonicHelper);
-
-        return popupMenu;
     }
 
 
 
-    
     /**
      *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
      *  to not lock the main even thread. The popup menu gets first displayed with the short drive names, and
@@ -441,27 +487,12 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
             final boolean useExtendedDriveNames = fileSystemView != null;
             for (int i = 0; i < items.size(); i++) {
                 final JMenuItem item = items.get(i);
-
-                String extendedName = null;
-                if (useExtendedDriveNames) {
-                    // Under Windows, show the extended drive name (e.g. "Local Disk (C:)" instead of just "C:") but use
-                    // the simple drive name for the mnemonic (i.e. 'C' instead of 'L').
-                    extendedName = getExtendedDriveName(volumes[i]);
-
-                    // Keep the extended name for later (see above)
-                    extendedNameCache.put(volumes[i], extendedName);
-                }
-                final String extendedNameFinal = extendedName;
-
-                // Set system icon for volumes, only if system icons are available on the current platform
-                final Icon icon = FileIcons.hasProperSystemIcons() ? FileIcons.getSystemFileIcon(volumes[i]) : null;
-                if (icon != null) {
-                    iconCache.put(volumes[i], icon);
-                }
+                final String extendedName = getExtendedDriverName(useExtendedDriveNames, volumes[i]);
+                final Icon icon = getIcon(volumes[i]);
 
                 SwingUtilities.invokeLater(() -> {
                     if (useExtendedDriveNames) {
-                        item.setText(extendedNameFinal);
+                        item.setText(extendedName);
                     }
                     if (icon != null) {
                         item.setIcon(icon);
@@ -476,7 +507,31 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 popupMenu.pack();
             });
         }
-        
+
+        @Nullable
+        private Icon getIcon(AbstractFile file) {
+            // Set system icon for volumes, only if system icons are available on the current platform
+            final Icon icon = FileIcons.hasProperSystemIcons() ? FileIcons.getSystemFileIcon(file) : null;
+            if (icon != null) {
+                iconCache.put(file, icon);
+            }
+            return icon;
+        }
+
+        @Nullable
+        private String getExtendedDriverName(boolean useExtendedDriveNames, AbstractFile file) {
+            if (useExtendedDriveNames) {
+                // Under Windows, show the extended drive name (e.g. "Local Disk (C:)" instead of just "C:") but use
+                // the simple drive name for the mnemonic (i.e. 'C' instead of 'L').
+                String extendedName = getExtendedDriveName(file);
+
+                // Keep the extended name for later (see above)
+                extendedNameCache.put(file, extendedName);
+                return extendedName;
+            }
+            return null;
+        }
+
     }
 
 
@@ -512,7 +567,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
         String var = event.getVariable();
 
         // Update the button's icon if the system file icons policy has changed
-        if (var.equals(MuPreferences.USE_SYSTEM_FILE_ICONS)) {
+        if (var.equals(TcPreferences.USE_SYSTEM_FILE_ICONS)) {
             updateButton();
         }
     }
@@ -603,4 +658,11 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 	public void locationCancelled(LocationEvent locationEvent) { }
 
 	public void locationFailed(LocationEvent locationEvent) {}
+
+	private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(DrivePopupButton.class);
+        }
+        return logger;
+    }
 }

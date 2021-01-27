@@ -42,10 +42,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
+     *
      * @param a string to test.
      * @param b suffix to test for.
      * @return <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case, <code>false</code> otherwise.
@@ -61,10 +60,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
+     *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
      * @param  posA                           position in <code>a</code> at which to look for <code>b</code>
@@ -82,13 +80,16 @@ public final class StringUtils {
         while (posB > 0) {
             char cA = a.charAt(--posA);   // Current character in a.
             // Works on lower-case characters only.
-            if (!Character.isLowerCase(cA))
+            if (!Character.isLowerCase(cA)) {
                 cA = Character.toLowerCase(cA);
+            }
             char cB = b.charAt(--posB);   // Current character in b.
-            if (!Character.isLowerCase(cB))
+            if (!Character.isLowerCase(cB)) {
                 cB = Character.toLowerCase(cB);
-            if (cA != cB)
+            }
+            if (cA != cB) {
                 return false;
+            }
         }
         return true;
     }
@@ -96,10 +97,8 @@ public final class StringUtils {
     /**
      * <p>
      * Checks if <code>str</code> contains a search string <code>searchStr</code> regardless of case, handling {@code null}.
-     * </p>
      * <p>
      * A {@code null} string will return {@code false}.
-     * </p>
      *
      * <pre>
      * StringUtils.contains(null, *) = false
@@ -134,10 +133,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
+     *
      * @param a string to test.
      * @param b suffix to test for.
      * @return <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case, <code>false</code> otherwise.
@@ -151,10 +149,9 @@ public final class StringUtils {
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
      * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
      * exceptions is so huge that it was deemed an acceptable issue.
-     * </p>
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
+     *
      * @param  a                              string to test.
      * @param  b                              suffix to test for.
      * @param  posA                           position in <code>a</code> at which to look for <code>b</code>
@@ -170,13 +167,16 @@ public final class StringUtils {
 
         while (posB > 0) {
             char cA = a.charAt(--posA);   // Current character in a.
-            if (!Character.isLowerCase(cA))
+            if (!Character.isLowerCase(cA)) {
                 cA = Character.toLowerCase(cA);
+            }
             char cB = b[--posB];          // Current character in b.
-            if (!Character.isLowerCase(cB))
+            if (!Character.isLowerCase(cB)) {
                 cB = Character.toLowerCase(cB);
-            if (cA != cB)
+            }
+            if (cA != cB) {
                 return false;
+            }
         }
         return true;
     }
@@ -215,8 +215,8 @@ public final class StringUtils {
     /**
      * Returns <code>true</code> if <code>a</code> starts with <code>b</code> regardless of the case.
      * <p>
-     * Note that this method will return <code>true</code> if <code>b</code> is an emptry string.
-     * </p>
+     * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
+     *
      * @param a string to test.
      * @param b prefix to test for.
      * @return <code>true</code> if <code>a</code> starts with <code>b</code> regardless of the case, <code>false</code> otherwise..
@@ -250,7 +250,7 @@ public final class StringUtils {
      *
      * <p>In other words, this method returns <code>true</code> if strings are either both <code>null</code>
      * or equal according to <code>String#equals(String)</code> for case-sensitive comparison, or
-     * <code>String#equalsIgnoreCase(String)</code> for case-insensitive comparison.</p> 
+     * <code>String#equalsIgnoreCase(String)</code> for case-insensitive comparison.
      *
      * @param s1 string to compare, potentially <code>null</code>
      * @param s2 string to compare, potentially <code>null</code>
@@ -283,19 +283,21 @@ public final class StringUtils {
 
     /**
      * Capitalizes the given string, making its first character upper case, and the rest of them lower case.
-     * This method reeturns an empty string if <code>null</code> or an empty string is passed.
+     * This method returns an empty string if <code>null</code> or an empty string is passed.
      *
      * @param s the string to capitalize
      * @return the capitalized string
      */
     public static String capitalize(String s) {
-        if (isNullOrEmpty(s))
+        if (isNullOrEmpty(s)) {
             return EMPTY;
+        }
 
         StringBuilder out = new StringBuilder(s.length());
         out.append(Character.toUpperCase(s.charAt(0)));
-        if (s.length() > 1)
+        if (s.length() > 1) {
             out.append(s.substring(1).toLowerCase());
+        }
         return out.toString();
     }
 
@@ -367,5 +369,14 @@ public final class StringUtils {
      */
     public static boolean isNullOrBlank(String string) {
         return isNullOrEmpty(string) || string.trim().isEmpty();
+    }
+
+    public static boolean isNumber(String string) {
+        try {
+            Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

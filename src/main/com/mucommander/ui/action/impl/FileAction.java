@@ -19,7 +19,7 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.filter.FileFilter;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.event.TableSelectionListener;
 import com.mucommander.ui.main.FolderPanel;
@@ -42,7 +42,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public abstract class FileAction extends MuAction implements TableSelectionListener, ActivePanelListener {
+public abstract class FileAction extends TcAction implements TableSelectionListener, ActivePanelListener {
 
     /** Filter that restricts the enabled condition to files that match it (can be null) */
     protected FileFilter filter;
@@ -103,8 +103,9 @@ public abstract class FileAction extends MuAction implements TableSelectionListe
      */
     public void selectedFileChanged(FileTable source) {
         // No need to update state if the originating FileTable is not the currently active one 
-        if(source==mainFrame.getActiveTable())
+        if (source == mainFrame.getActiveTable()) {
             updateEnabledState(source);
+        }
     }
 
     /**
@@ -112,8 +113,9 @@ public abstract class FileAction extends MuAction implements TableSelectionListe
      */
     public void markedFilesChanged(FileTable source) {
         // No need to update state if the originating FileTable is not the currently active one
-        if(source==mainFrame.getActiveTable())
+        if (source == mainFrame.getActiveTable()) {
             updateEnabledState(source);
+        }
     }
 
     ////////////////////////////////////////

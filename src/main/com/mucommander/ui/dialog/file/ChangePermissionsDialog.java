@@ -23,7 +23,6 @@ import com.mucommander.commons.file.PermissionAccesses;
 import com.mucommander.commons.file.PermissionTypes;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.ChangeFileAttributesJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ChangePermissionsAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -53,19 +52,19 @@ import java.awt.event.ItemListener;
 public class ChangePermissionsDialog extends JobDialog
         implements ActionListener, ItemListener, DocumentListener, PermissionTypes, PermissionAccesses {
 
-    private JCheckBox permCheckBoxes[][];
+    private final JCheckBox[][] permCheckBoxes;
 
-    private JTextField octalPermTextField;
+    private final JTextField octalPermTextField;
 
-    private JCheckBox recurseDirCheckBox;
+    private final JCheckBox recurseDirCheckBox;
 
     /** If true, ItemEvent events should be ignored */
     private boolean ignoreItemEvent;
     /** If true, DocumentEvent events should be ignored */
     private boolean ignoreDocumentEvent;
 
-    private JButton okButton;
-    private JButton cancelButton;
+    private final JButton btnOk;
+    private JButton btnCancel;
 
 
     public ChangePermissionsDialog(MainFrame mainFrame, FileSet files) {
@@ -86,22 +85,23 @@ public class ChangePermissionsDialog extends JobDialog
         int defaultPerms = firstFile.getPermissions().getIntValue();
 
         gridPanel.add(new JLabel());
-        gridPanel.add(new JLabel(Translator.get("permissions.read")));
-        gridPanel.add(new JLabel(Translator.get("permissions.write")));
-        gridPanel.add(new JLabel(Translator.get("permissions.executable")));
+        gridPanel.add(new JLabel(i18n("permissions.read")));
+        gridPanel.add(new JLabel(i18n("permissions.write")));
+        gridPanel.add(new JLabel(i18n("permissions.executable")));
 
         for (int a = USER_ACCESS; a >= OTHER_ACCESS; a--) {
-            gridPanel.add(new JLabel(Translator.get(a == USER_ACCESS ?"permissions.user" :  a== GROUP_ACCESS ? "permissions.group" : "permissions.other")));
+            gridPanel.add(new JLabel(i18n(a == USER_ACCESS ?"permissions.user" : a == GROUP_ACCESS ? "permissions.group" : "permissions.other")));
 
             for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p>>1) {
                 permCheckBox = new JCheckBox();
                 permCheckBox.setSelected((defaultPerms & (p<<a*3))!=0);
 
                 // Enable the checkbox only if the permission can be set in the destination
-                if ((permSetMask & (p<<a*3))==0)
+                if ((permSetMask & (p<<a*3))==0) {
                     permCheckBox.setEnabled(false);
-                else
+                } else {
                     permCheckBox.addItemListener(this);
+                }
 
                 gridPanel.add(permCheckBox);
                 permCheckBoxes[a][p] = permCheckBox;
@@ -118,8 +118,9 @@ public class ChangePermissionsDialog extends JobDialog
                 int strLen = str.length();
                 for (int i = 0; i < strLen; i++) {
                     char c = str.charAt(i);
-                    if (c < '0' || c > '7')
+                    if (c < '0' || c > '7') {
                         return;
+                    }
                 }
 
                 super.insertString(offset, str, attributeSet);
@@ -137,13 +138,13 @@ public class ChangePermissionsDialog extends JobDialog
 
         mainPanel.addSpace(10);
         JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        tempPanel.add(new JLabel(Translator.get("permissions.octal_notation")));
+        tempPanel.add(new JLabel(i18n("permissions.octal_notation")));
         tempPanel.add(octalPermTextField);
         mainPanel.add(tempPanel);
 
         mainPanel.addSpace(15);
 
-        recurseDirCheckBox = new JCheckBox(Translator.get("recurse_directories"));
+        recurseDirCheckBox = new JCheckBox(i18n("recurse_directories"));
         // Disable check box if no permission bit can be set
         recurseDirCheckBox.setEnabled(canSetPermission && (files.size()>1 || files.elementAt(0).isDirectory()));
         mainPanel.add(recurseDirCheckBox);
@@ -151,21 +152,21 @@ public class ChangePermissionsDialog extends JobDialog
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(Translator.get("change"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("change"));
+        btnCancel = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this)));
         mainPanel.add(fileDetailsPanel);
 
         getContentPane().add(mainPanel, BorderLayout.NORTH);
 
         if (!canSetPermission) {
             // Disable OK button if no permission bit can be set
-            okButton.setEnabled(false);
+            btnOk.setEnabled(false);
         }
 
-        getRootPane().setDefaultButton(canSetPermission?okButton:cancelButton);
+        getRootPane().setDefaultButton(canSetPermission ? btnOk : btnCancel);
         setResizable(false);
     }
 
@@ -180,8 +181,9 @@ public class ChangePermissionsDialog extends JobDialog
             for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p>>1) {
                 JCheckBox permCheckBox = permCheckBoxes[a][p];
 
-                if (permCheckBox.isSelected())
-                    perms |= (p<<a*3);
+                if (permCheckBox.isSelected()) {
+                    perms |= (p << a * 3);
+                }
             }
         }
 
@@ -195,8 +197,9 @@ public class ChangePermissionsDialog extends JobDialog
     private void updateOctalPermTextField() {
         String octalStr = Integer.toOctalString(getPermInt());
         int len = octalStr.length();
-        for(int i = len; i < 3; i++)
+        for (int i = len; i < 3; i++) {
             octalStr = "0" + octalStr;
+        }
 
         octalPermTextField.setText(octalStr);
     }
@@ -211,7 +214,7 @@ public class ChangePermissionsDialog extends JobDialog
         int perms = octalStr.isEmpty() ? 0 : Integer.parseInt(octalStr, 8);
 
         for (int a = USER_ACCESS; a >= OTHER_ACCESS; a--) {
-            for( int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p>>1) {
+            for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p>>1) {
                 JCheckBox permCheckBox = permCheckBoxes[a][p];
 //                if(permCheckBox.isEnabled())
                 permCheckBox.setSelected((perms & (p<<a*3))!=0);
@@ -228,14 +231,14 @@ public class ChangePermissionsDialog extends JobDialog
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton) {
+        if (source == btnOk) {
             dispose();
 
             // Starts copying files
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             ChangeFileAttributesJob job = new ChangeFileAttributesJob(progressDialog, mainFrame, files, getPermInt(), recurseDirCheckBox.isSelected());
             progressDialog.start(job);
-        } else if (source == cancelButton) {
+        } else if (source == btnCancel) {
             dispose();
         }
     }
@@ -248,8 +251,9 @@ public class ChangePermissionsDialog extends JobDialog
     // Update the octal permission text field whenever one of the permission checkboxes' value has changed
 
     public void itemStateChanged(ItemEvent e) {
-        if (ignoreItemEvent)
+        if (ignoreItemEvent) {
             return;
+        }
 
         ignoreDocumentEvent = true;
         updateOctalPermTextField();
@@ -264,8 +268,9 @@ public class ChangePermissionsDialog extends JobDialog
     // Update the permission checkboxes' values whenever the octal permission text field has changed
 
     public void changedUpdate(DocumentEvent e) {
-        if (ignoreDocumentEvent)
+        if (ignoreDocumentEvent) {
             return;
+        }
 
         ignoreItemEvent = true;
         updatePermCheckBoxes();
@@ -273,8 +278,9 @@ public class ChangePermissionsDialog extends JobDialog
     }
 
     public void insertUpdate(DocumentEvent e) {
-        if (ignoreDocumentEvent)
+        if (ignoreDocumentEvent) {
             return;
+        }
 
         ignoreItemEvent = true;
         updatePermCheckBoxes();
@@ -282,8 +288,9 @@ public class ChangePermissionsDialog extends JobDialog
     }
 
     public void removeUpdate(DocumentEvent e) {
-        if (ignoreDocumentEvent)
+        if (ignoreDocumentEvent) {
             return;
+        }
 
         ignoreItemEvent = true;
         updatePermCheckBoxes();

@@ -33,9 +33,10 @@ public interface BookmarkBuilder {
      * Notifies the builder of a new bookmark in the list.
      * @param  name              bookmark's name.
      * @param  location          bookmark's location.
+     * @param  parent            bookmark's parent name.
      * @throws BookmarkException if an error occurs.
      */
-    void addBookmark(String name, String location) throws BookmarkException;
+    void addBookmark(String name, String location, String parent) throws BookmarkException;
 
     /**
      * Notifies the builder that the bookmark list is finished.

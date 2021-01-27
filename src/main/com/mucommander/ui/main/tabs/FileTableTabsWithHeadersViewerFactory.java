@@ -32,8 +32,8 @@ import com.mucommander.ui.tabs.TabsWithHeaderViewer;
 */
 public class FileTableTabsWithHeadersViewerFactory implements TabsViewerFactory<FileTableTab> {
 
-	private FolderPanel folderPanel;
-	private MainFrame mainFrame;
+	private final FolderPanel folderPanel;
+	private final MainFrame mainFrame;
 	
 	public FileTableTabsWithHeadersViewerFactory(MainFrame mainFrame, FolderPanel folderPanel) {
 		this.folderPanel = folderPanel;

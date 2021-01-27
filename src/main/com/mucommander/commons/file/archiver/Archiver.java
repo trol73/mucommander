@@ -158,7 +158,7 @@ public abstract class Archiver {
      *
      * <p>This method will first attempt to get a {@link RandomAccessOutputStream} if the given file is able to supply
      * one, and if not, fall back to a regular <code>OutputStream</code>. Note that if the file exists, its contents
-     * will be overwritten. Write bufferring is used under the hood to improve performance.</p>
+     * will be overwritten. Write bufferring is used under the hood to improve performance.
      *
      * @param file the AbstractFile which the returned Archiver will write entries to
      * @param format an archive format
@@ -311,11 +311,11 @@ public abstract class Archiver {
      * <p>If the entry is a regular file (not a directory), an OutputStream which can be used to write the contents
      * of the entry will be returned, <code>null</code> otherwise. The OutputStream <b>must not</b> be closed once
      * it has been used (Archiver takes care of this), only the {@link #close() close} method has to be called when
-     * all entries have been created.</p>
+     * all entries have been created.
      *
      * <p>If this Archiver uses a single entry format, the specified path and file won't be used at all.
      * Also in this case, this method must be invoked only once (single entry), it will throw an IOException
-     * if invoked more than once.</p>
+     * if invoked more than once.
      *
      * @param entryPath the path to be used to create the entry in the archive. This parameter is simply ignored if the
      * archive is a single entry format.

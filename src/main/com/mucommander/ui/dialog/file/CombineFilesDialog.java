@@ -34,7 +34,6 @@ import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.file.util.PathUtils.ResolvedDestination;
 import com.mucommander.job.CombineFilesJob;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CombineFilesAction;
 import com.mucommander.ui.main.MainFrame;
@@ -47,7 +46,7 @@ import com.mucommander.ui.main.MainFrame;
 public class CombineFilesDialog extends TransferDestinationDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CombineFilesDialog.class);
 	
-    private AbstractFile destFolder;
+    private final AbstractFile destFolder;
 
     /**
      * Creates a new combine file dialog.
@@ -58,9 +57,9 @@ public class CombineFilesDialog extends TransferDestinationDialog {
     public CombineFilesDialog(MainFrame mainFrame, FileSet files, AbstractFile destFolder) {
         super(mainFrame, files, 
         		ActionProperties.getActionLabel(CombineFilesAction.Descriptor.ACTION_ID),
-                Translator.get("copy_dialog.destination"),
-                Translator.get("combine"),
-                Translator.get("combine_files_dialog.error_title"),
+                i18n("copy_dialog.destination"),
+                i18n("combine"),
+                i18n("combine_files_dialog.error_title"),
                 true);
 
         this.destFolder = destFolder;
@@ -110,8 +109,8 @@ public class CombineFilesDialog extends TransferDestinationDialog {
     @Override
     protected boolean isValidDestination(PathUtils.ResolvedDestination resolvedDest, String destPath) {
         // The path entered doesn't correspond to any existing folder
-        if (resolvedDest==null) {
-            showErrorDialog(Translator.get("invalid_path", destPath), errorDialogTitle);
+        if (resolvedDest == null) {
+            showErrorDialog(i18n("invalid_path", destPath), errorDialogTitle);
             return false;
         }
         return true;
@@ -140,7 +139,7 @@ public class CombineFilesDialog extends TransferDestinationDialog {
 
     @Override
     protected String getProgressDialogTitle() {
-        return Translator.get("progress_dialog.processing_files");
+        return i18n("progress_dialog.processing_files");
     }
 
 }

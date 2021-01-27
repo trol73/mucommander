@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import javax.swing.JButton;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.chooser.ColorChangeEvent;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 

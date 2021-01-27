@@ -36,13 +36,13 @@ import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.core.LocalLocationHistory;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.GoBackAction;
 import com.mucommander.ui.action.impl.GoForwardAction;
 import com.mucommander.ui.action.impl.OpenLocationAction;
@@ -61,10 +61,7 @@ import ru.trolsoft.macosx.RetinaImageIcon;
  */
 public class ToolBar extends JToolBar implements ConfigurationListener, MouseListener, ToolBarAttributesListener {
 
-    private MainFrame mainFrame;
-
-    /** Holds a reference to the RolloverButtonAdapter instance so that it doesn't get garbage-collected */
-    private RolloverButtonAdapter rolloverButtonAdapter;
+    private final MainFrame mainFrame;
 
     /** Dimension of button separators */
     private final static Dimension SEPARATOR_DIMENSION = new Dimension(10, 16);
@@ -76,8 +73,8 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
     /** Current icon scale value */
     // The math.max(1.0f, ...) part is to workaround a bug which cause(d) this value to be set to 0.0 in the configuration file.
-    private static float scaleFactor = Math.max(1.0f, MuConfigurations.getPreferences().getVariable(MuPreference.TOOLBAR_ICON_SCALE,
-                                                                        MuPreferences.DEFAULT_TOOLBAR_ICON_SCALE));
+    private static float scaleFactor = Math.max(1.0f, TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_ICON_SCALE,
+                                                                        TcPreferences.DEFAULT_TOOLBAR_ICON_SCALE));
 
 
     /**
@@ -95,11 +92,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         addMouseListener(this);
 
         // Listen to configuration changes to reload toolbar buttons when icon size has changed
-        MuConfigurations.addPreferencesListener(this);
-
-        // Rollover-enable the button and hold a reference to the RolloverButtonAdapter instance so that it doesn't
-        // get garbage-collected
-        rolloverButtonAdapter = new RolloverButtonAdapter();
+        TcConfigurations.addPreferencesListener(this);
 
         // create buttons for each actions and add them to the toolbar
         addButtons(ToolBarAttributes.getActions());
@@ -113,7 +106,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
                 addSeparator(SEPARATOR_DIMENSION);
             } else {
                 // Get a MuAction instance
-                MuAction action = ActionManager.getActionInstance(actionId, mainFrame);
+                TcAction action = ActionManager.getActionInstance(actionId, mainFrame);
                 // Do not add buttons for actions that do not have an icon
                 if (action != null && action.getIcon() != null) {
                     addButton(action);
@@ -153,7 +146,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
     /**
      * Adds a button to this toolbar using the given action.
      */
-    private void addButton(MuAction action) {
+    private void addButton(TcAction action) {
         JButton button;
 
         if (action instanceof GoBackAction || action instanceof GoForwardAction) {
@@ -178,17 +171,12 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
             if (button.getIcon() == null || button.getIcon().getIconHeight() <= 16) {
-            button.putClientProperty("JButton.buttonType", "segmentedTextured");
+                button.putClientProperty("JButton.buttonType", "segmentedTextured");
             }
             button.setRolloverEnabled(true);
+        } else {
+            RolloverButtonAdapter.decorateButton(button);
         }
-        // On other platforms, use a custom rollover effect
-        else {
-            // Init rollover
-            RolloverButtonAdapter.setButtonDecoration(button);
-            button.addMouseListener(rolloverButtonAdapter);
-        }
-
         add(button);
     }
 
@@ -225,7 +213,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         String var = event.getVariable();
 
         // Rescale buttons icon
-        if (var.equals(MuPreferences.TOOLBAR_ICON_SCALE)) {
+        if (var.equals(TcPreferences.TOOLBAR_ICON_SCALE)) {
             scaleFactor = event.getFloatValue();
             Component components[] = getComponents();
 
@@ -293,9 +281,9 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
      */
     private class HistoryPopupButton extends PopupButton {
 
-        private MuAction action;
+        private final TcAction action;
 
-        private HistoryPopupButton(MuAction action) {
+        private HistoryPopupButton(TcAction action) {
             super(action);
             this.action = action;
         }

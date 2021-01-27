@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.theme;
 
+import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.runtime.OsFamily;
 import org.fife.ui.rtextarea.RTextArea;
 
@@ -31,7 +32,7 @@ import java.util.WeakHashMap;
  * Base class for all things Theme.
  * <p>
  * The role of <code>ThemeData</code> is twofold:<br>
- * - theme data storage.<br/>
+ * - theme data storage.<br>
  * - default values retrievals and notification.<br>
  *
  * <p>
@@ -98,7 +99,7 @@ public class ThemeData implements ThemeId {
     // - Listeners -----------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Listeners on the default font and colors. */
-    private static WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
+    private static final WeakHashMap<ThemeListener, ?> listeners = new WeakHashMap<>();
 
 
 
@@ -191,8 +192,13 @@ public class ThemeData implements ThemeId {
             @Override
             public Font getFont(ThemeData data) {
                 Font font = super.getFont(data);
-                if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-                    return new Font("Menlo", font.getStyle(), font.getSize());
+                switch (OsFamily.getCurrent()) {
+                    case MAC_OS_X:
+                        return new Font("Menlo", font.getStyle(), font.getSize());
+                    case LINUX:
+                        if (RuntimeConstants.DISPLAY_4K) {
+                            return new Font(font.getName(), font.getStyle(), 32);
+                        }
                 }
                 return font;
             }
@@ -200,7 +206,7 @@ public class ThemeData implements ThemeId {
         registerDefaultFont(DEFAULT_HEX_VIEWER_FONT, new SystemDefaultFont("Table.font", mapper) {
             @Override
             public Font getFont(ThemeData data) {
-                return new Font("Monospaced", Font.PLAIN, 14);
+                return createDefaultHexViewerFont();
             }
         });
         registerDefaultColor(DEFAULT_TEXT_AREA_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "TextArea.foreground", mapper));
@@ -224,12 +230,12 @@ public class ThemeData implements ThemeId {
         registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "TextField.selectionForeground", mapper));
         registerDefaultColor(DEFAULT_TEXT_FIELD_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper));
         registerDefaultColor(DEFAULT_TEXT_FIELD_PROGRESS_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "TextField.selectionBackground", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
+            @Override
+            public Color getColor(ThemeData data) {
                 Color color = super.getColor(data);
-                                     return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
-                                 }
-                             });
+                return new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
+            }
+        });
 
         // Register Table related default values.
         mapper = new ComponentMapper() {
@@ -245,17 +251,17 @@ public class ThemeData implements ThemeId {
         registerDefaultColor(DEFAULT_TABLE_SELECTION_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_FOREGROUND, "Table.selectionForeground", mapper));
         registerDefaultColor(DEFAULT_TABLE_SELECTION_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.SELECTION_BACKGROUND, "Table.selectionBackground", mapper));
         registerDefaultColor(DEFAULT_TABLE_UNMATCHED_FOREGROUND, new SystemDefaultColor(SystemDefaultColor.FOREGROUND, "Table.foreground", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
+            @Override
+            public Color getColor(ThemeData data) {
                                      return super.getColor(data).darker();
                                  }
-                             });
+        });
         registerDefaultColor(DEFAULT_TABLE_UNMATCHED_BACKGROUND, new SystemDefaultColor(SystemDefaultColor.BACKGROUND, "Table.background", mapper) {
-                                 @Override
-                                 public Color getColor(ThemeData data) {
+            @Override
+            public Color getColor(ThemeData data) {
                                      return super.getColor(data).darker();
                                  }
-                             });
+        });
 
         // Menu header related default values.
         mapper = new ComponentMapper() {
@@ -293,20 +299,24 @@ public class ThemeData implements ThemeId {
         registerColor(QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR,    FILE_SELECTED_FOREGROUND_COLOR);
 
         // File default values.
+        registerColor(HIDDEN_FOLDER_FOREGROUND_COLOR,                 Color.GRAY);
         registerColor(HIDDEN_FILE_FOREGROUND_COLOR,                   Color.GRAY);
         registerColor(FOLDER_FOREGROUND_COLOR,                        DEFAULT_TABLE_FOREGROUND);
         registerColor(ARCHIVE_FOREGROUND_COLOR,                       DEFAULT_TABLE_FOREGROUND);
         registerColor(SYMLINK_FOREGROUND_COLOR,                       DEFAULT_TABLE_FOREGROUND);
         registerColor(FILE_INACTIVE_FOREGROUND_COLOR,                 DEFAULT_TABLE_FOREGROUND);
+        registerColor(HIDDEN_FOLDER_INACTIVE_FOREGROUND_COLOR,        Color.GRAY);
         registerColor(HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR,          Color.GRAY);
         registerColor(FOLDER_INACTIVE_FOREGROUND_COLOR,               DEFAULT_TABLE_FOREGROUND);
         registerColor(ARCHIVE_INACTIVE_FOREGROUND_COLOR,              DEFAULT_TABLE_FOREGROUND);
         registerColor(SYMLINK_INACTIVE_FOREGROUND_COLOR,              DEFAULT_TABLE_FOREGROUND);
         registerColor(FILE_FOREGROUND_COLOR,                          DEFAULT_TABLE_FOREGROUND);
+        registerColor(HIDDEN_FOLDER_SELECTED_FOREGROUND_COLOR,        DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(HIDDEN_FILE_SELECTED_FOREGROUND_COLOR,          DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(FOLDER_SELECTED_FOREGROUND_COLOR,               DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(ARCHIVE_SELECTED_FOREGROUND_COLOR,              DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(SYMLINK_SELECTED_FOREGROUND_COLOR,              DEFAULT_TABLE_SELECTION_FOREGROUND);
+        registerColor(HIDDEN_FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR,      DEFAULT_TABLE_SELECTION_FOREGROUND);
         registerColor(ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR,     DEFAULT_TABLE_SELECTION_FOREGROUND);
@@ -869,7 +879,7 @@ public class ThemeData implements ThemeId {
         // Dispatches it.
         for (ThemeListener listener : listeners.keySet()) {
             listener.colorChanged(event);
-    }
+        }
     }
 
 
@@ -900,13 +910,24 @@ public class ThemeData implements ThemeId {
 
     private static Font createDefaultTerminalFont() {
         String name;
-        if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
-            name = "Consolas";
-        } else if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-            name = "Menlo";
-        } else {
-            name = "Monospaced";
+        switch (OsFamily.getCurrent()) {
+            case WINDOWS:
+                name = "Consolas";
+                break;
+            case MAC_OS_X:
+                return new Font("Menlo", Font.PLAIN, 14);
+            case LINUX:
+                int size = RuntimeConstants.DISPLAY_4K ? 32 : 14;
+                return new Font("Monospaced", Font.PLAIN, size);
+            default:
+                name = "Monospaced";
         }
         return new Font(name, Font.PLAIN, 14);
+    }
+
+
+    private static Font createDefaultHexViewerFont() {
+        int size = OsFamily.getCurrent() == OsFamily.LINUX && RuntimeConstants.DISPLAY_4K ? 28 : 14;
+        return new Font("Monospaced", Font.PLAIN, size);
     }
 }

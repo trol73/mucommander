@@ -28,7 +28,7 @@ import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.TempExecJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowRecentExecutedFilesQLAction;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -44,7 +44,7 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  */
 
 public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
-	private static LinkedList<AbstractFile> list = new LinkedList<>();
+	private static final LinkedList<AbstractFile> list = new LinkedList<>();
 	private static final int MAX_NUM_OF_ELEMENTS = 10;
 //	private FolderPanel folderPanel;
 	
@@ -81,7 +81,7 @@ public class RecentExecutedFilesQL extends QuickListWithIcons<AbstractFile> {
 
 	@Override
     protected AbstractFile[] getData() {
-		return list.toArray(new AbstractFile[list.size()]);
+		return list.toArray(new AbstractFile[0]);
 	}
 
 	@Override

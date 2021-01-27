@@ -61,8 +61,9 @@ public class LocalProcess extends AbstractProcess {
         // Safeguard: makes sure that an exception is raised if the process could not be created.
         // This might not be strictly necessary, but the Runtime.exec documentation is not very precise
         // on what happens in case of an error.
-        if (process == null)
+        if (process == null) {
             throw new IOException();
+        }
     }
 
     private boolean isQuotedWith(String string, String quotationMark) {
@@ -134,7 +135,7 @@ public class LocalProcess extends AbstractProcess {
      * On Java 1.5 or higher, this will throw an <code>java.io.IOException</code>, as we're using
      * merged output streams. Developers should protect themselves against this by checking
      * {@link #usesMergedStreams()} before accessing streams.
-     * </p>
+     *
      * @return             the process' error stream.
      * @throws IOException if this process is using merged streams.
      */

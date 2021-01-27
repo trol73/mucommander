@@ -18,12 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.ui.action.*;
+import com.mucommander.ui.action.AbstractActionDescriptor;
+import com.mucommander.ui.action.ActionCategory;
+import com.mucommander.ui.action.ActionDescriptor;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -32,9 +34,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class RecallNextWindowAction extends MuAction {
+public class RecallNextWindowAction extends TcAction {
 
-    RecallNextWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private RecallNextWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -59,14 +61,10 @@ public class RecallNextWindowAction extends MuAction {
 		public KeyStroke getDefaultAltKeyStroke() { return null; }
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK | CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RecallNextWindowAction(mainFrame, properties);
         }
     }

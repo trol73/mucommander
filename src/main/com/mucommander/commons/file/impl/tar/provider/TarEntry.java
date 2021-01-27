@@ -49,10 +49,9 @@ import java.util.Date;
  * } header;
  * </pre>
  *
- * <p>-----------------------------------</p>
  * <p>This class is based off the <code>org.apache.tools.tar</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.1 of Ant.</p>
+ * file. It was forked at version 1.7.1 of Ant.
  * 
  * @author Apache Ant, Maxence Bernard
  */
@@ -128,7 +127,7 @@ public class TarEntry implements TarConstants {
         this.userId = 0;
         this.groupId = 0;
         this.userName = new StringBuffer(user);
-        this.groupName = new StringBuffer("");
+        this.groupName = new StringBuffer();
     }
 
     /**
@@ -151,9 +150,9 @@ public class TarEntry implements TarConstants {
         this.groupId = 0;
         this.size = 0;
         this.modTime = (new Date()).getTime() / MILLIS_PER_SECOND;
-        this.linkName = new StringBuffer("");
-        this.userName = new StringBuffer("");
-        this.groupName = new StringBuffer("");
+        this.linkName = new StringBuffer();
+        this.userName = new StringBuffer();
+        this.groupName = new StringBuffer();
         this.devMajor = 0;
         this.devMinor = 0;
 

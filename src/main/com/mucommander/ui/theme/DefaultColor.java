@@ -28,19 +28,18 @@ import java.util.List;
  * <p>
  * Instances of this class are used to provide default values for theme colors and notify the current theme when they
  * are modified.
- * </p>
  * <p>
  * If, for example, a color should default to the look and feel defined TextArea foreground color and the look and feel
  * is changed, the corresponding {@link DefaultColor} instance will catch that event and notify the current theme of the
  * change.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public abstract class DefaultColor {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** List of colors linked to this default value. */
-    private List<Integer> linkedColors = new ArrayList<>();
+    private final List<Integer> linkedColors = new ArrayList<>();
 
 
 
@@ -49,7 +48,7 @@ public abstract class DefaultColor {
     /**
      * Creates a new instance of {@link DefaultColor}.
      */
-    protected DefaultColor() {
+    DefaultColor() {
     }
 
 
@@ -60,9 +59,10 @@ public abstract class DefaultColor {
      * Notifies the current theme of a default value change to all linked colors.
      * @param color new default color value.
      */
-    protected void notifyChange(Color color) {
-        for(int i : linkedColors)
-            ThemeData.triggerColorEvent(i, color);    
+    void notifyChange(Color color) {
+        for(int i : linkedColors) {
+            ThemeData.triggerColorEvent(i, color);
+        }
     }
 
     /**
@@ -70,7 +70,7 @@ public abstract class DefaultColor {
      * <p>
      * If the default color's value were to change, the current theme will automatically be notified of the change and
      * ultimately propagate to all registered theme listeners if necessary.
-     * </p>
+     *
      * @param colorId identifier of the color that uses this instance as a default value.
      */
     public void link(Integer colorId) {

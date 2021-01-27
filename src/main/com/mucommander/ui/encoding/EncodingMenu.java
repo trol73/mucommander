@@ -18,10 +18,11 @@
 
 package com.mucommander.ui.encoding;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TMenuSeparator;
+import ru.trolsoft.ui.TRadioButtonMenuItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,10 +43,10 @@ public class EncodingMenu extends JMenu {
     protected final WeakHashMap<EncodingListener, ?> listeners = new WeakHashMap<>();
 
     /** the dialog/frame that owns this component */
-    protected DialogOwner dialogOwner;
+    private final DialogOwner dialogOwner;
 
     /** The encoding that is currently selected, may be null */
-    protected String selectedEncoding;
+    private String selectedEncoding;
 
 
     /**
@@ -78,28 +79,35 @@ public class EncodingMenu extends JMenu {
      * Adds a checkbox menu item for each of the preferred encodings, and a special item that invokes a dialog
      * that allows the list of preferred encodings to be customized.
      */
-    protected void populateMenu() {
+    private void populateMenu() {
         java.util.List<String> encodings = EncodingPreferences.getPreferredEncodings();
 
         // Add the current encoding if it is not in the list of preferred encodings
-        if(selectedEncoding!=null && !encodings.contains(selectedEncoding))
+        if (selectedEncoding != null && !encodings.contains(selectedEncoding)) {
             encodings.add(0, selectedEncoding);
+        }
 
-        // Add preferred encodings to the menu
-        //int nbEncodings = encodings.size();
-        JCheckBoxMenuItem item;
+        addPreferredEncodings(encodings);
+        add(new TMenuSeparator());
+        addCustomizeMenu();
+
+    }
+
+
+    private void addPreferredEncodings(java.util.List<String> encodings) {
         ButtonGroup group = new ButtonGroup();
-        for(String enc: encodings) {
-            item = new TCheckBoxMenuItem(enc);
+        for (String enc: encodings) {
+            JMenuItem item = new TRadioButtonMenuItem(enc);
 
             // Select the current encoding, if there is one
-            if(selectedEncoding!=null && selectedEncoding.equals(enc))
+            if (selectedEncoding != null && selectedEncoding.equals(enc)) {
                 item.setSelected(true);
+            }
 
             // Listen to checkbox actions
             item.addActionListener(e -> {
                 String oldEncoding = selectedEncoding;
-                selectedEncoding = ((JCheckBoxMenuItem)e.getSource()).getText();
+                selectedEncoding = ((JMenuItem)e.getSource()).getText();
                 if (!oldEncoding.equals(selectedEncoding)) {
                     // Notify listeners of the new encoding
                     fireEncodingListener(oldEncoding, EncodingMenu.this.selectedEncoding);
@@ -109,11 +117,11 @@ public class EncodingMenu extends JMenu {
             group.add(item);
             add(item);
         }
+    }
 
-        add(new TMenuSeparator());
-
+    private void addCustomizeMenu() {
         // 'Customize' menu item
-        JMenuItem customizeItem = new JMenuItem(Translator.get("customize")+"...");
+        JMenuItem customizeItem = new JMenuItem(Translator.get("customize") + "...");
         customizeItem.addActionListener(e -> {
             Window owner = dialogOwner.getOwner();
             if (owner instanceof Frame) {
@@ -138,12 +146,8 @@ public class EncodingMenu extends JMenu {
     }
 
 
-    //////////////////////
-    // Listener methods //
-    //////////////////////
-
     public void addEncodingListener(EncodingListener listener) {
-        synchronized(listeners) {
+        synchronized (listeners) {
             listeners.put(listener, null);
         }
     }
@@ -154,10 +158,11 @@ public class EncodingMenu extends JMenu {
         }
     }
 
-    protected void fireEncodingListener(String oldEncoding, String newEncoding) {
+    private void fireEncodingListener(String oldEncoding, String newEncoding) {
         synchronized(listeners) {
-            for (EncodingListener listener : listeners.keySet())
+            for (EncodingListener listener : listeners.keySet()) {
                 listener.encodingChanged(this, oldEncoding, newEncoding);
+            }
         }
 
     }

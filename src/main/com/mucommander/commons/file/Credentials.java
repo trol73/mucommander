@@ -8,8 +8,8 @@ package com.mucommander.commons.file;
  */
 public final class Credentials {
 
-    private String login;
-    private String password;
+    private final String login;
+    private final String password;
 	
     /**
      * Creates a new instance with the supplied login and password.
@@ -19,15 +19,8 @@ public final class Credentials {
      * @param password the password part as a string
      */
     public Credentials(String login, String password) {
-        // Replace null values by empty strings
-        if(login==null)
-            login="";
-
-        if(password==null)
-            password="";
-
-        this.login = login;
-        this.password = password;
+        this.login = login == null ? "" : login;
+        this.password = password == null ? "" : password;
     }
 
     /**
@@ -56,9 +49,9 @@ public final class Credentials {
     public String getMaskedPassword() {
         int passwordLength = password.length();
         StringBuilder maskedPasswordSb = new StringBuilder(passwordLength);
-        for(int i=0; i<passwordLength; i++)
+        for (int i = 0; i < passwordLength; i++) {
             maskedPasswordSb.append('*');
-
+        }
         return maskedPasswordSb.toString();
     }
 
@@ -66,7 +59,6 @@ public final class Credentials {
      * Returns <code>true</code> if these credentials are empty.
      * <p>
      * Credentials are said to be empty if both login and password are empty strings.
-     * </p>
      *
      * @return <code>true</code> if these credentials are empty, <code>false</code> otherwise.
      */
@@ -74,10 +66,6 @@ public final class Credentials {
         return "".equals(login) && "".equals(password);
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     /**
      * This method is equivalent to calling {@link #equals(Object, boolean)} with <code>false</code>:
@@ -87,6 +75,7 @@ public final class Credentials {
      * @return true if this and the specified instance are equal
      * @see #equals(Object, boolean)
      */
+    @Override
     public boolean equals(Object o) {
         return equals(o, false);
     }
@@ -99,24 +88,22 @@ public final class Credentials {
      * <p>
      * Empty Credentials and <code>null</code> are considered equal: if a <code>null</code> instance is specified,
      * <code>true</code> is returned if these Credentials are {@link #isEmpty() empty}).
-     * </p>
      *
      * @param o the Object to test for equality
-     * @param passwordSensitive true if passwords need to be equal for credentials instanes to match
+     * @param passwordSensitive true if passwords need to be equal for credentials instances to match
      * @return true if this and the specified instance are equal
      */
     public boolean equals(Object o, boolean passwordSensitive) {
         // Empty Credentials and null are equivalent
-        if(o==null)
+        if (o == null) {
             return isEmpty();
-
-        if(!(o instanceof Credentials)) // Note: this class is declared final so we don't need to worry about subclasses
+        }
+        if (!(o instanceof Credentials)) { // Note: this class is declared final so we don't need to worry about subclasses
             return false;
+        }
 
         Credentials credentials = (Credentials)o;
-
-        return credentials.login.equals(this.login)
-            && (!passwordSensitive || credentials.password.equals(this.password));
+        return credentials.login.equals(this.login) && (!passwordSensitive || credentials.password.equals(this.password));
     }
 
     /**
@@ -128,8 +115,7 @@ public final class Credentials {
     public Object clone() {
         try {
             return super.clone();
-        }
-        catch(CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e) {
             // Should never happen
             return null;
         }

@@ -42,19 +42,15 @@ import java.awt.*;
  */
 public class TrashPopupButton extends PopupButton {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    public TrashPopupButton(MainFrame mainFrame) {
+    TrashPopupButton(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
         setContentAreaFilled(false);
         setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, "trash.png"));
 
-        // Rollover-enable the button and hold a reference to the RolloverButtonAdapter instance so that it doesn't
-        // get garbage-collected
-        RolloverButtonAdapter rolloverButtonAdapter = new RolloverButtonAdapter();
-        RolloverButtonAdapter.setButtonDecoration(this);
-        addMouseListener(rolloverButtonAdapter);
+        RolloverButtonAdapter.decorateButton(this);
     }
 
     @Override

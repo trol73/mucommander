@@ -20,6 +20,7 @@ package com.mucommander.command;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
  *   <li>An {@link #getAlias() alias}, used to identify the command through the application.</li>
  *   <li>A {@link #getCommand() command}, which is what will be executed by the instance of <code>Command</code>.</li>
  *   <li>
- *     A {@link #getType() type}, which can be any of {@link CommandType#SYSTEM_COMMAND system} (invisible and inmutable),
+ *     A {@link #getType() type}, which can be any of {@link CommandType#SYSTEM_COMMAND system} (invisible and immutable),
  *     {@link CommandType#INVISIBLE_COMMAND invisible} (invisible and mutable) or {@link CommandType#NORMAL_COMMAND} (visible and mutable).
  *   </li>
  * </ul>
@@ -41,7 +42,7 @@ import java.util.List;
  * The basic command syntax is fairly simple:
  * <ul>
  *  <li>Any non-escaped <code>\</code> character will escape the following character and be removed from the tokens.</li>
- *  <li>Any non-escaped <code>"</code> character will escape all characters until the next occurence of <code>"</code>, except for <code>\</code>.</li>
+ *  <li>Any non-escaped <code>"</code> character will escape all characters until the next occurrence of <code>"</code>, except for <code>\</code>.</li>
  *  <li>Non-escaped space characters are used as token separators.</li>
  * </ul>
  * It is important to remember that <code>"</code> characters are <b>not</b> removed from the resulting tokens.
@@ -69,8 +70,6 @@ import java.util.List;
  * @see    com.mucommander.process.AbstractProcess
  */
 public class Command implements Comparable<Command> {
-    // - Keywords ------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Header of replacement keywords. */
     private static final char KEYWORD_HEADER                      = '$';
     /** Instances of this keyword will be replaced by the file's full path. */
@@ -87,9 +86,6 @@ public class Command implements Comparable<Command> {
     private static final char KEYWORD_NAME_WITHOUT_EXTENSION      = 'b';
 
 
-
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Command's alias. */
     private final String alias;
     /** Original command. */
@@ -103,8 +99,6 @@ public class Command implements Comparable<Command> {
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new command.
      * @param alias       alias of the command.
@@ -161,8 +155,6 @@ public class Command implements Comparable<Command> {
     }
 
 
-    // - Token retrieval -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns this command's tokens without performing keyword substitution.
      * @return this command's tokens without performing keyword substitution.
@@ -224,7 +216,7 @@ public class Command implements Comparable<Command> {
      * @return         the specified command's tokens after replacing keywords by the corresponding values from the specified fileset.
      */
     public static String[] getTokens(String command, FileSet files) {
-    	return getTokens(command, files.toArray(new AbstractFile[files.size()]));
+    	return getTokens(command, files.toArray(new AbstractFile[0]));
     }
 
     /**
@@ -251,15 +243,17 @@ public class Command implements Comparable<Command> {
 
             // Backslash escaping: the next character is not analyzed.
             else if (buffer[i] == '\\') {
-                if (i + 1 != command.length())
+                if (i + 1 != command.length()) {
                     currentToken.append(buffer[++i]);
+                }
             }
 
             // Whitespace: end of token if we're not between quotes.
             else if (buffer[i] == ' ' && !isInQuotes) {
                 // Skips un-escaped blocks of spaces.
-                while(i + 1 < command.length() && buffer[i + 1] == ' ')
+                while(i + 1 < command.length() && buffer[i + 1] == ' ') {
                     i++;
+                }
 
                 // Stores the current token.
                 tokens.add(currentToken.toString());
@@ -270,8 +264,9 @@ public class Command implements Comparable<Command> {
             else if (buffer[i] == KEYWORD_HEADER) {
                 // Skips keyword replacement if we're not interested
                 // in it.
-                if (files == null)
+                if (files == null) {
                     currentToken.append(KEYWORD_HEADER);
+                }
 
                 // If this is the last character, append it.
                 else if(++i == buffer.length)
@@ -318,19 +313,22 @@ public class Command implements Comparable<Command> {
             }
 
             // Nothing special about this character.
-            else
+            else {
                 currentToken.append(buffer[i]);
+            }
         }
 
         // Adds a possible last token.
-        if (currentToken.length() != 0)
+        if (currentToken.length() != 0) {
             tokens.add(currentToken.toString());
+        }
 
         // Empty commands are returned as an empty token rather than an empty array.
-        if (tokens.isEmpty())
+        if (tokens.isEmpty()) {
             return new String[] {""};
+        }
 
-        return tokens.toArray(new String[tokens.size()]);
+        return tokens.toArray(new String[0]);
     }
 
     /**
@@ -382,17 +380,14 @@ public class Command implements Comparable<Command> {
 
             case KEYWORD_PARENT:
                 AbstractFile parentFile = file.getParent();
-                return parentFile==null?"":parentFile.getAbsolutePath();
+                return parentFile == null ? "" : parentFile.getAbsolutePath();
 
             case KEYWORD_VM_PATH:
                 return new File(System.getProperty("user.dir")).getAbsolutePath();
 
             case KEYWORD_EXTENSION:
-                String extension;
-
-                if((extension = file.getExtension()) == null)
-                    return "";
-                return extension;
+                String extension = file.getExtension();
+                return extension != null ? extension : "";
 
             case KEYWORD_NAME_WITHOUT_EXTENSION:
                 return file.getNameWithoutExtension();
@@ -416,28 +411,30 @@ public class Command implements Comparable<Command> {
     }
 
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof Command))
+        if (!(object instanceof Command)) {
             return false;
+        }
 
-        Command cmd;
-        cmd = (Command)object;
+        Command cmd = (Command)object;
         return command.equals(cmd.command) && alias.equals(cmd.alias) && type == cmd.type &&
                getDisplayName().equals(cmd.getDisplayName());
     }
 
-    public int compareTo(Command command) {
+    public int compareTo(@NotNull Command command) {
         int buffer = getDisplayName().compareTo(command.getDisplayName());
 
-        if (buffer != 0)
+        if (buffer != 0) {
             return buffer;
-        if ((buffer = getAlias().compareTo(command.getAlias())) != 0)
+        }
+        if ((buffer = getAlias().compareTo(command.getAlias())) != 0) {
             return buffer;
+        }
         return this.command.compareTo(command.command);
     }
 
     /**
-     * Returns the original, un-tokenised command.
-     * @return the original, un-tokenised command.
+     * Returns the original, un-tokenized command.
+     * @return the original, un-tokenized command.
      */
     public synchronized String getCommand() {
     	return command;

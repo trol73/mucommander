@@ -40,7 +40,7 @@ import java.awt.Component;
  */
 public class CompactFileTableCellRenderer extends BaseCellRenderer {
 
-    private CellLabel emptyLabel = new CellLabel();
+    private final CellLabel emptyLabel = new CellLabel();
 
     public CompactFileTableCellRenderer(FileTable table) {
         super(table);

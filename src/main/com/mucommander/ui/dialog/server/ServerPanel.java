@@ -77,7 +77,7 @@ public abstract class ServerPanel extends XAlignedComponentPanel {
 	
     protected void addTextFieldListeners(JTextField textField, boolean updateLabel) {
         textField.addActionListener(dialog);
-        if(updateLabel) {
+        if (updateLabel) {
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 public void changedUpdate(DocumentEvent e) {
                     dialog.updateURLLabel();
@@ -94,10 +94,6 @@ public abstract class ServerPanel extends XAlignedComponentPanel {
         }
     }
 
-
-    ///////////////////////
-    // Abstract methoods //
-    ///////////////////////
 
     /** 
      * Returns the current server URL represented by this panel, <code>null</code> if it is not available.

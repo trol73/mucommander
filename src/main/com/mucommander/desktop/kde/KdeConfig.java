@@ -54,7 +54,7 @@ public class KdeConfig {
 
             LOGGER.debug(CONFIG_COMMAND+" returned '"+line+"' for "+key);
 
-            if(line==null || (line=line.trim()).equals(""))
+            if(line==null || (line=line.trim()).isEmpty())
                 return null;
 
             return line;

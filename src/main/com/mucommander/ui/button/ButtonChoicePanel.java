@@ -48,34 +48,34 @@ import java.awt.event.KeyListener;
 public class ButtonChoicePanel extends JPanel implements KeyListener, FocusListener {
 
     /** Provided JButton instances */
-    private JButton buttons[];
+    private final JButton[] buttons;
 	
     /** RootPane associated with this ButtonChoicePanel */
-    private JRootPane rootPane;
+    private final JRootPane rootPane;
 
     /** Number of columns of the buttons grid */
-    private int nbCols;
+    private final int nbCols;
     /** Number of row of the buttons grid */
-    private int nbRows;
+    private final int nbRows;
 
     /** Current button, i.e. the one that currently has focus */
     private int currentButton;
 	
     /** Total number of buttons */
-    private int nbButtons;
+    private final int nbButtons;
 
 	
     /**
      * Creates a new ButtonChoicePanel and lays out the given buttons on a grid
      * according to the provided number of colums.
      *
-     * <p>Initial focus will be given to the first button.</p>
+     * <p>Initial focus will be given to the first button.
      *
      * @param buttons  the JButton instances to layout
-     * @param nbCols   number of columns for the buttons grid, if <=0 all buttons will be put on a single row
+     * @param nbCols   number of columns for the buttons grid, if &lt;= 0 all buttons will be put on a single row
      * @param rootPane associated with this ButtonChoicePanel
      */
-    public ButtonChoicePanel(JButton buttons[], int nbCols, JRootPane rootPane) {
+    public ButtonChoicePanel(JButton[] buttons, int nbCols, JRootPane rootPane) {
         this.buttons = buttons;
         this.nbButtons = buttons.length;
         this.nbCols = nbCols <= 0 ? nbButtons : nbCols;

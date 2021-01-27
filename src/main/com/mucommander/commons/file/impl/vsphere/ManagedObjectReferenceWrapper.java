@@ -9,7 +9,7 @@ import com.vmware.vim25.ManagedObjectReference;
  *
  */
 public class ManagedObjectReferenceWrapper {
-	private ManagedObjectReference mor;
+	private final ManagedObjectReference mor;
 
 	public ManagedObjectReferenceWrapper(ManagedObjectReference mor) {
 		this.mor = mor;
@@ -41,12 +41,9 @@ public class ManagedObjectReferenceWrapper {
 		} else if (!mor.getValue().equals(other.mor.getValue()))
 			return false;
 		if (mor.getType() == null) {
-			if (other.mor.getType() != null)
-				return false;
-		} else if (!mor.getType().equals(other.mor.getType()))
-			return false;
-		return true;
-	}
+            return other.mor.getType() == null;
+		} else return mor.getType().equals(other.mor.getType());
+    }
 
 	@Override
 	public String toString() {

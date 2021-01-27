@@ -25,19 +25,15 @@ import com.mucommander.ui.main.table.Column;
  * @author Nicolas Rinaudo
  */
 public class FileTableConfiguration {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Each column's enabled state. */
-    private boolean[] enabled;
+    private final boolean[] enabled;
     /** Initial width of each column. */
-    private int[] width;
+    private final int[] width;
     /** Columns initial order. */
-    private int[] order;
+    private final int[] order;
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table configuration.
      */
@@ -49,9 +45,6 @@ public class FileTableConfiguration {
     }
 
 
-
-    // - Enabled access ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the specified column is enabled.
      * @param  column column whose enabled state should be returned.
@@ -65,7 +58,7 @@ public class FileTableConfiguration {
      * Sets the enabled state of the specified column.
      * <p>
      * Note that the {@link Column#NAME} column's enabled state is ignored as it will always be enabled.
-     * </p>
+     *
      * @param column column whose enabled state should be set.
      * @param flag   whether the column should be enabled.
      */
@@ -75,8 +68,6 @@ public class FileTableConfiguration {
 
 
 
-    // - Width access --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the initial width of the specified column.
      * @param  column column whose width should be retrieved.
@@ -91,7 +82,7 @@ public class FileTableConfiguration {
      * <p>
      * Note that the {@link Column#NAME} column's width will be ignored, as it depends on the frame's
      * initial dimensions.
-     * </p>
+     *
      * @param column column whose width should be set.
      * @param value  column's initial width.
      */
@@ -101,14 +92,12 @@ public class FileTableConfiguration {
 
 
 
-    // - Order access --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the desired initial position of the specified column.
      * <p>
      * Note that the returned value isn't necessarily a legal column position. It's used
      * as a comparison value rather than an index.
-     * </p>
+     *
      * @param  column column whose initial position will be returned.
      * @return        the desired initial position of the specified column.
      */

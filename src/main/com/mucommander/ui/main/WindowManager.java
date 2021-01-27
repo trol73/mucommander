@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.ShutdownHook;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.extension.ExtensionManager;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.frame.MainFrameBuilder;
@@ -61,7 +61,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     // The following constants are used to compute the proper position of a new MainFrame.
 
     /** MainFrame (main muCommander window) instances */
-    private List<MainFrame> mainFrames = new Vector<>();
+    private final List<MainFrame> mainFrames = new Vector<>();
     
     /** MainFrame currently being used (that has focus),
      * or last frame to have been used if muCommander doesn't have focus */	
@@ -77,11 +77,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      */
     private static void installCustomLookAndFeels() {
         // Get all available custom look and feels
-        List<String> plafs = MuConfigurations.getPreferences().getListVariable(MuPreference.CUSTOM_LOOK_AND_FEELS, MuPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+        List<String> plafs = TcConfigurations.getPreferences().getListVariable(TcPreference.CUSTOM_LOOK_AND_FEELS, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
 
         // Tries to retrieve the custom look and feels list.
-        if (plafs == null)
+        if (plafs == null) {
             return;
+        }
 
         // Goes through the list and install every custom look and feel we could find.
         // Look and feels that aren't supported under the current platform are ignored.
@@ -107,8 +108,8 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         installCustomLookAndFeels();
         
         // Sets custom lookAndFeel if different from current lookAndFeel
-        String lnfName = MuConfigurations.getPreferences().getVariable(MuPreference.LOOK_AND_FEEL);
-        if (lnfName!=null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
+        String lnfName = TcConfigurations.getPreferences().getVariable(TcPreference.LOOK_AND_FEEL);
+        if (lnfName != null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
             setLookAndFeel(lnfName);
         }
 
@@ -116,7 +117,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             getLogger().debug("Could load look'n feel from preferences");
         }
         
-        MuConfigurations.addPreferencesListener(this);
+        TcConfigurations.addPreferencesListener(this);
     }
 
     /**
@@ -171,20 +172,23 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         MainFrame[] newMainFrames = mainFrameBuilder.build();
 
         // To catch user window closing actions
-        for (MainFrame frame : newMainFrames)
-        	frame.addWindowListener(instance);
+        for (MainFrame frame : newMainFrames) {
+            frame.addWindowListener(instance);
+        }
 
         // Adds the new MainFrame to the vector
         instance.mainFrames.addAll(Arrays.asList(newMainFrames));
 
         // Set new window's title. Window titles show window number only if there is more than one window.
         // So if a second window was just created, we update first window's title so that it shows window number (#1).
-        for (MainFrame frame : instance.mainFrames)
-        	frame.updateWindowTitle();
+        for (MainFrame frame : instance.mainFrames) {
+            frame.updateWindowTitle();
+        }
 
         // Make frames visible
-        for (MainFrame frame : newMainFrames)
-        	frame.setVisible(true);
+        for (MainFrame frame : newMainFrames) {
+            frame.setVisible(true);
+        }
 
         if (!instance.mainFrames.isEmpty()) {
         	int previouslySelectedMainFrame = mainFrameBuilder.getSelectedFrame();
@@ -199,14 +203,15 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     public static synchronized void quit() {
         // Dispose all MainFrames, ending with the currently active one.
         int nbFrames = instance.mainFrames.size();
-        if (nbFrames>0) {            // If an uncaught exception occurred in the startup sequence, there is no MainFrame to dispose
+        if (nbFrames > 0) {            // If an uncaught exception occurred in the startup sequence, there is no MainFrame to dispose
             // Retrieve current MainFrame's index
             int currentMainFrameIndex = getCurrentWindowIndex();
             
             // Dispose all MainFrames but the current one
-            for (int i=0; i<nbFrames; i++) {
-                if(i!=currentMainFrameIndex)
-                	instance.mainFrames.get(i).dispose();
+            for (int i = 0; i < nbFrames; i++) {
+                if (i != currentMainFrameIndex) {
+                    instance.mainFrames.get(i).dispose();
+                }
             }
 
             // Dispose current MainFrame last so that its attributes (last folders, window position...) are saved last
@@ -217,13 +222,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
 
         // Dispose all other frames (viewers, editors...)
-        Frame frames[] = Frame.getFrames();
-        nbFrames = frames.length;
-        Frame frame;
-        for (int i=0; i < nbFrames; i++) {
-            frame = frames[i];
+        for (Frame frame : Frame.getFrames()) {
             if (frame.isShowing()) {
-                getLogger().debug("disposing frame#"+i);
+                getLogger().debug("disposing frame " + frame.getTitle());
                 frame.dispose();
             }
         }
@@ -263,11 +264,10 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     }
 
     public static void installLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        LookAndFeel plaf;
-
-        plaf = (LookAndFeel)Class.forName(className, true, ExtensionManager.getClassLoader()).newInstance();
-        if(plaf.isSupportedLookAndFeel())
+        LookAndFeel plaf = (LookAndFeel)Class.forName(className, true, ExtensionManager.getClassLoader()).newInstance();
+        if (plaf.isSupportedLookAndFeel()) {
             UIManager.installLookAndFeel(plaf.getName(), plaf.getClass().getName());
+        }
     }
 
     /**
@@ -277,7 +277,6 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      */
     private static void setLookAndFeel(String lnfName) {
         try {
-
             // Initializes class loading.
             // This is necessary due to Swing's UIDefaults.LazyProxyValue behaviour that just
             // won't use the right ClassLoader instance to load resources.
@@ -307,8 +306,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         Object source = e.getSource();
         
         // Return if event doesn't originate from a MainFrame (e.g. ViewerFrame or EditorFrame)
-        if(!(source instanceof MainFrame))
+        if (!(source instanceof MainFrame)) {
             return;
+        }
 
         currentMainFrame = (MainFrame)e.getSource();
         // Let MainFrame know that it is active in the foreground
@@ -316,8 +316,9 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // Resets shift mode to false, since keyReleased events may have been lost during window switching
         CommandBar commandBar = currentMainFrame.getCommandBar();
-        if(commandBar!=null)
+        if (commandBar != null) {
             commandBar.setAlternateActionsMode(false);
+        }
     }
 
     public void windowDeactivated(WindowEvent e) {
@@ -347,24 +348,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         Object source = e.getSource();
         if (source instanceof MainFrame) {
-            // Remove disposed MainFrame from the MainFrame list
-            int frameIndex = mainFrames.indexOf(source);
-
-            mainFrames.remove(source);
-
-            // Update following windows titles to reflect the MainFrame's disposal.
-            // Window titles show window number only if there is more than one window.
-            // So if there is only one window left, we update first window's title so that it removes window number (#1).
-            int nbFrames = mainFrames.size();
-            if (nbFrames == 1) {
-                mainFrames.get(0).updateWindowTitle();
-            } else {
-                if (frameIndex != -1) {
-                    for (int i = frameIndex; i < nbFrames; i++) {
-                        mainFrames.get(i).updateWindowTitle();
-                    }
-                }
-            }
+            closeMainFrame((MainFrame) source);
         } else if (source instanceof FileFrame) {
             FileFrame fileFrame = (FileFrame)source;
             if (fileFrame.getReturnFocusTo() != null) {
@@ -383,20 +367,47 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             return;
         }
 
-        // Test if there is at least one window (viewer, editor...) still showing
-        Frame frames[] = Frame.getFrames();
+        if (!hasMoreActiveFrames()) {
+            ShutdownHook.initiateShutdown();
+        }
+    }
 
-        int nbFrames = frames.length;
-        for (int i = 0; i<nbFrames; i++) {
-            Frame frame = frames[i];
-            if (frame.isShowing()) {
-                getLogger().debug("found active frame#"+i);
-                return;
+
+    /**
+     * Remove disposed MainFrame from the MainFrame list
+     */
+    private void closeMainFrame(MainFrame mainFrame) {
+        int frameIndex = mainFrames.indexOf(mainFrame);
+
+        mainFrames.remove(mainFrame);
+
+        // Update following windows titles to reflect the MainFrame's disposal.
+        // Window titles show window number only if there is more than one window.
+        // So if there is only one window left, we update first window's title so that it removes window number (#1).
+        int nbFrames = mainFrames.size();
+        if (nbFrames == 1) {
+            mainFrames.get(0).updateWindowTitle();
+        } else {
+            if (frameIndex >= 0) {
+                for (int i = frameIndex; i < nbFrames; i++) {
+                    mainFrames.get(i).updateWindowTitle();
+                }
             }
         }
+    }
 
-        // No more window showing, initiate shutdown sequence
-        ShutdownHook.initiateShutdown();
+    /**
+     * Test if there is at least one window (viewer, editor...) still showing
+     */
+    private boolean hasMoreActiveFrames() {
+        Frame[] frames = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame.isShowing()) {
+                getLogger().debug("found active frame");
+                return true;
+            }
+        }
+        return false;
     }
 
     public void windowIconified(WindowEvent e) {
@@ -421,11 +432,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
     	// /!\ font.size is set after font.family in AppearancePrefPanel
     	// that's why we only listen to this one in order not to change Font twice
-    	if (MuPreferences.LOOK_AND_FEEL.equals(var)) {
+    	if (TcPreferences.LOOK_AND_FEEL.equals(var)) {
     		String lnfName = event.getValue();
 
-    		if (!UIManager.getLookAndFeel().getClass().getName().equals(lnfName))
-    			setLookAndFeel(lnfName);
+    		if (!UIManager.getLookAndFeel().getClass().getName().equals(lnfName)) {
+                setLookAndFeel(lnfName);
+            }
     	}
     }
 

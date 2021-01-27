@@ -33,12 +33,11 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.VersionChecker;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.SelfUpdateJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.GoToWebsiteAction;
 import com.mucommander.ui.dialog.InformationDialog;
@@ -57,11 +56,11 @@ public class CheckVersionDialog extends QuestionDialog {
 	private static Logger logger;
 	
     /** Parent MainFrame instance */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /** true if the user manually clicked on the 'Check for updates' menu item,
      * false if the update check was automatically triggered on startup */
-    private boolean userInitiated;
+    private final boolean userInitiated;
 
     /** Dialog's width has to be at least 240 */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320,0);	
@@ -112,10 +111,10 @@ public class CheckVersionDialog extends QuestionDialog {
             }
             //version = VersionChecker.getInstance();
             // A newer version is available
-            if(version.isNewVersionAvailable()) {
+            if (version.isNewVersionAvailable()) {
                 getLogger().info("A new version is available!");
 
-                title = Translator.get("version_dialog.new_version_title");
+                title = i18n("version_dialog.new_version_title");
 
                 // Checks if the current platform can open a new browser window
                 downloadURL    = new URL(version.getDownloadURL());
@@ -123,7 +122,7 @@ public class CheckVersionDialog extends QuestionDialog {
                 
                 // If the platform is not capable of opening a new browser window,
                 // display the download URL.
-                message = downloadOption ? Translator.get("version_dialog.new_version") : Translator.get("version_dialog.new_version_url", downloadURL.toString());
+                message = downloadOption ? i18n("version_dialog.new_version") : i18n("version_dialog.new_version_url", downloadURL.toString());
 
                 jarURL = version.getJarURL();
             }
@@ -133,26 +132,24 @@ public class CheckVersionDialog extends QuestionDialog {
 
                 // If the version check was not iniated by the user (i.e. was automatic),
                 // we do not need to inform the user that he already has the latest version
-                if(!userInitiated) {
+                if (!userInitiated) {
                     dispose();
                     return;
                 }
                 
-                title = Translator.get("version_dialog.no_new_version_title");
-                message = Translator.get("version_dialog.no_new_version");
+                title = i18n("version_dialog.no_new_version_title");
+                message = i18n("version_dialog.no_new_version");
             }
-        }
-        // Check failed
-        catch(Exception e) {
+        } catch(Exception e) {
             // If the version check was not iniated by the user (i.e. was automatic),
             // we do not need to inform the user that the check failed
-            if(!userInitiated) {
+            if (!userInitiated) {
                 dispose();
                 return;
             }
 
-            title = Translator.get("version_dialog.not_available_title");
-            message = Translator.get("version_dialog.not_available");
+            title = i18n("version_dialog.not_available_title");
+            message = i18n("version_dialog.not_available");
         }
 
         // Set title
@@ -163,10 +160,10 @@ public class CheckVersionDialog extends QuestionDialog {
 
         // 'OK' choice
         actionsV.add(OK_ACTION);
-        labelsV.add(Translator.get("ok"));
+        labelsV.add(i18n("ok"));
 
         // 'Go to website' choice (if available)
-        if(downloadOption) {
+        if (downloadOption) {
             actionsV.add(GO_TO_WEBSITE_ACTION);
             labelsV.add(ActionProperties.getActionLabel(GoToWebsiteAction.Descriptor.ACTION_ID));
         }
@@ -179,8 +176,8 @@ public class CheckVersionDialog extends QuestionDialog {
 
         // Turn the vectors into arrays
         int nbChoices = actionsV.size();
-        int actions[] = new int[nbChoices];
-        String labels[] = new String[nbChoices];
+        int[] actions = new int[nbChoices];
+        String[] labels = new String[nbChoices];
         for (int i=0; i < nbChoices; i++) {
             actions[i] = actionsV.get(i);
             labels[i] = labelsV.get(i);
@@ -191,9 +188,9 @@ public class CheckVersionDialog extends QuestionDialog {
              actions,
              0);
 			
-        JCheckBox showNextTimeCheckBox = new JCheckBox(Translator.get("prefs_dialog.check_for_updates_on_startup"),
-        												MuConfigurations.getPreferences().getVariable(MuPreference.CHECK_FOR_UPDATE,
-                                                                                        MuPreferences.DEFAULT_CHECK_FOR_UPDATE));
+        JCheckBox showNextTimeCheckBox = new JCheckBox(i18n("prefs_dialog.check_for_updates_on_startup"),
+        												TcConfigurations.getPreferences().getVariable(TcPreference.CHECK_FOR_UPDATE,
+                                                                                        TcPreferences.DEFAULT_CHECK_FOR_UPDATE));
         addComponent(showNextTimeCheckBox);
 
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
@@ -201,22 +198,20 @@ public class CheckVersionDialog extends QuestionDialog {
         // Show dialog and get user action
         int action = getActionValue();
 
-        if(action==GO_TO_WEBSITE_ACTION) {
+        if (action == GO_TO_WEBSITE_ACTION) {
             try {
                 DesktopManager.executeOperation(DesktopManager.BROWSE, new Object[] {downloadURL});
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 InformationDialog.showErrorDialog(this);
             }
-        }
-        else if(action==INSTALL_AND_RESTART_ACTION) {
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("Installing new version"));
+        } else if (action == INSTALL_AND_RESTART_ACTION) {
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("Installing new version"));
             SelfUpdateJob job = new SelfUpdateJob(progressDialog, mainFrame, FileFactory.getFile(jarURL));
             progressDialog.start(job);
         }
 		
         // Remember user preference
-        MuConfigurations.getPreferences().setVariable(MuPreference.CHECK_FOR_UPDATE, showNextTimeCheckBox.isSelected());
+        TcConfigurations.getPreferences().setVariable(TcPreference.CHECK_FOR_UPDATE, showNextTimeCheckBox.isSelected());
     }
 
     private static Logger getLogger() {

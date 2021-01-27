@@ -31,7 +31,7 @@ import java.awt.*;
  */
 public class FindFileResultRenderer implements ListCellRenderer<AbstractFile> {
 
-    private CellLabel cellLabel = new CellLabel();
+    private final CellLabel cellLabel = new CellLabel();
 
     @Override
     public Component getListCellRendererComponent(JList<? extends AbstractFile> list, AbstractFile value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -87,9 +87,9 @@ public class FindFileResultRenderer implements ListCellRenderer<AbstractFile> {
             return ThemeCache.SYMLINK;
         }
 
-        // Hidden file.
+        // Hidden file/folder.
         if (file.isHidden()) {
-            return ThemeCache.HIDDEN_FILE;
+            return file.isDirectory() ? ThemeCache.HIDDEN_FOLDER : ThemeCache.HIDDEN_FILE;
         }
 
         // Directory.

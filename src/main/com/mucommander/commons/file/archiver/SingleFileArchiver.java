@@ -21,10 +21,6 @@ class SingleFileArchiver extends Archiver {
     }
 
 
-    /////////////////////////////
-    // Archiver implementation //
-    /////////////////////////////
-
     /**
      * This method is a no-op, and does nothing but throw an IOException if it is called more than once,
      * which should never be the case as this Archiver is only meant to store one file. 
@@ -47,5 +43,5 @@ class SingleFileArchiver extends Archiver {
     }
 
     @Override
-    public void postProcess() throws IOException {}
+    public void postProcess() {}
 }

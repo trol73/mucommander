@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.mucommander.commons.file.FileURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,6 @@ import com.mucommander.process.AbstractProcess;
 import com.mucommander.process.ProcessListener;
 import com.mucommander.shell.Shell;
 import com.mucommander.shell.ShellHistoryManager;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RunCommandAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -62,37 +62,32 @@ import com.mucommander.ui.theme.ThemeManager;
  * <p>
  * Creates and displays a new dialog allowing the user to input a command which will be executed once the action is confirmed.
  * The command output of the user command is displayed in a text area
- * </p>
  * <p>
  * Note that even though this component is affected by themes, it's impossible to edit the current theme while it's being displayed.
  * For this reason, the RunDialog doesn't listen to theme modifications.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class RunDialog extends FocusDialog implements ActionListener, ProcessListener, KeyListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RunDialog.class);
 	
-    // - UI components -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Main frame this dialog depends on. */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     /** Editable combo box used for shell input and history. */
     private ShellComboBox inputCombo;
     /** Run/stop button. */
-    private JButton       runStopButton;
+    private JButton btnRunStop;
     /** Cancel button. */
-    private JButton       cancelButton;
+    private JButton btnCancel;
     /** Clear shell history button. */
-    private JButton       clearButton;
+    private JButton btnClear;
     /** Text area used to display the shell output. */
-    private JTextArea     outputTextArea;
+    private JTextArea outputTextArea;
     /** Used to let the user known that the command is still running. */
-    private SpinningDial  dial;
+    private SpinningDial dial;
 
 
 
-    // - Process management --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Stream used to send characters to the process' stdin process. */
     private PrintStream     processInput;
     /** Process currently running, <code>null</code> if none. */
@@ -100,15 +95,11 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - Misc. class variables -----------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Minimum dimensions for the dialog. */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600, 400);
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates the dialog's shell output area.
      * @return a scroll pane containing the dialog's shell output area.
@@ -139,16 +130,15 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * @return the shell input part of the dialog.
      */
     private YBoxPanel createInputArea() {
-        YBoxPanel mainPanel;
-        JPanel    labelPanel;
-
-        mainPanel = new YBoxPanel();
+        YBoxPanel mainPanel = new YBoxPanel();
 
         // Adds a textual description:
         // - if we're working in a local directory, 'init in current folder'.
         // - if we're working on a non-standard FS, 'init in home folder'.
-        mainPanel.add(new JLabel(mainFrame.getActivePanel().getCurrentFolder().getURL().getScheme().equals(FileProtocols.FILE)?
-                                 Translator.get("run_dialog.run_command_description")+":" : Translator.get("run_dialog.run_in_home_description")+":"));
+        FileURL fileUrl = mainFrame.getActivePanel().getCurrentFolder().getURL();
+        boolean isFile = fileUrl.getScheme().equals(FileProtocols.FILE);
+        String label = i18n(isFile ? "run_dialog.run_command_description" : "run_dialog.run_in_home_description") + ":";
+        mainPanel.add(new JLabel(label));
 
         // Adds the shell input combo box.
         mainPanel.add(inputCombo = new ShellComboBox(this));
@@ -157,8 +147,8 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         // Adds a textual description of the shell output area.
         mainPanel.addSpace(10);
 
-        labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        labelPanel.add(new JLabel(Translator.get("run_dialog.command_output")+":"));
+        JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        labelPanel.add(new JLabel(i18n("run_dialog.command_output")+":"));
         labelPanel.add(new JLabel(dial = new SpinningDial()));
         mainPanel.add(labelPanel);
 
@@ -170,22 +160,19 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * @return a panel containing the dialog's buttons.
      */
     private XBoxPanel createButtonsArea() {
-        // Buttons panel
-        XBoxPanel buttonsPanel;
-
-        buttonsPanel = new XBoxPanel();
+        XBoxPanel buttonsPanel = new XBoxPanel();
 
         // 'Clear history' button.
-        buttonsPanel.add(clearButton = new JButton(Translator.get("run_dialog.clear_history")));
-        clearButton.addActionListener(this);
+        buttonsPanel.add(btnClear = new JButton(i18n("run_dialog.clear_history")));
+        btnClear.addActionListener(this);
 
         // Separator.
         buttonsPanel.add(Box.createHorizontalGlue());
 
         // 'Run / stop' and 'Cancel' buttons.
         buttonsPanel.add(DialogToolkit.createOKCancelPanel(
-                runStopButton = new JButton(Translator.get("run_dialog.run")),
-                cancelButton  = new JButton(Translator.get("cancel")),
+                btnRunStop = new JButton(i18n("run_dialog.run")),
+                btnCancel = new JButton(i18n("cancel")),
                 getRootPane(),
                 this));
 
@@ -208,7 +195,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
         // Sets default items.
         setInitialFocusComponent(inputCombo);
-        getRootPane().setDefaultButton(runStopButton);
+        getRootPane().setDefaultButton(btnRunStop);
 
         // Makes sure that any running process will be killed when the dialog is closed.
         addWindowListener(new WindowAdapter() {
@@ -227,8 +214,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - ProcessListener code ------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Notifies the RunDialog that the current process has died.
      * @param retValue process' return code (not used).
@@ -257,8 +242,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
     }
 
 
-    // - KeyListener code ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Notifies the RunDialog that a key has been pressed.
      * <p>
@@ -268,10 +251,10 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      *  <li>Printable characters are passed to the process and consumed.</li>
      *  <li>All other events are consumed.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * At the time of writing, <code>tab</code> characters do not seem to be caught.
-     * </p>
+     * 
      * @param event describes the key event.
      */
     public void keyPressed(KeyEvent event) {
@@ -306,46 +289,43 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
     public void keyReleased(KeyEvent event) {}
 
 
+    private void clearHistory() {
+        ShellHistoryManager.clear();
 
-    // - ActionListener code -------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
+        // Sets the new focus depending on whether a process is currently running or not.
+        if (currentProcess == null) {
+            inputCombo.requestFocus();
+            outputTextArea.setText("");
+        } else {
+            outputTextArea.requestFocus();
+            outputTextArea.getCaret().setVisible(true);
+        }
+    }
+
+    private void stopRunning() {
+        processInput.close();
+        currentProcess.destroy();
+        this.currentProcess = null;
+        switchToRunState();
+    }
+
     /**
      * Notifies the RunDialog that an action has been performed.
-     * @param e describes the action that occured.
+     * @param e describes the action that occurred.
      */
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        // 'Clear shell history' has been pressed, clear shell history.
-        if (source == clearButton) {
-            ShellHistoryManager.clear();
-
-            // Sets the new focus depending on whether a process is currently running or not.
-            if (currentProcess == null) {
-                inputCombo.requestFocus();
-                outputTextArea.setText("");
-            } else {
-                outputTextArea.requestFocus();
-                outputTextArea.getCaret().setVisible(true);
-            }
-        }
-
-        // 'Run / stop' button has been pressed.
-        else if (source == runStopButton) {
-
+        if (source == btnClear) {           // 'Clear shell history' has been pressed, clear shell history.
+            clearHistory();
+        } else if (source == btnRunStop) {  // 'Run / stop' button has been pressed.
             // If we're not running a process, start a new one.
             if (currentProcess == null) {
                 runCommand(inputCombo.getCommand());
             } else {    // If we're running a process, kill it.
-                processInput.close();
-                currentProcess.destroy();
-                this.currentProcess = null;
-                switchToRunState();
+                stopRunning();
             }
-        }
-
-        // Cancel button disposes the dialog and kills the process
-        else if (source == cancelButton) {
+        } else if (source == btnCancel) {      // Cancel button disposes the dialog and kills the process
             if (currentProcess != null) {
                 currentProcess.destroy();
             }
@@ -355,8 +335,6 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
 
 
 
-    // - Misc. ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Switches the UI back to 'Run command' state.
      */
@@ -365,7 +343,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
         dial.setAnimated(false);
 
         // Change 'Stop' button to 'Run'
-        this.runStopButton.setText(Translator.get("run_dialog.run"));
+        this.btnRunStop.setText(i18n("run_dialog.run"));
 
         // Make command field active again
         this.inputCombo.setEnabled(true);
@@ -382,13 +360,13 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * Runs the specified command.
      * @param command command to init.
      */
-    public void runCommand(String command) {
+    void runCommand(String command) {
         try {
             // Starts the spinning dial.
             dial.setAnimated(true);
 
             // Change 'Run' button to 'Stop'
-            this.runStopButton.setText(Translator.get("run_dialog.stop"));
+            this.btnRunStop.setText(i18n("run_dialog.stop"));
 
             // Resets the process output area.
             outputTextArea.setText("");
@@ -405,8 +383,8 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
             // Repaints the dialog.
             repaint();
         } catch(Exception e) {
-            // Notifies the user that an error occured and resets to normal state.
-            addToTextArea(Translator.get("generic_error"));
+            // Notifies the user that an error occurred and resets to normal state.
+            addToTextArea(i18n("generic_error"));
             switchToRunState();
         }
     }

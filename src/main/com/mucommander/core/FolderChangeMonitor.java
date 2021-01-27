@@ -32,9 +32,9 @@ import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.filter.AbstractFileFilter;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.OrFileFilter;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.main.FolderPanel;
@@ -57,7 +57,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
 	private static final Logger LOGGER = LoggerFactory.getLogger(FolderChangeMonitor.class);
 	
     /** Folder panel we are monitoring */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** Current file table's folder */
     private AbstractFile currentFolder;
@@ -95,15 +95,15 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     private static Thread monitorThread;
 
     /** FolderChangeMonitor instances */
-    private static List<FolderChangeMonitor> instances;
+    private static final List<FolderChangeMonitor> instances;
 
-    private static OrFileFilter disableAutoRefreshFilter = new OrFileFilter();
+    private static final OrFileFilter disableAutoRefreshFilter = new OrFileFilter();
 		
     /** Milliseconds period between checks to current folder's date */
-    private static long checkPeriod;
+    private static final long checkPeriod;
 	
     /** Delay in milliseconds before folder date check after a folder has been refreshed */
-    private static long waitAfterRefresh;
+    private static final long waitAfterRefresh;
 	
     /** If folder change check took an average of N milliseconds, thread will wait at least N*WAIT_MULTIPLIER before next check */
     private final static int WAIT_MULTIPLIER = 50;
@@ -115,8 +115,8 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         instances = new Vector<>();
 
         // Retrieve configuration values
-        checkPeriod = MuConfigurations.getPreferences().getVariable(MuPreference.REFRESH_CHECK_PERIOD, MuPreferences.DEFAULT_REFRESH_CHECK_PERIOD);
-        waitAfterRefresh = MuConfigurations.getPreferences().getVariable(MuPreference.WAIT_AFTER_REFRESH, MuPreferences.DEFAULT_WAIT_AFTER_REFRESH);
+        checkPeriod = TcConfigurations.getPreferences().getVariable(TcPreference.REFRESH_CHECK_PERIOD, TcPreferences.DEFAULT_REFRESH_CHECK_PERIOD);
+        waitAfterRefresh = TcConfigurations.getPreferences().getVariable(TcPreference.WAIT_AFTER_REFRESH, TcPreferences.DEFAULT_WAIT_AFTER_REFRESH);
 
         disableAutoRefreshFilter.addFileFilter(new AbstractFileFilter() {
             public boolean accept(AbstractFile file) {
@@ -211,18 +211,27 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         }
         // By checking FolderPanel.getLastFolderChangeTime(), we ensure that we don't check right after
         // the folder has been refreshed.
-        if (System.currentTimeMillis() - Math.max(monitor.lastCheckTimestamp, monitor.folderPanel.getLastFolderChangeTime())>monitor.waitBeforeCheckTime) {
+        if (System.currentTimeMillis() - Math.max(monitor.lastCheckTimestamp, monitor.folderPanel.getLastFolderChangeTime()) > monitor.waitBeforeCheckTime) {
             // Checks folder contents and refreshes view if necessary
             boolean folderRefreshed = monitor.checkAndRefresh();
             monitor.lastCheckTimestamp = System.currentTimeMillis();
 
             // If folder change check took an average of N milliseconds, we will wait at least N*WAIT_MULTIPLIER before next check
-            monitor.waitBeforeCheckTime = monitor.nbSamples == 0 ? checkPeriod :
-                    Math.max(folderRefreshed ? waitAfterRefresh : checkPeriod, (int) (WAIT_MULTIPLIER * (monitor.totalCheckTime / (float) monitor.nbSamples)));
+            monitor.waitBeforeCheckTime = calcWaitBeforeCheckTime(monitor, folderRefreshed);
         }
     }
 
-	
+    private long calcWaitBeforeCheckTime(FolderChangeMonitor monitor, boolean folderRefreshed) {
+        if (monitor.nbSamples == 0) {
+            return checkPeriod;
+        } else {
+            long refreshPeriod = folderRefreshed ? waitAfterRefresh : checkPeriod;
+            long perSamplePeriod = (long) (WAIT_MULTIPLIER * (monitor.totalCheckTime / (float) monitor.nbSamples));
+            return Math.max(refreshPeriod, perSamplePeriod);
+        }
+    }
+
+
     /**
      * Stops monitoring (stops monitoring thread).
      */

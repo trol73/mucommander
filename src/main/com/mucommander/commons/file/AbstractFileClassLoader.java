@@ -28,7 +28,7 @@ import java.util.*;
  * <code>ClassLoader</code> implementation capable of loading classes from instances of {@link AbstractFile}.
  * <p>
  * It's possible to modify this loader's classpath at runtime through the {@link #addFile(AbstractFile)} method.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class AbstractFileClassLoader extends ClassLoader {
@@ -36,15 +36,10 @@ public class AbstractFileClassLoader extends ClassLoader {
     private final static org.slf4j.Logger LOGGER = null;//org.slf4j.LoggerFactory.getLogger(AbstractFileClassLoader.class);
 
 	
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** All abstract files in which to look for classes and resources. */
-    private Vector<AbstractFile> files;
+    private final Vector<AbstractFile> files;
 
 
-
-    // - Initialisation -------------------------------------------------------
-    // ------------------------------------------------------------------------
     /**
      * Creates a new <code>AbstractFileClassLoader</code>.
      * @param parent parent of the class loader.
@@ -62,14 +57,11 @@ public class AbstractFileClassLoader extends ClassLoader {
     }
 
 
-
-    // - File list access ------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Adds the specified <code>file</code> to the class loader's classpath.
      * <p>
      * Note that the file will <b>not</b> be added if it's already in the classpath.
-     * </p>
+     *
      * @param  file                     file to add the class loader's classpath.
      * @throws IllegalArgumentException if <code>file</code> is not browsable.
      */
@@ -78,7 +70,6 @@ public class AbstractFileClassLoader extends ClassLoader {
         if (!file.isBrowsable()) {
             throw new IllegalArgumentException();
         }
-
         // Only adds the file if it's not already there.
         if (!contains(file)) {
             files.add(file);
@@ -89,14 +80,18 @@ public class AbstractFileClassLoader extends ClassLoader {
      * Returns an iterator on all files in this loader's classpath.
      * @return an iterator on all files in this loader's classpath.
      */
-    public Iterator<AbstractFile> files() {return files.iterator();}
+    public Iterator<AbstractFile> files() {
+        return files.iterator();
+    }
 
     /**
      * Returns <code>true</code> if this loader's classpath already contains the specified file.
      * @param  file file to look for.
      * @return      <code>true</code> if this loader's classpath already contains the specified file.
      */
-    public boolean contains(AbstractFile file) {return files.contains(file);}
+    public boolean contains(AbstractFile file) {
+        return files.contains(file);
+    }
 
 
 
@@ -206,7 +201,7 @@ public class AbstractFileClassLoader extends ClassLoader {
     /**
      * Returns the absolute path of the requested library.
      * @param name name of the library to load.
-     * @return the absolute path of the requested library if found, <code>null</code> otheriwse.
+     * @return the absolute path of the requested library if found, <code>null</code> otherwise.
      */
     @Override
     protected String findLibrary(String name) {
@@ -229,24 +224,15 @@ public class AbstractFileClassLoader extends ClassLoader {
         // Initialisation.
         byte[] buffer = new byte[(int)file.getSize()];      // Buffer for the class' bytecode.
         int offset = 0;                                     // Current offset in buffer.
-        InputStream in = null;                              // Stream on the class' bytecode.
 
-        try {
+        try (InputStream in = file.getInputStream()) {
             // Loads the content of file in buffer.
-            in = file.getInputStream();
             while (offset != buffer.length) {
                 offset += in.read(buffer, offset, buffer.length - offset);
             }
-
             // Loads the class.
             return defineClass(name, buffer, 0, buffer.length);
         }
-
-        // Frees resources.
-        finally {
-            if (in != null)
-                in.close();
-        }                
     }
 
     /**

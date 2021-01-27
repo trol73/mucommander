@@ -8,11 +8,11 @@ package com.mucommander.commons.file;
  * {@link #updateAttributes()} can retrieve a fresh copy of the attributes on the server.
  *
  * <p>Attributes can also be manually updated using attribute setters. The {@link #updateExpirationDate()} method allows
- * to reset the expiration date and consider the attributes as 'fresh'.</p>
+ * to reset the expiration date and consider the attributes as 'fresh'.
  *
  * <p>An initial value for the attributes 'time to live' is specified in the constructor and can later be changed using
  * {@link #setTtl(long)}. If the 'time to live' is set to -1, attributes are no longer automatically updated, this class
- * then simply acts as {@link com.mucommander.commons.file.SimpleFileAttributes}.</p>
+ * then simply acts as {@link com.mucommander.commons.file.SimpleFileAttributes}.
  *
  * @author Maxence Bernard
  */

@@ -20,6 +20,7 @@
 package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.util.PathUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author Maxence Bernard
  */
 class ArchiveEntryTree extends DefaultMutableTreeNode {
-    private static Logger logger = LoggerFactory.getLogger(ArchiveEntryTree.class);
+    private static Logger logger;
 
     /**
      * Creates a new empty tree.
@@ -51,8 +52,8 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
         int entryDepth = entry.getDepth();
         int slashPos = 0;
         DefaultMutableTreeNode node = this;
-        for(int d=1; d<=entryDepth; d++) {
-            if(d==entryDepth && !entry.isDirectory()) {
+        for (int d = 1; d <= entryDepth; d++) {
+            if (d == entryDepth && !entry.isDirectory()) {
                 // create a leaf node for the entry
                 entry.setExists(true);      // the entry has to exist
                 node.add(new DefaultMutableTreeNode(entry, true));
@@ -64,10 +65,10 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
             int nbChildren = node.getChildCount();
             DefaultMutableTreeNode childNode = null;
             boolean matchFound = false;
-            for(int c=0; c<nbChildren; c++) {
+            for (int c = 0; c < nbChildren; c++) {
                 childNode = (DefaultMutableTreeNode)node.getChildAt(c);
                 // Path comparison is 'trailing slash insensitive'
-                if(PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
+                if (PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
                     // Found a match
                     matchFound = true;
                     break;
@@ -77,20 +78,17 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
             if (matchFound) {
                 if (d == entryDepth) {
                     getLogger().trace("Replacing entry for node "+childNode);
-                    // Replace existing entry
-                    childNode.setUserObject(entry);
-                }
-                else {
+                    childNode.setUserObject(entry); // Replace existing entry
+                } else {
                     node = childNode;
                 }
-            }
-            else {
+            } else {
                 if (d == entryDepth) {
                     // create a leaf node for the entry
                     entry.setExists(true);      // the entry has to exist
                     node.add(new DefaultMutableTreeNode(entry, true));
                 } else {
-                    getLogger().trace("Creating node for "+subPath);
+                    getLogger().trace("Creating node for " + subPath);
                     childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getLastModifiedDate(), 0, true), true);
                     node.add(childNode);
                     node = childNode;
@@ -115,24 +113,13 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
         int entryDepth = ArchiveEntry.getDepth(entryPath);
         int slashPos = 0;
         DefaultMutableTreeNode currentNode = this;
-        for(int d=1; d<=entryDepth; d++) {
-            String subPath = d==entryDepth?entryPath:entryPath.substring(0, (slashPos=entryPath.indexOf('/', slashPos)+1));
-
-            int nbChildren = currentNode.getChildCount();
-            DefaultMutableTreeNode matchNode = null;
-            for (int c=0; c<nbChildren; c++) {
-                DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)currentNode.getChildAt(c);
-
-                // Path comparison is 'trailing slash insensitive'
-                if (PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
-                    // Found the node, let's return it
-                    matchNode = childNode;
-                    break;
-                }
-            }
-
+        for (int d = 1; d <= entryDepth; d++) {
+            String subPath = d == entryDepth ?
+                    entryPath :
+                    entryPath.substring(0, (slashPos = entryPath.indexOf('/', slashPos)+1));
+            DefaultMutableTreeNode matchNode = getDefaultMutableTreeNode(currentNode, subPath);
             if (matchNode == null) {
-                return null;    // No node maching the provided path, return null
+                return null;    // No node matching the provided path, return null
             }
 
             currentNode = matchNode;
@@ -141,9 +128,24 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
         return currentNode;
     }
 
+    @Nullable
+    private DefaultMutableTreeNode getDefaultMutableTreeNode(DefaultMutableTreeNode currentNode, String subPath) {
+        int nbChildren = currentNode.getChildCount();
+        for (int c = 0; c < nbChildren; c++) {
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)currentNode.getChildAt(c);
+
+            // Path comparison is 'trailing slash insensitive'
+            if (PathUtils.pathEquals(((ArchiveEntry)childNode.getUserObject()).getPath(), subPath, "/")) {
+                // Found the node, let's return it
+                return childNode;
+            }
+        }
+        return null;
+    }
+
     private static Logger getLogger() {
         if (logger == null) {
-            logger = LoggerFactory.getLogger(AbstractArchiveFile.class);
+            logger = LoggerFactory.getLogger(ArchiveEntryTree.class);
         }
         return logger;
     }

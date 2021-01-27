@@ -28,9 +28,9 @@ import java.util.Map;
 /**
  * @author Maxence Bernard
  */
-public class ShowDebugConsoleAction extends MuAction {
+public class ShowDebugConsoleAction extends TcAction {
 
-    ShowDebugConsoleAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ShowDebugConsoleAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -48,15 +48,23 @@ public class ShowDebugConsoleAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ShowDebugConsole";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.MISC; }
+		public ActionCategory getCategory() {
+			return ActionCategory.MISC;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowDebugConsoleAction(mainFrame, properties);
 		}
     }

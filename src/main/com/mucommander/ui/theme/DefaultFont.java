@@ -27,11 +27,10 @@ import java.util.List;
  * <p>
  * Instances of this class are used to provide default values for theme fonts and notify the current theme when they
  * are modified.
- * </p>
+ *
  * <p>
  * If, for example, a font should default to the look and feel defined TextArea font and the look and feel is changed,
  * the corresponding {@link DefaultFont} instance will catch that event and notify the current theme of the change.
- * </p>
  * @author Nicolas Rinaudo
  */
 public abstract class DefaultFont {
@@ -49,7 +48,7 @@ public abstract class DefaultFont {
      * <p>
      * If the default font's value were to change, the current theme will automatically be notified of the change and
      * ultimately propagate to all registered theme listeners if necessary.
-     * </p>
+     *
      * @param fontId identifier of the font that uses this instance as a default value.
      */
     public void link(Integer fontId) {

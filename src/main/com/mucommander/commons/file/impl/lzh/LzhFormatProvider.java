@@ -13,8 +13,9 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class LzhFormatProvider implements ArchiveFormatProvider {
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(
-            new String[] { ".lzh", ".lha" });
+    private static final String[] EXTENSIONS = { ".lzh", ".lha" };
+
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
 //    private final static byte[] SIGNATURE = { 0x2D, 0x6C, 0x68 };//=google but sevenzipjbinding examples 24FB2D
     private final static byte[] SIGNATURE = {  };
@@ -27,6 +28,11 @@ public class LzhFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }

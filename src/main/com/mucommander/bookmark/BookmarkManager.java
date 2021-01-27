@@ -29,6 +29,8 @@ import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.io.backup.BackupOutputStream;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 /**
@@ -36,7 +38,7 @@ import java.util.WeakHashMap;
  * <p>
  * It monitors any changes made to the bookmarks and when changes are made, fires change events to registered
  * listeners.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class BookmarkManager implements VectorChangeListener {
@@ -99,7 +101,7 @@ public class BookmarkManager implements VectorChangeListener {
     private static synchronized void buildBookmarks(BookmarkBuilder builder) throws BookmarkException {
         builder.startBookmarks();
         for (Bookmark bookmark : bookmarks) {
-            builder.addBookmark(bookmark.getName(), bookmark.getLocation());
+            builder.addBookmark(bookmark.getName(), bookmark.getLocation(), bookmark.getParent());
         }
         builder.endBookmarks();
     }
@@ -113,7 +115,7 @@ public class BookmarkManager implements VectorChangeListener {
      * <p>
      * If it hasn't been changed through a call to {@link #setBookmarksFile(String)},
      * this method will return the default, system dependant bookmarks file.
-     * </p>
+     *
      * @return             the path to the bookmark file.
      * @see    #setBookmarksFile(String)
      * @throws IOException if there was a problem locating the default bookmarks file.
@@ -129,7 +131,7 @@ public class BookmarkManager implements VectorChangeListener {
      * Sets the path to the bookmarks file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setBookmarksFile(FileFactory.getFile(file))</code>.
-     * </p>
+     *
      * @param     path                  path to the bookmarks file
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see       #getBookmarksFile()
@@ -148,12 +150,14 @@ public class BookmarkManager implements VectorChangeListener {
      * Sets the path to the bookmarks file.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()))</code>.
-     * </p>
+     *
      * @param     file                  path to the bookmarks file
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see       #getBookmarksFile()
      */
-    private static void setBookmarksFile(File file) throws FileNotFoundException {setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()));}
+    private static void setBookmarksFile(File file) throws FileNotFoundException {
+        setBookmarksFile(FileFactory.getFile(file.getAbsolutePath()));
+    }
 
     /**
      * Sets the path to the bookmarks file.
@@ -194,7 +198,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @param  in        where to read bookmarks from.
      * @throws Exception if an error occurs.
      */
-    public static void readBookmarks(InputStream in) throws Exception {readBookmarks(in, new Loader());}
+    public static void readBookmarks(InputStream in) throws Exception {
+        readBookmarks(in, new Loader());
+    }
 
     /**
      * Reads bookmarks from the specified <code>InputStream</code> and passes messages to the specified {@link BookmarkBuilder}.
@@ -202,7 +208,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @param  builder   where to send builing messages to.
      * @throws Exception if an error occurs.
      */
-    public static synchronized void readBookmarks(InputStream in, BookmarkBuilder builder) throws Exception {new BookmarkParser().parse(in, builder);}
+    public static synchronized void readBookmarks(InputStream in, BookmarkBuilder builder) throws Exception {
+        new BookmarkParser().parse(in, builder);
+    }
 
 
 
@@ -214,7 +222,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @return             a {@link BookmarkBuilder} that will write all building messages as XML to the specified output stream.
      * @throws IOException if an IO related error occurs.
      */
-    public static BookmarkBuilder getBookmarkWriter(OutputStream out) throws IOException {return new BookmarkWriter(out);}
+    public static BookmarkBuilder getBookmarkWriter(OutputStream out) throws IOException {
+        return new BookmarkWriter(out);
+    }
 
     /**
      * Writes all known bookmarks to the bookmark {@link #getBookmarksFile() file}.
@@ -254,7 +264,9 @@ public class BookmarkManager implements VectorChangeListener {
      * Deletes the specified bookmark.
      * @param bookmark bookmark to delete from the list.
      */
-    public static synchronized void removeBookmark(Bookmark bookmark) {bookmarks.remove(bookmark);}
+    public static synchronized void removeBookmark(Bookmark bookmark) {
+        bookmarks.remove(bookmark);
+    }
 
     /**
      * Convenience method that looks for a Bookmark with the given name (case ignored) and returns it,
@@ -270,6 +282,16 @@ public class BookmarkManager implements VectorChangeListener {
             }
         }
         return null;
+    }
+
+    public static List<Bookmark> getParentBookmarks() {
+        List<Bookmark> result = new ArrayList<>();
+        for (Bookmark b : bookmarks) {
+            if (b.getLocation().isEmpty()) {
+                result.add(b);
+            }
+        }
+        return result;
     }
 
     /**
@@ -315,7 +337,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @see   #removeBookmarkListener(BookmarkListener)
      */
     public static void addBookmarkListener(BookmarkListener listener) {
-        synchronized(listeners) {listeners.put(listener, null);}
+        synchronized(listeners) {
+            listeners.put(listener, null);
+        }
     }
 
     /**
@@ -325,7 +349,9 @@ public class BookmarkManager implements VectorChangeListener {
      * @see   #addBookmarkListener(BookmarkListener)
      */
     private static void removeBookmarkListener(BookmarkListener listener) {
-        synchronized(listeners) {listeners.remove(listener);}
+        synchronized(listeners) {
+            listeners.remove(listener);
+        }
     }
 
     /**
@@ -362,7 +388,7 @@ public class BookmarkManager implements VectorChangeListener {
      * to temporarily suspend events firing when a lot of them are made, for example when editing the bookmarks list.
      *
      * <p>If true is specified, any subsequent calls to fireBookmarksChanged will be ignored, until this method is
-     * called again with false.</p>
+     * called again with false.
      * @param b whether to fire events.
      */
     public static synchronized void setFireEvents(boolean b) {
@@ -402,8 +428,16 @@ public class BookmarkManager implements VectorChangeListener {
     // - Bookmark loading ------------------------------------------------------
     // -------------------------------------------------------------------------
     private static class Loader implements BookmarkBuilder {
-        public void startBookmarks() {}
-        public void endBookmarks() {}
-        public void addBookmark(String name, String location) {BookmarkManager.addBookmark(new Bookmark(name, location));}
+        public void startBookmarks() {
+
+        }
+
+        public void endBookmarks() {
+
+        }
+
+        public void addBookmark(String name, String location, String parent) {
+            BookmarkManager.addBookmark(new Bookmark(name, location, parent));
+        }
     }
 }

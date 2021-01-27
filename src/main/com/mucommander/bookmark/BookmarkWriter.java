@@ -19,8 +19,8 @@
 package com.mucommander.bookmark;
 
 import com.mucommander.RuntimeConstants;
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,9 +32,11 @@ import java.io.OutputStream;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 class BookmarkWriter implements BookmarkConstants, BookmarkBuilder {
-    private XmlWriter out;
+    private final XmlWriter out;
 
-    BookmarkWriter(OutputStream stream) throws IOException {out = new XmlWriter(stream);}
+    BookmarkWriter(OutputStream stream) throws IOException {
+        out = new XmlWriter(stream);
+    }
 
     public void startBookmarks() throws BookmarkException {
         // Root element
@@ -59,26 +61,27 @@ class BookmarkWriter implements BookmarkConstants, BookmarkBuilder {
         }
     }
 
-    public void addBookmark(String name, String location) throws BookmarkException {
+    public void addBookmark(String name, String location, String parent) throws BookmarkException {
         try {
-            // Start bookmark element
             out.startElement(ELEMENT_BOOKMARK);
             out.println();
 
-            // Write the bookmark's name
-            out.startElement(ELEMENT_NAME);
-            out.writeCData(name);
-            out.endElement(ELEMENT_NAME);
+            writeElement(ELEMENT_NAME, name);
+            writeElement(ELEMENT_LOCATION, location);
+            writeElement(ELEMENT_PARENT, parent);
 
-            // Write the bookmark's location
-            out.startElement(ELEMENT_LOCATION);
-            out.writeCData(location);
-            out.endElement(ELEMENT_LOCATION);
-
-            // End bookmark element
             out.endElement(ELEMENT_BOOKMARK);
         } catch(IOException e) {
             throw new BookmarkException(e);
+        }
+    }
+
+
+    private void writeElement(String name, String value) throws IOException {
+        if (value != null) {
+            out.startElement(name);
+            out.writeCData(value);
+            out.endElement(name);
         }
     }
 }

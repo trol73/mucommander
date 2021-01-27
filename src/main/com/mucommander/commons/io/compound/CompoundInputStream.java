@@ -37,7 +37,6 @@ import java.io.InputStream;
  * <p>
  * This class is abstract, with a single method to implement: {@link #getNextInputStream()}.
  * See {@link IteratorCompoundInputStream} for an <code>Iterator</code>-backed implementation.
- * </p>
  *
  * @see IteratorCompoundInputStream
  * @see CompoundReader
@@ -112,7 +111,6 @@ public abstract class CompoundInputStream extends InputStream {
      * otherwise.
      * <p>
      * Note: the current stream (if any) will be closed by this method.
-     * </p>
      *
      * @return <code>true</code> if there was a next stream, <code>false</code> otherwise
      * @throws IOException if an error occurred while trying to advancing the current stream. This
@@ -165,8 +163,7 @@ public abstract class CompoundInputStream extends InputStream {
             return true;
 
         if(currentIn==null)
-            if(!advanceInputStream())
-                return true;
+            return !advanceInputStream();
 
         return false;
     }
@@ -181,7 +178,6 @@ public abstract class CompoundInputStream extends InputStream {
      * <p>
      * Before calling this method, {@link #advanceInputStream()} closes the current stream (if any). In other words,
      * implementations do not have to worry about closing previously-returned streams.
-     * </p>
      *
      * @return the next <code>InputStream</code>, <code>null</code> if there is none.
      * @throws IOException if an error occurred while retrieving the next input stream 

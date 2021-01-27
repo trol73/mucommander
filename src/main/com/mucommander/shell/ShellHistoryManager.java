@@ -31,18 +31,18 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.PlatformManager;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.io.backup.BackupOutputStream;
 
 /**
- * Used to manage shell history.
+ * Used to manage shell HISTORY.
  * <p>
- * Using this class is fairly basic: you can add elements to the shell history through
+ * Using this class is fairly basic: you can add elements to the shell HISTORY through
  * {@link #add(String)} and browse it through {@link #getHistoryIterator()}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class ShellHistoryManager {
@@ -50,23 +50,23 @@ public class ShellHistoryManager {
 	
     // - History configuration -----------------------------------------------
     // -----------------------------------------------------------------------
-    /** File in which to store the shell history. */
+    /** File in which to store the shell HISTORY. */
     private static final String DEFAULT_HISTORY_FILE_NAME = "shell_history.xml";
 
 
 
     // - Class fields ---------------------------------------------------------------
     // ------------------------------------------------------------------------------
-    /** List of shell history registered listeners. */
-    private static WeakHashMap<ShellHistoryListener, ?> listeners;
-    /** Stores the shell history. */
-    private static String[]                             history;
-    /** Index of the first element of the history. */
-    private static int                                  historyStart;
-    /** Index of the last element of the history. */
-    private static int                                  historyEnd;
-    /** Path to the history file. */
-    private static AbstractFile                         historyFile;
+    /** List of shell HISTORY registered LISTENERS. */
+    private static final WeakHashMap<ShellHistoryListener, ?> LISTENERS;
+    /** Stores the shell HISTORY. */
+    private static final String[] HISTORY;
+    /** Index of the first element of the HISTORY. */
+    private static int historyStart;
+    /** Index of the last element of the HISTORY. */
+    private static int historyEnd;
+    /** Path to the HISTORY file. */
+    private static AbstractFile historyFile;
 
 
 
@@ -78,8 +78,8 @@ public class ShellHistoryManager {
     private ShellHistoryManager() {}
 
     static {
-        history   = new String[MuConfigurations.getPreferences().getVariable(MuPreference.SHELL_HISTORY_SIZE, MuPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
-        listeners = new WeakHashMap<>();
+        HISTORY = new String[TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_HISTORY_SIZE, TcPreferences.DEFAULT_SHELL_HISTORY_SIZE)];
+        LISTENERS = new WeakHashMap<>();
     }
 
 
@@ -87,18 +87,20 @@ public class ShellHistoryManager {
     // - Listener code --------------------------------------------------------------
     // ------------------------------------------------------------------------------
     /**
-     * Registers a listener to changes in the shell history.
+     * Registers a listener to changes in the shell HISTORY.
      * @param listener listener to register.
      */
-    public static void addListener(ShellHistoryListener listener) {listeners.put(listener, null);}
+    public static void addListener(ShellHistoryListener listener) {
+        LISTENERS.put(listener, null);}
 
     /**
-     * Propagates shell history events to all registered listeners.
-     * @param command command that was added to the shell history.
+     * Propagates shell HISTORY events to all registered LISTENERS.
+     * @param command command that was added to the shell HISTORY.
      */
     private static void triggerEvent(String command) {
-        for(ShellHistoryListener listener : listeners.keySet())
+        for (ShellHistoryListener listener : LISTENERS.keySet()) {
             listener.historyChanged(command);
+        }
     }
 
 
@@ -106,27 +108,28 @@ public class ShellHistoryManager {
     // - History access -------------------------------------------------------------
     // ------------------------------------------------------------------------------
     /**
-     * Completely empties the shell history.
+     * Completely empties the shell HISTORY.
      */
     public static void clear() {
-        // Empties history.
+        // Empties HISTORY.
         historyStart = 0;
         historyEnd   = 0;
 
-        // Notifies listeners.
-        for(ShellHistoryListener listener : listeners.keySet())
+        // Notifies LISTENERS.
+        for (ShellHistoryListener listener : LISTENERS.keySet()) {
             listener.historyCleared();
+        }
     }
 
     /**
-     * Returns a <b>non thread-safe</b> iterator on the history.
-     * @return an iterator on the history.
+     * Returns a <b>non thread-safe</b> iterator on the HISTORY.
+     * @return an iterator on the HISTORY.
      */
     public static Iterator<String> getHistoryIterator() {return new HistoryIterator();}
 
     /**
-     * Adds the specified command to shell history.
-     * @param command command to add to the shell history.
+     * Adds the specified command to shell HISTORY.
+     * @param command command to add to the shell HISTORY.
      */
     public static void add(String command) {
         // Ignores empty commands.
@@ -134,34 +137,31 @@ public class ShellHistoryManager {
             return;
         }
         // Ignores the command if it's the same as the last one.
-        // There is no last command if history is empty.
-        if(historyEnd != historyStart) {
-            int lastIndex;
-
+        // There is no last command if HISTORY is empty.
+        if (historyEnd != historyStart) {
             // Computes the index of the previous command.
-            if(historyEnd == 0)
-                lastIndex = history.length - 1;
-            else
-                lastIndex = historyEnd - 1;
-
-            if(command.equals(history[lastIndex]))
+            int lastIndex = historyEnd == 0 ? HISTORY.length - 1 : historyEnd - 1;
+            if (command.equals(HISTORY[lastIndex])) {
                 return;
+            }
         }
 
-        getLogger().debug("Adding  " + command + " to shell history.");
+        getLogger().debug("Adding  " + command + " to shell HISTORY.");
 
-        // Updates the history buffer.
-        history[historyEnd] = command;
+        // Updates the HISTORY buffer.
+        HISTORY[historyEnd] = command;
         historyEnd++;
 
-        // Wraps around the history buffer.
-        if (historyEnd == history.length)
+        // Wraps around the HISTORY buffer.
+        if (historyEnd == HISTORY.length) {
             historyEnd = 0;
+        }
 
-        // Clears items from the begining of the buffer if necessary.
+        // Clears items from the beginning of the buffer if necessary.
         if (historyEnd == historyStart) {
-            if (++historyStart == history.length)
+            if (++historyStart == HISTORY.length) {
                 historyStart = 0;
+            }
         }
 
         // Propagates the event.
@@ -173,8 +173,8 @@ public class ShellHistoryManager {
     // - History saving / loading ---------------------------------------------------
     // ------------------------------------------------------------------------------
     /**
-     * Sets the path of the shell history file.
-     * @param     path                  where to load the shell history from.
+     * Sets the path of the shell HISTORY file.
+     * @param     path                  where to load the shell HISTORY from.
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see                             #getHistoryFile()
      * @see                             #setHistoryFile(File)
@@ -182,50 +182,53 @@ public class ShellHistoryManager {
      */
     public static void setHistoryFile(String path) throws FileNotFoundException {
         AbstractFile file = FileFactory.getFile(path);
-        if (file == null)
+        if (file == null) {
             setHistoryFile(new File(path));
-        else
+        } else {
             setHistoryFile(file);
+        }
     }
 
     /**
-     * Sets the path of the shell history file.
-     * @param     file                  where to load the shell history from.
+     * Sets the path of the shell HISTORY file.
+     * @param     file                  where to load the shell HISTORY from.
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see                             #getHistoryFile()
      * @see                             #setHistoryFile(AbstractFile)
      * @see                             #setHistoryFile(String)
      */
-    public static void setHistoryFile(File file) throws FileNotFoundException {setHistoryFile(FileFactory.getFile(file.getAbsolutePath()));}
+    public static void setHistoryFile(File file) throws FileNotFoundException {
+        setHistoryFile(FileFactory.getFile(file != null ? file.getAbsolutePath() : null));
+    }
 
     /**
-     * Sets the path of the shell history file.
-     * @param     file                  where to load the shell history from.
+     * Sets the path of the shell HISTORY file.
+     * @param     file                  where to load the shell HISTORY from.
      * @exception FileNotFoundException if <code>path</code> is not accessible.
      * @see                             #getHistoryFile()
      * @see                             #setHistoryFile(File)
      * @see                             #setHistoryFile(String)
      */
     public static void setHistoryFile(AbstractFile file) throws FileNotFoundException {
-        // Makes sure file can be used as a shell history file.
-        if(file.isBrowsable())
+        // Makes sure file can be used as a shell HISTORY file.
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+        }
         historyFile = file;
     }
 
     /**
-     * Returns the path to the shell history file.
+     * Returns the path to the shell HISTORY file.
      * <p>
      * This method cannot guarantee the file's existence, and it's up to the caller
-     * to deal with the fact that the user might not actually have created a history file yet.
-     * </p>
+     * to deal with the fact that the user might not actually have created a HISTORY file yet.
      * <p>
      * This method's return value can be modified through {@link #setHistoryFile(String)}.
      * If this wasn't called, the default path will be used: {@link #DEFAULT_HISTORY_FILE_NAME}
      * in the {@link com.mucommander.PlatformManager#getPreferencesFolder() preferences} folder.
-     * </p>
-     * @return             the path to the shell history file.
-     * @throws IOException if an error occured while locating the default shell history file.
+     *
+     * @return             the path to the shell HISTORY file.
+     * @throws IOException if an error occurred while locating the default shell HISTORY file.
      * @see                #setHistoryFile(File)
      * @see                #setHistoryFile(String)
      * @see                #setHistoryFile(AbstractFile)
@@ -238,7 +241,7 @@ public class ShellHistoryManager {
     }
 
     /**
-     * Writes the shell history to hard drive.
+     * Writes the shell HISTORY to hard drive.
      * @throws IOException if an I/O error occurs.
      */
     public static void writeHistory() throws IOException {
@@ -248,7 +251,7 @@ public class ShellHistoryManager {
     }
 
     /**
-     * Loads the shell history.
+     * Loads the shell HISTORY.
      * @throws Exception if an error occurs.
      */
     public static void loadHistory() throws Exception {
@@ -266,44 +269,50 @@ public class ShellHistoryManager {
 
 
     /**
-     * Iterator used to browse history.
+     * Iterator used to browse HISTORY.
      * @author Nicolas Rinaudo
      */
     static class HistoryIterator implements Iterator<String> {
-        /** Index in the history. */
+        /** Index in the HISTORY. */
         private int index;
 
         /**
-         * Creates a new history iterator.
+         * Creates a new HISTORY iterator.
          */
-        public HistoryIterator() {index = ShellHistoryManager.historyStart;}
+        HistoryIterator() {
+            index = ShellHistoryManager.historyStart;
+        }
 
         /**
          * Returns <code>true</code> if there are more elements to iterate through.
          * @return <code>true</code> if there are more elements to iterate through, <code>false</code> otherwise.
          */
-        public boolean hasNext() {return index != ShellHistoryManager.historyEnd;}
+        public boolean hasNext() {
+            return index != ShellHistoryManager.historyEnd;
+        }
 
         /**
-         * Returns the next element in the history.
-         * @return the next element in the history.
+         * Returns the next element in the HISTORY.
+         * @return the next element in the HISTORY.
          */
         public String next() throws NoSuchElementException {
-            String value;
-
-            if(!hasNext())
+            if (!hasNext()) {
                 throw new NoSuchElementException();
+            }
 
-            value = ShellHistoryManager.history[index];
-            if(++index == ShellHistoryManager.history.length)
+            String value = ShellHistoryManager.HISTORY[index];
+            if (++index == ShellHistoryManager.HISTORY.length) {
                 index = 0;
+            }
             return value;
         }
 
         /**
          * Operation not supported.
          */
-        public void remove() throws UnsupportedOperationException {throw new UnsupportedOperationException();}
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
 
     }
 

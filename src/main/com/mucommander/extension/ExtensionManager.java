@@ -48,30 +48,25 @@ import java.util.StringTokenizer;
  * <ul>
  *   <li>
  *     Call <code>UIManager.getDefaults().put("ClassLoader", ExtensionManager.getClassLoader());</code> when initialising their application.
- *     This will force Swing to use our custom classloader when loading Look&Feels.
+ *     This will force Swing to use our custom classloader when loading Look&amp;Feels.
  *   </li>
  *   <li>
  *     Call <code>UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).newInstance());</code>
- *     to set a new look and feel. This will ensure that all classes and resources are available when initialising the Look&Feel.
+ *     to set a new look and feel. This will ensure that all classes and resources are available when initialising the Look&amp;Feel.
  *   </li>
  * </ul>
- * Unfortunately, this is not always sufficient. Some Look&Feels suffer from a peculiar behaviour in Swing that might cause resources to be loaded
- * through the system class loader rather than the one specified at initialisation time. This happens with Look&Feels that extend system ones, such
+ * <p>
+ * Unfortunately, this is not always sufficient. Some Look&amp;Feels suffer from a peculiar behaviour in Swing that might cause resources to be loaded
+ * through the system class loader rather than the one specified at initialisation time. This happens with Look&amp;Feels that extend system ones, such
  * as <code>Quaqua</code>. The only way to get these to load properly is to make sure the system classloader is an instance of
  * {@link com.mucommander.commons.file.AbstractFileClassLoader}.
  *
  * @author Nicolas Rinaudo
  */
 public class ExtensionManager {
-    // - Class fields -----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** ClassLoader used to load all extensions. */
     private static AbstractFileClassLoader loader;
 
-
-
-    // - Extensions folder ------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Path to the extensions folder. */
     private static AbstractFile extensionsFolder;
     /** Default name of the extensions folder. */
@@ -79,8 +74,6 @@ public class ExtensionManager {
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     public static void init() {
         ClassLoader temp = ClassLoader.getSystemClassLoader();
 
@@ -97,7 +90,7 @@ public class ExtensionManager {
     }
 
     /**
-     * Prevents instanciations of this class.
+     * Prevents instantiations of this class.
      */
     private ExtensionManager() {}
 
@@ -110,7 +103,7 @@ public class ExtensionManager {
      * <p>
      * If the specified path is not browsable (i.e. a folder or any file that muCommander can treat as such), its parent
      * will be used instead.
-     * </p>
+     *
      * @param  folder      path to the folder in which extensions are stored.
      * @throws IOException if the specified folder or the specified file's parent couldn't be accessed.
      * @see                #setExtensionsFolder(AbstractFile)
@@ -124,7 +117,7 @@ public class ExtensionManager {
      * <p>
      * If the specified path is not browsable (i.e. a folder or any file that muCommander can treat as such), its parent
      * will be used instead.
-     * </p>
+     *
      * @param  folder      path to the folder in which extensions are stored.
      * @throws IOException if the specified folder or the specified file's parent couldn't be accessed.
      * @see                #setExtensionsFolder(File)
@@ -148,7 +141,7 @@ public class ExtensionManager {
      * <p>
      * If the specified path is not browsable (i.e. a folder or any file that muCommander can treat as such), its parent
      * will be used instead.
-     * </p>
+     *
      * @param  path        path to the folder in which extensions are stored.
      * @throws IOException if the specified folder or the specified file's parent couldn't be accessed.
      * @see                #setExtensionsFolder(File)
@@ -158,7 +151,7 @@ public class ExtensionManager {
     public static void setExtensionsFolder(String path) throws IOException {
         AbstractFile folder = FileFactory.getFile(path);
 
-        if(folder == null) {
+        if (folder == null) {
             setExtensionsFolder(new File(path));
         } else {
             setExtensionsFolder(folder);
@@ -172,7 +165,7 @@ public class ExtensionManager {
      * <pre>
      * {@link PlatformManager#getPreferencesFolder()}.{@link AbstractFile#getChild(String) getChild}({@link #DEFAULT_EXTENSIONS_FOLDER_NAME});
      * </pre>
-     * </p>
+     *
      * @return             the path to the default extensions folder.
      * @throws IOException if there was an error retrieving the default extensions folder.
      */
@@ -245,7 +238,7 @@ public class ExtensionManager {
      * <p>
      * This is a convenience method and is equivalent to calling:
      * <code>{@link #isInClasspath(AbstractFile) isInClasspath}(file) || {@link #isInExtensionsPath(AbstractFile) isInExtensionsPath}(file)</code>.
-     * </p>
+     *
      * @param file file whose availability will be checked.
      * @return <code>true</code> if the specified file is either in the extension or system classpath, <code>false</code> otherwise.
      */
@@ -298,10 +291,10 @@ public class ExtensionManager {
      * <p>
      * This method will create the following new classpath entries:
      * <ul>
-     *   <li>{@link #getExtensionsFolder()}</li>.
+     *   <li>{@link #getExtensionsFolder()}.</li>
      *   <li>All <code>JAR</code> files in {@link #getExtensionsFolder()}.</li>
      * </ul>
-     * </p>
+     *
      * @throws IOException if the extensions folder is not accessible.
      */
     public static void addExtensionsToClasspath() throws IOException {

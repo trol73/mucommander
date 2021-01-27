@@ -31,14 +31,16 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class ShowPreferencesAction extends MuAction {
+public class ShowPreferencesAction extends TcAction {
 
-    ShowPreferencesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ShowPreferencesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
-    public void performAction() {GeneralPreferencesDialog.getDialog().showDialog();}
+    public void performAction() {
+    	GeneralPreferencesDialog.getDialog().showDialog();
+    }
 
 	@Override
 	public ActionDescriptor getDescriptor() {
@@ -49,15 +51,23 @@ public class ShowPreferencesAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ShowPreferences";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.MISC; }
+		public ActionCategory getCategory() {
+			return ActionCategory.MISC;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new ShowPreferencesAction(mainFrame, properties);
 		}
     }

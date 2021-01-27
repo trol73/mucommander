@@ -29,9 +29,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class SplitHorizontallyAction extends MuAction {
+public class SplitHorizontallyAction extends TcAction {
 
-    SplitHorizontallyAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SplitHorizontallyAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -49,15 +49,23 @@ public class SplitHorizontallyAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "SplitHorizontally";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+			return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+			return null;
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new SplitHorizontallyAction(mainFrame, properties);
 		}
     }

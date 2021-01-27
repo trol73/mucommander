@@ -21,6 +21,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -37,7 +38,7 @@ import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.ChecksumInputStream;
 import com.mucommander.commons.io.FileTransferException;
 import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.SplitFileAction;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
@@ -269,7 +270,7 @@ public class SplitFileJob extends AbstractCopyJob {
 					AbstractFile crcFile = baseDestFolder.getDirectChild(crcFileName);
 					OutputStream crcStream = crcFile.getOutputStream();
 					String line = sourceFile.getName() + " " + sourceChecksum;
-					crcStream.write(line.getBytes("utf-8"));
+					crcStream.write(line.getBytes(StandardCharsets.UTF_8));
 					crcStream.close();
 				} catch (Exception e) {
                     LOGGER.debug("Caught exception", e);

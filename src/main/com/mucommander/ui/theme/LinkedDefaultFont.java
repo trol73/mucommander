@@ -26,7 +26,7 @@ import java.awt.*;
  * This is typically useful to make sure that a font always defaults to the same value as another theme property.
  * Care should be exercised when using this class, however: it doesn't check for infinite recursion, meaning it's
  * entirely possible to freeze muCommander by linking a font to itself as a default.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
@@ -64,7 +64,8 @@ public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
     }
 
     public void fontChanged(FontChangedEvent event) {
-        if(event.getFontId() == id)
+        if (event.getFontId() == id) {
             notifyChange(event.getFont());
+        }
     }
 }

@@ -38,19 +38,19 @@ import java.awt.event.MouseListener;
 public class CommandBar extends JPanel implements KeyListener, MouseListener, CommandBarAttributesListener {
 
     /** Parent MainFrame instance */
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /** True when modifier key is pressed */
     private boolean modifierDown;
 
     /** Command bar buttons */
-    private CommandBarButton buttons[];
+    private CommandBarButton[] buttons;
     
     /** Command bar actions */
-    private static String actionIds[];
+    private static String[] actionIds;
     
     /** Command bar alternate actions */
-    private static String alternateActionIds[];
+    private static String[] alternateActionIds;
     
     /** Modifier key that triggers the display of alternate actions when pressed */
     private static KeyStroke modifier;

@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import javax.swing.Icon;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowParentFoldersQLAction;
 import com.mucommander.ui.main.FolderPanel;
@@ -37,7 +37,7 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  */
 public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> {
 
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 	
 	public ParentFoldersQL(FolderPanel folderPanel) {
 		super(folderPanel,
@@ -56,7 +56,7 @@ public class ParentFoldersQL extends QuickListWithIcons<AbstractFile> {
 	@Override
     public AbstractFile[] getData() {
         List<AbstractFile> abstractFiles = populateParentFolders(folderPanel.getCurrentFolder());
-        return abstractFiles.toArray(new AbstractFile[abstractFiles.size()]);
+        return abstractFiles.toArray(new AbstractFile[0]);
 	}
 
 	@Override

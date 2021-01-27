@@ -24,10 +24,10 @@ class NrgParser extends IsoParser {
 
         int len = rais.available();
 
-        int tracksMode[] = new int[255];
-        long tracksOffset[] = new long[255];
-        long tracksStart[] = new long[255];
-        long tracksEnd[] = new long[255];
+        int[] tracksMode = new int[255];
+        long[] tracksOffset = new long[255];
+        long[] tracksStart = new long[255];
+        long[] tracksEnd = new long[255];
 
         int tracks = 0;
 

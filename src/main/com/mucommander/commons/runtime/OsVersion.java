@@ -111,7 +111,19 @@ public enum OsVersion implements ComparableRuntimeProperty {
     MAC_OS_X_10_11("10.11"),
 
     /** Mac OS X 10.12 (Sierra) */
-    MAC_OS_X_10_12("10.12");
+    MAC_OS_X_10_12("10.12"),
+
+    /** Mac OS X 10.13 (High Sierra) */
+    MAC_OS_X_10_13("10.13"),
+
+    /** Mac OS X 10.14 (Mojave) */
+    MAC_OS_X_10_14("10.14"),
+
+    /** Mac OS X 10.15 (Catalina) */
+    MAC_OS_X_10_15("10.15"),
+
+    /** Mac OS X 10.16 (Big Sur) */
+    MAC_OS_X_10_16("10.16");
 
 
 
@@ -122,7 +134,7 @@ public enum OsVersion implements ComparableRuntimeProperty {
     protected final String stringRepresentation;
 
     /** Holds the OsVersion of the current runtime environment  */
-    private static OsVersion currentValue;
+    private static final OsVersion currentValue;
 
     static {
     	currentValue = parseSystemProperty(getRawSystemProperty(), OsFamily.getRawSystemProperty(), OsFamily.getCurrent());
@@ -134,10 +146,6 @@ public enum OsVersion implements ComparableRuntimeProperty {
     	this.stringRepresentation = stringRepresentation;
     }
 
-    
-    ////////////////////
-    // Static methods //
-    ////////////////////
 
     /**
      * Returns the OS version of the current runtime environment.
@@ -170,85 +178,72 @@ public enum OsVersion implements ComparableRuntimeProperty {
         // http://lopica.sourceforge.net/os.html
 
         if (osFamily == OsFamily.WINDOWS) {
-            if (osNameProp.equals("Windows 95"))
-                return WINDOWS_95;
-
-            if (osNameProp.equals("Windows 98"))
-                return WINDOWS_98;
-
-            if (osNameProp.equals("Windows Me"))
-                return WINDOWS_ME;
-
-            if (osNameProp.equals("Windows NT"))
-                return WINDOWS_NT;
-
-            if (osNameProp.equals("Windows 2000"))
-                return WINDOWS_2000;
-
-            if (osNameProp.equals("Windows XP"))
-                return WINDOWS_XP;
-
-            if (osNameProp.equals("Windows 2003"))
-                return WINDOWS_2003;
-
-            if (osNameProp.equals("Windows Vista"))
-                return WINDOWS_VISTA;
-
-            if (osNameProp.equals("Windows 7"))
-                return WINDOWS_7;
-
-            if (osNameProp.equals("Windows 8"))
-                return WINDOWS_8;
-
-            if (osNameProp.equals("Windows 8.1"))
-                return WINDOWS_8_1;
-
+            switch (osNameProp) {
+                case "Windows 95":
+                    return WINDOWS_95;
+                case "Windows 98":
+                    return WINDOWS_98;
+                case "Windows Me":
+                    return WINDOWS_ME;
+                case "Windows NT":
+                    return WINDOWS_NT;
+                case "Windows 2000":
+                    return WINDOWS_2000;
+                case "Windows XP":
+                    return WINDOWS_XP;
+                case "Windows 2003":
+                    return WINDOWS_2003;
+                case "Windows Vista":
+                    return WINDOWS_VISTA;
+                case "Windows 7":
+                    return WINDOWS_7;
+                case "Windows 8":
+                    return WINDOWS_8;
+                case "Windows 8.1":
+                    return WINDOWS_8_1;
+            }
             // Newer version we don't know of yet, assume latest supported OS version
             return WINDOWS_10;
         }
         // Mac OS X versions
         if (osFamily == OsFamily.MAC_OS_X) {
-            if (osVersionProp.startsWith("10.12"))
+            if (osVersionProp.startsWith("10.16")) {
+                return MAC_OS_X_10_16;
+            } else if (osVersionProp.startsWith("10.15")) {
+                return MAC_OS_X_10_15;
+            } else if (osVersionProp.startsWith("10.14")) {
+                return MAC_OS_X_10_14;
+            } else if (osVersionProp.startsWith("10.13")) {
+                return MAC_OS_X_10_13;
+            } else if (osVersionProp.startsWith("10.12")) {
                 return MAC_OS_X_10_12;
-
-            if (osVersionProp.startsWith("10.11"))
+            } else if (osVersionProp.startsWith("10.11")) {
                 return MAC_OS_X_10_11;
-
-            if (osVersionProp.startsWith("10.10"))
+            } else if (osVersionProp.startsWith("10.10")) {
                 return MAC_OS_X_10_10;
-
-            if (osVersionProp.startsWith("10.9"))
+            } else if (osVersionProp.startsWith("10.9")) {
                 return MAC_OS_X_10_9;
-
-            if (osVersionProp.startsWith("10.8"))
+            } else if (osVersionProp.startsWith("10.8")) {
                 return MAC_OS_X_10_8;
-
-            if (osVersionProp.startsWith("10.7"))
+            } else if (osVersionProp.startsWith("10.7")) {
                 return MAC_OS_X_10_7;
-
-            if (osVersionProp.startsWith("10.6"))
+            } else if (osVersionProp.startsWith("10.6")) {
                 return MAC_OS_X_10_6;
-
-            if (osVersionProp.startsWith("10.5"))
+            } else if (osVersionProp.startsWith("10.5")) {
                 return MAC_OS_X_10_5;
-
-            if (osVersionProp.startsWith("10.4"))
+            } else if (osVersionProp.startsWith("10.4")) {
                 return MAC_OS_X_10_4;
-
-            if (osVersionProp.startsWith("10.3"))
+            } else if (osVersionProp.startsWith("10.3")) {
                 return MAC_OS_X_10_3;
-
-            if (osVersionProp.startsWith("10.2"))
+            } else if (osVersionProp.startsWith("10.2")) {
                 return MAC_OS_X_10_2;
-
-            if (osVersionProp.startsWith("10.1"))
+            } else if (osVersionProp.startsWith("10.1")) {
                 return MAC_OS_X_10_1;
-
-            if (osVersionProp.startsWith("10.0"))
+            } else if (osVersionProp.startsWith("10.0")) {
                 return MAC_OS_X_10_0;
-
+            }
             // Newer version we don't know of yet, assume latest supported OS version
-            return MAC_OS_X_10_12;
+            return MAC_OS_X_10_16;
         }
 
         return OsVersion.UNKNOWN_VERSION;
@@ -263,29 +258,25 @@ public enum OsVersion implements ComparableRuntimeProperty {
         return this == currentValue;
     }
 
-    //////////////////////////////////////////////
-    // ComparableRuntimeProperty implementation //
-    //////////////////////////////////////////////
-
+    @Override
     public boolean isCurrentOrLower() {
 		return currentValue.compareTo(this) <= 0;
 	}
 
+	@Override
 	public boolean isCurrentLower() {
 		return currentValue.compareTo(this) < 0;
 	}
 
+	@Override
 	public boolean isCurrentOrHigher() {
 		return currentValue.compareTo(this) >= 0;
 	}
 
+	@Override
 	public boolean isCurrentHigher() {
 		return currentValue.compareTo(this) > 0;
 	}
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public String toString() {

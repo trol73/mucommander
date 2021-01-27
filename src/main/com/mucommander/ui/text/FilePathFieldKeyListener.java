@@ -41,7 +41,7 @@ public class FilePathFieldKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // Key listener to detect first left/right arrow pressed
         // if user press the left button then move cursor to the start of file name
-        //if user press the right button then move cursor to the end of file name
+        // if user press the right button then move cursor to the end of file name
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             if (deleteOnFirstAction) {

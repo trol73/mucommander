@@ -16,15 +16,19 @@ import java.util.StringTokenizer;
  * @author Maxence Bernard
  */
 public class S3ProtocolProvider implements ProtocolProvider {
+    public S3ProtocolProvider() {
+    }
+
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
         Credentials credentials = url.getCredentials();
-        if(credentials==null || credentials.getLogin().equals("") || credentials.getPassword().equals(""))
+        if (credentials == null || credentials.getLogin().isEmpty() || credentials.getPassword().isEmpty()) {
             throw new AuthException(url);
+        }
 
         S3Service service;
         String bucketName;
 
-        if(instantiationParams.length==0) {
+        if (instantiationParams.length == 0) {
             try {
                 service = new RestS3Service(new AWSCredentials(credentials.getLogin(), credentials.getPassword()));
                 Jets3tProperties props = new Jets3tProperties();
@@ -33,32 +37,34 @@ public class S3ProtocolProvider implements ProtocolProvider {
             catch(S3ServiceException e) {
                 throw S3File.getIOException(e, url);
             }
-        }
-        else {
+        } else {
             service = (S3Service)instantiationParams[0];
         }
 
         String path = url.getPath();
 
         // Root resource
-        if(("/").equals(path))
+        if (("/").equals(path)) {
             return new S3Root(url, service);
+        }
 
         // Fetch the bucket name from the URL
         StringTokenizer st = new StringTokenizer(path, "/");
         bucketName = st.nextToken();
 
         // Object resource
-        if(st.hasMoreTokens()) {
-            if(instantiationParams.length==2)
+        if (st.hasMoreTokens()) {
+            if (instantiationParams.length == 2) {
                 return new S3Object(url, service, bucketName, (org.jets3t.service.model.S3Object)instantiationParams[1]);
+            }
 
             return new S3Object(url, service, bucketName);
         }
 
         // Bucket resource
-        if(instantiationParams.length==2)
+        if (instantiationParams.length == 2) {
             return new S3Bucket(url, service, (org.jets3t.service.model.S3Bucket)instantiationParams[1]);
+        }
 
         return new S3Bucket(url, service, bucketName);
     }

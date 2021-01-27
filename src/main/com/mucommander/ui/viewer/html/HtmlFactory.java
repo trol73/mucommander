@@ -19,7 +19,7 @@ package com.mucommander.ui.viewer.html;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
 import com.mucommander.ui.viewer.WarnUserException;
@@ -43,7 +43,7 @@ public class HtmlFactory implements ViewerFactory {
 
 
     @Override
-    public boolean canViewFile(AbstractFile file) throws WarnUserException {
+    public boolean canViewFile(AbstractFile file) {
         if (webViewIsAvailable == null) {
             webViewIsAvailable = isWebViewIsAvailable();
         }

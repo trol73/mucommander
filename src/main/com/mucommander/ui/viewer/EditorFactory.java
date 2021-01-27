@@ -32,7 +32,7 @@ public interface EditorFactory {
      * <p>
      * The FileEditor may base its decision strictly upon the file's name and its extension or may wish to read some of
      * the file and compare it to a magic number.
-     * </p>
+     *
      * @param  file file for which a editor must be created.
      * @throws WarnUserException if the specified file can be edited after the warning message contained in the
      * exception is displayed to the end user.
@@ -45,4 +45,11 @@ public interface EditorFactory {
      * @return a new instance of {@link FileEditor}.
      */
     FileEditor createFileEditor();
+
+    /**
+     * Returns a name for EditAs list
+     *
+     * @return
+     */
+    String getName();
 }

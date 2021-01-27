@@ -22,7 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
@@ -42,7 +42,7 @@ public class GoToParentAction extends ActiveTabAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    GoToParentAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private GoToParentAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -54,8 +54,10 @@ public class GoToParentAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
-        setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent()!=null);
+        FolderPanel activePanel = mainFrame.getActivePanel();
+        boolean isLocked = activePanel.getTabs().getCurrentTab().isLocked();
+        AbstractFile currentFolder = activePanel.getCurrentFolder();
+        setEnabled(!isLocked && currentFolder != null && currentFolder.getParent() != null);
     }
 
 
@@ -70,7 +72,7 @@ public class GoToParentAction extends ActiveTabAction {
      * @param  panel in which to change the location.
      * @return <code>true</code> if <code>panel</code> has a parent, <code>false</code> otherwise.
      */
-    protected boolean goToParent(FolderPanel panel) {
+    private boolean goToParent(FolderPanel panel) {
     	AbstractFile parent = panel.getCurrentFolder().getParent();
         if (parent != null) {
         	panel.tryChangeCurrentFolder(parent, null, true);
@@ -103,15 +105,23 @@ public class GoToParentAction extends ActiveTabAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToParent";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new GoToParentAction(mainFrame, properties);
         }
     }

@@ -16,21 +16,27 @@ import java.io.IOException;
  */
 public class TarFormatProvider implements ArchiveFormatProvider {
 
-    /** Static instance of the filename filter that matches archive filenames */
-    private final static ExtensionFilenameFilter filenameFilter = new ExtensionFilenameFilter(new String[]
-        {".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".cbt"}
-    );
+    private static final String[] EXTENSIONS = {".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".cbt"};
+
+    /**
+     * Static instance of the filename filter that matches archive filenames
+     * */
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
 
-    //////////////////////////////////////////
-    // ArchiveFormatProvider implementation //
-    //////////////////////////////////////////
 
+    @Override
     public AbstractArchiveFile getFile(AbstractFile file) throws IOException {
         return new TarArchiveFile(file);
     }
 
+    @Override
     public FilenameFilter getFilenameFilter() {
-        return filenameFilter;
+        return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 }

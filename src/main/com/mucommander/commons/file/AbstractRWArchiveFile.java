@@ -47,9 +47,6 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
     }
 
 
-    ////////////////////////////////////////
-    // AbstractArchiveFile implementation //
-    ////////////////////////////////////////
 
     /**
      * Returns <code>true</code>: <code>AbstractRWArchiveFile</code> implementations are by definition capable of adding
@@ -65,10 +62,6 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
         return true;
     }
 
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Adds the given entry to the archive and returns an <code>OutputStream</code> to write the entry's contents
@@ -98,7 +91,7 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
      * Updates the specified entry in the archive with the attributes contained in the {@link ArchiveEntry} object.
      * Throws an <code>IOException</code> if the entry doesn't exist in the archive or if an I/O error occurs.
      *
-     * <p>This methods can be used to update the entry's date and permissions for instance.</p>
+     * <p>This methods can be used to update the entry's date and permissions for instance.
      *
      * @param entry the entry to update in the archive
      * @throws IOException if the entry doesn't exist in the archive or if an I/O error occurs
@@ -114,7 +107,7 @@ public abstract class AbstractRWArchiveFile extends AbstractArchiveFile {
      * <p>The actual effect of this method on the archive file depends on the kind of archive. It may be implemented
      * as a no-op if there is no use for it.
      * To illustrate, in the case of a {@link com.mucommander.commons.file.impl.zip.ZipArchiveFile}, this method removes chunks
-     * of free space that are left when entries are deleted.</p>
+     * of free space that are left when entries are deleted.
      *
      * @throws IOException if an I/O error occurs
      * @throws UnsupportedFileOperationException if {@link FileOperation#WRITE_FILE} operations are not supported by 

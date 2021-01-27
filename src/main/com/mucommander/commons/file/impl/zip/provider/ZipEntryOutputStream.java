@@ -10,7 +10,7 @@ import java.util.zip.CRC32;
  *
  * <p>The CRC32 checksum is calculated on-the-fly as data gets written to the stream, {@link #getCrc()} returns the
  * current checksum value. The {@link #getTotalIn()} and {@link #getTotalOut()} methods keep track of the uncompressed
- * and compressed of the supplied data.</p>
+ * and compressed of the supplied data.
  *
  * <p>There currently are two implementations of this class:
  * <ul>
@@ -19,13 +19,11 @@ import java.util.zip.CRC32;
  *  <li>{@link com.mucommander.commons.file.impl.zip.provider.StoredOutputStream}: implements the STORED compression method
  * (i.e. no compression)</li>
  * </ul>
- * </p>
  *
- * <p>--------------------------------------------------------------------------------------------------------------<br>
- * <br>
+ * <p>
  * This class is based off the <code>org.apache.tools.zip</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.0 of Ant.</p>
+ * file. It was forked at version 1.7.0 of Ant.
  *
  * @author Maxence Bernard
  */

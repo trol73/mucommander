@@ -40,10 +40,10 @@ import com.mucommander.ui.main.tabs.ConfFileTableTab;
  */
 public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 
-	private List<MainFrame> mainFrames = new LinkedList<>();
+	private final List<MainFrame> mainFrames = new LinkedList<>();
 	
 	public CommandLineMainFrameBuilder(String[] folders) {
-		for(int i=0; i < folders.length; i += 2) {
+		for (int i = 0; i < folders.length; i += 2) {
 			mainFrames.add(new MainFrame(
 					new ConfFileTableTab(getInitialAbstractPaths(folders[i], FolderPanelType.LEFT)),
 					getFileTableConfiguration(FolderPanelType.LEFT, mainFrames.size()),
@@ -54,7 +54,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
 
 	@Override
 	public MainFrame[] build() {
-		return mainFrames.toArray(new MainFrame[mainFrames.size()]);
+		return mainFrames.toArray(new MainFrame[0]);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
      * - if <code>path</code> is browsable (eg directory, archive, ...), use it as is.<br/>
      * - if it's not, use its parent.<br/>
      * - if it does not have a parent, use the default initial path for the frame.<br/>
-     * </p>
+     *
      * @param  path  path to the folder we want to open in <code>frame</code>.
      * @param  folderPanelType identifier of the panel we want to compute the path for (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
      *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
@@ -76,8 +76,9 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
      */
     private FileURL getInitialAbstractPaths(String path, FolderPanelType folderPanelType) {
         // This is one of those cases where a null value actually has a proper meaning.
-        if(path == null)
+        if (path == null) {
             return getHomeFolder().getURL();
+        }
 
         // Tries the specified path as-is.
         AbstractFile file;
@@ -86,8 +87,9 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
         while(true) {
             try {
                 file = FileFactory.getFile(path, true);
-                if(!file.exists())
+                if (file != null && !file.exists()) {
                     file = null;
+                }
                 break;
             }
             // If an AuthException occurred, gets login credential from the user.
@@ -117,18 +119,22 @@ public class CommandLineMainFrameBuilder extends MainFrameBuilder {
         }
 
         // If the specified path does not work out,
-        if(file == null)
+        if (file == null) {
             // Tries the specified path as a relative path.
-            if((file = FileFactory.getFile(new File(path).getAbsolutePath())) == null || !file.exists())
+            if ((file = FileFactory.getFile(new File(path).getAbsolutePath())) == null || !file.exists()) {
                 // Defaults to home.
                 return getHomeFolder().getURL();
+            }
+        }
 
         // If the specified path is a non-browsable, uses its parent.
-        if(!file.isBrowsable())
+        if (!file.isBrowsable()) {
             // This is just playing things safe, as I doubt there might ever be a case of
             // a file without a parent directory.
-            if((file = file.getParent()) == null)
+            if ((file = file.getParent()) == null) {
                 return getHomeFolder().getURL();
+            }
+        }
 
         return file.getURL();
     }

@@ -30,8 +30,8 @@ import javax.swing.Icon;
  */
 public class EmptyIcon implements Icon {
 
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 
 	public EmptyIcon(int size) {
 		this.width = size;

@@ -42,10 +42,10 @@ import java.awt.*;
 public class XAlignedComponentPanel extends JPanel {
 
     /** Gridbag layout constraints */
-    private GridBagConstraints c;
+    private final GridBagConstraints c;
 
     /** Number of pixels between labels and components */
-    private int xSpace;
+    private final int xSpace;
 
     /**
      * First component in this panel, which will be given the focus when focus is requested on this panel using
@@ -164,7 +164,7 @@ public class XAlignedComponentPanel extends JPanel {
             if (firstComponent instanceof JTextComponent) {
                 JTextComponent textComponent = (JTextComponent) firstComponent;
                 String text = textComponent.getText();
-                if(!text.equals("")) {
+                if(!text.isEmpty()) {
                     textComponent.setSelectionStart(0);
                     textComponent.setSelectionEnd(text.length());
                 }

@@ -57,14 +57,11 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
 	public void init(final boolean install) throws DesktopInitialisationException {
         // Workaround for JDK issue
         try {
-    	    Toolkit xToolkit = Toolkit.getDefaultToolkit();
-          Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
-          awtAppClassNameField.setAccessible(true);
-          awtAppClassNameField.set(xToolkit, "trolCommander");
-        } catch (Exception ge) {
-        	// Just ignore
-			/* Ignore */
-        }
+			Toolkit xToolkit = Toolkit.getDefaultToolkit();
+			Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
+			awtAppClassNameField.setAccessible(true);
+			awtAppClassNameField.set(xToolkit, "trolCommander");
+        } catch (Exception ignore) { }
         // Initialises trash management.
         DesktopManager.setTrashProvider(new GnomeTrashProvider());
         try {
@@ -119,4 +116,14 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
     public int getMultiClickInterval() {
         return multiClickInterval;
     }
+
+	@Override
+	public String getDefaultTerminalAppCommand() {
+		return "gnome-terminal --working-directory=$p";
+	}
+
+	@Override
+	public String getDefaultTerminalShellCommand() {
+		return "/bin/bash --login";
+	}
 }

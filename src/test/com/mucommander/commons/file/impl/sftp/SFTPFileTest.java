@@ -68,13 +68,13 @@ public class SFTPFileTest extends AbstractFileTest {
 
     // Method temporarily overridden to prevent the unit tests from failing
     @Override
-    protected void testGetInputStreamSupported() throws IOException, NoSuchAlgorithmException {
+    protected void testGetInputStreamSupported() {
         // Todo: fix the InputStream
     }
 
     // Method temporarily overridden to prevent the unit tests from failing
     @Override
-    protected void testGetRandomAccessInputStreamSupported() throws IOException, NoSuchAlgorithmException {
+    protected void testGetRandomAccessInputStreamSupported() {
         // Todo: fix the RandomAccessInputStream
     }
 }

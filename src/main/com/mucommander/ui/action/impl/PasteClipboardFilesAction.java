@@ -22,7 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.CopyJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -43,32 +43,35 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class PasteClipboardFilesAction extends MuAction {
+public class PasteClipboardFilesAction extends TcAction {
 
-    PasteClipboardFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private PasteClipboardFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // Allows this action to be dynamically enabled when the clipboard contains files, and disabled otherwise.
         // ClipboardNotifier does not work under Mac OS X (tested under Tiger with Java 1.5.0_06)
-        if(!OsFamily.MAC_OS_X.isCurrent())
+        if (!OsFamily.MAC_OS_X.isCurrent()) {
             new ClipboardNotifier(this);
+        }
     }
 
     @Override
     public void performAction() {
         // Retrieve clipboard files
         FileSet clipboardFiles = ClipboardSupport.getClipboardFiles();
-        if (clipboardFiles == null || clipboardFiles.isEmpty())
-            return;
+        if (clipboardFiles != null && !clipboardFiles.isEmpty()) {
+            startCopyingFiles(clipboardFiles);
+        }
+    }
 
-        // Start copying files
+    private void startCopyingFiles(FileSet clipboardFiles) {
         ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("copy_dialog.copying"));
         AbstractFile destFolder = mainFrame.getActivePanel().getCurrentFolder();
         CopyJob job = new CopyJob(progressDialog, mainFrame, clipboardFiles, destFolder, null, CopyJob.Mode.COPY, FileCollisionDialog.ASK_ACTION);
         progressDialog.start(job);
     }
 
-	@Override
+    @Override
 	public ActionDescriptor getDescriptor() {
 		return new Descriptor();
 	}
@@ -77,21 +80,23 @@ public class PasteClipboardFilesAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "PasteClipboardFiles";
 
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_V, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new PasteClipboardFilesAction(mainFrame, properties);
         }
     }

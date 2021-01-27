@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.button.ButtonChoicePanel;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.helper.ScreenServices;
@@ -51,7 +51,7 @@ public class DialogToolkit {
         return fitToDimension(window, minD, true);
     }
 	
-    public static boolean fitToMaxDimension(Window window, Dimension maxD) {
+    static boolean fitToMaxDimension(Window window, Dimension maxD) {
         return fitToDimension(window, maxD, false);
     }
 
@@ -74,7 +74,7 @@ public class DialogToolkit {
                 changeSize = true;
             }
 				
-            if(windowHeight < maxHeight) {
+            if (windowHeight < maxHeight) {
                 windowHeight = maxHeight;
                 changeSize = true;
             }
@@ -104,9 +104,10 @@ public class DialogToolkit {
     
     /**
      * Sets the given component's (JFrame, JDialog...) location to be centered on screen.
+     * @param c component to center on screen
      */
     public static void centerOnScreen(Component c) {
-        Dimension screenSize = MuSnapshot.getScreenSize();
+        Dimension screenSize = TcSnapshot.getScreenSize();
         c.setLocation(screenSize.width/2 - c.getWidth()/2,
                     screenSize.height/2 - c.getHeight()/2);
     }
@@ -117,7 +118,7 @@ public class DialogToolkit {
      * Note that this method assumes <code>c</code>'s dimension to be at most that of the screen.
      * This can be ensured through {@link #fitToScreen(Window)}. If this constraint is not respected,
      * behaviour is unpredictable.
-     * </p>
+     *
      * @param c      component to center.
      * @param window window to center on.
      */
@@ -125,17 +126,23 @@ public class DialogToolkit {
         int x = Math.max(0, window.getX() + (window.getWidth() - c.getWidth()) / 2);
         int y = Math.max(0, window.getY() + (window.getHeight() - c.getHeight()) / 2);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int       buffer;
-        if ((buffer = screenSize.width - (c.getWidth() + x)) < 0)
+        int buffer;
+        if ((buffer = screenSize.width - (c.getWidth() + x)) < 0) {
             x += buffer;
-        if ((buffer = screenSize.height - (c.getHeight() + y)) < 0)
+        }
+        if ((buffer = screenSize.height - (c.getHeight() + y)) < 0) {
             y += buffer;
+        }
         c.setLocation(x, y);
     }
     
 	
     /**
      * Creates an OK/Cancel panel using the given buttons, and register the given listener for button actions.
+     * @param okButton OK button
+     * @param cancelButton Cancel button
+     * @param actionListener action listener
+     * @param rootPane root panel
      */
     public static JPanel createOKCancelPanel(JButton okButton, JButton cancelButton, JRootPane rootPane, ActionListener actionListener) {
         return createButtonPanel(rootPane, actionListener, okButton, cancelButton);
@@ -143,6 +150,9 @@ public class DialogToolkit {
 
     /**
      * Creates an OK panel using the given button, and register the given listener for button actions.
+     * @param okButton OK button
+     * @param actionListener action listener
+     * @param rootPane root panel
      */
     public static JPanel createOKPanel(JButton okButton, JRootPane rootPane, ActionListener actionListener) {
         return createButtonPanel(rootPane, actionListener, okButton);
@@ -151,6 +161,9 @@ public class DialogToolkit {
     /**
      * Creates a button panel using the given buttons, and register the given listener for button actions.
      * Buttons are disposed horizontally, aligned to the right.
+     * @param rootPane root panel
+     * @param actionListener action listener
+     * @param buttons buttons
      */
     public static JPanel createButtonPanel(JRootPane rootPane, ActionListener actionListener, JButton ... buttons) {
         JPanel panel = new ButtonChoicePanel(buttons, 0, rootPane);
@@ -181,12 +194,14 @@ public class DialogToolkit {
      *   <code>true</code>
      * @see java.awt.GraphicsEnvironment#isHeadless
      */
-    public static Window getWindowForComponent(Component parentComponent) throws HeadlessException {
+    static Window getWindowForComponent(Component parentComponent) throws HeadlessException {
         // Note: this method is a shameless rip from javax.swing.JOptionPane
-        if (parentComponent == null)
+        if (parentComponent == null) {
             return JOptionPane.getRootFrame();
-        if (parentComponent instanceof Frame || parentComponent instanceof Dialog)
-            return (Window)parentComponent;
+        }
+        if (parentComponent instanceof Frame || parentComponent instanceof Dialog) {
+            return (Window) parentComponent;
+        }
         return getWindowForComponent(parentComponent.getParent());
     }
 }

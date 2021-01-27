@@ -18,10 +18,10 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.text.Translator;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.commandbar.CommandBar;
@@ -40,15 +40,15 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class ToggleCommandBarAction extends MuAction {
+public class ToggleCommandBarAction extends TcAction {
 
-    ToggleCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleCommandBarAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
-        updateLabel(MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_VISIBLE, MuPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
+        updateLabel(TcConfigurations.getPreferences().getVariable(TcPreference.COMMAND_BAR_VISIBLE, TcPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
     }
 
     private void updateLabel(boolean visible) {
-        setLabel(Translator.get(visible?Descriptor.ACTION_ID+".hide":Descriptor.ACTION_ID+".show"));
+        setLabel(Translator.get(visible ? Descriptor.ACTION_ID + ".hide" : Descriptor.ACTION_ID + ".show"));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ToggleCommandBarAction extends MuAction {
         CommandBar commandBar = mainFrame.getCommandBar();
         boolean visible = !commandBar.isVisible();
         // Save the last command bar visible state in the configuration, this will become the default for new MainFrame windows.
-        MuConfigurations.getPreferences().setVariable(MuPreference.COMMAND_BAR_VISIBLE, visible);
+        TcConfigurations.getPreferences().setVariable(TcPreference.COMMAND_BAR_VISIBLE, visible);
         // Change the label to reflect the new command bar state
         updateLabel(visible);
         // Show/hide the command bar
@@ -73,18 +73,28 @@ public class ToggleCommandBarAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "ToggleCommandBar";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-        public ActionCategory getCategory() { return ActionCategory.VIEW; }
+        public ActionCategory getCategory() {
+		    return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         @Override
-        public String getLabelKey() { return ACTION_ID+".show"; }
+        public String getLabelKey() {
+		    return ACTION_ID + ".show";
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleCommandBarAction(mainFrame, properties);
         }
     }

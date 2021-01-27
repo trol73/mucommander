@@ -89,7 +89,7 @@ public class OtherTextComponentCompletion extends CompletionType {
                     // Notify listeners that the text field has been validated
                 	if (itemSelected) {
                 		hideAutocompletionPopup();
-                		acceptListItem((String)list.getSelectedValue());
+                		acceptListItem(list.getSelectedValue());
                 		keyEvent.consume();
                 	}
                 	else
@@ -121,7 +121,7 @@ public class OtherTextComponentCompletion extends CompletionType {
                 case KeyEvent.VK_SPACE:
                 	if (keyEvent.isControlDown()) {
                 		if (!popup.isVisible()) {
-                    		autocompletedtextComp.moveCarentToEndOfText();
+                    		autocompletedtextComp.moveCaretToEndOfText();
                     		createNewShowingThread(0);
                     	}
                 	}

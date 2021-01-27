@@ -64,7 +64,9 @@ public abstract class UrlOperation implements DesktopOperation {
      * @param  url url to check against.
      * @return     <code>true</code> if the operation is supported for the specified file, <code>false</code> otherwise.
      */
-    public boolean canExecute(URL url) {return isAvailable();}
+    public boolean canExecute(URL url) {
+        return isAvailable();
+    }
 
 
 
@@ -129,21 +131,28 @@ public abstract class UrlOperation implements DesktopOperation {
      */
     protected URL extractTarget(Object[] target) {
         // We only deal with arrays containing 1 element.
-        if(target.length != 1)
+        if (target.length != 1) {
             return null;
+        }
+        Object obj = target[0];
 
         // If we find an instance of java.net.URL, we can stop here.
-        if(target[0] instanceof URL)
-            return (URL)target[0];
+        if (obj instanceof URL) {
+            return (URL)obj;
+        }
 
         // Deals with instances of HTTPFile.
-        if(target[0] instanceof HTTPFile)
-            return (URL)((AbstractFile)target[0]).getUnderlyingFileObject();
+        if (obj instanceof HTTPFile) {
+            return (URL)((AbstractFile)obj).getUnderlyingFileObject();
+        }
 
         // Deals with instances of String.
-        if(target[0] instanceof String) {
-            try {return new URL((String)target[0]);}
-            catch(MalformedURLException e) {return null;}
+        if (obj instanceof String) {
+            try {
+                return new URL((String)obj);
+            } catch(MalformedURLException e) {
+                return null;
+            }
         }
 
         // Illegal parameters.

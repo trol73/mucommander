@@ -130,8 +130,7 @@ System.out.println("?-> " + type);
             default:
                 throw new RuntimeException("unsupported operation for " + type);
         }
-        AvrDudeInputStream is = new AvrDudeInputStream(StreamType.HEX, configuration, operation);
-        return is;
+        return new AvrDudeInputStream(StreamType.HEX, configuration, operation);
     }
 
     @Override
@@ -150,7 +149,6 @@ System.out.println("?-> " + type);
             default:
                 throw new RuntimeException("unsupported operation for " + type);
         }
-        AvrdudeOutputStream os = new AvrdudeOutputStream(StreamType.HEX, configuration, operation);
-        return os;
+        return new AvrdudeOutputStream(StreamType.HEX, configuration, operation);
     }
 }

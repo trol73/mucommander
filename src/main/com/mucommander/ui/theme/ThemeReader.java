@@ -26,10 +26,10 @@ import java.util.StringTokenizer;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import org.intellij.lang.annotations.MagicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 
@@ -40,7 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
 class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 	private static Logger logger;
 
-	// TODO !!! add previous state to enum instead off terrible if-else list
+	// TODO !!! add previous state to enum insteadof terrible if-else list
     private enum State {
     /** Parsing hasn't started yet. */
         UNKNOWN,
@@ -74,9 +74,12 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
         SHELL_HISTORY_SELECTED,
     /** Parsing the volume_label element. */
         STATUS_BAR,
-        HIDDEN,
-        HIDDEN_NORMAL,
-        HIDDEN_SELECTED,
+        HIDDEN_FILE,
+        HIDDEN_FILE_NORMAL,
+        HIDDEN_FILE_SELECTED,
+        HIDDEN_FOLDER,
+        HIDDEN_FOLDER_NORMAL,
+        HIDDEN_FOLDER_SELECTED,
         FOLDER,
         FOLDER_NORMAL,
         FOLDER_SELECTED,
@@ -171,7 +174,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Notifies the reader that a new XML element is starting.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         // Ignores the content of unknown elements.
         if (unknownElement != null) {
             getLogger().debug("Ignoring element " + qName);
@@ -190,8 +193,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY_NORMAL;
             } else if (state == State.TERMINAL) {
                 state = State.TERMINAL_NORMAL;
-            } else if (state == State.HIDDEN) {
-                state = State.HIDDEN_NORMAL;
+            } else if (state == State.HIDDEN_FILE) {
+                state = State.HIDDEN_FILE_NORMAL;
+            } else if (state == State.HIDDEN_FOLDER) {
+                state = State.HIDDEN_FOLDER_NORMAL;
             } else if (state == State.FOLDER) {
                 state = State.FOLDER_NORMAL;
             } else if (state == State.ARCHIVE) {
@@ -279,8 +284,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY_SELECTED;
             } else if (state == State.TERMINAL) {
                 state = State.TERMINAL_SELECTED;
-            } else if (state == State.HIDDEN) {
-                state = State.HIDDEN_SELECTED;
+            } else if (state == State.HIDDEN_FILE) {
+                state = State.HIDDEN_FILE_SELECTED;
+            } else if (state == State.HIDDEN_FOLDER) {
+                state = State.HIDDEN_FOLDER_SELECTED;
             } else if (state == State.FOLDER) {
                 state = State.FOLDER_SELECTED;
             } else if (state == State.ARCHIVE) {
@@ -314,8 +321,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 setColor(ARCHIVE_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.SYMLINK_NORMAL) {
                 setColor(SYMLINK_INACTIVE_FOREGROUND_COLOR, attributes);
-            } else if(state == State.HIDDEN_NORMAL) {
+            } else if(state == State.HIDDEN_FILE_NORMAL) {
                 setColor(HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR, attributes);
+            } else if(state == State.HIDDEN_FOLDER_NORMAL) {
+                setColor(HIDDEN_FOLDER_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.MARKED_NORMAL) {
                 setColor(MARKED_INACTIVE_FOREGROUND_COLOR, attributes);
             } else if(state == State.EXECUTABLE_NORMAL) {
@@ -328,7 +337,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 setColor(ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
             } else if(state == State.SYMLINK_SELECTED) {
                 setColor(SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
-            } else if(state == State.HIDDEN_SELECTED) {
+            } else if(state == State.HIDDEN_FOLDER_SELECTED) {
+                setColor(HIDDEN_FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
+            } else if(state == State.HIDDEN_FILE_SELECTED) {
                 setColor(HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
             } else if(state == State.MARKED_SELECTED) {
                 setColor(MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR, attributes);
@@ -444,11 +455,18 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
             state = State.STATUS_BAR;
         }
 
-        else if (ELEMENT_HIDDEN.equals(qName)) {
+        else if (ELEMENT_HIDDEN_FILE.equals(qName)) {
             if (state != State.TABLE) {
                 traceIllegalDeclaration(qName);
             }
-            state = State.HIDDEN;
+            state = State.HIDDEN_FILE;
+        }
+
+        else if (ELEMENT_HIDDEN_FOLDER.equals(qName)) {
+            if (state != State.TABLE) {
+                traceIllegalDeclaration(qName);
+            }
+            state = State.HIDDEN_FOLDER;
         }
 
         else if (ELEMENT_FOLDER.equals(qName)) {
@@ -661,10 +679,14 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 
         // Text color.
         else if (ELEMENT_FOREGROUND.equals(qName)) {
-            if (state == State.HIDDEN_NORMAL) {
+            if (state == State.HIDDEN_FILE_NORMAL) {
                 setColor(HIDDEN_FILE_FOREGROUND_COLOR, attributes);
-            } else if (state == State.HIDDEN_SELECTED) {
+            } else if (state == State.HIDDEN_FILE_SELECTED) {
                 setColor(HIDDEN_FILE_SELECTED_FOREGROUND_COLOR, attributes);
+            } else if (state == State.HIDDEN_FOLDER_NORMAL) {
+                setColor(HIDDEN_FOLDER_FOREGROUND_COLOR, attributes);
+            } else if (state == State.HIDDEN_FOLDER_SELECTED) {
+                setColor(HIDDEN_FOLDER_SELECTED_FOREGROUND_COLOR, attributes);
             } else if (state == State.TABLE_UNMATCHED) {
                 setColor(FILE_TABLE_UNMATCHED_FOREGROUND_COLOR, attributes);
             } else if (state == State.FOLDER_NORMAL) {
@@ -771,7 +793,7 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Notifies the reader that the current element declaration is over.
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         // If we're in an unknown element....
         if (unknownElement != null) {
             // If it just closed, resume normal parsing.
@@ -792,7 +814,9 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
             state = State.TABLE;
         } else if (ELEMENT_UNMATCHED.equals(qName)) {
             state = State.TABLE;
-        } else if (qName.equals(ELEMENT_HIDDEN)) {
+        } else if (qName.equals(ELEMENT_HIDDEN_FILE)) {
+            state = State.TABLE;
+        } else if (qName.equals(ELEMENT_HIDDEN_FOLDER)) {
             state = State.TABLE;
         } else if (ELEMENT_FOLDER.equals(qName)) {
             state = State.TABLE;
@@ -835,8 +859,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY;
             } else if (state == State.TERMINAL_NORMAL) {
                 state = State.TERMINAL;
-            } else if (state == State.HIDDEN_NORMAL) {
-                state = State.HIDDEN;
+            } else if (state == State.HIDDEN_FILE_NORMAL) {
+                state = State.HIDDEN_FILE;
+            } else if (state == State.HIDDEN_FOLDER_NORMAL) {
+                state = State.HIDDEN_FOLDER;
             } else if (state == State.FOLDER_NORMAL) {
                 state = State.FOLDER;
             } else if (state == State.ARCHIVE_NORMAL) {
@@ -870,8 +896,10 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
                 state = State.SHELL_HISTORY;
             } else if (state == State.TERMINAL_SELECTED) {
                 state = State.TERMINAL;
-            } else if (state == State.HIDDEN_SELECTED) {
-                state = State.HIDDEN;
+            } else if (state == State.HIDDEN_FILE_SELECTED) {
+                state = State.HIDDEN_FILE;
+            } else if (state == State.HIDDEN_FOLDER_SELECTED) {
+                state = State.HIDDEN_FOLDER;
             } else if (state == State.FOLDER_SELECTED) {
                 state = State.FOLDER;
             } else if (state == State.ARCHIVE_SELECTED) {
@@ -931,31 +959,25 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
      * Creates a font from the specified XML attributes.
      * <p>
      * Ignored attributes will be set to their default values.
-     * </p>
+     *
      * @param  attributes XML attributes describing the font to use.
      * @return            the resulting Font instance.
      */
     private static Font createFont(Attributes attributes) {
-        String buffer; // Buffer for attribute values.
-
         // Computes the font style.
-        int style = 0;
-        if (((buffer = attributes.getValue(ATTRIBUTE_BOLD)) != null) && buffer.equals(VALUE_TRUE)) {
-            style |= Font.BOLD;
-        }
-        if (((buffer = attributes.getValue(ATTRIBUTE_ITALIC)) != null) && buffer.equals(VALUE_TRUE)) {
-            style |= Font.ITALIC;
-        }
+        int style = getFontStyle(attributes);
 
         // Computes the font size.
-        if ((buffer = attributes.getValue(ATTRIBUTE_SIZE)) == null) {
+        String buffer = attributes.getValue(ATTRIBUTE_SIZE);
+        if (buffer == null) {
             getLogger().debug("Missing font size attribute in theme, ignoring.");
             return null;
 	    }
         int size = Integer.parseInt(buffer);
 
-            // Computes the font family.
-        if ((buffer = attributes.getValue(ATTRIBUTE_FAMILY)) == null) {
+        // Computes the font family.
+        buffer = attributes.getValue(ATTRIBUTE_FAMILY);
+        if (buffer == null) {
             getLogger().debug("Missing font family attribute in theme, ignoring.");
             return null;
         }
@@ -974,6 +996,20 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
         // No font was found, instructs the ThemeManager to use the system default.
         getLogger().debug("Requested font families are not installed on the system, using default.");
         return null;
+    }
+
+    @MagicConstant(flags = {Font.BOLD, Font.ITALIC})
+    private static int getFontStyle(Attributes attributes) {
+        int style = 0;
+        String buffer = attributes.getValue(ATTRIBUTE_BOLD);
+        if (VALUE_TRUE.equals(buffer)) {
+            style |= Font.BOLD;
+        }
+        buffer = attributes.getValue(ATTRIBUTE_ITALIC);
+        if (VALUE_TRUE.equals(buffer)) {
+            style |= Font.ITALIC;
+        }
+        return style;
     }
 
     /**

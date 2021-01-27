@@ -19,7 +19,7 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
 
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ToggleGroupColumnAction extends ToggleColumnAction {
 
-    ToggleGroupColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleGroupColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.GROUP);
     }
 
@@ -48,7 +48,7 @@ public class ToggleGroupColumnAction extends ToggleColumnAction {
             super(Column.GROUP);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleGroupColumnAction(mainFrame, properties);
         }
     }

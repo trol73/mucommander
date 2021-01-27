@@ -19,9 +19,9 @@ package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.WildcardFileFilter;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferencesAPI;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferencesAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +33,11 @@ import java.util.Map;
  */
 public class FileGroupResolver {
 
+    public static final int MAX_GROUPS = 10;
+
     private static class ResolverRecord {
-        WildcardFileFilter filter;
-        int group;
+        final int group;
+        final WildcardFileFilter filter;
 
         ResolverRecord(int group, String mask) {
             this.group = group;
@@ -43,8 +45,8 @@ public class FileGroupResolver {
         }
     }
 
-    private Map<String, Integer> extensionsMap = new HashMap<>();
-    private List<ResolverRecord> filtersList = new ArrayList<>();
+    private final Map<String, Integer> extensionsMap = new HashMap<>();
+    private final List<ResolverRecord> filtersList = new ArrayList<>();
 
     private static FileGroupResolver instance;
 
@@ -67,9 +69,9 @@ public class FileGroupResolver {
         extensionsMap.clear();
         filtersList.clear();
 
-        MuPreferencesAPI prefs = MuConfigurations.getPreferences();
-        for (int group = 0; group < 10; group++) {
-            String masks = prefs.getVariable(MuPreference.values()[MuPreference.FILE_GROUP_1_MASK.ordinal() + group]);
+        TcPreferencesAPI prefs = TcConfigurations.getPreferences();
+        for (int group = 0; group < MAX_GROUPS; group++) {
+            String masks = prefs.getVariable(TcPreference.values()[TcPreference.FILE_GROUP_1_MASK.ordinal() + group]);
             if (masks == null) {
                 continue;
             }

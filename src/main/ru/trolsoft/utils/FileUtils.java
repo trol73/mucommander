@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@ import java.net.URISyntaxException;
  */
 public class FileUtils {
 
-    public static void copyFileFromJar(String src, String dest) throws IOException {
+    public static void copyFileFromJar(String src, String dest, boolean overwrite) throws IOException {
         File fileDest = new File(dest);
-        if (fileDest.exists() && fileDest.length() > 0) {
+        if (!overwrite && fileDest.exists() && fileDest.length() > 0) {
             return;
         }
         fileDest.getParentFile().mkdirs();
@@ -41,9 +41,13 @@ public class FileUtils {
     }
 
     public static void copyJarFile(String name, String jarPath) throws IOException {
+        copyJarFile(name, jarPath, false);
+    }
+
+    public static void copyJarFile(String name, String jarPath, boolean overwrite) throws IOException {
         final String outFile = jarPath + File.separatorChar + name;
-        if (!new File(outFile).exists()) {
-            FileUtils.copyFileFromJar('/' + name, outFile);
+        if (overwrite || !new File(outFile).exists()) {
+            FileUtils.copyFileFromJar('/' + name, outFile, overwrite);
         }
     }
 

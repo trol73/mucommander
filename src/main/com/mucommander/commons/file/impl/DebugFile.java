@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * DebugFile is a {@link ProxyFile} to be used for debugging purposes. It allows to track the calls made to
  * {@link com.mucommander.commons.file.AbstractFile} methods that are commonly I/O-bound, by logging calls to each of those
- * methods. It also allows to slow those methods down to simulate a slow filesytem.
+ * methods. It also allows to slow those methods down to simulate a slow filesystem.
  *
  * @author Maxence Bernard
  */
@@ -23,7 +23,7 @@ public class DebugFile extends ProxyFile {
     private int maxLatency;
 
     /** Used to randomize the latency for each calls to slowed-down methods */
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     
     /**
@@ -66,11 +66,10 @@ public class DebugFile extends ProxyFile {
      * Sleeps a random number of milliseconds, up to {@link #maxLatency}.
      */
     private void lag() {
-        if(maxLatency>0) {
+        if (maxLatency > 0) {
             try {
                 Thread.sleep(random.nextInt(maxLatency));
-            }
-            catch(InterruptedException e) {}
+            } catch(InterruptedException ignored) {}
         }
     }
 
@@ -81,10 +80,6 @@ public class DebugFile extends ProxyFile {
         return "called on "+super.getAbsolutePath()+" ("+file.getClass().getName()+")";
     }
 
-
-    /////////////////////////////////////////////////////
-    // Overridden methods (traced/slowed down methods) //
-    /////////////////////////////////////////////////////
 
     @Override
     public long getLastModifiedDate() {
@@ -127,7 +122,7 @@ public class DebugFile extends ProxyFile {
     }
 
     @Override
-    public long getFreeSpace() throws IOException, UnsupportedFileOperationException {
+    public long getFreeSpace() throws IOException {
         LOGGER.trace(getDebugString());
         lag();
 
@@ -135,7 +130,7 @@ public class DebugFile extends ProxyFile {
     }
 
     @Override
-    public long getTotalSpace() throws IOException, UnsupportedFileOperationException {
+    public long getTotalSpace() throws IOException {
         LOGGER.trace(getDebugString());
         lag();
 

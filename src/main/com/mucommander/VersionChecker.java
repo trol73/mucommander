@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import com.mucommander.commons.file.AbstractFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -38,9 +39,8 @@ import com.mucommander.commons.file.FileFactory;
  * - date of latest release.<br>
  * - latest official version.<br>
  * - where to download the latest version from.<br>
- * This class is used to access those informations and compare them with what is known
+ * This class is used to access that information and compare them with what is known
  * of the current one, making it possible to notify users of new releases.
- * </p>
  * <p>
  * Checking for new releases is a fairly straightforward process, and can be done
  * with a few lines of code:
@@ -54,7 +54,7 @@ import com.mucommander.commons.file.FileFactory;
  *     else
  *         System.out.println("You've got the latest muCommander version");
  *    }
- * catch(Exception e) {System.err.println("An error occured.");}
+ * catch(Exception e) {System.err.println("An error occurred.");}
  * </pre>
  *
  * <p>
@@ -103,9 +103,6 @@ public class VersionChecker extends DefaultHandler {
     private static final int STATE_UNKNOWN      = 5;
 
 
-
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Remote version number. */
     private String latestVersion;
     /** Where to download the latest version. */
@@ -118,9 +115,6 @@ public class VersionChecker extends DefaultHandler {
     private int    state;
 
 
-
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new version checker instance.
      */
@@ -137,7 +131,11 @@ public class VersionChecker extends DefaultHandler {
         getLogger().info("Opening connection to " + RuntimeConstants.VERSION_URL);
 
         // Parses the remote XML file using UTF-8 encoding.
-        try(InputStream in = FileFactory.getFile(RuntimeConstants.VERSION_URL).getInputStream()){
+        AbstractFile file = FileFactory.getFile(RuntimeConstants.VERSION_URL);
+        if (file == null) {
+            return null;
+        }
+        try (InputStream in = file.getInputStream()) {
 	        try {
 	            SAXParserFactory.newInstance().newSAXParser().parse(in, instance = new VersionChecker());
 	        } catch(Exception e) {
@@ -149,9 +147,9 @@ public class VersionChecker extends DefaultHandler {
         // Makes sure we retrieved the information we were looking for.
         // We're not checking the release date as older version of muCommander
         // didn't use it.
-        if(instance.latestVersion == null || instance.latestVersion.equals("") ||
-           instance.downloadURL == null   || instance.downloadURL.equals(""))
+        if (instance.latestVersion == null || instance.latestVersion.isEmpty() || instance.downloadURL == null   || instance.downloadURL.isEmpty()) {
             throw new Exception();
+        }
 
         return instance;
     }
@@ -182,19 +180,25 @@ public class VersionChecker extends DefaultHandler {
      * Returns the version number of the latest muCommander release.
      * @return the version number of the latest muCommander release.
      */
-    public String getLatestVersion() {return latestVersion;}
+    public String getLatestVersion() {
+        return latestVersion;
+    }
 
     /**
      * Returns the URL at which the latest version of muCommander can be downloaded.
      * @return the URL at which the latest version of muCommander can be downloaded.
      */
-    public String getDownloadURL() {return downloadURL;}
+    public String getDownloadURL() {
+        return downloadURL;
+    }
 
     /**
      * Returns the URL to the latest JAR file, <code>null</code> if not available.
      * @return the URL to the latest JAR file.
      */
-    public String getJarURL() {return jarURL;}
+    public String getJarURL() {
+        return jarURL;
+    }
 
     /**
      * Returns the date at which the latest version of muCommander has been released.
@@ -203,12 +207,11 @@ public class VersionChecker extends DefaultHandler {
      *
      * @return the date at which the latest version of muCommander has been released.
      */
-    public String getReleaseDate() {return releaseDate;}
+    public String getReleaseDate() {
+        return releaseDate;
+    }
 
 
-
-    // - XML parsing ------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Called when the XML document parsing has started.
      */
@@ -225,21 +228,22 @@ public class VersionChecker extends DefaultHandler {
      */
     @Override
     public void characters(char[] ch, int offset, int length) {
-        if(state == STATE_VERSION)
+        if (state == STATE_VERSION) {
             latestVersion += new String(ch, offset, length);
-        else if(state == STATE_DOWNLOAD_URL)
+        } else if (state == STATE_DOWNLOAD_URL) {
             downloadURL += new String(ch, offset, length);
-        else if(state == STATE_JAR_URL)
+        } else if (state == STATE_JAR_URL) {
             jarURL += new String(ch, offset, length);
-        else if(state == STATE_DATE)
+        } else if (state == STATE_DATE) {
             releaseDate += new String(ch, offset, length);
+        }
     }
 
     /**
      * Notifies the parser that a new tag is starting.
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         // Checks whether we know the tag and updates the current state.
         switch (qName) {
             case VERSION_ELEMENT:
@@ -264,7 +268,7 @@ public class VersionChecker extends DefaultHandler {
      * Notifies the parser that the current element is finished.
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {state = STATE_UNKNOWN;}
+    public void endElement(String uri, String localName, String qName) {state = STATE_UNKNOWN;}
 
     /**
      * Notifies the parser that XML parsing is finished.

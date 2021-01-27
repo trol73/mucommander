@@ -32,7 +32,7 @@ import java.util.List;
  */
 public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter implements CriterionFilter<C> {
 
-    private CriterionValueGenerator<C> generator;
+    private final CriterionValueGenerator<C> generator;
 
     /**
      * Creates a new <code>AbstractCriterionFilter</code> using the specified {@link CriterionValueGenerator} and operating
@@ -51,7 +51,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param generator generates criterion values for files as requested
      * @param inverted if true, this filter will operate in inverted mode.
      */
-    public AbstractCriterionFilter(CriterionValueGenerator<C> generator, boolean inverted) {
+    AbstractCriterionFilter(CriterionValueGenerator<C> generator, boolean inverted) {
         super(inverted);
 
         this.generator = generator;
@@ -71,8 +71,9 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if this filter matched the given value, according to the current inverted mode
      */
     public boolean match(C value) {
-        if(inverted)
+        if (inverted) {
             return reject(value);
+        }
 
         return accept(value);
     }
@@ -80,7 +81,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
     /**
      * Returns <code>true</code> if the given value was rejected by this filter, <code>false</code> if it was accepted.
      *
-     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.</p>
+     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.
      *
      * @param value the value to be tested
      * @return true if the given value was rejected by this filter
@@ -96,15 +97,17 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param values values to be tested
      * @return an array of accepted AbstractFile instances
      */
-    public C[] filter(C values[]) {
-        List<C> filteredValuesV = new ArrayList<>();
+    public C[] filter(C[] values) {
+        List<C> filteredValuesList = new ArrayList<>();
 
         for (C value : values) {
-            if (accept(value))
-                filteredValuesV.add(value);
+            if (accept(value)) {
+                filteredValuesList.add(value);
+            }
         }
-        C filteredValues[] = (C[]) new Object[filteredValuesV.size()];
-        return filteredValuesV.toArray(filteredValues);
+        @SuppressWarnings({"unchecked"})
+        C[] filteredValues = (C[]) new Object[filteredValuesList.size()];
+        return filteredValuesList.toArray(filteredValues);
     }
 
     /**
@@ -114,7 +117,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param values the values to be tested
      * @return true if all the values in the specified array were accepted
      */
-    public boolean match(C values[]) {
+    public boolean match(C[] values) {
         for (C value : values) {
             if (!match(value)) {
                 return false;
@@ -130,7 +133,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param values the values to be tested
      * @return true if all the values in the specified array were accepted
      */
-    public boolean accept(C values[]) {
+    public boolean accept(C[] values) {
         for (C value : values) {
             if (!accept(value)) {
                 return false;
@@ -146,7 +149,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @param values the values to be tested
      * @return true if all the values in the specified array were rejected
      */
-    public boolean reject(C values[]) {
+    public boolean reject(C[] values) {
         for (C value : values) {
             if (!reject(value)) {
                 return false;
@@ -156,10 +159,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
     }
 
 
-    ///////////////////////////////
-    // FileFilter implementation //
-    ///////////////////////////////
-
+    @Override
     public boolean accept(AbstractFile file) {
         return accept(generator.getCriterionValue(file));
     }

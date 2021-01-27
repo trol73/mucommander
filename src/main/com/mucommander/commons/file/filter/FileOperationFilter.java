@@ -7,7 +7,7 @@ import com.mucommander.commons.file.FileOperation;
  * <code>OperationFileFilter</code> matches files which support a specified {@link FileOperation file operation}.
  *
  * <p>Only one file operation can be matched at a time. To match several file operations, combine them using a
- * {@link com.mucommander.commons.file.filter.ChainedFileFilter}.</p>
+ * {@link com.mucommander.commons.file.filter.ChainedFileFilter}.
  *
  * @see FileOperation
  * @author Maxence Bernard
@@ -46,10 +46,7 @@ public class FileOperationFilter extends AbstractFileFilter {
     }
 
 
-    ///////////////////////////////
-    // FileFilter implementation //
-    ///////////////////////////////
-
+    @Override
     public boolean accept(AbstractFile file) {
         return file.isFileOperationSupported(op);
     }

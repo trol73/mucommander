@@ -60,10 +60,10 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     private static JFileChooser fileChooser;
 
     /** Caches icons for directories, used only for non-local files */
-    private static IconCache directoryIconCache = CachedFileIconProvider.createCache();
+    private static final IconCache directoryIconCache = CachedFileIconProvider.createCache();
 
     /** Caches icons for regular files, used only for non-local files */
-    private static IconCache fileIconCache = CachedFileIconProvider.createCache();
+    private static final IconCache fileIconCache = CachedFileIconProvider.createCache();
 
     /** True if init has been called */
     protected static boolean initialized;
@@ -208,10 +208,6 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
     }
 
 
-    //////////////////////////////////////////
-    // LocalFileIconProvider implementation //
-    //////////////////////////////////////////
-
     /**
      * <b>Implementation notes:</b> returns <code>false</code> (no caching) for:
      * <ul>
@@ -221,10 +217,12 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
      * <code>true</code> is returned for non-local files that are not symlinks to avoid excessive temporary file
      * creation.
      */
+    @Override
     public boolean isCacheable(AbstractFile file, Dimension preferredResolution) {
-        return !((file.getTopAncestor() instanceof LocalFile) || file.isSymlink());
+        return file != null && !((file.getTopAncestor() instanceof LocalFile) || file.isSymlink());
     }
 
+    @Override
     public Icon lookupCache(AbstractFile file, Dimension preferredResolution) {
         // Under Mac OS X, return the icon of /Network for the root of remote (non-local) locations. 
         if (OsFamily.MAC_OS_X.isCurrent() && !FileProtocols.FILE.equals(file.getURL().getScheme()) && file.isRoot()) {
@@ -234,6 +232,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         return (file.isDirectory()? directoryIconCache : fileIconCache).get(getCheckedExtension(file));
     }
 
+    @Override
     public void addToCache(AbstractFile file, Icon icon, Dimension preferredResolution) {
         // Map the extension onto the given icon
         (file.isDirectory() ? directoryIconCache : fileIconCache).put(getCheckedExtension(file), icon);

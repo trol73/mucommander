@@ -110,7 +110,7 @@ public class CachedDirectory extends ProxyFile {
         }
 
         Arrays.sort(children, cache.getSort());
-        Icon icons[] = new Icon[children.length];
+        Icon[] icons = new Icon[children.length];
         for (int i = 0; i < children.length; i++) {
             icons[i] = FileIcons.getFileIcon(children[i]);
         }

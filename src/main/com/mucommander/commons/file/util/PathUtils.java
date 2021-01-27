@@ -242,7 +242,7 @@ public class PathUtils {
     public static String removeLeadingSeparator(String path) {
         char firstChar;
         if (!path.isEmpty() && ((firstChar=path.charAt(0)) == '/' || firstChar=='\\')) {
-            return path.substring(1, path.length());
+            return path.substring(1);
         }
 
         return path;
@@ -257,7 +257,7 @@ public class PathUtils {
      */
     public static String removeLeadingSeparator(String path, String separator) {
         if (path.startsWith(separator)) {
-            return path.substring(separator.length(), path.length());
+            return path.substring(separator.length());
         }
 
         return path;
@@ -387,7 +387,7 @@ public class PathUtils {
             return "";
         }
 
-        return path.substring(pos+1, path.length());
+        return path.substring(pos+1);
     }
 
 

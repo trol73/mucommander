@@ -29,9 +29,9 @@ import java.util.Map;
  *
  * Created on 24/10/14.
  */
-public class TerminalPanelAction extends MuAction {
+public class TerminalPanelAction extends TcAction {
 
-    TerminalPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TerminalPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -67,7 +67,7 @@ public class TerminalPanelAction extends MuAction {
             return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new TerminalPanelAction(mainFrame, properties);
         }
     }

@@ -30,9 +30,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class RefreshAction extends MuAction {
+public class RefreshAction extends TcAction {
 
-    RefreshAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private RefreshAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -51,15 +51,23 @@ public class RefreshAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Refresh";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+			return ActionCategory.VIEW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0);
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new RefreshAction(mainFrame, properties);
 		}
     }

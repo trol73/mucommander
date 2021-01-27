@@ -33,14 +33,14 @@ import java.util.logging.Logger;
 public class WebDAVFile extends ProtocolFile {
 
     private final Sardine sardine = SardineFactory.begin();
-    private URI PATH;
+    private final URI PATH;
 
     protected AbstractFile parent;
     private boolean parentSet;
 
     private final static String SEPARATOR = "/";
 
-    WebDAVFile(FileURL fileURL) throws UnsupportedEncodingException, URISyntaxException {
+    WebDAVFile(FileURL fileURL) throws URISyntaxException {
         super(fileURL);
                
         String scheme = "http";
@@ -58,7 +58,7 @@ public class WebDAVFile extends ProtocolFile {
     }
 
     @Override
-    public void setLastModifiedDate(long lastModified) throws IOException, UnsupportedFileOperationException {
+    public void setLastModifiedDate(long lastModified) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -114,7 +114,7 @@ public class WebDAVFile extends ProtocolFile {
     }
 
     @Override
-    public void changePermission(int access, int permission, boolean enabled) throws IOException, UnsupportedFileOperationException {
+    public void changePermission(int access, int permission, boolean enabled) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -157,7 +157,7 @@ public class WebDAVFile extends ProtocolFile {
     }
 
     @Override
-    public AbstractFile[] ls() throws IOException, UnsupportedFileOperationException {
+    public AbstractFile[] ls() throws IOException {
 
         List<DavResource> files;
         try {
@@ -170,7 +170,7 @@ public class WebDAVFile extends ProtocolFile {
             return new AbstractFile[]{};
         }
 
-        AbstractFile children[] = new AbstractFile[files.size()];
+        AbstractFile[] children = new AbstractFile[files.size()];
         AbstractFile child;
         FileURL childURL;
         String childName;
@@ -203,7 +203,7 @@ public class WebDAVFile extends ProtocolFile {
 
         // Create new array of the exact file count
         if (fileCount < nbFiles) {
-            AbstractFile newChildren[] = new AbstractFile[fileCount];
+            AbstractFile[] newChildren = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
             return newChildren;
         }
@@ -212,47 +212,47 @@ public class WebDAVFile extends ProtocolFile {
     }
 
     @Override
-    public void mkdir() throws IOException, UnsupportedFileOperationException {
+    public void mkdir() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public InputStream getInputStream() throws IOException, UnsupportedFileOperationException {
+    public InputStream getInputStream() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException, UnsupportedFileOperationException {
+    public OutputStream getOutputStream() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public OutputStream getAppendOutputStream() throws IOException, UnsupportedFileOperationException {
+    public OutputStream getAppendOutputStream() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public RandomAccessInputStream getRandomAccessInputStream() throws IOException, UnsupportedFileOperationException {
+    public RandomAccessInputStream getRandomAccessInputStream() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException, UnsupportedFileOperationException {
+    public RandomAccessOutputStream getRandomAccessOutputStream() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void delete() throws IOException, UnsupportedFileOperationException {
+    public void delete() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void renameTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void renameTo(AbstractFile destFile) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void copyRemotelyTo(AbstractFile destFile) throws IOException, UnsupportedFileOperationException {
+    public void copyRemotelyTo(AbstractFile destFile) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -28,7 +28,6 @@ import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.CopyJob;
 import com.mucommander.job.TransferFileJob;
 import com.mucommander.job.UnpackJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.CopyAction;
 import com.mucommander.ui.main.MainFrame;
@@ -55,9 +54,9 @@ public class CopyDialog extends AbstractCopyDialog {
     public CopyDialog(MainFrame mainFrame, FileSet files) {
         super(mainFrame, files,
               ActionProperties.getActionLabel(CopyAction.Descriptor.ACTION_ID),
-              Translator.get("copy_dialog.destination"),
-              Translator.get("copy"),
-              Translator.get("copy_dialog.error_title"));
+              i18n("copy_dialog.destination"),
+              i18n("copy"),
+              i18n("copy_dialog.error_title"));
     }
 
 
@@ -109,7 +108,7 @@ public class CopyDialog extends AbstractCopyDialog {
 
     @Override
     protected String getProgressDialogTitle() {
-        return Translator.get("copy_dialog.copying");
+        return i18n("copy_dialog.copying");
     }
 
 

@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.viewer.hex;
 
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 import ru.trolsoft.ui.InputField;
@@ -29,26 +28,29 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.LongConsumer;
 
 /**
  * Goto address dialog.
  * @author Oleg Trifonov
  */
-public abstract class GotoDialog extends FocusDialog implements ActionListener {
+public class GotoDialog extends FocusDialog implements ActionListener {
 
     private final long maxOffset;
 
-    private InputField edtOffset;
+    private final InputField edtOffset;
+    private final LongConsumer action;
 
     /** The 'OK' button */
     private JButton btnOk;
 
 
-    public GotoDialog(Frame owner, long maxOffset) {
-        super(owner, Translator.get("hex_viewer.goto"), owner);
+    GotoDialog(Frame owner, long maxOffset, LongConsumer action) {
+        super(owner, i18n("hex_viewer.goto"), owner);
         this.maxOffset = maxOffset;
+        this.action = action;
         Container contentPane = getContentPane();
-        contentPane.add(new JLabel(Translator.get("hex_viewer.goto.offset")+":"), BorderLayout.NORTH);
+        contentPane.add(new JLabel(i18n("hex_viewer.goto.offset")+":"), BorderLayout.NORTH);
 
         edtOffset = new InputField(16, InputField.FilterType.HEX_LONG) {
             @Override
@@ -61,8 +63,8 @@ public abstract class GotoDialog extends FocusDialog implements ActionListener {
         edtOffset.addActionListener(this);
         contentPane.add(edtOffset, BorderLayout.CENTER);
 
-        btnOk = new JButton(Translator.get("ok"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("ok"));
+        JButton cancelButton = new JButton(i18n("cancel"));
         contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 
         // The text field will receive initial focus
@@ -73,10 +75,8 @@ public abstract class GotoDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if ((source == btnOk || source == edtOffset) && btnOk.isEnabled()) {
-            doGoto(edtOffset.getValue());
+            action.accept(edtOffset.getValue());
             dispose();
         }
     }
-
-    abstract protected void doGoto(long value);
 }

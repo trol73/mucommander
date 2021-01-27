@@ -67,7 +67,7 @@ public class LzmaAlone
 			return true;
 		}
 		
-		public boolean Parse(String[] args) throws Exception {
+		public boolean Parse(String[] args) {
 			int pos = 0;
 			boolean switchMode = true;
 			for (String s : args) {

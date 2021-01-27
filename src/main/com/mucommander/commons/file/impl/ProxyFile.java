@@ -23,7 +23,7 @@ import java.net.URL;
  * The {@link #getProxiedFile()} method allows to retrieve the proxied file instance.
  *
  * <p>This class is useful for wrapper files, such as {@link com.mucommander.commons.file.AbstractArchiveFile archive files},
- * that provide additional functionalities over an existing <code>AbstractFile</code> instance (the proxied file).
+ * that provide additional functionality over an existing <code>AbstractFile</code> instance (the proxied file).
  * By implementing/overriding every <code>AbstractFile</code> methods, <code>ProxyFile</code> ensures that
  * all <code>AbstractFile</code> methods can safely be used, even if they are overridden by the proxied
  * file instance's class.
@@ -208,7 +208,7 @@ public abstract class ProxyFile extends AbstractFile {
     /////////////////////////////////////
 
     @Override
-    public final boolean isFileOperationSupported(FileOperation op) {
+    public boolean isFileOperationSupported(FileOperation op) {
         Class<? extends AbstractFile> thisClass = getClass();
         Method opMethod = op.getCorrespondingMethod(thisClass);
         // If the method corresponding to the file operation has been overridden by this class (a ProxyFile subclass),
@@ -377,14 +377,17 @@ public abstract class ProxyFile extends AbstractFile {
     public void changeReplication(short replication) throws IOException {
         file.changeReplication(replication);
     }
+
     @Override
     public boolean isExecutable() {
     	return file.isExecutable();
     }
+
     @Override
     public PushbackInputStream getPushBackInputStream(int bufferSize) throws IOException {
     	return file.getPushBackInputStream(bufferSize);
     }
+
     @Override
     public void closePushbackInputStream() throws IOException {
     	file.closePushbackInputStream();

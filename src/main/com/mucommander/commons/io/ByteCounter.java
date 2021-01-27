@@ -23,7 +23,7 @@ package com.mucommander.commons.io;
  *
  * <p>Provided methods allow to read the the byte count, add a number bytes to it or reset it (make it zero).
  *
- * <p>This class is thread safe, ensuring that the counter is always in a consistent state.</p>
+ * <p>This class is thread safe, ensuring that the counter is always in a consistent state.
  *
  * @see com.mucommander.commons.io.CounterInputStream
  * @see com.mucommander.commons.io.CounterOutputStream

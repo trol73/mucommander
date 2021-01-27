@@ -111,7 +111,6 @@ public abstract class CompoundReader extends Reader {
      * otherwise.
      * <p>
      * Note: the current reader (if any) will be closed by this method.
-     * </p>
      *
      * @return <code>true</code> if there was a next reader, <code>false</code> otherwise
      * @throws IOException if an error occurred while trying to advancing the current reader. This
@@ -164,8 +163,7 @@ public abstract class CompoundReader extends Reader {
             return true;
 
         if(currentReader ==null)
-            if(!advanceReader())
-                return true;
+            return !advanceReader();
 
         return false;
     }
@@ -180,7 +178,6 @@ public abstract class CompoundReader extends Reader {
      * <p>
      * Before calling this method, {@link #advanceReader()} closes the current reader (if any). In other words,
      * implementations do not have to worry about closing previously-returned readers.
-     * </p>
      *
      * @return the next <code>Reader</code>, <code>null</code> if there is none.
      * @throws IOException if an error occurred while retrieving the next reader 

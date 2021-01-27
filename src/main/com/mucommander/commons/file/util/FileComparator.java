@@ -34,6 +34,8 @@ public class FileComparator implements Comparator<AbstractFile> {
     private boolean ascending;
     /** Specifies whether directories should precede files or be handled as regular files */
     private boolean directoriesFirst;
+    /** Specifies whether directories always alphabetical sorted */
+    private boolean foldersAlwaysAlphabetical;
 
     /** Criterion for filename comparison. */
     public final static int NAME_CRITERION = 0;
@@ -63,16 +65,18 @@ public class FileComparator implements Comparator<AbstractFile> {
      * @param criterion comparison criterion, see constant fields
      * @param ascending if true, ascending order will be used, descending order otherwise
      * @param directoriesFirst specifies whether directories should precede files or be handled as regular files
+     * @param foldersAlwaysAlphabetical specifies wether directories are sorted always alphabetical if they stay first
      */
-    public FileComparator(int criterion, boolean ascending, boolean directoriesFirst, QuickSearch quickSearch) {
+    public FileComparator(int criterion, boolean ascending, boolean directoriesFirst, boolean foldersAlwaysAlphabetical, QuickSearch quickSearch) {
         this.criterion = criterion;
         this.ascending = ascending;
         this.directoriesFirst = directoriesFirst;
+        this.foldersAlwaysAlphabetical = foldersAlwaysAlphabetical;
         this.quickSearch = quickSearch;
     }
 
-    public FileComparator(int criterion, boolean ascending, boolean directoriesFirst) {
-        this(criterion, ascending, directoriesFirst, null);
+    public FileComparator(int criterion, boolean ascending, boolean directoriesFirst, boolean foldersAlwaysAlphabetical) {
+        this(criterion, ascending, directoriesFirst, foldersAlwaysAlphabetical, null);
     }
 
 
@@ -85,7 +89,7 @@ public class FileComparator implements Comparator<AbstractFile> {
      *   <li>letters third</li>
      * </ul>
      *
-     * <p>This character order was suggested in ticket #282.</p> 
+     * <p>This character order was suggested in ticket #282.
      *
      * @param c character for which to return a value
      * @return a <code>value</code> for the given character
@@ -268,15 +272,26 @@ public class FileComparator implements Comparator<AbstractFile> {
 
         boolean is1Directory = f1.isDirectory();
         boolean is2Directory = f2.isDirectory();
+        long diff;
+
         if (directoriesFirst) {
             if (is1Directory && !is2Directory) {
                 return -1;    // ascending has no effect on the result (a directory is always first) so let's return
             } else if (is2Directory && !is1Directory) {
                 return 1;    // ascending has no effect on the result (a directory is always first) so let's return
             }
+            if ((foldersAlwaysAlphabetical) && (is1Directory && is2Directory))
+            {
+
+                diff = compareStrings(f1.getName(), f2.getName(), true);
+                if (diff == 0) {
+                    // Case-sensitive name comparison
+                    diff = compareStrings(f1.getName(), f2.getName(), false);
+                }
+                return (int) diff;
+            }
             // At this point, either both files are directories or none of them are
         }
-        long diff;
 
         if (criterion == SIZE_CRITERION)  {
             // Consider that directories have a size of 0

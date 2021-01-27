@@ -20,7 +20,7 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
@@ -40,11 +40,11 @@ import java.util.Map;
  * reversed.
  *
  * <p>This action is enabled only if the corresponding column is currently visible. This prevents this action from being
- * performed when the column is not visible, which is an unsupported operation</p>.
+ * performed when the column is not visible, which is an unsupported operation.
  *
  * @author Maxence Bernard
  */
-public abstract class SortByAction extends MuAction implements ActivePanelListener, TableColumnModelListener {
+public abstract class SortByAction extends TcAction implements ActivePanelListener, TableColumnModelListener {
 
     /** FileTable column this action operates on */
     protected Column column;
@@ -131,12 +131,20 @@ public abstract class SortByAction extends MuAction implements ActivePanelListen
             this.defaultKeyStroke = defaultKeyStroke;
         }
 
-        public String getId() { return column.getSortByColumnActionId(); }
+        public String getId() {
+            return column.getSortByColumnActionId();
+        }
 
-		public ActionCategory getCategory() { return ActionCategory.VIEW; }
+		public ActionCategory getCategory() {
+            return ActionCategory.VIEW;
+        }
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-		public KeyStroke getDefaultKeyStroke() { return defaultKeyStroke; }
+		public KeyStroke getDefaultKeyStroke() {
+            return defaultKeyStroke;
+        }
     }
 }

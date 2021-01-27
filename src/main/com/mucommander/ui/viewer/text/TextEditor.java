@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileOperation;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.encoding.EncodingListener;
@@ -58,20 +58,16 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 
     //private TextMenuHelper menuHelper;
     private TextEditorImpl textEditorImpl;
-    private TextViewer textViewerDelegate;
+    private final TextViewer textViewerDelegate;
     private StatusBar statusBar;
 
     private GutterEx gutter;
 
 
-    public TextEditor() {
+    TextEditor() {
         textEditorImpl = new TextEditorImpl(true, getStatusBar());
 //        Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
-        gutter = new GutterEx(textEditorImpl.getTextArea());
-        gutter.setLineNumberFont(textEditorImpl.getTextArea().getFont());
-        // TODO
-        gutter.setBackground(Color.LIGHT_GRAY);
-        gutter.setForeground(Color.black);
+        initGutter();
         //gutter.setActiveLineRangeColor(new Color(0,0,255));
         setLineNumbersEnabled(TextViewer.isLineNumbers());
 
@@ -82,7 +78,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     	textViewerDelegate = new TextViewer(textEditorImpl) {
     		
     		@Override
-    		protected void setComponentToPresent(JComponent component) {
+            public void setComponentToPresent(JComponent component) {
     			TextEditor.this.setComponentToPresent(component);
     		}
     		
@@ -98,17 +94,29 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
                 menuHelper = new TextMenuHelper(textEditorImpl, true);
                 //menuHelper.initMenu(TextEditor.this, TextEditor.this.getRowHeader().getView() != null);
                 menuHelper.initMenu(TextEditor.this, TextViewer.isLineNumbers());
+                //menuHelper.setupFileMenu(menuFile, TextEditor.this, getCurrentFile());
+                textEditorImpl.setMenuHelper(menuHelper);
     		}
     	};
-    	setComponentToPresent(textEditorImpl.getTextArea());
+
+        //setComponentToPresent(textEditorImpl.getTextArea());
+        setComponentToPresent(textEditorImpl.getEditorComponent());
+    }
+
+    private void initGutter() {
+        gutter = new GutterEx(textEditorImpl.getTextArea());
+        gutter.setLineNumberFont(textEditorImpl.getTextArea().getFont());
+        // TODO
+        gutter.setBackground(Color.LIGHT_GRAY);
+        gutter.setForeground(Color.black);
     }
 
     @Override
-    protected void setComponentToPresent(JComponent component) {
+    public void setComponentToPresent(JComponent component) {
 		getViewport().add(component);
 	}
 
-    void loadDocument(InputStream in, String encoding, DocumentListener documentListener) throws IOException {
+    private void loadDocument(InputStream in, String encoding, DocumentListener documentListener) throws IOException {
     	textViewerDelegate.loadDocument(in, encoding, documentListener);
         if (getStatusBar() != null) {
             getStatusBar().setEncoding(encoding);
@@ -130,16 +138,18 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 
         menuBar.add(textViewerDelegate.menuHelper.getEditMenu());
         menuBar.add(textViewerDelegate.menuHelper.getSearchMenu());
-        menuBar.add(textViewerDelegate.menuHelper.getMenuView());
+        menuBar.add(textViewerDelegate.menuHelper.getViewMenu());
+        menuBar.add(textViewerDelegate.menuHelper.getToolsMenu());
         menuBar.add(encodingMenu);
 
         textEditorImpl.getTextArea().setFocusTraversalKeysEnabled(false);
         textViewerDelegate.setMainKeyListener(textEditorImpl.getTextArea(), menuBar);
+        textViewerDelegate.menuHelper.setupFileMenu(menuFile, TextEditor.this, getCurrentFile());
     	return menuBar;
     }
 
     @Override
-    protected StatusBar getStatusBar() {
+    public StatusBar getStatusBar() {
         if (statusBar == null) {
             statusBar = new StatusBar();
         }
@@ -150,11 +160,11 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     protected void saveStateOnClose() {
         textViewerDelegate.saveState(getVerticalScrollBar());
         if (getCurrentFile() != null) { // possible if loading was interrupted by Esc
-        try {
-            getCurrentFile().closePushbackInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                getCurrentFile().closePushbackInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -172,7 +182,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     ///////////////////////////////
 
     @Override
-    protected void saveAs(AbstractFile destFile) throws IOException {
+    protected void saveAs(AbstractFile destFile) {
 //        OutputStream out = null;
         getStatusBar().setStatusMessage(Translator.get("text_editor.writing"));
 
@@ -216,7 +226,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     }
 
     @Override
-    public void show(AbstractFile file) throws IOException {
+    public void show(AbstractFile file) {
         TextArea textArea = textEditorImpl.getTextArea();
         textArea.discardAllEdits();
         textViewerDelegate.menuHelper.updateEditActions();
@@ -227,9 +237,8 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             type = FileType.getFileType(file);
             historyRecord.setFileType(type);
         }
-        // detect XML and PHP files
         if (type == FileType.NONE) {
-            type = textEditorImpl.detectFileFormat(file);
+            type = TextEditorUtils.detectFileFormat(file);
         }
         textEditorImpl.prepareForEdit(file);
         textEditorImpl.setSyntaxType(type);
@@ -334,7 +343,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
      * @return Whether or not line numbers are visible.
      * @see #setLineNumbersEnabled(boolean)
      */
-    public boolean getLineNumbersEnabled() {
+    private boolean getLineNumbersEnabled() {
         return gutter.getLineNumbersEnabled();
     }
 
@@ -461,5 +470,9 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public TextArea getTextArea() {
+        return textEditorImpl.getTextArea();
     }
 }

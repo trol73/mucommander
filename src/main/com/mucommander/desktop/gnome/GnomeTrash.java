@@ -32,7 +32,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.QueuedTrash;
 import com.mucommander.job.DeleteJob;
 import com.mucommander.process.ProcessRunner;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
@@ -45,7 +45,6 @@ import com.mucommander.ui.main.WindowManager;
  * This Trash class has the same possibilities as <code>KDETrash</code>, but is adapted to a
  * GNOME environment, where the trash is simple directory ~/.Trash. So working with trash means
  * working with this directory.
- * </p>
  *
  * @see GnomeTrashProvider
  * @author David Kovar (kowy), Maxence Bernard
@@ -103,7 +102,7 @@ public class GnomeTrash extends QueuedTrash {
 			AbstractFile secondaryTrashDir = userHome.getChildSilently("Trash/");
 			if (isTrashFolder(secondaryTrashDir)) {
 				return secondaryTrashDir;
-        }
+            }
         }
         // No existing user trash was found: create the folder, only if it doesn't already exist.
 		if (!primaryTrashDir.exists()) {
@@ -129,7 +128,7 @@ public class GnomeTrash extends QueuedTrash {
      */
 	private static boolean isTrashFolder(final AbstractFile file) {
         try {
-            return file.isDirectory() && file.getChild("info").isDirectory() && file.getChild("files").isDirectory();
+            return file != null && file.isDirectory() && file.getChild("info").isDirectory() && file.getChild("files").isDirectory();
 		} catch (IOException e) {
             return false;
         }
@@ -172,7 +171,6 @@ public class GnomeTrash extends QueuedTrash {
      * <p>
      * <b>Implementation notes:</b><br>
      * Simply free the <code>TRASH_PATH</code> directory
-     * </p>
      * 
      * @return True if everything went well
      */
@@ -237,7 +235,6 @@ public class GnomeTrash extends QueuedTrash {
      * Implementation of {@link com.mucommander.desktop.QueuedTrash} moveToTrash method.
      * <p>
      * Try to copy a collection of files to the GNOME's Trash.
-     * </p>
 	 * 
 	 * @param queuedFiles
 	 *          Collection of files to the trash

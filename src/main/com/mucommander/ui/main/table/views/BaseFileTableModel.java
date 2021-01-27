@@ -23,10 +23,10 @@ import com.mucommander.commons.file.impl.CachedFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.FileComparator;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.text.SizeFormat;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.main.table.CalculateDirectorySizeWorker;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.SortInfo;
@@ -117,12 +117,16 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
     static {
         // Initialize the size column format based on the configuration
-        setSizeFormat(MuConfigurations.getPreferences().getVariable(MuPreference.DISPLAY_COMPACT_FILE_SIZE,
-                                                  MuPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE));
+        setSizeFormat(getFileSizeFormat());
+    }
+
+    private static boolean getFileSizeFormat() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.DISPLAY_COMPACT_FILE_SIZE,
+                                                  TcPreferences.DEFAULT_DISPLAY_COMPACT_FILE_SIZE);
     }
 
 
-    public abstract void fillCellCache();
+    public abstract void fillCellCache(FileTable fileTable);
     public abstract int getFileRow(int index);
 
     /**
@@ -216,12 +220,13 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * @return the file located at the given index, not including the parent file
      */
     public synchronized AbstractFile getFileAt(int fileIndex) {
-        if (fileIndex == 0 && parent != null) {
-            return parent;
-        }
         if (parent != null) {
+            if (fileIndex == 0) {
+                return parent;
+            }
             fileIndex--;
         }
+
         // Need to check that row index is not larger than actual number of rows
         // because if table has just been changed (rows have been removed),
         // JTable may have an old row count value and may try to repaint rows that are out of bounds.
@@ -260,7 +265,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public synchronized AbstractFile[] getFiles() {
         int nbFiles = cachedFiles.length;
         AbstractFile[] files = new AbstractFile[nbFiles];
-        for (int i=0; i<nbFiles; i++) {
+        for (int i = 0; i < nbFiles; i++) {
             files[i] = cachedFiles[i] == null ? null : ((CachedFile) cachedFiles[i]).getProxiedFile();
         }
 
@@ -300,7 +305,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     private FileComparator createFileComparator(SortInfo sortInfo) {
         QuickSearch qs = quickSearch != null && quickSearch.isActive() && sortInfo.getQuickSearchMatchesFirst() ? quickSearch : null;
         return new FileComparator(sortInfo.getCriterion().getFileComparatorCriterion(), sortInfo.getAscendingOrder(),
-                sortInfo.getFoldersFirst(), qs);
+                sortInfo.getFoldersFirst(), sortInfo.getFoldersAlwaysAlphabetical(), qs);
     }
 
 
@@ -373,7 +378,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 
 
     /**
-     * Returns the current folder, i.e. the last folder set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[])}.
+     * Returns the current folder, i.e. the last folder set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[], FileTable table)}.
      *
      * @return the current folder
      */
@@ -403,7 +408,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * @param folder the current folder
      * @param children the current folder's children
      */
-    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[]) {
+    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[], FileTable table) {
         int nbFiles = children.length;
         this.currentFolder = (folder instanceof CachedFile) ? folder : new CachedFile(folder, true);
 
@@ -444,11 +449,12 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         // Init and fill cell cache to speed up table even more
         initCellValuesCache();
 
-        fillCellCache();
+        fillCellCache(table);
     }
 
     /**
-     * Returns the date of the current folder, when it was set using {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[])}.
+     * Returns the date of the current folder, when it was set using
+     * {@link #setCurrentFolder(com.mucommander.commons.file.AbstractFile, com.mucommander.commons.file.AbstractFile[], FileTable table)}.
      * In other words, the returned date is a snapshot of the current folder's date which is never updated.
      *
      * @return Returns the date of the current folder, when it was set using #setCurrentFolder(Abstract, Abstract[])
@@ -541,10 +547,9 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * Returns a {@link com.mucommander.commons.file.util.FileSet FileSet} with all currently marked files.
      * <p>
      * The returned <code>FileSet</code> is a freshly created instance, so it can be safely modified.
-     & However, it won't be kept current : the returned FileSet is just a snapshot
+     * However, it won't be kept current : the returned FileSet is just a snapshot
      * which might not reflect the current marked files state after this method has returned and additional
      * files have been marked/unmarked.
-     * </p>
      *
      * @return a FileSet containing all the files that are currently marked
      */
@@ -576,7 +581,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
      * 
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
-     * {@link #getFilesCount() getFilesCount()}.</p>
+     * {@link #getFilesCount() getFilesCount()}.
      *
      * @param row a row index, comprised between 0 and #getRowCount()-1
      * @param col a column index, comprised between 0 and #getColumnCount()-1
@@ -625,7 +630,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
      * This method can return the parent folder file ('..') if a parent exists and rowIndex is 0.
      *
      * <p>Returns <code>null</code> if rowIndex is lower than 0 or is greater than or equals
-     * {@link #getFilesCount() getFilesCount()}.</p>
+     * {@link #getFilesCount() getFilesCount()}.
      *
      * @param row a row index, comprised between 0 and #getRowCount()-1
      * @param col a column index, comprised between 0 and #getColumnCount()-1
@@ -645,11 +650,11 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
 	
 
     /**
-     * Returns the index of the row where the given file is located, <code>-1<code> if the file is not in the
+     * Returns the index of the row where the given file is located, <code>-1</code> if the file is not in the
      * current folder.
      *
      * @param file the file for which to find the row index
-     * @return the index of the file where the given file is located, <code>-1<code> if the file is not in the
+     * @return the index of the file where the given file is located, <code>-1</code> if the file is not in the
      * current folder
      */
     public synchronized int getFileIndex(AbstractFile file) {

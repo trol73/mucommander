@@ -28,15 +28,12 @@ package com.mucommander.commons.file;
  * specified URL and, if one set (or more) is found, call {@link FileURL#setCredentials(Credentials)} to set them.
  * Likewise, this method may also look for and set {@link FileURL#setProperty(String, String) URL properties},
  * that will be used by the corresponding {@link AbstractFile} during or after resolution.
- * </p>
  * <p>
  * {@link #authenticate(FileURL)} should normally be called only for {@link FileURL} schemes that
  * {@link FileURL#getAuthenticationType() support authentication}. Implementations should however not rely on that and
  * handle non-authenticated URLs as a no-op.
- * </p>
  * <p>
  * A default authenticator can be registered at {@link FileFactory#setDefaultAuthenticator(Authenticator)}.
- * </p>
  *
  * @see FileURL#getAuthenticationType()
  * @see FileFactory#setDefaultAuthenticator(Authenticator)

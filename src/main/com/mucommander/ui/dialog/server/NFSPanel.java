@@ -22,7 +22,7 @@ package com.mucommander.ui.dialog.server;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.nfs.NFSFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
@@ -39,11 +39,11 @@ public class NFSPanel extends ServerPanel {
 
     private final static int STANDARD_PORT = FileURL.getRegisteredHandler(FileProtocols.NFS).getStandardPort(); 
 
-    private JTextField serverField;
-    private JTextField shareField;
-    private JSpinner portSpinner;
-    private JComboBox<String> nfsVersionComboBox;
-    private JComboBox<String> nfsProtocolComboBox;
+    private final JTextField serverField;
+    private final JTextField shareField;
+    private final JSpinner portSpinner;
+    private final JComboBox<String> nfsVersionComboBox;
+    private final JComboBox<String> nfsProtocolComboBox;
 
     private static String lastServer = "";
     private static String lastShare = "";
@@ -110,10 +110,8 @@ public class NFSPanel extends ServerPanel {
 
         // Set port
         url.setPort(lastPort);
-
         // Set NFS version
         url.setProperty(NFSFile.NFS_VERSION_PROPERTY_NAME, lastNfsVersion);
-
         // Set NFS protocol
         url.setProperty(NFSFile.NFS_PROTOCOL_PROPERTY_NAME, lastNfsProtocol);
 
@@ -129,8 +127,9 @@ public class NFSPanel extends ServerPanel {
     public void dialogValidated() {
         // Commits the current spinner value in case it was being edited and 'enter' was pressed
         // (the spinner value would otherwise not be committed)
-        try { portSpinner.commitEdit(); }
-        catch(ParseException e) { }
+        try {
+            portSpinner.commitEdit();
+        } catch(ParseException ignored) { }
 
         updateValues();
     }

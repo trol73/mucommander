@@ -34,17 +34,13 @@ import java.io.Writer;
  * Implementation of {@link ConfigurationBuilder} used to write XML configuration streams.
  * <p>
  * Information on the XML file format can be found {@link XmlConfigurationReader here}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class XmlConfigurationWriter implements ConfigurationBuilder {
-    // - Class constants -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Factory used to create instances of {@link XmlConfigurationWriter}. */
     public static final ConfigurationWriterFactory<XmlConfigurationWriter> FACTORY;
 
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Writer on the destination XML stream. */
     protected final ContentHandler out;
     /** Empty XML attributes (avoids creating a new instance on each <code>startElement</code> call). */
@@ -53,8 +49,6 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
     protected   final String rootElementName;
 
 
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     static {
         FACTORY = new ConfigurationWriterFactory<XmlConfigurationWriter>() {
             public XmlConfigurationWriter getWriterInstance(Writer out) {
@@ -74,8 +68,6 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
     }
 
 
-    // - Writer methods ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     private static ContentHandler createHandler(Writer out) {
         SAXTransformerFactory factory;
         TransformerHandler    transformer;
@@ -101,17 +93,20 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
     }
 
 
-
-    // - Builder methods -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     protected void startElement(String name) throws ConfigurationException {
-        try {out.startElement("", name, name, emptyAttributes);}
-        catch(SAXException e) {throw new ConfigurationException(e);}
+        try {
+            out.startElement("", name, name, emptyAttributes);
+        } catch(SAXException e) {
+            throw new ConfigurationException(e);
+        }
     }
 
     protected void endElement(String name) throws ConfigurationException {
-        try {out.endElement("", name, name);}
-        catch(SAXException e) {throw new ConfigurationException(e);}
+        try {
+            out.endElement("", name, name);
+        } catch(SAXException e) {
+            throw new ConfigurationException(e);
+        }
     }
 
     /**
@@ -146,8 +141,9 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
             data = value.toCharArray();
             out.characters(data, 0, data.length);
             endElement(name);
+        } catch(SAXException e) {
+            throw new ConfigurationException(e);
         }
-        catch(SAXException e) {throw new ConfigurationException(e);}
     }
 
     /**
@@ -158,8 +154,9 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
         try {
             out.startDocument();
             startElement(rootElementName);
+        } catch(SAXException e) {
+            throw new ConfigurationException(e);
         }
-        catch(SAXException e) {throw new ConfigurationException(e);}
     }
 
     /**
@@ -170,7 +167,8 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
         try {
             endElement(rootElementName);
             out.endDocument();
+        } catch(SAXException e) {
+            throw new ConfigurationException(e);
         }
-        catch(SAXException e) {throw new ConfigurationException(e);}
     }
 }

@@ -18,8 +18,10 @@
 
 package com.mucommander.ui.event;
 
+import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.mucommander.commons.file.filter.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,16 +39,16 @@ public class LocationManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocationManager.class);
 
     /** Contains all registered location listeners, stored as weak references */
-    private WeakHashMap<LocationListener, ?> locationListeners = new WeakHashMap<>();
+    private final Map<LocationListener, ?> locationListeners = new WeakHashMap<>();
 
     /** The FolderPanel instance this LocationManager manages location events for */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** Current location presented in the FolderPanel */
     private AbstractFile currentFolder;
 
     /** Filters out unwanted files when listing folder contents */
-	private ConfigurableFolderFilter configurableFolderFilter = new ConfigurableFolderFilter();
+	private final ConfigurableFolderFilter configurableFolderFilter = new ConfigurableFolderFilter();
 
 	private FolderChangeMonitor folderChangeMonitor;
 
@@ -69,16 +71,9 @@ public class LocationManager {
      * @param folder the {@link AbstractFile} that is going to be presented in the {@link FolderPanel}
      */
     public void setCurrentFolder(AbstractFile folder, AbstractFile fileToSelect, boolean changeLockedTab) {
-    	LOGGER.trace("calling ls()");
-    	AbstractFile[] children;
-		try {
-			children = folder.ls(configurableFolderFilter);
-		} catch (Exception e) {
-			LOGGER.debug("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
-			children = new AbstractFile[0];
-		}
+        AbstractFile[] children = safeLs(folder, configurableFolderFilter);
 
-    	folderPanel.setCurrentFolder(folder, children, fileToSelect, changeLockedTab);
+        folderPanel.setCurrentFolder(folder, children, fileToSelect, changeLockedTab);
 
     	this.currentFolder = folder;
 
@@ -88,6 +83,16 @@ public class LocationManager {
     	// After the initial folder is set, initialize the monitoring thread
     	if (folderChangeMonitor == null) {
             folderChangeMonitor = new FolderChangeMonitor(folderPanel);
+        }
+    }
+
+    private static AbstractFile[] safeLs(AbstractFile folder, FileFilter filter) {
+        LOGGER.trace("calling ls()");
+        try {
+            return folder.ls(filter);
+        } catch (Exception e) {
+            LOGGER.debug("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
+            return new AbstractFile[0];
         }
     }
 
@@ -109,7 +114,7 @@ public class LocationManager {
      * has or is being changed.
      *
      * <p>Listeners are stored as weak references so {@link #removeLocationListener(LocationListener)}
-     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.</p>
+     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.
      *
      * @param listener the LocationListener to register
      */
@@ -133,8 +138,9 @@ public class LocationManager {
      * @param folderURL url of the new current folder in the associated FolderPanel
      */
     private synchronized void fireLocationChanged(FileURL folderURL) {
-        for(LocationListener listener : locationListeners.keySet())
+        for (LocationListener listener : locationListeners.keySet()) {
             listener.locationChanged(new LocationEvent(folderPanel, folderURL));
+        }
     }
 
     /**
@@ -143,8 +149,9 @@ public class LocationManager {
      * @param folderURL url of the folder that will become the new location if the folder change is successful
      */
     public synchronized void fireLocationChanging(FileURL folderURL) {
-        for(LocationListener listener : locationListeners.keySet())
+        for (LocationListener listener : locationListeners.keySet()) {
             listener.locationChanging(new LocationEvent(folderPanel, folderURL));
+        }
     }
 
     /**
@@ -154,8 +161,9 @@ public class LocationManager {
      * @param folderURL url of the folder for which a failed attempt was made to make it the current folder
      */
     public synchronized void fireLocationCancelled(FileURL folderURL) {
-        for(LocationListener listener : locationListeners.keySet())
+        for (LocationListener listener : locationListeners.keySet()) {
             listener.locationCancelled(new LocationEvent(folderPanel, folderURL));
+        }
     }
 
     /**
@@ -165,7 +173,8 @@ public class LocationManager {
      * @param folderURL url of the folder for which a failed attempt was made to make it the current folder
      */
     public synchronized void fireLocationFailed(FileURL folderURL) {
-        for(LocationListener listener : locationListeners.keySet())
+        for (LocationListener listener : locationListeners.keySet()) {
             listener.locationFailed(new LocationEvent(folderPanel, folderURL));
+        }
     }
 }

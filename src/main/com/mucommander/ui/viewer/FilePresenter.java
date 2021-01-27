@@ -58,7 +58,7 @@ public abstract class FilePresenter extends JScrollPane {
 	 * 
 	 * @param component the component to be presented
 	 */
-	protected void setComponentToPresent(JComponent component) {
+	public void setComponentToPresent(JComponent component) {
 		getViewport().removeAll();
 		getViewport().add(component);
 	}
@@ -67,7 +67,7 @@ public abstract class FilePresenter extends JScrollPane {
      * Returns the frame which contains this presenter.
      * <p>
      * This method may return <code>null</code>if the presenter is not inside a FileFrame.
-     * </p>
+     *
      * @return the frame which contains this presenter.
      * @see    #setFrame(FileFrame)
      */

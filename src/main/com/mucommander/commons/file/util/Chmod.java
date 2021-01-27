@@ -7,7 +7,7 @@ import com.mucommander.commons.file.AbstractFile;
  * file's permissions, overcoming the limitations of <code>java.io.File</code>.
  *
  * <p>The <code>chmod</code> command is available only under {@link com.mucommander.commons.runtime.OsFamily#isUnixBased() UNIX-based}
- * systems -- a call to any of this class' methods under other OS will likely fail.</p>
+ * systems -- a call to any of this class' methods under other OS will likely fail.
  *
  * @author Maxence Bernard
  * @see com.mucommander.commons.file.FilePermissions

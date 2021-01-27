@@ -25,7 +25,7 @@ import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
@@ -64,7 +64,7 @@ import java.util.Map;
  *
  * @author Nicolas Rinaudo
  */
-public class MarkExtensionAction extends MuAction {
+public class MarkExtensionAction extends TcAction {
     // - Property names ------------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Key that controls which extension should be matched. */
@@ -82,7 +82,7 @@ public class MarkExtensionAction extends MuAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    MarkExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkExtensionAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -138,7 +138,7 @@ public class MarkExtensionAction extends MuAction {
      * will match that extension. Otherwise, the currently selected file's extension will be used. If it doesn't
      * have one, the returned IMAGE_FILTER will match all files such that
      * <code>file.getExtension() == null</code>.
-     * </p>
+     *
      * @param  file currently selected file.
      * @return      the IMAGE_FILTER that should be applied by this action.
      */
@@ -210,15 +210,23 @@ public class MarkExtensionAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkExtension";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new MarkExtensionAction(mainFrame, properties);
         }
     }

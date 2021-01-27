@@ -50,35 +50,35 @@ public class DefaultPathCanonizer implements PathCanonizer {
     public String canonize(String path) {
         // Todo: use PathTokenizer?
 
-        if(!path.equals("/")) {
+        if (!path.equals("/")) {
             int pos;	    // position of current path separator
             int pos2 = 0;	// position of next path separator
             int separatorLen = separator.length();
             String dir;		// Current directory
             String dirWS;	// Current directory without trailing separator
             Vector<String> pathV = new Vector<>();	// Will contain directory hierachy
-            while((pos=pos2)!=-1) {
+            while ((pos = pos2) != -1) {
                 // Get the index of the next path separator occurrence
                 pos2 = path.indexOf(separator, pos);
 
-                if(pos2==-1) {	// Last dir (or empty string)
+                if (pos2 == -1) {	// Last dir (or empty string)
                     dir = path.substring(pos);
                     dirWS = dir;
-                }
-                else {
+                } else {
                     pos2 += separatorLen;
                     dir = path.substring(pos, pos2);		// Dir name includes trailing separator
                     dirWS = dir.substring(0, dir.length()-separatorLen);
                 }
 
                 // Discard '.' and empty directories
-                if((dirWS.equals("") && pathV.size()>0) || dirWS.equals(".")) {
+                if ((dirWS.isEmpty() && pathV.size()>0) || dirWS.equals(".")) {
                     continue;
                 }
                 // Remove last directory
                 else if(dirWS.equals("..")) {
-                    if(pathV.size()>0)
+                    if (pathV.size() > 0) {
                         pathV.removeElementAt(pathV.size()-1);
+                    }
                     continue;
                 }
                 // Replace '~' by the provided replacement string, only if one was specified
@@ -94,11 +94,12 @@ public class DefaultPathCanonizer implements PathCanonizer {
             }
 
             // Reconstruct path from directory list
-            path = "";
+            StringBuilder result = new StringBuilder();
             int nbDirs = pathV.size();
-            for(int i=0; i<nbDirs; i++)
-                path += pathV.elementAt(i);
-
+            for (int i = 0; i < nbDirs; i++) {
+                result.append(pathV.elementAt(i));
+            }
+            return result.toString();
             // We now have a path free of "." and ".." (and "~" if tilde replacement is enabled)  
         }
 

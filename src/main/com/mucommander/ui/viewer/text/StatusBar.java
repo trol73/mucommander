@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2017 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,9 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     private int color = -1;
 
+    private String forcedStatusMessage;
+    private long forcedStatusMessageTimeout;
+
 
     public StatusBar() {
         super("");
@@ -87,7 +90,7 @@ public class StatusBar extends org.fife.ui.StatusBar {
         panelColor.setBackground(new Color(color));
     }
 
-    public void setPosition(int line, int column) {
+    void setPosition(int line, int column) {
         lblPosition.setText(line + " : " + column);
     }
 
@@ -97,5 +100,20 @@ public class StatusBar extends org.fife.ui.StatusBar {
 
     public void setSyntax(String syntax) {
         lblSyntax.setText(syntax);
+    }
+
+    public void clearStatusMessage() {
+        if (forcedStatusMessage != null) {
+            if (System.currentTimeMillis() > forcedStatusMessageTimeout) {
+                forcedStatusMessage = null;
+            }
+        }
+        setStatusMessage(forcedStatusMessage != null ? forcedStatusMessage : "");
+    }
+
+    public void showMessage(String msg, long timeInMillis) {
+        forcedStatusMessage = msg;
+        forcedStatusMessageTimeout = System.currentTimeMillis() + timeInMillis;
+        setStatusMessage(msg);
     }
 }

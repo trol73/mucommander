@@ -76,23 +76,15 @@ public abstract class Base64Encoder {
      */
     public static String encode(byte[] b, int off, int len, Base64Table table) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        Base64OutputStream out64 = new Base64OutputStream(bout, false, table);
 
-        try {
+        try (Base64OutputStream out64 = new Base64OutputStream(bout, false, table)) {
             out64.write(b, off, len);
             out64.writePadding();
 
-            return new String(bout.toByteArray());
-        }
-        catch(IOException e) {
+            return bout.toString();
+        } catch (IOException e) {
             // Should never happen
             return null;
-        }
-        finally {
-            try { out64.close(); }
-            catch(IOException e) {
-                // Should never happen
-            }
         }
     }
 
@@ -106,8 +98,7 @@ public abstract class Base64Encoder {
     public static String encode(String s) {
         try {
             return encode(s, "UTF-8", Base64Table.STANDARD_TABLE);
-        }
-        catch(UnsupportedEncodingException e) {
+        } catch(UnsupportedEncodingException e) {
             // Should never happen, UTF-8 is necessarily supported by the Java runtime
             return null;
         }

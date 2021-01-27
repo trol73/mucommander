@@ -41,13 +41,13 @@ import java.util.Arrays;
  */
 public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
 
-    private DirectoryCache cache;
+    private final DirectoryCache cache;
     
     /** Comparator used to sort folders */
-    private FileComparator sort;
+    private final FileComparator sort;
     
     /** Listeners. */
-    private EventListenerList listenerList = new EventListenerList();
+    private final EventListenerList listenerList = new EventListenerList();
 
     /** Root of the directory tree. */
     private AbstractFile root;
@@ -56,7 +56,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     private int cachingNum = 0;
 
     /** icon used to show that a children of a directory are being cached */
-    private SpinningDial spinningIcon = new SpinningDial(16, 16, false);
+    private final SpinningDial spinningIcon = new SpinningDial(16, 16, false);
 
 
     FilesTreeModel(FileFilter filter, FileComparator sort) {

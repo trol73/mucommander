@@ -36,8 +36,6 @@ import java.awt.image.BufferedImage;
  * @author twall, Nicolas Rinaudo
  */
 public class SpinningDial extends AnimatedIcon {
-    // - Class constants -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Default creation animation status. */
     public  static final boolean DEFAULT_ANIMATE    = false;
     /** Dial's default color. */
@@ -57,14 +55,12 @@ public class SpinningDial extends AnimatedIcon {
 
 
 
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Icon's width. */
-    private int     width;
+    private final int     width;
     /** Icon's height. */
-    private int     height;
+    private final int     height;
     /** All images that compose the spinning dial. */
-    private Image[] frames;
+    private final Image[] frames;
     /** Color used to paint the dial. */
     private Color   color;
     /** Width of each stroke. */
@@ -72,8 +68,6 @@ public class SpinningDial extends AnimatedIcon {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new spinning dial.
      * <p>

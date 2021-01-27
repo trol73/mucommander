@@ -25,7 +25,7 @@ import java.util.WeakHashMap;
  *
  * <p>The polling frequency is controlled by the poll period. This parameter determines how often the file's attributes
  * are checked. The lower this period is, the faster changes will be reported to listeners, but also the higher the
- * impact on I/O and CPU. This parameter should be carefully specified to avoid hogging resources excessively.</p>
+ * impact on I/O and CPU. This parameter should be carefully specified to avoid hogging resources excessively.
  *
  * <p>Note that FileMonitor uses file attributes polling because the Java API doesn't currently provide any better way
  * to do detect file changes. If Java ever does provide a callback mechanism for detecting file changes, this class
@@ -100,7 +100,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * Creates a new FileMonitor that monitors the given file for changes, using the specified attribute set
      * and poll period.
      *
-     * <p>Note that monitoring will only start after {@link #startMonitoring()} has been called.</p>
+     * <p>Note that monitoring will only start after {@link #startMonitoring()} has been called.
      *
      * <p>
      * The following attributes can be monitored:
@@ -135,7 +135,7 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * Adds the given {@link FileChangeListener} instance to the list of registered listeners.
      *
      * <p>Listeners are stored as weak references so {@link #removeFileChangeListener(FileChangeListener)}
-     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.</p>
+     * doesn't need to be called for listeners to be garbage collected when they're not used anymore.
      *
      * @param listener the FileChangeListener to add to the list of registered listeners.
      * @see   #removeFileChangeListener(FileChangeListener)
@@ -162,15 +162,15 @@ public class FileMonitor implements FileMonitorConstants, Runnable {
      * <p>Once started, the monitoring thread will check for changes in the monitored file attributes specified in
      * the constructor, and call registered {@link FileChangeListener} instances whenever a change in one or several
      * attributes has been detected. The poll period specified in the constructor determines how often the file's
-     * attributes will be checked.</p>
+     * attributes will be checked.
      *
      * <p>This method waits until the thread is started effectively and the monitor is ready to monitor file changes.
      * This guarantees that all changes made to the monitored file after this method returns will be caught and properly
-     * reported to listeners.</p>
+     * reported to listeners.
      *
      * <p><code>FileMonitor</code> will keep monitoring the file until {@link #stopMonitoring()} is called, even if the
      * monitored file doesn't exist anymore. Thus, it is important not to forget to call {@link #stopMonitoring()} when
-     * monitoring is not needed anymore, in order to prevent unnecessary resource hogging.</p>
+     * monitoring is not needed anymore, in order to prevent unnecessary resource hogging.
      */
     synchronized void startMonitoring() {
         if(monitorThread ==null) {

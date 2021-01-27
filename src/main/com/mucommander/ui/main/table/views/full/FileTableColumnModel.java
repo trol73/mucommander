@@ -37,16 +37,12 @@ import java.util.*;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public class FileTableColumnModel implements TableColumnModel, PropertyChangeListener {
-    // - Class constants -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** If {@link #widthCache} is set to this, it needs to be recalculated. */
     private static final int                CACHE_OUT_OF_DATE = -1;
     /** Even though we're not using column selection, the table API forces us to return this instance or will crash. */
     private static final ListSelectionModel SELECTION_MODEL   = new DefaultListSelectionModel();
 
 
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** All registered listeners. */
     private final WeakHashMap<TableColumnModelListener, ?> listeners  = new WeakHashMap<>();
     /** Cache for the table's total width. */
@@ -54,18 +50,17 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     /** All available columns. */
     private final List<TableColumn> columns = new ArrayList<>(Column.values().length);
     /** Enabled state of each column. */
-    private boolean[]     enabled = new boolean[Column.values().length];
+    private final boolean[]     enabled = new boolean[Column.values().length];
     /** Visibility state of each column. */
-    private boolean[]     visibility = new boolean[Column.values().length];
+    private final boolean[]     visibility = new boolean[Column.values().length];
     /** Cache for the number of available columns. */
     private int           countCache;
     /** Whether the column sizes were set already. */
     private boolean       columnSizesSet;
+    private int[] internalIndexCache;
 
 
 
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table column model.
      */
@@ -116,8 +111,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
 
 
-    // - Configuration -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     public synchronized FileTableConfiguration getConfiguration() {
         FileTableConfiguration conf = new FileTableConfiguration();
         for (Column c : Column.values()) {
@@ -133,9 +126,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
     }
 
 
-
-    // - Enabled state -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     /**
      * Returns <code>true</code> if the specified column is enabled.
@@ -155,9 +145,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         this.enabled[column.ordinal()] = enabled;
     }
 
-
-    // - Visibility state ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     /**
      * Sets the specified column's visibility state.
@@ -180,6 +167,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 countCache--;
                 triggerColumnRemoved(new TableColumnModelEvent(this, columnVal, columnVal));
             }
+            internalIndexCache = null;
         }
     }
 
@@ -188,7 +176,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @param column column, see {@link Column} for possible values
      * @return <code>true</code> if the specified column is visible, <code>false</code> otherwise.
      */
-    public synchronized boolean isColumnVisible(Column column) {
+    public boolean isColumnVisible(Column column) {
         return visibility[column.ordinal()];
     }
 
@@ -212,19 +200,39 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
     // - Column retrieval ----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
-    private synchronized int getInternalIndex(int index) {
-        // Looks for the visible column of index 'index'.
-        int visibleIndex = -1;
+    private int getInternalIndex(int index) {
+        if (internalIndexCache != null) {
+            return internalIndexCache[index];
+        }
+//            // Looks for the visible column of index 'index'.
+//            int visibleIndex = -1;
+//            for (int i = 0; i < visibility.length; i++) {
+//                TableColumn column = columns.get(i);
+//                if (visibility[column.getModelIndex()]) {
+//                    if (++visibleIndex == index) {
+//                        return i;
+//                    }
+//                }
+//            }
+//            // Index doesn't exist.
+//            throw new ArrayIndexOutOfBoundsException(Integer.toString(index));
+            // Looks for the visible column of index 'index'.
+        buildColumnIndexCache();
+        return internalIndexCache[index];
+    }
+
+    private synchronized void buildColumnIndexCache() {
+        internalIndexCache = new int[visibility.length];
+        int visibleIndex = 0;
         for (int i = 0; i < visibility.length; i++) {
             TableColumn column = columns.get(i);
             if (visibility[column.getModelIndex()]) {
-                if (++visibleIndex == index) {
-                    return i;
-                }
+                internalIndexCache[visibleIndex++] = i;
             }
         }
-        // Index doesn't exist.
-        throw new ArrayIndexOutOfBoundsException(Integer.toString(index));
+        while (visibleIndex < visibility.length) {
+            internalIndexCache[visibleIndex++] = -1;
+        }
     }
 
     /**
@@ -236,7 +244,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         return columns.get(getInternalIndex(index));
     }
 
-    public synchronized TableColumn getColumnFromId(int id) {return columns.get(id);}
+    public synchronized TableColumn getColumnFromId(int id) {
+        return columns.get(id);
+    }
 
     public synchronized int getColumnPosition(int id) {
         for (int i = 0; i < visibility.length; i++) {
@@ -282,6 +292,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
 
         // Notifies listeners and stores the new configuration.
         triggerColumnMoved(new TableColumnModelEvent(this, from, to));
+        internalIndexCache = null;
     }
 
     public int getColumnIndex(Object identifier) {
@@ -470,7 +481,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * Ideally, we'd like to return <code>null</code> here, but the table API takes a dim view
      * of this and we're forced to keep a useless reference.
-     * </p>
+     *
      * @return a default list selection model.
      */
     public ListSelectionModel getSelectionModel() {return SELECTION_MODEL;}
@@ -501,7 +512,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * This will enumerate all the elements of {@link FileTableColumnModel#columns}, skipping
      * over any that's marked as invisible.
-     * </p>
+     *
      * @author Nicolas Rinaudo
      */
     private class ColumnEnumeration implements Enumeration<TableColumn> {
@@ -542,7 +553,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
          * Returns <code>true</code> if there's a next element in the enumeration.
          * @return <code>true</code> if there's a next element in the enumeration, <code>false</code> otherwise.
          */
-        public boolean hasMoreElements() {return nextIndex < visibility.length;}
+        public boolean hasMoreElements() {
+            return nextIndex < visibility.length;
+        }
 
         /**
          * Returns the next element in the enumeration.
@@ -574,14 +587,14 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * <p>
      * The sort is done by first comparing each column's index as defined in the configuration and,
      * if there's a conflict, by comparing each column's identifier.
-     * </p>
+     *
      * @author Nicolas Rinaudo
      */
     private static class ColumnSorter implements Comparator<TableColumn> {
         // - getInstance fields -------------------------------------------------------------
         // -------------------------------------------------------------------------------
         /** Defines the columns order. */
-        private FileTableConfiguration conf;
+        private final FileTableConfiguration conf;
 
 
 

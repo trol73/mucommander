@@ -21,7 +21,7 @@ package com.mucommander.job;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractRWArchiveFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.FileCollisionRenameDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -40,13 +40,13 @@ import java.io.IOException;
 public abstract class AbstractCopyJob extends TransferFileJob {
     
     /** Base destination folder */
-    protected AbstractFile baseDestFolder;
+    AbstractFile baseDestFolder;
     
     /** New filename in destination */
     protected String newName;
 
     /** Default choice when encountering an existing file */
-    protected int defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
+    private int defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
     
     /** Title used for error dialogs */
     protected String errorDialogTitle;
@@ -54,10 +54,10 @@ public abstract class AbstractCopyJob extends TransferFileJob {
     protected boolean append;
     
     /** The archive that contains the destination files (may be null) */
-    protected AbstractRWArchiveFile archiveToOptimize;
+    AbstractRWArchiveFile archiveToOptimize;
 
     /** True when an archive is being optimized */
-    protected boolean isOptimizingArchive;
+    boolean isOptimizingArchive;
 
 
     /**
@@ -70,8 +70,8 @@ public abstract class AbstractCopyJob extends TransferFileJob {
      * @param newName the new filename in the destination folder, can be <code>null</code> in which case the original filename will be used.
      * @param fileExistsAction default action to be performed when a file already exists in the destination, see {@link com.mucommander.ui.dialog.file.FileCollisionDialog} for allowed values
      */
-    public AbstractCopyJob(ProgressDialog progressDialog, MainFrame mainFrame,
-            FileSet files, AbstractFile destFolder, String newName, int fileExistsAction) {
+    AbstractCopyJob(ProgressDialog progressDialog, MainFrame mainFrame,
+                    FileSet files, AbstractFile destFolder, String newName, int fileExistsAction) {
         super(progressDialog, mainFrame, files);
 
         this.baseDestFolder = destFolder;
@@ -85,12 +85,10 @@ public abstract class AbstractCopyJob extends TransferFileJob {
      * @param destFileName a destination file name
      * @return the destination file or null if it cannot be created
      */
-    protected AbstractFile createDestinationFile(AbstractFile destFolder, String destFileName) {
-        AbstractFile destFile;
+    AbstractFile createDestinationFile(AbstractFile destFolder, String destFileName) {
         do {    // Loop for retry
             try {
-                destFile = destFolder.getDirectChild(destFileName);
-                break;
+                return destFolder.getDirectChild(destFileName);
             } catch (IOException e) {
                 // Destination file couldn't be instantiated
 
@@ -104,7 +102,6 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 // Skip continues
             }
         } while(true);
-        return destFile;
     }
     
     /**
@@ -175,8 +172,8 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 }
                 //  Overwrite file if destination is older
                 else if (choice == FileCollisionDialog.OVERWRITE_IF_OLDER_ACTION) {
-                    // Overwrite if file is newer (stricly)
-                    if(file.getLastModifiedDate() <= destFile.getLastModifiedDate())
+                    // Overwrite if file is newer (strictly)
+                    if (file.getLastModifiedDate() <= destFile.getLastModifiedDate())
                         return null;
                     break;
                 } else if (choice == FileCollisionDialog.RENAME_ACTION) {
@@ -204,10 +201,10 @@ public abstract class AbstractCopyJob extends TransferFileJob {
      *
      * @param rwArchiveFile the writable archive file to optimize
      */
-    protected void optimizeArchive(AbstractRWArchiveFile rwArchiveFile) {
+    void optimizeArchive(AbstractRWArchiveFile rwArchiveFile) {
         isOptimizingArchive = true;
 
-        while(true) {
+        while (true) {
             try {
                 archiveToOptimize = rwArchiveFile;
                 archiveToOptimize.optimizeArchive();

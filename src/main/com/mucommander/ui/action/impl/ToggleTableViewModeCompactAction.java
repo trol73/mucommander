@@ -20,7 +20,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.views.TableViewMode;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  * Created on 15/04/15.
  */
-public class ToggleTableViewModeCompactAction extends MuAction {
+public class ToggleTableViewModeCompactAction extends TcAction {
 
     /**
      * Creates a new <code>ToggleTableViewModeCompactAction</code>
@@ -40,7 +40,7 @@ public class ToggleTableViewModeCompactAction extends MuAction {
      * @param mainFrame  the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      */
-    ToggleTableViewModeCompactAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleTableViewModeCompactAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -59,17 +59,23 @@ public class ToggleTableViewModeCompactAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "ToggleTableViewModeCompact";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.VIEW; }
+        public ActionCategory getCategory() {
+            return ActionCategory.VIEW;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
         public KeyStroke getDefaultKeyStroke() {
             return KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.CTRL_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new ToggleTableViewModeCompactAction(mainFrame, properties);
         }
     }

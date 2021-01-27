@@ -2,12 +2,12 @@
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
  * Copyright (C) 2013-2016 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,7 +20,7 @@ package com.mucommander.ui.viewer;
 import com.mucommander.commons.HasProgress;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.EncodingDetector;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.statusbar.TaskWidget;
 
@@ -42,7 +42,7 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
     private boolean taskWidgetAttached;
 
 
-    public FilePreloadWorker(AbstractFile file, MainFrame mainFrame, Runnable onFinish) {
+    FilePreloadWorker(AbstractFile file, MainFrame mainFrame, Runnable onFinish) {
         this.file = file;
         this.mainFrame = mainFrame;
         this.onFinish = onFinish;
@@ -51,7 +51,7 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() {
         try {
             publish();
             final PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);

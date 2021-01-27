@@ -21,7 +21,7 @@ package com.mucommander.ui.action.impl;
 import java.util.Map;
 
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
 
@@ -33,7 +33,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class ToggleDateColumnAction extends ToggleColumnAction {
 
-    ToggleDateColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ToggleDateColumnAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.DATE);
     }
 
@@ -48,7 +48,7 @@ public class ToggleDateColumnAction extends ToggleColumnAction {
             super(Column.DATE);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ToggleDateColumnAction(mainFrame, properties);
         }
     }

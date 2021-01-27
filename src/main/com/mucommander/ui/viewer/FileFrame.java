@@ -7,8 +7,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import org.fife.ui.StatusBar;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,7 @@ import com.mucommander.ui.main.MainFrame;
  * 
  * @author Arik Hadas
  */
-public abstract class FileFrame extends JFrame implements QuickListContainer {
+public abstract class FileFrame extends JFrame implements QuickListContainer, IMacOsWindow {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileFrame.class);
 
 //	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
@@ -38,17 +40,18 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
     /**
      * The main frame from which this frame was initiated
      */
-	private MainFrame mainFrame;
+	private final MainFrame mainFrame;
 	
     private Component returnFocusTo;
 
 
     FileFrame(MainFrame mainFrame, Image icon) {
-		this.mainFrame = mainFrame;
+        this.mainFrame = mainFrame;
 
 		setIconImage(icon);
+
+        initLookAndFeel();
 		
-		// Call #dispose() on close (default is hide)
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
         setResizable(true);
@@ -56,69 +59,21 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
         //FileViewersList.update();
         //initContentPane(file);
 	}
-	
-	protected void initContentPane(final AbstractFile file) {
-		try {
-			filePresenter = createFilePresenter(file);
-		} catch (UserCancelledException e) {
+
+    void initContentPane(final AbstractFile file) {
+        try {
+            filePresenter = createFilePresenter(file);
+        } catch (UserCancelledException e) {
             e.printStackTrace();
 			// May get a UserCancelledException if the user canceled (refused to confirm the operation after a warning)
 			return;
 		}
 		// If not suitable presenter was found for the given file
-		if (filePresenter == null) {
-			showGenericErrorDialog();
-			return;
-		}
-		AsyncPanel asyncPanel = new AsyncPanel() {
-            @Override
-            public void initTargetComponent() throws Exception {
-                // key dispatcher for Esc detection
-                final KeyEventDispatcher keyEventDispatcher = e -> {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        cancel();
-                        setVisible(false);
-                        dispose();
-                    }
-                    return false;
-                };
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
-                try {
-                    filePresenter.open(file);
-                } finally {
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
-                }
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
-            }
-
-
-            @Override
-            public JComponent getTargetComponent(Exception e) {
-                if (e != null) {
-                    LOGGER.debug("Exception caught", e);
-                    showGenericErrorDialog();
-                    dispose();
-                    return filePresenter == null ? new JPanel() : filePresenter;
-                }
-                setJMenuBar(filePresenter.getMenuBar());
-                return filePresenter;
-            }
-
-
-            @Override
-            protected void updateLayout() {
-                super.updateLayout();
-                // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
-                //pack();
-                WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName(), true);
-                // Request focus on the viewer when it is visible
-                FocusRequester.requestFocus(filePresenter);
-
-                // Restore (caret position, scroll position etc.)
-                filePresenter.restoreStateOnStartup();
-            }
-        };
-
+        if (filePresenter == null) {
+            showGenericErrorDialog();
+            return;
+        }
+        AsyncPanel asyncPanel = createAsyncPanel(file);
 
         // Add the AsyncPanel to the content pane
         JPanel contentPane = new JPanel(new BorderLayout());
@@ -143,9 +98,63 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
         FileViewersList.update();
     }
 
-	private void showGenericErrorDialog() {
-		InformationDialog.showErrorDialog(mainFrame, getGenericErrorDialogTitle(), getGenericErrorDialogMessage());
-	}
+    @NotNull
+    private AsyncPanel createAsyncPanel(AbstractFile file) {
+        return new AsyncPanel() {
+                @Override
+                public void initTargetComponent() throws Exception {
+                    // key dispatcher for Esc detection
+                    final KeyEventDispatcher keyEventDispatcher = e -> {
+                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                            e.consume();
+                            cancel();
+                            setVisible(false);
+                            dispose();
+                        }
+                        return false;
+                    };
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
+                    try {
+                        filePresenter.open(file);
+                    } finally {
+                        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+                    }
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+                }
+
+
+                @Override
+                public JComponent getTargetComponent(Exception e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                        LOGGER.debug("Exception caught", e);
+                        showGenericErrorDialog();
+                        dispose();
+                        return filePresenter == null ? new JPanel() : filePresenter;
+                    }
+                    setJMenuBar(filePresenter.getMenuBar());
+                    return filePresenter;
+                }
+
+
+                @Override
+                protected void updateLayout() {
+                    super.updateLayout();
+                    // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
+                    //pack();
+                    WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName(), true);
+                    // Request focus on the viewer when it is visible
+                    FocusRequester.requestFocus(filePresenter);
+
+                    // Restore (caret position, scroll position etc.)
+                    filePresenter.restoreStateOnStartup();
+                }
+            };
+    }
+
+    private void showGenericErrorDialog() {
+        InformationDialog.showErrorDialog(mainFrame, getGenericErrorDialogTitle(), getGenericErrorDialogMessage());
+    }
 
 //	/**
 //	 * Sets this file presenter to full screen
@@ -160,13 +169,9 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
 	 * 
 	 * @return true if the frame is set to full screen, false otherwise
 	 */
-	public boolean isFullScreen() {
-		return (getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
+    private boolean isFullScreen() {
+		return (getExtendedState() & Frame.MAXIMIZED_BOTH) != 0;
 	}
-
-	////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
 
 
@@ -174,11 +179,9 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
     public void pack() {
     	if (!isFullScreen()) {
     		super.pack();
-
-    		DialogToolkit.fitToScreen(this);
-    		DialogToolkit.fitToMinDimension(this, getMinimumSize());
-
-    		DialogToolkit.centerOnWindow(this, mainFrame);
+            DialogToolkit.fitToScreen(this);
+            DialogToolkit.fitToMinDimension(this, getMinimumSize());
+            DialogToolkit.centerOnWindow(this, mainFrame);
     	}
     }
 
@@ -193,6 +196,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
             if (returnFocusTo != null) {
                 FocusRequester.requestFocus(returnFocusTo);
                 if (returnFocusTo instanceof FileFrame) {
+                    //SwingUtilities.invokeLater(() -> FocusRequester.requestFocus(((FileFrame)returnFocusTo).filePresenter));
                     FocusRequester.requestFocus(((FileFrame)returnFocusTo).filePresenter);
                     //((FileFrame)returnFocusTo).filePresenter
                 }
@@ -210,17 +214,6 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
     public Component getReturnFocusTo() {
         return returnFocusTo;
     }
-
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
-    
-    protected abstract String getGenericErrorDialogTitle();
-
-    protected abstract String getGenericErrorDialogMessage();
-    
-    protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
 
     public void setSearchedText(String searchedText) {
         filePresenter.setSearchedText(searchedText);
@@ -258,5 +251,15 @@ public abstract class FileFrame extends JFrame implements QuickListContainer {
     public Component nextFocusableComponent() {
         return this;
     }
+
+
+
+
+    protected abstract String getGenericErrorDialogTitle();
+
+    protected abstract String getGenericErrorDialogMessage();
+
+    protected abstract FilePresenter createFilePresenter(AbstractFile file) throws UserCancelledException;
+
 
 }

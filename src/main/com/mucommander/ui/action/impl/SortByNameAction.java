@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.swing.KeyStroke;
 
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
 
@@ -36,7 +36,7 @@ import com.mucommander.ui.main.table.Column;
  */
 public class SortByNameAction extends SortByAction {
 
-    SortByNameAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SortByNameAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, Column.NAME);
     }
 
@@ -52,7 +52,7 @@ public class SortByNameAction extends SortByAction {
             super(Column.NAME, KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.CTRL_DOWN_MASK));
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SortByNameAction(mainFrame, properties);
         }
     }

@@ -30,6 +30,6 @@ public class ConfiguredGnomeDesktopAdapter extends GnomeDesktopAdapter {
     public boolean isAvailable() {
         String var = System.getenv(ENV_VAR);
 
-        return var != null && !var.trim().equals("");
+        return var != null && !var.trim().isEmpty();
     }
 }

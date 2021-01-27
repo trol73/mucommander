@@ -33,7 +33,7 @@ public class BufferPoolTest {
     public final static int TEST_BUFFER_SIZE_2 = 28;
     public final static int TEST_MAX_POOL_SIZE = 1000;
     @BeforeClass
-    public void setup() throws Exception {
+    public void setup() {
     	BufferPool.releaseAll();
     }
 
@@ -41,7 +41,7 @@ public class BufferPoolTest {
      * Tests <code>BufferPool</code> with byte array (<code>byte[]</code>) buffers.
      *
      * <p>This method invokes {@link #testBuffer(com.mucommander.commons.io.BufferPool.BufferFactory)} with a
-     * {@link BufferPool.ByteArrayFactory} instance.</p>
+     * {@link BufferPool.ByteArrayFactory} instance.
      */
     @Test
     public void testByteArrayBuffer() {
@@ -52,7 +52,7 @@ public class BufferPoolTest {
      * Tests <code>BufferPool</code> with char array (<code>char[]</code>) buffers.
      *
      * <p>This method invokes {@link #testBuffer(com.mucommander.commons.io.BufferPool.BufferFactory)} with a
-     * {@link BufferPool.CharArrayFactory} instance.</p>
+     * {@link BufferPool.CharArrayFactory} instance.
      */
     @Test
     public void testCharArrayBuffer() {
@@ -63,7 +63,7 @@ public class BufferPoolTest {
      * Tests <code>BufferPool</code> with <code>ByteBuffer</code> buffers.
      *
      * <p>This method invokes {@link #testBuffer(com.mucommander.commons.io.BufferPool.BufferFactory)} with a
-     * {@link BufferPool.ByteBufferFactory} instance.</p>
+     * {@link BufferPool.ByteBufferFactory} instance.
      */
     @Test
     public void testByteBuffer() {
@@ -74,7 +74,7 @@ public class BufferPoolTest {
      * Tests <code>BufferPool</code> with <code>CharBuffer</code> buffers.
      *
      * <p>This method invokes {@link #testBuffer(com.mucommander.commons.io.BufferPool.BufferFactory)} with a
-     * {@link BufferPool.CharBufferFactory} instance.</p>
+     * {@link BufferPool.CharBufferFactory} instance.
      */
     @Test
     public void testCharBuffer() {
@@ -87,7 +87,7 @@ public class BufferPoolTest {
      * <p>This test assumes that no buffer with size=={@link #TEST_BUFFER_SIZE_1} or size=={@link #TEST_BUFFER_SIZE_2}
      * exist in the pool when the test starts. It also assumes that no other thread uses <code>BufferPool</code> while
      * the test is being performed. <code>BufferPool</code> will be left in the same state as it was right before the
-     * test.</p>
+     * test.
      *
      * @param factory the factory corresponding to the kind of buffer to test
      */

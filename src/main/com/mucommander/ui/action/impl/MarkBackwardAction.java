@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 
@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public abstract class MarkBackwardAction extends MuAction {
+public abstract class MarkBackwardAction extends TcAction {
 
     MarkBackwardAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);

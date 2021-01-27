@@ -35,9 +35,9 @@ class EditableHeaderUI extends BasicTableHeaderUI {
 	public class MouseInputHandler extends BasicTableHeaderUI.MouseInputHandler {
 		private Component dispatchComponent;
 
-		protected EditableHeader header;
+		protected final EditableHeader header;
 
-		public MouseInputHandler(EditableHeader header) {
+		MouseInputHandler(EditableHeader header) {
 			this.header = header;
 		}
 
@@ -53,8 +53,7 @@ class EditableHeaderUI extends BasicTableHeaderUI {
 			if (dispatchComponent == null) {
 				return false;
 			}
-			MouseEvent e2 = SwingUtilities.convertMouseEvent(header, e,
-					dispatchComponent);
+			MouseEvent e2 = SwingUtilities.convertMouseEvent(header, e, dispatchComponent);
 			dispatchComponent.dispatchEvent(e2);
 			return true;
 		}

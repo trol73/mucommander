@@ -18,6 +18,7 @@
 package com.mucommander.ui.main.table.views.compact;
 
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
 
 
@@ -36,7 +37,7 @@ public class CompactFileTableModel extends BaseFileTableModel {
     private int offset;
 
     /** Cell values cache */
-    private String cellValuesCache[];
+    private String[] cellValuesCache;
 
     public CompactFileTableModel(int columns, int visibleRows) {
         super();
@@ -68,13 +69,13 @@ public class CompactFileTableModel extends BaseFileTableModel {
     }
 
 
-    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[]) {
-        super.setCurrentFolder(folder, children);
+    public synchronized void setCurrentFolder(AbstractFile folder, AbstractFile children[], FileTable table) {
+        super.setCurrentFolder(folder, children, table);
         //rowCount = calcRowCount();
     }
 
     @Override
-    public void fillCellCache() {
+    public void fillCellCache(FileTable fileTable) {
         int len = cellValuesCache.length;
         if (len == 0) {
             return;

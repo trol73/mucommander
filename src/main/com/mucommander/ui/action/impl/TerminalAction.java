@@ -19,15 +19,17 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.desktop.DesktopManager;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -41,42 +43,56 @@ public class TerminalAction extends ParentFolderAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     public void performAction() {
         AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
-        String cmd = getConsoleCommand(currentFolder);
+        if (OsFamily.LINUX.isCurrent()) {
+            performOnLinux(currentFolder);
+        } else {
+            String cmd = getConsoleCommand(currentFolder);
+            try {
+                ProcessRunner.execute(cmd, currentFolder);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void performOnLinux(AbstractFile currentFolder) {
+        String[] tokens = getTerminalCommand().split(" ");
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i].contains("$p")) {
+                tokens[i] = tokens[i].replace("$p", currentFolder.getAbsolutePath());
+            }
+        }
         try {
-            //ProcessRunner.execute(cmd);
-            ProcessRunner.execute(cmd, currentFolder);
-        } catch(Exception e) {
+            ProcessRunner.execute(tokens, currentFolder);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String getDefaultTerminalCommand() {
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                return "cmd /c start cmd.exe /K \"cd /d $p\"";
-            case LINUX:
-                return "";
-            case MAC_OS_X:
-                return "open -a Terminal .";
-        }
-        return "";
+    private static String getConsoleCommand(AbstractFile folder) {
+        String cmd = getTerminalCommand();
+        String path = folder.getAbsolutePath();
+        return cmd.replace("$p", path);
     }
 
-    private static String getConsoleCommand(AbstractFile folder) {
-        String cmd;
-        if (MuConfigurations.getPreferences().getVariable(MuPreference.USE_CUSTOM_EXTERNAL_TERMINAL, MuPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL)) {
-            cmd = MuConfigurations.getPreferences().getVariable(MuPreference.CUSTOM_EXTERNAL_TERMINAL);
-        } else {
-            cmd = getDefaultTerminalCommand();
-        }
-        return cmd.replace("$p", folder.getAbsolutePath());
+
+    private static String getTerminalCommand() {
+        return useCustomExternalTerminal() ? getCustomExternalTerminal() : DesktopManager.getDefaultTerminalAppCommand();
+    }
+
+    private static String getCustomExternalTerminal() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL);
+    }
+
+    private static boolean useCustomExternalTerminal() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.USE_CUSTOM_EXTERNAL_TERMINAL, TcPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
     }
 
     @Override
@@ -93,15 +109,23 @@ public class TerminalAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "Terminal";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.MISC; }
+        public ActionCategory getCategory() {
+            return ActionCategory.MISC;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK); }
+        public KeyStroke getDefaultKeyStroke() {
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK);
+        }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new TerminalAction(mainFrame, properties);
         }
 

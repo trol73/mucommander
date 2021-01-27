@@ -29,7 +29,6 @@ import java.io.IOException;
  * <p>
  * For {@link AbstractArchiveFile} implementations to be automatically instantiated by {@link FileFactory},
  * this interface needs to be implemented and an instance registered with {@link FileFactory}.
- * </p>
  *
  * @author Nicolas Rinaudo, Maxence Bernard
  * @see AbstractArchiveFile
@@ -53,4 +52,6 @@ public interface ArchiveFormatProvider {
      * @return the <code>FilenameFilter</code> that matches filenames to be associated with this archive format
      */
     FilenameFilter getFilenameFilter();
+
+    String[] getFileExtensions();
 }

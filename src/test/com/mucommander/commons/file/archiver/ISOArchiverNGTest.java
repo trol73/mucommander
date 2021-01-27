@@ -76,7 +76,7 @@ public class ISOArchiverNGTest {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
         for(File file : files.values()){
             file.delete();
         }
@@ -86,11 +86,11 @@ public class ISOArchiverNGTest {
     }
 
     @BeforeMethod
-    public void setUpMethod() throws Exception {
+    public void setUpMethod() {
     }
 
     @AfterMethod
-    public void tearDownMethod() throws Exception {
+    public void tearDownMethod() {
     }
 
     /**
@@ -130,7 +130,7 @@ public class ISOArchiverNGTest {
      * Test of getProcessingFile method, of class ISOArchiver.
      */
     @Test
-    public void testGetProcessingFile() throws Exception {
+    public void testGetProcessingFile() {
         System.out.println("getProcessingFile");
         
         //Can't be sure which file is is
@@ -147,7 +147,7 @@ public class ISOArchiverNGTest {
      * Test of totalWrittenBytes method, of class ISOArchiver.
      */
     @Test
-    public void testTotalWrittenBytes() throws Exception {
+    public void testTotalWrittenBytes() {
         System.out.println("totalWrittenBytes");
         
         long totalSize = 0;
@@ -161,7 +161,7 @@ public class ISOArchiverNGTest {
      * Test of testWrittenBytesCurrentFile method, of class ISOArchiver.
      */
     @Test
-    public void testWrittenBytesCurrentFile() throws Exception {
+    public void testWrittenBytesCurrentFile() {
         System.out.println("writtenBytesCurrentFile");
         
         //Can't be sure which file is is
@@ -227,7 +227,7 @@ public class ISOArchiverNGTest {
      * Test of close method, of class ISOArchiver.
      */
 //    @Test
-    public void testClose() throws Exception {
+    public void testClose() {
     }
     
 }

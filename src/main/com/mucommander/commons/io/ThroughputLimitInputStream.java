@@ -26,10 +26,10 @@ import java.io.InputStream;
  * number of bytes per second. 
  * Whenever the bytes per second quota has been reached, the read and skip methods will lock and won't return
  * until either:
- * <ul>a new second commences, bringing the bytes read count back to zero for the new second
+ * <p><ul><li>a new second commences, bringing the bytes read count back to zero for the new second</li>
  * <li>{@link #setThroughputLimit(long)} is called with a more permissive bytes per second value (different from 0),
- * yielding to more bytes available for the current second.
- * </ul>
+ * yielding to more bytes available for the current second.</li>
+ * </ul><p>
  *
  * <p>Setting the throughput limit to 0 effectively blocks all read and skip calls indefinitely.
  * Any calls to the read or skip methods will lock, the only way to remove this lock being to call the

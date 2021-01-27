@@ -13,8 +13,9 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class XarFormatProvider implements ArchiveFormatProvider {
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(
-            new String[] { ".xar" });
+    private static final String[] EXTENSIONS = { ".xar" };
+
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     private final static byte[] SIGNATURE = {0x78, 0x61, 0x72, 0x21};
 
@@ -26,6 +27,11 @@ public class XarFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }

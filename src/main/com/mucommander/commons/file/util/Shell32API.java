@@ -192,7 +192,7 @@ public interface Shell32API extends StdCallLibrary {
      * <p>Remarks: With Microsoft Windows 2000, if NULL is passed in the pszRootPath parameter, the function fails
      * and returns an E_INVALIDARG error code. In earlier versions of the operating system, you can pass an empty
      * string or NULL. If pszRootPath contains an empty string or NULL, information is retrieved for all
-     * Recycle Bins on all drives.</p>
+     * Recycle Bins on all drives.
      *
      * @param pszRootPath a null-terminated string of maximum length MAX_PATH to contain the path of the root drive
      * on which the Recycle Bin is located. This parameter can contain a string formatted with the drive, folder,

@@ -22,7 +22,7 @@ package com.mucommander.ui.dialog.server;
 import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
@@ -36,11 +36,11 @@ import java.net.MalformedURLException;
  */
 public class SMBPanel extends ServerPanel {
 
-    private JTextField domainField;
-    private JTextField serverField;
-    private JTextField shareField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private final JTextField domainField;
+    private final JTextField serverField;
+    private final JTextField shareField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
 
     private static String lastDomain = "";
     private static String lastServer = "";
@@ -91,11 +91,7 @@ public class SMBPanel extends ServerPanel {
         lastUsername = usernameField.getText();
         lastPassword = new String(passwordField.getPassword());
     }
-	
-	
-    ////////////////////////////////
-    // ServerPanel implementation //
-    ////////////////////////////////
+
 	
     @Override
     FileURL getServerURL() throws MalformedURLException {
@@ -104,9 +100,9 @@ public class SMBPanel extends ServerPanel {
 
         // Insert the domain (if any) before the username, separated by a semicolon
         String userInfo = lastUsername;
-        if(!lastDomain.equals(""))
+        if (!lastDomain.isEmpty()) {
             userInfo = lastDomain+";"+userInfo;
-
+        }
         url.setCredentials(new Credentials(userInfo, lastPassword));
 
         return url;
@@ -116,6 +112,7 @@ public class SMBPanel extends ServerPanel {
     boolean usesCredentials() {
         return true;
     }
+
     @Override
     public void dialogValidated() {
         updateValues();

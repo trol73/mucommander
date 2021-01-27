@@ -23,7 +23,7 @@ import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.hadoop.HDFSFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
@@ -38,11 +38,11 @@ import java.text.ParseException;
  */
 public class HDFSPanel extends ServerPanel {
 
-    private JTextField serverField;
-    private JTextField usernameField;
+    private final JTextField serverField;
+    private final JTextField usernameField;
 //    private JTextField groupField;
-    private JTextField initialDirField;
-    private JSpinner portSpinner;
+    private final JTextField initialDirField;
+    private final JSpinner portSpinner;
 
     private static String lastServer = "";
     private static String lastUsername = HDFSFile.getDefaultUsername();
@@ -124,8 +124,9 @@ public class HDFSPanel extends ServerPanel {
     public void dialogValidated() {
         // Commits the current spinner value in case it was being edited and 'enter' was pressed
         // (the spinner value would otherwise not be committed)
-        try { portSpinner.commitEdit(); }
-        catch(ParseException e) { }
+        try {
+            portSpinner.commitEdit();
+        } catch(ParseException ignored) { }
 
         updateValues();
     }

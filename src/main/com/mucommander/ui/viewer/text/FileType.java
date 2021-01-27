@@ -42,7 +42,9 @@ public enum FileType {
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
     DTD("DTD", SyntaxConstants.SYNTAX_STYLE_DTD, "*.dtd"),
     FORTRAN("Fortran", SyntaxConstants.SYNTAX_STYLE_FORTRAN, "*.f,*.for,*.ftn,*.i"),
+    GO("Go", SyntaxConstants.SYNTAX_STYLE_GO, "*.go"),
     GROOVY("Groovy", SyntaxConstants.SYNTAX_STYLE_GROOVY,"*.groovy,*.gvy,*.gy,*.gsh,*.gradle"),
+    HEX("Intel HEX", SyntaxConstants.SYNTAX_STYLE_HEX, "*.hex,*.ihex"),
     HTACCESS("htaccess", SyntaxConstants.SYNTAX_STYLE_HTACCESS, ".htaccess"),
     HTML("HTML", SyntaxConstants.SYNTAX_STYLE_HTML, "*.html,*.htm"),
     JAVA("Java", SyntaxConstants.SYNTAX_STYLE_JAVA, "*.java"),
@@ -52,14 +54,15 @@ public enum FileType {
     LATEX("Latex", SyntaxConstants.SYNTAX_STYLE_LATEX, "*.tex"),
     LISP("Lisp", SyntaxConstants.SYNTAX_STYLE_LISP, "*.lisp,*.lsp"),
     LUA("Lua", SyntaxConstants.SYNTAX_STYLE_LUA, "*.lua"),
-    MAKEFILE("Makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE, "Makefile"),
+    MAKEFILE("Makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE, "Makefile,*.mk"),
     MXML("MXML", SyntaxConstants.SYNTAX_STYLE_MXML, "*.mxml"),
     NSIS("Nsis", SyntaxConstants.SYNTAX_STYLE_NSIS, "*.nsi"),
     PERL("Perl", SyntaxConstants.SYNTAX_STYLE_PERL, "*.pl"),
     PHP("PHP", SyntaxConstants.SYNTAX_STYLE_PHP, "*.php"),
-    PROPERTIES_FILE("Properties file", SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE, "*.properties,*.prop,*.conf"),
+    PROPERTIES_FILE("Properties file", SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE, "*.properties,*.prop,*.conf,*.yml"),
     PYTHON("Python", SyntaxConstants.SYNTAX_STYLE_PYTHON, "*.py,make.builder"),
     RUBY("Ruby", SyntaxConstants.SYNTAX_STYLE_RUBY, "*.rb"),
+    RUST("Rust", SyntaxConstants.SYNTAX_STYLE_RUST, "*.rs,*.rs.in"),
     SAS("SAS", SyntaxConstants.SYNTAX_STYLE_SAS, "*.sas"),
     SCALA("Scala", SyntaxConstants.SYNTAX_STYLE_SCALA, "*.scala"),
     SQL("SQL", SyntaxConstants.SYNTAX_STYLE_SQL, "*.sql"),
@@ -67,21 +70,18 @@ public enum FileType {
     UNIX_SHELL("Unix Shell", SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL, "*.sh,*.zsh,.zshrc,.profile,.bash_profile"),
     VISUAL_BASIC("VisualBasic", SyntaxConstants.SYNTAX_STYLE_VISUAL_BASIC, "*.bas,*.vb"),
     WINDOWS_BATCH("Windows bath", SyntaxConstants.SYNTAX_STYLE_WINDOWS_BATCH, "*.bat,*.cmd"),
-    XML("XML", SyntaxConstants.SYNTAX_STYLE_XML, "*.xml,Info.plist,*.jnlp,*.svg"),
-    HEX("Intel HEX", SyntaxConstants.SYNTAX_STYLE_HEX, "*.hex,*.ihex"),
-    GO("Go", SyntaxConstants.SYNTAX_STYLE_GO, "*.go"),
-    RUST("Rust", SyntaxConstants.SYNTAX_STYLE_RUST, "*.rs");
+    XML("XML", SyntaxConstants.SYNTAX_STYLE_XML, "*.xml,Info.plist,*.jnlp,*.svg");
 
 
     private final String contentType;
-    private final String fileMasks;
+    //private final String fileMasks;
     private final WildcardFileFilter fileFilters[];
     private final String name;
 
     FileType(String name, String contentType, String fileMasks) {
         this.name = name;
         this.contentType = contentType;
-        this.fileMasks = fileMasks;
+        //this.fileMasks = fileMasks;
         this.fileFilters = buildFileFilters(fileMasks);
     }
 

@@ -32,9 +32,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class PopupRightDriveButtonAction extends MuAction implements ActiveTabListener {
+public class PopupRightDriveButtonAction extends TcAction implements ActiveTabListener {
 
-    PopupRightDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private PopupRightDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         
         mainFrame.getRightPanel().getTabs().addActiveTabListener(this);
@@ -64,15 +64,23 @@ public class PopupRightDriveButtonAction extends MuAction implements ActiveTabLi
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "PopupRightDriveButton";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.ALT_DOWN_MASK);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new PopupRightDriveButtonAction(mainFrame, properties);
         }
     }

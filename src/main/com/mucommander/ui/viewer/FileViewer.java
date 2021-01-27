@@ -18,26 +18,21 @@
 
 package com.mucommander.ui.viewer;
 
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
-import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
-import ru.trolsoft.ui.TMenuSeparator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * An abstract class to be subclassed by file viewer implementations.
  *
- * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.</p>
+ * <p>
+ * <b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.
  *
  * @author Maxence Bernard, Arik Hadas
  */
@@ -48,10 +43,10 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      * properly in menu
      */
     private Map<KeyStroke, JMenuItem> menuKeyStrokes;
-	
+
+    protected JMenu menuFile;
     /** Close menu item */
-    private JMenuItem closeItem;
-    private JMenuItem filesItem;
+    private JMenuItem miClose;
 
     /**
      * Creates a new FileViewer.
@@ -66,85 +61,86 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
      */
     public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-        MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
+        MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_viewer.file_menu"), menuMnemonicHelper, null);
+        menuFile = MenuToolkit.addMenu(i18n("file_viewer.file_menu"), mnemonicHelper, null);
 
-        int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        fileMenu.add(new TMenuSeparator());
+        miClose = MenuToolkit.addMenuItem(menuFile, i18n("file_viewer.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        menuFile.add(miClose);
 
-        closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_viewer.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
-        fileMenu.add(closeItem);
-
-        menuBar.add(fileMenu);
+        menuBar.add(menuFile);
 
         return menuBar;
     }
-    
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == closeItem) {
+        Object source = e.getSource();
+        if (source == miClose) {
             getFrame().dispose();
-        } else if (e.getSource() == filesItem) {
-            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
-            viewedAndEditedFilesQL.show();
         }
     }
 
 
+    private final KeyListener mainKeyListener = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+            JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
+            if (menuItem != null) {
+                actionPerformed(new ActionEvent(menuItem, 0, null));
+                e.consume();
+                return;
+            }
+            super.keyPressed(e);
+        }
+    };
+
     /**
      * Set main component that will be listen key codes to fix issue with not workings menu accelerators
      *
-     * @param comp
-     * @param menuBar
+     * @param comp main component for listing
+     * @param menuBar menu bar
      */
     public void setMainKeyListener(Component comp, JMenuBar menuBar) {
         fillMenuKeyStrokes(menuBar);
-        comp.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
-                JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
-                if (menuItem != null) {
-                    actionPerformed(new ActionEvent(menuItem, 0, null));
-                    e.consume();
-                    return;
-                }
-                super.keyPressed(e);
-            }
-        });
+        comp.addKeyListener(mainKeyListener);
     }
+
+    private static boolean isProblemKey(KeyStroke keyStroke) {
+        if (keyStroke == null) {
+            return false;
+        }
+        int keyCode = keyStroke.getKeyCode();
+        return (keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) ||
+                (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN) ||
+                keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB;
+    }
+
+    private static boolean isProblemMenuItem(JMenuItem menuItem) {
+        return menuItem != null && isProblemKey(menuItem.getAccelerator());
+    }
+
 
     /**
      * Fills map for all keycodes that can be not processed properly in swing
      *
-     * @param menuBar
+     * @param menuBar menu bar
      */
-    protected void fillMenuKeyStrokes(JMenuBar menuBar) {
+    private void fillMenuKeyStrokes(JMenuBar menuBar) {
         menuKeyStrokes = new HashMap<>();
         for (int menuIndex = 0; menuIndex < menuBar.getMenuCount(); menuIndex++) {
             JMenu menu = menuBar.getMenu(menuIndex);
             for (int itemIndex = 0; itemIndex < menu.getItemCount(); itemIndex++) {
                 JMenuItem menuItem = menu.getItem(itemIndex);
-                if (menuItem == null) {
-                    continue;
-                }
-                KeyStroke keyStroke = menuItem.getAccelerator();
-                if (keyStroke == null) {
-                    continue;
-                }
-                int keyCode = keyStroke.getKeyCode();
-                if ((keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) || (keyCode >= KeyEvent.VK_LEFT && keyCode <= KeyEvent.VK_DOWN)
-                        || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB) {
-                    menuKeyStrokes.put(keyStroke, menuItem);
+                if (isProblemMenuItem(menuItem)) {
+                    menuKeyStrokes.put(menuItem.getAccelerator(), menuItem);
                 }
             }
         }
+    }
+
+    protected static String i18n(String key, String... params) {
+        return Translator.get(key, params);
     }
 }

@@ -25,7 +25,7 @@ public class CodeFormatException extends Exception {
     private final int line;
     private final int row;
 
-    public CodeFormatException(String message, int line, int row, Throwable cause) {
+    CodeFormatException(String message, int line, int row, Throwable cause) {
         super(message, cause);
         this.line = line;
         this.row = row;

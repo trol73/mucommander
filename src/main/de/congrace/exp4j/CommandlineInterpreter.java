@@ -23,7 +23,7 @@ package de.congrace.exp4j;
  * 
  * <pre>
  * java de.congrace.exp4j.CommandlineInterpreter "2 * log(2.2223) - ((2-3.221) * 14.232^2)"
- * > 248.91042049521056
+ * &gt; 248.91042049521056
  * </pre>
  * 
  * @author fas@congrace.de

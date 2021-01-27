@@ -3,6 +3,7 @@ package se.vidstige.jadb;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class Transport {
 
@@ -52,8 +53,8 @@ class Transport {
 //    }
 
     public void send(String command) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream, "utf-8");
-        byte[] data = command.getBytes("utf-8");
+        OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+        byte[] data = command.getBytes(StandardCharsets.UTF_8);
         writer.write(String.format("%04x", data.length));
         //writer.write(getCommandLength(command));
         writer.write(command);

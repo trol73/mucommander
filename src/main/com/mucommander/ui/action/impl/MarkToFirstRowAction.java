@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class MarkToFirstRowAction extends MarkBackwardAction {
 
-    MarkToFirstRowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkToFirstRowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -54,15 +54,23 @@ public class MarkToFirstRowAction extends MarkBackwardAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkToFirstRow";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_DOWN_MASK);
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkToFirstRowAction(mainFrame, properties);
 		}
     }

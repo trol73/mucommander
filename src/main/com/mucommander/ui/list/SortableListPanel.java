@@ -19,7 +19,7 @@
 package com.mucommander.ui.list;
 
 import com.mucommander.commons.collections.AlteredVector;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.button.ArrowButton;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ import java.awt.*;
  */
 public class SortableListPanel<E> extends JPanel {
 
-    private DynamicList<E> dynamicList;
+    private final DynamicList<E> dynamicList;
 
 
     /**

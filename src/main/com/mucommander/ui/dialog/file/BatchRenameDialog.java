@@ -23,7 +23,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.util.StringUtils;
 import com.mucommander.job.BatchRenameJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.BatchRenameAction;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -70,7 +69,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private static final int COL_CHANGED_NAME = 1;
     private static final int COL_CHANGE_BLOCK = 2;    
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     private JTextField edtFileNameMask;
     private JTable tblNames;
     private JButton btnRename;
@@ -92,19 +91,19 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private TableColumn colBlock;
 
     /** files to rename */
-    private FileSet files;
+    private final FileSet files;
 
     /** a map of old file names used to check for name conflicts */
-    private Map<String, AbstractFile> oldNames = new HashMap<>();
+    private final Map<String, AbstractFile> oldNames = new HashMap<>();
 
     /** a list of generated names */
-    private List<String> newNames = new ArrayList<>();
+    private final List<String> newNames = new ArrayList<>();
 
     /** a list of flags to block file rename */
-    private List<Boolean> blockNames = new ArrayList<>();
+    private final List<Boolean> blockNames = new ArrayList<>();
     
     /** a list of parsed tokens */
-    private List<AbstractToken> tokens = new ArrayList<>();
+    private final List<AbstractToken> tokens = new ArrayList<>();
 
 
 
@@ -145,14 +144,14 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         JPanel pnlButtons = new JPanel(new BorderLayout());
         pnlButtons.add(new JButton(getActRemove()), BorderLayout.WEST);
         XBoxPanel pnlButtonsRight = new XBoxPanel();
-        lblDuplicates = new JLabel(Translator.get("batch_rename_dialog.duplicate_names"));
+        lblDuplicates = new JLabel(i18n("batch_rename_dialog.duplicate_names"));
         lblDuplicates.setForeground(Color.red);
         lblDuplicates.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
         pnlButtonsRight.add(lblDuplicates);
-        btnRename = new JButton(Translator.get("rename"));
+        btnRename = new JButton(i18n("rename"));
         btnRename.addActionListener(this);
         pnlButtonsRight.add(btnRename);
-        btnClose = new JButton(Translator.get("cancel"));
+        btnClose = new JButton(i18n("cancel"));
         btnClose.addActionListener(this);
         pnlButtonsRight.add(btnClose);
         pnlButtons.add(pnlButtonsRight, BorderLayout.EAST);
@@ -201,7 +200,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                 }
             };
             actRemove.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-            actRemove.putValue(Action.NAME, Translator.get("remove"));
+            actRemove.putValue(Action.NAME, i18n("remove"));
         }
         return actRemove;
     }
@@ -227,11 +226,11 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
 
         // upper/lower case
         Vector<String> ulcase = new Vector<>();
-        ulcase.add(Translator.get("batch_rename_dialog.no_change"));
-        ulcase.add(Translator.get("batch_rename_dialog.lower_case"));
-        ulcase.add(Translator.get("batch_rename_dialog.upper_case"));
-        ulcase.add(Translator.get("batch_rename_dialog.first_upper"));
-        ulcase.add(Translator.get("batch_rename_dialog.word"));
+        ulcase.add(i18n("batch_rename_dialog.no_change"));
+        ulcase.add(i18n("batch_rename_dialog.lower_case"));
+        ulcase.add(i18n("batch_rename_dialog.upper_case"));
+        ulcase.add(i18n("batch_rename_dialog.first_upper"));
+        ulcase.add(i18n("batch_rename_dialog.word"));
         cbCase = new JComboBox<>(ulcase);
         cbCase.addActionListener(this);
 
@@ -260,27 +259,27 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         XBoxPanel pnlTop = new XBoxPanel();
         
         YBoxPanel pnl1 = new YBoxPanel();
-        pnl1.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.mask")));
+        pnl1.setBorder(BorderFactory.createTitledBorder(i18n("batch_rename_dialog.mask")));
         pnl1.add(edtFileNameMask);
         
         JPanel pnl1Btns = new JPanel(new GridLayout(3, 2));
 
-        btnName = new JButton("[N] - " + Translator.get("name"));
+        btnName = new JButton("[N] - " + i18n("name"));
         btnName.addActionListener(this);
         btnName.setHorizontalAlignment(SwingConstants.LEFT);
         pnl1Btns.add(btnName);
         
-        btnExtension = new JButton("[E] - " + Translator.get("extension"));
+        btnExtension = new JButton("[E] - " + i18n("extension"));
         btnExtension.addActionListener(this);
         btnExtension.setHorizontalAlignment(SwingConstants.LEFT);
         pnl1Btns.add(btnExtension);
 
-        btnNameRange = new JButton("[N#-#] - " + Translator.get("batch_rename_dialog.range"));
+        btnNameRange = new JButton("[N#-#] - " + i18n("batch_rename_dialog.range"));
         btnNameRange.addActionListener(this);
         btnNameRange.setHorizontalAlignment(SwingConstants.LEFT);
         pnl1Btns.add(btnNameRange);
         
-        btnCounter = new JButton("[C] - " + Translator.get("batch_rename_dialog.counter"));
+        btnCounter = new JButton("[C] - " + i18n("batch_rename_dialog.counter"));
         btnCounter.addActionListener(this);
         btnCounter.setHorizontalAlignment(SwingConstants.LEFT);
         pnl1Btns.add(btnCounter);
@@ -290,18 +289,18 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         pnlTop.add(pnl1);
         
         XAlignedComponentPanel pnl2 = new XAlignedComponentPanel(5);
-        pnl2.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.search_replace")));
-        pnl2.addRow(Translator.get("batch_rename_dialog.search_for"), edtSearchFor, 5);
-        pnl2.addRow(Translator.get("batch_rename_dialog.replace_with"),  edtReplaceWith, 5);
-        pnl2.addRow(Translator.get("batch_rename_dialog.upper_lower_case"), cbCase, 5);
-        pnl2.addRow(Translator.get("batch_rename_dialog.regexp"), cbRegExp, 5);
+        pnl2.setBorder(BorderFactory.createTitledBorder(i18n("batch_rename_dialog.search_replace")));
+        pnl2.addRow(i18n("batch_rename_dialog.search_for"), edtSearchFor, 5);
+        pnl2.addRow(i18n("batch_rename_dialog.replace_with"),  edtReplaceWith, 5);
+        pnl2.addRow(i18n("batch_rename_dialog.upper_lower_case"), cbCase, 5);
+        pnl2.addRow(i18n("batch_rename_dialog.regexp"), cbRegExp, 5);
         pnlTop.add(pnl2);
 
         XAlignedComponentPanel pnl3 = new XAlignedComponentPanel(5);
-        pnl3.setBorder(BorderFactory.createTitledBorder(Translator.get("batch_rename_dialog.counter") + " [C]"));
-        pnl3.addRow(Translator.get("batch_rename_dialog.start_at"), edtCounterStart, 5);
-        pnl3.addRow(Translator.get("batch_rename_dialog.step_by"), edtCounterStep, 5);
-        pnl3.addRow(Translator.get("batch_rename_dialog.format"), cbCounterDigits, 5);
+        pnl3.setBorder(BorderFactory.createTitledBorder(i18n("batch_rename_dialog.counter") + " [C]"));
+        pnl3.addRow(i18n("batch_rename_dialog.start_at"), edtCounterStart, 5);
+        pnl3.addRow(i18n("batch_rename_dialog.step_by"), edtCounterStep, 5);
+        pnl3.addRow(i18n("batch_rename_dialog.format"), cbCounterDigits, 5);
         pnlTop.add(pnl3);
 
         return pnlTop;
@@ -367,10 +366,10 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             names.add(newName);
         }            
         if (duplicates) {
-        	lblDuplicates.setText(Translator.get("batch_rename_dialog.duplicate_names"));
+        	lblDuplicates.setText(i18n("batch_rename_dialog.duplicate_names"));
         }
         if (oldNamesConflict) {
-        	lblDuplicates.setText(Translator.get("batch_rename_dialog.names_conflict"));
+        	lblDuplicates.setText(i18n("batch_rename_dialog.names_conflict"));
         }
         lblDuplicates.setVisible(duplicates || oldNamesConflict);
         btnRename.setEnabled(!duplicates && !oldNamesConflict);
@@ -596,7 +595,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         removeUnchangedFiles(false);
         // start rename job
         if (files.size() > 0) {
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame, files, newNames);
             progressDialog.start(job);
         }
@@ -742,11 +741,11 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         public String getColumnName(int column) {
             switch (column) {
             case COL_ORIG_NAME:
-                return Translator.get("batch_rename_dialog.old_name");
+                return i18n("batch_rename_dialog.old_name");
             case COL_CHANGED_NAME:
-                return Translator.get("batch_rename_dialog.new_name");
+                return i18n("batch_rename_dialog.new_name");
             case COL_CHANGE_BLOCK:
-                return Translator.get("batch_rename_dialog.block_name");
+                return i18n("batch_rename_dialog.block_name");
             }
             return "";
         }
@@ -1062,8 +1061,8 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      *
      */
     static class DateToken extends AbstractToken {
-        private NumberFormat year;
-        private NumberFormat digits2;
+        private final NumberFormat year;
+        private final NumberFormat digits2;
 
         DateToken(String token) {
             super(token);

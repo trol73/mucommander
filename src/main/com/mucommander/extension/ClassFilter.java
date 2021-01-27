@@ -22,7 +22,7 @@ package com.mucommander.extension;
  * Used to IMAGE_FILTER classes.
  * <p>
  * <code>ClassFilter</code> implementations are meant to be used in conjonction with {@link ClassFinder}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public interface ClassFilter {

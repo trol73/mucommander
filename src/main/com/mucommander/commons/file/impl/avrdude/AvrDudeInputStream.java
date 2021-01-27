@@ -53,12 +53,12 @@ public class AvrDudeInputStream extends InputStream implements HasProgress {
     }
 
     @Override
-    public int available() throws IOException {
+    public int available() {
         return data.available();
     }
 
     @Override
-    public synchronized void reset() throws IOException {
+    public synchronized void reset() {
         data.reset();
     }
 

@@ -19,10 +19,11 @@
 package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.util.FileComparator;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Enumerates and describes the different columns used in the {@link FileTable}.
@@ -39,21 +40,19 @@ public enum Column {
     OWNER("owner", true, false, FileComparator.OWNER_CRITERION, "ToggleOwnerColumn", "SortByOwner"),
     GROUP("group", true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
 
-    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<Integer,Column>(){{
-        for (Column column : Column.values()) {
-            put(column.ordinal(), column);
-        }
+    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<Integer, Column>(){{
+        Stream.of(Column.values()).forEach(column -> put(column.ordinal(), column));
     }};
 
     /** Standard minimum column width */
     private final static int STANDARD_MINIMUM_WIDTH = 2 * CellLabel.CELL_BORDER_WIDTH;
 
-    private String label;
-    private int minimumWidth;
-    private boolean showByDefault;
-    private int fileComparatorCriterion;
-    private String toggleActionId;
-    private String sortByActionId;
+    private final String label;
+    private final int minimumWidth;
+    private final boolean showByDefault;
+    private final int fileComparatorCriterion;
+    private final String toggleActionId;
+    private final String sortByActionId;
 
     Column(String labelId, boolean hasMinimumWidth, boolean showByDefault, int fileComparatorCriterion, String toggleActionId, String sortByActionId) {
         this.label = Translator.get(labelId);

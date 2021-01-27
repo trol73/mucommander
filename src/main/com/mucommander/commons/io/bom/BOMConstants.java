@@ -61,7 +61,7 @@ public interface BOMConstants {
     );
 
     /** List of supported BOMs */
-    BOM SUPPORTED_BOMS[] = new BOM[] {
+    BOM[] SUPPORTED_BOMS = new BOM[] {
         UTF8_BOM,
         UTF16_BE_BOM,
         UTF16_LE_BOM,

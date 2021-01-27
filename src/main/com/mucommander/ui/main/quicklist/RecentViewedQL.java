@@ -20,9 +20,9 @@ package com.mucommander.ui.main.quicklist;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.DummyFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.ShowRecentViewedFilesQLAction;
 import com.mucommander.ui.action.impl.ViewAction;
 import com.mucommander.ui.main.FolderPanel;
@@ -51,13 +51,13 @@ public class RecentViewedQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected Icon itemToIcon(AbstractFile item) {
-        return MuAction.getStandardIcon(ViewAction.class);
+        return TcAction.getStandardIcon(ViewAction.class);
     }
 
     @Override
     protected AbstractFile[] getData() {
         List<AbstractFile> list = TextFilesHistory.getInstance().getLastList(MAX_FILES_IN_LIST);
-        return list.toArray(new AbstractFile[list.size()]);
+        return list.toArray(new AbstractFile[0]);
     }
 
     @Override

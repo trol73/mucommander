@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.conf.Configuration;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.event.LocationAdapter;
 import com.mucommander.ui.event.LocationEvent;
 import com.mucommander.ui.main.FolderPanel;
@@ -42,7 +42,7 @@ import com.mucommander.ui.main.MainFrame;
  * and saves those locations, thus creating a global location history tracking.
  * 
  * <p>FolderHistory also keeps track of the last visited location so that it can be saved and recalled the next time the
- * application is started.</p>
+ * application is started.
  * 
  * @author Arik Hadas
  */
@@ -53,7 +53,7 @@ public class GlobalLocationHistory extends LocationAdapter {
 	private static GlobalLocationHistory instance;
 	
 	/** Locations that were accessed */
-	private Set<FileURL> history = new LinkedHashSet<>();
+	private final Set<FileURL> history = new LinkedHashSet<>();
 	
 	/** Maximum number of location that would be saved */
 	private static final int MAX_CAPACITY = 100;
@@ -62,16 +62,18 @@ public class GlobalLocationHistory extends LocationAdapter {
 	 * Private Constructor
 	 */
 	private GlobalLocationHistory() {
-		Configuration snapshot = MuConfigurations.getSnapshot();
+		Configuration snapshot = TcConfigurations.getSnapshot();
 
 		// Restore the global history from last init
-		int nbLocations = snapshot.getIntegerVariable(MuSnapshot.getRecentLocationsCountVariable());
-    	for (int i=0; i<nbLocations; ++i) {
-    		String filePath = snapshot.getVariable(MuSnapshot.getRecentLocationVariable(i));
+		int nbLocations = snapshot.getIntegerVariable(TcSnapshot.getRecentLocationsCountVariable());
+    	for (int i = 0; i < nbLocations; ++i) {
+    		String filePath = snapshot.getVariable(TcSnapshot.getRecentLocationVariable(i));
 			try {
 				history.add(FileURL.getFileURL(filePath));
 			} catch (MalformedURLException e) {
 				LOGGER.debug("Got invalid URL from the snapshot file: " + filePath, e);
+			} catch (Throwable t) {
+				LOGGER.debug("Can't process URL from the snapshot file: " + filePath, t);
 			}
     	}
 	}

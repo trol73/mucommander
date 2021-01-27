@@ -21,16 +21,16 @@ class LstArchiveEntryIterator implements ArchiveEntryIterator {
     private static final Logger LOGGER = LoggerFactory.getLogger(LstArchiveEntryIterator.class);
 
     /** Allows to read the LST archive line by line */
-    private BufferedReader br;
+    private final BufferedReader br;
 
     /** Parses LST-formatted dates */
-    private SimpleDateFormat lstDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm.ss");
+    private final SimpleDateFormat lstDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm.ss");
 
     /** The next entry to be returned by #nextEntry(), null if there is no more entry */
     private ArchiveEntry nextEntry;
 
     /** Base folder of all entries */
-    private String baseFolder;
+    private final String baseFolder;
 
     /** Current directory, used for parsing the LST file */
     private String currentDir = "";

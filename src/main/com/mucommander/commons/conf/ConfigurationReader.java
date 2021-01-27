@@ -27,20 +27,17 @@ import java.io.Reader;
  * Application writers that need to implement a specific configuration format need to subclass this.
  * Reader implementations have the task of parsing an input stream for configuration data and invoking the
  * relevant callback methods of {@link ConfigurationBuilder}.
- * </p>
  * <p>
  * The <code>com.mucommander.commons.conf</code> package comes with a default implementation,
  * {@link XmlConfigurationReader}, which handles the standard muCommander configuration file format.
- * </p>
  * <p>
  * In order for an implementation of <code>ConfigurationReader</code> to be usable by
  * {@link Configuration configuration} instances, it must come with an associated implementation of
  * {@link ConfigurationReaderFactory}.
- * </p>
  * <p>
  * In addition, most readers will have an associated writer used to write configuration files in a
  * format that the reader will understand.
- * </p>
+ *
  * @author Nicolas Rinaudo
  * @see    ConfigurationReaderFactory
  */
@@ -51,7 +48,7 @@ public interface ConfigurationReader {
      * When applicable, this method is expected to throw {@link ConfigurationFormatException format} exceptions rather
      * than {@link ConfigurationException configuration} exceptions. This will allow applications to report errors in a
      * way that is useful for users.
-     * </p>
+     *
      * @param in                      where to read the configuration information from.
      * @param builder                 where to send configuration messages to.
      * @throws IOException            if an I/O error occurs.

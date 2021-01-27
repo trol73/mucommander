@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,11 +18,14 @@
 
 package com.mucommander;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.ResourceLoader;
@@ -44,7 +47,7 @@ public class RuntimeConstants {
     public static final String LICENSE         = "/license.txt";
     /** Default muCommander theme. */
     public static final String DEFAULT_THEME   = "Native";
-
+    public static final boolean DISPLAY_4K = is4KDisplay();
 
 
     // - URLs ----------------------------------------------------------------------------------------------------------
@@ -88,16 +91,7 @@ public class RuntimeConstants {
     // - Initialisation ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     static {
-        Attributes attributes = null; // JAR file's manifest's attributes.
-        try (InputStream in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) {
-            if (in != null) {
-                Manifest manifest = new Manifest();
-                manifest.read(in);
-                attributes = manifest.getMainAttributes();
-            }
-        } catch (IOException e) {
-            LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
-        }
+        Attributes attributes = getManifestAttributes();
 
         if (attributes == null) {   // No MANIFEST.MF found, use default values.
             VERSION = "?";
@@ -108,15 +102,29 @@ public class RuntimeConstants {
             VERSION_URL  = HOMEPAGE_URL + "/version/version.xml";
             BUILD_NUMBER = "?";
         } else {    // A MANIFEST.MF file was found, extract data from it.
-            VERSION      = getAttribute(attributes, "Specification-Version");
+            VERSION = getAttribute(attributes, "Specification-Version");
             BUILD_DATE = getAttribute(attributes, "Build-Date");
-            VERSION_URL  = getAttribute(attributes, "Build-URL");
+            VERSION_URL = getAttribute(attributes, "Build-URL");
             BUILD_NUMBER = getAttribute(attributes, "Implementation-Version");
             // Protection against corrupt manifest files.
-            COPYRIGHT    = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
+            COPYRIGHT = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
 
         }
         APP_STRING = "trolCommander v" + VERSION;
+    }
+
+    @Nullable
+    private static Attributes getManifestAttributes() {
+        try (InputStream in = ResourceLoader.getResourceAsStream("META-INF/MANIFEST.MF", ResourceLoader.getDefaultClassLoader(), ResourceLoader.getRootPackageAsFile(RuntimeConstants.class))) {
+            if (in != null) {
+                Manifest manifest = new Manifest();
+                manifest.read(in);
+                return manifest.getMainAttributes();
+            }
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read MANIFEST.MF, default values will be used", e);
+        }
+        return null;
     }
 
     /**
@@ -129,4 +137,10 @@ public class RuntimeConstants {
         String buffer = attributes.getValue(name);
         return buffer == null ? "?" : buffer;
     }
+
+    private static boolean is4KDisplay() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        return screenSize.width*screenSize.height > 3500*3500;
+    }
+
 }

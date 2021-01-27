@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 public class TabWithoutHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	/** The component to be displayed in the tab */
-	private JComponent component;
+	private final JComponent component;
 
 	public TabWithoutHeaderViewer(TabsCollection<T> tabs, JComponent component) {
 		super(component, tabs);
@@ -50,8 +50,9 @@ public class TabWithoutHeaderViewer<T extends Tab> extends TabsViewer<T> {
 
 	@Override
 	public void add(T tab, int index) {
-		if (index > 0)
+		if (index > 0) {
 			throw new IllegalArgumentException("Unable to add tab at index > 0 to single tab display");
+		}
 		add(tab);
 	}
 

@@ -23,7 +23,7 @@ import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.core.LocalLocationHistory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.tabs.Tab;
 
 /**
@@ -80,11 +80,11 @@ public abstract class FileTableTab implements Tab {
 	 *  the tab's fixed title will be returned if such title was assigned,
 	 *  otherwise, a string representation will be created based on the tab's location:
 	 *    for local file, the filename will be returned ("/" in case the root folder is presented)
-	 *    for remote file, the returned pattern will be "\<host\>:\<filename\>"
+	 *    for remote file, the returned pattern will be "\&lt;host\&gt;:\&lt;filename\&gt;"
 	 * 
 	 * @return String representation of the tab
 	 */
-	public String getDisplayableTitle() {
+	String getDisplayableTitle() {
 		String title = getTitle();
 
 		return title != null ? title : createDisplayableTitleFromLocation(getLocation());
@@ -104,8 +104,9 @@ public abstract class FileTableTab implements Tab {
 
 	private String getFilenameRepresentation(String filename, boolean local) {
 		// Under for OSes with 'root drives' (Windows, OS/2), remove the leading '/' character
-		if (local && LocalFile.hasRootDrives() && filename != null)
+		if (local && LocalFile.hasRootDrives() && filename != null) {
 			return PathUtils.removeLeadingSeparator(filename, "/");
+		}
 		// Under other OSes, if the filename is empty return "/"
 		return filename == null ? "/" : filename;
 	}

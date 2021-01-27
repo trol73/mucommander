@@ -19,7 +19,6 @@ package com.mucommander.ui.viewer.text.search;
 
 import com.jidesoft.hints.ListDataIntelliHints;
 import com.mucommander.cache.TextHistory;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rtextarea.SearchContext;
@@ -83,7 +82,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
     /**
      * The "mark all" check box.
      */
-    protected JCheckBox markAllCheckBox;
+    private JCheckBox markAllCheckBox;
 
     /**
      * Folks listening for events in this dialog.
@@ -92,7 +91,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
 
 
 
-    public AbstractSearchDialog(Frame owner, String title, Component locationRelativeComp) {
+    AbstractSearchDialog(Frame owner, String title, Component locationRelativeComp) {
         super(owner, title, locationRelativeComp);
         init();
     }
@@ -106,11 +105,11 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         // Make a panel containing the option check boxes.
         pnlSearchConditions = new JPanel();
         pnlSearchConditions.setLayout(new BoxLayout(pnlSearchConditions, BoxLayout.Y_AXIS));
-        cbCaseSensitive = createCheckBox(Translator.get("text_viewer.find.case_sensitive"));
+        cbCaseSensitive = createCheckBox(i18n("text_viewer.find.case_sensitive"));
         pnlSearchConditions.add(cbCaseSensitive);
-        cbWholeWord = createCheckBox(Translator.get("text_viewer.find.whole_word"));
+        cbWholeWord = createCheckBox(i18n("text_viewer.find.whole_word"));
         pnlSearchConditions.add(cbWholeWord);
-        cbRegex = createCheckBox(Translator.get("text_viewer.find.regexp"));
+        cbRegex = createCheckBox(i18n("text_viewer.find.regexp"));
         pnlSearchConditions.add(cbRegex);
 
         // Initialize any text fields.
@@ -122,7 +121,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         new ListDataIntelliHints<>(edtText, history).setCaseSensitive(true);
 
         // Initialize other stuff.
-        btnCancel = new JButton(Translator.get("cancel"));
+        btnCancel = new JButton(i18n("cancel"));
         btnCancel.addActionListener(this);
 
 
@@ -132,11 +131,11 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         // Make a panel containing the "search up/down" radio buttons.
         pnlDirection = new JPanel();
         pnlDirection.setLayout(new BoxLayout(pnlDirection, BoxLayout.LINE_AXIS));
-        pnlDirection.setBorder(BorderFactory.createTitledBorder(Translator.get("text_viewer.find.direction")));
+        pnlDirection.setBorder(BorderFactory.createTitledBorder(i18n("text_viewer.find.direction")));
 
         ButtonGroup bg = new ButtonGroup();
-        rbUp = new JRadioButton(Translator.get("text_viewer.find.up"), false);
-        rbDown = new JRadioButton(Translator.get("text_viewer.find.down"), true);
+        rbUp = new JRadioButton(i18n("text_viewer.find.up"), false);
+        rbDown = new JRadioButton(i18n("text_viewer.find.down"), true);
         rbUp.addActionListener(this);
         rbDown.addActionListener(this);
         bg.add(rbUp);
@@ -145,7 +144,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         pnlDirection.add(rbDown);
 
         // Initialize the "mark all" button.
-        markAllCheckBox = createCheckBox(Translator.get("text_viewer.find.mark_all"));
+        markAllCheckBox = createCheckBox(i18n("text_viewer.find.mark_all"));
 
         // Rearrange the search conditions panel.
         pnlSearchConditions.removeAll();
@@ -161,9 +160,9 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         temp.add(markAllCheckBox);
         pnlSearchConditions.add(temp, BorderLayout.LINE_END);
 
-        lblFind = new JLabel(Translator.get("text_viewer.find_button") + ":");
+        lblFind = new JLabel(i18n("text_viewer.find_button") + ":");
 
-        btnFind = new JButton(Translator.get("text_viewer.find_button"));
+        btnFind = new JButton(i18n("text_viewer.find_button"));
         btnFind.addActionListener(this);
         btnFind.setDefaultCapable(true);
         btnFind.setEnabled(false);
@@ -351,7 +350,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
 
 
 
-    protected boolean matchesSearchFor(String text) {
+    boolean matchesSearchFor(String text) {
         if (text == null || text.isEmpty()) {
             return false;
         }
@@ -487,7 +486,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
      * @param event The <code>ActionEvent</code> object coming from a
      *        child component.
      */
-    protected void fireSearchEvent(ActionEvent event) {
+    void fireSearchEvent(ActionEvent event) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         SearchEvent e = null;

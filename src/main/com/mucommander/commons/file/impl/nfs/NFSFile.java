@@ -35,11 +35,11 @@ import java.io.OutputStream;
 public class NFSFile extends ProtocolFile {
 
     /** Underlying file instance */
-    private XFile file;
+    private final XFile file;
 
     private String absPath;
 
-    private FilePermissions permissions;
+    private final FilePermissions permissions;
 
     /** Caches the parent folder, initially null until getParent() gets called */
     private AbstractFile parent;
@@ -87,7 +87,7 @@ public class NFSFile extends ProtocolFile {
         // create the NFS URL used by XFile.
 
         // The general syntax for NFS URLs is : nfs://<host>:<port><url-path>, as specified by RFC 2054
-        // Additionaly, XFile allows some special flags to be used in the port part of the URL to specify connection
+        // Additionally, XFile allows some special flags to be used in the port part of the URL to specify connection
         // properties. Those flags must be placed after the port, and before the colon character delimiting the end of
         // the port part.
         // Here's the list of allowed flags (quoted from com.sun.nfs.NfsURL):
@@ -100,7 +100,7 @@ public class NFSFile extends ProtocolFile {
         //
         // The 'm' flag must be specified, otherwise regular NFS shares (i.e. non WebNFS-enabled ones) that don't
         // specify a public filehandle will fail. However, using this flag has two unfortunate consequences:
-        // - the NFS version fails to be properly negociated as it normally does (try v3 then fall back on v2): the
+        // - the NFS version fails to be properly negotiated as it normally does (try v3 then fall back on v2): the
         //  NFS version must be specified in the URL.
         // - an extra slash character must be added before the path part, otherwise it is considered as relative to
         //  the public filehandle and will thus fail to resolve.
@@ -109,8 +109,9 @@ public class NFSFile extends ProtocolFile {
 
         // Determines the NFS version (v2 or v3) to be used, based on the version property
         String nfsVersion = fileURL.getProperty(NFS_VERSION_PROPERTY_NAME);
-        if(nfsVersion==null)
+        if (nfsVersion == null) {
             nfsVersion = DEFAULT_NFS_VERSION;
+        }
 
         // Determines the NFS transport protocol (Auto, TCP or UDP) to be used, based on the protocol property
         String nfsProtocol = fileURL.getProperty(NFS_PROTOCOL_PROPERTY_NAME);
@@ -118,7 +119,7 @@ public class NFSFile extends ProtocolFile {
 
         // Omit port part if none is contained in the FileURL or if it is 2049
         int port = fileURL.getPort();
-        String portString = port==-1||port==2049?"":""+port;
+        String portString = port < 0 || port == 2049 ? "" : ""+port;
 
         // create the XFile instance with the weird NFS url
         this.file = new XFile("nfs://"+fileURL.getHost()+":"+portString+nfsVersion+nfsProtocol+"m"+"/"+fileURL.getPath());
@@ -131,10 +132,6 @@ public class NFSFile extends ProtocolFile {
         this.permissions = new NFSFilePermissions(file);
     }
 
-
-    /////////////////////////////////////////
-    // AbstractFile methods implementation //
-    /////////////////////////////////////////
 
     @Override
     public long getLastModifiedDate() {
@@ -163,11 +160,10 @@ public class NFSFile extends ProtocolFile {
         // Retrieve parent AbstractFile and cache it
         if (!parentValueSet) {
             FileURL parentURL = getURL().getParent();
-            if(parentURL != null) {
+            if (parentURL != null) {
                 parent = FileFactory.getFile(parentURL);
                 // Note: parent may be null if it can't be resolved
             }
-
             parentValueSet = true;
         }
         return parent;
@@ -302,8 +298,9 @@ public class NFSFile extends ProtocolFile {
     public void delete() throws IOException {
         boolean ret = file.delete();
 
-        if(!ret)
+        if (!ret) {
             throw new IOException();
+        }
     }
 
     /**
@@ -316,8 +313,9 @@ public class NFSFile extends ProtocolFile {
         checkRenamePrerequisites(destFile, true, false);
 
         // Rename file
-        if(!file.renameTo(((NFSFile)destFile).file))
+        if (!file.renameTo(((NFSFile)destFile).file)) {
             throw new IOException();
+        }
     }
 
     /**
@@ -367,13 +365,9 @@ public class NFSFile extends ProtocolFile {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public AbstractFile[] ls(FilenameFilter filenameFilter) throws IOException {
-        String names[] = file.list();
+        String[] names = file.list();
 
         if (names == null) {
             throw new IOException();
@@ -383,14 +377,14 @@ public class NFSFile extends ProtocolFile {
             names = filenameFilter.filter(names);
         }
 
-        AbstractFile children[] = new AbstractFile[names.length];
+        AbstractFile[] children = new AbstractFile[names.length];
         FileURL childURL;
         String baseURLPath = fileURL.getPath();
         if (!baseURLPath.endsWith("/")) {
             baseURLPath += SEPARATOR;
         }
 
-        for (int i=0; i<names.length; i++) {
+        for (int i = 0; i < names.length; i++) {
             // Clone this file's URL with the connection properties and set the child file's path
             childURL = (FileURL)fileURL.clone();
             childURL.setPath(baseURLPath+names[i]);
@@ -403,18 +397,14 @@ public class NFSFile extends ProtocolFile {
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     /**
      * NFSRandomAccessInputStream extends RandomAccessInputStream to provide random read access to an NFSFile.
      */
     public static class NFSRandomAccessInputStream extends RandomAccessInputStream {
 
-        private XRandomAccessFile raf;
+        private final XRandomAccessFile raf;
 
-        public NFSRandomAccessInputStream(XRandomAccessFile raf) {
+        NFSRandomAccessInputStream(XRandomAccessFile raf) {
             this.raf = raf;
         }
 
@@ -424,7 +414,7 @@ public class NFSFile extends ProtocolFile {
         }
 
         @Override
-        public int read(byte b[], int off, int len) throws IOException {
+        public int read(byte[] b, int off, int len) throws IOException {
             return raf.read(b, off, len);
         }
 
@@ -454,9 +444,9 @@ public class NFSFile extends ProtocolFile {
      */
     public static class NFSRandomAccessOutputStream extends RandomAccessOutputStream {
 
-        private XRandomAccessFile raf;
+        private final XRandomAccessFile raf;
 
-        public NFSRandomAccessOutputStream(XRandomAccessFile raf) {
+        NFSRandomAccessOutputStream(XRandomAccessFile raf) {
             this.raf = raf;
         }
 
@@ -466,12 +456,12 @@ public class NFSFile extends ProtocolFile {
         }
 
         @Override
-        public void write(byte b[]) throws IOException {
+        public void write(byte[] b) throws IOException {
             raf.write(b);
         }
 
         @Override
-        public void write(byte b[], int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) throws IOException {
             raf.write(b, off, len);
         }
 
@@ -504,11 +494,13 @@ public class NFSFile extends ProtocolFile {
         public void setLength(long newLength) throws IOException {
             // This operation is supported only if the new length is greater (or equal) than the current length
             long currentLength = getLength();
-            if(newLength<currentLength)
+            if (newLength < currentLength) {
                 throw new IOException();
+            }
 
-            if(newLength==currentLength)
+            if (newLength == currentLength) {
                 return;
+            }
 
             // Extend the file's length by seeking to the end and writing a byte
             seek(newLength-1);
@@ -522,22 +514,23 @@ public class NFSFile extends ProtocolFile {
      */
     private static class NFSFilePermissions extends IndividualPermissionBits implements FilePermissions {
 
-        private XFile file;
+        private final XFile file;
 
         private final static PermissionBits MASK = new GroupedPermissionBits(384);  // rw------- (300 octal)
 
-        public NFSFilePermissions(XFile file) {
+        NFSFilePermissions(XFile file) {
             this.file = file;
         }
 
         public boolean getBitValue(int access, int type) {
-            if(access!= USER_ACCESS)
+            if (access != USER_ACCESS) {
                 return false;
-
-            if(type==READ_PERMISSION)
+            }
+            if (type == READ_PERMISSION) {
                 return file.canRead();
-            else if(type==WRITE_PERMISSION)
+            } else if(type == WRITE_PERMISSION) {
                 return file.canWrite();
+            }
 
             return false;
         }

@@ -524,7 +524,7 @@ public class CharsetDetector {
                 csnames.add(rcinfo.recognizer.getName());
             }
         }
-        return csnames.toArray(new String[csnames.size()]);
+        return csnames.toArray(new String[0]);
     }
 
     /**

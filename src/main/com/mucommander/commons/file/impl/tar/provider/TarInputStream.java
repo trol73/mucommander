@@ -12,10 +12,9 @@ import java.io.InputStream;
  * the archive, and the read each entry as a normal input stream
  * using read().
  *
- * <p>-----------------------------------</p>
  * <p>This class is based off the <code>org.apache.tools.tar</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.1 of Ant.</p>
+ * file. It was forked at version 1.7.1 of Ant.
  * 
  * @author Apache Ant, Maxence Bernard
  */
@@ -144,10 +143,9 @@ public class TarInputStream extends InputStream {
      * bytes are left in the current entry in the archive.
      *
      * @return The number of available bytes for the current entry.
-     * @throws IOException for signature
      */
     @Override
-    public int available() throws IOException {
+    public int available() {
         if (entrySize - entryOffset > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
         }

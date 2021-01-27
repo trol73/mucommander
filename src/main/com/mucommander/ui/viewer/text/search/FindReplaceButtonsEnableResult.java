@@ -29,7 +29,7 @@ class FindReplaceButtonsEnableResult {
     private boolean enable;
     private String error;
 
-    public FindReplaceButtonsEnableResult(boolean enable, String error) {
+    FindReplaceButtonsEnableResult(boolean enable, String error) {
         this.enable = enable;
         this.error = error;
     }

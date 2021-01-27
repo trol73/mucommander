@@ -17,8 +17,8 @@
  */
 package com.mucommander.ui.main.statusbar;
 
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.border.MutableLineBorder;
 import com.mucommander.ui.theme.*;
 
@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import static com.mucommander.ui.theme.ThemeManager.*;
 /**
  * This label displays the amount of free and/or total space on a volume.
  */
@@ -50,12 +51,12 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
     VolumeSpaceLabel() {
         super("");
         setHorizontalAlignment(CENTER);
-        backgroundColor = ThemeManager.getCurrentColor(Theme.STATUS_BAR_BACKGROUND_COLOR);
-        //            borderColor     = ThemeManager.getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR);
-        okColor         = ThemeManager.getCurrentColor(Theme.STATUS_BAR_OK_COLOR);
-        warningColor    = ThemeManager.getCurrentColor(Theme.STATUS_BAR_WARNING_COLOR);
-        criticalColor   = ThemeManager.getCurrentColor(Theme.STATUS_BAR_CRITICAL_COLOR);
-        setBorder(new MutableLineBorder(ThemeManager.getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR)));
+        backgroundColor = getCurrentColor(Theme.STATUS_BAR_BACKGROUND_COLOR);
+        //borderColor     = getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR);
+        okColor = getCurrentColor(Theme.STATUS_BAR_OK_COLOR);
+        warningColor = getCurrentColor(Theme.STATUS_BAR_WARNING_COLOR);
+        criticalColor = getCurrentColor(Theme.STATUS_BAR_CRITICAL_COLOR);
+        setBorder(new MutableLineBorder(getCurrentColor(Theme.STATUS_BAR_BORDER_COLOR)));
         ThemeManager.addCurrentThemeListener(this);
     }
 
@@ -72,6 +73,18 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
         this.totalSpace = totalSpace;
 
         // Set new label's text
+        setText(getVolumeInfo());
+
+        // Set tooltip
+        if (freeSpace < 0 || totalSpace < 0) {
+            setToolTipText(null);       // Removes any previous tooltip
+        } else {
+            setToolTipText((int) (100 * freeSpace / (float) totalSpace) + "%");
+        }
+        repaint();
+    }
+
+    private String getVolumeInfo() {
         String volumeInfo;
         if (freeSpace >= 0) {
             volumeInfo = SizeFormat.format(freeSpace, VOLUME_INFO_SIZE_FORMAT);
@@ -85,15 +98,7 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
         } else {
             volumeInfo = "";
         }
-        setText(volumeInfo);
-
-        // Set tooltip
-        if (freeSpace < 0 || totalSpace < 0) {
-            setToolTipText(null);       // Removes any previous tooltip
-        } else {
-            setToolTipText((int) (100 * freeSpace / (float) totalSpace) + "%");
-        }
-        repaint();
+        return volumeInfo;
     }
 
 
@@ -114,12 +119,17 @@ class VolumeSpaceLabel extends JLabel implements ThemeListener {
      * @param percent distance between c1 and c2, comprised between 0 and 1.
      * @return an interpolated color value, located at percent between c1 and c2 in the RGB space.
      */
-    private Color interpolateColor(Color c1, Color c2, float percent) {
+    private static Color interpolateColor(Color c1, Color c2, float percent) {
         return new Color(
-                (int)(c1.getRed()+(c2.getRed()-c1.getRed())*percent),
-                (int)(c1.getGreen()+(c2.getGreen()-c1.getGreen())*percent),
-                (int)(c1.getBlue()+(c2.getBlue()-c1.getBlue())*percent)
+                interpolate(c1.getRed(), c2.getRed(), percent),
+                interpolate(c1.getGreen(), c2.getGreen(), percent),
+                interpolate(c1.getBlue(), c2.getBlue(), percent)
         );
+    }
+
+
+    private static int interpolate(int v1, int v2, float percent) {
+        return v1 + (int)((v2 - v1) * percent);
     }
 
     @Override

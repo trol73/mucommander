@@ -23,8 +23,8 @@ import java.io.OutputStream;
 public class S3Object extends S3File {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Object.class);
 
-    private String bucketName;
-    private S3ObjectFileAttributes atts;
+    private final String bucketName;
+    private final S3ObjectFileAttributes atts;
 
     /** Maximum size of an S3 object (5GB) */
     private final static long MAX_OBJECT_SIZE = 5368709120l;
@@ -51,7 +51,7 @@ public class S3Object extends S3File {
     private String getObjectKey() {
         String urlPath = fileURL.getPath();
         // Strip out the bucket name from the path
-        return urlPath.substring(bucketName.length()+2, urlPath.length());
+        return urlPath.substring(bucketName.length()+2);
     }
 
     private String getObjectKey(boolean wantTrailingSeparator) {
@@ -86,27 +86,18 @@ public class S3Object extends S3File {
             // Close the InputStream, no matter what
             try {
                 in.close();
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Do not re-throw the exception to prevent exceptions caught in the catch block from being replaced
             }
         }
     }
 
 
-    ///////////////////////////
-    // S3File implementation //
-    ///////////////////////////
-
     @Override
     public FileAttributes getFileAttributes() {
         return atts;
     }
 
-
-    /////////////////////////////////
-    // ProtocolFile implementation //
-    /////////////////////////////////
 
     @Override
     public String getOwner() {
@@ -141,8 +132,9 @@ public class S3Object extends S3File {
     @Override
     public void delete() throws IOException {
         // Note: DELETE on a non-existing resource is a successful request, so we need this check
-        if(!exists())
+        if (!exists()) {
             throw new IOException();
+        }
 
         try {
             // Make sure that the directory is empty, abort if not.
@@ -157,8 +149,7 @@ public class S3Object extends S3File {
             atts.setExists(false);
             atts.setDirectory(false);
             atts.setSize(0);
-        }
-        catch(S3ServiceException e) {
+        } catch(S3ServiceException e) {
             throw getIOException(e);
         }
     }
@@ -304,10 +295,6 @@ public class S3Object extends S3File {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
     }
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public void copyStream(InputStream in, boolean append, long length) throws FileTransferException {
         if (append) {
@@ -319,10 +306,9 @@ public class S3Object extends S3File {
 
         // If the length is known, we can upload the object directly without having to go through the tedious process
         // of copying the stream to a temporary file.
-        if(length>=0) {
+        if (length>=0) {
             putObject(in, length);
-        }
-        else {
+        } else {
             // Copy the stream to a temporary file so that we can know the object's length, which has to be declared
             // in the PUT request's headers (that is before the transfer is started).
             final AbstractFile tempFile;
@@ -356,8 +342,7 @@ public class S3Object extends S3File {
                 }
 
                 putObject(tempIn, tempFile.getSize());
-            }
-            finally {
+            } finally {
                 // Delete the temporary file, no matter what.
                 try {
                     tempFile.delete();
@@ -382,12 +367,11 @@ public class S3Object extends S3File {
      * requested to an offset that is less than 6666 bytes away from the current position going forward, the bytes
      * separating the current position to the new one are skipped (read and discarded), instead of closing the current
      * stream and opening a new one (which would cost 1 GET request). Doing so is cheaper (in $$$) and probably faster.
-     * </p>
      */
     private class S3ObjectRandomAccessInputStream extends RandomAccessInputStream {
 
         /** Length of the S3 object */
-        private long length;
+        private final long length;
 
         /** Current offset in the object stream */
         private long offset;
@@ -413,25 +397,25 @@ public class S3Object extends S3File {
          */
         private synchronized void openStream(long offset) throws IOException {
             // Nothing to do if the requested offset is the current offset
-            if(in!=null && this.offset==offset)
+            if (in != null && this.offset == offset) {
                 return;
+            }
 
             // If there is an open connection and the offset to reach is located between the current offset and
             // SKIP_SIZE, move to the said offset by skipping the difference instead of closing the connection and
             // opening a new one:
-            if(in!=null && offset>this.offset && offset-this.offset< SKIP_BYTE_SIZE) {
+            if (in != null && offset > this.offset && offset - this.offset < SKIP_BYTE_SIZE) {
                 byte[] skipBuf = BufferPool.getByteArray(SKIP_BYTE_SIZE);    // Use a constant buffer size to always reuse the same instance
                 try {
                     StreamUtils.readFully(in, skipBuf, 0, (int)(offset-this.offset));
                     this.offset = offset;
-                }
-                finally {
+                } finally {
                     BufferPool.releaseByteArray(skipBuf);
                 }
             }
             // If not, close the current connection
             else {
-                if(in!=null) {
+                if (in != null) {
                     try {
                         in.close();
                     }
@@ -445,47 +429,44 @@ public class S3Object extends S3File {
                     this.in = service.getObject(bucketName, getObjectKey(false), null, null, null, null, offset, null)
                         .getDataInputStream();
                     this.offset = offset;
-                }
-                catch(S3ServiceException e) {
+                } catch(S3ServiceException e) {
                     throw getIOException(e);
                 }
             }
         }
 
 
-        ////////////////////////////////////////////
-        // RandomAccessInputStream implementation //
-        ////////////////////////////////////////////
-
         @Override
         public synchronized int read(byte[] b, int off, int len) throws IOException {
-            if(in==null)
+            if (in == null) {
                 openStream(0);
+            }
 
             int nbRead = in.read(b, off, len);
-            if(nbRead>0)
+            if (nbRead > 0) {
                 offset += nbRead;
+            }
 
             return nbRead;
         }
 
         @Override
         public synchronized int read() throws IOException {
-            if(in==null)
+            if (in == null) {
                 openStream(0);
-
+            }
             int i = in.read();
-            if(i!=-1)
+            if (i != -1) {
                 offset++;
-
+            }
             return i;
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return length;
         }
 
-        public synchronized long getOffset() throws IOException {
+        public synchronized long getOffset() {
             return offset;
         }
 
@@ -495,12 +476,11 @@ public class S3Object extends S3File {
 
         @Override
         public synchronized void close() throws IOException {
-            if(in!=null) {
+            if (in != null) {
                 try {
                     in.close();
                     // Let the IOException be thrown
-                }
-                finally {
+                } finally {
                     // Further attempts to close the stream will be no-ops
                     in = null;
                     offset = 0;
@@ -513,7 +493,7 @@ public class S3Object extends S3File {
 //     * Reads an S3 object block by block. Each block is read by issuing a GET request with a specified Range.
 //     *
 //     * <p>Note: A GET request on Amazon S3 costs the equivalent of 6KB of data transferred. Setting the block size too
-//     * low will cause extra requests to be performed. Setting it too high will cause extra data to be transferred.</p>
+//     * low will cause extra requests to be performed. Setting it too high will cause extra data to be transferred.
 //     */
 //    private class S3ObjectRandomAccessInputStream extends BlockRandomInputStream {
 //
@@ -592,7 +572,7 @@ public class S3Object extends S3File {
             updateExpirationDate(); // declare the attributes as 'fresh'
         }
 
-        private S3ObjectFileAttributes(org.jets3t.service.model.S3Object object) throws AuthException {
+        private S3ObjectFileAttributes(org.jets3t.service.model.S3Object object) {
             super(TTL, false);      // no initial update
 
             setAttributes(object);
@@ -616,8 +596,7 @@ public class S3Object extends S3File {
                 setAttributes(service.getObjectDetails(bucketName, getObjectKey(), null, null, null, null));
                 // Object does not exist on the server
                 setExists(true);
-            }
-            catch(S3ServiceException e) {
+            } catch(S3ServiceException e) {
                 // Object does not exist on the server, or could not be retrieved
                 setExists(false);
 
@@ -632,16 +611,12 @@ public class S3Object extends S3File {
         }
 
 
-        /////////////////////////////////////////
-        // SyncedFileAttributes implementation //
-        /////////////////////////////////////////
 
         @Override
         public void updateAttributes() {
             try {
                 fetchAttributes();
-            }
-            catch(Exception e) {        // AuthException
+            } catch(Exception e) {        // AuthException
                 LOGGER.info("Failed to update attributes", e);
             }
         }

@@ -13,8 +13,9 @@ import net.sf.sevenzipjbinding.ArchiveFormat;
 
 public class ZFormatProvider implements ArchiveFormatProvider {
 
-    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(
-            new String[] { ".z" });
+    private static final String[] EXTENSIONS = { ".z" };
+
+    private final static ExtensionFilenameFilter FILENAME_FILTER = new ExtensionFilenameFilter(EXTENSIONS);
 
     private final static byte[] SIGNATURE = {0x1F, (byte) 0x9D};
 
@@ -26,6 +27,11 @@ public class ZFormatProvider implements ArchiveFormatProvider {
     @Override
     public FilenameFilter getFilenameFilter() {
         return FILENAME_FILTER;
+    }
+
+    @Override
+    public String[] getFileExtensions() {
+        return EXTENSIONS;
     }
 
 }

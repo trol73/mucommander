@@ -23,7 +23,6 @@ import com.mucommander.commons.file.FileOperation;
 import com.mucommander.commons.file.UnsupportedFileOperationException;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.ChangeFileAttributesJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ChangeReplicationAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -48,12 +47,12 @@ import java.awt.event.ActionListener;
  */
 public class ChangeReplicationDialog extends JobDialog implements ActionListener {
 
-    private IntTextField replication;
+    private final IntTextField replication;
 
-    private JCheckBox recurseDirCheckBox;
+    private final JCheckBox cbRecurseDir;
 
-    private JButton okButton;
-    private JButton cancelButton;
+    private final JButton btnOk;
+    private final JButton btnCancel;
 
 
     public ChangeReplicationDialog(MainFrame mainFrame, FileSet files) {
@@ -76,37 +75,37 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
         replication  = new IntTextField(lastReplication, 2);
 
         JPanel tempPanel = new FluentPanel(new FlowLayout(FlowLayout.LEFT));
-        tempPanel.add(new JLabel(Translator.get("replication.number")));
+        tempPanel.add(new JLabel(i18n("replication.number")));
         tempPanel.add(replication);
         mainPanel.add(tempPanel);
 
         mainPanel.addSpace(10);
 
-        recurseDirCheckBox = new JCheckBox(Translator.get("recurse_directories"));
-        mainPanel.add(recurseDirCheckBox);
+        cbRecurseDir = new JCheckBox(i18n("recurse_directories"));
+        mainPanel.add(cbRecurseDir);
 
         mainPanel.addSpace(15);
 
         // create file details button and OK/cancel buttons and lay them out a single row
         JPanel fileDetailsPanel = createFileDetailsPanel();
 
-        okButton = new JButton(Translator.get("change"));
-        cancelButton = new JButton(Translator.get("cancel"));
+        btnOk = new JButton(i18n("change"));
+        btnCancel = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(createFileDetailsButton(fileDetailsPanel),
-                DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this)));
         mainPanel.add(fileDetailsPanel);
 
         getContentPane().add(mainPanel, BorderLayout.NORTH);
 
         if (!canChangeReplication) {
             replication.setEnabled(false);
-            recurseDirCheckBox.setEnabled(false);
-            okButton.setEnabled(false);
+            cbRecurseDir.setEnabled(false);
+            btnOk.setEnabled(false);
         }
 
-        getRootPane().setDefaultButton(canChangeReplication?okButton:cancelButton);
-        setInitialFocusComponent(canChangeReplication?replication:cancelButton);
+        getRootPane().setDefaultButton(canChangeReplication? btnOk : btnCancel);
+        setInitialFocusComponent(canChangeReplication?replication: btnCancel);
         setResizable(true);
     }
 
@@ -118,27 +117,23 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton) {
+        if (source == btnOk) {
             dispose();
 
             // Change replication
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("progress_dialog.processing_files"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             ChangeFileAttributesJob job = new ChangeFileAttributesJob(progressDialog, mainFrame, files,
                     (short)replication.getValue(),
-                recurseDirCheckBox.isSelected());
+                cbRecurseDir.isSelected());
             progressDialog.start(job);
-        } else if (source == cancelButton) {
+        } else if (source == btnCancel) {
             dispose();
         }
     }
 
 
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
-
-    class IntTextField extends JTextField {
-        public IntTextField(int defval, int size) {
+    static class IntTextField extends JTextField {
+        IntTextField(int defval, int size) {
             super("" + defval, size);
         }
 
@@ -164,18 +159,16 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
         }
 
         class IntTextDocument extends PlainDocument {
-            public void insertString(int offs, String str, AttributeSet a)
-                    throws BadLocationException {
-                if (str == null)
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                if (str == null) {
                     return;
+                }
                 String oldString = getText(0, getLength());
-                String newString = oldString.substring(0, offs) + str
-                        + oldString.substring(offs);
+                String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
                 try {
                     Integer.parseInt(newString + "0");
                     super.insertString(offs, str, a);
-                } catch (NumberFormatException e) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
     }

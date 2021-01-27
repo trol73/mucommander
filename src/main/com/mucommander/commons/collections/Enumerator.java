@@ -27,42 +27,47 @@ import java.util.NoSuchElementException;
  * @author Nicolas Rinaudo
  */
 public class Enumerator<T> implements Iterator<T> {
-    // - Instance variables ----------------------------------------------------
-    // -------------------------------------------------------------------------
+
     /** Enumeration wrapped by this <code>Enumerator</code>. */
-    private Enumeration<T> enumeration;
+    private final Enumeration<T> enumeration;
 
 
-
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a new enumerator from the specified enumeration.
      * @param e enumeration that needs to be treated as an iterator.
      */
-    public Enumerator(Enumeration<T> e) {enumeration = e;}
+    public Enumerator(Enumeration<T> e) {
+        enumeration = e;
+    }
 
 
 
-    // - Iterator methods ------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the iterator has more elements.
      * (In other words, returns <code>true</code> if {@link #next() next} would return an element rather than throwing an exception.)
      * @return <code>true</code> if the iterator has more elements, <code>false</code> otherwise.
      */
-    public boolean hasNext() {return enumeration.hasMoreElements();}
+    @Override
+    public boolean hasNext() {
+        return enumeration.hasMoreElements();
+    }
 
     /**
      * Returns the next element in the iteration.
      * @return                        the next element in the iteration.
      * @throws NoSuchElementException if there is no next element in the iteration.
      */
-    public T next() throws NoSuchElementException {return enumeration.nextElement();}
+    @Override
+    public T next() throws NoSuchElementException {
+        return enumeration.nextElement();
+    }
 
     /**
      * Operation not supported.
      * @throws UnsupportedOperationException whenever this method is called.
      */
-    public void remove() {throw new UnsupportedOperationException();}
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -26,8 +26,6 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class MutableLineBorder extends LineBorder {
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a line border with the specified color and a thickness = 1.
      * @param color the color of the border.
@@ -51,8 +49,6 @@ public class MutableLineBorder extends LineBorder {
 
 
 
-    // - Setters -------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Sets this border's color.
      * @param color the color of the border.

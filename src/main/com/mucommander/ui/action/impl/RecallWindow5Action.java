@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class RecallWindow5Action extends RecallWindowAction {
 
-    RecallWindow5Action(MainFrame mainFrame, Map<String, Object> properties) {
+    private RecallWindow5Action(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties, 5);
     }
 
@@ -42,7 +42,7 @@ public class RecallWindow5Action extends RecallWindowAction {
             super(5);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RecallWindow5Action(mainFrame, properties);
         }
     }

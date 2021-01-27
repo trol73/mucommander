@@ -22,6 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -37,7 +38,8 @@ public class TextHistory {
         TEXT_SEARCH("search-text.history"),
         HEX_DATA_SEARCH("search-hex.history"),
         FILE_NAME("search-files.history"),
-        CALCULATOR("calculator.history");
+        CALCULATOR("calculator.history"),
+        EDITOR_BOOKMARKS("editor.bookmarks");
 
         private final String fileName;
         Type(String fileName) {
@@ -106,9 +108,12 @@ public class TextHistory {
     }
 
 
-    private LinkedList<String> load(AbstractFile file) throws IOException {
+    private LinkedList<String> load(AbstractFile file) {
         LinkedList<String> result = new LinkedList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF8"))) {
+        if (!file.exists()) {
+            return result;
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ( (line = reader.readLine() ) != null) {
                 String trim = line.trim();
@@ -124,7 +129,7 @@ public class TextHistory {
     }
 
     private void save(AbstractFile file, List<String> list) throws  IOException {
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), "UTF8"))) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8))) {
             for (String s : list) {
                 writer.write(s);
                 writer.write('\n');
@@ -136,11 +141,11 @@ public class TextHistory {
      * Returns the path to the history file.
      * <p>
      * Will return the default, system dependant bookmarks file.
-     * </p>
+     *
      * @return             the path to the bookmark file.
      * @throws java.io.IOException if there was a problem locating the default history file.
      */
-    private static synchronized AbstractFile getHistoryFile(Type type) throws IOException {
+    public static synchronized AbstractFile getHistoryFile(Type type) throws IOException {
         return PlatformManager.getPreferencesFolder().getChild(type.fileName);
     }
 

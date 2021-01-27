@@ -20,15 +20,15 @@ package com.mucommander.job.progress;
 
 import com.mucommander.job.FileJob;
 import com.mucommander.job.TransferFileJob;
-import com.mucommander.text.DurationFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.DurationFormat;
+import com.mucommander.utils.text.Translator;
 
 /**
  * Contains information about job progress.
  *
  */
 public class JobProgress {
-	private FileJob job;
+	private final FileJob job;
 	private TransferFileJob transferFileJob;
 
 	private long effectiveJobTime;
@@ -65,7 +65,7 @@ public class JobProgress {
 	 * 			 <code>true</code> update all information about processed file.<br/>
 	 * 			 <code>false</code> update only label of a processed file.<br/>
 	 * 		     Note that if a job has just finished this flag is ignored 
-	 * 			 and all variables are recalulated.
+	 * 			 and all variables are recalculated.
 	 * @return <code>true</code> if full job progress has been updated,
 	 *         <code>false</code> if only label has been updated.
 	 */

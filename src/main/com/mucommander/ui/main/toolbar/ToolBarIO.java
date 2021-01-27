@@ -150,7 +150,10 @@ public abstract class ToolBarIO extends DefaultHandler {
      * @param file path to the toolbar descriptor file
      */
     private static void setDescriptionFile(File file) throws FileNotFoundException {
-        setDescriptionFile(FileFactory.getFile(file.getAbsolutePath()));
+        AbstractFile descriptionFile = FileFactory.getFile(file.getAbsolutePath());
+        if (descriptionFile != null) {
+            setDescriptionFile(descriptionFile);
+        }
     }
 
 

@@ -101,10 +101,6 @@ public abstract class LRUCache<K, V> {
     }
 
 
-    ///////////////////////
-    // Abstract methods //
-    ///////////////////////
-
     /**
      * Returns the cached object value corresponding to the given key and marks the cached item as the most
      * recently used one.
@@ -164,10 +160,6 @@ public abstract class LRUCache<K, V> {
     public abstract int size();
 
 
-    //////////////////
-    // Test methods //
-    //////////////////
-
     /**
      * Tests this LRUCache for corruption and throws a RuntimeException if something is wrong.
      */
@@ -179,7 +171,7 @@ public abstract class LRUCache<K, V> {
      *
      * @param args command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         LRUCache<Integer, Integer> cache;
         /*
         // Simple test case
@@ -217,7 +209,7 @@ public abstract class LRUCache<K, V> {
         Random random = new Random();
         for (int i=0; i<100000; i++) {
             // 50% chance to add a new element with a random value and expiration date (50% chance for no expiration date)
-            if (cache.size()==0 || random.nextBoolean()) {
+            if (cache.isEmpty() || random.nextBoolean()) {
                 //				System.out.println("cache.add()");				
                 cache.add(random.nextInt(capacity), random.nextInt(), random.nextBoolean()?-1:random.nextInt(10));
             }
@@ -243,6 +235,10 @@ public abstract class LRUCache<K, V> {
 
         // Print the cache's state
         System.out.println(cache.toString());
+    }
+
+    public boolean isEmpty() {
+        return size() != 0;
     }
 
     private static Logger getLogger() {

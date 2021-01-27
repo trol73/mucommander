@@ -41,10 +41,6 @@ public class LocalCopyDialog extends CopyDialog {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     protected PathFieldContent computeInitialPath(FileSet files) {
         AbstractFile file = files.elementAt(0);

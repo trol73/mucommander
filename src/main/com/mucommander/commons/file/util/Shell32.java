@@ -9,7 +9,7 @@ import com.sun.jna.win32.W32APIOptions;
  * allowing to invoke selected Shell32 Windows DLL functions.
  *
  * <p>The Kernel32 DLL and the JNA library (which is used to access native libraries) may not be available on
- * all OS/CPU architectures: {@link #isAvailable()} can be used to determine that at runtime.</p>
+ * all OS/CPU architectures: {@link #isAvailable()} can be used to determine that at runtime.
  *
  * @see Shell32API
  * @author Maxence Bernard

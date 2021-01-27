@@ -18,7 +18,6 @@ package com.mucommander.commons.file;
  * of the actual parsing of URLs of a particular scheme when {@link FileURL#getFileURL(String)} is invoked. This allows
  * for scheme-specific parsing, like for example for the query part which should only be parsed and considered as a
  * separate part for certain schemes such as HTTP.
- * </p>
  *
  * <h3>Handler registration</h3>
  * <p>
@@ -49,7 +48,7 @@ public interface SchemeHandler {
      * FileURL. On the contrary, credentials will not be copied, the returned URL always has no credentials. 
      *
      * <p>This method returns a new FileURL instance every time it is called. Therefore, the returned URL can
-     * safely be modified without any risk of side effects.</p>
+     * safely be modified without any risk of side effects.
      *
      * @param location the location for which to return the authentication realm
      * @return the authentication realm of the specified url
@@ -60,10 +59,9 @@ public interface SchemeHandler {
      * Returns the scheme's guest credentials, <code>null</code> if the scheme doesn't have any.
      * <p>
      * Guest credentials offer a way to authenticate a URL as a 'guest' on file protocols that require a set of
-     * credentials to establish a connection. The returned credentials are provided with no guarantee that the fileystem
+     * credentials to establish a connection. The returned credentials are provided with no guarantee that the filesystem
      * will actually accept them and allow the request/connection. The notion of 'guest' credentials may or may not
      * have a meaning depending on the underlying file protocol.
-     * </p>
      *
      * @return the scheme's guest credentials, <code>null</code> if the scheme doesn't have any
      */

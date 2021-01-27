@@ -65,14 +65,12 @@ public abstract class AbstractStringCriterionFilter extends AbstractCriterionFil
     }
 
 
-    ///////////////////////////////////
-    // FilePathFilter implementation //
-    ///////////////////////////////////
-
+    @Override
     public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
+    @Override
     public void setCaseSensitive(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
     }

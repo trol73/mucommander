@@ -33,7 +33,6 @@ import java.io.UnsupportedEncodingException;
  * 1) it allows to auto-detect the encoding when a BOM is present in the underlying stream and use it.<br>
  * 2) it allows to discard the BOM from a Unicode stream: the leading bytes corresponding to the BOM are swallowed by
  * the stream and never returned by the <code>read</code> methods.
- * </p>
  *
  * @see BOMInputStream
  * @author Maxence Bernard

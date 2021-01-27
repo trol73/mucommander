@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.RuntimeConstants;
 import com.mucommander.io.backup.BackupOutputStream;
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 /**
  * This class is responsible for writing the tool-bar attributes (buttons and separators).
@@ -42,14 +42,15 @@ public class ToolBarWriter extends ToolBarIO {
 	private static ToolBarWriter instance;
 	
 	public static ToolBarWriter create() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ToolBarWriter();
+		}
 		return instance;
 	}
 	
 	private ToolBarWriter() {}
 	
-	void write() throws IOException {
+	void write() {
 		String[] actionIds = ToolBarAttributes.getActions();
 
 		try (BackupOutputStream bos = new BackupOutputStream(getDescriptionFile())) {
@@ -61,7 +62,7 @@ public class ToolBarWriter extends ToolBarIO {
 	}
 	
 	private static class Writer {
-		private XmlWriter writer = null;
+		private final XmlWriter writer;
 		
 		private Writer(OutputStream stream) throws IOException {
     		this.writer = new XmlWriter(stream);
@@ -86,9 +87,9 @@ public class ToolBarWriter extends ToolBarIO {
 		}
 		
 		private void write(String actionId) throws IOException {
-			if (actionId == null)
+			if (actionId == null) {
 				writer.writeStandAloneElement(SEPARATOR_ELEMENT);
-			else {
+			} else {
 				XmlAttributes attributes = new XmlAttributes();
 				attributes.add(ACTION_ID_ATTRIBUTE, actionId);
 

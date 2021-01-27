@@ -23,7 +23,7 @@ import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.impl.ftp.FTPFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
 import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingSelectBox;
@@ -44,18 +44,18 @@ import java.text.ParseException;
 public class FTPPanel extends ServerPanel implements ActionListener, EncodingListener {
 
     private final static int STANDARD_PORT = FileURL.getRegisteredHandler(FileProtocols.FTP).getStandardPort();
-    private static Credentials ANONYMOUS_CREDENTIALS = FileURL.getRegisteredHandler(FileProtocols.FTP).getGuestCredentials();
+    private static final Credentials ANONYMOUS_CREDENTIALS = FileURL.getRegisteredHandler(FileProtocols.FTP).getGuestCredentials();
 
-    private JTextField serverField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JTextField initialDirField;
-    private JSpinner portSpinner;
-    private JSpinner nbRetriesSpinner;
-    private JSpinner retryDelaySpinner;
-    private EncodingSelectBox encodingSelectBox;
-    private JCheckBox passiveCheckBox;
-    private JCheckBox anonymousCheckBox;
+    private final JTextField serverField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JTextField initialDirField;
+    private final JSpinner portSpinner;
+    private final JSpinner nbRetriesSpinner;
+    private final JSpinner retryDelaySpinner;
+    private final EncodingSelectBox encodingSelectBox;
+    private final JCheckBox passiveCheckBox;
+    private final JCheckBox anonymousCheckBox;
 	
     private static String lastServer = "";
     private static String lastUsername = "";
@@ -180,8 +180,9 @@ public class FTPPanel extends ServerPanel implements ActionListener, EncodingLis
     public void dialogValidated() {
         // Commits the current spinner value in case it was being edited and 'enter' was pressed
         // (the spinner value would otherwise not be committed)
-        try { portSpinner.commitEdit(); }
-        catch(ParseException e) { }
+        try {
+            portSpinner.commitEdit();
+        } catch(ParseException ignored) { }
 
         updateValues();
     }
@@ -194,19 +195,17 @@ public class FTPPanel extends ServerPanel implements ActionListener, EncodingLis
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
-        if(source == passiveCheckBox) {
+        if (source == passiveCheckBox) {
             passiveMode = passiveCheckBox.isSelected();
-        }
-        else if (source == anonymousCheckBox) {
+        } else if (source == anonymousCheckBox) {
             updateValues();
             anonymousUser = anonymousCheckBox.isSelected();
-            if(anonymousUser) {
+            if (anonymousUser) {
                 usernameField.setEnabled(false);
                 usernameField.setText(ANONYMOUS_CREDENTIALS.getLogin());
                 passwordField.setEnabled(false);
                 passwordField.setText(ANONYMOUS_CREDENTIALS.getPassword());
-            }
-            else {
+            } else {
                 usernameField.setEnabled(true);
                 usernameField.setText(lastUsername);
                 passwordField.setEnabled(true);
@@ -215,10 +214,6 @@ public class FTPPanel extends ServerPanel implements ActionListener, EncodingLis
         }
     }
 
-
-    /////////////////////////////////////
-    // EncodingListener implementation //
-    /////////////////////////////////////
 
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
         lastEncoding = newEncoding;

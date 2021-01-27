@@ -26,7 +26,7 @@ import com.mucommander.ui.main.FolderPanel;
  */
 public class NotClosableFileTableTabHeaderFactory extends FileTableTabHeaderFactory {
 
-	public NotClosableFileTableTabHeaderFactory(FolderPanel folderPanel) {
+	NotClosableFileTableTabHeaderFactory(FolderPanel folderPanel) {
 		super(folderPanel);
 	}
 	

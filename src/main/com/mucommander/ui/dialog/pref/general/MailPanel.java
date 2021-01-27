@@ -22,11 +22,11 @@ import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
 
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.conf.MuPreferencesAPI;
-import com.mucommander.text.Translator;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.conf.TcPreferencesAPI;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 import com.mucommander.ui.dialog.pref.PreferencesPanel;
 import com.mucommander.ui.dialog.pref.component.PrefTextField;
@@ -41,16 +41,16 @@ import com.mucommander.ui.layout.YBoxPanel;
 class MailPanel extends PreferencesPanel {
 
     /** Name of the user */
-    private PrefTextField nameField;
+    private final PrefTextField nameField;
 	
     /** Email address of the user */
-    private PrefTextField emailField;
+    private final PrefTextField emailField;
 	
     /** IP/hostname to the SMTP server */
-    private PrefTextField smtpField;
+    private final PrefTextField smtpField;
 	
     /** TCP port to the SMTP server */
-    private PrefTextField portField;
+    private final PrefTextField portField;
 
 
     MailPanel(PreferencesDialog parent) {
@@ -65,33 +65,33 @@ class MailPanel extends PreferencesPanel {
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
         // Name field
-        nameField = new PrefTextField(getVariable(MuPreference.MAIL_SENDER_NAME, "")) {
+        nameField = new PrefTextField(getVariable(TcPreference.MAIL_SENDER_NAME, "")) {
 			public boolean hasChanged() {
-				return !nameField.getText().equals(getVariable(MuPreference.MAIL_SENDER_NAME, ""));
+				return !nameField.getText().equals(getVariable(TcPreference.MAIL_SENDER_NAME, ""));
 			}
         };
         compPanel.addRow(Translator.get("prefs_dialog.mail_name"), nameField, 10);
 		
         // Email field
-        emailField = new PrefTextField(getVariable(MuPreference.MAIL_SENDER_ADDRESS, "")) {
+        emailField = new PrefTextField(getVariable(TcPreference.MAIL_SENDER_ADDRESS, "")) {
 			public boolean hasChanged() {
-				return !emailField.getText().equals(getVariable(MuPreference.MAIL_SENDER_ADDRESS, ""));
+				return !emailField.getText().equals(getVariable(TcPreference.MAIL_SENDER_ADDRESS, ""));
 			}
         };
         compPanel.addRow(Translator.get("prefs_dialog.mail_address"), emailField, 10);
 
         // SMTP field
-        smtpField = new PrefTextField(getVariable(MuPreference.SMTP_SERVER, "")) {
+        smtpField = new PrefTextField(getVariable(TcPreference.SMTP_SERVER, "")) {
 			public boolean hasChanged() {
-				return !smtpField.getText().equals(getVariable(MuPreference.SMTP_SERVER, ""));
+				return !smtpField.getText().equals(getVariable(TcPreference.SMTP_SERVER, ""));
 			}
         };
         compPanel.addRow(Translator.get("prefs_dialog.mail_server"), smtpField, 10);
 
         // SMTP port field
-        portField = new PrefTextField(""+getVariable(MuPreference.SMTP_PORT, MuPreferences.DEFAULT_SMTP_PORT)) {
+        portField = new PrefTextField(""+getVariable(TcPreference.SMTP_PORT, TcPreferences.DEFAULT_SMTP_PORT)) {
 			public boolean hasChanged() {
-				return !portField.getText().equals(String.valueOf(getVariable(MuPreference.SMTP_PORT, MuPreferences.DEFAULT_SMTP_PORT)));
+				return !portField.getText().equals(String.valueOf(getVariable(TcPreference.SMTP_PORT, TcPreferences.DEFAULT_SMTP_PORT)));
 			}
         };
         compPanel.addRow(Translator.get("server_connect_dialog.port"), portField, 10);
@@ -106,15 +106,12 @@ class MailPanel extends PreferencesPanel {
     }
 
 
-    ///////////////////////
-    // PrefPanel methods //
-    ///////////////////////
     @Override
     protected void commit() {
-        final MuPreferencesAPI pref = MuConfigurations.getPreferences();
-    	pref.setVariable(MuPreference.MAIL_SENDER_NAME, nameField.getText());
-    	pref.setVariable(MuPreference.MAIL_SENDER_ADDRESS, emailField.getText());
-    	pref.setVariable(MuPreference.SMTP_SERVER, smtpField.getText());
-    	pref.setVariable(MuPreference.SMTP_PORT, portField.getText());
+        final TcPreferencesAPI pref = TcConfigurations.getPreferences();
+    	pref.setVariable(TcPreference.MAIL_SENDER_NAME, nameField.getText());
+    	pref.setVariable(TcPreference.MAIL_SENDER_ADDRESS, emailField.getText());
+    	pref.setVariable(TcPreference.SMTP_SERVER, smtpField.getText());
+    	pref.setVariable(TcPreference.SMTP_PORT, portField.getText());
     }
 }

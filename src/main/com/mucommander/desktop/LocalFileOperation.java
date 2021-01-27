@@ -33,7 +33,7 @@ import java.io.IOException;
  * and {@link DesktopOperation#execute(Object[])}, instances of <code>LocalFileOperation</code>
  * can use {@link #canExecute(AbstractFile)} and {@link #execute(AbstractFile)} and ignore the complexity of
  * the desktop API's genericity.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public abstract class LocalFileOperation implements DesktopOperation {
@@ -61,11 +61,13 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * might want to overwrite it. For example, a <code>LocalFileOperation</code> that only works
      * on XML files would override this method to only return <code>true</code> if the specified
      * file is an XML one.
-     * </p>
+     *
      * @param  file file to check against.
      * @return      <code>true</code> if the operation is supported for the specified file, <code>false</code> otherwise.
      */
-    public boolean canExecute(AbstractFile file) {return isAvailable();}
+    public boolean canExecute(AbstractFile file) {
+        return isAvailable();
+    }
 
 
 
@@ -76,11 +78,10 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * <p>
      * By default, this method will call {@link #extractTarget(Object[])} on the specified parameters
      * and pass the resulting {@link AbstractFile} instance to {@link #canExecute(AbstractFile)}.
-     * </p>
      * <p>
      * This behaviour can be overriden by implementations, although most cases can be handled through
      * {@link #canExecute(AbstractFile)} instead.
-     * </p>
+     * 
      * @param  target operation parameters.
      * @return        <code>true</code> if the operation is supported for the specified parameters, <code>false</code> otherwise.
      * @see           #canExecute(AbstractFile)
@@ -96,7 +97,7 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * <p>
      * This method is a wrapper for {@link #extractTarget(Object[])} and {@link #execute(AbstractFile)}. Most
      * implementations should ignore it.
-     * </p>
+     *
      * @param  target                        parameters of the operation.
      * @throws IOException                   if an error occurs.
      * @throws UnsupportedOperationException if the operation is not supported.

@@ -34,9 +34,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class StopAction extends MuAction implements LocationListener {
+public class StopAction extends TcAction implements LocationListener {
 
-    StopAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private StopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         // This action is initially disabled and enabled only during a folder change
@@ -55,8 +55,9 @@ public class StopAction extends MuAction implements LocationListener {
         FolderPanel folderPanel = mainFrame.getActivePanel();
         ChangeFolderThread changeFolderThread = folderPanel.getChangeFolderThread();
 
-        if(changeFolderThread!=null)
+        if (changeFolderThread != null) {
             changeFolderThread.tryKill();
+        }
     }
 
 	@Override
@@ -89,15 +90,23 @@ public class StopAction extends MuAction implements LocationListener {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Stop";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new StopAction(mainFrame, properties);
         }
     }

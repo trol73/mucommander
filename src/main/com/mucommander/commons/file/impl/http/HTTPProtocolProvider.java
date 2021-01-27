@@ -10,7 +10,6 @@ import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
@@ -39,10 +38,10 @@ public class HTTPProtocolProvider implements ProtocolProvider {
      * <code>javax.net.ssl.SSLException</code>.
      *
      * <p>This method needs to be called only once in the JVM lifetime and will impact all HTTPS connections made,
-     * i.e. not only the ones made by this class.</p>
+     * i.e. not only the ones made by this class.
      *
      * <p>This clearly is unsecure for the user, but arguably better from a feature standpoint than systematically
-     * failing untrusted connections.</p>
+     * failing untrusted connections.
      *
      * @throws Exception if an error occurred while installing the custom X509TrustManager.
 	 */
@@ -54,10 +53,10 @@ public class HTTPProtocolProvider implements ProtocolProvider {
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-            public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
             }
 
-            public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
             }
         };
 
@@ -68,12 +67,10 @@ public class HTTPProtocolProvider implements ProtocolProvider {
 
         // create and install a custom hostname verifier that allows hostname mismatches
         HostnameVerifier permissiveHostnameVerifier = (urlHostName, session) -> true;
-       HttpsURLConnection.setDefaultHostnameVerifier(permissiveHostnameVerifier);
+        HttpsURLConnection.setDefaultHostnameVerifier(permissiveHostnameVerifier);
     }
     
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
-        return instantiationParams.length==0
-            ?new HTTPFile(url)
-            :new HTTPFile(url, (URL)instantiationParams[0]);
+        return instantiationParams.length == 0 ? new HTTPFile(url) :new HTTPFile(url, (URL)instantiationParams[0]);
     }
 }

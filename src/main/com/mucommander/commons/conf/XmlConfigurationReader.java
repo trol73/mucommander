@@ -69,15 +69,10 @@ import java.io.Reader;
  * @see    XmlConfigurationWriter
  */
 public class XmlConfigurationReader extends DefaultHandler implements ConfigurationReader {
-    // - Class fields --------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Factory used to create {@link XmlConfigurationReader} instances. */
     public static final ConfigurationReaderFactory<XmlConfigurationReader> FACTORY;
 
 
-
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Current depth in the configuration tree. */
     private       int                  depth;
     /** Buffer for each element's CDATA. */
@@ -91,10 +86,6 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
     /** Used to track the parser's position in the XML file. */
     private       Locator              locator;
 
-
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     static {
         FACTORY = XmlConfigurationReader::new;
     }
@@ -198,7 +189,7 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
         }
 
         isVariable = false;
-        itemName   = null;
+        itemName = null;
     }
 
     /**

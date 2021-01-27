@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.file;
 
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.dialog.FocusDialog;
 
@@ -39,14 +38,14 @@ import java.awt.event.ActionListener;
  */
 public class BatchRenameSelectRange extends FocusDialog implements ActionListener {
 
-    private JTextField edtRange;
-    private JButton btnCancel;
-    private JButton btnOK;
+    private final JTextField edtRange;
+    private final JButton btnCancel;
+    private final JButton btnOK;
     private String range = null;
     
 
-    public BatchRenameSelectRange(Dialog owner, String filename) {
-        super(owner, Translator.get("batch_rename_dialog.range"), owner);
+    BatchRenameSelectRange(Dialog owner, String filename) {
+        super(owner, i18n("batch_rename_dialog.range"), owner);
         edtRange = new JTextField();
         ReadOnlyDocument doc = new ReadOnlyDocument();
         edtRange.setDocument(doc);
@@ -59,8 +58,8 @@ public class BatchRenameSelectRange extends FocusDialog implements ActionListene
         content.setLayout(new BorderLayout());            
         content.add(edtRange, BorderLayout.CENTER);
 
-        btnOK = new JButton(Translator.get("ok"));
-        btnCancel = new JButton(Translator.get("cancel"));
+        btnOK = new JButton(i18n("ok"));
+        btnCancel = new JButton(i18n("cancel"));
         content.add(DialogToolkit.createOKCancelPanel(btnOK, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
     }
 
@@ -70,9 +69,9 @@ public class BatchRenameSelectRange extends FocusDialog implements ActionListene
         if (source == btnCancel) {
             dispose();
         } else if (source == btnOK) {
-            range = "[N" + Integer.toString(edtRange.getSelectionStart()+1);
+            range = "[N" + (edtRange.getSelectionStart() + 1);
             if (edtRange.getSelectionEnd() > 0 && edtRange.getSelectionEnd() > edtRange.getSelectionStart()+1) {
-                range += "-" + Integer.toString(edtRange.getSelectionEnd());
+                range += "-" + edtRange.getSelectionEnd();
             }
             range += "]";
             dispose();

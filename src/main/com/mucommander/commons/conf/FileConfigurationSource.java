@@ -26,17 +26,12 @@ import java.nio.charset.Charset;
  * @author Nicolas Rinaudo
  */
 public class FileConfigurationSource implements ConfigurationSource {
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Path to the file on which to open input and output streams. */
     private final File file;
     /** File's charset. */
     private final Charset charset;
 
 
-
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a source that will open streams on the specified file.
      * @param file file in which the configuration data is located.
@@ -63,7 +58,7 @@ public class FileConfigurationSource implements ConfigurationSource {
      * @param file file in which the configuration data is located.
      * @param charset charset in which the file is encoded.
      */
-    public FileConfigurationSource(File file, String charset) {
+    FileConfigurationSource(File file, String charset) {
         this(file, Charset.forName(charset));
     }
 
@@ -83,7 +78,7 @@ public class FileConfigurationSource implements ConfigurationSource {
      * @param path  path to the file in which the configuration data is located.
      * @param charset charset in which the file is encoded.
      */
-    public FileConfigurationSource(String path, String charset) {
+    FileConfigurationSource(String path, String charset) {
         this(new File(path), charset);
     }
 
@@ -98,8 +93,6 @@ public class FileConfigurationSource implements ConfigurationSource {
 
 
 
-    // - File access ---------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the file on which input and output streams are opened.
      * @return the file on which input and output streams are opened.
@@ -118,8 +111,6 @@ public class FileConfigurationSource implements ConfigurationSource {
 
 
 
-    // - Source methods ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Reader getReader() throws IOException {
         InputStream is = new FileInputStream(file);

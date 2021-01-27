@@ -28,7 +28,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
 import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -43,8 +43,6 @@ import java.util.Map;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class InternalEditAction extends AbstractViewerAction {
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>EditAction</code>.
      * @param mainFrame  frame to which the action is attached.
@@ -66,8 +64,6 @@ public class InternalEditAction extends AbstractViewerAction {
     }
 
 
-    // - AbstractViewerAction implementation ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Opens the internal editor on the specified file.
      * @param file file to edit.
@@ -99,15 +95,23 @@ public class InternalEditAction extends AbstractViewerAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "InternalEdit";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new InternalEditAction(mainFrame, properties);
         }
 

@@ -31,7 +31,7 @@ import com.mucommander.commons.file.AbstractRWArchiveFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
 
@@ -132,7 +132,7 @@ public class DeleteJob extends FileJob {
         int ret;
         if(!moveToTrash && file.isDirectory()) {
             String filePath = file.getAbsolutePath();
-            filePath = filePath.substring(getBaseSourceFolder().getAbsolutePath(false).length()+1, filePath.length());
+            filePath = filePath.substring(getBaseSourceFolder().getAbsolutePath(false).length()+1);
 
             // Important: symlinks must *not* be followed -- following symlinks could have disastrous effects.
             if(!file.isSymlink()) {

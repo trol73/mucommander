@@ -58,9 +58,8 @@ public abstract class Base64Decoder {
         }
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        int i;
-
         try (Base64InputStream bin = new Base64InputStream(new ByteArrayInputStream(b), table)) {
+            int i;
             while ((i = bin.read()) != -1) {
                 bout.write(i);
             }
@@ -82,9 +81,9 @@ public abstract class Base64Decoder {
      */
     public static String decode(String s, String encoding, Base64Table table) throws IOException {
         StringBuilder sb = new StringBuilder();
-        int i;
 
         try (InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(decodeAsBytes(s, table)), encoding)) {
+            int i;
             while ((i = isr.read()) != -1) {
                 sb.append((char) i);
             }

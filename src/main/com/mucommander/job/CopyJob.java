@@ -19,20 +19,18 @@
 
 package com.mucommander.job;
 
-import java.io.IOException;
-
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.commons.file.impl.local.LocalFile;
-import com.mucommander.commons.file.util.SymLinkUtils;
+import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.job.utils.ScanDirectoryThread;
+import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.dialog.file.ProgressDialog;
+import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.text.Translator;
-import com.mucommander.ui.dialog.file.ProgressDialog;
-import com.mucommander.ui.main.MainFrame;
+import java.io.IOException;
 
 
 /**
@@ -132,7 +130,8 @@ public class CopyJob extends AbstractCopyJob {
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink() && file instanceof LocalFile) {
-            copySymLink(file, destFile);
+            //copySymLink(file, destFile);
+            tryCopySymlinkFile(file, destFolder);
             return true;
         }
 
@@ -292,9 +291,9 @@ public class CopyJob extends AbstractCopyJob {
     }
 
 
-    private void copySymLink(AbstractFile file, AbstractFile destFile) {
-        String targetPath = SymLinkUtils.getTargetPath(file);
-        SymLinkUtils.createSymlink(destFile, targetPath);
-    }
+//    private void copySymLink(AbstractFile file, AbstractFile destFile) {
+//        String targetPath = SymLinkUtils.getTargetPath(file);
+//        SymLinkUtils.createSymlink(destFile, targetPath);
+//    }
 
 }

@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.Translator;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.utils.text.Translator;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.layout.YBoxPanel;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     // - Class fields -----------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Legal font sizes. */
-    private final static int FONT_SIZES[] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28};
+    private final static int[] FONT_SIZES = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28, 32, 36, 40};
 
 
 
@@ -57,7 +57,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     /** Currently selected font. */
     private Font        font;
     /** List of all registered state change listeners. */
-    private WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
+    private final WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
 
 
     // - Initialisation ---------------------------------------------------------
@@ -76,34 +76,31 @@ public class FontChooser extends YBoxPanel implements ActionListener {
      * @param selection default font selection (ignored if <code>null</code>).
      */
     private void initUI(Font selection) {
-        String[] familyNames;   // Contains all the available family names.
-        int      selectedIndex; // Default selection in combo box.
-        JPanel   panel;         // Temporary panel.
-
-        // Initialises the chooser's alignement.
         setAlignmentX(LEFT_ALIGNMENT);
 
         // Font families.
-        families      = new MuComboBox<>();
-        familyNames   = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        selectedIndex = 0;
-        for(int i = 0; i < familyNames.length; i++) {
+        families = new TcComboBox<>();
+        String[] familyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        int selectedIndex = 0;
+        for (int i = 0; i < familyNames.length; i++) {
             families.addItem(familyNames[i]);
-            if(selection.getFamily().equalsIgnoreCase(familyNames[i]))
+            if (selection.getFamily().equalsIgnoreCase(familyNames[i])) {
                 selectedIndex = i;
+            }
         }
         families.setSelectedIndex(selectedIndex);
         families.addActionListener(this);
 
         // Adds the font families to the component.
-        panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.add(families);
         add(panel);
 
         // Font sizes.
-        sizes = new JComboBox<>();
-        for (int fontSize : FONT_SIZES)
+        sizes = new TcComboBox<>();
+        for (int fontSize : FONT_SIZES) {
             sizes.addItem(Integer.toString(fontSize));
+        }
         sizes.setSelectedItem(Integer.toString(selection.getSize()));
         sizes.addActionListener(this);
 
@@ -145,16 +142,18 @@ public class FontChooser extends YBoxPanel implements ActionListener {
      * @return the font described by the current selection.
      */
     private Font createFont() {
-        return new Font((String)families.getSelectedItem(),
-                        (bold.isSelected() ? Font.BOLD : 0) | (italic.isSelected() ? Font.ITALIC : 0),
-                        Integer.parseInt((String)sizes.getSelectedItem()));
+        int style = (bold.isSelected() ? Font.BOLD : 0) | (italic.isSelected() ? Font.ITALIC : 0);
+        int size = Integer.parseInt((String)sizes.getSelectedItem());
+        return new Font((String)families.getSelectedItem(), style, size);
     }
 
     /**
      * Returns the font currently selected in the chooser.
      * @return the font currently selected in the chooser.
      */
-    public Font getCurrentFont() {return font;}
+    public Font getCurrentFont() {
+        return font;
+    }
 
 
 
@@ -172,15 +171,14 @@ public class FontChooser extends YBoxPanel implements ActionListener {
      * Called when the font description has been changed.
      */
     public void actionPerformed(ActionEvent e) {
-        ChangeEvent event;
-
         font = createFont();
         updatePreview();
 
         // Notifies listeners.
-        event    = new ChangeEvent(this);
-        for(ChangeListener listener : listeners.keySet())
+        ChangeEvent event = new ChangeEvent(this);
+        for (ChangeListener listener : listeners.keySet()) {
             listener.stateChanged(event);
+        }
     }
 
 

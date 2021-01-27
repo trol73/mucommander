@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * functions of the C standard library.
  *
  * <p>The C standard library and the JNA library (which is used to access native libraries) may not be available on
- * all OS/CPU architectures: {@link #isAvailable()} can be used to determine that at runtime.</p>
+ * all OS/CPU architectures: {@link #isAvailable()} can be used to determine that at runtime.
  *
  * @see CLibrary
  * @author Maxence Bernard

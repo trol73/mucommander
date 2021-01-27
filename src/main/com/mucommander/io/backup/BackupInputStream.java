@@ -29,13 +29,11 @@ import java.io.*;
  * <p>
  * This class' role is to choose which of the original or backup file should be read in order to ensure
  * that the data is not corrupt.
- * </p>
+ *
  * @see BackupOutputStream
  * @author Nicolas Rinaudo
  */
 public class BackupInputStream extends FilterInputStream implements BackupConstants {
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Opens a backup input stream on the specified file.
      * @param     file        file to open for reading.
@@ -67,7 +65,7 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
      * Opens a stream on the right file.
      * <p>
      * If a backup file is found, and is bigger than the target file, then it will be used.
-     * </p>
+     *
      * @param     file        file on which to open an input stream.
      * @return                a stream on the right file.
      * @exception IOException thrown if any IO related error occurs.
@@ -78,8 +76,9 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
         // Checks whether the backup file is a better choice than the target one.
         AbstractFile backup = FileFactory.getFile(test);
 
-        if (backup != null && backup.exists() && (file.getSize() < backup.getSize()))
+        if (backup != null && backup.exists() && (file.getSize() < backup.getSize())) {
             return backup.getInputStream();
+        }
 
         // Opens a stream on the target file.
         return file.getInputStream();
@@ -90,7 +89,7 @@ public class BackupInputStream extends FilterInputStream implements BackupConsta
      * Opens a stream on the right file.
      * <p>
      * If a backup file is found, and is bigger than the target file, then it will be used.
-     * </p>
+     *
      * @param     file        file on which to open an input stream.
      * @return                a stream on the right file.
      * @exception IOException thrown if any IO related error occurs.

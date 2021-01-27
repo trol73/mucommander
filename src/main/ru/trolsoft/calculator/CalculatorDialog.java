@@ -18,7 +18,6 @@
 package ru.trolsoft.calculator;
 
 import com.mucommander.cache.TextHistory;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
@@ -26,6 +25,8 @@ import com.mucommander.ui.layout.XBoxPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import de.congrace.exp4j.CustomOperator;
 import de.congrace.exp4j.ExpressionBuilder;
+import org.jetbrains.annotations.NotNull;
+import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -35,6 +36,8 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -42,15 +45,23 @@ import java.util.List;
  * Created on 04/06/14.
  * @author Oleg Trifonov
  */
-public class CalculatorDialog extends FocusDialog implements ActionListener {
+public class CalculatorDialog extends FocusDialog implements ActionListener, KeyListener {
 
     private static final Dimension MIN_DIMENSION = new Dimension(520, 300);
 
-    private HistoryComboBox cbExpression;
-    private JTextField edtDec, edtHex, edtBin, edtOct, edtExp;
-    private JButton btnDec, btnHex, btnBin, btnOct, btnExp;
-    private JButton btnClose;
-    private JLabel lblError;
+    private final HistoryComboBox cbExpression;
+    private final JTextField edtDec;
+    private final JTextField edtHex;
+    private final JTextField edtBin;
+    private final JTextField edtOct;
+    private final JTextField edtExp;
+    private final JButton btnDec;
+    private final JButton btnHex;
+    private final JButton btnBin;
+    private final JButton btnOct;
+    private final JButton btnExp;
+    private final JButton btnClose;
+    private final JLabel lblError;
 
     private final CustomOperator OP_SHL = new CustomOperator("<<", true, 10, 2) {
         @Override
@@ -98,12 +109,12 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     private final DecimalFormat FORMAT_EXP = new DecimalFormat("0.00000000000000E0000");
 
 
-    private final CustomOperator OPERATORS[] = {
+    private final CustomOperator[] OPERATORS = {
         OP_SHL, OP_SHR, OP_AND, OP_OR, OP_NOT, OP_XOR
     };
 
     public CalculatorDialog(Frame owner) {
-        super(owner, Translator.get("calculator.calculator"), null);
+        super(owner, i18n("calculator.calculator"), null);
 
         Container contentPane = getContentPane();
 
@@ -112,7 +123,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         // Text fields panel
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel() {
             @Override
-            public void add(Component comp, Object constraints) {
+            public void add(@NotNull Component comp, Object constraints) {
                 ((GridBagConstraints)constraints).fill = GridBagConstraints.HORIZONTAL;
                 super.add(comp, constraints);
             }
@@ -121,7 +132,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         List<String> calcHistory = TextHistory.getInstance().getList(TextHistory.Type.CALCULATOR);
         cbExpression = new HistoryComboBox(this, calcHistory);
 
-        compPanel.addRow(Translator.get("calculator.expression")+":", cbExpression, 5);
+        compPanel.addRow(i18n("calculator.expression")+":", cbExpression, 5);
 
         lblError = new JLabel();
         compPanel.addRow("", lblError, 10);
@@ -167,6 +178,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         compPanel.addRow(btnExp, edtExp, 0);
 
         cbExpression.addActionListener(this);
+        cbExpression.getEditor().getEditorComponent().addKeyListener(this);
 
         // Bottom line
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
@@ -175,7 +187,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         XBoxPanel buttonsPanel = new XBoxPanel();
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        btnClose = new JButton(Translator.get("close"));
+        btnClose = new JButton(i18n("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);
@@ -194,45 +206,69 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
         fixHeight();
     }
 
-    private void calculate() {
-        String expression = cbExpression.getSelectedItem().toString().trim();
+    private boolean calculateAndShow() {
+        String expression = getExpression();
+        if (expression == null) {
+            return false;
+        }
         boolean success;
         try {
             double res = evaluate(expression);
             TextHistory.getInstance().add(TextHistory.Type.CALCULATOR, expression, false);
-
             cbExpression.addToHistory(expression);
-
-            long valLong = Math.round(res);
-            boolean isDecimal = valLong == res;
-            edtDec.setText(isDecimal ? Long.toString(valLong) : FORMAT_DEC.format(res).replace(',', '.'));
-            edtHex.setText(Long.toHexString(valLong));
-            edtOct.setText(Long.toOctalString(valLong));
-            edtBin.setText(Long.toBinaryString(valLong));
-            edtExp.setText(formatExp(res));
+            showResult(res);
             success = true;
         } catch (Exception e) {
             e.printStackTrace();
-            edtDec.setText("");
-            edtHex.setText("");
-            edtOct.setText("");
-            edtBin.setText("");
-            edtExp.setText("");
+            clearResultFields();
             success = false;
         }
-        edtDec.setEnabled(success);
-        edtHex.setEnabled(success);
-        edtOct.setEnabled(success);
-        edtBin.setEnabled(success);
-        edtOct.setEnabled(success);
-        edtExp.setEnabled(success);
-        btnDec.setEnabled(success);
-        btnHex.setEnabled(success);
-        btnOct.setEnabled(success);
-        btnBin.setEnabled(success);
-        btnOct.setEnabled(success);
-        btnExp.setEnabled(success);
-        lblError.setText(success ? "" : Translator.get("calculator.error"));
+        enableControls(success);
+        lblError.setText(success ? "" : i18n("calculator.error"));
+        return success;
+    }
+
+    private void showResult(double res) {
+        long valLong = Math.round(res);
+        boolean isDecimal = valLong == res;
+        edtDec.setText(isDecimal ? Long.toString(valLong) : FORMAT_DEC.format(res).replace(',', '.'));
+        edtHex.setText(Long.toHexString(valLong));
+        edtOct.setText(Long.toOctalString(valLong));
+        edtBin.setText(Long.toBinaryString(valLong));
+        edtExp.setText(formatExp(res));
+    }
+
+    private String getExpression() {
+        Object selectedItem = cbExpression.getSelectedItem();
+        if (selectedItem == null) {
+            return null;
+        }
+        String result = selectedItem.toString().trim();
+        return StrUtils.removeUtfMarker(result).trim();
+    }
+
+
+    private void enableControls(boolean enable) {
+        edtDec.setEnabled(enable);
+        edtHex.setEnabled(enable);
+        edtOct.setEnabled(enable);
+        edtBin.setEnabled(enable);
+        edtOct.setEnabled(enable);
+        edtExp.setEnabled(enable);
+        btnDec.setEnabled(enable);
+        btnHex.setEnabled(enable);
+        btnOct.setEnabled(enable);
+        btnBin.setEnabled(enable);
+        btnOct.setEnabled(enable);
+        btnExp.setEnabled(enable);
+    }
+
+    private void clearResultFields() {
+        edtDec.setText("");
+        edtHex.setText("");
+        edtOct.setText("");
+        edtBin.setText("");
+        edtExp.setText("");
     }
 
     private double evaluate(String expression) throws Exception {
@@ -261,7 +297,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src == cbExpression) {
-            calculate();
+            calculateAndShow();
         } else if (src == btnClose) {
             cancel();
         } else if (src == btnDec) {
@@ -287,5 +323,22 @@ public class CalculatorDialog extends FocusDialog implements ActionListener {
     protected void saveState() {
         super.saveState();
         TextHistory.getInstance().save(TextHistory.Type.CALCULATOR);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && (e.getModifiers() & (KeyEvent.CTRL_MASK | KeyEvent.META_MASK)) != 0) {
+            if (calculateAndShow()) {
+                cbExpression.setSelectedItem(edtDec.getText());
+            }
+        }
     }
 }

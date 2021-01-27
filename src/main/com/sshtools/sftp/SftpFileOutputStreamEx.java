@@ -27,7 +27,7 @@ import com.sshtools.ssh.SshException;
  */
 public class SftpFileOutputStreamEx extends SftpFileOutputStream {
 
-    public SftpFileOutputStreamEx(SftpFile file, long pos) throws SftpStatusException, SshException {
+    protected SftpFileOutputStreamEx(SftpFile file, long pos) throws SftpStatusException, SshException {
         super(file);
         this.position = pos;
     }

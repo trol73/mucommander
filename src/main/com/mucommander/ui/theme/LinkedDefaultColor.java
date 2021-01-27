@@ -26,14 +26,14 @@ import java.awt.*;
  * This is typically useful to make sure that a color always defaults to the same value as another theme property.
  * Care should be exercised when using this class, however: it doesn't check for infinite recursion, meaning it's
  * entirely possible to freeze muCommander by linking a color to itself as a default.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme color to default to. */
-    private int colorId;
+    private final int colorId;
 
 
 
@@ -44,7 +44,7 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
      * Creates a new instance of {@link LinkedDefaultColor}.
      * @param colorId identifier of the current theme color to default to.
      */
-    public LinkedDefaultColor(int colorId) {
+    LinkedDefaultColor(int colorId) {
         this.colorId = colorId;
         ThemeData.addDefaultValuesListener(this);
     }
@@ -63,8 +63,9 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
     // - ThemeListener implementation ----------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     public void colorChanged(ColorChangedEvent event) {
-        if(event.getColorId() == colorId)
+        if (event.getColorId() == colorId) {
             notifyChange(event.getColor());
+        }
     }
 
     public void fontChanged(FontChangedEvent event) {

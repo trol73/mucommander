@@ -23,7 +23,7 @@ import com.mucommander.commons.file.FileURL;
 
 /**
  * CredentialsMapping associates a {@link Credentials} instance with a 'realm' , that is the location to a server.
- * It also adds the notion of persistency, allowing to specify whether the credentials should be saved to disk when the
+ * It also adds the notion of persistence, allowing to specify whether the credentials should be saved to disk when the
  * application quits and restored next time the application starts.
  *
  * @see CredentialsManager 
@@ -68,7 +68,6 @@ public final class CredentialsMapping {
      * Returns the location associated with the credentials.
      * <p>
      * Note: the returned {@link FileURL} does not contain any credentials.
-     * </p>
      *
      * @return the location associated with the credentials.
      */
@@ -98,8 +97,9 @@ public final class CredentialsMapping {
      * @return true if both CredentialsMapping instances are equal
      */
     public boolean equals(Object o) {
-        if(!(o instanceof CredentialsMapping))  // Note: CredentialsMapping is final, no need to test classes
+        if (!(o instanceof CredentialsMapping)) { // Note: CredentialsMapping is final, no need to test classes
             return false;
+        }
 
         CredentialsMapping cm = (CredentialsMapping)o;
 

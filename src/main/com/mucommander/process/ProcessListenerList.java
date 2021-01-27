@@ -55,23 +55,26 @@ public class ProcessListenerList implements ProcessListener {
      * Propagates the <i>process died</i> event to all registered listeners.
      */
     public void processDied(int returnValue) {
-        for(ProcessListener listener : listeners)
+        for (ProcessListener listener : listeners) {
             listener.processDied(returnValue);
+        }
     }
 
     /**
      * Propagates the <i>process output</i> event to all registered listeners.
      */
     public void processOutput(byte[] buffer, int offset, int length) {
-        for(ProcessListener listener : listeners)
+        for (ProcessListener listener : listeners) {
             listener.processOutput(buffer, offset, length);
+        }
     }
 
     /**
      * Propagates the <i>process output</i> event to all registered listeners.
      */
     public void processOutput(String output) {
-        for(ProcessListener listener : listeners)
+        for (ProcessListener listener : listeners) {
             listener.processOutput(output);
+        }
     }
 }

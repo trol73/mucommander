@@ -23,14 +23,13 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.*;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.dialog.debug.DebugConsoleAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -135,7 +134,7 @@ public class MuLogging {
 	 * @return the current log level used by all <code>org.slf4j</code> loggers.
 	 */
 	public static LogLevel getLogLevel() {
-		return LogLevel.valueOf(MuConfigurations.getPreferences().getVariable(MuPreference.LOG_LEVEL, MuPreferences.DEFAULT_LOG_LEVEL));
+		return LogLevel.valueOf(TcConfigurations.getPreferences().getVariable(TcPreference.LOG_LEVEL, TcPreferences.DEFAULT_LOG_LEVEL));
 	}
 
 	/**
@@ -145,7 +144,7 @@ public class MuLogging {
 	 * @param level the new log level to be used by all <code>org.slf4j</code> loggers.
 	 */
 	public static void setLogLevel(LogLevel level) {
-		MuConfigurations.getPreferences().setVariable(MuPreference.LOG_LEVEL, level.toString());
+		TcConfigurations.getPreferences().setVariable(TcPreference.LOG_LEVEL, level.toString());
 		updateLogLevel(level);
 	}
 	
@@ -157,7 +156,7 @@ public class MuLogging {
 		return consoleAppender;
 	}
 
-	public static void configureLogging() throws IOException {
+	public static void configureLogging() {
 		// We're no longer using LogManager and a logging.properties file to initialize java.util.logging, because of
 		// a limitation with Webstart limiting the use of handlers and formatters residing in the system's classpath,
 		// i.e. built-in ones.
@@ -174,8 +173,9 @@ public class MuLogging {
 		
 		// and add ours
 		Appender<ILoggingEvent>[] appenders = createAppenders(loggerContext);
-		for (Appender<ILoggingEvent> appender : appenders)
+		for (Appender<ILoggingEvent> appender : appenders) {
 			rootLogger.addAppender(appender);
+		}
 		
 		// Set the log level to the value defined in the configuration
 		updateLogLevel(getLogLevel());
@@ -221,21 +221,21 @@ public class MuLogging {
 		public String doLayout(ILoggingEvent event) {
 			StackTraceElement stackTraceElement = event.getCallerData()[0];
 			
-			StringBuilder sbuf = new StringBuilder(128);
-			sbuf.append("[");
-			sbuf.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
-			sbuf.append("] ");
-			sbuf.append(getLevel(event));
-			sbuf.append(" ");
-			sbuf.append(stackTraceElement.getFileName());
-			sbuf.append("#");
-			sbuf.append(stackTraceElement.getMethodName());
-			sbuf.append(",");
-			sbuf.append(stackTraceElement.getLineNumber());
-			sbuf.append(" ");
-			sbuf.append(event.getFormattedMessage());
-			sbuf.append(CoreConstants.LINE_SEPARATOR);
-			return sbuf.toString();
+			StringBuilder sb = new StringBuilder(128);
+			sb.append("[");
+			sb.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
+			sb.append("] ");
+			sb.append(getLevel(event));
+			sb.append(" ");
+			sb.append(stackTraceElement.getFileName());
+			sb.append("#");
+			sb.append(stackTraceElement.getMethodName());
+			sb.append(",");
+			sb.append(stackTraceElement.getLineNumber());
+			sb.append(" ");
+			sb.append(event.getFormattedMessage());
+			sb.append(CoreConstants.LINE_SEPARATOR);
+			return sb.toString();
 		}
 	}
 }

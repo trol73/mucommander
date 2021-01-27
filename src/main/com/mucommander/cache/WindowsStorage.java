@@ -40,7 +40,7 @@ public class WindowsStorage {
     public static class Record {
         public final int left, top, width, height;
 
-        public Record(String s) {
+        Record(String s) {
             String[] val = s.split(",");
             this.left = Integer.parseInt(val[0].trim());
             this.top = Integer.parseInt(val[1].trim());
@@ -60,7 +60,7 @@ public class WindowsStorage {
             if (obj == this) {
                 return true;
             }
-            if (obj == null || !(obj instanceof Record)) {
+            if (!(obj instanceof Record)) {
                 return false;
             }
             Record rec = (Record)obj;
@@ -77,7 +77,7 @@ public class WindowsStorage {
             window.setSize(width, height);
         }
 
-        public void applyPos(Window window) {
+        void applyPos(Window window) {
             window.setLocation(left, top);
         }
     }
@@ -141,7 +141,7 @@ public class WindowsStorage {
 
 
     private String getKey(Window window, String suffix) {
-        Class c = window.getClass();
+        Class<?> c = window.getClass();
         String key = c.getCanonicalName();
         if (key == null) {
             key = c.getPackage().getName() + '.' + c.getName();
@@ -171,61 +171,82 @@ public class WindowsStorage {
 
 
     private void load(AbstractFile file) throws IOException {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
-            while ( (line = reader.readLine() ) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) {
-                    continue;
-                }
-                int index = line.indexOf('=');
-                if (index < 0) {
-                    continue;
-                }
-                String key = line.substring(0, index);
-                String val = line.substring(index + 1);
-                try {
-                    records.put(key, new Record(val));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            while ((line = reader.readLine()) != null) {
+                loadRecord(line.trim());
             }
+        }
+//        BufferedReader reader = null;
+//        try {
+//            reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+//            String line;
+//            while ( (line = reader.readLine() ) != null) {
+//                line = line.trim();
+//                if (line.isEmpty() || line.startsWith("#")) {
+//                    continue;
+//                }
+//                int index = line.indexOf('=');
+//                if (index < 0) {
+//                    continue;
+//                }
+//                String key = line.substring(0, index);
+//                String val = line.substring(index + 1);
+//                try {
+//                    records.put(key, new Record(val));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (reader != null) {
+//                reader.close();
+//            }
+//        }
+    }
+
+    private void loadRecord(String line) {
+        if (line.isEmpty() || line.startsWith("#")) {
+            return;
+        }
+        int index = line.indexOf('=');
+        if (index < 0) {
+            return;
+        }
+        String key = line.substring(0, index);
+        String val = line.substring(index + 1);
+        try {
+            records.put(key, new Record(val));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                reader.close();
+        }
+    }
+
+
+    private void save(AbstractFile file) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()))) {
+            for (String key : getRecords().keySet()) {
+                if (key != null) {
+                    saveRecord(writer, key, records.get(key));
+                }
             }
         }
     }
 
-    private void save(AbstractFile file) throws  IOException {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()));
-            for (String key : records.keySet()) {
-                if (key == null) {
-                    continue;
-                }
-                writer.write(key);
-                writer.write('=');
-                writer.write(records.get(key).toString());
-                writer.write('\n');
-            }
-        } finally {
-            if (writer != null) {
-                writer.close();
-            }
-        }
+    private void saveRecord(Writer writer, String key, Record record) throws IOException {
+        writer.write(key);
+        writer.write('=');
+        writer.write(record.toString());
+        writer.write('\n');
     }
 
     /**
      * Returns the path to the history file.
      * <p>
      * Will return the default, system dependant bookmarks file.
-     * </p>
+     *
      * @return             the path to the bookmark file.
      * @throws java.io.IOException if there was a problem locating the default history file.
      */

@@ -217,11 +217,11 @@ public class CredentialsManager {
      * persistent.
      *
      * <p>The returned credentials will match the given URL's scheme and host, but the path may differ so there is
-     * no guarantee that the credentials will successfully authenticate the location.</p>
+     * no guarantee that the credentials will successfully authenticate the location.
      *
      * <p>The best match (credentials with the 'closest' path to the provided location's path) is returned at the first
      * position ([0]), if there is at least one matching credentials instance. The returned array can be empty
-     * (zero length) but never null.</p>
+     * (zero length) but never null.
      * 
      * @param location the location to be compared against known credentials instances, both volatile and persistent
      * @return an array of CredentialsMapping matching the given URL's scheme and host, best match at the first position
@@ -276,10 +276,10 @@ public class CredentialsManager {
      *
      * <p>Depending on value returned by {@link CredentialsMapping#isPersistent()}, the credentials will either be stored
      * in the volatile credentials list or the persistent one. Any existing credentials mapped to the same realm
-     * will be replaced by the provided ones.</p>
+     * will be replaced by the provided ones.
      *
      * <p>This method should be called when new credentials have been entered by the user, after they have been validated
-     * by the application (i.e. access was granted to the location).</p>
+     * by the application (i.e. access was granted to the location).
      *
      * @param credentialsMapping credentials to be added to the list of known credentials
      */
@@ -315,7 +315,7 @@ public class CredentialsManager {
 
      * <p>Any credentials contained by the <code>FileURL</code> will be lost and replaced with the new ones.
      * If properties with the same key are defined both in the realm and the given FileURL, the ones from the FileURL
-     * will be preserved.</p>
+     * will be preserved.
      *
      * @param location the FileURL to authenticate
      * @param credentialsMapping the credentials to use to authenticate the given FileURL
@@ -340,7 +340,7 @@ public class CredentialsManager {
      * otherwise.
      *
      * <p>Credentials are first looked for using {@link #getMatchingCredentials(com.mucommander.commons.file.FileURL)}.
-     * If there is no match, guest credentials are retrieved from the URL and used (if any).</p>
+     * If there is no match, guest credentials are retrieved from the URL and used (if any).
      *
      * @param location the FileURL to authenticate
      */
@@ -385,7 +385,6 @@ public class CredentialsManager {
      * <p>
      * The path of each matching CredentialsMapping' location is compared to the provided location's path: the more
      * folder parts match, the better. If both paths are equal, then the CredentialsMapping index is returned (perfect match).
-     * </p>
      *
      * @param location the location to be compared against CredentialsMapping matches
      * @param matches CredentialsMapping instances matching the given location
@@ -473,7 +472,7 @@ public class CredentialsManager {
      * Returns the list of known volatile {@link CredentialsMapping}, stored in a Vector.
      * <p>
      * The returned Vector instance is the one actually used by CredentialsManager, so use it with caution.
-     * </p>
+     *
      * @return the list of known volatile {@link CredentialsMapping}.
      */
     public static List<CredentialsMapping> getVolatileCredentialMappings() {
@@ -486,7 +485,7 @@ public class CredentialsManager {
      * <p>
      * Any changes made to the Vector will be detected and will yield to writing the credentials file when
      * {@link #writeCredentials(boolean)} is called with false.
-     * </p>
+     *
      * @return the list of known persistent {@link CredentialsMapping}.
      */
     public static AlteredVector<CredentialsMapping> getPersistentCredentialMappings() {

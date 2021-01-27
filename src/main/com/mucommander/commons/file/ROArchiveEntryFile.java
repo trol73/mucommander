@@ -16,11 +16,6 @@ public class ROArchiveEntryFile extends AbstractArchiveEntryFile {
         super(url, archiveFile, entry);
     }
 
-
-    /////////////////////////////////
-    // AbstractFile implementation //
-    /////////////////////////////////
-
     /**
      * Always throws {@link UnsupportedFileOperationException} when called.
      *

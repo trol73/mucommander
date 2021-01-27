@@ -28,7 +28,7 @@ public class JavaClassVersionDetector {
 
     private int major;
     private int minor;
-    private Version version;
+    private final Version version;
 
 
     public enum Version {
@@ -43,10 +43,12 @@ public class JavaClassVersionDetector {
         VER_1_7(51, 0, "1.7"),
         VER_1_8(52, 0, "1.8"),
         VER_1_9(53, 0, "1.9"),
+        VER_1_10(54, 0, "1.10"),
+        VER_1_11(55, 0, "1.11"),
         UNKNOWN(-1, -1, "unknown");
 
-        private int major;
-        private int minor;
+        private final int major;
+        private final int minor;
         public String name;
 
         Version(int major, int minor, String name) {

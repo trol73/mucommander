@@ -31,7 +31,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.archiver.Archiver;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -95,7 +95,7 @@ public class ArchiveJob extends TransferFileJob {
         }
 
         String filePath = file.getAbsolutePath(false);
-        String entryRelativePath = filePath.substring(baseFolderPath.length()+1, filePath.length());
+        String entryRelativePath = filePath.substring(baseFolderPath.length()+1);
 
         // Process current file
         do {		// Loop for retry

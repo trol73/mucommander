@@ -18,14 +18,14 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.main.tabs.FileTableTabs;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class CloseTabAction extends ActiveTabAction {
 
-    CloseTabAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CloseTabAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
     
@@ -47,8 +47,8 @@ public class CloseTabAction extends ActiveTabAction {
      */
     @Override
     protected void toggleEnabledState() {
-        setEnabled(!mainFrame.getActivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getTabs().getTabsCount() > 1);
+        FileTableTabs tabs = mainFrame.getActivePanel().getTabs();
+        setEnabled(!tabs.getCurrentTab().isLocked() && tabs.getTabsCount() > 1);
     }
 
     @Override
@@ -66,21 +66,23 @@ public class CloseTabAction extends ActiveTabAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CloseTab";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.TAB; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.TAB;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_W, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CloseTabAction(mainFrame, properties);
         }
 

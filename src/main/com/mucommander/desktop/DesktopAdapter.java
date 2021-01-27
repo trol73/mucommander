@@ -20,8 +20,16 @@ package com.mucommander.desktop;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.filter.FileFilter;
+import com.mucommander.commons.util.Pair;
+import com.mucommander.ui.action.TcAction;
+import com.mucommander.ui.notifier.AbstractNotifier;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Contract for classes that provide desktop integration features.
@@ -51,8 +59,7 @@ import java.awt.event.MouseEvent;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 public interface DesktopAdapter {
-    // - Detection / Initialisation --------------------------------------
-    // -------------------------------------------------------------------
+
     /**
      * Checks whether or not the desktop is available on the current platform.
      * @return <code>true</code> if the desktop is available on the current platform, <code>false</code> otherwise.
@@ -65,7 +72,7 @@ public interface DesktopAdapter {
      * This method is called when an instance of <code>DesktopAdapter</code> has been chosen as the
      * best fit for the current system.<br>
      * This gives the instance an opportunity to set itself up -
-     * default {@link com.mucommander.command.Command} and {@link com.mucommander.ui.action.MuAction} registration, 
+     * default {@link com.mucommander.command.Command} and {@link TcAction} registration,
      * trash management...
      * <p>
      * If the <code>install</code> parameter is set to <code>true</code>, this is the first time the
@@ -155,4 +162,30 @@ public interface DesktopAdapter {
      * @return <code>true</code> if the given file is an application file
      */
     boolean isApplication(AbstractFile file);
+
+    String getDefaultTerminalAppCommand();
+
+    default TrashProvider getTrash() {
+        return null;
+    }
+
+    default AbstractNotifier getNotifier() {
+        return null;
+    }
+
+    default Consumer<JTabbedPane> getTabbedPaneCustomizer() {
+        return null;
+    }
+
+    default void postCopy(AbstractFile source, AbstractFile target) {
+
+    }
+
+    default void customizeMainFrame(Window window) {
+
+    }
+
+    default List<Pair<JLabel, JComponent>> getExtendedFileProperties(AbstractFile file) {
+        return Collections.emptyList();
+    }
 }

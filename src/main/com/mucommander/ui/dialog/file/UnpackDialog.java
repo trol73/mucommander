@@ -23,7 +23,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.TransferFileJob;
 import com.mucommander.job.UnpackJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.UnpackAction;
 import com.mucommander.ui.main.MainFrame;
@@ -45,9 +44,9 @@ public class UnpackDialog extends TransferDestinationDialog {
     public UnpackDialog(MainFrame mainFrame, FileSet files) {
         super(mainFrame, files,
         	  ActionProperties.getActionLabel(UnpackAction.Descriptor.ACTION_ID),
-              Translator.get("unpack_dialog.destination"),
-              Translator.get("unpack"),
-              Translator.get("unpack_dialog.error_title"),
+              i18n("unpack_dialog.destination"),
+              i18n("unpack"),
+              i18n("unpack_dialog.error_title"),
               true);
     }
 
@@ -65,7 +64,7 @@ public class UnpackDialog extends TransferDestinationDialog {
     protected TransferFileJob createTransferFileJob(ProgressDialog progressDialog, PathUtils.ResolvedDestination resolvedDest, int defaultFileExistsAction) {
         int destinationType = resolvedDest.getDestinationType();
         if(destinationType==PathUtils.ResolvedDestination.EXISTING_FILE) {
-            showErrorDialog(Translator.get("invalid_path", resolvedDest.getDestinationFile().getAbsolutePath()));
+            showErrorDialog(i18n("invalid_path", resolvedDest.getDestinationFile().getAbsolutePath()));
             return null;
         }
 
@@ -79,6 +78,6 @@ public class UnpackDialog extends TransferDestinationDialog {
 
     @Override
     protected String getProgressDialogTitle() {
-        return Translator.get("unpack_dialog.unpacking");
+        return i18n("unpack_dialog.unpacking");
     }
 }

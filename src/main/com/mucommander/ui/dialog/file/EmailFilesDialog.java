@@ -36,11 +36,10 @@ import javax.swing.JTextField;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
 import com.mucommander.job.SendMailJob;
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EmailAction;
 import com.mucommander.ui.dialog.DialogToolkit;
@@ -53,7 +52,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * <p>One or several recipients, as well as a mail subject and body can be input.
  * The dialog also allows the user to review the files that have been marked,
- * select/unselect some, and displays the total file size.</p>
+ * select/unselect some, and displays the total file size.
  *
  * @author Maxence Bernard
  */
@@ -94,18 +93,18 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
             XAlignedComponentPanel compPanel = new XAlignedComponentPanel();
 
             // From (sender) field, non editable
-            JLabel fromLabel = new JLabel(MuConfigurations.getPreferences().getVariable(MuPreference.MAIL_SENDER_NAME)
-                                          +" <"+MuConfigurations.getPreferences().getVariable(MuPreference.MAIL_SENDER_ADDRESS)+">");
+            JLabel fromLabel = new JLabel(TcConfigurations.getPreferences().getVariable(TcPreference.MAIL_SENDER_NAME)
+                                          +" <"+ TcConfigurations.getPreferences().getVariable(TcPreference.MAIL_SENDER_ADDRESS)+">");
             //			fromField.setEditable(false);
-            compPanel.addRow(Translator.get("email_dialog.from")+":", fromLabel, 10);
+            compPanel.addRow(i18n("email_dialog.from")+":", fromLabel, 10);
 			
             // To (recipients) field
             toField = new JTextField(lastTo);
-            compPanel.addRow(Translator.get("email_dialog.to")+":", toField, 10);
+            compPanel.addRow(i18n("email_dialog.to")+":", toField, 10);
 			
             // Subject field
             subjectField = new JTextField(lastSubject);
-            compPanel.addRow(Translator.get("email_dialog.subject")+":", subjectField, 15);
+            compPanel.addRow(i18n("email_dialog.subject")+":", subjectField, 15);
 
             mainPanel.add(compPanel);		
 	
@@ -127,11 +126,10 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
             // checkbox showing all files that are to be sent, allowing them to be unselected
             int nbFiles = flattenedFiles.size();
             fileCheckboxes = new JCheckBox[nbFiles];
-            if(nbFiles>0) {
+            if (nbFiles > 0) {
                 YBoxPanel tempPanel2 = new YBoxPanel();
-                AbstractFile file;
                 for(int i=0; i<nbFiles; i++) {
-                    file = flattenedFiles.elementAt(i);
+                    AbstractFile file = flattenedFiles.elementAt(i);
                     fileCheckboxes[i] = new JCheckBox(file.getName()
                                                       +" ("+ SizeFormat.format(file.getSize(), SizeFormat.DIGITS_MEDIUM| SizeFormat.UNIT_SHORT| SizeFormat.INCLUDE_SPACE| SizeFormat.ROUND_TO_KB)+")", true);
                     fileCheckboxes[i].addItemListener(this);
@@ -143,8 +141,8 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
             updateInfoLabel();
 				
             // OK / Cancel buttons panel
-            okButton = new JButton(Translator.get("email_dialog.send"));
-            cancelButton = new JButton(Translator.get("cancel"));
+            okButton = new JButton(i18n("email_dialog.send"));
+            cancelButton = new JButton(i18n("cancel"));
             contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
 	
             // 'To' field will receive initial focus
@@ -153,9 +151,8 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
             // Packs dialog
             setMinimumSize(MINIMUM_DIALOG_DIMENSION);
             setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
-        }
-        catch(IOException e) {
-            showErrorDialog(Translator.get("email_dialog.read_error"), Translator.get("email_dialog.error_title"));
+        } catch(IOException e) {
+            showErrorDialog(i18n("email_dialog.read_error"), i18n("email_dialog.error_title"));
         }
     }
 
@@ -168,16 +165,17 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
         int nbSelected = 0;
         int bytesTotal = 0;
         long fileSize;
-        for(int i=0; i<nbFiles; i++) {
-            if(fileCheckboxes[i].isSelected()) {
+        for (int i=0; i<nbFiles; i++) {
+            if (fileCheckboxes[i].isSelected()) {
                 fileSize = flattenedFiles.elementAt(i).getSize();
-                if(fileSize>0)
+                if (fileSize > 0) {
                     bytesTotal += fileSize;
+                }
                 nbSelected++;
             }
         }
-        String text = 
-            Translator.get("nb_files", ""+nbSelected)
+        String text =
+                i18n("nb_files", ""+nbSelected)
             +(nbSelected==0?"":" ("+ SizeFormat.format(bytesTotal, SizeFormat.DIGITS_MEDIUM| SizeFormat.UNIT_LONG| SizeFormat.ROUND_TO_KB)+")");
         infoLabel.setText(text);
         infoLabel.repaint(100);
@@ -193,8 +191,9 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
     private FileSet getFlattenedFiles(FileSet originalFiles) throws IOException {
         int nbFiles = originalFiles.size();
         FileSet flattenedFiles = new FileSet(originalFiles.getBaseFolder());
-        for(int i=0; i<nbFiles; i++)
+        for (int i=0; i<nbFiles; i++) {
             recurseOnFolder(originalFiles.elementAt(i), flattenedFiles);
+        }
 
         return flattenedFiles;
     }
@@ -203,12 +202,12 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
      * Adds the given file to the FileSet if it's not a folder, recurses otherwise.
      */
     private void recurseOnFolder(AbstractFile file, FileSet flattenedFiles) throws IOException {
-        if(file.isDirectory() && !file.isSymlink()) {
+        if (file.isDirectory() && !file.isSymlink()) {
             AbstractFile children[] = file.ls();
-            for (AbstractFile child : children)
+            for (AbstractFile child : children) {
                 recurseOnFolder(child, flattenedFiles);
-        }
-        else {
+            }
+        } else {
             flattenedFiles.add(file);
         }
     }
@@ -226,7 +225,7 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
             String to = toField.getText().trim();
             String subject = subjectField.getText();
             String body = bodyArea.getText();
-            if(!to.equals("")) {
+            if (!to.isEmpty()) {
                 lastTo = to;
                 lastSubject = subject;
                 lastBody = body;
@@ -237,18 +236,20 @@ public class EmailFilesDialog extends JobDialog implements ActionListener, ItemL
                 // Creates new FileSet with files that have been selected
                 FileSet filesToSend = new FileSet(flattenedFiles.getBaseFolder());
                 int nbFiles = fileCheckboxes.length;
-                for(int i=0; i<nbFiles; i++)
-                    if(fileCheckboxes[i].isSelected())
+                for (int i = 0; i < nbFiles; i++) {
+                    if (fileCheckboxes[i].isSelected()) {
                         filesToSend.add(flattenedFiles.elementAt(i));
+                    }
+                }
 
                 // Starts sending files
-                ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("email_dialog.sending"));
+                ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("email_dialog.sending"));
                 SendMailJob mailJob = new SendMailJob(progressDialog, mainFrame, filesToSend, to, subject, body);
                 progressDialog.start(mailJob);
             }
         }
         // Cancel button
-        else if (source==cancelButton)  {
+        else if (source == cancelButton)  {
             dispose();			
         }
     }

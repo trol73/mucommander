@@ -56,17 +56,17 @@ public abstract class S3File extends ProtocolFile {
     protected AbstractFile[] listObjects(String bucketName, String prefix, S3File parent) throws IOException {
         try {
             S3ObjectsChunk chunk = service.listObjectsChunked(bucketName, prefix, "/", Constants.DEFAULT_OBJECT_LIST_CHUNK_SIZE, null, true);
-            org.jets3t.service.model.S3Object objects[] = chunk.getObjects();
+            org.jets3t.service.model.S3Object[] objects = chunk.getObjects();
             String[] commonPrefixes = chunk.getCommonPrefixes();
 
-            if(objects.length==0 && !prefix.equals("")) {
+            if (objects.length == 0 && !prefix.isEmpty()) {
                 // This happens only when the directory does not exist
                 throw new IOException();
             }
 
             AbstractFile[] children = new AbstractFile[objects.length+commonPrefixes.length];
             FileURL childURL;
-            int i=0;
+            int i = 0;
             String objectKey;
 
             for(org.jets3t.service.model.S3Object object : objects) {

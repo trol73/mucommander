@@ -108,6 +108,8 @@ public class FileFactory {
     /** Default authenticator, used when none is specified */
     private static Authenticator defaultAuthenticator;
 
+    private static Set<String> archiveExtensions;
+
 
     public static void registerProtocolNetworks() {
         ProtocolProvider protocolProvider;
@@ -137,6 +139,7 @@ public class FileFactory {
         registerArchiveFormat(new com.mucommander.commons.file.impl.lst.LstFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.rar.RarFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.sevenzip.SevenZipFormatProvider());
+        registerArchiveFormat(new com.mucommander.commons.file.impl.rpm.RpmFormatProvider());
 
         registerArchiveFormat(new com.mucommander.commons.file.impl.arj.ArjFormatProvider());
         registerArchiveFormat(new com.mucommander.commons.file.impl.cab.CabFormatProvider());
@@ -287,7 +290,7 @@ public class FileFactory {
      *
      * @param provider the <code>ArchiveFormatProvider</code> to register.
      */
-    public static void registerArchiveFormat(ArchiveFormatProvider provider) {
+    private static void registerArchiveFormat(ArchiveFormatProvider provider) {
         archiveFormatProvidersV.add(provider);
         updateArchiveFormatProviderArray();
     }
@@ -402,7 +405,7 @@ public class FileFactory {
      * @param parent the returned file's parent
      * @return an instance of <code>AbstractFile</code> for the specified absolute path.
      * @throws java.io.IOException if something went wrong during file or file url creation.
-     * @throws AuthException if additionnal authentication information is required to create the file
+     * @throws AuthException if additional authentication information is required to create the file
      */
     public static AbstractFile getFile(String absPath, AbstractFile parent) throws AuthException, IOException {
         return getFile(FileURL.getFileURL(absPath), parent);
@@ -532,7 +535,7 @@ public class FileFactory {
                     lastFileResolved = true;
                 } else {          // currentFile is an AbstractArchiveFile
                     // Note: wrapArchive() is already called by AbstractArchiveFile#createArchiveEntryFile()
-                    AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                    AbstractFile tempEntryFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length()), pathSeparator));
                     if (tempEntryFile.isArchive()) {
                         currentFile = tempEntryFile;
                         lastFileResolved = true;
@@ -561,7 +564,7 @@ public class FileFactory {
                 // Add the final file instance to the cache
                 filePool.put(currentFile.getURL(), currentFile);
             } else {          // currentFile is an AbstractArchiveFile
-                currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length(), currentPath.length()), pathSeparator));
+                currentFile = ((AbstractArchiveFile)currentFile).getArchiveEntryFile(PathUtils.removeLeadingSeparator(currentPath.substring(currentFile.getURL().getPath().length()), pathSeparator));
                 // Note: don't cache the entry file
             }
         }
@@ -592,8 +595,9 @@ public class FileFactory {
         else {
             // If an Authenticator has been specified and the specified FileURL's protocol is authenticated and the
             // FileURL doesn't contain any credentials, use it to authenticate the FileURL.
-            if (authenticator != null && fileURL.getAuthenticationType() != AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials())
+            if (authenticator != null && fileURL.getAuthenticationType() != AuthenticationType.NO_AUTHENTICATION && !fileURL.containsCredentials()) {
                 authenticator.authenticate(fileURL);
+            }
 
             // Finds the right file protocol provider
             ProtocolProvider provider = getProtocolProvider(scheme);
@@ -650,11 +654,13 @@ public class FileFactory {
         // Attempt to use the desired name
         AbstractFile tempFile = TEMP_DIRECTORY.getDirectChild(desiredFilename);
 
-        if (tempFile.exists())
+        if (tempFile.exists()) {
             tempFile = TEMP_DIRECTORY.getDirectChild(getFilenameVariation(desiredFilename));
+        }
 
-        if (deleteOnExit)
+        if (deleteOnExit) {
             ((java.io.File)tempFile.getUnderlyingFileObject()).deleteOnExit();
+        }
 
         return tempFile;
     }
@@ -691,7 +697,24 @@ public class FileFactory {
      * @return <code>true</code> if the specified filename is a known archive file name, <code>false</code> otherwise.
      */
     public static boolean isArchiveFilename(String filename) {
-        return getArchiveFormatProvider(filename) != null;
+        if (archiveExtensions == null) {
+            if (archiveFormatProviders == null) {
+                return false;
+            }
+            archiveExtensions = new HashSet<>();
+            for (ArchiveFormatProvider provider : archiveFormatProviders) {
+                if (provider != null) {
+                    String[] extensions = provider.getFileExtensions();
+                    for (String ext : extensions) {
+                        String extWithoutDot = ext.startsWith(".") ? ext.substring(1) : ext;
+                        archiveExtensions.add(extWithoutDot.toLowerCase());
+                    }
+                }
+            }
+        }
+        String ext = AbstractFile.getExtension(filename);
+        return ext != null && archiveExtensions.contains(ext.toLowerCase());
+        //return getArchiveFormatProvider(filename) != null;
     }
 
     /**
@@ -712,13 +735,21 @@ public class FileFactory {
         // the filename contains a dot '.' character, since most of the time this method is called with a filename that
         // doesn't match any of the filters.
         if (filename.indexOf('.') >= 0) {
-            ArchiveFormatProvider provider;
-            if ((provider = getArchiveFormatProvider(filename)) != null) {
+            ArchiveFormatProvider provider = getArchiveFormatProvider(filename);
+            if (provider != null) {
                 return provider.getFile(file);
             }
         }
 
         return file;
+    }
+
+    /**
+     * Same as wrapArchive(AbstractFile) but using the given extension rather than the file's extension.
+     */
+    public static AbstractFile wrapArchive(AbstractFile file, String extension) throws IOException {
+        ArchiveFormatProvider provider = getArchiveFormatProvider(file.getBaseName() + extension);
+        return provider != null ? provider.getFile(file) : file;
     }
 
 

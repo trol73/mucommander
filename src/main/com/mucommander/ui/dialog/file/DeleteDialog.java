@@ -23,7 +23,6 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.desktop.AbstractTrash;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.job.DeleteJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.DeleteAction;
@@ -32,6 +31,7 @@ import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.layout.InformationPane;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,13 +56,13 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     private boolean moveToTrash;
 
     /** Allows to control whether files should be moved to trash when deleted or permanently erased */
-    private JCheckBox moveToTrashCheckBox;
+    private JCheckBox cbMoveToTrash;
 
     /** Informs the user about the consequences of deleting files, based on the current 'Move to trash' choice */
-    private InformationPane informationPane;
+    private final InformationPane informationPane;
 
     /** The button that confirms deletion */
-    private JButton deleteButton;
+    private final JButton btnDelete;
 
     /** Dialog size constraints */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(360, 0);
@@ -85,8 +85,8 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         if (trash != null && !baseFolder.isArchive() && !trash.isTrashFile(baseFolder) && trash.canMoveToTrash(baseFolder)) {
             moveToTrash = !deletePermanently;
 
-            moveToTrashCheckBox = new JCheckBox(Translator.get("delete_dialog.move_to_trash.option"), moveToTrash);
-            moveToTrashCheckBox.addItemListener(this);
+            cbMoveToTrash = new JCheckBox(i18n("delete_dialog.move_to_trash.option"), moveToTrash);
+            cbMoveToTrash.addItemListener(this);
         }
 
         informationPane = new InformationPane();
@@ -100,25 +100,25 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         }
 
         // create file details button and OK/cancel buttons and lay them out a single row
-        deleteButton = new JButton(Translator.get("delete"));
-        JButton cancelButton = new JButton(Translator.get("cancel"));
+        btnDelete = new JButton(i18n("delete"));
+        JButton cancelButton = new JButton(i18n("cancel"));
 
         mainPanel.add(createButtonsPanel(files.size() > 1 ? createFileDetailsButton(fileDetailsPanel) : null,
-                DialogToolkit.createOKCancelPanel(deleteButton, cancelButton, getRootPane(), this)));
+                DialogToolkit.createOKCancelPanel(btnDelete, cancelButton, getRootPane(), this)));
 
         // add panel with multiple fil list below buttons
         if (files.size() > 1) {
             mainPanel.add(fileDetailsPanel);
         }
 
-        if (moveToTrashCheckBox != null) {
-            mainPanel.add(moveToTrashCheckBox);
+        if (cbMoveToTrash != null) {
+            mainPanel.add(cbMoveToTrash);
         }
 
         getContentPane().add(mainPanel);
 
         // Give initial keyboard focus to the 'Delete' button
-        setInitialFocusComponent(deleteButton);
+        setInitialFocusComponent(btnDelete);
 
         // Call dispose() when dialog is closed
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -142,21 +142,40 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
      * Updates the information pane to reflect the current 'Move to trash' choice.
      */
     private void updateDialog() {
-        String textId;
-        if (moveToTrash) {
-            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.move_to_trash.confirmation";
-        } else {
-            textId = files.size() == 1 ? "delete_dialog.permanently_delete.confirmation_1" : "delete_dialog.permanently_delete.confirmation";
-        }
-        informationPane.getMainLabel().setText(Translator.get(textId));
-        if (moveToTrash) {
-            textId = files.size() == 1 ? "delete_dialog.move_to_trash.confirmation_details_1" : "delete_dialog.move_to_trash.confirmation_details";
-        } else {
-            textId = "this_operation_cannot_be_undone";
-        }
-        informationPane.getCaptionLabel().setText(Translator.get(textId));
-        informationPane.setIcon(moveToTrash ? null: InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
+        String textId = buildTitleId();
+        informationPane.getMainLabel().setText(i18n(textId));
+        String messageId = buildMessageId();
+        informationPane.getCaptionLabel().setText(i18n(messageId));
+        informationPane.setIcon(moveToTrash ? null : InformationPane.getPredefinedIcon(InformationPane.WARNING_ICON));
         setTitle(ActionManager.getActionInstance(moveToTrash ? DeleteAction.Descriptor.ACTION_ID:PermanentDeleteAction.Descriptor.ACTION_ID, mainFrame).getLabel());
+    }
+
+    @NotNull
+    private String buildMessageId() {
+        if (moveToTrash) {
+            if (files.size() == 1) {
+                AbstractFile file = files.get(0);
+                return file.isSymlink() ? "this_operation_cannot_be_undone" : "delete_dialog.move_to_trash.confirmation_details_1";
+            } else {
+                return "delete_dialog.move_to_trash.confirmation_details";
+            }
+        } else {
+            return "this_operation_cannot_be_undone";
+        }
+    }
+
+    @NotNull
+    private String buildTitleId() {
+        boolean singleFileMode = files.size() == 1;
+        if (singleFileMode) {
+            AbstractFile file = files.get(0);
+            if (file.isSymlink()) {
+                return "delete_dialog.permanently_delete.symlink_confirmation_1";
+            } else {
+                return moveToTrash ? "delete_dialog.move_to_trash.confirmation_1" : "delete_dialog.permanently_delete.confirmation_1";
+            }
+        }
+        return moveToTrash ? "delete_dialog.move_to_trash.confirmation" : "delete_dialog.permanently_delete.confirmation";
     }
 
 
@@ -165,7 +184,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     /////////////////////////////////
 
     public void itemStateChanged(ItemEvent e) {
-        moveToTrash = moveToTrashCheckBox.isSelected();
+        moveToTrash = cbMoveToTrash.isSelected();
         updateDialog();
         pack();
     }
@@ -179,9 +198,9 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         // Start by disposing this dialog
         dispose();
 
-        if (e.getSource() == deleteButton) {
+        if (e.getSource() == btnDelete) {
             // Starts deleting files
-            ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("delete_dialog.deleting"));
+            ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("delete_dialog.deleting"));
             if (getReturnFocusTo() != null) {
                 progressDialog.returnFocusTo(getReturnFocusTo());
             }

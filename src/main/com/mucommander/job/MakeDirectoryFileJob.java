@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.RandomAccessOutputStream;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
@@ -156,7 +156,7 @@ public class MakeDirectoryFileJob extends FileJob {
                 boolean needAdminPermissions = e instanceof FileAccessDeniedException;
                 int action;
                 if (needAdminPermissions && !mkfileMode) {
-                    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                    if (OsFamily.MAC_OS_X.isCurrent()) {
                         if (!mkfileMode) {
                             tryMkDirAsAdministrator(file.getAbsolutePath(), null);
                         }
@@ -196,7 +196,7 @@ public class MakeDirectoryFileJob extends FileJob {
     }
 
     private void tryMkDirAsAdministrator(String path, String password) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             AppleScript.execute("do shell script \"mkdir -p + '" + path + "' \" with administrator privileges", new StringBuilder());
         }
     }

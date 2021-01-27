@@ -24,14 +24,14 @@ public class IsoArchiveFile extends AbstractROArchiveFile {
     //////////////////////////////////////////
 
     @Override
-    public ArchiveEntryIterator getEntryIterator() throws IOException, UnsupportedFileOperationException {
+    public ArchiveEntryIterator getEntryIterator() throws IOException {
         RandomAccessInputStream rais = getRandomAccessInputStream();
 
         return new IsoEntryIterator(IsoParser.getEntries(this, rais).iterator(), rais);
     }
 
     @Override
-    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException, UnsupportedFileOperationException {
+    public InputStream getEntryInputStream(ArchiveEntry entry, ArchiveEntryIterator entryIterator) throws IOException {
         // Cast the entry before creating the stream, in case it fails
         IsoArchiveEntry isoEntry = (IsoArchiveEntry) entry;
 
@@ -42,7 +42,7 @@ public class IsoArchiveFile extends AbstractROArchiveFile {
             // be closed when the iterator is closed.
             rais = new FilterRandomAccessInputStream(((IsoEntryIterator) entryIterator).getRandomAccessInputStream()) {
                 @Override
-                public void close() throws IOException {
+                public void close() {
                     // No-op
                 }
             };

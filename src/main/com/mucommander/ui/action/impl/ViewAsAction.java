@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2014-2016 Oleg Trifonov
+ * Copyright (C) 2014-2019 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.quicklist.ViewAsQL;
 
@@ -37,14 +37,12 @@ import java.util.Map;
  * @author Oleg Trifonov
  */
 public class ViewAsAction extends SelectedFilesAction {
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
-     * Creates a new instance of <code>ViewAction</code>.
+     * Creates a new instance of <code>ViewAsAction</code>.
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    ViewAsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private ViewAsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         ImageIcon icon = getStandardIcon(ViewAction.class);
@@ -84,7 +82,7 @@ public class ViewAsAction extends SelectedFilesAction {
 
         public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK); }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new ViewAsAction(mainFrame, properties);
         }
     }

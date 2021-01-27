@@ -18,10 +18,10 @@
 
 package com.mucommander.ui.action.impl;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.Column;
 
@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public abstract class ToggleColumnAction extends MuAction {
+public abstract class ToggleColumnAction extends TcAction {
 
     /** Index of the FileTable column this action operates on */
     protected Column column;
@@ -51,12 +51,16 @@ public abstract class ToggleColumnAction extends MuAction {
     }
 
     private void updateLabel() {
-        setLabel(Translator.get(isColumnVisible()?"ToggleColumn.hide":"ToggleColumn.show", column.getLabel()));
+        setLabel(Translator.get(isColumnVisible() ? "ToggleColumn.hide" : "ToggleColumn.show", column.getLabel()));
     }
 
     @Override
     public void performAction() {
-        mainFrame.getActiveTable().setColumnEnabled(column, !isColumnVisible());
+        boolean show = !isColumnVisible();
+        mainFrame.getActiveTable().setColumnEnabled(column, show);
+        if (show) {
+            mainFrame.getActivePanel().tryRefreshCurrentFolder();
+        }
     }
 
 
@@ -64,17 +68,29 @@ public abstract class ToggleColumnAction extends MuAction {
 
         private Column column;
 
-        public Descriptor(Column column) { this.column = column; }
+        public Descriptor(Column column) {
+            this.column = column;
+        }
 
-        public String getId() { return column.getToggleColumnActionId(); }
+        public String getId() {
+            return column.getToggleColumnActionId();
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.VIEW; }
+        public ActionCategory getCategory() {
+            return ActionCategory.VIEW;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return null; }
+        public KeyStroke getDefaultKeyStroke() {
+            return null;
+        }
 
         @Override
-        public String getLabel() { return Translator.get("ToggleColumn.show", column.getLabel()); }
+        public String getLabel() {
+            return Translator.get("ToggleColumn.show", column.getLabel());
+        }
     }
 }

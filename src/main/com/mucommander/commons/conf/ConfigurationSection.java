@@ -25,17 +25,12 @@ import java.util.*;
  * @author Nicolas Rinaudo
  */
 class ConfigurationSection {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Contains all the variables defined in the section. */
     private final Map<String, String> variables = new HashMap<>();
     /** Contains all the subsections defined the section. */
     private final Map<String, ConfigurationSection> sections = new HashMap<>();
 
 
-
-    // - Variables access ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Removes the specified variable from the section.
      * @param name name of the variable to remove.
@@ -59,7 +54,7 @@ class ConfigurationSection {
      * <p>
      * If <code>value</code> is either <code>null</code> or an empty string,
      * the call will be equivalent to {@link #removeVariable(String)}.
-     * </p>
+     *
      * @param  name  name of the variable to set.
      * @param  value value for the variable.
      * @return       <code>true</code> if the variable's value was changed as a result of this call, <code>false</code>
@@ -69,8 +64,9 @@ class ConfigurationSection {
         // If the specified value is empty, deletes the variable.
         if (value == null || value.trim().isEmpty()) {
             // If the variable wasn't set, we haven't changed its value.
-            if(getVariable(name) == null)
+            if (getVariable(name) == null) {
                 return false;
+            }
 
             // Otherwise, deletes it and returns true.
             removeVariable(name);
@@ -87,7 +83,7 @@ class ConfigurationSection {
      * <p>
      * Note that the order in which variable names are returned needs not be that in which they were added to the
      * section. Callers should not rely on the order being consistent over time.
-     * </p>
+     *
      * @return an iterator on the names of the variables that are defined in the section.
      */
     public Set<String> variableNames() {
@@ -104,13 +100,11 @@ class ConfigurationSection {
 
 
 
-    // - Value helpers -------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Casts the specified value into an integer.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>0</code>.
-     * </p>
+     *
      * @param value value to cast to an integer.
      * @return <code>value</code> as an integer.
      */
@@ -122,7 +116,7 @@ class ConfigurationSection {
      * Casts the specified value into a value list.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>null</code>.
-     * </p>
+     *
      * @param  value     value to cast to a value list.
      * @param  separator string used to separate data in tokens.
      * @return           <code>value</code> as a value list.
@@ -135,7 +129,7 @@ class ConfigurationSection {
      * Casts the specified value into an float.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>0</code>.
-     * </p>
+     *
      * @param value value to cast to an float.
      * @return <code>value</code> as an float.
      */
@@ -147,7 +141,7 @@ class ConfigurationSection {
      * Casts the specified value into an boolean.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>false</code>.
-     * </p>
+     *
      * @param value value to cast to an boolean.
      * @return <code>value</code> as an boolean.
      */
@@ -159,7 +153,7 @@ class ConfigurationSection {
      * Casts the specified value into an long.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>0</code>.
-     * </p>
+     *
      * @param value value to cast to an long.
      * @return <code>value</code> as an long.
      */
@@ -171,7 +165,7 @@ class ConfigurationSection {
      * Casts the specified value into an double.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>0</code>.
-     * </p>
+     *
      * @param value value to cast to an double.
      * @return <code>value</code> as an double.
      */
@@ -242,7 +236,7 @@ class ConfigurationSection {
      * Creates a subsection wit the specified name in the section.
      * <p>
      * If a subsection with the specified name already exists, it will be returned.
-     * </p>
+     *
      * @param  name name of the new section.
      * @return      the subsection with the specified name.
      */
@@ -272,14 +266,14 @@ class ConfigurationSection {
      * Deletes the specified section.
      * <p>
      * Note that this method is very inefficient and should only be called when strictly necessary.
-     * </p>
+     *
      * @param  section section to remove.
      * @return         <code>true</code> if the specified section was removed, <code>false</code> if it didn't exist.
      */
     public boolean removeSection(ConfigurationSection section) {
         Set<String> sectionNames = sectionNames();
 
-        // Goes through each key / value pair and checks whether we've found the sectioon
+        // Goes through each key / value pair and checks whether we've found the section
         // we were looking for.
         for (String name : sectionNames) {
             // If we have, remove it and break.
@@ -306,7 +300,7 @@ class ConfigurationSection {
      * <p>
      * Note that the order in which section names are returned needs not be that in which they were added to the
      * section. Callers should not rely on the order being consistent over time.
-     * </p>
+     *
      * @return an enumeration on all of this section's subsections' names.
      */
     public Set<String> sectionNames() {
@@ -322,14 +316,11 @@ class ConfigurationSection {
     }
 
 
-
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the section doesn't contain either variables or sub-sections.
      * <p>
      * This method is meant for {@link Configuration} instances to prune dead branches.
-     * </p>
+     *
      * @return <code>true</code> if the section doesn't contain either variables or sub-sections, <code>false</code>
      *         otherwise.
      */

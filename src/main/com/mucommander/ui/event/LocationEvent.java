@@ -32,10 +32,10 @@ import com.mucommander.ui.main.FolderPanel;
 public class LocationEvent {
 
     /** FolderPanel where location has or is being changed */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** URL of the folder that has or is being changed */
-    private FileURL folderURL;
+    private final FileURL folderURL;
 
     /**
      * Creates a new LocationEvent.

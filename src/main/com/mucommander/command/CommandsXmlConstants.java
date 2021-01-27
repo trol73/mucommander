@@ -25,7 +25,6 @@ package com.mucommander.command;
  * file format between the {@link com.mucommander.command.CommandWriter}
  * and {@link CommandReader}. It will be removed
  * at bytecode optimisation time.
- * </p>
  * <p>
  * Commands XML files must match the following DTD:
  * <pre>
@@ -49,17 +48,12 @@ package com.mucommander.command;
  * @author Nicolas Rinaudo
  */
 interface CommandsXmlConstants {
-    // - XML elements ----------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Root element. */
     String ELEMENT_ROOT     = "commands";
     /** Custom command definition element. */
     String ELEMENT_COMMAND  = "command";
 
 
-
-    // - Custom command structure ----------------------------------------------
-    // -------------------------------------------------------------------------
     /** Name of the attribute containing a command's display name. */
     String ATTRIBUTE_DISPLAY = "display";
     /** Name of the attribute containing a command's alias. */

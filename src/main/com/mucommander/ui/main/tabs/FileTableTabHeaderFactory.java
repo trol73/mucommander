@@ -26,9 +26,9 @@ import com.mucommander.ui.main.FolderPanel;
  */
 public abstract class FileTableTabHeaderFactory {
 
-	protected FolderPanel folderPanel;
+	protected final FolderPanel folderPanel;
 	
-	protected FileTableTabHeaderFactory(FolderPanel folderPanel) {
+	FileTableTabHeaderFactory(FolderPanel folderPanel) {
 		this.folderPanel = folderPanel;
 	}
 	

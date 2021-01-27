@@ -35,13 +35,13 @@ import com.mucommander.ui.tabs.TabFactory;
 public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements LocationListener {
 
 	/** FolderPanel containing those tabs */
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 
 	/** Factory of instances of FileTableTab */
-	private TabFactory<FileTableTab, FileURL> defaultTabsFactory;
+	private final TabFactory<FileTableTab, FileURL> defaultTabsFactory;
 
 	/** Factory of instances of FileTableTab */
-	private TabFactory<FileTableTab, FileTableTab> clonedTabsFactory;
+	private final TabFactory<FileTableTab, FileTableTab> clonedTabsFactory;
 
 	public FileTableTabs(MainFrame mainFrame, FolderPanel folderPanel, ConfFileTableTab[] initialTabs) {
 		super(new FileTableTabsWithoutHeadersViewerFactory(folderPanel), new FileTableTabsWithHeadersViewerFactory(mainFrame, folderPanel));
@@ -55,8 +55,9 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 		folderPanel.getLocationManager().addLocationListener(this);
 
 		// Add the initial folders
-		for (FileTableTab tab : initialTabs)
+		for (FileTableTab tab : initialTabs) {
 			addTab(clonedTabsFactory.createTab(tab));
+		}
 	}
 
 	@Override
@@ -68,8 +69,10 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 
 	@Override
 	protected void show(final int tabIndex) {
-		folderPanel.tryChangeCurrentFolderInternal(getTab(tabIndex).getLocation(), this::fireActiveTabChanged);
-			}
+		try {
+			folderPanel.tryChangeCurrentFolderInternal(getTab(tabIndex).getLocation(), this::fireActiveTabChanged);
+		} catch (Throwable ignore) {}
+	}
 
 	/**
 	 * Return the currently selected tab
@@ -77,7 +80,8 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	 * @return currently selected tab
 	 */
 	public FileTableTab getCurrentTab() {
-		return getTab(getSelectedIndex());
+		FileTableTab result = getTab(getSelectedIndex());
+		return result != null ? result : getTab(0);
 	}
 
 	private void updateTabLocation(final FileURL location) {
@@ -169,15 +173,24 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	 **********************************/
 	
 	public void locationChanged(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 
 	public void locationCancelled(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 
 	public void locationFailed(LocationEvent locationEvent) {
-		updateTabLocation(folderPanel.getCurrentFolder().getURL());
+		AbstractFile folder = folderPanel.getCurrentFolder();
+		if (folder != null) {
+			updateTabLocation(folder.getURL());
+		}
 	}
 	
 	public void locationChanging(LocationEvent locationEvent) { }

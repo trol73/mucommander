@@ -23,11 +23,10 @@ package com.mucommander.commons.conf;
  * <p>
  * This exception is meant to be thrown by {@link Configuration} whenever a method that requires a
  * {@link ConfigurationSource} to have been set is called.
- * </p>
  * <p>
  * Since <code>SourceConfigurationException</code> subclasses {@link ConfigurationException}, it
  * inherits his capacity to wrap other exceptions.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class SourceConfigurationException extends ConfigurationException {
@@ -42,7 +41,7 @@ public class SourceConfigurationException extends ConfigurationException {
      * <p>
      * The existing exception will be embedded in the new one, and its message will
      * become the default message for the <code>SourceConfigurationException</code>.
-     * </p>
+     *
      * @param cause the exception to be wrapped in a <code>SourceConfigurationException</code>.
      */
     public SourceConfigurationException(Throwable cause) {super(cause);}
@@ -51,7 +50,7 @@ public class SourceConfigurationException extends ConfigurationException {
      * Creates a new source configuration exception from an existing exception.
      * <p>
      * The existing exception will be embedded in the new one, but the new exception will have its own message.
-     * </p>
+     *
      * @param message the detail message.
      * @param cause   the exception to be wrapped in a <code>SourceConfigurationException</code>.
      */

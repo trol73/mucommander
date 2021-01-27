@@ -19,7 +19,6 @@
 package com.mucommander.ui.dialog.file;
 
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.button.CollapseExpandButton;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.dialog.InformationDialog;
@@ -73,7 +72,7 @@ public abstract class JobDialog extends FocusDialog {
      * @param message the error message
      */
     protected void showErrorDialog(String message) {
-        showErrorDialog(message, Translator.get("error"));
+        showErrorDialog(message, i18n("error"));
     }
 
 
@@ -96,7 +95,7 @@ public abstract class JobDialog extends FocusDialog {
             }
 
             @Override
-            public void initTargetComponent() throws Exception {
+            public void initTargetComponent() {
             }
 
             @Override
@@ -123,7 +122,7 @@ public abstract class JobDialog extends FocusDialog {
      * @return a button that expands/collapses the specified 'File details' panel
      */
     protected CollapseExpandButton createFileDetailsButton(JPanel detailsPanel) {
-        collapseExpandButton = new CollapseExpandButton(Translator.get("nb_files", String.valueOf(files.size())), detailsPanel, lastExpanded);
+        collapseExpandButton = new CollapseExpandButton(i18n("nb_files", String.valueOf(files.size())), detailsPanel, lastExpanded);
         return collapseExpandButton;
     }
 
@@ -155,7 +154,7 @@ public abstract class JobDialog extends FocusDialog {
     protected void setFiles(FileSet files) {
         this.files = files;
         if (collapseExpandButton != null) {
-            collapseExpandButton.setText(Translator.get("nb_files", Integer.toString(files.size())));
+            collapseExpandButton.setText(i18n("nb_files", Integer.toString(files.size())));
         }
     }
 

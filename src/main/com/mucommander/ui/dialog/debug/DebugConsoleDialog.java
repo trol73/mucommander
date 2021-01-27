@@ -42,10 +42,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.MuLogging.LogLevel;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.action.impl.ShowDebugConsoleAction;
@@ -65,19 +64,22 @@ import com.mucommander.ui.main.MainFrame;
 public class DebugConsoleDialog extends FocusDialog implements ActionListener, ItemListener {
 
     /** Displays log events, and allows to copy their values to the clipboard */
-    private JList<LoggingEvent> loggingEventsList = new JList<>();
+    private final JList<LoggingEvent> loggingEventsList = new JList<>();
 
     /** Allows the log level to be changed */
-    private JComboBox<LogLevel> levelComboBox = new MuComboBox<>();
+    private final JComboBox<LogLevel> levelComboBox = new TcComboBox<>(LogLevel.values());
 
     /** Closes the debug console when pressed */
-    private JButton closeButton;
+    private final JButton btnClose;
 
     /** Refreshes the list with the latest log records when pressed */
-    private JButton refreshButton;
+    private final JButton btnRefresh;
 
     /** Show threads tree */
-    private JButton threadsButton;
+    private final JButton btnThreads;
+
+    /** Show active threads tree */
+    private final JButton btnActiveThreads;
 
     /** Dialog size constraints */
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(600, 400);
@@ -109,26 +111,30 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
-        threadsButton = new JButton(Translator.get("debug_console_dialog.threads"));
-        threadsButton.addActionListener(this);
-        buttonPanel.add(threadsButton);
+        btnThreads = new JButton(i18n("debug_console_dialog.threads"));
+        btnThreads.addActionListener(this);
+        buttonPanel.add(btnThreads);
 
-        refreshButton = new JButton(new RefreshAction.Descriptor().getLabel());
-        refreshButton.addActionListener(this);
-        buttonPanel.add(refreshButton);
+        btnActiveThreads = new JButton(i18n("debug_console_dialog.active_threads"));
+        btnActiveThreads.addActionListener(this);
+        buttonPanel.add(btnActiveThreads);
 
-        closeButton = new JButton(Translator.get("close"));
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+        btnRefresh = new JButton(new RefreshAction.Descriptor().getLabel());
+        btnRefresh.addActionListener(this);
+        buttonPanel.add(btnRefresh);
+
+        btnClose = new JButton(i18n("close"));
+        btnClose.addActionListener(this);
+        buttonPanel.add(btnClose);
 
         southPanel.add(buttonPanel, BorderLayout.EAST);
         contentPane.add(southPanel, BorderLayout.SOUTH);
 
-        setInitialFocusComponent(closeButton);
+        setInitialFocusComponent(btnClose);
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
 
-        setInitialFocusComponent(closeButton);
+        setInitialFocusComponent(btnClose);
     }
 
     /**
@@ -138,15 +144,10 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      */
     private JPanel createComboPanel() {
         JPanel comboPanel = new JPanel(new FlowLayout());
-        comboPanel.add(new JLabel(Translator.get("debug_console_dialog.level")+":"));
+        comboPanel.add(new JLabel(i18n("debug_console_dialog.level")+":"));
         LogLevel logLevel = MuLogging.getLogLevel();
 
-        for (LogLevel level:LogLevel.values()) {
-            levelComboBox.addItem(level);
-        }
-        		
         levelComboBox.setSelectedItem(logLevel);
-        		
         levelComboBox.addItemListener(this);
 
         comboPanel.add(levelComboBox);
@@ -180,33 +181,36 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      */
     private void updateLogLevel() {
         LogLevel newLevel = (LogLevel) levelComboBox.getSelectedItem();
-
         MuLogging.setLogLevel(newLevel);
     }
 
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == refreshButton) {
+        if (source == btnRefresh) {
             refreshLogRecords();
-        } else if (source == closeButton) {
+        } else if (source == btnClose) {
             dispose();
-        } else if (source == threadsButton) {
-            // print threads
-            Map<Thread, StackTraceElement[]> stacktraces = Thread.getAllStackTraces();
-            DefaultListModel model = (DefaultListModel)loggingEventsList.getModel();
-            for (Thread t : stacktraces.keySet()) {
+        } else if (source == btnThreads) {
+            printThreads(false);
+        } else if (source == btnActiveThreads) {
+            printThreads(true);
+        }
+    }
 
-                model.addElement(buildStringEvent(LogLevel.INFO, t.getName() + " (" + t.getState() + ")"));
-                StackTraceElement[] stackTraceElements = stacktraces.get(t);
-                for (StackTraceElement ste : stackTraceElements) {
-                    model.addElement(buildStringEvent(LogLevel.FINEST, "     " + ste));
-                }
+    private void printThreads(boolean onlyActive) {
+        Map<Thread, StackTraceElement[]> stacktraces = Thread.getAllStackTraces();
+        DefaultListModel<LoggingEvent> model = (DefaultListModel<LoggingEvent>)loggingEventsList.getModel();
+        for (Thread t : stacktraces.keySet()) {
+            if (onlyActive && t.getState() != Thread.State.RUNNABLE) {
+                continue;
+            }
+            model.addElement(buildStringEvent(LogLevel.INFO, t.getName() + " (" + t.getState() + ")"));
+            StackTraceElement[] stackTraceElements = stacktraces.get(t);
+            for (StackTraceElement ste : stackTraceElements) {
+                model.addElement(buildStringEvent(LogLevel.FINEST, "     " + ste));
             }
         }
     }
@@ -232,9 +236,6 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
         };
     }
 
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
 
     public void itemStateChanged(ItemEvent e) {
         // Refresh the log records displayed in the JList whenever the selected level has been changed.
@@ -246,14 +247,28 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     /**
      * Custom {@link ListCellRenderer} that renders {@link LoggingEvent} instances.
      */
     private class DebugListCellRenderer extends DefaultListCellRenderer {
+
+        private Color getLevelColor(LogLevel logLevel) {
+            switch (logLevel) {
+                case SEVERE:
+                    return Color.RED;
+                case WARNING:
+                    return new Color(255, 100, 0);     // Dark orange
+                case CONFIG:
+                    return Color.BLUE;
+                case INFO:
+                    return Color.BLACK;
+                case FINE:
+                    return Color.DARK_GRAY;
+                default:
+                    return new Color(110, 110, 110);    // Between Color.GRAY and Color.DARK_GRAY
+            }
+        }
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -272,23 +287,9 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
             JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             
             // Change the label's foreground color to match the level of the log record
-            if(!isSelected) {
+            if (!isSelected) {
                 LogLevel level = ((LoggingEvent)value).getLevel();
-                Color color;
-
-                if(level.equals(LogLevel.SEVERE))
-                    color = Color.RED;
-                else if(level.equals(LogLevel.WARNING))
-                    color = new Color(255, 100, 0);     // Dark orange
-                else if(level.equals(LogLevel.CONFIG))
-                    color = Color.BLUE;
-                else if(level.equals(LogLevel.INFO))
-                    color = Color.BLACK;
-                else if(level.equals(LogLevel.FINE))
-                    color = Color.DARK_GRAY;
-                else
-                    color = new Color(110, 110, 110);    // Between Color.GRAY and Color.DARK_GRAY
-
+                Color color = getLevelColor(level);
                 label.setForeground(color);
             }
 
@@ -296,12 +297,11 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
             // If component's preferred width is larger than the list's width then the component is not entirely
             // visible. In that case, we set a tooltip text that will display the whole text when mouse is over the
             // component
-            if (loggingEventsList.getVisibleRect().getWidth() < label.getPreferredSize().getWidth())
-                label.setToolTipText(label.getText());
+            String toolTip = loggingEventsList.getVisibleRect().getWidth() < label.getPreferredSize().getWidth() ?
+                    label.getText() : null;
             // Have to set it to null because of the rubber-stamp rendering scheme (last value is kept)
-            else
-                label.setToolTipText(null);
-            
+            label.setToolTipText(toolTip);
+
             return label;
         }
     }

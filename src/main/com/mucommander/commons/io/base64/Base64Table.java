@@ -81,10 +81,10 @@ class Base64Table {
      * Creates a new <code>Base64Table</code> using the specified character table and padding character.
      *
      * <p>An <code>IllegalArgumentException</code> if the specified table is not 64 bytes long, contains duplicate
-     * values, or if the specified padding character is present in the table.</p>
+     * values, or if the specified padding character is present in the table.
      *
      * <p>The given byte array is cloned before being stored, to avoid any side effect that could be caused by the
-     * byte array being modified inadvertently after this constructor is called.</p>
+     * byte array being modified inadvertently after this constructor is called.
      *
      * @param table the base64 character table. The array must be 64 bytes long and must not contain any duplicate values.
      * @param paddingChar the ASCII character used for padding. This character must not already be used in the table.
@@ -102,19 +102,20 @@ class Base64Table {
         for(c=0; c<256; c++)
             decodingTable[c] = -1;
 
-        // Fill the decoding table and snsure that characters are used only once
-        byte val;
-        for(int i=0; i<64; i++) {
-            val= table[i];
-            if(decodingTable[val]!=-1)
+        // Fill the decoding table and ensure that characters are used only once
+        for (int i = 0; i < 64; i++) {
+            byte val = table[i];
+            if (decodingTable[val] != -1) {
                 throw new IllegalArgumentException("Base64 table contains duplicate values");
+            }
 
             decodingTable[val] = i;
         }
 
         // Ensure that the padding character is not already used in the table
-        if(decodingTable[paddingChar]!=-1)
+        if (decodingTable[paddingChar] != -1) {
             throw new IllegalArgumentException("Padding char is already used in Base64 table");
+        }
 
         this.paddingChar = paddingChar;
 

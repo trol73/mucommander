@@ -19,7 +19,7 @@
 package com.mucommander.ui.layout;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.icon.SpinningDial;
 
 import javax.swing.*;
@@ -44,7 +44,7 @@ import java.awt.*;
  * </ol>
  *
  * <p>This panel tries to be as 'transparent' as possible for the target component: the borders of this panel are empty
- * and its layout is a <code>BorderLayout</code> where the target component is added to the center.</p>
+ * and its layout is a <code>BorderLayout</code> where the target component is added to the center.
  *
  * @author Maxence Bernard
  */
@@ -71,14 +71,14 @@ public abstract class AsyncPanel extends JPanel {
             add(targetComponent, BorderLayout.CENTER);
             updateLayout();
             // Force update viewer/editor window on Windows 8.1
-            if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            if (OsFamily.WINDOWS.isCurrent()) {
                 setSize(getSize());
             }
         }
     }
 
     /** The component displayed while the target component is being loaded */
-    private JComponent waitComponent;
+    private final JComponent waitComponent;
 
     /** This field becomes true when this panel has become visible on screen. */
     private boolean visibleOnScreen;
@@ -98,7 +98,7 @@ public abstract class AsyncPanel extends JPanel {
      *
      * @param waitComponent the component to display while the target component is being loaded
      */
-    protected AsyncPanel(JComponent waitComponent) {
+    private AsyncPanel(JComponent waitComponent) {
         super(new BorderLayout());
 
         this.waitComponent = waitComponent;
@@ -176,11 +176,7 @@ public abstract class AsyncPanel extends JPanel {
         return tempPanel;
     }
 
-
-    /////////////////////////
-    // Overridable methods //
-    /////////////////////////
-
+    
     /**
      * Packs the parent Window that contains this component, if any. This method is called once the target component
      * has been made initialized and added to this panel. This method can be overridden by subclasses if additional work
@@ -192,10 +188,6 @@ public abstract class AsyncPanel extends JPanel {
 //            ((Window)tla).pack();
     }
 
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     public abstract JComponent getTargetComponent(Exception e);
 

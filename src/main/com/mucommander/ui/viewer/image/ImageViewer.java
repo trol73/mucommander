@@ -37,8 +37,7 @@ import javax.swing.*;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.conf.MuSnapshot;
-import com.mucommander.text.Translator;
+import com.mucommander.conf.TcSnapshot;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
@@ -55,10 +54,10 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.formats.pnm.PNMImageParser;
-import org.apache.sanselan.formats.psd.PsdImageParser;
-import org.apache.sanselan.formats.tiff.TiffImageParser;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.formats.pnm.PnmImageParser;
+import org.apache.commons.imaging.formats.psd.PsdImageParser;
+import org.apache.commons.imaging.formats.tiff.TiffImageParser;
 import ru.trolsoft.ui.TMenuSeparator;
 
 //import org.apache.commons.imaging.Imaging;
@@ -83,14 +82,14 @@ class ImageViewer extends FileViewer implements ActionListener {
 	
     /** Menu bar */
     // Menus //
-    private JMenu controlsMenu;
+    private final JMenu controlsMenu;
     // Items //
-    private JMenuItem prevImageItem;
-    private JMenuItem nextImageItem;
-    private JMenuItem zoomInItem;
-    private JMenuItem zoomOutItem;
+    private final JMenuItem prevImageItem;
+    private final JMenuItem nextImageItem;
+    private final JMenuItem zoomInItem;
+    private final JMenuItem zoomOutItem;
 
-    private ImageViewerImpl imageViewerImpl;
+    private final ImageViewerImpl imageViewerImpl;
     private List<AbstractFile> filesInDirectory;
     private int indexInDirectory = -1;
 
@@ -111,24 +110,24 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    public ImageViewer() {
+    ImageViewer() {
     	imageViewerImpl = new ImageViewerImpl();
     	
     	setComponentToPresent(imageViewerImpl);
     	
     	// create Go menu
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-    	controlsMenu = MenuToolkit.addMenu(Translator.get("image_viewer.controls_menu"), menuMnemonicHelper, null);
+    	controlsMenu = MenuToolkit.addMenu(i18n("image_viewer.controls_menu"), menuMnemonicHelper, null);
     	
-        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
-        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
+        nextImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
+        prevImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
         controlsMenu.add(new TMenuSeparator());
-        if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
-            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), this);
         } else {
-            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), this);
-            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, Translator.get("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), this);
+            zoomInItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_in"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), this);
+            zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
         }
     }
     
@@ -145,7 +144,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     @Override
     protected StatusBar getStatusBar() {
         if (statusBar == null) {
-        statusBar = new StatusBar();
+            statusBar = new StatusBar();
         }
         return statusBar;
     }
@@ -187,7 +186,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             //this.image = (BufferedImage) (new IcoImageParser().getAllBufferedImages(loadFile(file)).get(0));
         } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
             // TODO pBm raw format reading error
-            this.image = (BufferedImage) (new PNMImageParser().getAllBufferedImages(loadFile(file)).get(0));
+            this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).get(0);
         } else if ("svg".equals(ext)) {
             this.image = transcodeSVGDocument(file, 0, 0);
         } else {
@@ -208,7 +207,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
 
         this.zoomFactor = 1.0;
-        Dimension screen = MuSnapshot.getScreenSize();
+        Dimension screen = TcSnapshot.getScreenSize();
 
         double zoomFactorX = 1.0 * screen.width / imageWidth;
         double zoomFactorY = 1.0 * screen.height / imageHeight;
@@ -231,7 +230,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    private static byte[] loadFile(AbstractFile file) throws IOException {
+    private static byte[] loadFile(AbstractFile file) {
         byte[] data = new byte[(int) file.getSize()];
         try (InputStream is = file.getInputStream()) {
             int readTotal = 0;
@@ -346,10 +345,6 @@ class ImageViewer extends FileViewer implements ActionListener {
         nextImageItem.setEnabled(getNextFileIndex() >= 0);
     }
 
-    ///////////////////////////////
-    // FileViewer implementation //
-    ///////////////////////////////
-
     @Override
     public void show(AbstractFile file) throws IOException {
         if (filesInDirectory == null) {
@@ -380,16 +375,13 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
     }
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
     @Override
     public String getTitle() {
         return filesInDirectory.get(indexInDirectory).toString();
         //return file.getAbsolutePath()+" - "+image.getWidth(null)+"x"+image.getHeight(null)+" - "+((int)(zoomFactor*100))+"%";
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
@@ -442,7 +434,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             }
             updateFrame();
         } catch (IOException e) {
-            InformationDialog.showErrorDialog(this, Translator.get("file_viewer.view_error_title"), Translator.get("file_viewer.view_error"));
+            InformationDialog.showErrorDialog(this, i18n("file_viewer.view_error_title"), i18n("file_viewer.view_error"));
             e.printStackTrace();
         }
     }
@@ -545,9 +537,6 @@ class ImageViewer extends FileViewer implements ActionListener {
             addMouseMotionListener(this);
         }
     	
-    	////////////////////////
-        // Overridden methods //
-        ////////////////////////
 
         @Override
         public void paint(Graphics g) {
@@ -603,13 +592,11 @@ class ImageViewer extends FileViewer implements ActionListener {
             return image == null ? new Dimension(320, 200) : new Dimension(getScaledWidth(), getScaledHeight());
         }
     	
-    	//////////////////////////////////
-        // ThemeListener implementation //
-        //////////////////////////////////
 
         /**
          * Receives theme color changes notifications.
          */
+        @Override
         public void colorChanged(ColorChangedEvent event) {
             if (event.getColorId() == Theme.EDITOR_BACKGROUND_COLOR) {
                 backgroundColor = event.getColor();

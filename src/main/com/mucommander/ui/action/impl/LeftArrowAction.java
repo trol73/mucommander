@@ -21,7 +21,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Oleg Trifonov
  * Created on 27/10/16.
  */
-public class LeftArrowAction extends MuAction {
+public class LeftArrowAction extends TcAction {
 
     public LeftArrowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -85,7 +85,7 @@ public class LeftArrowAction extends MuAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new LeftArrowAction(mainFrame, properties);
         }
     }

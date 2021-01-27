@@ -34,16 +34,12 @@ import java.util.List;
  *
  * <p>Native methods in the Shell32 Windows API are used to access the Recycle Bin. There is an overhead associated with
  * invoking those methods (via JNA), so for performance reasons, this trash is implemented as a {@link com.mucommander.desktop.QueuedTrash}
- * in order to group calls to {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)}.</p>
+ * in order to group calls to {@link #moveToTrash(com.mucommander.commons.file.AbstractFile)}.
  *
  * @see WindowsTrashProvider
  * @author Maxence Bernard
  */
 public class WindowsTrash extends QueuedTrash {
-
-    //////////////////////////////////
-    // AbstractTrash implementation //
-    //////////////////////////////////
 
     /**
      * Implementation notes: returns <code>true</code> only for local files that are not archive entries.
@@ -89,8 +85,9 @@ public class WindowsTrash extends QueuedTrash {
      */
     @Override
     public int getItemCount() {
-        if(!Shell32.isAvailable())
+        if (!Shell32.isAvailable()) {
             return -1;
+        }
 
         Shell32API.SHQUERYRBINFO queryRbInfo = new Shell32API.SHQUERYRBINFO();
 
@@ -102,7 +99,7 @@ public class WindowsTrash extends QueuedTrash {
             queryRbInfo
         );
 
-        return ret==0?(int)queryRbInfo.i64NumItems:-1;
+        return ret == 0 ? (int)queryRbInfo.i64NumItems : -1;
     }
 
     /**
@@ -115,8 +112,11 @@ public class WindowsTrash extends QueuedTrash {
 
     @Override
     public void open() {
-        try {DesktopManager.openInFileManager(SpecialWindowsLocation.RECYCLE_BIN);}
-        catch(IOException e) {/* TODO: report error. */}
+        try {
+            DesktopManager.openInFileManager(SpecialWindowsLocation.RECYCLE_BIN);
+        } catch(IOException e) {
+            // TODO: report error.
+        }
     }
 
 
@@ -126,8 +126,9 @@ public class WindowsTrash extends QueuedTrash {
 
     @Override
     protected boolean moveToTrash(List<AbstractFile> queuedFiles) {
-        if(!Shell32.isAvailable())
+        if (!Shell32.isAvailable()) {
             return false;
+        }
 
         Shell32API.SHFILEOPSTRUCT fileop = new Shell32API.SHFILEOPSTRUCT();
 
@@ -137,7 +138,7 @@ public class WindowsTrash extends QueuedTrash {
         int nbFiles = queuedFiles.size();
 
         String[] paths = new String[nbFiles];
-        for(int i=0; i<nbFiles; i++) {
+        for (int i = 0; i<nbFiles; i++) {
             // Directories (and regular files) must not end with a trailing slash or the operation will fail.
             paths[i] = queuedFiles.get(i).getAbsolutePath(false);
         }

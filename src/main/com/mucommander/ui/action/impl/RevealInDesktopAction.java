@@ -21,13 +21,12 @@ package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractArchiveEntryFile;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.desktop.DesktopManager;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -42,7 +41,7 @@ import java.util.Map;
  */
 public class RevealInDesktopAction extends ParentFolderAction {
 
-    RevealInDesktopAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private RevealInDesktopAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setEnabled(DesktopManager.canOpenInFileManager());
@@ -51,27 +50,35 @@ public class RevealInDesktopAction extends ParentFolderAction {
     @Override
     protected void toggleEnabledState() {
         AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
-        setEnabled(currentFolder.getURL().getScheme().equals(FileProtocols.FILE)
+        setEnabled(isLocalRegularFolder(currentFolder));
+    }
+
+    private static boolean isLocalRegularFolder(AbstractFile currentFolder) {
+        return currentFolder != null && currentFolder.isLocalFile()
                && !currentFolder.isArchive()
-               && !currentFolder.hasAncestor(AbstractArchiveEntryFile.class)
-        );
+               && !currentFolder.hasAncestor(AbstractArchiveEntryFile.class);
     }
 
     @Override
     public void performAction() {
         try {
-            if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-                AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
-                if (currentFile == null) {
-                    currentFile = mainFrame.getActivePanel().getCurrentFolder();
-                }
-                DesktopManager.openInFileManager(currentFile);
-            } else {
-                DesktopManager.openInFileManager(mainFrame.getActivePanel().getCurrentFolder());
-            }
+            DesktopManager.openInFileManager(getCurrentFolder());
         } catch(Exception e) {
             InformationDialog.showErrorDialog(mainFrame);
         }
+    }
+
+    private AbstractFile getCurrentFolder() {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            AbstractFile currentFile = mainFrame.getActiveTable().getSelectedFile();
+            if (currentFile == null) {
+                return mainFrame.getActivePanel().getCurrentFolder();
+            }
+            return currentFile;
+        } else {
+            return mainFrame.getActivePanel().getCurrentFolder();
+        }
+
     }
 
 	@Override
@@ -83,18 +90,20 @@ public class RevealInDesktopAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "RevealInDesktop";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_L, CTRL_OR_META_DOWN_MASK);
         }
 
         @Override
@@ -105,13 +114,13 @@ public class RevealInDesktopAction extends ParentFolderAction {
 
         @Override
         public ImageIcon getIcon() {
-		    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+		    if (OsFamily.MAC_OS_X.isCurrent()) {
                 return getStandardIcon("Finder");
             }
             return super.getIcon();
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new RevealInDesktopAction(mainFrame, properties);
         }
     }

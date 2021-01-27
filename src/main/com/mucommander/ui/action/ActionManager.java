@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * ActionManager provides methods to retrieve {@link MuAction} instances and invoke them. It keeps track of all the
+ * ActionManager provides methods to retrieve {@link TcAction} instances and invoke them. It keeps track of all the
  * action instances it has created and allows them to be reused within a {@link MainFrame}.
  *
  * <p>MuAction subclasses should not be instantiated directly, <code>getActionInstance</code>
@@ -40,9 +40,9 @@ import java.util.regex.Pattern;
  * in several components of a MainFrame at the same time; if an action's state changes, the change must be reflected
  * everywhere the action is used. It is also important for performance reasons: sharing one action throughout a
  * {@link com.mucommander.ui.main.MainFrame} saves some memory and also CPU cycles as some actions listen to particular events to change
- * their state accordingly.</p>
+ * their state accordingly.
  *
- * @see MuAction
+ * @see TcAction
  * @see ActionParameters
  * @see ActionKeymap
  * @author Maxence Bernard, Arik Hadas
@@ -77,6 +77,7 @@ public class ActionManager {
     	registerAction(new CloseTabAction.Descriptor());
 //    	registerAction(new CommandAction.Descriptor());
     	registerAction(new CompareFoldersAction.Descriptor());
+		registerAction(new CompareFolderFilesAction.Descriptor());
     	registerAction(new ConnectToServerAction.Descriptor());
     	registerAction(new CopyAction.Descriptor());
     	registerAction(new CopyFileBaseNamesAction.Descriptor());
@@ -131,6 +132,7 @@ public class ActionManager {
     	registerAction(new NewWindowAction.Descriptor());
     	registerAction(new NextTabAction.Descriptor());
     	registerAction(new OpenAction.Descriptor());
+		registerAction(new OpenAsAction.Descriptor());
     	registerAction(new OpenInBothPanelsAction.Descriptor());
     	registerAction(new OpenInNewTabAction.Descriptor());
     	registerAction(new OpenInOtherPanelAction.Descriptor());
@@ -192,6 +194,7 @@ public class ActionManager {
     	registerAction(new ShowRootFoldersQLAction.Descriptor());
         registerAction(new ShowRecentViewedFilesQLAction.Descriptor());
         registerAction(new ShowRecentEditedFilesQLAction.Descriptor());
+		registerAction(new ShowEditorBookmarksQLAction.Descriptor());
     	registerAction(new ShowServerConnectionsAction.Descriptor());
     	registerAction(new ShowTabsQLAction.Descriptor());
     	registerAction(new SortByDateAction.Descriptor());
@@ -220,15 +223,18 @@ public class ActionManager {
     	registerAction(new ToggleOwnerColumnAction.Descriptor());
     	registerAction(new TogglePermissionsColumnAction.Descriptor());
     	registerAction(new ToggleShowFoldersFirstAction.Descriptor());
+    	registerAction(new ToggleFoldersAlwaysAlphabeticalAction.Descriptor());
     	registerAction(new ToggleSizeColumnAction.Descriptor());
     	registerAction(new ToggleStatusBarAction.Descriptor());
     	registerAction(new ToggleToolBarAction.Descriptor());
     	registerAction(new ToggleTreeAction.Descriptor());
     	registerAction(new UnmarkAllAction.Descriptor());
     	registerAction(new UnmarkGroupAction.Descriptor());
+		registerAction(new MarkEmptyFilesAction.Descriptor());
     	registerAction(new UnpackAction.Descriptor());
     	registerAction(new ViewAction.Descriptor());
         registerAction(new ViewAsAction.Descriptor());
+		registerAction(new EditAsAction.Descriptor());
         registerAction(new TerminalAction.Descriptor());
         registerAction(new FindFileAction.Descriptor());
         registerAction(new CalculatorAction.Descriptor());
@@ -243,6 +249,8 @@ public class ActionManager {
 		registerAction(new EjectDriveAction.Descriptor());
 		registerAction(new CompareFilesAction.Descriptor());
 		registerAction(new TogglePanelPreviewModeAction.Descriptor());
+		registerAction(new TextEditorsListAction.Descriptor());
+		registerAction(new UserMenuAction.Descriptor());
     }
 
 	public static void registerCommandsActions() {
@@ -260,7 +268,6 @@ public class ActionManager {
      * @param actionDescriptor - ActionDescriptor instance of the action.
      */
     private static void registerAction(ActionDescriptor actionDescriptor) {
-    	//actionFactories.put(actionDescriptor.getId(), actionDescriptor);	// TODO
     	ActionProperties.addActionDescriptor(actionDescriptor);
     }
     
@@ -271,7 +278,6 @@ public class ActionManager {
      */
     public static Iterator<String> getActionIds() {
 		return ActionProperties.actionDescriptors.keySet().iterator();
-    	//return actionFactories.keySet().iterator();
     }
     
     /**
@@ -281,13 +287,12 @@ public class ActionManager {
      * @return String representing the id of the MuAction in the specified path. null is returned if the given path is invalid.
      */
     public static String extrapolateId(String actionClassPath) {
-    	if (actionClassPath == null)
-    		return null;
+    	if (actionClassPath == null) {
+			return null;
+		}
     	
     	Matcher matcher = PATTERN.matcher(actionClassPath);
-    	return matcher.matches() ? 
-    			matcher.group(1)
-    			: actionClassPath;
+    	return matcher.matches() ? matcher.group(1) : actionClassPath;
     }
     
     /**
@@ -304,7 +309,7 @@ public class ActionManager {
     /**
      * Convenience method that returns an instance of the action corresponding to the given <code>Command</code>,
      * and associated with the specified <code>MainFrame</code>. This method gets the ID of the relevant action,
-     * passes it to {@link #getActionInstance(String, MainFrame)} and returns the {@link MuAction} instance.
+     * passes it to {@link #getActionInstance(String, MainFrame)} and returns the {@link TcAction} instance.
      *
      * @param command the command that is invoked by the returned action
      * @param mainFrame the MainFrame instance the action belongs to
@@ -312,14 +317,14 @@ public class ActionManager {
      * @see #getActionInstance(String, MainFrame)
      * action could not be found or could not be instantiated.
      */
-    public static MuAction getActionInstance(Command command, MainFrame mainFrame) {
+    public static TcAction getActionInstance(Command command, MainFrame mainFrame) {
         return getActionInstance(new CommandAction.Descriptor(command).getId(), mainFrame);
     }
 
     /**
      * Convenience method that returns an instance of the action denoted by the given ID, and associated with the
      * specified <code>MainFrame</code>. This method creates an ActionParameters with no initial property, passes it to
-     * {@link #getActionInstance(ActionParameters, MainFrame)} and returns the {@link MuAction} instance.
+     * {@link #getActionInstance(ActionParameters, MainFrame)} and returns the {@link TcAction} instance.
      *
      * @param actionId ID of the action to instantiate
      * @param mainFrame the MainFrame instance the action belongs to
@@ -327,11 +332,11 @@ public class ActionManager {
      * @see #getActionInstance(ActionParameters, MainFrame)
      * action could not be found or could not be instantiated.
      */
-    public static MuAction getActionInstance(String actionId, MainFrame mainFrame) {
+    public static TcAction getActionInstance(String actionId, MainFrame mainFrame) {
         return getActionInstance(new ActionParameters(actionId), mainFrame);
     }
 
-    public static Optional<MuAction> getActionInstance2(ActionParameters actionParameters, MainFrame mainFrame) {
+    public static Optional<TcAction> getActionInstance2(ActionParameters actionParameters, MainFrame mainFrame) {
     	return Optional.ofNullable(getActionInstance(actionParameters,mainFrame));
     }
     /**
@@ -348,14 +353,10 @@ public class ActionManager {
      * @return a MuAction instance matching the given ActionParameters and MainFrame, <code>null</code> if the
      * MuAction action denoted by the ActionParameters could not be found or could not be instantiated.
      */
-    public static MuAction getActionInstance(ActionParameters actionParameters, MainFrame mainFrame) {
-        Map<ActionParameters, ActionAndIdPair> mainFrameActions = mainFrameActionsMap.get(mainFrame);
-        if (mainFrameActions == null) {
-            mainFrameActions = new Hashtable<>();
-            mainFrameActionsMap.put(mainFrame, mainFrameActions);
-        }
+    public static TcAction getActionInstance(ActionParameters actionParameters, MainFrame mainFrame) {
+		Map<ActionParameters, ActionAndIdPair> mainFrameActions = mainFrameActionsMap.computeIfAbsent(mainFrame, k -> new Hashtable<>());
 
-        // Looks for an existing MuAction instance used by the specified MainFrame
+		// Looks for an existing MuAction instance used by the specified MainFrame
         if (mainFrameActions.containsKey(actionParameters)) {
         	return mainFrameActions.get(actionParameters).getAction();
         } else {
@@ -382,7 +383,7 @@ public class ActionManager {
             }
 
             // Instantiate the MuAction class
-            MuAction action = actionFactory.createAction(mainFrame, properties);
+            TcAction action = actionFactory.createAction(mainFrame, properties);
             mainFrameActions.put(actionParameters, new ActionAndIdPair(action, actionId));
 
             // If the action's label has not been set yet, use the action descriptor's
@@ -438,8 +439,8 @@ public class ActionManager {
      * @param muActionId the MuAction id to compare instances against
      * @return  a ArrayList of all MuAction instances matching the specified action id
      */
-    static List<MuAction> getActionInstances(String muActionId) {
-        List<MuAction> actionInstances = new ArrayList<>();
+    static List<TcAction> getActionInstances(String muActionId) {
+        List<TcAction> actionInstances = new ArrayList<>();
 
         // Iterate on all MainFrame instances
         for (Map<ActionParameters, ActionAndIdPair> actionParametersActionAndIdPairHashtable : mainFrameActionsMap.values()) {
@@ -459,7 +460,7 @@ public class ActionManager {
 
     /**
      * Convenience method that retrieves an instance of the action denoted by the given ID and associated
-     * with the given {@link MainFrame} and calls {@link MuAction#performAction()} on it.
+     * with the given {@link MainFrame} and calls {@link TcAction#performAction()} on it.
      * Returns <code>true</code> if an instance of the action could be retrieved and performed, <code>false</code>
      * if the MuAction could not be found or could not be instantiated.
      *
@@ -473,7 +474,7 @@ public class ActionManager {
 
     /**
      * Convenience method that retrieves an instance of the MuAction denoted by the given {@link ActionParameters}
-     * and associated with the given {@link com.mucommander.ui.main.MainFrame} and calls {@link MuAction#performAction()} on it.
+     * and associated with the given {@link com.mucommander.ui.main.MainFrame} and calls {@link TcAction#performAction()} on it.
      * Returns <code>true</code> if an instance of the action could be retrieved and performed, <code>false</code>
      * if the MuAction could not be found or could not be instantiated.
      *
@@ -482,7 +483,7 @@ public class ActionManager {
      * @return true if the action instance could be retrieved and the action performed, false otherwise
      */
     public static boolean performAction(ActionParameters actionParameters, MainFrame mainFrame) {
-        MuAction action = getActionInstance(actionParameters, mainFrame);
+        TcAction action = getActionInstance(actionParameters, mainFrame);
 
         if (action == null) {
             return false;
@@ -497,15 +498,15 @@ public class ActionManager {
      *  Helper class to represent a pair of instance and id of MuAction.
      */
     private static class ActionAndIdPair {
-    	private MuAction action;
+    	private TcAction action;
     	private String id;
     	
-    	ActionAndIdPair(MuAction action, String id) {
+    	ActionAndIdPair(TcAction action, String id) {
     		this.action = action;
     		this.id = id;
     	}
     	
-    	public MuAction getAction() { return action; }
+    	public TcAction getAction() { return action; }
     	
     	public String getId() { return id; }
     }

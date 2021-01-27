@@ -52,7 +52,7 @@ public class FileWindowsListButton extends JideSplitButton {
         addActionListener(e -> showSelectedFile());
     }
 
-    public FileWindowsListButton() {
+    FileWindowsListButton() {
         this(false);
     }
 
@@ -80,7 +80,7 @@ public class FileWindowsListButton extends JideSplitButton {
     }
 
 
-    public void updateList() {
+    private void updateList() {
         removeAll();
         if (includeMainFrames) {
             List<MainFrame> mainFrames = WindowManager.getMainFrames();

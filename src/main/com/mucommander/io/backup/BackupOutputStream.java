@@ -47,16 +47,14 @@ import java.io.OutputStream;
  *     file should be used rather than the original one.
  *   </li>
  * </ul>
- * </p>
  * <p>
  * Files that have been saved by this class should be read with {@link BackupInputStream}
  * in order to make sure that an uncorrupt version of them is loaded.
- * </p>
  * <p>
  * The <code>BackupOutputStream</code> monitors all of its own I/O operations. If an error occurs, then the backup
  * operation will not be performed when {@link #close()} is called. It's possible to force the backup operation by
  * using the {@link #close(boolean)} method.
- * </p>
+ *
  * @see    BackupInputStream
  * @author Nicolas Rinaudo
  */
@@ -117,11 +115,10 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * Flushes this output stream and forces any buffered output bytes to be written out to the stream.
      * <p>
      * This method calls the <code>flush()</code> method of its underlying output stream.
-     * </p>
      * <p>
      * If an error occurs at this point, the {@link #close()} method will not overwrite the target file. This can be
      * forced through the {@link #close(boolean)} method.
-     * </p>
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -141,11 +138,10 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * Writes b.length bytes to this output stream.
      * <p>
      * This method calls the <code>write(byte[] b)</code> method of its underlying output stream.
-     * </p>
      * <p>
      * If an error occurs at this point, the {@link #close()} method will not overwrite the target file. This can be
      * forced through the {@link #close(boolean)} method.
-     * </p>
+     *
      * @param  b           the data to be written.
      * @throws IOException if an I/O error occurs.
      */
@@ -167,11 +163,10 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * Writes len bytes from the specified byte array starting at offset off to this output stream.
      * <p>
      * This method calls the <code>write(byte[] b, int off, int len)</code> method of its underlying output stream.
-     * </p>
      * <p>
      * If an error occurs at this point, the {@link #close()} method will not overwrite the target file. This can be
      * forced through the {@link #close(boolean)} method.
-     * </p>
+     *
      * @param  b           the data to be written.
      * @param  off         the start offset in the data.
      * @param  len         the number of bytes to write.
@@ -195,21 +190,21 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * Writes the specified byte to this output stream.
      * <p>
      * This method calls the <code>write(byte b)</code> method of its underlying output stream.
-     * </p>
      * <p>
      * If an error occurs at this point, the {@link #close()} method will not overwrite the target file. This can be
      * forced through the {@link #close(boolean)} method.
-     * </p>
+     *
      * @param  b           the data to be written.
      * @throws IOException if an I/O error occurs.
      */
     @Override
     public void write(int b) throws IOException {
-        if(error)
+        if (error) {
             out.write(b);
-        else {
-            try {out.write(b);}
-            catch(IOException e) {
+        } else {
+            try {
+                out.write(b);
+            } catch(IOException e) {
                 error = true;
                 throw e;
             }
@@ -250,7 +245,7 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * The <code>backup</code> parameter is meant for those cases when an error happened
      * while writing to the stream: if it did, we don't want to propagate to the target
      * file, and thus should prevent the backup operation from being performed.
-     * </p>
+     *
      * @param     backup      whether or not to overwrite the target file by the backup one.
      * @exception IOException thrown if any IO related error occurs.
      */

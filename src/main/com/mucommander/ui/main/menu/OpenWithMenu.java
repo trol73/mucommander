@@ -26,7 +26,7 @@ import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.main.MainFrame;
@@ -36,16 +36,16 @@ import com.mucommander.ui.main.MainFrame;
  * Open with menu.
  * <p>
  * Note that this class doesn't yet monitor modifications to the command list.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class OpenWithMenu extends JMenu {
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     /**
      * Creates a new Open With menu.
      */
-    public OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
+    OpenWithMenu(MainFrame frame, AbstractFile clickedFile) {
         super(Translator.get("file_menu.open_with") + "...");
         this.mainFrame = frame;
         populate(clickedFile);
@@ -54,7 +54,7 @@ public class OpenWithMenu extends JMenu {
     /**
      * Refreshes the content of the menu.
      */
-    private synchronized void populate(AbstractFile clickedFile) {
+    public void populate(AbstractFile clickedFile) {
         for (Command command : CommandManager.commands()) {
             if (command.getType() != CommandType.NORMAL_COMMAND) {
                 continue;

@@ -22,7 +22,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 
@@ -48,10 +48,6 @@ public class EditorFrame extends FileFrame {
         super(mainFrame, icon);
         initContentPane(file);
     }
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public Dimension getMinimumSize() {

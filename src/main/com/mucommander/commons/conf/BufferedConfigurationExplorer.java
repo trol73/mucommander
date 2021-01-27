@@ -25,47 +25,41 @@ import java.util.Stack;
  * <p>
  * This behaves exactly as a {@link ConfigurationExplorer}, but keeps track of its own path. This is meant
  * for instances of {@link Configuration} to prune empty branches.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 class BufferedConfigurationExplorer extends ConfigurationExplorer {
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Sections that have been passed through. */
     private final Stack<ConfigurationSection> sections = new Stack<>();
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new explorer on the specified section.
      * @param root section from which to start exploring.
      */
-    public BufferedConfigurationExplorer(ConfigurationSection root) {
+    BufferedConfigurationExplorer(ConfigurationSection root) {
         super(root);
     }
 
 
 
-    // - History browsing ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if there are more sections in the history.
      * @return <code>true</code> if there are more sections in the history.
      */
-    public boolean hasSections() {return !sections.empty();}
+    boolean hasSections() {
+        return !sections.empty();
+    }
 
     /**
      * Returns the next section in history.
      * @return the next section in history.
      */
-    public ConfigurationSection popSection() {return sections.pop();}
+    ConfigurationSection popSection() {
+        return sections.pop();
+    }
 
 
-
-    // - Exploration methods -------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Move to the specified section.
      * @param  name   name of the current section's subsection in which to move.
@@ -74,7 +68,7 @@ class BufferedConfigurationExplorer extends ConfigurationExplorer {
      */
     @Override
     public boolean moveTo(String name, boolean create) {
-        if(super.moveTo(name, create)) {
+        if (super.moveTo(name, create)) {
             sections.push(getSection());
             return true;
         }

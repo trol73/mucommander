@@ -18,38 +18,13 @@
 
 package com.mucommander.ui.main;
 
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.dnd.DropTarget;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.ui.event.TableSelectionListener;
-import com.mucommander.ui.main.quicklist.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.auth.CredentialsMapping;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileURL;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.core.FolderChangeMonitor;
 import com.mucommander.core.LocalLocationHistory;
 import com.mucommander.core.LocationChanger;
@@ -61,6 +36,8 @@ import com.mucommander.ui.action.impl.FocusPreviousAction;
 import com.mucommander.ui.dnd.FileDragSourceListener;
 import com.mucommander.ui.dnd.FileDropTargetListener;
 import com.mucommander.ui.event.LocationManager;
+import com.mucommander.ui.event.TableSelectionListener;
+import com.mucommander.ui.main.quicklist.*;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
@@ -70,7 +47,17 @@ import com.mucommander.ui.main.tree.FoldersTreePanel;
 import com.mucommander.ui.quicklist.QuickList;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import com.mucommander.ui.tabs.ActiveTabListener;
-import com.mucommander.utils.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.dnd.DropTarget;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Folder pane that contains the table that displays the contents of the current directory and allows navigation, the
@@ -86,24 +73,24 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     /** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private LocationManager locationManager = new LocationManager(this);
+    private final LocationManager locationManager = new LocationManager(this);
 
     /*  We're NOT using JComboBox anymore because of its strange behavior:
         it calls actionPerformed() each time an item is highlighted with the arrow (UP/DOWN) keys,
         so there is no way to tell if it's the final selection (ENTER) or not.
     */
-    private DrivePopupButton driveButton;
-    private LocationTextField locationTextField;
-    private FileTable fileTable;
-    private FileTableTabs tabs;
-    private FoldersTreePanel foldersTreePanel;
-    private JSplitPane treeSplitPane;
+    private final DrivePopupButton driveButton;
+    private final LocationTextField locationTextField;
+    private final FileTable fileTable;
+    private final FileTableTabs tabs;
+    private final FoldersTreePanel foldersTreePanel;
+    private final JSplitPane treeSplitPane;
 
-    private FileDragSourceListener fileDragSourceListener;
+    private final FileDragSourceListener fileDragSourceListener;
 
-    private LocationChanger locationChanger;
+    private final LocationChanger locationChanger;
 
     /** Is directory tree visible */
     private boolean treeVisible = false;
@@ -114,11 +101,11 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     /** Array of all the existing pop ups for this panel's FileTable **/
     private QuickList[] fileTablePopups;
 
-    private JPanel locationPanel;
+    private final JPanel locationPanel;
 
     private PreviewPanel previewPanel;
 
-    private TableSelectionListener previewTableSelectionListener = new TableSelectionListener() {
+    private final TableSelectionListener previewTableSelectionListener = new TableSelectionListener() {
         @Override
         public void selectedFileChanged(FileTable source) {
             if (previewMode) {
@@ -358,7 +345,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     	locationTextField.setProgressValue(value);
     }
 
-    public void tryChangeCurrentFolderInternal(FileURL folderURL, Callback callback) {
+    public void tryChangeCurrentFolderInternal(FileURL folderURL, Runnable callback) {
     	locationChanger.tryChangeCurrentFolderInternal(folderURL, callback);
     }
 
@@ -448,7 +435,8 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
                     new RootFoldersQL(this),
                     new TabsQL(this),
                     new RecentViewedQL(this),
-                    new RecentEditedQL(this)
+                    new RecentEditedQL(this),
+                    new EditorBookmarksQL(this)
             };
         }
     	fileTablePopups[index].show();
@@ -532,7 +520,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
     public void focusLost(FocusEvent e) {
-        if (!MuConfigurations.getPreferences().getVariable(MuPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, MuPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
+        if (!TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
             fileTable.getQuickSearch().stop();
         }
     }

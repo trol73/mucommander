@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.helper;
 
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcSnapshot;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -41,7 +41,7 @@ public class ScreenServices {
      * to another. For example, on X11 windowing systems, there is no guarantee that
      * a window will be displayed on the same screen, let alone computer, as the one
      * the application is running on.
-     * </p>
+     *
      * @param window the window for which screen insets should be computed.
      * @return the screen's insets for the specified window
      */
@@ -56,7 +56,7 @@ public class ScreenServices {
      * <p>
      * If <code>x</code> (resp. <code>y</code>) is <code>null</code>, this method won't test
      * whether the frame is within horizontal (resp. vertical) bounds.
-     * </p>
+     *
      * @param frame frame who's visibility should be tested.
      * @param x     horizontal coordinate of the upper-leftmost corner of the area to check for.
      * @param y     vertical coordinate of the upper-leftmost corner of the area to check for.
@@ -65,7 +65,7 @@ public class ScreenServices {
      */
     public static boolean isInsideUsableScreen(Frame frame, int x, int y) {
         Insets screenInsets = getScreenInsets(frame);
-        Dimension screenSize = MuSnapshot.getScreenSize();
+        Dimension screenSize = TcSnapshot.getScreenSize();
 
         return (x < 0 || (x >= screenInsets.left && x < screenSize.width - screenInsets.right))
             && (y < 0 || (y >= screenInsets.top && y < screenSize.height - screenInsets.bottom));

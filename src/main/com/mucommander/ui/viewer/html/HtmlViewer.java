@@ -42,7 +42,7 @@ public class HtmlViewer extends FileViewer {
     private String url;
     private String content;
 
-    public HtmlViewer() {
+    HtmlViewer() {
         super();
     }
 

@@ -22,7 +22,7 @@ package com.mucommander.ui.dialog.server;
 import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.FileURL;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 import javax.swing.*;
@@ -36,9 +36,9 @@ import java.net.MalformedURLException;
  */
 public class HTTPPanel extends ServerPanel {
 
-    private JTextField urlField;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private final JTextField urlField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
 
     private static String lastURL = "http://";
     private static String lastUsername = "";
@@ -76,23 +76,17 @@ public class HTTPPanel extends ServerPanel {
         lastUsername = usernameField.getText();
         lastPassword = new String(passwordField.getPassword());
     }
-
-
-    ////////////////////////////////
-    // ServerPanel implementation //
-    ////////////////////////////////
 	
     @Override
     FileURL getServerURL() throws MalformedURLException {
         updateValues();
         
-        if(!(lastURL.toLowerCase().startsWith(FileProtocols.HTTP+"://") || lastURL.toLowerCase().startsWith(FileProtocols.HTTPS+"://")))
-            lastURL = FileProtocols.HTTP+"://"+lastURL;
+        if (!(lastURL.toLowerCase().startsWith(FileProtocols.HTTP+"://") || lastURL.toLowerCase().startsWith(FileProtocols.HTTPS+"://"))) {
+            lastURL = FileProtocols.HTTP + "://" + lastURL;
+        }
 
         FileURL fileURL = FileURL.getFileURL(lastURL);
-
         fileURL.setCredentials(new Credentials(lastUsername, lastPassword));
-
         return fileURL;
     }
 	

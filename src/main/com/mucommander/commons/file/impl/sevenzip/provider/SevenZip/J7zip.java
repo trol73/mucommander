@@ -50,7 +50,7 @@ public class J7zip {
                     else
                         System.out.println("CRC =");
                     System.out.println("Method = " + item.getMethods() );
-                    System.out.println("" );
+                    System.out.println();
                     
                 } else {
                     System.out.print(str_tm + " " + item.getAttributesString());
@@ -74,7 +74,7 @@ public class J7zip {
         }
     }
     
-    static void testOrExtract(IInArchive archive,Vector<String> listOfNames,int mode) throws Exception {
+    static void testOrExtract(IInArchive archive,Vector<String> listOfNames,int mode) {
         
         ArchiveExtractCallback extractCallbackSpec = new ArchiveExtractCallback();
         IArchiveExtractCallback extractCallback = extractCallbackSpec;
@@ -128,9 +128,8 @@ public class J7zip {
         final int MODE_EXTRACT = 2;
         
         int mode = -1;
-        
-        Vector<String> listOfNames = new Vector<>();
-        listOfNames.addAll(Arrays.asList(args).subList(2, args.length));
+
+        Vector<String> listOfNames = new Vector<>(Arrays.asList(args).subList(2, args.length));
         
         switch (args[0]) {
             case "l":

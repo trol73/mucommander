@@ -20,7 +20,7 @@ package com.mucommander;
 
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.BookmarkManager;
-import com.mucommander.conf.MuConfigurations;
+import com.mucommander.conf.TcConfigurations;
 import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
@@ -80,14 +80,15 @@ public class ShutdownHook extends Thread {
      */
     private synchronized static void performShutdownTasks() {
         // Return if shutdown tasks have already been performed
-        if (shutdownTasksPerformed)
+        if (shutdownTasksPerformed) {
             return;
+        }
         
         TreeIOThreadManager.getInstance().interrupt();
 
         // Save snapshot
         try{
-            MuConfigurations.saveSnapshot();
+            TcConfigurations.saveSnapshot();
         } catch(Exception e) {
             getLogger().warn("Failed to save snapshot", e);
         }
@@ -95,7 +96,7 @@ public class ShutdownHook extends Thread {
         // Save preferences
         // Don't need to save preferences on shutdown because it saves in Preferences edit dialog on Ok pressed
         try {
-            MuConfigurations.savePreferences();
+            TcConfigurations.savePreferences();
         } catch(Exception e) {
             getLogger().warn("Failed to save configuration", e);
         }

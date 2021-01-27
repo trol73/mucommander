@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.RuntimeConstants;
 import com.mucommander.io.backup.BackupOutputStream;
 import com.mucommander.ui.text.KeyStrokeUtils;
-import com.mucommander.xml.XmlAttributes;
-import com.mucommander.xml.XmlWriter;
+import com.mucommander.utils.xml.XmlAttributes;
+import com.mucommander.utils.xml.XmlWriter;
 
 /**
  * This class is responsible for writing the command-bar attributes (actions and modifier).
@@ -52,7 +52,7 @@ class CommandBarWriter extends CommandBarIO {
 	
 	private CommandBarWriter() {}
 	
-	void write() throws IOException {
+	void write() {
 		String[] commandBarActionIds = CommandBarAttributes.getActions();
 		String[] commandBarAlterativeActionIds = CommandBarAttributes.getAlternateActions();
 		KeyStroke commandBarModifier = CommandBarAttributes.getModifier();
@@ -66,7 +66,7 @@ class CommandBarWriter extends CommandBarIO {
 	}
 	
 	private static class Writer {
-		private XmlWriter writer = null;
+		private XmlWriter writer;
 		
 		private Writer(OutputStream stream) throws IOException {
     		this.writer = new XmlWriter(stream);

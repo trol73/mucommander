@@ -51,7 +51,7 @@ class CommandBarReader extends CommandBarIO {
     private KeyStroke modifier;
 
     /** Parsed file */
-    private AbstractFile file;
+    private final AbstractFile file;
 
     /**
      * Starts parsing the XML description file.
@@ -67,26 +67,23 @@ class CommandBarReader extends CommandBarIO {
             SAXParserFactory.newInstance().newSAXParser().parse(in, this);
         }
     }
-
-    ////////////////////
-    ///// getters //////
-    ////////////////////
     
-    public String[] getActionsRead() {
+    
+    String[] getActionsRead() {
     	int nbActions = actionsIdsV.size();
     	String[] actionIds = new String[nbActions];
         actionsIdsV.toArray(actionIds);
         return actionIds;
     }
     
-    public String[] getAlternateActionsRead() {
+    String[] getAlternateActionsRead() {
     	int nbActions = alternateActionsIdsV.size();
     	String[] alternateActionIds = new String[nbActions];
         alternateActionsIdsV.toArray(alternateActionIds);
         return alternateActionIds;
     }
     
-    public KeyStroke getModifierRead() {
+    KeyStroke getModifierRead() {
     	return modifier;
     }
     
@@ -109,7 +106,7 @@ class CommandBarReader extends CommandBarIO {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         if(qName.equals(BUTTON_ELEMENT)) {
         	// Resolve action id
         	String actionIdAttribute = attributes.getValue(ACTION_ID_ATTRIBUTE);

@@ -34,7 +34,7 @@ import com.mucommander.ui.main.MainFrame;
  *
  * @author Maxence Bernard
  */
-public class OpenURLInBrowserAction extends MuAction {
+public class OpenURLInBrowserAction extends TcAction {
 
     /** Key to the URL property */
     final static String URL_PROPERTY_KEY = "url";
@@ -50,7 +50,7 @@ public class OpenURLInBrowserAction extends MuAction {
     public void performAction() {
         Object url = getValue(URL_PROPERTY_KEY);
 
-        if (url!=null && (url instanceof String)) {
+        if (url instanceof String) {
             try {
                 DesktopManager.browse(new URL((String)url));
             } catch(Exception e) {
@@ -68,18 +68,28 @@ public class OpenURLInBrowserAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "OpenURLInBrowser";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return null; }
+		public ActionCategory getCategory() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 		
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
         @Override
-        public boolean isParameterized() { return true; }
+        public boolean isParameterized() {
+		    return true;
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenURLInBrowserAction(mainFrame, properties);
         }
     }

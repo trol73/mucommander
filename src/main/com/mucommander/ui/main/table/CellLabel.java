@@ -33,7 +33,7 @@ import java.awt.*;
  * <p>CellLabel is basically a faster dumbed-down JLabel which overrides some JLabel to be no-ops (see below)
  * and some other (setText, setIcon) to call JLabel's super methods only if value has changed since last call,
  * as very often values don't change from one cell to another. Some methods were borrowed from Sun's 
- * <code>DefaultTableCellRender</code> implementation and are marked as much.</p>
+ * <code>DefaultTableCellRender</code> implementation and are marked as much.
  * 
  * <p>Quote from Sun's Javadoc : The table class defines a single cell renderer and uses it as a 
  * as a rubber-stamp for rendering all cells in the table;  it renders the first cell,
@@ -52,8 +52,6 @@ import java.awt.*;
  * @author Maxence Bernard, Sun Microsystems
  */
 public class CellLabel extends JLabel {
-    // - Constants -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Amount of border space on the left and right of the cell */
     public static final int CELL_BORDER_WIDTH = 4;
     /** Amount of border space on the top and bottom of the cell */
@@ -156,8 +154,6 @@ public class CellLabel extends JLabel {
 
 
 
-    // - Label content -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Overrides <code>JLabel.setText</code> to call 
      * the super method only if the value has changed since last call.
@@ -239,8 +235,6 @@ public class CellLabel extends JLabel {
 
 
 
-    // - Painting ------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Paints the label.
      * @param g where to paint the label.
@@ -271,15 +265,7 @@ public class CellLabel extends JLabel {
         }
 
         if (markerColor != null) {
-            setSize(w - h, h);
-            super.paint(g);
-            setSize(w, h);
-            if (gradientColor == null) {
-                g.setColor(lastBackgroundColor);
-                g.fillRect(w - h, 1, h, h - 2);
-            }
-            g.setColor(markerColor);
-            g.fillArc(w - h, h/6, h*2/3, h*2/3, 0, 360);
+            drawMarker(g, w, h);
         } else {
             // Normal painting
             super.paint(g);
@@ -297,22 +283,38 @@ public class CellLabel extends JLabel {
         }
         // TODO improve it
         if (progressValue > 0) {
-            int a = -progressValue*20 % 360;
-            int r = h - 4;
-            if (r % 2 != 0) {
-                r--;
-            }
-            g.setColor(lastForegroundColor);
-            g.fillArc(w - r, 2, r, r, a+100, 200);
-            g.setColor(lastBackgroundColor);
-            int r2 = r/2;
-            if (r2 % 2 != 0) {
-                r2++;
-            }
-            int d = (r - r2) / 2;
-            g.fillOval(w - r + d, 2 + d, r2, r2);
-            //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
+            drawProgress(g, w, h);
         }
+    }
+
+    private void drawMarker(Graphics g, int w, int h) {
+        setSize(w - h, h);
+        super.paint(g);
+        setSize(w, h);
+        if (gradientColor == null) {
+            g.setColor(lastBackgroundColor);
+            g.fillRect(w - h, 1, h, h - 2);
+        }
+        g.setColor(markerColor);
+        g.fillArc(w - h, h/6, h*2/3, h*2/3, 0, 360);
+    }
+
+    private void drawProgress(Graphics g, int w, int h) {
+        int a = -progressValue*20 % 360;
+        int r = h - 4;
+        if (r % 2 != 0) {
+            r--;
+        }
+        g.setColor(lastForegroundColor);
+        g.fillArc(w - r, 2, r, r, a+100, 200);
+        g.setColor(lastBackgroundColor);
+        int r2 = r/2;
+        if (r2 % 2 != 0) {
+            r2++;
+        }
+        int d = (r - r2) / 2;
+        g.fillOval(w - r + d, 2 + d, r2, r2);
+        //g.fillArc(w - r + d, 2 + d, r2, r2, a+100, 200);
     }
 
     protected void paintOutline(Graphics g) {

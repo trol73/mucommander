@@ -24,8 +24,9 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.ui.viewer.EditorRegistrar;
 
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -36,21 +37,21 @@ import java.util.Map;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class EditAction extends InternalEditAction {
-    // - Initialization ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>EditAction</code>.
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    EditAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
 
+    @Override
+    protected boolean preferInternalAction(AbstractFile file) {
+        return !EditorRegistrar.getAllEditors(file).isEmpty();
+    }
 
-    // - AbstractViewerAction implementation ---------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     protected Command getCustomCommand(AbstractFile file) {
         return CommandManager.getCommandForAlias(CommandManager.EDITOR_ALIAS, file);
@@ -66,15 +67,23 @@ public class EditAction extends InternalEditAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "Edit";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0);
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new EditAction(mainFrame, properties);
         }
     }

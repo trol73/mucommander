@@ -21,7 +21,7 @@ package com.mucommander.ui.action.impl;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
@@ -34,15 +34,12 @@ import java.util.Map;
  * <p>
  * If the right panel is the active panel and the selected file is browsable as defined by
  * {@link com.mucommander.commons.file.AbstractFile#isBrowsable()} then the selected file will be opened.
- * </p>
  *
  * <p>
  * Otherwise the right panel's location will be opened.
- * </p>
  *
  * <p>
  * If the left panel is locked then a new tab in the left panel will be opened first.
- * </p>
  *
  * @author Martin Kortkamp
  */
@@ -52,7 +49,7 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private OpenRightInLeftPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -73,15 +70,23 @@ public class OpenRightInLeftPanelAction extends OpenLeftInRightPanelAction {
     public static final class Descriptor extends AbstractActionDescriptor {
         public static final String ACTION_ID = "OpenRightInLeftPanel";
 
-        public String getId() { return ACTION_ID; }
+        public String getId() {
+            return ACTION_ID;
+        }
 
-        public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+        public ActionCategory getCategory() {
+            return ActionCategory.NAVIGATION;
+        }
 
-        public KeyStroke getDefaultAltKeyStroke() { return null; }
+        public KeyStroke getDefaultAltKeyStroke() {
+            return null;
+        }
 
-        public KeyStroke getDefaultKeyStroke() { return null; }
+        public KeyStroke getDefaultKeyStroke() {
+            return null;
+        }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new OpenRightInLeftPanelAction(mainFrame, properties);
         }
     }

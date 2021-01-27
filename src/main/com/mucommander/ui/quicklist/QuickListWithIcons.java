@@ -68,22 +68,32 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 
 			public void popupMenuCanceled(PopupMenuEvent e) {}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			    onHide();
+            }
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				// Clear icon-caching before opening popup-list in order to let the icons be fetched again.
-				itemToIconCacheMap.clear();
-			}			
+				onShow();
+			}
 		});
 	}
-	
-	/**
+
+    protected void onShow() {
+        // Clear icon-caching before opening popup-list in order to let the icons be fetched again.
+        itemToIconCacheMap.clear();
+    }
+
+    protected void onHide() {}
+
+
+    /**
 	 * Called when waitingIcon is added to the list.
 	 */
 	private synchronized void waitingIconAddedToList() {
 		// If there was no other waitingIcon in the list before current addition - start the spinning dial.
-		if (numOfWaitingIconInList++ == 0)
-            WAITING_ICON.setAnimated(true);
+		if (numOfWaitingIconInList++ == 0) {
+			WAITING_ICON.setAnimated(true);
+		}
 	}
 	
 	/**
@@ -91,8 +101,9 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 	 */
 	private synchronized void waitingIconRemovedFromList() {
 		// If after current remove operation, there will be no waitingIcon in the list - stop the spinning dial.
-		if (--numOfWaitingIconInList == 0)
-            WAITING_ICON.setAnimated(false);
+		if (--numOfWaitingIconInList == 0) {
+			WAITING_ICON.setAnimated(false);
+		}
 	}
 	
 	@Override
@@ -152,8 +163,8 @@ public abstract class QuickListWithIcons<T> extends QuickListWithDataList<T> {
 			Image image = ((ImageIcon) icon).getImage();
 			final double height = preferredSize.getHeight();
 			final double width = (height / icon.getIconHeight()) * icon.getIconWidth();
-			image = image.getScaledInstance((int)width, (int)height, Image.SCALE_SMOOTH);
-			return new ImageIcon(image);
+			Image scaledImage = image.getScaledInstance((int)width, (int)height, Image.SCALE_SMOOTH);
+			return new ImageIcon(scaledImage);
 		}
 
 		return icon;

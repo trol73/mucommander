@@ -40,11 +40,11 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
 	
 	/* Variables used for XML parsing */
 	protected final static String ROOT_ELEMENT = "keymap";
-    protected final static String ACTION_ELEMENT = "action";
-    protected final static String CLASS_ATTRIBUTE = "class";
-    protected final static String ID_ATTRIBUTE = "id";
-    protected final static String PRIMARY_KEYSTROKE_ATTRIBUTE = "keystroke";
-    protected final static String ALTERNATE_KEYSTROKE_ATTRIBUTE = "alt_keystroke";
+    final static String ACTION_ELEMENT = "action";
+    final static String CLASS_ATTRIBUTE = "class";
+    final static String ID_ATTRIBUTE = "id";
+    final static String PRIMARY_KEYSTROKE_ATTRIBUTE = "keystroke";
+    final static String ALTERNATE_KEYSTROKE_ATTRIBUTE = "alt_keystroke";
     /** Attribute containing the last muCommander version that was used to create the file */
 	protected static final String VERSION_ATTRIBUTE  = "version";
     
@@ -66,7 +66,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * By default, this file is {@link #DEFAULT_ACTIONS_FILE_NAME} within the preferences folder.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setActionsFile(FileFactory.getFile(file))</code>.
-     * </p>
+     *
      * @param  path                  path to the actions file
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
@@ -85,7 +85,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * By default, this file is {@link #DEFAULT_ACTIONS_FILE_NAME} within the preferences folder.
      * <p>
      * This is a convenience method and is strictly equivalent to calling <code>setActionsFile(FileFactory.getFile(file.getAbsolutePath()))</code>.
-     * </p>
+     *
      * @param  file                  path to the actions file
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
@@ -98,8 +98,9 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
     private static void setActionsFile(AbstractFile file) throws FileNotFoundException {
-        if (file.isBrowsable())
+        if (file.isBrowsable()) {
             throw new FileNotFoundException("Not a valid file: " + file.getAbsolutePath());
+        }
 
         actionsFile = file;
     }
@@ -133,7 +134,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
             getLogger().debug("Action keymap not modified, not saving");
     }
     
-    protected static void createEmptyFile() throws IOException {
+    protected static void createEmptyFile() {
     	writer.create();
     }
     

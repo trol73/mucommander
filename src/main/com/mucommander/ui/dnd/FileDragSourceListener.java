@@ -42,11 +42,11 @@ import java.awt.event.InputEvent;
 public class FileDragSourceListener implements DragGestureListener, DragSourceListener {
 
     /** the FolderPanel instance used to retrieve dragged files */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
 
     /**
-     * Creates a new FileDragSourceListener using the specified FolderPanel that will be used to retreive the dragged files
+     * Creates a new FileDragSourceListener using the specified FolderPanel that will be used to retrieve the dragged files
      * based on the current file selection.
      *
      * @param folderPanel the FolderPanel used to retrieve the list of selected/marked file(s) that are dragged
@@ -57,7 +57,7 @@ public class FileDragSourceListener implements DragGestureListener, DragSourceLi
 
 
     /**
-     * Enables drag operations on the specified component. This class will be notified wheneven drag operations
+     * Enables drag operations on the specified component. This class will be notified whenever drag operations
      * are performed on the component.
      *
      * @param c the component for which to add 'drag' support

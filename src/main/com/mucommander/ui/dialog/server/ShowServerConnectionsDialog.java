@@ -22,7 +22,6 @@ import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.commons.file.connection.ConnectionHandler;
 import com.mucommander.commons.file.connection.ConnectionPool;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowServerConnectionsAction;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -46,14 +45,14 @@ import java.util.List;
  */
 public class ShowServerConnectionsDialog extends FocusDialog implements ActionListener {
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private JList connectionList;
-    private List<ConnectionHandler> connections;
+    private final JList<String> connectionList;
+    private final List<ConnectionHandler> connections;
 
-    private JButton disconnectButton;
-    private JButton goToButton;
-    private JButton closeButton;
+    private final JButton btnDisconnect;
+    private final JButton btnGoto;
+    private final JButton btnClose;
 
     // Dialog's size has to be at least 400x300
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(400,300);
@@ -70,7 +69,6 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         Container contentPane = getContentPane();
 
         // Add the list of server connections
-
         connections = ConnectionPool.getConnectionHandlersSnapshot();
 
         connectionList = new JList<>(new AbstractListModel<String>() {
@@ -80,7 +78,6 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
             public String getElementAt(int i) {
                 ConnectionHandler connHandler = connections.get(i);
-
                 // Show login (but not password) in the URL
                 // Note: realm returned by ConnectionHandler does not contain credentials
                 FileURL clonedRealm = (FileURL)connHandler.getRealm().clone();
@@ -88,7 +85,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
                 clonedRealm.setCredentials(loginCredentials);
 
                 return clonedRealm.toString(true)
-                        +" ("+Translator.get(connHandler.isLocked()?"server_connections_dialog.connection_busy":"server_connections_dialog.connection_idle")+")";
+                        +" ("+i18n(connHandler.isLocked()?"server_connections_dialog.connection_busy":"server_connections_dialog.connection_idle")+")";
             }
         });
 
@@ -111,33 +108,33 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // Disconnect button
-        disconnectButton = new JButton(Translator.get("server_connections_dialog.disconnect"));
-        disconnectButton.setMnemonic(mnemonicHelper.getMnemonic(disconnectButton));
-        disconnectButton.setEnabled(hasConnections);
+        btnDisconnect = new JButton(i18n("server_connections_dialog.disconnect"));
+        btnDisconnect.setMnemonic(mnemonicHelper.getMnemonic(btnDisconnect));
+        btnDisconnect.setEnabled(hasConnections);
         if (hasConnections) {
-            disconnectButton.addActionListener(this);
+            btnDisconnect.addActionListener(this);
         }
 
-        buttonGroupPanel.add(disconnectButton);
+        buttonGroupPanel.add(btnDisconnect);
 
         // Go to button
-        goToButton = new JButton(Translator.get("go_to"));
-        goToButton.setMnemonic(mnemonicHelper.getMnemonic(goToButton));
-        goToButton.setEnabled(hasConnections);
+        btnGoto = new JButton(i18n("go_to"));
+        btnGoto.setMnemonic(mnemonicHelper.getMnemonic(btnGoto));
+        btnGoto.setEnabled(hasConnections);
         if (hasConnections) {
-            goToButton.addActionListener(this);
+            btnGoto.addActionListener(this);
         }
-        buttonGroupPanel.add(goToButton);
+        buttonGroupPanel.add(btnGoto);
 
         buttonsPanel.add(buttonGroupPanel);
 
         // Button that closes the window
-        closeButton = new JButton(Translator.get("close"));
-        closeButton.setMnemonic(mnemonicHelper.getMnemonic(closeButton));
-        closeButton.addActionListener(this);
+        btnClose = new JButton(i18n("close"));
+        btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
+        btnClose.addActionListener(this);
 
         buttonsPanel.add(Box.createHorizontalGlue());
-        buttonsPanel.add(closeButton);
+        buttonsPanel.add(btnClose);
 
         contentPane.add(buttonsPanel, BorderLayout.SOUTH);
 
@@ -145,7 +142,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         setInitialFocusComponent(connectionList);
 
         // Selects 'Done' button when enter is pressed
-        getRootPane().setDefaultButton(closeButton);
+        getRootPane().setDefaultButton(btnClose);
 
         // Packs dialog
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
@@ -161,7 +158,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
         Object source = e.getSource();
 
         // Disconnects the selected connection
-        if (source == disconnectButton) {
+        if (source == btnDisconnect) {
             int selectedIndex = connectionList.getSelectedIndex();
 
             if (selectedIndex >= 0 && selectedIndex < connections.size()) {
@@ -178,11 +175,11 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
 
                 // Disable contextual buttons if there are no more connections
                 if (connections.isEmpty()) {
-                    disconnectButton.setEnabled(false);
-                    goToButton.setEnabled(false);
+                    btnDisconnect.setEnabled(false);
+                    btnGoto.setEnabled(false);
                 }
             }
-        } else if (source == goToButton)  {
+        } else if (source == btnGoto)  {
             // Goes to the selected connection
             // Dispose the dialog first
             dispose();
@@ -191,7 +188,7 @@ public class ShowServerConnectionsDialog extends FocusDialog implements ActionLi
             if (selectedIndex>=0 && selectedIndex<connections.size()) {
                 mainFrame.getActivePanel().tryChangeCurrentFolder(connections.get(selectedIndex).getRealm());
             }
-        } else if (source==closeButton)  {
+        } else if (source== btnClose)  {
             dispose();
         }
     }

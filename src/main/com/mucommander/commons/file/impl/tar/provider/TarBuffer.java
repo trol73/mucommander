@@ -17,20 +17,20 @@ import java.util.Arrays;
  * <p>
  * You should never have a need to access this class directly.
  * TarBuffers are created by Tar IO Streams.
- * <p>-----------------------------------</p>
+ *
  * <p>This class is based off the <code>org.apache.tools.tar</code> package of the <i>Apache Ant</i> project. The Ant
  * code has been modified under the terms of the Apache License which you can find in the bundled muCommander license
- * file. It was forked at version 1.7.1 of Ant.</p>
+ * file. It was forked at version 1.7.1 of Ant.
  * 
  * @author Apache Ant, Maxence Bernard
  */
 public class TarBuffer {
 
     /** Default record size */
-    public static final int DEFAULT_RCDSIZE = (512);
+    static final int DEFAULT_RCDSIZE = (512);
 
     /** Default block size */
-    public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
+    static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
 
     private InputStream     inStream;
     private OutputStream    outStream;
@@ -56,7 +56,7 @@ public class TarBuffer {
      * @param blockSize the block size to use
      * @param recordSize the record size to use
      */
-    public TarBuffer(InputStream inStream, int blockSize, int recordSize) {
+    TarBuffer(InputStream inStream, int blockSize, int recordSize) {
         this.inStream = inStream;
         this.outStream = null;
 
@@ -77,7 +77,7 @@ public class TarBuffer {
      * @param blockSize the block size to use
      * @param recordSize the record size to use
      */
-    public TarBuffer(OutputStream outStream, int blockSize, int recordSize) {
+    TarBuffer(OutputStream outStream, int blockSize, int recordSize) {
         this.inStream = null;
         this.outStream = outStream;
 
@@ -110,7 +110,7 @@ public class TarBuffer {
      * Get the TAR Buffer's block size. Blocks consist of multiple records.
      * @return the block size
      */
-    public int getBlockSize() {
+    int getBlockSize() {
         return this.blockSize;
     }
 
@@ -118,7 +118,7 @@ public class TarBuffer {
      * Get the TAR Buffer's record size.
      * @return the record size
      */
-    public int getRecordSize() {
+    int getRecordSize() {
         return this.recordSize;
     }
 
@@ -138,7 +138,7 @@ public class TarBuffer {
      * @param record The record data to check.
      * @return true if the record data is an End of Archive
      */
-    public boolean isEOFRecord(byte[] record) {
+    boolean isEOFRecord(byte[] record) {
         for (int i = 0, sz = getRecordSize(); i < sz; ++i) {
             if (record[i] != 0) {
                 return false;
@@ -154,7 +154,7 @@ public class TarBuffer {
      * @return <code>true</code> if the record has been skipped, <code>false</code> if EOF has been reached
      * @throws IOException on error
      */
-    public boolean skipRecord() throws IOException {
+    boolean skipRecord() throws IOException {
         if (debug) {
             System.err.println("SkipRecord: recIdx = " + currRecIdx
                                + " blkIdx = " + currBlkIdx);
@@ -182,7 +182,7 @@ public class TarBuffer {
      * @return <code>true</code> if the record has been read, <code>false</code> if EOF has been reached
      * @throws IOException on error
      */
-    public boolean readRecord(byte[] recordBuf) throws IOException {
+    boolean readRecord(byte[] recordBuf) throws IOException {
         if (debug) {
             System.err.println("ReadRecord: recIdx = " + currRecIdx
                                + " blkIdx = " + currBlkIdx);
@@ -287,11 +287,21 @@ public class TarBuffer {
      * @return true if a block was read, false if EOF was reached
      * @throws IOException on error
      */
-    public boolean skipBlock() throws IOException {
+    boolean skipBlock() throws IOException {
         int bytesToSkip = blockSize;
 
+        int noSkipCnt = 0;
         while (bytesToSkip > 0) {
             long numBytes = inStream.skip(bytesToSkip);
+            if (numBytes == 0) {
+                noSkipCnt++;
+                if (noSkipCnt >= 10) {
+                    return false;
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignore) {}
+            }
             // Adopt the same 'generous' behavior as #readBlock(), i.e. allow a premature EOF only if at least
             // a byte was properly skipped.
             if (numBytes == -1) {
@@ -313,7 +323,7 @@ public class TarBuffer {
      *
      * @return The current zero based block number.
      */
-    public int getCurrentBlockNum() {
+    int getCurrentBlockNum() {
         return currBlkIdx;
     }
 
@@ -332,7 +342,7 @@ public class TarBuffer {
      *
      * @return The current zero based record number.
      */
-    public int getCurrentRecordNum() {
+    int getCurrentRecordNum() {
         return currRecIdx - 1;
     }
 
@@ -342,7 +352,7 @@ public class TarBuffer {
      *
      * @return the number of records per block
      */
-    public int getRecordsPerBlock() {
+    int getRecordsPerBlock() {
         return recsPerBlock;
     }
 
@@ -352,7 +362,7 @@ public class TarBuffer {
      * @param record The record data to write to the archive.
      * @throws IOException on error
      */
-    public void writeRecord(byte[] record) throws IOException {
+    void writeRecord(byte[] record) throws IOException {
         if (debug) {
             System.err.println("WriteRecord: recIdx = " + currRecIdx
                                + " blkIdx = " + currBlkIdx);
@@ -389,7 +399,7 @@ public class TarBuffer {
      * @param offset The offset of the record data within buf.
      * @throws IOException on error
      */
-    public void writeRecord(byte[] buf, int offset) throws IOException {
+    void writeRecord(byte[] buf, int offset) throws IOException {
         if (debug) {
             System.err.println("WriteRecord: recIdx = " + currRecIdx
                                + " blkIdx = " + currBlkIdx);
@@ -482,7 +492,7 @@ public class TarBuffer {
             }
         }
         finally {
-            if(blockBuffer!=null) {
+            if (blockBuffer!=null) {
                 BufferPool.releaseByteArray(blockBuffer);
                 blockBuffer = null;
             }

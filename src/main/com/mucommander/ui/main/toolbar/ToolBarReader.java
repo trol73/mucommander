@@ -18,21 +18,18 @@
 
 package com.mucommander.ui.main.toolbar;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Vector;
-
-import javax.xml.parsers.SAXParserFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.io.backup.BackupInputStream;
 import com.mucommander.ui.action.ActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * This class parses the XML file describing the toolbar's buttons and associated actions.
@@ -74,7 +71,7 @@ public class ToolBarReader extends ToolBarIO {
     public void endDocument() {}
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         switch (qName) {
             case BUTTON_ELEMENT:
                 // Resolve action id
@@ -88,10 +85,11 @@ public class ToolBarReader extends ToolBarIO {
                     // Resolve action class
                     String actionClassAttribute = attributes.getValue(ACTION_ATTRIBUTE);
                     String actionId = ActionManager.extrapolateId(actionClassAttribute);
-                    if (ActionManager.isActionExist(actionId))
+                    if (ActionManager.isActionExist(actionId)) {
                         actionIdsV.add(actionId);
-                    else
+                    } else {
                         getLogger().warn("Error in " + DEFAULT_TOOLBAR_FILE_NAME + ": action id for class " + actionClassAttribute + " was not found");
+                    }
                 }
                 break;
             case SEPARATOR_ELEMENT:
@@ -102,8 +100,9 @@ public class ToolBarReader extends ToolBarIO {
                 String fileVersion = attributes.getValue(VERSION_ATTRIBUTE);
 
                 // if the file's version is not up-to-date, update the file to the current version at quitting.
-                if (!RuntimeConstants.VERSION.equals(fileVersion))
+                if (!RuntimeConstants.VERSION.equals(fileVersion)) {
                     setModified();
+                }
                 break;
         }
     }

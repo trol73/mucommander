@@ -19,13 +19,13 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.table.FileTable;
 import com.mucommander.ui.main.table.views.full.FileTableModel;
@@ -47,16 +47,16 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class MarkSelectedFileAction extends MuAction {
+public class MarkSelectedFileAction extends TcAction {
 
-    MarkSelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MarkSelectedFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
 
     @Override
     public void performAction() {
-		if (MuConfigurations.getPreferences().getVariable(MuPreference.CALCULATE_FOLDER_SIZE_ON_MARK, MuPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK))
+		if (TcConfigurations.getPreferences().getVariable(TcPreference.CALCULATE_FOLDER_SIZE_ON_MARK, TcPreferences.DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK))
 		{
 			calculateFolderSize();
 		}
@@ -82,15 +82,23 @@ public class MarkSelectedFileAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MarkSelectedFile";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0); }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0);
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new MarkSelectedFileAction(mainFrame, properties);
 		}
     }

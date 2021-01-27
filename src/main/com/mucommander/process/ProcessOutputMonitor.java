@@ -29,11 +29,10 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class is used by {@link com.mucommander.process.AbstractProcess} to make sure that
  * processes do not stall because their stdout and stderr streams are not emptied.
- * </p>
  * <p>
  * This implementation is rather hackish, and should not be used directly: it works, but is not
  * meant to support anything but the very specific needs of {@link com.mucommander.process.AbstractProcess}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 class ProcessOutputMonitor extends Thread {
@@ -72,7 +71,7 @@ class ProcessOutputMonitor extends Thread {
      * <p>
      * A process monitor created that way will also wait on the specified <code>process</code> before quiting,
      * and notify the listener when the process has actually died.
-     * </p>
+     *
      * @param in       input stream to 'empty'.
      * @param listener where to send the content of the stream.
      * @param process  process to wait on.
@@ -144,7 +143,6 @@ class ProcessOutputMonitor extends Thread {
      * <p>
      * Calling this method will cause the process' stream to stop being read. For this reason,
      * it should only be called right before the process is killed, as it will otherwise stall.
-     * </p>
      */
     public void stopMonitoring() {
         // Closes the input stream.

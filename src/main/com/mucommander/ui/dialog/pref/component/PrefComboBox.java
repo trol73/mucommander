@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.component;
 
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.pref.PreferencesDialog;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Arik Hadas, Oleg Trifonov
  */
-public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefComponent {
+public abstract class PrefComboBox<E> extends TcComboBox<E> implements PrefComponent {
 
 	protected PrefComboBox() {
 		super();
@@ -60,7 +60,9 @@ public abstract class PrefComboBox<E> extends MuComboBox<E> implements PrefCompo
 
     @Override
     public E getSelectedItem() {
-        return (E) super.getSelectedItem();
+        @SuppressWarnings({"unchecked"})
+	    E selected = (E)super.getSelectedItem();
+        return selected;
     }
 
 }

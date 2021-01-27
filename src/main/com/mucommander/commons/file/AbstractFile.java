@@ -21,6 +21,7 @@ package com.mucommander.commons.file;
 
 import java.awt.Dimension;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -33,6 +34,7 @@ import com.mucommander.commons.file.compat.CompatURLStreamHandler;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.commons.file.impl.ProxyFile;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.ChecksumInputStream;
 import com.mucommander.commons.io.FileTransferException;
@@ -54,7 +56,7 @@ import com.mucommander.commons.runtime.OsFamily;
 public abstract class AbstractFile implements FileAttributes, PermissionTypes, PermissionAccesses {
 
     /** URL representing this file */
-    protected FileURL fileURL;
+    protected final FileURL fileURL;
 
     /** Default path separator */
     protected final static String DEFAULT_SEPARATOR = "/";
@@ -170,7 +172,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * </ul>
      * <p>
      * This default implementation returns the string representation of this file's {@link #getURL() url}, without
-     * the login and password parts. File implementations overridding this method should always return a path free of
+     * the login and password parts. File implementations overriding this method should always return a path free of
      * any login and password, so that it can safely be displayed to the end user or stored, without risking to
      * compromise sensitive information.
      *
@@ -237,7 +239,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * Returns <code>true</code> if this file is hidden.
      *
      * <p>This default implementation is solely based on the filename and returns <code>true</code> if this
-     * file's name starts with '.'. This method should be overriden if the underlying filesystem has a notion 
+     * file's name starts with '.'. This method should be overridden if the underlying filesystem has a notion
      * of hidden files.
      *
      * @return true if this file is hidden
@@ -308,7 +310,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * unavailable. If the returned file does exist, it must always be a {@link #isDirectory() directory}.
      * In other words, archive files may not be considered as volumes.
      * <p>
-     * The notion of volume may or may not have a meaning depending on the kind of fileystem. On local filesystems,
+     * The notion of volume may or may not have a meaning depending on the kind of filesystem. On local filesystems,
      * the notion of volume can be assimilated into that of <i>mount point</i> for UNIX-based OSes, or <i>drive</i>
      * for the Windows platform. Volumes may also have a meaning for certain network filesystems such as SMB, for which
      * shares can be considered as volumes. Filesystems that don't have a notion of volume should return the
@@ -439,15 +441,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (isFileOperationSupported(FileOperation.COPY_REMOTELY)) {
             try {
                 copyRemotelyTo(destFile);
-                // Operation was a success, all done.
-                return;
-            } catch(IOException e) {
-                // Fail silently
-            }
+                return; // Operation was a success, all done.
+            } catch (IOException ignore) {}
         }
 
         // Fall back to copying the file manually
-
         checkCopyPrerequisites(destFile, false);
 
         // Copy the file and its contents if the file is a directory
@@ -489,9 +487,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 renameTo(destFile);
                 // Rename was a success, all done.
                 return;
-            } catch(IOException e) {
-                // Fail silently
-            }
+            } catch (IOException ignore) {}
         }
 
         // Fall back to moving the file manually
@@ -626,10 +622,13 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public String getPermissionsString() {
         FilePermissions permissions = getPermissions();
+        if (permissions == null) {
+            return isSymlink() ? "l???" : isDirectory() ? "d???" : "-???";
+        }
         int supportedPerms = permissions.getMask().getIntValue();
 
-        String s = "";
-        s += isSymlink() ? 'l' : isDirectory() ? 'd' : '-';
+        StringBuilder sb = new StringBuilder();
+        sb.append(isSymlink() ? 'l' : isDirectory() ? 'd' : '-');
 
         int perms = permissions.getIntValue();
 
@@ -639,21 +638,19 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         // The first one ('owner') will always be displayed, regardless of the permission bit mask. 'Group' and 'other'
         // will be displayed only if the permission mask contains information about them (at least one permission bit).
         for (int a = USER_ACCESS; a >= OTHER_ACCESS; a--) {
-
             if (a == USER_ACCESS || (supportedPerms & (7<<bitShift)) != 0) {
                 for (int p = READ_PERMISSION; p >= EXECUTE_PERMISSION; p = p >> 1) {
                     if ((perms & (p<<bitShift)) == 0) {
-                        s += '-';
+                        sb.append('-');
                     } else {
-                        s += p == READ_PERMISSION ? 'r' : p == WRITE_PERMISSION ? 'w' : 'x';
+                        sb.append(p == READ_PERMISSION ? 'r' : p == WRITE_PERMISSION ? 'w' : 'x');
                     }
                 }
             }
-
             bitShift -= 3;
         }
 
-        return s;
+        return sb.toString();
     }
 
 
@@ -912,7 +909,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             }
             lastAncestor = ancestor;
             ancestor = ancestor.getAncestor();
-        } while(lastAncestor != ancestor);
+        } while (lastAncestor != ancestor);
 
         return null;
     }
@@ -996,7 +993,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (hasAncestor(AbstractArchiveFile.class)) {
             return getAncestor(AbstractArchiveFile.class);
         } else if (hasAncestor(AbstractArchiveEntryFile.class)) {
-            return getAncestor(AbstractArchiveEntryFile.class).getArchiveFile();
+            AbstractArchiveEntryFile ancestor = getAncestor(AbstractArchiveEntryFile.class);
+            return ancestor != null ? ancestor.getArchiveFile() : null;
         }
 
         return null;
@@ -1140,21 +1138,25 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
             if (allowCaseVariations) {
                 String sourceFileName = getName();
                 String destFileName = destFile.getName();
-                if (sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName))
+                if (sourceFileName.equalsIgnoreCase(destFileName) && !sourceFileName.equals(destFileName)) {
                     isAllowedCaseVariation = true;
+                }
             }
 
-            if (!isAllowedCaseVariation)
+            if (!isAllowedCaseVariation) {
                 throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
+            }
         }
 
         // Throw an exception if source is a parent of destination
-        if (!filesEqual && isParentOf(destFile))      // Note: isParentOf(destFile) returns true if both files are equal
+        if (!filesEqual && isParentOf(destFile)) {      // Note: isParentOf(destFile) returns true if both files are equal
             throw new FileTransferException(FileTransferException.SOURCE_PARENT_OF_DESTINATION);
+        }
 
         // Throw an exception if the source file does not exist
-        if (!exists())
+        if (!exists()) {
             throw new FileTransferException(FileTransferException.FILE_NOT_FOUND);
+        }
     }
 
     /**
@@ -1246,6 +1248,11 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 copyRecursively(child, destChild);
             }
         } else {
+//            try (InputStream in = sourceFile.getInputStream()) {
+//                destFile.copyStream(in, false, sourceFile.getSize());
+//            } catch (IOException e) {
+//                throw new FileTransferException(FileTransferException.OPENING_SOURCE);
+//            }
             InputStream in;
 
             try {
@@ -1312,7 +1319,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * or not implemented by the underlying filesystem.
      */
     public final void importPermissions(AbstractFile sourceFile) throws IOException {
-        importPermissions(sourceFile,isDirectory()
+        importPermissions(sourceFile, isDirectory()
                 ? FilePermissions.DEFAULT_DIRECTORY_PERMISSIONS
                 : FilePermissions.DEFAULT_FILE_PERMISSIONS);
     }
@@ -1353,7 +1360,8 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @see FileOperation
      */
     public static boolean isFileOperationSupported(FileOperation op, Class<? extends AbstractFile> c) {
-        return !op.getCorrespondingMethod(c).isAnnotationPresent(UnsupportedFileOperation.class);
+        Method method = op.getCorrespondingMethod(c);
+        return method != null && !method.isAnnotationPresent(UnsupportedFileOperation.class);
     }
 
     /**
@@ -1373,12 +1381,13 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public static String getExtension(String filename) {
         int lastDotPos = filename.lastIndexOf('.');
-
-        int len;
-        if (lastDotPos <= 0 || lastDotPos==(len=filename.length())-1) {
+        if (lastDotPos <= 0) {
             return null;
         }
-
+        int len = filename.length();
+        if (lastDotPos == len-1) {
+            return null;
+        }
         return filename.substring(lastDotPos+1, len);
     }
 
@@ -1396,7 +1405,6 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     public String getBaseName() {
         String fileName = getName();
         int lastDotPos = fileName.lastIndexOf('.');
-    	 
         if (lastDotPos <= 0 || lastDotPos == fileName.length()-1) {
             return fileName;
         }
@@ -1970,7 +1978,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
     /**
      * Returns the file Object of the underlying API providing access to the filesystem. The returned Object may expose
-     * filesystem-specific functionalities that are not available in <code>AbstractFile</code>. Note however that the
+     * filesystem-specific functionality that are not available in <code>AbstractFile</code>. Note however that the
      * returned Object type may change over time, if the underlying API used to provide access to the filesystem
      * changes, so this method should be used only as a last resort.
      *
@@ -2012,6 +2020,10 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
         if (pushbackInputStream != null) {
             pushbackInputStream.close();
         }
+    }
+
+    public boolean isLocalFile() {
+        return FileProtocols.FILE.equals(fileURL.getScheme()) && hasAncestor(LocalFile.class);
     }
 
 

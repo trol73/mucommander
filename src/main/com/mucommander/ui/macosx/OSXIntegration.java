@@ -18,11 +18,12 @@
 
 package com.mucommander.ui.macosx;
 
+import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.about.AboutDialog;
 import com.mucommander.ui.dialog.shutdown.QuitDialog;
@@ -51,22 +52,30 @@ public class OSXIntegration {
         // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
         // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
         // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
-        if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
+        if (OsVersion.MAC_OS_X_10_4.isCurrentOrLower() || OsVersion.MAC_OS_X_10_13.isCurrentOrHigher()) {
             // Turn on/off brush metal look (default is off because still buggy when scrolling and panning dialog windows) :
             //  "Allows you to display your main windows with the 'textured' Aqua window appearance.
             //   This property should be applied only to the primary application window,
             //   and should not affect supporting windows like dialogs or preference windows."
             System.setProperty("apple.awt.brushMetalLook",
-                ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_BRUSHED_METAL, MuPreferences.DEFAULT_USE_BRUSHED_METAL));
+                ""+ TcConfigurations.getPreferences().getVariable(TcPreference.USE_BRUSHED_METAL, TcPreferences.DEFAULT_USE_BRUSHED_METAL));
         }
 
         // Enables/Disables screen menu bar (default is on) :
         //  "if you are using the Aqua look and feel, this property puts Swing menus in the Mac OS X menu bar."
-        System.setProperty("apple.laf.useScreenMenuBar", ""+MuConfigurations.getPreferences().getVariable(MuPreference.USE_SCREEN_MENU_BAR,
-                                                                                             MuPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
+        System.setProperty("apple.laf.useScreenMenuBar", ""+ TcConfigurations.getPreferences().getVariable(TcPreference.USE_SCREEN_MENU_BAR,
+                                                                                             TcPreferences.DEFAULT_USE_SCREEN_MENU_BAR));
 
         // Catch 'About', 'Preferences' and 'Quit' events
-        new EAWTHandler();
+        try {
+            if (JavaVersion.JAVA_1_9.isCurrentOrHigher()) {
+                new Java9DesktopHandler();
+            } else {
+                new EAWTHandler();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *   <li>Their <code>isSupportedLookAndFeel</code> method returns <code>true</code>.</li>
  *   <li>They are not an inner class.</li>
  * </ul>
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class LookAndFeelFilter implements ClassFilter {

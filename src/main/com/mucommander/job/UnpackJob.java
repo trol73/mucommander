@@ -23,7 +23,7 @@ import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.ProxyFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.UnmarkAllAction;
 import com.mucommander.ui.dialog.file.ProgressDialog;
@@ -61,7 +61,6 @@ public class UnpackJob extends AbstractCopyJob {
      * Creates a new UnpackJob without starting it.
      * <p>
      * The base destination folder will be created if it doesn't exist.
-     * </p>
      *
      * @param progressDialog dialog which shows this job's progress
      * @param mainFrame mainFrame this job has been triggered by
@@ -223,11 +222,9 @@ public class UnpackJob extends AbstractCopyJob {
                             processEntry = true;
                             selectedEntries.remove(i);
                             break;
+                        } else {
                         }
-
-                        else {
                     }
-                }
                 }
 
                 if (!processEntry) {
@@ -262,7 +259,7 @@ public class UnpackJob extends AbstractCopyJob {
                 // Do nothing if the file is a symlink (skip file and return)
                 if (entryFile.isSymlink()) {
                     // TODO !!! implement me
-System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
+//System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
 
                     return true;
                 }
@@ -464,7 +461,7 @@ System.out.println(file.getAbsolutePath() + " -> " + file.getCanonicalPath());
         private AbstractArchiveFile archiveFile;
         private ArchiveEntryIterator iterator;
 
-        public ProxiedEntryFile(AbstractFile entryFile, ArchiveEntry entry, AbstractArchiveFile archiveFile, ArchiveEntryIterator iterator) {
+        ProxiedEntryFile(AbstractFile entryFile, ArchiveEntry entry, AbstractArchiveFile archiveFile, ArchiveEntryIterator iterator) {
             super(entryFile);
 
             this.entry = entry;

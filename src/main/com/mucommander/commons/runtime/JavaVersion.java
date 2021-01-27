@@ -47,26 +47,32 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     /** Java 1.7.x */
     JAVA_1_7("1.7"),
     /** Java 1.8.x */
-    JAVA_1_8("1.8");
+    JAVA_1_8("1.8"),
+    /** Java 1.9.x */
+    JAVA_1_9("1.9"),
+    /** Java 1.10.x */
+    JAVA_1_10("1.10"),
+    /** Java 1.9.x */
+    JAVA_1_11("1.11");
 
 
     /** Logger used by this class. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaVersion.class);
 
     /** Holds the JavaVersion of the current runtime environment  */
-    private static JavaVersion currentValue;
+    private static final JavaVersion CURRENT_VALUE;
 
     /** Holds the String representation of the current JVM architecture  */
-    private static String currentArchitecture;
+    private static final String CURRENT_ARCHITECTURE;
 
     /** The String representation of this RuntimeProperty, set at creation time */
     protected final String stringRepresentation;
 
     static {
-    	currentValue = parseSystemProperty(getRawSystemProperty());
-    	currentArchitecture = System.getProperty("os.arch");
-    	LOGGER.info("Current Java version: {}", currentValue);
-    	LOGGER.info("Current JVM architecture: {}", currentArchitecture);
+    	CURRENT_VALUE = parseSystemProperty(getRawSystemProperty());
+    	CURRENT_ARCHITECTURE = System.getProperty("os.arch");
+    	LOGGER.info("Current Java version: {}", CURRENT_VALUE);
+    	LOGGER.info("Current JVM architecture: {}", CURRENT_ARCHITECTURE);
     }
 
 
@@ -74,9 +80,6 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     	this.stringRepresentation = stringRepresentation;
     }
 
-    ////////////////////
-    // Static methods //
-    ////////////////////
 
     /**
      * Returns <code>true</code> if the JVM architecture is amd64
@@ -84,7 +87,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
      * @return <code>true</code> if the JVM architecture is amd64, and <code>false</code> otherwise.
      */
     public static boolean isAmd64Architecture() {
-    	return "amd64".equals(currentArchitecture);
+    	return "amd64".equals(CURRENT_ARCHITECTURE);
     }
 
     /**
@@ -93,7 +96,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
      * @return the Java version of the current runtime environment
      */
     public static JavaVersion getCurrent() {
-        return currentValue;
+        return CURRENT_VALUE;
     }
 
     /**
@@ -123,7 +126,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
             }
         }
         // Newer version we don't know of yet, assume latest supported Java version
-        return JavaVersion.JAVA_1_8;
+        return JavaVersion.JAVA_1_11;
     }
 
     /**
@@ -132,32 +135,29 @@ public enum JavaVersion implements ComparableRuntimeProperty {
      * @return true if this instance is the same as the current runtime's value
      */
     public boolean isCurrent() {
-        return this == currentValue;
+        return this == CURRENT_VALUE;
     }
 
-    //////////////////////////////////////////////
-    // ComparableRuntimeProperty implementation //
-    //////////////////////////////////////////////
 
+    @Override
 	public boolean isCurrentOrLower() {
-		return currentValue.compareTo(this)<=0;
+		return CURRENT_VALUE.compareTo(this) <= 0;
 	}
 
+	@Override
 	public boolean isCurrentLower() {
-		return currentValue.compareTo(this)<0;
+		return CURRENT_VALUE.compareTo(this) < 0;
 	}
 
+	@Override
 	public boolean isCurrentOrHigher() {
-		return currentValue.compareTo(this)>=0;
+		return CURRENT_VALUE.compareTo(this) >= 0;
 	}
 
+	@Override
 	public boolean isCurrentHigher() {
-		return currentValue.compareTo(this)>0;
+		return CURRENT_VALUE.compareTo(this) > 0;
 	}
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public String toString() {

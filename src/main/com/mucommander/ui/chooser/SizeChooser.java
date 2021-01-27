@@ -18,8 +18,8 @@
 
 package com.mucommander.ui.chooser;
 
-import com.mucommander.text.SizeFormat;
-import com.mucommander.ui.combobox.MuComboBox;
+import com.mucommander.utils.text.SizeFormat;
+import com.mucommander.ui.combobox.TcComboBox;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +33,7 @@ import java.util.WeakHashMap;
  * Each time the value changes, a <code>ChangeEvent</code> is fired to registered listeners.
  *
  * <p>This component can also serve to enter a speed in byte/kilobyte/megabyte/... per second. This only affects the
- * units displayed, this component works in the exact same way otherwise.</p>
+ * units displayed, this component works in the exact same way otherwise.
  *
  * @author Maxence Bernard
  */
@@ -83,7 +83,7 @@ public class SizeChooser extends JPanel {
         }
         add(valueSpinner);
 
-        unitComboBox = new MuComboBox<>();
+        unitComboBox = new TcComboBox<>();
         for (int i = SizeFormat.BYTE_UNIT; i <= SizeFormat.GIGABYTE_UNIT; i++) {
             unitComboBox.addItem(SizeFormat.getUnitString(i, speedUnits));
         }

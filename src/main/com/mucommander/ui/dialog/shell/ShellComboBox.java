@@ -21,7 +21,7 @@ package com.mucommander.ui.dialog.shell;
 import com.mucommander.shell.ShellHistoryListener;
 import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.autocomplete.CompleterFactory;
-import com.mucommander.ui.combobox.AutocompletedEditableCombobox;
+import com.mucommander.ui.combobox.AutocompleteEditableCombobox;
 import com.mucommander.ui.combobox.EditableComboBox;
 import com.mucommander.ui.combobox.EditableComboBoxListener;
 import com.mucommander.ui.combobox.SaneComboBox;
@@ -39,14 +39,13 @@ import java.util.Iterator;
  * In addition to providing basic shell command input features, this widget interfaces with
  * the {@link com.mucommander.shell.ShellHistoryManager} to offer a history of shell commands
  * for the user to browse through.
- * </p>
  * <p>
  * Note that even though this component is affected by themes, it's impossible to edit the current theme while it's being displayed.
  * For this reason, the RunDialog doesn't listen to theme modifications.
- * </p>
+ *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
-public class ShellComboBox extends AutocompletedEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
+public class ShellComboBox extends AutocompleteEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
     // - Instance fields -----------------------------------------------------
     // -----------------------------------------------------------------------
     /** Input field used to type in commands. */

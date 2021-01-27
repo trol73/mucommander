@@ -32,9 +32,9 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 @InvokesDialog
-public class UnmarkGroupAction extends MuAction {
+public class UnmarkGroupAction extends TcAction {
 
-    UnmarkGroupAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private UnmarkGroupAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -52,15 +52,23 @@ public class UnmarkGroupAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "UnmarkGroup";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.SELECTION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.SELECTION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0);
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
 			return new UnmarkGroupAction(mainFrame, properties);
 		}
     }

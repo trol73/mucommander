@@ -2,6 +2,7 @@ package se.vidstige.jadb;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by vidstige on 2014-03-19.
@@ -28,7 +29,7 @@ public class SyncTransport {
         output.writeBytes(syncCommand);
 //        output.writeInt(Integer.reverseBytes(name.length()));
 //        output.writeBytes(name);
-        byte[] data = name.getBytes("utf-8");
+        byte[] data = name.getBytes(StandardCharsets.UTF_8);
         output.writeInt(Integer.reverseBytes(data.length));
         output.write(data);
     }
@@ -68,7 +69,9 @@ public class SyncTransport {
         int nameLength = readInt();
         String name = readString(nameLength);
 
-        if (!"DENT".equals(id)) return RemoteFileRecord.DONE;
+        if (!"DENT".equals(id)) {
+            return RemoteFileRecord.DONE;
+        }
         return new RemoteFileRecord(name, mode, size, time);
     }
 

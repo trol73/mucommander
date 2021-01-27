@@ -30,13 +30,13 @@ import java.nio.charset.Charset;
 public class BOM {
 
     /** the byte sequence that identifies this BOM */
-    private byte[] sig;
+    private final byte[] sig;
 
     /** the character encoding denoted by this BOM */
-    private String encoding;
+    private final String encoding;
 
     /** character encoding aliases that map onto this BOM */
-    private String aliases[];
+    private final String[] aliases;
 
     /**
      * Creates a new <code>BOM</code> instance identified by the given signature and denoting the specified
@@ -46,7 +46,7 @@ public class BOM {
      * @param encoding the character encoding denoted by this BOM
      * @param aliases character encoding aliases
      */
-    BOM(byte signature[], String encoding, String[] aliases) {
+    BOM(byte[] signature, String encoding, String[] aliases) {
         this.sig = signature;
         this.encoding = encoding;
         this.aliases = aliases;
@@ -85,14 +85,16 @@ public class BOM {
      * @param bytes the byte sequence to compare against this BOM's signature
      * @return true if this BOM's signature starts with the given byte sequence
      */
-    public boolean sigStartsWith(byte bytes[]) {
+    public boolean sigStartsWith(byte[] bytes) {
         int bytesLen = bytes.length;
-        if(bytesLen>sig.length)
+        if (bytesLen > sig.length) {
             return false;
+        }
 
-        for(int i=0; i<bytesLen; i++) {
-            if(bytes[i]!= sig[i])
+        for (int i = 0; i < bytesLen; i++) {
+            if (bytes[i] != sig[i]) {
                 return false;
+            }
         }
 
         return true;
@@ -104,14 +106,10 @@ public class BOM {
      * @param bytes the byte sequence to compare against this BOM's signature
      * @return true if this BOM's signature matches the given byte sequence
      */
-    public boolean sigEquals(byte bytes[]) {
+    public boolean sigEquals(byte[] bytes) {
         return bytes.length==sig.length && sigStartsWith(bytes);
     }
 
-
-    ////////////////////
-    // Static methods //
-    ////////////////////
 
     /**
      * Returns a {@link BOM} instance for the specified encoding, <code>null</code> if the encoding doesn't
@@ -130,40 +128,38 @@ public class BOM {
      * have a corresponding BOM (non-Unicode encoding).
      */
     public static BOM getInstance(String encoding) {
-        if(!Charset.isSupported(encoding))
+        if (!Charset.isSupported(encoding)) {
             return null;
+        }
 
         Charset charset = Charset.forName(encoding);
         // Retrieve the charset's canonical name for aliases we may not know about
         encoding = charset.name();
 
-        String[] aliases;
-
-        for(int i=0; i<BOMConstants.SUPPORTED_BOMS.length; i++) {
-            if(BOMConstants.SUPPORTED_BOMS[i].getEncoding().equalsIgnoreCase(encoding))
+        for (int i = 0; i<BOMConstants.SUPPORTED_BOMS.length; i++) {
+            if (BOMConstants.SUPPORTED_BOMS[i].getEncoding().equalsIgnoreCase(encoding)) {
                 return BOMConstants.SUPPORTED_BOMS[i];
-
-            aliases = BOMConstants.SUPPORTED_BOMS[i].getAliases();
-            for (String alias : aliases)
-                if (alias.equalsIgnoreCase(encoding))
+            }
+            String[] aliases = BOMConstants.SUPPORTED_BOMS[i].getAliases();
+            for (String alias : aliases) {
+                if (alias.equalsIgnoreCase(encoding)) {
                     return BOMConstants.SUPPORTED_BOMS[i];
+                }
+            }
         }
 
         return null;
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Returns <code>true</code> if and only if the given Object is a <code>BOM</code> instance with the same
-     * signature as this instance.         *
+     * signature as this instance.
      *
      * @param o the Object to test for equality
      * @return true if the specified Object is a BOM instance with the same signature as this instance
      */
+    @Override
     public boolean equals(Object o) {
         return (o instanceof BOM) && ((BOM)o).sigEquals(sig);
     }
@@ -173,14 +169,13 @@ public class BOM {
      *
      * @return returns a String representation of this <code>BOM</code>.
      */
+    @Override
     public String toString() {
-        StringBuilder out;
-
-        out = new StringBuilder(super.toString());
+        StringBuilder out = new StringBuilder(super.toString());
         out.append(", signature=");
-        for(int i=0; i < sig.length; i++) {
+        for(int i = 0; i < sig.length; i++) {
             out.append(0xFF&sig[i]);
-            out.append((i==sig.length-1?"}":", "));
+            out.append((i == sig.length-1 ? "}" : ", "));
         }
         out.append(", encoding=");
         out.append(encoding);

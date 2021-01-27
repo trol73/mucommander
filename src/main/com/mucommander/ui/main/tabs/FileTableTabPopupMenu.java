@@ -27,28 +27,28 @@ import com.mucommander.ui.action.impl.MoveTabToOtherPanelAction;
 import com.mucommander.ui.action.impl.SetTabTitleAction;
 import com.mucommander.ui.action.impl.ToggleLockTabAction;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.ui.popup.MuActionsPopupMenu;
+import com.mucommander.ui.popup.TcActionsPopupMenu;
 
 /**
 * Contextual popup menu invoked by {@link FileTableTabbedPane} when right-clicking on a tab's title.
 * 
 * @author Arik Hadas
 */
-class FileTableTabPopupMenu extends MuActionsPopupMenu {
+class FileTableTabPopupMenu extends TcActionsPopupMenu {
 
-	public FileTableTabPopupMenu(MainFrame mainFrame) {
+	FileTableTabPopupMenu(MainFrame mainFrame) {
 		super(mainFrame);
 
-		FileTableTab tab = mainFrame.getActivePanel().getTabs().getCurrentTab();
+		//FileTableTab tab = mainFrame.getActivePanel().getTabs().getCurrentTab();
 		
 		addAction(DuplicateTabAction.Descriptor.ACTION_ID);
 		addAction(CloseTabAction.Descriptor.ACTION_ID);
 		addAction(CloseOtherTabsAction.Descriptor.ACTION_ID);
 		addAction(CloseDuplicateTabsAction.Descriptor.ACTION_ID);
-		add(new Separator());
+		addSeparator();
 		addAction(ToggleLockTabAction.Descriptor.ACTION_ID);
 		addAction(SetTabTitleAction.Descriptor.ACTION_ID);
-		add(new Separator());
+		addSeparator();
 		addAction(MoveTabToOtherPanelAction.Descriptor.ACTION_ID);
 		addAction(CloneTabToOtherPanelAction.Descriptor.ACTION_ID);
 	}

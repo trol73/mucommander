@@ -39,7 +39,10 @@ interface BookmarkConstants {
     /** Bookmark location */
     String ELEMENT_LOCATION  = "location";
 
-    /** Bookmark URL: was used up until 0.8 beta3 nightly builds and replaced by 'location' element. Kept
-     * for upward compatibility */
-    String ELEMENT_URL       = "url";
+    /** Bookmark parent name */
+    String ELEMENT_PARENT  = "parent";
+
+//    /** Bookmark URL: was used up until 0.8 beta3 nightly builds and replaced by 'location' element. Kept
+//     * for upward compatibility */
+//    String ELEMENT_URL       = "url";
 }

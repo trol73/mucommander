@@ -4,7 +4,7 @@ package de.congrace.exp4j;
  * This classed is used to create custom functions for exp4j<br>
  *
  * <b>Example</b><br>
- * <code><pre>{@code}	
+ * <pre>{@code
  * CustomFunction fooFunc = new CustomFunction("foo") {
  * 		public double applyFunction(double value) {
  * 			return value*Math.E;
@@ -13,7 +13,7 @@ package de.congrace.exp4j;
  * double varX=12d;
  * Calculable calc = new ExpressionBuilder("foo(x)").withCustomFunction(fooFunc).withVariable("x",varX).build();
  * assertTrue(calc.calculate() == Math.E * varX);
- * }</pre></code>
+ * }</pre>
  * 
  * @author frank asseg
  * 
@@ -44,7 +44,7 @@ public abstract class CustomFunction {
 	 * @param name
 	 *            the name of the function (e.g. foo)
 	 */
-	protected CustomFunction(String name, int argumentCount) throws InvalidCustomFunctionException {
+	protected CustomFunction(String name, int argumentCount) {
 		this.argc = argumentCount;
 		this.name = name;
 	}

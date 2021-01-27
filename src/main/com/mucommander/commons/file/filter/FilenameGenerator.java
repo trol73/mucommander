@@ -10,9 +10,6 @@ import com.mucommander.commons.file.AbstractFile;
  */
 public class FilenameGenerator implements CriterionValueGenerator<String> {
 
-    ////////////////////////////////////////////
-    // CriterionValueGenerator implementation //
-    ////////////////////////////////////////////
 
     public String getCriterionValue(AbstractFile file) {
         return file.getName();

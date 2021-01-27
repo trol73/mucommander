@@ -29,7 +29,7 @@ import com.mucommander.commons.file.AbstractFile;
  * Use {@link DesktopManager#getTrash()} to retrieve an instance of a trash implementation that can
  * be used on the current platform.<br>
  * Also, some AbstractTrash subclasses may not be able to provide working implementations for all trash operations;
- * probe methods are provided to find out if a particular operation is available.</p>
+ * probe methods are provided to find out if a particular operation is available.
  *
  * @see TrashProvider
  * @see DesktopManager#getTrash()

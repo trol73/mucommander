@@ -43,14 +43,14 @@ import com.mucommander.ui.main.FolderPanel;
 */
 public class FileTableTabHeader extends JPanel implements ActionListener {
 	
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 	
 	private static final String CLOSE_ICON_NAME = "close.png";
     private static final String CLOSE_ROLLOVER_ICON_NAME = "close_rollover.png";
     private static final int CLOSE_ICON_SIZE = 12;
     
     public static final String LOCKED_ICON_NAME = "lock.png";
-    public static final int LOCKED_ICON_SIZE = 12;
+    private static final int LOCKED_ICON_SIZE = 12;
 
     FileTableTabHeader(FolderPanel folderPanel, boolean closable, FileTableTab tab) {
         super(new GridBagLayout());
@@ -120,7 +120,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
 	 **************************************************/
     private class CloseButton extends JButton {
     	 
-        public CloseButton() {
+        CloseButton() {
             setPreferredSize(new Dimension(CLOSE_ICON_SIZE, CLOSE_ICON_SIZE));
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
@@ -150,7 +150,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
     
     private class LockedIcon extends JLabel {
    	 
-        public LockedIcon() {
+        LockedIcon() {
         	super(IconManager.getIcon(IconManager.IconSet.COMMON, LOCKED_ICON_NAME));
             setPreferredSize(new Dimension(LOCKED_ICON_SIZE, LOCKED_ICON_SIZE));
             //No need to be focusable

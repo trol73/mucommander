@@ -20,15 +20,17 @@ package com.mucommander.ui.main;
 
 import com.apple.eawt.FullScreenUtilities;
 import com.mucommander.commons.file.AbstractArchiveEntryFile;
+import com.mucommander.commons.file.AbstractArchiveFile;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferences;
-import com.mucommander.conf.MuSnapshot;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferences;
+import com.mucommander.conf.TcSnapshot;
+import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.CloseWindowAction;
@@ -39,6 +41,7 @@ import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.layout.ProportionalSplitPane;
 import com.mucommander.ui.layout.YBoxPanel;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.menu.MainMenuBar;
 import com.mucommander.ui.main.statusbar.StatusBar;
@@ -48,8 +51,8 @@ import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
-import com.mucommander.ui.terminal.MuTerminal;
-
+import com.mucommander.ui.terminal.TcTerminal;
+;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -64,7 +67,7 @@ import java.util.WeakHashMap;
  * 
  * @author Maxence Bernard
  */
-public class MainFrame extends JFrame implements LocationListener {
+public class MainFrame extends JFrame implements LocationListener, IMacOsWindow {
 	
     private ProportionalSplitPane splitPane;
 
@@ -77,7 +80,7 @@ public class MainFrame extends JFrame implements LocationListener {
     /** Active table in the MainFrame */
     private FileTable activeTable;
 
-    private MuTerminal muTerminal;
+    private TcTerminal tcTerminal;
     private JSplitPane terminalSplitPane;
 
     /** Toolbar panel */
@@ -102,7 +105,7 @@ public class MainFrame extends JFrame implements LocationListener {
     private boolean singlePanel;
 
     /** Contains all registered ActivePanelListener instances, stored as weak references */
-    private WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<>();
+    private final WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<>();
 
     private JPanel insetsPane;
 
@@ -114,8 +117,9 @@ public class MainFrame extends JFrame implements LocationListener {
         // TODO: this code should probably be moved to the desktop API
 
         // - Mac OS X completely ignores calls to #setIconImage/setIconImages, no need to waste time
-        if (OsFamily.MAC_OS_X.isCurrent())
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             return;
+        }
 
         // Use Java 1.6 's new Window#setIconImages(List<Image>) when available
         if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
@@ -154,6 +158,10 @@ public class MainFrame extends JFrame implements LocationListener {
         // Set the window icon
         setWindowIcon();
 
+        DesktopManager.customizeMainFrame(this);
+
+        //initLookAndFeel();
+
         if (OsFamily.MAC_OS_X.isCurrent()) {
         	// Lion Fullscreen support
         	FullScreenUtilities.setWindowCanFullScreen(this, true);
@@ -179,7 +187,7 @@ public class MainFrame extends JFrame implements LocationListener {
         // properly initialized
         this.toolbar = new ToolBar(this);
         this.toolbarPanel = ToolbarMoreButton.wrapToolBar(toolbar);
-        this.toolbarPanel.setVisible(MuConfigurations.getPreferences().getVariable(MuPreference.TOOLBAR_VISIBLE, MuPreferences.DEFAULT_TOOLBAR_VISIBLE));
+        this.toolbarPanel.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_VISIBLE, TcPreferences.DEFAULT_TOOLBAR_VISIBLE));
         contentPane.add(toolbarPanel, BorderLayout.NORTH);
 
         insetsPane = new JPanel(new BorderLayout()) {
@@ -206,8 +214,8 @@ public class MainFrame extends JFrame implements LocationListener {
         // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
         // in JSplitPane which is anti-natural / confusing.
         splitPane = new ProportionalSplitPane(this,
-        		MuConfigurations.getSnapshot().getVariable(MuSnapshot.getSplitOrientation(0), MuSnapshot.DEFAULT_SPLIT_ORIENTATION).equals(MuSnapshot.VERTICAL_SPLIT_ORIENTATION) ?
-                                              	JSplitPane.HORIZONTAL_SPLIT:JSplitPane.VERTICAL_SPLIT,
+        		TcConfigurations.getSnapshot().getVariable(TcSnapshot.getSplitOrientation(0), TcSnapshot.DEFAULT_SPLIT_ORIENTATION).equals(TcSnapshot.VERTICAL_SPLIT_ORIENTATION) ?
+                                              	JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT,
                                               false,
                                               MainFrame.this.leftFolderPanel,
                                               MainFrame.this.rightFolderPanel) {
@@ -242,7 +250,7 @@ public class MainFrame extends JFrame implements LocationListener {
         // Show command bar only if it hasn't been disabled in the preferences
         this.commandBar = new CommandBar(this);
         // Note: CommandBar.setVisible() has to be called no matter if CommandBar is visible or not, in order for it to be properly initialized
-        this.commandBar.setVisible(MuConfigurations.getPreferences().getVariable(MuPreference.COMMAND_BAR_VISIBLE, MuPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
+        this.commandBar.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.COMMAND_BAR_VISIBLE, TcPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
         southPanel.add(commandBar);
         insetsPane.add(southPanel, BorderLayout.SOUTH);
 
@@ -291,12 +299,12 @@ public class MainFrame extends JFrame implements LocationListener {
 
         for (boolean isLeft = true; ; isLeft = false) {
         	FileTable fileTable = isLeft ? leftTable : rightTable;
-        	fileTable.sortBy(Column.valueOf(MuConfigurations.getSnapshot().getVariable(MuSnapshot.getFileTableSortByVariable(0, isLeft), MuSnapshot.DEFAULT_SORT_BY).toUpperCase()),
-                    !MuConfigurations.getSnapshot().getVariable(MuSnapshot.getFileTableSortOrderVariable(0, isLeft), MuSnapshot.DEFAULT_SORT_ORDER).equals(MuSnapshot.SORT_ORDER_DESCENDING));
+        	fileTable.sortBy(Column.valueOf(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortByVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_BY).toUpperCase()),
+                    !TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortOrderVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_ORDER).equals(TcSnapshot.SORT_ORDER_DESCENDING));
         	
         	FolderPanel folderPanel = isLeft ? leftFolderPanel : rightFolderPanel;
-        	folderPanel.setTreeWidth(MuConfigurations.getSnapshot().getVariable(MuSnapshot.getTreeWidthVariable(0, isLeft), 150));
-        	folderPanel.setTreeVisible(MuConfigurations.getSnapshot().getVariable(MuSnapshot.getTreeVisiblityVariable(0, isLeft), false));
+        	folderPanel.setTreeWidth(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeWidthVariable(0, isLeft), 150));
+        	folderPanel.setTreeVisible(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeVisiblityVariable(0, isLeft), false));
         	
         	if (!isLeft)
         		break;
@@ -344,8 +352,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * @param folderPanel the new active panel
      */
     private void fireActivePanelChanged(FolderPanel folderPanel) {
-        for (ActivePanelListener listener : activePanelListeners.keySet())
+        for (ActivePanelListener listener : activePanelListeners.keySet()) {
             listener.activePanelChanged(folderPanel);
+        }
     }
 
 
@@ -424,9 +433,9 @@ public class MainFrame extends JFrame implements LocationListener {
      * Returns the currently active table.
      *
      * <p>The returned table doesn't necessarily have focus, the focus can be in some other component
-     * of the active {@link FolderPanel}, or nowhere in the MainFrame if it is currently not in the foreground.</p>
+     * of the active {@link FolderPanel}, or nowhere in the MainFrame if it is currently not in the foreground.
      *
-     * <p>Use {@link FileTable#hasFocus()} to test if the table currently has focus.</p>
+     * <p>Use {@link FileTable#hasFocus()} to test if the table currently has focus.
      *
      * @return the currently active table
      * @see FileTable#isActiveTable()
@@ -439,7 +448,7 @@ public class MainFrame extends JFrame implements LocationListener {
      * Returns the currently active panel.
      *
      * <p>The returned panel doesn't necessarily have focus, for example if the MainFrame is currently not in the
-     * foreground.</p>
+     * foreground.
      *
      * @return the currently active panel
      */
@@ -522,7 +531,7 @@ public class MainFrame extends JFrame implements LocationListener {
     public void setSplitPaneOrientation(boolean vertical) {
         // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
         // in JSplitPane which is anti-natural / confusing
-        splitPane.setOrientation(vertical?JSplitPane.HORIZONTAL_SPLIT:JSplitPane.VERTICAL_SPLIT);
+        splitPane.setOrientation(vertical ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT);
     }
 
     /**
@@ -617,7 +626,7 @@ public class MainFrame extends JFrame implements LocationListener {
     }
 
     /**
-     * Forces a refrehs of the frame's folder panel.
+     * Forces a refresh of the frame's folder panel.
      */
     public void tryRefreshCurrentFolders() {
         leftFolderPanel.tryRefreshCurrentFolder();
@@ -649,7 +658,8 @@ public class MainFrame extends JFrame implements LocationListener {
      */
     public void updateWindowTitle() {
         // Update window title
-        String title = activeTable.getFolderPanel().getCurrentFolder().getAbsolutePath();
+        AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
+        String title = currentFolder != null ? currentFolder.getAbsolutePath() : "";
 
 	// Add the application name to window title on all OSs except MAC
         if (!OsFamily.MAC_OS_X.isCurrent()) {
@@ -663,15 +673,15 @@ public class MainFrame extends JFrame implements LocationListener {
         setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher()) {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher() && currentFolder != null) {
             // Displays the document icon in the window title bar, works only for local files
-            AbstractFile currentFolder = activeTable.getFolderPanel().getCurrentFolder();
             Object javaIoFile;
             if (currentFolder.getURL().getScheme().equals(FileProtocols.FILE)) {
                 // If the current folder is an archive entry, display the archive file, this is the closest we can get
                 // with a java.io.File
                 if (currentFolder.hasAncestor(AbstractArchiveEntryFile.class)) {
-                    javaIoFile = currentFolder.getParentArchive().getUnderlyingFileObject();
+                    AbstractArchiveFile parent = currentFolder.getParentArchive();
+                    javaIoFile = parent != null ? parent.getUnderlyingFileObject() : null;
                 } else {
                     javaIoFile = currentFolder.getUnderlyingFileObject();
                 }
@@ -802,33 +812,33 @@ public class MainFrame extends JFrame implements LocationListener {
 
     public void showTerminalPanel(boolean show) {
         if (show) {
-            if (muTerminal == null) {
-                muTerminal = new MuTerminal(this);
+            if (tcTerminal == null) {
+                tcTerminal = new TcTerminal(this);
                 terminalSplitPane = new JSplitPane();
                 terminalSplitPane.setBorder(null);
                 terminalSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
             }
 
             terminalSplitPane.setTopComponent(splitPane);
-            terminalSplitPane.setBottomComponent(muTerminal.getComponent());
+            terminalSplitPane.setBottomComponent(tcTerminal.getComponent());
 
-            int height = muTerminal.loadHeight();
+            int height = tcTerminal.loadHeight();
             if (height < 0) {
                 height = getHeight()/2;
             }
             terminalSplitPane.setDividerLocation(height);
 
-            muTerminal.show(true);
+            tcTerminal.show(true);
             insetsPane.remove(splitPane);
             insetsPane.add(terminalSplitPane, BorderLayout.CENTER);
-            muTerminal.updateTitle();
+            tcTerminal.updateTitle();
             revalidate();
-            muTerminal.getComponent().requestFocusInWindow();
-        } else if (muTerminal != null) {
-            muTerminal.storeHeight(terminalSplitPane.getDividerLocation());
+            tcTerminal.getComponent().requestFocusInWindow();
+        } else if (tcTerminal != null) {
+            tcTerminal.storeHeight(terminalSplitPane.getDividerLocation());
             insetsPane.remove(terminalSplitPane);
             insetsPane.add(splitPane, BorderLayout.CENTER);
-            muTerminal.show(false);
+            tcTerminal.show(false);
             revalidate();
             activeTable.requestFocus();
             updateWindowTitle();
@@ -837,19 +847,19 @@ public class MainFrame extends JFrame implements LocationListener {
 
 
     public void toggleTerminalPanel() {
-        JComponent term = muTerminal != null ? muTerminal.getComponent() : null;
+        JComponent term = tcTerminal != null ? tcTerminal.getComponent() : null;
 
         if (term != null && !term.hasFocus() && term.getParent().getParent() != null) {
-            muTerminal.getComponent().getComponent(0).requestFocus();
+            tcTerminal.getComponent().getComponent(0).requestFocus();
         } else {
-            showTerminalPanel(muTerminal == null || !muTerminal.getComponent().isVisible());
+            showTerminalPanel(tcTerminal == null || !tcTerminal.getComponent().isVisible());
         }
     }
 
 
     public void closeTerminalSession() {
         showTerminalPanel(false);
-        muTerminal = null;
+        tcTerminal = null;
         terminalSplitPane = null;
     }
 

@@ -19,10 +19,12 @@
 package com.mucommander.ui.main.table.views.full;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.CustomDateFormat;
-import com.mucommander.text.SizeFormat;
+import com.mucommander.ui.main.table.FileTable;
+import com.mucommander.utils.text.CustomDateFormat;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.views.BaseFileTableModel;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -33,7 +35,9 @@ import com.mucommander.ui.main.table.views.BaseFileTableModel;
 public class FileTableModel extends BaseFileTableModel {
 
     /** Cell values cache */
-    private Object cellValuesCache[][];
+    private Object[][] cellValuesCache;
+
+    private int columnsVisibilityMask;
 
 
     /**
@@ -49,7 +53,7 @@ public class FileTableModel extends BaseFileTableModel {
     public synchronized void setupFromModel(BaseFileTableModel model) {
         super.setupFromModel(model);
         initCellValuesCache();
-        fillCellCache();
+        fillCellCache(null);
     }
 
     /**
@@ -65,11 +69,13 @@ public class FileTableModel extends BaseFileTableModel {
      * Retrieves all cell values and stores them in an array for fast access.
      */
     @Override
-    public synchronized void fillCellCache() {
+    public synchronized void fillCellCache(FileTable fileTable) {
         int len = cellValuesCache.length;
         if (len == 0) {
             return;
         }
+
+        columnsVisibilityMask = calcColumnVisibilityMask(fileTable);
         // Special '..' file
         if (parent != null) {
             Object[] cell = cellValuesCache[0];
@@ -98,12 +104,47 @@ public class FileTableModel extends BaseFileTableModel {
         }
     }
 
+    private static int calcColumnVisibilityMask(FileTable fileTable) {
+        if (fileTable == null) {
+            return 0xffff;
+        }
+        int mask = 0;
+        for (Column column : Column.values()) {
+            if (fileTable.isColumnVisible(column)) {
+                mask |= 1 << column.ordinal();
+            }
+        }
+        return mask;
+    }
+
     private Object[] fillOneCellCache(int cellIndex, int fileIndex) {
         AbstractFile file = getCachedFileAt(fileIndex);
         Object[] cell = cellValuesCache[cellIndex];
         cell[Column.NAME.ordinal()-1] = file.getName();
+        if (isColumnVisible(Column.SIZE)) {
+            cell[Column.SIZE.ordinal() - 1] = getSizeValue(file);
+        }
+        if (isColumnVisible(Column.DATE)) {
+            cell[Column.DATE.ordinal() - 1] = CustomDateFormat.format(file.getLastModifiedDate());
+        }
+        if (isColumnVisible(Column.PERMISSIONS)) {
+            cell[Column.PERMISSIONS.ordinal() - 1] = file.getPermissionsString();
+        }
+        if (isColumnVisible(Column.OWNER) && file.canGetOwner()) {
+            cell[Column.OWNER.ordinal() - 1] = file.getOwner();
+        }
+        if (isColumnVisible(Column.GROUP) && file.canGetGroup()) {
+            cell[Column.GROUP.ordinal() - 1] = file.getGroup();
+        }
+        return cell;
+    }
 
-        Object sizeValue;
+    private boolean isColumnVisible(Column column) {
+        return (columnsVisibilityMask & (1 << column.ordinal())) != 0;
+    }
+
+    @NotNull
+    private String getSizeValue(AbstractFile file) {
         if (file.isDirectory()) {
             if (hasCalculatedDirectories) {
                 Long dirSize;
@@ -111,28 +152,18 @@ public class FileTableModel extends BaseFileTableModel {
                     dirSize = directorySizes.get(file);
                 }
                 if (dirSize != null) {
-                    sizeValue = SizeFormat.format(dirSize, sizeFormat);
+                    return SizeFormat.format(dirSize, sizeFormat);
                 } else {
                     synchronized (calculateSizeQueue) {
-                        sizeValue = calculateSizeQueue.contains(file) ? QUEUED_DIRECTORY_SIZE_STRING : DIRECTORY_SIZE_STRING;
+                        return calculateSizeQueue.contains(file) ? QUEUED_DIRECTORY_SIZE_STRING : DIRECTORY_SIZE_STRING;
                     }
                 }
             } else {
-                sizeValue = DIRECTORY_SIZE_STRING;
+                return DIRECTORY_SIZE_STRING;
             }
         } else {
-            sizeValue = SizeFormat.format(file.getSize(), sizeFormat);
+            return SizeFormat.format(file.getSize(), sizeFormat);
         }
-        cell[Column.SIZE.ordinal()-1] = sizeValue;
-        cell[Column.DATE.ordinal()-1] = CustomDateFormat.format(file.getLastModifiedDate());
-        cell[Column.PERMISSIONS.ordinal()-1] = file.getPermissionsString();
-        if (file.canGetOwner()) {
-            cell[Column.OWNER.ordinal() - 1] = file.getOwner();
-        }
-        if (file.canGetGroup()) {
-            cell[Column.GROUP.ordinal() - 1] = file.getGroup();
-        }
-        return cell;
     }
 
 

@@ -73,8 +73,7 @@ class ArArchiveEntryIterator implements ArchiveEntryIterator {
             // Fully read the 60 file header bytes. If it cannot be read, it most likely means we've reached
             // the end of the archive.
             StreamUtils.readFully(in, fileHeader);
-        }
-        catch(IOException e) {
+        }catch(IOException e) {
             return null;
         }
 
@@ -96,9 +95,9 @@ class ArArchiveEntryIterator implements ArchiveEntryIterator {
 
             // BSD variant : BSD ar store extended filenames by placing the string "#1/" followed by the file name length
             // in the file name field, and appending the real filename to the file header.
-            if(name.startsWith("#1/")) {
+            if (name.startsWith("#1/")) {
                 // Read extended name
-                int extendedNameLength = Integer.parseInt(name.substring(3, name.length()));
+                int extendedNameLength = Integer.parseInt(name.substring(3));
                 name = new String(StreamUtils.readFully(in, new byte[extendedNameLength])).trim();
                 // Decrease remaining file size
                 size -= extendedNameLength;
@@ -111,31 +110,30 @@ class ArArchiveEntryIterator implements ArchiveEntryIterator {
                 this.gnuExtendedNames = StreamUtils.readFully(in, new byte[(int)size]);
 
                 // Skip one padding byte if size is odd
-                if(size%2!=0)
+                if (size % 2 != 0) {
                     StreamUtils.skipFully(in, 1);
+                }
 
                 // Don't return this entry which should not be visible, but recurse to return next entry instead
                 return getNextEntry();
             }
             // GNU variant: entry with an extended name, look up extended name in // entry
             else if(this.gnuExtendedNames!=null && name.startsWith("/")) {
-                int off = Integer.parseInt(name.substring(1, name.length()));
+                int off = Integer.parseInt(name.substring(1));
                 name = "";
                 byte b;
-                while((b=this.gnuExtendedNames[off++])!='/')
+                while((b=this.gnuExtendedNames[off++])!='/') {
                     name += (char)b;
+                }
             }
 
             return new ArchiveEntry(name, false, date, size, true);
-        }
-        // Re-throw IOException
-        catch(IOException e) {
+        } catch(IOException e) {
+            // Re-throw IOException
             LOGGER.info("Caught IOException", e);
-
             throw e;
-        }
-        // Catch any other exceptions (NumberFormatException for instance) and throw an IOException instead
-        catch(Exception e2) {
+        } catch(Exception e2) {
+            // Catch any other exceptions (NumberFormatException for instance) and throw an IOException instead
             LOGGER.info("Caught Exception", e2);
 
             throw new IOException();

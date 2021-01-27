@@ -39,7 +39,7 @@ import com.mucommander.ui.main.MainFrame;
 @InvokesDialog
 public class SplitFileAction extends SelectedFileAction {
 
-    SplitFileAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private SplitFileAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new AndFileFilter(
@@ -65,15 +65,23 @@ public class SplitFileAction extends SelectedFileAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "SplitFile";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return null; }
+		public ActionCategory getCategory() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new SplitFileAction(mainFrame, properties);
         }
     }

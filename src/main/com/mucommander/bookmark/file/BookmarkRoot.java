@@ -43,8 +43,9 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
 
     // - Initialisation --------------------------------------------------------
     // -------------------------------------------------------------------------
-    public BookmarkRoot() throws IOException {this(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://"));}
-    public BookmarkRoot(FileURL url) {
+    BookmarkRoot() throws IOException {this(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://"));}
+
+    BookmarkRoot(FileURL url) {
         super(url);
         lastModified = System.currentTimeMillis();
         BookmarkManager.addBookmarkListener(this);
@@ -56,24 +57,26 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
     // -------------------------------------------------------------------------
     @Override
     public AbstractFile[] ls() throws IOException {
-        AbstractFile[] files;
-        Object[]       buffer;
-
         // Retrieves all available bookmarks.
-        buffer = BookmarkManager.getBookmarks().toArray();
-        files  = new AbstractFile[buffer.length];
+        Object[] buffer = BookmarkManager.getBookmarks().toArray();
+        AbstractFile[] files  = new AbstractFile[buffer.length];
 
         // Creates the associated instances of BookmarkFile
-        for(int i = 0; i < files.length; i++)
+        for (int i = 0; i < files.length; i++) {
             files[i] = new BookmarkFile((Bookmark)buffer[i]);
+        }
         return files;
     }
 
     @Override
-    public String getName() {return "";}
+    public String getName() {
+        return "";
+    }
 
     @Override
-    public boolean isDirectory() {return true;}
+    public boolean isDirectory() {
+        return true;
+    }
 
 
 
@@ -82,14 +85,18 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
     /**
      * Stores the current date as the date of last modification.
      */
-    public void bookmarksChanged() {lastModified = System.currentTimeMillis();}
+    public void bookmarksChanged() {
+        lastModified = System.currentTimeMillis();
+    }
 
     /**
      * Returns the date at which the bookmark list was last modified.
      * @return the date at which the bookmark list was last modified.
      */
     @Override
-    public long getLastModifiedDate() {return lastModified;}
+    public long getLastModifiedDate() {
+        return lastModified;
+    }
 
 
 

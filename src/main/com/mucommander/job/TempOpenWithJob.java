@@ -37,7 +37,7 @@ import com.mucommander.ui.main.MainFrame;
  * executes them with a specific command. The temporary files are deleted when the JVM terminates.
  *
  * <p>It is important to understand that when this job operates on a set of files, a process is started for each file
-  * to execute, so this operation should require confirmation by the user before being attempted.</p>
+  * to execute, so this operation should require confirmation by the user before being attempted.
   *
  * @author Maxence Bernard, Nicolas Rinaudo
  */

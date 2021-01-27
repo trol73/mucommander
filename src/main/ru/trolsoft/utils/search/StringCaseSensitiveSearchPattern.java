@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class StringCaseSensitiveSearchPattern implements SearchPattern {
 
-    private final byte data[];
+    private final byte[] data;
 
     public StringCaseSensitiveSearchPattern(String s, String charset) throws UnsupportedEncodingException {
         this.data = s.getBytes(charset);

@@ -17,7 +17,6 @@
  */
 package com.mucommander.ui.viewer.text.search;
 
-import com.mucommander.text.Translator;
 import org.fife.ui.rtextarea.SearchContext;
 
 import javax.swing.*;
@@ -41,11 +40,11 @@ public class ReplaceDialog extends AbstractSearchDialog {
     /**
      * Our search listener, cached so we can grab its selected text easily.
      */
-    protected SearchListener searchListener;
+    private SearchListener searchListener;
 
 
     public ReplaceDialog(Frame owner, SearchListener listener) {
-        super(owner, Translator.get("text_editor.replace"), null);
+        super(owner, i18n("text_editor.replace"), null);
 
         this.searchListener = listener;
 
@@ -64,7 +63,7 @@ public class ReplaceDialog extends AbstractSearchDialog {
         edtReplace.getDocument().addDocumentListener(replaceDocumentListener);
 
         // Create the "Replace with" label.
-        JLabel lblReplace = new JLabel(Translator.get("text_editor.replace_with") + ":");
+        JLabel lblReplace = new JLabel(i18n("text_editor.replace_with") + ":");
 
         JPanel temp = new JPanel(new BorderLayout());
         temp.add(edtReplace);
@@ -100,11 +99,11 @@ public class ReplaceDialog extends AbstractSearchDialog {
         // Make a panel containing the action buttons.
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 1, 5, 5));
-        btnReplace = new JButton(Translator.get("text_editor.replace_button"));
+        btnReplace = new JButton(i18n("text_editor.replace_button"));
         btnReplace.setActionCommand(SearchEvent.Type.REPLACE.name());
         btnReplace.addActionListener(this);
         btnReplace.setEnabled(false);
-        btnReplaceAll = new JButton(Translator.get("text_editor.replace_all"));
+        btnReplaceAll = new JButton(i18n("text_editor.replace_all"));
         btnReplaceAll.setActionCommand(SearchEvent.Type.REPLACE_ALL.name());
         btnReplaceAll.addActionListener(this);
         btnReplaceAll.setEnabled(false);

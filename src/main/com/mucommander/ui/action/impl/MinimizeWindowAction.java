@@ -19,7 +19,7 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -34,9 +34,9 @@ import java.util.Map;
  * @author Maxence Bernard
  * @see com.mucommander.ui.action.impl.MaximizeWindowAction
  */
-public class MinimizeWindowAction extends MuAction {
+public class MinimizeWindowAction extends TcAction {
 
-    MinimizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private MinimizeWindowAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -54,25 +54,33 @@ public class MinimizeWindowAction extends MuAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "MinimizeWindow";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.WINDOW; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.WINDOW;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+		    return KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_DOWN_MASK);
+		}
 
         @Override
         public String getLabel() {
             // Use a special label for Mac OS X, if it exists, use the standard action label otherwise
             String macLabelKey = ActionProperties.getActionLabelKey(ACTION_ID)+".mac_os_x";
-            if(OsFamily.MAC_OS_X.isCurrent() && Translator.hasValue(macLabelKey, false))
+            if (OsFamily.MAC_OS_X.isCurrent() && Translator.hasValue(macLabelKey, false)) {
                 return Translator.get(macLabelKey);
-
+            }
             return super.getLabel();
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new MinimizeWindowAction(mainFrame, properties);
         }
     }

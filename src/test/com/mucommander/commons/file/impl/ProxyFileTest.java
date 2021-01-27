@@ -67,17 +67,17 @@ public class ProxyFileTest extends AbstractFileTest {
 
     //@Test
     @Override
-    public void testUnsupportedFileOperationAnnotations() throws Exception {
+    public void testUnsupportedFileOperationAnnotations() {
     }
 
     //@Test
     @Override
-    public void testSupportedFileOperations() throws Exception {
+    public void testSupportedFileOperations() {
     }
 
     //@Test
     @Override
-    public void testFileInstanceCaching() throws Exception {
+    public void testFileInstanceCaching() {
         // This test can't pass as ProxyFile instance are not cached, only the underlying protocol file.
     }
 

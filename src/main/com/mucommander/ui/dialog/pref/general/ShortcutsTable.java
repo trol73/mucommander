@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.commons.util.Pair;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionDescriptor;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
@@ -81,12 +81,12 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
     private static final Stroke DOTTED_BORDER_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 2.0f, new float[]{2.0f}, 0);
 
     /** Transparent icon used to align non-locked themes with the others. */
-    private static ImageIcon transparentIcon = new ImageIcon(new BufferedImage(BASE_ICON_DIMENSION, BASE_ICON_DIMENSION, BufferedImage.TYPE_INT_ARGB));
+    private static final ImageIcon transparentIcon = new ImageIcon(new BufferedImage(BASE_ICON_DIMENSION, BASE_ICON_DIMENSION, BufferedImage.TYPE_INT_ARGB));
 
 	/** Private object used to indicate that a delete operation was made */
 	public static final Object DELETE = new Object();
 	
-	private ShortcutsTableData data;
+	private final ShortcutsTableData data;
 
 	/** Comparator of actions according to their labels */
 	private static final Comparator<String> ACTIONS_COMPARATOR = (id1, id2) -> {
@@ -105,7 +105,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	private int lastSelectedRow = -1;
 	
 	/** The bar below the table in which messages can be displayed */
-	private TooltipBar tooltipBar;
+	private final TooltipBar tooltipBar;
 	
 	/** Number of mouse clicks required to enter cell's editing state */
 	private static final int NUM_OF_CLICKS_TO_ENTER_EDITING_STATE = 2;
@@ -125,7 +125,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	/** Thread that cancel cell's editing state after CELL_EDITING_STATE_PERIOD time */
 	private CancelEditingStateThread cancelEditingStateThread;
 
-	private ShortcutsTableCellRenderer cellRenderer;
+	private final ShortcutsTableCellRenderer cellRenderer;
 	
 	ShortcutsTable(TooltipBar tooltipBar) {
 		super();
@@ -142,7 +142,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		setAutoCreateColumnsFromModel(false);
 		setCellSelectionEnabled(false);
 		setColumnSelectionAllowed(false);
-		setDragEnabled(false);		
+		setDragEnabled(false);
+		FontMetrics fm = getFontMetrics(getFont());
+		int fontHeight = fm.getHeight();
+		setRowHeight(fontHeight);
 
 		if (!usesTableHeaderRenderingProperties()) {
 			CenteredTableHeaderRenderer renderer = new CenteredTableHeaderRenderer();
@@ -231,10 +234,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		super.valueChanged(e);
 		// Selection might be changed, update tooltip
 		int selectedRow = getSelectedRow();
-		if (selectedRow == -1) // no row is selected
+		if (selectedRow == -1) {// no row is selected
 			tooltipBar.showDefaultMessage();
-		else
+		} else {
 			tooltipBar.showActionTooltip(data.getCurrentTooltip());
+		}
 	}
 	
 	void updateModel(ActionFilter filter) {
@@ -741,11 +745,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				
 				// If component's preferred width is bigger than column width then the component is not entirely
 	            // visible so we set a tooltip text that will display the whole text when mouse is over the component
-	            if (table.getColumnModel().getColumn(vColIndex).getWidth() < label.getPreferredSize().getWidth())
-	                label.setToolTipText(text);
-	            // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
-	            else
-	                label.setToolTipText(null);
+	            if (table.getColumnModel().getColumn(vColIndex).getWidth() < label.getPreferredSize().getWidth()) {
+					label.setToolTipText(text);
+				} else { // Have to set it to null otherwise the defaultRender sets the tooltip text to the last one specified
+					label.setToolTipText(null);
+				}
 	            
 	            // Set label's text
 				label.setText(text);

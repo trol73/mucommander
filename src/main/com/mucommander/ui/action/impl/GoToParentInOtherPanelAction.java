@@ -19,11 +19,10 @@
 package com.mucommander.ui.action.impl;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 
@@ -36,7 +35,7 @@ import java.util.Map;
  * <p>
  * This action is only enabled when the active panel has a parent,
  * and the selected tab in the other panel is not locked.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class GoToParentInOtherPanelAction extends ParentFolderAction {
@@ -45,7 +44,7 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    GoToParentInOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private GoToParentInOtherPanelAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -53,7 +52,7 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      * Goes to <code>sourcePanel</code>'s parent in <code>destPanel</code>.
      * <p>
      * If <code>sourcePanel</code> doesn't have a parent, nothing will happen.
-     * </p>
+     *
      * @param  sourcePanel panel whose parent should be used.
      * @param  destPanel   panel in which to change the location.
      * @return             <code>true</code> if <code>sourcePanel</code> has a parent, <code>false</code> otherwise.
@@ -75,8 +74,9 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
      */
     @Override
     protected void toggleEnabledState() {
+        AbstractFile currentFolder = mainFrame.getActivePanel().getCurrentFolder();
         setEnabled(!mainFrame.getInactivePanel().getTabs().getCurrentTab().isLocked() &&
-        		    mainFrame.getActivePanel().getCurrentFolder().getParent()!=null);
+        		    currentFolder != null && currentFolder.getParent() != null);
     }
     
     /**
@@ -96,21 +96,23 @@ public class GoToParentInOtherPanelAction extends ParentFolderAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "GoToParentInOtherPanel";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
 		public KeyStroke getDefaultKeyStroke() {
-            if (OsFamily.getCurrent() != OsFamily.MAC_OS_X) {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK);
-            } else {
-                return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.META_DOWN_MASK);
-            }
+            return KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, CTRL_OR_META_DOWN_MASK);
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new GoToParentInOtherPanelAction(mainFrame, properties);
         }
     }

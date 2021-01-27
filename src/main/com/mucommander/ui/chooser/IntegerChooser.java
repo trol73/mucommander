@@ -28,30 +28,22 @@ import java.util.WeakHashMap;
  * Component meant to let users choose an integer value from a specific range.
  * <p>
  * An IntegerChooser is an compound-component created by associating a JSpinner and a JSlider.
- * </p>
  * <p>
  * In order to track the chooser's state, listeners can be registered through {@link #addChangeListener(ChangeListener)}.
- * </p>
+ *
  * @author Nicolas Rinaudo
  */
 public class IntegerChooser extends JPanel implements ChangeListener {
-    // - Instance variables --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** List of all registered state change listeners. */
-    private WeakHashMap<ChangeListener, ?> listeners;
+    private final WeakHashMap<ChangeListener, ?> listeners;
 
 
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Integer slider. */
-    private JSlider  slider;
+    private final JSlider  slider;
     /** Integer spinner. */
-    private JSpinner spinner;
+    private final JSpinner spinner;
 
 
-
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new integer chooser.
      * @param min          chooser's minimum value.
@@ -86,26 +78,38 @@ public class IntegerChooser extends JPanel implements ChangeListener {
      * The number that is passed-in represents the distance, measured in values, between each major tick mark. If you have a
      * slider with a range from 0 to 50 and the major tick spacing is set to 10, you will get major ticks next to the following
      * values: 0, 10, 20, 30, 40, 50.
+     * @param spacing major tick spacing
      */
-    public void setMajorTickSpacing(int spacing) {slider.setMajorTickSpacing(spacing);}
+    public void setMajorTickSpacing(int spacing) {
+        slider.setMajorTickSpacing(spacing);
+    }
 
     /**
      * This method sets the minor tick spacing.
      * The number that is passed-in represents the distance, measured in values, between each minor tick mark. If you have a
      * slider with a range from 0 to 50 and the minor tick spacing is set to 10, you will get minor ticks next to the following
      * values: 0, 10, 20, 30, 40, 50.
+     * @param spacing minor ticks spacing
      */
-    public void setMinorTickSpacing(int spacing) {slider.setMinorTickSpacing(spacing);}
+    public void setMinorTickSpacing(int spacing) {
+        slider.setMinorTickSpacing(spacing);
+    }
 
     /**
      * Determines whether tick marks are painted on the slider
+     * @param b true if tick marks are painted on the slider
      */
-    public void setPaintTicks(boolean b) {slider.setPaintTicks(b);}
+    public void setPaintTicks(boolean b) {
+        slider.setPaintTicks(b);
+    }
 
     /**
      * Determines whether labels are painted on the slider
+     * @param b true if labels marks are painted on the slider
      */
-    public void setPaintLabels(boolean b) {slider.setPaintLabels(b);}
+    public void setPaintLabels(boolean b) {
+        slider.setPaintLabels(b);
+    }
 
     /**
      * Determines whether labels are painted on the slider.
@@ -128,33 +132,35 @@ public class IntegerChooser extends JPanel implements ChangeListener {
 
 
 
-    // - State changing code ----------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Registers the specified object as a change listener.
      */
-    public void addChangeListener(ChangeListener listener) {listeners.put(listener, null);}
+    public void addChangeListener(ChangeListener listener) {
+        listeners.put(listener, null);
+    }
 
     /**
      * Un-registers the specified object as a change listener.
      */
-    public void removeChangeListener(ChangeListener listener) {listeners.remove(listener);}
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
 
     /**
      * This method is public as an implementation side effect and should never be called directly.
      */
     public void stateChanged(ChangeEvent e) {
-        ChangeEvent event;
-
         // Updates the chooser's value.
-        if(e.getSource() == spinner)
+        if (e.getSource() == spinner) {
             slider.setValue((Integer) spinner.getValue());
-        else if(e.getSource() == slider)
+        } else if(e.getSource() == slider) {
             spinner.setValue(slider.getValue());
+        }
 
         // Notifies listeners.
-        event    = new ChangeEvent(this);
-        for(ChangeListener listener : listeners.keySet())
+        ChangeEvent event = new ChangeEvent(this);
+        for (ChangeListener listener : listeners.keySet()) {
             listener.stateChanged(event);
+        }
     }
 }

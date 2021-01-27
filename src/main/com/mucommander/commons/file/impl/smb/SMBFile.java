@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
  * <p>
  * The associated {@link FileURL} scheme is {@link FileProtocols#SMB}. The host part of the URL designates the
  * SMB server. Credentials are specified in the login and password parts. The path separator is '/'.
- * </p>
  * <p>
  * Here are a few examples of valid SMB URLs:
  * <code>
@@ -27,16 +26,13 @@ import java.net.MalformedURLException;
  * smb://domain;username:password@server/path/to/file<br>
  * smb://workgroup/<br>
  * </code>
- * </p>
  * <p>
  * The special 'smb://' URL represents the SMB root and lists all workgroups that are available on the network,
  * akin to Windows' network neighborhood.
- * </p>
  * <p>
  * Access to SMB files is provided by the <code>jCIFS</code> library distributed under the LGPL license.
  * The {@link #getUnderlyingFileObject()} method allows to retrieve a <code>jcifs.smb.SmbFile</code> instance
  * corresponding to this <code>SMBFile</code>.
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -125,7 +121,7 @@ import java.net.MalformedURLException;
         int domainStart = login.indexOf(";");
         if (domainStart != -1) {
             domain = login.substring(0, domainStart);
-            login = login.substring(domainStart+1, login.length());
+            login = login.substring(domainStart+1);
         } else {
             domain = null;
         }
@@ -403,9 +399,9 @@ import java.net.MalformedURLException;
 
         boolean isDirectory = file.isDirectory();
 
-        // SmbFile#renameTo() throws an IOException if the destination exists (instead of overwriting the file)
-        if(destFile.exists())
-            destFile.delete();
+//        // SmbFile#renameTo() throws an IOException if the destination exists (instead of overwriting the file)
+//        if(destFile.exists())
+//            destFile.delete();
 
         // Rename the file
         file.renameTo(((SMBFile)destFile).file);
@@ -682,7 +678,7 @@ import java.net.MalformedURLException;
         // jicfs.smb.SmbFilenameFilter implementation //
         ////////////////////////////////////////////////
 
-        public boolean accept(SmbFile dir, String name) throws SmbException {
+        public boolean accept(SmbFile dir, String name) {
             return filter.accept(name);
         }
     }

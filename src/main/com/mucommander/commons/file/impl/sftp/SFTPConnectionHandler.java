@@ -17,7 +17,6 @@ import com.sshtools.ssh2.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,10 +49,6 @@ class SFTPConnectionHandler extends ConnectionHandler {
         super(location);
     }
 
-
-    //////////////////////////////////////
-    // ConnectionHandler implementation //
-    //////////////////////////////////////
 
     @Override
     public void startConnection() throws IOException {
@@ -115,7 +110,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
 
                 // Throw an AuthException if problems with private key file
                 try {
-                    SshPrivateKeyFile pkfile = SshPrivateKeyFileFactory.parse(new FileInputStream(new File(privateKeyPath)));
+                    SshPrivateKeyFile pkfile = SshPrivateKeyFileFactory.parse(new FileInputStream(privateKeyPath));
                     SshKeyPair pair = pkfile.toKeyPair(pkfile.isPassphraseProtected() ? credentials.getPassword() : null);
                     pk.setPrivateKey(pair.getPrivateKey());
                     pk.setPublicKey(pair.getPublicKey());
@@ -149,7 +144,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                         return false;
                     }
 
-                    for (int i=0; i<prompts.length; i++) {
+                    for (int i = 0; i < prompts.length; i++) {
                         LOGGER.trace("prompts[{}]={}", i, prompts[i].getPrompt());
                         prompts[i].setResponse(credentials.getPassword());
                     }
@@ -169,20 +164,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                 authClient = pwd;
             }
 
-            try {
-                int authResult = sshClient.authenticate(authClient);
-
-                // Throw an AuthException if authentication failed
-                if (authResult != SshAuthentication.COMPLETE) {
-                    throwAuthException("Login or password rejected");   // Todo: localize this entry
-                }
-
-                LOGGER.info("authentication complete, authResult={}", authResult);
-            } catch(AuthException e) {
-                LOGGER.info("Caught exception while authenticating", e);
-                e.printStackTrace();
-                throw  e;//throwAuthException(e.getMessage());
-            }
+            authenticate(authClient);
             // Init SFTP connections
             sftpClient = new SftpClient(sshClient);
             SshSession session = sshClient.openSessionChannel();
@@ -209,6 +191,23 @@ class SFTPConnectionHandler extends ConnectionHandler {
             } else {
                 throw new IOException(e);
             }
+        }
+    }
+
+    private void authenticate(SshAuthentication authClient) throws SshException, AuthException {
+        try {
+            int authResult = sshClient.authenticate(authClient);
+
+            // Throw an AuthException if authentication failed
+            if (authResult != SshAuthentication.COMPLETE) {
+                throwAuthException("Login or password rejected");   // Todo: localize this entry
+            }
+
+            LOGGER.info("authentication complete, authResult={}", authResult);
+        } catch(AuthException e) {
+            LOGGER.info("Caught exception while authenticating", e);
+            e.printStackTrace();
+            throw  e;//throwAuthException(e.getMessage());
         }
     }
 

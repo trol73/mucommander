@@ -19,9 +19,9 @@
 
 package com.mucommander.ui.helper;
 
-import java.awt.Component;
+import java.awt.*;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
@@ -39,13 +39,13 @@ public class FocusRequester implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FocusRequester.class);
 	
     /** The component on which to request focus */
-    private Component c;
+    private Component component;
 
     /** If true, focus will be requested using Component#requestFocusInWindow() instead of Component#requestFocus() */
     private boolean requestFocusInWindow;
 	
     private FocusRequester(Component c, boolean requestFocusInWindow) {
-        this.c = c;
+        this.component = c;
         this.requestFocusInWindow = requestFocusInWindow;
     }
 	
@@ -54,7 +54,7 @@ public class FocusRequester implements Runnable {
      * Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
-     * In that case, calling {@link Component#requestFocus()} would have no effect.</p>
+     * In that case, calling {@link Component#requestFocus()} would have no effect.
      *
      * @param c the component on which to request focus
      * @see java.awt.Component#requestFocus()
@@ -72,7 +72,7 @@ public class FocusRequester implements Runnable {
      * currently queued Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
-     * In that case, calling {@link java.awt.Component#requestFocusInWindow()} would have no effect.</p>
+     * In that case, calling {@link java.awt.Component#requestFocusInWindow()} would have no effect.
      *
      * @param c the component on which to request focus
      * @see java.awt.Component#requestFocusInWindow()
@@ -93,17 +93,22 @@ public class FocusRequester implements Runnable {
     public void run() {
         // Request focus on the component
         if (requestFocusInWindow) {
-            c.requestFocusInWindow();
+            component.requestFocusInWindow();
         } else {
-            c.requestFocus();
+            component.requestFocus();
         }
-        if (c instanceof MainFrame) {
-            MainFrame mainFrame = (MainFrame)c;
+        if (component instanceof Frame) {
+            Frame f = (Frame) component;
+            f.toFront();
+        }
+        if (component instanceof MainFrame) {
+            MainFrame mainFrame = (MainFrame) component;
             mainFrame.getActiveTable().requestFocus();
         }
 
-        LOGGER.debug("focus requested on " + (c.getClass().getName()));
 
-        this.c = null;
+        LOGGER.debug("focus requested on " + (component.getClass().getName()));
+
+        this.component = null;
     }
 }

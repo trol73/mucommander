@@ -90,7 +90,7 @@ public abstract class Completer {
 	 * Add service to this completer.
 	 * 
 	 * The order in which the services is being registered is important, 
-	 * see: <code>tryToCompleteFromServices<code>.
+	 * see: <code>tryToCompleteFromServices</code>.
 	 * 
 	 * @param service - Service to be added. 
 	 */

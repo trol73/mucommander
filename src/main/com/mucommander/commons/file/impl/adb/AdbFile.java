@@ -41,6 +41,7 @@ public class AdbFile extends ProtocolFile {
 	private List<RemoteFile> childs;
 	private AbstractFile parent;
 	private JadbConnection jadbConnection;
+	private String rootFolder;
 
 	private static FileURL lastModifiedPath;        // FIXME that's a bad way to detect directory changes
 
@@ -62,19 +63,18 @@ public class AdbFile extends ProtocolFile {
 			if (path.isEmpty() || "\\".equals(path)) {
 				path = "/";
 			}
-
-			try {
-				List<RemoteFile> files = device.list(path);
-				childs = new ArrayList<>();
-				for (RemoteFile rf : files) {
-					if (".".equals(rf.getPath())) {
-						remoteFile = rf;
-					} else {
-						childs.add(rf);
-					}
+			remoteFile = tryLs(device, path);
+			if (remoteFile == null && "/".equals(path)) {
+				remoteFile = tryLs(device, "/sdcard/");
+				if (remoteFile != null) {
+					rootFolder = "/sdcard/";
 				}
-			} catch (JadbException e) {
-				e.printStackTrace();
+			}
+			if (remoteFile == null && "/".equals(path)) {
+				remoteFile = tryLs(device, "/mnt/sdcard/");
+				if (remoteFile != null) {
+					rootFolder = "/mnt/sdcard/";
+				}
 			}
 			closeConnection();
 		} else {
@@ -82,7 +82,28 @@ public class AdbFile extends ProtocolFile {
 				rebuildChildrenList(url);
 			}
 		}
+		if (rootFolder == null) {
+			rootFolder = "/";
+		}
 		this.remoteFile = remoteFile;
+	}
+
+	private RemoteFile tryLs(JadbDevice device, String path) throws IOException {
+		RemoteFile result = null;
+		try {
+			List<RemoteFile> files = device.list(path);
+			childs = new ArrayList<>();
+			for (RemoteFile rf : files) {
+				if (".".equals(rf.getPath())) {
+					result = rf;
+				} else {
+					childs.add(rf);
+				}
+			}
+		} catch (JadbException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	private void rebuildChildrenList(FileURL url) throws IOException {
@@ -120,9 +141,8 @@ public class AdbFile extends ProtocolFile {
 		return device;
 	}
 
-	private void closeConnection() throws IOException {
+	private void closeConnection() {
 		if (jadbConnection != null) {
-			//jadbConnection.close();
 			jadbConnection = null;
 		}
 	}
@@ -142,7 +162,7 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public void setLastModifiedDate(long lastModified) throws IOException {
+	public void setLastModifiedDate(long lastModified) {
 	}
 
 	@Override
@@ -202,7 +222,7 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public void changePermission(int access, int permission, boolean enabled) throws IOException {
+	public void changePermission(int access, int permission, boolean enabled) {
 
 	}
 
@@ -212,12 +232,12 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public short getReplication() throws UnsupportedFileOperationException {
+	public short getReplication() {
 		return 0;
 	}
 
 	@Override
-	public long getBlocksize() throws UnsupportedFileOperationException {
+	public long getBlocksize() {
 		return 0;
 	}
 
@@ -238,7 +258,7 @@ public class AdbFile extends ProtocolFile {
 
 	@Override
 	public boolean isDirectory() {
-		return remoteFile != null && remoteFile.isDirectory();
+		return remoteFile == null || remoteFile.isDirectory();
 	}
 
 	@Override
@@ -266,7 +286,8 @@ public class AdbFile extends ProtocolFile {
 			if ("..".equals(rf.getPath())) {
 				continue;
 			}
-			FileURL url = FileURL.getFileURL(getURL() + "/" + rf.getPath());
+
+			FileURL url = FileURL.getFileURL(getURL() + rootFolder + rf.getPath());
 			AdbFile adbFile = new AdbFile(url, rf);
 			adbFile.parent = this;
 			result[index++] = adbFile;
@@ -311,17 +332,17 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public OutputStream getAppendOutputStream() throws IOException {
+	public OutputStream getAppendOutputStream() {
 		return null;
 	}
 
 	@Override
-	public RandomAccessInputStream getRandomAccessInputStream() throws IOException {
+	public RandomAccessInputStream getRandomAccessInputStream() {
 		return null;
 	}
 
 	@Override
-	public RandomAccessOutputStream getRandomAccessOutputStream() throws IOException {
+	public RandomAccessOutputStream getRandomAccessOutputStream() {
 		return null;
 	}
 
@@ -378,17 +399,17 @@ public class AdbFile extends ProtocolFile {
 	}
 
 	@Override
-	public void copyRemotelyTo(AbstractFile destFile) throws IOException {
+	public void copyRemotelyTo(AbstractFile destFile) {
 
 	}
 
 	@Override
-	public long getFreeSpace() throws IOException {
+	public long getFreeSpace() {
 		return 0;
 	}
 
 	@Override
-	public long getTotalSpace() throws IOException {
+	public long getTotalSpace() {
 		return 0;
 	}
 

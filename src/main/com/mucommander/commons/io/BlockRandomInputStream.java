@@ -31,7 +31,7 @@ import java.io.IOException;
  * The block size should be carefully chosen as it affects seek performance and thus overall performance greatly:
  * the larger the block size, the more data is fetched when seeking outside the current block and consequently the
  * longer it takes to reposition the stream. On the other hand, a larger block size will yield better performance when
- * reading the resource sequentially, as it lessens the overhead of requesting a particular block.</p>
+ * reading the resource sequentially, as it lessens the overhead of requesting a particular block.
  *
  * @author Maxence Bernard
  */
@@ -59,7 +59,7 @@ public abstract class BlockRandomInputStream extends RandomAccessInputStream {
      * <p>The block size should be carefully chosen as it affects seek performance and thus overall performance greatly:
      * the larger the block size, the more data is fetched when seeking outside the current block and consequently the
      * longer it takes to reposition the stream. On the other hand, a larger block size will yield better performance
-     * when reading the resource sequentially, as it lessens the overhead of requesting a particular block.</p>
+     * when reading the resource sequentially, as it lessens the overhead of requesting a particular block.
      *
      * @param blockSize controls the amount of data requested when reading a block
      */
@@ -144,7 +144,7 @@ public abstract class BlockRandomInputStream extends RandomAccessInputStream {
         return nbBytes;
     }
 
-    public long getOffset() throws IOException {
+    public long getOffset() {
         return offset;
     }
 
@@ -171,10 +171,10 @@ public abstract class BlockRandomInputStream extends RandomAccessInputStream {
      * the number of bytes that could be read, normally <code>blockLen</code> but can be less.
      *
      * <p>Note that <code>blockLen</code> may be smaller than {@link #blockSize} if the end of file is near, to prevent
-     * <code>EOF</code> from being reached. In other words, <code>fileOffset+blockLen</code> should theorically not
-     * exceed the file's length, but this could happen in the unlikely event that the file just shrinked after
+     * <code>EOF</code> from being reached. In other words, <code>fileOffset+blockLen</code> should theoretically not
+     * exceed the file's length, but this could happen in the unlikely event that the file just shrunk after
      * {@link #getLength()} was last called. So this method's implementation should handle the case where
-     * <code>EOF</code> is reached prematurely and return the number of bytes that were actually read.</p>
+     * <code>EOF</code> is reached prematurely and return the number of bytes that were actually read.
      *
      * @param fileOffset global file offset that marks the beginning of the block
      * @param block the array to fill with data, starting at 0

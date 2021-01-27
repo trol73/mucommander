@@ -14,7 +14,7 @@ import java.net.URLEncoder;
  * {@link HadoopFile} implementation for the Amazon S3 protocol.
  *
  * <p>Even though it is working for the most part, it is flawed in several ways and should not be used.
- * See the {@link com.mucommander.commons.file.impl.s3} package for a better implementation of the Amazon S3 protocol.</p>
+ * See the {@link com.mucommander.commons.file.impl.s3} package for a better implementation of the Amazon S3 protocol.
  *
  * @deprecated
  * @author Maxence Bernard

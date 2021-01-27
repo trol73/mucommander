@@ -61,14 +61,14 @@ public abstract class PopupButton extends NonFocusableButton {
     /** 
      * Box-orientation constant used to specify the buttom-left oriented side of a box.
      */
-    public static final int BOTTOM_LEFT_ORIENTED = 5;
+    private static final int BOTTOM_LEFT_ORIENTED = 5;
 
 
     /**
      * Creates a new PopupButton with no custom action for when this button is clicked.
      * When this button is clicked, the popup menu as returned by {@link #getPopupMenu()} will be displayed.
      */
-    public PopupButton() {
+    protected PopupButton() {
         this(null);
     }
 
@@ -113,7 +113,7 @@ public abstract class PopupButton extends NonFocusableButton {
     /**
      * Returns true if a popup menu is currently being displayed.
      */
-    public boolean isPopupMenuVisible() {
+    private boolean isPopupMenuVisible() {
         return popupMenu!=null;
     }
 
@@ -212,8 +212,9 @@ public abstract class PopupButton extends NonFocusableButton {
         }
 
         public synchronized void mouseClicked(MouseEvent mouseEvent) {
-            if (!isEnabled() || shouldIgnoreMouseEvent())    // Ignore event if button is disabled
+            if (!isEnabled() || shouldIgnoreMouseEvent()) {    // Ignore event if button is disabled
                 return;
+            }
 
             // Indicate to Thread spawn by mousePressed that mouse is not pressed anymore
             pressedTime = 0;

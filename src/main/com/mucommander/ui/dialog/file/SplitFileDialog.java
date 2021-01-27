@@ -22,8 +22,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.job.SplitFileJob;
-import com.mucommander.text.SizeFormat;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.SizeFormat;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.SplitFileAction;
 import com.mucommander.ui.combobox.EditableComboBox;
@@ -52,10 +51,10 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 	private static final int MAX_PARTS = 100;
 
 	private static final String[] unitNames = new String[] {
-		Translator.get("unit.bytes_short").toLowerCase(),
-		Translator.get("unit.kb").toLowerCase(),
-		Translator.get("unit.mb").toLowerCase(),
-		Translator.get("unit.gb").toLowerCase()
+			i18n("unit.bytes_short").toLowerCase(),
+			i18n("unit.kb").toLowerCase(),
+			i18n("unit.mb").toLowerCase(),
+			i18n("unit.gb").toLowerCase()
 	};
 	
 	private static final int[] unitBytes = new int[] {
@@ -71,7 +70,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
     	DECIMAL_FORMAT.setGroupingUsed(false);
     }
     
-    private String MSG_AUTO = Translator.get("split_file_dialog.auto");
+    private String MSG_AUTO = i18n("split_file_dialog.auto");
 
     private AbstractFile file;
 	private AbstractFile destFolder;
@@ -84,7 +83,7 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 	private JTextField edtSize;
 	private JSpinner spnParts;
 
-	protected boolean edtChange;
+	private boolean edtChange;
 
 
     /**
@@ -108,21 +107,21 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
         content.setLayout(new BorderLayout(0, 5));
         XAlignedComponentPanel pnlMain = new XAlignedComponentPanel(10);
 
-        pnlMain.addRow(Translator.get("split_file_dialog.file_to_split") + ":", new JLabel(file.getName()), 0);
+        pnlMain.addRow(i18n("split_file_dialog.file_to_split") + ":", new JLabel(file.getName()), 0);
         String size = SizeFormat.format(file.getSize(), SizeFormat.DIGITS_FULL | SizeFormat.UNIT_LONG | SizeFormat.INCLUDE_SPACE);
-        pnlMain.addRow(Translator.get("size") + ":", new JLabel(size), 10);
+        pnlMain.addRow(i18n("size") + ":", new JLabel(size), 10);
         
 		edtTargetDirectory = new FilePathField(destFolder.getAbsolutePath(), 40);
-        pnlMain.addRow(Translator.get("split_file_dialog.target_directory") + ":", edtTargetDirectory, 5);
+        pnlMain.addRow(i18n("split_file_dialog.target_directory") + ":", edtTargetDirectory, 5);
 
         XBoxPanel pnlSize = new XBoxPanel();
 		String[] sizes = new String[] {
 			MSG_AUTO,	
-			"10 " + Translator.get("unit.mb"),
-			"100 " + Translator.get("unit.mb"),
-			"250 " + Translator.get("unit.mb"),
-			"650 " + Translator.get("unit.mb"),
-			"700 " + Translator.get("unit.mb")
+			"10 " + i18n("unit.mb"),
+			"100 " + i18n("unit.mb"),
+			"250 " + i18n("unit.mb"),
+			"650 " + i18n("unit.mb"),
+			"700 " + i18n("unit.mb")
 		};
 		edtSize = new JTextField();
 		EditableComboBox<String> cbSize = new EditableComboBox<>(edtSize, sizes);
@@ -137,26 +136,25 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
 		cbSize.addComboBoxListener(source -> updatePartsNumber());
 		pnlSize.add(cbSize);
 		pnlSize.addSpace(10);
-		pnlSize.add(new JLabel(Translator.get("split_file_dialog.parts") + ":"));
+		pnlSize.add(new JLabel(i18n("split_file_dialog.parts") + ":"));
 		pnlSize.addSpace(5);
-		spnParts = new JSpinner(new SpinnerNumberModel(1, 1,
-                file.getSize(), 1));
+		spnParts = new JSpinner(new SpinnerNumberModel(1, 1, file.getSize(), 1));
 		spnParts.addChangeListener(e -> {
             if (!edtChange) {
                 long parts = ((Number)spnParts.getValue()).longValue();
-                long newsize = file.getSize() / parts;
+                long newSize = file.getSize() / parts;
                 if (file.getSize() % parts != 0) {
-                    newsize++;
+                    newSize++;
                 }
-                if (getBytes() != newsize) {
-                    edtSize.setText(Long.toString(newsize));
+                if (getBytes() != newSize) {
+                    edtSize.setText(Long.toString(newSize));
                 }
             }
         });
 		pnlSize.add(spnParts);
-        pnlMain.addRow(Translator.get("split_file_dialog.part_size") + ":", pnlSize, 0);
+        pnlMain.addRow(i18n("split_file_dialog.part_size") + ":", pnlSize, 0);
         
-		cbGenerateCRC = new JCheckBox(Translator.get("split_file_dialog.generate_CRC"));
+		cbGenerateCRC = new JCheckBox(i18n("split_file_dialog.generate_CRC"));
 		cbGenerateCRC.setSelected(true);
 		pnlMain.addRow("", cbGenerateCRC, 0);
 
@@ -171,8 +169,8 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
      * Creates bottom panel with buttons.
      */
     private JPanel getPnlButtons() {
-        btnSplit = new JButton(Translator.get("split"));
-        btnClose = new JButton(Translator.get("cancel"));
+        btnSplit = new JButton(i18n("split"));
+        btnClose = new JButton(i18n("cancel"));
         return DialogToolkit.createOKCancelPanel(btnSplit, btnClose, getRootPane(), this);
     }
 
@@ -190,20 +188,19 @@ public class SplitFileDialog extends JobDialog implements ActionListener {
         PathUtils.ResolvedDestination resolvedDest = 
         	PathUtils.resolveDestination(destPath, mainFrame.getActivePanel().getCurrentFolder());
         // The path entered doesn't correspond to any existing folder
-        if (resolvedDest==null || (files.size()>1 && 
-        		resolvedDest.getDestinationType()!=PathUtils.ResolvedDestination.EXISTING_FOLDER)) {
-            showErrorDialog(Translator.get("invalid_path", destPath), Translator.get("split_file_dialog.error_title"));
+        if (resolvedDest == null || (files.size() > 1 &&
+        		resolvedDest.getDestinationType() != PathUtils.ResolvedDestination.EXISTING_FOLDER)) {
+            showErrorDialog(i18n("invalid_path", destPath), i18n("split_file_dialog.error_title"));
             return;
         }
 
         long parts = getParts();
         if (parts > MAX_PARTS) {
-            showErrorDialog(Translator.get("split_file_dialog.max_parts", 
-            		Integer.toString(MAX_PARTS)), Translator.get("split_file_dialog.error_title"));
+            showErrorDialog(i18n("split_file_dialog.max_parts",
+            		Integer.toString(MAX_PARTS)), i18n("split_file_dialog.error_title"));
         	return;
         }
-        ProgressDialog progressDialog = new ProgressDialog(mainFrame,
-                Translator.get("progress_dialog.processing_files"));
+        ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
 		SplitFileJob job = new SplitFileJob(progressDialog, mainFrame,
 		        file, resolvedDest.getDestinationFolder(), size, (int)parts);
 		job.setIntegrityCheckEnabled(cbGenerateCRC.isSelected());

@@ -36,21 +36,21 @@ public class CompareImagesPanel extends JPanel {
     private static final int MAX_PREVIEW_WIDTH = 150;
     private static final int MAX_PREVIEW_HEIGHT = 100;
 
-    private Image[] images = new Image[2];
-    private int[] imgWidth = new int[2];
-    private int[] imgHeight = new int[2];
-    private int[] imgSrcWidth = new int[2];
-    private int[] imgSrcHeight = new int[2];
+    private final Image[] images = new Image[2];
+    private final int[] imgWidth = new int[2];
+    private final int[] imgHeight = new int[2];
+    private final int[] imgSrcWidth = new int[2];
+    private final int[] imgSrcHeight = new int[2];
 
-    private JLabel[] lblImageSize = new JLabel[2];
+    private final JLabel[] lblImageSize = new JLabel[2];
 
-    private JDialog parent;
-    private ImageIcon arrow;
-    private SpinningDial[] dials = new SpinningDial[2];
+    private final JDialog parent;
+    private final ImageIcon arrow;
+    private final SpinningDial[] dials = new SpinningDial[2];
 
     private class LoadImagesTask extends SwingWorker<Void, Void> {
-        private AbstractFile file;
-        private int index;
+        private final AbstractFile file;
+        private final int index;
 
         public LoadImagesTask(AbstractFile file, int index) {
             super();
@@ -59,7 +59,7 @@ public class CompareImagesPanel extends JPanel {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             if (file == null) {
                 return null;
             }

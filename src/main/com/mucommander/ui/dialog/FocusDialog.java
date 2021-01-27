@@ -29,7 +29,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.mucommander.cache.WindowsStorage;
+import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.main.MainFrame;
+import com.mucommander.utils.text.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,7 @@ import com.mucommander.ui.helper.FocusRequester;
  * </ul>
  * @author Maxence Bernard
  */
-public class FocusDialog extends JDialog implements WindowListener {
+public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FocusDialog.class);
     private static final EmptyBorder BORDER = new EmptyBorder(6, 8, 6, 8);
 	
@@ -78,7 +80,7 @@ public class FocusDialog extends JDialog implements WindowListener {
 
     private static long lastCreateTime;
     private static String lastCreateTitle;
-    private static Class lastTreateClass;
+    private static Class lastCreateClass;
     /**
      * Saved to restore focus
      */
@@ -95,13 +97,13 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+            if (dt < 250 && lastCreateClass != null && lastCreateClass.equals(getClass())) {
                 kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastTreateClass = getClass();
+        lastCreateClass = getClass();
         if (kill) {
             dispose();
             throw new RuntimeException("EventDispatchThread error");
@@ -119,13 +121,13 @@ public class FocusDialog extends JDialog implements WindowListener {
         if (title != null && title.equals(lastCreateTitle)) {
             long dt = System.currentTimeMillis() - lastCreateTime;
             // sometimes EventDispatchThread duplicates events that caused double windows
-            if (dt < 250 && lastTreateClass != null && lastTreateClass.equals(getClass())) {
+            if (dt < 250 && lastCreateClass != null && lastCreateClass.equals(getClass())) {
                 kill = true;
             }
         }
         lastCreateTime = System.currentTimeMillis();
         lastCreateTitle = title;
-        lastTreateClass = getClass();
+        lastCreateClass = getClass();
         if (kill) {
             dispose();
             throw new RuntimeException("EventDispatchThread error");
@@ -135,6 +137,8 @@ public class FocusDialog extends JDialog implements WindowListener {
     private void init(Component locationRelativeComp) {
         this.locationRelativeComp = locationRelativeComp;
         setLocationRelativeTo(locationRelativeComp);
+
+        initLookAndFeel();
 
         JPanel contentPane = (JPanel)getContentPane();
         contentPane.setBorder(BORDER);
@@ -172,7 +176,6 @@ public class FocusDialog extends JDialog implements WindowListener {
      * This method is equivalent to a call to {@link #dispose()}. It's meant to be
      * overridden by those implementations of <code>FocusDialog</code> that need to init
      * code before canceling the dialog.
-     * </p>
      */
     public void cancel() {
         dispose();
@@ -291,7 +294,7 @@ public class FocusDialog extends JDialog implements WindowListener {
                 setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
             }
         }
-
+        SwingUtilities.invokeLater(this::toFront);
         setVisible(true);
     }
 
@@ -305,13 +308,11 @@ public class FocusDialog extends JDialog implements WindowListener {
     }
 
 
-    ////////////////////////////
-    // WindowListener methods //
-    ////////////////////////////
-
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
         // (this method is called each time the dialog is activated)
         if (!firstTimeActivated && initialFocusComponent != null) {
@@ -331,18 +332,23 @@ public class FocusDialog extends JDialog implements WindowListener {
         }
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
@@ -374,9 +380,14 @@ public class FocusDialog extends JDialog implements WindowListener {
             public void componentResized(ComponentEvent e) {
                 Dimension preferredSize = getPreferredSize();
                 int width = getWidth();
-                setSize(new Dimension(Math.max(width, preferredSize.width), preferredSize.height));
+                int minWidth = minimumDimension != null ? minimumDimension.width : preferredSize.width;
+                setSize(new Dimension(Math.max(width, minWidth), preferredSize.height));
                 super.componentResized(e);
             }
         });
+    }
+
+    protected static String i18n(String key, String... params) {
+        return Translator.get(key, params);
     }
 }

@@ -50,7 +50,7 @@ public class ByteUtils {
      * @param bytes the array of bytes for which to get an hexadecimal string representation
      * @return an hexadecimal string representation of the given byte array
      */
-    public static String toHexString(byte bytes[]) {
+    public static String toHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
 
         for (byte aByte : bytes) {

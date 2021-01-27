@@ -35,7 +35,7 @@ import java.awt.event.MouseListener;
  */
 public class FileTableHeader extends JTableHeader implements MouseListener {
 
-    private FileTable table;
+    private final FileTable table;
 
     FileTableHeader(FileTable table) {
         super(table.getColumnModel());
@@ -45,63 +45,61 @@ public class FileTableHeader extends JTableHeader implements MouseListener {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public boolean getReorderingAllowed() {
         return true;
     }
 
-    
-    //////////////////////////////////
-    // MouseListener implementation //
-    //////////////////////////////////
 
     public void mouseClicked(MouseEvent e) {
         Column col = Column.valueOf(table.convertColumnIndexToModel(getColumnModel().getColumnIndexAtX(e.getX())));
 
         table.requestFocus();
 
-        // One of the table headers was left-clicked, sort the table by the clicked column's criterion
         if (DesktopManager.isLeftMouseButton(e)) {
-            // If the table was already sorted by this criteria, reverse order
-            if (table.getSortInfo().getCriterion() == col) {
-                table.reverseSortOrder();
-            } else {
-                table.sortBy(col);
-            }
+            // One of the table headers was left-clicked, sort the table by the clicked column's criterion
+            changeSortOrder(col);
+        } else if (DesktopManager.isRightMouseButton(e)) {
+            // One of the table headers was right-clicked, popup a menu that offers to hide the column
+            showSortPopupMenu(e);
         }
-        // One of the table headers was right-clicked, popup a menu that offers to hide the column
-        else if (DesktopManager.isRightMouseButton(e)) {
-            JPopupMenu popupMenu = new JPopupMenu();
-            MainFrame mainFrame = table.getFolderPanel().getMainFrame();
+    }
 
-            JCheckBoxMenuItem checkboxMenuItem;
-            for (Column c : Column.values()) {
-                if (c == Column.NAME) {
-                    continue;
-                }
+    private void showSortPopupMenu(MouseEvent e) {
+        JPopupMenu popupMenu = new JPopupMenu();
+        MainFrame mainFrame = table.getFolderPanel().getMainFrame();
 
-                checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(c.getToggleColumnActionId(), mainFrame));
-
-                checkboxMenuItem.setSelected(table.isColumnEnabled(c));
-                checkboxMenuItem.setEnabled(table.isColumnDisplayable(c));
-                // Override the action's label to a shorter one
-                checkboxMenuItem.setText(c.getLabel());
-
-                popupMenu.add(checkboxMenuItem);
+        for (Column c : Column.values()) {
+            if (c == Column.NAME) {
+                continue;
             }
 
-            popupMenu.add(new TMenuSeparator());
+            JCheckBoxMenuItem checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(c.getToggleColumnActionId(), mainFrame));
 
-            checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(ToggleAutoSizeAction.Descriptor.ACTION_ID, mainFrame));
-            checkboxMenuItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());
+            checkboxMenuItem.setSelected(table.isColumnEnabled(c));
+            checkboxMenuItem.setEnabled(table.isColumnDisplayable(c));
+            // Override the action's label to a shorter one
+            checkboxMenuItem.setText(c.getLabel());
+
             popupMenu.add(checkboxMenuItem);
+        }
 
-            popupMenu.show(this, e.getX(), e.getY());
-            popupMenu.setVisible(true);
+        popupMenu.add(new TMenuSeparator());
+
+        JCheckBoxMenuItem checkboxMenuItem = new TCheckBoxMenuItem(ActionManager.getActionInstance(ToggleAutoSizeAction.Descriptor.ACTION_ID, mainFrame));
+        checkboxMenuItem.setSelected(mainFrame.isAutoSizeColumnsEnabled());
+        popupMenu.add(checkboxMenuItem);
+
+        popupMenu.show(this, e.getX(), e.getY());
+        popupMenu.setVisible(true);
+    }
+
+    private void changeSortOrder(Column col) {
+        // If the table was already sorted by this criteria, reverse order
+        if (table.getSortInfo().getCriterion() == col) {
+            table.reverseSortOrder();
+        } else {
+            table.sortBy(col);
         }
     }
 

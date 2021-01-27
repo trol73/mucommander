@@ -89,7 +89,7 @@ class PreviewPanel extends JPanel {
                 Font currentFont = textArea.getFont();
                 int currentFontSize = currentFont.getSize();
                 boolean rotationUp = e.getWheelRotation() < 0;
-                if ((!rotationUp && currentFontSize > 1) || rotationUp) {
+                if (rotationUp || currentFontSize > 1) {
                     Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFontSize + (rotationUp ? 1 : -1));
                     textArea.setFont(newFont);
                 }

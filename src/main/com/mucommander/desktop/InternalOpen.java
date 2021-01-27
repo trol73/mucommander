@@ -41,13 +41,14 @@ class InternalOpen extends LocalFileOperation {
     /**
      * Creates a new <code>InternalOpen</code> instance.
      */
-    public InternalOpen() {
+    InternalOpen() {
     }
 
     private Desktop getDesktop() {
         if (!initialized) {
-            if(Desktop.isDesktopSupported())
+            if (Desktop.isDesktopSupported()) {
                 desktop = Desktop.getDesktop();
+            }
             initialized = true;
         }
         return desktop;
@@ -64,7 +65,6 @@ class InternalOpen extends LocalFileOperation {
      *   <li>Desktops are supported by the current system (<code>Desktop.isDesktopSupported()</code> returns <code>true</code>).</li>
      *   <li>File opening is supported by the desktop (<code>Desktop.isSupported(Desktop.Action.OPEN)</code> returns <code>true</code>).</li>
      * </ul>
-     * </p>
      * @return <code>true</code> if this operations is available, <code>false</code> otherwise.
      */
     @Override
@@ -72,15 +72,18 @@ class InternalOpen extends LocalFileOperation {
 
     @Override
     public void execute(AbstractFile file) throws IOException {
-        if(isAvailable())
+        if (isAvailable()) {
             getDesktop().open(new File(file.getAbsolutePath()));
-        else
+        } else {
             throw new UnsupportedOperationException();
+        }
     }
     /**
      * Returns the action's label.
      * @return the action's label.
      */
     @Override
-    public String getName() {return "java.awt.Desktop open file";}
+    public String getName() {
+        return "java.awt.Desktop open file";
+    }
 }

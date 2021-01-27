@@ -40,7 +40,7 @@ import java.util.Map;
 @InvokesDialog
 public class CombineFilesAction extends SelectedFilesAction {
 	
-    CombineFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private CombineFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
 
         setSelectedFileFilter(new FileOperationFilter(FileOperation.READ_FILE));
@@ -52,8 +52,9 @@ public class CombineFilesAction extends SelectedFilesAction {
         FileFilter filter = new AttributeFileFilter(FileAttribute.FILE);
         filter.filter(files);
 
-    	if (files.isEmpty())
-    		return;
+    	if (files.isEmpty()) {
+            return;
+        }
 
         AbstractFile destFolder = mainFrame.getInactivePanel().getCurrentFolder();
         new CombineFilesDialog(mainFrame, files, destFolder).showDialog();
@@ -67,15 +68,23 @@ public class CombineFilesAction extends SelectedFilesAction {
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "CombineFiles";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+		    return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.FILES; }
+		public ActionCategory getCategory() {
+		    return ActionCategory.FILES;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+		    return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return null; }
+		public KeyStroke getDefaultKeyStroke() {
+		    return null;
+		}
 
-        public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
             return new CombineFilesAction(mainFrame, properties);
         }
 

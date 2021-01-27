@@ -18,12 +18,17 @@
 
 package com.mucommander.desktop;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
+import java.util.function.Consumer;
 
+import com.mucommander.commons.util.Pair;
+import com.mucommander.ui.notifier.AbstractNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +46,13 @@ import com.mucommander.desktop.windows.Win9xDesktopAdapter;
 import com.mucommander.desktop.windows.WinNtDesktopAdapter;
 import com.mucommander.desktop.xfce.GuessedXfceDesktopAdapter;
 
+import javax.swing.*;
+
 /**
  * @author Nicolas Rinaudo
  */
 public class DesktopManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DesktopManager.class);
+	private static Logger logger;
 	
     // - Predefined operation types --------------------------------------
     // -------------------------------------------------------------------
@@ -53,7 +60,7 @@ public class DesktopManager {
      * Represents "browse" operations.
      * <p>
      * These operations are used to open URL in a browser.
-     * </p>
+     *
      * @see #canBrowse()
      * @see #browse(URL)
      */
@@ -63,21 +70,22 @@ public class DesktopManager {
      * Represents "file manager" operations.
      * <p>
      * These operations are used to reveal local files in a file manager.
-     * </p>
+     *
      * @see #canOpenInFileManager()
      * @see #openInFileManager(File)
      */
-    public static final String OPEN_IN_FILE_MANAGER = "openFM";
+    private static final String OPEN_IN_FILE_MANAGER = "openFM";
 
     /**
      * Represents "open" operations.
      * <p>
      * These operations are used to open local files.
-     * </p>
+     *
      * @see #canOpen()
      * @see #open(File)
      */
-    public static final String OPEN = "open";
+    static final String OPEN = "open";
+
 
 
 
@@ -88,9 +96,9 @@ public class DesktopManager {
      * <p>
      * These operations are for internal use only, and cannot be registered through the
      * {@link #registerOperation(String,int,DesktopOperation)} method.
-     * </p>
+     *
      */
-    public static final int SYSTEM_OPERATION = 0;
+    private static final int SYSTEM_OPERATION = 0;
 
     /**
      * Non-system operations.
@@ -98,35 +106,34 @@ public class DesktopManager {
      * These operations are treated with a lower priority than {@link #SYSTEM_OPERATION} ones, but higher
      * than {@link #FALLBACK_OPERATION} ones. They are meant for plugin specific operations and are expected
      * to be fairly reliable.
-     * </p>
+     *
      */
-    public static final int CUSTOM_OPERATION = 1;
+    private static final int CUSTOM_OPERATION = 1;
 
     /**
      * Last resort operations.
      * <p>
      * These operations will only ever be used if nothing else is available. They need only be a best-effort solution.
-     * </p>
+     *
      */
-    public static final int FALLBACK_OPERATION = 2;
+    private static final int FALLBACK_OPERATION = 2;
 
 
 
-    // - Class fields ----------------------------------------------------
-    // -------------------------------------------------------------------
+
     /** All available desktop operations. */
-    private static Map<String, List<DesktopOperation>>[] operations;
+    private static final Map<String, List<DesktopOperation>>[] operations;
     /** All known desktops. */
-    private static List<DesktopAdapter> desktops;
+    private static final List<DesktopAdapter> desktops;
     /** Current desktop. */
     private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
     private static TrashProvider trashProvider;
+    /** AbstractNotifier instance, null if none is available on the current platform */
+    private static AbstractNotifier notifier;
+    private static Consumer<JTabbedPane> tabbedPaneCustomizer;
 
 
-
-    // - Initialisation --------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Prevents instantiation of the class.
      */
@@ -138,8 +145,6 @@ public class DesktopManager {
      * the earlier they are registered, the lower their priority.
      */
     static {
-        // - Adapters initialisation -------------------------------------
-        // ---------------------------------------------------------------
         desktops = new ArrayList<>();
 
         // The default desktop adapter must be registered first, as we only want to use
@@ -175,7 +180,7 @@ public class DesktopManager {
         //   operations are user configurable).
         // - they are executed before any other operations (if available, they will
         //   provide safer and better integration than any other operation).
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
+        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
             innerRegisterOperation(OPEN,   SYSTEM_OPERATION,  new InternalOpen());
             innerRegisterOperation(BROWSE, SYSTEM_OPERATION,  new InternalBrowse());
         }
@@ -196,7 +201,7 @@ public class DesktopManager {
      * If <code>install</code> is set to <code>true</code>, this method
      * might result in installing desktop specific data such as bookmarks, keyboard
      * shortcuts...
-     * </p>
+     *
      * @param install                         whether or not to install desktop specific information.
      * @throws DesktopInitialisationException if an error occurred while initialising desktops.
      */
@@ -207,8 +212,11 @@ public class DesktopManager {
             DesktopAdapter current = desktops.get(i);
             if (current.isAvailable()) {
                 desktop = current;
-                LOGGER.debug("Using desktop: " + desktop);
+                getLogger().debug("Using desktop: " + desktop);
                 desktop.init(install);
+                setTrashProvider(desktop.getTrash());
+                setNotifier(desktop.getNotifier());
+                setTabbedPaneCustomizer(desktop.getTabbedPaneCustomizer());
                 return;
             }
         }
@@ -221,11 +229,11 @@ public class DesktopManager {
      * will find itself in a situation where it doesn't know which desktop it's running on.
      * Calling this method ensures that, if a {@link DesktopAdapter} instance is required,
      * we have at least the {@link DefaultDesktopAdapter} to work with.
-     * </p>
      */
     private static void checkInit() {
-        if (desktop == null)
+        if (desktop == null) {
             desktop = new DefaultDesktopAdapter();
+        }
     }
 
 
@@ -238,7 +246,7 @@ public class DesktopManager {
      * Note that the later an adapter is registered, the higher its priority. Since all
      * default adapters are registered at initialisation time, any call to this method
      * will result in the new adapter to be checked before them.
-     * </p>
+     *
      * @param adapter desktop adapter to register.
      */
     public static void registerAdapter(DesktopAdapter adapter) {desktops.add(adapter);}
@@ -251,23 +259,22 @@ public class DesktopManager {
      * Registers the specified operation for the specified type and priority.
      */
     private static void innerRegisterOperation(String type, int priority, DesktopOperation operation) {
-        List<DesktopOperation> container;
-
         // Makes sure we have a container for operations of the specified priority.
-        if(operations[priority] == null)
+        if (operations[priority] == null) {
             operations[priority] = new Hashtable<>();
+        }
 
         // Makes sure we have a container for operations of the specified type.
-        if((container = operations[priority].get(type)) == null)
-            operations[priority].put(type, container = new Vector<>());
+        List<DesktopOperation> container = operations[priority].computeIfAbsent(type, k -> new Vector<>());
 
         // Creates the requested entry.
         container.add(operation);
     }
 
     public static void registerOperation(String type, int priority, DesktopOperation operation) {
-        if(priority != FALLBACK_OPERATION && priority != CUSTOM_OPERATION)
+        if (priority != FALLBACK_OPERATION && priority != CUSTOM_OPERATION) {
             throw new IllegalArgumentException();
+        }
         innerRegisterOperation(type, priority, operation);
     }
 
@@ -276,8 +283,9 @@ public class DesktopManager {
     // - Operation support -----------------------------------------------
     // -------------------------------------------------------------------
     private static List<DesktopOperation> getOperations(String type, int priority) {
-        if (operations[priority] == null)
+        if (operations[priority] == null) {
             return null;
+        }
 
         return operations[priority].get(type);
     }
@@ -312,29 +320,31 @@ public class DesktopManager {
     }
 
     private static DesktopOperation getSupportedOperation(String type, Object[] target) {
-        DesktopOperation operation;
-        if ((operation = getSupportedOperation(type, SYSTEM_OPERATION, target)) != null) {
+        DesktopOperation operation = getSupportedOperation(type, SYSTEM_OPERATION, target);
+        if (operation != null) {
             return operation;
         }
-        if ((operation = getSupportedOperation(type, CUSTOM_OPERATION, target)) != null) {
+        operation = getSupportedOperation(type, CUSTOM_OPERATION, target);
+        if (operation != null) {
             return operation;
         }
-        if ((operation = getSupportedOperation(type, FALLBACK_OPERATION, target)) != null) {
+        operation = getSupportedOperation(type, FALLBACK_OPERATION, target);
+        if (operation != null) {
             return operation;
         }
         return null;
     }
 
     private static DesktopOperation getAvailableOperation(String type) {
-        DesktopOperation operation;
-
-        if ((operation = getAvailableOperation(type, SYSTEM_OPERATION)) != null)
-            return operation;
-        if ((operation = getAvailableOperation(type, CUSTOM_OPERATION)) != null)
-            return operation;
-        if ((operation = getAvailableOperation(type, FALLBACK_OPERATION)) != null)
-            return operation;
-        return null;
+        DesktopOperation systemOperation = getAvailableOperation(type, SYSTEM_OPERATION);
+        if (systemOperation != null) {
+            return systemOperation;
+        }
+        DesktopOperation customOperation = getAvailableOperation(type, CUSTOM_OPERATION);
+        if (customOperation != null) {
+            return customOperation;
+        }
+        return getAvailableOperation(type, FALLBACK_OPERATION);
     }
 
     public static boolean isOperationAvailable(String type) {
@@ -348,66 +358,91 @@ public class DesktopManager {
     public static void executeOperation(String type, Object[] target) throws IOException, UnsupportedOperationException {
         DesktopOperation operation = getSupportedOperation(type, target);
 
-        if (operation != null) {
-            operation.execute(target);
-        } else {
+        if (operation == null) {
             throw new UnsupportedOperationException();
         }
+        operation.execute(target);
     }
 
     public static String getOperationName(String type) throws UnsupportedOperationException {
         DesktopOperation operation = getAvailableOperation(type);
-        if (operation != null) {
-            return operation.getName();
+        if (operation == null) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
-
-   }
+        return operation.getName();
+    }
 
     public static String getOperationName(String type, Object[] target) throws UnsupportedOperationException {
         DesktopOperation operation = getSupportedOperation(type, target);
-
-        if (operation != null) {
-            return operation.getName();
+        if (operation == null) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
+        return operation.getName();
     }
 
 
 
     // - Browser helpers -------------------------------------------------
     // -------------------------------------------------------------------
-    public static boolean canBrowse() {return isOperationAvailable(BROWSE);}
+    public static boolean canBrowse() {
+        return isOperationAvailable(BROWSE);
+    }
 
-    public static boolean canBrowse(URL url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(URL url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static boolean canBrowse(String url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(String url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static boolean canBrowse(AbstractFile url) {return isOperationSupported(BROWSE, new Object[] {url});}
+    public static boolean canBrowse(AbstractFile url) {
+        return isOperationSupported(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(URL url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(URL url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(String url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(String url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
-    public static void browse(AbstractFile url) throws IOException, UnsupportedOperationException {executeOperation(BROWSE, new Object[] {url});}
+    public static void browse(AbstractFile url) throws IOException, UnsupportedOperationException {
+        executeOperation(BROWSE, new Object[] {url});
+    }
 
 
 
     // - File opening helpers --------------------------------------------
     // -------------------------------------------------------------------
-    public static boolean canOpen() {return isOperationAvailable(OPEN);}
+    public static boolean canOpen() {
+        return isOperationAvailable(OPEN);
+    }
 
-    public static boolean canOpen(File file) {return isOperationSupported(OPEN, new Object[] {file});}
+    public static boolean canOpen(File file) {
+        return isOperationSupported(OPEN, new Object[] {file});
+    }
 
-    public static boolean canOpen(String file) {return isOperationSupported(OPEN, new Object[] {file});}
+    public static boolean canOpen(String file) {
+        return isOperationSupported(OPEN, new Object[] {file});
+    }
 
-    public static boolean canOpen(AbstractFile file) {return isOperationSupported(OPEN, new Object[] {file});}
+    public static boolean canOpen(AbstractFile file) {
+        return isOperationSupported(OPEN, new Object[] {file});
+    }
 
-    public static void open(File file) throws IOException, UnsupportedOperationException {executeOperation(OPEN, new Object[] {file});}
+    public static void open(File file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN, new Object[] {file});
+    }
 
-    public static void open(String file) throws IOException, UnsupportedOperationException {executeOperation(OPEN, new Object[] {file});}
+    public static void open(String file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN, new Object[] {file});
+    }
 
-    public static void open(AbstractFile file) throws IOException, UnsupportedOperationException {executeOperation(OPEN, new Object[] {file});}
+    public static void open(AbstractFile file) throws IOException, UnsupportedOperationException {
+        executeOperation(OPEN, new Object[] {file});
+    }
 
 
 
@@ -489,7 +524,21 @@ public class DesktopManager {
      * Sets the object that is used to create instances of {@link com.mucommander.desktop.AbstractTrash}.
      * @param provider object that will be used to create instances of {@link com.mucommander.desktop.AbstractTrash}.
      */
-    public static void setTrashProvider(TrashProvider provider) {trashProvider = provider;}
+    public static void setTrashProvider(TrashProvider provider) {
+        trashProvider = provider;
+    }
+
+    private static void setTabbedPaneCustomizer(Consumer<JTabbedPane> tabbedPaneCustomizer) {
+        DesktopManager.tabbedPaneCustomizer = tabbedPaneCustomizer;
+    }
+
+    private static void setNotifier(AbstractNotifier notifier) {
+        DesktopManager.notifier = notifier;
+    }
+
+    public static AbstractNotifier getNotifier() {
+        return notifier;
+    }
 
 
     // - Mouse management ------------------------------------------------
@@ -500,7 +549,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -517,7 +566,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isMiddleMouseButton(MouseEvent)
@@ -534,7 +583,7 @@ public class DesktopManager {
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
      * The goal of this method is to allow desktop to check for such non-standard behaviours.
-     * </p>
+     *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
      * @see      #isRightMouseButton(MouseEvent)
@@ -564,7 +613,7 @@ public class DesktopManager {
      * <p>
      * The returned command must set the shell in its 'init script' mode.
      * For example, for bash, the returned command should be <code>/bin/bash -l -c"</code>.
-     * </p>
+     *
      * @return the command used to start shell processes.
      */
     public static String getDefaultShell() {
@@ -572,11 +621,16 @@ public class DesktopManager {
         return desktop.getDefaultShell();
     }
 
-
     public static String getDefaultTerminalShellCommand() {
         checkInit();
         return desktop.getDefaultTerminalShellCommand();
     }
+
+    public static String getDefaultTerminalAppCommand() {
+        checkInit();
+        return desktop.getDefaultTerminalAppCommand();
+    }
+
 
     /**
      * Returns <code>true</code> if the given file is an application file. What an application file actually is
@@ -589,5 +643,29 @@ public class DesktopManager {
      */
     public static boolean isApplication(AbstractFile file) {
         return desktop.isApplication(file);
+    }
+
+    public static void customizeTabbedPaneUI(JTabbedPane tabbedPane) {
+        if (tabbedPaneCustomizer != null)
+            tabbedPaneCustomizer.accept(tabbedPane);
+    }
+
+    public static void postCopy(AbstractFile source, AbstractFile target) {
+        desktop.postCopy(source, target);
+    }
+
+    public static void customizeMainFrame(Window window) {
+        desktop.customizeMainFrame(window);
+    }
+
+    public static List<Pair<JLabel, JComponent>> getExtendedFileProperties(AbstractFile file) {
+        return desktop.getExtendedFileProperties(file);
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(DesktopManager.class);
+        }
+        return logger;
     }
 }

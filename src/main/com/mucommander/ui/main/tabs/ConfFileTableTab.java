@@ -5,9 +5,9 @@ import com.mucommander.core.LocalLocationHistory;
 
 public class ConfFileTableTab extends FileTableTab {
 
-	private boolean lock;
-	private FileURL location;
-	private String title;
+	private final boolean lock;
+	private final FileURL location;
+	private final String title;
 	
 	public ConfFileTableTab(FileURL location) {
 		this(false, location, null);

@@ -43,7 +43,7 @@ public abstract class SocketServer implements Runnable {
                 clientThread.setDaemon(true);
                 clientThread.start();
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

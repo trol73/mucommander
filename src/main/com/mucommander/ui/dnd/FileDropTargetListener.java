@@ -36,7 +36,7 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.job.CopyJob;
 import com.mucommander.job.MoveJob;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.FolderPanel;
@@ -74,10 +74,10 @@ public class FileDropTargetListener implements DropTargetListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileDropTargetListener.class);
 	
     /** the FolderPanel instance used to change the current folder when a file is dropped */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 
     /** Mode that specifies what to do when files are dropped */
-    private boolean changeFolderOnlyMode;
+    private final boolean changeFolderOnlyMode;
 
     /** Drop action (copy or move) currenlty specified by the user */
     private int currentDropAction;
@@ -150,7 +150,7 @@ public class FileDropTargetListener implements DropTargetListener {
      * <p>This method overrides the default drop action for drag-and-drop operations within muCommander to make it
      * <code>DnDConstants.ACTION_COPY</code> instead of <code>DnDConstants.ACTION_MOVE</code>.
      * For a move action to be performed when the mouse is released, the modifiers defined by
-     * {@link #MOVE_ACTION_MODIFIERS_EX} must be down.</p>
+     * {@link #MOVE_ACTION_MODIFIERS_EX} must be down.
      *
      * @return <code>true</code> if the event was accepted, false otherwise
      */

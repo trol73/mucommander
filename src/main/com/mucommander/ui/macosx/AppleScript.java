@@ -18,10 +18,10 @@
 
 package com.mucommander.ui.macosx;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
+import com.mucommander.commons.file.AbstractFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ import com.mucommander.process.ProcessRunner;
 /**
  * This class allows to init AppleScript code under Mac OS X, relying on the <code>osacript</code> command available
  * that comes with any install of Mac OS X. This command is used instead of the Cocoa-Java library which has been
- * deprecated by Apple.<br/>
+ * deprecated by Apple.<br>
  * Calls to {@link #execute(String, StringBuilder)} on any OS other than Mac OS X will always fail.
  *
  * <p>
@@ -42,14 +42,14 @@ import com.mucommander.process.ProcessRunner;
  * <ul>
  *   <li>AppleScript 1.10- (Mac OS X 10.4 or lower) expects <i>MacRoman</i> encoding, not <i>UTF-8</i>. <b>That
  *       means the script should only contain characters that are part of the MacRoman charset</b>; any character
- *       that cannot be expressed in MacRoman will not be propertly interpreted.<br/>
+ *       that cannot be expressed in MacRoman will not be properly interpreted.
  *       The only way to pass Unicode text to a script is by reading it from a file.
  *       See <a href="http://www.satimage.fr/software/en/unicode_and_applescript.html">http://www.satimage.fr/software/en/unicode_and_applescript.html</a>
  *       for more information on how to do so.
  *   </li>
  *   <li>AppleScript 2.0+ (Mac OS X 10.5 and up) is fully Unicode-aware and will properly interpret any Unicode
  *       character: "AppleScript is now entirely Unicode-based. Comments and text constants in scripts may contain
- *       any Unicode characters, and all text processing is done in Unicode".<br/>
+ *       any Unicode characters, and all text processing is done in Unicode".
  *       See <a href="http://www.apple.com/applescript/features/unicode.html">http://www.apple.com/applescript/features/unicode.html</a>
  *       for more information.
  *   </li>
@@ -64,7 +64,7 @@ public class AppleScript {
     public final static String UTF8 = "UTF-8";
 
     /** The MacRoman encoding */
-    public final static String MACROMAN = "MacRoman";
+    private final static String MACROMAN = "MacRoman";
 
 
     /**
@@ -82,6 +82,11 @@ public class AppleScript {
      * @return true if the script was successfully executed, false if the
      */
     public static boolean execute(String appleScript, StringBuilder outputBuffer) {
+        return execute(appleScript, outputBuffer, null);
+    }
+
+
+    public static boolean execute(String appleScript, StringBuilder outputBuffer, AbstractFile currentDirectory) {
         // No point in going any further if the current OS is not Mac OS X
         if (!OsFamily.MAC_OS_X.isCurrent()) {
             return false;
@@ -92,21 +97,20 @@ public class AppleScript {
         // Use the 'osascript' command to execute the AppleScript. The '-s o' flag tells osascript to print errors to
         // stdout rather than stderr. The AppleScript is piped to the process instead of passing it as an argument
         // ('-e' flag), for better control over the encoding and to remove any limitations on the maximum script size.
-        String tokens[] = new String[] {
+        String[] tokens = new String[] {
             "osascript",
             "-s",
             "o",
         };
 
-        OutputStreamWriter pout = null;
         try {
             // Execute the osascript command.
-            AbstractProcess process = ProcessRunner.execute(tokens, outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding()));
-
+            ProcessListener processListener = outputBuffer == null ? null : new ScriptOutputListener(outputBuffer, AppleScript.getScriptEncoding());
+            AbstractProcess process = ProcessRunner.execute(tokens, currentDirectory, processListener, null);
             // Pipe the script to the osascript process.
-            pout = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding());
-            pout.write(appleScript);
-            pout.close();
+            try (OutputStreamWriter pout  = new OutputStreamWriter(process.getOutputStream(), getScriptEncoding())) {
+                pout.write(appleScript);
+            }
 
             // Wait for the process to die
             int returnCode = process.waitFor();
@@ -122,15 +126,6 @@ public class AppleScript {
         } catch(Exception e) {        // IOException, InterruptedException
             // Shouldn't normally happen
         	LOGGER.debug("Unexcepted exception while executing AppleScript", e);
-
-            try {
-                if (pout != null) {
-                    pout.close();
-                }
-            } catch(IOException e1) {
-                // Can't do much about it
-            }
-
             return false;
         }
     }
@@ -160,8 +155,8 @@ public class AppleScript {
      */
     private static class ScriptOutputListener implements ProcessListener {
 
-        private StringBuilder outputBuffer;
-        private String outputEncoding;
+        private final StringBuilder outputBuffer;
+        private final String outputEncoding;
 
         private ScriptOutputListener(StringBuilder outputBuffer, String outputEncoding) {
             this.outputBuffer = outputBuffer;

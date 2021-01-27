@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- =================================================== -->
-<!-- Author:           Oleg Trifonov                   -->
-<!-- Description:                                        -->
-<!-- A dark theme  -->
-<!-- =================================================== -->
-
 <theme>
     <file_table>
         <border color="868686"/>
@@ -27,10 +21,10 @@
             <inactive_background color="151515"/>
         </alternate>
         <unmatched>
-            <background color="b2b2b2"/>
-            <foreground color="000000"/>
+            <background color="333333"/>
+            <foreground color="ccccff" alpha="5c"/>
         </unmatched>
-        <hidden>
+        <hidden_folder>
             <normal>
                 <foreground color="666666"/>
                 <inactive_foreground color="666666"/>
@@ -39,7 +33,17 @@
                 <foreground color="ffffff"/>
                 <inactive_foreground color="666666"/>
             </selected>
-        </hidden>
+        </hidden_folder>        
+        <hidden_file>
+            <normal>
+                <foreground color="666666"/>
+                <inactive_foreground color="666666"/>
+            </normal>
+            <selected>
+                <foreground color="ffffff"/>
+                <inactive_foreground color="666666"/>
+            </selected>
+        </hidden_file>
         <folder>
             <normal>
                 <inactive_foreground color="ffffff"/>
@@ -52,8 +56,8 @@
         </folder>
         <archive>
             <normal>
-                <inactive_foreground color="9999ff"/>
-                <foreground color="9999ff"/>
+                <inactive_foreground color="ff00cc"/>
+                <foreground color="ff00cc"/>
             </normal>
             <selected>
                 <inactive_foreground color="000000"/>
@@ -80,6 +84,12 @@
                 <foreground color="cc0000"/>
             </selected>
         </marked>
+        <executable>
+            <normal>
+            </normal>
+            <selected>
+            </selected>
+        </executable>
         <file>
             <normal>
                 <inactive_foreground color="66ffff"/>
@@ -91,15 +101,44 @@
             </selected>
         </file>
     </file_table>
+    <file_groups>
+        <group1>
+            <normal color="9966ff"/>
+        </group1>
+        <group2>
+            <normal color="ff6667"/>
+        </group2>
+        <group3>
+            <normal color="66ccff"/>
+        </group3>
+        <group4>
+            <normal color="ff9999"/>
+        </group4>
+        <group5>
+            <normal color="ccffcc"/>
+        </group5>
+        <group6>
+            <normal color="ccccff"/>
+        </group6>
+        <group7>
+            <normal color="ccccff"/>
+        </group7>
+        <group8>
+            <normal color="66ff00"/>
+        </group8>
+        <group9>
+            <normal color="00ff99"/>
+        </group9>
+        <group10>
+            <normal color="66ffcc"/>
+        </group10>
+    </file_groups>
     <shell>
-        <font family="Monospaced" size="12" bold="true"/>
         <normal>
-            <background color="ffffff"/>
-            <foreground color="000000"/>
+            <background color="000000"/>
+            <foreground color="99ff33"/>
         </normal>
         <selected>
-            <background color="3875d7"/>
-            <foreground color="ffffff"/>
         </selected>
     </shell>
     <shell_history>
@@ -113,8 +152,16 @@
             <foreground color="ffffff"/>
         </selected>
     </shell_history>
+    <terminal>
+        <font family="Menlo" size="14"/>
+        <normal>
+            <background color="000000"/>
+        </normal>
+        <selected>
+        </selected>
+    </terminal>
     <editor>
-        <font family="Lucida Grande" size="13"/>
+        <font family="Menlo" size="13"/>
         <normal>
             <background color="000000"/>
             <foreground color="99ff99"/>
@@ -123,10 +170,22 @@
             <background color="3875d7"/>
             <foreground color="ffffff"/>
         </selected>
-         <current>
-            <background color="111111"/>
+        <current>
+            <background color="101010"/>
         </current>
     </editor>
+    <hex_viewer>
+        <normal>
+            <background color="000000"/>
+            <foreground color="33ff33"/>
+            <secondary_background color="002424"/>
+            <ascii_foreground color="ff33ff"/>
+            <offset_foreground color="33ffff"/>
+        </normal>
+        <selected>
+            <ascii_background color="0000ff"/>
+        </selected>
+    </hex_viewer>
     <location_bar>
         <font family="Lucida Grande" size="12"/>
         <progress color="3875d7" alpha="40"/>

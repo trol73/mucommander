@@ -29,7 +29,7 @@ import java.util.Map;
  * Created on 09/10/14.
  */
 @InvokesDialog
-public class EditCommandsAction extends MuAction {
+public class EditCommandsAction extends TcAction {
 
     /**
      * Creates a new <code>MuAction</code> associated with the specified {@link com.mucommander.ui.main.MainFrame}. The properties contained by
@@ -38,7 +38,7 @@ public class EditCommandsAction extends MuAction {
      * @param mainFrame  the MainFrame to associate with this new MuAction
      * @param properties the initial properties to use in this action. The Hashtable may simply be empty if no initial
      */
-    EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private EditCommandsAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
@@ -73,7 +73,7 @@ public class EditCommandsAction extends MuAction {
             return null;
         }
 
-        public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
+        public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) {
             return new EditCommandsAction(mainFrame, properties);
         }
     }

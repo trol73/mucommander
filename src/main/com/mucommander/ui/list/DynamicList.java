@@ -20,7 +20,7 @@ package com.mucommander.ui.list;
 
 import com.mucommander.commons.collections.AlteredVector;
 import com.mucommander.commons.collections.VectorChangeListener;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -44,20 +44,20 @@ import java.awt.event.KeyEvent;
 public class DynamicList<E> extends JList<E> {
 
     /** Items displayed in the JList */
-    private AlteredVector<E> items;
+    private final AlteredVector<E> items;
 
     /** Custom ListModel that handles modifications made to the AlteredVector */
-    private DynamicListModel model;
+    private final DynamicListModel model;
 
     /** Action instance which moves the currently selected item up when triggered */
-    private MoveUpAction moveUpAction;
+    private final MoveUpAction moveUpAction;
 
     /** Action instance which moves the currently selected item down when triggered */
-    private MoveDownAction moveDownAction;
+    private final MoveDownAction moveDownAction;
 
     /** Action instance which, when triggered, removes the currently selected item from the list
      * and selects the previous item (if any). */
-    private RemoveAction removeAction;
+    private final RemoveAction removeAction;
 
 
     /**
@@ -257,7 +257,7 @@ public class DynamicList<E> extends JList<E> {
      * @return true if the given index is without the bounds of the items.
      */
     public boolean isIndexValid(int index) {
-        return index>=0 && index<items.size();
+        return index >= 0 && index < items.size();
     }
 
 
@@ -270,8 +270,9 @@ public class DynamicList<E> extends JList<E> {
      */
     public void itemModified(int index, boolean selectItem) {
         // Make sure that the given index is not out of bounds
-        if(!isIndexValid(index))
+        if (!isIndexValid(index)) {
             return;
+        }
 
         // Notify ListModel in order to properly repaint list
         model.notifyModified(index);
@@ -284,7 +285,7 @@ public class DynamicList<E> extends JList<E> {
      * @param index the item to move
      * @param moveUp if true the item at the given index will be moved up, if not moved down
      */
-    public void moveItem(int index, boolean moveUp) {
+    private void moveItem(int index, boolean moveUp) {
         // Make sure that the given index is not out of bounds
         if (!isIndexValid(index)) {
             return;
@@ -295,15 +296,17 @@ public class DynamicList<E> extends JList<E> {
         // Calculate the new index for the item to move
         if (moveUp)  {
             // Item is already at the top, do nothing
-            if (index < 1)
+            if (index < 1) {
                 return;
+            }
 
             newIndex = index-1;
         }
         else {
             // Item is already at the bottom, do nothing
-            if (index >= items.size()-1)
+            if (index >= items.size()-1) {
                 return;
+            }
 
             newIndex = index+1;
         }
@@ -324,7 +327,7 @@ public class DynamicList<E> extends JList<E> {
      *
      * @return an Action that moves the currently selected item up.
      */
-    public Action getMoveUpAction() {
+    Action getMoveUpAction() {
         return moveUpAction;
     }
 
@@ -334,7 +337,7 @@ public class DynamicList<E> extends JList<E> {
      *
      * @return an Action that moves the currently selected item down.
      */
-    public Action getMoveDownAction() {
+    Action getMoveDownAction() {
         return moveDownAction;
     }
 

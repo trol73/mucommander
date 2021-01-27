@@ -20,7 +20,7 @@ package com.mucommander.ui.main.quicklist;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
 import com.mucommander.ui.viewer.FileFrame;
@@ -37,8 +37,8 @@ import java.util.List;
  */
 public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
 
-    private List<FileViewersList.FileRecord> files = FileViewersList.getFiles();
-    private AbstractFile currentFile;
+    private final List<FileViewersList.FileRecord> files = FileViewersList.getFiles();
+    private final AbstractFile currentFile;
     private int currentFileIndex = -1;
 
     public ViewedAndEditedFilesQL(QuickListContainer container, AbstractFile currentFile) {
@@ -56,7 +56,7 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
+                int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
                 if (e.getKeyCode() == mask) {
                     setVisible(false);
                     acceptListItem(dataList.getSelectedValue());
@@ -92,6 +92,7 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
         super.show();
         if (currentFileIndex >= 0) {
             dataList.setSelectedIndex(currentFileIndex);
+            selectNext();
         }
     }
 
@@ -118,12 +119,17 @@ public class ViewedAndEditedFilesQL extends QuickListWithIcons<AbstractFile> {
     }
 
 
-    public void selectNext() {
+    private void selectNext() {
         int selected = dataList.getSelectedIndex();
         selected++;
         if (selected >= dataList.getModel().getSize()) {
             selected = 0;
         }
         dataList.setSelectedIndex(selected);
+    }
+
+
+    public boolean isEmpty() {
+        return files.isEmpty();
     }
 }

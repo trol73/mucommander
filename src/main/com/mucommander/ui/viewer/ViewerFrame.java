@@ -24,7 +24,7 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 
 

@@ -20,9 +20,9 @@ package com.mucommander.ui.main.quicklist;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.DummyFile;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.action.impl.EditAction;
 import com.mucommander.ui.action.impl.ShowRecentEditedFilesQLAction;
 import com.mucommander.ui.action.impl.ViewAction;
@@ -42,10 +42,9 @@ import java.util.List;
  */
 public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
 
+    private static final LinkedList<AbstractFile> list = new LinkedList<>();
 
-    private static LinkedList<AbstractFile> list = new LinkedList<>();
-
-    private static final int MAX_FILES_IN_LIST = 50;
+    private static final int MAX_FILES_IN_LIST = 100;
 
     private final MainFrame mainFrame;
 
@@ -57,13 +56,13 @@ public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     protected Icon itemToIcon(AbstractFile item) {
-        return MuAction.getStandardIcon(EditAction.class);
+        return TcAction.getStandardIcon(EditAction.class);
     }
 
     @Override
     protected AbstractFile[] getData() {
         List<AbstractFile> list = TextFilesHistory.getInstance().getLastList(MAX_FILES_IN_LIST);
-        return list.toArray(new AbstractFile[list.size()]);
+        return list.toArray(new AbstractFile[0]);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class RecentEditedQL extends QuickListWithIcons<AbstractFile> {
         if (item instanceof DummyFile) {
             item = FileFactory.getFile(item.getURL());
         }
-        if (item.exists()) {
+        if (item != null && item.exists()) {
             EditorRegistrar.createEditorFrame(mainFrame, item, ActionProperties.getActionIcon(ViewAction.Descriptor.ACTION_ID).getImage());
         } else {
             // TODO error message

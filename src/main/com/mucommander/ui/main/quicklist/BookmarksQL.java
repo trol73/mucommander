@@ -25,11 +25,14 @@ import com.mucommander.bookmark.BookmarkListener;
 import com.mucommander.bookmark.BookmarkManager;
 import com.mucommander.commons.collections.AlteredVector;
 import com.mucommander.commons.file.FileFactory;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.ShowBookmarksQLAction;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.quicklist.QuickListWithIcons;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This quick list shows existing bookmarks.
@@ -38,7 +41,7 @@ import com.mucommander.ui.quicklist.QuickListWithIcons;
  */
 public class BookmarksQL extends QuickListWithIcons<Bookmark> implements BookmarkListener {
 	private Bookmark[] cachedBookmarks;
-	private FolderPanel folderPanel;
+	private final FolderPanel folderPanel;
 
 	public BookmarksQL(FolderPanel folderPanel) {
 		super(folderPanel, ActionProperties.getActionLabel(ShowBookmarksQLAction.Descriptor.ACTION_ID), Translator.get("bookmarks_menu.no_bookmark"));
@@ -65,8 +68,20 @@ public class BookmarksQL extends QuickListWithIcons<Bookmark> implements Bookmar
 	}
 
 	public void bookmarksChanged() {
+		cachedBookmarks = prepareBookmarks();
+	}
+
+	private static Bookmark[] prepareBookmarks() {
+		List<Bookmark> outList = new ArrayList<>();
 		AlteredVector<Bookmark> bookmarks = BookmarkManager.getBookmarks();
-		cachedBookmarks = new Bookmark[bookmarks.size()];
-		bookmarks.toArray(cachedBookmarks);
+		for (Bookmark bookmark : bookmarks) {
+			if (!bookmark.getLocation().isEmpty() && !bookmark.getName().equals(BookmarkManager.BOOKMARKS_SEPARATOR)) {
+				outList.add(bookmark);
+			}
+		}
+
+		Bookmark[] result = new Bookmark[outList.size()];
+		outList.toArray(result);
+		return result;
 	}
 }

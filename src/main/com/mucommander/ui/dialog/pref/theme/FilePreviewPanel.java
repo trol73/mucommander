@@ -18,7 +18,7 @@
 
 package com.mucommander.ui.dialog.pref.theme;
 
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.border.MutableLineBorder;
 import com.mucommander.ui.chooser.PreviewLabel;
 import com.mucommander.ui.icon.CustomFileIconProvider;
@@ -40,13 +40,12 @@ import java.beans.PropertyChangeListener;
  * @author Nicolas Rinaudo
  */
 class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, ThemeId {
-    // - Row identifiers ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     private enum RowType {
         FOLDER,
         PLAIN_FILE,
         ARCHIVE,
+        HIDDEN_FOLDER,
         HIDDEN_FILE,
         SYMLINK,
         MARKED_FILE,
@@ -65,19 +64,12 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
     }
 
 
-
-
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
-    private ThemeData    data;
-    private boolean      isActive;
+    private final ThemeData    data;
+    private final boolean      isActive;
     private PreviewTable table;
-    private ImageIcon    symlinkIcon;
+    private final ImageIcon    symlinkIcon;
 
 
-
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new preview panel on the specified theme data.
      * @param data     data to preview.
@@ -100,30 +92,34 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
         table = new PreviewTable();
         setViewportView(table);
 
-        getViewport().setBackground(data.getColor(isActive ? Theme.FILE_TABLE_BACKGROUND_COLOR : Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR));
+        getViewport().setBackground(getColor(isActive ? Theme.FILE_TABLE_BACKGROUND_COLOR : Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR));
 
-        setBorder(new MutableLineBorder(data.getColor(isActive ? Theme.FILE_TABLE_BORDER_COLOR : Theme.FILE_TABLE_INACTIVE_BORDER_COLOR)));
+        setBorder(new MutableLineBorder(getColor(isActive ? Theme.FILE_TABLE_BORDER_COLOR : Theme.FILE_TABLE_INACTIVE_BORDER_COLOR)));
 
         addPropertyChangeListener(this);
     }
 
     public void propertyChange(PropertyChangeEvent event) {
-        if(event.getPropertyName().equals(PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME))
-            getViewport().setBackground(data.getColor(isActive ? Theme.FILE_TABLE_BACKGROUND_COLOR : Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR));
-        else if(event.getPropertyName().equals(PreviewLabel.BORDER_COLOR_PROPERTY_NAME)) {
-            // Some (rather evil) look and feels will change borders outside of muCommander's control,
-            // this check is necessary to ensure no exception is thrown.
-            if(getBorder() instanceof MutableLineBorder)
-                ((MutableLineBorder)getBorder()).setLineColor(data.getColor(isActive ? Theme.FILE_TABLE_BORDER_COLOR : Theme.FILE_TABLE_INACTIVE_BORDER_COLOR));
+        switch(event.getPropertyName()) {
+            case PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME:
+                getViewport().setBackground(getColor(isActive ? Theme.FILE_TABLE_BACKGROUND_COLOR : Theme.FILE_TABLE_INACTIVE_BACKGROUND_COLOR));
+                break;
+            case PreviewLabel.BORDER_COLOR_PROPERTY_NAME:
+                // Some (rather evil) look and feels will change borders outside of muCommander's control,
+                // this check is necessary to ensure no exception is thrown.
+                if (getBorder() instanceof MutableLineBorder) {
+                    ((MutableLineBorder)getBorder()).setLineColor(getColor(isActive ? Theme.FILE_TABLE_BORDER_COLOR : Theme.FILE_TABLE_INACTIVE_BORDER_COLOR));
+                }
+                break;
+            case PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME:
+                break;
+            default:
+                return;
         }
-        else if(!event.getPropertyName().equals(PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME))
-            return;
         repaint();
     }
 
 
-    // - Theme listening -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Resets the table's row height with the new font.
      */
@@ -135,14 +131,12 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
 
 
 
-    // - Preview table -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Used to preview the current table theme.
      * @author Nicolas Rinaudo
      */
     private class PreviewTable extends JTable {
-        private PreviewCellRenderer cellRenderer;
+        private final PreviewCellRenderer cellRenderer;
         private Dimension           preferredSize;
 
         /**
@@ -152,6 +146,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
             super(new String[][] {{"", Translator.get("theme_editor.folder")},
                                   {"", Translator.get("theme_editor.plain_file")},
                                   {"", Translator.get("theme_editor.archive_file")},
+                                  {"", Translator.get("theme_editor.hidden_folder")},
                                   {"", Translator.get("theme_editor.hidden_file")},
                                   {"", Translator.get("theme_editor.symbolic_link")},
                                   {"", Translator.get("theme_editor.marked_file")},
@@ -191,9 +186,8 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
          */
         @Override
         public void doLayout() {
-            int width;
-
-            getColumnModel().getColumn(0).setWidth(width = getIconWidth());
+            int width = getIconWidth();
+            getColumnModel().getColumn(0).setWidth(width);
             getColumnModel().getColumn(1).setWidth(Math.max(getWidth() - width, getLabelWidth()));
         }
 
@@ -244,7 +238,9 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
          * Uses our preview cell renderer rather than the default one.
          */
         @Override
-        public TableCellRenderer getCellRenderer(int row, int column) {return cellRenderer;}
+        public TableCellRenderer getCellRenderer(int row, int column) {
+            return cellRenderer;
+        }
 
         /**
          * Cell are not editable.
@@ -255,15 +251,13 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
 
 
 
-    // - Preview renderer ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Used to render preview cells.
      * @author Nicolas Rinaudo
      */
     private class PreviewCellRenderer implements TableCellRenderer {
-        private CellLabel label;
-        private CellLabel icon;
+        private final CellLabel label;
+        private final CellLabel icon;
 
         /**
          * Creates a new preview cell renderer.
@@ -280,59 +274,66 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
             switch(row) {
                 // Folders.
                 case FOLDER:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? FOLDER_SELECTED_FOREGROUND_COLOR :
-                                                               FOLDER_FOREGROUND_COLOR);
-                    return FilePreviewPanel.this.data.getColor(isSelected ? FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           FOLDER_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? FOLDER_SELECTED_FOREGROUND_COLOR : FOLDER_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR : FOLDER_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Plain files.
                 case PLAIN_FILE:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? FILE_SELECTED_FOREGROUND_COLOR :
-                                                               FILE_FOREGROUND_COLOR);
-                return FilePreviewPanel.this.data.getColor(isSelected ? FILE_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           FILE_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? FILE_SELECTED_FOREGROUND_COLOR : FILE_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? FILE_INACTIVE_SELECTED_FOREGROUND_COLOR : FILE_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Archives.
                 case ARCHIVE:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? ARCHIVE_SELECTED_FOREGROUND_COLOR :
-                                                               ARCHIVE_FOREGROUND_COLOR);
-                return FilePreviewPanel.this.data.getColor(isSelected ? ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           ARCHIVE_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? ARCHIVE_SELECTED_FOREGROUND_COLOR : ARCHIVE_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? ARCHIVE_INACTIVE_SELECTED_FOREGROUND_COLOR : ARCHIVE_INACTIVE_FOREGROUND_COLOR);
+                    }
+                // Hidden folders.
+                case HIDDEN_FOLDER:
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? HIDDEN_FOLDER_SELECTED_FOREGROUND_COLOR : HIDDEN_FOLDER_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? HIDDEN_FOLDER_INACTIVE_SELECTED_FOREGROUND_COLOR : HIDDEN_FOLDER_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Hidden files.
                 case HIDDEN_FILE:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? HIDDEN_FILE_SELECTED_FOREGROUND_COLOR :
-                                                               HIDDEN_FILE_FOREGROUND_COLOR);
-                    return FilePreviewPanel.this.data.getColor(isSelected ? HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? HIDDEN_FILE_SELECTED_FOREGROUND_COLOR : HIDDEN_FILE_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? HIDDEN_FILE_INACTIVE_SELECTED_FOREGROUND_COLOR : HIDDEN_FILE_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Symlinks.
                 case SYMLINK:
-                    if(FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? SYMLINK_SELECTED_FOREGROUND_COLOR :
-                                                               SYMLINK_FOREGROUND_COLOR);
-                    return FilePreviewPanel.this.data.getColor(isSelected ? SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           SYMLINK_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? SYMLINK_SELECTED_FOREGROUND_COLOR : SYMLINK_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? SYMLINK_INACTIVE_SELECTED_FOREGROUND_COLOR : SYMLINK_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Marked files.
                 case MARKED_FILE:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? MARKED_SELECTED_FOREGROUND_COLOR :
-                                                               MARKED_FOREGROUND_COLOR);
-                    return FilePreviewPanel.this.data.getColor(isSelected ? MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                                                           MARKED_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? MARKED_SELECTED_FOREGROUND_COLOR : MARKED_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? MARKED_INACTIVE_SELECTED_FOREGROUND_COLOR : MARKED_INACTIVE_FOREGROUND_COLOR);
+                    }
 
                 // Executable files.
                 case EXECUTABLE_FILE:
-                    if (FilePreviewPanel.this.isActive)
-                        return FilePreviewPanel.this.data.getColor(isSelected ? EXECUTABLE_SELECTED_FOREGROUND_COLOR :
-                                EXECUTABLE_FOREGROUND_COLOR);
-                    return FilePreviewPanel.this.data.getColor(isSelected ? EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR :
-                            EXECUTABLE_INACTIVE_FOREGROUND_COLOR);
+                    if (FilePreviewPanel.this.isActive) {
+                        return getColor(isSelected ? EXECUTABLE_SELECTED_FOREGROUND_COLOR : EXECUTABLE_FOREGROUND_COLOR);
+                    } else {
+                        return getColor(isSelected ? EXECUTABLE_INACTIVE_SELECTED_FOREGROUND_COLOR : EXECUTABLE_INACTIVE_FOREGROUND_COLOR);
+                    }
                 case GROUP_1_FILE:
                 case GROUP_2_FILE:
                 case GROUP_3_FILE:
@@ -344,7 +345,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
                 case GROUP_9_FILE:
                 case GROUP_10_FILE:
                     int group = row.ordinal() - RowType.GROUP_1_FILE.ordinal();
-                        return FilePreviewPanel.this.data.getColor(FILE_GROUP_1_FOREGROUND_COLOR + group);
+                    return getColor(FILE_GROUP_1_FOREGROUND_COLOR + group);
             }
 
             // Impossible.
@@ -359,16 +360,17 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
             CellLabel currentLabel;
 
             // Icon label foreground.
-            if(column == 0) {
+            if (column == 0) {
                 currentLabel = icon;
-                if (rowType == RowType.FOLDER)
+                if (rowType == RowType.FOLDER) {
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FOLDER_ICON_NAME));
-                else if (rowType == RowType.ARCHIVE)
+                } else if (rowType == RowType.ARCHIVE) {
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.ARCHIVE_ICON_NAME));
-                else if (rowType == RowType.SYMLINK)
+                } else if (rowType == RowType.SYMLINK) {
                     currentLabel.setIcon(symlinkIcon);
-                else
+                } else {
                     currentLabel.setIcon(IconManager.getIcon(IconManager.IconSet.FILE, CustomFileIconProvider.FILE_ICON_NAME));
+                }
             }
             // Text label foreground.
             else {
@@ -379,28 +381,33 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
             }
 
             // Foreground.
-            if (isSelected)
-                currentLabel.setOutline(isActive ? data.getColor(FILE_TABLE_SELECTED_OUTLINE_COLOR) :
-                                        data.getColor(FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR));
-            else
+            if (isSelected) {
+                currentLabel.setOutline(getColor(isActive ? FILE_TABLE_SELECTED_OUTLINE_COLOR : FILE_TABLE_INACTIVE_SELECTED_OUTLINE_COLOR));
+            } else {
                 currentLabel.setOutline(null);
+            }
 
             // Background.
             if (FilePreviewPanel.this.isActive) {
-                if (isSelected)
-                    currentLabel.setBackground(FilePreviewPanel.this.data.getColor(FILE_TABLE_SELECTED_BACKGROUND_COLOR));
-                else
-                    currentLabel.setBackground(FilePreviewPanel.this.data.getColor((row % 2 == 0) ? FILE_TABLE_BACKGROUND_COLOR :
-                                                                                   FILE_TABLE_ALTERNATE_BACKGROUND_COLOR));
+                if (isSelected) {
+                    currentLabel.setBackground(getColor(FILE_TABLE_SELECTED_BACKGROUND_COLOR));
+                } else {
+                    currentLabel.setBackground(getColor((row % 2 == 0) ? FILE_TABLE_BACKGROUND_COLOR : FILE_TABLE_ALTERNATE_BACKGROUND_COLOR));
+                }
             } else {
-                if (isSelected)
-                    currentLabel.setBackground(FilePreviewPanel.this.data.getColor(FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR));
-                else
-                    currentLabel.setBackground(FilePreviewPanel.this.data.getColor((row % 2 == 0) ? FILE_TABLE_INACTIVE_BACKGROUND_COLOR :
-                                                                                   FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR));
+                if (isSelected) {
+                    currentLabel.setBackground(getColor(FILE_TABLE_INACTIVE_SELECTED_BACKGROUND_COLOR));
+                } else {
+                    currentLabel.setBackground(getColor((row % 2 == 0) ? FILE_TABLE_INACTIVE_BACKGROUND_COLOR : FILE_TABLE_INACTIVE_ALTERNATE_BACKGROUND_COLOR));
+                }
             }
 
             return currentLabel;
         }
     }
+
+    private Color getColor(int id) {
+        return data.getColor(id);
+    }
+
 }

@@ -93,7 +93,8 @@ public class AdbUtils {
             path = null;
         }
         if (path != null) {
-            AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\platform-tools\\adb.exe" : "/platform-tools/adb"));
+            String adb = path + (OsFamily.WINDOWS .isCurrent() ? "\\platform-tools\\adb.exe" : "/platform-tools/adb");
+            AbstractFile result = FileFactory.getFile(adb);
             if (result != null && result.exists() && !result.isDirectory()) {
                 return result.getParent();
             }
@@ -104,12 +105,13 @@ public class AdbUtils {
             path = null;
         }
         if (path != null) {
-            AbstractFile result = FileFactory.getFile(path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\adb.exe" : "/adb"));
+            String adb = path + (OsFamily.getCurrent() == OsFamily.WINDOWS ? "\\adb.exe" : "/adb");
+            AbstractFile result = FileFactory.getFile(adb);
             if (result != null && result.exists() && !result.isDirectory()) {
                 return result.getParent();
             }
         }
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             String defaultPath = System.getProperty("user.home") + "/Library/Android/sdk/platform-tools/adb";
             AbstractFile result = FileFactory.getFile(defaultPath);
             if (result != null && result.exists() && !result.isDirectory()) {

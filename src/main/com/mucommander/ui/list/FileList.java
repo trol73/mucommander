@@ -33,7 +33,7 @@ import java.awt.*;
  * subsequently needed by this list. This has a cost since all files will have to queried at init time, even if some
  * are not used (displayed) afterwards. On the other hand, navigation throughout the list will be faster.
  * Preloading can be enabled or disabled in the constructor but it should always enabled unless it is
- * known for certain that the underlying files are not I/O bound and cannot lock.</p>
+ * known for certain that the underlying files are not I/O bound and cannot lock.
  *
  * @author Maxence Bernard
  */
@@ -67,10 +67,11 @@ public class FileList extends JList<AbstractFile> {
 
         // Very important: allows the JList to operate in fixed cell height mode, which makes it substantially faster
         // to initialize when there is a large number of rows.
-        if(nbFiles>0)
+        if (nbFiles > 0) {
             setPrototypeCellValue(files.elementAt(0));
+        }
 
-        if(preloadFileAttributes) {
+        if (preloadFileAttributes) {
             filenames = new String[nbFiles];
             icons = new Icon[nbFiles];
             AbstractFile file;
@@ -105,11 +106,10 @@ public class FileList extends JList<AbstractFile> {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 label.setFont(customFont);
 
-                if(FileList.this.fileAttributesPreloaded) {
+                if (FileList.this.fileAttributesPreloaded) {
                     label.setText(filenames[index]);
                     label.setIcon(icons[index]);
-                }
-                else {
+                } else {
                     AbstractFile file = (AbstractFile)value;
                     label.setText(file.getName());
                     label.setIcon(file.getIcon());

@@ -237,6 +237,6 @@ public class ActionProperties {
 
 		public boolean isParameterized() { return false; }
 
-		public MuAction createAction(MainFrame mainFrame, Map<String, Object> properties) { return null; }
+		public TcAction createAction(MainFrame mainFrame, Map<String, Object> properties) { return null; }
 	}
 }

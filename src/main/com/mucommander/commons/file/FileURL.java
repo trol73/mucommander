@@ -18,7 +18,7 @@ import java.util.*;
  * 	scheme://[login[:password]@]host[:port][/path][?query]
  * </pre>
  *
- * <h3>Instanciation</h3>
+ * <h3>Instantiation</h3>
  * <p>
  * FileURL cannot be instantiated directly, instances can be created using {@link #getFileURL(String)}.
  * Unlike the <code>java.net.URL</code> and <code>java.net.URI</code> classes, FileURL instances are mutable --
@@ -198,8 +198,9 @@ public class FileURL implements Cloneable {
         } catch (Exception e) {
             // Catch any unexpected exception thrown by the SchemeParser and turn it into a MalformedURLException
             // with a specific error message.
-            if (e instanceof MalformedURLException)
-                throw (MalformedURLException)e;
+            if (e instanceof MalformedURLException) {
+                throw (MalformedURLException) e;
+            }
 
             throw new MalformedURLException("URL parser error");
         }
@@ -251,7 +252,7 @@ public class FileURL implements Cloneable {
      * @param scheme the scheme to associate the handler with (case-insensitive)
      * @param handler the new handler in charge of the scheme
      */
-    public static void registerHandler(String scheme, SchemeHandler handler) {
+    static void registerHandler(String scheme, SchemeHandler handler) {
         handlers.put(scheme.toLowerCase(), handler);
     }
 
@@ -261,7 +262,7 @@ public class FileURL implements Cloneable {
      *
      * @param scheme the scheme to remove the handler for
      */
-    public static void unregisterHandler(String scheme) {
+    static void unregisterHandler(String scheme) {
         handlers.remove(scheme.toLowerCase());
     }
 
@@ -281,7 +282,7 @@ public class FileURL implements Cloneable {
      *
      * @return the default handler
      */
-    public static SchemeHandler getDefaultHandler() {
+    static SchemeHandler getDefaultHandler() {
         return DEFAULT_HANDLER;
     }
 
@@ -488,7 +489,7 @@ public class FileURL implements Cloneable {
      * Returns this scheme's guest credentials, <code>null</code> if the scheme doesn't have any.
      * <p>
      * Guest credentials offer a way to authenticate a URL as a 'guest' on file protocols that require a set of
-     * credentials to establish a connection. The returned credentials are provided with no guarantee that the fileystem
+     * credentials to establish a connection. The returned credentials are provided with no guarantee that the filesystem
      * will actually accept them and allow the request/connection. The notion of 'guest' credentials may or may not
      * have a meaning depending on the underlying file protocol.
      *
@@ -865,7 +866,7 @@ public class FileURL implements Cloneable {
      * @return <code>true</code> if the path of this URL and the given URL are equal
      */
     public boolean pathEquals(FileURL url) {
-    	boolean isCaseSensitiveOS = !(OsFamily.getCurrent().equals(OsFamily.WINDOWS) || OsFamily.getCurrent().equals(OsFamily.OS_2));
+    	boolean isCaseSensitiveOS = !(OsFamily.WINDOWS.isCurrent() || OsFamily.OS_2.isCurrent());
     	
         String path1 = isCaseSensitiveOS ? this.getPath() : this.getPath().toLowerCase();
         String path2 = isCaseSensitiveOS ? url.getPath() : url.getPath().toLowerCase();
@@ -924,7 +925,7 @@ public class FileURL implements Cloneable {
      * @param url the URL to test for properties equality
      * @return <code>true</code> if the properties contained by this URL and the given URL are equal
      */
-    public boolean propertiesEquals(FileURL url) {
+    private boolean propertiesEquals(FileURL url) {
         return (this.properties == null && url.properties == null)
            ||  (this.properties != null && this.properties.equals(url.properties))
            ||  (url.properties != null && url.properties.equals(this.properties));
@@ -1013,8 +1014,9 @@ public class FileURL implements Cloneable {
      * @return true if both FileURL instances are equal
      */
     public boolean equals(Object o, boolean compareCredentials, boolean compareProperties) {
-        if (o == null || !(o instanceof FileURL))
+        if (!(o instanceof FileURL)) {
             return false;
+        }
 
         FileURL url = (FileURL)o;
 

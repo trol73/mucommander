@@ -1,13 +1,13 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2020 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -22,12 +22,11 @@ import com.mucommander.cache.TextHistory;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.conf.MuConfigurations;
-import com.mucommander.conf.MuPreference;
-import com.mucommander.conf.MuPreferencesAPI;
+import com.mucommander.conf.TcConfigurations;
+import com.mucommander.conf.TcPreference;
+import com.mucommander.conf.TcPreferencesAPI;
 import com.mucommander.job.FileJob;
 import com.mucommander.job.FindFileJob;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.FindFileAction;
 import com.mucommander.ui.combobox.SaneComboBox;
@@ -71,39 +70,39 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     /** How often should progress information be refreshed (in ms) */
     private final static int REFRESH_RATE = 200;
 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     private FindFileJob job;
-    private SpinningDial dial;
+    private final SpinningDial dial;
 
-    private JButton btnNewSearch;
-    private JButton btnStop;
-    private JButton btnClean;
-    private JButton btnClose;
+    private final JButton btnNewSearch;
+    private final JButton btnStop;
+    private final JButton btnClean;
+    private final JButton btnClose;
 
-    private JTextField edtFileName;
-    private InputField edtText;
-    private JTextField edtFromDirectory;
+    private final JTextField edtFileName;
+    private final InputField edtText;
+    private final JTextField edtFromDirectory;
 
-    private JCheckBox cbSearchSubdirectories;
-    private JCheckBox cbSearchArchives;
-    private JCheckBox cbIgnoreHidden;
-    private JCheckBox cbCaseSensitive;
-    private JCheckBox cbSearchHex;
-    private JComboBox<String> cbEncoding;
+    private final JCheckBox cbSearchSubdirectories;
+    private final JCheckBox cbSearchArchives;
+    private final JCheckBox cbIgnoreHidden;
+    private final JCheckBox cbCaseSensitive;
+    private final JCheckBox cbSearchHex;
+    private final JComboBox<String> cbEncoding;
 
     private DefaultListModel<AbstractFile> listModel = new DefaultListModel<>();
     private JList<AbstractFile> list;
-    private JLabel lblTotal;
+    private final JLabel lblTotal;
 
     private AbstractFile startDirectory;
 
-    private ListDataIntelliHints textHints, hexHints;
+    private ListDataIntelliHints<String> textHints, hexHints;
     private UpdateRunner updateRunner;
 
     private class UpdateRunner extends SwingWorker<List<AbstractFile>, AbstractFile> {
 
         @Override
-        protected List<AbstractFile> doInBackground() throws Exception {
+        protected List<AbstractFile> doInBackground() {
             btnNewSearch.setEnabled(false);
             while (job != null && job.getState() != FileJob.State.FINISHED) {
                 checkUpdates();
@@ -167,7 +166,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
         new ListDataIntelliHints<>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
-        compPanel.addRow(Translator.get("find_dialog.name")+":", edtFileName, 5);
+        compPanel.addRow(i18n("find_dialog.name")+":", edtFileName, 5);
 
         // Add contains field
         this.edtText = new InputField();
@@ -175,7 +174,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 //        List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
 //        new ListDataIntelliHints<>(edtText, textHistory).setCaseSensitive(false);
 //        edtText.setText("");
-        compPanel.addRow(Translator.get("find_dialog.contains")+":", edtText, 5);
+        compPanel.addRow(i18n("find_dialog.contains")+":", edtText, 5);
 
         // Add encoding field
         this.cbEncoding = new SaneComboBox<>();
@@ -184,30 +183,30 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         for (String encoding: encodings) {
             cbEncoding.addItem(encoding);
         }
-        compPanel.addRow(Translator.get("find_dialog.encoding")+":", cbEncoding, 5);
+        compPanel.addRow(i18n("find_dialog.encoding")+":", cbEncoding, 5);
 
         // create a path field with auto-completion capabilities
         this.edtFromDirectory = new FilePathField();
         this.edtFromDirectory.setText(currentFolder.toString());
         edtFromDirectory.getDocument().addDocumentListener(this);
-        compPanel.addRow(Translator.get("find_dialog.initial_directory")+":", edtFromDirectory, 10);
+        compPanel.addRow(i18n("find_dialog.initial_directory")+":", edtFromDirectory, 10);
 
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);
 
         // Checkboxes
-        this.cbSearchSubdirectories = new JCheckBox(Translator.get("find_dialog.search_subdirectories"));
-        this.cbSearchArchives = new JCheckBox(Translator.get("find_dialog.search_archives"));
-        this.cbCaseSensitive = new JCheckBox(Translator.get("find_dialog.case_sensitive"));
-        this.cbIgnoreHidden = new JCheckBox(Translator.get("find_dialog.ignore_hidden"));
-        this.cbSearchHex = new JCheckBox(Translator.get("find_dialog.search_hex"));
+        this.cbSearchSubdirectories = new JCheckBox(i18n("find_dialog.search_subdirectories"));
+        this.cbSearchArchives = new JCheckBox(i18n("find_dialog.search_archives"));
+        this.cbCaseSensitive = new JCheckBox(i18n("find_dialog.case_sensitive"));
+        this.cbIgnoreHidden = new JCheckBox(i18n("find_dialog.ignore_hidden"));
+        this.cbSearchHex = new JCheckBox(i18n("find_dialog.search_hex"));
 
-        MuPreferencesAPI prefs = MuConfigurations.getPreferences();
-        cbSearchSubdirectories.setSelected(prefs.getVariable(MuPreference.FIND_FILE_SUBDIRECTORIES, true));
-        cbSearchArchives.setSelected(prefs.getVariable(MuPreference.FIND_FILE_ARCHIVES, false));
-        cbCaseSensitive.setSelected(prefs.getVariable(MuPreference.FIND_FILE_CASE_SENSITIVE, false));
-        cbIgnoreHidden.setSelected(prefs.getVariable(MuPreference.FIND_FILE_IGNORE_HIDDEN, false));
-        cbSearchHex.setSelected(prefs.getVariable(MuPreference.FIND_FILE_SEARCH_HEX, false));
-        cbEncoding.setSelectedItem(prefs.getVariable(MuPreference.FIND_FILE_ENCODING, "UTF-8"));
+        TcPreferencesAPI prefs = TcConfigurations.getPreferences();
+        cbSearchSubdirectories.setSelected(prefs.getVariable(TcPreference.FIND_FILE_SUBDIRECTORIES, true));
+        cbSearchArchives.setSelected(prefs.getVariable(TcPreference.FIND_FILE_ARCHIVES, false));
+        cbCaseSensitive.setSelected(prefs.getVariable(TcPreference.FIND_FILE_CASE_SENSITIVE, false));
+        cbIgnoreHidden.setSelected(prefs.getVariable(TcPreference.FIND_FILE_IGNORE_HIDDEN, false));
+        cbSearchHex.setSelected(prefs.getVariable(TcPreference.FIND_FILE_SEARCH_HEX, false));
+        cbEncoding.setSelectedItem(prefs.getVariable(TcPreference.FIND_FILE_ENCODING, "UTF-8"));
 
         cbSearchHex.addActionListener(e -> setHexMode(cbSearchHex.isSelected()));
         setHexMode(cbSearchHex.isSelected());
@@ -224,7 +223,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
 
         // Search results
-        yPanel.add(new JLabel(Translator.get("find_dialog.search_results")));
+        yPanel.add(new JLabel(i18n("find_dialog.search_results")));
         list = new JList<>(listModel);
         list.addMouseListener(new MouseAdapter() {
             @Override
@@ -284,6 +283,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
                         break;
 
                     case KeyEvent.VK_F8:
+                    case KeyEvent.VK_DELETE:
                         new DeleteDialog(mainFrame, getSelectedFiles(), false).returnFocusTo(getFocusOwner()).showDialog();
                         break;
 
@@ -307,22 +307,22 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         buttonsPanel.add(new JLabel(dial = new SpinningDial()));
         buttonsPanel.add(Box.createHorizontalGlue());
 
-        btnNewSearch = new JButton(Translator.get("search"));
+        btnNewSearch = new JButton(i18n("search"));
         btnNewSearch.addActionListener(this);
         btnNewSearch.setMnemonic(mnemonicHelper.getMnemonic(btnNewSearch));
         buttonGroupPanel.add(btnNewSearch);
 
-        btnStop = new JButton(Translator.get("stop"));
+        btnStop = new JButton(i18n("stop"));
         btnStop.addActionListener(this);
         btnStop.setMnemonic(mnemonicHelper.getMnemonic(btnStop));
         buttonGroupPanel.add(btnStop);
 
-        btnClean = new JButton(Translator.get("clean"));
+        btnClean = new JButton(i18n("clean"));
         btnClean.addActionListener(this);
         btnClean.setMnemonic(mnemonicHelper.getMnemonic(btnClean));
         buttonGroupPanel.add(btnClean);
 
-        btnClose = new JButton(Translator.get("close"));
+        btnClose = new JButton(i18n("close"));
         btnClose.addActionListener(this);
         btnClose.setMnemonic(mnemonicHelper.getMnemonic(btnClose));
         buttonGroupPanel.add(btnClose);
@@ -408,8 +408,8 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         } else if (e.getSource() == btnStop) {
             if (job != null) {
                 job.interrupt();
+                job = null;
             }
-            job = null;
         } else if (e.getSource() == btnClean) {
             clearResults();
         } else if (e.getSource() == btnClose) {
@@ -459,7 +459,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
 
     private void updateResultLabel() {
-        lblTotal.setText(Translator.get("find_dialog.found") + ": " + listModel.size() + " ");
+        lblTotal.setText(i18n("find_dialog.found") + ": " + listModel.size() + " ");
     }
 
 
@@ -468,13 +468,13 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         if (job != null) {
             job.interrupt();
         }
-        MuPreferencesAPI prefs = MuConfigurations.getPreferences();
-        prefs.setVariable(MuPreference.FIND_FILE_ARCHIVES, cbSearchArchives.isSelected());
-        prefs.setVariable(MuPreference.FIND_FILE_CASE_SENSITIVE, cbCaseSensitive.isSelected());
-        prefs.setVariable(MuPreference.FIND_FILE_IGNORE_HIDDEN, cbIgnoreHidden.isSelected());
-        prefs.setVariable(MuPreference.FIND_FILE_SEARCH_HEX, cbSearchHex.isSelected());
-        prefs.setVariable(MuPreference.FIND_FILE_SUBDIRECTORIES, cbSearchSubdirectories.isSelected());
-        prefs.setVariable(MuPreference.FIND_FILE_ENCODING, cbEncoding.getSelectedItem().toString());
+        TcPreferencesAPI prefs = TcConfigurations.getPreferences();
+        prefs.setVariable(TcPreference.FIND_FILE_ARCHIVES, cbSearchArchives.isSelected());
+        prefs.setVariable(TcPreference.FIND_FILE_CASE_SENSITIVE, cbCaseSensitive.isSelected());
+        prefs.setVariable(TcPreference.FIND_FILE_IGNORE_HIDDEN, cbIgnoreHidden.isSelected());
+        prefs.setVariable(TcPreference.FIND_FILE_SEARCH_HEX, cbSearchHex.isSelected());
+        prefs.setVariable(TcPreference.FIND_FILE_SUBDIRECTORIES, cbSearchSubdirectories.isSelected());
+        prefs.setVariable(TcPreference.FIND_FILE_ENCODING, cbEncoding.getSelectedItem().toString());
 
         super.cancel();
     }

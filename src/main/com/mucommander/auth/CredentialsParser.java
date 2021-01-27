@@ -88,7 +88,6 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
      * Returns the muCommander version that was used to write the credentials file, <code>null</code> if it is unknown.
      * <p>
      * Note: the version attribute was introduced in muCommander 0.8.4.
-     * </p>
      *
      * @return the muCommander version that was used to write the credentials file, <code>null</code> if it is unknown.
      */
@@ -102,7 +101,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
     ///////////////////////////////////
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         characters.setLength(0);
 
         switch (qName) {
@@ -128,7 +127,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         switch (qName) {
             case ELEMENT_CREDENTIALS:
                 if (url == null || login == null || password == null) {

@@ -32,26 +32,20 @@ import java.io.InputStream;
  * <p>
  * Command file parsing is done through the {@link #read(InputStream,CommandBuilder) read} method, which is
  * the only way to interact with this class.
- * </p>
  * <p>
  * Note that while this class knows how to read the content of an command XML file, its role is not to interpret it. This
  * is done by instances of {@link CommandBuilder}.
- * </p>
+ *
  * @see    CommandsXmlConstants
  * @see    CommandBuilder
  * @see    CommandWriter
  * @author Nicolas Rinaudo
  */
 public class CommandReader extends DefaultHandler implements CommandsXmlConstants {
-    // - getInstance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Where to send building messages. */
-    private CommandBuilder builder;
+    private final CommandBuilder builder;
 
 
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new command reader.
      * @param b where to send custom command events.
@@ -62,8 +56,6 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
 
 
 
-    // - XML interaction -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Parses the content of the specified input stream.
      * <p>
@@ -71,13 +63,12 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
      * encounters. Note that parsing is done in a very lenient fashion, and perfectly invalid XML files might not raise
      * an exception. This is not a flaw in the parser, and both allows muCommander to be error resilient and the commands
      * file format to be extended without having to rewrite most of this code.
-     * </p>
      * <p>
      * Note that even if an error occurs, both of the builder's {@link CommandBuilder#startBuilding()} and
      * {@link CommandBuilder#endBuilding()} methods will still be called. Parsing will stop at the first error
      * however, so while the builder is guaranteed to receive correct messages, it might not receive all declared
      * commands.
-     * </p>
+     *
      * @param  in        where to read command data from.
      * @param  b         where to send building events to.
      * @throws IOException thrown if any error occurs.
@@ -95,8 +86,6 @@ public class CommandReader extends DefaultHandler implements CommandsXmlConstant
 
 
 
-    // - XML methods ---------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * This method is public as an implementation side effect and should not be called directly.
      */

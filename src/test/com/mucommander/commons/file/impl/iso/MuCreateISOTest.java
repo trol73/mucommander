@@ -122,7 +122,7 @@ public class MuCreateISOTest {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
         for(File file : files.values()){
             file.delete();
         }
@@ -132,11 +132,11 @@ public class MuCreateISOTest {
     }
 
     @BeforeMethod
-    public void setUpMethod() throws Exception {
+    public void setUpMethod() {
     }
 
     @AfterMethod
-    public void tearDownMethod() throws Exception {
+    public void tearDownMethod() {
     }
     
     //Create a temp file with data within the ASCII range
@@ -199,7 +199,7 @@ public class MuCreateISOTest {
      * Test of getProcessingFile method, of class MuCreateISO.
      */
     @Test
-    public void testGetProcessingFile() throws Exception {
+    public void testGetProcessingFile() {
         System.out.println("getProcessingFile");
         
         //Can't be sure which file is is
@@ -216,7 +216,7 @@ public class MuCreateISOTest {
      * Test of totalWrittenBytes method, of class MuCreateISO.
      */
     @Test
-    public void testTotalWrittenBytes() throws Exception {
+    public void testTotalWrittenBytes() {
         System.out.println("totalWrittenBytes");
         
         long totalSize = 0;
@@ -227,7 +227,7 @@ public class MuCreateISOTest {
     }
 
     @Test
-    public void testWrittenBytesCurrentFile() throws Exception {
+    public void testWrittenBytesCurrentFile() {
         System.out.println("writtenBytesCurrentFile");
         
         //Can't be sure which file is is

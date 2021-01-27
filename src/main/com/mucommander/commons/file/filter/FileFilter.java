@@ -12,10 +12,10 @@ import com.mucommander.commons.file.util.FileSet;
  * mode in which a filter operates.
  *
  * <p>Several convenience methods are provided to operate this filter on a set of files, and filter out files that
- * do not match this filter.</p>
+ * do not match this filter.
  *
  * <p>A <code>FileFilter</code> instance can be passed to {@link AbstractFile#ls(FileFilter)} to filter out some of the
- * the files contained by a folder.</p>
+ * the files contained by a folder.
  *
  * @see AbstractFileFilter
  * @see FilenameFilter
@@ -58,7 +58,7 @@ public interface FileFilter {
     /**
      * Returns <code>true</code> if the given file was rejected by this filter, <code>false</code> if it was accepted.
      *
-     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.</p>
+     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.
      *
      * @param file the file to test
      * @return true if the given file was rejected by this FileFilter
@@ -139,7 +139,7 @@ public interface FileFilter {
     /**
      * Returns <code>true</code> if the given file was accepted by this filter, <code>false</code> if it was rejected.
      *
-     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.</p>
+     * <p>The {@link #isInverted() inverted} mode has no effect on the values returned by this method.
      *
      * @param file the file to test
      * @return true if the given file was accepted by this FileFilter

@@ -29,14 +29,14 @@ import java.io.InputStream;
  */
 public class ZxSpectrumScrImage {
 
-    public static final int WIDTH = 256;
-    public static final int HEIGHT = 192;
+    private static final int WIDTH = 256;
+    private static final int HEIGHT = 192;
 
-    public static final int DEFAULT_ZOOM = 1;
+    private static final int DEFAULT_ZOOM = 1;
 
     //private static final int ROWS =
 
-    public static final int SCR_IMAGE_FILE_SIZE = 6912;
+    static final int SCR_IMAGE_FILE_SIZE = 6912;
 
     private static final Color[] PALETTE_BRIGHT_0 = {
         new Color(0x000000),
@@ -61,6 +61,9 @@ public class ZxSpectrumScrImage {
 
 
     public static BufferedImage load(InputStream is, int zoomFactor) {
+        if (is == null) {
+            return null;
+        }
         byte[] data = new byte[SCR_IMAGE_FILE_SIZE];
         int readTotal = 0;
         try {
@@ -74,12 +77,10 @@ public class ZxSpectrumScrImage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         if (readTotal != SCR_IMAGE_FILE_SIZE) {
             return null;
@@ -130,11 +131,11 @@ public class ZxSpectrumScrImage {
                 int attrIndex = ((y/8)*32)+(x/8);
                 int inkIndex = ink[attrIndex];
                 int paperIndex = paper[attrIndex];
-                boolean istBright = bright[attrIndex];
+                boolean isBright = bright[attrIndex];
                 if (((data[address]&(0x1<<bit))>>bit) != 0) {
                     g.setColor(PALETTE_BRIGHT_0[inkIndex]);
                 } else {
-                    if (istBright) {
+                    if (isBright) {
                         g.setColor(PALETTE_BRIGHT_1[paperIndex]);
                     } else {
                         g.setColor(PALETTE_BRIGHT_0[paperIndex]);

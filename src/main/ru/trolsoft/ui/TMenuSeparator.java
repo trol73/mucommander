@@ -32,7 +32,7 @@ public class TMenuSeparator extends JSeparator {
 
     public TMenuSeparator() {
         super();
-        if (OsFamily.getCurrent() == OsFamily.LINUX && getPreferredSize().height <= 0) {
+        if (OsFamily.LINUX.isCurrent() && getPreferredSize().height <= 0) {
             Dimension d = getPreferredSize();
             d.height = 1;
             setPreferredSize(d);

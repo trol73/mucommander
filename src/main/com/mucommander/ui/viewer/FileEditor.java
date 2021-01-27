@@ -18,7 +18,19 @@
 
 package com.mucommander.ui.viewer;
 
-import java.awt.Frame;
+import com.mucommander.commons.file.*;
+import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.job.FileCollisionChecker;
+import com.mucommander.ui.dialog.InformationDialog;
+import com.mucommander.ui.dialog.QuestionDialog;
+import com.mucommander.ui.dialog.file.FileCollisionDialog;
+import com.mucommander.ui.helper.MenuToolkit;
+import com.mucommander.ui.helper.MnemonicHelper;
+import com.mucommander.utils.text.Translator;
+import ru.trolsoft.ui.TMenuSeparator;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -26,49 +38,29 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
-import com.mucommander.commons.file.*;
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.job.FileCollisionChecker;
-import com.mucommander.text.Translator;
-import com.mucommander.ui.dialog.InformationDialog;
-import com.mucommander.ui.dialog.QuestionDialog;
-import com.mucommander.ui.dialog.file.FileCollisionDialog;
-import com.mucommander.ui.helper.MenuToolkit;
-import com.mucommander.ui.helper.MnemonicHelper;
-import com.mucommander.ui.main.quicklist.ViewedAndEditedFilesQL;
-import ru.trolsoft.ui.TMenuSeparator;
-
 
 /**
  * An abstract class to be subclassed by file editor implementations.
  *
- * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.</p>
+ * <p><b>Warning:</b> the file viewer/editor API may soon receive a major overhaul.
  *
  * @author Maxence Bernard, Arik Hadas
  */
 public abstract class FileEditor extends FilePresenter implements ActionListener {
-	
+
     /** Menu items */
-    private JMenuItem saveItem;
-    private JMenuItem saveAsItem;
-    private JMenuItem closeItem;
-    private JMenuItem filesItem;
-    
+    protected JMenu menuFile;
+    private JMenuItem miSave;
+    private JMenuItem miSaveAs;
+    private JMenuItem miClose;
+
     /** Serves to indicate if saving is needed before closing the window, value should only be modified using the setSaveNeeded() method */
     private boolean saveNeeded;
 
     /**
      * Creates a new FileEditor.
      */
-    public FileEditor() {
+    protected FileEditor() {
 
     }
 	
@@ -77,7 +69,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     	if (getFrame() == null || this.saveNeeded == saveNeeded) {
             return;
         }
-        if (!this.saveNeeded && saveNeeded) {
+        if (!this.saveNeeded) {
             getStatusBar().setStatusMessage(Translator.get("text_editor.modified"));
         }
         this.saveNeeded = saveNeeded;
@@ -89,47 +81,56 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     }
     
     private boolean trySaveAs() {
+        AbstractFile destFile = choiceFileToSave();
+        if (destFile != null && checkCollision(destFile) && trySave(destFile)) {
+            setCurrentFile(destFile);
+            return true;
+        }
+        return false;
+    }
+
+    private AbstractFile choiceFileToSave() {
         JFileChooser fileChooser = new JFileChooser();
-		AbstractFile currentFile = getCurrentFile();
+        AbstractFile currentFile = getCurrentFile();
         // Sets selected file in JFileChooser to current file
         if (currentFile.getURL().getScheme().equals(FileProtocols.FILE)) {
             fileChooser.setSelectedFile(new File(currentFile.getAbsolutePath()));
         }
         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         int ret = fileChooser.showSaveDialog(getFrame());
-		
+
         if (ret == JFileChooser.APPROVE_OPTION) {
             AbstractFile destFile;
             try {
                 destFile = FileFactory.getFile(fileChooser.getSelectedFile().getAbsolutePath(), true);
             } catch (IOException e) {
                 InformationDialog.showErrorDialog(getFrame(), Translator.get("write_error"), Translator.get("file_editor.cannot_write"));
-                return false;
+                return null;
             }
-
-            // Check for file collisions, i.e. if the file already exists in the destination
-            int collision = FileCollisionChecker.checkForCollision(null, destFile);
-            if (collision != FileCollisionChecker.NO_COLLOSION) {
-                // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
-                // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
-                int action = new FileCollisionDialog(getFrame(), getFrame()/*mainFrame*/, collision, null, destFile, false, false).getActionValue();
-
-                // User chose to overwrite the file
-                if (action == FileCollisionDialog.OVERWRITE_ACTION) {
-                    // Do nothing, simply continue and file will be overwritten
-                }
-                // User chose to cancel or closed the dialog
-                else {
-                    return false;
-                }
-            }
-
-            if (trySave(destFile)) {
+            if (checkCollision(destFile) && trySave(destFile)) {
                 setCurrentFile(destFile);
-                return true;
+                return destFile;
             }
         }
-        return false;
+        return null;
+    }
+
+    private boolean checkCollision(AbstractFile destFile) {
+        // Check for file collisions, i.e. if the file already exists in the destination
+        int collision = FileCollisionChecker.checkForCollision(null, destFile);
+        if (collision != FileCollisionChecker.NO_COLLOSION) {
+            // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
+            // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
+            int action = new FileCollisionDialog(getFrame(), getFrame()/*mainFrame*/, collision, null, destFile, false, false).getActionValue();
+
+            // User chose to overwrite the file
+            if (action == FileCollisionDialog.OVERWRITE_ACTION) {
+                // Do nothing, simply continue and file will be overwritten
+            } else {
+                return false;   // User chose to cancel or closed the dialog
+            }
+        }
+        return true;
     }
 
     // Returns false if an error occurred while saving the file.
@@ -149,6 +150,13 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         }
     }
 
+    private void forceOverwriteFile(AbstractFile file) throws IOException {
+        FilePermissions savedPermissions = file.getPermissions();
+        file.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
+        saveAs(file);
+        file.changePermissions(savedPermissions);
+    }
+
 
     private boolean trySaveReadOnly(AbstractFile destFile) {
         QuestionDialog dialog = new QuestionDialog((Frame)null, Translator.get("warning"), Translator.get("file_editor.overwrite_readonly"), getFrame(),
@@ -158,9 +166,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         int ret = dialog.getActionValue();
         if (ret == 0) { // Overwrite
             try {
-                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, true);
-                saveAs(destFile);
-                destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
+                forceOverwriteFile(destFile);
                 return true;
             } catch (IOException e) {
                 getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
@@ -177,7 +183,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
 
     // Returns true if the file does not have any unsaved change or if the user refused to save the changes,
     // false if the user canceled the dialog or the save failed.
-    public boolean askSave() {
+    protected boolean askSave() {
         if (!saveNeeded) {
             return true;
         }
@@ -204,47 +210,38 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
      */
     public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-        MnemonicHelper menuItemMnemonicHelper = new MnemonicHelper();
+        MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
         // File menu
-        JMenu fileMenu = MenuToolkit.addMenu(Translator.get("file_editor.file_menu"), menuMnemonicHelper, null);
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
-            saveItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK), this);
+        menuFile = MenuToolkit.addMenu(Translator.get("file_editor.file_menu"), mnemonicHelper, null);
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            miSave = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK), this);
         } else {
-            saveItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
+            miSave = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
         }
-        saveAsItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.save_as"), menuItemMnemonicHelper, null, this);
-        fileMenu.add(new TMenuSeparator());
-        int mask = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-        filesItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.files"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask), this);
-        fileMenu.add(new TMenuSeparator());
-        closeItem = MenuToolkit.addMenuItem(fileMenu, Translator.get("file_editor.close"), menuItemMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
+        miSaveAs = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save_as"), mnemonicHelper, null, this);
+        menuFile.add(new TMenuSeparator());
+        miClose = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.close"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), this);
 		
-        menuBar.add(fileMenu);
+        menuBar.add(menuFile);
 
         return menuBar;
     }
-    
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
-	
+
+
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-		
+
         // File menu
-        if (source == saveItem) {
+        if (source == miSave) {
             trySave(getCurrentFile());
-        } else if (source == saveAsItem) {
+        } else if (source == miSaveAs) {
             trySaveAs();
-        } else if (source == closeItem) {
-        	getFrame().dispose();
-        } else if (source == filesItem) {
-            ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(getFrame(), getCurrentFile());
-            viewedAndEditedFilesQL.show();
+        } else if (source == miClose) {
+            getFrame().dispose();
         }
     }
+
 
     //////////////////////
     // Abstract methods //

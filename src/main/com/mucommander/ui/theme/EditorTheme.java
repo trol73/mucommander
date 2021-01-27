@@ -41,6 +41,7 @@ public class EditorTheme {
     public EditorTheme(RSyntaxTextArea textArea) {
         theme = new Theme(textArea);
     }
+
     public static EditorTheme load(InputStream in) throws IOException {
         return new EditorTheme(org.fife.ui.rsyntaxtextarea.Theme.load(in));
     }

@@ -21,6 +21,7 @@ package com.mucommander.job;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.util.FileSet;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.icon.IconManager;
@@ -48,7 +49,6 @@ import com.mucommander.ui.viewer.ViewerRegistrar;
  * The path of each file is relative to the checksum file's path. In the above example, <code>readme.txt</code> and
  * the checksum file are located in the same folder. Note that 2 space characters (and not just one as anyone in his
  * right mind would think) separate the hexadecimal checksum from the file path.
- * </p>
  *
  * <p>The above file format is used for all checksum algorithms but one: CRC32, which uses the special SFV format where
  * the checksum for each file is written as follow:
@@ -57,7 +57,6 @@ import com.mucommander.ui.viewer.ViewerRegistrar;
  * wne-ebai.r01 f80a8443
  * ...
  * </pre>
- * </p>
  *
  * @author Maxence Bernard
  */
@@ -109,13 +108,13 @@ public class CalculateChecksumJob extends TransferFileJob {
                     }
 
                     return true;
-                }
-                catch(IOException e) {
+                } catch(IOException e) {
                     // file.ls() failed
                     int ret = showErrorDialog(Translator.get("error"), Translator.get("cannot_read_folder", file.getName()));
                     // Retry loops
-                    if(ret==RETRY_ACTION)
+                    if (ret == RETRY_ACTION) {
                         continue;
+                    }
                     // Cancel, skip or close dialog returns false
                     return false;
                 }
@@ -124,59 +123,48 @@ public class CalculateChecksumJob extends TransferFileJob {
 
         // Calculate the file's checksum
         do {		// Loop for retry
-            InputStream in = null;
-            String line;
-            String checksum;
+
             try {
-                // Resets the digest before use
-                digest.reset();
-
-                in = null;
-                in = setCurrentInputStream(file.getInputStream());
-
                 // Determine the path relative to the base source folder
                 String relativePath = file.getAbsolutePath();
-                relativePath = relativePath.substring(baseSourcePath.length(), relativePath.length());
+                relativePath = relativePath.substring(baseSourcePath.length());
+
+                // Resets the digest before use
+                digest.reset();
+                String checksum;
+                try (InputStream is = setCurrentInputStream(file.getInputStream())) {
+                    checksum = AbstractFile.calculateChecksum(is, digest);
+                }
 
                 // Write a new line in the checksum file, in the appropriate format
-                checksum = AbstractFile.calculateChecksum(in, digest);
-                if(useSfvFormat) {
-                    // SFV format for CRC32 checksums
+                String line;
+                if (useSfvFormat) {
+                    // SFV format for CRC32 checksum
                     line = relativePath + " " + checksum;     // 1 space character
-                }
-                else {
+                } else {
                     // 'SUMS' format for other checksum algorithms
                     line = checksum + "  " + relativePath;    // 2 space characters, that's how the format is
                 }
 
                 line += '\n';
 
-                // Close the InputStream, we're done with it
-                in.close();
-
-                checksumFileOut.write(line.getBytes("utf-8"));
+                checksumFileOut.write(line.getBytes(StandardCharsets.UTF_8));
 
                 return true;
-            }
-            catch(IOException e) {
-                // Close the InputStream, a new one will be created when retrying
-                if(in!=null) {
-                    try { in.close(); }
-                    catch(IOException e2){}
-                }
-
+            } catch (IOException e) {
                 // If the job was interrupted by the user at the time the exception occurred, it most likely means that
                 // the IOException was caused by the stream being closed as a result of the user interruption.
                 // If that is the case, the exception should not be interpreted as an error.
                 // Same goes if the current file was skipped.
-                if(getState() == State.INTERRUPTED || wasCurrentFileSkipped())
+                if (getState() == State.INTERRUPTED || wasCurrentFileSkipped()) {
                     return false;
+                }
 
                 LOGGER.debug("Caught IOException", e);
                 
                 int ret = showErrorDialog(Translator.get("error"), Translator.get("error_while_transferring", file.getAbsolutePath()));
                 // Retry loops
-                if(ret==RETRY_ACTION) {
+                if (ret == RETRY_ACTION) {
                     // Reset processed bytes currentFileByteCounter
                     getCurrentFileByteCounter().reset();
 
@@ -206,13 +194,13 @@ public class CalculateChecksumJob extends TransferFileJob {
 
         // Check for file collisions, i.e. if the file already exists in the destination
         int collision = FileCollisionChecker.checkForCollision(null, checksumFile);
-        if(collision!=FileCollisionChecker.NO_COLLOSION) {
+        if (collision != FileCollisionChecker.NO_COLLOSION) {
             // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
             // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
             int choice = waitForUserResponse(new FileCollisionDialog(getProgressDialog(), getMainFrame(), collision, null, checksumFile, false, false));
 
             // Overwrite file
-            if (choice== FileCollisionDialog.OVERWRITE_ACTION) {
+            if (choice == FileCollisionDialog.OVERWRITE_ACTION) {
                 // Do nothing, simply continue and file will be overwritten
             }
             // 'Cancel' or close dialog interrupts the job
@@ -230,8 +218,7 @@ public class CalculateChecksumJob extends TransferFileJob {
 
                 break;
 
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 int choice = showErrorDialog(Translator.get("error"),
                                              Translator.get("cannot_write_file", checksumFile.getName()),
                                              new String[] {CANCEL_TEXT, RETRY_TEXT},
@@ -239,8 +226,9 @@ public class CalculateChecksumJob extends TransferFileJob {
                                              );
 
                 // Retry loops
-                if(choice == RETRY_ACTION)
+                if (choice == RETRY_ACTION) {
                     continue;
+                }
 
                 // 'Cancel' or close dialog interrupts the job
                 interrupt();
@@ -262,9 +250,10 @@ public class CalculateChecksumJob extends TransferFileJob {
         super.jobStopped();
         
         // Close the checksum file's OutputStream
-        if(checksumFileOut !=null) {
-            try { checksumFileOut.close(); }
-            catch(IOException e2){
+        if (checksumFileOut != null) {
+            try {
+                checksumFileOut.close();
+            } catch (IOException ignore) {
                 // No need to inform the user
             }
         }

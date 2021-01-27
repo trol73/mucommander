@@ -21,7 +21,7 @@ package com.mucommander.ui.viewer.text;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.io.BinaryDetector;
 import com.mucommander.commons.io.EncodingDetector;
-import com.mucommander.text.Translator;
+import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.viewer.*;
 
 import java.io.IOException;
@@ -63,11 +63,23 @@ public class TextFactory implements ViewerFactory, EditorFactory {
             return false;
         }
         // Warn the user if the file looks like a binary file
+        if (checkBinaryFile(file)) {
+            return false;
+        }
 
+        // Warn the user if the file is large that a certain size as the whole file is loaded into memory
+        // (in a JTextArea)
+        if (file.getSize() > FILE_SIZE_WARNING_THRESHOLD) {
+            throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
+        }
+        return true;
+    }
+
+    private boolean checkBinaryFile(AbstractFile file) {
         try {
             PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             if (BinaryDetector.guessBinary(is)) {
-                return false;
+                return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,13 +89,6 @@ public class TextFactory implements ViewerFactory, EditorFactory {
                 e1.printStackTrace();
             }
         }
-
-        // Warn the user if the file is large that a certain size as the whole file is loaded into memory
-        // (in a JTextArea)
-        if (file.getSize() > FILE_SIZE_WARNING_THRESHOLD) {
-            throw new WarnUserException(Translator.get("file_viewer.large_file_warning"));
-        }
-
-        return true;
+        return false;
     }
 }

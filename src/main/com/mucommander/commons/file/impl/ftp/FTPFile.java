@@ -103,11 +103,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     private final static SimpleDateFormat SITE_UTIME_DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
 
-    protected FTPFile(FileURL fileURL) throws IOException {
+    FTPFile(FileURL fileURL) throws IOException {
         this(fileURL, null);
     }
 
-    protected FTPFile(FileURL fileURL, org.apache.commons.net.ftp.FTPFile file) throws IOException {
+    FTPFile(FileURL fileURL, org.apache.commons.net.ftp.FTPFile file) throws IOException {
         super(fileURL);
 
         this.absPath = fileURL.getPath();
@@ -277,7 +277,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     /**
      * Attempts to change this file's date using the <i>'SITE UTIME'</i> FTP command.
-     * This command seems to be implemeted by modern FTP servers such as ProFTPd or PureFTP Server but since it is not
+     * This command seems to be implemented by modern FTP servers such as ProFTPd or PureFTP Server but since it is not
      * part of the basic FTP command set, it may as well not be supported by the remote server.
      */
     @Override
@@ -378,7 +378,8 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     @Override
     public FilePermissions getPermissions() {
         if (isSymlink()) {
-            return getCanonicalFile().getAncestor(FTPFile.class).permissions;
+            FTPFile ancestor = getCanonicalFile().getAncestor(FTPFile.class);
+            return ancestor != null ? ancestor.permissions : null;
         }
 
         return permissions;
@@ -1014,11 +1015,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             return nbRead;
         }
 
-        public long getOffset() throws IOException {
+        public long getOffset() {
             return offset;
         }
 
-        public long getLength() throws IOException {
+        public long getLength() {
             return FTPFile.this.getSize();
         }
 
@@ -1083,7 +1084,12 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             }
             // we need to refresh the file after update
             // otherwise the file size for archives will be show incorrect etc.
-            FTPFile.this.file = getFTPFile(getURL());
+            try {
+                FTPFile.this.file = getFTPFile(getURL());
+            } catch (IOException e) {
+                // Checks if the IOException corresponds to a socket error and in that case, closes the connection
+                connHandler.checkSocketException(e);
+            }
             // force to refresh folder pane with this file
             FolderChangeMonitor.addFileToRefresh(getAbsolutePath());
             isClosed = true;
@@ -1092,7 +1098,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 super.close();
 
                 LOGGER.trace("complete pending commands");
-                connHandler.ftpClient.completePendingCommand();
+                if (connHandler != null && connHandler.ftpClient != null) {
+                    connHandler.ftpClient.completePendingCommand();
+                }
                 LOGGER.trace("commands completed");
             } catch(IOException e) {
                 LOGGER.info("exception in completePendingCommands()", e);
@@ -1291,7 +1299,9 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                     }
 	
 	                // Login
-	                ftpClient.login(credentials.getLogin(), credentials.getPassword());
+                    if (credentials != null) {
+                        ftpClient.login(credentials.getLogin(), credentials.getPassword());
+                    }
 	                // Throw an IOException (potentially an AuthException) if the server replied with an error
 	                checkServerReply();
 	
@@ -1368,7 +1378,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             // Thus, the only way (AFAIK) to know if the socket is still connected is to intercept all IOException
             // thrown by FTPClient and check if they correspond to a socket exception.
 
-            return ftpClient!=null && ftpClient.isConnected();
+            return ftpClient != null && ftpClient.isConnected();
 
 //            if(ftpClient==null || !ftpClient.isConnected())
 //                return false;
@@ -1386,12 +1396,16 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
                 // Try to logout, this may fail if the connection is broken
                 try {
                     ftpClient.logout();
-                } catch(IOException ignore) {}
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Close the socket connection
                 try {
                     ftpClient.disconnect();
-                } catch(IOException ignore) {}
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
 
                 ftpClient = null;
             }
@@ -1405,7 +1419,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             if (ftpClient != null) {
                 try {
                     ftpClient.sendNoOp();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // Checks if the IOException corresponds to a socket error and in that case, closes the connection
                     checkSocketException(e);
                 }
@@ -1420,7 +1434,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         private org.apache.commons.net.ftp.FTPFile file;
 
-        public FTPFilePermissions(org.apache.commons.net.ftp.FTPFile file) {
+        FTPFilePermissions(org.apache.commons.net.ftp.FTPFile file) {
             this.file = file;
         }
 

@@ -40,17 +40,17 @@ import com.mucommander.commons.runtime.OsFamily;
  *   Under supported platforms, those file icons are the same as the ones displayed in the default file manager.</li>
  *  <li>{@link #getCustomFileIcon(AbstractFile)}: returns a custom icon, fetched from the muCommander icon set and
  * based on the file's kind (archive, folder...) and extension.</li>
- *  <li}{@link #getFileIcon(AbstractFile)} returns either a system icon or a custom icon, depending on the current
+ *  <li>{@link #getFileIcon(AbstractFile)} returns either a system icon or a custom icon, depending on the current
  * system icons policy. The default policy is {@link #DEFAULT_SYSTEM_ICONS_POLICY} and can be changed using
  * {@link #setSystemIconsPolicy(String)}.</li>
  * </ul>
  * Icons can be requested indifferently for any type of {@link AbstractFile} files: local files, remote files,
- * archives entries... The </p>
+ * archives entries... 
  *
  * <p>It is important to note that not all platforms have proper support for system file icons.
  * The {@link #hasProperSystemIcons()} method can be used to determine if the current platform properly supports system
  * icons. Non-supported platforms may return no icon (<code>null</code> values), or icons that do not resemble the
- * system ones.</p>
+ * system ones.
  *
  * @author Maxence Bernard
  */
@@ -64,7 +64,7 @@ public class FileIcons {
     public final static String USE_SYSTEM_ICONS_ALWAYS = "always";
 
     /** Default policy for system icons */
-    private final static String DEFAULT_SYSTEM_ICONS_POLICY = OsFamily.getCurrent() == OsFamily.MAC_OS_X ? USE_SYSTEM_ICONS_ALWAYS : USE_SYSTEM_ICONS_APPLICATIONS;
+    private final static String DEFAULT_SYSTEM_ICONS_POLICY = OsFamily.MAC_OS_X.isCurrent() ? USE_SYSTEM_ICONS_ALWAYS : USE_SYSTEM_ICONS_APPLICATIONS;
 
     /** Default icon scale factor (no rescaling) */
     private final static float DEFAULT_SCALE_FACTOR = 1.0f;

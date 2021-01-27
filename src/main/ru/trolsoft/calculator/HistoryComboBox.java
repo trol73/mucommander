@@ -17,9 +17,9 @@
  */
 package ru.trolsoft.calculator;
 
+import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.ui.dialog.FocusDialog;
 
-import javax.swing.JComboBox;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -28,11 +28,11 @@ import java.util.List;
  * @author Oleg Trifonov
  * Created on 06/06/14.
  */
-public class HistoryComboBox extends JComboBox<String> {
+public class HistoryComboBox extends TcComboBox<String> {
     private final FocusDialog parent;
 
     public HistoryComboBox(FocusDialog parent, List<String> values) {
-        super(values.toArray(new String[values.size()]));
+        super(values.toArray(new String[0]));
         this.parent = parent;
         setEditable(true);
         if (values.size() > 0) {
@@ -41,7 +41,7 @@ public class HistoryComboBox extends JComboBox<String> {
             getEditor().selectAll();
         }
 
-        getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -53,7 +53,8 @@ public class HistoryComboBox extends JComboBox<String> {
                     }
                 }
             }
-        });
+        };
+        getEditor().getEditorComponent().addKeyListener(keyAdapter);
     }
 
 

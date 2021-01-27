@@ -11,7 +11,7 @@ class RPNExpression implements Calculable {
 
 	final Map<String, Double> variables;
 
-	public RPNExpression(List<Token> tokens, String expression, final Map<String, Double> variables) {
+	RPNExpression(List<Token> tokens, String expression, final Map<String, Double> variables) {
 		super();
 		this.tokens = tokens;
 		this.expression = expression;

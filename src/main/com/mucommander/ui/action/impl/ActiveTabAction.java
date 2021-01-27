@@ -20,20 +20,20 @@ package com.mucommander.ui.action.impl;
 
 import java.util.Map;
 
-import com.mucommander.ui.action.MuAction;
+import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.event.ActivePanelListener;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.tabs.ActiveTabListener;
 
 /**
- * This class is an abstract {@link MuAction} that operates on the current tab. It monitors changes in the active
+ * This class is an abstract {@link TcAction} that operates on the current tab. It monitors changes in the active
  * tab's properties and calls {@link #toggleEnabledState()} when the properties have changed, or when the active 
  * tab itself has changed, in order to enable or disable this action.
  * 
  * @author Arik Hadas
  */
-public abstract class ActiveTabAction extends MuAction implements ActivePanelListener, ActiveTabListener {
+public abstract class ActiveTabAction extends TcAction implements ActivePanelListener, ActiveTabListener {
 
 	public ActiveTabAction(MainFrame mainFrame, Map<String,Object> properties) {
 		super(mainFrame, properties);

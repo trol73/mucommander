@@ -45,28 +45,20 @@ public class GnomeConfig {
      * command isn't available in the path.
      */
     public static String getValue(String key) throws IOException {
-        BufferedReader br = null;
         try {
             Process process = Runtime.getRuntime().exec(CONFIG_COMMAND+" -g "+key);
 
-            br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = br.readLine();
-
-            LOGGER.debug(CONFIG_COMMAND+" returned '"+line+"' for "+key);
-
-            if(line==null || (line=line.trim()).equals("") || line.startsWith("No value set for"))
-                return null;
-
-            return line;
-        }
-        catch(IOException e) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = br.readLine();
+                LOGGER.debug(CONFIG_COMMAND+" returned '"+line+"' for "+key);
+                if (line == null || (line=line.trim()).isEmpty() || line.startsWith("No value set for")) {
+                    return null;
+                }
+                return line;
+            }
+        } catch(IOException e) {
             LOGGER.debug("Error while retrieving value for "+key, e);
-
             throw e;
-        }
-        finally {
-            if(br!=null)
-                try { br.close(); } catch(IOException e) {}
         }
     }
 }

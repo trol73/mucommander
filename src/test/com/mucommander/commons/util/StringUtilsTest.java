@@ -473,8 +473,7 @@ public class StringUtilsTest {
     @Test(dataProvider = "flatten")
     public void testFlatten(String expected, String[] data, String separator) {
         assert expected.equals(StringUtils.flatten(data, separator));
-        if(separator.equals(" "))
-            assert expected.equals(StringUtils.flatten(data));
+        assert !separator.equals(" ") || expected.equals(StringUtils.flatten(data));
     }
 
     /**

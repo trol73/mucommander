@@ -28,9 +28,9 @@ import java.io.InputStream;
  * <code>skip</code> methods can either throw a {@link StreamOutOfBoundException} or simply return <code>-1</code>.
  *
  * <p>The limit has no effect if it is set to a value that is higher than the number of bytes remaining in the
- * underlying stream.</p>
+ * underlying stream.
  *
- * <p>This class is particularly useful for reading archives that are a concatenation of files, tarballs for instance.</p>
+ * <p>This class is particularly useful for reading archives that are a concatenation of files, tarballs for instance.
  *
  * @author Maxence Bernard
  * @see BoundedReader
@@ -50,7 +50,7 @@ public class BoundedInputStream extends FilterInputStream implements Bounded {
      *
      * <p>If the <code>throwStreamOutOfBoundException</code> parameter is <code>true</code>, <code>read</code> and
      * <code>skip</code> methods will throw a {@link StreamOutOfBoundException} when an attempt to read or skip beyond
-     * that limit is made. If <code>false</code>, <code>-1</code> will be returned.</p>
+     * that limit is made. If <code>false</code>, <code>-1</code> will be returned.
      *
      * @param in the stream to be bounded
      * @param allowedBytes the total number of bytes that are allowed to be read or skipped, <code>-1</code> for no limit
@@ -174,7 +174,7 @@ public class BoundedInputStream extends FilterInputStream implements Bounded {
      * Always throws an <code>IOException</code>: the call is *not* delegated to the underlying stream.
      */
     @Override
-    public synchronized void reset() throws IOException {
+    public synchronized void reset() {
         // Todo: in theory we could support mark/reset
         // No-op
     }

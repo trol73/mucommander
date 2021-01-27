@@ -32,9 +32,9 @@ import java.util.Map;
  *
  * @author Maxence Bernard
  */
-public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabListener {
+public class PopupLeftDriveButtonAction extends TcAction implements ActiveTabListener {
 
-    PopupLeftDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private PopupLeftDriveButtonAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
         
         mainFrame.getLeftPanel().getTabs().addActiveTabListener(this);
@@ -64,15 +64,23 @@ public class PopupLeftDriveButtonAction extends MuAction implements ActiveTabLis
     public static final class Descriptor extends AbstractActionDescriptor {
     	public static final String ACTION_ID = "PopupLeftDriveButton";
     	
-		public String getId() { return ACTION_ID; }
+		public String getId() {
+			return ACTION_ID;
+		}
 
-		public ActionCategory getCategory() { return ActionCategory.NAVIGATION; }
+		public ActionCategory getCategory() {
+			return ActionCategory.NAVIGATION;
+		}
 
-		public KeyStroke getDefaultAltKeyStroke() { return null; }
+		public KeyStroke getDefaultAltKeyStroke() {
+			return null;
+		}
 
-		public KeyStroke getDefaultKeyStroke() { return KeyStroke.getKeyStroke(KeyEvent.VK_F1, KeyEvent.ALT_DOWN_MASK); }
+		public KeyStroke getDefaultKeyStroke() {
+			return KeyStroke.getKeyStroke(KeyEvent.VK_F1, KeyEvent.ALT_DOWN_MASK);
+		}
 
-		public MuAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
+		public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
 			return new PopupLeftDriveButtonAction(mainFrame, properties);
 		}
     }

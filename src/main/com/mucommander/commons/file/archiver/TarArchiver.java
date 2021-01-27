@@ -17,7 +17,7 @@ import java.io.OutputStream;
  */
 class TarArchiver extends Archiver {
 
-    private TarOutputStream tos;
+    private final TarOutputStream tos;
     private boolean firstEntry = true;
 
     TarArchiver(OutputStream outputStream) {
@@ -29,9 +29,6 @@ class TarArchiver extends Archiver {
     }
 
 
-    /////////////////////////////
-    // Archiver implementation //
-    /////////////////////////////
 
     @Override
     public OutputStream createEntry(String entryPath, FileAttributes attributes) throws IOException {
@@ -78,5 +75,5 @@ class TarArchiver extends Archiver {
     }
     
     @Override
-    public void postProcess() throws IOException {}
+    public void postProcess() {}
 }

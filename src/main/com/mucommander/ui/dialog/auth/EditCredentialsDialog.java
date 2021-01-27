@@ -38,7 +38,6 @@ import com.mucommander.auth.CredentialsManager;
 import com.mucommander.auth.CredentialsMapping;
 import com.mucommander.commons.collections.AlteredVector;
 import com.mucommander.commons.file.Credentials;
-import com.mucommander.text.Translator;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditCredentialsAction;
 import com.mucommander.ui.dialog.FocusDialog;
@@ -54,7 +53,7 @@ import com.mucommander.ui.main.MainFrame;
 /**
  * This dialog contains a list of all persistent credentials and allows the user to edit, remove, go to and reorder them.
  *
- * <p>If the contents of this list is modified, credentials will be saved to disk when this dialog is disposed.</p>
+ * <p>If the contents of this list is modified, credentials will be saved to disk when this dialog is disposed.
  *
  * @author Maxence Bernard
  */
@@ -105,11 +104,11 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
 
         // Add login field
         this.loginField = new JTextField();
-        compPanel.addRow(Translator.get("login")+":", loginField, 5);
+        compPanel.addRow(i18n("login")+":", loginField, 5);
 
         // Add password field
         this.passwordField = new JPasswordField();
-        compPanel.addRow(Translator.get("password")+":", passwordField, 10);
+        compPanel.addRow(i18n("password")+":", passwordField, 10);
 
         YBoxPanel yPanel = new YBoxPanel(10);
         yPanel.add(compPanel);
@@ -124,14 +123,14 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         buttonsPanel.add(removeButton);
 
         // Go to button
-        goToButton = new JButton(Translator.get("go_to"));
+        goToButton = new JButton(i18n("go_to"));
         goToButton.setMnemonic(mnemonicHelper.getMnemonic(goToButton));
         goToButton.addActionListener(this);
 
         buttonsPanel.add(goToButton);
 
         // Button that closes the window
-        closeButton = new JButton(Translator.get("close"));
+        closeButton = new JButton(i18n("close"));
         closeButton.setMnemonic(mnemonicHelper.getMnemonic(closeButton));
         closeButton.addActionListener(this);
 
@@ -175,7 +174,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
 
         boolean componentsEnabled = false;
 
-        if(!credentialsList.isSelectionEmpty() && credentials.size()>0) {
+        if (!credentialsList.isSelectionEmpty() && !credentials.isEmpty()) {
             componentsEnabled = true;
 
             CredentialsMapping credentialsMapping = credentialsList.getSelectedValue();
@@ -200,7 +199,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
     private void modifyCredentials() {
         // Make sure that the item still exists (could have been removed) before trying to modify its value
         int itemIndex = credentials.indexOf(lastSelectedItem);
-        if(lastSelectedItem!=null && itemIndex!=-1) {
+        if (lastSelectedItem != null && itemIndex >= 0) {
             credentials.setElementAt(new CredentialsMapping(new Credentials(loginField.getText(), new String(passwordField.getPassword())), lastSelectedItem.getRealm(), true), itemIndex);
         }
         
@@ -233,14 +232,13 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
         Object source = e.getSource();
 
         // Dispose the dialog (credentials save is performed in dispose())
-        if (source== closeButton)  {
+        if (source == closeButton)  {
             // Commit current credentials modifications.
             // Note: if the dialog is cancelled, current modifications will be cancelled (i.e. not committed) 
             modifyCredentials();
             
             dispose();
-        }
-        else if(source==goToButton) {
+        } else if (source == goToButton) {
             // Dispose dialog first
             dispose();
             // Go to credentials' realm location
@@ -256,8 +254,9 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
     public void valueChanged(ListSelectionEvent e) {
         LOGGER.trace("called, e.getValueIsAdjusting="+e.getValueIsAdjusting()+" getSelectedIndex="+ credentialsList.getSelectedIndex());
 
-        if(e.getValueIsAdjusting())
+        if (e.getValueIsAdjusting()) {
             return;
+        }
 
         // Commit current credentials modifications
         modifyCredentials();

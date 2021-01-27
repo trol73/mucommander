@@ -28,7 +28,7 @@ public class FixedDefaultFont extends DefaultFont {
     // - Instance fields -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /** Font to default to. */
-    private Font font;
+    private final Font font;
 
 
     // - Initialisation ------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ public class FixedDefaultFont extends DefaultFont {
      * Creates a new instance of {@link FixedDefaultFont}.
      * @param font font to default to.
      */
-    public FixedDefaultFont(Font font) {
+    FixedDefaultFont(Font font) {
         this.font = font;
     }
 
