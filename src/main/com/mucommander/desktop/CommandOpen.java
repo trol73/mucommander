@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 class CommandOpen extends LocalFileOperation {
     /** Whether or not the 'init as executable' command can be used if no better alternative is found. */
-    private boolean allowDefault;
+    private final boolean allowDefault;
 
 
     CommandOpen(boolean allowDefault) {

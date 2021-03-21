@@ -342,7 +342,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
     
     public void setProgressValue(int value) {
-    	locationTextField.setProgressValue(value);
+        SwingUtilities.invokeLater(() -> locationTextField.setProgressValue(value));
     }
 
     public void tryChangeCurrentFolderInternal(FileURL folderURL, Runnable callback) {
@@ -498,10 +498,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
 
     
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Overridden for debugging purposes.
      */
@@ -510,25 +506,22 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         return getClass().getName()+"@"+hashCode() +" currentFolder="+getCurrentFolder()+" hasFocus="+hasFocus();
     }
 
-    ///////////////////////////
-    // FocusListener methods //
-    ///////////////////////////
-    
+
+    @Override
     public void focusGained(FocusEvent e) {
         // Notify MainFrame that we are in control now! (our table/location field is active)
         mainFrame.setActiveTable(fileTable);
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         if (!TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST)) {
             fileTable.getQuickSearch().stop();
         }
     }
 
-    ////////////////////////////////
-    // QuickListContainer methods //
-    ////////////////////////////////
-    
+
+    @Override
     public Point calcQuickListPosition(Dimension dim) {
     	return new Point(
     			Math.max((getWidth() - (int)dim.getWidth()) / 2, 0),
@@ -536,18 +529,18 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     			);
 	}
 
+    @Override
 	public Component containerComponent() {
 		return this;
 	}
 
+    @Override
 	public Component nextFocusableComponent() {
 		return fileTable;
 	}
 
-	///////////////////////////////
-	// ActiveTabListener methods //
-	///////////////////////////////
 
+    @Override
 	public void activeTabChanged() {
 		boolean isCurrentTabLocked = tabs.getCurrentTab().isLocked();
 		

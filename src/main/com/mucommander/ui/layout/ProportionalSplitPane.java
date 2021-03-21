@@ -133,12 +133,12 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
 
 
     /**
-     * Disables all the JSPlitPane accessibility shortcuts that are registered by default:
+     * Disables all the JSplitPane accessibility shortcuts that are registered by default:
      * <ul>
      * <li>Navigate in - Tab
      * <li>Navigate out - Ctrl+Tab, Ctrl+Shift+Tab
      * <li>Navigate between - Tab, F6
-     * <li>Give focus spliter bar - F8
+     * <li>Give focus splitter bar - F8
      * <li>Change size - Arrow keys, home, and end (moves the pane splitter appropriately)
      * </ul>
      */
@@ -148,10 +148,13 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         inputMap.setParent(null);
     }
 
+    /**
+     * Returns current pane split ratio.
+     */
+    public float getSplitRatio() {
+        return this.splitRatio;
+    }
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public void setOrientation(int orientation) {
@@ -161,19 +164,15 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
     }
 
 
-    //////////////////////////////////////
-    // ComponentListener implementation //
-    //////////////////////////////////////
-
     /**
      * Sets the divider location when the ContentPane has been resized so that it stays at the
      * same proportional (not absolute) location.
      */
+    @Override
     public void componentResized(ComponentEvent e) {
         Object source = e.getSource();
 
-
-        if(source==window) {
+        if (source == window) {
             // Note: the window/split pane may not be visible when this method is called for the first time
 
             // Makes sure that windowWidth is never 0 in #componentMoved.
@@ -182,8 +181,9 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         }
     }
 
+    @Override
     public void componentMoved(ComponentEvent e) {
-        if(e.getSource() == getDividerComponent()) {
+        if (e.getSource() == getDividerComponent()) {
             // Ignore this event if the divider's location hasn't changed, or if the initial divider's location
             // hasn't been set yet
             if (lastDividerLocation == -1) {
@@ -207,13 +207,8 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         }
     }
 
-    /**
-     * Returns current pane split ratio.
-     */
-    public float getSplitRatio() {
-        return this.splitRatio;
-    }
 
+    @Override
     public void componentShown(ComponentEvent e) {
         // Called when the window is made visible
         if (e.getSource() == window) {
@@ -222,29 +217,32 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         }
     }
 
+    @Override
     public void componentHidden(ComponentEvent e) {
     }
 
 
-    ///////////////////////////
-    // MouseListener methods //
-    ///////////////////////////
-
+    @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (DesktopManager.isLeftMouseButton(mouseEvent) && mouseEvent.getClickCount()==2) {
+        if (DesktopManager.isLeftMouseButton(mouseEvent) && mouseEvent.getClickCount() == 2) {
             setSplitRatio(0.5f);
+            doLayout();
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent mouseEvent) {
     }
 
+    @Override
     public void mouseReleased(MouseEvent mouseEvent) {
     }
 
+    @Override
     public void mouseEntered(MouseEvent mouseEvent) {
     }
 
+    @Override
     public void mouseExited(MouseEvent mouseEvent) {
     }
 }

@@ -19,6 +19,7 @@
 package com.mucommander.ui.layout;
 
 import com.mucommander.ui.text.MultiLineLabel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,14 +110,16 @@ public class InformationPane extends JPanel {
     public InformationPane(String mainMessage, String captionMessage, int mainMessageFontStyle, Icon icon) {
         super(new BorderLayout());
 
-        if(icon!=null)
+        if (icon != null) {
             setIcon(icon);
+        }
 
         YBoxPanel yPanel = new YBoxPanel(5);
 
         mainLabel = new MultiLineLabel(mainMessage);
-        if(mainMessageFontStyle!=Font.PLAIN)
+        if (mainMessageFontStyle != Font.PLAIN) {
             setMainLabelFontStyle(mainMessageFontStyle);
+        }
         yPanel.add(mainLabel);
 
         yPanel.addSpace(5);
@@ -136,30 +139,27 @@ public class InformationPane extends JPanel {
      * @return an Icon instance corresponding to the given predefined icon id 
      */
     public static Icon getPredefinedIcon(int predefinedIconId) {
-        String optionPaneIcon;
+        String optionPaneIcon = getPredefinedIconName(predefinedIconId);
+        if (optionPaneIcon == null) {
+            return null;
+        }
+        return UIManager.getIcon("OptionPane." + optionPaneIcon);
+    }
 
-        switch(predefinedIconId) {
+    @Nullable
+    private static String getPredefinedIconName(int predefinedIconId) {
+        switch (predefinedIconId) {
             case ERROR_ICON:
-                optionPaneIcon = "errorIcon";
-                break;
-
+                return "errorIcon";
             case INFORMATION_ICON:
-                optionPaneIcon = "informationIcon";
-                break;
-
+                return "informationIcon";
             case WARNING_ICON:
-                optionPaneIcon = "warningIcon";
-                break;
-
+                return "warningIcon";
             case QUESTION_ICON:
-                optionPaneIcon = "questionIcon";
-                break;
-
+                return "questionIcon";
             default:
                 return null;
         }
-
-        return UIManager.getIcon("OptionPane."+optionPaneIcon);
     }
 
     /**

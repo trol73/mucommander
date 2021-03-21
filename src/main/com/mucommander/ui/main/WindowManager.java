@@ -56,8 +56,6 @@ import com.mucommander.ui.helper.FocusRequester;
 public class WindowManager implements WindowListener, ConfigurationListener {
 	private static Logger logger;
 	
-    // - MainFrame positioning --------------------------------------------------
-    // --------------------------------------------------------------------------
     // The following constants are used to compute the proper position of a new MainFrame.
 
     /** MainFrame (main muCommander window) instances */
@@ -70,8 +68,6 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     private static final WindowManager instance = new WindowManager();
 
 
-    // - Initialization ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Installs all custom look and feels.
      */
@@ -297,11 +293,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
     }
 
-
-    ////////////////////////////
-    // WindowListener methods //
-    ////////////////////////////
-
+    @Override
     public void windowActivated(WindowEvent e) {
         Object source = e.getSource();
         
@@ -321,6 +313,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
         Object source = e.getSource();
 
@@ -337,12 +330,14 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         ((MainFrame)e.getSource()).setForegroundActive(false);
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
     }
     
     /**
      * windowClosed is synchronized so that it doesn't get called while quit() is executing.
      */
+    @Override
     public synchronized void windowClosed(WindowEvent e) {
         getLogger().trace("called");
 
@@ -410,23 +405,23 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         return false;
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
 
-    ///////////////////////////////////
-    // ConfigurationListener methods //
-    ///////////////////////////////////
-
     /**
      * Listens to certain configuration variables.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
     	String var = event.getVariable();
 

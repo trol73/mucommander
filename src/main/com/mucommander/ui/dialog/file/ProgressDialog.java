@@ -95,26 +95,26 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     private final static int SPEED_GRAPH_HEIGHT = 80;
 
 
-    private JLabel currentFileLabel;
-    private JLabel totalTransferredLabel;
+    private JLabel lblCurrentFile;
+    private JLabel lblTotalTransferred;
 
     private JProgressBar totalProgressBar;
     private JProgressBar currentFileProgressBar;
 
-    private JLabel currentSpeedLabel;
-    private JCheckBox limitSpeedCheckBox;
+    private JLabel lblCurrentSpeed;
+    private JCheckBox cbLimitSpeed;
     private SizeChooser speedChooser;
-    private JLabel elapsedTimeLabel;
+    private JLabel lblElapsedTime;
 
     private SpeedGraph speedGraph;
 
     private CollapseExpandButton collapseExpandButton;
     private ButtonChoicePanel buttonsChoicePanel;
-    private JButton pauseResumeButton;
-    private JButton skipButton;
-    private JButton stopButton;
-    private JButton backgroundButton;
-    private JCheckBox closeWhenFinishedCheckBox;
+    private JButton btnPauseResume;
+    private JButton btnSkip;
+    private JButton btnStop;
+    private JButton btnBackground;
+    private JCheckBox cbCloseWhenFinished;
 //    private JButton hideButton;
 
     private FileJob job;
@@ -151,61 +151,61 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     }
     
     
-    private void initUI() {
+    private void initUi() {
         Container contentPane = getContentPane();
 
         totalProgressBar = new JProgressBar();
         totalProgressBar.setStringPainted(true);
         totalProgressBar.setAlignmentX(LEFT_ALIGNMENT);
-        currentFileLabel = new JLabel(job.getStatusString());
-        currentFileLabel.setAlignmentX(LEFT_ALIGNMENT);
+        lblCurrentFile = new JLabel(job.getStatusString());
+        lblCurrentFile.setAlignmentX(LEFT_ALIGNMENT);
 		
         YBoxPanel yPanel = new YBoxPanel();
         // 2 progress bars
         if (transferFileJob != null) {
-            yPanel.add(currentFileLabel);
+            yPanel.add(lblCurrentFile);
             currentFileProgressBar = new JProgressBar();
             currentFileProgressBar.setStringPainted(true);
             yPanel.add(currentFileProgressBar);
             yPanel.addSpace(10);
 		
-            totalTransferredLabel = new JLabel(i18n("progress_dialog.starting"));
-            yPanel.add(totalTransferredLabel);
+            lblTotalTransferred = new JLabel(i18n("progress_dialog.starting"));
+            yPanel.add(lblTotalTransferred);
 			
             yPanel.add(totalProgressBar);
         }
         // Single progress bar
         else {
-            yPanel.add(currentFileLabel);
+            yPanel.add(lblCurrentFile);
             yPanel.add(totalProgressBar);
         }
 
         yPanel.addSpace(10);
-        elapsedTimeLabel = new JLabel(i18n("progress_dialog.elapsed_time")+": ");
-        elapsedTimeLabel.setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, StatusBar.WAITING_ICON));
-        yPanel.add(elapsedTimeLabel);
+        lblElapsedTime = new JLabel(i18n("progress_dialog.elapsed_time")+": ");
+        lblElapsedTime.setIcon(IconManager.getIcon(IconManager.IconSet.STATUS_BAR, StatusBar.WAITING_ICON));
+        yPanel.add(lblElapsedTime);
 
         if (transferFileJob != null) {
             JPanel tempPanel = new JPanel(new BorderLayout());
 
-            this.currentSpeedLabel = new JLabel();
+            lblCurrentSpeed = new JLabel();
             updateCurrentSpeedLabel("");
-            currentSpeedLabel.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, CURRENT_SPEED_ICON));
-            tempPanel.add(currentSpeedLabel, BorderLayout.WEST);
+            lblCurrentSpeed.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, CURRENT_SPEED_ICON));
+            tempPanel.add(lblCurrentSpeed, BorderLayout.WEST);
 
             YBoxPanel advancedPanel = new YBoxPanel();
 
-            this.speedGraph = new SpeedGraph();
+            speedGraph = new SpeedGraph();
             speedGraph.setPreferredSize(new Dimension(0, SPEED_GRAPH_HEIGHT));
             advancedPanel.add(speedGraph);
 
             advancedPanel.addSpace(5);
 
             JPanel tempPanel2 = new JPanel(new BorderLayout());
-            this.limitSpeedCheckBox = new JCheckBox(i18n("progress_dialog.limit_speed")+":", false);
-            limitSpeedCheckBox.addItemListener(this);
+            cbLimitSpeed = new JCheckBox(i18n("progress_dialog.limit_speed")+":", false);
+            cbLimitSpeed.addItemListener(this);
 
-            tempPanel2.add(limitSpeedCheckBox, BorderLayout.WEST);
+            tempPanel2.add(cbLimitSpeed, BorderLayout.WEST);
 
             speedChooser = new SizeChooser(true);
             speedChooser.setEnabled(false);
@@ -218,7 +218,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             // panel height can't be greater than speedChooser height
             tempPanel2.setMaximumSize(new Dimension(tempPanel2.getMaximumSize().width, speedChooser.getPreferredSize().height));
 
-            this.collapseExpandButton = new CollapseExpandButton(i18n("progress_dialog.advanced"), advancedPanel, true);
+            collapseExpandButton = new CollapseExpandButton(i18n("progress_dialog.advanced"), advancedPanel, true);
             collapseExpandButton.setExpandedState(TcConfigurations.getPreferences().getVariable(TcPreference.PROGRESS_DIALOG_EXPANDED,
                                                                                    TcPreferences.DEFAULT_PROGRESS_DIALOG_EXPANDED));
             tempPanel.add(collapseExpandButton, BorderLayout.EAST);
@@ -232,38 +232,38 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             yPanel.add(advancedPanel);
         }
 
-        closeWhenFinishedCheckBox = new JCheckBox(i18n("progress_dialog.close_when_finished"));
-        closeWhenFinishedCheckBox.setSelected(TcConfigurations.getPreferences().getVariable(TcPreference.PROGRESS_DIALOG_CLOSE_WHEN_FINISHED,
+        cbCloseWhenFinished = new JCheckBox(i18n("progress_dialog.close_when_finished"));
+        cbCloseWhenFinished.setSelected(TcConfigurations.getPreferences().getVariable(TcPreference.PROGRESS_DIALOG_CLOSE_WHEN_FINISHED,
                                                                                TcPreferences.DEFAULT_PROGRESS_DIALOG_CLOSE_WHEN_FINISHED));
-        yPanel.add(closeWhenFinishedCheckBox);
+        yPanel.add(cbCloseWhenFinished);
 
 //        yPanel.add(Box.createVerticalGlue());
         contentPane.add(yPanel, BorderLayout.CENTER);
 
-        pauseResumeButton = new JButton(i18n("pause"), IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
-        pauseResumeButton.addActionListener(this);
+        btnPauseResume = new JButton(i18n("pause"), IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
+        btnPauseResume.addActionListener(this);
 
         if (transferFileJob != null) {
-            skipButton = new JButton(i18n("skip"), IconManager.getIcon(IconManager.IconSet.PROGRESS, SKIP_ICON));
-            skipButton.addActionListener(this);
+            btnSkip = new JButton(i18n("skip"), IconManager.getIcon(IconManager.IconSet.PROGRESS, SKIP_ICON));
+            btnSkip.addActionListener(this);
         }
 
-        stopButton = new JButton(i18n("stop"), IconManager.getIcon(IconManager.IconSet.PROGRESS, STOP_ICON));
-        stopButton.addActionListener(this);
+        btnStop = new JButton(i18n("stop"), IconManager.getIcon(IconManager.IconSet.PROGRESS, STOP_ICON));
+        btnStop.addActionListener(this);
 
-        backgroundButton = new JButton(i18n("progress_dialog.hide"));
-        backgroundButton.addActionListener(this);
+        btnBackground = new JButton(i18n("progress_dialog.hide"));
+        btnBackground.addActionListener(this);
 
         this.buttonsChoicePanel = new ButtonChoicePanel(
-                skipButton == null ? new JButton[] {pauseResumeButton, stopButton, backgroundButton} : new JButton[] {pauseResumeButton, skipButton, stopButton, backgroundButton},
+                btnSkip == null ? new JButton[] {btnPauseResume, btnStop, btnBackground} : new JButton[] {btnPauseResume, btnSkip, btnStop, btnBackground},
                 0, getRootPane());
         contentPane.add(buttonsChoicePanel, BorderLayout.SOUTH);
 
         // Cancel button receives initial focus
-        setInitialFocusComponent(stopButton);
+        setInitialFocusComponent(btnStop);
 
         // Enter triggers cancel button
-        getRootPane().setDefaultButton(stopButton);
+        getRootPane().setDefaultButton(btnStop);
     }
 
 
@@ -277,7 +277,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             this.transferFileJob = (TransferFileJob) job;
         }
 
-        initUI();
+        initUi();
         
 		JobProgressMonitor.getInstance().addJob(job);
         JobProgressMonitor.getInstance().addJobProgressListener(this);
@@ -308,18 +308,15 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 //    }
 
     private void updateThroughputLimit() {
-        transferFileJob.setThroughputLimit(limitSpeedCheckBox.isSelected()?speedChooser.getValue():-1);
+        transferFileJob.setThroughputLimit(cbLimitSpeed.isSelected() ? speedChooser.getValue() : -1);
     }
 
     private void updateCurrentSpeedLabel(String value) {
-        currentSpeedLabel.setText(i18n("progress_dialog.current_speed")+": "+value);
+        lblCurrentSpeed.setText(i18n("progress_dialog.current_speed") + ": " + value);
     }
 
 
-    ////////////////////////////////////
-    // FileJobListener implementation //
-    ////////////////////////////////////
-
+    @Override
     public void jobStateChanged(FileJob source, State oldState, State newState) {
         LOGGER.debug("currentThread="+Thread.currentThread()+" oldState="+oldState+" newState="+newState);
 
@@ -331,7 +328,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         } else if (newState == State.FINISHED) {
             stopBackground();
             //  Dispose dialog only if 'Close when finished option' is selected
-            if (closeWhenFinishedCheckBox.isSelected()) {
+            if (cbCloseWhenFinished.isSelected()) {
                 // Stop repaint thread and dispose dialog
                 stop();
                 dispose();
@@ -341,20 +338,20 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 // bars to indicate that the job is finished
 
                 // Change 'Stop' button's label to 'Close'
-                stopButton.setText(i18n("close"));
+                btnStop.setText(i18n("close"));
 
                 // Disable components
-                pauseResumeButton.setEnabled(false);
+                btnPauseResume.setEnabled(false);
 
                 if (transferFileJob != null) {
-                    skipButton.setEnabled(false);
-                    limitSpeedCheckBox.setEnabled(false);
+                    btnSkip.setEnabled(false);
+                    cbLimitSpeed.setEnabled(false);
                     speedChooser.setEnabled(false);
                 }
             }
         } else if (newState == State.PAUSED) {
-            pauseResumeButton.setText(i18n("resume"));
-            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, RESUME_ICON));
+            btnPauseResume.setText(i18n("resume"));
+            btnPauseResume.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, RESUME_ICON));
 
             // Update buttons mnemonics
             buttonsChoicePanel.updateMnemonics();
@@ -363,8 +360,8 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 updateCurrentSpeedLabel("N/A");
             }
         } else if (newState == State.RUNNING) {
-            pauseResumeButton.setText(i18n("pause"));
-            pauseResumeButton.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
+            btnPauseResume.setText(i18n("pause"));
+            btnPauseResume.setIcon(IconManager.getIcon(IconManager.IconSet.PROGRESS, PAUSE_ICON));
 
             // Update buttons mnemonics
             buttonsChoicePanel.updateMnemonics();
@@ -378,7 +375,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     // for each file being processed (job notifications) which can hog the CPU when lots of small files
     // are being transferred.
     private void updateProgressLabel(JobProgress progress) {
-    	currentFileLabel.setText(progress.getJobStatusString());
+    	lblCurrentFile.setText(progress.getJobStatusString());
     }
     
     private void updateProgressUI(JobProgress progress) {
@@ -387,7 +384,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             currentFileProgressBar.setString(progress.getFileProgressText());
 
             // Update total transferred label
-            totalTransferredLabel.setText(
+            lblTotalTransferred.setText(
                     i18n("progress_dialog.transferred",
                               SizeFormat.format(progress.getBytesTotal(), SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_LONG | SizeFormat.ROUND_TO_KB),
                               SizeFormat.format(progress.getTotalBps(), SizeFormat.UNIT_SPEED | SizeFormat.DIGITS_MEDIUM | SizeFormat.UNIT_SHORT | SizeFormat.ROUND_TO_KB))
@@ -399,7 +396,6 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 speedGraph.addSample(progress.getCurrentBps());
                 updateCurrentSpeedLabel(SizeFormat.format(progress.getCurrentBps(), SizeFormat.UNIT_SPEED| SizeFormat.DIGITS_MEDIUM| SizeFormat.UNIT_SHORT));
             }
-            
         }
         
         totalProgressBar.setValue(progress.getTotalPercentInt());
@@ -409,24 +405,21 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
 
         // Update elapsed time label
-        elapsedTimeLabel.setText(i18n("progress_dialog.elapsed_time")+": "+DurationFormat.format(progress.getEffectiveJobTime()));
-    	
+        lblElapsedTime.setText(i18n("progress_dialog.elapsed_time")+": "+DurationFormat.format(progress.getEffectiveJobTime()));
     }
     
-    /////////////////////////////
-    // JobProgress listener    //
-    /////////////////////////////
-    
 
+    @Override
 	public void jobAdded(FileJob source, int idx) {
 		// nothing here		
 	}
 
-
+    @Override
 	public void jobRemoved(FileJob source, int idx) {
 		// nothing here		
 	}
 
+    @Override
 	public void jobProgress(FileJob source, int idx, boolean fullUpdate) {
 		if (job.equals(source)) {
 			updateProgressLabel(source.getJobProgress());
@@ -434,75 +427,70 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 				updateProgressUI(source.getJobProgress());
 			}
 		}
-		
 	}
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == stopButton) {
-            State jobState = job.getState();
-            // Case when 'Close when finished' isn't selected, stop button's action becomes 'Close'
-            if (jobState == State.FINISHED || jobState == State.INTERRUPTED) {
-                dispose();
-            } else {
-                job.interrupt();
-            }
-        } else if (source == skipButton) {
+        if (source == btnStop) {
+            stopJob();
+        } else if (source == btnSkip) {
             transferFileJob.skipCurrentFile();
-        } else if (source == pauseResumeButton) {
+        } else if (source == btnPauseResume) {
             // Pause/resume job
             job.setPaused(job.getState() != State.PAUSED);
-        } else if (source == backgroundButton) {
-            if (taskWidget == null) {
-                taskWidget = new TaskWidget();
-                taskWidget.setText(getTitle());
-                taskWidget.setProgressDialog(this);
-                mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
-                mainFrame.getStatusBar().revalidate();
-                mainFrame.getStatusBar().repaint();
-            }
-            taskWidget.setVisible(true);
-            setVisible(false);
+        } else if (source == btnBackground) {
+            hideToBackground();
         }
 //        else if(source==hideButton) {
 //            mainFrame.setState(Frame.ICONIFIED);
 //        }
     }
 
+    private void stopJob() {
+        State jobState = job.getState();
+        // Case when 'Close when finished' isn't selected, stop button's action becomes 'Close'
+        if (jobState == State.FINISHED || jobState == State.INTERRUPTED) {
+            dispose();
+        } else {
+            job.interrupt();
+        }
+    }
 
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
+    private void hideToBackground() {
+        if (taskWidget == null) {
+            taskWidget = new TaskWidget();
+            taskWidget.setText(getTitle());
+            taskWidget.setProgressDialog(this);
+            mainFrame.getStatusBar().getTaskPanel().addTask(taskWidget);
+            mainFrame.getStatusBar().revalidate();
+            mainFrame.getStatusBar().repaint();
+        }
+        taskWidget.setVisible(true);
+        setVisible(false);
+    }
 
+
+    @Override
     public void itemStateChanged(ItemEvent e) {
         Object source = e.getSource();
-        if (source == limitSpeedCheckBox) {
-            boolean isEnabled = limitSpeedCheckBox.isSelected();
+        if (source == cbLimitSpeed) {
+            boolean isEnabled = cbLimitSpeed.isSelected();
             speedChooser.setEnabled(isEnabled);
             updateThroughputLimit();
         }
     }
 
 
-    ///////////////////////////////////
-    // ChangeListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == speedChooser) {
             updateThroughputLimit();
         }
     }
 
-
-    ///////////////////////////////////////
-    // Overridden WindowListener methods // 
-    ///////////////////////////////////////
 
     @Override
     public void windowActivated(WindowEvent e) {
@@ -533,7 +521,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
         }
 
         // Remember 'close window when finished' option state
-        TcConfigurations.getPreferences().setVariable(TcPreference.PROGRESS_DIALOG_CLOSE_WHEN_FINISHED, closeWhenFinishedCheckBox.isSelected());
+        TcConfigurations.getPreferences().setVariable(TcPreference.PROGRESS_DIALOG_CLOSE_WHEN_FINISHED, cbCloseWhenFinished.isSelected());
     }
 
 
@@ -551,20 +539,14 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
     private class SpeedGraph extends JPanel {
 
         private final Color GRAPH_OUTLINE_COLOR = new Color(70, 70, 70);
-
         private final Color GRAPH_FILL_COLOR = new Color(215, 215, 215);
-
         private final Color BPS_LIMIT_COLOR = new Color(204, 0, 0);
-
         private static final int LINE_SPACING = 6;
-
         private static final int NB_SAMPLES_MAX = 320;
-
         private static final int STROKE_WIDTH = 1;
 
         private final List<Long> samples = new Vector<>(NB_SAMPLES_MAX);
-
-        private Stroke lineStroke = new BasicStroke(STROKE_WIDTH);
+        private final Stroke lineStroke = new BasicStroke(STROKE_WIDTH);
 
 
         private SpeedGraph() {
@@ -581,7 +563,6 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 // Add sample to the vector
                 samples.add(bytesPerSecond);
             }
-
             repaint();
         }
 
@@ -614,10 +595,11 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
                 // Calculate the maximum bytes per second of all the samples to be displayed
                 long maxBps = 0;
-                for (int i=firstSample; i<firstSample+nbLines; i++) {
+                for (int i = firstSample; i < firstSample+nbLines; i++) {
                     long sample = samples.get(i);
-                    if(sample > maxBps)
+                    if (sample > maxBps) {
                         maxBps = sample;
+                    }
                 }
 
                 // Y-scale projection ratio, leave some space on both sides of the graph
@@ -625,9 +607,9 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
                 // Draw throughput limit as an horizontal line, only if there is a limit
                 long bpsLimit = transferFileJob.getThroughputLimit();
-                if (bpsLimit>0) {
+                if (bpsLimit > 0) {
                     g.setColor(BPS_LIMIT_COLOR);
-                    int y = height-STROKE_WIDTH-(int)(bpsLimit/yRatio);
+                    int y = height-STROKE_WIDTH - (int)(bpsLimit/yRatio);
                     g.drawLine(0, y, width, y);
                 }
 
@@ -636,9 +618,9 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 int x = STROKE_WIDTH;
                 Polygon p = new Polygon();
                 int sampleOffset = firstSample;
-                for(int l=0; l<nbLines; l++) {
+                for (int l = 0; l < nbLines; l++) {
                     p.addPoint(x, height-STROKE_WIDTH-(int)(samples.get(sampleOffset++) /yRatio));
-                    x+=LINE_SPACING;
+                    x += LINE_SPACING;
                 }
                 p.addPoint(x-LINE_SPACING, height-1);
                 p.addPoint(0, height-1);
@@ -648,14 +630,13 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
                 g.setColor(GRAPH_OUTLINE_COLOR);
                 x = STROKE_WIDTH;
                 sampleOffset = firstSample;
-                for(int l=0; l<nbLines-1; l++) {
+                for (int l = 0; l < nbLines-1; l++) {
                     g.drawLine(x, height-STROKE_WIDTH-(int)(samples.get(sampleOffset) /yRatio),
                               (x+=LINE_SPACING), height-STROKE_WIDTH-(int)(samples.get(++sampleOffset) /yRatio));
                 }
 
                 // Draw an horizontal line at the bottom of the graph
-                g.drawLine(0, height-1,
-                        width-1, height-1);
+                g.drawLine(0, height-1,width-1, height-1);
 
                 // Unsuccessful rendering test using curves
     //            GeneralPath gp = new GeneralPath();

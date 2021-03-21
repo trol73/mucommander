@@ -99,7 +99,7 @@ public class QuitDialog extends QuestionDialog {
      * @return <code>true</code> if quit confirmation hasn't been disabled in the preferences
      */
     public static boolean confirmationRequired() {
-        return  WindowManager.getMainFrames().size() > 0     // May happen after an uncaught exception in the startup sequence
+        return  !WindowManager.getMainFrames().isEmpty()     // May happen after an uncaught exception in the startup sequence
              && TcConfigurations.getPreferences().getVariable(TcPreference.CONFIRM_ON_QUIT, TcPreferences.DEFAULT_CONFIRM_ON_QUIT);
     }
     

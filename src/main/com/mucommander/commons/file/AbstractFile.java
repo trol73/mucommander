@@ -570,7 +570,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      *
      * <p>Implementation note: the default implementation of this method calls sequentially {@link #changePermission(int, int, boolean)},
      * for each permission and access (that's a total 9 calls). This may affect performance on filesystems which need
-     * to perform an I/O request to change each permission individually. In that case, and if the fileystem allows
+     * to perform an I/O request to change each permission individually. In that case, and if the filesystem allows
      * to change all permissions at once, this method should be overridden.
      *
      * @param permissions new permissions for this file
@@ -772,7 +772,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     public final AbstractFile getChild(String relativePath) throws IOException {
         FileURL childURL = (FileURL)getURL().clone();
-        childURL.setPath(addTrailingSeparator(childURL.getPath())+ relativePath);
+        childURL.setPath(addTrailingSeparator(childURL.getPath()) + relativePath);
 
         return FileFactory.getFile(childURL, true);
     }

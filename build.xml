@@ -925,6 +925,7 @@
                 <attribute name="Implementation-Vendor"  value="${app.vendor}"/>
 <!--                <attribute name="Implementation-Version" value="${svn.version}"/> -->
                 <attribute name="Build-Date"             value="${DSTAMP}"/>
+                <attribute name="Build-Time"             value="${TSTAMP}"/>
                 <attribute name="Build-URL"              value="${version.url}"/>
             </manifest>
             <metainf dir="${res.jar}"/>

@@ -50,6 +50,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO;
 import com.mucommander.ui.notifier.AbstractNotifier;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.tools.ToolsEnvironment;
+import com.mucommander.updates.VersionChecker;
 import com.mucommander.utils.MuLogging;
 import com.mucommander.utils.text.Translator;
 import org.slf4j.Logger;
@@ -76,8 +77,6 @@ import java.util.concurrent.*;
 public class TrolCommander {
 	private static Logger logger;
 
-    // - Class fields -----------------------------------------------------------
-    // --------------------------------------------------------------------------
     private static SplashScreen  splashScreen;
     /** Whether or not to display the splash screen. */
     private static boolean useSplash;
@@ -87,8 +86,6 @@ public class TrolCommander {
     private static final Object LAUNCH_LOCK = new Object();
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Prevents initialisation of the <code>Launcher</code>.
      */

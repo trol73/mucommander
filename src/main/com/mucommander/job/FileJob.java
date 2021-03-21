@@ -87,7 +87,7 @@ public abstract class FileJob implements Runnable {
     private ProgressDialog progressDialog;
 
     /** Main frame on which the job is to be performed */ 
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 	
     /** Base source folder */
     private AbstractFile baseSourceFolder;
@@ -144,10 +144,10 @@ public abstract class FileJob implements Runnable {
     private State jobState = State.NOT_STARTED;
 
     /** List of registered FileJobListener stored as weak references */
-    private WeakHashMap<FileJobListener, ?> listeners = new WeakHashMap<>();
+    private final WeakHashMap<FileJobListener, ?> listeners = new WeakHashMap<>();
     
     /** Information about this job progress */
-    private JobProgress jobProgress;
+    private final JobProgress jobProgress;
 
     /** True if the user asked to automatically skip errors */
     private boolean autoSkipErrors;
@@ -557,7 +557,7 @@ public abstract class FileJob implements Runnable {
             AbstractNotifier.getNotifier().displayBackgroundNotification(NotificationType.JOB_COMPLETED,
                     getProgressDialog() == null ? "" : getProgressDialog().getTitle(),
                     Translator.get("progress_dialog.job_finished"));
-    }
+        }
     }
 
 
@@ -607,8 +607,8 @@ public abstract class FileJob implements Runnable {
      * @param message error dialog message
      */
     protected int showErrorDialog(String title, String message) {
-        String actionTexts[] = new String[]{SKIP_TEXT, SKIP_ALL_TEXT, RETRY_TEXT, CANCEL_TEXT};
-        int actionValues[] = new int[]{SKIP_ACTION, SKIP_ALL_ACTION, RETRY_ACTION, CANCEL_ACTION};
+        String[] actionTexts = new String[]{SKIP_TEXT, SKIP_ALL_TEXT, RETRY_TEXT, CANCEL_TEXT};
+        int[] actionValues = new int[]{SKIP_ACTION, SKIP_ALL_ACTION, RETRY_ACTION, CANCEL_ACTION};
 
         return showErrorDialog(title, message, actionTexts, actionValues);
     }
@@ -623,7 +623,7 @@ public abstract class FileJob implements Runnable {
      * @param actionTexts actions text to display
      * @param actionValues actions return values
      */
-    protected int showErrorDialog(String title, String message, String actionTexts[], int actionValues[]) {
+    protected int showErrorDialog(String title, String message, String[] actionTexts, int[] actionValues) {
         // Return SKIP_ACTION if 'skip all' has previously been selected and 'skip' is in the list of actions.
         if (autoSkipErrors) {
             for (int actionValue : actionValues)
@@ -833,14 +833,11 @@ public abstract class FileJob implements Runnable {
         return baseSourceFolder;
     }
 	
-	
-    /////////////////////////////
-    // Runnable implementation //
-    /////////////////////////////
 
     /**
      * This method is public as a side-effect of this class implementing <code>Runnable</code>.
      */
+    @Override
     public final void run() {
         FileTable activeTable = getMainFrame().getActiveTable();
 
@@ -850,7 +847,7 @@ public abstract class FileJob implements Runnable {
 //this.nbFilesDiscovered += nbFiles;
 
         // Loop on all source files, checking that job has not been interrupted
-        for (currentFileIndex=0; currentFileIndex < nbFiles; currentFileIndex++) {
+        for (currentFileIndex = 0; currentFileIndex < nbFiles; currentFileIndex++) {
             AbstractFile currentFile = files.elementAt(currentFileIndex);
 
             // Change current file and advance file index
@@ -860,8 +857,9 @@ public abstract class FileJob implements Runnable {
             boolean success = processFile(currentFile, null);
 
             // Stop if job was interrupted
-            if (getState() == State.INTERRUPTED)
+            if (getState() == State.INTERRUPTED) {
                 break;
+            }
 
             // Unmark file in active table if 'auto unmark' is enabled
             // and file was processed successfully
@@ -885,9 +883,6 @@ public abstract class FileJob implements Runnable {
     }
 
 
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Returns <code>true</code> if the given folder has or may have been modified by this job.

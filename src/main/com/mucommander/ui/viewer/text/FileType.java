@@ -48,7 +48,7 @@ public enum FileType {
     HTACCESS("htaccess", SyntaxConstants.SYNTAX_STYLE_HTACCESS, ".htaccess"),
     HTML("HTML", SyntaxConstants.SYNTAX_STYLE_HTML, "*.html,*.htm"),
     JAVA("Java", SyntaxConstants.SYNTAX_STYLE_JAVA, "*.java"),
-    JAVASCRIPT("JavaScript", SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT, "*.js"),
+    JAVASCRIPT("JavaScript", SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT, "*.js,*.ts"),
     JSON("Json", SyntaxConstants.SYNTAX_STYLE_JSON, "*.json"),
     JSP("JSP", SyntaxConstants.SYNTAX_STYLE_JSP, "*.jsp"),
     LATEX("Latex", SyntaxConstants.SYNTAX_STYLE_LATEX, "*.tex"),

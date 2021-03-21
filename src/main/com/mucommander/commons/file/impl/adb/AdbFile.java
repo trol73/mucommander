@@ -198,7 +198,7 @@ public class AdbFile extends ProtocolFile {
 	@Override
 	public boolean exists() {
 		AdbFile adbParent = (AdbFile) getParent();
-		if (adbParent == null) {
+		if (adbParent == null || adbParent.childs == null) {
 			String path = getURL().getPath();
 			return "/".equals(path);
 		}

@@ -127,7 +127,7 @@ public class MeterProgressBarUI extends BasicProgressBarUI {
             }
         }
 
-        //paint backgound
+        //paint background
         g2.setColor(progressBar.getBackground());
         g2.setStroke(new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
                 0.f, new float[]{_cellLength, _cellSpacing}, 0.f));
@@ -135,8 +135,7 @@ public class MeterProgressBarUI extends BasicProgressBarUI {
         if (orientation == JProgressBar.HORIZONTAL) {
             g2.drawLine(b.left - _cellSpacing, barRectHeight / 2 + b.top,
                     b.left + barRectWidth, barRectHeight / 2 + b.top);
-        }
-        else {
+        } else {
             g2.drawLine(barRectWidth / 2 + b.left, b.top + barRectHeight + _cellSpacing,
                     barRectWidth / 2 + b.left, b.top);
         }

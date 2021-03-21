@@ -38,7 +38,7 @@ public class NativeFileUtils {
     private static void prepareLibrary(boolean overwrite) {
         String jarPath = FileUtils.getJarPath();
         try {
-            FileUtils.copyJarFile("libtrolsoft.jnilib", jarPath, overwrite);
+            FileUtils.copyFromJarFile("libtrolsoft.jnilib", jarPath, overwrite);
         } catch (IOException e) {
             e.printStackTrace();
         }

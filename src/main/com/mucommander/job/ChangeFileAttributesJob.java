@@ -36,7 +36,7 @@ import com.mucommander.ui.main.MainFrame;
 public class ChangeFileAttributesJob extends FileJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeFileAttributesJob.class);
 	
-    private boolean recurseOnDirectories;
+    private final boolean recurseOnDirectories;
 
     private int permissions = -1;
     private long date = -1;
@@ -65,9 +65,6 @@ public class ChangeFileAttributesJob extends FileJob {
         this.recurseOnDirectories = recurseOnDirectories;
     }
 
-    ////////////////////////////
-    // FileJob implementation //
-    ////////////////////////////
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
@@ -78,10 +75,10 @@ public class ChangeFileAttributesJob extends FileJob {
         if (recurseOnDirectories && file.isDirectory()) {
             do {		// Loop for retries
                 try {
-                    AbstractFile children[] = file.ls();
+                    AbstractFile[] children = file.ls();
                     int nbChildren = children.length;
 
-                    for(int i=0; i<nbChildren && getState() != State.INTERRUPTED; i++) {
+                    for (int i=0; i<nbChildren && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                         nextFile(children[i]);
                         processFile(children[i], null);

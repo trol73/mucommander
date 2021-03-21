@@ -31,32 +31,30 @@ import org.slf4j.LoggerFactory;
 import com.mucommander.commons.file.util.ResourceLoader;
 
 /**
- * Defines various generic muCommander constants.
+ * Defines various generic trolCommander constants.
  * @author Nicolas Rinaudo
  */
 public class RuntimeConstants {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeConstants.class);
 	
-    // - Constant paths ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Path to the themes directory. */
     public static final String THEMES_PATH     = "/themes";
     /** Path to the viewer/editor themes directory. */
     public static final String TEXT_SYNTAX_THEMES_PATH = "/themes/editor";
-    /** Path to the muCommander license file. */
+    /** Path to the trolCommander license file. */
     public static final String LICENSE         = "/license.txt";
-    /** Default muCommander theme. */
+    /** Default trolCommander theme. */
     public static final String DEFAULT_THEME   = "Native";
     public static final boolean DISPLAY_4K = is4KDisplay();
 
 
-    // - URLs ----------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Homepage URL. */
     public static final String HOMEPAGE_URL       = "http://trolsoft.ru/en/soft/trolcommander";
+
+    public static final String DEFAULT_VERSION_URL = "http://trolsoft.ru/content/soft/trolcommander/version.xml";
     /** URL at which to download the latest version description. */
-    static final String VERSION_URL;
-    /** URL of the muCommander forums. */
+    public static final String VERSION_URL;
+    /** URL of the trolCommander forums. */
     public static final String FORUMS_URL         = HOMEPAGE_URL + "/forums/";
     /** URL at which to see the donation information. */
     public static final String DONATION_URL       = HOMEPAGE_URL + "/#donate";
@@ -67,29 +65,29 @@ public class RuntimeConstants {
 
 
 
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Release date to use in case the JAR file doesn't contain the information.
      * This is guaranteed to trigger a software update - the JAR file is corrupt, so we might as well get the latest
      * version.
      */
     private static final String DEFAULT_RELEASE_DATE = "20020101";
-    /** Current muCommander version (<code>MAJOR.MINOR.DEV</code>). */
+    /** Current trolCommander version (<code>MAJOR.MINOR.DEV</code>). */
     public  static final String VERSION;
     /** Date at which the build was generated (<code>YYYYMMDD</code>). */
     public  static final String BUILD_DATE;
+    /** Time at which the build was generated (<code>HHMM</code>). */
+    public  static final String BUILD_TIME;
     /** Copyright information (<code>YYYY-YYYY</code>). */
     public  static final String COPYRIGHT;
-    /** String describing the software (<code>muCommander vMAJOR.MINOR.DEV</code>). */
+    /** String describing the software (<code>trolCommander vMAJOR.MINOR.DEV</code>). */
     public  static final String APP_STRING;
-    /** String describing the muCommander build number. */
+    /** String describing the trolCommander build number. */
     public static final String BUILD_NUMBER;
+    /** YYYYMMDDHHmm   */
+    public static final String BUILD_CODE;
 
     
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     static {
         Attributes attributes = getManifestAttributes();
 
@@ -99,16 +97,19 @@ public class RuntimeConstants {
             // We use a date that we are sure is later than the latest version to trigger the version checker.
             // After all, the JAR appears to be corrupt and should be upgraded.
             BUILD_DATE = DEFAULT_RELEASE_DATE;
-            VERSION_URL  = HOMEPAGE_URL + "/version/version.xml";
+            BUILD_TIME = null;
+            VERSION_URL  = DEFAULT_VERSION_URL;
             BUILD_NUMBER = "?";
+            BUILD_CODE = null;
         } else {    // A MANIFEST.MF file was found, extract data from it.
             VERSION = getAttribute(attributes, "Specification-Version");
             BUILD_DATE = getAttribute(attributes, "Build-Date");
+            BUILD_TIME = getAttribute(attributes, "Build-Time");
             VERSION_URL = getAttribute(attributes, "Build-URL");
             BUILD_NUMBER = getAttribute(attributes, "Implementation-Version");
             // Protection against corrupt manifest files.
             COPYRIGHT = BUILD_DATE.length() > 4 ? BUILD_DATE.substring(0, 4) : DEFAULT_RELEASE_DATE;
-
+            BUILD_CODE = BUILD_DATE + BUILD_TIME;
         }
         APP_STRING = "trolCommander v" + VERSION;
     }

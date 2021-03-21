@@ -71,11 +71,7 @@ public abstract class AbstractCriterionFilter<C> extends AbstractFileFilter impl
      * @return true if this filter matched the given value, according to the current inverted mode
      */
     public boolean match(C value) {
-        if (inverted) {
-            return reject(value);
-        }
-
-        return accept(value);
+        return inverted ? reject(value) : accept(value);
     }
 
     /**

@@ -57,7 +57,7 @@ public class CopyJob extends AbstractCopyJob {
         COPY,
         DOWNLOAD
     }
-    private Mode mode;
+    private final Mode mode;
 
 
 	
@@ -82,10 +82,6 @@ public class CopyJob extends AbstractCopyJob {
     }
 
 
-
-    ////////////////////////////////////
-    // TransferFileJob implementation //
-    ////////////////////////////////////
 
     /**
      * Copies recursively the given file or folder. 
@@ -123,28 +119,19 @@ public class CopyJob extends AbstractCopyJob {
         if (destFile == null) {
             return false;
         }
-//System.out.println("destFile " + destFile);
         currentDestFile = destFile;
 
         AbstractFile sourceFile = file.getAncestor();
 
         // Do nothing if file is a symlink (skip file and return)
         if (file.isSymlink() && file instanceof LocalFile) {
-            //copySymLink(file, destFile);
             tryCopySymlinkFile(file, destFolder);
             return true;
         }
 
         // ADB files
         if (sourceFile instanceof AdbFile && destFile instanceof LocalFile && !sourceFile.isDirectory()) {
-            AdbFile adbFile = (AdbFile)sourceFile;
-            try {
-                adbFile.pushTo(destFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
+            return copyAdbFile(destFile, (AdbFile) sourceFile);
         }
 
         destFile = checkForCollision(file, destFolder, destFile, false);
@@ -152,75 +139,97 @@ public class CopyJob extends AbstractCopyJob {
             return false;
         }
 
-        // Copy directory recursively
-        if (file.isDirectory()) {
-            // create the folder in the destination folder if it doesn't exist
-            if (!(destFile.exists() && destFile.isDirectory())) {
-                // Loop for retry
-                do {
-                    try {
-                        destFile.mkdir();
-                    } catch (IOException e) {
-                        // Unable to create folder
-                        int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", destFileName));
-                        // Retry loops
-                        if (ret == RETRY_ACTION) {
-                            continue;
-                        }
-                        // Cancel or close dialog return false
-                        return false;
-                        // Skip continues
-                    }
-                    break;
-                } while(true);
-            }
-			
-            // and copy each file in this folder recursively
-            do {		// Loop for retry
+        if (!file.isDirectory()) {
+            return tryCopyFile(file, destFile, append, errorDialogTitle);
+        }
+        return copyDirectoryRecursively(file, destFileName, destFile);
+    }
+
+    private boolean copyDirectoryRecursively(AbstractFile file, String destFileName, AbstractFile destFile) {
+        return createSubFolder(destFileName, destFile) && copyChildrenRecursively(file, destFile);
+    }
+
+    private boolean createSubFolder(String destFileName, AbstractFile destFile) {
+        // create the folder in the destination folder if it doesn't exist
+        if (!(destFile.exists() && destFile.isDirectory())) {
+            // Loop for retry
+            do {
                 try {
-                    // for each file in folder...
-                    AbstractFile subFiles[] = file.ls();
-//filesDiscovered(subFiles);
-                    for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
-                        // Notify job that we're starting to process this file (needed for recursive calls to processFile)
-                        nextFile(subFiles[i]);
-                        processFile(subFiles[i], destFile);
-                    }
-
-                    // Set currentDestFile back to the enclosing folder in case an overridden processFile method
-                    // needs to work with the folder after calling super.processFile.
-                    currentDestFile = destFile;
-
-                    // Only when finished with folder, set destination folder's date to match the original folder one
-                    if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
-                        try {
-                            destFile.setLastModifiedDate(file.getLastModifiedDate());
-                        } catch (IOException e) {
-                            LOGGER.debug("failed to change the date of "+destFile, e);
-                            // Fail silently
-                        }
-                    }
-
-                    return true;
+                    destFile.mkdir();
                 } catch (IOException e) {
-                    // file.ls() failed
-                    int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_folder", file.getName()));
+                    // Unable to create folder
+                    int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_create_folder", destFileName));
                     // Retry loops
                     if (ret == RETRY_ACTION) {
                         continue;
                     }
-                    // Cancel, skip or close dialog returns false
+                    // Cancel or close dialog return false
                     return false;
+                    // Skip continues
                 }
+                break;
             } while(true);
         }
-        // File is a regular file, copy it
-        else  {
-            // Copy the file
-            return tryCopyFile(file, destFile, append, errorDialogTitle);
+        return true;
+    }
+
+    private boolean copyChildrenRecursively(AbstractFile file, AbstractFile destFile) {
+        // and copy each file in this folder recursively
+        do {		// Loop for retry
+            try {
+                // for each file in folder...
+                processChildernFiles(file, destFile);
+
+                // Set currentDestFile back to the enclosing folder in case an overridden processFile method
+                // needs to work with the folder after calling super.processFile.
+                currentDestFile = destFile;
+
+                // Only when finished with folder, set destination folder's date to match the original folder one
+                changeFolderModifiedDate(file, destFile);
+
+                return true;
+            } catch (IOException e) {
+                // file.ls() failed
+                int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_read_folder", file.getName()));
+                // Retry loops
+                if (ret == RETRY_ACTION) {
+                    continue;
+                }
+                // Cancel, skip or close dialog returns false
+                return false;
+            }
+        } while(true);
+    }
+
+
+    private void changeFolderModifiedDate(AbstractFile file, AbstractFile destFile) {
+        if (destFile.isFileOperationSupported(FileOperation.CHANGE_DATE)) {
+            try {
+                destFile.setLastModifiedDate(file.getLastModifiedDate());
+            } catch (IOException e) {
+                LOGGER.debug("failed to change the date of "+ destFile, e);
+            }
         }
     }
 
+    private void processChildernFiles(AbstractFile file, AbstractFile destFile) throws IOException {
+        AbstractFile[] subFiles = file.ls();
+        for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
+            // Notify job that we're starting to process this file (needed for recursive calls to processFile)
+            nextFile(subFiles[i]);
+            processFile(subFiles[i], destFile);
+        }
+    }
+
+    private boolean copyAdbFile(AbstractFile destFile, AdbFile sourceFile) {
+        try {
+            sourceFile.pushTo(destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 
     // This job modifies baseDestFolder and its subfolders
@@ -230,9 +239,6 @@ public class CopyJob extends AbstractCopyJob {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     protected void jobCompleted() {
@@ -240,8 +246,9 @@ public class CopyJob extends AbstractCopyJob {
 
         // If the destination files are located inside an archive, optimize the archive file
         AbstractArchiveFile archiveFile = baseDestFolder.getParentArchive();
-        if (archiveFile != null && archiveFile.isArchive() && archiveFile.isWritable())
+        if (archiveFile != null && archiveFile.isArchive() && archiveFile.isWritable()) {
             optimizeArchive((AbstractRWArchiveFile)archiveFile);
+        }
 
         // If this job corresponds to a 'local copy' of a single file and in the same directory,
         // select the copied file in the active table after this job has finished (and hasn't been cancelled)
@@ -257,11 +264,9 @@ public class CopyJob extends AbstractCopyJob {
         if (isCheckingIntegrity()) {
             return super.getStatusString();
         }
-        
         if (isOptimizingArchive) {
             return Translator.get("optimizing_archive", archiveToOptimize.getName());
         }
-
         return Translator.get(mode == Mode.DOWNLOAD ? "download_dialog.downloading_file" : "copy_dialog.copying_file", getCurrentFilename());
     }
 
@@ -283,9 +288,9 @@ public class CopyJob extends AbstractCopyJob {
         float progressByCount = 1.0f*(processedFilesCount-1) / scanDirectoryThread.getFilesCount();
         float result = (progressBySize * 8 + progressByCount * 2) / 10;
         if (result < 0) {
-            result = 0;
+            return 0;
         } else if (result > 1) {
-            result = 1;
+            return 1;
         }
         return result;
     }

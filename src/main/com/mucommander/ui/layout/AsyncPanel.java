@@ -21,6 +21,7 @@ package com.mucommander.ui.layout;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.icon.SpinningDial;
+import ru.trolsoft.ui.ZxSpectrumLoadPane;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -48,13 +49,14 @@ import java.awt.*;
  *
  * @author Maxence Bernard
  */
-public abstract class AsyncPanel extends JPanel {
+public abstract class AsyncPanel extends ZxSpectrumLoadPane {
 
     private class InitWorker extends SwingWorker<Void, Void> {
         private Exception exception;
 
         @Override
         protected Void doInBackground() {
+            AsyncPanel.this.start();
             try {
                 initTargetComponent();
             } catch (Exception e) {
@@ -74,6 +76,7 @@ public abstract class AsyncPanel extends JPanel {
             if (OsFamily.WINDOWS.isCurrent()) {
                 setSize(getSize());
             }
+            AsyncPanel.this.stop();
         }
     }
 
@@ -137,23 +140,23 @@ public abstract class AsyncPanel extends JPanel {
     /*
      * Loads the target component by calling {@link #getTargetComponent()} and replace the wait component by it.
      */
-/*
-    private void loadTargetComponent() {
-        new Thread() {
-            @Override
-            public void init() {
-                JComponent targetComponent = getTargetComponent();
 
-                remove(waitComponent);
-                setBorder(new EmptyBorder(0, 0, 0, 0));
+//    private void loadTargetComponent() {
+//        new Thread() {
+//            @Override
+//            public void init() {
+//                JComponent targetComponent = getTargetComponent();
+//
+//                remove(waitComponent);
+//                setBorder(new EmptyBorder(0, 0, 0, 0));
+//
+//                add(targetComponent, BorderLayout.CENTER);
+//
+//                updateLayout();
+//            }
+//        }.start();
+//    }
 
-                add(targetComponent, BorderLayout.CENTER);
-
-                updateLayout();
-            }
-        }.start();
-    }
-*/
     /**
      * Returns the default component to be displayed while the target component is being loaded.
      *

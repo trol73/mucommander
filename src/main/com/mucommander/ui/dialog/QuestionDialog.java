@@ -159,10 +159,8 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
     }
 
 
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 		
@@ -175,6 +173,7 @@ public class QuestionDialog extends FocusDialog implements ActionListener, Dialo
         dispose();
     }
 
+    @Override
     public Object getUserInput() {
         super.showDialog();
         return retValue;

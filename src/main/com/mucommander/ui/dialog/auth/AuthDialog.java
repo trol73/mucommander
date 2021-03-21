@@ -34,7 +34,6 @@ import com.mucommander.ui.layout.InformationPane;
 import com.mucommander.ui.layout.XAlignedComponentPanel;
 import com.mucommander.ui.layout.YBoxPanel;
 import com.mucommander.ui.main.MainFrame;
-import com.mucommander.utils.text.Translator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,25 +53,25 @@ import java.awt.event.ActionListener;
  */
 public class AuthDialog extends FocusDialog implements ActionListener, EditableComboBoxListener {
 
-    private JButton okButton;
-    private JButton cancelButton;
+    private final JButton btnOk;
+    private final JButton btnCancel;
 
     private JRadioButton guestRadioButton;
     private JRadioButton userRadioButton;
 
-    private JTextField loginField;
+    private final JTextField loginField;
     private EditableComboBox<String> loginComboBox;
 
-    private JPasswordField passwordField;
+    private final JPasswordField passwordField;
 
-    private JCheckBox saveCredentialsCheckBox;
+    private final JCheckBox cbSaveCredentials;
 
     private CredentialsMapping selectedCredentialsMapping;
     private boolean guestCredentialsSelected;
 
-    private FileURL fileURL;
+    private final FileURL fileURL;
 
-    private CredentialsMapping[] credentialsMappings;
+    private final CredentialsMapping[] credentialsMappings;
 
     // Dialog size constraints
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320,0);
@@ -87,7 +86,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
 
         YBoxPanel yPanel = new YBoxPanel();
 
-        if(authFailed) {
+        if (authFailed) {
             yPanel.add(new InformationPane(i18n("auth_dialog.authentication_failed"), errorMessage, errorMessage==null?Font.PLAIN:Font.BOLD, InformationPane.ERROR_ICON));
             yPanel.addSpace(5);
             yPanel.add(new JSeparator());
@@ -101,7 +100,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
         Credentials guestCredentials = fileURL.getGuestCredentials();
         // Fetch credentials from the specified FileURL (if any) and use them only if they're different from the guest ones
         Credentials urlCredentials = fileURL.getCredentials();
-        if (urlCredentials!=null && guestCredentials!=null && urlCredentials.equals(guestCredentials)) {
+        if (urlCredentials != null && urlCredentials.equals(guestCredentials)) {
             urlCredentials = null;
         }
         // Retrieve a list of credentials matching the URL from CredentialsManager
@@ -110,21 +109,10 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
         XAlignedComponentPanel compPanel = new XAlignedComponentPanel(10);
 
         // Connect as Guest/User radio buttons, displayed only if the URL has guest credentials
-        if(guestCredentials!=null) {
-            guestRadioButton = new JRadioButton(StringUtils.capitalize(guestCredentials.getLogin()));
-            guestRadioButton.addActionListener(this);
-            compPanel.addRow(i18n("auth_dialog.connect_as"), guestRadioButton, 0);
-
-            userRadioButton = new JRadioButton(i18n("user"));
-            userRadioButton.addActionListener(this);
-            compPanel.addRow("", userRadioButton, 15);
-
-            ButtonGroup buttonGroup = new ButtonGroup();
-            buttonGroup.add(guestRadioButton);
-            buttonGroup.add(userRadioButton);
-        }
-        // If not, display an introduction label ("please enter a login and password")
-        else {
+        if (guestCredentials != null) {
+            addGuestCredentials(guestCredentials, compPanel);
+        } else {
+            // If not, display an introduction label ("please enter a login and password")
             yPanel.add(new JLabel(i18n("auth_dialog.desc")));
             yPanel.addSpace(15);
         }
@@ -147,10 +135,8 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
             }
 
             loginComboBox.addEditableComboBoxListener(this);
-
             loginComponent = loginComboBox;
-        }
-		else {
+        } else {
             // Simple text field
             loginField = new JTextField();
             loginComponent = loginField;
@@ -171,9 +157,8 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
         // If the provided URL contains credentials, use them
         if (urlCredentials != null) {
             selectedCredentials = urlCredentials;
-        }
-        // Else if CredentialsManager had matching credentials, use the best ones  
-        else if(nbCredentials > 0) {
+        } else if (nbCredentials > 0) {
+            // Else if CredentialsManager had matching credentials, use the best ones
             CredentialsMapping bestCredentialsMapping = credentialsMappings[0];
 
             selectedCredentials = bestCredentialsMapping.getCredentials();
@@ -182,8 +167,8 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
 
         yPanel.add(compPanel);
 
-        this.saveCredentialsCheckBox = new JCheckBox(i18n("auth_dialog.store_credentials"), saveCredentialsCheckBoxSelected);
-        yPanel.add(saveCredentialsCheckBox);
+        this.cbSaveCredentials = new JCheckBox(i18n("auth_dialog.store_credentials"), saveCredentialsCheckBoxSelected);
+        yPanel.add(cbSaveCredentials);
 
         yPanel.addSpace(5);
         contentPane.add(yPanel, BorderLayout.CENTER);
@@ -202,8 +187,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
             if (userRadioButton != null) {
                 userRadioButton.setSelected(true);
             }
-        }
-        else {
+        } else {
             // Pre-fill the login field with the current user's name (ticket #185)
             loginField.setText(System.getProperty("user.name"));
 
@@ -213,23 +197,37 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
 
                 loginField.setEnabled(false);
                 passwordField.setEnabled(false);
-                saveCredentialsCheckBox.setEnabled(false);
+                cbSaveCredentials.setEnabled(false);
             }
         }
 
         // Add OK/Cancel buttons
-        this.okButton = new JButton(Translator.get("ok"));
-        this.cancelButton = new JButton(Translator.get("cancel"));
-        contentPane.add(DialogToolkit.createOKCancelPanel(okButton, cancelButton, getRootPane(), this), BorderLayout.SOUTH);
+        this.btnOk = new JButton(i18n("ok"));
+        this.btnCancel = new JButton(i18n("cancel"));
+        contentPane.add(DialogToolkit.createOKCancelPanel(btnOk, btnCancel, getRootPane(), this), BorderLayout.SOUTH);
 
         // Set the component that will receive the initial focus
-        setInitialFocusComponent(guestRadioButton==null?loginField:guestRadioButton.isSelected()?guestRadioButton:loginField);
+        setInitialFocusComponent(guestRadioButton == null ? loginField : guestRadioButton.isSelected() ? guestRadioButton:loginField);
 
         // Set minimum dimension
         setMinimumSize(MINIMUM_DIALOG_DIMENSION);
 
         // Set minimum dimension
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);
+    }
+
+    private void addGuestCredentials(Credentials guestCredentials, XAlignedComponentPanel compPanel) {
+        guestRadioButton = new JRadioButton(StringUtils.capitalize(guestCredentials.getLogin()));
+        guestRadioButton.addActionListener(this);
+        compPanel.addRow(i18n("auth_dialog.connect_as"), guestRadioButton, 0);
+
+        userRadioButton = new JRadioButton(i18n("user"));
+        userRadioButton.addActionListener(this);
+        compPanel.addRow("", userRadioButton, 15);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(guestRadioButton);
+        buttonGroup.add(userRadioButton);
     }
 
 
@@ -258,14 +256,14 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
      * been pressed in a text field.
      */
     private void setCredentialMapping() {
-        if (guestRadioButton!=null && guestRadioButton.isSelected()) {
+        if (guestRadioButton != null && guestRadioButton.isSelected()) {
             guestCredentialsSelected = true;
             selectedCredentialsMapping = new CredentialsMapping(fileURL.getGuestCredentials(), fileURL, false);
         } else {
             Credentials enteredCredentials = new Credentials(loginField.getText(), new String(passwordField.getPassword()));
             guestCredentialsSelected = false;
 
-            boolean isPersistent = saveCredentialsCheckBox.isSelected();
+            boolean isPersistent = cbSaveCredentials.isSelected();
             selectedCredentialsMapping = new CredentialsMapping(enteredCredentials, fileURL, isPersistent);
 
             // Look for an existing matching CredentialsMapping instance to re-use the realm which may contain
@@ -283,26 +281,23 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
     }
 
 
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == okButton || source == loginField || source == passwordField) {
+        if (source == btnOk || source == loginField || source == passwordField) {
             setCredentialMapping();
             dispose();
-        } else if (source == cancelButton) {
+        } else if (source == btnCancel) {
             dispose();
         } else if (source == guestRadioButton) {
             loginField.setEnabled(false);
             passwordField.setEnabled(false);
-            saveCredentialsCheckBox.setEnabled(false);
+            cbSaveCredentials.setEnabled(false);
         } else if(source == userRadioButton) {
             loginField.setEnabled(true);
             passwordField.setEnabled(true);
-            saveCredentialsCheckBox.setEnabled(true);
+            cbSaveCredentials.setEnabled(true);
 
             loginField.selectAll();
             FocusRequester.requestFocus(loginField);
@@ -310,10 +305,7 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
     }
 
 
-    /////////////////////////////////////////////
-    // EditableComboBoxListener implementation //
-    /////////////////////////////////////////////
-
+    @Override
     public void comboBoxSelectionChanged(SaneComboBox source) {
         CredentialsMapping selectedCredentialsMapping = credentialsMappings[loginComboBox.getSelectedIndex()];
         Credentials selectedCredentials = selectedCredentialsMapping.getCredentials();
@@ -321,15 +313,18 @@ public class AuthDialog extends FocusDialog implements ActionListener, EditableC
         passwordField.setText(selectedCredentials.getPassword());
 
         // Enable/disable 'save credentials' checkbox depending on whether the selected credentials are persistent or not
-        if(saveCredentialsCheckBox!=null)
-            saveCredentialsCheckBox.setSelected(selectedCredentialsMapping.isPersistent());
+        if (cbSaveCredentials != null) {
+            cbSaveCredentials.setSelected(selectedCredentialsMapping.isPersistent());
+        }
     }
 
+    @Override
     public void textFieldValidated(EditableComboBox source) {
         setCredentialMapping();
         dispose();
     }
 
+    @Override
     public void textFieldCancelled(EditableComboBox source) {
     }
 }

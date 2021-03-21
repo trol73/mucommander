@@ -1,13 +1,13 @@
 /*
- * This file is part of muCommander, http://www.mucommander.com
- * Copyright (C) 2002-2012 Maxence Bernard
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
+ * Copyright (C) 2014-2021 Oleg Trifonov
  *
- * muCommander is free software; you can redistribute it and/or modify
+ * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * muCommander is distributed in the hope that it will be useful,
+ * trolCommander is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,256 +18,102 @@
 
 package com.mucommander.job;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.file.FileFactory;
-import com.mucommander.commons.file.filter.AttributeFileFilter;
-import com.mucommander.commons.file.filter.AttributeFileFilter.FileAttribute;
-import com.mucommander.commons.file.filter.EqualsFilenameFilter;
-import com.mucommander.commons.file.filter.ExtensionFilenameFilter;
-import com.mucommander.commons.file.filter.OrFileFilter;
 import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.file.util.ResourceLoader;
-import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.desktop.DesktopManager;
-import com.mucommander.process.ProcessRunner;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.file.FileCollisionDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
+import com.mucommander.updates.SelfUpdateUtils;
+import com.mucommander.utils.text.Translator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This job self-updates the trolCommander with a new JAR file that is fetched from a specified remote file.
- * The update process boils down to the following steps:
- * <ul>
- *  <li>First, all classes of the existing JAR files are loaded in memory, to ensure that the shutdown sequence has all
- * the classes it needs, including those that haven't been used yet.</li>
- *  <li>The new JAR file is downloaded (using {@link CopyJob}) to a temporary location</li>
- *  <li>The new JAR file is moved from the temporary location to the main application JAR file, overwriting the previous
- * JAR file.
- *  <li>trolCommander is restarted: this involves starting a new application instance and shutting down the current one.
- *  The specifics of this step are platform-dependant.</li>
- * </ul>
- *
- * @author Maxence Bernard
  */
 public class SelfUpdateJob extends CopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfUpdateJob.class);
-	
-    /** The JAR file to be updated */
-    private AbstractFile destJar;
 
-    /** The temporary file where the remote JAR file is copied, before being moved to its final location */
-    private AbstractFile tempDestJar;
+	private static final String TEMP_JAR_FILENAME = "trolcommander-new.jar";
 
-    /** The ClassLoader to use for loading all classes from the JAR file */
-    private ClassLoader classLoader;
-
-    /** Filters directories and class files, used for loading classes from the JAR file */
-    private OrFileFilter directoryOrClassFileFilter;
-
-    /** True if classes haven't been loaded yet */ 
-    private boolean loadingClasses =  true;
 
 
     public SelfUpdateJob(ProgressDialog progressDialog, MainFrame mainFrame, AbstractFile remoteJarFile) {
-        this(progressDialog, mainFrame, new FileSet(remoteJarFile.getParent(), remoteJarFile), getDestJarFile());
-    }
-
-    private SelfUpdateJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destJar) {
-        this(progressDialog, mainFrame, files, destJar, getTempDestJar(destJar));
-    }
-
-    private SelfUpdateJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet files, AbstractFile destJar, AbstractFile tempDestJar) {
-        super(progressDialog, mainFrame, files, tempDestJar.getParent(), tempDestJar.getName(), CopyJob.Mode.DOWNLOAD, FileCollisionDialog.OVERWRITE_ACTION);
-
-        this.destJar = destJar;
-        this.tempDestJar = tempDestJar;
-        this.classLoader = getClass().getClassLoader();
-
-        directoryOrClassFileFilter = new OrFileFilter(
-            new AttributeFileFilter(FileAttribute.DIRECTORY),
-            new ExtensionFilenameFilter(".class")
-        );
-    }
-
-    private static AbstractFile getTempDestJar(AbstractFile destJar) {
-        try {
-            return createTemporaryFolder().getChild(destJar.getName());
-        }
-        catch(IOException e) {
-            return destJar;
-        }
-    }
-
-    private static AbstractFile createTemporaryFolder() {
-        AbstractFile tempFolder;
-        try {
-            tempFolder = FileFactory.getTemporaryFile("trolcomander-self-update", true);
-            tempFolder.mkdir();
-        }
-        catch(IOException e) {
-            tempFolder = FileFactory.getTemporaryFolder();
-        }
-
-        return tempFolder;
+        super(progressDialog, mainFrame, new FileSet(remoteJarFile.getParent(), remoteJarFile),
+                getTempJarFolder(), TEMP_JAR_FILENAME, CopyJob.Mode.DOWNLOAD, FileCollisionDialog.OVERWRITE_ACTION);
     }
 
 
-    /**
-     * Returns the JAR file to update.
-     *
-     * @return the JAR file to update
-     */
-    private static AbstractFile getDestJarFile() {
+    private static AbstractFile getApplicationJarFile() {
         return ResourceLoader.getRootPackageAsFile(SelfUpdateJob.class);
     }
 
-    /**
-     * Loads all the class files contained in the given JAR file recursively.
-     *
-     * @param file the JAR file from which to load the classes
-     * @throws Exception if an error occurred while loading the classes
-     */
-    private void loadClassRecurse(AbstractFile file) throws Exception {
-        if (file.isBrowsable()) {
-            AbstractFile[] children = file.ls(directoryOrClassFileFilter);
-            for (AbstractFile child : children) {
-                loadClassRecurse(child);
-            }
-        }
-        else {          // .class file
-
-            String classname = file.getAbsolutePath(false);
-            // Strip off the JAR file's path and ".class" extension
-            classname = classname.substring(destJar.getAbsolutePath(true).length(), classname.length()-6);
-            // Replace separator characters by '.'
-            classname = classname.replace(destJar.getSeparator(), ".");
-            // We now have a class name, e.g. "com.mucommander.Launcher"
-
-            try {
-                classLoader.loadClass(classname);
-
-                LOGGER.trace("Loaded class "+classname);
-            }
-            catch(java.lang.NoClassDefFoundError e) {
-                LOGGER.debug("Caught an error while loading class "+classname, e);
-            }
-        }
+    private static AbstractFile getTempJarFolder() {
+        return getApplicationJarFile().getParent();
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
-    @Override
-    public String getStatusString() {
-        if(loadingClasses) {
-            return Translator.get("version_dialog.preparing_for_update");
-        }
-
-        return super.getStatusString();
-    }
-
-    @Override
-    protected void jobStarted() {
-        super.jobStarted();
-
-        try {
-            // Loads all classes from the JAR file before the new JAR file is installed.
-            // This will ensure that the shutdown sequence, which invokes so not-yet-loaded classes goes down smoothly.
-            loadClassRecurse(destJar);
-            loadingClasses = false;
-        }
-        catch(Exception e) {
-            LOGGER.debug("Caught exception", e);
-
-            // Todo: display an error message
-            interrupt();
-        }
-    }
+//    @Override
+//    protected void jobStarted() {
+//        super.jobStarted();
+//        try {
+////            // Loads all classes from the JAR file before the new JAR file is installed.
+////            // This will ensure that the shutdown sequence, which invokes so not-yet-loaded classes goes down smoothly.
+////            loadClassRecurse(destJar);
+////            loadingClasses = false;
+//        } catch(Exception e) {
+//            LOGGER.debug("Caught exception", e);
+//            // TODO: display an error message
+//            interrupt();
+//        }
+//    }
 
     @Override
     protected void jobCompleted() {
-        try {
-            AbstractFile parent;
-            // Mac OS X
-            if(OsFamily.MAC_OS_X.isCurrent()) {
-                parent = destJar.getParent();
+        System.out.println("JOB COMPLETED");
+        System.out.println(SelfUpdateUtils.extractRestarter());
+        System.out.println(SelfUpdateUtils.checkRestarter());
+        System.out.println("SelfUpdateUtils.updateAndRestart()");
+        SelfUpdateUtils.updateAndRestart();
+        System.out.println("WindowManager.quit()");
+        WindowManager.quit();
+        System.out.println("System.exit(0)");
+        System.exit(0);
+        //System.out.println(SelfUpdateUtils.getTcExecutionCommand());
 
-                // Look for an .app container that encloses the JAR file
-                if ("Java".equals(parent.getName())
-                    && (parent = parent.getParent()) != null && "Resources".equals(parent.getName())
-                    && (parent = parent.getParent()) != null && "Contents".equals(parent.getName())
-                    && (parent = parent.getParent()) != null && "app".equals(parent.getExtension())) {
-
-                    String appPath = parent.getAbsolutePath();
-
-                    LOGGER.debug("Opening "+appPath);
-
-                    // Open -W wait for the current trolCommander .app to terminate, before re-opening it
-                    ProcessRunner.execute(new String[]{"/bin/sh", "-c", "open -W "+appPath+" && open "+appPath});
-
-                    return;
-                }
-            }
-            else {
-                parent = destJar.getParent();
-                EqualsFilenameFilter launcherFilter;
-
-                // Windows
-                if (OsFamily.WINDOWS.isCurrent()) {
-                    // Look for a trolCommander.exe launcher located in the same folder as the JAR file
-                    launcherFilter = new EqualsFilenameFilter("trolCommander.exe", false);
-
-                }
-                // Other platforms, possibly Unix/Linux
-                else {
-                    // Look for a trolcommander.sh located in the same folder as the JAR file
-                    launcherFilter = new EqualsFilenameFilter("trolcommander.sh", false);
-                }
-
-                AbstractFile[] launcherFile = parent.ls(launcherFilter);
-
-                // If a launcher file was found, execute it
-                if(launcherFile!=null && launcherFile.length==1) {
-                    DesktopManager.open(launcherFile[0]);
-
-                    return;
-                }
-            }
-
-            // No platform-specific launcher found, launch the Jar directly
-            ProcessRunner.execute(new String[]{"java", "-jar", destJar.getAbsolutePath()});
-        }
-        catch(IOException e) {
-            LOGGER.debug("Caught exception", e);
-            // Todo: we might want to do something about this
-        }
-        finally {
-            WindowManager.quit();
-        }
+//        try {
+//            // Mac OS X
+//            if (OsFamily.MAC_OS_X.isCurrent() && executeOnMacOsX()) {
+//                return;
+//            } else if (executeDefault()) {
+//                return;
+//            }
+//
+//            // No platform-specific launcher found, launch the Jar directly
+//            ProcessRunner.execute(new String[]{"java", "-jar", destJar.getAbsolutePath()});
+//        } catch(IOException e) {
+//            LOGGER.debug("Caught exception", e);
+//            // TODO: we might want to do something about this
+//        } finally {
+//            WindowManager.quit();
+//        }
     }
+
+
+
+//    @Override
+//    protected boolean processFile(AbstractFile file, Object recurseParams) {
+//        if (!super.processFile(file, recurseParams)) {
+//            return false;
+//        }
+//    }
 
     @Override
-    protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if (!super.processFile(file, recurseParams)) {
-            return false;
-        }
-
-        // Move the file from the temporary location to its final destination
-        try {
-            tempDestJar.moveTo(destJar);
-            return true;
-        }
-        catch(IOException e) {
-            return false;
-        }
+    public String getStatusString() {
+        return Translator.get("version_dialog.preparing_for_update");
     }
+
 }

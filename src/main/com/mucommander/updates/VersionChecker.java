@@ -16,26 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander;
+package com.mucommander.updates;
 
-import java.io.InputStream;
-
-import javax.xml.parsers.SAXParserFactory;
-
+import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.AbstractFile;
+import com.mucommander.commons.file.FileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.mucommander.commons.file.FileFactory;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
 
 /**
- * Retrieves information about the latest release of muCommander.
+ * Retrieves information about the latest release of trolCommander.
  * <p>
  * The {@link com.mucommander.RuntimeConstants#VERSION_URL} URL contains information
- * about the latest release of muCommander:<br>
+ * about the latest release of trolCommander:<br>
  * - date of latest release.<br>
  * - latest official version.<br>
  * - where to download the latest version from.<br>
@@ -50,15 +48,15 @@ import com.mucommander.commons.file.FileFactory;
  * try {
  *     version = VersionChecker.getInstance();
  *     if(version.isNewVersionAvailable())
- *         System.out.println("A new version of muCommander is available");
+ *         System.out.println("A new version of trolCommander is available");
  *     else
- *         System.out.println("You've got the latest muCommander version");
+ *         System.out.println("You've got the latest trolCommander version");
  *    }
  * catch(Exception e) {System.err.println("An error occurred.");}
  * </pre>
  *
  * <p>
- * muCommander is considered up to date if:<br>
+ * trolCommander is considered up to date if:<br>
  * - the {@link com.mucommander.RuntimeConstants#VERSION local version} is
  *   not smaller than the remote one.<br>
  * - the {@link com.mucommander.RuntimeConstants#BUILD_DATE local release date} is
@@ -112,7 +110,7 @@ public class VersionChecker extends DefaultHandler {
     /** Remote release date. */
     private String releaseDate;
     /** Current state the parser is in. */
-    private int    state;
+    private int state;
 
 
     /**
@@ -121,13 +119,11 @@ public class VersionChecker extends DefaultHandler {
     private VersionChecker() {}
 
     /**
-     * Retrieves a description of the latest released version of muCommander.
-     * @return              a description of the latest released version of muCommander.
+     * Retrieves a description of the latest released version of trolCommander.
+     * @return              a description of the latest released version of trolCommander.
      * @exception Exception thrown if any error happens while retrieving the remote version.
      */
     public static VersionChecker getInstance() throws Exception {
-        VersionChecker instance;
-
         getLogger().info("Opening connection to " + RuntimeConstants.VERSION_URL);
 
         // Parses the remote XML file using UTF-8 encoding.
@@ -135,6 +131,7 @@ public class VersionChecker extends DefaultHandler {
         if (file == null) {
             return null;
         }
+        VersionChecker instance;
         try (InputStream in = file.getInputStream()) {
 	        try {
 	            SAXParserFactory.newInstance().newSAXParser().parse(in, instance = new VersionChecker());
@@ -145,7 +142,7 @@ public class VersionChecker extends DefaultHandler {
         }
 
         // Makes sure we retrieved the information we were looking for.
-        // We're not checking the release date as older version of muCommander
+        // We're not checking the release date as older version of trolCommander
         // didn't use it.
         if (instance.latestVersion == null || instance.latestVersion.isEmpty() || instance.downloadURL == null   || instance.downloadURL.isEmpty()) {
             throw new Exception();
@@ -167,8 +164,9 @@ public class VersionChecker extends DefaultHandler {
         if (latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
             // This ensures backward compatibility - if the remote version file does not contain
             // release date information, ignore it.
-            if (releaseDate.isEmpty())
+            if (releaseDate.isEmpty()) {
                 return true;
+            }
 
             // Checks whether the remote release date is later than the current release date.
             return releaseDate.compareTo(RuntimeConstants.BUILD_DATE) > 0;
@@ -177,16 +175,16 @@ public class VersionChecker extends DefaultHandler {
     }
 
     /**
-     * Returns the version number of the latest muCommander release.
-     * @return the version number of the latest muCommander release.
+     * Returns the version number of the latest trolCommander release.
+     * @return the version number of the latest trolCommander release.
      */
     public String getLatestVersion() {
         return latestVersion;
     }
 
     /**
-     * Returns the URL at which the latest version of muCommander can be downloaded.
-     * @return the URL at which the latest version of muCommander can be downloaded.
+     * Returns the URL at which the latest version of trolCommander can be downloaded.
+     * @return the URL at which the latest version of trolCommander can be downloaded.
      */
     public String getDownloadURL() {
         return downloadURL;
@@ -201,11 +199,11 @@ public class VersionChecker extends DefaultHandler {
     }
 
     /**
-     * Returns the date at which the latest version of muCommander has been released.
+     * Returns the date at which the latest version of trolCommander has been released.
      * <p>
      * The date format is YYYYMMDD.
      *
-     * @return the date at which the latest version of muCommander has been released.
+     * @return the date at which the latest version of trolCommander has been released.
      */
     public String getReleaseDate() {
         return releaseDate;
@@ -275,7 +273,7 @@ public class VersionChecker extends DefaultHandler {
      */
     @Override
     public void endDocument() {
-        // Make sure we're not keep meaningless whitecase characters in the data.
+        // Make sure we're not keep meaningless whitespace characters in the data.
         latestVersion = latestVersion.toLowerCase().trim();
         downloadURL   = downloadURL.trim();
         jarURL        = jarURL.trim();

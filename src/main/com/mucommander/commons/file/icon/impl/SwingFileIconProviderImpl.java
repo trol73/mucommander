@@ -83,9 +83,9 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         String jarPath = FileUtils.getJarPath();
 
         try {
-            FileUtils.copyJarFile("libquaqua.jnilib", jarPath);
-            FileUtils.copyJarFile("libquaqua64.dylib", jarPath);
-            FileUtils.copyJarFile("libquaqua64.jnilib", jarPath);
+            FileUtils.copyFromJarFile("libquaqua.jnilib", jarPath);
+            FileUtils.copyFromJarFile("libquaqua64.dylib", jarPath);
+            FileUtils.copyFromJarFile("libquaqua64.jnilib", jarPath);
         } catch (IOException e) {
             e.printStackTrace();
         }

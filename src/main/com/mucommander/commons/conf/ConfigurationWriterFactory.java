@@ -36,7 +36,7 @@ import java.io.Writer;
 public abstract class ConfigurationWriterFactory<T extends ConfigurationBuilder> {
 	
 	/** The name of the root element of the XML file */
-	private String rootElementName;
+	private final String rootElementName;
 	
 	/**
 	 * Constructor

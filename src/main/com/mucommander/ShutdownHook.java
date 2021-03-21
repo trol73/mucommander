@@ -87,7 +87,7 @@ public class ShutdownHook extends Thread {
         TreeIOThreadManager.getInstance().interrupt();
 
         // Save snapshot
-        try{
+        try {
             TcConfigurations.saveSnapshot();
         } catch(Exception e) {
             getLogger().warn("Failed to save snapshot", e);

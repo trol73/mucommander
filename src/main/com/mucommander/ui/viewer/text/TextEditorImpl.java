@@ -96,7 +96,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
     boolean replaceDialogMode = false;
 
 
-    private KeyListener textAreaKeyListener = new KeyAdapter() {
+    private final KeyListener textAreaKeyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == KeyEvent.ALT_MASK) {
@@ -325,7 +325,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 	}
 
     void gotoLine() {
-        new GotoLineDialog(frame, textArea.getLineCount(), (line) -> textArea.gotoLine(line)).showDialog();
+        new GotoLineDialog(frame, textArea.getLineCount(), textArea::gotoLine).showDialog();
     }
 
 
@@ -333,9 +333,6 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 		return textArea.getLineWrap();
 	}
 
-	////////////////////////////
-	// Package-access methods //
-	////////////////////////////
 
 	void wrap(boolean isWrap) {
 		textArea.setLineWrap(isWrap);
@@ -511,7 +508,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 	        textArea.gotoLine(line, column);
         } else {
             TextFilesHistory.FileRecord historyRecord = TextFilesHistory.getInstance().get(file);
-            historyRecord.update(line, line, column >= 0 ? column : 0, historyRecord.getFileType(), historyRecord.getEncoding());
+            historyRecord.update(line, line, Math.max(column, 0), historyRecord.getFileType(), historyRecord.getEncoding());
             openOtherFile(file, fileFrame -> {
                 fileFrame.returnFocusTo(fileFrame);
                 TextArea newTextArea = ((TextEditor)fileFrame.getFilePresenter()).getTextArea();

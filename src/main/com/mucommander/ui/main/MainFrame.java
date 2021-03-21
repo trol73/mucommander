@@ -109,6 +109,180 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
 
     private JPanel insetsPane;
 
+    public MainFrame(ConfFileTableTab leftTab, FileTableConfiguration leftTableConf,
+                     ConfFileTableTab rightTab, FileTableConfiguration rightTableConf) {
+        this(new ConfFileTableTab[] {leftTab}, 0, leftTableConf, new ConfFileTableTab[] {rightTab}, 0, rightTableConf);
+    }
+
+
+    /**
+     * Creates a new main frame set to the given initial folders.
+     *
+     * @param leftTabs left panel tabs configuration
+     * @param indexOfLeftSelectedTab index of left selected tab
+     * @param leftTableConf left table configuration
+     * @param rightTabs right panel tabs configuration
+     * @param indexOfRightSelectedTab index of right selected tab
+     * @param rightTableConf right table configuration
+     */
+    public MainFrame(ConfFileTableTab[] leftTabs, int indexOfLeftSelectedTab, FileTableConfiguration leftTableConf,
+                     ConfFileTableTab[] rightTabs, int indexOfRightSelectedTab, FileTableConfiguration rightTableConf) {
+    		/*AbstractFile[] leftInitialFolders, AbstractFile[] rightInitialFolders,
+    				 int indexOfLeftSelectedTab, int indexOfRightSelectedTab,
+    			     FileURL[] leftLocationHistory, FileURL[] rightLocationHistory) { */
+        FolderPanel leftPanel = new FolderPanel(this, leftTabs, indexOfLeftSelectedTab, leftTableConf);
+        FolderPanel rightPanel = new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf);
+        init(leftPanel, rightPanel);
+
+        for (boolean isLeft = true; ; isLeft = false) {
+            FileTable fileTable = isLeft ? leftTable : rightTable;
+            fileTable.sortBy(Column.valueOf(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortByVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_BY).toUpperCase()),
+                    !TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortOrderVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_ORDER).equals(TcSnapshot.SORT_ORDER_DESCENDING));
+
+            FolderPanel folderPanel = isLeft ? leftFolderPanel : rightFolderPanel;
+            folderPanel.setTreeWidth(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeWidthVariable(0, isLeft), 150));
+            folderPanel.setTreeVisible(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeVisiblityVariable(0, isLeft), false));
+
+            if (!isLeft)
+                break;
+        }
+    }
+
+    /**
+     * Copy constructor
+     */
+    public MainFrame(MainFrame mainFrame) {
+        FolderPanel leftFolderPanel = mainFrame.getLeftPanel();
+        FolderPanel rightFolderPanel = mainFrame.getRightPanel();
+        FileTable leftFileTable = leftFolderPanel.getFileTable();
+        FileTable rightFileTable = rightFolderPanel.getFileTable();
+
+        init(new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(leftFolderPanel.getCurrentFolder().getURL())}, 0, leftFileTable.getConfiguration()),
+                new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(rightFolderPanel.getCurrentFolder().getURL())}, 0, rightFileTable.getConfiguration()));
+
+        // TODO: Sorting should be part of the FileTable configuration
+        this.leftTable.sortBy(leftFileTable.getSortInfo());
+        this.rightTable.sortBy(rightFileTable.getSortInfo());
+    }
+
+    private void init(FolderPanel leftFolderPanel, FolderPanel rightFolderPanel) {
+        // Set the window icon
+        setWindowIcon();
+
+        DesktopManager.customizeMainFrame(this);
+
+        //initLookAndFeel();
+
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            // Lion Fullscreen support
+            FullScreenUtilities.setWindowCanFullScreen(this, true);
+        }
+
+        // Enable window resize
+        setResizable(true);
+
+        // The toolbar should have no inset, this is why it is left out of the insetsPane
+        JPanel contentPane = new JPanel(new BorderLayout());
+        setContentPane(contentPane);
+
+        // Initializes the folder panels and file tables.
+        this.leftFolderPanel = leftFolderPanel;
+        this.rightFolderPanel = rightFolderPanel;
+        leftTable = leftFolderPanel.getFileTable();
+        rightTable = rightFolderPanel.getFileTable();
+        activeTable  = leftTable;
+
+        // create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the
+        // preferences.
+        // Note: Toolbar.setVisible() has to be called no matter if Toolbar is visible or not, in order for it to be
+        // properly initialized
+        this.toolbar = new ToolBar(this);
+        this.toolbarPanel = ToolbarMoreButton.wrapToolBar(toolbar);
+        this.toolbarPanel.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_VISIBLE, TcPreferences.DEFAULT_TOOLBAR_VISIBLE));
+        contentPane.add(toolbarPanel, BorderLayout.NORTH);
+
+        insetsPane = new JPanel(new BorderLayout()) {
+            // Add an x=3,y=3 gap around content pane
+            @Override
+            public Insets getInsets() {
+                return new Insets(0, 3, 3, 3);      // No top inset
+            }
+        };
+
+        // Below the toolbar there is the pane with insets
+        contentPane.add(insetsPane, BorderLayout.CENTER);
+
+        // Listen to location change events to display the current folder in the window's title
+        leftFolderPanel.getLocationManager().addLocationListener(this);
+        rightFolderPanel.getLocationManager().addLocationListener(this);
+
+        // create menu bar (has to be created after toolbar)
+        MainMenuBar menuBar = new MainMenuBar(this);
+        setJMenuBar(menuBar);
+
+        // create the split pane that separates folder panels and allows to resize how much space is allocated to the
+        // both of them. The split orientation is loaded from and saved to the preferences.
+        // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
+        // in JSplitPane which is anti-natural / confusing.
+        int splitOrientation = TcConfigurations.getSnapshot().getVariable(TcSnapshot.getSplitOrientation(0), TcSnapshot.DEFAULT_SPLIT_ORIENTATION).equals(TcSnapshot.VERTICAL_SPLIT_ORIENTATION) ?
+                JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT;
+        splitPane = new ProportionalSplitPane(this, splitOrientation,false,
+                MainFrame.this.leftFolderPanel,
+                MainFrame.this.rightFolderPanel) {
+            @Override
+            public Insets getInsets() {
+                return new Insets(0, 0, 0, 0);
+            }
+        };
+
+        // Remove any default border the split pane has
+        splitPane.setBorder(null);
+
+        // Adds buttons that allow to collapse and expand the split pane in both directions
+        splitPane.setOneTouchExpandable(true);
+
+        // Disable all the JSPlitPane accessibility shortcuts that are registered by default, as some of them
+        // conflict with default mucommander action shortcuts (e.g. F6 and F8)
+        splitPane.disableAccessibilityShortcuts();
+
+        // Split pane will be given any extra space
+        insetsPane.add(splitPane, BorderLayout.CENTER);
+
+        // Add a 2-pixel gap between the file table and status bar
+        YBoxPanel southPanel = new YBoxPanel();
+        southPanel.addSpace(2);
+
+        // Add status bar
+        this.statusBar = new StatusBar(this);
+        southPanel.add(statusBar);
+
+        // Show command bar only if it hasn't been disabled in the preferences
+        this.commandBar = new CommandBar(this);
+        // Note: CommandBar.setVisible() has to be called no matter if CommandBar is visible or not, in order for it to be properly initialized
+        this.commandBar.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.COMMAND_BAR_VISIBLE, TcPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
+        southPanel.add(commandBar);
+        insetsPane.add(southPanel, BorderLayout.SOUTH);
+
+        // Perform CloseAction when the user asked the window to close
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ActionManager.performAction(CloseWindowAction.Descriptor.ACTION_ID, MainFrame.this);
+            }
+        });
+
+        ActionKeymap.registerActions(this);
+
+        // Fire table change events on registered ActivePanelListener instances, to notify of the initial active table.
+        fireActivePanelChanged(activeTable.getFolderPanel());
+
+        // Set the custom FocusTraversalPolicy that manages focus for both FolderPanel and their subcomponents.
+        setFocusTraversalPolicy(new CustomFocusTraversalPolicy());
+    }
+
+
+
     /**
      * Sets the window icon, using the best method (Java 1.6's Window#setIconImages when available, Window#setIconImage
      * otherwise) and icon resolution(s) (OS-dependent).
@@ -154,179 +328,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         }
     }
 
-    private void init(FolderPanel leftFolderPanel, FolderPanel rightFolderPanel) {
-        // Set the window icon
-        setWindowIcon();
 
-        DesktopManager.customizeMainFrame(this);
-
-        //initLookAndFeel();
-
-        if (OsFamily.MAC_OS_X.isCurrent()) {
-        	// Lion Fullscreen support
-        	FullScreenUtilities.setWindowCanFullScreen(this, true);
-        }
-
-        // Enable window resize
-        setResizable(true);
-
-        // The toolbar should have no inset, this is why it is left out of the insetsPane
-        JPanel contentPane = new JPanel(new BorderLayout());
-        setContentPane(contentPane);
-
-        // Initializes the folder panels and file tables.
-        this.leftFolderPanel = leftFolderPanel;
-        this.rightFolderPanel = rightFolderPanel;
-        leftTable = leftFolderPanel.getFileTable();
-        rightTable = rightFolderPanel.getFileTable();
-        activeTable  = leftTable;
-
-        // create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the
-        // preferences.
-        // Note: Toolbar.setVisible() has to be called no matter if Toolbar is visible or not, in order for it to be
-        // properly initialized
-        this.toolbar = new ToolBar(this);
-        this.toolbarPanel = ToolbarMoreButton.wrapToolBar(toolbar);
-        this.toolbarPanel.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_VISIBLE, TcPreferences.DEFAULT_TOOLBAR_VISIBLE));
-        contentPane.add(toolbarPanel, BorderLayout.NORTH);
-
-        insetsPane = new JPanel(new BorderLayout()) {
-                // Add an x=3,y=3 gap around content pane
-                @Override
-                public Insets getInsets() {
-                    return new Insets(0, 3, 3, 3);      // No top inset 
-                }
-            };
-
-        // Below the toolbar there is the pane with insets
-        contentPane.add(insetsPane, BorderLayout.CENTER);
-
-        // Listen to location change events to display the current folder in the window's title
-        leftFolderPanel.getLocationManager().addLocationListener(this);
-        rightFolderPanel.getLocationManager().addLocationListener(this);
-
-        // create menu bar (has to be created after toolbar)
-        MainMenuBar menuBar = new MainMenuBar(this);
-        setJMenuBar(menuBar);
-
-        // create the split pane that separates folder panels and allows to resize how much space is allocated to the
-        // both of them. The split orientation is loaded from and saved to the preferences.
-        // Note: the vertical/horizontal terminology used in muCommander is just the opposite of the one used
-        // in JSplitPane which is anti-natural / confusing.
-        splitPane = new ProportionalSplitPane(this,
-        		TcConfigurations.getSnapshot().getVariable(TcSnapshot.getSplitOrientation(0), TcSnapshot.DEFAULT_SPLIT_ORIENTATION).equals(TcSnapshot.VERTICAL_SPLIT_ORIENTATION) ?
-                                              	JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT,
-                                              false,
-                                              MainFrame.this.leftFolderPanel,
-                                              MainFrame.this.rightFolderPanel) {
-        	// We don't want any extra space around split pane
-        	@Override
-        	public Insets getInsets() {
-        		return new Insets(0, 0, 0, 0);
-        	}
-        };
-
-        // Remove any default border the split pane has
-        splitPane.setBorder(null);
-
-        // Adds buttons that allow to collapse and expand the split pane in both directions
-        splitPane.setOneTouchExpandable(true);
-
-        // Disable all the JSPlitPane accessibility shortcuts that are registered by default, as some of them
-        // conflict with default mucommander action shortcuts (e.g. F6 and F8) 
-        splitPane.disableAccessibilityShortcuts();
-
-        // Split pane will be given any extra space
-        insetsPane.add(splitPane, BorderLayout.CENTER);
-
-        // Add a 2-pixel gap between the file table and status bar
-        YBoxPanel southPanel = new YBoxPanel();
-        southPanel.addSpace(2);
-
-        // Add status bar
-        this.statusBar = new StatusBar(this);
-        southPanel.add(statusBar);
-		
-        // Show command bar only if it hasn't been disabled in the preferences
-        this.commandBar = new CommandBar(this);
-        // Note: CommandBar.setVisible() has to be called no matter if CommandBar is visible or not, in order for it to be properly initialized
-        this.commandBar.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.COMMAND_BAR_VISIBLE, TcPreferences.DEFAULT_COMMAND_BAR_VISIBLE));
-        southPanel.add(commandBar);
-        insetsPane.add(southPanel, BorderLayout.SOUTH);
-
-        // Perform CloseAction when the user asked the window to close
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                ActionManager.performAction(CloseWindowAction.Descriptor.ACTION_ID, MainFrame.this);
-            }
-        });
-
-        ActionKeymap.registerActions(this);
-
-        // Fire table change events on registered ActivePanelListener instances, to notify of the initial active table.
-        fireActivePanelChanged(activeTable.getFolderPanel());
-
-        // Set the custom FocusTraversalPolicy that manages focus for both FolderPanel and their subcomponents.
-        setFocusTraversalPolicy(new CustomFocusTraversalPolicy());
-    }
-
-    public MainFrame(ConfFileTableTab leftTab, FileTableConfiguration leftTableConf,
-    	             ConfFileTableTab rightTab, FileTableConfiguration rightTableConf) {
-    	this(new ConfFileTableTab[] {leftTab}, 0, leftTableConf, new ConfFileTableTab[] {rightTab}, 0, rightTableConf);
-    }
-    
-
-    /**
-     * Creates a new main frame set to the given initial folders.
-     *
-     * @param leftTabs left panel tabs configuration
-     * @param indexOfLeftSelectedTab index of left selected tab
-     * @param leftTableConf left table configuration
-     * @param rightTabs right panel tabs configuration
-     * @param indexOfRightSelectedTab index of right selected tab
-     * @param rightTableConf right table configuration
-     */
-    public MainFrame(ConfFileTableTab[] leftTabs, int indexOfLeftSelectedTab, FileTableConfiguration leftTableConf,
-    		         ConfFileTableTab[] rightTabs, int indexOfRightSelectedTab, FileTableConfiguration rightTableConf) {
-    		/*AbstractFile[] leftInitialFolders, AbstractFile[] rightInitialFolders,
-    				 int indexOfLeftSelectedTab, int indexOfRightSelectedTab,
-    			     FileURL[] leftLocationHistory, FileURL[] rightLocationHistory) { */
-        FolderPanel leftPanel = new FolderPanel(this, leftTabs, indexOfLeftSelectedTab, leftTableConf);
-        FolderPanel rightPanel = new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf);
-        init(leftPanel, rightPanel);
-
-        for (boolean isLeft = true; ; isLeft = false) {
-        	FileTable fileTable = isLeft ? leftTable : rightTable;
-        	fileTable.sortBy(Column.valueOf(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortByVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_BY).toUpperCase()),
-                    !TcConfigurations.getSnapshot().getVariable(TcSnapshot.getFileTableSortOrderVariable(0, isLeft), TcSnapshot.DEFAULT_SORT_ORDER).equals(TcSnapshot.SORT_ORDER_DESCENDING));
-        	
-        	FolderPanel folderPanel = isLeft ? leftFolderPanel : rightFolderPanel;
-        	folderPanel.setTreeWidth(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeWidthVariable(0, isLeft), 150));
-        	folderPanel.setTreeVisible(TcConfigurations.getSnapshot().getVariable(TcSnapshot.getTreeVisiblityVariable(0, isLeft), false));
-        	
-        	if (!isLeft)
-        		break;
-        }
-    }
-
-    /**
-     * Copy constructor
-     */
-    public MainFrame(MainFrame mainFrame) {
-    	FolderPanel leftFolderPanel = mainFrame.getLeftPanel(); 
-    	FolderPanel rightFolderPanel = mainFrame.getRightPanel();
-    	FileTable leftFileTable = leftFolderPanel.getFileTable();
-    	FileTable rightFileTable = rightFolderPanel.getFileTable();
-
-    	init(new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(leftFolderPanel.getCurrentFolder().getURL())}, 0, leftFileTable.getConfiguration()),
-             new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(rightFolderPanel.getCurrentFolder().getURL())}, 0, rightFileTable.getConfiguration()));
-
-    	// TODO: Sorting should be part of the FileTable configuration
-        this.leftTable.sortBy(leftFileTable.getSortInfo());
-        this.rightTable.sortBy(rightFileTable.getSortInfo());
-    }
 
     /**
      * Registers the given ActivePanelListener to receive events when the active table changes.

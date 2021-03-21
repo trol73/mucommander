@@ -1,7 +1,7 @@
 package com.mucommander.commons.conf;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -81,20 +81,15 @@ public class Configuration {
 
 
 
-    // - Synchronisation locks -----------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    /** Used to synchronise concurent access of the configuration source. */
+    /** Used to synchronise concurrent access of the configuration source. */
     private final Object sourceLock = new Object();
-    /** Used to synchronise concurent access of the reader factory. */
+    /** Used to synchronise concurrent access of the reader factory. */
     private final Object readerLock = new Object();
-    /** Used to synchronise concurent access of the writer factory. */
+    /** Used to synchronise concurrent access of the writer factory. */
     private final Object writerLock = new Object();
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    
     /**
      * Creates a new instance of <code>Configuration</code>.
      * <p>
@@ -169,9 +164,6 @@ public class Configuration {
     }
 
 
-
-    // - Reader handling -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Sets the factory that will be used to create {@link ConfigurationReader reader} instances.
      * <p>
@@ -240,9 +232,6 @@ public class Configuration {
     }
 
 
-
-    // - Configuration reading -----------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Loads configuration from the specified input stream, using the specified configuration reader.
      * @param  in                              where to read the configuration from.
@@ -279,7 +268,7 @@ public class Configuration {
      */
     @Deprecated
     public void read(InputStream in) throws ConfigurationException, IOException {
-        read(new InputStreamReader(in, Charset.forName("utf-8")), getReaderFactory().getReaderInstance());
+        read(new InputStreamReader(in, StandardCharsets.UTF_8), getReaderFactory().getReaderInstance());
     }
 
     /**
@@ -319,7 +308,6 @@ public class Configuration {
      * @see                                    #read(Reader,ConfigurationReader)
      */
     public void read(ConfigurationReader reader) throws IOException, ConfigurationException {
-        Reader in = null;     // Input stream on the configuration source.
         ConfigurationSource source = getSource(); // Configuration source.
 
         // Makes sure the configuration source has been properly set.
@@ -327,16 +315,8 @@ public class Configuration {
             throw new SourceConfigurationException("Configuration source hasn't been set.");
         }
         // Reads the configuration data.
-        try {
-            in = source.getReader();
+        try (Reader in = source.getReader()) {
             read(in, reader);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch(Exception ignore) {
-                }
-            }
         }
     }
 
@@ -366,10 +346,6 @@ public class Configuration {
         read(getReaderFactory().getReaderInstance());
     }
 
-
-
-    // - Configuration writing -----------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Writes the configuration to the specified {@link Writer}.
      * <p>
@@ -402,7 +378,6 @@ public class Configuration {
      * @see                                    #write()
      */
     public void write() throws IOException, ConfigurationException {
-        Writer out = null;    // Where to write the configuration data.
         ConfigurationSource source = getSource(); // Configuration source.
 
         // Makes sure the source has been set.
@@ -410,17 +385,8 @@ public class Configuration {
             throw new SourceConfigurationException("No configuration source has been set");
         }
 
-        // Writes the configuration data.
-        try {
-            write(out = source.getWriter());
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch(Exception e) {
-                    // Ignores errors here, nothing we can do about them.
-                }
-            }
+        try (Writer out = source.getWriter()) {
+            write(out);
         }
     }
 
@@ -436,9 +402,6 @@ public class Configuration {
     }
 
 
-
-    // - Configuration building ----------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Recursively explores the specified section and invokes the specified builder's callback methods.
      * @param  builder                object that will receive building events.
@@ -515,7 +478,7 @@ public class Configuration {
         String buffer = moveToParent(explorer, name, true);   // Buffer for the variable's name trimmed of section information.
 
         // If the variable's value was actually modified, triggers an event.
-        if(explorer.getSection().setVariable(buffer, value)) {
+        if (explorer.getSection().setVariable(buffer, value)) {
             triggerEvent(new ConfigurationEvent(this, name, value));
             return true;
         }
@@ -652,9 +615,6 @@ public class Configuration {
     public boolean setVariable(String name, double value) {return setVariable(name, ConfigurationSection.getValue(value));}
 
 
-
-    // - Variable retrieval --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the value of the specified variable.
      * @param  name fully qualified name of the variable whose value should be retrieved.
@@ -663,12 +623,10 @@ public class Configuration {
      * @see         #getVariable(String,String)
      */
     public synchronized String getVariable(String name) {
-        ConfigurationExplorer explorer; // Used to navigate to the variable's parent section.
-
         // If the variable's 'path' doesn't exist, return null.
-        if((name = moveToParent(explorer = new ConfigurationExplorer(root), name, false)) == null)
-            return null;
-        return explorer.getSection().getVariable(name);
+        ConfigurationExplorer explorer = new ConfigurationExplorer(root);   // Used to navigate to the variable's parent section.
+        name = moveToParent(explorer, name, false);
+        return name == null ? null : explorer.getSection().getVariable(name);
     }
 
     /**
@@ -753,8 +711,6 @@ public class Configuration {
 
 
 
-    // - Variable removal ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Prunes dead branches from the specified configuration tree.
      * @param explorer used to backtrack through the configuration tree.
@@ -791,9 +747,9 @@ public class Configuration {
         String buffer = moveToParent(explorer, name, false);   // Buffer for the variable's name trimmed of section information.
 
         // If the variable's 'path' doesn't exist, return null.
-        if (buffer == null)
+        if (buffer == null) {
             return null;
-
+        }
         // If the variable was actually set, triggers an event.
         if ((buffer = explorer.getSection().removeVariable(buffer)) != null) {
             prune(explorer);
@@ -1050,8 +1006,9 @@ public class Configuration {
                 return name;
 
             // If we've reached a dead-end, return null.
-            if (!root.moveTo(name, create))
+            if (!root.moveTo(name, create)) {
                 return null;
+            }
         }
         return name;
     }
@@ -1088,8 +1045,6 @@ public class Configuration {
 
 
 
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the configuration's root section.
      * @return the configuration's root section.
@@ -1100,15 +1055,11 @@ public class Configuration {
 
 
 
-    // - Loading -------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Used to load configuration.
      * @author Nicolas Rinaudo
      */
     private class ConfigurationLoader implements ConfigurationBuilder {
-        // - Instance variables ----------------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------------------------------------
         /** Parents of {@link #currentSection}. */
         private Stack<ConfigurationSection> sections;
         /** Fully qualified names of {@link #currentSection}. */
@@ -1117,9 +1068,6 @@ public class Configuration {
         private ConfigurationSection        currentSection;
 
 
-
-        // - Initialisation --------------------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------------------------------------
         /**
          * Creates a new configuration loader.
          * @param root where to create the configuration in.
@@ -1130,8 +1078,6 @@ public class Configuration {
 
 
 
-        // - Building --------------------------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------------------------------------
         /**
          * Initialises the configuration building.
          */

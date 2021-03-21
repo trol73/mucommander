@@ -45,7 +45,7 @@ public abstract class AbstractRegexpFilter extends AbstractStringCriterionFilter
     public AbstractRegexpFilter(CriterionValueGenerator<String> generator, String regexp, boolean caseSensitive, boolean inverted) throws PatternSyntaxException {
         super(generator, caseSensitive, inverted);
 
-        pattern = Pattern.compile(regexp, caseSensitive?0:Pattern.CASE_INSENSITIVE);
+        pattern = Pattern.compile(regexp, caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
     }
 
     /**
