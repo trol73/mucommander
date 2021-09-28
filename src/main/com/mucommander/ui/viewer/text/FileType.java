@@ -75,7 +75,7 @@ public enum FileType {
 
     private final String contentType;
     //private final String fileMasks;
-    private final WildcardFileFilter fileFilters[];
+    private final WildcardFileFilter[] fileFilters;
     private final String name;
 
     FileType(String name, String contentType, String fileMasks) {
@@ -126,7 +126,7 @@ public enum FileType {
         if (fileMasks == null) {
             return new WildcardFileFilter[0];
         }
-        String masks[] = fileMasks.split(",");
+        String[] masks = fileMasks.split(",");
         WildcardFileFilter[] result = new WildcardFileFilter[masks.length];
         for (int i = 0; i < masks.length; i++) {
             result[i] = new WildcardFileFilter(masks[i], IOCase.INSENSITIVE);
