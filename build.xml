@@ -932,6 +932,59 @@
         </jar>
     </target>
 
+    <!-- to launch from maven via antrun -->
+    <target name="jar2">
+        <tstamp/>
+
+        <!-- Extract external libraries to be packed with trolCommander, exclusing non-bytecode files.                 -->
+        <echo>Unpacking external libraries...</echo>
+        <mkdir dir="${tmp.libs}"/>
+        <unjar dest="${tmp.libs}">
+            <path refid="lib.runtime"/>
+            <patternset>
+                <exclude name="**/*.html"/>
+                <exclude name="**/*.css"/>
+<!--                
+                <exclude name="**/*.gif"/>
+-->                
+                <exclude name="**/*.MF"/>
+                <exclude name="jcifs/util/mime.map"/>
+                <exclude name="META-INF/**/*"/>
+            </patternset>
+        </unjar>
+
+        <mkdir dir="${dist}"/>
+
+        <!-- Retrieves the implementation version.                                                                 
+        <exec executable="svnversion" failifexecutionfails="no" outputproperty="svn.version">
+            <arg value="."/>
+            <arg value="-n"/>
+        </exec>
+          -->
+
+
+        <echo>Creating JAR file...</echo>
+        <property name="version.url" value="${url.version}"/>
+        <jar jarfile="${jar.normal}">
+            <fileset dir="${tmp.main}"/>
+            <fileset dir="target/classes"/>
+            <fileset dir="${tmp.libs}"/>
+            <manifest>
+                <attribute name="Main-Class"             value="com.mucommander.TrolCommander"/>
+                <attribute name="Specification-Title"    value="${app.name}"/>
+                <attribute name="Specification-Vendor"   value="${app.vendor}"/>
+                <attribute name="Specification-Version"  value="${app.version}"/>
+                <attribute name="Implementation-Title"   value="${app.name}"/>
+                <attribute name="Implementation-Vendor"  value="${app.vendor}"/>
+<!--                <attribute name="Implementation-Version" value="${svn.version}"/> -->
+                <attribute name="Build-Date"             value="${DSTAMP}"/>
+                <attribute name="Build-Time"             value="${TSTAMP}"/>
+                <attribute name="Build-URL"              value="${version.url}"/>
+            </manifest>
+            <metainf dir="${res.jar}"/>
+        </jar>
+    </target>
+
 
 
     <!-- = Documentation targets =================================================================================== -->

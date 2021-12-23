@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="AppleJavaExtensions">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/compile/apple/ui.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
