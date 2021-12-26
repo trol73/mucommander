@@ -499,11 +499,15 @@ public class LocalFile extends ProtocolFile {
     private static void addJavaIoFileRoots(List<AbstractFile> v) {
         // Warning : No file operation should be performed on the resolved folders as under Win32, this would cause a
         // dialog to appear for removable drives such as A:\ if no disk is present.
-        File[] fileRoots = File.listRoots();
-
-        for (File fileRoot : fileRoots) {
+//        File[] fileRoots = File.listRoots();
+//        for (File fileRoot : fileRoots) {
+//            try {
+//                v.add(FileFactory.getFile(fileRoot.getAbsolutePath(), true));
+//            } catch (IOException ignore) {}
+//        }
+        for (Path p : FileSystems.getDefault().getRootDirectories()) {
             try {
-                v.add(FileFactory.getFile(fileRoot.getAbsolutePath(), true));
+                v.add(FileFactory.getFile(p.toString(), true));
             } catch (IOException ignore) {}
         }
     }

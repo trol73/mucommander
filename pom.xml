@@ -36,9 +36,9 @@
 		<bintray.package>trolcommander</bintray.package>
 		<libs.path>${project.basedir}/assembly/lib</libs.path>
 		<libs.runtime.path>${project.basedir}/lib/runtime</libs.runtime.path>
-		<hadoop.version>1.2.1</hadoop.version>
-		<hadoop.common.version>2.5.1</hadoop.common.version>
-		<guava.version>18.0.0</guava.version>
+		<hadoop.version>3.3.1</hadoop.version>
+		<hadoop.common.version>3.3.1</hadoop.common.version>
+		<guava.version>17.0</guava.version>
 		<protobuf.version>2.4.1</protobuf.version>
 		<lucene.version>7.1.0</lucene.version>
 		<slf4j.version>1.6.4</slf4j.version>
@@ -91,7 +91,7 @@
 			<artifactId>pty4j</artifactId>
 			<version>0.3</version>
 			<scope>system</scope>
-			<systemPath>${libs.path}/pty4j-0.3.jar</systemPath>
+			<systemPath>${libs.runtime.path}/jediterm/pty4j-0.11.3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pty4j</groupId>
@@ -100,7 +100,7 @@
 			<scope>system</scope>
 			<systemPath>${libs.path}/pty4j-native.jar</systemPath>
 		</dependency>
-		<dependency>
+        	<dependency>
 			<groupId>org.icepdf</groupId>
 			<artifactId>icepdf-viewer</artifactId>
 			<version>5.0.4_8</version>
@@ -154,9 +154,23 @@
 			<scope>system</scope>
 			<systemPath>${libs.path}/ui.jar</systemPath>
 		</dependency>
-		<!-- <dependency> <groupId>javafx</groupId> <artifactId>javafx</artifactId> 
-			<version>2.1</version> <scope>system</scope> <systemPath>${libs.path}/ui.jar</systemPath> 
-			</dependency> -->
+                <dependency>
+                    <groupId>com.googlecode.plist</groupId>
+                    <artifactId>dd-plist</artifactId>
+                    <version>1.23</version>
+                </dependency>                
+		<dependency>
+                    <groupId>javafx</groupId> 
+                    <artifactId>javafx</artifactId> 
+		    <version>2.1</version>
+                    <scope>system</scope> 
+                    <systemPath>${libs.path}/jfxrt.jar</systemPath> 
+		</dependency>
+                <dependency>
+                    <groupId>javax.xml.ws</groupId>
+                    <artifactId>jaxws-api</artifactId>
+                    <version>2.3.1</version>
+                </dependency>
 		<!-- <dependency> <groupId>com.apple</groupId> <artifactId>AppleJavaExtensions</artifactId> 
 			<version>1.4</version> </dependency> -->
 		<dependency>
@@ -172,7 +186,7 @@
 			<artifactId>sevenzipjbinding</artifactId>
 			<version>1.7</version>
 			<scope>system</scope>
-			<systemPath>${libs.path}/sevenzipjbinding.jar</systemPath>
+			<systemPath>${libs.runtime.path}/sevenzipjbinding.jar</systemPath>
 		</dependency>
 		<dependency>
 			<!-- Dirty hack: there is no place to download it from -->
@@ -180,7 +194,7 @@
 			<artifactId>sevenzipjbinding-AllPlatforms</artifactId>
 			<version>1.7</version>
 			<scope>system</scope>
-			<systemPath>${libs.path}/sevenzipjbinding-AllPlatforms.jar</systemPath>
+			<systemPath>${libs.runtime.path}/sevenzipjbinding-AllPlatforms.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>sshtools</groupId>
@@ -221,10 +235,9 @@
 		<dependency>
 			<groupId>com.fifesoft</groupId>
     			<artifactId>rsyntaxtextarea</artifactId>
-               <version>2.6.1</version>
-<!--               
-			<systemPath>${libs.runtime.path}/rsyntaxtextarea-2.6.0-SNAPSHOT.jar</systemPath>
--->
+                        <version>3.1.4</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/rsyntaxtextarea-3.1.3-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
@@ -538,6 +551,8 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20140107</version>
+			<scope>system</scope>
+			<systemPath>${libs.runtime.path}/json-20180813.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -778,7 +793,7 @@
 							<!-- <binlibs> <fileSet> <directory>${project.build.directory}/dllextract</directory> 
 								<includes> <include>test.dll</include> </includes> </fileSet> </binlibs> -->
 							<!-- Optional, default is false -->
-							<attachToBuild>false</attachToBuild>
+							<attachToBuild>true</attachToBuild>
 							<!-- Optional, default is "onejar" -->
 							<classifier>onejar</classifier>
 						</configuration>
@@ -818,6 +833,31 @@
 <!--					</executions>-->
 				</configuration>
 			</plugin>
+<!-- 
+    run et debug marchent aussi (v profiler)
+    sinon exec:java -Dexec.mainClass="com.mucommander.TrolCommander"
+-->                                              
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.mucommander.TrolCommander</mainClass>
+          <executable>/java/jdk17/bin/java</executable>
+          <arguments>
+          </arguments>
+          <environmentVariables>
+          </environmentVariables>
+          <classpathScope>compile</classpathScope>
+        </configuration>
+    </plugin>                            
 		</plugins>
 	</build>
 	<profiles>
