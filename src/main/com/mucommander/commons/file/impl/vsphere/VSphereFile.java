@@ -12,13 +12,11 @@ import com.mucommander.commons.io.StreamUtils;
 import com.vmware.vim25.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.NodeList;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.soap.Detail;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.*;
 import java.net.*;
@@ -113,7 +111,7 @@ public class VSphereFile extends ProtocolFile implements
 			getMor(connHandler);
 			fixPathInVmIfNeeded(connHandler);
 
-			checkAttributues(connHandler);
+			checkAttributes(connHandler);
 		} catch (RuntimeFaultFaultMsg | FileFaultFaultMsg | GuestOperationsFaultFaultMsg | TaskInProgressFaultMsg |
 				InvalidPropertyFaultMsg | URISyntaxException | InvalidStateFaultMsg e) {
 			translateandLogException(e);
@@ -146,7 +144,7 @@ public class VSphereFile extends ProtocolFile implements
 		VsphereConnHandler connHandler = null;
 		try {
 			connHandler = getConnHandler();
-			checkAttributues(connHandler);
+			checkAttributes(connHandler);
 		} finally {
 			releaseConnHandler(connHandler);
 		}
@@ -272,7 +270,7 @@ public class VSphereFile extends ProtocolFile implements
 		return fileManager;
 	}
 
-	private void checkAttributues(VsphereConnHandler connHandler)
+	private void checkAttributes(VsphereConnHandler connHandler)
 			throws IOException, FileFaultFaultMsg,
 			GuestOperationsFaultFaultMsg, InvalidStateFaultMsg,
 			RuntimeFaultFaultMsg, TaskInProgressFaultMsg,
@@ -311,15 +309,15 @@ public class VSphereFile extends ProtocolFile implements
 	}
 
 	private boolean isFileNotFound(SOAPFaultException e) {
-		Detail detail = e.getFault().getDetail();
-		NodeList childNodes = detail.getChildNodes();
-
-		for (int i = 0; i < childNodes.getLength(); ++i) {
-			// I hate soap...
-			if (childNodes.item(i).getNodeName().equals("FileNotFoundFault")) {
-				return true;
-			}
-		}
+//		Detail detail = e.getFault().getDetail();
+//		NodeList childNodes = detail.getChildNodes();
+//
+//		for (int i = 0; i < childNodes.getLength(); ++i) {
+//			// I hate soap...
+//			if (childNodes.item(i).getNodeName().equals("FileNotFoundFault")) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 
