@@ -263,24 +263,24 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // Creates the look and feel combo box.
         lookAndFeelComboBox = new PrefComboBox<String>() {
-			public boolean hasChanged() {
+            public boolean hasChanged() {
                 String lnf = getVariable(LOOK_AND_FEEL);
-				int selectedIndex = getSelectedIndex();
+                int selectedIndex = getSelectedIndex();
                 return selectedIndex >= 0 && !lookAndFeels[selectedIndex].getClassName().equals(lnf);
-                }
-			};
+            }
+        };
         lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
-                @Override
-                public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    if (index < 0) {
-                        return label;
-                    }
-                    // All look and feels that are not modifiable must be flagged with a lock icon.
-                    label.setIcon(isLookAndFeelModifiable(lookAndFeels[index]) ? transparentIcon : lockIcon);
+            @Override
+            public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (index < 0) {
                     return label;
                 }
-            });
+                // All look and feels that are not modifiable must be flagged with a lock icon.
+                label.setIcon(isLookAndFeelModifiable(lookAndFeels[index]) ? transparentIcon : lockIcon);
+                return label;
+            }
+        });
 
         // Populates the look and feel combo box.
         populateLookAndFeels();
@@ -367,9 +367,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // Creates the theme combo box.
         themeComboBox = new PrefComboBox<Theme>() {
-			public boolean hasChanged() {
-				return !ThemeManager.isCurrentTheme(getSelectedItem());
-			}
+            public boolean hasChanged() {
+                return !ThemeManager.isCurrentTheme(getSelectedItem());
+            }
         };
         themeComboBox.addActionListener(this);
 
@@ -377,20 +377,20 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lockIcon = IconManager.getIcon(IconManager.IconSet.PREFERENCES, "lock.png");
         transparentIcon = new ImageIcon(new BufferedImage(lockIcon.getIconWidth(), lockIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB));
         themeComboBox.setRenderer(new BasicComboBoxRenderer<Theme>() {
-                @Override
-                public Component getListCellRendererComponent(JList<? extends Theme> list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label = (JLabel)super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
-                    if (ThemeManager.isCurrentTheme(theme)) {
-                        label.setText(theme.getName() +  " (" + Translator.get("theme.current") + ")");
-                    } else {
-                        label.setText(theme.getName());
-                    }
-
-                    label.setIcon(theme.getType() == Theme.Type.PREDEFINED ? lockIcon : transparentIcon);
-
-                    return label;
+            @Override
+            public Component getListCellRendererComponent(JList<? extends Theme> list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
+                if (ThemeManager.isCurrentTheme(theme)) {
+                    label.setText(theme.getName() + " (" + Translator.get("theme.current") + ")");
+                } else {
+                    label.setText(theme.getName());
                 }
-            });
+
+                label.setIcon(theme.getType() == Theme.Type.PREDEFINED ? lockIcon : transparentIcon);
+
+                return label;
+            }
+        });
 
         // Initialises the content of the combo box.
         populateThemes(ThemeManager.getCurrentTheme());
@@ -468,9 +468,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private JPanel createSystemIconsPanel() {
         // 'Use system file icons' combo box
         this.useSystemFileIconsComboBox = new PrefComboBox<String>() {
-			public boolean hasChanged() {
-				String systemIconsPolicy;
-				switch (useSystemFileIconsComboBox.getSelectedIndex()) {
+            public boolean hasChanged() {
+                String systemIconsPolicy;
+                switch (useSystemFileIconsComboBox.getSelectedIndex()) {
                     case 0:
                         systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
                         break;
@@ -479,9 +479,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                         break;
                     default:
                         systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
-				}
-				return !systemIconsPolicy.equals(getVariable(USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
-			}
+                }
+                return !systemIconsPolicy.equals(getVariable(USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
+            }
         };
         useSystemFileIconsComboBox.addItem(Translator.get("prefs_dialog.use_system_file_icons.never"));
         useSystemFileIconsComboBox.addItem(Translator.get("prefs_dialog.use_system_file_icons.applications"));
@@ -506,10 +506,10 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private PrefComboBox<String> createIconSizeCombo(final TcPreference preference, float defaultValue) {
     	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>(ICON_SIZES) {
-			public boolean hasChanged() {
-				return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(getVariable(preference));
-			}
-    	};
+            public boolean hasChanged() {
+                return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(getVariable(preference));
+            }
+        };
         float scaleFactor = getVariable(preference, defaultValue);
         int index = 0;
         for (int i = 0; i < ICON_SCALE_FACTORS.length; i++) {
@@ -595,9 +595,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
         // Sorts them.
         Arrays.sort(lookAndFeels, new Comparator<UIManager.LookAndFeelInfo>() {
-                public int compare(UIManager.LookAndFeelInfo a, UIManager.LookAndFeelInfo b) {return a.getName().compareTo(b.getName());}
-                public boolean equals(Object a) {return false;}
-            });
+            public int compare(UIManager.LookAndFeelInfo a, UIManager.LookAndFeelInfo b) {
+                return a.getName().compareTo(b.getName());
+            }
+
+            public boolean equals(Object a) {
+                return false;
+            }
+        });
     }
 
     /**
@@ -771,14 +776,12 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             if ((newLookAndFeels = new ClassFinder().find(lookAndFeelLibrary, new LookAndFeelFilter())).isEmpty())
                 InformationDialog.showWarningDialog(this, Translator.get("prefs_dialog.no_look_and_feel"));
             else if (importLookAndFeelLibrary(lookAndFeelLibrary)) {
-                String currentName;
-
                 if (customLookAndFeels == null)
                     customLookAndFeels = new Vector<>();
 
                 // Adds all new instances to the list of custom look&feels.
                 for (Class<?> newLookAndFeel : newLookAndFeels) {
-                    currentName = newLookAndFeel.getName();
+                    String currentName = newLookAndFeel.getName();
                     if (!customLookAndFeels.contains(currentName)) {
                         customLookAndFeels.add(currentName);
                         try {
@@ -789,10 +792,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
                     }
                 }
 
-                if (customLookAndFeels.isEmpty())
+                if (customLookAndFeels.isEmpty()) {
                     customLookAndFeels = null;
-                else
-                	TcConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+                } else {
+                    TcConfigurations.getPreferences().setVariable(CUSTOM_LOOK_AND_FEELS, customLookAndFeels, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
+                }
 
                 populateLookAndFeels();
             }
@@ -1095,9 +1099,9 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private static class ExtensionFileFilter extends javax.swing.filechooser.FileFilter {
         /** Extension to match. */
-        private String extension;
+        private final String extension;
         /** Filter's description. */
-        private String description;
+        private final String description;
 
         /**
          * Creates a new extension file IMAGE_FILTER that will match files with the specified extension.
@@ -1121,10 +1125,12 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
             // If the file has an extension, and it matches .xml, return true.
             // Otherwise, return false.
             String ext = AbstractFile.getExtension(file.getName());
-            return ext != null && extension.equalsIgnoreCase(ext);
+            return extension.equalsIgnoreCase(ext);
         }
 
         @Override
-        public String getDescription() {return description;}
+        public String getDescription() {
+            return description;
+        }
     }
 }
