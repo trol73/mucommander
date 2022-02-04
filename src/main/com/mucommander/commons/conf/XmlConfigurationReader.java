@@ -102,7 +102,7 @@ public class XmlConfigurationReader extends DefaultHandler implements Configurat
     // - Reader methods ------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     /**
-     * Reads the content of <code>in</code> an passes build messages to <code>builder</code>.
+     * Reads the content of <code>in</code> a passes build messages to <code>builder</code>.
      * @param in input stream from which to read the configuration data.
      * @param  builder                      object to notify of build events.
      * @throws IOException                  if an I/O error occurs.

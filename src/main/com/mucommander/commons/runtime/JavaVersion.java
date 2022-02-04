@@ -66,7 +66,7 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     private static final String CURRENT_ARCHITECTURE;
 
     /** The String representation of this RuntimeProperty, set at creation time */
-    protected final String stringRepresentation;
+    private final String stringRepresentation;
 
     static {
     	CURRENT_VALUE = parseSystemProperty(getRawSystemProperty());
@@ -125,14 +125,14 @@ public enum JavaVersion implements ComparableRuntimeProperty {
                 return ver;
             }
         }
-        // Newer version we don't know of yet, assume latest supported Java version
+        // Newer version we don't know of yet, assume the latest supported Java version
         return JavaVersion.JAVA_1_11;
     }
 
     /**
      * Returns <code>true</code> if this instance is the same instance as the one returned by {@link #getCurrent()}.
      *
-     * @return true if this instance is the same as the current runtime's value
+     * @return true if this instance is the same as the current runtime value
      */
     public boolean isCurrent() {
         return this == CURRENT_VALUE;

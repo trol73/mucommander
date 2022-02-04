@@ -70,7 +70,7 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
     /**
      * Deletes this entry from the associated <code>AbstractArchiveFile</code>.
      * <p>
-     * Throws a {@link UnsupportedFileOperationException} if if the underlying file does not support the required
+     * Throws a {@link UnsupportedFileOperationException} if the underlying file does not support the required
      * read and write {@link FileOperation file operations}. Throws an <code>IOException</code> in any of the following
      * cases:
      * <ul>
@@ -112,7 +112,7 @@ public class RWArchiveEntryFile extends AbstractArchiveEntryFile {
     /**
      * Creates this entry as a directory in the associated <code>AbstractArchiveFile</code>.
      * <p>
-     * Throws a {@link UnsupportedFileOperationException} if if the underlying file does not support the required
+     * Throws a {@link UnsupportedFileOperationException} if the underlying file does not support the required
      * read and write {@link FileOperation file operations}. Throws an <code>IOException</code> if this entry
      * already exists in the archive or if an I/O error occurred.
      *

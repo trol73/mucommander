@@ -31,6 +31,7 @@ import com.mucommander.commons.io.RandomAccessOutputStream;
 import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
+import java.nio.Buffer;
 import ru.trolsoft.jni.NativeFileUtils;
 
 import java.io.*;
@@ -1235,41 +1236,49 @@ public class LocalFile extends ProtocolFile {
     public static class LocalRandomAccessInputStream extends RandomAccessInputStream {
 
         private final FileChannel channel;
-        private final ByteBuffer bb;
+
+        /*
+          Here we use class Buffer but refer to ByteBuffer object.
+          This fixes a problem when running a project compiled for Java 9+ on older versions (Java 8).
+          In Java 8, while calling limit() or position() (and some other) methods of ByteBuffer class, since it has no implementation for this method,
+          so it is actually calling the method from extended class, Buffer.
+          However, in Java 9 and higher, ByteBuffer class has implemented its own methods, and the returning object is changed from Buffer to ByteBuffer
+         */
+        private final Buffer buffer;
 
         LocalRandomAccessInputStream(FileChannel channel) {
             this.channel = channel;
-            this.bb = BufferPool.getByteBuffer();
+            this.buffer = BufferPool.getByteBuffer();
         }
 
         @Override
         public int read() throws IOException {
-            synchronized(bb) {
-                bb.position(0);
-                bb.limit(1);
+            synchronized(buffer) {
+                buffer.position(0);
+                buffer.limit(1);
 
-                int nbRead = channel.read(bb);
+                int nbRead = channel.read((ByteBuffer) buffer);
                 if (nbRead <= 0) {
                     return nbRead;
                 }
 
-                return 0xFF & bb.get(0);
+                return 0xFF & ((ByteBuffer)buffer).get(0);
             }
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
-            synchronized(bb) {
-                bb.position(0);
-                bb.limit(Math.min(bb.capacity(), len));
+            synchronized(buffer) {
+                buffer.position(0);
+                buffer.limit(Math.min(buffer.capacity(), len));
 
-                int nbRead = channel.read(bb);
+                int nbRead = channel.read((ByteBuffer)buffer);
                 if (nbRead <= 0) {
                     return nbRead;
                 }
 
-                bb.position(0);
-                bb.get(b, off, nbRead);
+                buffer.position(0);
+                ((ByteBuffer)buffer).get(b, off, nbRead);
 
                 return nbRead;
             }
@@ -1277,7 +1286,7 @@ public class LocalFile extends ProtocolFile {
 
         @Override
         public void close() throws IOException {
-            BufferPool.releaseByteBuffer(bb);
+            BufferPool.releaseByteBuffer((ByteBuffer)buffer);
             channel.close();
         }
 
@@ -1337,23 +1346,27 @@ public class LocalFile extends ProtocolFile {
     public static class LocalRandomAccessOutputStream extends RandomAccessOutputStream {
 
         private final FileChannel channel;
-        private final ByteBuffer bb;
+
+        /*
+          Here we use class Buffer but refer to ByteBuffer object. See comment above.
+         */
+        private final Buffer buffer;
 
         LocalRandomAccessOutputStream(FileChannel channel) {
             this.channel = channel;
-            this.bb = BufferPool.getByteBuffer();
+            this.buffer = BufferPool.getByteBuffer();
         }
 
         @Override
         public void write(int i) throws IOException {
-            synchronized(bb) {
-                bb.position(0);
-                bb.limit(1);
+            synchronized(buffer) {
+                buffer.position(0);
+                buffer.limit(1);
 
-                bb.put((byte)i);
-                bb.position(0);
+                ((ByteBuffer)buffer).put((byte)i);
+                buffer.position(0);
 
-                channel.write(bb);
+                channel.write((ByteBuffer)buffer);
             }
         }
 
@@ -1364,21 +1377,20 @@ public class LocalFile extends ProtocolFile {
 
         @Override
         public void write(byte[] b, int off, int len) throws IOException {
-            synchronized(bb) {
+            synchronized(buffer) {
                 do {
-                    bb.position(0);
-                    int nbToWrite = Math.min(bb.capacity(), len);
-                    bb.limit(nbToWrite);
+                    buffer.position(0);
+                    int nbToWrite = Math.min(buffer.capacity(), len);
+                    buffer.limit(nbToWrite);
 
-                    bb.put(b, off, nbToWrite);
-                    bb.position(0);
+                    ((ByteBuffer)buffer).put(b, off, nbToWrite);
+                    buffer.position(0);
 
-                    nbToWrite = channel.write(bb);
+                    nbToWrite = channel.write((ByteBuffer)buffer);
 
                     len -= nbToWrite;
                     off += nbToWrite;
-                }
-                while(len > 0);
+                } while(len > 0);
             }
         }
 
@@ -1399,7 +1411,7 @@ public class LocalFile extends ProtocolFile {
                     channel.position(newLength);
                 }
             } else {
-                // Expand the file by positionning the offset at the new EOF and writing a byte, and reposition the
+                // Expand the file by positioning the offset at the new EOF and writing a byte, and reposition the
                 // offset to where it was
                 channel.position(newLength-1);      // Note: newLength cannot be 0
                 write(0);
@@ -1410,7 +1422,7 @@ public class LocalFile extends ProtocolFile {
 
         @Override
         public void close() throws IOException {
-            BufferPool.releaseByteBuffer(bb);
+            BufferPool.releaseByteBuffer((ByteBuffer)buffer);
             channel.close();
         }
 

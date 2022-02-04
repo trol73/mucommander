@@ -69,16 +69,17 @@ public class XmlConfigurationWriter implements ConfigurationBuilder {
 
 
     private static ContentHandler createHandler(Writer out) {
-        SAXTransformerFactory factory;
-        TransformerHandler    transformer;
-
         // Initializes the transformer factory.
-        factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
+        SAXTransformerFactory factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
         //factory.setAttribute("indent-number", 4);
 
         // Creates a new transformer.
-        try {transformer = factory.newTransformerHandler();}
-        catch(TransformerConfigurationException e) {throw new IllegalStateException(e);}
+        TransformerHandler    transformer;
+        try {
+            transformer = factory.newTransformerHandler();
+        } catch(TransformerConfigurationException e) {
+            throw new IllegalStateException(e);
+        }
 
         // Enables indentation.
         transformer.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");

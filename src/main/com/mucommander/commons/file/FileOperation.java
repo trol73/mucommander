@@ -95,17 +95,17 @@ public enum FileOperation {
     GET_FREE_SPACE,
 
     /**
-     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)}}.
      */
     GET_BLOCKSIZE,
 
     /**
-     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)}}.
      */
     GET_REPLICATION,
 
     /**
-     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)} ()}.
+     * Represents a 'change replication factor' operation, as specified by {@link AbstractFile#changeReplication(short)}}.
      */
     CHANGE_REPLICATION,
 

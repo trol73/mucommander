@@ -40,7 +40,7 @@ public abstract class ConfigurationWriterFactory<T extends ConfigurationBuilder>
 	
 	/**
 	 * Constructor
-	 * For backward compatibility using root element "prefs" it not mentioned otherwise
+	 * For backward compatibility using root element "prefs" it is not mentioned otherwise
 	 */
 	public ConfigurationWriterFactory() {
 		this("prefs");

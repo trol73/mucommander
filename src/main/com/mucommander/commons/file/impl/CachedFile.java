@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 /**
  * CachedFile is a ProxyFile that caches the return values of most {@link AbstractFile} getter methods. This allows
- * to limit the number of calls to the underlying file methods which can have a cost since they often are I/O bound.
+ * to limit the number of calls to the underlying file methods which can have a cost since they are often I/O bound.
  * The methods that are cached are those overridden by this class, except for the <code>ls</code> methods, which are
  * overridden only to allow recursion (see {@link #CachedFile(com.mucommander.commons.file.AbstractFile, boolean)}).
  *
@@ -79,7 +79,6 @@ public class CachedFile extends ProxyFile {
     private static final int EXISTS_VALUE_MASK = 1 << 29;
     private static final int IS_ROOT_VALUE_MASK = 1 << 30;
 
-    // others
     /** If true, AbstractFile instances returned by this class will be wrapped into CachedFile instances */
     private static final int RECURSE_INSTANCES_MASK = 1 << 29;
 

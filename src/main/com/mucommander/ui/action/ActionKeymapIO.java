@@ -59,7 +59,7 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
     /** Whether the actions have been modified since the last time they were saved */
     protected static boolean wereActionsModified;
     
-    private static ActionKeymapWriter writer = new ActionKeymapWriter();
+    private static final ActionKeymapWriter writer = new ActionKeymapWriter();
     
 	/**
      * Sets the path to the user actions file to be loaded when calling {@link #loadActionKeymap()}.
@@ -89,7 +89,9 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
      * @param  file                  path to the actions file
      * @throws FileNotFoundException if <code>file</code> is not accessible.
      */
-    private static void setActionsFile(File file) throws FileNotFoundException {setActionsFile(FileFactory.getFile(file.getAbsolutePath()));}
+    private static void setActionsFile(File file) throws FileNotFoundException {
+        setActionsFile(FileFactory.getFile(file.getAbsolutePath()));
+    }
 
     /**
      * Sets the path to the user actions file to be loaded when calling {@link #loadActionKeymap()}.
@@ -124,7 +126,6 @@ public abstract class ActionKeymapIO extends DefaultHandler  {
     
     /**
      * Writes the current action keymaps to the user's actions file.
-     * @throws IOException 
      * @throws IOException
      */
     public static void saveActionKeymap() throws IOException {

@@ -2,12 +2,10 @@ package com.mucommander.commons.file.impl;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FilePermissions;
-import com.mucommander.commons.file.UnsupportedFileOperationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DebugFile is a {@link ProxyFile} to be used for debugging purposes. It allows to track the calls made to

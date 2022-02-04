@@ -49,7 +49,7 @@ public class JavaClassVersionDetector {
 
         private final int major;
         private final int minor;
-        public String name;
+        public final String name;
 
         Version(int major, int minor, String name) {
             this.major = major;

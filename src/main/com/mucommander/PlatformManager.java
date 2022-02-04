@@ -91,7 +91,7 @@ public class PlatformManager {
     }
 
     /**
-     * Returns the path to the folder that contains all of the user's data.
+     * Returns the path to the folder that contains all the user's data.
      * <p>
      * All modules that save user data to a file should do so in a file located in
      * the folder returned by this method.

@@ -36,7 +36,7 @@ public class SimpleFileAttributes implements MutableFileAttributes {
     private short replication = 1;
 
     /** BlockSize attribute */
-    private long blocksize = 0;
+    private long blockSize = 0;
 
     /**
      * Creates a new SimpleFileAttributes instance with unspecified/null attribute values.
@@ -151,12 +151,12 @@ public class SimpleFileAttributes implements MutableFileAttributes {
         this.replication = replication;
     }
 
-    public long getBlocksize() {
-        return blocksize;
+    public long getBlockSize() {
+        return blockSize;
     }
 
-    public void setBlocksize(long blocksize) {
-        this.blocksize = blocksize;
+    public void setBlockSize(long blockSize) {
+        this.blockSize = blockSize;
     }
 
 }

@@ -51,7 +51,7 @@ public interface AssociationBuilder {
     /**
      * Adds a mask to the current association.
      * @param  mask             regular expression that a file name must match in order to match the association.
-     * @param  isCaseSensitive  whether the regular expression is case sensitive.
+     * @param  isCaseSensitive  whether the regular expression is case-sensitive.
      * @throws CommandException if an error occurs.
      */
     void setMask(String mask, boolean isCaseSensitive) throws CommandException;

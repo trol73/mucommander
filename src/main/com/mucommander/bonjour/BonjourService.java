@@ -28,13 +28,13 @@ import com.mucommander.commons.file.FileURL;
 public class BonjourService {
 
     /** the unqualified name of the service, e.g. 'foobar' */
-    private String name;
+    private final String name;
 
     /** the url pointing to the service's location */
-    private FileURL url;
+    private final FileURL url;
 
     /** the fully qualified name of the service, e.g. 'foobar._http._tcp.local' */
-    private String fullyQualifiedName;
+    private final String fullyQualifiedName;
 
 
     /**
@@ -88,13 +88,10 @@ public class BonjourService {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Returns <code>true</code> if the given Object is a BonjourService instance with the same fully qualified name.
      */
+    @Override
     public boolean equals(Object o) {
         return o instanceof BonjourService && fullyQualifiedName.equals(((BonjourService) o).fullyQualifiedName);
 
@@ -104,7 +101,8 @@ public class BonjourService {
     /**
      * Returns a String representation of this BonjourService in the form name / url.
      */
+    @Override
     public String toString() {
-        return name+" / "+url.toString(false);
+        return name + " / " + url.toString(false);
     }
 }

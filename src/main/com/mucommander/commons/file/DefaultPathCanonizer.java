@@ -8,10 +8,10 @@ import java.util.Vector;
 public class DefaultPathCanonizer implements PathCanonizer {
 
     /** Path separator */
-    private String separator;
+    private final String separator;
 
     /** The string replacement for '~' path fragments, null for no tilde replacement */
-    private String tildeReplacement;
+    private final String tildeReplacement;
 
 
     /**
@@ -36,10 +36,6 @@ public class DefaultPathCanonizer implements PathCanonizer {
     }
 
 
-    //////////////////////////////////
-    // PathCanonizer implementation //
-    //////////////////////////////////
-
     /**
      * Returns a canonical value of the given path, where '.' and '..' path fragments are factored out,
      * and '~' fragments replaced by the string specified in the constructor (if not <code>null</code>).
@@ -47,6 +43,7 @@ public class DefaultPathCanonizer implements PathCanonizer {
      * @param path the path to canonize
      * @return the canonized path
      */
+    @Override
     public String canonize(String path) {
         // Todo: use PathTokenizer?
 

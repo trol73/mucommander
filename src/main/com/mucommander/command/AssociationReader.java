@@ -45,7 +45,7 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
     // - Instance variables --------------------------------------------------
     // -----------------------------------------------------------------------
     /** Where to send building messages. */
-    private AssociationBuilder builder;
+    private final AssociationBuilder builder;
     private boolean isInAssociation;
 
 

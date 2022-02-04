@@ -58,11 +58,11 @@ public class CredentialsManager {
 	private static Logger logger;
 	
     /** Contains volatile CredentialsMapping instances, lost when the application terminates */
-    private static List<CredentialsMapping> volatileCredentialMappings = new Vector<>();
+    private static final List<CredentialsMapping> volatileCredentialMappings = new Vector<>();
 
     /** Contains persistent CredentialsMapping instances, stored to an XML file when the application
      * terminates, and loaded the next time the application is started */
-    private static AlteredVector<CredentialsMapping> persistentCredentialMappings = new AlteredVector<>();
+    private static final AlteredVector<CredentialsMapping> persistentCredentialMappings = new AlteredVector<>();
 
     /** Singleton CredentialsManagerAuthenticator instance */
     private final static Authenticator AUTHENTICATOR = new CredentialsManagerAuthenticator();
@@ -82,7 +82,7 @@ public class CredentialsManager {
 
     /** create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
       * stores VectorChangeListener as weak references) */
-    private static CredentialsManager singleton = new CredentialsManager();
+    private static final CredentialsManager singleton = new CredentialsManager();
 
     static {
         // Listen to changes made to the persistent entries vector.
@@ -231,7 +231,7 @@ public class CredentialsManager {
         List<CredentialsMapping> matchesV = getMatchingCredentialsV(location);
 
         // Transform vector into an array
-        CredentialsMapping matches[] = new CredentialsMapping[matchesV.size()];
+        CredentialsMapping[] matches = new CredentialsMapping[matchesV.size()];
         matchesV.toArray(matches);
 
         return matches;
@@ -347,7 +347,7 @@ public class CredentialsManager {
     private static void authenticateImplicit(FileURL location) {
         getLogger().trace("called, fileURL="+ location +" containsCredentials="+ location.containsCredentials());
 
-        CredentialsMapping creds[] = getMatchingCredentials(location);
+        CredentialsMapping[] creds = getMatchingCredentials(location);
         if (creds.length > 0) {
             authenticate(location, creds[0]);
         } else {
@@ -403,7 +403,7 @@ public class CredentialsManager {
             pathTokensV.add(st.nextToken());
         }
         int nbTokens = pathTokensV.size();
-        String pathTokens[] = new String[nbTokens];
+        String[] pathTokens = new String[nbTokens];
         pathTokensV.toArray(pathTokens);
 
         CredentialsMapping tempCredentialsMapping;

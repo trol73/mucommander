@@ -69,13 +69,13 @@ import java.util.*;
  */
 public class Configuration {
     /** Used to get access to the configuration source's input and output streams. */
-    private ConfigurationSource                                source;
+    private ConfigurationSource source;
     /** Used to create objects that will read from the configuration source. */
-    private ConfigurationReaderFactory                         readerFactory;
+    private ConfigurationReaderFactory readerFactory;
     /** Used to create objects that will write to the configuration source. */
-    private ConfigurationWriterFactory                         writerFactory;
+    private ConfigurationWriterFactory writerFactory;
     /** Holds the content of the configuration file. */
-    private final ConfigurationSection                         root = new ConfigurationSection();
+    private final ConfigurationSection root = new ConfigurationSection();
     /** Contains all registered configuration LISTENERS, stored as weak references. */
     private final WeakHashMap<ConfigurationListener, ?> LISTENERS = new WeakHashMap<>();
 

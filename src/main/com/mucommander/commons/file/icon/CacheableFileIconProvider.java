@@ -21,7 +21,7 @@ public interface CacheableFileIconProvider extends FileIconProvider {
      * <p>This method is called by {@link CachedFileIconProvider#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * each time an icon is requested. If <code>true</code> is returned, the icon cache will be looked up with
      * {@link #lookupCache(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} and if the cache did not return
-     * an icon, the icon will be be added to the cache with {@link #addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon, java.awt.Dimension)}.
+     * an icon, the icon will be added to the cache with {@link #addToCache(com.mucommander.commons.file.AbstractFile, javax.swing.Icon, java.awt.Dimension)}.
      * <br>
      * On the other hand, if <code>false</code> is returned, {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * will simply be called, without querying or adding to the cache.

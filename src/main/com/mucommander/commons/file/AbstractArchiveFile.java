@@ -105,7 +105,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * Creates the entries tree, used by {@link #ls(AbstractArchiveEntryFile , com.mucommander.commons.file.filter.FilenameFilter, com.mucommander.commons.file.filter.FileFilter)}
      * to quickly list the contents of an archive's subfolder.
      *
-     * @throws IOException if an error occured while retrieving this archive's entries
+     * @throws IOException if an error occurred while retrieving this archive's entries
      * @throws UnsupportedFileOperationException if {@link FileOperation#READ_FILE} operations are not supported by the
      * underlying file protocol.
      */
@@ -232,7 +232,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * underlying file protocol.
      */
     private AbstractFile[] ls(DefaultMutableTreeNode treeNode, AbstractFile parentFile, FilenameFilter filenameFilter, FileFilter fileFilter) throws IOException {
-        AbstractFile files[];
+        AbstractFile[] files;
         int nbChildren = treeNode.getChildCount();
 
         // No FilenameFilter, create entry files and store them directly into an array

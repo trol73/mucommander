@@ -28,8 +28,9 @@ public class MimeTypes extends Hashtable<String, String> {
 					StringTokenizer st = new StringTokenizer(line);
 					String description = st.nextToken();
 
-					while (st.hasMoreTokens())
+					while (st.hasMoreTokens()) {
 						put(st.nextToken(), description);
+					}
 				} catch (Exception e) {
 					// If a line contains an error, catch the exception and go to the next line
 				}

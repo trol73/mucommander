@@ -40,7 +40,7 @@ public class LauncherCmdHelper {
     private boolean verbose;
 
     /**
-     * Whether or not to ignore warnings when booting.
+     * Whether to ignore warnings when booting.
      */
     private boolean fatalWarnings;
 
@@ -65,7 +65,7 @@ public class LauncherCmdHelper {
      * Prints muCommander's command line usage and exits.
      */
     private static void printUsage() {
-        System.out.println("Usage: mucommander [options] [folders]");
+        System.out.println("Usage: trolcommander [options] [folders]");
         System.out.println("Options:");
 
         // Allows users to tweak how file associations are loaded / saved.
@@ -80,7 +80,7 @@ public class LauncherCmdHelper {
         // Allows users to tweak how command bar configuration is loaded / saved.
         System.out.println(" -C FILE, --commandbar FILE        Load command bar from FILE.");
 
-        // Allows users to change the extensions folder.
+        // Allows users to change the extension's folder.
         System.out.println(" -e FOLDER, --extensions FOLDER    Load extensions from FOLDER.");
 
         // Allows users to tweak how custom commands are loaded / saved.
@@ -92,7 +92,7 @@ public class LauncherCmdHelper {
         // Allows users to tweak how keymaps are loaded.
         System.out.println(" -k FILE, --keymap FILE            Load keymap from FILE");
 
-        // Allows users to change the preferences folder.
+        // Allows users to change the preference's folder.
         System.out.println(" -p FOLDER, --preferences FOLDER   Store configuration files in FOLDER");
 
         // muCommander will not print verbose error messages.
@@ -318,7 +318,7 @@ public class LauncherCmdHelper {
     private static void printError(String msg, boolean quit) {
         if (quit) {
         	getLogger().error(msg);
-            System.err.println("See mucommander --help for more information.");
+            System.err.println("See trolcommander --help for more information.");
             System.exit(1);
         } else{
         	getLogger().warn(msg);
@@ -345,8 +345,8 @@ public class LauncherCmdHelper {
 
     /**
      * Prints the specified error message to stderr.
-     * @param msg       error message to print to stder.
-     * @param quit      whether or not to quit after printing the error message.
+     * @param msg       error message to print to stderr.
+     * @param quit      whether to quit after printing the error message.
      * @param exception exception that triggered the error (for verbose output).
      */
     void printError(String msg, Exception exception, boolean quit) {

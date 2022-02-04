@@ -1231,7 +1231,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
                 throw new FileTransferException(FileTransferException.WRITING_DESTINATION);
             }
 
-            AbstractFile children[];
+            AbstractFile[] children;
             try {
                 children = sourceFile.ls();
             } catch(IOException e) {
@@ -1285,7 +1285,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      */
     private void deleteRecursively(AbstractFile file) throws IOException {
         if (file.isDirectory() && !file.isSymlink()) {
-            AbstractFile children[] = file.ls();
+            AbstractFile[] children = file.ls();
             for (AbstractFile child : children) {
                 deleteRecursively(child);
             }

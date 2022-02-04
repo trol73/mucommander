@@ -60,7 +60,7 @@ public interface ConfigurationBuilder {
      * <p>
      * This method will be invoked once at the beginning of every configuration section. Unless an
      * unrecoverable error happens, there will be an {@link #endSection(String) endSection} event for every
-     * <code>startSection</code> event, even if the section is empty. All of the section's content will be
+     * <code>startSection</code> event, even if the section is empty. All the section's content will be
      * reported, in order, before the corresponding {@link #endSection(String) endSection} event.
      *
      * @param  name                   name of the new section.

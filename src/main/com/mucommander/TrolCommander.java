@@ -83,7 +83,7 @@ public class TrolCommander {
 	private static Logger logger;
 
     private static SplashScreen  splashScreen;
-    /** Whether or not to display the splash screen. */
+    /** Whether to display the splash screen. */
     private static boolean useSplash;
     /** true while the application is launching, false after it has finished launching */
     private static boolean isLaunching = true;

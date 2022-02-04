@@ -22,11 +22,11 @@ public interface FilePermissions extends PermissionBits {
     FilePermissions EMPTY_FILE_PERMISSIONS = new SimpleFilePermissions(0, 0);
 
     /** Default file permissions used by {@link AbstractFile#importPermissions(AbstractFile)} for permission bits that
-     * are not available in the source: rw-r--r-- (644 octal). All of the permission bits are marked as supported. */
+     * are not available in the source: rw-r--r-- (644 octal). All the permission bits are marked as supported. */
     FilePermissions DEFAULT_FILE_PERMISSIONS = new SimpleFilePermissions(420, FULL_PERMISSION_BITS);
 
     /** Default directory permissions used by {@link AbstractFile#importPermissions(AbstractFile)} for permission bits that
-     * are not available in the source: rwxr-xr-x (755 octal). All of the permission bits are marked as supported. */
+     * are not available in the source: rwxr-xr-x (755 octal). All the permission bits are marked as supported. */
     FilePermissions DEFAULT_DIRECTORY_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);
 
     FilePermissions DEFAULT_EXECUTABLE_PERMISSIONS = new SimpleFilePermissions(493, FULL_PERMISSION_BITS);

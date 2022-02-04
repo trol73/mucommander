@@ -54,7 +54,7 @@ public enum MacOsSystemFolder {
     VM_STORAGE("/VM Storage");
 
     /** file path */
-	String path;
+    final String path;
 
     static Set<String> paths;
 

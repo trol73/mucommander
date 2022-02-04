@@ -32,13 +32,13 @@ import com.mucommander.commons.file.FileURL;
 public final class CredentialsMapping {
 
     /** User credentials */
-    private Credentials credentials;
+    private final Credentials credentials;
 
     /** The location credentials are associated with */
-    private FileURL realm;
+    private final FileURL realm;
 
     /** Should these credentials be saved to disk ? */
-    private boolean isPersistent;
+    private final boolean isPersistent;
 
     
     /**
@@ -85,10 +85,6 @@ public final class CredentialsMapping {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Returns <code>true</code> if the given Object is a {@link com.mucommander.auth.CredentialsMapping} instance
      * whose credentials and realm are equals to those of this instance.
@@ -96,6 +92,7 @@ public final class CredentialsMapping {
      * @param o the Object to test for equality
      * @return true if both CredentialsMapping instances are equal
      */
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof CredentialsMapping)) { // Note: CredentialsMapping is final, no need to test classes
             return false;
@@ -106,6 +103,7 @@ public final class CredentialsMapping {
         return cm.credentials.equals(this.credentials, false) && cm.realm.equals(this.realm, false, true);
     }
 
+    @Override
     public String toString() {
         return credentials.toString()+" "+realm.toString(false);
     }

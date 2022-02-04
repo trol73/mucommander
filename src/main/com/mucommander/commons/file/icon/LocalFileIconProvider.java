@@ -15,7 +15,7 @@ import java.io.IOException;
  * <p>This class implements {@link #getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)} and passes on
  * requests for local file icons to {@link #getLocalFileIcon(com.mucommander.commons.file.impl.local.LocalFile, com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.
  * On the other hand, requests for non-local file icons are transformed to local ones, by creating a local temporary
- * file with the same name (best effort) and extension (guaranteed) as the non-local file, and passes on the file
+ * file with the same name (the best effort) and extension (guaranteed) as the non-local file, and passes on the file
  * to {@link #getLocalFileIcon(com.mucommander.commons.file.impl.local.LocalFile, com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}.
  *
  * @author Maxence Bernard
@@ -24,7 +24,7 @@ public abstract class LocalFileIconProvider implements FileIconProvider {
 
     /**
      * Creates a returns a temporary local file/directory with the same extension as the specified file/directory
-     * (guaranteed), and the same filename as much as possible (best effort).
+     * (guaranteed), and the same filename as much as possible (the best effort).
      * This method returns <code>null</code> if the temporary file/directory could not be created.
      *
      * @param nonLocalFile the non-local file for which to create a temporary file.

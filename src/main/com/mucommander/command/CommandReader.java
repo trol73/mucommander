@@ -33,7 +33,7 @@ import java.io.InputStream;
  * Command file parsing is done through the {@link #read(InputStream,CommandBuilder) read} method, which is
  * the only way to interact with this class.
  * <p>
- * Note that while this class knows how to read the content of an command XML file, its role is not to interpret it. This
+ * Note that while this class knows how to read the content of a command XML file, its role is not to interpret it. This
  * is done by instances of {@link CommandBuilder}.
  *
  * @see    CommandsXmlConstants

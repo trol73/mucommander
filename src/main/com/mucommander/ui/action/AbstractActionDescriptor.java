@@ -49,23 +49,23 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
 //        }
 //    }
 	
-	//////////////////////////////////
-	//// ActionDescriptor methods ////
-	//////////////////////////////////
-	
+    @Override
     public String getLabel() {
         String label = getStandardLabel();
         return label != null ? label : getLabelKey();
     }
 
+    @Override
     public ImageIcon getIcon() {
         return getStandardIcon(getId());
     }
-    
+
+    @Override
     public String getTooltip() {
         return getStandardTooltip(getId());
     }
-    
+
+    @Override
     public String getDescription() {
     	String tooltip = getTooltip();
     	return tooltip == null ? getLabel() : tooltip;
@@ -80,6 +80,7 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      *
      * @return the standard dictionary key for the action's label
      */
+    @Override
     public String getLabelKey() {
 		return getId()+".label";
 	}
@@ -90,15 +91,13 @@ public abstract class AbstractActionDescriptor implements ActionDescriptor {
      *
      * @return <code>false</code>
      */
+    @Override
     public boolean isParameterized() {
         return false;
     }
 
 
-    /////////////////////////
-    //// Private methods ////
-    /////////////////////////
-    
+
     /**
      * Queries {@link Translator} for a label corresponding to the action using the standard naming convention.
      * Returns the label or <code>null</code> if no corresponding entry was found in the dictionary.

@@ -67,7 +67,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
     private final MainFrame mainFrame;
 	
     /** 
-     * Is selection case sensitive? (initially false)
+     * Is selection case-sensitive? (initially false)
      * <br>Note: this field is static so the value is kept after the dialog is OKed.
      */ 
     private static boolean caseSensitive = false;
@@ -95,7 +95,6 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
      * @param addToSelection if <code>true</code>, files matching
      */
     public FileSelectionDialog(MainFrame mainFrame, boolean addToSelection) {
-
         super(mainFrame, i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"), mainFrame);
 	
         this.mainFrame = mainFrame;
@@ -148,10 +147,8 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
     }
 
 
-    ////////////////////////////
-    // ActionListener methods //
-    ////////////////////////////
-	
+
+	@Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 

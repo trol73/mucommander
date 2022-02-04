@@ -131,7 +131,7 @@ public enum OsVersion implements ComparableRuntimeProperty {
     private static final Logger LOGGER = LoggerFactory.getLogger(OsVersion.class);
 
     /** The String representation of this RuntimeProperty, set at creation time */
-    protected final String stringRepresentation;
+    private final String stringRepresentation;
 
     /** Holds the OsVersion of the current runtime environment  */
     private static final OsVersion currentValue;

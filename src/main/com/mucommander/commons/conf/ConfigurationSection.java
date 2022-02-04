@@ -79,7 +79,7 @@ class ConfigurationSection {
     }
 
     /**
-     * Returns an set on the names of the variables that are defined in the section.
+     * Returns a set on the names of the variables that are defined in the section.
      * <p>
      * Note that the order in which variable names are returned needs not be that in which they were added to the
      * section. Callers should not rely on the order being consistent over time.
@@ -126,12 +126,12 @@ class ConfigurationSection {
     }
 
     /**
-     * Casts the specified value into an float.
+     * Casts the specified value into a float.
      * <p>
      * If <code>value</code> is <code>null</code>, this method will return <code>0</code>.
      *
-     * @param value value to cast to an float.
-     * @return <code>value</code> as an float.
+     * @param value value to cast to a float.
+     * @return <code>value</code> as a float.
      */
     public static float getFloatValue(String value) {
         return value == null ? 0 : Float.parseFloat(value);

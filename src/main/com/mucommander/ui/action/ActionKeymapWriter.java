@@ -77,7 +77,7 @@ class ActionKeymapWriter extends ActionKeymapIO {
 	}
 	
     private static class Writer {
-    	private XmlWriter writer;
+    	private final XmlWriter writer;
 
     	private Writer(OutputStream stream) throws IOException {
     		this.writer = new XmlWriter(stream);

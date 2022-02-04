@@ -24,15 +24,12 @@ public class GroupedPermissionBits implements PermissionBits {
         this.permissions = permissions;
     }
 
-
-    ///////////////////////////////////
-    // PermissionBits implementation //
-    ///////////////////////////////////
-
+    @Override
     public int getIntValue() {
         return permissions;
     }
 
+    @Override
     public boolean getBitValue(int access, int type) {
         return (permissions & (type << (access*3))) != 0;
     }

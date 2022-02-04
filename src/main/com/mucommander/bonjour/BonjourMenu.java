@@ -29,7 +29,7 @@ import javax.swing.event.MenuListener;
 
 /**
  * An abstract JMenu that contains an item for each Bonjour service available
- * (as returned {@link BonjourDirectory#getServices()} displaying the Bonjour service's name. When an item is clicked,
+ * (as returned {@link BonjourDirectory#getServices()} displaying the Bonjour service's name). When an item is clicked,
  * the action returned by {@link #getMenuItemAction(BonjourService)} is returned.
  *
  * <p>Note: the items list is refreshed each time the menu is selected. In other words, a new instance of BonjourMenu
@@ -75,11 +75,11 @@ public abstract class BonjourMenu extends JMenu implements MenuListener {
             add(new JMenuItem(Translator.get("bonjour.bonjour_disabled"))).setEnabled(false);
             return;
         }
-        BonjourService services[] = BonjourDirectory.getServices();
+        BonjourService[] services = BonjourDirectory.getServices();
 
         if (services.length > 0) {
             // Add a menu item for each Bonjour service.
-            // When clicked, the corresponding URL will opened in the active table.
+            // When clicked, the corresponding URL will be opened in the active table.
             MnemonicHelper mnemonicHelper = new MnemonicHelper();
 
             for (BonjourService service : services) {
