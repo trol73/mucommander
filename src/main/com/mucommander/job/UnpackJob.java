@@ -48,7 +48,7 @@ public class UnpackJob extends AbstractCopyJob {
     private List<ArchiveEntry> selectedEntries;
 
     /** Depth of the folder in which the top entries are located. 0 is the highest depth (archive's root folder) */
-    private int baseArchiveDepth;
+    private final int baseArchiveDepth;
 
     private long totalFilesSize;
     private int totalFilesCount;
@@ -222,7 +222,6 @@ public class UnpackJob extends AbstractCopyJob {
                             processEntry = true;
                             selectedEntries.remove(i);
                             break;
-                        } else {
                         }
                     }
                 }

@@ -45,7 +45,7 @@ public class TempExecJob extends TempCopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TempExecJob.class);
 	
     /** Files to execute */
-    private FileSet filesToExecute;
+    private final FileSet filesToExecute;
 
     /**
      * Creates a new <code>TempExecJob</code> that operates on a single file.
@@ -79,36 +79,37 @@ public class TempExecJob extends TempCopyJob {
 
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
-        if(!super.processFile(file, recurseParams))
+        if (!super.processFile(file, recurseParams)) {
             return false;
+        }
 
         // TODO: temporary files seem to remain after the JVM quits under Mac OS X, even if the files permissions are unchanged
 
         // Execute the file, only if it is one of the top-level files
-        if(filesToExecute.indexOf(file)!=-1) {
-            if(!currentDestFile.isDirectory()) {        // Do not change directories' permissions
-                try {
-                    // Make the temporary file read only
-                    if(currentDestFile.getChangeablePermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION))
-                        currentDestFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
-                }
-                catch(IOException e) {
-                    LOGGER.debug("Caught exeception while changing permissions of "+currentDestFile, e);
-                    return false;
-                }
-            }
-
-            // Try to open the file.
+        if (!filesToExecute.contains(file)) {
+            return true;
+        }
+        if (!currentDestFile.isDirectory()) {        // Do not change directories' permissions
             try {
-                DesktopManager.open(currentDestFile);
-                RecentExecutedFilesQL.addFile(file);
-            }
-            catch(Exception e) {
-                LOGGER.debug("Caught exeception while opening "+currentDestFile, e);
+                // Make the temporary file read only
+                if (currentDestFile.getChangeablePermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION))
+                    currentDestFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
+            } catch(IOException e) {
+                LOGGER.debug("Caught exception while changing permissions of " + currentDestFile, e);
                 return false;
             }
         }
+        return openFile(file);
+    }
 
-        return true;
+    private boolean openFile(AbstractFile file) {
+        try {
+            DesktopManager.open(currentDestFile);
+            RecentExecutedFilesQL.addFile(file);
+            return true;
+        } catch(Exception e) {
+            LOGGER.debug("Caught exception while opening " + currentDestFile, e);
+            return false;
+        }
     }
 }

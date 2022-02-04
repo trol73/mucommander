@@ -74,7 +74,7 @@ public class FindFileJob extends FileJob {
                 return true;
             }
             try {
-                AbstractFile subFiles[] = file.ls();
+                AbstractFile[] subFiles = file.ls();
                 for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                     if (ignoreHidden && file.isHidden()) {
                         continue;
@@ -94,7 +94,7 @@ public class FindFileJob extends FileJob {
 
         if (file.isArchive() && searchArchives) {
             try {
-                AbstractFile subFiles[] = file.ls();
+                AbstractFile[] subFiles = file.ls();
                 for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                     if (ignoreHidden && file.isHidden()) {
                         continue;
@@ -164,7 +164,7 @@ public class FindFileJob extends FileJob {
         IOCase filterCase = OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent() ? IOCase.INSENSITIVE : IOCase.SENSITIVE;
 
         if (fileMask.contains(",")) {
-            String masks[] = fileMask.split(",");
+            String[] masks = fileMask.split(",");
             List<IOFileFilter> fileFilters = new ArrayList<>();
             for (String mask : masks) {
                 String trimMask = mask.trim();

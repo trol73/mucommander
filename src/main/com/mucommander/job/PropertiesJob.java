@@ -90,14 +90,13 @@ public class PropertiesJob extends FileJob {
             nbFolders++;
 
             try {
-                AbstractFile subFiles[] = file.ls();
-                for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
+                AbstractFile[] subFiles = file.ls();
+                for (int i = 0; i < subFiles.length && getState() != State.INTERRUPTED; i++) {
                     // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                     nextFile(subFiles[i]);
                     processFile(subFiles[i], null);
                 }
-            }
-            catch(IOException e) {
+            } catch(IOException e) {
                 // Should we tell the user?
             }
         }
@@ -105,8 +104,9 @@ public class PropertiesJob extends FileJob {
         else {
             nbFilesRecurse++;
             long fileSize = file.getSize();
-            if(fileSize>0)		// Can be equal to -1 if size not available
+            if (fileSize > 0) {		// Can be equal to -1 if size not available
                 totalBytes += fileSize;
+            }
         }
 	
         return true;
