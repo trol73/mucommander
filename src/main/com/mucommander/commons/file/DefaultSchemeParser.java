@@ -241,10 +241,10 @@ public class DefaultSchemeParser implements SchemeParser {
             // Filenames may contain @ chars, so atPos must be lower than next separator's position (if any)
             if (atPos != -1 && (separatorPos == -1 || atPos < separatorPos)) {
                 colonPos = authority.indexOf(':');
-                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), StandardCharsets.UTF_8);
+                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), "UTF-8");
                 String password;
                 if (colonPos != -1) {
-                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), StandardCharsets.UTF_8);
+                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), "UTF-8");
                 } else {
                     password = null;
                 }
