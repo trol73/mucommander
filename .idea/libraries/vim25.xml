@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="vim25">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/runtime/vmware/vim25-2.5.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
