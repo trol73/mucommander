@@ -779,7 +779,7 @@ public class TrolCommander {
      * @param args command line arguments.
      */
     //@SuppressWarnings({"unchecked"})
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         if (OsFamily.MAC_OS_X.isCurrent()) {
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "trolCommander");
 			// disable openGL in javaFX (used for HtmlViewer) as it cashes JVM under vmWare

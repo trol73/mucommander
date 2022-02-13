@@ -34,11 +34,14 @@ public class NativeFileUtils {
     private static boolean init = false;
     private static boolean installed = false;
 
+    private static String getJnilibFileName() {
+        return "libtrolsoft-" + System.getProperty("os.arch") + ".jnilib";
+    }
 
     private static void prepareLibrary(boolean overwrite) {
         String jarPath = FileUtils.getJarPath();
         try {
-            FileUtils.copyFromJarFile("libtrolsoft.jnilib", jarPath, overwrite);
+            FileUtils.copyFromJarFile(getJnilibFileName(), jarPath, overwrite);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,7 +53,7 @@ public class NativeFileUtils {
             prepareLibrary(false);
             try {
                 String path = FileUtils.getJarPath() + File.separator;
-                System.load(path + "libtrolsoft.jnilib");
+                System.load(path + getJnilibFileName());
                 installed = true;
                 if (getLibraryVersion() != VERSION) {
                     prepareLibrary(true);

@@ -31,7 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * OSXTrash provides access to the Mac OS X Finder's trash. Only local files (or locally mounted files) can be moved
@@ -67,6 +69,33 @@ public class OSXTrash extends QueuedTrash {
     private final static String EMPTY_TRASH_APPLESCRIPT = "tell application \"Finder\" to empty trash";
 
     private static final MacFileUtils macFileUtils = new MacFileUtils();
+
+    /**
+     * AppleScript that moves files to the trash, for versions of AppleScript (1.10 or lower )that do not allow Unicode
+     * in the script itself (only MacRoman). As a result, this script is more complicated as the only way to deal with
+     * Unicode text is to read them from a file. See http://www.satimage.fr/software/en/unicode_and_applescript.html
+     * for more info about this workaround.
+     */
+    private final static String MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE =
+            // Loads the contents of the UTF8-encoded file which path is contained in the 'tmpFilePath' variable.
+            // This variable must be set before the beginning of the script. This file contains the list of files to move
+            // to the trash, separated by EOL characters. The file must NOT end with a trailing EOL.
+            "set tmpFile to (open for access (POSIX file tmpFilePath))\n" +
+                    "set tmpFileContents to (read tmpFile for (get eof tmpFile) as «class utf8»)\n" +
+                    "close access tmpFile\n" +
+                    // Split the file contents into a list of lines, each line representing a POSIX file path to delete
+                    "set posixFileList to every paragraph of tmpFileContents\n" +
+                    // Convert the list of POSIX paths into a list of file objects. Note that internally AppleScript uses
+                    // a Mac-specific colon-separated path notation rather than the POSIX one.
+                    "set fileCount to the number of items in posixFileList\n" +
+                    "set fileList to {}\n" +
+                    "repeat with i from 1 to the fileCount\n" +
+                    "set posixFile to item i of posixFileList\n" +
+                    "copy POSIX file posixFile to the end of fileList\n" +
+                    "end repeat\n" +
+                    // Tell the Finder to move those files to the trash. Note that the file list must contain file objects and not
+                    // POSIX paths, hence the previous step.
+                    "tell application \"Finder\" to move fileList to the trash";
 
 
     /**
@@ -133,13 +162,109 @@ public class OSXTrash extends QueuedTrash {
      */
     @Override
     protected boolean moveToTrash(List<AbstractFile> queuedFiles) {
+        if (queuedFiles.isEmpty()) {
+            return true;
+        }
+
+        if (moveToTrashViaAppleScript(queuedFiles)) {
+            return true;
+        }
+
+        boolean smbFs = queuedFiles.stream()
+                .map(file -> (File) file.getUnderlyingFileObject())
+                .map(File::toPath)
+                .map(path -> {
+                    try {
+                        return Files.getFileStore(path);
+                    } catch (IOException e) {
+                        LOGGER.warn("failed to retrieve FileStore of {}", path, e);
+                        return null;
+                    }
+                })
+                .map(fs -> fs != null ? fs.type() : null)
+                .anyMatch("smbfs"::equals);
+        if (smbFs) {
+            // JNA doesn't move files on SMB shares to trash
+            LOGGER.error("failed to move SMB files to trash");
+            return false;
+        }
+
+        LOGGER.info("fall back to removing files using JNA");
+        return moveToTrashViaJna(queuedFiles);
+    }
+
+    private boolean moveToTrashViaJna(List<AbstractFile> queuedFiles) {
         File[] files = queuedFiles.stream().map(AbstractFile::getAbsolutePath).map(File::new).toArray(File[]::new);
         try {
             macFileUtils.moveToTrash(files);
-            return true;
         } catch (IOException e) {
             LOGGER.error("failed to move files to trash", e);
             return false;
+        }
+        return true;
+    }
+
+    private boolean moveToTrashViaAppleScript(List<AbstractFile> queuedFiles) {
+        // Simple script for AppleScript versions with Unicode support, i.e. that allows Unicode characters in the
+        // script (AppleScript 2.0 / Mac OS X 10.5 or higher).
+        if (AppleScript.getScriptEncoding().equals(AppleScript.UTF8)) {
+            String appleScript = queuedFiles.stream()
+                    .map(AbstractFile::getAbsolutePath)
+                    .map(path -> String.format("posix file \"%s\"", path))
+                    .collect(Collectors.joining(", ", "tell application \"Finder\" to move {", "} to the trash"));
+
+            return AppleScript.execute(appleScript, null);
+        }
+        // Script for AppleScript versions without Unicode support (AppleScript 1.10 / Mac OS X 10.4 or lower)
+        else {
+            AbstractFile tmpFile = null;
+            OutputStreamWriter tmpOut = null;
+
+            try {
+                // Create the temporary file that contains the list of files to move, encoded as UTF-8 and separated by
+                // EOL characters. The file must NOT end with a trailing EOL.
+                int nbFiles = queuedFiles.size();
+                tmpFile = FileFactory.getTemporaryFile("trash_files.tc", false);
+                tmpOut = new OutputStreamWriter(tmpFile.getOutputStream(), StandardCharsets.UTF_8);
+
+                for (int i = 0; i < nbFiles; i++) {
+                    tmpOut.write(queuedFiles.get(i).getAbsolutePath());
+                    if (i < nbFiles-1) {
+                        tmpOut.write("\n");
+                    }
+                }
+
+                tmpOut.close();
+
+                // Set the 'tmpFilePath' variable to the path of the temporary file we just created
+                String appleScript = "set tmpFilePath to \"" + tmpFile.getAbsolutePath() + "\"\n";
+                appleScript += MOVE_TO_TRASH_APPLESCRIPT_NO_UNICODE;
+
+                boolean success = AppleScript.execute(appleScript, null);
+
+                // AppleScript has been executed, we can now safely close and delete the temporary file
+                tmpFile.delete();
+
+                return success;
+            } catch(IOException e) {
+                LOGGER.debug("Caught IOException", e);
+
+                if (tmpOut != null) {
+                    try {
+                        tmpOut.close();
+                    } catch(IOException ignore) {
+                    }
+                }
+
+                if (tmpFile != null) {
+                    try {
+                        tmpFile.delete();
+                    } catch(IOException ignore) {
+                    }
+                }
+
+                return false;
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2021 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ public enum FileType {
     BBCODE("BBCode", SyntaxConstants.SYNTAX_STYLE_BBCODE),
     C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c,*.m"),
     CLOJURE("Clojure", SyntaxConstants.SYNTAX_STYLE_CLOJURE, "*.clj"),
-    CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc,*.h,*.ino"),
+    CPP("C++", SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS, "*.cpp,*.cc,*.h,*.hpp,*.ino"),
     CSHARP("C#", SyntaxConstants.SYNTAX_STYLE_CSHARP, "*.cs"),
     CSS("CSS", SyntaxConstants.SYNTAX_STYLE_CSS, "*.css"),
     DELPHI("Delphi", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),

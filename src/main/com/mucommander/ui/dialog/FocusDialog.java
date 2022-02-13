@@ -19,10 +19,7 @@
 
 package com.mucommander.ui.dialog;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -108,6 +105,9 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
             dispose();
             throw new RuntimeException("EventDispatchThread error");
         }
+//        if (owner != null) {
+//            showOnScreen(owner);
+//        }
     }
 
     public FocusDialog(Dialog owner, String title, Component locationRelativeComp) {
@@ -131,6 +131,30 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
         if (kill) {
             dispose();
             throw new RuntimeException("EventDispatchThread error");
+        }
+//        if (owner != null) {
+//            showOnScreen(owner);
+//        }
+    }
+
+
+    public void showOnScreen(Window parent) {
+        if (getWidth() == 0) {
+            return;
+        }
+System.out.println("SIZE " + getWidth() + "x" + getHeight() + "     " + getLocation());
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = env.getScreenDevices();
+        final GraphicsDevice frameDevice = parent.getGraphicsConfiguration().getDevice();
+        for (GraphicsDevice graphicsDevice : devices) {
+System.out.println(frameDevice.getIDstring() + " ' " + graphicsDevice.getIDstring());
+            if (frameDevice.equals(graphicsDevice) || frameDevice.getIDstring().equals(graphicsDevice.getIDstring())) {
+                final Rectangle monitorBounds = graphicsDevice.getDefaultConfiguration().getBounds();
+                final int x = monitorBounds.x + (monitorBounds.width - getWidth()) /2;
+                final int y = monitorBounds.y + (monitorBounds.height - getHeight()) / 2;
+System.out.println("  " + monitorBounds.width + 'x' + monitorBounds.height + "    " + monitorBounds.x + ' ' + monitorBounds.y);
+                setLocation(x, y);
+            }
         }
     }
 
@@ -291,12 +315,15 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
             if (locationRelativeComp == null) {
                 DialogToolkit.centerOnScreen(this);
             } else {
-                setLocation(locationRelativeComp.getX()+(locationRelativeComp.getWidth()-getWidth())/2, locationRelativeComp.getY()+(locationRelativeComp.getHeight()-getHeight())/2);
+                final int x = locationRelativeComp.getX() + (locationRelativeComp.getWidth() - getWidth()) / 2;
+                final int y = locationRelativeComp.getY() + (locationRelativeComp.getHeight() - getHeight()) / 2;
+                setLocation(x, y);
             }
         }
         SwingUtilities.invokeLater(this::toFront);
         setVisible(true);
     }
+
 
     /**
      * Return <code>true</code> if the dialog has been activated (see WindowListener.windowActivated()).

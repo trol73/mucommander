@@ -91,7 +91,7 @@ public class LocationManager {
         try {
             return folder.ls(filter);
         } catch (Exception e) {
-            LOGGER.debug("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
+            LOGGER.error("Couldn't ls children of " + folder.getAbsolutePath() + ", error: " + e.getMessage());
             return new AbstractFile[0];
         }
     }
