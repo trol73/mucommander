@@ -209,7 +209,7 @@ public abstract class HadoopFile extends ProtocolFile {
 
     @Override
     public long getBlocksize() {
-        return fileAttributes.getBlocksize();
+        return fileAttributes.getBlockSize();
     }
 
     // Supported file operations
@@ -485,7 +485,7 @@ public abstract class HadoopFile extends ProtocolFile {
             setOwner(fileStatus.getOwner());
             setGroup(fileStatus.getGroup());
             setReplication(fileStatus.getReplication());
-            setBlocksize(fileStatus.getBlockSize());
+            setBlockSize(fileStatus.getBlockSize());
         }
 
         /**

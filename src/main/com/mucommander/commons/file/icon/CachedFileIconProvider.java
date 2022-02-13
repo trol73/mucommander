@@ -46,10 +46,6 @@ public class CachedFileIconProvider implements FileIconProvider {
     }
 
 
-    /////////////////////////////////////
-    // FileIconProvider implementation //
-    /////////////////////////////////////
-
     /**
      * <i>Implementation notes</i>: this method first calls {@link CacheableFileIconProvider#isCacheable(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * to determine if the icon cache is used.
@@ -63,6 +59,7 @@ public class CachedFileIconProvider implements FileIconProvider {
      * <p><b>If the file icon is not cacheable</b>, {#getFileIcon(com.mucommander.commons.file.AbstractFile, java.awt.Dimension)}
      * is simply called on the <code>CacheableFileIconProvider</code> and its value returned.
      */
+    @Override
     public Icon getFileIcon(AbstractFile file, Dimension preferredResolution) {
         boolean isCacheable = cacheableFip.isCacheable(file, preferredResolution);
 

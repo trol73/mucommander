@@ -48,7 +48,7 @@ public class SimpleFilePermissions extends GroupedPermissionBits implements File
 
     /**
      * Pads the given permissions with the specified ones: the permission bits that are not supported
-     * (as reported by the supplied permissions mask} are replaced by those of the default permissions.
+     * (as reported by the supplied permissions mask) are replaced by those of the default permissions.
      * That means:<br>
      *  - if the mask indicates that all permission bits are supported (mask = 777 octal), the supplied permissions will
      * simply be returned, without using any of the default permissions<br>
@@ -69,7 +69,7 @@ public class SimpleFilePermissions extends GroupedPermissionBits implements File
 
     /**
      * Pads the given permissions with the specified ones: the permission bits that are not supported
-     * (as reported by the supplied permissions mask} are replaced by those of the default permissions.
+     * (as reported by the supplied permissions mask) are replaced by those of the default permissions.
      * That means:<br>
      *  - if the mask indicates that all permission bits are supported (mask = 777 octal), the supplied permissions will
      * simply be returned, without using any of the default permissions<br>
@@ -86,10 +86,7 @@ public class SimpleFilePermissions extends GroupedPermissionBits implements File
     }
 
 
-    ////////////////////////////////////
-    // FilePermissions implementation //
-    ////////////////////////////////////
-
+    @Override
     public PermissionBits getMask() {
         return mask;
     }

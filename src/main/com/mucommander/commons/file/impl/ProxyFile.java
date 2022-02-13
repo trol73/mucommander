@@ -346,6 +346,7 @@ public abstract class ProxyFile extends AbstractFile {
         file.deleteRecursively();
     }
 
+    @Override
     public boolean equals(Object f) {
         return file.equals(f);
     }

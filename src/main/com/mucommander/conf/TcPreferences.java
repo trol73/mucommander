@@ -32,8 +32,8 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.icon.FileIcons;
 
 /**
- * muCommander specific wrapper for the <code>com.mucommander.conf</code> API which is used to save 'static' configurations.
- * 'static' configurations refer to properties that can be changed from the preferences dialog only.
+ * trolCommander specific wrapper for the <code>com.mucommander.conf</code> API which is used to save 'static' configurations.
+ * 'static' configurations refer to properties that can be changed from the preference's dialog only.
  * those properties do not change often.
  * 
  * @author Nicolas Rinaudo, Maxence Bernard, Arik Hadas
@@ -42,7 +42,7 @@ public class TcPreferences implements TcPreferencesAPI {
 
 	// - Misc. variables -----------------------------------------------------
 	// -----------------------------------------------------------------------
-	/** Whether or not to automatically check for updates on startup. */
+	/** Whether to automatically check for updates on startup. */
 	public static final String  CHECK_FOR_UPDATE                  = "check_for_updates_on_startup";
 	/** Default automated update behavior. */
 	public static final boolean DEFAULT_CHECK_FOR_UPDATE          = true;
@@ -58,30 +58,30 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String  TIME_FORMAT                       = "time_format";
 	/** Default time format. */
 	public static final String  DEFAULT_TIME_FORMAT               = "hh:mm a";
-	/** Language muCommander should use when looking for text.. */
+	/** Language trolCommander should use when looking for text. */
 	public static final String  LANGUAGE                          = "language";
-	/** Whether or not to display compact file sizes. */
+	/** Whether to display compact file sizes. */
 	public static final String  DISPLAY_COMPACT_FILE_SIZE         = "display_compact_file_size";
 	/** Default file size display behavior. */
 	public static final boolean DEFAULT_DISPLAY_COMPACT_FILE_SIZE = true;
-	/** Whether or not to ask the user for confirmation before quitting muCommander. */
+	/** Whether to ask the user for confirmation before quitting trolCommander. */
 	public static final String  CONFIRM_ON_QUIT                   = "quit_confirmation";
 	/** Default quitting behavior. */
 	public static final boolean DEFAULT_CONFIRM_ON_QUIT           = true;
-	/** Whether or not to display splash screen when starting muCommander. */
+	/** Whether to display splash screen when starting trolCommander. */
 	public static final String  SHOW_SPLASH_SCREEN                = "show_splash_screen";
 	/** Default splash screen behavior. */
 	public static final boolean DEFAULT_SHOW_SPLASH_SCREEN        = true;
-	/** Look and feel used by muCommander. */
+	/** Look and feel used by trolCommander. */
 	public static final String  LOOK_AND_FEEL                     = "lookAndFeel";
 	/** All registered custom Look and feels. */
 	public static final String  CUSTOM_LOOK_AND_FEELS             = "custom_look_and_feels";
-	/** Separator used to tokenise the custom look and feels variable. */
+	/** Separator used to tokenize the custom look and feels variable. */
 	public static final String  CUSTOM_LOOK_AND_FEELS_SEPARATOR   = ";";
 	/** Controls whether system notifications are enabled. */
 	public static final String  ENABLE_SYSTEM_NOTIFICATIONS       = "enable_system_notifications";
 	/** System notifications are enabled by default on platforms where a notifier is available and works well enough.
-	 * In particular, the system tray notifier is available under Linux+Java 1.6, but it doesn't work well so it is not
+	 * In particular, the system tray notifier is available under Linux+Java 1.6, but it doesn't work well, so it is not
 	 * enabled by default. */
 	public static final boolean DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS = OsFamily.MAC_OS_X.isCurrent() ||
 			(OsFamily.WINDOWS.isCurrent() && JavaVersion.JAVA_1_6.isCurrentOrHigher());
@@ -108,9 +108,9 @@ public class TcPreferences implements TcPreferencesAPI {
 	// -----------------------------------------------------------------------
 	/** Section describing the shell CONFIGURATION. */
 	public static final String  SHELL_SECTION                     = "shell";
-	/** Shell invocation command (in case muCommander is not using the default one). */
+	/** Shell invocation command (in case trolCommander is not using the default one). */
 	public static final String  CUSTOM_SHELL                      = SHELL_SECTION + '.' + "custom_command";
-	/** Whether or not to use a custom shell invocation command. */
+	/** Whether to use a custom shell invocation command. */
 	public static final String  USE_CUSTOM_SHELL                  = SHELL_SECTION + '.' + "use_custom";
 	/** Default custom shell behavior. */
 	public static final boolean DEFAULT_USE_CUSTOM_SHELL          = false;
@@ -120,7 +120,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final int     DEFAULT_SHELL_HISTORY_SIZE        = 100;
 	/** Encoding used to read the shell output. */
 	public static final String  SHELL_ENCODING                    = SHELL_SECTION + '.' + "encoding";
-	/** Whether or not shell encoding should be auto-detected. */
+	/** Whether shell encoding should be auto-detected. */
 	public static final String  AUTODETECT_SHELL_ENCODING         = SHELL_SECTION + '.' + "autodetect_encoding";
 	/** Default shell encoding auto-detection behaviour. */
 	public static final boolean DEFAULT_AUTODETECT_SHELL_ENCODING = true;
@@ -131,7 +131,7 @@ public class TcPreferences implements TcPreferencesAPI {
     public static final String TERMINAL_SECTION = "terminal";
     /** Terminal invocation command. */
     public static final String CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "custom_external_command";
-    /** Whether or not to use a custom shell invocation Terminal command. */
+    /** Whether to use a custom shell invocation Terminal command. */
     public static final String USE_CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "use_custom_external";
     /** Default custom terminal behavior. */
     public static final boolean DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL = false;
@@ -153,9 +153,9 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String SMTP_PORT                          = MAIL_SECTION + '.' + "smtp_port";
 	/** Default outgoing TCP port to the SMTP server. */
 	public static final int    DEFAULT_SMTP_PORT                   = 25;
-	/** Name under which mails sent by muCommander should appear. */
+	/** Name under which mails sent by trolCommander should appear. */
 	public static final String MAIL_SENDER_NAME                   = MAIL_SECTION + '.' + "sender_name";
-	/** Address which mails sent by muCommander should be replied to. */
+	/** Address which mails sent by trolCommander should be replied to. */
 	public static final String MAIL_SENDER_ADDRESS                = MAIL_SECTION + '.' + "sender_address";
 
 
@@ -164,7 +164,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	// -----------------------------------------------------------------------
 	/** Section describing the command bar CONFIGURATION. */
 	public static final String  COMMAND_BAR_SECTION               = "command_bar";
-	/** Whether or not the command bar is visible. */
+	/** Whether the command bar is visible. */
 	public static final String  COMMAND_BAR_VISIBLE               = COMMAND_BAR_SECTION + '.' + "visible";
 	/** Default command bar visibility. */
 	public static final boolean DEFAULT_COMMAND_BAR_VISIBLE       = true;
@@ -179,7 +179,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	// -----------------------------------------------------------------------
 	/** Section describing the status bar CONFIGURATION. */
 	public static final String STATUS_BAR_SECTION                 = "status_bar";
-	/** Whether or not the status bar is visible. */
+	/** Whether the status bar is visible. */
 	public static final String STATUS_BAR_VISIBLE                 = STATUS_BAR_SECTION + '.' + "visible";
 	/** Default status bar visibility. */
 	public static final boolean DEFAULT_STATUS_BAR_VISIBLE        = true;
@@ -190,7 +190,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	// -----------------------------------------------------------------------
 	/** Section describing the toolbar CONFIGURATION. */
 	public static final String TOOLBAR_SECTION                    = "toolbar";
-	/** Whether or not the toolbar is visible. */
+	/** Whether the toolbar is visible. */
 	public static final String TOOLBAR_VISIBLE                    = TOOLBAR_SECTION + '.' + "visible";
 	/** Default toolbar visibility. */
 	public static final boolean DEFAULT_TOOLBAR_VISIBLE           = true;
@@ -216,15 +216,15 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String  LEFT                               = "left";
 	/** Identifier of the right file table. */
 	public static final String  RIGHT                              = "right";
-	/** Whether or not to display hidden files. */
+	/** Whether to display hidden files. */
 	public static final String  SHOW_HIDDEN_FILES                  = FILE_TABLE_SECTION + '.' + "show_hidden_files";
 	/** Default hidden files visibility. */
 	public static final boolean DEFAULT_SHOW_HIDDEN_FILES          = true;
-	/** Whether or not to display OS X .DS_Store files. */
+	/** Whether to display OS X .DS_Store files. */
 	public static final String  SHOW_DS_STORE_FILES                = FILE_TABLE_SECTION + '.' + "show_ds_store_files";
 	/** Default .DS_Store files visibility. */
 	public static final boolean DEFAULT_SHOW_DS_STORE_FILES        = true;
-	/** Whether or not to display system folders. */
+	/** Whether to display system folders. */
 	public static final String  SHOW_SYSTEM_FOLDERS                = FILE_TABLE_SECTION + '.' + "show_system_folders";
 	/** Default system folders visibility. */
 	public static final boolean DEFAULT_SHOW_SYSTEM_FOLDERS        = true;
@@ -232,7 +232,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String  TABLE_ICON_SCALE                   = FILE_TABLE_SECTION + '.' + "icon_scale";
 	/** Default scale factor of file table icons. */
 	public static final float   DEFAULT_TABLE_ICON_SCALE           = 1.0f;
-	/** Whether or not columns should resize themselves automatically. */
+	/** Whether columns should resize themselves automatically. */
 	public static final String  AUTO_SIZE_COLUMNS                  = FILE_TABLE_SECTION + '.' + "auto_size_columns";
 	/** Default columns auto-resizing behavior. */
 	public static final boolean DEFAULT_AUTO_SIZE_COLUMNS          = true;
@@ -254,30 +254,29 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final boolean DEFAULT_CD_FOLLOWS_SYMLINKS        = false;
 	/** Whether to always show the header of a single tab or not */
 	public static final String SHOW_SINGLE_TAB_HEADER			   = FILE_TABLE_SECTION + '.' + "show_single_tab_header";
-	/** Default value for 'Always show single tab header" */
+	/** Default value for 'Always show single tab header' */
 	public static final boolean DEFAULT_SHOW_TAB_HEADER	   = false;
 	/** Whether to calculate folder size when marking that folder */
 	public static final String CALCULATE_FOLDER_SIZE_ON_MARK       = FILE_TABLE_SECTION + '.' + "calculate_folder_size_on_mark";
 	/** Default value for 'Calculate folder size on mark' */
 	public static final boolean DEFAULT_CALCULATE_FOLDER_SIZE_ON_MARK = false;
 
-	/** Name of the root element's attribute that contains the version of muCommander used to write the CONFIGURATION file. */
+	/** Name of the root element's attribute that contains the version of trolCommander used to write the CONFIGURATION file. */
 	static final String VERSION_ATTRIBUTE = "version";
 
 
 
 	// - Mac OS X variables --------------------------------------------------
 	// -----------------------------------------------------------------------
-	/** Section describing muCommander's Mac OS X integration. */
+	/** Section describing trolCommander's Mac OS X integration. */
 	public static final String  MAC_OSX_SECTION                   = "macosx";
-	/** Whether or not to use the brushed metal look. */
+	/** Whether to use the brushed metal look. */
 	public static final String  USE_BRUSHED_METAL                 = MAC_OSX_SECTION + '.' + "brushed_metal_look";
 	/** Default brushed metal look behavior. */
 	// At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
 	// so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
-	// See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
 	public static final boolean DEFAULT_USE_BRUSHED_METAL         = false;
-	/** Whether or not to use a Mac OS X style menu bar. */
+	/** Whether to use a Mac OS X style menu bar. */
 	public static final String  USE_SCREEN_MENU_BAR               = MAC_OSX_SECTION + '.' + "screen_menu_bar";
 	/** Default menu bar type. */
 	public static final boolean DEFAULT_USE_SCREEN_MENU_BAR       = true;
@@ -286,7 +285,7 @@ public class TcPreferences implements TcPreferencesAPI {
 
 	// - Startup folder variables --------------------------------------------
 	// -----------------------------------------------------------------------
-	/** Section describing muCommander's startup folders. */
+	/** Section describing trolCommander's startup folders. */
 	public static final String  STARTUP_FOLDER_SECTION            = "startup_folder";
 	/** Startup folder type (for the two panels) */
 	public static final String  STARTUP_FOLDERS                   = STARTUP_FOLDER_SECTION + '.' + "on_startup";
@@ -343,7 +342,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String  PROGRESS_DIALOG_EXPANDED          = PROGRESS_DIALOG_SECTION + '.' + "expanded";
 	/** Default progress dialog expanded state. */
 	public static final boolean DEFAULT_PROGRESS_DIALOG_EXPANDED  = true;
-	/** Controls whether or not the progress dialog should be closed when the job is finished. */
+	/** Controls whether the progress dialog should be closed when the job is finished. */
 	public static final String PROGRESS_DIALOG_CLOSE_WHEN_FINISHED = PROGRESS_DIALOG_SECTION + '.' + "close_when_finished";
 	/** Default progress dialog behavior when the job is finished. */
 	public static final boolean DEFAULT_PROGRESS_DIALOG_CLOSE_WHEN_FINISHED  = true;
@@ -352,7 +351,7 @@ public class TcPreferences implements TcPreferencesAPI {
 
 	// - Variables used for themes -------------------------------------------
 	// -----------------------------------------------------------------------
-	/** Section controlling which theme should be applied to muCommander. */
+	/** Section controlling which theme should be applied to trolCommander. */
 	public static final String THEME_SECTION                      = "theme";
 	/** Current theme type (custom, predefined or user defined). */
 	public static final String THEME_TYPE                         = THEME_SECTION + '.' + "type";
@@ -442,7 +441,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	private String configurationVersion;
 
 	/**
-	 * Prevents instantiation of this class from outside of this package.
+	 * Prevents instantiation of this class from outside this package.
 	 */
 	TcPreferences() {
 		TcPreferencesFile muPreferencesFile = TcPreferencesFile.getPreferencesFile();
@@ -454,7 +453,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	// - Configuration reading / writing -------------------------------------
 	// -----------------------------------------------------------------------
 	/**
-	 * Loads the muCommander CONFIGURATION.
+	 * Loads the trolCommander CONFIGURATION.
 	 * @throws IOException            if an I/O error occurs.
 	 * @throws ConfigurationException if a CONFIGURATION related error occurs.
 	 */
@@ -483,7 +482,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	}
 
 	/**
-	 * Saves the muCommander CONFIGURATION.
+	 * Saves the trolCommander CONFIGURATION.
 	 * @throws IOException            if an I/O error occurs.
 	 * @throws ConfigurationException if a CONFIGURATION related error occurs.
 	 */
@@ -539,7 +538,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	/**
 	 * Check whether the preferences file exists
 	 * @return             true if the preferences file exits, false otherwise.
-	 * @throws IOException if an error occured.
+	 * @throws IOException if an error occurred.
 	 */
 	boolean isFileExists() throws IOException {
 		return configuration.getSource().isExists();
@@ -548,84 +547,102 @@ public class TcPreferences implements TcPreferencesAPI {
 	/////////////////////////////////////
 	// MuPreferencesAPI implementation //
 	/////////////////////////////////////
-
+	@Override
 	public boolean setVariable(TcPreference preference, String value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
+	@Override
 	public boolean setVariable(TcPreference preference, int value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
-	public boolean setVariable(TcPreference preference, List<String> value,
-							   String separator) {
+	@Override
+	public boolean setVariable(TcPreference preference, List<String> value, String separator) {
 		return configuration.setVariable(preference.toString(), value, separator);
 	}
 
+	@Override
 	public boolean setVariable(TcPreference preference, float value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
+	@Override
 	public boolean setVariable(TcPreference preference, boolean value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
+	@Override
 	public boolean setVariable(TcPreference preference, long value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
+	@Override
 	public boolean setVariable(TcPreference preference, double value) {
 		return configuration.setVariable(preference.toString(), value);
 	}
 
+	@Override
 	public String getVariable(TcPreference preference) {
 		return configuration.getVariable(preference.toString());
 	}
-	
+
+	@Override
 	public String getVariable(TcPreference preference, String value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
+	@Override
 	public int getVariable(TcPreference preference, int value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
+	@Override
 	public List<String> getVariable(TcPreference preference, List<String> value, String separator) {
 		return configuration.getVariable(preference.toString(), value, separator);
 	}
 
+	@Override
 	public float getVariable(TcPreference preference, float value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
+	@Override
 	public boolean getVariable(TcPreference preference, boolean value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
+	@Override
 	public long getVariable(TcPreference preference, long value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
 
+	@Override
 	public double getVariable(TcPreference preference, double value) {
 		return configuration.getVariable(preference.toString(), value);
 	}
-	
+
+	@Override
 	public ValueList getListVariable(TcPreference preference, String separator) {
 		return configuration.getListVariable(preference.toString(), separator);
 	}
-	
+
+	@Override
 	public boolean getBooleanVariable(String name) {
 		return configuration.getBooleanVariable(name);
 	}
-	
+
+	@Override
 	public String  getVariable(String name) {
 		return configuration.getVariable(name);
 	}
-	
+
+	@Override
 	public boolean isVariableSet(TcPreference preference) {
 		return configuration.isVariableSet(preference.toString());
 	}
-	
+
+	@Override
 	public String removeVariable(String name) {
 		return configuration.removeVariable(name);
 	}

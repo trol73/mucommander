@@ -234,7 +234,7 @@ public abstract class LRUCache<K, V> {
         getLogger().debug("Stress test took "+(System.currentTimeMillis()-timeStamp)+" ms.\n");
 
         // Print the cache's state
-        System.out.println(cache.toString());
+        System.out.println(cache);
     }
 
     public boolean isEmpty() {

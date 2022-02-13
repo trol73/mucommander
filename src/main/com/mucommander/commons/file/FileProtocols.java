@@ -31,7 +31,7 @@ public interface FileProtocols {
     /** Protocol for files served by an SFTP server (not to be confused with FTPS or SCP). */
     String SFTP      = "sftp";
 
-    /** Protocol for files served by a SMB/CIFS server. */
+    /** Protocol for files served by an SMB/CIFS server. */
     String SMB       = "smb";
 
     /** Protocol for files served by a web server using WebDAV/HTTP. */

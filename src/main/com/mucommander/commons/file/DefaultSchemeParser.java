@@ -21,6 +21,7 @@ package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,7 @@ public class DefaultSchemeParser implements SchemeParser {
     }
 
     /**
-     * Creates a DefaultSchemeParser with a {@link DefaultPathCanonizer} that uses that uses the operating system's
+     * Creates a DefaultSchemeParser with a {@link DefaultPathCanonizer} that uses the operating system's
 	 * default path separator as the path separator and no tilde replacement.
      * If <code>parseQuery</code> is <code>true</code>, any query part (delimited by '?') will be parsed as such,
      * or considered as part of the path otherwise.
@@ -182,7 +183,7 @@ public class DefaultSchemeParser implements SchemeParser {
 
                 // Handle Windows-style UNC network paths ( \\hostname\path ):
                 // - under Windows, transform it into a URL in the file://hostname/path form,
-                //   LocalProtocolProvider will translate it back into an UNC network path
+                //   LocalProtocolProvider will translate it back into a UNC network path
                 // - under other OS, conveniently transform it into smb://hostname/path to be nice with folks
                 //   who've spent too much time using Windows
                 else if (url.startsWith("\\\\") && urlLen > 2) {
@@ -240,10 +241,10 @@ public class DefaultSchemeParser implements SchemeParser {
             // Filenames may contain @ chars, so atPos must be lower than next separator's position (if any)
             if (atPos != -1 && (separatorPos == -1 || atPos < separatorPos)) {
                 colonPos = authority.indexOf(':');
-                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), "UTF-8");
+                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), StandardCharsets.UTF_8);
                 String password;
                 if (colonPos != -1) {
-                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), "UTF-8");
+                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), StandardCharsets.UTF_8);
                 } else {
                     password = null;
                 }

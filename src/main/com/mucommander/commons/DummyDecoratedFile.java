@@ -23,7 +23,7 @@ import com.mucommander.commons.runtime.OsFamily;
 
 /**
  *
- *  This class is an child of <code>DummyFile</code> with overwritten {@link #toString()}} method that return a "nice" value
+ *  This class is a child of <code>DummyFile</code> with overwritten {@link #toString()}} method that return a "nice" value
  *  for local files (without 'file://localhost/')
  *
  *  @author Oleg Trifonov

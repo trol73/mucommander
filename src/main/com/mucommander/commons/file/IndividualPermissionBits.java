@@ -14,10 +14,7 @@ public abstract class IndividualPermissionBits implements PermissionBits {
     }
 
 
-    ///////////////////////////////////////////
-    // Partial PermissionBits implementation //
-    ///////////////////////////////////////////
-
+    @Override
     public int getIntValue() {
         int bitShift = 0;
         int perms = 0;

@@ -23,18 +23,16 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.Credentials;
 import com.mucommander.commons.file.FileURL;
 import com.mucommander.io.backup.BackupInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.xml.parsers.SAXParserFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This class takes care of parsing the credentials XML file and adding parsed {@link CredentialsMapping} instances
@@ -71,16 +69,9 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
      * Parses the given XML credentials file. Should only be called by CredentialsManager.
      */
     void parse(AbstractFile file) throws Exception {
-        InputStream in;
-
-        in = null;
         characters = new StringBuilder();
-        try {SAXParserFactory.newInstance().newSAXParser().parse(in = new BackupInputStream(file), this);}
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {}
-            }
+        try (InputStream in  = new BackupInputStream(file)) {
+            SAXParserFactory.newInstance().newSAXParser().parse(in, this);
         }
     }
 

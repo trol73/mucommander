@@ -54,7 +54,7 @@ public class ActionManager {
     //static final Map<String, ActionFactory> actionFactories = new HashMap<>();
     
     /** MainFrame -> MuAction map */
-    private static WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
+    private static final WeakHashMap<MainFrame, Map<ActionParameters, ActionAndIdPair>> mainFrameActionsMap = new WeakHashMap<>();
     
     /** Pattern to resolve the action ID from action class path */
     private final static Pattern PATTERN = Pattern.compile(".*\\.(.*)?Action");
@@ -498,8 +498,8 @@ public class ActionManager {
      *  Helper class to represent a pair of instance and id of MuAction.
      */
     private static class ActionAndIdPair {
-    	private TcAction action;
-    	private String id;
+    	private final TcAction action;
+    	private final String id;
     	
     	ActionAndIdPair(TcAction action, String id) {
     		this.action = action;

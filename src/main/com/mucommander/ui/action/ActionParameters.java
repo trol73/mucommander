@@ -45,10 +45,10 @@ import java.util.Map;
 public class ActionParameters {
 
     /** Action ID */
-    private String actionId;
+    private final String actionId;
 
     /** Initialization properties, null if there are no initialization properties */
-    private Map<String,Object> properties;
+    private final Map<String,Object> properties;
 
 
     /**
@@ -100,6 +100,7 @@ public class ActionParameters {
      * ActionParameters instances are considered equal if they refer to the same {@link TcAction} class and
      * set of initialization properties.
      */
+    @Override
     public boolean equals(Object o) {
         if(!(o instanceof ActionParameters))
             return false;
@@ -115,6 +116,7 @@ public class ActionParameters {
     /**
      * Returns a hash code value for this ActionParameters, making this class suitable for use as a key in a Hashtable.
      */
+    @Override
     public int hashCode() {
         return actionId.hashCode() + 27*(properties==null?0:properties.hashCode());
     }
@@ -122,6 +124,7 @@ public class ActionParameters {
     /**
      * Returns a String representation of this ActionParameters. 
      */
+    @Override
     public String toString() {
         return super.toString()+" class="+actionId+" properties="+properties;
     }

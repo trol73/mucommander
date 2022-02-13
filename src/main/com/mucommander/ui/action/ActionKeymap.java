@@ -34,11 +34,11 @@ import java.util.Map;
 public class ActionKeymap {
 
     /** Maps action id onto Keystroke instances */
-    private static Map<String, KeyStroke> customPrimaryActionKeymap = new HashMap<>();
+    private static final Map<String, KeyStroke> customPrimaryActionKeymap = new HashMap<>();
     /** Maps action id instances onto Keystroke instances */
-    private static Map<String, KeyStroke> customAlternateActionKeymap = new HashMap<>();
+    private static final Map<String, KeyStroke> customAlternateActionKeymap = new HashMap<>();
     /** Maps Keystroke instances onto action id */
-    private static AcceleratorMap acceleratorMap = new AcceleratorMap();
+    private static final AcceleratorMap acceleratorMap = new AcceleratorMap();
 
     /*=================
      * Public Methods *
@@ -111,12 +111,12 @@ public class ActionKeymap {
     
     private static void unregisterAcceleratorFromAction(String actionId, KeyStroke accelerator) {
     	switch (getAcceleratorType(accelerator)) {
-		case AcceleratorMap.PRIMARY_ACCELERATOR:
-			registerActionAccelerators(actionId, null, getAlternateAccelerator(actionId));
-			break;
-		case AcceleratorMap.ALTERNATIVE_ACCELERATOR:
-			registerActionAccelerators(actionId, getAccelerator(actionId), null);
-			break;
+			case AcceleratorMap.PRIMARY_ACCELERATOR:
+				registerActionAccelerators(actionId, null, getAlternateAccelerator(actionId));
+				break;
+			case AcceleratorMap.ALTERNATIVE_ACCELERATOR:
+				registerActionAccelerators(actionId, getAccelerator(actionId), null);
+				break;
 		}
     }
     

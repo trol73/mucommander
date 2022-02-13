@@ -16,11 +16,7 @@ public class SingleArchiveEntryIterator implements ArchiveEntryIterator {
         this.entry = entry;
     }
 
-
-    /////////////////////////////////////////
-    // ArchiveEntryIterator implementation //
-    /////////////////////////////////////////
-
+    @Override
     public ArchiveEntry nextEntry() {
         if (entry == null) {
             return null;
@@ -35,6 +31,7 @@ public class SingleArchiveEntryIterator implements ArchiveEntryIterator {
     /**
      * Implemented as a no-op (nothing to close).
      */
+    @Override
     public void close() {
     }
 }

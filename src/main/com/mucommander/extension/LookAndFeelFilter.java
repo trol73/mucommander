@@ -58,38 +58,47 @@ public class LookAndFeelFilter implements ClassFilter {
         if (c.getDeclaringClass() != null) {
             return false;
         }
+        return isPublicAndNotAbstract(c) && hasPublicDefaultConstructor(c) && isAvailableLookAndFeel(c);
+    }
 
-        // Makes sure the class is public and non abstract.
+    private static boolean isPublicAndNotAbstract(Class<?> c) {
+        // Makes sure the class is public and non-abstract.
         int modifiers = c.getModifiers();
-        if (!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers)) {
-            return false;
-        }
+        return Modifier.isPublic(modifiers) && !Modifier.isAbstract(modifiers);
+    }
 
+
+    private static boolean hasPublicDefaultConstructor(Class<?> c) {
         // Makes sure the class has a public, no-arg constructor.
-        Constructor<?> constructor; // Public, no-arg constructor.
         try {
-            constructor = c.getDeclaredConstructor();
+            Constructor<?> constructor = c.getDeclaredConstructor();
+            return Modifier.isPublic(constructor.getModifiers());
         } catch(Exception e) {
             return false;
         }
-        if (!Modifier.isPublic(constructor.getModifiers())) {
-            return false;
-        }
+    }
 
+    private static boolean isAvailableLookAndFeel(Class<?> c) {
         // Makes sure the class extends javax.swing.LookAndFeel and that if it does,
         // it's supported by the system.
         Class<?> buffer = c;
         while (buffer != null) {
             // c is a LookAndFeel, makes sure it's supported.
             if (buffer.equals(LookAndFeel.class)) {
-                try {return ((LookAndFeel)c.newInstance()).isSupportedLookAndFeel();}
-                catch(Throwable e) {
-                    LOGGER.debug("Caught exception", e);
-                    return false;
-                }
+                return isSupportedLookAndFeel(c);
             }
             buffer = buffer.getSuperclass();
         }
         return false;
     }
+
+    private static boolean isSupportedLookAndFeel(Class<?> c) {
+        try {
+            return ((LookAndFeel) c.newInstance()).isSupportedLookAndFeel();
+        } catch(Throwable e) {
+            LOGGER.debug("Class " + c + " caught exception", e);
+            return false;
+        }
+    }
+
 }

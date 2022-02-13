@@ -18,6 +18,10 @@
 
 package com.mucommander;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
@@ -56,8 +60,9 @@ import com.mucommander.utils.text.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
 import java.util.HashSet;
@@ -78,7 +83,7 @@ public class TrolCommander {
 	private static Logger logger;
 
     private static SplashScreen  splashScreen;
-    /** Whether or not to display the splash screen. */
+    /** Whether to display the splash screen. */
     private static boolean useSplash;
     /** true while the application is launching, false after it has finished launching */
     private static boolean isLaunching = true;
@@ -711,6 +716,21 @@ public class TrolCommander {
         }
     }
 
+    private static class InstallFlatLafsTask extends LauncherTask {
+
+        InstallFlatLafsTask(LauncherCmdHelper helper, LauncherTask... depends) {
+            super("install_flat_laf", helper, depends);
+        }
+
+        @Override
+        void run() throws Exception {
+            FlatLightLaf.installLafInfo();
+            FlatDarculaLaf.installLafInfo();
+            FlatDarkLaf.installLafInfo();
+            FlatIntelliJLaf.installLafInfo();
+        }
+    }
+
 
     private static class PrepareKeystrokeClassTask extends LauncherTask {
 
@@ -809,6 +829,7 @@ public class TrolCommander {
             helper.parseArgs();
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);
+            LauncherTask taskInstallFlat = new InstallFlatLafsTask(helper);
             LauncherTask taskPrepareKeystrokeClass = new PrepareKeystrokeClassTask(helper);
             //LauncherTask taskPrepareLogger = new PrepareLoggerTask(helper);
             LauncherTask taskLoadConfigs = new LoadConfigsTask(helper);
@@ -840,6 +861,7 @@ public class TrolCommander {
 //            tasks.add(taskPrepareLogger);
 
             tasks.add(taskPrepareGraphics);
+            tasks.add(taskInstallFlat);
             tasks.add(taskPrepareKeystrokeClass);
             tasks.add(taskRegisterActions);
 

@@ -32,7 +32,7 @@ public class Profiler {
     private static final Set<String> hiddenGroups = new HashSet<>();
 
     private static String lastSectionName;
-    private static List<String> initThreads = new ArrayList<>();
+    private static final List<String> initThreads = new ArrayList<>();
 
     public static long getTime() {
 //        return System.nanoTime();
@@ -118,9 +118,11 @@ public class Profiler {
     }
 
     private static String withSpaces(String name, int len) {
-        while (name.length() < len) {
-            name += " ";
+        StringBuilder nameBuilder = new StringBuilder(name);
+        while (nameBuilder.length() < len) {
+            nameBuilder.append(" ");
         }
+        name = nameBuilder.toString();
         return name;
     }
 
@@ -132,6 +134,7 @@ public class Profiler {
         }
 
         // Note: this comparator imposes orderings that are inconsistent with equals.
+        @Override
         public int compare(String a, String b) {
             if (base.get(a) >= base.get(b)) {
                 return -1;

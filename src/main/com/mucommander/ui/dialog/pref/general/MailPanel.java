@@ -89,7 +89,7 @@ class MailPanel extends PreferencesPanel {
         compPanel.addRow(Translator.get("prefs_dialog.mail_server"), smtpField, 10);
 
         // SMTP port field
-        portField = new PrefTextField(""+getVariable(TcPreference.SMTP_PORT, TcPreferences.DEFAULT_SMTP_PORT)) {
+        portField = new PrefTextField(getVariable(TcPreference.SMTP_PORT, ""+TcPreferences.DEFAULT_SMTP_PORT)) {
 			public boolean hasChanged() {
 				return !portField.getText().equals(String.valueOf(getVariable(TcPreference.SMTP_PORT, TcPreferences.DEFAULT_SMTP_PORT)));
 			}

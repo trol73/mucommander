@@ -327,9 +327,6 @@ public abstract class TcAction extends AbstractAction {
     }
 
 
-    ////////////////////
-    // Static methods //
-    ////////////////////
 
     /**
      * Queries {@link IconManager} for an image icon corresponding to the specified action using standard icon path

@@ -17,7 +17,7 @@
  */
 package ru.trolsoft.utils;
 
-import javax.xml.bind.DatatypeConverter;
+import javax.sql.rowset.spi.SyncResolver;
 
 /**
  * @author Oleg Trifonov
@@ -152,11 +152,65 @@ public class StrUtils {
 
 
     public static byte[] hexStringToBytes(String text) {
-        text = text.replace(" ", "");
-        if (text.length() % 2 == 1) {
-            text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
+//        text = text.replace(" ", "");
+//        if (text.length() % 2 == 1) {
+//            text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
+//        }
+//        return DatatypeConverter.parseHexBinary(text);
+
+        int len = text.length();
+        int i = 0;
+        char c1 = 0;
+        char c2 = 0;
+        int outPos = 0;
+        byte[] array = new byte[(len+1)/2];
+        while (i < len) {
+            if (c2 != 0) {
+                int b1 = parseNibble(c1);
+                int b2 = parseNibble(c2);
+                if (b1 < 0 || b2 < 0) {
+                    return new byte[0];
+                }
+                array[outPos++] = (byte)((b1 << 4) + b2);
+                c1 = 0;
+                c2 = 0;
+            }
+            char nextNibble = text.charAt(i++);
+            if (nextNibble == ' ' || nextNibble == '\t') {
+                continue;
+            }
+            if (c1 == 0) {
+                c1 = nextNibble;
+            } else {
+                c2 = nextNibble;
+            }
         }
-        return DatatypeConverter.parseHexBinary(text);
+        if (c1 != 0) {
+            int b1 = parseNibble(c1);
+            if (b1 < 0) {
+                return new byte[0];
+            }
+            array[outPos++] = (byte)b1;
+        }
+        if (array.length == outPos) {
+            return array;
+        } else {
+            byte[] result = new byte[outPos];
+            System.arraycopy(array, 0, result, 0, outPos);
+            return result;
+        }
+    }
+
+    private static int parseNibble(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
+        } else if (c >= 'A' && c <= 'F') {
+            return c - 'A' + 10;
+        } else if (c >= 'a' && c <= 'f') {
+            return c - 'a' + 10;
+        } else {
+            return -1;
+        }
     }
 
     public static boolean hasUtfMarker(String s) {

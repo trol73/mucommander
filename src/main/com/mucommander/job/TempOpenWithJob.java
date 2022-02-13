@@ -45,13 +45,13 @@ public class TempOpenWithJob extends TempCopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TempOpenWithJob.class);
 	
     /** The command to execute, appended with the temporary file path(s) */
-    private Command command;
+    private final Command command;
 
     /** Files to execute */
-    private FileSet filesToOpen;
+    private final FileSet filesToOpen;
 
     /** This list is populated with temporary files, as they are created by processFile() */
-    private FileSet tempFiles;
+    private final FileSet tempFiles;
 
 
     /**
@@ -95,15 +95,14 @@ public class TempOpenWithJob extends TempCopyJob {
         // TODO: temporary files seem to be left after the JVM quits under Mac OS X, even if the files permissions are unchanged
 
         // Add the file to the list of files to open, only if it is one of the top-level files
-        if(filesToOpen.indexOf(file)!=-1) {
+        if(filesToOpen.contains(file)) {
             if(!currentDestFile.isDirectory()) {        // Do not change directories' permissions
                 try {
                     // Make the temporary file read only
                     if(currentDestFile.getChangeablePermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION))
                         currentDestFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
-                }
-                catch(IOException e) {
-                    LOGGER.debug("Caught exeception while changing permissions of "+currentDestFile, e);
+                } catch(IOException e) {
+                    LOGGER.debug("Caught exception while changing permissions of "+currentDestFile, e);
                     return false;
                 }
             }
@@ -120,8 +119,7 @@ public class TempOpenWithJob extends TempCopyJob {
 
         try {
             ProcessRunner.execute(command.getTokens(tempFiles), baseDestFolder);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             LOGGER.debug("Caught exception executing "+command+" "+tempFiles, e);
         }
     }

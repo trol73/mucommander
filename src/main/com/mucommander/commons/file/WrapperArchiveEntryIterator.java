@@ -27,10 +27,7 @@ public class WrapperArchiveEntryIterator implements ArchiveEntryIterator {
 
     @Override
     public ArchiveEntry nextEntry() {
-        if (!iterator.hasNext()) {
-            return null;
-        }
-        return iterator.next();
+        return iterator.hasNext() ? iterator.next() : null;
     }
 
     /**

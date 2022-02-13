@@ -36,17 +36,17 @@ public class ActionProperties {
 	/* Maps action id -> action descriptor */
 	static final Map<String, ActionDescriptor> actionDescriptors = new HashMap<>(200);
 
-	private static ActionDescriptor nullActionDescriptor = new NullActionDescriptor();
+	private static final ActionDescriptor nullActionDescriptor = new NullActionDescriptor();
 	
-	/* Contains all used action categories (i.e for each category at least one action is registered) */
-	private static TreeSet<ActionCategory> actionCategories = new TreeSet<>();
+	/* Contains all used action categories (i.e. for each category at least one action is registered) */
+	private static final TreeSet<ActionCategory> actionCategories = new TreeSet<>();
 
 	/* Maps action id -> primary shortcut */
-	private static Map<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<>();
+	private static final Map<String, KeyStroke> defaultPrimaryActionKeymap = new HashMap<>();
 	/* Maps action id -> alternative shortcut */
-	private static Map<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
+	private static final Map<String, KeyStroke> defaultAlternateActionKeymap = new HashMap<>();
 	/* Maps shortcut -> action id */
-	private static AcceleratorMap defaultAcceleratorMap = new AcceleratorMap();
+	private static final AcceleratorMap defaultAcceleratorMap = new AcceleratorMap();
 
 	/**
 	 * Getter for ActionDescriptor.
@@ -197,7 +197,7 @@ public class ActionProperties {
 	
 	/**
 	 * Getter for all existed categories.
-	 * Existed category means an actions category which at least one of its actions is registered.
+	 * Existed category means an actions' category which at least one of its actions is registered.
 	 * 
 	 * The categories are ordered based on the alphabet order of their descriptions (labels).
 	 * 

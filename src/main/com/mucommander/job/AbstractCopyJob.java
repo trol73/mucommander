@@ -138,7 +138,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
             }
             
             // Handle collision, asking the user what to do or using a default action to resolve the collision 
-            if (collision != FileCollisionChecker.NO_COLLOSION) {
+            if (collision != FileCollisionChecker.NO_COLLISION) {
                 int choice;
                 // Use default action if one has been set, if not show up a dialog
                 if (defaultFileExistsAction==FileCollisionDialog.ASK_ACTION) {

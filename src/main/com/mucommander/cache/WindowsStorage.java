@@ -162,6 +162,7 @@ public class WindowsStorage {
             records = new HashMap<>();
             try {
                 load(getHistoryFile());
+            } catch (FileNotFoundException ignore) {
             } catch (IOException e) {
                 e.printStackTrace();
             }

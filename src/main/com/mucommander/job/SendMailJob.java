@@ -49,7 +49,7 @@ public class SendMailJob extends TransferFileJob {
     private boolean connectedToMailServer;
 
     /** Error dialog title */
-    private String errorDialogTitle;
+    private final String errorDialogTitle;
 	
 	
     /////////////////////
@@ -59,19 +59,19 @@ public class SendMailJob extends TransferFileJob {
     /** Email recipient(s) */
     private String recipientString;
     /** Email subject */
-    private String mailSubject;
+    private final String mailSubject;
     /** Email body */
-    private String mailBody;
+    private final String mailBody;
 
     /** SMTP server */
-    private String mailServer;
+    private final String mailServer;
     /** From name */
-    private String fromName;
+    private final String fromName;
     /** From address */
-    private String fromAddress;
+    private final String fromAddress;
 	
     /** Email boundary string, delimits the end of the body and attachments */
-    private String boundary;
+    private final String boundary;
 
     /** Connection variable */
     private BufferedReader in;
@@ -90,10 +90,10 @@ public class SendMailJob extends TransferFileJob {
     public SendMailJob(ProgressDialog progressDialog, MainFrame mainFrame, FileSet filesToSend, String recipientString, String mailSubject, String mailBody) {
         super(progressDialog, mainFrame, filesToSend);
 
-        this.boundary = "trolcommander"+System.currentTimeMillis();
+        this.boundary = "trolcommander" + System.currentTimeMillis();
         this.recipientString = recipientString;
         this.mailSubject = mailSubject;
-        this.mailBody = mailBody+"\n\n"+"Sent by trolCommander - http://www.mucommander.com\n";
+        this.mailBody = mailBody+"\n\n"+"Sent by trolCommander - http://www.trolsoft.ru\n";
 
         this.mailServer = TcConfigurations.getPreferences().getVariable(TcPreference.SMTP_SERVER);
         this.fromName = TcConfigurations.getPreferences().getVariable(TcPreference.MAIL_SENDER_NAME);
@@ -136,7 +136,7 @@ public class SendMailJob extends TransferFileJob {
 
     private void sendBody() throws IOException {
         // here you are supposed to send your username
-        readWriteLine("HELO muCommander");
+        readWriteLine("HELO trolCommander");
         // warning : some mail server validate the sender address and will fail is an invalid
         // address is provided
         readWriteLine("MAIL FROM: "+fromAddress);
@@ -168,21 +168,22 @@ public class SendMailJob extends TransferFileJob {
      */
     private String splitRecipientString(String recipientsStr, List<String> recipients) {
 
-        // /!\ this piece of code is far from being bullet proof but I'm too lazy now to rewrite it
+        // /!\ this piece of code is far from being bulletproof, but I'm too lazy now to rewrite it
         StringBuilder newRecipientsSb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(recipientsStr, ",;");
-        String rec;
-        int pos1, pos2;
         while(st.hasMoreTokens()) {
-            rec = st.nextToken().trim();
-            if((pos1=rec.indexOf('<'))!=-1 && (pos2=rec.indexOf('>', pos1+1))!=-1)
+            String rec = st.nextToken().trim();
+            int pos1, pos2;
+            if ((pos1 = rec.indexOf('<')) != -1 && (pos2 = rec.indexOf('>', pos1+1)) != -1) {
                 recipients.add(rec.substring(pos1+1, pos2));
-            else
+            } else {
                 recipients.add(rec);
+            }
 
             newRecipientsSb.append(rec);
-            if(st.hasMoreTokens())
+            if (st.hasMoreTokens()) {
                 newRecipientsSb.append(", ");
+            }
         }
 		
         return newRecipientsSb.toString();
@@ -285,7 +286,7 @@ public class SendMailJob extends TransferFileJob {
 
     /**
      * This method is called when this job starts, before the first call to {@link #processFile(AbstractFile,Object) processFile()} is made.
-     * This method here does nothing but it can be overriden by subclasses to perform some first-time initializations.
+     * This method here does nothing, but it can be overridden by subclasses to perform some first-time initializations.
      */
     @Override
     protected void jobStarted() {

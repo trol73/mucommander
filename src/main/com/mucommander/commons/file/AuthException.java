@@ -25,7 +25,7 @@ import java.io.IOException;
 
 /**
  * AuthException is an <code>IOException</code> that is thrown whenever an operation failed due to the lack of,
- * invalid or insufficient credentials. An URL associated with the exception gives the location where the error
+ * invalid or insufficient credentials. A URL associated with the exception gives the location where the error
  * occurred, and the set of credentials that were used (if any).
  *
  * @author Maxence Bernard
@@ -54,8 +54,9 @@ public class AuthException extends IOException {
         super(msg);
 
         this.fileURL = fileURL;
-        if(msg!=null)
+        if (msg != null) {
             this.msg = msg.trim();
+        }
     }
 	
 

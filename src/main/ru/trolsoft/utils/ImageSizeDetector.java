@@ -85,9 +85,8 @@ public class ImageSizeDetector {
             int c4 = is.read();
             if ((c1 == 'M' && c2 == 'M' && c3 == 0 && c4 == 42) || (c1 == 'I' && c2 == 'I' && c3 == 42 && c4 == 0)) { //TIFF
                 boolean bigEndian = c1 == 'M';
-                int ifd = 0;
                 int entries;
-                ifd = readDword(is, bigEndian);
+                int ifd = readDword(is, bigEndian);
                 is.skip(ifd - 8);
                 entries = readWord(is, bigEndian);
                 for (int i = 1; i <= entries; i++) {

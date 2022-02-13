@@ -5,12 +5,14 @@ import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.StringUtils;
-
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represents a Uniform Resource Locator (URL). The general format of a URL is as follows:
@@ -727,11 +729,7 @@ public class FileURL implements Cloneable {
         sb.append("://");
 
         if (includeCredentials && credentials != null) {
-            try {
-                sb.append(URLEncoder.encode(credentials.getLogin(), "UTF-8"));
-            } catch(UnsupportedEncodingException e) {
-                // This can't happen in practice, UTF-8 is necessarily supported
-            }
+            sb.append(URLEncoder.encode(credentials.getLogin(), StandardCharsets.UTF_8));
 
             String password = credentials.getPassword();
             if( !password.isEmpty()) {
@@ -739,11 +737,7 @@ public class FileURL implements Cloneable {
                 if (maskPassword)
                     sb.append(credentials.getMaskedPassword());
                 else {
-                    try {
-                        sb.append(URLEncoder.encode(password, "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        // This can't happen in practice, UTF-8 is necessarily supported
-                    }
+                    sb.append(URLEncoder.encode(password, StandardCharsets.UTF_8));
                 }
             }
             sb.append('@');

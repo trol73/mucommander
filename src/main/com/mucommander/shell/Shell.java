@@ -50,14 +50,11 @@ public class Shell implements ConfigurationListener {
     /** Tokens that compose the shell command. */
     private static String[] tokens;
     /** Tokens that compose remote shell commands. */
-    private static String[] remoteTokens;
+    private static final String[] remoteTokens;
     /** Instance of configuration listener. */
-    private static Shell    confListener;
+    private static final Shell confListener;
 
 
-
-    // - Initialization ------------------------------------------------------
-    // -----------------------------------------------------------------------
     static {
     	TcConfigurations.addPreferencesListener(confListener = new Shell());
 

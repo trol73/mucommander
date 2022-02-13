@@ -24,7 +24,7 @@ import org.apache.commons.collections4.map.ReferenceMap;
 import javax.swing.*;
 
 /**
- * This class provides a icon cache, mapping <code>Object</code> keys onto {@link Icon} instances.
+ * This class provides an icon cache, mapping <code>Object</code> keys onto {@link Icon} instances.
  * Any kind of Object may be used as the key: a file, a URL, an extension, ... allowing different of icon caching
  * strategies to be implemented.
  *

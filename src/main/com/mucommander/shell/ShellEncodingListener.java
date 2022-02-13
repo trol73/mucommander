@@ -34,8 +34,6 @@ class ShellEncodingListener implements ProcessListener {
     private static ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     public synchronized void processDied(int returnValue) {
-        String oldEncoding;
-
         // Abort if there is no need to identify the encoding anymore.
         if (out == null) {
             return;
@@ -49,7 +47,7 @@ class ShellEncodingListener implements ProcessListener {
 
         // Checks whether the detected charset is supported.
         if (Charset.isSupported(encoding)) {
-            oldEncoding = TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_ENCODING);
+            String oldEncoding = TcConfigurations.getPreferences().getVariable(TcPreference.SHELL_ENCODING);
 
             // If no encoding was previously set, or we have found a new encoding, change the current shell encoding.
             if(!encoding.equals(oldEncoding)) {

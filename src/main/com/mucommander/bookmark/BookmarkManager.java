@@ -52,7 +52,7 @@ public class BookmarkManager implements VectorChangeListener {
     private static final String DEFAULT_BOOKMARKS_FILE_NAME = "bookmarks.xml";
 
     /** Bookmark instances */
-    private static AlteredVector<Bookmark> bookmarks = new AlteredVector<>();
+    private static final AlteredVector<Bookmark> bookmarks = new AlteredVector<>();
 
     /** Contains all registered bookmark listeners, stored as weak references */
     private static final WeakHashMap<BookmarkListener, ?> listeners = new WeakHashMap<>();
@@ -71,14 +71,12 @@ public class BookmarkManager implements VectorChangeListener {
 
     /** create a singleton instance, needs to be referenced so that it's not garbage collected (AlteredVector
      * stores VectorChangeListener as weak references) */
-    private static BookmarkManager singleton = new BookmarkManager();
+    private static final BookmarkManager singleton = new BookmarkManager();
 
     /** Value of bookmark's name that make the bookmark treated as a separator */
     public static final String BOOKMARKS_SEPARATOR = "-";
 
 
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     static {
         // Listen to changes made to the bookmarks vector
         bookmarks.addVectorChangeListener(singleton);

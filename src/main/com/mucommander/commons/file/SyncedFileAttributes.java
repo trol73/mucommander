@@ -53,7 +53,7 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
     }
 
     /**
-     * Sets the attributes' 'time to live', , i.e. the amount of time since the last update after which attributes will
+     * Sets the attributes' 'time to live', i.e. the amount of time since the last update after which attributes will
      * be automatically updated when any of the getter method is called.
      * Note that setting the 'time to live' causes the expiration date to be updated with {@link #updateExpirationDate()}.
      *
@@ -87,7 +87,7 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
     }
 
     /**
-     * Updates the attributes' expiration date to 'now' + 'ttl' (as returned by {@link #getTtl()}.
+     * Updates the attributes' expiration date to 'now' + 'ttl' (as returned by {@link #getTtl()}).
      * This method is called after attributes have been automatically updated. It can also be called after attribute
      * values have been manually updated using the setter methods.
      */
@@ -96,7 +96,7 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
     }
 
     /**
-     * Returns <code>true</code> if attributes have expired, i.e. the {@link #getExpirationDate()} expiration date} has
+     * Returns <code>true</code> if attributes have expired, i.e. the {@link #getExpirationDate()} expiration date has
      * passed, <code>false</code> if attributes are still 'fresh'. This method also returns <code>false</code> if
      * automatic attributes' update has been disabled ('time to live' set to a negative value), or if attributes are
      * currently being updated.
@@ -250,10 +250,10 @@ public abstract class SyncedFileAttributes extends SimpleFileAttributes {
      * Overridden to trigger attributes update if the expiration date has been reached.
      */
     @Override
-    public long getBlocksize() {
+    public long getBlockSize() {
         checkForExpiration(false);
 
-        return super.getBlocksize();
+        return super.getBlockSize();
     }
 
 

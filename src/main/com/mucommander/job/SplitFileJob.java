@@ -52,10 +52,10 @@ import com.mucommander.ui.main.MainFrame;
 public class SplitFileJob extends AbstractCopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SplitFileJob.class);
 	
-    private long partSize;
-	private AbstractFile sourceFile;
+    private final long partSize;
+	private final AbstractFile sourceFile;
 	private InputStream origFileStream;
-	private AbstractFile destFolder;
+	private final AbstractFile destFolder;
 	private long sizeLeft;
 	private boolean recalculateCRC = false;
 
@@ -66,7 +66,7 @@ public class SplitFileJob extends AbstractCopyJob {
 	 *
 	 */
 	private static class DummyDestFile extends DummyFile {
-		private long size;
+		private final long size;
 		
 		public DummyDestFile(FileURL url, long size) {
 			super(url);
@@ -104,10 +104,10 @@ public class SplitFileJob extends AbstractCopyJob {
 	 */
 	private void addDummyFile(int i, long size) {
     	String num;
-    	if (i<10) {
-    		num = "00" + Integer.toString(i); 
-    	} else if (i<100) {
-    		num = "0" + Integer.toString(i); 
+    	if (i < 10) {
+    		num = "00" + i;
+    	} else if (i < 100) {
+    		num = "0" + i;
     	} else {
     		num = Integer.toString(i); 
     	}
@@ -171,7 +171,7 @@ public class SplitFileJob extends AbstractCopyJob {
         OutputStream out = null;
         try {
 			out = destFile.getOutputStream();
-			
+
 			try {
 				long written = StreamUtils.copyStream(origFileStream, out, BufferPool.getDefaultBufferSize(), partSize);
 				sizeLeft -= written;
@@ -222,8 +222,7 @@ public class SplitFileJob extends AbstractCopyJob {
                     // Fail silently
                 }
             }
-		}
-        catch (IOException e) {
+		} catch (IOException e) {
             LOGGER.debug("Caught exception", e);
 
             showErrorDialog(errorDialogTitle,
@@ -235,13 +234,12 @@ public class SplitFileJob extends AbstractCopyJob {
 			
 		} finally {
             try {
-            	if (out!=null)
+            	if (out != null)
             		out.close();
-            }
-            catch(IOException e2) {
+            } catch(IOException ignore) {
             }
 		}
-		
+
     	return true;
     }
 

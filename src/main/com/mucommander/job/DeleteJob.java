@@ -50,15 +50,15 @@ public class DeleteJob extends FileJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteJob.class);
 	
     /** Title used for error dialogs */
-    private String errorDialogTitle;
+    private final String errorDialogTitle;
 
     /** If true, files will be moved to the trash instead of being deleted */
-    private boolean moveToTrash;
+    private final boolean moveToTrash;
 
     /** Trash instance, null if moveToTrash is false */
     private AbstractTrash trash;
 
-    /** The archive that contains the deleted files (may be null) */ 
+    /** The archive that contains the deleted files (maybe null) */
     private AbstractRWArchiveFile archiveToOptimize;
 
     /** True when an archive is being optimized */
@@ -139,7 +139,7 @@ public class DeleteJob extends FileJob {
                 do {		// Loop for retry
                     // Delete each file in this folder
                     try {
-                        AbstractFile subFiles[] = file.ls();
+                        AbstractFile[] subFiles = file.ls();
                         for(int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                             // Notify job that we're starting to process this file (needed for recursive calls to processFile)
                             nextFile(subFiles[i]);
@@ -190,11 +190,6 @@ public class DeleteJob extends FileJob {
     protected boolean hasFolderChanged(AbstractFile folder) {
         return getBaseSourceFolder().isParentOf(folder);
     }
-
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     protected void jobStopped() {

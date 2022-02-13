@@ -142,18 +142,7 @@ public class AdbUtils {
     public static Map<String, String> getDeviceNames() {
         final Map<String, String> result = new HashMap<>();
         ExecutionFinishListener listener = (exitCode, output) -> {
-            String lines[] = output.split("\\r?\\n");
-            for (String s : lines) {
-                String vals[] = s.split("\\s+");
-                for (String val : vals) {
-                    if (val.startsWith("model:")) {
-                        String serial = vals[0];
-                        String name = val.substring(6); // "model:"
-                        name = name.replace('_', ' ');
-                        result.put(serial, name);
-                    }
-                }
-            }
+            parseDevicesList(result, output);
         };
         AbstractFile adbPath = getAdbPath();
         if (OsFamily.getCurrent().isUnixBased() && adbPath != null) {
@@ -168,6 +157,21 @@ public class AdbUtils {
             }
         }
         return result;
+    }
+
+    private static void parseDevicesList(Map<String, String> result, String output) {
+        String[] lines = output.split("\\r?\\n");
+        for (String s : lines) {
+            String[] columns = s.split("\\s+");
+            for (String val : columns) {
+                if (val.startsWith("model:")) {
+                    String serial = columns[0];
+                    String name = val.substring(6); // "model:"
+                    name = name.replace('_', ' ');
+                    result.put(serial, name);
+                }
+            }
+        }
     }
 
 }

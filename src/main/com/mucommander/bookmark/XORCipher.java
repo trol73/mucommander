@@ -24,7 +24,7 @@ import com.mucommander.commons.io.base64.Base64Encoder;
 import java.io.IOException;
 
 /**
- * This class provides provides simple XOR symmetrical encryption using a static hard-coded key, coupled with Base64
+ * This class provides simple XOR symmetrical encryption using a static hard-coded key, coupled with Base64
  * encoding so that encrypted strings only use alphanumeric characters and thus can be embedded in text formats such
  * as XML.
  *

@@ -98,9 +98,9 @@ public class ValueList extends ArrayList<String> {
     }
 
     /**
-     * Returns the value found at the specified index of the list as a boolean.
+     * Returns the value found at the specified index of the list as an boolean.
      * @param  index index of the value to retrieve.
-     * @return       the value found at the specified index of the list as a boolean.
+     * @return       the value found at the specified index of the list as an boolean.
      */
     public boolean booleanValueAt(int index) {
         return ConfigurationSection.getBooleanValue(valueAt(index));

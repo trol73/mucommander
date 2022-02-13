@@ -18,12 +18,10 @@
 
 package com.mucommander.shell;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parses XML shell history files and populates the {@link com.mucommander.shell.ShellHistoryManager}.
@@ -46,7 +44,7 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
     /** Reader's current status. */
     private int          status;
     /** Buffer for the current command. */
-    private StringBuilder command;
+    private final StringBuilder command;
     /** muCommander version that was used to write the shell history file */
     private String version;
 

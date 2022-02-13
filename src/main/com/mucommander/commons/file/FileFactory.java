@@ -85,13 +85,13 @@ public class FileFactory {
     private static Logger logger;
 
     /** All registered protocol providers. */
-    private static Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
+    private static final Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
 
     /** Local file provider to avoid hashtable lookups (faster). */
     private static ProtocolProvider localFileProvider;
 
     /** Vector of registered ArchiveFormatMapping instances */
-    private static List<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<>();
+    private static final List<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<>();
 
     /** Array of registered FileProtocolMapping instances, for quicker access */
     private static ArchiveFormatProvider[] archiveFormatProviders;

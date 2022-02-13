@@ -54,7 +54,7 @@ public enum OsFamily {
     private static Logger logger;
 
     /** The String representation of this RuntimeProperty, set at creation time */
-    protected final String stringRepresentation;
+    private final String stringRepresentation;
     
     private final boolean isCaseSensitiveFilesystem;
 

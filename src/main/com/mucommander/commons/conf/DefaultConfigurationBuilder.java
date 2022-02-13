@@ -30,7 +30,7 @@ package com.mucommander.commons.conf;
  */
 public class DefaultConfigurationBuilder implements ConfigurationBuilder {
     /**
-     * Receive notification at the begining of the configuration.
+     * Receive notification at the beginning of the configuration.
      * <p>
      * By default, do nothing. Application writers may override this method in a subclass to take
      * specific actions at the beginning of a document (such as allocating the root node of a tree

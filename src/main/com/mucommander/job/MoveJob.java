@@ -44,7 +44,7 @@ public class MoveJob extends AbstractCopyJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoveJob.class);
 	
     /** True if this job corresponds to a single file renaming */
-    private boolean renameMode = false;
+    private final boolean renameMode;
 
     
     /**
@@ -170,7 +170,7 @@ public class MoveJob extends AbstractCopyJob {
             // move each file in this folder recursively
             do {		// Loop for retry
                 try {
-                    AbstractFile subFiles[] = file.ls();
+                    AbstractFile[] subFiles = file.ls();
                     boolean isFolderEmpty = true;
                     for (AbstractFile subFile : subFiles) {
                         // Return now if the job was interrupted, so that we do not attempt to delete this folder
@@ -216,19 +216,7 @@ public class MoveJob extends AbstractCopyJob {
             }
 
             // finally, delete the empty folder
-            do {		// Loop for retry
-                try  {
-                    file.delete();
-                    return true;
-                } catch(IOException e) {
-                    int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_folder", file.getAbsolutePath()));
-                    // Retry loops
-                    if (ret == RETRY_ACTION)
-                        continue;
-                    // Cancel, skip or close dialog returns false
-                    return false;
-                }
-            } while(true);
+            return deleteEmptyFolder(file);
         }
         // File is a regular file, move it by copying it to the destination and then deleting it
         else  {
@@ -257,6 +245,22 @@ public class MoveJob extends AbstractCopyJob {
 
             return false;
         }
+    }
+
+    private boolean deleteEmptyFolder(AbstractFile file) {
+        do {		// Loop for retry
+            try {
+                file.delete();
+                return true;
+            } catch(IOException e) {
+                int ret = showErrorDialog(errorDialogTitle, Translator.get("cannot_delete_folder", file.getAbsolutePath()));
+                // Retry loops
+                if (ret == RETRY_ACTION)
+                    continue;
+                // Cancel, skip or close dialog returns false
+                return false;
+            }
+        } while(true);
     }
 
     // This job modifies baseDestFolder and its subfolders

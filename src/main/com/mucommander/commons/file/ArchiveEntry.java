@@ -126,10 +126,6 @@ public class ArchiveEntry extends SimpleFileAttributes {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     /**
      * Returns the file permissions of this entry. This method is overridden to return default permissions
      * ({@link FilePermissions#DEFAULT_DIRECTORY_PERMISSIONS} for directories, {@link FilePermissions#DEFAULT_FILE_PERMISSIONS}
