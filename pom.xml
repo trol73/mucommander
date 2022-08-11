@@ -37,7 +37,7 @@
 		<libs.path>${project.basedir}/assembly/lib</libs.path>
 		<libs.runtime.path>${project.basedir}/lib/runtime</libs.runtime.path>
 		<hadoop.version>3.3.1</hadoop.version>
-		<hadoop.common.version>3.3.1</hadoop.common.version>
+		<hadoop.common.version>3.3.3</hadoop.common.version>
 		<guava.version>17.0</guava.version>
 		<protobuf.version>2.4.1</protobuf.version>
 		<lucene.version>7.1.0</lucene.version>
