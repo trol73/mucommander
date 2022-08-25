@@ -5,6 +5,8 @@ import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.StringUtils;
+
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -729,15 +731,23 @@ public class FileURL implements Cloneable {
         sb.append("://");
 
         if (includeCredentials && credentials != null) {
-            sb.append(URLEncoder.encode(credentials.getLogin(), StandardCharsets.UTF_8));
+            try {
+                sb.append(URLEncoder.encode(credentials.getLogin(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                // This can't happen in practice, UTF-8
+            }
 
             String password = credentials.getPassword();
             if( !password.isEmpty()) {
                 sb.append(':');
-                if (maskPassword)
+                if (maskPassword) {
                     sb.append(credentials.getMaskedPassword());
-                else {
-                    sb.append(URLEncoder.encode(password, StandardCharsets.UTF_8));
+                } else {
+                    try {
+                        sb.append(URLEncoder.encode(password, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        // This can't happen in practice, UTF-8 
+                    }
                 }
             }
             sb.append('@');
