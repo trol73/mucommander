@@ -41,10 +41,10 @@ public class TextFilesHistory {
 
     private static WeakReference<TextFilesHistory> instance;
 
-    private List<FileRecord> records = new ArrayList<>();
+    private final List<FileRecord> records = new ArrayList<>();
 
     public static class FileRecord {
-        private String fileName;
+        private final String fileName;
         private int scrollPosition;
         private int line, column;
         private FileType fileType;
@@ -153,13 +153,11 @@ public class TextFilesHistory {
         load(getHistoryFile());
     }
 
-    private void load(AbstractFile file) throws IOException {
-        BufferedReader reader = null;
+    private void load(AbstractFile file) {
         records.clear();
-        try {
-            reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
-            while ((line = reader.readLine() ) != null) {
+            while ((line = reader.readLine()) != null) {
                 if (line.isEmpty() || line.startsWith("#")) {
                     continue;
                 }
@@ -170,10 +168,6 @@ public class TextFilesHistory {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
         }
     }
 
@@ -211,16 +205,10 @@ public class TextFilesHistory {
     }
 
     public void save(AbstractFile file) throws  IOException {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(file.getOutputStream()))) {
             for (FileRecord rec : records) {
                 writer.write(rec.toString());
                 writer.write('\n');
-            }
-        } finally {
-            if (writer != null) {
-                writer.close();
             }
         }
     }

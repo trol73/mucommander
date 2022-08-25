@@ -147,9 +147,9 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
     }
 
     /**
-     * Returns whether or not the text in this editor has unsaved changes.
+     * Returns whether the text in this editor has unsaved changes.
      *
-     * @return Whether or not the text has unsaved changes.
+     * @return Whether the text has unsaved changes.
      * @see #setDirty(boolean)
      */
     public boolean isDirty() {
@@ -157,7 +157,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
     }
 
     /**
-     * Sets whether or not this text in this editor has unsaved changes.
+     * Sets whether this text in this editor has unsaved changes.
      * This fires a property change event of type {@link #DIRTY_PROPERTY}.<p>
      *
      * Applications will usually have no need to call this method directly; the

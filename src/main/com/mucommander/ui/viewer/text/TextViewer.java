@@ -270,6 +270,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     // ActionListener implementation //
     ///////////////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (menuHelper.performAction(e, this)) {
             return;
@@ -280,7 +281,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
     /////////////////////////////////////
     // EncodingListener implementation //
     /////////////////////////////////////
-
+    Override
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
         // Store caret and scrollbar position before change
         TextArea textArea = textEditorImpl.getTextArea();

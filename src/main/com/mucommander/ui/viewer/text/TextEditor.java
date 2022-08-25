@@ -57,7 +57,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 	private static final Logger LOGGER = LoggerFactory.getLogger(TextEditor.class);
 
     //private TextMenuHelper menuHelper;
-    private TextEditorImpl textEditorImpl;
+    private final TextEditorImpl textEditorImpl;
     private final TextViewer textViewerDelegate;
     private StatusBar statusBar;
 
@@ -252,7 +252,8 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     /////////////////////////////////////
     // DocumentListener implementation //
     /////////////////////////////////////
-	
+
+    @Override
     public void changedUpdate(DocumentEvent e) {
         textViewerDelegate.menuHelper.updateEditActions();
         // ignore change event if it was caused by syntax change
@@ -260,11 +261,13 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             setSaveNeeded(true);
  //        }
     }
-	
+
+    @Override
     public void insertUpdate(DocumentEvent e) {
         setSaveNeeded(true);
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         setSaveNeeded(true);
     }
@@ -273,6 +276,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     // ActionListener implementation //
     ///////////////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (textViewerDelegate.menuHelper.performAction(e, textViewerDelegate)) {
             return;
@@ -284,6 +288,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     // EncodingListener implementation //
     /////////////////////////////////////
 
+    @Override
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
     	if (!askSave()) {
     		return;         // Abort if the file could not be saved

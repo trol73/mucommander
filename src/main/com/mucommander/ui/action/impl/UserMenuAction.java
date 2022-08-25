@@ -28,7 +28,6 @@ import com.mucommander.ui.notifier.NotificationType;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.text.TextEditor;
 import com.mucommander.ui.viewer.text.TextFilesHistory;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +82,6 @@ public class UserMenuAction extends ParentFolderAction {
         return menu != null ? menu : findLocalMenu(folder.getParent());
     }
 
-    @Nullable
     private static AbstractFile getMenuFile(AbstractFile folder) {
         if (folder == null || !folder.exists()) {
             return null;
