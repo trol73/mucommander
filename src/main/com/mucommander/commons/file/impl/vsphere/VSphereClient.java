@@ -1,37 +1,19 @@
 package com.mucommander.commons.file.impl.vsphere;
 
+import com.mucommander.commons.util.StringUtils;
+import com.vmware.vim25.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.Closeable;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.xml.ws.BindingProvider;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.mucommander.commons.util.StringUtils;
-import com.vmware.vim25.DynamicProperty;
-import com.vmware.vim25.InvalidLocaleFaultMsg;
-import com.vmware.vim25.InvalidLoginFaultMsg;
-import com.vmware.vim25.InvalidPropertyFaultMsg;
-import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.ObjectContent;
-import com.vmware.vim25.ObjectSpec;
-import com.vmware.vim25.PropertyFilterSpec;
-import com.vmware.vim25.PropertySpec;
-import com.vmware.vim25.RuntimeFaultFaultMsg;
-import com.vmware.vim25.ServiceContent;
-import com.vmware.vim25.UserSession;
-import com.vmware.vim25.VimPortType;
-import com.vmware.vim25.VimService;
 
 /**
  * Wrapper over the vSphere API
@@ -104,17 +86,15 @@ public class VSphereClient implements Closeable {
 		VimService vimService = new VimService();
 
 		log.trace("Getting vimPort from vimService");
-		vimPort = vimService.getVimPort();
+		//vimPort = vimService.getVimPort();
 		log.trace("vimPort is gotT successfully");
 		log.trace("Getting context from vimPort");
-		Map<String, Object> requestContext = ((BindingProvider) vimPort)
-				.getRequestContext();
+		//Map<String, Object> requestContext = ((BindingProvider) vimPort).getRequestContext();
 		log.trace("Context from vimPort is got successfully");
 
 		log.trace("URL to connect to vSphere host '{}'", connectionUrl);
-		requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-				connectionUrl);
-		requestContext.put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+//		requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, connectionUrl);
+//		requestContext.put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
 		// do trust ? TODO
 /*		requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, getSSLContext()
 				.getSocketFactory());

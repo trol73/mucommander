@@ -17,7 +17,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.io.*;
 import java.net.*;
 import java.rmi.RemoteException;
@@ -61,10 +60,8 @@ import java.util.*;
  * @see ConnectionPool
  * @author Yuval Kohavi, yuval.kohavi@intigua.com
  */
-public class VSphereFile extends ProtocolFile implements
-		ConnectionHandlerFactory {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(VSphereFile.class);
+public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactory {
+	private static final Logger LOGGER = LoggerFactory.getLogger(VSphereFile.class);
 
 	public static final String GUEST_CREDENTIALS = "guestCredentials";
 
@@ -284,7 +281,7 @@ public class VSphereFile extends ProtocolFile implements
 					.getVimPort()
 					.listFilesInGuest(fileManager, vm, credentials,
 							getPathInVm(), null, null, null);
-		} catch (SOAPFaultException e) {
+		} catch (Exception e) {
 			if (isFileNotFound(e)) {
 				return;
 			}
@@ -308,7 +305,7 @@ public class VSphereFile extends ProtocolFile implements
 
 	}
 
-	private boolean isFileNotFound(SOAPFaultException e) {
+	private boolean isFileNotFound(Exception e) {
 //		Detail detail = e.getFault().getDetail();
 //		NodeList childNodes = detail.getChildNodes();
 //

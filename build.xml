@@ -643,6 +643,8 @@
         </exec>
     </target>
 
+
+
     <target name="compress" depends="obfuscate,check-7za,copy-obfuscated,compress-obfuscated"/>
 
 
@@ -692,6 +694,7 @@
         <libpath property="jsse.lib" library="jsse.jar"/>
         <libpath property="jce.lib"  library="jce.jar"/>
 
+
         <echo>Creating obfuscated JAR file...</echo>
         <mkdir dir="${reports.proguard}"/>
         <taskdef resource="proguard/ant/task.properties" classpathref="lib.tools"/>
@@ -706,26 +709,25 @@
                printmapping="${reports.proguard}/mapping.txt" 
                printusage="${reports.proguard}/usage.txt"
                printseeds="${reports.proguard}/seeds.txt" 
-               target="${source.version}"
                repackageclasses=""
                verbose="true"
-               preverify="true">
+          	preverify="true">
+		-libraryjars  ${java.home}/jmods/java.base.jmod(!**.jar;!module-info.class)
+		-libraryjars  ${java.home}/jmods/java.desktop.jmod(!**.jar;!module-info.class)
+		-libraryjars  ${java.home}/jmods/java.logging.jmod(!**.jar;!module-info.class)
+		-libraryjars  ${java.home}/jmods/java.datatransfer.jmod(!**.jar;!module-info.class)
+		-libraryjars  ${java.home}/jmods/java.sql.jmod(!**.jar;!module-info.class)
+		
+		-libraryjars ./lib
+
                
             <injar  name="${jar.normal}"/>
             <outjar name="${jar.obf}"/>
-
-            <libraryjar path="${java.lib}"/>
-            <libraryjar path="${jsse.lib}"/>
-            <libraryjar path="${jce.lib}"/>
 <!--
-            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/rt.jar"/>
-            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/classes.jar"/>
-            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/jsse.jar"/>
-            <libraryjar path="/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre/lib/jce.jar"/>
--->            
+            <libraryjar path="./lib"/>
 
             <libraryjar refid="lib.compile"/>
-
+-->
             <keepattribute name="exceptions"/>
 
             <keep name="org.apache.hadoop.**">
@@ -858,26 +860,6 @@
 				<method name="*"/>
 				<constructor name="*"/>
 			</keep>
-
-<!--			
-
-			<keepclassmembers name="org.apache.batik.ext.swing.DoubleDocument" allowobfuscation="false" allowoptimization="false">
-				<field name="*"/>
-				<method name="*"/>
-				<constructor name="*"/>
-			</keepclassmembers>		
-			<keep name="org.apache.batik.ext.swing.DoubleDocument" allowobfuscation="false" allowoptimization="false">
-				<field name="*"/>
-				<method name="*"/>
-				<constructor name="*"/>
-			</keep>
-			
-
-					  com.sshtools.j2ssh.sftp.SftpSubsystemClient"
-                           com.sshtools.j2ssh.sftp.SshFxpSymlink	
-					  com.sshtools.j2ssh.sftp.SshFxpLStat.class
--->
-
         </proguard>
     </target>
 

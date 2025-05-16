@@ -22,7 +22,7 @@
 		</developer>
 	</developers>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<encoding>UTF-8</encoding>
 		<source.java.version>1.8</source.java.version>
 		<target.java.version>1.8</target.java.version>
@@ -100,6 +100,7 @@
 			<scope>system</scope>
 			<systemPath>${libs.path}/pty4j-native.jar</systemPath>
 		</dependency>
+<!--		
         	<dependency>
 			<groupId>org.icepdf</groupId>
 			<artifactId>icepdf-viewer</artifactId>
@@ -113,6 +114,17 @@
 			<version>5.0.4_8</version>
 			<scope>system</scope>
 			<systemPath>${libs.path}/icepdf-core.jar</systemPath>
+		</dependency>
+-->
+		<dependency>
+		    <groupId>com.github.pcorless.icepdf</groupId>
+		    <artifactId>icepdf-core</artifactId>
+		    <version>7.0.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.pcorless.icepdf</groupId>
+		    <artifactId>icepdf-viewer</artifactId>
+		    <version>7.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.realityinteractive</groupId>
@@ -235,9 +247,9 @@
 		<dependency>
 			<groupId>com.fifesoft</groupId>
     			<artifactId>rsyntaxtextarea</artifactId>
-                        <version>3.1.4</version>
+                        <version>3.3.3</version>
 			<scope>system</scope>
-			<systemPath>${libs.runtime.path}/rsyntaxtextarea-3.1.3-SNAPSHOT.jar</systemPath>
+			<systemPath>${libs.runtime.path}/rsyntaxtextarea-3.3.3-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>

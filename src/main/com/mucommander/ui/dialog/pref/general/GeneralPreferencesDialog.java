@@ -76,17 +76,17 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     // - Tab icons --------------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Name of the icon used by the 'general' tab. */
-    private final static String GENERAL_ICON    = "general.png";
+    private static final String GENERAL_ICON    = "general.png";
     /** Name of the icon used by the 'folders' tab. */
-    private final static String FOLDERS_ICON    = "folders.png";
+    private static final String FOLDERS_ICON    = "folders.png";
     /** Name of the icon used by the 'appearance' tab. */
-    private final static String APPEARANCE_ICON = "appearance.png";
+    private static final String APPEARANCE_ICON = "appearance.png";
     /** Name of the icon used by the 'mail' tab. */
-    private final static String MAIL_ICON       = "mail.png";
+    private static final String MAIL_ICON       = "mail.png";
     /** Name of the icon used by the 'misc' tab. */
-    private final static String MISC_ICON       = "misc.png";
+    private static final String MISC_ICON       = "misc.png";
     /** Name of the icon used by the 'shortucts' tab. */
-    private final static String SHORTCUTS_ICON  = "shortcuts.png";
+    private static final String SHORTCUTS_ICON  = "shortcuts.png";
 
 
 
@@ -200,7 +200,7 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
 		else
 			modifiedComponents.remove(component);
 		
-		setCommitButtonsEnabled(modifiedComponents.size() != 0);
+		setCommitButtonsEnabled(!modifiedComponents.isEmpty());
 	}
     
     @Override

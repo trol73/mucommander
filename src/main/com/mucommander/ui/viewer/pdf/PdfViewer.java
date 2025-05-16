@@ -65,7 +65,7 @@ public class PdfViewer extends FileViewer {
         }
     }
 
-    @Override
+        @Override
     protected StatusBar getStatusBar() {
         return null;
     }

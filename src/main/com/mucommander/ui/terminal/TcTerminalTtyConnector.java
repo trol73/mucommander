@@ -17,8 +17,6 @@
  */
 package com.mucommander.ui.terminal;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jediterm.pty.PtyProcessTtyConnector;
 import com.jediterm.terminal.LoggingTtyConnector;
 import com.mucommander.conf.TcConfigurations;
@@ -35,9 +33,7 @@ import com.sun.jna.Platform;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Oleg Trifonov
@@ -45,7 +41,7 @@ import java.util.Map;
  */
 public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements LoggingTtyConnector {
 
-    private final List<char[]> myDataChunks = Lists.newArrayList();
+    private final List<char[]> myDataChunks = new ArrayList<>();
     private final PtyProcess process;
 
 
@@ -71,12 +67,12 @@ public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
     }
 
     public List<char[]> getChunks() {
-        return Lists.newArrayList(myDataChunks);
+        return new ArrayList<>(myDataChunks);
     }
 
 
     private static PtyProcess createPtyProcess(String directory) throws IOException {
-        Map<String, String> envs = Maps.newHashMap(System.getenv());
+        Map<String, String> envs = new HashMap<>(System.getenv());
         envs.put("TERM", "xterm-256color");
 
         TcPreferencesAPI pref = TcConfigurations.getPreferences();

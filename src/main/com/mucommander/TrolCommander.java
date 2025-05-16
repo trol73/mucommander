@@ -41,6 +41,9 @@ import com.mucommander.shell.ShellHistoryManager;
 import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.dialog.InformationDialog;
+import com.mucommander.ui.dialog.about.AboutDialog;
+import com.mucommander.ui.dialog.pref.PreferencesDialog;
+import com.mucommander.ui.dialog.pref.general.GeneralPreferencesDialog;
 import com.mucommander.ui.dialog.startup.CheckVersionDialog;
 import com.mucommander.ui.dialog.startup.InitialSetupDialog;
 import com.mucommander.ui.icon.FileIcons;
@@ -62,7 +65,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
 import java.util.HashSet;
@@ -364,6 +367,7 @@ public class TrolCommander {
                 MainFrameBuilder mainFrameBuilder = new DefaultMainFramesBuilder();
                 WindowManager.createNewMainFrame(mainFrameBuilder);                                 // !!!!
             }
+
             Profiler.stop("launcher.create-window");
             Profiler.stop("loading");
             Profiler.print();
@@ -430,8 +434,14 @@ public class TrolCommander {
             } catch(Exception e) {
                 getLogger().debug("Exception thrown while initializing Mac OS X integration", e);
             }
+            Desktop desktop = Desktop.getDesktop();
+            if (desktop.isSupported(Desktop.Action.APP_ABOUT)) {
+                desktop.setAboutHandler(e -> new AboutDialog((WindowManager.getCurrentMainFrame())).showDialog());
+            }
+            if (desktop.isSupported(Desktop.Action.APP_PREFERENCES)) {
+                desktop.setAboutHandler(e -> GeneralPreferencesDialog.getDialog().showDialog());
+            }
         }
-
     }
 
 
@@ -447,7 +457,11 @@ public class TrolCommander {
 
             // - Logging configuration ------------------------------------
             // ------------------------------------------------------------
-            MuLogging.configureLogging();
+            try {
+                MuLogging.configureLogging();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             initMacOsSupport();
 

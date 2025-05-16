@@ -57,7 +57,7 @@ public class TcTerminal {
         this.settingsProvider = new TerminalSettingsProvider();
         this.ttyConnector = createTtyConnector(getCurrentFolder());
 
-        BasicConfigurator.configureDefaultContext();
+        //BasicConfigurator.configureDefaultContext();
 
         termWidget = new JediTermWidget(settingsProvider) {
             @Override
