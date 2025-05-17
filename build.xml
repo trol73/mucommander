@@ -1202,9 +1202,15 @@
                 <pathelement location="${tmp.main}"/>
                 <path refid="lib.runtime"/>
             </classpath>
-<!--            
-            <jvmarg value="-verbose"/>
--->
+            <jvmarg value="--add-opens"/>
+            <jvmarg value="java.desktop/com.apple.eawt=ALL-UNNAMED"/>
+
+            <jvmarg value="--add-opens"/>
+            <jvmarg value="java.desktop/com.apple.laf=ALL-UNNAMED"/>
+            
+            <jvmarg value="--add-opens"/>
+            <jvmarg value="java.desktop/com.apple.eio=ALL-UNNAMED"/>
+
         </java>
     </target>
 </project>
