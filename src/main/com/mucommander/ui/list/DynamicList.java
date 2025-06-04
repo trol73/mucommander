@@ -214,18 +214,18 @@ public class DynamicList<E> extends JList<E> {
 
         // Map 'Shift+Up'/'Meta+Up' and 'Shift+Left'/'Meta+Left' to MoveUpAction
         actionClass = moveUpAction.getClass();
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.META_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.META_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.META_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.META_DOWN_MASK), actionClass);
         actionMap.put(actionClass, moveUpAction);
 
         // Map 'Shift+Down'/'Meta+Down' and 'Shift+Right'/'Meta+Right' to MoveDownAction
         actionClass = moveDownAction.getClass();
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.META_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_MASK), actionClass);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.META_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.META_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), actionClass);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.META_DOWN_MASK), actionClass);
         actionMap.put(actionClass, moveDownAction);
     }
 

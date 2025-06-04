@@ -17,20 +17,18 @@
  */
 package com.mucommander.ui.terminal;
 
-import ch.qos.logback.classic.BasicConfigurator;
 import com.jediterm.terminal.RequestOrigin;
 import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.model.StyleState;
 import com.jediterm.terminal.model.TerminalTextBuffer;
 import com.jediterm.terminal.ui.JediTermWidget;
-import com.jediterm.terminal.ui.TerminalPanelListener;
+//import com.jediterm.terminal.ui.TerminalPanelListener;
 import com.jediterm.terminal.ui.TerminalSession;
 import com.jediterm.terminal.ui.TerminalWidget;
+import com.jediterm.terminal.ui.TerminalWidgetListener;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
 import com.mucommander.cache.WindowsStorage;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
-import ru.trolsoft.utils.FileUtils;
 
 import javax.swing.JComponent;
 import java.awt.Dimension;
@@ -46,16 +44,14 @@ public class TcTerminal {
 
     private final MainFrame mainFrame;
     private final TerminalWidget termWidget;
-    private final SettingsProvider settingsProvider;
-    private final TcTerminalTtyConnector ttyConnector;
 
     private static final String STORAGE_KEY = "TerminalPanel";
 
     public TcTerminal(final MainFrame mainFrame) {
         super();
         this.mainFrame = mainFrame;
-        this.settingsProvider = new TerminalSettingsProvider();
-        this.ttyConnector = createTtyConnector(getCurrentFolder());
+        SettingsProvider settingsProvider = new TerminalSettingsProvider();
+        TcTerminalTtyConnector ttyConnector = createTtyConnector(getCurrentFolder());
 
         //BasicConfigurator.configureDefaultContext();
 
@@ -66,21 +62,26 @@ public class TcTerminal {
             }
         };
 
-
-        termWidget.setTerminalPanelListener(new TerminalPanelListener() {
-            public void onPanelResize(final Dimension pixelDimension, final RequestOrigin origin) {
-            }
-
-            @Override
-            public void onSessionChanged(final TerminalSession currentSession) {
-                updateTitle();
-            }
-
-            @Override
-            public void onTitleChanged(String title) {
-                updateTitle();//mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
-            }
-        });
+//        termWidget.addListener(new TerminalWidgetListener() {
+//            @Override
+//            public void allSessionsClosed(TerminalWidget terminalWidget) {
+//
+//            }
+//        });
+//        termWidget.setTerminalPanelListener(new TerminalPanelListener() {
+//            public void onPanelResize(final Dimension pixelDimension, final RequestOrigin origin) {
+//            }
+//
+//            @Override
+//            public void onSessionChanged(final TerminalSession currentSession) {
+//                updateTitle();
+//            }
+//
+//            @Override
+//            public void onTitleChanged(String title) {
+//                updateTitle();//mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
+//            }
+//        });
 
         termWidget.getComponent().addFocusListener(new FocusListener() {
             @Override
@@ -111,7 +112,6 @@ public class TcTerminal {
             };
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO
             return null;
         }
     }
@@ -151,7 +151,8 @@ public class TcTerminal {
 
 
     public void updateTitle() {
-        mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
+        mainFrame.setTitle(termWidget.getTerminalDisplay().getWindowTitle());
+//        mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
     }
 
 }

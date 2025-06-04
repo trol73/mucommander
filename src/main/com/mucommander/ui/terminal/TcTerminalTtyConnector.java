@@ -17,19 +17,14 @@
  */
 package com.mucommander.ui.terminal;
 
-import com.jediterm.pty.PtyProcessTtyConnector;
-import com.jediterm.terminal.LoggingTtyConnector;
+import com.jediterm.terminal.ProcessTtyConnector;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
 import com.mucommander.conf.TcPreferencesAPI;
 import com.mucommander.desktop.DesktopManager;
 import com.pty4j.PtyProcess;
-import com.pty4j.unix.Pty;
-import com.pty4j.unix.UnixPtyProcess;
-import com.pty4j.util.PtyUtil;
-import com.pty4j.windows.WinPtyProcess;
-import com.sun.jna.Platform;
+import com.pty4j.PtyProcessBuilder;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,11 +34,8 @@ import java.util.*;
  * @author Oleg Trifonov
  * Created on 28/10/14.
  */
-public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements LoggingTtyConnector {
-
+public class TcTerminalTtyConnector extends ProcessTtyConnector {
     private final List<char[]> myDataChunks = new ArrayList<>();
-    private final PtyProcess process;
-
 
 
     TcTerminalTtyConnector(String directory) throws IOException {
@@ -53,7 +45,11 @@ public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
 
     private TcTerminalTtyConnector(PtyProcess process) {
         super(process, StandardCharsets.UTF_8);
-        this.process = process;
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 
     @Override
@@ -85,19 +81,17 @@ public class TcTerminalTtyConnector extends PtyProcessTtyConnector implements Lo
 
         cmd = cmd.replaceAll("\t", " ").replaceAll(" +", " ");
         String[] command = cmd.split(" ");
-//        PtyProcessOptions options = new PtyProcessOptions(command, envs, directory, false, null, null, true, true);
 
-        if (Platform.isWindows()) {
-            return new WinPtyProcess(command, PtyUtil.toStringArray(envs), directory, true);
-        }
-        Pty pty = new Pty(false);
-        return new UnixPtyProcess(command, PtyUtil.toStringArray(envs), directory, pty, pty);
-        //return new UnixPtyProcess(command, PtyUtil.toStringArray(envs), directory, new Pty(false));
-//        return PtyProcess.exec(command, envs, null);
-    }
-
-    PtyProcess getPtyProcess() {
-        return process;
+        return new PtyProcessBuilder()
+                .setCommand(command)
+                .setEnvironment(envs)
+                .setDirectory(directory)
+                .setRedirectErrorStream(true)
+                .setWindowsAnsiColorEnabled(true)
+                .setUnixOpenTtyToPreserveOutputAfterTermination(true)
+                .setSpawnProcessUsingJdkOnMacIntel(true)
+                .setConsole(false)   // Windows only ?
+                .start();
     }
 
 }

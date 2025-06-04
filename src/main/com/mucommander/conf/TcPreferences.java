@@ -27,7 +27,6 @@ import com.mucommander.commons.conf.Configuration;
 import com.mucommander.commons.conf.ConfigurationException;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.commons.conf.ValueList;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.icon.FileIcons;
 
@@ -84,7 +83,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	 * In particular, the system tray notifier is available under Linux+Java 1.6, but it doesn't work well, so it is not
 	 * enabled by default. */
 	public static final boolean DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS = OsFamily.MAC_OS_X.isCurrent() ||
-			(OsFamily.WINDOWS.isCurrent() && JavaVersion.JAVA_1_6.isCurrentOrHigher());
+			OsFamily.WINDOWS.isCurrent();
 	/** List of encodings that are displayed in encoding selection components. */
 	public static final String  PREFERRED_ENCODINGS               = "preferred_encodings";
 

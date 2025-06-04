@@ -36,47 +36,50 @@ import com.mucommander.commons.file.util.Kernel32API;
 import com.mucommander.commons.file.util.PathUtils;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsVersion;
 import com.sun.jna.ptr.LongByReference;
 
 /**
  * TODO: update this documentation and LocalFile documentation
- * 
+ *
  * @author Arik Hadas
  */
 public class UNCFile extends ProtocolFile {
-	private static final Logger LOGGER = LoggerFactory.getLogger(UNCFile.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UNCFile.class);
 
     protected File file;
     private final FilePermissions permissions;
-    
-    /** Absolute file path, free of trailing separator */
+
+    /**
+     * Absolute file path, free of trailing separator
+     */
     protected String absPath;
 
-    /** Caches the parent folder, initially null until getParent() gets called */
+    /**
+     * Caches the parent folder, initially null until getParent() gets called
+     */
     protected AbstractFile parent;
-    /** Indicates whether the parent folder instance has been retrieved and cached or not (parent can be null) */
+    /**
+     * Indicates whether the parent folder instance has been retrieved and cached or not (parent can be null)
+     */
     protected boolean parentValueSet;
-	
-    /** Underlying Windows's path separator */
+
+    /**
+     * Underlying Windows's path separator
+     */
     public final static String SEPARATOR = "\\";
-    
+
     // Permissions can only be changed under Java 1.6 and up and are limited to 'user' access.
     // Note: 'read' and 'execute' permissions have no meaning under Windows (files are either read-only or
     // read-write) and as such can't be changed.
 
-    /** Changeable permissions mask for Java 1.6 and up, on Windows OS (any version) */
-    private static final PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS = new GroupedPermissionBits(128);   // -w------- (200 octal)
+    /**
+     * Changeable permissions mask for Java 1.6 and up, on Windows OS (any version)
+     */
+    private static final PermissionBits CHANGEABLE_PERMISSIONS = new GroupedPermissionBits(128);   // -w------- (200 octal)
 
-    /** Changeable permissions mask for Java 1.5 or below */
-    private static final PermissionBits CHANGEABLE_PERMISSIONS_JAVA_1_5 = PermissionBits.EMPTY_PERMISSION_BITS;   // --------- (0)
 
-    /** Bit mask that indicates which permissions can be changed */
-    private final static PermissionBits CHANGEABLE_PERMISSIONS = JavaVersion.JAVA_1_6.isCurrentOrHigher()
-            ?CHANGEABLE_PERMISSIONS_JAVA_1_6_WINDOWS:CHANGEABLE_PERMISSIONS_JAVA_1_5;
-    
-	/**
+    /**
      * Creates a new instance of UNCFile and a corresponding {@link File} instance.
      */
     protected UNCFile(FileURL fileURL) throws IOException {
@@ -86,13 +89,14 @@ public class UNCFile extends ProtocolFile {
     /**
      * Creates a new instance of UNCFile, using the given {@link File} if not <code>null</code>, creating a new
      * {@link File} instance otherwise.
+     *
      * @throws IOException if an I/O error occurs.
      */
     protected UNCFile(FileURL fileURL, File file) throws IOException {
         super(fileURL);
 
         if (file == null) {
-            absPath = SEPARATOR+SEPARATOR+fileURL.getHost()+fileURL.getPath().replace('/', '\\');    // Replace leading / char by \			
+            absPath = SEPARATOR + SEPARATOR + fileURL.getHost() + fileURL.getPath().replace('/', '\\');    // Replace leading / char by \
 
             // create the java.io.File instance and throw an exception if the path is not absolute.
             file = new File(absPath);
@@ -102,10 +106,10 @@ public class UNCFile extends ProtocolFile {
         }
         // the java.io.File instance was created by ls(), no need to re-create it or call the costly File#getAbsolutePath()
         else {
-            absPath = SEPARATOR+SEPARATOR+fileURL.getHost()+fileURL.getPath().replace('/', '\\');
+            absPath = SEPARATOR + SEPARATOR + fileURL.getHost() + fileURL.getPath().replace('/', '\\');
         }
-		
-		// Remove the trailing separator if present
+
+        // Remove the trailing separator if present
         if (absPath.endsWith(SEPARATOR)) {
             absPath = absPath.substring(0, absPath.length() - 1);
         }
@@ -114,25 +118,21 @@ public class UNCFile extends ProtocolFile {
         this.permissions = new UNCFilePermissions(file);
     }
 
-    /////////////////////////////////
-    // AbstractFile implementation //
-    /////////////////////////////////
-
     /**
      * Returns a <code>java.io.File</code> instance corresponding to this file.
      */
     @Override
     public Object getUnderlyingFileObject() {
-    	return file;
+        return file;
     }
 
     @Override
     public boolean isSymlink() {
-    	// At the moment symlinks under Windows (aka NTFS junction points) are not supported because java.io.File
-    	// knows nothing about them and there is no way to discriminate them. So there is no need to waste time
-    	// comparing canonical paths, just return false.
-    	// Todo: add support for .lnk files (~hard links)
-    	return false;
+        // At the moment symlinks under Windows (aka NTFS junction points) are not supported because java.io.File
+        // knows nothing about them and there is no way to discriminate them. So there is no need to waste time
+        // comparing canonical paths, just return false.
+        // Todo: add support for .lnk files (~hard links)
+        return false;
     }
 
     @Override
@@ -142,33 +142,33 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public long getLastModifiedDate() {
-    	return file.lastModified();
+        return file.lastModified();
     }
 
     @Override
     public void setLastModifiedDate(long lastModified) throws IOException {
         // java.io.File#setLastModified(long) throws an IllegalArgumentException if time is negative.
         // If specified time is negative, set it to 0 (01/01/1970).
-        if(lastModified < 0)
+        if (lastModified < 0)
             lastModified = 0;
 
-        if(!file.setLastModified(lastModified))
+        if (!file.setLastModified(lastModified))
             throw new IOException();
     }
-		
+
     @Override
     public long getSize() {
         return file.length();
     }
-	
+
     @Override
     public AbstractFile getParent() {
         // Retrieve the parent AbstractFile instance and cache it
         if (!parentValueSet) {
-            if(!isRoot()) {
+            if (!isRoot()) {
                 FileURL parentURL = getURL().getParent();
 
-                if(parentURL != null) {
+                if (parentURL != null) {
                     parent = FileFactory.getFile(parentURL);
                 }
             }
@@ -176,18 +176,18 @@ public class UNCFile extends ProtocolFile {
         }
         return parent;
     }
-	
+
     @Override
     public void setParent(AbstractFile parent) {
         this.parent = parent;
         this.parentValueSet = true;
     }
-		
+
     @Override
     public boolean exists() {
         return file.exists();
     }
-	
+
     @Override
     public FilePermissions getPermissions() {
         return permissions;
@@ -201,18 +201,18 @@ public class UNCFile extends ProtocolFile {
     @Override
     public void changePermission(int access, int permission, boolean enabled) throws IOException {
         // Only the 'user' permissions under Java 1.6 are supported
-        if(access!=USER_ACCESS || JavaVersion.JAVA_1_6.isCurrentLower())
+        if (access != USER_ACCESS)
             throw new IOException();
 
         boolean success = false;
-        if(permission==READ_PERMISSION)
+        if (permission == READ_PERMISSION)
             success = file.setReadable(enabled);
-        else if(permission==WRITE_PERMISSION)
+        else if (permission == WRITE_PERMISSION)
             success = file.setWritable(enabled);
-        else if(permission==EXECUTE_PERMISSION)
+        else if (permission == EXECUTE_PERMISSION)
             success = file.setExecutable(enabled);
 
-        if(!success)
+        if (!success)
             throw new IOException();
     }
 
@@ -265,6 +265,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -276,6 +277,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -287,6 +289,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -298,6 +301,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -309,6 +313,7 @@ public class UNCFile extends ProtocolFile {
      * Implementation notes: the returned <code>InputStream</code> uses a NIO {@link FileChannel} under the hood to
      * benefit from <code>InterruptibleChannel</code> and allow a thread waiting for an I/O to be gracefully interrupted
      * using <code>Thread#interrupt()</code>.
+     *
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -331,10 +336,10 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public void mkdir() throws IOException {
-        if(!file.mkdir())
+        if (!file.mkdir())
             throw new IOException();
     }
-	
+
     @Override
     public void renameTo(AbstractFile destFile) throws IOException {
         // Throw an exception if the file cannot be renamed to the specified destination.
@@ -353,7 +358,7 @@ public class UNCFile extends ProtocolFile {
         // special treatment.
 
         destFile = destFile.getTopAncestor();
-        File destJavaIoFile = ((UNCFile)destFile).file;
+        File destJavaIoFile = ((UNCFile) destFile).file;
 
         // This check is necessary under Windows because java.io.File#renameTo(java.io.File) does not return false
         // if the destination file is located on a different drive, contrary for example to Mac OS X where renameTo
@@ -361,31 +366,31 @@ public class UNCFile extends ProtocolFile {
         // Not doing this under Windows would mean files would get moved between drives with renameTo, which doesn't
         // allow the transfer to be monitored.
         // Note that Windows UNC paths are handled by checkRenamePrerequisites() when comparing hosts for equality.
-        if(!getRoot().equals(destFile.getRoot()))
-        	throw new IOException();
+        if (!getRoot().equals(destFile.getRoot()))
+            throw new IOException();
 
         // Windows 9x or Windows Me: Kernel32's MoveFileEx function is NOT available
-        if(OsVersion.WINDOWS_ME.isCurrentOrLower()) {
-        	// The destination file is deleted before calling java.io.File#renameTo().
-        	// Note that in this case, the atomicity of this method is not guaranteed anymore -- if
-        	// java.io.File#renameTo() fails (for whatever reason), the destination file is deleted anyway.
-        	if(destFile.exists())
-        		if(!destJavaIoFile.delete())
-        			throw new IOException();
+        if (OsVersion.WINDOWS_ME.isCurrentOrLower()) {
+            // The destination file is deleted before calling java.io.File#renameTo().
+            // Note that in this case, the atomicity of this method is not guaranteed anymore -- if
+            // java.io.File#renameTo() fails (for whatever reason), the destination file is deleted anyway.
+            if (destFile.exists())
+                if (!destJavaIoFile.delete())
+                    throw new IOException();
         }
         // Windows NT: Kernel32's MoveFileEx can be used, if the Kernel32 DLL is available.
-        else if(Kernel32.isAvailable()) {
-        	// Note: MoveFileEx is always used, even if the destination file does not exist, to avoid having to
-        	// call #exists() on the destination file which has a cost.
-        	if (!Kernel32.getInstance().MoveFileEx(absPath, destFile.getAbsolutePath(),
-        			Kernel32API.MOVEFILE_REPLACE_EXISTING|Kernel32API.MOVEFILE_WRITE_THROUGH)) {
-        		String errorMessage = Integer.toString(Kernel32.getInstance().GetLastError());
-        		// TODO: use Kernel32.FormatMessage
-        		throw new IOException("Rename using Kernel32 API failed: " + errorMessage);
-        	} else {
-        		// move successful
-        		return;
-        	}
+        else if (Kernel32.isAvailable()) {
+            // Note: MoveFileEx is always used, even if the destination file does not exist, to avoid having to
+            // call #exists() on the destination file which has a cost.
+            if (!Kernel32.getInstance().MoveFileEx(absPath, destFile.getAbsolutePath(),
+                    Kernel32API.MOVEFILE_REPLACE_EXISTING | Kernel32API.MOVEFILE_WRITE_THROUGH)) {
+                String errorMessage = Integer.toString(Kernel32.getInstance().GetLastError());
+                // TODO: use Kernel32.FormatMessage
+                throw new IOException("Rename using Kernel32 API failed: " + errorMessage);
+            } else {
+                // move successful
+                return;
+            }
         }
         // else fall back to java.io.File#renameTo
         if (!file.renameTo(destJavaIoFile)) {
@@ -395,19 +400,13 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public long getFreeSpace() throws IOException {
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher())
-            return file.getUsableSpace();
-
-        return getVolumeInfo()[1];
+        return file.getUsableSpace();
     }
-	
+
     @Override
     public long getTotalSpace() throws IOException {
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher())
-            return file.getTotalSpace();
-
-        return getVolumeInfo()[0];
-    }	
+        return file.getTotalSpace();
+    }
 
     // Unsupported file operations
 
@@ -443,14 +442,15 @@ public class UNCFile extends ProtocolFile {
 
     ////////////////////////
     // Overridden methods //
-    ////////////////////////
+
+    /// /////////////////////
 
     @Override
     public String getName() {
         // If this file has no parent, return:
         // - the drive's name under OSes with root drives such as Windows, e.g. "C:"
         // - "/" under Unix-based systems
-        if(isRoot())
+        if (isRoot())
             return absPath;
 
         return file.getName();
@@ -459,8 +459,8 @@ public class UNCFile extends ProtocolFile {
     @Override
     public String getAbsolutePath() {
         // Append separator for directories
-        if(isDirectory() && !absPath.endsWith(SEPARATOR))
-            return absPath+SEPARATOR;
+        if (isDirectory() && !absPath.endsWith(SEPARATOR))
+            return absPath + SEPARATOR;
 
         return absPath;
     }
@@ -470,7 +470,7 @@ public class UNCFile extends ProtocolFile {
     public String getCanonicalPath() {
         // This test is not necessary anymore now that 'No disk' error dialogs are disabled entirely (using Kernel32
         // DLL's SetErrorMode function). Leaving this code commented for a while in case the problem comes back.
-         
+
 //        // To avoid drive seeks and potential 'floppy drive not available' dialog under Win32
 //        // triggered by java.io.File.getCanonicalPath()
 //        if(IS_WINDOWS && guessFloppyDrive())
@@ -482,12 +482,11 @@ public class UNCFile extends ProtocolFile {
         try {
             String canonicalPath = file.getCanonicalPath();
             // Append separator for directories
-            if(isDirectory() && !canonicalPath.endsWith(SEPARATOR))
+            if (isDirectory() && !canonicalPath.endsWith(SEPARATOR))
                 canonicalPath = canonicalPath + SEPARATOR;
 
             return canonicalPath;
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             return absPath;
         }
     }
@@ -499,7 +498,7 @@ public class UNCFile extends ProtocolFile {
 
     @Override
     public AbstractFile[] ls(FilenameFilter filenameFilter) throws IOException {
-        File[] files = file.listFiles(filenameFilter==null?null:new UNCFilenameFilter(filenameFilter));
+        File[] files = file.listFiles(filenameFilter == null ? null : new UNCFilenameFilter(filenameFilter));
         if (files == null) {
             throw new IOException();
         }
@@ -510,9 +509,9 @@ public class UNCFile extends ProtocolFile {
 
             // Clone the FileURL of this file and set the child's path, this is more efficient than creating a new
             // FileURL instance from scratch.
-            FileURL childURL = (FileURL)fileURL.clone();
+            FileURL childURL = (FileURL) fileURL.clone();
 
-            childURL.setPath(addTrailingSeparator(fileURL.getPath())+file.getName());
+            childURL.setPath(addTrailingSeparator(fileURL.getPath()) + file.getName());
 
             // Retrieves an AbstractFile (LocalFile or AbstractArchiveFile) instance that's potentially already in
             // the cache, reuse this file as the file's parent, and the already-created java.io.File instance.
@@ -532,8 +531,8 @@ public class UNCFile extends ProtocolFile {
      */
     @Override
     public AbstractFile getRoot() {
-    	String[] splittedBySeparator = absPath.split("\\\\");
-    	return FileFactory.getFile(SEPARATOR + SEPARATOR + splittedBySeparator[2] + SEPARATOR + splittedBySeparator[3]);
+        String[] splittedBySeparator = absPath.split("\\\\");
+        return FileFactory.getFile(SEPARATOR + SEPARATOR + splittedBySeparator[2] + SEPARATOR + splittedBySeparator[3]);
     }
 
     /**
@@ -541,13 +540,13 @@ public class UNCFile extends ProtocolFile {
      */
     @Override
     public boolean isRoot() {
-    	return countIndexOf(absPath, "\\\\") <= 3;
+        return countIndexOf(absPath, "\\\\") <= 3;
     }
 
-	private int countIndexOf(String text, String search) {
-		return text.split(search).length - 1;
-	}
-	
+    private int countIndexOf(String text, String search) {
+        return text.split(search).length - 1;
+    }
+
     /**
      * Overridden to return the local volume on which this file is located. The returned volume is one of the volumes
      * returned by {@link LocalFile#getVolumes()}.
@@ -564,15 +563,15 @@ public class UNCFile extends ProtocolFile {
 
         String thisPath = getAbsolutePath(true);
 
-        for (int i=0; i<volumes.length; i++) {
+        for (int i = 0; i < volumes.length; i++) {
             AbstractFile volume = volumes[i];
             String volumePath = volume.getAbsolutePath(true);
 
             if (thisPath.equals(volumePath)) {
                 return this;
-            } else if(thisPath.startsWith(volumePath)) {
+            } else if (thisPath.startsWith(volumePath)) {
                 depth = PathUtils.getDepth(volumePath, volume.getSeparator());
-                if(depth>bestDepth) {
+                if (depth > bestDepth) {
                     bestDepth = depth;
                     bestMatch = i;
                 }
@@ -587,7 +586,7 @@ public class UNCFile extends ProtocolFile {
         return getRoot();
     }
 
-    
+
     /**
      * Returns the total and free space on the volume where this file resides.
      *
@@ -599,16 +598,7 @@ public class UNCFile extends ProtocolFile {
      * @throws IOException if an I/O error occurred
      */
     public long[] getVolumeInfo() throws IOException {
-        // Under Java 1.6 and up, use the (new) java.io.File methods
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            return new long[] {
-                getTotalSpace(),
-                getFreeSpace()
-            };
-        }
-
-        // Under Java 1.5 or lower, use native methods
-        return getNativeVolumeInfo();
+        return new long[] { getTotalSpace(), getFreeSpace() };
     }
 
     /**
@@ -624,84 +614,82 @@ public class UNCFile extends ProtocolFile {
         long[] dfInfo = new long[]{-1, -1};
 
         try {
-                // Use the Kernel32 DLL if it is available
-                if (Kernel32.isAvailable()) {
-                    // Retrieves the total and free space information using the GetDiskFreeSpaceEx function of the
-                    // Kernel32 API.
-                    LongByReference totalSpaceLBR = new LongByReference();
-                    LongByReference freeSpaceLBR = new LongByReference();
+            // Use the Kernel32 DLL if it is available
+            if (Kernel32.isAvailable()) {
+                // Retrieves the total and free space information using the GetDiskFreeSpaceEx function of the
+                // Kernel32 API.
+                LongByReference totalSpaceLBR = new LongByReference();
+                LongByReference freeSpaceLBR = new LongByReference();
 
-                    if(Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
-                        dfInfo[0] = totalSpaceLBR.getValue();
-                        dfInfo[1] = freeSpaceLBR.getValue();
-                    }
-                    else {
-                        LOGGER.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
-                    }
+                if (Kernel32.getInstance().GetDiskFreeSpaceEx(absPath, null, totalSpaceLBR, freeSpaceLBR)) {
+                    dfInfo[0] = totalSpaceLBR.getValue();
+                    dfInfo[1] = freeSpaceLBR.getValue();
+                } else {
+                    LOGGER.warn("Call to GetDiskFreeSpaceEx failed, absPath={}", absPath);
                 }
-                // Otherwise, parse the output of 'dir "filePath"' command to retrieve free space information, if
-                // running Window NT or higher.
-                // Note: no command invocation under Windows 95/98/Me, because it causes a shell window to
-                // appear briefly every time this method is called (See ticket #63).
-                else if (OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
-                    // 'dir' command returns free space on the last line
-                    Process process = Runtime.getRuntime().exec(
-                            (OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT)>=0 ? "cmd /c" : "command.com /c")
-                            + " dir \""+absPath+"\"");
+            }
+            // Otherwise, parse the output of 'dir "filePath"' command to retrieve free space information, if
+            // running Window NT or higher.
+            // Note: no command invocation under Windows 95/98/Me, because it causes a shell window to
+            // appear briefly every time this method is called (See ticket #63).
+            else if (OsVersion.WINDOWS_NT.isCurrentOrHigher()) {
+                // 'dir' command returns free space on the last line
+                Process process = Runtime.getRuntime().exec(
+                        (OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT) >= 0 ? "cmd /c" : "command.com /c")
+                                + " dir \"" + absPath + "\"");
 
-                    // Check that the process was correctly started
-                    if (process!=null) {
-                        br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line;
-                        String lastLine = null;
-                        // Retrieves last line of dir
-                        while((line=br.readLine())!=null) {
-                            if(!line.trim().isEmpty())
-                                lastLine = line;
-                        }
+                // Check that the process was correctly started
+                if (process != null) {
+                    br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    String lastLine = null;
+                    // Retrieves last line of dir
+                    while ((line = br.readLine()) != null) {
+                        if (!line.trim().isEmpty())
+                            lastLine = line;
+                    }
 
-                        // Last dir line may look like something this (might vary depending on system's language, below in French):
-                        // 6 Rep(s)  14 767 521 792 octets libres
-                        if (lastLine != null) {
-                            StringTokenizer st = new StringTokenizer(lastLine, " \t\n\r\f,.");
-                            // Discard first token
-                            st.nextToken();
+                    // Last dir line may look like something this (might vary depending on system's language, below in French):
+                    // 6 Rep(s)  14 767 521 792 octets libres
+                    if (lastLine != null) {
+                        StringTokenizer st = new StringTokenizer(lastLine, " \t\n\r\f,.");
+                        // Discard first token
+                        st.nextToken();
 
-                            // Concatenates as many contiguous groups of numbers
-                            String token;
-                            String freeSpace = "";
-                            while(st.hasMoreTokens()) {
-                                token = st.nextToken();
-                                char c = token.charAt(0);
-                                if (c >= '0' && c <= '9') {
-                                    freeSpace += token;
-                                } else if(!freeSpace.isEmpty()) {
-                                    break;
-                                }
+                        // Concatenates as many contiguous groups of numbers
+                        String token;
+                        String freeSpace = "";
+                        while (st.hasMoreTokens()) {
+                            token = st.nextToken();
+                            char c = token.charAt(0);
+                            if (c >= '0' && c <= '9') {
+                                freeSpace += token;
+                            } else if (!freeSpace.isEmpty()) {
+                                break;
                             }
-
-                            dfInfo[1] = Long.parseLong(freeSpace);
                         }
+
+                        dfInfo[1] = Long.parseLong(freeSpace);
                     }
                 }
+            }
         } finally {
             if (br != null) {
-                try { br.close(); } catch(IOException ignored) {}
+                try {
+                    br.close();
+                } catch (IOException ignored) {
+                }
             }
         }
 
         return dfInfo;
     }
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     /**
      * A Permissions implementation for LocalFile.
      */
     private static class UNCFilePermissions extends IndividualPermissionBits implements FilePermissions {
-        
+
         private final java.io.File file;
 
         // Permissions are limited to the user access type. Executable permission flag is only available under Java 1.6
@@ -709,15 +697,10 @@ public class UNCFile extends ProtocolFile {
         // Note: 'read' and 'execute' permissions have no meaning under Windows (files are either read-only or
         // read-write), but we return default values.
 
-        /** Mask for supported permissions under Java 1.6 */
-        private static final PermissionBits JAVA_1_6_PERMISSIONS = new GroupedPermissionBits(448);   // rwx------ (700 octal)
-
-        /** Mask for supported permissions under Java 1.5 */
-        private static final PermissionBits JAVA_1_5_PERMISSIONS = new GroupedPermissionBits(384);   // rw------- (300 octal)
-
-        private final static PermissionBits MASK = JavaVersion.JAVA_1_6.isCurrentOrHigher()
-                ?JAVA_1_6_PERMISSIONS
-                :JAVA_1_5_PERMISSIONS;
+        /**
+         * Mask for supported permissions under Java 1.6
+         */
+        private final static PermissionBits MASK = new GroupedPermissionBits(448);   // rwx------ (700 octal)
 
         private UNCFilePermissions(java.io.File file) {
             this.file = file;
@@ -755,14 +738,14 @@ public class UNCFile extends ProtocolFile {
             if (getBitValue(USER_ACCESS, EXECUTE_PERMISSION)) {
                 userPerms |= EXECUTE_PERMISSION;
             }
-            return userPerms<<6;
+            return userPerms << 6;
         }
 
         public PermissionBits getMask() {
             return MASK;
         }
     }
-    
+
     /**
      * Turns a {@link FilenameFilter} into a {@link java.io.FilenameFilter}.
      */

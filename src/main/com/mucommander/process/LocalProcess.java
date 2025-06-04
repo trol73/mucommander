@@ -82,15 +82,14 @@ public class LocalProcess extends AbstractProcess {
         return newTokens;
     }
 
-    // - Implementation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the current JRE version supports merged <code>java.lang.Process</code> streams.
      * @return <code>true</code> if the current JRE version supports merged <code>java.lang.Process</code> streams, <code>false</code> otherwise.
      */
     @Override
     public boolean usesMergedStreams() {
-        return JavaVersion.JAVA_1_5.isCurrentOrHigher();
+        // TODO remove it
+        return true;//JavaVersion.JAVA_1_5.isCurrentOrHigher();
     }
 
     /**

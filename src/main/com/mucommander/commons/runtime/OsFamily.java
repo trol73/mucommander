@@ -119,6 +119,13 @@ public enum OsFamily {
         return System.getProperty("os.name");
     }
 
+    public static String getRawOsArch() {
+        return System.getProperty("os.arch");
+    }
+
+    public static boolean isAarch64() {
+        return "aarch64".equals(getRawOsArch());
+    }
     /**
      * Returns an <code>OsFamily</code> instance corresponding to the specified system property's value.
      *

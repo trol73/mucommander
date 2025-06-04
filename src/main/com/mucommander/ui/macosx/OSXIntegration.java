@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.macosx;
 
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.TcConfigurations;
@@ -68,11 +67,7 @@ public class OSXIntegration {
 
         // Catch 'About', 'Preferences' and 'Quit' events
         try {
-            if (JavaVersion.JAVA_1_9.isCurrentOrHigher()) {
-                new Java9DesktopHandler();
-            } else {
-                new EAWTHandler();
-            }
+            new EAWTHandler();
         } catch (Throwable t) {
             t.printStackTrace();
         }

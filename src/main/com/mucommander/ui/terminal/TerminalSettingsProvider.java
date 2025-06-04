@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2020 Oleg Trifonov
+ * Copyright (C) 2013-2025 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import com.jediterm.terminal.TextStyle;
 import com.jediterm.terminal.ui.settings.DefaultSettingsProvider;
 import com.mucommander.ui.theme.Theme;
 import com.mucommander.ui.theme.ThemeManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -34,17 +35,17 @@ import java.awt.Font;
 public class TerminalSettingsProvider extends DefaultSettingsProvider {
 
     @Override
-    public TextStyle getDefaultStyle() {
+    @NotNull public TextStyle getDefaultStyle() {
         Color fg = ThemeManager.getCurrentColor(Theme.TERMINAL_FOREGROUND_COLOR);
         Color bg = ThemeManager.getCurrentColor(Theme.TERMINAL_BACKGROUND_COLOR);
-        return new TextStyle(TerminalColor.awt(fg), TerminalColor.awt(bg));
+        return new TextStyle(colorFromAwt(fg), colorFromAwt(bg));
     }
 
     @Override
-    public TextStyle getSelectionColor() {
+    @NotNull public TextStyle getSelectionColor() {
         Color fg = ThemeManager.getCurrentColor(Theme.TERMINAL_SELECTED_FOREGROUND_COLOR);
         Color bg = ThemeManager.getCurrentColor(Theme.TERMINAL_SELECTED_BACKGROUND_COLOR);
-        return new TextStyle(TerminalColor.awt(fg), TerminalColor.awt(bg));
+        return new TextStyle(colorFromAwt(fg), colorFromAwt(bg));
     }
 
     @Override
@@ -61,4 +62,7 @@ public class TerminalSettingsProvider extends DefaultSettingsProvider {
         return false;
     }
 
+    private static TerminalColor colorFromAwt(Color color) {
+        return TerminalColor.rgb(color.getRed(), color.getGreen(), color.getBlue());
+    }
 }

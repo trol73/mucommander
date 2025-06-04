@@ -22,7 +22,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
-import com.mucommander.desktop.osx.OSXTerminal;
+import com.mucommander.desktop.macos.OSXTerminal;
 import com.mucommander.process.ExecutorUtils;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.EditAction;

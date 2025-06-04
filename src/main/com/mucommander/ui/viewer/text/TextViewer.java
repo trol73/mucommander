@@ -106,7 +106,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
         super.setFrame(frame);
         textEditorImpl.setFrame(frame);
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK), CUSTOM_FULL_SCREEN_EVENT);
     }
 
 
@@ -347,8 +347,7 @@ public class TextViewer extends FileViewer implements EncodingListener {
             if (current instanceof TextArea) {
                 return (TextArea)current;
             }
-            if (current instanceof Container) {
-                Container container = (Container)current;
+            if (current instanceof Container container) {
                 stack.addAll(Arrays.asList(container.getComponents()));
             }
         }

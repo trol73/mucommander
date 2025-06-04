@@ -19,7 +19,6 @@ package com.mucommander.ui.viewer.hex;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.runtime.OsFamily;
-import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.theme.ThemeId;
@@ -82,7 +81,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     }
 
     private int getCtrlOrMetaMask() {
-        return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
+        return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
     }
 
     private OnOffsetChangeListener onOffsetChangeListener = new OnOffsetChangeListener() {

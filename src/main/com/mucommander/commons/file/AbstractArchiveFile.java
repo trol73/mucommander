@@ -87,6 +87,9 @@ public abstract class AbstractArchiveFile extends ProxyFile {
      * need to be reloaded */
     private long entryTreeDate;
 
+    /** The password to use for a password-protected archive */
+    protected String password;
+
     /** Caches {@link AbstractArchiveEntryFile} instances so that there is only one AbstractArchiveEntryFile
      * corresponding to the same entry at any given time, to avoid attribute inconsistencies. The key is the
      * corresponding ArchiveEntry. */
@@ -524,6 +527,14 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         checkEntriesTree();
 
         return ls(entryTreeRoot, this, null, filter);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     // Note: do not override #isDirectory() to always return true, as AbstractArchiveFile instances may be created when

@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.desktop.gnome.ConfiguredGnomeDesktopAdapter;
 import com.mucommander.desktop.gnome.GuessedGnomeDesktopAdapter;
 import com.mucommander.desktop.kde.ConfiguredKde3DesktopAdapter;
@@ -41,7 +40,7 @@ import com.mucommander.desktop.kde.ConfiguredKde4DesktopAdapter;
 import com.mucommander.desktop.kde.GuessedKde3DesktopAdapter;
 import com.mucommander.desktop.kde.GuessedKde4DesktopAdapter;
 import com.mucommander.desktop.openvms.OpenVMSDesktopAdapter;
-import com.mucommander.desktop.osx.OSXDesktopAdapter;
+import com.mucommander.desktop.macos.OSXDesktopAdapter;
 import com.mucommander.desktop.windows.Win9xDesktopAdapter;
 import com.mucommander.desktop.windows.WinNtDesktopAdapter;
 import com.mucommander.desktop.xfce.GuessedXfceDesktopAdapter;
@@ -180,10 +179,8 @@ public class DesktopManager {
         //   operations are user configurable).
         // - they are executed before any other operations (if available, they will
         //   provide safer and better integration than any other operation).
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            innerRegisterOperation(OPEN,   SYSTEM_OPERATION,  new InternalOpen());
-            innerRegisterOperation(BROWSE, SYSTEM_OPERATION,  new InternalBrowse());
-        }
+        innerRegisterOperation(OPEN,   SYSTEM_OPERATION,  new InternalOpen());
+        innerRegisterOperation(BROWSE, SYSTEM_OPERATION,  new InternalBrowse());
 
         // Registers CommandXXX operations.
         innerRegisterOperation(BROWSE,               SYSTEM_OPERATION,    new CommandBrowse());

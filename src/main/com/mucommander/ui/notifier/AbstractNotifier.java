@@ -55,7 +55,7 @@ public abstract class AbstractNotifier {
         // Finds and creates a suitable AbstractNotifier instance for the platform, if there is one
         if (OsFamily.MAC_OS_X.isCurrent()) {
             notifier = new GrowlNotifier();
-        } else if (JavaVersion.JAVA_1_6.isCurrentOrHigher() && SystemTray.isSupported()) {
+        } else if (SystemTray.isSupported()) {
             notifier = new SystemTrayNotifier();
         }
     }

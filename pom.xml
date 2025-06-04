@@ -22,10 +22,10 @@
 		</developer>
 	</developers>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 		<encoding>UTF-8</encoding>
-		<source.java.version>1.8</source.java.version>
-		<target.java.version>1.8</target.java.version>
+		<source.java.version>21</source.java.version>
+		<target.java.version>21</target.java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<github.user>trol73</github.user>
@@ -41,7 +41,7 @@
 		<guava.version>17.0</guava.version>
 		<protobuf.version>2.4.1</protobuf.version>
 		<lucene.version>7.1.0</lucene.version>
-		<slf4j.version>1.6.4</slf4j.version>
+		<slf4j.version>2.0.17</slf4j.version>
 	</properties>
 
 	<scm>
@@ -72,27 +72,45 @@
 			<scope>system</scope>
 			<systemPath>${libs.path}/javadjvu.jar</systemPath>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>jediterm</groupId>
 			<artifactId>jediterm-pty</artifactId>
 			<version>2.0</version>
 			<scope>system</scope>
-			<systemPath>${libs.path}/jediterm-pty-2.0.jar</systemPath>
+			<systemPath>${libs.path}/JediTerm-3.53-SNAPSHOT.jar</systemPath>
 		</dependency>
+-->
+		<dependency>
+			<groupId>org.jetbrains.jediterm</groupId>
+			<artifactId>jediterm-core</artifactId>
+			<version>3.53</version>
+			<scope>system</scope>
+			<systemPath>${libs.path}/jediterm-core-3.53-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.jediterm</groupId>
+			<artifactId>jediterm-ui</artifactId>
+			<version>3.53</version>
+			<scope>system</scope>
+			<systemPath>${libs.path}/jediterm-ui-3.53-SNAPSHOT.jar</systemPath>
+		</dependency>
+
 		<dependency>
 			<groupId>jediterm</groupId>
 			<artifactId>purejavacomm</artifactId>
 			<version>0.0.22</version>
 			<scope>system</scope>
-			<systemPath>${libs.runtime.path}/jediterm/purejavacomm-0.0.22.jar</systemPath>
+			<systemPath>${libs.runtime.path}/jediterm/purejavacomm.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>pty4j</groupId>
+			<groupId>org.jetbrains.pty4j</groupId>
 			<artifactId>pty4j</artifactId>
-			<version>0.3</version>
+			<version>0.13.4</version>
 			<scope>system</scope>
-			<systemPath>${libs.runtime.path}/jediterm/pty4j-0.11.3.jar</systemPath>
+			<systemPath>${libs.runtime.path}/jediterm/pty4j-0.13.4.jar</systemPath>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>pty4j</groupId>
 			<artifactId>pty4j-native</artifactId>
@@ -100,6 +118,7 @@
 			<scope>system</scope>
 			<systemPath>${libs.path}/pty4j-native.jar</systemPath>
 		</dependency>
+-->
 <!--		
         	<dependency>
 			<groupId>org.icepdf</groupId>
@@ -292,12 +311,12 @@
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna-platform</artifactId>
-			<version>4.2.0</version>
+			<version>5.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
-			<version>4.2.0</version>
+			<version>5.13.0</version>
 		</dependency>
 		<!-- <dependency> <groupId>com.sun.jna</groupId> <artifactId>jna</artifactId> 
 			<version>3.0.9</version> </dependency> <dependency> <groupId>net.java.dev.jna</groupId> 
@@ -699,10 +718,10 @@
 				<artifactId>osxappbundle-maven-plugin</artifactId>
 				<version>1.0-alpha-2</version>
 				<configuration>
-					<bundleName>muCommander</bundleName>
-					<mainClass>com.mucommander.Launcher</mainClass>
+					<bundleName>trolCommander</bundleName>
+					<mainClass>com.mucommander.TrolCommander</mainClass>
 					<iconFile>src/main/resources/icon.icns</iconFile>
-					<jvmVersion>1.7+</jvmVersion>
+					<jvmVersion>21+</jvmVersion>
 				</configuration>
 				<!--<executions> -->
 				<!--<execution> -->

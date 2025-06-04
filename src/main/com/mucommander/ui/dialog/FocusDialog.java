@@ -188,7 +188,7 @@ System.out.println("  " + monitorBounds.width + 'x' + monitorBounds.height + "  
 		
         // Maps the dispose action to the 'Apple+W' keystroke under Mac OS X
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK), CUSTOM_DISPOSE_EVENT);
         }
 
         // Under Windows, Alt+F4 automatically disposes the dialog, nothing to do

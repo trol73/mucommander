@@ -18,6 +18,7 @@
 
 package com.mucommander.ui.text;
 
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
@@ -30,12 +31,11 @@ import com.mucommander.commons.runtime.OsFamily;
  * @author Arik Hadas, Maxence Bernard
  */
 public class KeyStrokeUtils {
+    private final static String SHIFT_MODIFIER_STRING = InputEvent.getModifiersExText(KeyEvent.SHIFT_DOWN_MASK);
+    private final static String CTRL_MODIFIER_STRING  = InputEvent.getModifiersExText(KeyEvent.CTRL_DOWN_MASK);
+    private final static String ALT_MODIFIER_STRING   = InputEvent.getModifiersExText(KeyEvent.ALT_DOWN_MASK);
+    private final static String META_MODIFIER_STRING  = InputEvent.getModifiersExText(KeyEvent.META_DOWN_MASK);
 
-	private final static String SHIFT_MODIFIER_STRING = KeyEvent.getKeyModifiersText(KeyEvent.SHIFT_MASK);
-    private final static String CTRL_MODIFIER_STRING  = KeyEvent.getKeyModifiersText(KeyEvent.CTRL_MASK);
-    private final static String ALT_MODIFIER_STRING   = KeyEvent.getKeyModifiersText(KeyEvent.ALT_MASK);
-    private final static String META_MODIFIER_STRING  = KeyEvent.getKeyModifiersText(KeyEvent.META_MASK);
-    
 	
     /**
      * Returns a String representation for the given KeyStroke for display, in the following format:<br>
@@ -93,26 +93,26 @@ public class KeyStrokeUtils {
     public static String getModifiersDisplayableRepresentation(int modifiers) {
         StringBuilder result = new StringBuilder();
 
-        if ((modifiers&KeyEvent.SHIFT_MASK) != 0) {
+        if ((modifiers&KeyEvent.SHIFT_DOWN_MASK) != 0) {
             result.append(SHIFT_MODIFIER_STRING);
         }
 
-        if ((modifiers&KeyEvent.CTRL_MASK) != 0) {
+        if ((modifiers&KeyEvent.CTRL_DOWN_MASK) != 0) {
             appendModifier(result, CTRL_MODIFIER_STRING);
         }
 
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            if ((modifiers&KeyEvent.ALT_MASK) != 0) {
+            if ((modifiers&KeyEvent.ALT_DOWN_MASK) != 0) {
                 appendModifier(result, ALT_MODIFIER_STRING);
             }
-            if ((modifiers&KeyEvent.META_MASK) != 0) {
+            if ((modifiers&KeyEvent.META_DOWN_MASK) != 0) {
                 appendModifier(result, META_MODIFIER_STRING);
             }
         } else {
-            if ((modifiers&KeyEvent.META_MASK) != 0) {
+            if ((modifiers&KeyEvent.META_DOWN_MASK) != 0) {
                 appendModifier(result, META_MODIFIER_STRING);
             }
-            if ((modifiers&KeyEvent.ALT_MASK) != 0) {
+            if ((modifiers&KeyEvent.ALT_DOWN_MASK) != 0) {
                 appendModifier(result, ALT_MODIFIER_STRING);
             }
         }
@@ -121,7 +121,7 @@ public class KeyStrokeUtils {
     }
 
     private static void appendModifier(StringBuilder sb, String s) {
-        if (sb.length() != 0) {
+        if (!sb.isEmpty()) {
             sb.append('+');
         }
         sb.append(s);

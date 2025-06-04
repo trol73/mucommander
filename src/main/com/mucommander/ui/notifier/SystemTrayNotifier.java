@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.ui.action.AwtActionProxy;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.TcAction;
@@ -105,7 +104,7 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
     public boolean setEnabled(boolean enabled) {
         if (enabled) {
             // No need to bother if the current Java runtime version is not 1.6 or up, or if SystemTray is not available
-            if (JavaVersion.JAVA_1_6.isCurrentLower() || !SystemTray.isSupported()) {
+            if (!SystemTray.isSupported()) {
                 return false;
             }
 
@@ -196,20 +195,13 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
     }
 
 
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
         LOGGER.trace("caught SystemTray ActionEvent");
 
         WindowManager.getCurrentMainFrame().toFront();
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     protected void finalize() throws Throwable {

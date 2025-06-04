@@ -39,9 +39,9 @@ import java.awt.event.*;
 public class KeyboardShortcutChooser extends JPanel implements ItemListener, ComboBoxListener, FocusListener, KeyListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KeyboardShortcutChooser.class);
 	
-    private JTextField textField;
-    private JCheckBox modifierCheckBoxes[];
-    private SaneComboBox<KeyChoice> keyComboBox;
+    private final JTextField textField;
+    private final JCheckBox[] modifierCheckBoxes;
+    private final SaneComboBox<KeyChoice> keyComboBox;
 
     private KeyStroke currentKeyStroke;
 
@@ -49,7 +49,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
     private boolean updatingComboBox;
     private boolean updatingCheckBoxes;
 
-    private String noneString = "<"+Translator.get("none")+">";
+    private final String noneString = "<"+Translator.get("none")+">";
 
     private final static int KEY_CHOICES[] = new int[] {
         KeyEvent.VK_ESCAPE, KeyEvent.VK_TAB, KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ENTER,
@@ -65,11 +65,11 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
     };
 
 
-    private final static int MODIFIER_TABLE[] = {
-        KeyEvent.SHIFT_MASK,
-        KeyEvent.CTRL_MASK,
-        KeyEvent.ALT_MASK,
-        KeyEvent.META_MASK
+    private final static int[] MODIFIER_TABLE = {
+        KeyEvent.SHIFT_DOWN_MASK,
+        KeyEvent.CTRL_DOWN_MASK,
+        KeyEvent.ALT_DOWN_MASK,
+        KeyEvent.META_DOWN_MASK
     };
 
     private final static Color FOCUSED_TEXT_FIELD_FOREGROUND = Color.BLACK;
@@ -115,7 +115,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         modifierCheckBoxes = new JCheckBox[MODIFIER_TABLE.length];
         for (int i = 0; i <  MODIFIER_TABLE.length; i++) {
             @MagicConstant(flagsFromClass = java.awt.event.InputEvent.class) int modifier = MODIFIER_TABLE[i];
-            modifierCheckBoxes[i] = new JCheckBox(KeyEvent.getKeyModifiersText(modifier));
+            modifierCheckBoxes[i] = new JCheckBox(InputEvent.getModifiersExText(modifier));
             flowPanel.add(modifierCheckBoxes[i]);
             modifierCheckBoxes[i].addItemListener(this);
         }
@@ -204,11 +204,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
     }
 
-
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
-
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
         if (!updatingCheckBoxes) {
             updateKeyStroke();
@@ -216,11 +212,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         }
     }
 
-
-    /////////////////////////////////////
-    // ComboBoxListener implementation //
-    /////////////////////////////////////
-
+    @Override
     public void comboBoxSelectionChanged(SaneComboBox source) {
         if (!updatingComboBox) {
             updateKeyStroke();
@@ -229,25 +221,19 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
     }
 
 
-    //////////////////////////////////
-    // FocusListener implementation //
-    //////////////////////////////////
-
+    @Override
     public void focusGained(FocusEvent focusEvent) {
         textField.setText("");
         textField.setForeground(FOCUSED_TEXT_FIELD_FOREGROUND);
     }
 
+    @Override
     public void focusLost(FocusEvent focusEvent) {
         textField.setForeground(UNFOCUSED_TEXT_FIELD_FOREGROUND);
         updateTextField();
     }
 
-
-    ////////////////////////////////
-    // KeyListener implementation //
-    ////////////////////////////////
-
+    @Override
     public void keyPressed(KeyEvent keyEvent) {
         LOGGER.trace("keyModifiers="+keyEvent.getModifiers()+" keyCode="+keyEvent.getKeyCode());
 
@@ -263,16 +249,15 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
         updateTextField();
     }
 
+    @Override
     public void keyReleased(KeyEvent keyEvent) {
     }
 
+    @Override
     public void keyTyped(KeyEvent keyEvent) {
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     private static class KeyChoice {
         private int keyValue;

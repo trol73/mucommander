@@ -2,7 +2,6 @@ package com.mucommander.commons.file.impl.s3;
 
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.io.RandomAccessOutputStream;
-import com.mucommander.commons.runtime.JavaVersion;
 import org.jets3t.service.Constants;
 import org.jets3t.service.S3ObjectsChunk;
 import org.jets3t.service.S3Service;
@@ -29,7 +28,7 @@ public abstract class S3File extends ProtocolFile {
 
         this.service = service;
     }
-    
+
     protected IOException getIOException(S3ServiceException e) throws IOException {
         return getIOException(e, fileURL);
     }
@@ -38,21 +37,18 @@ public abstract class S3File extends ProtocolFile {
         handleAuthException(e, fileURL);
 
         Throwable cause = e.getCause();
-        if(cause instanceof IOException)
-            return (IOException)cause;
+        if (cause instanceof IOException)
+            return (IOException) cause;
 
-        if(JavaVersion.JAVA_1_6.isCurrentOrHigher())
-            return new IOException(e);
-
-        return new IOException(e.getMessage());
+        return new IOException(e);
     }
 
     protected static void handleAuthException(S3ServiceException e, FileURL fileURL) throws AuthException {
         int code = e.getResponseCode();
-        if(code==401 || code==403)
+        if (code == 401 || code == 403)
             throw new AuthException(fileURL);
     }
-    
+
     protected AbstractFile[] listObjects(String bucketName, String prefix, S3File parent) throws IOException {
         try {
             S3ObjectsChunk chunk = service.listObjectsChunked(bucketName, prefix, "/", Constants.DEFAULT_OBJECT_LIST_CHUNK_SIZE, null, true);
@@ -64,18 +60,18 @@ public abstract class S3File extends ProtocolFile {
                 throw new IOException();
             }
 
-            AbstractFile[] children = new AbstractFile[objects.length+commonPrefixes.length];
+            AbstractFile[] children = new AbstractFile[objects.length + commonPrefixes.length];
             FileURL childURL;
             int i = 0;
             String objectKey;
 
-            for(org.jets3t.service.model.S3Object object : objects) {
+            for (org.jets3t.service.model.S3Object object : objects) {
                 // Discard the object corresponding to the prefix itself
                 objectKey = object.getKey();
-                if(objectKey.equals(prefix))
+                if (objectKey.equals(prefix))
                     continue;
 
-                childURL = (FileURL)fileURL.clone();
+                childURL = (FileURL) fileURL.clone();
                 childURL.setPath(bucketName + "/" + objectKey);
 
                 children[i] = FileFactory.getFile(childURL, parent, service, object);
@@ -83,8 +79,8 @@ public abstract class S3File extends ProtocolFile {
             }
 
             org.jets3t.service.model.S3Object directoryObject;
-            for(String commonPrefix : commonPrefixes) {
-                childURL = (FileURL)fileURL.clone();
+            for (String commonPrefix : commonPrefixes) {
+                childURL = (FileURL) fileURL.clone();
                 childURL.setPath(bucketName + "/" + commonPrefix);
 
                 directoryObject = new org.jets3t.service.model.S3Object(commonPrefix);
@@ -98,7 +94,7 @@ public abstract class S3File extends ProtocolFile {
             // Trim the array if an object was discarded.
             // Note: Having to recreate an array sucks (puts pressure on the GC), but I haven't found a reliable way
             // to know in advance whether the prefix will appear in the results or not.
-            if(i<children.length) {
+            if (i < children.length) {
                 AbstractFile[] childrenTrimmed = new AbstractFile[i];
                 System.arraycopy(children, 0, childrenTrimmed, 0, i);
 
@@ -106,8 +102,7 @@ public abstract class S3File extends ProtocolFile {
             }
 
             return children;
-        }
-        catch(S3ServiceException e) {
+        } catch (S3ServiceException e) {
             throw getIOException(e);
         }
     }
@@ -115,24 +110,25 @@ public abstract class S3File extends ProtocolFile {
 
     //////////////////////
     // Abstract methods //
-    //////////////////////
+
+    /// ///////////////////
 
     public abstract FileAttributes getFileAttributes();
 
 
     /////////////////////////////////
     // ProtocolFile implementation //
-    /////////////////////////////////
+
+    /// //////////////////////////////
 
     @Override
     public AbstractFile getParent() {
-        if(!parentSet) {
+        if (!parentSet) {
             FileURL parentFileURL = this.fileURL.getParent();
-            if(parentFileURL!=null) {
+            if (parentFileURL != null) {
                 try {
                     parent = FileFactory.getFile(parentFileURL, null, service);
-                }
-                catch(IOException e) {
+                } catch (IOException e) {
                     // No parent
                 }
             }
@@ -181,7 +177,7 @@ public abstract class S3File extends ProtocolFile {
     public Object getUnderlyingFileObject() {
         return getFileAttributes();
     }
-    
+
 
     // Unsupported operations, no matter the kind of resource (object, bucket, service)
 

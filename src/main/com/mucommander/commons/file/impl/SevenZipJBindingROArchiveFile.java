@@ -3,8 +3,15 @@ package com.mucommander.commons.file.impl;
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.sevenzip.SevenZipArchiveFile.ExtractCallback;
 import com.mucommander.commons.file.impl.sevenzip.SignatureCheckedRandomAccessFile;
+import com.mucommander.commons.file.impl.sevenzip.multivolume.InArchiveWrapper;
+import com.mucommander.commons.file.impl.sevenzip.multivolume.SevenZipMultiVolumeCallbackHandler;
+import com.mucommander.commons.file.impl.sevenzip.multivolume.SevenZipRarMultiVolumeCallbackHandler;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.CircularByteBuffer;
 import net.sf.sevenzipjbinding.*;
+import net.sf.sevenzipjbinding.impl.VolumedArchiveInStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,9 +19,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
-   
+    private static final Logger LOGGER = LoggerFactory.getLogger(SevenZipJBindingROArchiveFile.class);
+
+    private static final Pattern MULTI_PART_RAR_PATTERN = Pattern.compile("[.]part\\d+[.]rar");
+
+    private static final String MULTI_PART_7Z_EXT = ".7z.001";
+
+   private static volatile boolean libraryInit = false;
     protected IInArchive inArchive;
     private ArchiveFormat sevenZipJBindingFormat;
     private final SevenZipArchiveFormatDetector formatDetector;
@@ -34,6 +48,7 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
         this.sevenZipJBindingFormat = sevenZipJBindingFormat;
         this.formatSignature = formatSignature;
         this.formatDetector = null;
+        initSevenZipBindings();
     }
 
     public SevenZipJBindingROArchiveFile(AbstractFile file, SevenZipArchiveFormatDetector formatDetector) {
@@ -41,19 +56,97 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
         this.sevenZipJBindingFormat = null;
         this.formatSignature = new byte[] {};
         this.formatDetector = formatDetector;
+        initSevenZipBindings();
     }
 
 
+    private static void initSevenZipBindings() {
+        if (!libraryInit) {
+            synchronized (SevenZipJBindingROArchiveFile.class) {
+                try {
+                    if (OsFamily.getCurrent() == OsFamily.MAC_OS_X && OsFamily.isAarch64()) {
+                        SevenZip.initSevenZipFromPlatformJAR("Mac-arm64");
+                    } else {
+                        SevenZip.initSevenZipFromPlatformJAR();
+                    }
+                    libraryInit = true;
+                } catch (SevenZipNativeInitializationException ex) {
+                    throw new RuntimeException("Unable to init 7-Zip-JBinding library bindings", ex);
+                }
+            }
+        }
+    }
+
+//    private IInArchive openInArchive() throws IOException {
+//        if (inArchive == null) {
+//            if (formatDetector != null) {
+//                sevenZipJBindingFormat = formatDetector.detect(file);
+//            }
+//            SignatureCheckedRandomAccessFile in = new SignatureCheckedRandomAccessFile(file, formatSignature);
+//            inArchive = SevenZip.openInArchive(sevenZipJBindingFormat, in);
+//        }
+//        return inArchive;
+//    }
+
+    /**
+     * Open the file and check its signature compared to the one provided in {@link #SevenZipJBindingROArchiveFile(AbstractFile, ArchiveFormat, byte[])}
+     * @return this {@code SevenZipJBindingROArchiveFile} instance when file signature matches the specified signature
+     * @throws IOException in case the file cannot be opened or its signature differs from the specified signature
+     */
+    public SevenZipJBindingROArchiveFile check() throws IOException {
+        openInArchive();
+        return this;
+    }
 
     private IInArchive openInArchive() throws IOException {
         if (inArchive == null) {
-            if (formatDetector != null) {
-                sevenZipJBindingFormat = formatDetector.detect(file);
+            boolean multiPartRar = MULTI_PART_RAR_PATTERN.matcher(file.getName()).find();
+            boolean multiPartSevenZip = file.getName().toLowerCase().endsWith(MULTI_PART_7Z_EXT);
+
+
+//            if (formatDetector != null) {
+//                sevenZipJBindingFormat = formatDetector.detect(file);
+//            }
+//            SignatureCheckedRandomAccessFile in = new SignatureCheckedRandomAccessFile(file, formatSignature);
+//            inArchive = SevenZip.openInArchive(sevenZipJBindingFormat, in);
+
+            if (multiPartRar) {
+                SevenZipRarMultiVolumeCallbackHandler handler = new SevenZipRarMultiVolumeCallbackHandler(formatSignature, password);
+                IInStream firstStream = handler.getStream(file.getAbsolutePath());
+                IInArchive tmpInArchive = SevenZip.openInArchive(sevenZipJBindingFormat, firstStream, handler);
+                inArchive = new InArchiveWrapper(tmpInArchive, handler);
+            } else if (multiPartSevenZip) {
+                SevenZipMultiVolumeCallbackHandler handler = new SevenZipMultiVolumeCallbackHandler(formatSignature, file, password);
+                IInArchive tmpInArchive = SevenZip.openInArchive(sevenZipJBindingFormat, new VolumedArchiveInStream(handler));
+                if (isEnc(tmpInArchive) && password == null) {
+                    // Throwing this exception to trigger password dialog
+                    throw new IOException(String.format("Password protected file but password is null [file = %s]", file.getName()));
+                }
+                inArchive = new InArchiveWrapper(tmpInArchive, handler);
+            } else {
+                SignatureCheckedRandomAccessFile in = new SignatureCheckedRandomAccessFile(file, formatSignature);
+                IInArchive tmpInArchive = SevenZip.openInArchive(sevenZipJBindingFormat, in, password);
+                inArchive = new InArchiveWrapper(tmpInArchive, in);
             }
-            SignatureCheckedRandomAccessFile in = new SignatureCheckedRandomAccessFile(file, formatSignature);
-            inArchive = SevenZip.openInArchive(sevenZipJBindingFormat, in);
         }
         return inArchive;
+    }
+
+    private boolean isEnc(IInArchive archive) {
+        try {
+            if (Boolean.TRUE.equals(archive.getArchiveProperty(PropID.ENCRYPTED))) {
+                return true;
+            }
+
+            for (int i = 0; i < archive.getNumberOfItems(); i++) {
+                if (Boolean.TRUE.equals(archive.getProperty(i, PropID.ENCRYPTED))) {
+                    return true;
+                }
+            }
+        } catch (SevenZipException e) {
+            LOGGER.error("Error checking if file is encrypted", e);
+        }
+        return false;
     }
 
     @Override
@@ -74,7 +167,7 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
                     inArchive.close();
                 }
             } catch (SevenZipException e) {
-                System.err.println("Error closing archive: " + e);
+                LOGGER.error("Error closing archive", e);
             }
             inArchive = null;
         }
@@ -91,19 +184,19 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
                     final IInArchive sevenZipFile = openInArchive();
                     sevenZipFile.extract(in, false, new ExtractCallback(inArchive, cbb.getOutputStream()));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Can't open archive", e);
                 } finally {
                     if (inArchive != null) {
                         try {
                             inArchive.close();
                         } catch (SevenZipException e) {
-                            e.printStackTrace();
+                            LOGGER.error("Can't close archive", e);
                         }
                     }
                     try {
                         cbb.getOutputStream().close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.error("Can't close outputstream", e);
                     }
                     inArchive = null;
                 }

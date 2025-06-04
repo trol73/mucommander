@@ -30,31 +30,31 @@ import org.slf4j.LoggerFactory;
  * @author Maxence Bernard, Arik Hadas
 */
 public enum JavaVersion implements ComparableRuntimeProperty {
-	/** Java 1.0.x */
-    JAVA_1_0("1.0"),
-    /** Java 1.1.x */
-    JAVA_1_1("1.1"),
-    /** Java 1.2.x */
-    JAVA_1_2("1.2"),
-    /** Java 1.3.x */
-    JAVA_1_3("1.3"),
-    /** Java 1.4.x */
-    JAVA_1_4("1.4"),
-    /** Java 1.5.x */
-    JAVA_1_5("1.5"),
-    /** Java 1.6.x */
-    JAVA_1_6("1.6"),
-    /** Java 1.7.x */
-    JAVA_1_7("1.7"),
-    /** Java 1.8.x */
-    JAVA_1_8("1.8"),
-    /** Java 1.9.x */
-    JAVA_1_9("1.9"),
-    /** Java 1.10.x */
-    JAVA_1_10("1.10"),
-    /** Java 1.9.x */
-    JAVA_1_11("1.11");
-
+    JAVA_11("11"),
+    /** Java 12.x */
+    JAVA_12("12"),
+    /** Java 13.x */
+    JAVA_13("13"),
+    /** Java 14.x */
+    JAVA_14("14"),
+    /** Java 15.x */
+    JAVA_15("15"),
+    /** Java 16.x */
+    JAVA_16("16"),
+    /** Java 17.x */
+    JAVA_17("17"),
+    /** Java 18.x */
+    JAVA_18("18"),
+    /** Java 19.x */
+    JAVA_19("19"),
+    /** Java 20.x */
+    JAVA_20("20"),
+    /** Java 21.x */
+    JAVA_21("21"),
+    /** Java 22.x */
+    JAVA_22("22"),
+    /** Java 23.x */
+    JAVA_23("23");
 
     /** Logger used by this class. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaVersion.class);
@@ -111,22 +111,41 @@ public enum JavaVersion implements ComparableRuntimeProperty {
     /**
      * Returns a <code>JavaVersion</code> instance corresponding to the specified system property's value.
      *
-     * @param javaVersionProp the value of the "java.version" system property
+     * @param s the value of the "java.version" system property
      * @return a JavaVersion instance corresponding to the specified system property's value
      */
-    static JavaVersion parseSystemProperty(String javaVersionProp) {
+    static JavaVersion parseSystemProperty(String s) {
         // Java version property should never be null or empty, but better be safe than sorry ...
-        if (javaVersionProp == null || (javaVersionProp = javaVersionProp.trim()).isEmpty()) {
-            // Assume last java version
-            return values()[values().length-1];
+        if (s == null || (s = s.trim()).isEmpty())
+            // Assume java 11 (first supported Java version)
+            return JavaVersion.JAVA_11;
+        if (s.startsWith("22")) {
+            return JavaVersion.JAVA_22;
+        } else if (s.startsWith("21")) {
+            return JavaVersion.JAVA_21;
+        } else if (s.startsWith("20")) {
+            return JavaVersion.JAVA_20;
+        } else if (s.startsWith("19")) {
+            return JavaVersion.JAVA_19;
+        } else if (s.startsWith("18")) {
+            return JavaVersion.JAVA_18;
+        } else if (s.startsWith("17")) {
+            return JavaVersion.JAVA_17;
+        } else if (s.startsWith("16")) {
+            return JavaVersion.JAVA_16;
+        } else if (s.startsWith("15")) {
+            return JavaVersion.JAVA_15;
+        } else if (s.startsWith("14")) {
+            return JavaVersion.JAVA_14;
+        } else if (s.startsWith("13")) {
+            return JavaVersion.JAVA_13;
+        } else if (s.startsWith("12")) {
+            return JavaVersion.JAVA_12;
+        } else if (s.startsWith("11")) {
+            return JavaVersion.JAVA_11;
         }
-        for (JavaVersion ver : values()) {
-            if (javaVersionProp.startsWith(ver.stringRepresentation)) {
-                return ver;
-            }
-        }
-        // Newer version we don't know of yet, assume the latest supported Java version
-        return JavaVersion.JAVA_1_11;
+        // Newer version we don't know of yet, assume latest supported Java version
+        return JavaVersion.JAVA_23;
     }
 
     /**

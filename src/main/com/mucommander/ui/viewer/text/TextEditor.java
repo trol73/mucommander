@@ -177,9 +177,6 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     }
 
 
-    ///////////////////////////////
-    // FileEditor implementation //
-    ///////////////////////////////
 
     @Override
     protected void saveAs(AbstractFile destFile) {
@@ -216,7 +213,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     	textEditorImpl.setFrame(frame);
     	//frame.setFullScreen(TextViewer.isFullScreen());
 
-    	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK), CUSTOM_FULL_SCREEN_EVENT);
+    	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK), CUSTOM_FULL_SCREEN_EVENT);
 //    	getActionMap().put(CUSTOM_FULL_SCREEN_EVENT, new AbstractAction() {
 //    		public void actionPerformed(ActionEvent e){
 //    			TextViewer.setFullScreen(!frame.isFullScreen());
@@ -345,7 +342,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     /**
      * Returns <code>true</code> if the line numbers are enabled and visible.
      *
-     * @return Whether or not line numbers are visible.
+     * @return Whether line numbers are visible.
      * @see #setLineNumbersEnabled(boolean)
      */
     private boolean getLineNumbersEnabled() {
@@ -453,8 +450,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             if (current instanceof TextArea) {
                 return (TextArea)current;
             }
-            if (current instanceof Container) {
-                Container container = (Container)current;
+            if (current instanceof Container container) {
                 stack.addAll(Arrays.asList(container.getComponents()));
             }
         }

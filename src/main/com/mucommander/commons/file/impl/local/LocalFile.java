@@ -28,7 +28,6 @@ import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.FilteredOutputStream;
 import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import java.nio.Buffer;
@@ -741,7 +740,7 @@ public class LocalFile extends ProtocolFile {
     @Override
     public void changePermission(int access, int permission, boolean enabled) throws IOException {
         // Only the 'user' permissions under Java 1.6 are supported
-        if (access != USER_ACCESS || JavaVersion.JAVA_1_6.isCurrentLower()) {
+        if (access != USER_ACCESS) {
             throw new IOException();
         }
 
@@ -992,21 +991,13 @@ public class LocalFile extends ProtocolFile {
 
     @Override
     public long getFreeSpace() throws IOException {
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            return file.getUsableSpace();
-        }
-
-        return getVolumeInfo()[1];
+        return file.getUsableSpace();
     }
 	
     @Override
     public long getTotalSpace() throws IOException {
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            return file.getTotalSpace();
-        }
-
-        return getVolumeInfo()[0];
-    }	
+        return file.getTotalSpace();
+    }
 
     // Unsupported file operations
 
@@ -1038,10 +1029,6 @@ public class LocalFile extends ProtocolFile {
     public void changeReplication(short replication) throws IOException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
     }
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public String getName() {

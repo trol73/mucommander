@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.desktop.osx;
+package com.mucommander.desktop.macos;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.macosx.AppleScript;

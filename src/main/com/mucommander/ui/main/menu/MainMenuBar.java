@@ -429,8 +429,8 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
             helpMenu.add(new TMenuSeparator());
             MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(GoToWebsiteAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
             //MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(GoToForumsAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-            MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(ReportBugAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
-            MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(DonateAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+            //MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(ReportBugAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
+            //MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(DonateAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
 
             helpMenu.add(new TMenuSeparator());
             MenuToolkit.addMenuItem(helpMenu, ActionManager.getActionInstance(CheckForUpdatesAction.Descriptor.ACTION_ID, mainFrame), menuItemMnemonicHelper);
@@ -446,10 +446,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     }
 	
 
-    ///////////////////////////
-    // ActionListener method //
-    ///////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
         // Discard action events while in 'no events mode'
         if (mainFrame.getNoEventsMode()) {
@@ -462,10 +459,7 @@ public class MainMenuBar extends JMenuBar implements ActionListener, MenuListene
     }
 
 
-    //////////////////////////
-    // MenuListener methods //
-    //////////////////////////
-
+    @Override
     public void menuSelected(MenuEvent e) {
         Object source = e.getSource();
 

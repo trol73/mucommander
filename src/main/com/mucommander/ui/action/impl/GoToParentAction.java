@@ -61,11 +61,6 @@ public class GoToParentAction extends ActiveTabAction {
     }
 
 
-
-    ///////////////////////
-    // Protected methods //
-    ///////////////////////
-
     /**
      * Updates <code>panel</code>'s location to its parent.
      *
@@ -83,9 +78,6 @@ public class GoToParentAction extends ActiveTabAction {
 
 
 
-    /////////////////////////////
-    // MuAction implementation //
-    /////////////////////////////
     /**
      * Goes to the current location's parent in the active panel.
      */

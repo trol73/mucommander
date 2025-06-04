@@ -735,6 +735,53 @@
                 <method name="*"/>
                 <constructor name="*"/>
             </keep>
+
+
+
+
+
+<!--
+
+
+       <keep name="org.apache.commons.logging.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+       <keep name="org.apache.log4j.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+       <keep name="org.slf4j.bridge.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+       <keep name="org.slf4j.reload4j.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+       
+       <keep name="org.slf4j.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+       <keep name="org.slf4j.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+  
+-->
+       <keep name="ch.qos.logback.**">
+           <field name="*"/>
+           <method name="*"/>
+           <constructor name="*"/>
+       </keep>
+            
             <!-- Action API uses reflection.                                                                         -->
             <keepclasseswithmembers extends="com.mucommander.ui.action.MuAction">
                 <constructor access="public" name="*"/>

@@ -33,7 +33,6 @@ import com.mucommander.commons.file.impl.local.LocalProtocolProvider;
 import com.mucommander.commons.file.util.FilePool;
 import com.mucommander.commons.file.util.PathTokenizer;
 import com.mucommander.commons.file.util.PathUtils;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 
 /**
@@ -66,7 +65,7 @@ import com.mucommander.commons.runtime.OsFamily;
  * {@link #registerArchiveFormat(ArchiveFormatProvider)}.
  *
  * <p>
- * Built-in file file formats are:
+ * Built-in file formats are:
  * <ul>
  *   <li><code>ZIP</code>, registered to zip, jar, war, wal, wmz, xpi, ear, odt, ods and odp files.</li>
  *   <li><code>TAR</code>, registered to tar, tar.gz, tgz, tar.bz2 and tbz2 files.</li>
@@ -159,11 +158,10 @@ public class FileFactory {
 
 
     public static void registerProtocolOthers() {
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            // Hadoop requires Java 1.6
-            registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
+        // Hadoop requires Java 1.6
+        registerProtocol(FileProtocols.HDFS, new com.mucommander.commons.file.impl.hadoop.HDFSProtocolProvider());
 //            registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.hadoop.S3ProtocolProvider());
-        }
+
         registerProtocol(FileProtocols.S3, new com.mucommander.commons.file.impl.s3.S3ProtocolProvider());
         registerProtocol(FileProtocols.VSPHERE, new com.mucommander.commons.file.impl.vsphere.VSphereProtocolProvider());
 

@@ -34,208 +34,210 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This class manages logging issues within mucommander
+ * This class manages logging issues within trolCommander
  *
  * @author Maxence Bernard, Arik Hadas
  */
 public class MuLogging {
 
-	/** Levels of log printings */
-	public enum LogLevel {
-		OFF,
-		SEVERE,
-		WARNING,
-		INFO,
-		CONFIG,
-		FINE,
-		FINER,
-		FINEST;
+    /**
+     * Levels of log printings
+     */
+    public enum LogLevel {
+        OFF,
+        SEVERE,
+        WARNING,
+        INFO,
+        CONFIG,
+        FINE,
+        FINER,
+        FINEST;
 
-		/**
-		 * This method maps logback levels to mucommander log levels
-		 * 
-		 * @param logbackLevel logback log level
-		 * @return <code>LogLevel</code> corresponding to the given logback log level
-		 */
-		public static LogLevel valueOf(Level logbackLevel) {
-			switch(logbackLevel.toInt()) {
-	    	case ch.qos.logback.classic.Level.OFF_INT:
-	    		return LogLevel.OFF;
-	    	case ch.qos.logback.classic.Level.ERROR_INT:
-	    		return LogLevel.SEVERE;
-	    	case ch.qos.logback.classic.Level.WARN_INT:
-	    		return LogLevel.WARNING;
-	    	case ch.qos.logback.classic.Level.INFO_INT:
-	    		return LogLevel.INFO;
-	    	case ch.qos.logback.classic.Level.DEBUG_INT:
-	    		return LogLevel.FINE;
-	    	case ch.qos.logback.classic.Level.TRACE_INT:
-	    		return LogLevel.FINEST;
-	    	default:
-	    		return LogLevel.OFF;
-			}
-		}
-		
-		/**
-		 * This method maps mucommander log levels to logback levels
-		 * 
-		 * @return logback level corresponding to this <code>LogLevel</code>
-		 */
-		public Level toLogbackLevel() {
-			switch (this) {
-			case SEVERE:
-				return ch.qos.logback.classic.Level.ERROR;
-			case WARNING:
-				return ch.qos.logback.classic.Level.WARN;
-			case INFO:
-			case CONFIG:
-				return ch.qos.logback.classic.Level.INFO;
-			case FINE:
-			case FINER:
-				return ch.qos.logback.classic.Level.DEBUG;
-			case FINEST:
-				return ch.qos.logback.classic.Level.TRACE;
-			case OFF:
-			default:
-				return ch.qos.logback.classic.Level.OFF;
-			}	
-		}
-	}
-	
-	/** Appender that writes log printings to the standard console */
-	private static ConsoleAppender<ILoggingEvent> consoleAppender;
-	
-	/** Appender that writes log printings to the debug console dialog */
-	private static DebugConsoleAppender debugConsoleAppender;
+        /**
+         * This method maps logback levels to trolCommander log levels
+         *
+         * @param logbackLevel logback log level
+         * @return <code>LogLevel</code> corresponding to the given logback log level
+         */
+        public static LogLevel valueOf(Level logbackLevel) {
+            switch (logbackLevel.toInt()) {
+                case ch.qos.logback.classic.Level.OFF_INT:
+                    return LogLevel.OFF;
+                case ch.qos.logback.classic.Level.ERROR_INT:
+                    return LogLevel.SEVERE;
+                case ch.qos.logback.classic.Level.WARN_INT:
+                    return LogLevel.WARNING;
+                case ch.qos.logback.classic.Level.INFO_INT:
+                    return LogLevel.INFO;
+                case ch.qos.logback.classic.Level.DEBUG_INT:
+                    return LogLevel.FINE;
+                case ch.qos.logback.classic.Level.TRACE_INT:
+                    return LogLevel.FINEST;
+                default:
+                    return LogLevel.OFF;
+            }
+        }
 
-	/**
-	 * Sets the level of all muCommander loggers.
-	 *
-	 * @param level the new log level
-	 */
-	private static void updateLogLevel(LogLevel level) {
-		ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		logger.setLevel(level.toLogbackLevel());
-	}
-	
-	/**
-	 * Returns the log level, in mucommander terms, that match the level of a given logback logging event
-	 * 
-	 * @param loggingEvent logback logging event
-	 * @return log level, in mucommander terms, that match the level of the given logback logging event
-	 */
-	public static LogLevel getLevel(ILoggingEvent loggingEvent) {
-    	return LogLevel.valueOf(loggingEvent.getLevel());
+        /**
+         * This method maps trolCommander log levels to logback levels
+         *
+         * @return logback level corresponding to this <code>LogLevel</code>
+         */
+        public Level toLogbackLevel() {
+            switch (this) {
+                case SEVERE:
+                    return ch.qos.logback.classic.Level.ERROR;
+                case WARNING:
+                    return ch.qos.logback.classic.Level.WARN;
+                case INFO:
+                case CONFIG:
+                    return ch.qos.logback.classic.Level.INFO;
+                case FINE:
+                case FINER:
+                    return ch.qos.logback.classic.Level.DEBUG;
+                case FINEST:
+                    return ch.qos.logback.classic.Level.TRACE;
+                case OFF:
+                default:
+                    return ch.qos.logback.classic.Level.OFF;
+            }
+        }
     }
 
-	/**
-	 * Returns the current log level used by all <code>org.slf4j</code> loggers.
-	 *
-	 * @return the current log level used by all <code>org.slf4j</code> loggers.
-	 */
-	public static LogLevel getLogLevel() {
-		return LogLevel.valueOf(TcConfigurations.getPreferences().getVariable(TcPreference.LOG_LEVEL, TcPreferences.DEFAULT_LOG_LEVEL));
-	}
+    /**
+     * Appender that writes log printings to the standard console
+     */
+    private static ConsoleAppender<ILoggingEvent> consoleAppender;
 
-	/**
-	 * Sets the new log level to be used by all <code>org.slf4j</code> loggers, and persists it in the
-	 * application preferences.
-	 *
-	 * @param level the new log level to be used by all <code>org.slf4j</code> loggers.
-	 */
-	public static void setLogLevel(LogLevel level) {
-		TcConfigurations.getPreferences().setVariable(TcPreference.LOG_LEVEL, level.toString());
-		updateLogLevel(level);
-	}
-	
-	public static DebugConsoleAppender getDebugConsoleAppender() {
-		return debugConsoleAppender;
-	}
-	
-	public static ConsoleAppender<ILoggingEvent> getConsoleAppender() {
-		return consoleAppender;
-	}
+    /**
+     * Appender that writes log printings to the debug console dialog
+     */
+    private static DebugConsoleAppender debugConsoleAppender;
 
-	public static void configureLogging() {
-		// We're no longer using LogManager and a logging.properties file to initialize java.util.logging, because of
-		// a limitation with Webstart limiting the use of handlers and formatters residing in the system's classpath,
-		// i.e. built-in ones.
+    /**
+     * Sets the level of all muCommander loggers.
+     *
+     * @param level the new log level
+     */
+    private static void updateLogLevel(LogLevel level) {
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.setLevel(level.toLogbackLevel());
+    }
 
-		// Get root logger
-		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		
-		// we are not interested in auto-configuration
-		LoggerContext loggerContext = rootLogger.getLoggerContext();
-		loggerContext.reset();
-		
-		// Remove default appenders
-		rootLogger.detachAndStopAllAppenders();
-		
-		// and add ours
-		Appender<ILoggingEvent>[] appenders = createAppenders(loggerContext);
-		for (Appender<ILoggingEvent> appender : appenders) {
-			rootLogger.addAppender(appender);
-		}
-		
-		// Set the log level to the value defined in the configuration
-		updateLogLevel(getLogLevel());
-	}
-	
-	private static Appender<ILoggingEvent>[] createAppenders(LoggerContext loggerContext) {
-		Layout<ILoggingEvent> layout = new CustomLoggingLayout();
+    /**
+     * Returns the log level, in mucommander terms, that match the level of a given logback logging event
+     *
+     * @param loggingEvent logback logging event
+     * @return log level, in mucommander terms, that match the level of the given logback logging event
+     */
+    public static LogLevel getLevel(ILoggingEvent loggingEvent) {
+        return LogLevel.valueOf(loggingEvent.getLevel());
+    }
 
-		consoleAppender = createConsoleAppender(loggerContext, layout);
-		debugConsoleAppender = createDebugConsoleAppender(loggerContext, layout);
-		
-		return new Appender[] { consoleAppender, debugConsoleAppender };
-	}
+    /**
+     * Returns the current log level used by all <code>org.slf4j</code> loggers.
+     *
+     * @return the current log level used by all <code>org.slf4j</code> loggers.
+     */
+    public static LogLevel getLogLevel() {
+        return LogLevel.valueOf(TcConfigurations.getPreferences().getVariable(TcPreference.LOG_LEVEL, TcPreferences.DEFAULT_LOG_LEVEL));
+    }
 
-	private static ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
-		ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+    /**
+     * Sets the new log level to be used by all <code>org.slf4j</code> loggers, and persists it in the
+     * application preferences.
+     *
+     * @param level the new log level to be used by all <code>org.slf4j</code> loggers.
+     */
+    public static void setLogLevel(LogLevel level) {
+        TcConfigurations.getPreferences().setVariable(TcPreference.LOG_LEVEL, level.toString());
+        updateLogLevel(level);
+    }
 
-		LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
-		encoder.setContext(loggerContext);
-	    encoder.setLayout(layout);
-	    encoder.start();
+    public static DebugConsoleAppender getDebugConsoleAppender() {
+        return debugConsoleAppender;
+    }
 
-	    consoleAppender.setContext(loggerContext);
-	    consoleAppender.setEncoder(encoder);
-	    consoleAppender.start();
+    public static ConsoleAppender<ILoggingEvent> getConsoleAppender() {
+        return consoleAppender;
+    }
 
-	    return consoleAppender;
-	}
-	
-	private static DebugConsoleAppender createDebugConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
-		DebugConsoleAppender debugConsoleAppender = new DebugConsoleAppender(layout);
-		
-		debugConsoleAppender.setContext(loggerContext);
-		debugConsoleAppender.start();
-		
-		return debugConsoleAppender;
-	}
+    public static void configureLogging() {
+        // Get root logger
+        ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-	private static class CustomLoggingLayout extends LayoutBase<ILoggingEvent> {
+        // we are not interested in auto-configuration
+        LoggerContext loggerContext = rootLogger.getLoggerContext();
+        loggerContext.reset();
 
-		private final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		
-		public String doLayout(ILoggingEvent event) {
-			StackTraceElement stackTraceElement = event.getCallerData()[0];
-			
-			StringBuilder sb = new StringBuilder(128);
-			sb.append("[");
-			sb.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
-			sb.append("] ");
-			sb.append(getLevel(event));
-			sb.append(" ");
-			sb.append(stackTraceElement.getFileName());
-			sb.append("#");
-			sb.append(stackTraceElement.getMethodName());
-			sb.append(",");
-			sb.append(stackTraceElement.getLineNumber());
-			sb.append(" ");
-			sb.append(event.getFormattedMessage());
-			sb.append(CoreConstants.LINE_SEPARATOR);
-			return sb.toString();
-		}
-	}
+        // Remove default appenders
+        rootLogger.detachAndStopAllAppenders();
+
+        // and add ours
+        Appender<ILoggingEvent>[] appenders = createAppenders(loggerContext);
+        for (Appender<ILoggingEvent> appender : appenders) {
+            rootLogger.addAppender(appender);
+        }
+
+        // Set the log level to the value defined in the configuration
+        updateLogLevel(getLogLevel());
+    }
+
+    private static Appender<ILoggingEvent>[] createAppenders(LoggerContext loggerContext) {
+        Layout<ILoggingEvent> layout = new CustomLoggingLayout();
+
+        consoleAppender = createConsoleAppender(loggerContext, layout);
+        debugConsoleAppender = createDebugConsoleAppender(loggerContext, layout);
+
+        return new Appender[]{consoleAppender, debugConsoleAppender};
+    }
+
+    private static ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
+        ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+
+        LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
+        encoder.setContext(loggerContext);
+        encoder.setLayout(layout);
+        encoder.start();
+
+        consoleAppender.setContext(loggerContext);
+        consoleAppender.setEncoder(encoder);
+        consoleAppender.start();
+
+        return consoleAppender;
+    }
+
+    private static DebugConsoleAppender createDebugConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
+        DebugConsoleAppender debugConsoleAppender = new DebugConsoleAppender(layout);
+
+        debugConsoleAppender.setContext(loggerContext);
+        debugConsoleAppender.start();
+
+        return debugConsoleAppender;
+    }
+
+    private static class CustomLoggingLayout extends LayoutBase<ILoggingEvent> {
+
+        private final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        public String doLayout(ILoggingEvent event) {
+            StackTraceElement stackTraceElement = event.getCallerData()[0];
+
+            StringBuilder sb = new StringBuilder(128);
+            sb.append("[");
+            sb.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
+            sb.append("] ");
+            sb.append(getLevel(event));
+            sb.append(" ");
+            sb.append(stackTraceElement.getFileName());
+            sb.append("#");
+            sb.append(stackTraceElement.getMethodName());
+            sb.append(",");
+            sb.append(stackTraceElement.getLineNumber());
+            sb.append(" ");
+            sb.append(event.getFormattedMessage());
+            sb.append(CoreConstants.LINE_SEPARATOR);
+            return sb.toString();
+        }
+    }
 }

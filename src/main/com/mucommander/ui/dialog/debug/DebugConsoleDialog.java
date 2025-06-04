@@ -30,17 +30,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Map;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import com.mucommander.ui.combobox.TcComboBox;
 import com.mucommander.utils.MuLogging;
@@ -159,14 +149,18 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      * Refreshes the JList with the log records contained by {@link DebugConsoleAppender}.
      */
     private void refreshLogRecords() {
-    	DefaultListModel<LoggingEvent> listModel = new DefaultListModel<>();
         DebugConsoleAppender handler = MuLogging.getDebugConsoleAppender();
-
+        if (handler == null) {
+            return;
+        }
         final LoggingEvent[] records = handler.getLogRecords();
         final LogLevel currentLogLevel = MuLogging.getLogLevel();
-        
+        if (records == null) {
+            return;
+        }
+        DefaultListModel<LoggingEvent> listModel = new DefaultListModel<>();
         for (LoggingEvent record : records) {
-        	if (record.isLevelEqualOrHigherThan(currentLogLevel)) {
+            if (record.isLevelEqualOrHigherThan(currentLogLevel)) {
                 listModel.addElement(record);
             }
         }
@@ -181,7 +175,9 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      */
     private void updateLogLevel() {
         LogLevel newLevel = (LogLevel) levelComboBox.getSelectedItem();
-        MuLogging.setLogLevel(newLevel);
+        if (newLevel != null) {
+            MuLogging.setLogLevel(newLevel);
+        }
     }
 
 
@@ -201,18 +197,25 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     }
 
     private void printThreads(boolean onlyActive) {
-        Map<Thread, StackTraceElement[]> stacktraces = Thread.getAllStackTraces();
-        DefaultListModel<LoggingEvent> model = (DefaultListModel<LoggingEvent>)loggingEventsList.getModel();
-        for (Thread t : stacktraces.keySet()) {
+        Map<Thread, StackTraceElement[]> stackTraces = Thread.getAllStackTraces();
+        DefaultListModel<LoggingEvent> model = new DefaultListModel<>();
+        ListModel<LoggingEvent> oldModel = loggingEventsList.getModel();
+        for (int i = 0; i < oldModel.getSize(); i++) {
+            model.add(i, oldModel.getElementAt(i));
+        }
+        model.addElement(buildStringEvent(LogLevel.INFO, "----------[Threads]--------------"));
+        for (Thread t : stackTraces.keySet()) {
             if (onlyActive && t.getState() != Thread.State.RUNNABLE) {
                 continue;
             }
+
             model.addElement(buildStringEvent(LogLevel.INFO, t.getName() + " (" + t.getState() + ")"));
-            StackTraceElement[] stackTraceElements = stacktraces.get(t);
+            StackTraceElement[] stackTraceElements = stackTraces.get(t);
             for (StackTraceElement ste : stackTraceElements) {
                 model.addElement(buildStringEvent(LogLevel.FINEST, "     " + ste));
             }
         }
+        loggingEventsList.setModel(model);
     }
 
 

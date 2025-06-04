@@ -335,7 +335,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER && (e.getModifiers() & (KeyEvent.CTRL_MASK | KeyEvent.META_MASK)) != 0) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && (e.getModifiersEx() & (KeyEvent.CTRL_DOWN_MASK | KeyEvent.META_DOWN_MASK)) != 0) {
             if (calculateAndShow()) {
                 cbExpression.setSelectedItem(edtDec.getText());
             }

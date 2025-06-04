@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.combobox;
 
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.ui.autocomplete.EditableComboboxCompletion;
 import com.mucommander.ui.autocomplete.TypicalAutocompleterEditableCombobox;
 import com.mucommander.ui.autocomplete.completers.Completer;
@@ -106,10 +105,6 @@ public class AutocompleteEditableCombobox<E> extends EditableComboBox<E> {
 	public void respondToEnterKeyPressing(KeyEvent keyEvent) {
 		// Combo popup menu is visible
 		if (isPopupVisible()) {
-			// Under Java 1.5 or lower, we need to explicitely hide the popup.
-			if(JavaVersion.JAVA_1_5.isCurrentOrLower())
-				hidePopup();
-			
 			// Note that since the event is not consumed, JComboBox will catch it and fire
 		}
 		// Combo popup menu is not visible, these events really belong to the text field

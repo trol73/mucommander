@@ -121,9 +121,9 @@ public abstract class QueuedTrash extends AbstractTrash {
     /**
      * Performs the actual job of moving files to the trash.
      *
-     * <p>The thread starts by waiting {@link com.mucommander.desktop.osx.OSXTrash#QUEUE_PERIOD} milliseconds before moving them to give additional
+     * <p>The thread starts by waiting {@link com.mucommander.desktop.macos.OSXTrash#QUEUE_PERIOD} milliseconds before moving them to give additional
      * files a chance to be queued and regrouped as a single call to {@link QueuedTrash#moveToTrash(java.util.List)}.
-     * If more files were queued during that period, the thread will wait an additional {@link com.mucommander.desktop.osx.OSXTrash# QUEUE_PERIOD},
+     * If more files were queued during that period, the thread will wait an additional {@link com.mucommander.desktop.macos.OSXTrash# QUEUE_PERIOD},
      * and so on.
      */
     private class MoveToTrashThread extends Thread {

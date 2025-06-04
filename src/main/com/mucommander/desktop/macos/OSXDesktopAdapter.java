@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander.desktop.osx;
+package com.mucommander.desktop.macos;
 
 import com.apple.eawt.FullScreenUtilities;
 import com.apple.eio.FileManager;
@@ -65,7 +65,7 @@ import static com.mucommander.command.CommandManager.registerDefaultCommand;
  */
 public class OSXDesktopAdapter extends DefaultDesktopAdapter {
     private static final String OPENER_COMMAND = "open $f";
-    //private static final String FINDER_COMMAND = "open $f -R";
+//    private static final String FINDER_COMMAND = "open $f -R";
     private static final String FINDER_COMMAND = "open -a Finder $f";
     private static final String FINDER_NAME    = "Finder";
 
@@ -185,7 +185,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
             // Swallow the exception and do not interrupt the transfer
             LOGGER.debug("Error while parsing macOS file comment of source", e);
         }
-        if (comment != null && !"".equals(comment = comment.trim()) && !setFileComment(destPath, comment)) {
+        if (comment != null && !(comment = comment.trim()).isEmpty() && !setFileComment(destPath, comment)) {
             LOGGER.error("Error while copying macOS file comment to %s", destPath);
         }
     }

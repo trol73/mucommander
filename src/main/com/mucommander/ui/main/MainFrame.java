@@ -23,7 +23,6 @@ import com.mucommander.commons.file.AbstractArchiveEntryFile;
 import com.mucommander.commons.file.AbstractArchiveFile;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
-import com.mucommander.commons.runtime.JavaVersion;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.conf.TcConfigurations;
@@ -52,7 +51,6 @@ import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
 import com.mucommander.ui.terminal.TcTerminal;
-;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -296,36 +294,29 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         }
 
         // Use Java 1.6 's new Window#setIconImages(List<Image>) when available
-        if (JavaVersion.JAVA_1_6.isCurrentOrHigher()) {
-            List<Image> icons = new ArrayList<>();
+        List<Image> icons = new ArrayList<>();
 
-            // Start by adding a 16x16 image with 1-bit transparency, any OS should support that.
-            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon16_8.png").getImage());
+        // Start by adding a 16x16 image with 1-bit transparency, any OS should support that.
+        icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon16_8.png").getImage());
 
-            // - Windows XP messes up 8-bit PNG transparency.
-            // We would be better off with the .ico of the launch4j exe (which has 8-bit alpha transparency) but there
-            // seems to be no way to keep it when in 'dontWrapJar' mode (separate exe and jar files).
-            if (OsFamily.WINDOWS.isCurrent() && OsVersion.WINDOWS_XP.isCurrentOrLower()) {
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon48_8.png").getImage());
-            }
-            // - Windows Vista supports 8-bit transparency and icon resolutions up to 256x256.
-            // - GNOME and KDE support 8-bit transparency.
-            else {
-                // Add PNG 24 images (8-bit transparency)
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon16_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon32_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon48_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon128_24.png").getImage());
-                icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon256_24.png").getImage());
-            }
-
-            setIconImages(icons);
+        // - Windows XP messes up 8-bit PNG transparency.
+        // We would be better off with the .ico of the launch4j exe (which has 8-bit alpha transparency) but there
+        // seems to be no way to keep it when in 'dontWrapJar' mode (separate exe and jar files).
+        if (OsFamily.WINDOWS.isCurrent() && OsVersion.WINDOWS_XP.isCurrentOrLower()) {
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon48_8.png").getImage());
         }
-        else {      // Java 1.5 or lower
-            // Err on the safe side by assuming that 8-bit transparency is not supported.
-            // Any OS should support 16x16 icons with 1-bit transparency.
-            setIconImage(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon16_8.png").getImage());
+        // - Windows Vista supports 8-bit transparency and icon resolutions up to 256x256.
+        // - GNOME and KDE support 8-bit transparency.
+        else {
+            // Add PNG 24 images (8-bit transparency)
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon16_24.png").getImage());
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon32_24.png").getImage());
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon48_24.png").getImage());
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon128_24.png").getImage());
+            icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon256_24.png").getImage());
         }
+
+        setIconImages(icons);
     }
 
 

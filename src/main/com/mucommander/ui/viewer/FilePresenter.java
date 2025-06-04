@@ -17,7 +17,7 @@ import org.fife.ui.StatusBar;
  */
 public abstract class FilePresenter extends JScrollPane {
 	
-	/** FileFrame instance that contains this presenter (may be null). */
+	/** FileFrame instance that contains this presenter (maybe null). */
     private FileFrame frame;
     
     /** File currently being presented. */
@@ -44,7 +44,7 @@ public abstract class FilePresenter extends JScrollPane {
 
 		// Catch Apple+W keystrokes under Mac OS X to close the window
         if (OsFamily.MAC_OS_X.isCurrent()) {
-        	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), CUSTOM_DISPOSE_EVENT);
+        	getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK), CUSTOM_DISPOSE_EVENT);
         	getActionMap().put(CUSTOM_DISPOSE_EVENT, new AbstractAction() {
         		public void actionPerformed(ActionEvent e){
         			getFrame().dispose();
@@ -128,10 +128,7 @@ public abstract class FilePresenter extends JScrollPane {
     	setCurrentFile(file);
     }
     
-	//////////////////////
-    // Abstract methods //
-    //////////////////////
-	
+
     /**
      * This method is invoked when the specified file is about to be opened.
      * This method should retrieve the file and do the necessary so that this component can be displayed.

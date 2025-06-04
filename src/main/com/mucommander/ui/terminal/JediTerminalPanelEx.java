@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2025 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import java.awt.event.KeyEvent;
  * Created on 27/10/14.
  */
 public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel {
-
     private final MainFrame mainFrame;
     private final int keyModifier;
     private int lineHeight;
@@ -45,7 +44,7 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
                         @NotNull StyleState styleState, MainFrame mainFrame) {
         super(settingsProvider, terminalTextBuffer, styleState);
         this.mainFrame = mainFrame;
-        this.keyModifier = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
+        this.keyModifier = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
     }
 
 
@@ -62,12 +61,12 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
 //        }
 
         if (id == KeyEvent.KEY_PRESSED) {
-            String actionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false));
+            String actionId = ActionKeymap.getRegisteredActionIdForKeystroke(KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiersEx(), false));
             if (TerminalPanelAction.Descriptor.ACTION_ID.equals(actionId)) {
                 mainFrame.showTerminalPanel(false);
                 return;
             }
-            if (e.getModifiers() == keyModifier) {
+            if (e.getModifiersEx() == keyModifier) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
                         resizePanel(1);
@@ -89,12 +88,12 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
                         return;
                 }
             }
-            myKeyListener.keyPressed(e);
+            super.processKeyEvent(e);
         } else if (id == KeyEvent.KEY_TYPED) {
-            myKeyListener.keyTyped(e);
+            super.processKeyEvent(e);
         }
 
-        if (e.getModifiers() == InputEvent.ALT_MASK && e.getKeyCode() == KeyEvent.VK_C) {
+        if (e.getModifiersEx() == InputEvent.ALT_DOWN_MASK && e.getKeyCode() == KeyEvent.VK_C) {
             if (id == KeyEvent.KEY_RELEASED) {
                 new CalculatorDialog(mainFrame).showDialog();
             }

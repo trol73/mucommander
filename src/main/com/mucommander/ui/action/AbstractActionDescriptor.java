@@ -38,17 +38,6 @@ import java.awt.event.KeyEvent;
 public abstract class AbstractActionDescriptor implements ActionDescriptor {
     protected static final int CTRL_OR_META_DOWN_MASK = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
 
-//        static int count;
-//    public AbstractActionDescriptor() {
-//        count++;
-//        if (count % 10 == 0) {
-//            System.out.println(count);
-//            if (count == 200) {
-//                new Exception().printStackTrace();
-//            }
-//        }
-//    }
-	
     @Override
     public String getLabel() {
         String label = getStandardLabel();
