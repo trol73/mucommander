@@ -19,7 +19,6 @@ import com.mucommander.commons.io.RandomAccessOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -148,7 +147,7 @@ public class WebDAVFile extends ProtocolFile {
             return true;
         }
 
-        return !resources.isEmpty() && resources.get(0).isDirectory();
+        return !resources.isEmpty() && resources.getFirst().isDirectory();
     }
 
     @Override
@@ -166,7 +165,7 @@ public class WebDAVFile extends ProtocolFile {
             return new AbstractFile[]{};
         }
 
-        if (files == null || files.size() == 0) {
+        if (files == null || files.isEmpty()) {
             return new AbstractFile[]{};
         }
 

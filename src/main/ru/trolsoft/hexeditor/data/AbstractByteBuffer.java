@@ -100,14 +100,11 @@ public abstract class AbstractByteBuffer {
 
     private long calcOffset(long fileOffset, boolean randomAccessStream) {
         if (randomAccessStream) {
-            switch (cacheStrategy) {
-                case FORWARD:
-                    return fileOffset;
-                case BACKWARD:
-                    return fileOffset - buffer.length;
-                case CENTER:
-                    return fileOffset - buffer.length / 2;
-            }
+            return switch (cacheStrategy) {
+                case FORWARD -> fileOffset;
+                case BACKWARD -> fileOffset - buffer.length;
+                case CENTER -> fileOffset - buffer.length / 2;
+            };
         } else {
             switch (cacheStrategy) {
                 case FORWARD:
@@ -161,19 +158,9 @@ public abstract class AbstractByteBuffer {
 
     /**
      * Load file data from #offset and fills #buffer
-     *
-     * @throws IOException
-     *
-     * @see #offset
-     * @see #buffer
-     * @see #size
      */
     abstract protected void loadBuffer() throws IOException;
 
-    /**
-     *
-     * @return
-     */
     abstract protected boolean supportRandomAccess();
 
     public CacheStrategy getCacheStrategy() {

@@ -133,7 +133,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         finally {
             try {
                 entries.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // Not much we can do about it
             }
         }
@@ -190,7 +190,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         checkEntriesTree();
         DefaultMutableTreeNode entryNode = entryTreeRoot.findEntryNode(entry.getPath());
 
-        if(entryNode!=null) {
+        if (entryNode != null) {
             DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode)entryNode.getParent();
             parentNode.remove(entryNode);
         }
@@ -239,10 +239,10 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         int nbChildren = treeNode.getChildCount();
 
         // No FilenameFilter, create entry files and store them directly into an array
-        if(filenameFilter==null) {
+        if (filenameFilter == null) {
             files = new AbstractFile[nbChildren];
 
-            for(int c=0; c<nbChildren; c++) {
+            for (int c=0; c < nbChildren; c++) {
                 files[c] = getArchiveEntryFile((ArchiveEntry)(((DefaultMutableTreeNode)treeNode.getChildAt(c)).getUserObject()), parentFile);
             }
         }
@@ -292,16 +292,8 @@ public abstract class AbstractArchiveFile extends ProxyFile {
 
             // create an RO and RW entry file, depending on whether this archive file is RO or RW
             entryFile = this instanceof AbstractRWArchiveFile
-                ?new RWArchiveEntryFile(
-                  entryURL,
-                  this,
-                  entry
-                )
-                :new ROArchiveEntryFile(
-                      entryURL,
-                      this,
-                      entry
-                );
+                ? new RWArchiveEntryFile(entryURL, this, entry)
+                : new ROArchiveEntryFile(entryURL,this, entry);
 
             entryFile.setParent(parentFile);
 
@@ -385,17 +377,11 @@ public abstract class AbstractArchiveFile extends ProxyFile {
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode)entryNode.getParent();
         return getArchiveEntryFile(
                 (ArchiveEntry)entryNode.getUserObject(),
-                parentNode==entryTreeRoot
-                    ?this
-                    :getArchiveEntryFile(parentNode)
+                parentNode == entryTreeRoot ? this : getArchiveEntryFile(parentNode)
         );
     }
 
-    
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
-	
+
     /**
      * Returns an iterator of {@link ArchiveEntry} that iterates through all the entries of this archive.
      * Implementations of this method should as much as possible return entries in their "natural order", i.e. the order
@@ -448,19 +434,11 @@ public abstract class AbstractArchiveFile extends ProxyFile {
     public abstract boolean isWritable();
 
 
-    /////////////////////////////////////////
-    // Partial AbstractFile implementation //
-    /////////////////////////////////////////
-
     @Override
     public boolean isArchive() {
         return exists() && !isDirectory();
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     /**
      * This method is overridden to list and return the topmost entries contained by this archive.
@@ -474,7 +452,7 @@ public abstract class AbstractArchiveFile extends ProxyFile {
     @Override
     public AbstractFile[] ls() throws IOException {
         // Delegate to the ancestor if this file isn't actually an archive
-        if(!isArchive())
+        if (!isArchive())
             return super.ls();
 
         // Make sure the entries tree is created and up-to-date

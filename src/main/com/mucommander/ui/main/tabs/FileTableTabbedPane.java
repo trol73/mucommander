@@ -20,10 +20,8 @@ package com.mucommander.ui.main.tabs;
 
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
-import com.mucommander.ui.macosx.TabbedPaneUICustomizer;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.tabs.TabbedPane;

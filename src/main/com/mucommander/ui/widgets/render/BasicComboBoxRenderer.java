@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2025 Oleg Trifonov
  *
  * muCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer
      * the <code>setBorder</code> method.
      */
     protected static final Border NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
-    private static final Border SAFE_NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
 
     @Override
     public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -65,11 +64,7 @@ public class BasicComboBoxRenderer<T> extends JLabel implements ListCellRenderer
     public BasicComboBoxRenderer() {
         super();
         setOpaque(true);
-        setBorder(getNoFocusBorder());
-    }
-
-    private static Border getNoFocusBorder() {
-        return System.getSecurityManager() == null ? NO_FOCUS_BORDER : SAFE_NO_FOCUS_BORDER;
+        setBorder(NO_FOCUS_BORDER);
     }
 
     public Dimension getPreferredSize() {

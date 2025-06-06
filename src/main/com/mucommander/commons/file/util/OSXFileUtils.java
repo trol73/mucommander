@@ -23,18 +23,12 @@ import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.NSString;
 import com.dd.plist.PropertyListFormatException;
 import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.commons.io.StreamUtils;
-import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.sun.jna.platform.mac.XAttrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class contains methods for file operations that are specific to Mac OS X.

@@ -58,10 +58,6 @@ public class ToolBarReader extends ToolBarIO {
         return actionIds;
     }
 
-    ////////////////////////////
-    // ContentHandler methods //
-    ////////////////////////////
-
     @Override
     public void startDocument() {
         actionIdsV = new Vector<>();

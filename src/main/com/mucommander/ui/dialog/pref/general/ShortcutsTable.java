@@ -358,9 +358,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
         }
 	}
 	
-	private class CancelEditingStateThread extends Thread {
+	private static class CancelEditingStateThread extends Thread {
 		private boolean stopped = false;
-		private TableCellEditor cellEditor;
+		private final TableCellEditor cellEditor;
 
 		CancelEditingStateThread(TableCellEditor cellEditor) {
 			this.cellEditor = cellEditor;
@@ -382,7 +382,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	}
 	
 	private class KeymapTableModel extends DefaultTableModel {	
-		private ShortcutsTableData tableData = null;
+		private ShortcutsTableData tableData;
 
 		private KeymapTableModel(ShortcutsTableData data) {
 			super(data.getTableData(), new String[] {Translator.get("shortcuts_table.action_description"),
@@ -477,7 +477,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		/////////////////////////////
 
 		public void keyPressed(KeyEvent keyEvent) {
-			LOGGER.trace("keyModifiers="+keyEvent.getModifiers()+" keyCode="+keyEvent.getKeyCode());
+			LOGGER.trace("keyModifiers={} keyCode={}", keyEvent.getModifiersEx(), keyEvent.getKeyCode());
 
 	        int keyCode = keyEvent.getKeyCode();
 	        if(keyCode==KeyEvent.VK_SHIFT || keyCode==KeyEvent.VK_CONTROL || keyCode==KeyEvent.VK_ALT || keyCode==KeyEvent.VK_META)
@@ -515,7 +515,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	private class ShortcutsTableData {
 
 		public class CurrentActionAccceleratorsFilter extends ActionFilter {
-			private KeyStroke accelerator;
+			private final KeyStroke accelerator;
 
 			CurrentActionAccceleratorsFilter(KeyStroke accelerator) {
 				this.accelerator = accelerator;
@@ -539,9 +539,9 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		private final Integer accelerator = 1;
 		private final Integer alt_accelerator = 2;
 		private final Integer tooltips = 3;
-		
-		private List<String> allActionIds;
-		private HashMap<String, Map<Integer, Object>> db;
+
+		private final List<String> allActionIds;
+		private final HashMap<String, Map<Integer, Object>> db;
 		
 		ShortcutsTableData() {
             allActionIds = new ArrayList<>();
@@ -698,7 +698,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	
 	private class ShortcutsTableCellRenderer implements TableCellRenderer, ThemeListener {
 		/** Custom JLabel that render specific column cells */
-	    private DotBorderedCellLabel[] cellLabels = new DotBorderedCellLabel[NUM_OF_COLUMNS];
+	    private final DotBorderedCellLabel[] cellLabels = new DotBorderedCellLabel[NUM_OF_COLUMNS];
 	    
 	    ShortcutsTableCellRenderer() {
 	    	for(int i=0; i<NUM_OF_COLUMNS; ++i)
@@ -799,7 +799,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	/**
 	 * CellLabel with a dotted outline.
 	 */
-	private class DotBorderedCellLabel extends CellLabel {
+	private static class DotBorderedCellLabel extends CellLabel {
 
 		@Override
         protected void paintOutline(Graphics g) {

@@ -154,7 +154,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     private String buildMessageId() {
         if (moveToTrash) {
             if (files.size() == 1) {
-                AbstractFile file = files.get(0);
+                AbstractFile file = files.getFirst();
                 return file.isSymlink() ? "this_operation_cannot_be_undone" : "delete_dialog.move_to_trash.confirmation_details_1";
             } else {
                 return "delete_dialog.move_to_trash.confirmation_details";
@@ -168,7 +168,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
     private String buildTitleId() {
         boolean singleFileMode = files.size() == 1;
         if (singleFileMode) {
-            AbstractFile file = files.get(0);
+            AbstractFile file = files.getFirst();
             if (file.isSymlink()) {
                 return "delete_dialog.permanently_delete.symlink_confirmation_1";
             } else {
@@ -178,22 +178,14 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
         return moveToTrash ? "delete_dialog.move_to_trash.confirmation" : "delete_dialog.permanently_delete.confirmation";
     }
 
-
-    /////////////////////////////////
-    // ItemListener implementation //
-    /////////////////////////////////
-
+    @Override
     public void itemStateChanged(ItemEvent e) {
         moveToTrash = cbMoveToTrash.isSelected();
         updateDialog();
         pack();
     }
 
-
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void actionPerformed(ActionEvent e) {
         // Start by disposing this dialog
         dispose();

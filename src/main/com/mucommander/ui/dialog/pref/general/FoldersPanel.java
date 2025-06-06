@@ -430,7 +430,7 @@ class FoldersPanel extends PreferencesPanel implements ItemListener, KeyListener
 			return text.trim().isEmpty() ? HOME_FOLDER_PATH : text;
 		}
 
-    	private class HintTextFieldUI extends BasicTextFieldUI implements FocusListener {
+    	private static class HintTextFieldUI extends BasicTextFieldUI implements FocusListener {
 
     	    private String hint;
     	    private boolean hideOnFocus;

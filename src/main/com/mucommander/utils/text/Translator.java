@@ -46,7 +46,7 @@ public class Translator {
 	private static Logger logger;
 	
     /** List of all available languages in the dictionary file */
-    private static List<Locale> availableLanguages = new ArrayList<>();
+    private static final List<Locale> availableLanguages = new ArrayList<>();
 
     /** Current language */
     private static Locale language;
@@ -164,17 +164,17 @@ public class Translator {
         if (availableLanguages.contains(locale)) {
             // Language is available
             bundle = ResourceBundle.getBundle("dictionary", locale, new UTF8Control());
-            getLogger().debug("Language " + locale + " is available.");
+            getLogger().debug("Language {} is available.", locale);
         } else {
             // Language is not available, fall back to default language
             bundle = ResourceBundle.getBundle("dictionary", new UTF8Control());
-            getLogger().debug("Language " + locale + " is not available, falling back to English");
+            getLogger().debug("Language {} is not available, falling back to English", locale);
         }
         // Set preferred language in configuration file
         TcConfigurations.getPreferences().setVariable(TcPreference.LANGUAGE, locale.toLanguageTag());
 
         Translator.language = locale;
-        getLogger().debug("Current language has been set to " + Translator.language);
+        getLogger().debug("Current language has been set to {}", Translator.language);
     }
 
     /**
@@ -191,7 +191,7 @@ public class Translator {
      * Returns an array of available languages, expressed as language codes ("EN", "FR", "pt_BR"...).
      * The returned array is sorted by language codes in case insensitive order.
      *
-     * @return an array of language codes.
+     * @return an list of language codes.
      */
     public static List<Locale> getAvailableLanguages() {
         return availableLanguages;
@@ -235,7 +235,7 @@ public class Translator {
             }
             text = key;
             System.out.println("No value for " + key +" in language " + language + ", using English value");
-            getLogger().debug("No value for " + key + " in language " + language + ", using English value");
+            getLogger().debug("No value for {}  in language {}, using English value", key, language);
         }
 
         // Replace %1, %2 ... parameters by their value

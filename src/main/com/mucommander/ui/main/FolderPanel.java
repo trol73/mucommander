@@ -122,14 +122,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
 
     /* TODO branch private boolean branchView; */
 
-    /**
-     * Constructor
-     * 
-     * @param mainFrame - the MainFrame that contains this panel
-     * @param initialTabs
-     * @param indexOfSelectedTab
-     * @param conf - configuration for this panel's file table
-     */
     FolderPanel(MainFrame mainFrame, ConfFileTableTab[] initialTabs, int indexOfSelectedTab, FileTableConfiguration conf) {
         super(new BorderLayout());
 
@@ -420,7 +412,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
     /**
-     * Shows the pop up which is located the given index in fileTablePopups.
+     * Shows the popup which is located the given index in fileTablePopups.
      * 
      * @param index - index of the FileTablePopup in fileTablePopups.
      */
@@ -497,10 +489,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
     
-
-    /**
-     * Overridden for debugging purposes.
-     */
     @Override
     public String toString() {
         return getClass().getName()+"@"+hashCode() +" currentFolder="+getCurrentFolder()+" hasFocus="+hasFocus();

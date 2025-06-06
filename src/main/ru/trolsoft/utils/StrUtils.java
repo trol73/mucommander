@@ -17,8 +17,6 @@
  */
 package ru.trolsoft.utils;
 
-import javax.sql.rowset.spi.SyncResolver;
-
 /**
  * @author Oleg Trifonov
  * Created on 03/04/14.
@@ -35,11 +33,6 @@ public class StrUtils {
     private static final char UTF_16_LE_MARKER = 0xFFFE;
 
 
-    /**
-     *
-     * @param val
-     * @return
-     */
     public static String dwordToHexStr(long val) {
         String result = Long.toHexString(val);
         int len = result.length();
@@ -50,11 +43,6 @@ public class StrUtils {
     }
 
 
-    /**
-     *
-     * @param b
-     * @return
-     */
     public static String byteToHexStr(byte b) {
         int v = b & 0xFF;
         String result = HEX_BYTE_STRINGS[v];
@@ -66,13 +54,6 @@ public class StrUtils {
     }
 
 
-    /**
-     *
-     * @param bytes
-     * @param offset
-     * @param size
-     * @return
-     */
     public static String bytesToHexStr(byte[] bytes, int offset, int size) {
         char[] hexChars = new char[size * 2];
         for (int i = offset; i < offset + size; i++) {
@@ -84,21 +65,11 @@ public class StrUtils {
     }
 
 
-    /**
-     *
-     * @param b
-     * @return
-     */
     public static String byteToBinaryStr(byte b) {
         int v = b & 0xFF;
         return byteToBinaryStr(v);
     }
 
-    /**
-     *
-     * @param v
-     * @return
-     */
     public static String byteToBinaryStr(int v) {
         String result = BINARY_BYTE_STRINGS[v];
         if (result == null) {
@@ -110,21 +81,11 @@ public class StrUtils {
     }
 
 
-    /**
-     *
-     * @param b
-     * @return
-     */
     public static String byteToOctalStr(byte b) {
         int v = b & 0xFF;
         return byteToOctalStr(v);
     }
 
-    /**
-     *
-     * @param v
-     * @return
-     */
     public static String byteToOctalStr(int v) {
         String result = OCTAL_BYTE_STRINGS[v];
         if (result == null) {
@@ -136,11 +97,6 @@ public class StrUtils {
     }
 
 
-    /**
-     *
-     * @param bytes
-     * @return
-     */
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder s = new StringBuilder();
         for (byte aByte : bytes) {
@@ -152,12 +108,6 @@ public class StrUtils {
 
 
     public static byte[] hexStringToBytes(String text) {
-//        text = text.replace(" ", "");
-//        if (text.length() % 2 == 1) {
-//            text = text.substring(0, text.length() - 1) + "0" + text.charAt(text.length() - 1);
-//        }
-//        return DatatypeConverter.parseHexBinary(text);
-
         int len = text.length();
         int i = 0;
         char c1 = 0;

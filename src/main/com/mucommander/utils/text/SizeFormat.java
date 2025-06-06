@@ -88,10 +88,6 @@ public class SizeFormat {
     private final static String DECIMAL_SEPARATOR = ""+DECIMAL_FORMAT.getDecimalFormatSymbols().getDecimalSeparator();
 
 
-    /////////////////////
-    // Dictionary keys //
-    /////////////////////
-
     private final static String BYTE = Translator.get("unit.byte");
     private final static String BYTES = Translator.get("unit.bytes");
     private final static String B = Translator.get("unit.bytes_short");

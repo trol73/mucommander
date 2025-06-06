@@ -64,8 +64,6 @@ public class FileIconsCache {
 
     /**
      * Get icon from cache or get it from system and add to cache
-     * @param file
-     * @return
      */
     public Icon getIcon(AbstractFile file) {
         String path = file.getAbsolutePath();
@@ -125,8 +123,6 @@ public class FileIconsCache {
 
     /**
      * Request file icon from OS
-     * @param file
-     * @return
      */
     private Icon loadIcon(AbstractFile file) {
         return FileIcons.getFileIcon(file);

@@ -19,12 +19,9 @@ package com.mucommander.ui.viewer.audio;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.ui.viewer.FileViewer;
-//import com.xuggle.xuggler.*;
 import org.fife.ui.StatusBar;
 
 import javax.sound.sampled.*;
-import java.io.IOException;
-
 
 
 public class AudioViewer extends FileViewer {

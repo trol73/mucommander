@@ -30,7 +30,7 @@ public class Decoder
         // #endif
         
 {
-    class LenDecoder {
+    static class LenDecoder {
         short[] m_Choice = new short[2];
         BitTreeDecoder[] m_LowCoder = new BitTreeDecoder[Base.kNumPosStatesMax];
         BitTreeDecoder[] m_MidCoder = new BitTreeDecoder[Base.kNumPosStatesMax];
@@ -65,8 +65,8 @@ public class Decoder
         }
     }
     
-    class LiteralDecoder {
-        class Decoder2 {
+    static class LiteralDecoder {
+        static class Decoder2 {
             short[] m_Decoders = new short[0x300];
             
             public void Init() {
@@ -443,11 +443,9 @@ public class Decoder
                     _remainLen = kLenIdFinished;
                     return HRESULT.S_FALSE;
                 }
-                
-                
-                int locLen = len;
-                if (len > curSize)
-                    locLen = curSize;
+
+
+                int locLen = Math.min(len, curSize);
                 // if (!m_OutWindow.CopyBlock(rep0, locLen))
                 //    return HRESULT.S_FALSE;
                 m_OutWindow.CopyBlock(rep0, locLen);

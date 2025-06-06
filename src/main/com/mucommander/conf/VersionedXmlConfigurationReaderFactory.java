@@ -20,18 +20,12 @@ package com.mucommander.conf;
 
 import com.mucommander.commons.conf.ConfigurationReader;
 import com.mucommander.commons.conf.ConfigurationReaderFactory;
-import com.mucommander.commons.conf.ReaderConfigurationException;
 
 /**
  * @author Maxence Bernard
  */
 public class VersionedXmlConfigurationReaderFactory implements ConfigurationReaderFactory {
-
-    ///////////////////////////////////////////////
-    // ConfigurationReaderFactory implementation //
-    ///////////////////////////////////////////////
-
-
+    @Override
     public ConfigurationReader getReaderInstance() {
         return new VersionedXmlConfigurationReader();
     }

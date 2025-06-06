@@ -106,7 +106,7 @@ public class LocalLocationHistory {
 
 		// If capacity is reached, remove first folder
 		if (history.size() >= HISTORY_CAPACITY) {
-			history.remove(0);
+			history.removeFirst();
 			historyIndex--;
 		}
 
@@ -160,7 +160,7 @@ public class LocalLocationHistory {
 	 * Returns a list of 'back' folders, most recently visited folder first. The returned array may be empty if there
 	 * currently isn't any 'back' folder in history, but may never be null.
 	 *
-	 * @return a list of 'back' folders, most recently visited folder first
+	 * @return a array of 'back' folders, most recently visited folder first
 	 */
 	public FileURL[] getBackFolders() {
 		if (!hasBackFolder()) {
@@ -183,7 +183,7 @@ public class LocalLocationHistory {
 	 * Returns a list of 'forward' folders, most recently visited folder first. The returned array may be empty if there
 	 * currently isn't any 'forward' folder in history, but may never be null.
 	 *
-	 * @return a list of 'forward' folders, most recently visited folder first
+	 * @return a array of 'forward' folders, most recently visited folder first
 	 */
 	public FileURL[] getForwardFolders() {
 		if (!hasForwardFolder()) {

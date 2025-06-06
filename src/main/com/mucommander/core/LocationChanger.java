@@ -85,7 +85,6 @@ public class LocationChanger {
 	 */
 	public void tryChangeCurrentFolderInternal(final FileURL folderURL, Runnable callback) {
 		mainFrame.setNoEventsMode(true);
-		// Set cursor to hourglass/wait
         showWaitCursor();
 
         Thread setLocationThread = new Thread(() -> {
@@ -94,7 +93,6 @@ public class LocationChanger {
                 locationManager.setCurrentFolder(folder, null, true);
             } finally {
                 mainFrame.setNoEventsMode(false);
-                // Restore default cursor
                 restoreDefaultCursor();
                 // Notify callback that the folder has been set
                 callback.run();
@@ -175,16 +173,13 @@ public class LocationChanger {
 	 * @return the thread that performs the actual folder change, null if another folder change is already underway  
 	 */
 	public ChangeFolderThread tryChangeCurrentFolder(AbstractFile folder, AbstractFile selectThisFileAfter, boolean findWorkableFolder, boolean changeLockedTab) {
-		LOGGER.debug("folder="+folder+" selectThisFileAfter="+selectThisFileAfter);
+		LOGGER.debug("folder= {} selectThisFileAfter={}", folder, selectThisFileAfter);
 
 		synchronized(FOLDER_CHANGE_LOCK) {
 			// Make sure a folder change is not already taking place. This can happen under rare but normal
 			// circumstances, if this method is called before the folder change thread has had the time to call
 			// MainFrame#setNoEventsMode.
-			if (changeFolderThread != null) {
-				LOGGER.debug("A folder change is already taking place ("+changeFolderThread+"), returning null");
-				return null;
-			}
+			if (isChangeFolderThreadAlreadyTakingPlace()) return null;
 
 			// Important: the ChangeFolderThread instance must be kept in a local variable (as opposed to the
 			// changeFolderThread field only) before being returned. The reason for this is that ChangeFolderThread
@@ -270,10 +265,7 @@ public class LocationChanger {
 			// Make sure a folder change is not already taking place. This can happen under rare but normal
 			// circumstances, if this method is called before the folder change thread has had the time to call
 			// MainFrame#setNoEventsMode.
-			if (changeFolderThread != null) {
-				LOGGER.debug("A folder change is already taking place ("+changeFolderThread+"), returning null");
-				return null;
-			}
+			if (isChangeFolderThreadAlreadyTakingPlace()) return null;
 
 			// Important: the ChangeFolderThread instance must be kept in a local variable (as opposed to the
 			// changeFolderThread field only) before being returned. The reason for this is that ChangeFolderThread
@@ -286,6 +278,14 @@ public class LocationChanger {
 			changeFolderThread = thread;
 			return thread;
 		}
+	}
+
+	private boolean isChangeFolderThreadAlreadyTakingPlace() {
+		if (changeFolderThread != null) {
+			LOGGER.debug("A folder change is already taking place ({}), returning null", changeFolderThread);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -609,7 +609,7 @@ public class LocationChanger {
 		@Override
 		public void start() {
 			// Notify listeners that location is changing
-			locationManager.fireLocationChanging(folder==null?folderURL:folder.getURL());
+			locationManager.fireLocationChanging(folder == null ? folderURL : folder.getURL());
 
 			super.start();
 		}
@@ -788,9 +788,8 @@ public class LocationChanger {
 						// Restore default cursor
 						restoreDefaultCursor();
 
-						if (e instanceof AuthException) {
-							AuthException authException = (AuthException)e;
-							// Retry (loop) if user provided new credentials, if not stop
+						if (e instanceof AuthException authException) {
+                            // Retry (loop) if user provided new credentials, if not stop
 							AuthDialog authDialog = popAuthDialog(authException.getURL(), true, authException.getMessage());
 							newCredentialsMapping = authDialog.getCredentialsMapping();
 							guestCredentialsSelected = authDialog.guestCredentialsSelected();

@@ -18,8 +18,6 @@
 
 package com.mucommander.ui.button;
 
-import com.mucommander.commons.runtime.OsVersion;
-
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

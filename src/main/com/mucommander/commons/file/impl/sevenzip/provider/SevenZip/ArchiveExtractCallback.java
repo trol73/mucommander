@@ -12,7 +12,7 @@ import com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Archive.Seve
 public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICryptoGetTextPassword,
 {
     
-    class OutputStream extends java.io.OutputStream {
+    static class OutputStream extends java.io.OutputStream {
         java.io.RandomAccessFile file;
         
         public OutputStream(java.io.RandomAccessFile f) {

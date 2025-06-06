@@ -60,22 +60,15 @@ public class MuLogging {
          * @return <code>LogLevel</code> corresponding to the given logback log level
          */
         public static LogLevel valueOf(Level logbackLevel) {
-            switch (logbackLevel.toInt()) {
-                case ch.qos.logback.classic.Level.OFF_INT:
-                    return LogLevel.OFF;
-                case ch.qos.logback.classic.Level.ERROR_INT:
-                    return LogLevel.SEVERE;
-                case ch.qos.logback.classic.Level.WARN_INT:
-                    return LogLevel.WARNING;
-                case ch.qos.logback.classic.Level.INFO_INT:
-                    return LogLevel.INFO;
-                case ch.qos.logback.classic.Level.DEBUG_INT:
-                    return LogLevel.FINE;
-                case ch.qos.logback.classic.Level.TRACE_INT:
-                    return LogLevel.FINEST;
-                default:
-                    return LogLevel.OFF;
-            }
+            return switch (logbackLevel.toInt()) {
+                case Level.OFF_INT -> LogLevel.OFF;
+                case Level.ERROR_INT -> LogLevel.SEVERE;
+                case Level.WARN_INT -> LogLevel.WARNING;
+                case Level.INFO_INT -> LogLevel.INFO;
+                case Level.DEBUG_INT -> LogLevel.FINE;
+                case Level.TRACE_INT -> LogLevel.FINEST;
+                default -> LogLevel.OFF;
+            };
         }
 
         /**
@@ -84,23 +77,14 @@ public class MuLogging {
          * @return logback level corresponding to this <code>LogLevel</code>
          */
         public Level toLogbackLevel() {
-            switch (this) {
-                case SEVERE:
-                    return ch.qos.logback.classic.Level.ERROR;
-                case WARNING:
-                    return ch.qos.logback.classic.Level.WARN;
-                case INFO:
-                case CONFIG:
-                    return ch.qos.logback.classic.Level.INFO;
-                case FINE:
-                case FINER:
-                    return ch.qos.logback.classic.Level.DEBUG;
-                case FINEST:
-                    return ch.qos.logback.classic.Level.TRACE;
-                case OFF:
-                default:
-                    return ch.qos.logback.classic.Level.OFF;
-            }
+            return switch (this) {
+                case SEVERE -> Level.ERROR;
+                case WARNING -> Level.WARN;
+                case INFO, CONFIG -> Level.INFO;
+                case FINE, FINER -> Level.DEBUG;
+                case FINEST -> Level.TRACE;
+                default -> Level.OFF;
+            };
         }
     }
 

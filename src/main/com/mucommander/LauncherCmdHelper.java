@@ -35,7 +35,7 @@ public class LauncherCmdHelper {
 	private static Logger logger;
 
     /**
-     * Whether or not to display verbose error messages.
+     * Whether to display verbose error messages.
      */
     private boolean verbose;
 

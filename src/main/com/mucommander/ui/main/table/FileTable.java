@@ -20,6 +20,7 @@ package com.mucommander.ui.main.table;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -188,11 +189,13 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     private int lastSelectedRow, lastSelectedCol, lastSelectedEqCnt;
 
+    /** Whether to proceed with renaming the next file after renaming the selected file */
+    private boolean consecutiveRename;
 
 
     public FileTable(MainFrame mainFrame, FolderPanel folderPanel, FileTableConfiguration conf) {
-        super(new FileTableModel(), new FileTableColumnModel(conf));    // TODO !!!
-//super(new CompactFileTableModel(2, 20), new CompactFileTableColumnModel(2, conf));    // TODO !!!
+        super(new FileTableModel(), new FileTableColumnModel(conf));
+
         this.conf = conf;
         tableModel = (BaseFileTableModel)getModel();
         tableModel.setSortInfo(sortInfo);
@@ -319,6 +322,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     private DefaultOverlayable createOverlayableTable() {
         return new DefaultOverlayable(scrollpaneWrapper) {
+            @Serial
             private static final long serialVersionUID = 1L;
 
             {
@@ -599,7 +603,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      * @param children children of the specified folder
      * @param fileToSelect the file to select, <code>null</code> for the default selection.
      */
-    public void setCurrentFolder(AbstractFile folder, AbstractFile children[], AbstractFile fileToSelect) {
+    public void setCurrentFolder(AbstractFile folder, AbstractFile[] children, AbstractFile fileToSelect) {
         // Stop quick search in case it was being used before folder change
         if (!isQuickSearchMatchesFirst() || !folder.equals(tableModel.getCurrentFolder())) {
             quickSearch.stop();
@@ -715,7 +719,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     /**
      * Controls whether quick search matches are displayed first in this FileTable or mixed with other files.
-     * @param enabled
      */
     public void setShowMatchesFirst(boolean enabled) {
         sortInfo.setQuickSearchMatchesFirst(enabled);
@@ -1002,8 +1005,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /**
      * Convenience method that returns this table's <code>javax.swing.table.TableColumnModel</code> cast as a
      * {@link FileTableColumnModel}.
-     *
-     * This methods return not null for full table view mode
+     * This method return not null for full table view mode
      *
      * @return this table's TableColumnModel cast as a FileTableColumnModel
      */
@@ -1014,8 +1016,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /**
      * Convenience method that returns this table's <code>javax.swing.table.TableColumnModel</code> cast as a
      * {@link CompactFileTableColumnModel}.
-     *
-     * This methods return not null for compact table view mode
+     * This method return not null for compact table view mode
      *
      * @return this table's TableColumnModel cast as a CompactFileTableColumnModel
      */
@@ -1173,19 +1174,19 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     public void editCurrentFilename() {
         // Forces CommandBar to return to its normal state as modify key release event is never fired to FileTable
         mainFrame.getCommandBar().setAlternateActionsMode(false);
-
         // Temporarily enable editing
         tableModel.setNameColumnEditable(true);
         // Filename editor's row resize disabled because of Java bug #4398268 which prevents new rows from being visible after setRowHeight(row, height) has been called :/
-        // // Adjust row height to match filename editor's height
+        // Adjust row height to match filename editor's height
         // setRowHeight(row, (int)filenameEditor.filenameField.getPreferredSize().getHeight());
         // Starts editing clicked cell's name column
+
         if (viewMode == TableViewMode.FULL) {
             editCellAt(currentRow, convertColumnIndexToView(Column.NAME.ordinal()));
         } else {
             editCellAt(currentRow, currentColumn);
         }
-
+        getFolderPanel().getFolderChangeMonitor().setPaused(true);
         // Saves current/editing row in the filename editor and requests focus on the text field
         filenameEditor.notifyEditing(currentRow, currentColumn);
         // Disable editing
@@ -1357,8 +1358,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
             // update model if need
             BaseFileTableModel model = getFileTableModel();
-            if (model instanceof CompactFileTableModel) {
-                CompactFileTableModel compactModel = (CompactFileTableModel)model;
+            if (model instanceof CompactFileTableModel compactModel) {
                 if (compactModel.getVisibleRows() != pageSize) {
                     compactModel.setVisibleRows(pageSize);
                     SwingUtilities.invokeLater(this::invalidate);
@@ -1390,11 +1390,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             return;
         }
         TableColumn nameColumn = getColumnModel().getColumn(convertColumnIndexToView(Column.NAME.ordinal()));
-        if (nameColumn.getWidth() + width >= RESERVED_NAME_COLUMN_WIDTH) {
-            nameColumn.setWidth(nameColumn.getWidth() + width);
-        } else {
-            nameColumn.setWidth(RESERVED_NAME_COLUMN_WIDTH);
-        }
+        nameColumn.setWidth(Math.max(nameColumn.getWidth() + width, RESERVED_NAME_COLUMN_WIDTH));
     }
 
     /**
@@ -1552,18 +1548,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
 
-    /**
-     * Overridden for debugging purposes.
-     */
     @Override
     public String toString() {
         return getClass().getName()+"@"+hashCode() +" currentFolder="+folderPanel.getCurrentFolder()+" hasFocus="+hasFocus()+" currentRow="+currentRow;
     }
 
-    ///////////////////////////
-    // MouseListener methods //
-    ///////////////////////////
-
+    @Override
     public void mouseClicked(MouseEvent e) {
         // Discard mouse events while in 'no events mode'
         if (mainFrame.getNoEventsMode()) {
@@ -1663,12 +1653,15 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         // Discard mouse events while in 'no events mode'
         if (mainFrame.getNoEventsMode()) {
@@ -1729,12 +1722,9 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
-
-    /////////////////////////////////
-    // MouseMotionListener methods //
-    /////////////////////////////////
 
     public void mouseDragged(MouseEvent e) {
         // Discard mouse motion events while in 'no events mode'
@@ -1757,14 +1747,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
 
+    @Override
     public void mouseMoved(MouseEvent e) {
     }
 
 
-    /////////////////////////
-    // KeyListener methods //
-    /////////////////////////
-
+    @Override
     public void keyPressed(KeyEvent e) {
         // Handle Left/Right keys for compact modes
         if (viewMode != TableViewMode.FULL) {
@@ -1786,9 +1774,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
+    @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
         // Discard keyReleased events while quick search is active
         if (quickSearch.isActive()) {
@@ -1803,10 +1793,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
     }
 
-    /////////////////////////////////
-    // ActivePanelListener methods //
-    /////////////////////////////////
-
+    @Override
     public void activePanelChanged(FolderPanel folderPanel) {
         isActiveTable = folderPanel == getFolderPanel();
 
@@ -1824,15 +1811,10 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
 
-
-
-    ///////////////////////////////////
-    // ConfigurationListener methods //
-    ///////////////////////////////////
-
     /**
      * Listens to certain configuration variables.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
         switch (event.getVariable()) {
             case TcPreferences.DISPLAY_COMPACT_FILE_SIZE:
@@ -1861,8 +1843,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 repaint();
         }
     }
-
-
 
 
     /**
@@ -1896,33 +1876,31 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         FilenameEditor(JTextField textField) {
             super(textField);
             this.filenameField = textField;
-
             // Sets the font to the same one that's used for cell rendering (user-defined)
             filenameField.setFont(FileTableCellRenderer.getCellFont());
+            filenameField.setFocusTraversalKeysEnabled(false);
             textField.addKeyListener(
                 new FilePathFieldKeyListener(textField, false) {
                     // Cancel editing when escape key pressed, this is unfortunately not DefaultCellEditor's default behavior
                     @Override
                     public void keyPressed(KeyEvent e) {
-                        super.keyPressed(e);
                         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                             cancelCellEditing();
+                        } else if (e.getKeyCode() == KeyEvent.VK_TAB) {
+                            cancelCellEditing();
+                            consecutiveRename = editingRow < tableModel.getRowCount() - 1;
+                            rename();
                         }
                     }
                 }
             );
             textField.addActionListener(e -> rename());
-            textField.addFocusListener(new FocusListener() {
-				
+            textField.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					cancelCellEditing();
 					FileTable.this.repaint();
 				}
-				
-				public void focusGained(FocusEvent e) {}
 			});
-
-
         }
         
 
@@ -1939,10 +1917,50 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("move_dialog.moving"));
                 FileSet files = new FileSet(current);
                 files.add(fileToRename);
-                MoveJob renameJob = new MoveJob(progressDialog, mainFrame, files, current, newName, FileCollisionDialog.ASK_ACTION, true);
-                progressDialog.start(renameJob);
+                MoveJob renameJob;
+                if (!consecutiveRename) {
+                    renameJob = new MoveJob(null, mainFrame, files, current, newName, FileCollisionDialog.ASK_ACTION, true);
+                } else {
+                    AbstractFile fileToBeSelected = tableModel.getFileAt(editingRow+1, editingCol);
+                    renameJob = new MoveJob(null, mainFrame, files, current, newName, FileCollisionDialog.ASK_ACTION, true) {
+                        @Override
+                        protected void selectFileWhenFinished(AbstractFile file) {
+                            super.selectFileWhenFinished(fileToBeSelected);
+                        }
+                    };
+                }
+                progressDialog.start(renameJob);//renameJob.start();
+
+//                renameJob= new MoveJob(progressDialog, mainFrame, files, current, newName, FileCollisionDialog.ASK_ACTION, true);
+//                progressDialog.start(renameJob);
+            } else if (consecutiveRename) {
+                selectFile(editingRow + 1);
+                fireSelectedFileChangedEvent();
+
+                long tm = System.currentTimeMillis();
+                if (tm - lastInvokeEitCurrentFilename > 10) {
+                    SwingUtilities.invokeLater(FileTable.this::editCurrentFilename);
+                }
+                lastInvokeEitCurrentFilename = tm;
+
+//                SwingUtilities.invokeLater(FileTable.this::editCurrentFilename);
+//     [java] 	at com.mucommander.ui.main.table.FileTable$FilenameEditor.rename(FileTable.java:1960)
+//     [java] 	at com.mucommander.ui.main.table.FileTable$FilenameEditor$1.keyPressed(FileTable.java:1912)
+//     [java] 	at java.desktop/java.awt.AWTEventMulticaster.keyPressed(AWTEventMulticaster.java:257)
+
+//     [java] 	at com.mucommander.ui.main.table.FileTable$FilenameEditor.rename(FileTable.java:1960)
+//     [java] 	at com.mucommander.ui.main.table.FileTable$FilenameEditor$1.keyPressed(FileTable.java:1912)
+//     [java] 	at java.desktop/java.awt.AWTEventMulticaster.keyPressed(AWTEventMulticaster.java:258)
             }
         }
+
+        @Override
+        public void cancelCellEditing() {
+            getFolderPanel().getFolderChangeMonitor().setPaused(false);
+            super.cancelCellEditing();
+        }
+
+        static long lastInvokeEitCurrentFilename = System.currentTimeMillis();
 
 
         /*
@@ -1973,6 +1991,19 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             // Request focus on text field
             filenameField.requestFocus();
         }
+
+//        private void notifyEditingRow(int row) {
+//            // The editing row has to be saved as it could change after row editing has been started
+//            this.editingRow = row;
+//
+//            AbstractFile file = tableModel.getFileAtRow(editingRow);
+//            AbstractCopyDialog.selectDestinationFilename(file, file.getName(), 0).feedToPathField(filenameField);
+//
+////            filenameField.setBorder(BorderFactory.createLineBorder(cellRenderer.getBakgroundOfSelectedFileInInactiveTable()));
+//
+//            // Request focus on text field
+//            filenameField.requestFocus();
+//        }
 
 
         @Override
@@ -2093,10 +2124,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             }
             mainFrame.getStatusBar().setStatusInfo(hint, IconManager.getIcon(IconManager.IconSet.STATUS_BAR, QUICK_SEARCH_KO_ICON), false);
 		}
-		
-        ///////////////////////////////
-        // KeyAdapter implementation //
-        ///////////////////////////////
 
 		@Override
 	    public synchronized void keyPressed(KeyEvent e) {
@@ -2286,7 +2313,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                 tableModel.setCurrentFolder(folder, children, FileTable.this);
                 // Update the visibility state of conditional columns
                 FileTableColumnModel columnModel = getFileTableColumnModel();
-
                 updateColumnsVisibility();
 
                 // The column corresponding to the current 'sort by' criterion may have become invisible.
@@ -2306,7 +2332,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
                 // Computes the index of the new row selection.
                 int indexToSelect = getIndexToSelect();
-
                 selectFile(indexToSelect);
                 fireSelectedFileChangedEvent();
 
@@ -2323,15 +2348,16 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     // Notify registered listeners that currently marked files have changed on this FileTable
                     fireMarkedFilesChangedEvent();
                 }
+                if (consecutiveRename) {
+                    editCurrentFilename();
+                    consecutiveRename = false;
+                }
                 resizeAndRepaint();
             } catch (Throwable e) {
                 // While no such thing should happen, we want to make absolutely sure no exception
                 // is propagated to the AWT event dispatch thread.
                 getLogger().warn("Caught exception while changing folder, this should not happen!", e);
                 getLogger().warn(e.getMessage());
-//    for (StackTraceElement ste  : e.getStackTrace()) {
-//        getLogger().warn(ste.toString());
-//    }
             } finally {
                 // Notify #setCurrentFolder that we're done changing the folder.
                 synchronized(this) {

@@ -650,7 +650,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
         } else if (source == btnCounter) {
             insertPattern("[C]");
         } else if (source == btnNameRange) {
-            String firstFile = files.get(0).getNameWithoutExtension();
+            String firstFile = files.getFirst().getNameWithoutExtension();
             BatchRenameSelectRange dlg = new BatchRenameSelectRange(this, firstFile);
             dlg.showDialog();
             String range = dlg.getRange();

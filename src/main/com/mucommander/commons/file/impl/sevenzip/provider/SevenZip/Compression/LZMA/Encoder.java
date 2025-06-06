@@ -58,9 +58,9 @@ public class Encoder {
 	static final int kDefaultDictionaryLogSize = 22;
 	static final int kNumFastBytesDefault = 0x20;
 
-	class LiteralEncoder
+	static class LiteralEncoder
 	{
-		class Encoder2
+		static class Encoder2
 		{
 			short[] m_Encoders = new short[0x300];
 
@@ -157,7 +157,7 @@ public class Encoder {
 		{ return m_Coders[((pos & m_PosMask) << m_NumPrevBits) + ((prevByte & 0xFF) >>> (8 - m_NumPrevBits))]; }
 	}
 
-	class LenEncoder
+	static class LenEncoder
 	{
 		short[] _choice = new short[2];
 		BitTreeEncoder[] _lowCoder = new BitTreeEncoder[Base.kNumPosStatesEncodingMax];
@@ -216,7 +216,7 @@ public class Encoder {
 			int a1 = com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice1(_choice[0]);
 			int b0 = a1 + com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice0(_choice[1]);
 			int b1 = a1 + com.mucommander.commons.file.impl.sevenzip.provider.SevenZip.Compression.RangeCoder.Encoder.GetPrice1(_choice[1]);
-			int i = 0;
+			int i;
 			for (i = 0; i < Base.kNumLowLenSymbols; i++)
 			{
 				if (i >= numSymbols)

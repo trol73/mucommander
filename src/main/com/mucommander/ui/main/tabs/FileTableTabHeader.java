@@ -118,7 +118,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
     /**************************************************
 	 * Buttons which are presented in the tab's header
 	 **************************************************/
-    private class CloseButton extends JButton {
+    private static class CloseButton extends JButton {
     	 
         CloseButton() {
             setPreferredSize(new Dimension(CLOSE_ICON_SIZE, CLOSE_ICON_SIZE));
@@ -148,7 +148,7 @@ public class FileTableTabHeader extends JPanel implements ActionListener {
         }
     }
     
-    private class LockedIcon extends JLabel {
+    private static class LockedIcon extends JLabel {
    	 
         LockedIcon() {
         	super(IconManager.getIcon(IconManager.IconSet.COMMON, LOCKED_ICON_NAME));

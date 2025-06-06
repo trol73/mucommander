@@ -85,10 +85,10 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 	private static Logger logger;
 	
     /** FolderPanel instance that contains this button */
-    private FolderPanel folderPanel;
+    private final FolderPanel folderPanel;
 	
     /** Current volumes */
-    private static AbstractFile volumes[];
+    private static AbstractFile[] volumes;
 
     /** static FileSystemView instance, has a (non-null) value only under Windows */
     private static FileSystemView fileSystemView;
@@ -97,7 +97,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     private static Map<AbstractFile, String> extendedNameCache;
     
     /** Caches drive icons */
-    private static Map<AbstractFile, Icon> iconCache = new HashMap<>();
+    private static final Map<AbstractFile, Icon> iconCache = new HashMap<>();
     
 
     /** Filters out volumes from the list based on the exclude regexp defined in the configuration, null if the regexp
@@ -273,7 +273,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
      * filtered using the regexp defined in the {@link TcPreferences#VOLUME_EXCLUDE_REGEXP} configuration variable
      * (if defined).
      *
-     * @return the list of volumes to be displayed in the popup menu
+     * @return the array of volumes to be displayed in the popup menu
      */
     private static AbstractFile[] getDisplayableVolumes() {
         AbstractFile[] volumes = LocalFile.getVolumes();
@@ -284,11 +284,6 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
         return volumes;
     }
-
-
-    ////////////////////////////////
-    // PopupButton implementation //
-    ////////////////////////////////
 
     @Override
     public JPopupMenu getPopupMenu() {
@@ -467,14 +462,14 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
 
 
     /**
-     *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread so as
+     *  Calls to getExtendedDriveName(String) are very slow, so they are performed in a separate thread
      *  to not lock the main even thread. The popup menu gets first displayed with the short drive names, and
      * then refreshed with the extended names as they are retrieved.        
      */
-    private class RefreshDriveNamesAndIcons extends Thread {
+    private static class RefreshDriveNamesAndIcons extends Thread {
         
-        private JPopupMenu popupMenu;
-        private List<JMenuItem> items;
+        private final JPopupMenu popupMenu;
+        private final List<JMenuItem> items;
 
         RefreshDriveNamesAndIcons(JPopupMenu popupMenu, List<JMenuItem> items) {
             super("RefreshDriveNamesAndIcons");
@@ -590,16 +585,12 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     }
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     /**
      * This action pops up {@link com.mucommander.ui.dialog.server.ServerConnectDialog} for a specified
      * protocol.
      */
     private class ServerConnectAction extends AbstractAction {
-        private Class<? extends ServerPanel> serverPanelClass;
+        private final Class<? extends ServerPanel> serverPanelClass;
 
         private ServerConnectAction(String label, Class<? extends ServerPanel> serverPanelClass) {
             super(label);

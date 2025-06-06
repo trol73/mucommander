@@ -58,7 +58,7 @@ class AdbProtocolHandler implements Runnable {
                     send(output, String.format("%04x", responder.getVersion()));
                 } else if ("host:transport-any".equals(command)) {
                     // TODO: Check so that exactly one device is selected.
-                    selected = responder.getDevices().get(0);
+                    selected = responder.getDevices().getFirst();
                     output.writeBytes("OKAY");
                 } else if ("host:devices".equals(command)) {
                     ByteArrayOutputStream tmp = new ByteArrayOutputStream();
@@ -67,7 +67,7 @@ class AdbProtocolHandler implements Runnable {
                         writer.writeBytes(d.getSerial() + "\t" + d.getType() + "\n");
                     }
                     output.writeBytes("OKAY");
-                    send(output, new String(tmp.toByteArray(), StandardCharsets.UTF_8));
+                    send(output, tmp.toString(StandardCharsets.UTF_8));
                 } else if (command.startsWith("host:transport:")) {
                     String serial = command.substring("host:transport:".length());
                     selected = findDevice(serial);
@@ -88,7 +88,7 @@ class AdbProtocolHandler implements Runnable {
                     return;
                 } else if ("host:get-state".equals(command)) {
                     // TODO: Check so that exactly one device is selected.
-                    AdbDeviceResponder device = responder.getDevices().get(0);
+                    AdbDeviceResponder device = responder.getDevices().getFirst();
                     output.writeBytes("OKAY");
                     send(output, device.getType());
                 } else if (command.startsWith("host-serial:")) {

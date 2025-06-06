@@ -6,7 +6,6 @@ import com.mucommander.commons.file.FileOperation;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * An {@link AbstractFileTest} implementation for {@link com.mucommander.commons.file.impl.sftp.SFTPFile}.

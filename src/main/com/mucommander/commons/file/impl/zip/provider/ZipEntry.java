@@ -20,7 +20,6 @@ package com.mucommander.commons.file.impl.zip.provider;
 
 import java.util.Calendar;
 import java.util.Vector;
-import java.util.zip.ZipException;
 
 /**
  * Extension that adds better handling of extra fields and provides

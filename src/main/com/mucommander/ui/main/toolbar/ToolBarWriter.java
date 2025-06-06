@@ -37,8 +37,6 @@ import com.mucommander.utils.xml.XmlWriter;
 public class ToolBarWriter extends ToolBarIO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ToolBarWriter.class);
 	
-	// - Singleton -------------------------------------------------------
-    // -------------------------------------------------------------------
 	private static ToolBarWriter instance;
 	
 	public static ToolBarWriter create() {

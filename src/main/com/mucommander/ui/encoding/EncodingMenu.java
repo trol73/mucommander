@@ -20,7 +20,6 @@ package com.mucommander.ui.encoding;
 
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.DialogOwner;
-import ru.trolsoft.ui.TCheckBoxMenuItem;
 import ru.trolsoft.ui.TMenuSeparator;
 import ru.trolsoft.ui.TRadioButtonMenuItem;
 

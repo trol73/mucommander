@@ -20,7 +20,6 @@ package com.mucommander.conf;
 
 import com.mucommander.commons.conf.ConfigurationBuilder;
 import com.mucommander.commons.conf.ConfigurationWriterFactory;
-import com.mucommander.commons.conf.WriterConfigurationException;
 
 import java.io.Writer;
 

@@ -308,7 +308,6 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
                 folderPanel.tryChangeCurrentFolder(folder);
             }
         }
-
     }
     
 
@@ -327,61 +326,61 @@ public class FoldersTreePanel extends JPanel implements TreeSelectionListener,
         }
     }
 
-    // - LocationListener code -------------------------------------------------
-    // -------------------------------------------------------------------------
 
+    @Override
     public void locationCancelled(LocationEvent locationEvent) {
     }
 
+    @Override
     public void locationChanged(LocationEvent locationEvent) {
         updateSelectedFolder();
     }
 
+    @Override
     public void locationChanging(LocationEvent locationEvent) {
     }
 
+    @Override
     public void locationFailed(LocationEvent locationEvent) {
     }
 
-    
-    // - FocusListener code ----------------------------------------------------
-    // -------------------------------------------------------------------------
-    
+
+    @Override
     public void focusGained(FocusEvent e) {
 		tree.setBackground(ThemeCache.backgroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL]);	
 	}
 
+    @Override
 	public void focusLost(FocusEvent e) {
 		tree.setBackground(ThemeCache.backgroundColors[ThemeCache.INACTIVE][ThemeCache.NORMAL]);	
 	}
 
-	
-    // - ThemeListener code ----------------------------------------------------
-    // -------------------------------------------------------------------------
-	
-	public void colorChanged(ColorChangedEvent event) {
+    @Override
+    public void colorChanged(ColorChangedEvent event) {
         int type = tree.hasFocus()  ? ThemeCache.ACTIVE : ThemeCache.INACTIVE;
         tree.setBackground(ThemeCache.backgroundColors[type][ThemeCache.NORMAL]);
 		tree.repaint();
 	}
 
-	public void fontChanged(FontChangedEvent event) {
+    @Override
+    public void fontChanged(FontChangedEvent event) {
 		tree.setFont(ThemeCache.tableFont);
 		tree.repaint();
 	}
 
-    // - TreeModelListener code ------------------------------------------------
-    // -------------------------------------------------------------------------
-
-	public void treeNodesChanged(TreeModelEvent e) {
+    @Override
+    public void treeNodesChanged(TreeModelEvent e) {
     }
 
+    @Override
     public void treeNodesInserted(TreeModelEvent e) {
     }
 
+    @Override
     public void treeNodesRemoved(TreeModelEvent e) {
     }
 
+    @Override
     public void treeStructureChanged(TreeModelEvent e) {
         // ensures that a selection is repainted correctly
         // after nodes have been inserted                

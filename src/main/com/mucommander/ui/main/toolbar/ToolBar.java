@@ -200,22 +200,18 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
     }
 
-    
-
-    ///////////////////////////////////
-    // ConfigurationListener methods //
-    ///////////////////////////////////
 
     /**
      * Listens to certain configuration variables.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
 
         // Rescale buttons icon
         if (var.equals(TcPreferences.TOOLBAR_ICON_SCALE)) {
             scaleFactor = event.getFloatValue();
-            Component components[] = getComponents();
+            Component[] components = getComponents();
 
             for (Component component : components) {
                 if (component instanceof JButton) {
@@ -226,14 +222,11 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
     }
 
 
-    ///////////////////////////
-    // MouseListener methods //
-    ///////////////////////////
-
+    @Override
     public void mouseClicked(MouseEvent e) {
         Object source = e.getSource();
 
-        // Right clicking on the toolbar brings up a popup menu
+        // Right-clicking on the toolbar brings up a popup menu
         if (source == this) {
             if (DesktopManager.isRightMouseButton(e)) {
                 //			if (e.isPopupTrigger()) {	// Doesn't work under Mac OS X (CTRL+click doesn't return true)
@@ -245,6 +238,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JButton) {
@@ -252,6 +246,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JButton) {
@@ -259,18 +254,17 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
     }
 
-    
-    ///////////////////////////////////////
-    // ToolBarAttributesListener methods //
-    ///////////////////////////////////////
-    
-	public void toolBarActionsChanged() {
+
+    @Override
+    public void toolBarActionsChanged() {
 		removeAll();
 		addButtons(ToolBarAttributes.getActions());
 	}

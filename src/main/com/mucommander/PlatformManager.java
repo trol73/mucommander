@@ -84,7 +84,7 @@ public class PlatformManager {
         // Makes sure the folder exists.
         if (!folder.exists()) {
             if (!folder.mkdir()) {
-                LOGGER.warn("Could not create preference folder: " + folder.getAbsolutePath());
+                LOGGER.warn("Could not create preference folder: {}", folder.getAbsolutePath());
             }
         }
         return folder.getAbsolutePath();

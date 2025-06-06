@@ -121,8 +121,7 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     }
 
     /**
-     * Notifies all listeners that have registered interest for notification on
-     * this event type.
+     * Notifies all listeners that have registered interest for notification on this event type.
      * @param source the node where the tree model has changed
      * @param path the path to the root node
      * @see EventListenerList
@@ -145,11 +144,8 @@ public class FilesTreeModel implements TreeModel, CachedDirectoryListener {
     }
 
     /**
-     * Builds the parents of node up to and including the root node,
-     * where the original node is the last element in the returned array.
-     * The length of the returned array gives the node's depth in the
-     * tree.
-     * 
+     * Builds the parents of node up to and including the root node, where the original node is the last element
+     * in the returned array. The length of the returned array gives the node's depth in the tree.
      * @param aNode the TreeNode to get the path for
      */
     AbstractFile[] getPathToRoot(AbstractFile aNode) {

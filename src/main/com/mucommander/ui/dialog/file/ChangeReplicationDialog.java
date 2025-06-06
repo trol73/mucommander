@@ -158,7 +158,7 @@ public class ChangeReplicationDialog extends JobDialog implements ActionListener
             }
         }
 
-        class IntTextDocument extends PlainDocument {
+        static class IntTextDocument extends PlainDocument {
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                 if (str == null) {
                     return;

@@ -21,8 +21,8 @@ package com.mucommander.core;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,32 @@ import com.mucommander.ui.main.FolderPanel;
  */
 public class FolderChangeMonitor implements Runnable, WindowListener, LocationListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FolderChangeMonitor.class);
-	
+
+    /**
+     * If not null then refresh folder that contains this files
+     */
+    private static final List<String> forceRefreshFilePath = new ArrayList<>();
+
+    /** Thread in which the actual monitoring is performed */
+    private static Thread monitorThread;
+
+    /** FolderChangeMonitor instances */
+    private static final List<FolderChangeMonitor> instances;
+
+    private static final OrFileFilter disableAutoRefreshFilter = new OrFileFilter();
+
+    /** Milliseconds period between checks to current folder's date */
+    private static final long checkPeriod;
+
+    /** Delay in milliseconds before folder date check after a folder has been refreshed */
+    private static final long waitAfterRefresh;
+
+    /** If folder change check took an average of N milliseconds, thread will wait at least N*WAIT_MULTIPLIER before next check */
+    private final static int WAIT_MULTIPLIER = 50;
+
+    /** Granularity of the thread check (number of milliseconds to sleep before next loop) */
+    private final static int TICK = 300;
+
     /** Folder panel we are monitoring */
     private final FolderPanel folderPanel;
 
@@ -83,36 +108,9 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     /** Number of checks in current folder */
     private int nbSamples = 0;
 
-    /**
-     * If not null then refresh folder that contains this files
-     */
-    private static final List<String> forceRefreshFilePath = new ArrayList<>();
-    //////////////////////
-    // Static variables //
-    //////////////////////
-	
-    /** Thread in which the actual monitoring is performed */
-    private static Thread monitorThread;
-
-    /** FolderChangeMonitor instances */
-    private static final List<FolderChangeMonitor> instances;
-
-    private static final OrFileFilter disableAutoRefreshFilter = new OrFileFilter();
-		
-    /** Milliseconds period between checks to current folder's date */
-    private static final long checkPeriod;
-	
-    /** Delay in milliseconds before folder date check after a folder has been refreshed */
-    private static final long waitAfterRefresh;
-	
-    /** If folder change check took an average of N milliseconds, thread will wait at least N*WAIT_MULTIPLIER before next check */
-    private final static int WAIT_MULTIPLIER = 50;
-
-    /** Granularity of the thread check (number of milliseconds to sleep before next loop) */
-    private final static int TICK = 300;
 
     static {
-        instances = new Vector<>();
+        instances = Collections.synchronizedList(new ArrayList<>());
 
         // Retrieve configuration values
         checkPeriod = TcConfigurations.getPreferences().getVariable(TcPreference.REFRESH_CHECK_PERIOD, TcPreferences.DEFAULT_REFRESH_CHECK_PERIOD);
@@ -169,7 +167,6 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
 
         int needToClearRefreshQueueCounter = 0;
         while (monitorThread != null) {
-			
             // Sleep for a while
             try {
                 Thread.sleep(TICK);
@@ -243,7 +240,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     /**
      * Suspends or resumes this monitor.
      *
-     * @param paused true to supsend, false to resume
+     * @param paused true to suspend, false to resume
      */
     public void setPaused(boolean paused) {
         // Note: this method should *not* be synchronized as it would potentially lock while the folder is being
@@ -298,7 +295,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         // what we want (the folder will be changed to a 'workable' folder).
         boolean result = false;
         if (date != currentFolderDate) {
-            LOGGER.debug(this+" ("+currentFolder.getName()+") Detected changes in current folder, refreshing table!");
+            LOGGER.debug("{} ({}) Detected changes in current folder, refreshing table!", this, currentFolder.getName());
 			
             // Try and refresh current folder in a separate thread as to not lock monitor thread
             folderPanel.tryRefreshCurrentFolder();
@@ -323,14 +320,12 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
     }
 
 
-    /////////////////////////////////////
-    // LocationListener implementation //
-    /////////////////////////////////////
-
+    @Override
     public void locationChanging(LocationEvent locationEvent) {
         folderChanging = true;
     }
 
+    @Override
     public void locationChanged(LocationEvent locationEvent) {
         // Update new current folder info
         updateFolderInfo(locationEvent.getFolderPanel().getCurrentFolder());
@@ -338,35 +333,40 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         folderChanging = false;
     }
 
+    @Override
     public void locationCancelled(LocationEvent locationEvent) {
         folderChanging = false;
     }
 
+    @Override
     public void locationFailed(LocationEvent locationEvent) {
         folderChanging = false;
     }
 
 
-    ///////////////////////////////////
-    // WindowListener implementation //
-    ///////////////////////////////////
-
+    @Override
     public void windowActivated(WindowEvent e) {}
 
+    @Override
     public void windowDeactivated(WindowEvent e) {}
 
+    @Override
     public void windowIconified(WindowEvent e) {}
 
+    @Override
     public void windowDeiconified(WindowEvent e) {}
 
+    @Override
     public void windowOpened(WindowEvent e) {}
 
+    @Override
     public void windowClosing(WindowEvent e) {}
 
+    @Override
     public void windowClosed(WindowEvent e) {
         // Remove the MainFrame from the list of monitored instances
         instances.remove(this);
-        LOGGER.debug("nbInstances="+instances.size());
+        LOGGER.debug("nbInstances= {}", instances.size());
     }
 
     /**

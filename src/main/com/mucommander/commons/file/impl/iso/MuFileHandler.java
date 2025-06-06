@@ -40,7 +40,7 @@ import java.util.Iterator;
 
 public class MuFileHandler extends ChainingStreamHandler {
 
-    private ISO9660RootDirectory root;
+    private final ISO9660RootDirectory root;
     private String processingFile = null;
     private DataReferenceProgress drp = null;
     private long totalWritenBytes = 0;
@@ -126,8 +126,8 @@ public class MuFileHandler extends ChainingStreamHandler {
     /*
      * DataReference wrapper that will allow the progress to be retrieved
      */
-    private class DataReferenceProgress implements DataReference{
-        private DataReference dr = null;
+    private static class DataReferenceProgress implements DataReference{
+        private final DataReference dr;
         private InputStream is = null;
         
         DataReferenceProgress(DataReference dr){

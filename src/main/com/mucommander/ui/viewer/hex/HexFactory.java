@@ -21,7 +21,6 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.viewer.FileViewer;
 import com.mucommander.ui.viewer.ViewerFactory;
-import com.mucommander.ui.viewer.WarnUserException;
 
 /**
  * <code>ViewerFactory</code> implementation for creating hex viewers.

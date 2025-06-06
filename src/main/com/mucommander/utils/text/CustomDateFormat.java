@@ -128,13 +128,11 @@ public class CustomDateFormat implements ConfigurationListener {
     }
 	
 
-    ///////////////////////////////////
-    // ConfigurationListener methods //
-    ///////////////////////////////////
 
     /**
      * Listens to some configuration variables.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
         String var = event.getVariable();
 

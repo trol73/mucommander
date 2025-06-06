@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2016 Oleg Trifonov
+ * Copyright (C) 2013-2025 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,6 @@ public class CodeFormatter {
 
             lso.setByteStream(bos);
             serializer.write(document, lso);
-            System.out.println(bos.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,11 +88,9 @@ public class CodeFormatter {
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(in));
             return db.parse(is);
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
         } catch (SAXParseException e) {
             throw new CodeFormatException(e.getMessage(), e.getLineNumber(), e.getColumnNumber(), e);
-        } catch (SAXException | IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }

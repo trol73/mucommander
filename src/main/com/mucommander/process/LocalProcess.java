@@ -26,8 +26,6 @@ import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.commons.runtime.JavaVersion;
-
 /**
  * Process running on the local computer.
  * @author Nicolas Rinaudo
@@ -35,14 +33,10 @@ import com.mucommander.commons.runtime.JavaVersion;
 public class LocalProcess extends AbstractProcess {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocalProcess.class);
 
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Underlying system process. */
-    private Process process;
+    private final Process process;
 
 
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a new local process running the specified command.
      * @param  tokens      command to init and its parameters.
@@ -57,13 +51,6 @@ public class LocalProcess extends AbstractProcess {
         pb.redirectErrorStream(true);
 
         process = pb.start();
-
-        // Safeguard: makes sure that an exception is raised if the process could not be created.
-        // This might not be strictly necessary, but the Runtime.exec documentation is not very precise
-        // on what happens in case of an error.
-        if (process == null) {
-            throw new IOException();
-        }
     }
 
     private boolean isQuotedWith(String string, String quotationMark) {

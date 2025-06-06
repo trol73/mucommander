@@ -48,11 +48,7 @@ public final class Credentials {
      */
     public String getMaskedPassword() {
         int passwordLength = password.length();
-        StringBuilder maskedPasswordSb = new StringBuilder(passwordLength);
-        for (int i = 0; i < passwordLength; i++) {
-            maskedPasswordSb.append('*');
-        }
-        return maskedPasswordSb.toString();
+        return "*".repeat(passwordLength);
     }
 
     /**

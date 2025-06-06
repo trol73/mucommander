@@ -18,9 +18,11 @@
 
 package com.mucommander.commons.file.impl.zip.provider;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipException;
 
 /**
@@ -38,7 +40,7 @@ public class ExtraFieldUtils {
     /**
      * Static registry of known extra fields.
      */
-    private static Hashtable<ZipShort, Class<? extends ZipExtraField>> implementations = new Hashtable<>();
+    private static final Map<ZipShort, Class<? extends ZipExtraField>> implementations = new Hashtable<>();
 
     static {
         register(AsiExtraField.class);
@@ -54,14 +56,16 @@ public class ExtraFieldUtils {
      */
     public static void register(Class<? extends ZipExtraField> c) {
         try {
-            ZipExtraField ze = c.newInstance();
+            ZipExtraField ze = c.getDeclaredConstructor().newInstance();
             implementations.put(ze.getHeaderId(), c);
         } catch (ClassCastException cc) {
-            throw new RuntimeException(c + " doesn\'t implement ZipExtraField");
+            throw new RuntimeException(c + " doesn't implement ZipExtraField");
         } catch (InstantiationException ie) {
             throw new RuntimeException(c + " is not a concrete class");
-        } catch (IllegalAccessException ie) {
-            throw new RuntimeException(c + "\'s no-arg constructor is not public");
+        } catch (IllegalAccessException | InvocationTargetException ie) {
+            throw new RuntimeException(c + "'s no-arg constructor is not public");
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 

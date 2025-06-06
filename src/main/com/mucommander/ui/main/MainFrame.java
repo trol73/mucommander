@@ -240,7 +240,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         splitPane.setOneTouchExpandable(true);
 
         // Disable all the JSPlitPane accessibility shortcuts that are registered by default, as some of them
-        // conflict with default mucommander action shortcuts (e.g. F6 and F8)
+        // conflict with default trolCommander action shortcuts (e.g. F6 and F8)
         splitPane.disableAccessibilityShortcuts();
 
         // Split pane will be given any extra space

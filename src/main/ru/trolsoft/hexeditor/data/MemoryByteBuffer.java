@@ -17,8 +17,6 @@
  */
 package ru.trolsoft.hexeditor.data;
 
-import java.io.IOException;
-
 /**
  * @author Oleg Trifonov
  * Created on 08/02/17.

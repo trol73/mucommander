@@ -61,7 +61,7 @@ public class DurationFormat {
         for (int i = 0; i < SECONDS.length; i++) {
             int n = remainderSec/SECONDS[i];
             if (n > 0) {
-                if (s.length() > 0) {
+                if (!s.isEmpty()) {
                     s.append(' ');
                 }
                 s.append(Translator.get(KEYS[i], ""+n));
@@ -70,7 +70,7 @@ public class DurationFormat {
         }
 
         // Don't add second part if equal to 0, unless this is the only part
-        if (remainderSec > 0 || s.length() == 0) {
+        if (remainderSec > 0 || s.isEmpty()) {
             if (remainderSec == 0) {
 //                if (s.length() > 0) {
 //                    s.delete(0, s.length() - 1);
@@ -78,7 +78,7 @@ public class DurationFormat {
                 s.append('<').append(Translator.get(SECONDS_KEY, "1"));
                 //s = "<" + Translator.get(SECONDS_KEY, "1");
             } else {
-                s.append(s.length() == 0 ? "" : " ").append(Translator.get(SECONDS_KEY, "" + remainderSec));
+                s.append(s.isEmpty() ? "" : " ").append(Translator.get(SECONDS_KEY, "" + remainderSec));
             }
         }
         return s.toString();
@@ -92,23 +92,4 @@ public class DurationFormat {
         return INFINITE;
     }
     
-
-//    public static void main(String args[]) {
-//        // 0s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(0));
-//        // 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(1000));
-//        // 1m 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(61*1000));
-//        // 1h 1m 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(3661*1000));
-//        // 1d 1h 1m 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(90061*1000));
-//        // 1m 1h 1m 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format((2592000+90061)*(long)1000));
-//        // 1y 1m 1h 1m 1s
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format((31104000+2592000+90061)*(long)1000));
-//        // Infinite
-//        System.out.println(com.mucommander.utils.text.DurationFormat.format(1001l*Integer.MAX_VALUE));
-//    }
 }

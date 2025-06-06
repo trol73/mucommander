@@ -66,7 +66,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     protected QuickSearch quickSearch;
 
     /** Index array */
-    protected int fileArrayIndex[];
+    protected int[] fileArrayIndex;
 	
     /** The current folder */
     protected AbstractFile currentFolder;
@@ -639,9 +639,6 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     public synchronized AbstractFile getFileAt(int row, int col) {
         AbstractFile file = getCachedFileAt(row, col);
 	
-//        if (file == null) {
-//            return null;
-//        }
         if (file instanceof CachedFile) {
             return ((CachedFile) file).getProxiedFile();
         }
@@ -736,8 +733,6 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         this.nameColumnEditable = editable;
     }
 
-
-
     /**
      * Marks/Unmarks the given row. If the specified row corresponds to the special '..' parent file, the row won't
      * be marked.
@@ -749,7 +744,6 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
         if (index == 0 && parent != null) {
             return;
         }
-
         // Return if the row is already marked/unmarked
         final int fileIndex = fileArrayIndex[parent != null ? index - 1 : index];
 //        if((marked && rowMarked[fileIndex]) || (!marked && !rowMarked[fileIndex]))
@@ -851,7 +845,7 @@ public abstract class BaseFileTableModel extends AbstractTableModel {
     private void processNextQueuedFile(FileTable table) {
         AbstractFile nextFile;
         synchronized (calculateSizeQueue) {
-            nextFile = calculateSizeQueue.isEmpty() ? null : calculateSizeQueue.remove(0);
+            nextFile = calculateSizeQueue.isEmpty() ? null : calculateSizeQueue.removeFirst();
             }
         if (nextFile == null) {
             calculateDirectorySizeWorker = null;
