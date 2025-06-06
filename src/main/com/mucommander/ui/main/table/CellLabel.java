@@ -64,8 +64,6 @@ public class CellLabel extends JLabel {
 
 
 
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Last text set by the setText method */
     private String lastText;
     /** Last icon set by the setIcon method */
@@ -88,8 +86,6 @@ public class CellLabel extends JLabel {
     private Color markerColor;
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new blank CellLabel.
      */
@@ -328,7 +324,7 @@ public class CellLabel extends JLabel {
     // -----------------------------------------------------------------------------------
     /*
      * The following methods are overridden as a performance measure to 
-     * to prune code-paths are often called in the case of renders
+     * prune code-paths are often called in the case of renders
      * but which we know are unnecessary.  Great care should be taken
      * when writing your own renderer to weigh the benefits and 
      * drawbacks of overriding methods like these.

@@ -38,10 +38,6 @@ public class TcConfigurations {
 	/** Dynamic configurations of trolCommander */
 	private static final TcSnapshot snapshot = new TcSnapshot();
 	
-	/////////////////////////
-	// API for preferences //
-	/////////////////////////
-	
 	public static TcPreferencesAPI getPreferences() {
 		return preferences;
 	}
@@ -70,10 +66,6 @@ public class TcConfigurations {
     	preferences.removeConfigurationListener(listener);
     }
 
-    //////////////////////
-    // API for snapshot //
-    //////////////////////
-    
     public static Configuration getSnapshot() {
     	return snapshot.getConfiguration();
     }

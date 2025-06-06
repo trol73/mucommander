@@ -126,10 +126,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         }
     }
 
-
-
-    // - Dialog creation --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a dialog containing the specified color chooser.
      * @param  parent  component on which to center the dialog.
@@ -149,12 +145,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
     public static FocusDialog createDialog(Frame parent, ColorChooser chooser) {
         return new ChooserDialog(parent, chooser);
     }
-
-
-
-    // - UI Initialisation ------------------------------------------------------
-    // --------------------------------------------------------------------------
-
 
     /**
      * Creates the preview panel.
@@ -206,8 +196,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
     }
 
 
-    // - Color / font management ------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Returns the color selected by the user.
      * @return the color selected by the user.
@@ -261,8 +249,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
     }
 
 
-    // - Chooser dialog ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Component used to present a <code>ColorChooser</code> from within a modal dialog.
      * @author Nicolas Rinaudo

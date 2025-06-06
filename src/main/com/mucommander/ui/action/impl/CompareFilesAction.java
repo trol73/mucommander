@@ -42,11 +42,10 @@ import java.util.Map;
  * @author Oleg Trifonov
  */
 public class CompareFilesAction extends SelectedFilesAction {
-
     private static final String OPENDIFF_PATH = "/usr/bin/opendiff";
     private static final String MELD_PATH = "/usr/bin/meld";
 
-    public enum Method {
+    public enum DiffMethod {
         MAC_OS_X_DIFF {
             @Override
             void exec(String file1, String file2) throws IOException, InterruptedException {
@@ -63,7 +62,7 @@ public class CompareFilesAction extends SelectedFilesAction {
         abstract void exec(String file1, String file2) throws IOException, InterruptedException;
     }
 
-    private static Method method;
+    private static DiffMethod diffMethod;
 
     private CompareFilesAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
@@ -100,12 +99,12 @@ public class CompareFilesAction extends SelectedFilesAction {
     }
 
     public static void compareTwoFiles(String file1, String file2) {
-        if (method == null || file1 == null || file2 == null) {
+        if (diffMethod == null || file1 == null || file2 == null) {
             return;
         }
         new Thread(() -> {
             try {
-                method.exec(file1, file2);
+                diffMethod.exec(file1, file2);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -113,20 +112,20 @@ public class CompareFilesAction extends SelectedFilesAction {
     }
 
     public static boolean supported() {
-        if (method != null) {
+        if (diffMethod != null) {
             return true;
         }
 
         switch (OsFamily.getCurrent()) {
             case MAC_OS_X:
                 if (new File(OPENDIFF_PATH).exists()) {
-                    method = Method.MAC_OS_X_DIFF;
+                    diffMethod = DiffMethod.MAC_OS_X_DIFF;
                     return true;
                 }
                 break;
             case LINUX:
                 if (new File(MELD_PATH).exists()) {
-                    method = Method.LINUX_MELD;
+                    diffMethod = DiffMethod.LINUX_MELD;
                     return true;
                 }
                 break;

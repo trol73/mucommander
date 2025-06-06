@@ -140,7 +140,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
 
             private int getMaxYExtent() {
                 int result = viewport.getView().getHeight() - viewport.getHeight();
-                return result < 0 ? 0 : result;
+                return Math.max(result, 0);
             }
         });
 
@@ -186,10 +186,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         }
     }
 
-    ///////////////////////////
-    // FocusListener methods //
-    ///////////////////////////
-    
+    @Override
     public void focusGained(FocusEvent e) {
     	setBorderColor(borderColor);
     	getViewport().setBackground(backgroundColor);
@@ -197,6 +194,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
     	getViewport().repaint();
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
     	setBorderColor(unfocusedBorderColor);
     	getViewport().setBackground(unfocusedBackgroundColor);
@@ -212,11 +210,7 @@ public class FileTableWrapperForDisplay extends JScrollPane implements FocusList
         }
     }
 	
-	// - Theme listening -------------------------------------------------------------
-    // -------------------------------------------------------------------------------
-    /**
-     * Receives theme color changes notifications.
-     */
+    @Override
     public void colorChanged(ColorChangedEvent event) {
         switch (event.getColorId()) {
             case Theme.FILE_TABLE_BORDER_COLOR:

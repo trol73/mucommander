@@ -54,12 +54,10 @@ public class RetinaImageIcon extends ImageIcon {
 
         try {
             Field field = graphicsDevice.getClass().getDeclaredField("scale");
-            if (field != null) {
-                field.setAccessible(true);
-                Object scale = field.get(graphicsDevice);
-                if (scale instanceof Integer && (Integer) scale == 2) {
-                    isRetina = true;
-                }
+            field.setAccessible(true);
+            Object scale = field.get(graphicsDevice);
+            if (scale instanceof Integer && (Integer) scale == 2) {
+                isRetina = true;
             }
         } catch (Exception ignore) {
         }

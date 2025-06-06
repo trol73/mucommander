@@ -42,7 +42,7 @@ public class SortInfo implements Cloneable {
     /** Should folders be displayed first, or mixed with regular files */
     private boolean showFoldersFirst = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_FOLDERS_FIRST, TcPreferences.DEFAULT_SHOW_FOLDERS_FIRST);
 
-    /** Should Folders also get sorted or alway alphabetical ... only possible if Folders First enabled */
+    /** Should Folders also get sorted or always alphabetical ... only possible if Folders First enabled */
     private boolean foldersAlwaysAlphabetical = TcConfigurations.getPreferences().getVariable(TcPreference.FOLDERS_ALWAYS_ALPHABETICAL, TcPreferences.DEFAULT_FOLDERS_ALWAYS_ALPHABETICAL);
 
     private boolean showQuickSearchMatchesFirst = TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST, TcPreferences.DEFAULT_SHOW_QUICK_SEARCH_MATCHES_FIRST);
@@ -144,10 +144,6 @@ public class SortInfo implements Cloneable {
     }
 
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     @Override
     public SortInfo clone() {

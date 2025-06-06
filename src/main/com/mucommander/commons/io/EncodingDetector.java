@@ -20,6 +20,7 @@ package com.mucommander.commons.io;
 
 import com.ibm.icu.text.CharsetDetector;
 import com.ibm.icu.text.CharsetMatch;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,34 +134,34 @@ public class EncodingDetector {
 
 
         CharsetMatch[] matches = cd.detectAll();
-
-        CharsetMatch cm = matches == null || matches.length == 0 ? null : matches[0];
-//for (CharsetMatch match : matches) {
-//    System.out.println("> " + match.getName() + "  " + match.getConfidence());
-//}
-        // detect win-1251 for case latin + cyrillic
-        if (matches != null && matches.length > 1) {
-            String detectedName = cm.getName().toLowerCase();
-            if (detectedName.startsWith("iso-8859-")) {
-                for (CharsetMatch match : matches) {
-                    //if (match.getConfidence()*5 >= cm.getConfidence() && match.getName().toLowerCase().startsWith("windows-1251")) {
-                    if (match.getName().toLowerCase().startsWith("windows-1251")) {
-                        cm = match;
-                        break;
-                    }
-                }
-
-            }
-        }
+        CharsetMatch cm = getBestCharsetMatch(matches);
 
         // Debug info
         LOGGER.trace("bestMatch getName()={}, getConfidence()={}", (cm==null?"null":cm.getName()),
                      (cm==null?"null":Integer.toString(cm.getConfidence())));
-//            CharsetMatch cms[] = cd.detectAll();
-//            for(int i=0; i<cms.length; i++)
-//                CommonsLogger.finest("getName()="+cms[i].getName()+" getConfidence()="+cms[i].getConfidence());
 
         return cm == null ? null : cm.getName();
+    }
+
+    @Nullable
+    private static CharsetMatch getBestCharsetMatch(CharsetMatch[] matches) {
+        if (matches == null || matches.length == 0) {
+            return null;
+        }
+        CharsetMatch cm = matches[0];
+        // detect win-1251 for case latin + cyrillic
+        String detectedName = cm.getName().toLowerCase();
+        if (detectedName.startsWith("iso-8859-")) {
+            for (CharsetMatch match : matches) {
+                if (match.getName().toLowerCase().startsWith("windows-1251")) {
+                    return match;
+                } else if (match.getName().toLowerCase().startsWith("utf-8")) {
+                    return match;
+                }
+            }
+        }
+
+        return cm;
     }
 
 
