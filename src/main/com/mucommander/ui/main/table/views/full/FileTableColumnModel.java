@@ -91,7 +91,7 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
                 column.setWidth(conf.getWidth(c));
             }
 
-            // Initialises the column's visibility and minimum width.
+            // Initializes the column's visibility and minimum width.
             if (c == Column.NAME) {
                 enabled[columnIndex] = true;
             } else {
@@ -516,15 +516,11 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @author Nicolas Rinaudo
      */
     private class ColumnEnumeration implements Enumeration<TableColumn> {
-        // - getInstance fields -------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /** Index of the next available element in the enumeration. */
         private int nextIndex;
 
 
 
-        // - Initialisation --------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Creates a new column enumeration.
          */
@@ -546,9 +542,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
         }
 
 
-
-        // - Enumeration methods ---------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Returns <code>true</code> if there's a next element in the enumeration.
          * @return <code>true</code> if there's a next element in the enumeration, <code>false</code> otherwise.
@@ -591,15 +584,9 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
      * @author Nicolas Rinaudo
      */
     private static class ColumnSorter implements Comparator<TableColumn> {
-        // - getInstance fields -------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /** Defines the columns order. */
         private final FileTableConfiguration conf;
 
-
-
-        // - Initialisation --------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Loads the columns order as defined in the configuration.
          */
@@ -607,10 +594,6 @@ public class FileTableColumnModel implements TableColumnModel, PropertyChangeLis
             this.conf = conf;
         }
 
-
-
-        // - Comparator code -------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Compares <code>o1</code> and <code>o2</code>.
          */

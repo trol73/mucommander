@@ -40,7 +40,7 @@ import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
 import com.mucommander.commons.util.Pair;
 import com.mucommander.desktop.DefaultDesktopAdapter;
-import com.mucommander.desktop.DesktopInitialisationException;
+import com.mucommander.desktop.DesktopInitializationException;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.desktop.TrashProvider;
 import com.mucommander.ui.macosx.AppleScript;
@@ -85,7 +85,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
     }
 
     @Override
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
         // Initialises trash management.
         DesktopManager.setTrashProvider(new OSXTrashProvider());
 
@@ -97,7 +97,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
 
             new OSXIntegration();
         } catch(CommandException e) {
-            throw new DesktopInitialisationException(e);
+            throw new DesktopInitializationException(e);
         }
     }
 

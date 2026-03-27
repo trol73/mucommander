@@ -60,7 +60,7 @@ public class FileByteBuffer extends AbstractByteBuffer {
     @Override
     protected void loadBuffer() throws IOException {
         getFile().seek(offset);
-        size = getFile().read(buffer);
+        bufferSize = getFile().read(buffer);
     }
 
     @Override

@@ -266,7 +266,6 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
 
     /**
      * Return <code>true</code> if the application can read this file.
-     *
      * TODO: need to be overridden with a correct check for each file type.
      *
      * @return true if the application can read this file.
@@ -345,7 +344,7 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
      * @return an <code>InputStream</code> to read this file's contents, skipping the specified number of bytes
      */
     public InputStream getInputStream(long offset) throws IOException {
-        // Use a random access input stream when available
+        // Use random access input stream when available
         if (isFileOperationSupported(FileOperation.RANDOM_READ_FILE)) {
             RandomAccessInputStream rais = getRandomAccessInputStream();
             rais.seek(offset);

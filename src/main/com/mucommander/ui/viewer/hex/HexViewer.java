@@ -25,8 +25,8 @@ import com.mucommander.ui.theme.ThemeId;
 import com.mucommander.ui.viewer.FileViewer;
 import ru.trolsoft.calculator.CalculatorDialog;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
-import ru.trolsoft.hexeditor.data.MuCommanderByteBuffer;
-import ru.trolsoft.hexeditor.events.OnOffsetChangeListener;
+import ru.trolsoft.hexeditor.data.TrolCommanderByteBuffer;
+import ru.trolsoft.hexeditor.events.OffsetChangeListener;
 import ru.trolsoft.hexeditor.search.ByteBufferSearchUtils;
 import ru.trolsoft.hexeditor.ui.HexTable;
 import ru.trolsoft.hexeditor.ui.ViewerHexTableModel;
@@ -55,12 +55,12 @@ public class HexViewer extends FileViewer implements ThemeId {
     private String encoding = DEFAULT_ENCODING;
     private byte[] lastSearchBytes;
 
-    private JMenu menuView;
-    private JMenuItem gotoItem;
-    private JMenuItem findItem;
-    private JMenuItem findNextItem;
-    private JMenuItem findPrevItem;
-    private JMenuItem calculatorItem;
+    private final JMenu menuView;
+    private final JMenuItem gotoItem;
+    private final JMenuItem findItem;
+    private final JMenuItem findNextItem;
+    private final JMenuItem findPrevItem;
+    private final JMenuItem calculatorItem;
 
     private GotoDialog dlgGoto;
     private FindDialog dlgFind;
@@ -84,13 +84,13 @@ public class HexViewer extends FileViewer implements ThemeId {
         return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
     }
 
-    private OnOffsetChangeListener onOffsetChangeListener = new OnOffsetChangeListener() {
+    private final OffsetChangeListener offsetChangeListener = new OffsetChangeListener() {
         @Override
         public void onChange(long offset) {
             if (statusBar != null) {
                 statusBar.setOffset(offset);
                 try {
-                    if (byteBuffer.getFileSize() > 0) {
+                    if (byteBuffer.getFileSize() > 0 && offset < byteBuffer.getFileSize()) {
                         statusBar.setByteValue(byteBuffer.getByte(offset));
                     }
                 } catch (IOException e) {
@@ -104,7 +104,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     @Override
     protected void show(AbstractFile file) {
         try {
-            byteBuffer = new MuCommanderByteBuffer(file);
+            byteBuffer = new TrolCommanderByteBuffer(file);
             model = new ViewerHexTableModel(byteBuffer);
             model.load();
             hexTable = new HexTable(model);
@@ -119,10 +119,18 @@ public class HexViewer extends FileViewer implements ThemeId {
             hexTable.setAlternateRowBackground(true);
 
             hexTable.getTableHeader().setFont(new Font("Monospaced", Font.PLAIN, 12));
+            hexTable.setSelectionChangeListener((fromAddress, toAddress) -> {
+                long bytesSelected = Math.abs(toAddress - fromAddress) + 1;
+                if (bytesSelected > 1) {
+                    statusBar.setStatusMessage("Selected " +bytesSelected + " bytes");
+                } else {
+                    statusBar.setStatusMessage("");
+                }
+            });
 
 
-            hexTable.setOnOffsetChangeListener(onOffsetChangeListener);
-            onOffsetChangeListener.onChange(0);
+            hexTable.setOnOffsetChangeListener(offsetChangeListener);
+            offsetChangeListener.onChange(0);
 
             if (statusBar != null) {
                 statusBar.setMaxOffset(file.getSize() - 1);
@@ -207,6 +215,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     }
 
     private void doSearchFromPos(byte[] bytes, long pos, boolean next) {
+System.out.println("doSearchFromPos " + pos + " " + next);
         lastSearchBytes = bytes;
         try {
             long lastSearchResult;
@@ -219,7 +228,6 @@ public class HexViewer extends FileViewer implements ThemeId {
                 hexTable.gotoOffset(lastSearchResult);
                 clearStatusMessage();
             } else {
-
                 if (statusBar != null) {
                     statusBar.setStatusMessage(i18n("hex_viewer.search_not_found"));
                 }

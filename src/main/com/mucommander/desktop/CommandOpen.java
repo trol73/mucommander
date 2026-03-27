@@ -29,7 +29,7 @@ import java.io.IOException;
  * @author Nicolas Rinaudo
  */
 class CommandOpen extends LocalFileOperation {
-    /** Whether or not the 'init as executable' command can be used if no better alternative is found. */
+    /** Whether the 'init as executable' command can be used if no better alternative is found. */
     private final boolean allowDefault;
 
 

@@ -28,8 +28,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Nicolas Rinaudo
  */
 class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants {
-    // - Reader statuses -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Parsing hasn't started. */
     private static final int STATUS_UNKNOWN = 0;
     /** Currently parsing the root tag. */
@@ -39,8 +37,6 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
 
 
 
-    // - Instance fields -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Reader's current status. */
     private int          status;
     /** Buffer for the current command. */
@@ -49,8 +45,6 @@ class ShellHistoryReader extends DefaultHandler implements ShellHistoryConstants
     private String version;
 
 
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new shell history reader.
      */

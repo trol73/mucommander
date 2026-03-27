@@ -14,7 +14,7 @@ public class RegexpFilenameFilter extends AbstractRegexpFilter implements Filena
      * mode.
      *
      * @param regexp regular expression that matches string values.
-     * @param caseSensitive whether the regular expression is case sensitive or not.
+     * @param caseSensitive whether the regular expression is case-sensitive or not.
      * @throws PatternSyntaxException if the syntax of the regular expression is not correct.
      */
     public RegexpFilenameFilter(String regexp, boolean caseSensitive) throws PatternSyntaxException {
@@ -26,7 +26,7 @@ public class RegexpFilenameFilter extends AbstractRegexpFilter implements Filena
      * modes.
      *
      * @param regexp regular expression that matches string values.
-     * @param caseSensitive whether the regular expression is case sensitive or not.
+     * @param caseSensitive whether the regular expression is case-sensitive or not.
      * @param inverted if true, this filter will operate in inverted mode.
      * @throws PatternSyntaxException if the syntax of the regular expression is not correct.
      */

@@ -18,8 +18,11 @@
 package com.mucommander.ui.main.statusbar;
 
 import com.jidesoft.swing.JideSplitButton;
+import com.mucommander.RuntimeConstants;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
+import com.mucommander.ui.text.FontUtils;
 import com.mucommander.ui.viewer.FileViewersList;
 import com.mucommander.utils.FileIconsCache;
 
@@ -48,6 +51,9 @@ public class FileWindowsListButton extends JideSplitButton {
     public FileWindowsListButton(boolean includeMainFrames) {
         super();
         this.includeMainFrames = includeMainFrames;
+        if (OsFamily.getCurrent() == OsFamily.LINUX && RuntimeConstants.DISPLAY_4K) {
+            FontUtils.scaleFont(this, 18, 22);
+        }
         updateList();
         addActionListener(e -> showSelectedFile());
     }

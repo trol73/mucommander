@@ -35,10 +35,6 @@ public interface PermissionBits {
     /** read/write/execute permissions cleared for user/group/other (0) */
     PermissionBits EMPTY_PERMISSION_BITS = new GroupedPermissionBits(EMPTY_PERMISSION_INT);
 
-    
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Returns the value of all the permission bits (9 in total) in a UNIX-style permission int. Each of the permission

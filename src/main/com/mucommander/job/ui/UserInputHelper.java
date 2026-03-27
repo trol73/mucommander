@@ -35,7 +35,7 @@ public class UserInputHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserInputHelper.class);
 	
     private Object userInput;
-    private DialogResult dialog;
+    private final DialogResult dialog;
 
     public UserInputHelper(FileJob job, DialogResult dialog) {
         this.dialog = dialog;

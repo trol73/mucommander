@@ -21,17 +21,11 @@ public class ConfigurationExplorerTest {
     /** Depth of the tests. */
     protected static final int    DEPTH          = 4;
 
-
-
-    // - Instance variables --------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Configuration used for tests. */
     protected Configuration conf;
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Fills the configuration instance with test values.
      */
@@ -49,10 +43,6 @@ public class ConfigurationExplorerTest {
         }
     }
 
-
-
-    // - Tests ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns a configuration explorer on the test section.
      * @return a configuration explorer on the test section.

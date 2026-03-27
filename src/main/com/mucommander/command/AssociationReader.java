@@ -42,16 +42,12 @@ import java.io.InputStream;
  * @author Nicolas Rinaudo
  */
 public class AssociationReader extends DefaultHandler implements AssociationsXmlConstants {
-    // - Instance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Where to send building messages. */
     private final AssociationBuilder builder;
     private boolean isInAssociation;
 
 
 
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new command reader.
      * @param b where to send custom command events.
@@ -61,9 +57,6 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
     }
 
 
-
-    // - XML interaction -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Parses the content of the specified input stream.
      * <p>
@@ -95,9 +88,6 @@ public class AssociationReader extends DefaultHandler implements AssociationsXml
     }
 
 
-
-    // - XML methods ---------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * This method is public as an implementation side effect and should not be called directly.
      */

@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Maxence Bernard
  */
 public class MarkAllAction extends TcAction {
-    private boolean mark;
+    private final boolean mark;
 
     MarkAllAction(MainFrame mainFrame, Map<String, Object> properties, boolean mark) {
         super(mainFrame, properties);

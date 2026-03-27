@@ -30,8 +30,6 @@ import java.io.File;
  * @author Nicolas Rinaudo
  */
 public class CommandTest {
-    // - Constants -------------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Test command's alias. */
     private static final String ALIAS        = "alias";
     /** Test command's command. */
@@ -39,17 +37,11 @@ public class CommandTest {
     /** Test command's display name. */
     private static final String DISPLAY_NAME = "test";
 
-
-
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Used while testing keyword substitution. */
     private AbstractFile[] files;
 
 
 
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a batch of files used for testing.
      */
@@ -70,9 +62,6 @@ public class CommandTest {
     }
 
 
-
-    // - Simple keyword substitution -------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Tests the <code>$f</code> keyword.
      */

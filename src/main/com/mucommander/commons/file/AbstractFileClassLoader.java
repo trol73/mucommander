@@ -221,7 +221,6 @@ public class AbstractFileClassLoader extends ClassLoader {
      * @throws IOException if an error occurs.
      */
     private Class<?> loadClass(String name, AbstractFile file) throws IOException {
-        // Initialisation.
         byte[] buffer = new byte[(int)file.getSize()];      // Buffer for the class' bytecode.
         int offset = 0;                                     // Current offset in buffer.
 

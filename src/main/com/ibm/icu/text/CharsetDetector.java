@@ -32,7 +32,6 @@ import java.util.List;
  * in a single language, and a minimum of a few hundred bytes worth of plain text
  * in the language are needed.  The detection process will attempt to
  * ignore html or xml style markup that could otherwise obscure the content.
- *
  * stable ICU 3.4
  */
 public class CharsetDetector {
@@ -133,7 +132,6 @@ public class CharsetDetector {
   
     /**
      * Return the charset that best matches the supplied input data.
-     * 
      * Note though, that because the detection 
      * only looks at the start of the input data,
      * there is a possibility that the returned charset will fail to handle
@@ -154,7 +152,7 @@ public class CharsetDetector {
 //          detectAll(), and cut it short as soon as a match with a high confidence
 //          is found.  This is something to be done later, after things are otherwise
 //          working.
-        CharsetMatch matches[] = detectAll();
+        CharsetMatch[] matches = detectAll();
         
         if (matches == null || matches.length == 0) {
             return null;
@@ -308,8 +306,7 @@ public class CharsetDetector {
      * @see #enableInputFilter
      *
      */
-    public boolean inputFilterEnabled()
-    {
+    public boolean inputFilterEnabled() {
         return fStripTags;
     }
     
@@ -345,7 +342,7 @@ public class CharsetDetector {
         //     quick and dirty, not 100% accurate, but hopefully good enough, statistically.
         //     discard everything within < brackets >
         //     Count how many total '<' and illegal (nested) '<' occur, so we can make some
-        //     guess as to whether the input was actually marked up at all.
+        //     guess whether the input was actually marked up at all.
         int srci;
 
         if (fStripTags) {
@@ -372,13 +369,9 @@ public class CharsetDetector {
             
             fInputLen = dsti;
         }
-        
-        //
         //  If it looks like this input wasn't marked up, or if it looks like it's
         //    essentially nothing but markup abandon the markup stripping.
         //    Detection will have to work on the unstripped input.
-        //
-
         if (openTags < 5 || openTags/5 < badTags || (fInputLen < 100 && fRawLength>600)) {
             int limit = fRawLength;
             
@@ -391,11 +384,8 @@ public class CharsetDetector {
             }
             fInputLen = srci;
         }
-        
-        //
-        // Tally up the byte occurence statistics.
-        //   These are available for use by the various detectors.
-        //
+        // Tally up the byte occurrence statistics.
+        // These are available for use by the various detectors.
         Arrays.fill(fByteStats, (short)0);
         for (srci=0; srci<fInputLen; srci++) {
             int val = fInputBytes[srci] & 0x00ff;
@@ -412,16 +402,14 @@ public class CharsetDetector {
      }
 
     /*
-     *  The following items are accessed by individual CharsetRecongizers during
-     *     the recognition process
-     * 
+     *  The following items are accessed by individual CharsetRecognizers during the recognition process
      */
     byte[]      fInputBytes =       // The text to be checked.  Markup will have been
                    new byte[kBufSize];  //   removed if appropriate.
     
     int         fInputLen;          // Length of the byte data in fInputBytes.
     
-    short       fByteStats[] =      // byte frequency statistics for the input text.
+    short[] fByteStats =      // byte frequency statistics for the input text.
                    new short[256];  //   Value is percent, not absolute.
                                     //   Value is rounded up, so zero really means zero occurences.
     
@@ -440,16 +428,11 @@ public class CharsetDetector {
     InputStream          fInputStream;  // User's input stream, or null if the user
                                         //   gave us a byte array.
      
-    //
     //  Stuff private to CharsetDetector
-    //
-    private boolean      fStripTags =   // If true, setText() will strip tags from input text.
-                           false;
-
+    private boolean      fStripTags = false;  // If true, setText() will strip tags from input text.
     private boolean[]    fEnabledRecognizers;   // If not null, active set of charset recognizers had
                                                 // been changed from the default. The array index is
                                                 // corresponding to ALL_RECOGNIZER. See setDetectableCharset().
-
     private static class CSRecognizerInfo {
         CharsetRecognizer recognizer;
         boolean isDefaultEnabled;
@@ -463,55 +446,44 @@ public class CharsetDetector {
     /*
      * List of recognizers for all charsets known to the implementation.
      */
-    private static final List<CSRecognizerInfo> ALL_CS_RECOGNIZERS;
-
-    static {
-        List<CSRecognizerInfo> list = new ArrayList<>();
-
-        list.add(new CSRecognizerInfo(new CharsetRecog_UTF8(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_16_BE(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_16_LE(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_32_BE(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_32_LE(), true));
-
-        list.add(new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_sjis(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022JP(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022CN(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022KR(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_gb_18030(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_euc_jp(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_euc_kr(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_big5(), true));
-
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_1(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_2(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_5_ru(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_6_ar(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_7_el(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_8_I_he(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_8_he(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_windows_1251(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_windows_1256(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_KOI8_R(), true));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_9_tr(), true));
-
+    private static final List<CSRecognizerInfo> ALL_CS_RECOGNIZERS = List.of(
+        new CSRecognizerInfo(new CharsetRecog_UTF8(), true),
+        new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_16_BE(), true),
+        new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_16_LE(), true),
+        new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_32_BE(), true),
+        new CSRecognizerInfo(new CharsetRecog_Unicode.CharsetRecog_UTF_32_LE(), true),
+        new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_sjis(), true),
+        new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022JP(), true),
+        new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022CN(), true),
+        new CSRecognizerInfo(new CharsetRecog_2022.CharsetRecog_2022KR(), true),
+        new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_gb_18030(), true),
+        new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_euc_jp(), true),
+        new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_euc.CharsetRecog_euc_kr(), true),
+        new CSRecognizerInfo(new CharsetRecog_mbcs.CharsetRecog_big5(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_1(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_2(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_5_ru(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_6_ar(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_7_el(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_8_I_he(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_8_he(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_windows_1251(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_windows_1256(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_KOI8_R(), true),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_8859_9_tr(), true),
         // IBM 420/424 recognizers are disabled by default
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM424_he_rtl(), false));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM424_he_ltr(), false));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM420_ar_rtl(), false));
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM420_ar_ltr(), false));
-
-        list.add(new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_cp866(), true));
-
-        ALL_CS_RECOGNIZERS = Collections.unmodifiableList(list);
-    }
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM424_he_rtl(), false),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM424_he_ltr(), false),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM420_ar_rtl(), false),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_IBM420_ar_ltr(), false),
+        new CSRecognizerInfo(new CharsetRecog_sbcs.CharsetRecog_cp866(), true)
+    );
 
     /**
      * Get the names of charsets that can be recognized by this CharsetDetector instance.
      *
      * @return an array of the names of charsets that can be recognized by this CharsetDetector
      * instance.
-     *
      * internal
      * @deprecated This API is ICU internal only.
      */
@@ -538,7 +510,6 @@ public class CharsetDetector {
      * @return A reference to this <code>CharsetDetector</code>.
      * @throws IllegalArgumentException when the name of charset encoding is
      * not supported.
-     *
      * internal
      * @deprecated This API is ICU internal only.
      */
@@ -557,7 +528,6 @@ public class CharsetDetector {
             // No matching encoding found
             throw new IllegalArgumentException("Invalid encoding: " + "\"" + encoding + "\"");
         }
-
         if (fEnabledRecognizers == null && !isDefaultVal) {
             // create an array storing the non default setting
             fEnabledRecognizers = new boolean[ALL_CS_RECOGNIZERS.size()];
@@ -567,11 +537,9 @@ public class CharsetDetector {
                 fEnabledRecognizers[i] = ALL_CS_RECOGNIZERS.get(i).isDefaultEnabled;
             }
         }
- 
         if (fEnabledRecognizers != null) {
             fEnabledRecognizers[modIdx] = enabled;
         }
-
         return this;
     }
 }

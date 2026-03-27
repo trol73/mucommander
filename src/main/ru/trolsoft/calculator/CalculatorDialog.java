@@ -26,6 +26,8 @@ import com.mucommander.ui.layout.YBoxPanel;
 import de.congrace.exp4j.CustomOperator;
 import de.congrace.exp4j.ExpressionBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.trolsoft.utils.StrUtils;
 
 import javax.swing.JButton;
@@ -46,8 +48,8 @@ import java.util.List;
  * @author Oleg Trifonov
  */
 public class CalculatorDialog extends FocusDialog implements ActionListener, KeyListener {
-
     private static final Dimension MIN_DIMENSION = new Dimension(520, 300);
+    private static Logger logger;
 
     private final HistoryComboBox cbExpression;
     private final JTextField edtDec;
@@ -219,7 +221,7 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
             showResult(res);
             success = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error("Calculation failed", e);
             clearResultFields();
             success = false;
         }
@@ -340,5 +342,12 @@ public class CalculatorDialog extends FocusDialog implements ActionListener, Key
                 cbExpression.setSelectedItem(edtDec.getText());
             }
         }
+    }
+
+    private static Logger getLogger() {
+        if (logger == null) {
+            logger = LoggerFactory.getLogger(CalculatorDialog.class);
+        }
+        return logger;
     }
 }

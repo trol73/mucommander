@@ -44,8 +44,7 @@ class OperatorToken extends CalculationToken {
 	/**
 	 * apply the {@link CustomOperator}
 	 * 
-	 * @param values
-	 *            the doubles to operate on
+	 * @param values the doubles to operate on
 	 * @return the result of the {@link CustomOperator}
 	 */
 	double applyOperation(double... values) {
@@ -54,9 +53,8 @@ class OperatorToken extends CalculationToken {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof OperatorToken) {
-			final OperatorToken t = (OperatorToken) obj;
-			return t.getValue().equals(this.getValue());
+		if (obj instanceof OperatorToken t) {
+            return t.getValue().equals(this.getValue());
 		}
 		return false;
 	}

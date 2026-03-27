@@ -67,8 +67,8 @@ public interface DesktopOperation {
     /**
      * Returns the operation's name.
      * <p>
-     * The returned value might be displayed to the user. It should thus be made as
-     * human readable as possible and, if possible, localised.
+     * The returned value might be displayed to the user. It should thus be made as human-readable as possible
+     * and, if possible, localised.
      *
      * @return the operation's name.
      */

@@ -67,8 +67,6 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
         }
     };
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent    dialog containing the panel.
@@ -81,15 +79,12 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
 
 
 
-    // - UI initialisation ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates the JPanel that contains all of the color configuration elements.
      * @param fontChooser font chooser used by the editor panel.
      * @return the JPanel that contains all of the color configuration elements.
      */
     private JPanel createTextColorsPanel(FontChooser fontChooser) {
-        // Initialisation
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);
 
         // Header

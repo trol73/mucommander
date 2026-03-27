@@ -35,67 +35,82 @@ public class ByteBufferSearchUtils {
      * @return the offset of the first occurrence of the specified data, at the specified offset, or -1 if there is no such occurrence
      */
     public static long indexOf(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
-        long fileSize = data.getFileSize();
-        if (fileSize <= 0 || pattern.length == 0) {
+        if (data == null || pattern == null || fromOffset < 0) {
             return -1;
         }
+        long fileSize = data.getFileSize();
+        if (fileSize <= 0 || pattern.length == 0 || pattern.length > fileSize) {
+            return -1;
+        }
+        fromOffset = Math.min(fromOffset, fileSize - 1);
         int[] failure = computeFailure(pattern);
         AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
         data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
 
-        int j = 0;
-        for (long i = fromOffset; i < fileSize; i++) {
-            while (j > 0 && pattern[j] != data.getByte(i)) {
-                j = failure[j - 1];
+        try {
+            int j = 0;
+            for (long i = fromOffset; i <= fileSize - pattern.length; i++) {
+                byte currentByte = data.getByte(i);
+                while (j > 0 && pattern[j] != currentByte) {
+                    j = failure[j - 1];
+                }
+                if (pattern[j] == currentByte) {
+                    j++;
+                }
+                if (j == pattern.length) {
+                    return i - pattern.length + 1;
+                }
             }
-            if (pattern[j] == data.getByte(i)) {
-                j++;
-            }
-            if (j == pattern.length) {
-                data.setCacheStrategy(cacheStrategy);
-                return i - pattern.length + 1;
-            }
-        }
-        data.setCacheStrategy(cacheStrategy);
-        return -1;
-    }
-
-    public static long indexOf(AbstractByteBuffer data, byte[][] patterns, long fromOffset) throws IOException {
-        long fileSize = data.getFileSize();
-        if (fileSize <= 0 || patterns.length == 0) {
             return -1;
+        } finally {
+            data.setCacheStrategy(cacheStrategy);
         }
-        int[][] failures = new int[patterns.length][];
-        for (int i = 0; i < patterns.length; i++) {
-            failures[i] = computeFailure(patterns[i]);
-        }
-        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
-        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
-
-        int[] j = new int[patterns.length];
-        for (int i = 0; i < j.length; i++) {
-            j[i] = 0;
-        }
-/*
-        for (long i = fromOffset; i < fileSize; i++) {
-            while (j > 0 && pattern[j] != data.getByte(i)) {
-                j = failure[j - 1];
-            }
-            if (pattern[j] == data.getByte(i)) {
-                j++;
-            }
-            if (j == pattern.length) {
-                data.setCacheStrategy(cacheStrategy);
-                return i - pattern.length + 1;
-            }
-        }
-        */
-        data.setCacheStrategy(cacheStrategy);
-        return -1;
     }
+
+//    public static long indexOf(AbstractByteBuffer data, byte[][] patterns, long fromOffset) throws IOException {
+//        long fileSize = data.getFileSize();
+//        if (fileSize <= 0 || patterns.length == 0) {
+//            return -1;
+//        }
+//        int[][] failures = new int[patterns.length][];
+//        for (int i = 0; i < patterns.length; i++) {
+//            failures[i] = computeFailure(patterns[i]);
+//        }
+//        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
+//        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
+//
+//        int[] j = new int[patterns.length];
+//        for (int i = 0; i < j.length; i++) {
+//            j[i] = 0;
+//        }
+///*
+//        for (long i = fromOffset; i < fileSize; i++) {
+//            while (j > 0 && pattern[j] != data.getByte(i)) {
+//                j = failure[j - 1];
+//            }
+//            if (pattern[j] == data.getByte(i)) {
+//                j++;
+//            }
+//            if (j == pattern.length) {
+//                data.setCacheStrategy(cacheStrategy);
+//                return i - pattern.length + 1;
+//            }
+//        }
+//        */
+//        data.setCacheStrategy(cacheStrategy);
+//        return -1;
+//    }
 
 
     public static long indexOfBackward(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
+        if (data == null || pattern == null || fromOffset < 0) {
+            return -1;
+        }
+        long fileSize = data.getFileSize();
+        if (fileSize <= 0 || pattern.length == 0 || pattern.length > fileSize) {
+            return -1;
+        }
+        fromOffset = Math.min(fromOffset, fileSize - 1);
         byte[] patternInvert = new byte[pattern.length];
         for (int i = 0; i < pattern.length; i++) {
             patternInvert[i] = pattern[pattern.length-i-1];
@@ -103,22 +118,27 @@ public class ByteBufferSearchUtils {
         int[] failure = computeFailure(patternInvert);
         AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
         data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.BACKWARD);
-
-        int j = 0;
-        for (long i = fromOffset; i >= 0; i--) {
-            while (j > 0 && patternInvert[j] != data.getByte(i)) {
-                j = failure[j - 1];
+        try {
+            int j = 0;
+//            for (long i = fromOffset; i >= 0; i--) {
+            for (long i = fromOffset; i >= pattern.length - 1; i--) {
+                while (j > 0 && patternInvert[j] != data.getByte(i)) {
+                    j = failure[j - 1];
+                }
+                //if (pattern[j] == data.getByte(i)) {
+                if (patternInvert[j] == data.getByte(i)) {
+                    j++;
+                }
+                if (j == pattern.length) {
+//                    data.setCacheStrategy(cacheStrategy);
+                    //return i - pattern.length + 1;
+                    return i;
+                }
             }
-            if (pattern[j] == data.getByte(i)) {
-                j++;
-            }
-            if (j == pattern.length) {
-                data.setCacheStrategy(cacheStrategy);
-                return i - pattern.length + 1;
-            }
+            return -1;
+        } finally {
+            data.setCacheStrategy(cacheStrategy);
         }
-        data.setCacheStrategy(cacheStrategy);
-        return -1;
     }
 
 
@@ -128,12 +148,15 @@ public class ByteBufferSearchUtils {
      * Finds the first occurrence of the pattern in the text.
      */
     public static int indexOf(byte[] data, byte[] pattern) {
+        if (data == null || pattern == null || pattern.length == 0) {
+            return -1;
+        }
+        if (pattern.length > data.length) {
+            return -1;
+        }
         int[] failure = computeFailure(pattern);
 
         int j = 0;
-        if (data.length == 0) {
-            return -1;
-        }
 
         for (int i = 0; i < data.length; i++) {
             while (j > 0 && pattern[j] != data[i]) {
@@ -150,7 +173,7 @@ public class ByteBufferSearchUtils {
     }
 
     /**
-     * Computes the failure function using a boot-strapping process,
+     * Computes the failure function using a bootstrapping process,
      * where the pattern is matched against itself.
      */
     private static int[] computeFailure(byte[] pattern) {

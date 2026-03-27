@@ -106,8 +106,8 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
         // Property element (properties will be set when credentials element ends
             case ELEMENT_PROPERTY:
                 if (urlProperties == null)
-                urlProperties = new Hashtable<>();
-            urlProperties.put(attributes.getValue(ATTRIBUTE_NAME), attributes.getValue(ATTRIBUTE_VALUE));
+                    urlProperties = new Hashtable<>();
+                urlProperties.put(attributes.getValue(ATTRIBUTE_NAME), attributes.getValue(ATTRIBUTE_VALUE));
                 break;
         // Root element, the 'encryption' attribute specifies which encoding was used to encrypt passwords
             case ELEMENT_ROOT:
@@ -129,7 +129,7 @@ class CredentialsParser extends DefaultHandler implements CredentialsConstants {
             // Copy properties into FileURL instance (if any)
                 if (urlProperties != null) {
                     for (String key : urlProperties.keySet())
-                    url.setProperty(key, urlProperties.get(key));
+                        url.setProperty(key, urlProperties.get(key));
             }
 
             // Decrypt password

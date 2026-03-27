@@ -136,10 +136,8 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 
     }
 
-    // - Instance variables --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Theme template that is currently being built. */
-    private ThemeData template;
+    private final ThemeData template;
     /** Current state of the XML parser. */
     private State state;
     /** Used to ignore the content of an unknown tag. */
@@ -147,8 +145,6 @@ class ThemeReader extends DefaultHandler implements ThemeXmlConstants, ThemeId {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new theme reader.
      */

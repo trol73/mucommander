@@ -27,16 +27,10 @@ import java.net.URL;
  * @author Nicolas Rinaudo
  */
 class InternalBrowse extends UrlOperation {
-    // - Instance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Underlying desktop instance. */
     private Desktop desktop;
     private boolean initialized = false;
 
-
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new <code>InternalOpenUrl</code> instance.
      */
@@ -53,8 +47,6 @@ class InternalBrowse extends UrlOperation {
         return desktop;
     }
 
-    // - BrowseOperation implementation --------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Returns <code>true</code> if this operation is available.
      * <p>

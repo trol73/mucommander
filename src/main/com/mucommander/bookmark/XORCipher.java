@@ -73,7 +73,7 @@ public class XORCipher {
      * alphanumeric characters.
      *
      * @param s the String to encrypt
-     * @return a XOR-Base64 encrypted String
+     * @return an XOR-Base64 encrypted String
      */
     public static String encryptXORBase64(String s) {
         // TODO:

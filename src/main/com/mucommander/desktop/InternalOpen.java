@@ -28,16 +28,10 @@ import java.io.IOException;
  * @author Nicolas Rinaudo
  */
 class InternalOpen extends LocalFileOperation {
-    // - Instance variables --------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Underlying desktop instance. */
     private Desktop desktop;
     private boolean initialized = false;
 
-
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new <code>InternalOpen</code> instance.
      */
@@ -54,9 +48,6 @@ class InternalOpen extends LocalFileOperation {
         return desktop;
     }
 
-
-    // - DesktopOperation implementation -------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Returns <code>true</code> if this operation is available.
      * <p>
@@ -78,8 +69,8 @@ class InternalOpen extends LocalFileOperation {
             throw new UnsupportedOperationException();
         }
     }
+
     /**
-     * Returns the action's label.
      * @return the action's label.
      */
     @Override

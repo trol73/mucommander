@@ -107,12 +107,15 @@ public class UserPopupMenuLoader {
             JSONArray array = (JSONArray) cmd;
             List<List<String>> result = new ArrayList<>();
             if (arrayContainsArrays(array)) {
-                for (Object o : array) {
+//                for (Object o : array) {
+                for (int i = 0; i < array.length(); i++) {
+                    Object o = array.get(i);
                     List<String> group = new ArrayList<>();
                     result.add(group);
-                    if (o instanceof JSONArray) {
-                        JSONArray groupArray = (JSONArray) o;
-                        for (Object c : groupArray) {
+                    if (o instanceof JSONArray groupArray) {
+                        //for (Object c : groupArray) {
+                        for (int j = 0; j < groupArray.length(); j++) {
+                            Object c = groupArray.get(i);
                             if (c instanceof String) {
                                 group.add((String) c);
                             } else {
@@ -125,7 +128,9 @@ public class UserPopupMenuLoader {
             } else {
                 List<String> group = new ArrayList<>();
                 result.add(group);
-                for (Object c : array) {
+//                for (Object c : array) {
+                for (int i = 0; i < array.length(); i++) {
+                    Object c = array.get(i);
                     if (c instanceof String) {
                         group.add((String) c);
                     } else {
@@ -140,7 +145,9 @@ public class UserPopupMenuLoader {
     }
 
     private static boolean arrayContainsArrays(JSONArray array) {
-        for (Object o : array) {
+//        for (Object o : array) {
+        for (int i = 0; i < array.length(); i++) {
+            Object o = array.get(i);
             if (o instanceof JSONArray) {
                 return true;
             }

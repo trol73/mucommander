@@ -77,7 +77,7 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
 
             if (matchFound) {
                 if (d == entryDepth) {
-                    getLogger().trace("Replacing entry for node "+childNode);
+                    getLogger().trace("Replacing entry for node {}", childNode);
                     childNode.setUserObject(entry); // Replace existing entry
                 } else {
                     node = childNode;
@@ -88,7 +88,7 @@ class ArchiveEntryTree extends DefaultMutableTreeNode {
                     entry.setExists(true);      // the entry has to exist
                     node.add(new DefaultMutableTreeNode(entry, true));
                 } else {
-                    getLogger().trace("Creating node for " + subPath);
+                    getLogger().trace("Creating node for {}", subPath);
                     childNode = new DefaultMutableTreeNode(new ArchiveEntry(subPath, true, entry.getLastModifiedDate(), 0, true), true);
                     node.add(childNode);
                     node = childNode;

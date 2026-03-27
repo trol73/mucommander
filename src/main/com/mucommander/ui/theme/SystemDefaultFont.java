@@ -44,8 +44,6 @@ import java.beans.PropertyChangeListener;
  * @author Nicolas Rinaudo
  */
 public class SystemDefaultFont extends DefaultFont implements PropertyChangeListener {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Name of the {@link UIManager#getFont(Object)} font property} to query. */
     private final String property;
     /** Current value of the default font. */
@@ -55,8 +53,6 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link SystemDefaultFont}.
      * @param property {@link UIManager} property to query for the default font.
@@ -69,9 +65,6 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
     }
 
 
-
-    // - DefaultFont implementation ------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Font getFont(ThemeData data) {
         // If the font hasn't been identified yet...
@@ -90,9 +83,7 @@ public class SystemDefaultFont extends DefaultFont implements PropertyChangeList
     }
 
 
-
-    // - PropertyChangeListener implementation -------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // Monitors changes to both the global look & feel and the target property and react to them if necessary.
         String name = evt.getPropertyName().toLowerCase();

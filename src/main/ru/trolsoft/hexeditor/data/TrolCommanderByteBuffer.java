@@ -25,14 +25,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class MuCommanderByteBuffer extends AbstractByteBuffer {
-
-    private AbstractFile file;
+public class TrolCommanderByteBuffer extends AbstractByteBuffer {
+    private final AbstractFile file;
     private InputStream is;
     private long lastOffset;
 
 
-    public MuCommanderByteBuffer(AbstractFile file) {
+    public TrolCommanderByteBuffer(AbstractFile file) {
         super(DEFAULT_CAPACITY);
         this.file = file;
     }
@@ -52,8 +51,7 @@ public class MuCommanderByteBuffer extends AbstractByteBuffer {
     @Override
     protected void loadBuffer() throws IOException {
         getInputStream();
-        if (is instanceof RandomAccessInputStream) {
-            RandomAccessInputStream rndIs = ((RandomAccessInputStream) is);
+        if (is instanceof RandomAccessInputStream rndIs) {
             // Seek and reuse the stream
             rndIs.seek(offset);
 //System.out.println("RANDOM ACCESS " + offset);
@@ -73,16 +71,16 @@ public class MuCommanderByteBuffer extends AbstractByteBuffer {
             }
         }
         int bufPos = 0;
-        size = 0;
-        while (size < capacity) {
-            int read = is.read(buffer, bufPos, capacity-size);
+        bufferSize = 0;
+        while (bufferSize < capacity) {
+            int read = is.read(buffer, bufPos, capacity- bufferSize);
             if (read < 0) {
                 break;
             }
             bufPos += read;
-            size += read;
+            bufferSize += read;
         }
-        lastOffset = offset + size;
+        lastOffset = offset + bufferSize;
     }
 
     @Override

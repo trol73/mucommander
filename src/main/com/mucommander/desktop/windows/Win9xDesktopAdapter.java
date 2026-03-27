@@ -23,7 +23,7 @@ import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.desktop.DesktopInitialisationException;
+import com.mucommander.desktop.DesktopInitializationException;
 
 /**
  * @author Nicolas Rinaudo
@@ -37,14 +37,14 @@ public class Win9xDesktopAdapter extends WindowsDesktopAdapter {
     public boolean isAvailable() {return super.isAvailable() && OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT) < 0;}
 
     @Override
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
         super.init(install);
         try {
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, OPENER_COMMAND, CommandType.SYSTEM_COMMAND, EXPLORER_NAME, null));
         } catch(CommandException e) {
-            throw new DesktopInitialisationException(e);
+            throw new DesktopInitializationException(e);
         }
     }
 

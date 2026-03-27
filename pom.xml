@@ -42,7 +42,8 @@
 		<protobuf.version>2.4.1</protobuf.version>
 		<lucene.version>7.1.0</lucene.version>
 		<slf4j.version>2.0.17</slf4j.version>
-	</properties>
+        <kotlin.version>2.2.20</kotlin.version>
+    </properties>
 
 	<scm>
 		<connection>scm:git:${github.url}.git</connection>
@@ -616,11 +617,22 @@
 			<version>1.10.19</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.directory.api</groupId> <artifactId>api-all</artifactId> 
-			<version>1.0.0-M31</version> <exclusions> <exclusion> <groupId>log4j</groupId> 
-			<artifactId>log4j</artifactId> </exclusion> <exclusion> <groupId>org.slf4j</groupId> 
-			<artifactId>slf4j-log4j12</artifactId> </exclusion> <exclusion> <groupId>net.java.dev.jets3t</groupId> 
-			<artifactId>jets3t</artifactId> </exclusion> </exclusions> </dependency> -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- <dependency> <groupId>org.apache.directory.api</groupId> <artifactId>api-all</artifactId>
+            <version>1.0.0-M31</version> <exclusions> <exclusion> <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId> </exclusion> <exclusion> <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId> </exclusion> <exclusion> <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId> </exclusion> </exclusions> </dependency> -->
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main</sourceDirectory>
@@ -645,17 +657,7 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>${source.java.version}</source>
-					<target>${target.java.version}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
+            <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
@@ -888,8 +890,73 @@
           </environmentVariables>
           <classpathScope>compile</classpathScope>
         </configuration>
-    </plugin>                            
-		</plugins>
+    </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/main</sourceDir>
+                                <sourceDir>target/generated-sources/annotations</sourceDir>
+                                <sourceDir>src/test</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>${source.java.version}</source>
+                    <target>${target.java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
 	<profiles>
 		<profile>

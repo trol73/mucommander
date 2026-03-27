@@ -907,6 +907,11 @@
 				<method name="*"/>
 				<constructor name="*"/>
 			</keep>
+			<keep name="com.formdev.flatlaf.**" allowshrinking="false" allowoptimization="false" allowobfuscation="false">
+				<field name="*"/>
+				<method name="*"/>
+				<constructor name="*"/>
+			</keep>
         </proguard>
     </target>
 

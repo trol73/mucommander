@@ -57,8 +57,6 @@ package com.mucommander.command;
  * @author Nicolas Rinaudo
  */
 interface AssociationsXmlConstants {
-    // - XML elements ----------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Root element. */
     String ELEMENT_ROOT          = "associations";
     /** Custom association definition element. */
@@ -70,10 +68,6 @@ interface AssociationsXmlConstants {
     String ELEMENT_IS_WRITABLE   = "writable";
     String ELEMENT_IS_EXECUTABLE = "executable";
 
-
-
-    // - Custom association structure ------------------------------------------
-    // -------------------------------------------------------------------------
     /** Name of the attribute containing the alias of the command to execute in this association. */
     String ATTRIBUTE_COMMAND        = "command";
     String ATTRIBUTE_VALUE          = "value";

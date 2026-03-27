@@ -47,17 +47,17 @@ import java.util.StringTokenizer;
  * application writers must:
  * <ul>
  *   <li>
- *     Call <code>UIManager.getDefaults().put("ClassLoader", ExtensionManager.getClassLoader());</code> when initialising their application.
+ *     Call <code>UIManager.getDefaults().put("ClassLoader", ExtensionManager.getClassLoader());</code> when initializing their application.
  *     This will force Swing to use our custom classloader when loading Look&amp;Feels.
  *   </li>
  *   <li>
  *     Call <code>UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).newInstance());</code>
- *     to set a new look and feel. This will ensure that all classes and resources are available when initialising the Look&amp;Feel.
+ *     to set a new look and feel. This will ensure that all classes and resources are available when initializing the Look&amp;Feel.
  *   </li>
  * </ul>
  * <p>
- * Unfortunately, this is not always sufficient. Some Look&amp;Feels suffer from a peculiar behaviour in Swing that might cause resources to be loaded
- * through the system class loader rather than the one specified at initialisation time. This happens with Look&amp;Feels that extend system ones, such
+ * Unfortunately, this is not always sufficient. Some Look&amp;Feels suffer from a peculiar behavior in Swing that might cause resources to be loaded
+ * through the system class loader rather than the one specified at initialization time. This happens with Look&amp;Feels that extend system ones, such
  * as <code>Quaqua</code>. The only way to get these to load properly is to make sure the system classloader is an instance of
  * {@link com.mucommander.commons.file.AbstractFileClassLoader}.
  *
@@ -94,10 +94,6 @@ public class ExtensionManager {
      */
     private ExtensionManager() {}
 
-
-
-    // - Extension folder access ------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Sets the path to the folder in which all extensions are stored.
      * <p>
@@ -110,7 +106,9 @@ public class ExtensionManager {
      * @see                #setExtensionsFolder(String)
      * @see                #getExtensionsFolder()
      */
-    private static void setExtensionsFolder(File folder) throws IOException {setExtensionsFolder(FileFactory.getFile(folder.getAbsolutePath()));}
+    private static void setExtensionsFolder(File folder) throws IOException {
+        setExtensionsFolder(FileFactory.getFile(folder.getAbsolutePath()));
+    }
 
     /**
      * Sets the path to the folder in which all extensions are stored.

@@ -21,19 +21,13 @@ public class XmlAttributesTest {
     /** Second value of the test attribute. */
     private static final String TEST_VALUE_2     = "value2";
 
-
-
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Instance used to test the XmlAttributes class. */
     private XmlAttributes attributes;
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
-     * Initialises the test case.
+     * Initializes the test case.
      */
     @BeforeMethod
     public void setUp() {
@@ -41,9 +35,6 @@ public class XmlAttributesTest {
     }
 
 
-
-    // - Test code -----------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Runs the basic tests.
      */
@@ -99,8 +90,7 @@ public class XmlAttributesTest {
         try {
             names.remove();
             throw new AssertionError();
-        }
-        catch(Exception e) {}
+        } catch(Exception ignore) {}
     }
 
     /**

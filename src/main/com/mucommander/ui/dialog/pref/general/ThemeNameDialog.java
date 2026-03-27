@@ -42,10 +42,6 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
     /** Cancel button. */
     private JButton cancelButton;
 
-
-
-    // - Misc. fields --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Whether the dialog was closed by the ok button or by cancelling it. */
     private boolean wasValidated;
     /** Maximum dimensions for the dialog. */
@@ -53,8 +49,6 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new name dialog with the specified owner.
      * @param owner component that will own this dialog.
@@ -75,10 +69,6 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
         init(name);
     }
 
-
-
-    // - UI initialisation ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates the panel in which we'll store the label and name field.
      * @param  name current name.
@@ -117,9 +107,6 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
     }
 
 
-
-    // - Status queries ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the name entered by the user.
      * @return the name entered by the user.

@@ -144,14 +144,13 @@ public class ArchiveEntry extends SimpleFileAttributes {
     }
 
     /**
-     * Overriden to invalidates any previously computed hash code.
+     * Overridden to invalidates any previously computed hash code.
      *
      * @param path new path to set
      */
     @Override
     public void setPath(String path) {
         super.setPath(path);
-
         // Invalidate any previously
         hashCode = 0;
     }

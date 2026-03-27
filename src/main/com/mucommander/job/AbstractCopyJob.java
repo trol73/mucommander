@@ -46,14 +46,14 @@ public abstract class AbstractCopyJob extends TransferFileJob {
     protected String newName;
 
     /** Default choice when encountering an existing file */
-    private int defaultFileExistsAction = FileCollisionDialog.ASK_ACTION;
+    private int defaultFileExistsAction;//
     
     /** Title used for error dialogs */
     protected String errorDialogTitle;
     
     protected boolean append;
     
-    /** The archive that contains the destination files (may be null) */
+    /** The archive that contains the destination files (maybe null) */
     AbstractRWArchiveFile archiveToOptimize;
 
     /** True when an archive is being optimized */

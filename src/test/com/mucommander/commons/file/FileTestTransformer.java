@@ -17,35 +17,29 @@ import java.util.Properties;
  * @author Nicolas Rinaudo
  */
 public class FileTestTransformer implements IMethodInterceptor {
-    // - Constants -----------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     private static final String PATH_PROPERTY = "test.properties.file";
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     static {
-        String      path;
-        InputStream in;
-        Properties  properties;
-
+        String path;
         // Makes sure the required System property is set.
         if((path = System.getProperty(PATH_PROPERTY)) == null)
             throw new IllegalStateException(PATH_PROPERTY + " not set.");
 
         // Loads the properties.
-        in = null;
+        InputStream in = null;
+        Properties  properties;
         try {
             in = new FileInputStream(new File(path));
             properties = new Properties();
             properties.load(in);
-        }
-        catch(IOException e) {throw new IllegalStateException(e);}
-        finally {
-            if(in != null) {
-                try {in.close();}
-                catch(IOException e) {
+        } catch(IOException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(IOException e) {
                     // Nothing we can do about this.
                 }
             }
@@ -62,14 +56,10 @@ public class FileTestTransformer implements IMethodInterceptor {
     // -----------------------------------------------------------------------------------------------------------------
 
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
-        List<IMethodInstance> out;
-        String value;
-
-        out = new ArrayList<>();
+        List<IMethodInstance> out = new ArrayList<>();
         for(IMethodInstance method: methods) {
-            Class aClass;
-
-            aClass = method.getMethod().getTestClass().getRealClass();
+            Class aClass = method.getMethod().getTestClass().getRealClass();
+            String value;
             if(aClass == null || (value = System.getProperty(aClass.getName() + "#enabled")) == null ||
                     Boolean.parseBoolean(value))
                 out.add(method);

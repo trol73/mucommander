@@ -126,6 +126,11 @@ public enum OsFamily {
     public static boolean isAarch64() {
         return "aarch64".equals(getRawOsArch());
     }
+
+    public static boolean isAmd64() {
+        return "amd64".equals(getRawOsArch());
+    }
+
     /**
      * Returns an <code>OsFamily</code> instance corresponding to the specified system property's value.
      *

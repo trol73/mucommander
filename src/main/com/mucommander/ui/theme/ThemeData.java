@@ -20,6 +20,7 @@ package com.mucommander.ui.theme;
 
 import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.runtime.OsFamily;
+import com.mucommander.ui.text.FontUtils;
 import org.fife.ui.rtextarea.RTextArea;
 
 import javax.swing.*;
@@ -179,6 +180,7 @@ public class ThemeData implements ThemeId {
 
 
     static {
+        FontUtils.setup();
         // - Default values registering --------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
         ComponentMapper mapper = new ComponentMapper() {

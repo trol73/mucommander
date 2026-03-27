@@ -37,11 +37,6 @@ public abstract class MarkForwardAction extends TcAction {
         super(mainFrame, properties);
     }
 
-
-    /////////////////////////////
-    // MuAction implementation //
-    /////////////////////////////
-
     @Override
     public void performAction() {
         FileTable fileTable = mainFrame.getActiveTable();
@@ -55,11 +50,6 @@ public abstract class MarkForwardAction extends TcAction {
         fileTable.setRangeMarked(currentFileIndex, endIndex, !fileTable.getFileTableModel().isFileMarked(currentFileIndex));
         fileTable.selectFile(Math.min(lastIndex, endIndex + 1));
     }
-
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
 
     /**
      * Returns the number of rows to mark/unmark.

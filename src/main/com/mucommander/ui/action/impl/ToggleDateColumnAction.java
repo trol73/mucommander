@@ -27,7 +27,7 @@ import com.mucommander.ui.main.table.Column;
 
 /**
  * Shows/hides the 'Date' column of the currently active FileTable. If the column is currently visible, this action
- * will hide it and vice-versa.
+ * will hide it and vice versa.
  *
  * @author Maxence Bernard
  */

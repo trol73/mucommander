@@ -24,7 +24,7 @@ import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.commons.file.filter.RegexpFilenameFilter;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.desktop.DesktopInitialisationException;
+import com.mucommander.desktop.DesktopInitializationException;
 
 /**
  * @author Nicolas Rinaudo
@@ -43,7 +43,7 @@ public class WinNtDesktopAdapter extends WindowsDesktopAdapter {
     public boolean isAvailable() {return super.isAvailable() && OsVersion.getCurrent().compareTo(OsVersion.WINDOWS_NT) >= 0;}
 
     @Override
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
         super.init(install);
         try {
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  FILE_OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
@@ -53,7 +53,7 @@ public class WinNtDesktopAdapter extends WindowsDesktopAdapter {
 
             CommandManager.registerDefaultAssociation(CommandManager.EXE_OPENER_ALIAS, new RegexpFilenameFilter(EXE_REGEXP, false));
         } catch(CommandException e) {
-            throw new DesktopInitialisationException(e);
+            throw new DesktopInitializationException(e);
         }
     }
 

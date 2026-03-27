@@ -30,15 +30,11 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme font to default to. */
     private int id;
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link LinkedDefaultFont}.
      * @param id identifier of the current theme font to default to.
@@ -49,8 +45,6 @@ public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
 
 
 
-    // - DefaultFont implementation ------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Font getFont(ThemeData data) {
         return data.getFont(id);
@@ -58,8 +52,6 @@ public class LinkedDefaultFont extends DefaultFont implements ThemeListener {
 
 
 
-    // - ThemeListener implementation ----------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     public void colorChanged(ColorChangedEvent event) {
     }
 

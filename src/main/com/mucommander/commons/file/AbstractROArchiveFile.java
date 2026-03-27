@@ -26,7 +26,7 @@ package com.mucommander.commons.file;
  * <p>
  * <code>AbstractROArchiveFile</code> implementations only have to provide two methods:
  * <ul>
- *  <li>{@link #getEntryIterator()} to list the entries contained by the archive in a flat, non hierarchical way
+ *  <li>{@link #getEntryIterator()} to list the entries contained by the archive in a flat, non-hierarchical way
  *  <li>{@link AbstractArchiveFile#getEntryInputStream(ArchiveEntry, ArchiveEntryIterator)} to retrieve a particular entry's content.
  * </ul>
  * The {@link #isWritable()} method is implemented to always returns <code>false</code>.

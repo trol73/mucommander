@@ -40,8 +40,6 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
     private ProgressTextField  normalPreview;
     private ProgressTextField  progressPreview;
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent   dialog containing the panel.

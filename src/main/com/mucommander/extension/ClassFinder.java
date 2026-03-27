@@ -47,18 +47,14 @@ import com.mucommander.commons.file.filter.OrFileFilter;
  * @author Nicolas Rinaudo
  */
 public class ClassFinder {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** ClassLoader used to load classes from explored files. */
     private ClassLoader  loader;
     /** Used to IMAGE_FILTER out files that are neither classes nor directories. */
-    private OrFileFilter filter;
+    private final OrFileFilter filter;
     /** Used to IMAGE_FILTER out unwanted classes. */
     private ClassFilter  classFilter;
 
 
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new instance of <code>ClassFinder</code>.
      */
@@ -105,9 +101,6 @@ public class ClassFinder {
     }
 
 
-
-    // - Public code ---------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Explores the content of the specified file and looks for classes that match the specified class IMAGE_FILTER.
      * <p>

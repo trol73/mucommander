@@ -25,14 +25,10 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class FixedDefaultFont extends DefaultFont {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Font to default to. */
     private final Font font;
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link FixedDefaultFont}.
      * @param font font to default to.
@@ -42,9 +38,6 @@ public class FixedDefaultFont extends DefaultFont {
     }
 
 
-
-    // - DefaultFont implementation ------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Font getFont(ThemeData data) {
         return font;

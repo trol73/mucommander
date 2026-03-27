@@ -64,11 +64,11 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
     private org.apache.commons.net.ftp.FTPFile file;
 
-    private String absPath;
+    private final String absPath;
 
     private AbstractFile parent;
     private boolean parentValSet;
-    private FilePermissions permissions;
+    private final FilePermissions permissions;
 
     private boolean fileExists;
 
@@ -143,7 +143,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             return createFTPFile("/", true);
         } else {
             FTPConnectionHandler connHandler = (FTPConnectionHandler)ConnectionPool.getConnectionHandler(this, fileURL, true);
-            org.apache.commons.net.ftp.FTPFile files[];
+            org.apache.commons.net.ftp.FTPFile[] files;
             try {
                 // Makes sure the connection is started, if not starts it
                 connHandler.checkConnection();
@@ -198,7 +198,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
      * @throws AuthException if the user is not allowed to access this directory
      */
     private static org.apache.commons.net.ftp.FTPFile[] listFiles(FTPConnectionHandler connHandler, String absPath) throws IOException {
-        org.apache.commons.net.ftp.FTPFile files[];
+        org.apache.commons.net.ftp.FTPFile[] files;
         try {
             // Important: the folder is listed by changing the current working directory using the CWD command and then
             // issuing a LIST to list the current directory, instead of issuing a LIST with the path as an argument.
@@ -526,7 +526,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     public AbstractFile[] ls() throws IOException {
         // Retrieve a ConnectionHandler and lock it
         FTPConnectionHandler connHandler = (FTPConnectionHandler)ConnectionPool.getConnectionHandler(this, fileURL, true);
-        org.apache.commons.net.ftp.FTPFile files[];
+        org.apache.commons.net.ftp.FTPFile[] files;
         try {
             // Makes sure the connection is started, if not starts it
             connHandler.checkConnection();
@@ -541,7 +541,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
             return new AbstractFile[]{};
         }
 
-        AbstractFile children[] = new AbstractFile[files.length];
+        AbstractFile[] children = new AbstractFile[files.length];
         int nbFiles = files.length;
         int fileCount = 0;
         String parentPath = fileURL.getPath();
@@ -574,7 +574,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 
         // create new array of the exact file count
         if (fileCount < nbFiles) {
-            AbstractFile newChildren[] = new AbstractFile[fileCount];
+            AbstractFile[] newChildren = new AbstractFile[fileCount];
             System.arraycopy(children, 0, newChildren, 0, fileCount);
             return newChildren;
         }
@@ -655,10 +655,6 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
     public void changeReplication(short replication) throws IOException {
         throw new UnsupportedFileOperationException(FileOperation.CHANGE_REPLICATION);
     }
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     /**
      * Changes permissions using the SITE CHMOD FTP command.
@@ -1005,7 +1001,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
         }
 
         @Override
-        public int read(byte b[], int off, int len) throws IOException {
+        public int read(byte[] b, int off, int len) throws IOException {
             int nbRead = in.read(b, off, len);
 
             if (nbRead != -1) {
@@ -1127,7 +1123,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
 //        private CustomFTPClient ftpClient;
 
         /** Controls whether passive mode should be used for data transfers (default is true) */
-        private boolean passiveMode;
+        private final boolean passiveMode;
 
         /** Encoding used by the FTP control connection */
         private String encoding;
@@ -1432,7 +1428,7 @@ public class FTPFile extends ProtocolFile implements ConnectionHandlerFactory {
      */
     private static class FTPFilePermissions extends IndividualPermissionBits implements FilePermissions {
 
-        private org.apache.commons.net.ftp.FTPFile file;
+        private final org.apache.commons.net.ftp.FTPFile file;
 
         FTPFilePermissions(org.apache.commons.net.ftp.FTPFile file) {
             this.file = file;

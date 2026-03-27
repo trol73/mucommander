@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * This is a Builder implementation for the exp4j API used to create a Calculable instance for the user
@@ -55,7 +54,6 @@ public class ExpressionBuilder {
 	}
 
 	private List<Character> getValidOperators() {
-	    //TODO - change non-ascii paragraph sign to '\u00a7'
 		return Arrays.asList('!', '#', '§', '$', '&', ';', ':', '~', '<', '>', '|', '=', '^');
 	}
 
@@ -96,7 +94,7 @@ public class ExpressionBuilder {
 				return values[0] % values[1];
 			}
 		};
-		CustomOperator umin = new CustomOperator("\'", false, this.highUnaryPrecedence ? 7 : 5, 1) {
+		CustomOperator umin = new CustomOperator("'", false, this.highUnaryPrecedence ? 7 : 5, 1) {
 			@Override
 			protected double applyOperation(double[] values) {
 				return -values[0];
@@ -113,7 +111,7 @@ public class ExpressionBuilder {
 		operations.put("-", sub);
 		operations.put("*", mul);
 		operations.put("/", div);
-		operations.put("\'", umin);
+		operations.put("'", umin);
 		operations.put("^", pow);
 		operations.put("%", mod);
 		return operations;
@@ -261,8 +259,8 @@ public class ExpressionBuilder {
 		for (CustomOperator op : customOperators.values()) {
 			for (int i = 0; i < op.symbol.length(); i++) {
 				if (!validOperatorSymbols.contains(op.symbol.charAt(i))) {
-				    //TODO - change non-ascii paragraph sign to '\u00a7'
-					throw new UnparsableExpressionException("" + op.symbol
+				    //TODO - change non-ascii paragraph sign to '§'
+					throw new UnparsableExpressionException(op.symbol
 							+ " is not a valid symbol for an operator please choose from: !,#,§,$,&,;,:,~,<,>,|,=");
 				}
 			}
@@ -270,8 +268,7 @@ public class ExpressionBuilder {
 		for (String varName : variables.keySet()) {
 			checkVariableName(varName);
 			if (customFunctions.containsKey(varName)) {
-				throw new UnparsableExpressionException("Variable '" + varName
-						+ "' cannot have the same name as a function");
+				throw new UnparsableExpressionException("Variable '" + varName+ "' cannot have the same name as a function");
 			}
 		}
 		builtInOperators.putAll(customOperators);
@@ -296,10 +293,9 @@ public class ExpressionBuilder {
 	}
 
 	/**
-	 * add a custom function instance for the evaluator to recognize
+	 * Add a custom function instance for the evaluator to recognize
 	 * 
-	 * @param function
-	 *            the {@link CustomFunction} to add
+	 * @param function the {@link CustomFunction} to add
 	 * @return the {@link ExpressionBuilder} instance
 	 */
 	public ExpressionBuilder withCustomFunction(CustomFunction function) {
@@ -315,12 +311,10 @@ public class ExpressionBuilder {
 	}
 
 	/**
-	 * set the value for a variable
+	 * Set the value for a variable
 	 * 
-	 * @param variableName
-	 *            the variable name e.g. "x"
-	 * @param value
-	 *            the value e.g. 2.32d
+	 * @param variableName the variable name e.g. "x"
+	 * @param value the value e.g. 2.32d
 	 * @return the {@link ExpressionBuilder} instance
 	 */
 	public ExpressionBuilder withVariable(String variableName, double value) {
@@ -331,8 +325,7 @@ public class ExpressionBuilder {
 	/**
 	 * set the variables names used in the expression without setting their values
 	 * 
-	 * @param variableNames
-	 *            vararg {@link String} of the variable names used in the expression
+	 * @param variableNames vararg {@link String} of the variable names used in the expression
 	 * @return the ExpressionBuilder instance
 	 */
 	public ExpressionBuilder withVariableNames(String... variableNames) {
@@ -350,17 +343,14 @@ public class ExpressionBuilder {
 	 * @return the {@link ExpressionBuilder} instance
 	 */
 	public ExpressionBuilder withVariables(Map<String, Double> variableMap) {
-		for (Entry<String, Double> v : variableMap.entrySet()) {
-			variables.put(v.getKey(), v.getValue());
-		}
+        variables.putAll(variableMap);
 		return this;
 	}
 
 	/**
 	 * set a {@link CustomOperator} to be used in the expression
 	 * 
-	 * @param operation
-	 *            the {@link CustomOperator} to be used
+	 * @param operation the {@link CustomOperator} to be used
 	 * @return the {@link ExpressionBuilder} instance
 	 */
 	public ExpressionBuilder withOperation(CustomOperator operation) {
@@ -371,8 +361,7 @@ public class ExpressionBuilder {
 	/**
 	 * set a {@link Collection} of {@link CustomOperator} to use in the expression
 	 * 
-	 * @param operations
-	 *            the {@link Collection} of {@link CustomOperator} to use
+	 * @param operations the {@link Collection} of {@link CustomOperator} to use
 	 * @return the {@link ExpressionBuilder} instance
 	 */
 	public ExpressionBuilder withOperations(Collection<CustomOperator> operations) {

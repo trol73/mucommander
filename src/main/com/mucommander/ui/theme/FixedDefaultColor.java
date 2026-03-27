@@ -25,15 +25,10 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class FixedDefaultColor extends DefaultColor {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Color to default to. */
-    private Color color;
+    private final Color color;
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link FixedDefaultColor}.
      * @param color color to default to.
@@ -43,9 +38,6 @@ public class FixedDefaultColor extends DefaultColor {
     }
 
 
-
-    // - DefaultColor implementation -----------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Color getColor(ThemeData data) {
         return color;

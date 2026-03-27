@@ -66,7 +66,14 @@ public class SevenZipJBindingROArchiveFile extends AbstractROArchiveFile {
                 try {
                     if (OsFamily.getCurrent() == OsFamily.MAC_OS_X && OsFamily.isAarch64()) {
                         SevenZip.initSevenZipFromPlatformJAR("Mac-arm64");
+                    } else if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+                        SevenZip.initSevenZipFromPlatformJAR("Mac-x86_64");
+                    } else if (OsFamily.getCurrent() == OsFamily.LINUX && OsFamily.isAmd64()) {
+                        SevenZip.initSevenZipFromPlatformJAR("Linux-amd64");
+                    } else if (OsFamily.getCurrent() == OsFamily.LINUX) {
+                        SevenZip.initSevenZipFromPlatformJAR("Linux-i386");
                     } else {
+                        System.out.println("Arch: " + System.getProperty("os.arch"));
                         SevenZip.initSevenZipFromPlatformJAR();
                     }
                     libraryInit = true;

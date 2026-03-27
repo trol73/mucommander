@@ -18,6 +18,9 @@
 
 package com.mucommander.ui.text;
 
+import com.mucommander.RuntimeConstants;
+import com.mucommander.commons.runtime.OsFamily;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,6 +30,48 @@ import java.awt.*;
  * @author Maxence Bernard
  */
 public class FontUtils {
+    public static void setup() {
+        if (OsFamily.getCurrent() == OsFamily.LINUX && RuntimeConstants.DISPLAY_4K) {
+            scaleFont("Menu.font", 18, 24);
+            scaleFont("MenuItem.font", 18, 24);
+            scaleFont("CheckBoxMenuItem.font", 18, 24);
+            scaleFont("TabbedPane.font", 18, 22);
+            scaleFont("CheckBox.font", 18, 24);
+            scaleFont("ComboBox.font", 18, 24);
+            scaleFont("RadioButton.font", 18, 24);
+            scaleFont("Button.font", 18, 22);
+            scaleFont("Label.font", 18, 24);
+            scaleFont("List.font", 18, 22);
+            scaleFont("TextField.font", 18, 22);
+            scaleFont("ToolTip.font", 18, 24);
+            scaleFont("Table.font", 18, 22);
+            scaleFont("TableHeader.font", 18, 24);
+            scaleFont("TitledBorder.font", 18, 24);
+            scaleFont("ProgressBar.font", 18, 22);
+            scaleFont("JideSplitButton.font", 18, 22);
+        }
+    }
+
+    private static void scaleFont(String uiManagerName, int minSize, int size) {
+        Font font = UIManager.getFont(uiManagerName);
+        if (font != null && font.getSize() <= minSize) {
+            Font newFont = new Font(font.getFontName(), font.getStyle(), size);
+            UIManager.put(uiManagerName, newFont);
+        }
+    }
+
+    public static Font scaleFont(Font font, int minSize, int size) {
+        if (font.getSize() <= minSize) {
+            return  new Font(font.getFontName(), font.getStyle(), size);
+        } else {
+            return font;
+        }
+    }
+
+    public static void scaleFont(JComponent component, int minSize, int size) {
+        component.setFont(scaleFont(component.getFont(), minSize, size));
+    }
+
 
     /**
      * Changes the style of the given component's font. Other attributes of the font are left unchanged.

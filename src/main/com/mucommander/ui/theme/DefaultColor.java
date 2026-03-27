@@ -36,15 +36,10 @@ import java.util.List;
  * @author Nicolas Rinaudo
  */
 public abstract class DefaultColor {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** List of colors linked to this default value. */
     private final List<Integer> linkedColors = new ArrayList<>();
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link DefaultColor}.
      */
@@ -52,9 +47,6 @@ public abstract class DefaultColor {
     }
 
 
-
-    // - Event propagation ---------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Notifies the current theme of a default value change to all linked colors.
      * @param color new default color value.
@@ -78,9 +70,6 @@ public abstract class DefaultColor {
     }
 
 
-
-    // - Abstract methods ----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the color this default value represents.
      * @param  data contains all the current theme values.

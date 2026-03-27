@@ -94,9 +94,9 @@ public class LookAndFeelFilter implements ClassFilter {
 
     private static boolean isSupportedLookAndFeel(Class<?> c) {
         try {
-            return ((LookAndFeel) c.newInstance()).isSupportedLookAndFeel();
+            return ((LookAndFeel) c.getDeclaredConstructor().newInstance()).isSupportedLookAndFeel();
         } catch(Throwable e) {
-            LOGGER.debug("Class " + c + " caught exception", e);
+            LOGGER.debug("Class {} caught exception", c, e);
             return false;
         }
     }

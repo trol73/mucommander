@@ -46,17 +46,12 @@ import java.util.Iterator;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class ShellComboBox extends AutocompleteEditableCombobox<String> implements EditableComboBoxListener, ShellHistoryListener, PopupMenuListener {
-    // - Instance fields -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /** Input field used to type in commands. */
-    private JTextField input;
+    private final JTextField input;
     /** Where to init commands. */
-    private RunDialog  parent;
+    private final RunDialog  parent;
 
 
-
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Creates a new shell combo box.
      * @param parent where to execute commands.

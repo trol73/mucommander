@@ -46,8 +46,6 @@ import java.util.List;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 abstract class ThemeEditorPanel extends PreferencesPanel {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Edited theme data. */
     protected ThemeData themeData;
 
@@ -62,8 +60,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
 
 
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new <code>ThemeEditorPanel</code>.
      * @param parent    dialog in which the panel is stored.
@@ -75,7 +71,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
 
         this.themeData = themeData;
 
-        // Initialises the caption label font.
         captionLabelFont = new JLabel().getFont();
         captionLabelFont = captionLabelFont.deriveFont(Font.BOLD, captionLabelFont.getSize()-1.5f);
     }
@@ -285,8 +280,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @author Nicolas Rinaudo
      */
     private static class ThemeFontChooserListener implements ChangeListener {
-        // - Instance fields -------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /** Theme data in which to update the font when it changes. */
         private final ThemeData data;
         /** Identifier of the font we're listening on. */
@@ -295,8 +288,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         private final PreferencesDialog dialog;
 
 
-        // - Initialisation --------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Creates a new <code>ThemeFontChooserListener</code>.
          * @param data   theme data to modify when change events are received.
@@ -308,10 +299,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
             this.dialog = dialog;
         }
 
-
-
-        // - Changes listening -----------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Updates the theme data with the new font value.
          */
@@ -327,14 +314,10 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @author Nicolas Rinaudo
      */
     private static class PreviewFontChooserListener implements ChangeListener {
-        // - Instance fields -------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /** Component to update when the font has changed. */
         private final JComponent preview;
 
 
-        // - Initialisation --------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Creates a new instance of <code>PreviewFontChooserListener</code>.
          * @param preview component to update when the font has changed.
@@ -344,9 +327,6 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         }
 
 
-
-        // - Changes listening -----------------------------------------------------------
-        // -------------------------------------------------------------------------------
         /**
          * Updates the preview component.
          */

@@ -19,41 +19,41 @@
 package com.mucommander.desktop;
 
 /**
- * Encapsulates errors that occur at {@link DesktopAdapter} initialisation time.
+ * Encapsulates errors that occur at {@link DesktopAdapter} initialization time.
  * <p>
  * This class can contain basic error information from either the <code>com.mucommander.desktop</code> API
  * or the application. Application writers can subclass it to provide additional functionality.
  * <p>
  * If the application needs to pass through other types of exceptions, it must wrap them in a
- * <code>DesktopInitialisationException</code> or an exception derived from it.
+ * <code>DesktopInitializationException</code> or an exception derived from it.
  *
  * @author Nicolas Rinaudo
  */
-public class DesktopInitialisationException extends Exception {
+public class DesktopInitializationException extends Exception {
     /**
-     * Creates a new desktop initialisation exception.
+     * Creates a new desktop initialization exception.
      * @param message the error message.
      */
-    public DesktopInitialisationException(String message) {super(message);}
+    public DesktopInitializationException(String message) {super(message);}
 
 
     /**
-     * Creates a new desktop initialisation exception wrapping an existing exception.
+     * Creates a new desktop initialization exception wrapping an existing exception.
      * <p>
      * The existing exception will be embedded in the new one, and its message will
-     * become the default message for the <code>DesktopInitialisationException</code>.
+     * become the default message for the <code>DesktopInitializationException</code>.
      *
-     * @param cause the exception to be wrapped in a <code>DesktopInitialisationException</code>.
+     * @param cause the exception to be wrapped in a <code>DesktopInitializationException</code>.
      */
-    public DesktopInitialisationException(Throwable cause) {super(cause);}
+    public DesktopInitializationException(Throwable cause) {super(cause);}
 
     /**
-     * Creates a new desktop initialisation exception from an existing exception.
+     * Creates a new desktop initialization exception from an existing exception.
      * <p>
      * The existing exception will be embedded in the new one, but the new exception will have its own message.
      *
      * @param message the detail message.
-     * @param cause   the exception to be wrapped in a <code>DesktopInitialisationException</code>.
+     * @param cause   the exception to be wrapped in a <code>DesktopInitializationException</code>.
      */
-    public DesktopInitialisationException(String message, Throwable cause) {super(message, cause);}
+    public DesktopInitializationException(String message, Throwable cause) {super(message, cause);}
 }

@@ -57,12 +57,8 @@ public class Theme extends ThemeData {
     // ThemeData uses a weak hashmap to store its listeners, meaning that each listener must be 'linked'
     // somewhere or be garbage collected. Simply put, if we do not store the instance here, we might
     // as well not bother registering it.
-    /** Default values listener. */
     private DefaultValuesListener defaultValuesListener;
 
-
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
 
     /**
      * Creates a new empty user theme.

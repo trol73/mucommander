@@ -22,10 +22,8 @@ import com.mucommander.commons.file.util.FileSet;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.main.MainFrame;
 import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.AbstractFileFilter;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.OrFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.io.filefilter.*;
+import org.jetbrains.annotations.NotNull;
 import ru.trolsoft.utils.search.*;
 
 import java.io.File;
@@ -163,19 +161,7 @@ public class FindFileJob extends FileJob {
         this.ignoreHidden = ignoreHidden;
         IOCase filterCase = OsFamily.MAC_OS_X.isCurrent() || OsFamily.WINDOWS.isCurrent() ? IOCase.INSENSITIVE : IOCase.SENSITIVE;
 
-        if (fileMask.contains(",")) {
-            String[] masks = fileMask.split(",");
-            List<IOFileFilter> fileFilters = new ArrayList<>();
-            for (String mask : masks) {
-                String trimMask = mask.trim();
-                if (!trimMask.isEmpty()) {
-                    fileFilters.add(new WildcardFileFilter(trimMask, filterCase));
-                }
-            }
-            fileFilter = new OrFileFilter(fileFilters);
-        } else {
-            fileFilter = new WildcardFileFilter(fileMask, filterCase);
-        }
+        fileFilter = buildFileFilter(fileMask, filterCase);
 
         if (hexMode) {
             searchPattern = new BytesSearchPattern(bytes);
@@ -189,6 +175,43 @@ public class FindFileJob extends FileJob {
             }
         }
 
+    }
+
+    @NotNull
+    private static AbstractFileFilter buildFileFilter(String fileMask, IOCase filterCase) {
+        if (!fileMask.contains(",")) {
+            if (fileMask.startsWith("!")) {
+                return new NotFileFilter(new WildcardFileFilter(fileMask.substring(1).trim(), filterCase));
+            } else {
+                return new WildcardFileFilter(fileMask, filterCase);
+            }
+        }
+
+        return buildMultipleFileFilters(fileMask, filterCase);
+    }
+
+    @NotNull
+    private static AbstractFileFilter buildMultipleFileFilters(String fileMask, IOCase filterCase) {
+        String[] masks = fileMask.split(",");
+        List<IOFileFilter> fileFilters = new ArrayList<>();
+        boolean hasNot = false;
+        for (String mask : masks) {
+            String trimMask = mask.trim();
+            if (trimMask.isEmpty()) {
+                continue;
+            }
+            if (trimMask.startsWith("!")) {
+                var notMask = trimMask.substring(1).trim();
+                if (notMask.isEmpty()) {
+                    continue;
+                }
+                fileFilters.add(new NotFileFilter(new WildcardFileFilter(notMask, filterCase)));
+                hasNot = true;
+            } else {
+                fileFilters.add(new WildcardFileFilter(trimMask, filterCase));
+            }
+        }
+        return hasNot ? new AndFileFilter(fileFilters) : new OrFileFilter(fileFilters);
     }
 
 }

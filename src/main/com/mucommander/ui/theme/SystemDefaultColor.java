@@ -59,8 +59,6 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
 
 
 
-    // - Color types ---------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Identifies a foreground color (linked to {@link JComponent#getForeground()}). */
     static final int FOREGROUND = 1;
     /** Identifies a background color (linked to {@link JComponent#getBackground()}). */
@@ -73,9 +71,6 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
     static final int CURRENT_LINE_BACKGROUND = 5;
 
 
-
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** {@link UIManager} property to look for. */
     private final String property;
     /**
@@ -90,8 +85,6 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link SystemDefaultColor}.
      * @param type     type of the color being described (can be one of {@link #FOREGROUND}, {@link #BACKGROUND},
@@ -108,8 +101,6 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
 
 
 
-    // - DefaultColor implementation -----------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Returns the color of the right {@link #type type} used by the specified component.
      * @param  component component to analyse.
@@ -123,9 +114,7 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
         }
 
         // Text component specific colors.
-        else if (component instanceof JTextComponent) {
-            JTextComponent comp = (JTextComponent)component;
-
+        else if (component instanceof JTextComponent comp) {
             if (type == SELECTION_FOREGROUND) {
                 return comp.getSelectedTextColor();
             } else if(type == SELECTION_BACKGROUND) {

@@ -30,16 +30,9 @@ import java.awt.*;
  * @author Nicolas Rinaudo
  */
 public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Identifier of the current theme color to default to. */
     private final int colorId;
 
-
-
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance of {@link LinkedDefaultColor}.
      * @param colorId identifier of the current theme color to default to.
@@ -49,19 +42,12 @@ public class LinkedDefaultColor extends DefaultColor implements ThemeListener {
         ThemeData.addDefaultValuesListener(this);
     }
 
-
-
-    // - DefaultColor implementation -----------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public Color getColor(ThemeData data) {
         return data.getColor(colorId); 
     }
 
 
-
-    // - ThemeListener implementation ----------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     public void colorChanged(ColorChangedEvent event) {
         if (event.getColorId() == colorId) {
             notifyChange(event.getColor());

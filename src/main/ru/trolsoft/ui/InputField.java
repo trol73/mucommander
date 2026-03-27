@@ -52,7 +52,7 @@ public class InputField extends JTextField implements DocumentListener {
 
     private String textEncoding;
 
-    private List<InputField> assignedFields;
+    private List<InputField> bindedFields;
 
     public InputField() {
         super();
@@ -122,7 +122,7 @@ public class InputField extends JTextField implements DocumentListener {
         // don't filter text value
         if (filterType == null || filterType == FilterType.ANY_TEXT) {
             onChange();
-            updateAssignedFields();
+            updateBindFields();
             return;
         }
         filtering = true;
@@ -131,7 +131,7 @@ public class InputField extends JTextField implements DocumentListener {
             String input = getText().toUpperCase();
             String filtered = filterInput(input, maxLength);
             setText(filtered);
-            updateAssignedFields();
+            updateBindFields();
             onChange();
             filtering = false;
         });
@@ -245,11 +245,11 @@ public class InputField extends JTextField implements DocumentListener {
     }
 
 
-    public void assignField(InputField field) {
-        if (assignedFields == null) {
-            assignedFields = new ArrayList<>();
+    public void bindField(InputField field) {
+        if (bindedFields == null) {
+            bindedFields = new ArrayList<>();
         }
-        assignedFields.add(field);
+        bindedFields.add(field);
     }
 
     private void setTextWithoutFilter(String text) {
@@ -259,12 +259,12 @@ public class InputField extends JTextField implements DocumentListener {
     }
 
 
-    private void updateAssignedFields() {
-        if (assignedFields == null) {
+    private void updateBindFields() {
+        if (bindedFields == null) {
             return;
         }
         final String src = getText();
-        for (InputField field : assignedFields) {
+        for (InputField field : bindedFields) {
             String text;
             try {
                 text = convert(src, filterType, field.getFilterType());

@@ -34,7 +34,7 @@ public class GnomeConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GnomeConfig.class);
 	
     /** Name of the command to invoke for retrieving configuration values */
-    private static String CONFIG_COMMAND = "gconftool";
+    private static final String CONFIG_COMMAND = "gconftool";
 
     /**
      * Returns the GNOME configuration value corresponding to the given key, <code>null</code> if this key has no value.

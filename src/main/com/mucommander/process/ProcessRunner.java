@@ -38,18 +38,12 @@ import java.util.StringTokenizer;
  * @author Nicolas Rinaudo
  */
 public class ProcessRunner {
-    // - Initialisation ------------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Prevents instances of ProcessRunner from being created.
      */
     private ProcessRunner() {
     }
 
-
-
-    // - Process running -----------------------------------------------------
-    // -----------------------------------------------------------------------
     /**
      * Executes the specified command in the specified directory.
      * <p>

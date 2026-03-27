@@ -48,15 +48,10 @@ import com.mucommander.io.backup.BackupOutputStream;
 public class ShellHistoryManager {
 	private static Logger logger;
 	
-    // - History configuration -----------------------------------------------
-    // -----------------------------------------------------------------------
     /** File in which to store the shell HISTORY. */
     private static final String DEFAULT_HISTORY_FILE_NAME = "shell_history.xml";
 
 
-
-    // - Class fields ---------------------------------------------------------------
-    // ------------------------------------------------------------------------------
     /** List of shell HISTORY registered LISTENERS. */
     private static final WeakHashMap<ShellHistoryListener, ?> LISTENERS;
     /** Stores the shell HISTORY. */
@@ -70,8 +65,6 @@ public class ShellHistoryManager {
 
 
 
-    // - Initialisation -------------------------------------------------------------
-    // ------------------------------------------------------------------------------
     /**
      * Prevents instantiations of the class.
      */
@@ -82,10 +75,6 @@ public class ShellHistoryManager {
         LISTENERS = new WeakHashMap<>();
     }
 
-
-
-    // - Listener code --------------------------------------------------------------
-    // ------------------------------------------------------------------------------
     /**
      * Registers a listener to changes in the shell HISTORY.
      * @param listener listener to register.

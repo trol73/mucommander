@@ -34,15 +34,10 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 class BookmarkRoot extends ProtocolFile implements BookmarkListener {
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Time at which the bookmarks were last modified. */
     private long lastModified;
 
 
-
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     BookmarkRoot() throws IOException {this(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://"));}
 
     BookmarkRoot(FileURL url) {
@@ -52,9 +47,6 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
     }
 
 
-
-    // - AbstractFile methods --------------------------------------------------
-    // -------------------------------------------------------------------------
     @Override
     public AbstractFile[] ls() throws IOException {
         // Retrieves all available bookmarks.
@@ -78,10 +70,6 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
         return true;
     }
 
-
-
-    // - Bookmarks synchronisation ---------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Stores the current date as the date of last modification.
      */
@@ -98,10 +86,6 @@ class BookmarkRoot extends ProtocolFile implements BookmarkListener {
         return lastModified;
     }
 
-
-
-    // - Unused methods --------------------------------------------------------
-    // -------------------------------------------------------------------------
     // The following methods are not used by BookmarkFile. They will throw an exception,
     // return an 'operation non supported' value or return a default value.
 

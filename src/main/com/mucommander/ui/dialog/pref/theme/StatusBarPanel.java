@@ -74,8 +74,6 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener,
     private Preview criticalPreview;
     
 
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new file table editor.
      * @param parent   dialog containing the panel.
@@ -87,7 +85,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener,
     }
 
     private JPanel createGeneralPanel(FontChooser chooser, ColorButton foreground) {
-        // Initialises the color panel.
+        // Initializes the color panel.
         JPanel colorPanel = new ProportionalGridPanel(2);
         colorPanel.add(createCaptionLabel("theme_editor.text"));
         colorPanel.add(foreground);

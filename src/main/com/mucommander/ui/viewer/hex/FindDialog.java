@@ -80,10 +80,9 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         new ListDataIntelliHints<>(hexField, historyHex).setCaseSensitive(false);
         hexField.setText("");
 
-        textField.assignField(hexField);
-        hexField.assignField(textField);
-        textField.setTextEncoding(encoding);
-        hexField.setTextEncoding(encoding);
+        textField.bindField(hexField);
+        hexField.bindField(textField);
+        setEncoding(encoding);
 
         contentPane.add(compPanel, BorderLayout.CENTER);
 
@@ -96,6 +95,10 @@ public abstract class FindDialog extends FocusDialog implements ActionListener {
         setInitialFocusComponent(textField);
     }
 
+    private void setEncoding(String encoding) {
+        textField.setTextEncoding(encoding);
+        hexField.setTextEncoding(encoding);
+    }
 
     public byte[] getSearchBytes() {
         return hexField.getBytes();

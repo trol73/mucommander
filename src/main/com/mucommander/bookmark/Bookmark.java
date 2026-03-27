@@ -144,11 +144,9 @@ public class Bookmark implements Cloneable {
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof Bookmark)) {
+        if (!(object instanceof Bookmark bookmark)) {
             return false;
         }
-
-        Bookmark bookmark = (Bookmark)object;
         return bookmark.getName().equals(name);
     }
 }

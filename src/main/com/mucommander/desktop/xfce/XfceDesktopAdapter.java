@@ -23,7 +23,7 @@ import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.desktop.DefaultDesktopAdapter;
-import com.mucommander.desktop.DesktopInitialisationException;
+import com.mucommander.desktop.DesktopInitializationException;
 import com.mucommander.desktop.DesktopManager;
 
 /**
@@ -35,7 +35,7 @@ abstract class XfceDesktopAdapter extends DefaultDesktopAdapter {
     private static final String EXE_OPENER        = "$f";
     
 	@Override
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
         // Initialises trash management.
         DesktopManager.setTrashProvider(new XfceTrashProvider());
 
@@ -46,6 +46,6 @@ abstract class XfceDesktopAdapter extends DefaultDesktopAdapter {
             CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS,   EXE_OPENER,  CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FILE_OPENER, CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME, null));
         }
-        catch(CommandException e) {throw new DesktopInitialisationException(e);}
+        catch(CommandException e) {throw new DesktopInitializationException(e);}
     }
 }

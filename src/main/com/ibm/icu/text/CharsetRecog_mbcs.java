@@ -157,8 +157,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
                  done = true;
                  return -1;
              }
-             int byteValue = (int)det.fRawInput[nextIndex++] & 0x00ff;
-             return byteValue;
+             return (int)det.fRawInput[nextIndex++] & 0x00ff;
          }       
      }
      
@@ -166,7 +165,6 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
       * Get the next character (however many bytes it is) from the input data
       *    Subclasses for specific charset encodings must implement this function
       *    to get characters according to the rules of their encoding scheme.
-      * 
       *  This function is not a method of class iteratedChar only because
       *   that would require a lot of extra derived classes, which is awkward.
       * @param it  The iteratedChar "struct" into which the returned char is placed.
@@ -321,11 +319,10 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          boolean nextChar(iteratedChar it, CharsetDetector det) {
              it.index = it.nextIndex;
              it.error = false;
-             int firstByte  = 0;
-             int secondByte = 0;
-             int thirdByte  = 0;
-             //int fourthByte = 0;
-             
+             int firstByte;
+             int secondByte;
+             int thirdByte;
+
              buildChar: {
                  firstByte = it.charValue = it.nextByte(det);                 
                  if (firstByte < 0) {
@@ -382,7 +379,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          static class CharsetRecog_euc_jp extends CharsetRecog_euc {
              static int [] commonChars = 
                  // TODO:  This set of data comes from the character frequency-
-                 //        of-occurence analysis tool.  The data needs to be moved
+                 //        of-occurrence analysis tool.  The data needs to be moved
                  //        into a resource and loaded from there.
                 {0xa1a1, 0xa1a2, 0xa1a3, 0xa1a6, 0xa1bc, 0xa1ca, 0xa1cb, 0xa1d6, 0xa1d7, 0xa4a2, 
                  0xa4a4, 0xa4a6, 0xa4a8, 0xa4aa, 0xa4ab, 0xa4ac, 0xa4ad, 0xa4af, 0xa4b1, 0xa4b3, 
@@ -416,7 +413,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          static class CharsetRecog_euc_kr extends CharsetRecog_euc {
              static int [] commonChars = 
                  // TODO:  This set of data comes from the character frequency-
-                 //        of-occurence analysis tool.  The data needs to be moved
+                 //        of-occurrence analysis tool.  The data needs to be moved
                  //        into a resource and loaded from there.
                 {0xb0a1, 0xb0b3, 0xb0c5, 0xb0cd, 0xb0d4, 0xb0e6, 0xb0ed, 0xb0f8, 0xb0fa, 0xb0fc, 
                  0xb1b8, 0xb1b9, 0xb1c7, 0xb1d7, 0xb1e2, 0xb3aa, 0xb3bb, 0xb4c2, 0xb4cf, 0xb4d9, 
@@ -461,10 +458,10 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          boolean nextChar(iteratedChar it, CharsetDetector det) {
              it.index = it.nextIndex;
              it.error = false;
-             int firstByte  = 0;
-             int secondByte = 0;
-             int thirdByte  = 0;
-             int fourthByte = 0;
+             int firstByte;
+             int secondByte;
+             int thirdByte;
+             int fourthByte;
              
              buildChar: {
                  firstByte = it.charValue = it.nextByte(det); 
@@ -513,7 +510,7 @@ abstract class CharsetRecog_mbcs extends CharsetRecognizer {
          
          static int [] commonChars = 
              // TODO:  This set of data comes from the character frequency-
-             //        of-occurence analysis tool.  The data needs to be moved
+             //        of-occurrence analysis tool.  The data needs to be moved
              //        into a resource and loaded from there.
             {0xa1a1, 0xa1a2, 0xa1a3, 0xa1a4, 0xa1b0, 0xa1b1, 0xa1f1, 0xa1f3, 0xa3a1, 0xa3ac, 
              0xa3ba, 0xb1a8, 0xb1b8, 0xb1be, 0xb2bb, 0xb3c9, 0xb3f6, 0xb4f3, 0xb5bd, 0xb5c4, 

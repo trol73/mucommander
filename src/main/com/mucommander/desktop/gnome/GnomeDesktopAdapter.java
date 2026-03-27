@@ -21,6 +21,7 @@ package com.mucommander.desktop.gnome;
 import java.awt.Toolkit;
 import java.lang.reflect.Field;
 
+import com.mucommander.desktop.DesktopInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,6 @@ import com.mucommander.command.CommandType;
 import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.RegexpFilenameFilter;
 import com.mucommander.desktop.DefaultDesktopAdapter;
-import com.mucommander.desktop.DesktopInitialisationException;
 import com.mucommander.desktop.DesktopManager;
 
 /**
@@ -54,7 +54,8 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
     public abstract boolean isAvailable();
 
     @Override
-	public void init(final boolean install) throws DesktopInitialisationException {
+	public void init(final boolean install) throws DesktopInitializationException {
+		setWMClass();
         // Workaround for JDK issue
         try {
 			Toolkit xToolkit = Toolkit.getDefaultToolkit();
@@ -62,7 +63,7 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
 			awtAppClassNameField.setAccessible(true);
 			awtAppClassNameField.set(xToolkit, "trolCommander");
         } catch (Exception ignore) { }
-        // Initialises trash management.
+        // Initializes trash management.
         DesktopManager.setTrashProvider(new GnomeTrashProvider());
         try {
 			CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS, FILE_OPENER,
@@ -94,7 +95,7 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
                 multiClickInterval = super.getMultiClickInterval();
             }
         } catch (CommandException e) {
-            throw new DesktopInitialisationException(e);
+            throw new DesktopInitializationException(e);
         }
     }
 
@@ -125,5 +126,24 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
 	@Override
 	public String getDefaultTerminalShellCommand() {
 		return "/bin/bash --login";
+	}
+
+	/**
+	 * Sets the WM_CLASS for Linux window managers.
+	 */
+	private static void setWMClass() {
+		try {
+			java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+			java.lang.reflect.Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
+			awtAppClassNameField.setAccessible(true);
+			awtAppClassNameField.set(null, "trolcommander-trolCommander");
+		} catch (NoSuchFieldException e) {
+			// Not running on X11/Linux, or field doesn't exist in this JDK version
+			System.out.println("DEBUG: Could not set WM_CLASS - field not found (probably not Linux/X11)");
+		} catch (IllegalAccessException e) {
+			System.err.println("Warning: Could not set WM_CLASS due to access restrictions: " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Warning: Unexpected error setting WM_CLASS: " + e.getMessage());
+		}
 	}
 }

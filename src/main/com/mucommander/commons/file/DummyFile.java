@@ -23,11 +23,6 @@ public class DummyFile extends AbstractFile {
         super(url);
     }
 
-
-    /////////////////////////////////
-    // AbstractFile implementation //
-    /////////////////////////////////
-
     /**
      * Implementation notes: always returns <code>0</code>.
      */

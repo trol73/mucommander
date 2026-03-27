@@ -59,21 +59,17 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 public class BackupOutputStream extends OutputStream implements BackupConstants {
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** The underlying OutputStream */
-    private OutputStream out;
+    private final OutputStream out;
     /** Path of the original file. */
-    private AbstractFile     target;
+    private final AbstractFile     target;
     /** Path to the backup file. */
-    private AbstractFile     backup;
-    /** Whether or not an error occured while writing to the backup file. */
+    private final AbstractFile     backup;
+    /** Whether, or not an error occurred while writing to the backup file. */
     private boolean          error;
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Opens a backup output stream on the specified file.
      * @param     file        file on which to open a backup output stream.

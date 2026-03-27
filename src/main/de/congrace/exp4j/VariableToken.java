@@ -28,8 +28,7 @@ class VariableToken extends CalculationToken {
 	/**
 	 * construct a new {@link VariableToken}
 	 * 
-	 * @param value
-	 *            the value of the token
+	 * @param value the value of the token
 	 */
 	VariableToken(String value) {
 		super(value);

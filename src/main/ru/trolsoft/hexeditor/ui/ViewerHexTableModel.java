@@ -17,9 +17,6 @@ public class ViewerHexTableModel extends AbstractTableModel {
     private final int hexDataColumns;
     protected final AbstractByteBuffer buffer;
 
-
-
-
     public ViewerHexTableModel(AbstractByteBuffer byteBuffer, int columns) {
         this.buffer = byteBuffer;
         for (int i = 0; i < VISIBLE_SYMBOLS.length; i++) {
@@ -41,10 +38,6 @@ public class ViewerHexTableModel extends AbstractTableModel {
     }
 
 
-    /**
-     * Get file size
-     * @return
-     */
     public long getSize() {
         return fileSize;
     }
@@ -85,7 +78,7 @@ public class ViewerHexTableModel extends AbstractTableModel {
             }
             try {
                 return StrUtils.byteToHexStr(buffer.getByte(fileOffset));
-            } catch (IOException e) {
+            } catch (ArrayIndexOutOfBoundsException | IOException e) {
                 e.printStackTrace();
                 return "xx";
             }

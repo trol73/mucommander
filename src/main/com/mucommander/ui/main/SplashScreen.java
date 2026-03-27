@@ -18,7 +18,9 @@
 
 package com.mucommander.ui.main;
 
+import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.util.ResourceLoader;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.dialog.DialogToolkit;
 import com.mucommander.ui.icon.IconManager;
 
@@ -51,14 +53,6 @@ public class SplashScreen extends JWindow {
     /** Path to the splash screen wo image within the JAR file */
     private final static String SPLASH_IMAGE_PATH = IconManager.IconSet.TROLCOMMANDER.getFolder() + "splash.png";
 
-    /** Name of the font used to display text on this splash screen */
-    private final static String FONT_NAME = "Courier";
-    /** Style of the font used to display text on this splash screen */
-//    private final static int FONT_STYLE = Font.PLAIN;
-    private final static int FONT_STYLE = Font.BOLD;
-    /** Size of the font used to display text on this splash screen */
-    private final static int FONT_SIZE = 11;
-	
     /** Color of the text displayed on this splash screen */ 
     private final static Color TEXT_COLOR = new Color(192, 238, 241);
     private final static Color SHADOW_TEXT_COLOR = new Color(0, 86, 117);
@@ -85,7 +79,8 @@ public class SplashScreen extends JWindow {
         this.loadingMessage = loadingMessage;
 
         // create a custom font
-        this.customFont = new Font(FONT_NAME, FONT_STYLE, FONT_SIZE);
+        int fontSize = OsFamily.getCurrent() == OsFamily.LINUX && RuntimeConstants.DISPLAY_4K ? 24 : 11;
+        this.customFont = new Font("Courier", Font.BOLD, fontSize);
         ImageIcon imageIcon = loadImageIcon();
 
         setContentPane(new JLabel(imageIcon));

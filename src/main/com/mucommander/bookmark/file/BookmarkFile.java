@@ -36,16 +36,13 @@ public class BookmarkFile extends ProtocolFile {
     // - Instance fields -------------------------------------------------------
     // -------------------------------------------------------------------------
     /** Bookmark wrapped by this abstract file. */
-    private Bookmark     bookmark;
+    private final Bookmark bookmark;
     /** Underlying abstract file. */
     private AbstractFile file;
 
     /** Permissions for all bookmark files: rw- (600 octal). Only the 'user' permissions bits are supported. */
     final static FilePermissions PERMISSIONS = new SimpleFilePermissions(384, 448);
 
-
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a new bookmark file wrapping the specified bookmark.
      * @param  bookmark    bookmark to wrap.
@@ -57,9 +54,6 @@ public class BookmarkFile extends ProtocolFile {
     }
 
 
-
-    // - Helper methods --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Returns the <code>AbstractFile</code> this instance wraps.
      * <p>

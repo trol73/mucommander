@@ -37,17 +37,12 @@ import com.mucommander.ui.theme.ThemeManager;
  * @author Maxence Bernard, Nicolas Rinaudo
  */
 public class GeneralPreferencesDialog extends PreferencesDialog {
-    // - Singleton --------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Used to ensure we only have the one preferences dialog open at any given time. */
     private static GeneralPreferencesDialog singleton;
-    /** Stores the components in the dialog that were changed and their current value is different 
-     *  then their saved value at MuConfiguration **/
+    /** Stores the components in the dialog that were changed and their current value is different from their saved value at MuConfiguration **/
     private final Set<PrefComponent> modifiedComponents = new LinkedHashSet<>();
 
 
-    // - Dimensions -------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /* Dialog's minimum dimensions. */
 //    private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(580, 300);
     /* Dialog's maximum dimensions. */
@@ -85,20 +80,14 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     private static final String MAIL_ICON       = "mail.png";
     /** Name of the icon used by the 'misc' tab. */
     private static final String MISC_ICON       = "misc.png";
-    /** Name of the icon used by the 'shortucts' tab. */
+    /** Name of the icon used by the 'shortcuts' tab. */
     private static final String SHORTCUTS_ICON  = "shortcuts.png";
 
-
-
-    // - Misc .fields -----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Index of the tab that was last selected by the user. */
     private static int      lastTabIndex = 0;
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new instance of the <code>GeneralPreferencesDialog</code>.
      */
@@ -133,9 +122,6 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     }
 
 
-
-    // - Misc. ------------------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Commits the changes and writes the configuration file if necessary.
      */

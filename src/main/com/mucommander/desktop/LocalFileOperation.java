@@ -37,15 +37,9 @@ import java.io.IOException;
  * @author Nicolas Rinaudo
  */
 public abstract class LocalFileOperation implements DesktopOperation {
-    // - DesktopOperation methods ----------------------------------------
-    // -------------------------------------------------------------------
     public abstract String getName();
     public abstract boolean isAvailable();
 
-
-
-    // - Wrappers --------------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Executes the operation on the specified file.
      * @param  file                          file on which to execute the operation.
@@ -69,10 +63,6 @@ public abstract class LocalFileOperation implements DesktopOperation {
         return isAvailable();
     }
 
-
-
-    // - DesktopOperation implementation ---------------------------------
-    // -------------------------------------------------------------------
     /**
      * Returns <code>true</code> if the operation is supported for the specified parameters.
      * <p>
@@ -116,10 +106,6 @@ public abstract class LocalFileOperation implements DesktopOperation {
         execute(file);
     }
 
-
-
-    // - Parameter analysis ----------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Analyses the specified parameters and returns them in a form that can be used.
      * <p>

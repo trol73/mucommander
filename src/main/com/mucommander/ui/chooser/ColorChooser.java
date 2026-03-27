@@ -58,7 +58,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
     // --------------------------------------------------------------------------
     /** Currently selected color. */
     private Color          currentColor;
-    /** Color on which the dialog was initialised. */
+    /** Color on which the dialog was initialized. */
     private final Color initialColor;
     /** Property to change in the preview component when the current color changes */
     private String previewColorPropertyName;
@@ -95,9 +95,6 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         UIManager.put("ColorChooser.swatchesRecentText", Translator.get("color_chooser.recent"));
     }
 
-
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     public ColorChooser() {
         this(Color.WHITE, null, null);
     }
@@ -110,7 +107,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         this.currentColor  = initialColor;
         this.initialColor = initialColor;
 
-        // Initialises the UI.
+        // Initializes the UI.
         add(createChooserPanel());
         add(createTransparencyPanel());
 
@@ -183,7 +180,7 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
      * Creates the transparency selection panel.
      */
     private JPanel createTransparencyPanel() {
-        // Creates and initialises the transparency selector.
+        // Creates and initializes the transparency selector.
         alpha = new IntegerChooser(0, 255, 255);
         alpha.setMajorTickSpacing(85);
         alpha.setMinorTickSpacing(17);

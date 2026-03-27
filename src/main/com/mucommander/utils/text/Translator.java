@@ -52,9 +52,7 @@ public class Translator {
     private static Locale language;
 
     private static ResourceBundle bundle;
-    /**
-     * Prevents instance creation.
-     */
+
     private Translator() {
     }
 
@@ -100,7 +98,7 @@ public class Translator {
             // Try to match language with the system's language, only if the system's language
             // has values in dictionary, otherwise use default language (English).
             Locale defaultLocale = Locale.getDefault();
-            getLogger().info("Language not set in preferences, trying to match system's language (" + defaultLocale + ")");
+            getLogger().info("Language not set in preferences, trying to match system's language ({})", defaultLocale);
             return defaultLocale;
         }
 

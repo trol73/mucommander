@@ -66,7 +66,7 @@ public abstract class ToggleColumnAction extends TcAction {
 
     public static abstract class Descriptor extends AbstractActionDescriptor {
 
-        private Column column;
+        private final Column column;
 
         public Descriptor(Column column) {
             this.column = column;

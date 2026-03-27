@@ -47,7 +47,7 @@ public abstract class AbstractByteBuffer {
     /**
      * Number of bytes in buffer
      */
-    protected int size;
+    protected int bufferSize;
     protected long offset;
     protected byte[] buffer;
 
@@ -63,7 +63,7 @@ public abstract class AbstractByteBuffer {
         this.capacity = capacity;
         buffer = new byte[capacity];
         this.offset = 0;
-        this.size = 0;
+        this.bufferSize = 0;
         this.streamSize = -1;
     }
 
@@ -73,16 +73,9 @@ public abstract class AbstractByteBuffer {
     }
 
 
-    /**
-     *
-     * @param fileOffset
-     * @return
-     * @throws IOException
-     * @throws IndexOutOfBoundsException
-     */
     public byte getByte(long fileOffset) throws IOException {
         long index = fileOffset - offset;
-        if (index < 0 || index >= size) {
+        if (index < 0 || index >= bufferSize) {
             if (fileOffset < 0 || fileOffset >= getFileSize()) {
                 throw new IndexOutOfBoundsException("Position: " + fileOffset + ", file size = " + getFileSize());
             }
@@ -94,7 +87,14 @@ public abstract class AbstractByteBuffer {
             loadBuffer();
             index = fileOffset - offset;
         }
-        return buffer[(int)index];
+        try {
+            return buffer[(int)index];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("\nERROR\nfile offset: " + fileOffset + ", file size: " + getFileSize());
+            System.err.println("offset: " + offset + ", buffer size: " + buffer.length);
+            e.printStackTrace();
+            return 0;   // TODO !!!!
+        }
     }
 
 
@@ -102,15 +102,16 @@ public abstract class AbstractByteBuffer {
         if (randomAccessStream) {
             return switch (cacheStrategy) {
                 case FORWARD -> fileOffset;
-                case BACKWARD -> fileOffset - buffer.length;
+                case BACKWARD -> fileOffset - buffer.length + 1;
                 case CENTER -> fileOffset - buffer.length / 2;
             };
         } else {
+            // TODO что-то странное !
             switch (cacheStrategy) {
                 case FORWARD:
                     return fileOffset;
                 case BACKWARD:
-                    return fileOffset - buffer.length;
+                    return fileOffset - buffer.length + 1;
                 case CENTER:
                     return fileOffset;
             }
@@ -118,11 +119,6 @@ public abstract class AbstractByteBuffer {
         return fileOffset;
     }
 
-    /**
-     *
-     * @return
-     * @throws IOException
-     */
     public long getFileSize() throws IOException {
         if (streamSize < 0) {
             streamSize = getStreamSize();
@@ -130,22 +126,12 @@ public abstract class AbstractByteBuffer {
         return streamSize;
     }
 
-
-    /**
-     *
-     * @throws IOException
-     */
     public void close() throws IOException {
-        size = 0;
+        bufferSize = 0;
         buffer = null;
         closeStream();
     }
 
-
-    /**
-     *
-     * @return
-     */
     public int getCapacity() {
         return capacity;
     }
@@ -170,6 +156,5 @@ public abstract class AbstractByteBuffer {
     public void setCacheStrategy(CacheStrategy cacheStrategy) {
         this.cacheStrategy = cacheStrategy;
     }
-
 
 }

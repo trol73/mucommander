@@ -38,8 +38,6 @@ import java.io.InputStreamReader;
 public class LicenseDialog extends FocusDialog implements ActionListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LicenseDialog.class);
 	
-    // - UI components ----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Button used to close the dialog. */
     private JButton     okButton;
     /** Panel in which to display the license. */
@@ -47,8 +45,6 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
 
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new license dialog centered on the specified window.
      * @param dialog window on which to center the new dialog.
@@ -67,9 +63,6 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
         initUI();
     }
 
-
-    // - UI initialisation ------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates the 'ok' button panel.
      * @return the 'ok' button panel.

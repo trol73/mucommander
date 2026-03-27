@@ -69,7 +69,7 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
     /**
      * Suffix of keyname for position/size storage
      */
-    private String storageSuffix = null;
+    private String storageSuffix;
 
     private boolean storeSizes = true;
 
@@ -142,17 +142,17 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
         if (getWidth() == 0) {
             return;
         }
-System.out.println("SIZE " + getWidth() + "x" + getHeight() + "     " + getLocation());
+//System.out.println("SIZE " + getWidth() + "x" + getHeight() + "     " + getLocation());
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] devices = env.getScreenDevices();
         final GraphicsDevice frameDevice = parent.getGraphicsConfiguration().getDevice();
         for (GraphicsDevice graphicsDevice : devices) {
-System.out.println(frameDevice.getIDstring() + " ' " + graphicsDevice.getIDstring());
+//System.out.println(frameDevice.getIDstring() + " ' " + graphicsDevice.getIDstring());
             if (frameDevice.equals(graphicsDevice) || frameDevice.getIDstring().equals(graphicsDevice.getIDstring())) {
                 final Rectangle monitorBounds = graphicsDevice.getDefaultConfiguration().getBounds();
                 final int x = monitorBounds.x + (monitorBounds.width - getWidth()) /2;
                 final int y = monitorBounds.y + (monitorBounds.height - getHeight()) / 2;
-System.out.println("  " + monitorBounds.width + 'x' + monitorBounds.height + "    " + monitorBounds.x + ' ' + monitorBounds.y);
+//System.out.println("  " + monitorBounds.width + 'x' + monitorBounds.height + "    " + monitorBounds.x + ' ' + monitorBounds.y);
                 setLocation(x, y);
             }
         }

@@ -31,17 +31,9 @@ import java.io.OutputStream;
  * @author Nicolas Rinaudo
  */
 class ThemeWriter implements ThemeXmlConstants, ThemeId {
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
-    /**
-     * Prevents instanciation of the class.
-     */
     private ThemeWriter() {}
 
 
-
-    // - XML output ----------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Saves the specified theme to the specified output stream.
      * @param  theme       theme to save.

@@ -45,7 +45,7 @@ public interface CriterionFilter<C> extends FileFilter {
      * @param value values to be tested
      * @return an array of accepted AbstractFile instances
      */
-    C[] filter(C value[]);
+    C[] filter(C[] value);
 
     /**
      * Convenience method that returns <code>true</code> if all the values in the specified array were matched by
@@ -54,7 +54,7 @@ public interface CriterionFilter<C> extends FileFilter {
      * @param value the values to be tested
      * @return true if all the values in the specified array were accepted
      */
-    boolean match(C value[]);
+    boolean match(C[] value);
 
     /**
      * Convenience method that returns <code>true</code> if all the values in the specified array were accepted by
@@ -63,7 +63,7 @@ public interface CriterionFilter<C> extends FileFilter {
      * @param value the values to be tested
      * @return true if all the values in the specified array were accepted
      */
-    boolean accept(C value[]);
+    boolean accept(C[] value);
 
     /**
      * Convenience method that returns <code>true</code> if all the values in the specified array were rejected by
@@ -72,7 +72,7 @@ public interface CriterionFilter<C> extends FileFilter {
      * @param value the values to be tested
      * @return true if all the values in the specified array were rejected
      */
-    boolean reject(C value[]);
+    boolean reject(C[] value);
 
     /**
      * Returns <code>true</code> if the given value was accepted by this filter, <code>false</code> if it was rejected.

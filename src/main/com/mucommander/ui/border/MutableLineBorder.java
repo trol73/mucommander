@@ -43,7 +43,7 @@ public class MutableLineBorder extends LineBorder {
      * Creates a line border with the specified color, thickness, and corner shape.
      * @param color          the color of the border
      * @param thickness      the thickness of the border
-     * @param roundedCorners whether or not border corners should be round
+     * @param roundedCorners whether border corners should be round
      */
     public MutableLineBorder(Color color, int thickness, boolean roundedCorners) {super(color, thickness, roundedCorners);}
 
@@ -57,7 +57,7 @@ public class MutableLineBorder extends LineBorder {
 
     /**
      * Sets this border's corner shape.
-     * @param roundedCorners whether or not border corners should be round
+     * @param roundedCorners whether border corners should be round
      */
     public void setRoundedCorners(boolean roundedCorners) {this.roundedCorners = roundedCorners;}
 

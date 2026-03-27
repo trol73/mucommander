@@ -1,15 +1,15 @@
 
                           ABSTRACT
 
-muCommander is released under the terms of the GNU General Public License
+trolCommander is released under the terms of the GNU General Public License
 found below.
 
-The muCommander Ant tools and muCommander Configuration API are released
+The trolCommander Ant tools and trolCommander Configuration API are released
 separately under the terms of the Lesser General Public License which
 permits use of the libraries in proprietary programs under certain
 conditions.
 
-Additionally, muCommander uses the following third party works:
+Additionally, trolCommander uses the following third party works:
 - the Ant library under the terms of the Apache License
 - Apache Commons libraries under the terms of the Apache License
 - Apache Hadoop under the terms of the Apache License

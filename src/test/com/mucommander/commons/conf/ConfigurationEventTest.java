@@ -30,33 +30,24 @@ public class ConfigurationEventTest {
     private static final boolean        BOOLEAN_VALUE = true;
 
 
-
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** Configuration instance used to create events. */
     private Configuration conf;
 
 
 
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     static {
         for(int i = 0; i < 7; i++)
             LIST_VALUE.add(Integer.toString(i));
     }
 
     /**
-     * Initialises the test case.
+     * Initializes the test case.
      */
     @BeforeMethod
     public void setUp() {
         conf = new Configuration();
     }
 
-
-
-    // - Type specific tests -------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Tests string events.
      */
@@ -171,8 +162,6 @@ public class ConfigurationEventTest {
 
 
 
-    // - Misc. tests ---------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Tests event creation.
      */
@@ -180,7 +169,7 @@ public class ConfigurationEventTest {
     public void testConstructor() {
         ConfigurationEvent event;
 
-        // Makes sure the constructor initialises events properly.
+        // Makes sure the constructor initializes events properly.
         event = new ConfigurationEvent(conf, VARIABLE_NAME, STRING_VALUE);
         assert conf.equals(event.getConfiguration());
         assert VARIABLE_NAME.equals(event.getVariable());

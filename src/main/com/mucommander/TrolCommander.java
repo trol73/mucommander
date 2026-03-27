@@ -22,6 +22,8 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.file.BookmarkProtocolProvider;
 import com.mucommander.command.Command;
@@ -94,7 +96,7 @@ public class TrolCommander {
 
 
     /**
-     * Prevents initialisation of the <code>Launcher</code>.
+     * Prevents initialization of the <code>Launcher</code>.
      */
     private TrolCommander() {}
 
@@ -615,7 +617,6 @@ public class TrolCommander {
 
         @Override
         void run() throws Exception {
-            // Loads credentials
             printStartupMessage("Loading credentials...");
             try {
                 CredentialsManager.loadCredentials();
@@ -632,7 +633,7 @@ public class TrolCommander {
 
         @Override
         void run() throws Exception {
-            // Inits CustomDateFormat to make sure that its ConfigurationListener is added
+            // Init CustomDateFormat to make sure that its ConfigurationListener is added
             // before FileTable, so CustomDateFormat gets notified of date format changes first
             com.mucommander.utils.text.CustomDateFormat.init();
         }
@@ -741,6 +742,8 @@ public class TrolCommander {
             FlatDarculaLaf.installLafInfo();
             FlatDarkLaf.installLafInfo();
             FlatIntelliJLaf.installLafInfo();
+            FlatMacLightLaf.installLafInfo();
+            FlatMacDarkLaf.installLafInfo();
         }
     }
 
@@ -824,9 +827,9 @@ public class TrolCommander {
 
         getLogger().info("Current OS family: {}", OsFamily.getCurrent());
 
-        String lang = System.getProperty("user.language");
-        String country = System.getProperty("user.country");
-        if ("tr".equalsIgnoreCase(lang) || "tr".equalsIgnoreCase(country)) {
+        String lang = System.getProperty("user.language").toLowerCase();
+        String country = System.getProperty("user.country").toLowerCase();
+        if ("tr".equals(lang) || "tr".equals(country) || "he".equals(lang) || "il".equals(country)) {
             throw new RuntimeException("Unsupported");
         }
 
@@ -836,9 +839,8 @@ public class TrolCommander {
 
         LauncherExecutor executor = new LauncherExecutor(processors <= 0 ? 1 : processors);
         try {
-            // Initialises fields.
             LauncherCmdHelper helper = new LauncherCmdHelper(args, true, false);
-            // Whether or not to ignore warnings when booting.
+            // Whether, or not to ignore warnings when booting.
             helper.parseArgs();
 
             LauncherTask taskPrepareGraphics = new PrepareGraphicsTask(helper);

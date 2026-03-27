@@ -85,7 +85,7 @@ public interface AssociationBuilder {
     void setIsWritable(boolean isWritable) throws CommandException;
 
     /**
-     * Adds a <i>executable</i> IMAGE_FILTER on the current association.
+     * Adds an <i>executable</i> IMAGE_FILTER on the current association.
      * @param  isExecutable     whether executable files must be refused or accepted by the association.
      * @throws CommandException if an error occurs.
      */

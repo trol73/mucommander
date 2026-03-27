@@ -85,9 +85,8 @@ class NumberToken extends CalculationToken {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof NumberToken) {
-			final NumberToken t = (NumberToken) obj;
-			return t.getValue().equals(this.getValue());
+		if (obj instanceof NumberToken t) {
+            return t.getValue().equals(this.getValue());
 		}
 		return false;
 	}

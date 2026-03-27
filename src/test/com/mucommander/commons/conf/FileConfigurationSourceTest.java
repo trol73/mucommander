@@ -13,22 +13,14 @@ import java.io.Writer;
  * @author Nicolas Rinaudo
  */
 public class FileConfigurationSourceTest  {
-    // - Test constants ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** String used for tests. */
     private static final String TEST_VALUE = "Hello, World!";
 
 
-
-    // - Instance fields -----------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /** File used to run the tests. */
     private File file;
 
 
-
-    // - Initialisation ------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new temporary file with which to work.
      */
@@ -38,15 +30,11 @@ public class FileConfigurationSourceTest  {
         file.deleteOnExit();
     }
 
-
-
-    // - Tests ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
     /**
-     * Tests file source initialisation.
+     * Tests file source initialization.
      */
     @Test
-    public void testInitialisation() {
+    public void testInitialization() {
         FileConfigurationSource source;
 
         // Makes sure the 'file' constructor works properly.

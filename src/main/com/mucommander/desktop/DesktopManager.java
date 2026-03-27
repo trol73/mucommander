@@ -53,8 +53,6 @@ import javax.swing.*;
 public class DesktopManager {
 	private static Logger logger;
 	
-    // - Predefined operation types --------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Represents "browse" operations.
      * <p>
@@ -85,11 +83,6 @@ public class DesktopManager {
      */
     static final String OPEN = "open";
 
-
-
-
-    // - Operation priority ----------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Represents system operations.
      * <p>
@@ -121,9 +114,9 @@ public class DesktopManager {
 
 
     /** All available desktop operations. */
-    private static final Map<String, List<DesktopOperation>>[] operations;
+    private static final Map<String, List<DesktopOperation>>[] operations = new Hashtable[3];
     /** All known desktops. */
-    private static final List<DesktopAdapter> desktops;
+    private static final List<DesktopAdapter> desktops = new ArrayList<>();
     /** Current desktop. */
     private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
@@ -139,15 +132,12 @@ public class DesktopManager {
     private DesktopManager() {}
 
     /*
-     * Static initialisation.
+     * Static initialization.
      * Bear in mind that adapters and operations are registered the 'wrong' way around:
      * the earlier they are registered, the lower their priority.
      */
     static {
-        desktops = new ArrayList<>();
-
-        // The default desktop adapter must be registered first, as we only want to use
-        // it if nothing else worked.
+        // The default desktop adapter must be registered first, as we only want to use it if nothing else worked.
         registerAdapter(new DefaultDesktopAdapter());
 
         // Unix desktops:
@@ -166,12 +156,6 @@ public class DesktopManager {
         registerAdapter(new OSXDesktopAdapter());
         registerAdapter(new Win9xDesktopAdapter());
         registerAdapter(new WinNtDesktopAdapter());
-
-
-
-        // - Operations initialization -----------------------------------
-        // ---------------------------------------------------------------
-        operations = new Hashtable[3];
 
         // Having 1.6 specific operations registered as the lowest priority system
         // ones ensures that:
@@ -200,9 +184,9 @@ public class DesktopManager {
      * shortcuts...
      *
      * @param install                         whether or not to install desktop specific information.
-     * @throws DesktopInitialisationException if an error occurred while initialising desktops.
+     * @throws DesktopInitializationException if an error occurred while initialising desktops.
      */
-    public static void init(boolean install) throws DesktopInitialisationException {
+    public static void init(boolean install) throws DesktopInitializationException {
         // Browses desktop from the last registered to the first, to make sure that
         // custom desktop adapters are used before the default ones.
         for (int i = desktops.size() - 1; i >= 0; i--) {
@@ -234,14 +218,11 @@ public class DesktopManager {
     }
 
 
-
-    // - Desktop adapter registration ------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Registers the specified {@link DesktopAdapter}.
      * <p>
      * Note that the later an adapter is registered, the higher its priority. Since all
-     * default adapters are registered at initialisation time, any call to this method
+     * default adapters are registered at initialization time, any call to this method
      * will result in the new adapter to be checked before them.
      *
      * @param adapter desktop adapter to register.
@@ -249,9 +230,6 @@ public class DesktopManager {
     public static void registerAdapter(DesktopAdapter adapter) {desktops.add(adapter);}
 
 
-
-    // - Operation registration ------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Registers the specified operation for the specified type and priority.
      */
@@ -276,14 +254,10 @@ public class DesktopManager {
     }
 
 
-
-    // - Operation support -----------------------------------------------
-    // -------------------------------------------------------------------
     private static List<DesktopOperation> getOperations(String type, int priority) {
         if (operations[priority] == null) {
             return null;
         }
-
         return operations[priority].get(type);
     }
 
@@ -326,10 +300,7 @@ public class DesktopManager {
             return operation;
         }
         operation = getSupportedOperation(type, FALLBACK_OPERATION, target);
-        if (operation != null) {
-            return operation;
-        }
-        return null;
+        return operation;
     }
 
     private static DesktopOperation getAvailableOperation(String type) {
@@ -377,10 +348,6 @@ public class DesktopManager {
         return operation.getName();
     }
 
-
-
-    // - Browser helpers -------------------------------------------------
-    // -------------------------------------------------------------------
     public static boolean canBrowse() {
         return isOperationAvailable(BROWSE);
     }
@@ -409,10 +376,6 @@ public class DesktopManager {
         executeOperation(BROWSE, new Object[] {url});
     }
 
-
-
-    // - File opening helpers --------------------------------------------
-    // -------------------------------------------------------------------
     public static boolean canOpen() {
         return isOperationAvailable(OPEN);
     }
@@ -441,10 +404,6 @@ public class DesktopManager {
         executeOperation(OPEN, new Object[] {file});
     }
 
-
-
-    // - File manager helpers --------------------------------------------
-    // -------------------------------------------------------------------
     public static boolean canOpenInFileManager() {
         return isOperationAvailable(OPEN_IN_FILE_MANAGER);
     }
@@ -496,10 +455,6 @@ public class DesktopManager {
         return getFileManagerName(getSupportedOperation(OPEN_IN_FILE_MANAGER, new Object[] {file}));
     }
 
-
-
-    // - Trash management ------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Returns an instance of the {@link com.mucommander.desktop.AbstractTrash} implementation that can be used on the current platform.
      * @return an instance of the AbstractTrash implementation that can be used on the current platform, or <code>null</code> if none is available.
@@ -537,9 +492,6 @@ public class DesktopManager {
         return notifier;
     }
 
-
-    // - Mouse management ------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Checks whether the specified <code>MouseEvent</code> is a left-click for this desktop.
      * <p>
@@ -602,9 +554,6 @@ public class DesktopManager {
         return desktop.getMultiClickInterval();
     }
 
-
-    // - Misc. -----------------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Returns the command used to start shell processes.
      * <p>

@@ -104,8 +104,6 @@ public class CommandsPanel extends JPanel implements ActionListener, DocumentLis
     }
 
 
-    // - UI initialisation ------------------------------------------------------
-    // --------------------------------------------------------------------------
     private void initUI() {
         setLayout(new BorderLayout());
 

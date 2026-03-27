@@ -139,10 +139,8 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
      * @return the JPanel that contains all of the item's color configuration elements.
      */
     private JPanel createItemColorsPanel(FontChooser fontChooser) {
-        // Initialisation.
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3); // Contains all the color buttons.
 
-        // Header.
         addLabelRow(gridPanel, false);
 
         PreviewLabel label = new PreviewLabel();
@@ -163,12 +161,11 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
     }
     
     /**
-     * Creates the JPanel that contains all of the header's color configuration elements.
+     * Creates the JPanel that contains all the header's color configuration elements.
      * @param fontChooser font chooser used by the editor panel.
-     * @return the JPanel that contains all of the header's color configuration elements.
+     * @return the JPanel that contains all the header's color configuration elements.
      */
     private JPanel createHeaderColorsPanel(FontChooser fontChooser) {
-        // Initialization.
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);  // // Contains all the color buttons.
 
         // Header.
@@ -262,8 +259,6 @@ public class QuickListPanel extends ThemeEditorPanel implements PropertyChangeLi
         }
     }
 
-    // - Modification management ---------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Ignored.
      */

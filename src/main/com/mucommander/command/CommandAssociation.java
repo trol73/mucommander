@@ -26,17 +26,12 @@ import com.mucommander.commons.file.filter.FileFilter;
  * @author Nicolas Rinaudo
  */
 class CommandAssociation {
-
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Command associated to this file name IMAGE_FILTER. */
     private Command    command;
     private FileFilter fileFilter;
 
 
 
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a new <code>CommandAssociation</code>.
      * @param command command that must be executed if the association is matched.

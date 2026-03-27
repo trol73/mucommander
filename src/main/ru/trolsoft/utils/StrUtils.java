@@ -114,7 +114,7 @@ public class StrUtils {
         char c2 = 0;
         int outPos = 0;
         byte[] array = new byte[(len+1)/2];
-        while (i < len) {
+        while (i <= len) {
             if (c2 != 0) {
                 int b1 = parseNibble(c1);
                 int b2 = parseNibble(c2);
@@ -125,6 +125,7 @@ public class StrUtils {
                 c1 = 0;
                 c2 = 0;
             }
+            if (i == len) break;
             char nextNibble = text.charAt(i++);
             if (nextNibble == ' ' || nextNibble == '\t') {
                 continue;

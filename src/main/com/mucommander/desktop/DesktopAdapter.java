@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * There are two main steps to writing a desktop adapter:
  * <ul>
  *   <li>Desktop detection</li>
- *   <li>Desktop initialisation</li>
+ *   <li>Desktop initialization</li>
  * </ul>
  *
  * <h3>Desktop detection</h3>
@@ -49,7 +49,7 @@ import java.util.function.Consumer;
  * (this can be done through the {@link com.mucommander.process.ProcessRunner} class), query
  * environment variables, ...
  *
- * <h3>Desktop initialisation</h3>
+ * <h3>Desktop initialization</h3>
  * <p>
  * This is achieved through the {@link #init(boolean)} method. Application developers are
  * expected to register all of their desktop specific tools there: {@link DesktopOperation desktop operations},
@@ -80,9 +80,9 @@ public interface DesktopAdapter {
      * dependant things such as {@link com.mucommander.bookmark.Bookmark} or {@link com.mucommander.ui.action.ActionKeymap}.
      *
      * @param  install                        <code>true</code> if this is the application's first boot, <code>false</code> otherwise.
-     * @throws DesktopInitialisationException if any error occurs.
+     * @throws DesktopInitializationException if any error occurs.
      */
-    void init(boolean install) throws DesktopInitialisationException;
+    void init(boolean install) throws DesktopInitializationException;
 
 
 

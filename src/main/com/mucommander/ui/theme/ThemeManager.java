@@ -73,18 +73,11 @@ public class ThemeManager {
     /** Theme that is currently applied to muCommander. */
     private static Theme         currentTheme;
     /** Used to listen on the current theme's modifications. */
-    private static ThemeListener listener = new CurrentThemeListener();
+    private static final ThemeListener listener = new CurrentThemeListener();
     /** Theme that is currently applied to viewer and editor. */
     private static String currentSyntaxThemeName;
 
 
-
-    // - Initialisation ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
-
-    /**
-     * Prevents instanciation of the class.
-     */
     private ThemeManager() {}
 
     /**

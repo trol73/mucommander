@@ -15,7 +15,6 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 
 public class JScrollMenu extends JMenu {
-
     // Covers the one in the JMenu because the method that creates it in JMenu is private
     /**
      * The popup menu portion of the menu.

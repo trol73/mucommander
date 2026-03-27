@@ -21,7 +21,6 @@ package ru.trolsoft.hexeditor.events;
  * @author Oleg Trifonov
  * Created on 02/04/14.
  */
-public interface OnOffsetChangeListener {
-
+public interface OffsetChangeListener {
     void onChange(long offset);
 }

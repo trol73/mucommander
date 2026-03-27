@@ -24,7 +24,7 @@ package ru.trolsoft.hexeditor.data;
 public class MemoryByteBuffer extends AbstractByteBuffer {
     public MemoryByteBuffer(int capacity) {
         super(capacity);
-        size = capacity;
+        bufferSize = capacity;
         streamSize = capacity;
     }
 

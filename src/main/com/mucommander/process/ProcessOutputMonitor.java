@@ -37,23 +37,18 @@ import org.slf4j.LoggerFactory;
  */
 class ProcessOutputMonitor extends Thread {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessOutputMonitor.class);
-	
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
+
     /** Stream to read from. */
     private InputStream     in;
-    private String          encoding;
+    private final String          encoding;
     /** Listener to notify of updates. */
-    private ProcessListener listener;
+    private final ProcessListener listener;
     /** Process to wait on once the stream is closed. */
     private AbstractProcess process;
     /** Whether the process is still being monitored. */
     private boolean         monitor;
 
 
-
-    // - Initialisation --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a news ProcessOutputMonitor that will read from <code>in</code> and notify <code>listener</code>.
      * @param in       input stream to 'empty'.

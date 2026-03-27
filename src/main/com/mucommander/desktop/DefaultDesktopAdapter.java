@@ -82,9 +82,9 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * how to override it.
      *
      * @param  install                        <code>true</code> if this is the application's first boot, <code>false</code> otherwise.
-     * @throws DesktopInitialisationException if any error occurs.
+     * @throws DesktopInitializationException if any error occurs.
      */
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
     }
 
     /**

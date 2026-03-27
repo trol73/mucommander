@@ -26,7 +26,7 @@ import com.mucommander.command.CommandException;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
 import com.mucommander.desktop.DefaultDesktopAdapter;
-import com.mucommander.desktop.DesktopInitialisationException;
+import com.mucommander.desktop.DesktopInitializationException;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.desktop.TrashProvider;
 
@@ -43,7 +43,7 @@ abstract class KdeDesktopAdapter extends DefaultDesktopAdapter {
     private String DOUBLE_CLICK_CONFIG_KEY = "DoubleClickInterval";
 
     @Override
-    public void init(boolean install) throws DesktopInitialisationException {
+    public void init(boolean install) throws DesktopInitializationException {
         // Initialises trash management.
         DesktopManager.setTrashProvider(getTrashProvider());
 
@@ -54,7 +54,7 @@ abstract class KdeDesktopAdapter extends DefaultDesktopAdapter {
             CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   execCommand, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, execCommand, CommandType.SYSTEM_COMMAND, getFileManagerName(), null));
         }
-        catch(CommandException e) {throw new DesktopInitialisationException(e);}
+        catch(CommandException e) {throw new DesktopInitializationException(e);}
 
         // Multi-click interval retrieval
         try {

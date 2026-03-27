@@ -35,8 +35,8 @@ public class HistoryComboBox extends TcComboBox<String> {
         super(values.toArray(new String[0]));
         this.parent = parent;
         setEditable(true);
-        if (values.size() > 0) {
-            String text = values.get(0);
+        if (!values.isEmpty()) {
+            String text = values.getFirst();
             setSelectedItem(text);
             getEditor().selectAll();
         }

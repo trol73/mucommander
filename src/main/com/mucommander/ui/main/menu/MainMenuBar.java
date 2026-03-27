@@ -70,7 +70,6 @@ import java.util.List;
  * @author Maxence Bernard
  */
 public class MainMenuBar extends JMenuBar implements ActionListener, MenuListener {
-
     private final MainFrame mainFrame;
 
     // View menu

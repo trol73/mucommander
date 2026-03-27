@@ -94,12 +94,9 @@ public final class CredentialsMapping {
      */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof CredentialsMapping)) { // Note: CredentialsMapping is final, no need to test classes
+        if (!(o instanceof CredentialsMapping cm)) { // Note: CredentialsMapping is final, no need to test classes
             return false;
         }
-
-        CredentialsMapping cm = (CredentialsMapping)o;
-
         return cm.credentials.equals(this.credentials, false) && cm.realm.equals(this.realm, false, true);
     }
 

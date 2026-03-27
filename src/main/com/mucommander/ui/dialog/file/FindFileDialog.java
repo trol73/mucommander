@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2020 Oleg Trifonov
+ * Copyright (C) 2013-2025 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,7 +166,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         List<String> filesHistory = TextHistory.getInstance().getList(TextHistory.Type.FILE_NAME);
         new ListDataIntelliHints<>(edtFileName, filesHistory).setCaseSensitive(false);
         edtFileName.setText("");
-        compPanel.addRow(i18n("find_dialog.name")+":", edtFileName, 5);
+        compPanel.addRow(i18n("find_dialog.name") + ":", edtFileName, 5);
 
         // Add contains field
         this.edtText = new InputField();
@@ -174,7 +174,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 //        List<String> textHistory = TextHistory.getInstance().getList(TextHistory.Type.TEXT_SEARCH);
 //        new ListDataIntelliHints<>(edtText, textHistory).setCaseSensitive(false);
 //        edtText.setText("");
-        compPanel.addRow(i18n("find_dialog.contains")+":", edtText, 5);
+        compPanel.addRow(i18n("find_dialog.contains") + ":", edtText, 5);
 
         // Add encoding field
         this.cbEncoding = new SaneComboBox<>();
@@ -183,13 +183,13 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
         for (String encoding: encodings) {
             cbEncoding.addItem(encoding);
         }
-        compPanel.addRow(i18n("find_dialog.encoding")+":", cbEncoding, 5);
+        compPanel.addRow(i18n("find_dialog.encoding") + ":", cbEncoding, 5);
 
         // create a path field with auto-completion capabilities
         this.edtFromDirectory = new FilePathField();
         this.edtFromDirectory.setText(currentFolder.toString());
         edtFromDirectory.getDocument().addDocumentListener(this);
-        compPanel.addRow(i18n("find_dialog.initial_directory")+":", edtFromDirectory, 10);
+        compPanel.addRow(i18n("find_dialog.initial_directory") + ":", edtFromDirectory, 10);
 
         ProportionalGridPanel gridPanel = new ProportionalGridPanel(3);
 

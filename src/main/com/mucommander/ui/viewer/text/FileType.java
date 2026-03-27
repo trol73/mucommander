@@ -34,6 +34,7 @@ public enum FileType {
     ASSEMBLER_X86("Assembler x86", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86, "*.asm"),
     ASSEMBLER_AVR("Assembler AVR", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR, "*.lss,*.s"),
     ASSEMBLER_6502("Assembler 6502", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_6502, "*.asm"),
+    ASSEMBLER_RISCV("Assembler Risc-V", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_RISCV, "*.lss,*.s"),
     AVR_RAT("AVR Rat", SyntaxConstants.SYNTAX_STYLE_AVR_RAT, "*.art,*.arth"),
     BBCODE("BBCode", SyntaxConstants.SYNTAX_STYLE_BBCODE),
     C("C", SyntaxConstants.SYNTAX_STYLE_C, "*.c,*.m"),

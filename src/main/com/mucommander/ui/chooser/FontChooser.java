@@ -35,22 +35,16 @@ import java.util.WeakHashMap;
  * @author Nicolas Rinaudo
  */
 public class FontChooser extends YBoxPanel implements ActionListener {
-    // - Class fields -----------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Legal font sizes. */
     private final static int[] FONT_SIZES = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28, 32, 36, 40};
 
-
-
-    // - Instance fields --------------------------------------------------------
-    // --------------------------------------------------------------------------
     /** Lists all the available font families. */
     private JComboBox<String> families;
     /** Lists all the legal font sizes. */
     private JComboBox<String> sizes;
-    /** Whether or not the font should be italic. */
+    /** Whether, or not the font should be italic. */
     private JCheckBox   italic;
-    /** Whether or not the font should be bold. */
+    /** Whether, or not the font should be bold. */
     private JCheckBox   bold;
     /** Used to display a preview of the current font. */
     private JLabel      preview;
@@ -60,8 +54,6 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     private final WeakHashMap<ChangeListener, ?> listeners = new WeakHashMap<>();
 
 
-    // - Initialisation ---------------------------------------------------------
-    // --------------------------------------------------------------------------
     /**
      * Creates a new FontChooser with the specified selection.
      * @param selection font that should be pre-selected.

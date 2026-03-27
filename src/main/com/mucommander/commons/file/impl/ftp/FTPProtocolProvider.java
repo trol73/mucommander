@@ -47,11 +47,7 @@ public class FTPProtocolProvider implements ProtocolProvider {
         return forceHiddenFilesListing;
     }
 
-
-    /////////////////////////////////////
-    // ProtocolProvider Implementation //
-    /////////////////////////////////////
-
+    @Override
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
         return instantiationParams.length==0
             ?new FTPFile(url)

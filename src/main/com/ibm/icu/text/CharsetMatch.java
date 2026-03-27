@@ -124,11 +124,8 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
     /**
      * Get an indication of the confidence in the charset detected.
      * Confidence values range from 0-100, with larger numbers indicating
-     * a better match of the input data to the characteristics of the
-     * charset.
-     *
+     * a better match of the input data to the characteristics of the charset.
      * @return the confidence in the charset match
-     *
      */
     public int getConfidence() {
         return fConfidence;
@@ -140,7 +137,7 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      * platform that accept charset names.  It is the "Canonical name"
      * as defined by the class java.nio.charset.Charset; for
      * charsets that are registered with the IANA charset registry,
-     * this is the MIME-preferred registerd name.
+     * this is the MIME-preferred registered name.
      *
      * @see java.nio.charset.Charset
      * @see java.io.InputStreamReader
@@ -208,10 +205,8 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
      */
     CharsetMatch(CharsetDetector det, int conf, String csName, String lang) {
         fConfidence = conf;
-        
-        // The references to the original application input data must be copied out
-        //   of the charset recognizer to here, in case the application resets the
-        //   recognizer before using this CharsetMatch.
+        // The references to the original application input data must be copied out  of the charset recognizer to here,
+        // in case the application resets the recognizer before using this CharsetMatch.
         if (det.fInputStream == null) {
             // We only want the existing input byte data if it came straight from the user,
             //   not if is just the head of a stream.
@@ -223,20 +218,10 @@ public class CharsetMatch implements Comparable<CharsetMatch> {
         fLang = lang;
     }
 
-    
-    //
-    //   Private Data
-    //
-    private int                 fConfidence;
-    private byte[]              fRawInput = null;     // Original, untouched input bytes.
-                                                      //  If user gave us a byte array, this is it.
-    private int                 fRawLength;           // Length of data in fRawInput array.
-
-    private InputStream         fInputStream = null;  // User's input stream, or null if the user
-                                                      //   gave us a byte array.
-    
-    private String              fCharsetName;         // The name of the charset this CharsetMatch
-                                                      //   represents.  Filled in by the recognizer.
-    private String              fLang;                // The language, if one was determined by
-                                                      //   the recognizer during the detect operation.
+    private final int fConfidence;
+    private byte[] fRawInput;  // Original, untouched input bytes. If user gave us a byte array, this is it.
+    private int fRawLength;    // Length of data in fRawInput array.
+    private final InputStream fInputStream;  // User's input stream, or null if the user gave us a byte array.
+    private final String fCharsetName;  // The name of the charset this CharsetMatch  represents.  Filled in by the recognizer.
+    private final String fLang;  // The language, if one was determined by the recognizer during the detect operation.
 }
