@@ -125,8 +125,6 @@ public class HexTable extends JTable {
 
         // Draw the new selection.
         repaintSelection(prevSelectionIndexFrom, prevSelectionIndexTo);
-
-//        fireSelectionChangedEvent(prevSmallest, prevLargest);
         if (selectionChangeListener != null) {
             selectionChangeListener.onSelectionChanged(anchorSelectionIndex, leadSelectionIndex);
         }
@@ -157,7 +155,7 @@ public class HexTable extends JTable {
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        return false;//cellToOffset(row, col) >- 1;
+        return false;//cellToOffset(row, col) > -1;
     }
 
     @Override
@@ -304,7 +302,7 @@ public class HexTable extends JTable {
         if (row < 0 || row >= getRowCount() || col < 1 || col > hexColumns) {
             return -1;
         }
-        int offs = row*hexColumns + col - 1;
+        long offs = (long)row * hexColumns + col - 1;
         return (offs >= 0 && offs < model.getSize()) ? offs : -1;
     }
 
@@ -527,7 +525,7 @@ public class HexTable extends JTable {
      * Get color to render the first offset column
      * @return color to render the first offset column
      */
-    public Color getOffsetColomnColor() {
+    public Color getOffsetColumnColor() {
         return offsetColor;
     }
 
@@ -607,8 +605,8 @@ public class HexTable extends JTable {
      * @return The rendering hints, or <code>null</code> if they cannot be
      *         determined.
      */
-    private Map getDesktopAntiAliasHints() {
-        return (Map)getToolkit().getDesktopProperty("awt.font.desktophints");
+    private Map<?, ?> getDesktopAntiAliasHints() {
+        return (Map<?, ?>)getToolkit().getDesktopProperty("awt.font.desktophints");
     }
 
     @Override
@@ -670,11 +668,11 @@ public class HexTable extends JTable {
         super.processKeyEvent(e);
     }
 
-    public OffsetChangeListener getOnOffsetChangeListener() {
+    public OffsetChangeListener getOffsetChangeListener() {
         return offsetChangeListener;
     }
 
-    public void setOnOffsetChangeListener(OffsetChangeListener offsetChangeListener) {
+    public void setOffsetChangeListener(OffsetChangeListener offsetChangeListener) {
         this.offsetChangeListener = offsetChangeListener;
     }
 
@@ -719,7 +717,7 @@ public class HexTable extends JTable {
                 hasSeparatorLine = false;
             }  else {
                 if (!isSelected) {
-                    if ((alternateRowBackground && (row & 1) > 0) ^ (alternateColumnBackground && (column & 1)>0)) {
+                    if (shouldUseAlternateBackground(row, column)) {
                         setBackground(alternateCellColor);
                     } else {
                         setBackground(table.getBackground());
@@ -736,6 +734,10 @@ public class HexTable extends JTable {
             }
 
             return this;
+        }
+
+        private boolean shouldUseAlternateBackground(int row, int column) {
+            return (alternateRowBackground && (row & 1) > 0) ^ (alternateColumnBackground && (column & 1) > 0);
         }
 
         @Override

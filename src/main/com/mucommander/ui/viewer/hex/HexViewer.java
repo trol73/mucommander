@@ -129,7 +129,7 @@ public class HexViewer extends FileViewer implements ThemeId {
             });
 
 
-            hexTable.setOnOffsetChangeListener(offsetChangeListener);
+            hexTable.setOffsetChangeListener(offsetChangeListener);
             offsetChangeListener.onChange(0);
 
             if (statusBar != null) {

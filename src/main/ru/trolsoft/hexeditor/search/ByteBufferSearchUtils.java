@@ -67,40 +67,53 @@ public class ByteBufferSearchUtils {
         }
     }
 
-//    public static long indexOf(AbstractByteBuffer data, byte[][] patterns, long fromOffset) throws IOException {
-//        long fileSize = data.getFileSize();
-//        if (fileSize <= 0 || patterns.length == 0) {
-//            return -1;
-//        }
-//        int[][] failures = new int[patterns.length][];
-//        for (int i = 0; i < patterns.length; i++) {
-//            failures[i] = computeFailure(patterns[i]);
-//        }
-//        AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
-//        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
-//
-//        int[] j = new int[patterns.length];
-//        for (int i = 0; i < j.length; i++) {
-//            j[i] = 0;
-//        }
-///*
-//        for (long i = fromOffset; i < fileSize; i++) {
-//            while (j > 0 && pattern[j] != data.getByte(i)) {
-//                j = failure[j - 1];
-//            }
-//            if (pattern[j] == data.getByte(i)) {
-//                j++;
-//            }
-//            if (j == pattern.length) {
-//                data.setCacheStrategy(cacheStrategy);
-//                return i - pattern.length + 1;
-//            }
-//        }
-//        */
-//        data.setCacheStrategy(cacheStrategy);
-//        return -1;
-//    }
+    /**
+     * Searches for the first occurrence of any of the specified patterns in the buffer,
+     * starting at the specified offset.
+     *
+     * @param data buffer for search
+     * @param patterns array of patterns to search for
+     * @param fromOffset the offset from which to start the search
+     * @return the offset of the first occurrence of any pattern, or -1 if none found
+     */
+    public static long indexOf(AbstractByteBuffer data, byte[][] patterns, long fromOffset) throws IOException {
+        if (data == null || patterns == null || fromOffset < 0) {
+            return -1;
+        }
+        long fileSize = data.getFileSize();
+        if (fileSize <= 0) {
+            return -1;
+        }
+        fromOffset = Math.min(fromOffset, fileSize - 1);
 
+        long earliestMatch = -1;
+
+        AbstractByteBuffer.CacheStrategy originalStrategy = data.getCacheStrategy();
+        data.setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
+
+        try {
+            for (byte[] pattern : patterns) {
+                if (pattern == null || pattern.length == 0 || pattern.length > fileSize) {
+                    continue;
+                }
+                long match = indexOf(data, pattern, fromOffset);
+
+                if (match != -1) {
+                    if (earliestMatch == -1 || match < earliestMatch) {
+                        earliestMatch = match;
+                        // Оптимизация: если нашли в starting offset, раньше быть не может
+                        if (earliestMatch == fromOffset) {
+                            return earliestMatch;
+                        }
+                    }
+                }
+            }
+        } finally {
+            data.setCacheStrategy(originalStrategy);
+        }
+
+        return earliestMatch;
+    }
 
     public static long indexOfBackward(AbstractByteBuffer data, byte[] pattern, long fromOffset) throws IOException {
         if (data == null || pattern == null || fromOffset < 0) {

@@ -20,8 +20,6 @@ class ByteBufferSearchUtilsTest {
     @Mock
     private AbstractByteBuffer mockBuffer;
 
-    // ========== indexOf(AbstractByteBuffer, byte[], long) ==========
-
     @Nested
     @DisplayName("indexOf: Валидация входных параметров")
     class IndexOfValidation {
@@ -33,7 +31,7 @@ class ByteBufferSearchUtilsTest {
 
         @Test
         void returnsMinusOne_whenPatternIsNull() throws IOException {
-            assertEquals(-1, ByteBufferSearchUtils.indexOf(mockBuffer, null, 0));
+            assertEquals(-1, ByteBufferSearchUtils.indexOf(mockBuffer, (byte[])null, 0));
         }
 
         @Test
@@ -231,8 +229,6 @@ class ByteBufferSearchUtilsTest {
         }
     }
 
-    // ========== indexOf(byte[], byte[]) для обычных массивов ==========
-
     @Nested
     @DisplayName("indexOf(byte[], byte[]): Поиск в обычных массивах")
     class IndexOfArrayTests {
@@ -281,5 +277,68 @@ class ByteBufferSearchUtilsTest {
             long index = invocation.getArgument(0);
             return data[Math.toIntExact(index)];
         }).when(mockBuffer).getByte(anyLong());
+    }
+
+    @Nested
+    @DisplayName("indexOf(byte[][], ...): Поиск множества паттернов")
+    class IndexOfMultiplePatterns {
+
+        @Test
+        void findsEarliestPattern() throws IOException {
+            byte[] data = {0, 1, 2, 3, 4, 5};
+            byte[][] patterns = {
+                    {3, 4, 5},  // найдётся на индексе 3
+                    {1, 2}      // найдётся на индексе 1 ← раньше
+            };
+            setupBuffer(data, 0, data.length);
+
+            long result = ByteBufferSearchUtils.indexOf(mockBuffer, patterns, 0);
+            assertEquals(1, result);
+        }
+
+        @Test
+        void returnsMinusOne_whenNoPatternsMatch() throws IOException {
+            byte[] data = {1, 2, 3};
+            byte[][] patterns = {{4, 5}, {6, 7}};
+            setupBuffer(data, 0, data.length);
+
+            long result = ByteBufferSearchUtils.indexOf(mockBuffer, patterns, 0);
+            assertEquals(-1, result);
+        }
+
+        @Test
+        void skipsNullAndEmptyPatterns() throws IOException {
+            byte[] data = {1, 2, 3};
+            byte[][] patterns = {null, {}, {2, 3}}; // null и пустой должны игнорироваться
+            setupBuffer(data, 0, data.length);
+
+            long result = ByteBufferSearchUtils.indexOf(mockBuffer, patterns, 0);
+            assertEquals(1, result);
+        }
+
+        @Test
+        void restoresCacheStrategy_onMultiplePatterns() throws IOException {
+            byte[] data = {1, 2, 3};
+            byte[][] patterns = {{1}, {2}, {3}};
+            when(mockBuffer.getFileSize()).thenReturn(3L);
+            when(mockBuffer.getCacheStrategy()).thenReturn(AbstractByteBuffer.CacheStrategy.FORWARD);
+            doAnswer(invocation -> data[Math.toIntExact(invocation.getArgument(0))])
+                    .when(mockBuffer).getByte(anyLong());
+
+            ByteBufferSearchUtils.indexOf(mockBuffer, patterns, 0);
+
+            verify(mockBuffer).setCacheStrategy(AbstractByteBuffer.CacheStrategy.FORWARD);
+        }
+
+        @Test
+        void handlesFromOffset_correctly() throws IOException {
+            byte[] data = {1, 2, 3, 1, 2, 3};
+            byte[][] patterns = {{1, 2, 3}};
+            setupBuffer(data, 0, data.length);
+
+            // Поиск с позиции 3 — должно найти второе вхождение
+            long result = ByteBufferSearchUtils.indexOf(mockBuffer, patterns, 3);
+            assertEquals(3, result);
+        }
     }
 }
