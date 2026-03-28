@@ -125,7 +125,9 @@ public class ViewerHexTableModel extends AbstractTableModel {
     }
 
     void setAsciiCharVisible(char ch, boolean visible) {
-        VISIBLE_SYMBOLS[ch] = visible;
+        if (ch < VISIBLE_SYMBOLS.length) {
+            VISIBLE_SYMBOLS[ch] = visible;
+        }
     }
 
 }

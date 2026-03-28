@@ -45,7 +45,7 @@ public class FileTableHeaderRenderer extends DefaultTableCellRenderer {
 
         // Icon should be on the right
         setHorizontalTextPosition(LEFT);
-        // Increase gap size between text and icon (defaut is 4 pixels)
+        // Increase gap size between text and icon (default is 4 pixels)
         setIconTextGap(6);
         // Note: the label is left-aligned by default
         setHorizontalAlignment(JLabel.CENTER);

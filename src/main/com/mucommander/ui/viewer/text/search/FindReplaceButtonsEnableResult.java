@@ -24,10 +24,9 @@ package com.mucommander.ui.viewer.text.search;
  * Created on 21/06/16.
  * @author Oleg Trifonov
  */
-class FindReplaceButtonsEnableResult {
-
+public class FindReplaceButtonsEnableResult {
     private boolean enable;
-    private String error;
+    private final String error;
 
     FindReplaceButtonsEnableResult(boolean enable, String error) {
         this.enable = enable;

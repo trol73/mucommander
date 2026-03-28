@@ -104,7 +104,7 @@ public class ClonedMainFrameBuilder extends MainFrameBuilder {
      * If <code>x</code> (resp. <code>y</code>) is <code>null</code>, this method won't test
      * whether the frame is within horizontal (resp. vertical) bounds.
      *
-     * @param frame frame who's visibility should be tested.
+     * @param frame frame whose visibility should be tested.
      * @param x     horizontal coordinate of the upper-leftmost corner of the area to check for.
      * @param y     vertical coordinate of the upper-leftmost corner of the area to check for.
      * @return      <code>true</code> if the frame can be moved at the specified location,

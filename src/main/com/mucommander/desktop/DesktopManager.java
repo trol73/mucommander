@@ -183,8 +183,8 @@ public class DesktopManager {
      * might result in installing desktop specific data such as bookmarks, keyboard
      * shortcuts...
      *
-     * @param install                         whether or not to install desktop specific information.
-     * @throws DesktopInitializationException if an error occurred while initialising desktops.
+     * @param install                         whether to install desktop specific information.
+     * @throws DesktopInitializationException if an error occurred while initializing desktops.
      */
     public static void init(boolean install) throws DesktopInitializationException {
         // Browses desktop from the last registered to the first, to make sure that
@@ -193,7 +193,7 @@ public class DesktopManager {
             DesktopAdapter current = desktops.get(i);
             if (current.isAvailable()) {
                 desktop = current;
-                getLogger().debug("Using desktop: " + desktop);
+                getLogger().debug("Using desktop: {}", desktop);
                 desktop.init(install);
                 setTrashProvider(desktop.getTrash());
                 setNotifier(desktop.getNotifier());

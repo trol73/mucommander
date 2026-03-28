@@ -40,7 +40,7 @@ public enum Column {
     OWNER("owner", true, false, FileComparator.OWNER_CRITERION, "ToggleOwnerColumn", "SortByOwner"),
     GROUP("group", true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
 
-    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<Integer, Column>(){{
+    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<>() {{
         Stream.of(Column.values()).forEach(column -> put(column.ordinal(), column));
     }};
 

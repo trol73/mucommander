@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ import java.util.Set;
  *
  * @author twall, Nicolas Rinaudo
  */
-public abstract class AnimatedIcon implements Icon {
+public abstract class AnimatedIcon implements Icon, AutoCloseable {
     /** Default number of frames per animation. */
     public static final int DEFAULT_FRAME_COUNT = 8;
     /** Default number of milliseconds between each frame. */
@@ -52,9 +53,10 @@ public abstract class AnimatedIcon implements Icon {
     private int     currentFrame;
     /** Total number of frames in the animation. */
     private int     frameCount;
-    /** Whether or not the animation should be running. */
+    /** Whether the animation should be running. */
     private boolean animate;
 
+    private boolean disposed = false;
 
 
     /**
@@ -63,7 +65,9 @@ public abstract class AnimatedIcon implements Icon {
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>{@link #AnimatedIcon(int,int)}({@link #DEFAULT_FRAME_COUNT}, {@link #DEFAULT_FRAME_DELAY});</code>
      */
-    public AnimatedIcon() {this(DEFAULT_FRAME_COUNT, DEFAULT_FRAME_DELAY);}
+    public AnimatedIcon() {
+        this(DEFAULT_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    }
 
     /**
      * Creates a new animated icon with the specified number of frames.
@@ -73,7 +77,9 @@ public abstract class AnimatedIcon implements Icon {
      *
      * @param frameCount number of frames in the animation.
      */
-    public AnimatedIcon(int frameCount) {this(frameCount, DEFAULT_FRAME_DELAY);}
+    public AnimatedIcon(int frameCount) {
+        this(frameCount, DEFAULT_FRAME_DELAY);
+    }
 
     /**
      * Creates a new animated icon with the specified number of frames and repaint delay.
@@ -81,7 +87,7 @@ public abstract class AnimatedIcon implements Icon {
      * @param repaintDelay number of milliseconds to sleep between each frame.
      */
     public AnimatedIcon(int frameCount, int repaintDelay) {
-        // Initialises the animation timer.
+        // Initializes the animation timer.
         timer = new Timer(repaintDelay, new AnimationUpdater(this));
         timer.setRepeats(true);
 
@@ -119,19 +125,25 @@ public abstract class AnimatedIcon implements Icon {
      * Sets the total number of frames in the animation.
      * @param count total number of frames in the animation.
      */
-    public synchronized void setFrameCount(int count) {this.frameCount = count;}
+    public synchronized void setFrameCount(int count) {
+        this.frameCount = count;
+    }
 
     /**
      * Returns the total number of frames in the animation.
      * @return the total number of frames in the animation.
      */
-    public synchronized int getFrameCount() {return frameCount;}
+    public synchronized int getFrameCount() {
+        return frameCount;
+    }
 
     /**
      * Returns the index of the current frame in the animation.
      * @return the index of the current frame in the animation.
      */
-    public synchronized int getFrame() {return currentFrame;}
+    public synchronized int getFrame() {
+        return currentFrame;
+    }
 
     /**
      * Sets the index of the current frame in the animation.
@@ -221,7 +233,12 @@ public abstract class AnimatedIcon implements Icon {
         if (c != null) {
             AffineTransform transform;
 
-            transform = ((Graphics2D)g).getTransform();
+            if (g instanceof Graphics2D g2d) {
+                transform = g2d.getTransform();
+            } else {
+                // Fallback: использовать масштаб 1.0
+                transform = new AffineTransform();
+            }
             components.add(new TrackedComponent(c, x, y, (int)(getIconWidth() * transform.getScaleX()), (int)(getIconHeight() * transform.getScaleY())));
 
             // Restarts the timer if necessary.
@@ -246,18 +263,15 @@ public abstract class AnimatedIcon implements Icon {
         }
     }
 
+
     @Override
-    protected void finalize() throws Throwable {
-        // Forces the timer to stop when the animation isn't used anymore.
-        timer.stop();
-
-        super.finalize();
+    public void close() throws Exception {
+        if (!disposed) {
+            timer.stop();
+            components.clear();
+            disposed = true;
+        }
     }
-
-
-
-    // - Container tracking --------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Used to keep track of the various components in which an animated icon is being painted.
      * @author twall, Nicolas Rinaudo
@@ -301,10 +315,15 @@ public abstract class AnimatedIcon implements Icon {
             this.y      = y;
             this.width  = width;
             this.height = height;
-            hashCode    = (x + "," + y + ":" + c.hashCode()).hashCode();
+            int code = x;
+            code = 31 * code + y;
+            code = 31 * code + System.identityHashCode(c);
+            this.hashCode = code;
         }
 
-        public int hashCode() {return hashCode;}
+        public int hashCode() {
+            return hashCode;
+        }
 
         /**
          * Finds the specified component's first non-renderer ancestor.
@@ -341,7 +360,9 @@ public abstract class AnimatedIcon implements Icon {
          * Creates a new animation updater on the specified icon.
          * @param icon animation to update.
          */
-        public AnimationUpdater(AnimatedIcon icon) {this.icon = new WeakReference<>(icon);}
+        public AnimationUpdater(AnimatedIcon icon) {
+            this.icon = new WeakReference<>(icon);
+        }
 
         /**
          * Notifies the icon that it should update.

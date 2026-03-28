@@ -18,9 +18,7 @@
 
 package com.mucommander.ui.quicklist.item;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -55,9 +53,9 @@ public class QuickListDataList<T> extends JList<T> {
 	
 	private final static int VISIBLE_ROWS_COUNT = 10;
 
-	private QuickSearch quickSearch = new QuickListQuickSearch();
+	private final QuickSearch quickSearch = new QuickListQuickSearch();
 	
-	private Component nextFocusableComponent;
+	private final Component nextFocusableComponent;
 
 	public QuickListDataList(Component nextFocusableComponent){
 		this.nextFocusableComponent = nextFocusableComponent;
@@ -136,10 +134,7 @@ public class QuickListDataList<T> extends JList<T> {
 		cellRenderer.setSelectedItemBackground(selectedBackground);
 	}
 
-	/**
-	 * 
-	 */
-	protected class DataListItemRenderer<E> extends DefaultListCellRenderer implements ThemeListener {
+	protected class DataListItemRenderer extends DefaultListCellRenderer implements ThemeListener {
 
 		private Color selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
 		private Color selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
@@ -157,16 +152,15 @@ public class QuickListDataList<T> extends JList<T> {
 
 			T item = getListItem(rowIndex);
 
-			// Sanity check.
+			CellLabel label = new CellLabel();
 			if (item == null) {
-				LOGGER.debug("tableModel.getCachedFileAtRow("+ rowIndex +") RETURNED NULL !");
-				return null;
+				LOGGER.debug("tableModel.getCachedFileAtRow({}) RETURNED NULL !", rowIndex);
+				return label;
 			}
 
 			QuickSearch search = QuickListDataList.this.getQuickSearch();
 			boolean matches = !search.isActive() || search.matches(item.toString());
 
-			CellLabel label = new CellLabel();
 			label.setFont(itemFont);
 
 			label.setText(item.toString());
@@ -200,10 +194,8 @@ public class QuickListDataList<T> extends JList<T> {
 			this.itemForeground = itemForeground;
 		}
 
-		//////////////////////////////////
-		// ThemeListener implementation //
-		//////////////////////////////////
 
+		@Override
 		public void colorChanged(ColorChangedEvent event) {
             if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR) {
                 itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
@@ -221,9 +213,6 @@ public class QuickListDataList<T> extends JList<T> {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public class QuickListQuickSearch extends QuickSearch {
 
 		public QuickListQuickSearch() {
@@ -282,11 +271,14 @@ public class QuickListDataList<T> extends JList<T> {
 			if (!isActive()) {
 				// Return (do not start quick search) if the key is not a valid quick search input
 				if (!isValidQuickSearchInput(e)) {
-					if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER)
+					if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER) {
 						tryToTransferFocusToTheNextComponent();
+					}
 					
-					if (keyCode == KeyEvent.VK_ENTER)
-						((QuickListWithDataList<T>)(getParent().getParent().getParent())).itemSelected(getSelectedValue());
+					if (keyCode == KeyEvent.VK_ENTER) {
+						Container c = getParent().getParent().getParent();
+						((QuickListWithDataList<T>)(c)).itemSelected(getSelectedValue());
+					}
 					
 					return;
 				}

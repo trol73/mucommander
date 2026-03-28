@@ -364,7 +364,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
                 try {
                     pattern = Pattern.compile(searchFor, flags);
                 } catch (PatternSyntaxException pse) {
-                    pse.printStackTrace(); // Never happens
+                    getLogger().error("Invalid regular expression: " + searchFor, pse);
                     return false;
                 }
                 return pattern.matcher(text).matches();
@@ -383,8 +383,8 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
     /**
      * Returns whether the characters on either side of
      * <code>substr(searchIn,startPos,startPos+searchStringLength)</code>
-     * are whitespace.  While this isn't the best definition of "whole word",
-     * it's the one we're going to use for now.
+     * are whitespace.
+     * While this isn't the best definition of "whole word", it's the one we're going to use for now.
      */
     public static boolean isWholeWord(CharSequence searchIn, int offset, int len) {
         boolean wsBefore, wsAfter;
@@ -515,7 +515,7 @@ public class AbstractSearchDialog extends FocusDialog implements ActionListener 
         InputMap im = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         ActionMap am = rootPane.getActionMap();
 
-        int modifier = getToolkit().getMenuShortcutKeyMask();
+        int modifier = getToolkit().getMenuShortcutKeyMaskEx();
         KeyStroke ctrlF = KeyStroke.getKeyStroke(KeyEvent.VK_F, modifier);
         im.put(ctrlF, "focusSearchForField");
         am.put("focusSearchForField", new AbstractAction() {

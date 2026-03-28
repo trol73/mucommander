@@ -45,11 +45,18 @@ public class HDFSPanel extends ServerPanel {
     private final JSpinner portSpinner;
 
     private static String lastServer = "";
-    private static String lastUsername = HDFSFile.getDefaultUsername();
+    private static String lastUsername;
 //    private static String lastGroup = HDFSFile.getDefaultGroup();
     private static String lastInitialDir = "/";
     private static int lastPort = FileURL.getRegisteredHandler(FileProtocols.HDFS).getStandardPort();
 
+    static {
+        try {
+            lastUsername = HDFSFile.getDefaultUsername();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
 
     HDFSPanel(ServerConnectDialog dialog, final MainFrame mainFrame) {
         super(dialog, mainFrame);

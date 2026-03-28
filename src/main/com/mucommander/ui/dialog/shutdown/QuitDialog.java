@@ -41,7 +41,7 @@ import com.mucommander.ui.main.WindowManager;
  */
 public class QuitDialog extends QuestionDialog {
     /**
-     * This flag used to prevent duplication of QuitDialog on MacOsX
+     * This flag used to prevent duplication of QuitDialog on macOS
      */
     private static boolean displayed = false;
 

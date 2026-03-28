@@ -107,8 +107,6 @@ public abstract class BaseCellRenderer implements TableCellRenderer, ThemeListen
     }
 
 
-    // - Theme listening -------------------------------------------------------------
-    // -------------------------------------------------------------------------------
     /**
      * Receives theme color changes notifications.
      */

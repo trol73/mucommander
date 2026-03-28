@@ -418,10 +418,6 @@ public abstract class HadoopFile extends ProtocolFile {
     protected abstract void setDefaultFileAttributes(FileURL url, HadoopFileAttributes atts);
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     /**
      * HadoopFileAttributes provides getters and setters for Hadoop file attributes. By extending
      * <code>SyncedFileAttributes</code>, this class caches attributes for a certain amount of time

@@ -17,7 +17,6 @@ import java.util.List;
  * @author Maxence Bernard
  */
 public interface Shell32API extends StdCallLibrary {
-
     //
     // Note that the C header "shellapi.h" includes "pshpack1.h", which disables automatic alignment of structure fields.
     //
@@ -26,9 +25,6 @@ public interface Shell32API extends StdCallLibrary {
     int STRUCTURE_ALIGNMENT = JavaVersion.isAmd64Architecture() ? Structure.ALIGN_DEFAULT : Structure.ALIGN_NONE;
 
 
-    //////////////////////////////
-    // SHFileOperation function //
-    //////////////////////////////
 
     // Allowed wFunc values
 
@@ -118,7 +114,7 @@ public interface Shell32API extends StdCallLibrary {
             return encodedPaths.toString();
         }
 
-        protected List getFieldOrder() {
+        protected List<String> getFieldOrder() {
             return Arrays.asList("hwnd", "wFunc", "pFrom", "pTo", "fFlags", "fAnyOperationsAborted", "pNameMappings", "lpszProgressTitle");
         }
     }
@@ -181,7 +177,7 @@ public interface Shell32API extends StdCallLibrary {
         public long i64NumItems;
 
         @Override
-        protected List getFieldOrder() {
+        protected List<String> getFieldOrder() {
             return Arrays.asList("cbSize", "i64Size", "i64NumItems");
         }
     }

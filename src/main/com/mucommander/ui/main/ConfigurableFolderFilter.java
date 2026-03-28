@@ -41,10 +41,10 @@ import static com.mucommander.conf.TcPreference.*;
  */
 public class ConfigurableFolderFilter extends AndFileFilter implements ConfigurationListener {
     
-    private FileFilter hiddenFileFilter = new AttributeFileFilter(FileAttribute.HIDDEN, true);
-    private FileFilter dsFileFilter = new DSStoreFileFilter();
+    private final FileFilter hiddenFileFilter = new AttributeFileFilter(FileAttribute.HIDDEN, true);
+    private final FileFilter dsFileFilter = new DSStoreFileFilter();
     /** Filter used to IMAGE_FILTER out system files and folders that should not be displayed to inexperienced users. */
-    private FileFilter systemFileFilter = new AttributeFileFilter(FileAttribute.SYSTEM, true);
+    private final FileFilter systemFileFilter = new AttributeFileFilter(FileAttribute.SYSTEM, true);
     
 
     public ConfigurableFolderFilter() {
@@ -69,13 +69,10 @@ public class ConfigurableFolderFilter extends AndFileFilter implements Configura
     }
 
 
-    //////////////////////////////////////////
-    // ConfigurationListener implementation //
-    //////////////////////////////////////////
-
     /**
      * Adds or removes filters based on configuration changes.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event) {
         // Show or hide hidden files
         switch (event.getVariable()) {

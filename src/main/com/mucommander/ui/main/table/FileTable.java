@@ -90,7 +90,7 @@ import com.mucommander.ui.quicksearch.QuickSearch;
  */
 public class FileTable extends JTable implements MouseListener, MouseMotionListener, KeyListener,
                                                  ActivePanelListener, ConfigurationListener, ThemeListener {
-	private static Logger logger;
+	private static final Logger logger = LoggerFactory.getLogger(FileTable.class);
 	
     /** Minimum width for 'name' column when in automatic column sizing mode */
     private final static int RESERVED_NAME_COLUMN_WIDTH = 40;
@@ -148,7 +148,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     private final QuickSearch quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
-    private final WeakHashMap<TableSelectionListener, ?> tableSelectionListeners = new WeakHashMap<>();
+    private final WeakHashMap<TableSelectionListener, Void> tableSelectionListeners = new WeakHashMap<>();
 
     /** True when this table is the current or last active table in the MainFrame */
     private boolean isActiveTable;
@@ -302,7 +302,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             try {
                 selectFile(selectedFileIndex);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Could not select file: {}", selectedFileIndex, e);
             }
         }
         invalidate();
@@ -388,7 +388,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
         // Displays an ascending/descending arrow
         tableHeader.putClientProperty("JTableHeader.sortDirection", isActiveTable
-            ? sortInfo.getAscendingOrder() ? "ascending":"decending"      // descending is misspelled but this is OK
+            ? sortInfo.getAscendingOrder() ? "ascending":"descending"      // descending is misspelled but this is OK
             : null);
 
             // Note: if this table is not currently active, properties are cleared to remove the highlighting effect.
@@ -1213,10 +1213,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
 
-    ////////////////////////////////////
-    // TableSelectionListener methods //
-    ////////////////////////////////////
-
     /**
      * Adds the given TableSelectionListener to the list of listeners that are registered to receive
      * notifications when the currently selected file changes.
@@ -1259,16 +1255,23 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     }
 
 
+    private FontMetrics cellFontMetrics;
+    private Font lastCellFont;
+    private int dirStringWidth;
+    private int wwwStringWidth;
 
-    // - Layout management ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     private void doAutoLayout(boolean respectSize) {
         final AbstractFile currentFolder = getFolderPanel().getCurrentFolder();
-        final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
-        final int dirStringWidth1 = fm.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
-        final int dirStringWidth2 = fm.stringWidth(SizeFormat.format(1024 * 1024 * 555, FileTableModel.getSizeFormat())); // some big value with big string-length
-        final int dirStringWidth3 = fm.stringWidth(SizeFormat.format(1016 * 1024, FileTableModel.getSizeFormat())); // some other big value with big string-length
-        final int dirStringWidth = Math.max(Math.max(dirStringWidth1, dirStringWidth2), dirStringWidth3);
+        if (cellFontMetrics == null || lastCellFont != FileTableCellRenderer.getCellFont()) {
+            lastCellFont = FileTableCellRenderer.getCellFont();
+            cellFontMetrics = getFontMetrics(lastCellFont);
+            final int dirStringWidth1 = cellFontMetrics.stringWidth(FileTableModel.DIRECTORY_SIZE_STRING);
+            final int dirStringWidth2 = cellFontMetrics.stringWidth(SizeFormat.format(1024 * 1024 * 555, FileTableModel.getSizeFormat())); // some big value with big string-length
+            final int dirStringWidth3 = cellFontMetrics.stringWidth(SizeFormat.format(1016 * 1024, FileTableModel.getSizeFormat())); // some other big value with big string-length
+            dirStringWidth = Math.max(Math.max(dirStringWidth1, dirStringWidth2), dirStringWidth3);
+            wwwStringWidth = cellFontMetrics.stringWidth("WWWW");
+        }
+//        final FontMetrics fm = getFontMetrics(FileTableCellRenderer.getCellFont());
 
         pageSize = getParent().getSize().height / getRowHeight();
 
@@ -1297,19 +1300,19 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                     columnWidth = (int) FileIcons.getIconDimension().getWidth();
                 } else if (c == Column.DATE) {
                     String val = currentFolder != null ? CustomDateFormat.format(currentFolder.getLastModifiedDate()) : "";
-                    columnWidth = Math.max(MIN_COLUMN_AUTO_WIDTH, fm.stringWidth(val));
+                    columnWidth = Math.max(MIN_COLUMN_AUTO_WIDTH, cellFontMetrics.stringWidth(val));
                     columnWidth *= 1.1;
                 } else if (c == Column.SIZE) {
                     long size = 1000 * 1024 * 1024;
                     String val = SizeFormat.format(size, BaseFileTableModel.getSizeFormat());
-                    columnWidth = Math.max(dirStringWidth, fm.stringWidth(val));
+                    columnWidth = Math.max(dirStringWidth, cellFontMetrics.stringWidth(val));
                     columnWidth *= 1.1;
                 } else if (c == Column.PERMISSIONS) {
                     try {
                         String permissionStr = currentFolder != null ? currentFolder.getPermissionsString() : "----";
-                        columnWidth = Math.max(fm.stringWidth("WWWW"), fm.stringWidth(permissionStr));
+                        columnWidth = Math.max(wwwStringWidth, cellFontMetrics.stringWidth(permissionStr));
                     } catch (Exception e) {
-                        columnWidth = fm.stringWidth("WWWW");
+                        columnWidth = wwwStringWidth;
                     }
                 } else {
                     columnWidth = MIN_COLUMN_AUTO_WIDTH;
@@ -1320,7 +1323,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
                             break;
                         }
                         String val = (String)getModel().getValueAt(rowNum, column.getModelIndex());
-                        int stringWidth = val == null ? 0 : c == Column.SIZE ? dirStringWidth : fm.stringWidth(val);
+                        int stringWidth = val == null ? 0 : c == Column.SIZE ? dirStringWidth : cellFontMetrics.stringWidth(val);
                         columnWidth = Math.max(columnWidth, stringWidth);
                     }
                 }
@@ -1473,8 +1476,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             lastSelectedEqCnt++;
 
             if (lastSelectedEqCnt == 10) {
-                getLogger().warn("Sticky cursor!");
-                System.out.println("Sticky cursor!");
+                logger.warn("Sticky cursor!");
                 throw new RuntimeException("Sticky cursor!");
                /*
                  at com.mucommander.ui.main.table.FileTable.changeSelection(FileTable.java:1432)
@@ -2255,16 +2257,16 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     // End of QuickSearch class
 
 
-    // - Theme listening -------------------------------------------------------------
-    // -------------------------------------------------------------------------------
     /**
      * Not used.
      */
+    @Override
     public void colorChanged(ColorChangedEvent event) {}
 
     /**
      * Receives theme font changes notifications.
      */
+    @Override
     public void fontChanged(FontChangedEvent event) {
         if (event.getFontId() == Theme.FILE_TABLE_FONT) {
             // Changes filename editor's font
@@ -2285,7 +2287,12 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         if (fileTableColumnModel != null) {
             return fileTableColumnModel.getColumnFromId(column.ordinal()).getWidth();
         }
-        return getCompactFileTableColumnModel().getColumn(0).getWidth();
+        var model = getCompactFileTableColumnModel();
+        if (model == null) {
+            return 0;
+        }
+        var c = getCompactFileTableColumnModel().getColumn(0);
+        return c == null ? 0 : c.getWidth();
     }
 
     /**
@@ -2356,8 +2363,8 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
             } catch (Throwable e) {
                 // While no such thing should happen, we want to make absolutely sure no exception
                 // is propagated to the AWT event dispatch thread.
-                getLogger().warn("Caught exception while changing folder, this should not happen!", e);
-                getLogger().warn(e.getMessage());
+                logger.warn("Caught exception while changing folder, this should not happen!", e);
+                logger.warn(e.getMessage());
             } finally {
                 // Notify #setCurrentFolder that we're done changing the folder.
                 synchronized(this) {
@@ -2406,13 +2413,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         return ((BaseFileTableModel)getModel()).getFilesCount();
     }
 
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(FileTable.class);
-        }
-        return logger;
-    }
 
     private static boolean isQuickSearchMatchesFirst() {
         return TcConfigurations.getPreferences().getVariable(TcPreference.SHOW_QUICK_SEARCH_MATCHES_FIRST,

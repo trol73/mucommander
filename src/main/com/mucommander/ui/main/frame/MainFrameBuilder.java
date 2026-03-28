@@ -39,73 +39,75 @@ import com.mucommander.ui.main.table.Column;
 import com.mucommander.ui.main.table.views.full.FileTableConfiguration;
 
 /**
- * 
+ *
  * @author Arik Hadas
  */
 public abstract class MainFrameBuilder {
-	private static Logger logger;
+    private static Logger logger;
 
-	public abstract MainFrame[] build();
-	
-	public int getSelectedFrame() { return 0; }
-	
-	/**
+    public abstract MainFrame[] build();
+
+    public int getSelectedFrame() {
+        return 0;
+    }
+
+    /**
      * Retrieves the user's initial path for the specified frame.
      * <p>
      * If the path found in preferences is either illegal or does not exist, this method will
      * return the user's home directory - we assume this will always exist, which might be a bit
      * of a leap of faith.
      *
-     * @param  folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
-     *               {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#RIGHT}).
-     * @return       the user's initial path for the specified frame.
-     */ 
+     * @param folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
+     *                        {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#RIGHT}).
+     * @return the user's initial path for the specified frame.
+     */
     protected AbstractFile[] getInitialPaths(FolderPanelType folderPanelType, int window) {
-        boolean       isCustom;    // Whether the initial path is a custom one or the last used folder.
-        String[]      folderPaths; // Paths to the initial folders.
-        
+        boolean isCustom;    // Whether the initial path is a custom one or the last used folder.
+        String[] folderPaths; // Paths to the initial folders.
+
         // Snapshot configuration
         Configuration snapshot = TcConfigurations.getSnapshot();
         // Preferences configuration
         TcPreferencesAPI preferences = TcConfigurations.getPreferences();
-        
+
         // Checks which kind of initial path we're dealing with.
         isCustom = preferences.getVariable(TcPreference.STARTUP_FOLDERS, TcPreferences.DEFAULT_STARTUP_FOLDERS).equals(TcPreferences.STARTUP_FOLDERS_CUSTOM);
 
         // Handles custom initial paths.
         if (isCustom) {
-        	folderPaths = new String[] {(folderPanelType == FolderPanelType.LEFT ? preferences.getVariable(TcPreference.LEFT_CUSTOM_FOLDER) :
-        		preferences.getVariable(TcPreference.RIGHT_CUSTOM_FOLDER))};
+            folderPaths = new String[]{(folderPanelType == FolderPanelType.LEFT ? preferences.getVariable(TcPreference.LEFT_CUSTOM_FOLDER) :
+                    preferences.getVariable(TcPreference.RIGHT_CUSTOM_FOLDER))};
         }
         // Handles "last folder" initial paths.
         else {
-        	// Set initial path to each tab
-        	int nbFolderPaths = snapshot.getIntegerVariable(TcSnapshot.getTabsCountVariable(window, folderPanelType == FolderPanelType.LEFT));
-        	folderPaths = new String[nbFolderPaths];
-        	for (int i=0; i<nbFolderPaths;++i) {
+            // Set initial path to each tab
+            int nbFolderPaths = snapshot.getIntegerVariable(TcSnapshot.getTabsCountVariable(window, folderPanelType == FolderPanelType.LEFT));
+            folderPaths = new String[nbFolderPaths];
+            for (int i = 0; i < nbFolderPaths; ++i) {
                 folderPaths[i] = snapshot.getVariable(TcSnapshot.getTabLocationVariable(window, folderPanelType == FolderPanelType.LEFT, i));
             }
         }
 
         List<AbstractFile> initialFolders = new LinkedList<>(); // Initial folders
         AbstractFile folder;
-        
+
         for (String folderPath : folderPaths) {
-        	// TODO: consider whether to search for workable path in case the folder doesn't exist
-        	if (folderPath != null && (folder = FileFactory.getFile(folderPath)) != null && folder.exists())
-        		initialFolders.add(folder);
+            // TODO: consider whether to search for workable path in case the folder doesn't exist
+            if (folderPath != null && (folder = FileFactory.getFile(folderPath)) != null && folder.exists())
+                initialFolders.add(folder);
         }
-        
+
         // If the initial path is not legal or does not exist, defaults to the user's home.
-        AbstractFile[] results = initialFolders.size() == 0 ?
-        		new AbstractFile[] {FileFactory.getFile(System.getProperty("user.home"))} :
+        AbstractFile[] results = initialFolders.isEmpty() ?
+                new AbstractFile[]{FileFactory.getFile(System.getProperty("user.home"))} :
                 initialFolders.toArray(new AbstractFile[0]);
 
         getLogger().debug("initial folders:");
-        for (AbstractFile result:results) {
-            getLogger().debug("\t"+result);
+        for (AbstractFile result : results) {
+            getLogger().debug("\t{}", result);
         }
-        
+
         return results;
     }
 
@@ -116,23 +118,23 @@ public abstract class MainFrameBuilder {
      * return the user's home directory - we assume this will always exist, which might be a bit
      * of a leap of faith.
      *
-     * @param  folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
-     *               {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
-     * @return       the user's initial path for the specified frame.
+     * @param folderPanelType panel for which the initial path should be returned (either {@link com.mucommander.ui.main.FolderPanel.FolderPanelType#LEFT} or
+     *                        {@link #@link com.mucommander.ui.main.FolderPanel.FolderPanelType.RIGHT}).
+     * @return the user's initial path for the specified frame.
      */
     FileURL getInitialPath(FolderPanelType folderPanelType) {
         // Preferences configuration
         TcPreferencesAPI preferences = TcConfigurations.getPreferences();
-        
+
         // Checks which kind of initial path we're dealing with.
         boolean isCustom = preferences.getVariable(TcPreference.STARTUP_FOLDERS, TcPreferences.DEFAULT_STARTUP_FOLDERS).equals(TcPreferences.STARTUP_FOLDERS_CUSTOM);
 
         String customPath = null;
         // Handles custom initial paths.
         if (isCustom) {
-        	customPath = (folderPanelType == FolderPanelType.LEFT ? 
-        			preferences.getVariable(TcPreference.LEFT_CUSTOM_FOLDER)
-        			: preferences.getVariable(TcPreference.RIGHT_CUSTOM_FOLDER));
+            customPath = (folderPanelType == FolderPanelType.LEFT ?
+                    preferences.getVariable(TcPreference.LEFT_CUSTOM_FOLDER)
+                    : preferences.getVariable(TcPreference.RIGHT_CUSTOM_FOLDER));
         }
 
         AbstractFile result;
@@ -140,8 +142,8 @@ public abstract class MainFrameBuilder {
             result = getHomeFolder();
         }
 
-        getLogger().debug("initial folder: " + result);
-        
+        getLogger().debug("initial folder: {}", result);
+
         return result.getURL();
     }
 
@@ -149,15 +151,15 @@ public abstract class MainFrameBuilder {
         FileTableConfiguration conf = new FileTableConfiguration();
 
         // Loop on columns
-        for (Column c  : Column.values()) {
+        for (Column c : Column.values()) {
             if (c != Column.NAME) {       // Skip the special name column (always visible, width automatically calculated)
-            	// Sets the column's initial visibility.
-            	conf.setEnabled(c,
-            			TcConfigurations.getSnapshot().getVariable(
-            					TcSnapshot.getShowColumnVariable(window, c, folderPanelType == FolderPanelType.LEFT),
-            					c.showByDefault()
-    					)
-    			);
+                // Sets the column's initial visibility.
+                conf.setEnabled(c,
+                        TcConfigurations.getSnapshot().getVariable(
+                                TcSnapshot.getShowColumnVariable(window, c, folderPanelType == FolderPanelType.LEFT),
+                                c.showByDefault()
+                        )
+                );
 
                 // Sets the column's initial width.
                 conf.setWidth(c, TcConfigurations.getSnapshot().getIntegerVariable(TcSnapshot.getColumnWidthVariable(window, c, folderPanelType == FolderPanelType.LEFT)));
@@ -165,16 +167,16 @@ public abstract class MainFrameBuilder {
 
             // Sets the column's initial order
             conf.setPosition(c, TcConfigurations.getSnapshot().getVariable(
-                                    TcSnapshot.getColumnPositionVariable(window, c, folderPanelType == FolderPanelType.LEFT),
-                                    c.ordinal())
+                    TcSnapshot.getColumnPositionVariable(window, c, folderPanelType == FolderPanelType.LEFT),
+                    c.ordinal())
             );
         }
 
         return conf;
     }
-    
+
     AbstractFile getHomeFolder() {
-    	return FileFactory.getFile(System.getProperty("user.home"));
+        return FileFactory.getFile(System.getProperty("user.home"));
     }
 
 
