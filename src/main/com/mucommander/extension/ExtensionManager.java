@@ -77,7 +77,7 @@ public class ExtensionManager {
     public static void init() {
         ClassLoader temp = ClassLoader.getSystemClassLoader();
 
-        // Initialises the extension class loader.
+        // Initializes the extension class loader.
         if (temp instanceof AbstractFileClassLoader) {
             // If the system classloader is an instance of AbstractFileClassLoader, use it.
             loader = (AbstractFileClassLoader) temp;
@@ -107,7 +107,8 @@ public class ExtensionManager {
      * @see                #getExtensionsFolder()
      */
     private static void setExtensionsFolder(File folder) throws IOException {
-        setExtensionsFolder(FileFactory.getFile(folder.getAbsolutePath()));
+        AbstractFile file = FileFactory.getFile(folder.getAbsolutePath());
+        setExtensionsFolder(file);
     }
 
     /**

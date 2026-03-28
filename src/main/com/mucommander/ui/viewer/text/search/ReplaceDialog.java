@@ -31,16 +31,15 @@ import java.beans.PropertyChangeEvent;
  * Created on 21/06/16.
  */
 public class ReplaceDialog extends AbstractSearchDialog {
-
-    private JButton btnReplace;
-    private JButton btnReplaceAll;
-    private JTextField edtReplace;
+    private final JButton btnReplace;
+    private final JButton btnReplaceAll;
+    private final JTextField edtReplace;
 
 
     /**
      * Our search listener, cached so we can grab its selected text easily.
      */
-    private SearchListener searchListener;
+    private final SearchListener searchListener;
 
 
     public ReplaceDialog(Frame owner, SearchListener listener) {
@@ -77,9 +76,9 @@ public class ReplaceDialog extends AbstractSearchDialog {
         searchPanel.add(lblReplace);
         searchPanel.add(temp2);
 
-        makeSpringCompactGrid(searchPanel, 2, 2,	//rows, cols
-                5, 0,		//initX, initY
-                6, 6);	//xPad, yPad
+        makeSpringCompactGrid(searchPanel, 2, 2,
+                5, 0,
+                6, 6);
 
         // Make a panel containing the inherited search direction radio
         // buttons and the inherited search options.
@@ -161,7 +160,6 @@ public class ReplaceDialog extends AbstractSearchDialog {
         } else {
             super.handleSearchContextPropertyChanged(e);
         }
-
     }
 
 
@@ -185,13 +183,14 @@ public class ReplaceDialog extends AbstractSearchDialog {
      * Listens for changes in the text field (find search field).
      */
     private class ReplaceDocumentListener implements DocumentListener {
-
+        @Override
         public void insertUpdate(DocumentEvent e) {
             if (e.getDocument().equals(edtText.getDocument())) {
                 handleToggleButtons();
             }
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             if (e.getDocument().equals(edtText.getDocument()) && e.getDocument().getLength() == 0) {
                 btnFind.setEnabled(false);
@@ -202,11 +201,9 @@ public class ReplaceDialog extends AbstractSearchDialog {
             }
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
         }
     }
-
-
-
 
 }

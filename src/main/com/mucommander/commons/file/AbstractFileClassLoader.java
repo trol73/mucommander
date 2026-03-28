@@ -26,8 +26,7 @@ import java.util.*;
 
 /**
  * <code>ClassLoader</code> implementation capable of loading classes from instances of {@link AbstractFile}.
- * <p>
- * It's possible to modify this loader's classpath at runtime through the {@link #addFile(AbstractFile)} method.
+ * <p>It's possible to modify this loader's classpath at runtime through the {@link #addFile(AbstractFile)} method.
  *
  * @author Nicolas Rinaudo
  */
