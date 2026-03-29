@@ -1,0 +1,433 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "idea"
+    id 'com.gradleup.shadow' version '9.2.0'
+    id 'com.github.ben-manes.versions' version '0.53.0'
+}
+
+group = 'ru.trolsoft'
+version = '0.9.9'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+def opensJvmApps = [
+    '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+    '--add-opens', 'java.desktop/sun.awt.X11=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.net=ALL-UNNAMED',
+    '--add-opens', 'java.desktop/javax.swing.plaf.basic=ALL-UNNAMED',
+    '--add-opens', 'java.transaction.xa/javax.transaction.xa=ALL-UNNAMED',
+    '--add-opens', 'java.management/javax.management=ALL-UNNAMED',
+    '--add-opens', 'java.rmi/java.rmi=ALL-UNNAMED',
+    '--add-opens', 'java.security.jgss/org.ietf.jgss=ALL-UNNAMED',
+    '--add-opens', 'java.sql/java.sql=ALL-UNNAMED',
+    '--add-opens', 'java.base/sun.net.www.protocol.http=ALL-UNNAMED',
+    '--add-opens', 'java.base/sun.net.www.protocol.https=ALL-UNNAMED',
+    '--add-opens', 'jdk.httpserver/com.sun.net.httpserver=ALL-UNNAMED',
+    '--add-opens', 'java.compiler/javax.lang.model.element=ALL-UNNAMED'
+]
+
+def macosJvmArgs = [
+    '--add-opens', 'java.desktop/com.apple.laf=ALL-UNNAMED',
+    '--add-opens', 'java.desktop/com.apple.laf.AquaLookAndFeel=ALL-UNNAMED',
+    '--add-exports', 'java.desktop/com.apple.laf=ALL-UNNAMED',
+    '--add-exports', 'java.desktop/com.apple.eawt=ALL-UNNAMED',
+    '--add-opens', 'java.desktop/com.apple.eawt=ALL-UNNAMED',
+    '-Dcom.apple.smallTabs=true',
+    '-Dcom.apple.hwaccel',
+    '-Dapple.laf.useScreenMenuBar=true',
+    '-Xdock:name=trolCommander'
+]
+
+def isMac = System.getProperty('os.name').toLowerCase().contains('mac')
+
+application {
+    mainClass = 'com.mucommander.TrolCommander'
+    applicationDefaultJvmArgs = [
+        '-Xmx128m',
+        '-Xms128m',
+        '-XX:ReservedCodeCacheSize=64m',
+        '-XX:+IgnoreUnrecognizedVMOptions',
+        '-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader',
+        '-Dslf4j.provider=ch.qos.logback.classic.spi.LogbackServiceProvider',
+        '-Dfile.encoding=UTF-8'
+    ] + opensJvmApps + (isMac ? macosJvmArgs : [])
+}
+
+repositories {
+    mavenCentral()
+    
+    flatDir {
+        dirs 'lib/runtime', 'lib/compile', 'lib/test'
+    }
+}
+
+
+dependencies {
+    implementation name: 'apple/AppleJavaExtensions-1.6'
+    
+    implementation name: 'jediterm/jediterm-ui-3.53-SNAPSHOT'
+    implementation name: 'jediterm/jediterm-core-3.53-SNAPSHOT'
+    implementation name: 'jediterm/JediTerm-3.53-SNAPSHOT'
+    implementation name: 'jediterm/annotations'
+    implementation name: 'jediterm/jzlib-1.1.1'
+    implementation name: 'jediterm/pty4j-0.13.4'
+    implementation name: 'jediterm/purejavacomm'
+    
+    implementation name: 'jets3t/jets3t-0.7.2'
+
+    implementation name: 'vmware/vim25-2.5'
+    implementation name: 'sun/yanfs-1.2'
+    implementation name: 'sshtools/j2ssh-maverick-1.5.5'
+
+    implementation name: 'slf4j/jcl-over-slf4j-2.0.17'
+    implementation name: 'slf4j/jul-to-slf4j-2.0.17'
+    implementation name: 'slf4j/slf4j-api-2.0.17'
+
+    implementation name: 'quaqua/quaqua-native'
+    implementation name: 'quaqua/quaqua'
+
+    implementation name: 'objectweb/asm-3.0'
+    implementation name: 'objectweb/asm-commons-3.0'
+    implementation name: 'objectweb/asm-tree-3.0'
+
+
+//    implementation name: 'logback/log4j-over-slf4j-2.0.17'
+    implementation name: 'logback/logback-classic-1.5.18'
+    implementation name: 'logback/logback-core-1.5.18'
+
+    implementation name: 'jna/jna-5.17.0'
+    implementation name: 'jna/jna-platform-5.17.0'
+
+    implementation name: 'jmdns/jmdns-3.1'
+
+    implementation name: 'jets3t/jets3t-0.7.2'
+
+    implementation name: 'jcifs/jcifs-1.3.18-kohsuke-2-SNAPSHOT'
+
+    implementation name: 'java-iso-tools/iso9660-writer-2.0.0'
+    implementation name: 'java-iso-tools/sabre-2.0.0'
+
+    implementation name: 'icepdf/icepdf-core-7.3.2'
+    implementation name: 'icepdf/icepdf-viewer-7.3.2'
+
+//    implementation name: 'github/sardine-5.3'
+
+    implementation 'org.apache.xmlgraphics:batik-anim:1.10'
+    implementation 'org.apache.xmlgraphics:batik-awt-util:1.0'
+    implementation 'org.apache.xmlgraphics:batik-bridge:1.10'
+    implementation 'org.apache.xmlgraphics:batik-codec:1.10'
+    implementation 'org.apache.xmlgraphics:batik-css:1.10'
+    implementation 'org.apache.xmlgraphics:batik-dom:1.10'
+    implementation 'org.apache.xmlgraphics:batik-ext:1.10'
+    implementation 'org.apache.xmlgraphics:batik-extension:1.10'
+    implementation 'org.apache.xmlgraphics:batik-gui-util:1.10'
+    implementation 'org.apache.xmlgraphics:batik-gvt:1.10'
+    implementation 'org.apache.xmlgraphics:batik-parser:1.10'
+    implementation 'org.apache.xmlgraphics:batik-script:1.10'
+    implementation 'org.apache.xmlgraphics:batik-svg-dom:1.10'
+    implementation 'org.apache.xmlgraphics:batik-svggen:1.10'
+    implementation 'org.apache.xmlgraphics:batik-swing:1.10'
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.10'
+    implementation "org.apache.xmlgraphics:batik-util:1.10"
+    implementation "org.apache.xmlgraphics:batik-xml:1.10"
+
+//    implementation 'org.apache.xmlgraphics:batik-anim:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-awt-util:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-bridge:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-codec:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-css:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-dom:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-ext:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-extension:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-gui-util:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-gvt:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-parser:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-script:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-svg-dom:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-svggen:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-swing:1.19'
+//    implementation 'org.apache.xmlgraphics:batik-transcoder:1.19'
+//    implementation "org.apache.xmlgraphics:batik-util:1.19"
+//    implementation "org.apache.xmlgraphics:batik-xml:1.19"
+
+    implementation "xml-apis:xml-apis:1.3.04"
+//    implementation 'commons-io:commons-io:2.0'
+//    implementation name: 'batik/xml-apis-ext-1.3.04'
+    implementation name: 'batik/xmlgraphics-commons-2.0'
+
+
+//    implementation name: 'batik/batik-anim-1.8'
+//    implementation name: 'batik/batik-awt-util-1.8'
+//    implementation name: 'batik/batik-bridge-1.8'
+//    implementation name: 'batik/batik-codec-1.8'
+//    implementation name: 'batik/batik-css-1.8'
+//    implementation name: 'batik/batik-dom-1.8'
+//    implementation name: 'batik/batik-ext-1.8'
+//    implementation name: 'batik/batik-extension-1.8'
+//    implementation name: 'batik/batik-gui-util-1.8'
+//    implementation name: 'batik/batik-gvt-1.8'
+//    implementation name: 'batik/batik-parser-1.8'
+//    implementation name: 'batik/batik-script-1.8'
+//    implementation name: 'batik/batik-svg-dom-1.8'
+//    implementation name: 'batik/batik-svggen-1.8'
+//    implementation name: 'batik/batik-swing-1.8'
+//    implementation name: 'batik/batik-transcoder-1.8'
+//    implementation name: 'batik/batik-util-1.8'
+//    implementation name: 'batik/batik-xml-1.8'
+//    implementation name: 'batik/xml-apis-ext-1.3.04'
+//    implementation name: 'batik/xmlgraphics-commons-2.0'
+    
+    implementation name: 'com.realityinteractive.imageio.tga'
+    implementation name: 'dd-plist-1.23'
+    implementation name: 'djvuframe'
+    implementation name: 'fife.common'
+    implementation name: 'flatlaf-3.7.1'
+    implementation name: 'gson-2.3'
+    implementation name: 'guava-31.1-jre'
+    implementation name: 'image4j'
+    implementation name: 'jakarta.jakartaee-api-9.0.0-RC3'
+    implementation name: 'javadjvu'
+    implementation name: 'jftp-1.60-trol1'
+    implementation name: 'jide-oss-3.7.4'
+    implementation name: 'json-20251224'
+    implementation name: 'kotlin-stdlib-2.1.21'
+    implementation name: 'rsyntaxtextarea-3.6.1-SNAPSHOT'
+    implementation name: 'sardine-5.3'
+    implementation name: 'sevenzipjbinding-AllPlatforms'
+    implementation name: 'sevenzipjbinding-Mac-arm64'
+    implementation name: 'sevenzipjbinding'
+    implementation name: 'trolcommander-native'
+    implementation name: 'trolsoft'
+    implementation name: 'unirest-java-1.3.26'
+
+    // lib.compile
+    compileOnly name: 'jfxrt'
+   
+
+
+    // Apache Commons
+    implementation 'commons-net:commons-net:3.9.0'
+    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'commons-lang:commons-lang:2.6'
+    implementation 'commons-io:commons-io:2.4'
+    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'org.apache.commons:commons-collections4:4.5.0'
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'org.apache.commons:commons-imaging:1.0-alpha2'
+
+    implementation 'org.apache.hadoop:hadoop-common:2.6.0'
+    implementation 'xerces:xercesImpl:2.12.2'
+    
+    
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+//    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    
+    // JNA
+    implementation 'net.java.dev.jna:jna:5.13.0'
+
+    implementation 'oro:oro:2.0.8'
+    
+    // === ЗАВИСИМОСТИ ДЛЯ КОМПИЛЯЦИИ (если нужны аннотации) ===
+    // compileOnly '...'
+    
+    // === ТЕСТОВЫЕ ЗАВИСИМОСТИ ===
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'  // для JUnit 5 интеграции
+    testImplementation 'org.assertj:assertj-core:3.26.3'
+
+
+    
+    
+    // === ИНСТРУМЕНТЫ СБОРКИ (если нужны в runtime) ===
+    // implementation files('lib/tools/some-tool.jar')
+}
+
+// ==================== ИСХОДНЫЙ КОД И РЕСУРСЫ ====================
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+            exclude '**/*.java', '**/*.xml'   // исключить код из ресурсов
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+// ==================== JAR-СБОРКА ====================
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': application.mainClass,
+            'Specification-Title': 'trolCommander',
+            'Specification-Vendor': 'Oleg Trifonov',
+            'Specification-Version': project.version,
+            'Implementation-Title': 'trolCommander',
+            'Implementation-Vendor': 'Oleg Trifonov',
+            'Implementation-Version': project.version,
+            'Build-Date': new Date().format('yyyy-MM-dd'),
+            'Class-Path': configurations.runtimeClasspath.files.collect { 
+                "lib/${it.name}" 
+            }.join(' ')
+        )
+    }
+    
+//    // Включение ресурсов в JAR
+//    from('res/runtime') {
+//        include '**/*'
+//        exclude '**/*.java'
+//    }
+}
+
+// ==================== SHADOW JAR (fat-jar со всеми зависимостями) ====================
+
+shadowJar {
+    archiveBaseName.set('trolcommander')
+    archiveClassifier.set('')
+    archiveVersion.set(project.version)
+    
+    manifest {
+        inheritFrom jar.manifest
+    }
+    
+    // Исключение подписей зависимостей (чтобы не было конфликтов)
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    
+    // Объединение сервис-файлов
+    mergeServiceFiles()
+}
+
+// ==================== ЗАДАЧИ СБОРКИ ====================
+
+// Задача для сборки с локальными зависимостями
+tasks.register('buildWithLocalLibs') {
+    group = 'build'
+    description = 'Сборка с использованием локальных JAR из lib/'
+    dependsOn 'shadowJar'
+}
+
+// Задача для сборки с миграцией на Maven
+tasks.register('buildWithMaven') {
+    group = 'build'
+    description = 'Сборка с приоритетом Maven-зависимостей'
+    dependsOn 'shadowJar'
+}
+
+// Задача для запуска приложения
+tasks.register('runApp', JavaExec) {
+    group = 'application'
+    description = 'Запуск trolCommander'
+    mainClass = application.mainClass
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = application.applicationDefaultJvmArgs
+}
+
+// ==================== УТИЛИТЫ ДЛЯ МИГРАЦИИ ====================
+
+// Задача: показать, какие зависимости берутся из локальных файлов
+tasks.register('listLocalDependencies') {
+    group = 'help'
+    description = 'Показать зависимости из локальной папки lib/'
+    
+    doLast {
+        def localDeps = configurations.runtimeClasspath.files.findAll { 
+            it.absolutePath.contains('/lib/') 
+        }
+        if (localDeps.isEmpty()) {
+            println "✓ Все зависимости загружаются из Maven-репозиториев"
+        } else {
+            println "⚠ Локальные зависимости:"
+            localDeps.each { println "  - ${it.name}" }
+            println "\n💡 Подсказка: замените 'implementation name: ...' на 'implementation \"group:artifact:version\""
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+
+//    dependsOn 'compileJava', 'processResources'
+    
+    jvmArgs = [
+        '-Djava.awt.headless=true',
+        '-Djava.system.class.loader=com.mucommander.commons.file.AbstractFileClassLoader'
+    ]
+    
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat = 'full'
+        showStandardStreams = true
+    }
+}
+
+// Отключение предупреждений о кодировке
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+
+    if (isMac) {
+        options.compilerArgs += [
+            '--add-exports', 'java.desktop/com.apple.laf=ALL-UNNAMED',
+            '--add-exports', 'java.desktop/com.apple.eawt=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/com.apple.laf=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/com.apple.eawt=ALL-UNNAMED'
+        ]
+    }
+}
+
+// Копирование библиотек в output для классического запуска (опционально)
+tasks.register('copyLibs', Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/libs"
+}
+
+
+//tasks.named('startScripts') {
+//    dependsOn 'shadowJar'
+//    // Перенастроить класспасс на shadowJar
+//    classpath = files(shadowJar.archiveFile)
+//}
+//
+//// И использовать другой classifier для shadowJar, чтобы не конфликтовать
+//shadowJar {
+//    archiveClassifier = 'all'  // будет trolcommander-0.9.9-all.jar
+//}
+
+
+// ✅ Отключить стандартные задачи дистрибуции (конфликтуют с shadowJar)
+tasks.named('distZip') { enabled = false }
+tasks.named('distTar') { enabled = false }
+tasks.named('startScripts') { enabled = false }
+
+// ✅ Отключить стандартный jar, если используете только shadowJar
+tasks.named('jar') { enabled = false }
+
+// ✅ Сделать shadowJar задачей сборки по умолчанию
+tasks.named('assemble') {
+    dependsOn 'shadowJar'
+}
+tasks.named('compileJava') {
+    dependsOn 'processResources'
+}

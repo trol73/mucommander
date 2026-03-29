@@ -1,0 +1,5 @@
+rootProject.name = 'trolcommander'
+
+// Включение локальных модулей (если нужно)
+// include ':libs:local-lib1'
+// project(':libs:local-lib1').projectDir = file('lib/local-lib1')
