@@ -20,6 +20,7 @@ package com.mucommander.command;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.impl.local.LocalFile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,11 +87,8 @@ public class CommandTest {
      * @return the specified file's parent, or an empty string if it doesn't have one.
      */
     private String getParent(AbstractFile file) {
-        AbstractFile parent;
-
-        if ((parent = file.getParent()) == null)
-            return "";
-        return parent.getAbsolutePath();
+        AbstractFile parent = file.getParent();
+        return parent == null ? "" : parent.getAbsolutePath();
     }
 
     /**
@@ -240,6 +238,10 @@ public class CommandTest {
     @Test
     public void testParsingWithSubstitution() {
         String[] tokens;
+
+        for (var file : FILES) {
+            assertEquals(LocalFile.class, file.getClass());
+        }
 
         // Makes sure keywords are tokenized when not escaped.
         tokens = Command.getTokens("ls $f", FILES);

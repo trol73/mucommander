@@ -24,8 +24,8 @@ import java.io.*;
 import java.util.*;
 
 import com.mucommander.commons.file.util.PathUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import com.mucommander.PlatformManager;
 import com.mucommander.RuntimeConstants;
@@ -47,9 +47,8 @@ import com.mucommander.ui.theme.Theme.Type;
  * Offers methods for accessing and modifying themes.
  * @author Nicolas Rinaudo
  */
+@Slf4j
 public class ThemeManager {
-	private static Logger logger;
-	
     // - Class variables -----------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /** Path to the user defined theme file. */
@@ -71,10 +70,12 @@ public class ThemeManager {
     /** Whether the user theme was modified. */
     private static boolean       wasUserThemeModified;
     /** Theme that is currently applied to muCommander. */
+    @Getter
     private static Theme         currentTheme;
     /** Used to listen on the current theme's modifications. */
     private static final ThemeListener listener = new CurrentThemeListener();
     /** Theme that is currently applied to viewer and editor. */
+    @Getter
     private static String currentSyntaxThemeName;
 
 
@@ -100,7 +101,7 @@ public class ThemeManager {
         try {
             type = getThemeTypeFromLabel(TcConfigurations.getPreferences().getVariable(TcPreference.THEME_TYPE, TcPreferences.DEFAULT_THEME_TYPE));
         } catch(Exception e) {
-            e.printStackTrace();
+            log.error("Theme type error", e);
             type = getThemeTypeFromLabel(TcPreferences.DEFAULT_THEME_TYPE);
         }
 
@@ -117,7 +118,7 @@ public class ThemeManager {
         try {
             currentTheme = readTheme(type, name);
         } catch(Exception e1) {
-            e1.printStackTrace();
+            log.error("Can't read theme", e1);
             type = getThemeTypeFromLabel(TcPreferences.DEFAULT_THEME_TYPE);
             name = TcPreferences.DEFAULT_THEME_NAME;
 
@@ -131,9 +132,10 @@ public class ThemeManager {
                 currentTheme = readTheme(type, name);
             } catch(Exception e2) {
                 if (!wasUserThemeLoaded) {
-                    try {currentTheme = readTheme(Theme.Type.USER, null);}
-                    catch(Exception e3) {
-                        e3.printStackTrace();
+                    try {
+                        currentTheme = readTheme(Theme.Type.USER, null);
+                    } catch(Exception e3) {
+                        log.error("Can't read theme", e3);
                     }
                 }
                 if (currentTheme == null) {
@@ -214,7 +216,7 @@ public class ThemeManager {
             try {
                 themes.add(readTheme(Theme.Type.PREDEFINED, name));
             } catch(Exception e) {
-                getLogger().warn("Failed to load predefined theme " + name, e);
+                log.warn("Failed to load predefined theme " + name, e);
             }
         }
 
@@ -226,15 +228,15 @@ public class ThemeManager {
                 try {
                     themes.add(readTheme(Theme.Type.CUSTOM, name));
                 } catch(Exception e) {
-                    getLogger().warn("Failed to load custom theme " + name, e);
+                    log.warn("Failed to load custom theme " + name, e);
                 }
             }
         } catch(Exception e) {
-            getLogger().warn("Failed to load custom themes", e);
+            log.warn("Failed to load custom themes", e);
         }
 
         // Sorts the themes by name.
-        themes.sort(Comparator.comparing(t -> (t.getName())));
+        themes.sort(Comparator.comparing(Theme::getName));
 
         return themes;
     }
@@ -257,7 +259,7 @@ public class ThemeManager {
                 themes.add(iterator.next());
             }
         } catch(Exception e) {
-            getLogger().debug("Failed to load custom theme names", e);
+            log.debug("Failed to load custom theme names", e);
         }
 
         // Sorts the theme names.
@@ -695,16 +697,18 @@ public class ThemeManager {
 
         // Cleanup.
         finally {
-            if(in != null) {
-                try {in.close();}
-                catch(Exception e) {
-                    e.printStackTrace();
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(Exception e) {
+                    log.error("Can't close in file", e);
                 }
             }
-            if(out != null) {
-                try {out.close();}
-                catch(Exception e) {
-                    e.printStackTrace();
+            if (out != null) {
+                try {
+                    out.close();
+                } catch(Exception e) {
+                    log.error("Can't close out file", e);
                 }
             }
         }
@@ -712,10 +716,6 @@ public class ThemeManager {
         return new Theme(listener, data, Theme.Type.CUSTOM, name);
     }
 
-
-
-    // - Theme reading -------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns an input stream on the user theme.
      * @return             an input stream on the user theme.
@@ -805,7 +805,6 @@ public class ThemeManager {
      * Return the requested theme for file viewer/editor
      * @param name name ot the theme
      * @return the resulting theme data.
-     * @throws IOException
      */
     public static EditorTheme readEditorTheme(String name) throws IOException {
         InputStream is = getPredefinedEditorThemeInputStream(name);
@@ -891,12 +890,6 @@ public class ThemeManager {
         }
     }
 
-    public static Theme getCurrentTheme() {
-        return currentTheme;
-    }
-
-    public static String getCurrentSyntaxThemeName() {return currentSyntaxThemeName;}
-
     /**
      * Changes the current theme.
      * <p>
@@ -915,7 +908,7 @@ public class ThemeManager {
         try {
             saveCurrentTheme();
         } catch(IOException e) {
-            getLogger().warn("Couldn't save current theme", e);
+            log.warn("Couldn't save current theme", e);
         }
 
         // Updates muCommander's configuration.
@@ -1187,12 +1180,5 @@ public class ThemeManager {
                 triggerColorEvent(event);
             }
         }
-    }
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(ThemeManager.class);
-        }
-        return logger;
     }
 }

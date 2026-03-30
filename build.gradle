@@ -68,6 +68,12 @@ repositories {
 
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
     implementation name: 'apple/AppleJavaExtensions-1.6'
     
     implementation name: 'jediterm/jediterm-ui-3.53-SNAPSHOT'
@@ -202,7 +208,7 @@ sourceSets {
         }
         resources {
             srcDirs = ['src/main/resources']
-            exclude '**/*.java', '**/*.xml'   // исключить код из ресурсов
+            exclude '**/*.java'
         }
     }
     test {
@@ -325,6 +331,7 @@ test {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+    options.annotationProcessorPath = configurations.annotationProcessor
 
     if (isMac) {
         options.compilerArgs += [

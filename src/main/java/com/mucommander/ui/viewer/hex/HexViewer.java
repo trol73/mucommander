@@ -23,6 +23,7 @@ import com.mucommander.ui.helper.MenuToolkit;
 import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.theme.ThemeId;
 import com.mucommander.ui.viewer.FileViewer;
+import lombok.extern.slf4j.Slf4j;
 import ru.trolsoft.calculator.CalculatorDialog;
 import ru.trolsoft.hexeditor.data.AbstractByteBuffer;
 import ru.trolsoft.hexeditor.data.TrolCommanderByteBuffer;
@@ -44,6 +45,7 @@ import static com.mucommander.ui.theme.ThemeManager.getCurrentFont;
  * Hex dump viewer
  * @author Oleg Trifonov
  */
+@Slf4j
 public class HexViewer extends FileViewer implements ThemeId {
 
     private static final String DEFAULT_ENCODING = "windows-1252";
@@ -94,7 +96,7 @@ public class HexViewer extends FileViewer implements ThemeId {
                         statusBar.setByteValue(byteBuffer.getByte(offset));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Can't show offset", e);
                 }
             }
         }
@@ -140,7 +142,7 @@ public class HexViewer extends FileViewer implements ThemeId {
             setComponentToPresent(hexTable);
             getViewport().setBackground(hexTable.getBackground());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Init error", e);
         }
     }
 
@@ -166,12 +168,12 @@ public class HexViewer extends FileViewer implements ThemeId {
         try {
             byteBuffer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Close buffer error", e);
         }
         try {
             getCurrentFile().closePushbackInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Close stream error", e);
         }
     }
 
@@ -215,7 +217,6 @@ public class HexViewer extends FileViewer implements ThemeId {
     }
 
     private void doSearchFromPos(byte[] bytes, long pos, boolean next) {
-System.out.println("doSearchFromPos " + pos + " " + next);
         lastSearchBytes = bytes;
         try {
             long lastSearchResult;
@@ -232,8 +233,8 @@ System.out.println("doSearchFromPos " + pos + " " + next);
                     statusBar.setStatusMessage(i18n("hex_viewer.search_not_found"));
                 }
             }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            log.error("Search error", e);
         }
     }
 
@@ -267,7 +268,7 @@ System.out.println("doSearchFromPos " + pos + " " + next);
         try {
             lastSearchBytes = searchedText.getBytes(encoding);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("setSearchedText", e);
         }
     }
 

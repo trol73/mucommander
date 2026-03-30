@@ -107,7 +107,7 @@ public class TrolCommander {
      * This method will return immediately if the application has already been launched when it is called.
      */
     public static void waitUntilLaunched() {
-        getLogger().debug("called, thread="+Thread.currentThread());
+        getLogger().debug("called, thread {}", Thread.currentThread());
         synchronized(LAUNCH_LOCK) {
             while (isLaunching) {
                 try {
@@ -1012,6 +1012,4 @@ public class TrolCommander {
         }
         return logger;
     }
-
-
 }
