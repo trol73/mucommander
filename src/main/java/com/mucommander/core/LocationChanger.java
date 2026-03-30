@@ -591,7 +591,6 @@ public class LocationChanger {
 					interrupt();
 				} else {
 					// Call Thread#stop() the first time this method is called
-					super.stop();
 					LOGGER.debug("Killing thread using #stop()");
 					killedByStop = true;
 

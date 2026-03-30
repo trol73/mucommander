@@ -126,7 +126,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * </pre>
      *
      * @param panel          panel in which to add the label row.
-     * @param includePreview whether or not to add the <code>preview</code> label.
+     * @param includePreview whether to add the <code>preview</code> label.
      */
     void addLabelRow(ProportionalGridPanel panel, boolean includePreview) {
         // Skips first column.
@@ -151,7 +151,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
      * @param fontId identifier of the font this chooser will be editing.
      */
     FontChooser createFontChooser(int fontId) {
-        // Initialises the font chooser.
+        // Initializes the font chooser.
         FontChooser fontChooser = new FontChooser(themeData.getFont(fontId));
         fontChooser.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.font")));
         ChangeListener listener = new ThemeFontChooserListener(themeData, fontId, parent);
@@ -241,7 +241,7 @@ abstract class ThemeEditorPanel extends PreferencesPanel {
         // Adds the row's caption label.
         gridPanel.add(createCaptionLabel(label));
 
-        // Initialises the color buttons' preview label.
+        // Initializes the color buttons' preview label.
         PreviewLabel previewLabel = new PreviewLabel();
         previewLabel.setTextPainted(true);
         addFontChooserListener(fontChooser, previewLabel);

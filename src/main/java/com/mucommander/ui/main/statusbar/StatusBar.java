@@ -263,7 +263,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
         // and update status info
         addComponentListener(this);
 
-        // Initialises theme.
+        // Initializes theme.
         selectedFilesLabel.setFont(ThemeManager.getCurrentFont(Theme.STATUS_BAR_FONT));
         selectedFilesLabel.setForeground(ThemeManager.getCurrentColor(Theme.STATUS_BAR_FOREGROUND_COLOR));
         volumeSpaceLabel.setFont(ThemeManager.getCurrentFont(Theme.STATUS_BAR_FONT));

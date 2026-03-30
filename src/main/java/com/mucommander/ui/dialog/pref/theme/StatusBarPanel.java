@@ -171,7 +171,7 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener,
     }
 
     /**
-     * Initialises the panel's UI.
+     * Initializes the panel's UI.
      */
     private void initUI() {
         JPanel       mainPanel;
@@ -185,24 +185,24 @@ class StatusBarPanel extends ThemeEditorPanel implements PropertyChangeListener,
         JTabbedPane tabbedPane;
         fontChooser = createFontChooser(STATUS_BAR_FONT);
 
-        // Initialises the foreground color button.
+        // Initializes the foreground color button.
         foreground = new ColorButton(parent, themeData, STATUS_BAR_FOREGROUND_COLOR, PreviewLabel.FOREGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
         previewLabel.setTextPainted(true);
         addFontChooserListener(fontChooser, previewLabel);
         previewLabel.addPropertyChangeListener(this);
 
-        // Initialises the background and border color buttons.
+        // Initializes the background and border color buttons.
         background = new ColorButton(parent, themeData, STATUS_BAR_BACKGROUND_COLOR, PreviewLabel.BACKGROUND_COLOR_PROPERTY_NAME, previewLabel = new PreviewLabel());
         border     = new ColorButton(parent, themeData, STATUS_BAR_BORDER_COLOR, PreviewLabel.BORDER_COLOR_PROPERTY_NAME, borderPreviewLabel = new PreviewLabel());
 
-        // Initialises the background color preview.
+        // Initializes the background color preview.
         previewLabel.setTextPainted(true);
         foreground.addUpdatedPreviewComponent(previewLabel);
         border.addUpdatedPreviewComponent(previewLabel);
         addFontChooserListener(fontChooser, previewLabel);
         previewLabel.addPropertyChangeListener(this);
 
-        // Initialises the border color preview.
+        // Initializes the border color preview.
         borderPreviewLabel.setTextPainted(true);
         foreground.addUpdatedPreviewComponent(borderPreviewLabel);
         background.addUpdatedPreviewComponent(borderPreviewLabel);

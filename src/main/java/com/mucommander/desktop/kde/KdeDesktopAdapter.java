@@ -40,7 +40,7 @@ abstract class KdeDesktopAdapter extends DefaultDesktopAdapter {
     private int multiClickInterval;
 
     /** Key to the double-click interval value in the KDE configuration */
-    private String DOUBLE_CLICK_CONFIG_KEY = "DoubleClickInterval";
+    private final String DOUBLE_CLICK_CONFIG_KEY = "DoubleClickInterval";
 
     @Override
     public void init(boolean install) throws DesktopInitializationException {
@@ -53,8 +53,9 @@ abstract class KdeDesktopAdapter extends DefaultDesktopAdapter {
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS,  execCommand, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS,   execCommand, CommandType.SYSTEM_COMMAND, null, null));
             CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, execCommand, CommandType.SYSTEM_COMMAND, getFileManagerName(), null));
+        } catch(CommandException e) {
+            throw new DesktopInitializationException(e);
         }
-        catch(CommandException e) {throw new DesktopInitializationException(e);}
 
         // Multi-click interval retrieval
         try {

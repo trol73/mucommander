@@ -53,7 +53,7 @@ public class IntegerChooser extends JPanel implements ChangeListener {
     public IntegerChooser(int min, int max, int initialValue) {
         super();
 
-        // Initialises the listeners.
+        // Initializes the listeners.
         listeners = new WeakHashMap<>();
 
         // Creates the components.

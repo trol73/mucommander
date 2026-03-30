@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.mucommander.commons.file.impl.iso;
 
 import com.github.stephenc.javaisotools.eltorito.impl.ElToritoConfig;
@@ -30,42 +24,38 @@ import java.util.Random;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class MuCreateISOTest {
-	private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(MuCreateISOTest.class);
-    private static File tempFile1 = null;
-    private static File tempFile2 = null;
-    private static File tempFile3 = null;
-    private static File tempDir1;
-    private static HashMap<String, File> files = new HashMap();
-    private static File archiveFile = null;
-    private static MuCreateISO instance = null;
+	private final static Logger logger = LoggerFactory.getLogger(MuCreateISOTest.class);
+    private static final HashMap<String, File> files = new HashMap<>();
+    private static File archiveFile;
+    private static MuCreateISO instance;
     
-    public MuCreateISOTest(){
-        
-    }
-    
+
     @BeforeAll
     public static void setUpClass() throws Exception {
         //Setup testing files and dirs
         ISO9660RootDirectory root = new ISO9660RootDirectory();
-        tempFile1 = createTempFile("tempFile1",10000);
+        File tempFile1 = createTempFile("tempFile1", 10000);
         root.addFile(tempFile1);
         files.put(tempFile1.getName(), tempFile1);
         tempFile1.deleteOnExit();
-        
-        tempFile2 = createTempFile("tempFile2",20000);
+
+        File tempFile2 = createTempFile("tempFile2", 20000);
         root.addFile(tempFile2);
         files.put(tempFile2.getName(), tempFile2);
         tempFile2.deleteOnExit();
-        
-        tempDir1 = Files.createTempDir();
+
+        File tempDir1 = Files.createTempDir();
         ISO9660Directory dir = root.addDirectory(tempDir1);
         tempDir1.deleteOnExit();
-        
-        tempFile3 = createTempFile("tempFile3",40000);
+
+        File tempFile3 = createTempFile("tempFile3", 40000);
         dir.addFile(tempFile3);
         files.put(tempDir1.getName() + File.separator + tempFile3.getName(), tempFile3);
         tempFile3.deleteOnExit();
@@ -163,12 +153,10 @@ public class MuCreateISOTest {
      */
     @Test
     public void testProcess() throws Exception {
-        System.out.println("process");
         //complete check of file content
         IsoArchiveFile archive = new IsoArchiveFile(FileFactory.getFile(archiveFile.getPath()));
         
-        for(String fileName : files.keySet()){
-            System.out.println("Testing: "+fileName);
+        for (String fileName : files.keySet()){
             //File that should be saved in the archive
             AbstractFile archiveEntryFile = archive.getArchiveEntryFile(fileName);
             //See if file actually exists
@@ -190,8 +178,6 @@ public class MuCreateISOTest {
      */
     @Test
     public void testGetProcessingFile() {
-        System.out.println("getProcessingFile");
-        
         //Can't be sure which file is is
         boolean found = false;
         for(File file : files.values()){
@@ -207,8 +193,6 @@ public class MuCreateISOTest {
      */
     @Test
     public void testTotalWrittenBytes() {
-        System.out.println("totalWrittenBytes");
-        
         long totalSize = 0;
         for(File file : files.values()){
             totalSize += file.length();
@@ -218,15 +202,10 @@ public class MuCreateISOTest {
 
     @Test
     public void testWrittenBytesCurrentFile() {
-        System.out.println("writtenBytesCurrentFile");
-        
         //Can't be sure which file is is
         boolean found = false;
         for(File file : files.values()){
-            if(
-                    file.getName().equals(instance.getProcessingFile()) 
-                 && file.length() == instance.writtenBytesCurrentFile())
-            {
+            if (file.getName().equals(instance.getProcessingFile()) && file.length() == instance.writtenBytesCurrentFile()) {
                 found = true;
             }
         }
@@ -238,15 +217,10 @@ public class MuCreateISOTest {
      */
     @Test
     public void testCurrentFileLength() {
-        System.out.println("currentFileLength");
-        
         //Can't be sure which file is is
         boolean found = false;
         for(File file : files.values()){
-            if(
-                    file.getName().equals(instance.getProcessingFile()) 
-                 && file.length() == instance.currentFileLength())
-            {
+            if(file.getName().equals(instance.getProcessingFile()) && file.length() == instance.currentFileLength()) {
                 found = true;
             }
         }

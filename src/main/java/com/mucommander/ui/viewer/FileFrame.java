@@ -29,9 +29,6 @@ import com.mucommander.ui.main.MainFrame;
 public abstract class FileFrame extends JFrame implements QuickListContainer, IMacOsWindow {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileFrame.class);
 
-//	private final static Dimension WAIT_DIALOG_SIZE = new Dimension(400, 350);
-
-
     /**
      * The file presenter within this frame
      */
@@ -64,7 +61,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
         try {
             filePresenter = createFilePresenter(file);
         } catch (UserCancelledException e) {
-            e.printStackTrace();
+            LOGGER.error("Operation canceled by user", e);
 			// May get a UserCancelledException if the user canceled (refused to confirm the operation after a warning)
 			return;
 		}
@@ -126,7 +123,6 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
                 @Override
                 public JComponent getTargetComponent(Exception e) {
                     if (e != null) {
-                        e.printStackTrace();
                         LOGGER.debug("Exception caught", e);
                         showGenericErrorDialog();
                         dispose();

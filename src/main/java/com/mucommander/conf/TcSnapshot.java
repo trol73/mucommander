@@ -69,11 +69,11 @@ public class TcSnapshot {
  	private static final String  FILE_PRESENTER_SECTION            = "file_presenter";
  	/** Section describing information specific to text file presenter. */
  	private static final String TEXT_FILE_PRESENTER_SECTION        = FILE_PRESENTER_SECTION + "." + "text";
- 	/** Whether or not to wrap long lines. */
+ 	/** Whether to wrap long lines. */
  	public static final String  TEXT_FILE_PRESENTER_LINE_WRAP      = TEXT_FILE_PRESENTER_SECTION + "." + "line_wrap";
  	/** Default wrap value. */
  	public static final boolean DEFAULT_LINE_WRAP                  = false;
- 	/** Whether or not to show line numbers. */
+ 	/** Whether to show line numbers. */
  	public static final String  TEXT_FILE_PRESENTER_LINE_NUMBERS   = TEXT_FILE_PRESENTER_SECTION + "." + "line_numbers";
  	/** Default line numbers value. */
  	public static final boolean DEFAULT_LINE_NUMBERS               = true;

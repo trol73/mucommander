@@ -60,9 +60,6 @@ import org.apache.commons.imaging.formats.psd.PsdImageParser;
 import org.apache.commons.imaging.formats.tiff.TiffImageParser;
 import ru.trolsoft.ui.TMenuSeparator;
 
-//import org.apache.commons.imaging.Imaging;
-
-
 
 /**
  * A simple image viewer, capable of displaying <code>PNG</code>, <code>GIF</code> and <code>JPEG</code> images. 
@@ -70,7 +67,6 @@ import ru.trolsoft.ui.TMenuSeparator;
  * @author Maxence Bernard, Arik Hadas, Oleg Trifonov
  */
 class ImageViewer extends FileViewer implements ActionListener {
-
     private static final Cursor CURSOR_WAIT = new Cursor(Cursor.WAIT_CURSOR);
     private static final Cursor CURSOR_DEFAULT = Cursor.getDefaultCursor();
     private static final Cursor CURSOR_CROSS = new Cursor(Cursor.CROSSHAIR_CURSOR);
@@ -81,7 +77,6 @@ class ImageViewer extends FileViewer implements ActionListener {
     private boolean vectorImage;
 	
     /** Menu bar */
-    // Menus //
     private final JMenu controlsMenu;
     // Items //
     private final JMenuItem prevImageItem;
@@ -182,11 +177,11 @@ class ImageViewer extends FileViewer implements ActionListener {
         } else if ("tif".equals(ext) || "tiff".equals(ext)) {
             this.image = new TiffImageParser().getBufferedImage(loadFile(file), null);
         } else if ("ico".equals(ext)) {
-            this.image = ICODecoder.read(file.getInputStream()).get(0);
+            this.image = ICODecoder.read(file.getInputStream()).getFirst();
             //this.image = (BufferedImage) (new IcoImageParser().getAllBufferedImages(loadFile(file)).get(0));
         } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
             // TODO pBm raw format reading error
-            this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).get(0);
+            this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).getFirst();
         } else if ("svg".equals(ext)) {
             this.image = transcodeSVGDocument(file, 0, 0);
         } else {
@@ -314,7 +309,9 @@ class ImageViewer extends FileViewer implements ActionListener {
                 } catch (Exception ignore) {
                 }
         };
-        Executors.newSingleThreadScheduledExecutor().schedule(task, 1000, TimeUnit.MILLISECONDS);
+        try (var executor = Executors.newSingleThreadScheduledExecutor()) {
+            executor.schedule(task, 1000, TimeUnit.MILLISECONDS);
+        }
     }
 
     private void updateFrame() {

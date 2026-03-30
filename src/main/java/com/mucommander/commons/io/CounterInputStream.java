@@ -77,7 +77,7 @@ public class CounterInputStream extends InputStream {
 
 
     /**
-     * Specifies whether or not skipped bytes (using {@link #skip(long)} should be accounted for.
+     * Specifies whether skipped bytes (using {@link #skip(long)} should be accounted for.
      * This is by default enabled, bytes that are skipped are added to the ByteCounter.
      *
      * @param countSkippedBytes if true, skipped bytes will be accounted for, the ByteCounter will be increased
@@ -94,11 +94,6 @@ public class CounterInputStream extends InputStream {
     public boolean getCountSkippedBytes() {
         return countSkippedBytes;
     }
-
-
-    ////////////////////////////////
-    // InputStream implementation //
-    ////////////////////////////////
 
     @Override
     public int read() throws IOException {

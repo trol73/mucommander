@@ -103,7 +103,7 @@ public class ShellComboBox extends AutocompleteEditableCombobox<String> implemen
             insertItemAt((command = iterator.next()), 0);
         }
 
-        // If the list is not empty, initialises the input field on the last command.
+        // If the list is not empty, initializes the input field on the last command.
         if (command != null) {
             input.setText(command);
             input.setSelectionStart(0);

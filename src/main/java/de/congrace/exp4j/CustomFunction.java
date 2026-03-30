@@ -32,7 +32,7 @@ public abstract class CustomFunction {
 	CustomFunction(String name) throws InvalidCustomFunctionException {
 		this.argc = 1;
 		this.name = name;
-		int firstChar = (int) name.charAt(0);
+		int firstChar = name.charAt(0);
 		if ((firstChar < 65 || firstChar > 90) && (firstChar < 97 || firstChar > 122)) {
 			throw new InvalidCustomFunctionException("functions have to start with a lowercase or uppercase character");
 		}
@@ -41,8 +41,7 @@ public abstract class CustomFunction {
 	/**
 	 * create a new single value input CustomFunction with a set name
 	 * 
-	 * @param name
-	 *            the name of the function (e.g. foo)
+	 * @param name the name of the function (e.g. foo)
 	 */
 	protected CustomFunction(String name, int argumentCount) {
 		this.argc = argumentCount;

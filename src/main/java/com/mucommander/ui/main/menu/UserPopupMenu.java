@@ -44,11 +44,9 @@ import java.util.List;
 import java.util.Map;
 
 public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMenuListener {
-
-
     private final MainFrame mainFrame;
     private final AbstractFile menuFile;
-    private Map<JMenuItem, UserMenuItem> propertiesMap = new HashMap<>();
+    private final Map<JMenuItem, UserMenuItem> propertiesMap = new HashMap<>();
     private JMenuItem firstItem;
 
 
@@ -205,7 +203,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
 
     @Override
     public void processKeyEvent(KeyEvent e, MenuElement[] path, MenuSelectionManager manager) {
-        if (e.getKeyCode() == KeyEvent.VK_F4 && e.getModifiers() == 0 && e.getID() == KeyEvent.KEY_PRESSED) {
+        if (e.getKeyCode() == KeyEvent.VK_F4 && e.getModifiersEx() == 0 && e.getID() == KeyEvent.KEY_PRESSED) {
             openEditor();
             e.consume();
             return;

@@ -86,7 +86,7 @@ public abstract class FilePresenter extends JScrollPane {
     
     /**
      * Returns a description of the file currently being presented which will be used as a window title.
-     * This method returns the file's name but it can be overridden to provide more information.
+     * This method returns the file's name, but it can be overridden to provide more information.
      * @return this dialog's title.
      */
     protected String getTitle() {
@@ -118,7 +118,7 @@ public abstract class FilePresenter extends JScrollPane {
     }
 	
 	/**
-	 * Open a given AbstraceFile for display.
+	 * Open a given AbstractFile for display.
 	 * 
 	 * @param file the file to be presented
 	 * @throws IOException in case of an I/O problem
@@ -148,7 +148,6 @@ public abstract class FilePresenter extends JScrollPane {
 
     /**
      * Returns the status bar for presenter frame. Can return null if the viewer doesn't have status bar.
-     * @return
      */
     protected abstract StatusBar getStatusBar();
 

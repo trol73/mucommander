@@ -43,14 +43,6 @@ public class ByteBufferSearchUtils {
             return -1;
         }
         fromOffset = Math.min(fromOffset, fileSize - 1);
-//        if (fromOffset < 0) {
-//            fromOffset = 0;
-//        }
-//        long maxStartPos = fileSize - pattern.length;
-//        fromOffset = Math.min(fromOffset, maxStartPos);
-//        if (fromOffset < 0) {
-//            fromOffset = 0;
-//        }
 
         int[] failure = computeFailure(pattern);
         AbstractByteBuffer.CacheStrategy cacheStrategy = data.getCacheStrategy();
@@ -149,8 +141,6 @@ public class ByteBufferSearchUtils {
                     j++;
                 }
                 if (j == pattern.length) {
-//                    data.setCacheStrategy(cacheStrategy);
-//                    return i - pattern.length + 1;
                     return i;
                 }
             }

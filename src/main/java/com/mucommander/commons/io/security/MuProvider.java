@@ -22,7 +22,7 @@ import java.security.Provider;
 import java.security.Security;
 
 /**
- * This custom <code>java.security.Provider</code> exposes muCommander's own <code>MessageDigest</code> implementations,
+ * This custom <code>java.security.Provider</code> exposes trolCommander's own <code>MessageDigest</code> implementations,
  * and the ones used aggregated from third party libraries.
  *
  * <p>The {@link #registerProvider()} method should be called once to register this <code>Provider</code> with the
@@ -36,7 +36,7 @@ public class MuProvider extends Provider {
     private static boolean initialized;
 
     private MuProvider() {
-        super("muCommander", 1.0, "muCommander's additional MessageDigest implementations.");
+        super("trolCommander", 1.0, "trolCommander's additional MessageDigest implementations.");
     }
 
     /**

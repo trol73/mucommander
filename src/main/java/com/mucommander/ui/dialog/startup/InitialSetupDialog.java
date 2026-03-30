@@ -113,7 +113,7 @@ public class InitialSetupDialog extends FocusDialog implements ActionListener {
      * @return the dialog's look and feel panel.
      */
     private JPanel createLookAndFeelPanel() {
-		// Initialises the theme panel.
+		// Initializes the theme panel.
 		JPanel lfPanel = new YBoxPanel();
 		lfPanel.setAlignmentX(LEFT_ALIGNMENT);
         lfPanel.setBorder(BorderFactory.createTitledBorder(i18n("prefs_dialog.look_and_feel")));

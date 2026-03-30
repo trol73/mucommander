@@ -462,7 +462,7 @@ public class ThemeData implements ThemeId {
      * not. Freezing a value means that it will be considered to have been set to the default value,
      * and will not be updated when this default value changes.
      *
-     * @param  freezeDefaults whether or not to freeze the data's default values.
+     * @param  freezeDefaults whether to freeze the data's default values.
      * @return                a clone of the current theme data.
      * @see                   #cloneData()
      */
@@ -688,7 +688,7 @@ public class ThemeData implements ThemeId {
      * parameter.
      *
      * @param  data           data against which to compare.
-     * @param  ignoreDefaults whether or not to compare default values.
+     * @param  ignoreDefaults whether to compare default values.
      * @return                <code>true</code> if the specified data and the current one are identical, <code>false</code> otherwise.
      * @see                   #isFontDifferent(int,Font,boolean)
      * @see                   #isColorDifferent(int,Color,boolean)
@@ -742,7 +742,7 @@ public class ThemeData implements ThemeId {
      *
      * @param  id             identifier of the font to check.
      * @param  font           font to check.
-     * @param  ignoreDefaults whether or not to ignore defaults if the requested item doesn't have a value.
+     * @param  ignoreDefaults whether to ignore defaults if the requested item doesn't have a value.
      * @return                <code>true</code> if <code>font</code> is different from the one defined in the data.
      * @see                   #isFontDifferent(int,Font)
      * @see                   #isColorDifferent(int,Color)
@@ -789,7 +789,7 @@ public class ThemeData implements ThemeId {
      *
      * @param  id             identifier of the color to check.
      * @param  color           color to check.
-     * @param  ignoreDefaults whether or not to ignore defaults if the requested item doesn't have a value.
+     * @param  ignoreDefaults whether to ignore defaults if the requested item doesn't have a value.
      * @return                <code>true</code> if <code>color</code> is different from the one defined in the data.
      * @see                   #isColorDifferent(int,Color)
      * @see                   #isFontDifferent(int,Font)

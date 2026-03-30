@@ -146,7 +146,7 @@ public class ShutdownHook extends Thread {
             getLogger().warn("Failed to save command bar", e);
         }
         
-        // Saves the tool bar.
+        // Saves the toolbar.
         try {
             ToolBarIO.saveToolBar();
         } catch(Exception e) {

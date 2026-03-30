@@ -126,7 +126,7 @@ public class TextMenuHelper {
         miFindPrevious = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.find_previous"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F3, KeyEvent.SHIFT_DOWN_MASK), actionListener);
         if (editMode) {
             menuSearch.addSeparator();
-            miReplace = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.replace_menu"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()|KeyEvent.ALT_MASK), actionListener);
+            miReplace = MenuToolkit.addMenuItem(menuSearch, i18n("text_editor.replace_menu"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_F, getCtrlOrMetaMask()|KeyEvent.ALT_DOWN_MASK), actionListener);
         }
         menuSearch.addSeparator();
         miGotoLine = MenuToolkit.addMenuItem(menuSearch, i18n("text_viewer.goto_line"), menuItemMnemonicHelper, getKeyStroke(KeyEvent.VK_G, getCtrlOrMetaMask()), actionListener);
@@ -154,13 +154,13 @@ public class TextMenuHelper {
         MnemonicHelper mnemonicHelper = new MnemonicHelper();
         JMenuItem lastItem = fileMenu.getItemCount() > 0 ? fileMenu.getItem(fileMenu.getItemCount()-1) : null;
 
-        int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
+        int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
         miFiles = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.files"), mnemonicHelper, getKeyStroke(KeyEvent.VK_TAB, mask), actionListener);
-        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_MASK), actionListener);
+        miMainFrame = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.show_file_manager"), mnemonicHelper, getKeyStroke(KeyEvent.VK_1, KeyEvent.CTRL_DOWN_MASK), actionListener);
         miAddToBookmarks = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.add_to_bookmark"), mnemonicHelper, null, actionListener);
         miRemoveFromBookmarks = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.remove_from_bookmark"), mnemonicHelper, null, actionListener);
 
-        mask = getCtrlOrMetaMask() | KeyEvent.SHIFT_MASK;
+        mask = getCtrlOrMetaMask() | KeyEvent.SHIFT_DOWN_MASK;
         miGotoHeaderSource = MenuToolkit.addMenuItem(fileMenu, i18n("file_editor.goto_header_source"), mnemonicHelper, getKeyStroke(KeyEvent.VK_A, mask), actionListener);
         fileMenu.add(new TMenuSeparator());
         if (lastItem != null) {
@@ -198,9 +198,9 @@ public class TextMenuHelper {
         }
     }
 
-    @MagicConstant(flags = {KeyEvent.META_MASK, KeyEvent.CTRL_MASK})
+    @MagicConstant(flags = {KeyEvent.META_DOWN_MASK, KeyEvent.CTRL_DOWN_MASK})
     private int getCtrlOrMetaMask() {
-        return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
+        return OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
     }
 
 
@@ -284,7 +284,9 @@ public class TextMenuHelper {
             textEditorImpl.build();
         } else if (source == miUserMenu) {
             UserPopupMenu menu = UserMenuAction.createMenu(getMainFrame());
-            menu.show(textEditorImpl.frame);
+            if (menu != null) {
+                menu.show(textEditorImpl.frame);
+            }
         } else {
             return false;
         }

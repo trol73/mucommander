@@ -371,7 +371,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
     private void updateButtons() {
         btnNewSearch.setEnabled(job == null);
         btnStop.setEnabled(!btnNewSearch.isEnabled());
-        btnClean.setEnabled(!listModel.isEmpty());
+        btnClean.setEnabled(!(listModel == null || listModel.isEmpty()));
     }
 
     private void start() {

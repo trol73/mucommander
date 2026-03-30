@@ -163,7 +163,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             try {
                 getCurrentFile().closePushbackInputStream();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IO Exception on save state", e);
             }
         }
     }
@@ -188,7 +188,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             write(out);
         } catch (Throwable e) {
             getStatusBar().setStatusMessage(Translator.get("text_editor.cant_save_file"));
-            e.printStackTrace();
+            LOGGER.error("Exception on save", e);
             return;
         }
         // We get here only if the destination file was updated successfully
@@ -398,9 +398,9 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
 
 
     /**
-     * Toggles whether or not line numbers are visible.
+     * Toggles whether line numbers are visible.
      *
-     * @param enabled Whether or not line numbers should be visible.
+     * @param enabled Whether line numbers should be visible.
      * @see #getLineNumbersEnabled()
      */
     public void setLineNumbersEnabled(boolean enabled) {

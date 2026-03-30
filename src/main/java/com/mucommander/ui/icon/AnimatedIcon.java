@@ -91,11 +91,10 @@ public abstract class AnimatedIcon implements Icon, AutoCloseable {
         timer = new Timer(repaintDelay, new AnimationUpdater(this));
         timer.setRepeats(true);
 
-        // Initialises frame control.
+        // Initializes frame control.
         setFrameCount(frameCount);
         setFrameDelay(repaintDelay);
     }
-
 
 
     /**

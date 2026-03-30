@@ -31,9 +31,9 @@ import java.io.PrintStream;
 
 public class ExecPanel extends JPanel implements ProcessListener {
 
-    private ExecOutputTextPane outputPane;
-    private SpinningDial dial;
-    private JLabel lblDial;
+    private final ExecOutputTextPane outputPane;
+    private final SpinningDial dial;
+    private final JLabel lblDial;
     private final StringStream stringStream = new StringStream();
 
     /** Stream used to send characters to the process' stdin process. */

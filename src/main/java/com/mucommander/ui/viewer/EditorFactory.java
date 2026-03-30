@@ -49,7 +49,6 @@ public interface EditorFactory {
     /**
      * Returns a name for EditAs list
      *
-     * @return
      */
     String getName();
 }

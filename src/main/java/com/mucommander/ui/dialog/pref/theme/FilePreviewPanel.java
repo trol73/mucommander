@@ -86,7 +86,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
     }
 
     /**
-     * Initialises the previwer's UI.
+     * Initializes the previwer's UI.
      */
     private void initUI() {
         table = new PreviewTable();
@@ -163,19 +163,19 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
                     },
                 new String[] {"", Translator.get("preview")});
 
-            // Initialises table painting.
+            // Initializes table painting.
             cellRenderer = new PreviewCellRenderer();
             setShowGrid(false);
 
-            // Initialises the table selection.
+            // Initializes the table selection.
             getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             changeSelection(0, 0, false, false);
 
-            // Initialises row dimensions.
+            // Initializes row dimensions.
             setRowHeight(data.getFont(FILE_TABLE_FONT));
             setIntercellSpacing(new Dimension(0,0));
 
-            // Initialises the table header.
+            // Initializes the table header.
             getTableHeader().setResizingAllowed(false);
             getTableHeader().setReorderingAllowed(false);
             ((DefaultTableCellRenderer)getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
@@ -227,7 +227,7 @@ class FilePreviewPanel extends JScrollPane implements PropertyChangeListener, Th
         }
 
         /**
-         * Initialises the row height depending on the font.
+         * Initializes the row height depending on the font.
          */
         private void setRowHeight(Font font) {
             setRowHeight(2 * CellLabel.CELL_BORDER_HEIGHT + Math.max(getFontMetrics(font).getHeight(),

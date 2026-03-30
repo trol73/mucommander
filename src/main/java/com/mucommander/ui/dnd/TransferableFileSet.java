@@ -114,7 +114,7 @@ public class TransferableFileSet implements Transferable {
 
 
     /**
-     * Sets whether or not the FileSet <code>DataFlavor</code> (as returned by {@link #getFileSetDataFlavor()}
+     * Sets whether the FileSet <code>DataFlavor</code> (as returned by {@link #getFileSetDataFlavor()}
      * should be supported by this Transferable (supported by default).
      *
      * @param supported <code>true</code> to support the flavor
@@ -124,7 +124,7 @@ public class TransferableFileSet implements Transferable {
     }
 
     /**
-     * Sets whether or not the <code>DataFlavor.javaFileListFlavor</code> should be supported by this Transferable
+     * Sets whether the <code>DataFlavor.javaFileListFlavor</code> should be supported by this Transferable
      * (supported by default).
      *
      * @param supported <code>true</code> to support the flavor
@@ -134,7 +134,7 @@ public class TransferableFileSet implements Transferable {
     }
 
     /**
-     * Sets whether or not the <code>DataFlavor.stringFlavor</code> should be supported by this Transferable
+     * Sets whether the <code>DataFlavor.stringFlavor</code> should be supported by this Transferable
      * (supported by default).
      *
      * @param supported <code>true</code> to support the flavor
@@ -144,7 +144,7 @@ public class TransferableFileSet implements Transferable {
     }
 
     /**
-     * Sets whether or not the <code>text/uri-list</code> (RFC 2483) should be supported by this Transferable
+     * Sets whether the <code>text/uri-list</code> (RFC 2483) should be supported by this Transferable
      * (supported by default).
      *
      * @param supported <code>true</code> to support the flavor

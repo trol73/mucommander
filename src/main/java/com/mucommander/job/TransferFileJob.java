@@ -150,7 +150,7 @@ public abstract class TransferFileJob extends FileJob {
             throw new FileTransferException(FileTransferException.SOURCE_AND_DESTINATION_IDENTICAL);
         }
 
-        // Determine whether or not AbstractFile.copyRemotelyTo() should be used to copy the file.
+        // Determine whether AbstractFile.copyRemotelyTo() should be used to copy the file.
         // Some file protocols do not provide a getOutputStream() method and require the use of copyRemotelyTo(). Some other
         // may also offer server to server copy which is more efficient than stream copy.
 

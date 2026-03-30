@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2017 Oleg Trifonov
+ * Copyright (C) 2013-2026 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,9 +42,25 @@ public class JavaClassVersionDetector {
         VER_1_6(50, 0, "1.6"),
         VER_1_7(51, 0, "1.7"),
         VER_1_8(52, 0, "1.8"),
-        VER_1_9(53, 0, "1.9"),
-        VER_1_10(54, 0, "1.10"),
-        VER_1_11(55, 0, "1.11"),
+        VER_9(53, 0, "9"),
+        VER_10(54, 0, "10"),
+        VER_11(55, 0, "11 (LTS)"),
+        VER_12(56, 0, "12"),
+        VER_13(57, 0, "13"),
+        VER_14(58, 0, "14"),
+        VER_15(59, 0, "15"),
+        VER_16(60, 0, "16"),
+        VER_17(61, 0, "17 (LTS)"),
+        VER_18(62, 0, "18"),
+        VER_19(63, 0, "19"),
+        VER_20(64, 0, "20"),
+        VER_21(65, 0, "21 (LTS)"),
+        VER_22(66, 0, "22"),
+        VER_23(67, 0, "23"),
+        VER_24(68, 0, "24"),
+        VER_25(69, 0, "25 (LTS)"),
+        VER_26(70, 0, "26"),
+
         UNKNOWN(-1, -1, "unknown");
 
         private final int major;

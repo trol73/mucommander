@@ -105,7 +105,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * @return a scroll pane containing the dialog's shell output area.
      */
     private JScrollPane createOutputArea() {
-        // Creates and initialises the output area.
+        // Creates and initializes the output area.
         outputTextArea = new JTextArea();
         outputTextArea.setLineWrap(true);
         outputTextArea.setCaretPosition(0);

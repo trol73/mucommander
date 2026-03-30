@@ -86,7 +86,7 @@ public class ThemeNameDialog extends FocusDialog implements ActionListener {
     }
 
     /**
-     * Initialises the dialog's UI.
+     * Initializes the dialog's UI.
      */
     private void init(String name) {
         setMaximumSize(MAXIMUM_DIALOG_DIMENSION);

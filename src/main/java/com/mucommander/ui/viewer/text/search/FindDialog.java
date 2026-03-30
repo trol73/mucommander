@@ -109,9 +109,9 @@ public class FindDialog extends AbstractSearchDialog {
 
     /**
      * Overrides <code>JDialog</code>'s <code>setVisible</code> method; decides
-     * whether or not buttons are enabled.
+     * whether buttons are enabled.
      *
-     * @param visible Whether or not the dialog should be visible.
+     * @param visible Whether the dialog should be visible.
      */
     @Override
     public void setVisible(boolean visible) {

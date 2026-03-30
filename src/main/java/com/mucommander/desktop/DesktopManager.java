@@ -177,7 +177,7 @@ public class DesktopManager {
     }
 
     /**
-     * Initialises desktop management.
+     * Initializes desktop management.
      * <p>
      * If <code>install</code> is set to <code>true</code>, this method
      * might result in installing desktop specific data such as bookmarks, keyboard

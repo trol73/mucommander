@@ -49,13 +49,13 @@ public class CommandTest {
     /**
      * Used while testing keyword substitution.
      */
-    private static final AbstractFile[] FILES =  new AbstractFile[]{
+    private static final AbstractFile[] FILES =  new AbstractFile[] {
         FileFactory.getFile(System.getProperty("user.dir")),
-        FileFactory.getFile(System.getProperty("user.dir") + FileSystems.getDefault().getSeparator() + "test.txt"),
+        FileFactory.getFile(System.getProperty("user.dir") + FileSystems.getDefault().getSeparator() + "test-cmd.txt"),
         FileFactory.getFile(System.getProperty("user.home")),
-        FileFactory.getFile(System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "test.txt"),
+        FileFactory.getFile(System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "test-cmd.txt"),
         FileFactory.getFile(System.getProperty("java.home")),
-        FileFactory.getFile(System.getProperty("java.home") + FileSystems.getDefault().getSeparator() + "test.txt")
+        FileFactory.getFile(System.getProperty("java.home") + FileSystems.getDefault().getSeparator() + "test-cmd.txt")
     };
 
 
@@ -118,11 +118,8 @@ public class CommandTest {
      * @return the specified file's extension.
      */
     private String getExtension(AbstractFile file) {
-        String ext;
-
-        if ((ext = file.getExtension()) == null)
-            return "";
-        return ext;
+        String ext = file.getExtension();
+        return ext == null ? "" : ext;
     }
 
     /**
@@ -246,10 +243,10 @@ public class CommandTest {
 
         // Makes sure keywords are tokenized when not escaped.
         tokens = Command.getTokens("ls $f", FILES);
-        assert 1 + FILES.length == tokens.length;
-        assert "ls".equals(tokens[0]);
+        assertEquals(1 + FILES.length, tokens.length);
+        assertEquals("ls", tokens[0]);
         for (int i = 0; i < FILES.length; i++)
-            assert tokens[i + 1].equals(FILES[i].getAbsolutePath());
+            assertEquals(FILES[i].getAbsolutePath(), tokens[i + 1]);
 
         // Makes sure keywords are not tokenized when escaped.
         tokens = Command.getTokens("ls \"$f\"", FILES);
@@ -260,21 +257,22 @@ public class CommandTest {
             buffer.append(FILES[i].getAbsolutePath());
         }
         buffer.append("\"");
-        assert 2 == tokens.length;
-        assert "ls".equals(tokens[0]);
+        assertEquals(2, tokens.length);
+        assertEquals("ls", tokens[0]);
         assertEquals(buffer.toString(), tokens[1]);
 
         // Makes sure that keyword substitution happens even if the keyword is not a single token.
         tokens = Command.getTokens("ls$fla", FILES[0]);
-        assert 1 == tokens.length;
-        assert ("ls" + FILES[0].getAbsolutePath() + "la").equals(tokens[0]);
+        assertEquals(1, tokens.length);
+        assertEquals("ls" + FILES[0].getAbsolutePath() + "la", tokens[0]);
 
         tokens = Command.getTokens("ls$fla", FILES);
         assert FILES.length == tokens.length;
         assert ("ls" + FILES[0].getAbsolutePath()).equals(tokens[0]);
-        for (int i = 1; i < FILES.length - 1; i++)
-            assert FILES[i].getAbsolutePath().equals(tokens[i]);
-        assert (FILES[FILES.length - 1].getAbsolutePath() + "la").equals(tokens[tokens.length - 1]);
+        for (int i = 1; i < FILES.length - 1; i++) {
+            assertEquals(FILES[i].getAbsolutePath(), tokens[i]);
+        }
+        assertEquals(FILES[FILES.length - 1].getAbsolutePath() + "la", tokens[tokens.length - 1]);
     }
 
     /**
@@ -322,7 +320,7 @@ public class CommandTest {
 
         // Makes sure \s:
         // - escape spaces.
-        // - are remoed from the command.
+        // - are removed from the command.
         tokens = Command.getTokens("ls My\\ Documents");
         assert 2 == tokens.length;
         assert "ls".equals(tokens[0]);
@@ -357,16 +355,16 @@ public class CommandTest {
 
         // Tests context dependant values.
         if (isDisplayNameSet) {
-            assert command.isDisplayNameSet();
-            assert DISPLAY_NAME.equals(command.getDisplayName());
+            assertTrue(command.isDisplayNameSet());
+            assertEquals(DISPLAY_NAME, command.getDisplayName());
         } else {
-            assert !command.isDisplayNameSet();
-            assert ALIAS.equals(command.getDisplayName());
+            assertFalse(command.isDisplayNameSet());
+            assertEquals(ALIAS, command.getDisplayName());
         }
     }
 
     /**
-     * Makes sure all constructors initialise a command to the right values.
+     * Makes sure all constructors initialize a command to the right values.
      */
     @Test
     public void testConstructors() {

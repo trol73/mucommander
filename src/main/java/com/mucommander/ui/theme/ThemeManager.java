@@ -68,7 +68,7 @@ public class ThemeManager {
 
     // - Instance variables --------------------------------------------------------------
     // -----------------------------------------------------------------------------------
-    /** Whether or not the user theme was modified. */
+    /** Whether the user theme was modified. */
     private static boolean       wasUserThemeModified;
     /** Theme that is currently applied to muCommander. */
     private static Theme         currentTheme;
@@ -879,7 +879,7 @@ public class ThemeManager {
      */
     private static void saveCurrentTheme() throws IOException {
         // Makes sure no NullPointerException is raised if this method is called
-        // before themes have been initialised.
+        // before themes have been initialized.
         if (currentTheme == null) {
             return;
         }

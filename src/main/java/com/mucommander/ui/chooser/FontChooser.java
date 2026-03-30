@@ -64,7 +64,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
     }
 
     /**
-     * Initialises the font chooser's UI.
+     * Initializes the font chooser's UI.
      * @param selection default font selection (ignored if <code>null</code>).
      */
     private void initUI(Font selection) {
@@ -113,7 +113,7 @@ public class FontChooser extends YBoxPanel implements ActionListener {
         panel.add(italic);
         add(panel);
 
-        // Initialises the current font.
+        // Initializes the current font.
         font = selection;
 
         // Creates the preview panel.

@@ -86,7 +86,7 @@ public class OSXDesktopAdapter extends DefaultDesktopAdapter {
 
     @Override
     public void init(boolean install) throws DesktopInitializationException {
-        // Initialises trash management.
+        // Initializes trash management.
         DesktopManager.setTrashProvider(new OSXTrashProvider());
 
         // Registers OS X specific commands.

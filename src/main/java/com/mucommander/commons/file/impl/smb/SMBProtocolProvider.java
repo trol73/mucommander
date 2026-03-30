@@ -64,7 +64,7 @@ public class SMBProtocolProvider implements ProtocolProvider {
     }
 
     /**
-     * Sets whether or not 'extended security' should be used when connecting to SMB servers. This configuration method
+     * Sets whether 'extended security' should be used when connecting to SMB servers. This configuration method
      * must be called before {@link SMBFile} is first instantiated ; calling it after that will have no effect.
      * <p>
      * This configuration option is mapped onto jCIFS's <code>jcifs.smb.client.useExtendedSecurity</code> client
@@ -81,10 +81,7 @@ public class SMBProtocolProvider implements ProtocolProvider {
     }
 
 
-    /////////////////////////////////////
-    // ProtocolProvider implementation //
-    /////////////////////////////////////
-
+    @Override
     public AbstractFile getFile(FileURL url, Object... instantiationParams) throws IOException {
         return instantiationParams.length == 0
             ? new SMBFile(url)

@@ -112,7 +112,7 @@ class ShellPanel extends ThemeEditorPanel implements PropertyChangeListener {
 
 
     /**
-     * Initialises the panel's UI.
+     * Initializes the panel's UI.
      */
     private void initUI() {
         setLayout(new BorderLayout());

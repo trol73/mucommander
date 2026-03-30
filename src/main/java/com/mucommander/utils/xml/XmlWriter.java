@@ -251,7 +251,7 @@ public class XmlWriter {
     /**
      * Writes an element opening sequence.
      * @param name         name of the element to open.
-     * @param  isStandAlone whether or not this element should be closed immediately.
+     * @param  isStandAlone whether this element should be closed immediately.
      * @param  attributes   XML attributes for this element.
      * @throws IOException  if an I/O error occurs.
      */

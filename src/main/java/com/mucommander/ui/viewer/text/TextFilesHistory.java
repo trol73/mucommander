@@ -240,9 +240,9 @@ public class TextFilesHistory {
         if (index >= 0) {
             records.remove(index);
         }
-        records.add(0, record);
+        records.addFirst(record);
         while (records.size() > MAX_NUMBER_OF_RECORDS) {
-            records.remove(records.size()-1);
+            records.removeLast();
         }
         return this;
     }

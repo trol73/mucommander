@@ -153,7 +153,7 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
     }
 
     /**
-     * Initialises the panel's UI.
+     * Initializes the panel's UI.
      */
     private void initUI() {
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -207,7 +207,7 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
      * @return the file editor textPreview panel.
      */
     private JPanel createTextPreviewPanel() {
-        // Initialises the textPreview text area.
+        // Initializes the textPreview text area.
         textPreview = new RSyntaxTextArea(15, 15);
 
         // Initialises colors.

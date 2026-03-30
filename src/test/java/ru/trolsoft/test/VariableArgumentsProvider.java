@@ -1,9 +1,11 @@
 package ru.trolsoft.test;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 import java.lang.reflect.Field;
 import java.util.stream.Stream;
@@ -13,7 +15,8 @@ public class VariableArgumentsProvider implements ArgumentsProvider, AnnotationC
     private String variableName;
 
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+    @NullMarked
+    public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
         return context.getTestClass()
                 .map(this::getField)
                 .map(this::getValue)

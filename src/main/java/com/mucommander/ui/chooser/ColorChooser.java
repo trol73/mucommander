@@ -275,12 +275,12 @@ public class ColorChooser extends YBoxPanel implements ChangeListener {
         }
 
         /**
-         * Initialises the dialog's UI.
+         * Initializes the dialog's UI.
          */
         private void initUI(ColorChooser chooser) {
             this.chooser = chooser;
 
-            // Initialises the dialog and its content pane.
+            // Initializes the dialog and its content pane.
             Container contentPane = getContentPane();
             contentPane.setLayout(new BorderLayout());
 

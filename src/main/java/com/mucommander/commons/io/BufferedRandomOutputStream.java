@@ -79,10 +79,6 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
     }
 
 
-    /////////////////////////////////////////////
-    // RandomAccessOutputStream implementation //
-    /////////////////////////////////////////////
-
     /**
      * Writes the specified byte to this buffered output stream.
      *
@@ -205,11 +201,10 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      * memory leak.
      */
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         // If this stream hasn't been closed, release the buffer before finalizing the object
         if (buffer != null) {
             BufferPool.releaseByteArray(buffer);
         }
-        super.finalize();
     }
 }

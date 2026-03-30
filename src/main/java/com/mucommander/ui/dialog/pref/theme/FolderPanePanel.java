@@ -47,7 +47,7 @@ class FolderPanePanel extends ThemeEditorPanel {
 
 
     /**
-     * Initialises the panel's UI.
+     * Initializes the panel's UI.
      */
     private void initUI() {
         FontChooser fontChooser = createFontChooser(ThemeData.FILE_TABLE_FONT);
@@ -84,7 +84,7 @@ class FolderPanePanel extends ThemeEditorPanel {
     private JPanel createGeneralPanel(FontChooser chooser) {
         ProportionalGridPanel panel = new ProportionalGridPanel(4);
 
-        // Initialises the quicksearch panel.
+        // Initializes the quicksearch panel.
         addLabelRow(panel);
         panel.add(addColorButtons(panel, chooser, "theme_editor.quick_search.unmatched_file", ThemeData.FILE_TABLE_UNMATCHED_FOREGROUND_COLOR,
                                   ThemeData.FILE_TABLE_UNMATCHED_BACKGROUND_COLOR));
@@ -92,7 +92,7 @@ class FolderPanePanel extends ThemeEditorPanel {
         quickSearchPanel.add(panel);
         quickSearchPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("theme_editor.quick_search")));
 
-        // Initialises the panel.
+        // Initializes the panel.
         YBoxPanel mainPanel = new YBoxPanel();
         mainPanel.add(chooser);
         mainPanel.addSpace(10);

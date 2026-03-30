@@ -27,6 +27,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * @author Oleg Trifonov
@@ -62,7 +63,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         try {
             int pos = getLineStartOffset(line - 1) + column - 1;
             setCaretPosition(pos);
-            Rectangle temp = modelToView(pos);
+            Rectangle2D temp = modelToView2D(pos);
             if (temp == null) {
                 postponedCaretPosition = pos;
             } else {
@@ -169,7 +170,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      * <code>load()</code>, <code>reload()</code>, <code>save()</code>, or
      * <code>saveAs()</code> are called.
      *
-     * @param dirty Whether or not the text has been modified.
+     * @param dirty Whether the text has been modified.
      * @see #isDirty()
      */
     public void setDirty(boolean dirty) {
@@ -265,8 +266,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      * dirty flag when the line separator is changed.
      *
      * @param separator The new line separator.
-     * @throws NullPointerException If <code>separator</code> is
-     *         <code>null</code>.
+     * @throws NullPointerException If <code>separator</code> is <code>null</code>.
      * @throws IllegalArgumentException If <code>separator</code> is not one
      *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
      * @see #getLineSeparator()

@@ -63,7 +63,7 @@ public class WindowsTest {
         try {
             Process theProcess = Runtime.getRuntime().exec("cmd /c wmic logicaldisk get caption");
             BufferedReader inStream = new BufferedReader(new InputStreamReader(theProcess.getInputStream()));
-            String line = null;
+            String line;
             while ((line = inStream.readLine()) != null) {
                 LOGGER.info(line);
             }

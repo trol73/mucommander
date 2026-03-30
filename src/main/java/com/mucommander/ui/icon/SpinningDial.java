@@ -71,7 +71,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
@@ -87,7 +87,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
@@ -101,7 +101,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial with the specified color.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
@@ -118,7 +118,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial with the specified color.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_SIZE} for its width and height.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
@@ -132,7 +132,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial with the specified dimensions.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
@@ -150,7 +150,7 @@ public class SpinningDial extends AnimatedIcon {
     /**
      * Creates a new spinning dial with the specified dimensions.
      * <p>
-     * The new instance will be initialised using default values:
+     * The new instance will be initialized using default values:
      * <ul>
      *   <li>{@link #DEFAULT_COLOR} for its color.</li>
      *   <li>{@link #DEFAULT_SPOKES} for its number of spokes.</li>
@@ -240,7 +240,7 @@ public class SpinningDial extends AnimatedIcon {
     public SpinningDial(int w, int h, int spokes, Color c, boolean animate) {
         super(spokes, 1000 / spokes);
 
-        // Initialises the icon.
+        // Initializes the icon.
         width       = w;
         height      = h;
         color       = c;
@@ -319,10 +319,10 @@ public class SpinningDial extends AnimatedIcon {
     // - Rendering methods ---------------------------------------------------------------
     // -----------------------------------------------------------------------------------
     /**
-     * Initialises graphics for painting one of the dial's frames.
-     * @param graphics graphics instance to initialise.
+     * Initializes graphics for painting one of the dial's frames.
+     * @param graphics graphics instance to initialize.
      */
-    private void initialiseGraphics(Graphics2D graphics) {
+    private void initializeGraphics(Graphics2D graphics) {
         float scale;
 
         scale = (float)Math.min(width, height) / FULL_SIZE;
@@ -352,7 +352,7 @@ public class SpinningDial extends AnimatedIcon {
             // Checks whether the current frame has already been generated or not, generates
             // it if not.
             if((frames[currentFrame = getFrame()]) == null) {
-                // Initialises the frame.
+                // Initializes the frame.
                 // Note: getGraphicsConfiguration() returns null if the component has not yet been added to a container
                 GraphicsConfiguration gc = c != null ? c.getGraphicsConfiguration() : null;
                 Image frame;
@@ -361,9 +361,9 @@ public class SpinningDial extends AnimatedIcon {
                 else
                     frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-                // Initialises the frame's g.
+                // Initializes the frame's g.
                 Graphics2D g = (Graphics2D)frame.getGraphics();
-                initialiseGraphics(g);
+                initializeGraphics(g);
 
                 // Draws each spoke in the dial.
                 int alpha  = 255;

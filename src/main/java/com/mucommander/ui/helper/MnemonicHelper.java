@@ -97,7 +97,7 @@ public class MnemonicHelper {
      * used as a mnemonic, returned by {@link #getMnemonic(String)}.
      *
      * @param ch the character which will be tested for an existing mnemonic.
-     * @return whether or not the character is already used in the mnemonics array.
+     * @return whether the character is already used in the mnemonics array.
      */
     private boolean isMnemonicUsed(char ch) {
         return takenMnemonics.contains(ch);

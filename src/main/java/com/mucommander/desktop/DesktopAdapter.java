@@ -61,13 +61,13 @@ import java.util.function.Consumer;
 public interface DesktopAdapter {
 
     /**
-     * Checks whether or not the desktop is available on the current platform.
+     * Checks whether the desktop is available on the current platform.
      * @return <code>true</code> if the desktop is available on the current platform, <code>false</code> otherwise.
      */
     boolean isAvailable();
 
     /**
-     * Initialises this desktop.
+     * Initializes this desktop.
      * <p>
      * This method is called when an instance of <code>DesktopAdapter</code> has been chosen as the
      * best fit for the current system.<br>

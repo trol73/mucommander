@@ -1780,7 +1780,7 @@ public abstract class AbstractFileTest {
             return;
 
         // Assert that a directory can be created when the file doesn't already exist (without throwing an IOException)
-        AbstractFile dir1 = tempFile.getDirectChild("dir1");
+        AbstractFile dir1 = tempFile.getDirectChild("dir1-" + getTestFileClass().getName());
         AbstractFile dir2 = dir1.getDirectChild("dir2");
         AbstractFile dir2b = dir1.getChild("dir2" + dir1.getSeparator());     // Same file with a trailing separator
         dir2.mkdirs();
@@ -1906,7 +1906,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#changePermissions(int)}, calling {@link #testChangePermissionsSupported()} or
-     * {@link #testChangePermissionsUnsupported()} depending on whether or not the {@link FileOperation#CHANGE_PERMISSION}
+     * {@link #testChangePermissionsUnsupported()} depending on whether the {@link FileOperation#CHANGE_PERMISSION}
      * operation is supported.
      *
      * @throws IOException              should not happen
@@ -1960,7 +1960,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#setLastModifiedDate(long)}, calling {@link #testChangeDateSupported()} or
-     * {@link #testChangeDateUnsupported()} depending on whether or not the {@link FileOperation#CHANGE_DATE}
+     * {@link #testChangeDateUnsupported()} depending on whether the {@link FileOperation#CHANGE_DATE}
      * operation is supported.
      *
      * @throws IOException              should not happen
@@ -1994,7 +1994,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#getInputStream()}, calling {@link #testGetInputStreamSupported()} or
-     * {@link #testGetInputStreamUnsupported()} depending on whether or not the {@link FileOperation#READ_FILE}
+     * {@link #testGetInputStreamUnsupported()} depending on whether the {@link FileOperation#READ_FILE}
      * operation is supported.
      *
      * @throws IOException              should not happen
@@ -2010,7 +2010,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#getRandomAccessInputStream()}, calling {@link #testGetRandomAccessInputStreamSupported()}
-     * or {@link #testGetRandomAccessInputStreamUnsupported()} depending on whether or not the
+     * or {@link #testGetRandomAccessInputStreamUnsupported()} depending on whether the
      * {@link FileOperation#RANDOM_READ_FILE} operation is supported.
      *
      * @throws IOException              should not happen
@@ -2026,7 +2026,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#getOutputStream()}, calling {@link #testGetOutputStreamSupported()}
-     * or {@link #testGetOutputStreamUnsupported()} depending on whether or not the
+     * or {@link #testGetOutputStreamUnsupported()} depending on whether the
      * {@link FileOperation#WRITE_FILE} operation is supported.
      *
      * @throws IOException              should not happen
@@ -2042,7 +2042,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#getAppendOutputStream()}, calling {@link #testGetAppendOutputStreamSupported()}
-     * or {@link #testGetAppendOutputStreamUnsupported()} depending on whether or not the
+     * or {@link #testGetAppendOutputStreamUnsupported()} depending on whether the
      * {@link FileOperation#APPEND_FILE} operation is supported.
      *
      * @throws IOException              should not happen
@@ -2058,7 +2058,7 @@ public abstract class AbstractFileTest {
 
     /**
      * Tests {@link AbstractFile#getRandomAccessOutputStream()}, calling {@link #testGetRandomAccessOutputStreamSupported()}
-     * or {@link #testGetRandomAccessOutputStreamUnsupported()} depending on whether or not the
+     * or {@link #testGetRandomAccessOutputStreamUnsupported()} depending on whether the
      * {@link FileOperation#RANDOM_WRITE_FILE} operation is supported.
      *
      * @throws IOException              should not happen

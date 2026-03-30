@@ -99,15 +99,15 @@ class TextEditorImpl implements ThemeListener, ThemeId {
     private final KeyListener textAreaKeyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiers() == KeyEvent.ALT_MASK) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getModifiersEx() == KeyEvent.ALT_DOWN_MASK) {
                 if (selectedIncludeFile != null) {
                     openOtherFile(selectedIncludeFile);
                 }
                 return;
             }
 
-            int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_MASK : KeyEvent.CTRL_MASK;
-            if (textArea.isEditable() && e.getKeyChar() == KeyEvent.VK_TAB && e.getModifiers() == mask) {
+            int mask = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.ALT_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+            if (textArea.isEditable() && e.getKeyChar() == KeyEvent.VK_TAB && e.getModifiersEx() == mask) {
                 ViewedAndEditedFilesQL viewedAndEditedFilesQL = new ViewedAndEditedFilesQL(frame, frame.getFilePresenter().getCurrentFile());
                 viewedAndEditedFilesQL.show();
                 e.consume();
@@ -163,7 +163,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 		textArea.setWrapStyleWord(true);
 
 		textArea.addMouseWheelListener(e -> {
-            boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+            boolean isCtrlPressed = (e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0;
             if (isCtrlPressed) {
                 Font currentFont = textArea.getFont();
                 int currentFontSize = currentFont.getSize();
@@ -181,9 +181,6 @@ class TextEditorImpl implements ThemeListener, ThemeId {
         return textArea;
 	}
 
-	/////////////////
-	// Search code //
-	/////////////////
 
     void find() {
         SearchListener searchListener = new SearchListener() {

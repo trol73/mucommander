@@ -128,7 +128,7 @@ class LocationBarPanel extends ThemeEditorPanel implements PropertyChangeListene
     }
 
     /**
-     * Initialises the panel's UI.
+     * Initializes the panel's UI.
      */
     private void initUI() {
         JPanel panel;

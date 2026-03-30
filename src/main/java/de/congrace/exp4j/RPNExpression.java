@@ -28,13 +28,13 @@ class RPNExpression implements Calculable {
 	 *             if the variables are invalid
 	 */
 	public double calculate(double... values) throws IllegalArgumentException {
-		if (variables.size() == 0 && values != null) {
+		if (variables.isEmpty() && values != null) {
 			throw new IllegalArgumentException("there are no variables to set values");
 		} else if (values != null && values.length != variables.size()) {
 			throw new IllegalArgumentException("The are an unequal number of variables and arguments");
 		}
 		int i = 0;
-		if (variables.size() > 0 && values != null) {
+		if (!variables.isEmpty() && values != null) {
 			for (Map.Entry<String, Double> entry : variables.entrySet()) {
 				entry.setValue(values[i++]);
 			}

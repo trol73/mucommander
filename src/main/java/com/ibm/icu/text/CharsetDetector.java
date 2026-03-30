@@ -299,7 +299,7 @@ public class CharsetDetector {
     }   
        
     /**
-     * Test whether or not input filtering is enabled.
+     * Test whether input filtering is enabled.
      * 
      * @return <code>true</code> if input text will be filtered.
      * 

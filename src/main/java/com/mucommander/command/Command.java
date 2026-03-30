@@ -61,51 +61,75 @@ import java.util.List;
  * {@link #getTokens(AbstractFile)} method. This will return a tokenized version of the command and replace any
  * keyword by the corresponding file value . It's also possible to skip keyword replacement through the {@link #getTokens()} method.
  * <p>
- * A command's executable tokens are typically meant to be used with {@link com.mucommander.process.ProcessRunner#execute(String[],AbstractFile)}
+ * A command's executable tokens are typically meant to be used with {@link com.mucommander.process.ProcessRunner#execute(String[], AbstractFile)}
  * in order to generate instances of {@link com.mucommander.process.AbstractProcess}.
  *
  * @author Nicolas Rinaudo
- * @see    CommandManager
- * @see    com.mucommander.process.ProcessRunner
- * @see    com.mucommander.process.AbstractProcess
+ * @see CommandManager
+ * @see com.mucommander.process.ProcessRunner
+ * @see com.mucommander.process.AbstractProcess
  */
 public class Command implements Comparable<Command> {
-    /** Header of replacement keywords. */
-    private static final char KEYWORD_HEADER                      = '$';
-    /** Instances of this keyword will be replaced by the file's full path. */
-    private static final char KEYWORD_PATH                        = 'f';
-    /** Instances of this keyword will be replaced by the file's name. */
-    private static final char KEYWORD_NAME                        = 'n';
-    /** Instances of this keyword will be replaced by the file's parent directory. */
-    private static final char KEYWORD_PARENT                      = 'p';
-    /** Instances of this keyword will be replaced by the JVM's current directory. */
-    private static final char KEYWORD_VM_PATH                     = 'j';
-    /** Instances of this keyword will be replaced by the file's extension. */
-    private static final char KEYWORD_EXTENSION                   = 'e';
-    /** Instances of this keyword will be replaced by the file's name without its extension. */
-    private static final char KEYWORD_NAME_WITHOUT_EXTENSION      = 'b';
+    /**
+     * Header of replacement keywords.
+     */
+    private static final char KEYWORD_HEADER = '$';
+    /**
+     * Instances of this keyword will be replaced by the file's full path.
+     */
+    private static final char KEYWORD_PATH = 'f';
+    /**
+     * Instances of this keyword will be replaced by the file's name.
+     */
+    private static final char KEYWORD_NAME = 'n';
+    /**
+     * Instances of this keyword will be replaced by the file's parent directory.
+     */
+    private static final char KEYWORD_PARENT = 'p';
+    /**
+     * Instances of this keyword will be replaced by the JVM's current directory.
+     */
+    private static final char KEYWORD_VM_PATH = 'j';
+    /**
+     * Instances of this keyword will be replaced by the file's extension.
+     */
+    private static final char KEYWORD_EXTENSION = 'e';
+    /**
+     * Instances of this keyword will be replaced by the file's name without its extension.
+     */
+    private static final char KEYWORD_NAME_WITHOUT_EXTENSION = 'b';
 
 
-    /** Command's alias. */
+    /**
+     * Command's alias.
+     */
     private final String alias;
-    /** Original command. */
+    /**
+     * Original command.
+     */
     private final String command;
-    /** Name used to display the command to users. */
+    /**
+     * Name used to display the command to users.
+     */
     private final String displayName;
-    /** Command type. */
+    /**
+     * Command type.
+     */
     private final CommandType type;
-    /** Filemask */
+    /**
+     * Filemask
+     */
     private final String fileMask;
-
 
 
     /**
      * Creates a new command.
+     *
      * @param alias       alias of the command.
-     * @param command command that will be executed.
+     * @param command     command that will be executed.
      * @param type        type of the command.
      * @param displayName name of the command as seen by users (if <code>null</code>, defaults to <code>alias</code>).
-     * @param fileMask mask for files specification
+     * @param fileMask    mask for files specification
      */
     public Command(String alias, String command, CommandType type, String displayName, String fileMask) {
         this.alias = alias;
@@ -120,29 +144,29 @@ public class Command implements Comparable<Command> {
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
      * <code>
-     *     {@link #Command(String, String, CommandType, String, String)
-     *     Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null, null)
+     * {@link #Command(String, String, CommandType, String, String)
+     * Command(}alias, command, {@link CommandType#NORMAL_COMMAND}, null, null)
      * </code>.
      *
      * @param alias   alias of the command.
      * @param command command that will be executed.
      */
     public Command(String alias, String command) {
-    	this(alias, command, CommandType.NORMAL_COMMAND, null, null);
+        this(alias, command, CommandType.NORMAL_COMMAND, null, null);
     }
 
     /**
      * Creates a new command.
      * <p>
      * This is a convenience constructor and is strictly equivalent to calling
-     * <code>{@link #Command(String,String,CommandType,String, String) Command(}alias, command, type, null, null)</code>.
+     * <code>{@link #Command(String, String, CommandType, String, String) Command(}alias, command, type, null, null)</code>.
      *
      * @param alias   alias of the command.
      * @param command command that will be executed.
      * @param type    type of the command.
      */
     public Command(String alias, String command, CommandType type) {
-    	this(alias, command, type, null, null);
+        this(alias, command, type, null, null);
     }
 
 
@@ -157,76 +181,83 @@ public class Command implements Comparable<Command> {
 
     /**
      * Returns this command's tokens without performing keyword substitution.
+     *
      * @return this command's tokens without performing keyword substitution.
      */
     public synchronized String[] getTokens() {
-    	return getTokens(command, (AbstractFile[])null);
+        return getTokens(command, (AbstractFile[]) null);
     }
 
     /**
      * Returns this command's tokens, replacing keywords by the corresponding values from the specified file.
-     * @param  file file from which to retrieve keyword substitution values.
-     * @return      this command's tokens, replacing keywords by the corresponding values from the specified file.
+     *
+     * @param file file from which to retrieve keyword substitution values.
+     * @return this command's tokens, replacing keywords by the corresponding values from the specified file.
      */
     public synchronized String[] getTokens(AbstractFile file) {
-    	return getTokens(command, file);
+        return getTokens(command, file);
     }
 
     /**
      * Returns this command's tokens, replacing keywords by the corresponding values from the specified fileset.
-     * @param  files files from which to retrieve keyword substitution values.
-     * @return       this command's tokens, replacing keywords by the corresponding values from the specified fileset.
+     *
+     * @param files files from which to retrieve keyword substitution values.
+     * @return this command's tokens, replacing keywords by the corresponding values from the specified fileset.
      */
     public synchronized String[] getTokens(FileSet files) {
-    	return getTokens(command, files);
+        return getTokens(command, files);
     }
 
     /**
      * Returns this command's tokens, replacing keywords by the corresponding values from the specified files.
-     * @param  files files from which to retrieve keyword substitution values.
-     * @return       this command's tokens, replacing keywords by the corresponding values from the specified files.
+     *
+     * @param files files from which to retrieve keyword substitution values.
+     * @return this command's tokens, replacing keywords by the corresponding values from the specified files.
      */
     public synchronized String[] getTokens(AbstractFile[] files) {
-    	return getTokens(command, files);
+        return getTokens(command, files);
     }
 
     /**
      * Returns the specified command's tokens without performing keyword substitution.
-     * @param  command command to tokenize.
-     * @return         the specified command's tokens without performing keyword substitution.
+     *
+     * @param command command to tokenize.
+     * @return the specified command's tokens without performing keyword substitution.
      */
     public static String[] getTokens(String command) {
-    	return getTokens(command, (AbstractFile[])null);
+        return getTokens(command, (AbstractFile[]) null);
     }
 
     /**
      * Returns the specified command's tokens after replacing keywords by the corresponding values from the specified file.
-     * @param  command command to tokenize.
-     * @param  file    file from which to retrieve keyword substitution values.
-     * @return         the specified command's tokens after replacing keywords by the corresponding values from the specified file.
+     *
+     * @param command command to tokenize.
+     * @param file    file from which to retrieve keyword substitution values.
+     * @return the specified command's tokens after replacing keywords by the corresponding values from the specified file.
      */
     public static String[] getTokens(String command, AbstractFile file) {
-    	return getTokens(command, new AbstractFile[] {file});
+        return getTokens(command, new AbstractFile[]{file});
     }
 
     /**
      * Returns the specified command's tokens after replacing keywords by the corresponding values from the specified fileset.
-     * @param  command command to tokenize.
-     * @param  files   file from which to retrieve keyword substitution values.
-     * @return         the specified command's tokens after replacing keywords by the corresponding values from the specified fileset.
+     *
+     * @param command command to tokenize.
+     * @param files   file from which to retrieve keyword substitution values.
+     * @return the specified command's tokens after replacing keywords by the corresponding values from the specified fileset.
      */
     public static String[] getTokens(String command, FileSet files) {
-    	return getTokens(command, files.toArray(new AbstractFile[0]));
+        return getTokens(command, files.toArray(new AbstractFile[0]));
     }
 
     /**
      * Returns the specified command's tokens after replacing keywords by the corresponding values from the specified files.
-     * @param  command command to tokenize.
-     * @param  files   file from which to retrieve keyword substitution values.
-     * @return         the specified command's tokens after replacing keywords by the corresponding values from the specified files.
+     *
+     * @param command command to tokenize.
+     * @param files   file from which to retrieve keyword substitution values.
+     * @return the specified command's tokens after replacing keywords by the corresponding values from the specified files.
      */
     public static String[] getTokens(String command, AbstractFile[] files) {
-        // Initialises parsing.
         List<String> tokens = new ArrayList<>();                                // All tokens.
         command = command.trim();
         StringBuilder currentToken = new StringBuilder(command.length());       // Buffer for the current token.
@@ -251,7 +282,7 @@ public class Command implements Comparable<Command> {
             // Whitespace: end of token if we're not between quotes.
             else if (buffer[i] == ' ' && !isInQuotes) {
                 // Skips un-escaped blocks of spaces.
-                while(i + 1 < command.length() && buffer[i + 1] == ' ') {
+                while (i + 1 < command.length() && buffer[i + 1] == ' ') {
                     i++;
                 }
 
@@ -262,18 +293,17 @@ public class Command implements Comparable<Command> {
 
             // Keyword: perform keyword substitution.
             else if (buffer[i] == KEYWORD_HEADER) {
-                // Skips keyword replacement if we're not interested
-                // in it.
+                // Skips keyword replacement if we're not interested in it.
                 if (files == null) {
                     currentToken.append(KEYWORD_HEADER);
                 }
 
                 // If this is the last character, append it.
-                else if(++i == buffer.length)
+                else if (++i == buffer.length)
                     currentToken.append(KEYWORD_HEADER);
 
-                // If we've found a legal keyword, perform keyword replacement
-                else if(isLegalKeyword(buffer[i])) {
+                    // If we've found a legal keyword, perform keyword replacement
+                else if (isLegalKeyword(buffer[i])) {
                     // Deals with the first file.
                     currentToken.append(getKeywordReplacement(buffer[i], files[0]));
 
@@ -297,7 +327,7 @@ public class Command implements Comparable<Command> {
 
                             // When not in quotes, the last file is the beginning of a new token
                             // rather than a single one.
-                            else if(j != files.length - 1)
+                            else if (j != files.length - 1)
                                 tokens.add(getKeywordReplacement(buffer[i], files[j]));
                             else
                                 currentToken.append(getKeywordReplacement(buffer[i], files[j]));
@@ -319,13 +349,13 @@ public class Command implements Comparable<Command> {
         }
 
         // Adds a possible last token.
-        if (currentToken.length() != 0) {
+        if (!currentToken.isEmpty()) {
             tokens.add(currentToken.toString());
         }
 
         // Empty commands are returned as an empty token rather than an empty array.
         if (tokens.isEmpty()) {
-            return new String[] {""};
+            return new String[]{""};
         }
 
         return tokens.toArray(new String[0]);
@@ -356,22 +386,24 @@ public class Command implements Comparable<Command> {
 
     /**
      * Returns <code>true</code> if the specified character is a legal keyword.
-     * @param  keyword character to check.
-     * @return         <code>true</code> if the specified character is a legal keyword, <code>false</code> otherwise.
+     *
+     * @param keyword character to check.
+     * @return <code>true</code> if the specified character is a legal keyword, <code>false</code> otherwise.
      */
     private static boolean isLegalKeyword(char keyword) {
         return keyword == KEYWORD_PATH || keyword == KEYWORD_NAME || keyword == KEYWORD_PARENT ||
-            keyword == KEYWORD_VM_PATH || keyword == KEYWORD_EXTENSION || keyword == KEYWORD_NAME_WITHOUT_EXTENSION;
+                keyword == KEYWORD_VM_PATH || keyword == KEYWORD_EXTENSION || keyword == KEYWORD_NAME_WITHOUT_EXTENSION;
     }
 
     /**
      * Gets the value from <code>file</code> that should be used to replace <code>keyword</code>.
-     * @param  keyword character to replace.
-     * @param  file    file from which to retrieve the replacement value.
-     * @return         the requested replacement value.
+     *
+     * @param keyword character to replace.
+     * @param file    file from which to retrieve the replacement value.
+     * @return the requested replacement value.
      */
     private static String getKeywordReplacement(char keyword, AbstractFile file) {
-        switch(keyword) {
+        switch (keyword) {
             case KEYWORD_PATH:
                 return file.getAbsolutePath();
 
@@ -396,7 +428,6 @@ public class Command implements Comparable<Command> {
     }
 
 
-
     // - Misc. ---------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     public int hashCode() {
@@ -415,9 +446,9 @@ public class Command implements Comparable<Command> {
             return false;
         }
 
-        Command cmd = (Command)object;
+        Command cmd = (Command) object;
         return command.equals(cmd.command) && alias.equals(cmd.alias) && type == cmd.type &&
-               getDisplayName().equals(cmd.getDisplayName());
+                getDisplayName().equals(cmd.getDisplayName());
     }
 
     public int compareTo(@NotNull Command command) {
@@ -434,29 +465,34 @@ public class Command implements Comparable<Command> {
 
     /**
      * Returns the original, un-tokenized command.
+     *
      * @return the original, un-tokenized command.
      */
     public synchronized String getCommand() {
-    	return command;
+        return command;
     }
 
     /**
      * Returns this command's alias.
+     *
      * @return this command's alias.
      */
     public synchronized String getAlias() {
-    	return alias;
+        return alias;
     }
 
     /**
      * Returns the command's type.
+     *
      * @return the command's type.
      */
     public synchronized CommandType getType() {
-    	return type;
+        return type;
     }
 
-    public synchronized String getFileMask() { return fileMask; }
+    public synchronized String getFileMask() {
+        return fileMask;
+    }
 
     /**
      * Returns the command's display name.
@@ -466,19 +502,20 @@ public class Command implements Comparable<Command> {
      * @return the command's display name.
      */
     public synchronized String getDisplayName() {
-    	return displayName != null ? displayName : alias;
+        return displayName != null ? displayName : alias;
     }
 
     /**
      * Returns <code>true</code> if the command's display name has been set.
+     *
      * @return <code>true</code> if the command's display name has been set, <code>false</code> otherwise.
      */
     synchronized boolean isDisplayNameSet() {
-    	return displayName != null;
+        return displayName != null;
     }
 
     @Override
     public String toString() {
-    	return alias + (displayName == null ? "" : ":" + displayName) + ":" + command + (fileMask != null ? "[" + fileMask + "]" : "");
+        return alias + (displayName == null ? "" : ":" + displayName) + ":" + command + (fileMask != null ? "[" + fileMask + "]" : "");
     }
 }

@@ -103,7 +103,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
     }
 
     /**
-     * Initialises the dialog's UI.
+     * Initializes the dialog's UI.
      */
     private void initUI() {
         Container contentPane = getContentPane();
@@ -116,7 +116,7 @@ public class LicenseDialog extends FocusDialog implements ActionListener {
         setInitialFocusComponent(okButton);
         getRootPane().setDefaultButton(okButton);
 
-        // Makes sure the scroll pane is initialises on its first line.
+        // Makes sure the scroll pane is initializes on its first line.
         SwingUtilities.invokeLater(() -> licensePanel.getViewport().setViewPosition(new Point(0,0)));
         pack();
     }

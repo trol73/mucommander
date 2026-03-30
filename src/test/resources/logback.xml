@@ -1,0 +1,3 @@
+<configuration debug="false">
+    <logger name="com.mucommander.commons.file.DefaultSchemeParser" level="ERROR" />
+</configuration>

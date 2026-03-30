@@ -92,7 +92,7 @@ public class AppleScript {
             return false;
         }
 
-        LOGGER.debug("Executing AppleScript: "+appleScript);
+        LOGGER.debug("Executing AppleScript: {}", appleScript);
 
         // Use the 'osascript' command to execute the AppleScript. The '-s o' flag tells osascript to print errors to
         // stdout rather than stderr. The AppleScript is piped to the process instead of passing it as an argument
@@ -115,7 +115,7 @@ public class AppleScript {
             // Wait for the process to die
             int returnCode = process.waitFor();
 
-            LOGGER.debug("osascript returned code="+returnCode+", output="+ outputBuffer);
+            LOGGER.debug("osascript returned code={}, output={}", returnCode, outputBuffer);
 
             if (returnCode != 0) {
             	LOGGER.debug("osascript terminated abnormally");
@@ -163,10 +163,7 @@ public class AppleScript {
             this.outputEncoding = outputEncoding;
         }
 
-        ////////////////////////////////////
-        // ProcessListener implementation //
-        ////////////////////////////////////
-
+        @Override
         public void processOutput(byte[] buffer, int offset, int length) {
             try {
                 outputBuffer.append(new String(buffer, offset, length, outputEncoding));
@@ -175,9 +172,11 @@ public class AppleScript {
             }
         }
 
+        @Override
         public void processOutput(String s) {
         }
 
+        @Override
         public void processDied(int returnValue) {
             // Remove the trailing "\n" character that osascript returns.
             int len = outputBuffer.length();

@@ -168,7 +168,7 @@ public class MarkExtensionAction extends TcAction {
         // At this point, ext contains the extension that should be matched.
         ExtensionFilenameFilter filter = new ExtensionFilenameFilter("." + ext);
 
-        // Initialises the IMAGE_FILTER's case-sensitive depending on the action's properties.
+        // Initializes the IMAGE_FILTER's case-sensitive depending on the action's properties.
         filter.setCaseSensitive(isCaseSensitive());
 
         return filter;

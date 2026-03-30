@@ -81,11 +81,11 @@ public class Configuration {
 
 
 
-    /** Used to synchronise concurrent access of the configuration source. */
+    /** Used to synchronize concurrent access of the configuration source. */
     private final Object sourceLock = new Object();
-    /** Used to synchronise concurrent access of the reader factory. */
+    /** Used to synchronize concurrent access of the reader factory. */
     private final Object readerLock = new Object();
-    /** Used to synchronise concurrent access of the writer factory. */
+    /** Used to synchronie concurrent access of the writer factory. */
     private final Object writerLock = new Object();
 
 
@@ -993,7 +993,7 @@ public class Configuration {
      * Navigates the specified explorer to the parent section of the specified variable.
      * @param  root where to start exploring from.
      * @param  name name of the variable to seek.
-     * @param  create whether or not the path to the variable should be created if it doesn't exist.
+     * @param  create whether the path to the variable should be created if it doesn't exist.
      * @return        the name of the variable trimmed of section information, <code>null</code> if not found.
      */
     private String moveToParent(ConfigurationExplorer root, String name, boolean create) {
@@ -1079,7 +1079,7 @@ public class Configuration {
 
 
         /**
-         * Initialises the configuration building.
+         * Initializes the configuration building.
          */
         public void startConfiguration() {
             sections = new Stack<>();

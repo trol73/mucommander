@@ -210,7 +210,7 @@ public abstract class FileJob implements Runnable {
 	
 	
     /**
-     * Specifies whether or not files that have been processed should be unmarked from current table (enabled by default).
+     * Specifies whether files that have been processed should be unmarked from current table (enabled by default).
      *
      * @param autoUnmark <code>true</code> to automatically unmark files after they have been processed.
      */
@@ -219,7 +219,7 @@ public abstract class FileJob implements Runnable {
     }
 
     /**
-     * Sets whether or not this file job should automatically skip errors when encountered (disabled by default).
+     * Sets whether this file job should automatically skip errors when encountered (disabled by default).
      *
      * @param autoSkipErrors <code>true</code> to automatically skip errors, <code>false</code> to show an error dialog.
      */
@@ -231,7 +231,7 @@ public abstract class FileJob implements Runnable {
     /**
      * Sets the given file to be selected in the active table after this job has finished.
      * The file will only be selected if it exists in the active table's folder and if this job hasn't
-     * been cancelled. The selection will occur after the tables have been refreshed (if they are refreshed).
+     * been canceled. The selection will occur after the tables have been refreshed (if they are refreshed).
      *
      * @param file the file to be selected in the active table after this job has finished
      */

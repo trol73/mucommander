@@ -242,7 +242,7 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * while writing to the stream: if it did, we don't want to propagate to the target
      * file, and thus should prevent the backup operation from being performed.
      *
-     * @param     backup      whether or not to overwrite the target file by the backup one.
+     * @param     backup      whether to overwrite the target file by the backup one.
      * @exception IOException thrown if any IO related error occurs.
      */
     public void close(boolean backup) throws IOException {

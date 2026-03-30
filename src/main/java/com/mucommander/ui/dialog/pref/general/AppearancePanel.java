@@ -146,7 +146,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private JButton btnDeleteTheme;
     /** Used to display the currently selected theme's type. */
     private JLabel lblType;
-    /** Whether or not to ignore theme combobox related events. */
+    /** Whether to ignore theme combobox related events. */
     private boolean      ignoreComboChanges;
     /** Last folder that was selected in import or export operations. */
     private AbstractFile lastSelectedFolder;
@@ -285,7 +285,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // Populates the look and feel combo box.
         populateLookAndFeels();
 
-        // Initialises buttons and event listening.
+        // Initializes buttons and event listening.
         importLookAndFeelButton = new JButton(Translator.get("prefs_dialog.import") + "...");
         deleteLookAndFeelButton = new JButton(Translator.get("delete"));
         importLookAndFeelButton.addActionListener(this);
@@ -580,14 +580,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     // - Look and feel actions --------------------------------------------------
     // --------------------------------------------------------------------------
     /**
-     * Initialises the list of custom look&feels.
+     * Initializes the list of custom look&feels.
      */
     private void initializeCustomLookAndFeels() {
         customLookAndFeels = getListVariable(CUSTOM_LOOK_AND_FEELS, TcPreferences.CUSTOM_LOOK_AND_FEELS_SEPARATOR);
     }
 
     /**
-     * Initialises the list of available look&feels.
+     * Initializes the list of available look&feels.
      */
     private void initializeAvailableLookAndFeels() {
         // Loads all available look and feels.
@@ -808,7 +808,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     private void importLookAndFeel() {
-        // Initialises the file chooser.
+        // Initializes the file chooser.
         JFileChooser chooser = createFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.addChoosableFileFilter(new ExtensionFileFilter("jar", Translator.get("prefs_dialog.jar_file")));
@@ -923,7 +923,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     }
 
     /**
-     * Creates a file chooser initialised on the last selected folder.
+     * Creates a file chooser initialized on the last selected folder.
      */
     private JFileChooser createFileChooser() {
         if (lastSelectedFolder == null) {
@@ -952,7 +952,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Imports a new theme in muCommander.
      */
     private void importTheme() {
-        // Initialises the file chooser.
+        // Initializes the file chooser.
         JFileChooser chooser = createFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.addChoosableFileFilter(new ExtensionFileFilter("xml", Translator.get("prefs_dialog.xml_file")));

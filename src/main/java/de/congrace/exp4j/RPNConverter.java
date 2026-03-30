@@ -32,13 +32,13 @@ abstract class RPNConverter {
 			}
 			switch (c) {
 			case '+':
-				if (resultBuilder.length() > 0 && !afterOperator && !afterParantheses && !expressionStart) {
+				if (!resultBuilder.isEmpty() && !afterOperator && !afterParantheses && !expressionStart) {
 					// not an unary plus so append the char
 					resultBuilder.append(c);
 				}
 				break;
 			case '-':
-				if (resultBuilder.length() > 0 && !afterOperator && !afterParantheses && !expressionStart) {
+				if (!resultBuilder.isEmpty() && !afterOperator && !afterParantheses && !expressionStart) {
 					// not unary 
 					resultBuilder.append(c);
 				}else{
@@ -66,7 +66,7 @@ abstract class RPNConverter {
 			token.mutateStackForInfixTranslation(operatorStack, output);
 		}
 		// all tokens read, put the rest of the operations on the output;
-		while (operatorStack.size() > 0) {
+		while (!operatorStack.isEmpty()) {
 			output.append(operatorStack.pop().getValue()).append(" ");
 		}
 		String postfix = output.toString().trim();

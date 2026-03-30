@@ -76,7 +76,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
     }
 
     /**
-     * Initialises this desktop.
+     * Initializes this desktop.
      * <p>
      * This method is empty. See {@link DesktopAdapter#init(boolean)} for information on
      * how to override it.
