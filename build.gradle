@@ -137,6 +137,10 @@ dependencies {
     // lib.compile
     compileOnly name: 'jfxrt'
 
+    if (!isMac) {
+        compileOnly name: 'apple/ui'
+    }
+
 
     implementation 'org.apache.xmlgraphics:batik-anim:1.19'
     implementation 'org.apache.xmlgraphics:batik-awt-util:1.19'
