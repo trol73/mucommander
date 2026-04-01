@@ -30,6 +30,7 @@ import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.menu.usermenu.UserMenuItem;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.utils.text.Translator;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMenuListener {
     private final MainFrame mainFrame;
     private final AbstractFile menuFile;
@@ -122,8 +124,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     private void sleep(long ms) {
         try {
             Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ignore) {
         }
     }
 
@@ -136,7 +137,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
                 try {
                     ExecutorUtils.execute(cmd.singleCommand, folder);
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("Single command error", e);
                 }
             }).start();
         } else {
@@ -147,7 +148,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
                             ExecutorUtils.execute(command, folder);
                         }
                     } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Multiple commands error", e);
                     }
                 }).start();
             }

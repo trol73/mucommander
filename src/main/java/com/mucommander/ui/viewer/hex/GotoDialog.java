@@ -42,7 +42,7 @@ public class GotoDialog extends FocusDialog implements ActionListener {
     private final LongConsumer action;
 
     /** The 'OK' button */
-    private JButton btnOk;
+    private final JButton btnOk;
 
 
     GotoDialog(Frame owner, long maxOffset, LongConsumer action) {

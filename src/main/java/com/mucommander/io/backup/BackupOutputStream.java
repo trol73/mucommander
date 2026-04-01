@@ -20,6 +20,7 @@ package com.mucommander.io.backup;
 
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,21 +76,27 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * @param     file        file on which to open a backup output stream.
      * @exception IOException thrown if any IO error occurs.
      */
-    public BackupOutputStream(File file) throws IOException {this(FileFactory.getFile(file.getAbsolutePath()));}
+    public BackupOutputStream(File file) throws IOException {
+        this(FileFactory.getFile(file.getAbsolutePath()));
+    }
 
     /**
      * Opens a backup output stream on the specified file.
      * @param     file        file on which to open a backup output stream.
      * @exception IOException thrown if any IO error occurs.
      */
-    public BackupOutputStream(String file) throws IOException {this(FileFactory.getFile((new File(file)).getAbsolutePath()));}
+    public BackupOutputStream(String file) throws IOException {
+        this(FileFactory.getFile((new File(file)).getAbsolutePath()));
+    }
 
     /**
      * Opens a backup output stream on the specified file.
      * @param     file        file on which to open a backup output stream.
      * @exception IOException thrown if any IO error occurs.
      */
-    public BackupOutputStream(AbstractFile file) throws IOException {this(file, FileFactory.getFile(file.getAbsolutePath() + BACKUP_SUFFIX));}
+    public BackupOutputStream(AbstractFile file) throws IOException {
+        this(file, FileFactory.getFile(file.getAbsolutePath() + BACKUP_SUFFIX));
+    }
 
     /**
      * Opens an output stream on the specified file using the specified backup file.
@@ -142,7 +149,7 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void write(byte[] b) throws IOException {
+    public void write(@NotNull byte[] b) throws IOException {
         if (error) {
             out.write(b);
         } else {
@@ -169,7 +176,7 @@ public class BackupOutputStream extends OutputStream implements BackupConstants 
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(@NotNull byte[] b, int off, int len) throws IOException {
         if (error) {
             out.write(b, off, len);
         } else {

@@ -38,10 +38,10 @@ public final class StringUtils {
     /**
      * Returns <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case.
      * <p>
-     * This method has a known bug under some alphabets with peculiar capitalisation rules such as the Georgian one,
+     * This method has a known bug under some alphabets with peculiar capitalization rules such as the Georgian one,
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
-     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
-     * exceptions is so huge that it was deemed an acceptable issue.
+     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>.
+     * The performance hit of testing for these exceptions is so huge that it was deemed an acceptable issue.
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
      *
@@ -56,9 +56,9 @@ public final class StringUtils {
     /**
      * Returns <code>true</code> if the substring of <code>a</code> starting at <code>posA</code> matches <code>b</code> regardless of the case.
      * <p>
-     * This method has a known bug under some alphabets with peculiar capitalisation rules such as the Georgian one,
+     * This method has a known bug under some alphabets with peculiar capitalization rules such as the Georgian one,
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
-     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
+     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for these
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
@@ -129,9 +129,9 @@ public final class StringUtils {
     /**
      * Returns <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case.
      * <p>
-     * This method has a known bug under some alphabets with peculiar capitalisation rules such as the Georgian one,
+     * This method has a known bug under some alphabets with peculiar capitalization rules such as the Georgian one,
      * where <code>Character.toUpperCase(a) == Character.toUpperCase(b)</code> doesn't necessarily imply that
-     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for this
+     * <code>Character.toLowerCase(a) == Character.toLowerCase(b)</code>. The performance hit of testing for these
      * exceptions is so huge that it was deemed an acceptable issue.
      * <p>
      * Note that this method will return <code>true</code> if <code>b</code> is an empty string.
@@ -140,7 +140,9 @@ public final class StringUtils {
      * @param b suffix to test for.
      * @return <code>true</code> if <code>a</code> ends with <code>b</code> regardless of the case, <code>false</code> otherwise.
      */
-    public static boolean endsWithIgnoreCase(String a, char[] b) {return matchesIgnoreCase(a, b, a.length());}
+    public static boolean endsWithIgnoreCase(String a, char[] b) {
+        return matchesIgnoreCase(a, b, a.length());
+    }
 
     /**
      * Returns <code>true</code> if the substring of <code>a</code> starting at <code>posA</code> matches <code>b</code> regardless of the case.
@@ -308,7 +310,7 @@ public final class StringUtils {
      * @param s the string array to flatten
      * @return the flattened string array
      */
-    public static String flatten(String s[]) {
+    public static String flatten(String[] s) {
         return flatten(s, " ");
     }
 
@@ -323,7 +325,7 @@ public final class StringUtils {
      * @param separator the String that separates each
      * @return the flattened string array
      */
-    public static String flatten(String s[], String separator) {
+    public static String flatten(String[] s, String separator) {
         if (s == null) {
             return null;
         }
@@ -360,7 +362,7 @@ public final class StringUtils {
 
 
     /**
-     * Returns true if the given string is null or empty or it's trimmed value is empty (i.e. it's length is 0)
+     * Returns true if the given string is null or empty, or it's trimmed value is empty (i.e. it's length is 0)
      *
      * @param string - the given String to check
      * @return true if the given string is null or empty or whitespace only, false otherwise

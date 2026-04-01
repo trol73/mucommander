@@ -48,6 +48,7 @@ import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.image4j.codec.ico.ICODecoder;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
@@ -66,10 +67,15 @@ import ru.trolsoft.ui.TMenuSeparator;
  *
  * @author Maxence Bernard, Arik Hadas, Oleg Trifonov
  */
+@Slf4j
 class ImageViewer extends FileViewer implements ActionListener {
     private static final Cursor CURSOR_WAIT = new Cursor(Cursor.WAIT_CURSOR);
     private static final Cursor CURSOR_DEFAULT = Cursor.getDefaultCursor();
     private static final Cursor CURSOR_CROSS = new Cursor(Cursor.CROSSHAIR_CURSOR);
+
+    private static final Color TRANSPARENT_COLOR_1 = new Color(0x666666);
+    private static final Color TRANSPARENT_COLOR_2 = new Color(0x999999);
+    private static final int TRANSPARENT_GRID_STEP = 8;
 
     private BufferedImage image;
     //private BufferedImage scaledImage;
@@ -183,7 +189,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             // TODO pBm raw format reading error
             this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).getFirst();
         } else if ("svg".equals(ext)) {
-            this.image = transcodeSVGDocument(file, 0, 0);
+            this.image = transcodeSvgDocument(file, 0, 0);
         } else {
             try (InputStream is = file.getInputStream()) {
                 this.image = ImageIO.read(is);
@@ -220,7 +226,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         try {
             file.closePushbackInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Stream close error", e);
         }
     }
 
@@ -237,7 +243,7 @@ class ImageViewer extends FileViewer implements ActionListener {
                 readTotal += bytesRead;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("File load error", e);
         }
         return data;
     }
@@ -271,9 +277,9 @@ class ImageViewer extends FileViewer implements ActionListener {
             AbstractFile file = filesInDirectory.get(indexInDirectory);
             if ("svg".equalsIgnoreCase(file.getExtension())) {
                 try {
-                    this.image = transcodeSVGDocument(file, scaledWidth, scaledHeight);
+                    this.image = transcodeSvgDocument(file, scaledWidth, scaledHeight);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Transcode error", e);
                 }
 //            } else {
 //                this.scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
@@ -346,7 +352,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     public void show(AbstractFile file) throws IOException {
         if (filesInDirectory == null) {
             filesInDirectory = new ArrayList<>();
-            AbstractFile ls[] = file.getParent().ls();
+            AbstractFile[] ls = file.getParent().ls();
             ImageFactory imageFactory = new ImageFactory();
             for (AbstractFile f : ls) {
                 if (imageFactory.canViewFile(f)) {
@@ -367,7 +373,7 @@ class ImageViewer extends FileViewer implements ActionListener {
         try {
             loadImage(file);
         } catch (ImageReadException e) {
-            e.printStackTrace();
+            log.error("Load error", e);
             throw new IOException("Image parsing error", e);
         }
     }
@@ -432,7 +438,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             updateFrame();
         } catch (IOException e) {
             InformationDialog.showErrorDialog(this, i18n("file_viewer.view_error_title"), i18n("file_viewer.view_error"));
-            e.printStackTrace();
+            log.error("Update close error", e);
         }
     }
 
@@ -468,7 +474,7 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    private static BufferedImage transcodeSVGDocument(AbstractFile file, float width, float height) throws IOException {
+    private static BufferedImage transcodeSvgDocument(AbstractFile file, float width, float height) throws IOException {
         // create a PNG transcoder.
         Transcoder t = new PNGTranscoder();
         // Set the transcoding hints.
@@ -494,7 +500,7 @@ class ImageViewer extends FileViewer implements ActionListener {
             // Return the newly rendered image.
             return ImageIO.read(new ByteArrayInputStream(imgData));
         } catch (TranscoderException e) {
-            e.printStackTrace();
+            log.error("SVG transcode error", e);
             return null;
         }
     }
@@ -515,9 +521,6 @@ class ImageViewer extends FileViewer implements ActionListener {
     }
 
 
-    private static final Color TRANSPARENT_COLOR_1 = new Color(0x666666);
-    private static final Color TRANSPARENT_COLOR_2 = new Color(0x999999);
-    private static final int TRANSPARENT_GRID_STEP = 8;
     /**
      * Image viewer panel
      */

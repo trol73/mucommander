@@ -37,7 +37,6 @@ import java.io.InputStream;
  * @author Oleg Trifonov
  */
 public class HtmlViewer extends FileViewer {
-
     private WebView webView;
     private String url;
     private String content;

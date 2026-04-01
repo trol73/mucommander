@@ -28,7 +28,6 @@ import java.io.InputStream;
  * Created on 23/02/14.
  */
 public class ZxSpectrumScrImage {
-
     private static final int WIDTH = 256;
     private static final int HEIGHT = 192;
 
@@ -135,11 +134,7 @@ public class ZxSpectrumScrImage {
                 if (((data[address]&(0x1<<bit))>>bit) != 0) {
                     g.setColor(PALETTE_BRIGHT_0[inkIndex]);
                 } else {
-                    if (isBright) {
-                        g.setColor(PALETTE_BRIGHT_1[paperIndex]);
-                    } else {
-                        g.setColor(PALETTE_BRIGHT_0[paperIndex]);
-                    }
+                    g.setColor(isBright ? PALETTE_BRIGHT_1[paperIndex] : PALETTE_BRIGHT_0[paperIndex]);
                 }
                 g.fillRect(x*zoomFactor, y*zoomFactor, zoomFactor, zoomFactor);
             }

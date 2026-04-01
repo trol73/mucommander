@@ -39,7 +39,7 @@ public class FileLabelCache {
     private static final int CACHE_SIZE = 1000;
     private static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
 
-    private static FileLabelCache instance;
+    private static volatile FileLabelCache instance;
     private final Map<String, Color> colors = new HashMap<>();
     private final LinkedList<String> files = new LinkedList<>();
 

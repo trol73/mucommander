@@ -27,6 +27,7 @@ import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Represents a file in the <code>bookmark://</code> file system.
@@ -49,7 +50,7 @@ public class BookmarkFile extends ProtocolFile {
      * @throws IOException if the specified bookmark's URL cannot be resolved.
      */
     BookmarkFile(Bookmark bookmark) throws IOException {
-        super(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://" + java.net.URLEncoder.encode(bookmark.getName(), "UTF-8")));
+        super(FileURL.getFileURL(BookmarkProtocolProvider.BOOKMARK + "://" + java.net.URLEncoder.encode(bookmark.getName(), StandardCharsets.UTF_8)));
         this.bookmark = bookmark;
     }
 

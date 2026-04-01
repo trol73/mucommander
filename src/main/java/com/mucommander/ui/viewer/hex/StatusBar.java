@@ -19,6 +19,7 @@
 package com.mucommander.ui.viewer.hex;
 
 import com.mucommander.ui.main.statusbar.FileWindowsListButton;
+import lombok.Setter;
 import org.fife.ui.StatusBarPanel;
 import ru.trolsoft.utils.StrUtils;
 
@@ -31,12 +32,13 @@ import java.awt.GridBagConstraints;
  *
  */
 public class StatusBar extends org.fife.ui.StatusBar {
-    private FileWindowsListButton lbFiles;
+    private final FileWindowsListButton lbFiles;
 
-    private JLabel lblOffset;
-    private JLabel lblEncoding;
-    private JLabel lblValue;
+    private final JLabel lblOffset;
+    private final JLabel lblEncoding;
+    private final JLabel lblValue;
 
+    @Setter
     private long maxOffset = -1;
 
 
@@ -80,10 +82,6 @@ public class StatusBar extends org.fife.ui.StatusBar {
             str += " / " + StrUtils.dwordToHexStr(maxOffset);
         }
         lblOffset.setText(str);
-    }
-
-    public void setMaxOffset(long maxOffset) {
-        this.maxOffset = maxOffset;
     }
 
     public void setEncoding(String encoding) {

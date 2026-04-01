@@ -17,6 +17,9 @@
  */
 package ru.trolsoft.hexeditor.data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 
 /**
@@ -42,12 +45,14 @@ public abstract class AbstractByteBuffer {
     /**
      * Size of buffer
      */
+    @Getter
     protected final int capacity;
 
     /**
      * Number of bytes in buffer
      */
     protected int bufferSize;
+    @Getter
     protected long offset;
     protected byte[] buffer;
 
@@ -57,6 +62,8 @@ public abstract class AbstractByteBuffer {
     protected long streamSize;
 
 
+    @Getter
+    @Setter
     private CacheStrategy cacheStrategy = CacheStrategy.CENTER;
 
     public AbstractByteBuffer(int capacity) {
@@ -66,12 +73,6 @@ public abstract class AbstractByteBuffer {
         this.bufferSize = 0;
         this.streamSize = -1;
     }
-
-
-    public long getOffset() {
-        return offset;
-    }
-
 
     public byte getByte(long fileOffset) throws IOException {
         long index = fileOffset - offset;
@@ -132,11 +133,6 @@ public abstract class AbstractByteBuffer {
         closeStream();
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-
     abstract protected void closeStream() throws IOException;
 
     abstract protected long getStreamSize() throws IOException;
@@ -148,13 +144,5 @@ public abstract class AbstractByteBuffer {
     abstract protected void loadBuffer() throws IOException;
 
     abstract protected boolean supportRandomAccess();
-
-    public CacheStrategy getCacheStrategy() {
-        return cacheStrategy;
-    }
-
-    public void setCacheStrategy(CacheStrategy cacheStrategy) {
-        this.cacheStrategy = cacheStrategy;
-    }
 
 }

@@ -70,7 +70,7 @@ class BookmarkOutputStream extends ByteArrayOutputStream implements BookmarkBuil
      * Note that this method will remove any previous bookmark of the same name.
      *
      * @param name     name of the new bookmark.
-     * @Param location location of the new bookmark.
+     * @param location location of the new bookmark.
      */
     public void addBookmark(String name, String location, String parent) {
         // Creates the new bookmark and checks for conflicts.
