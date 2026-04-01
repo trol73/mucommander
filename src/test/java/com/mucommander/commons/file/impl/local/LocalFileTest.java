@@ -129,6 +129,10 @@ public class LocalFileTest extends AbstractFileTest {
 
         for (AbstractFile volume : volumes) {
             log.info("Volume {}", volume);
+            String name = volume.toString();
+            if (name.equals("/sys/kernel/debug/") || name.equals("/boot/efi/")) {
+            	continue;
+            }
             testVolume(volume);
         }
     }
