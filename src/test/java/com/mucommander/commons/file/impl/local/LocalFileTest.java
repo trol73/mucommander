@@ -4,6 +4,7 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.AbstractFileTest;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.regex.Matcher;
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class LocalFileTest extends AbstractFileTest {
 
     @Override
@@ -123,11 +125,12 @@ public class LocalFileTest extends AbstractFileTest {
     public void testVolumes() throws IOException {
         AbstractFile[] volumes = LocalFile.getVolumes();
 
-        assert volumes != null;
-        assert volumes.length>0;
+        assert volumes.length > 0;
 
-        for (AbstractFile volume : volumes)
+        for (AbstractFile volume : volumes) {
+            log.info("Volume {}", volume);
             testVolume(volume);
+        }
     }
 
     /**

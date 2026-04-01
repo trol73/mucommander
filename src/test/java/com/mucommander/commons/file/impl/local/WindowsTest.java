@@ -7,14 +7,14 @@ import java.io.InputStreamReader;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class WindowsTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WindowsTest.class);
 
     @Test
     public void testWindows() {
@@ -23,40 +23,43 @@ public class WindowsTest {
         start = System.currentTimeMillis();
         File[] fileRoots = File.listRoots();
         end = System.currentTimeMillis();
-        LOGGER.info("roots : "+fileRoots.length);
-        LOGGER.info("**** option 1 = " + (end - start));
+        log.info("roots : {}", fileRoots.length);
+        log.info("**** option 1 = {}", end - start);
         //  3/4 === 21000
 
         start = System.currentTimeMillis();
-        FileStore[] stores = new FileStore[26];
-        int count = 0;
-        for (FileStore store: FileSystems.getDefault().getFileStores()) {
-            stores[count++] = store;
-        }
+        List<FileStore> stores = new ArrayList<>();
+        FileSystems.getDefault().getFileStores().forEach(stores::add);
+
+//        FileStore[] stores = new FileStore[26];
+        int count = stores.size();
+//        for (FileStore store: FileSystems.getDefault().getFileStores()) {
+//            stores[count++] = store;
+//        }
         end = System.currentTimeMillis();
-        LOGGER.info("stores : "+count);
+        log.info("stores : {}", count);
         for (int i=0; i<count; i++) {
-            LOGGER.info(stores[i].name()+" "+stores[i].name());
+            log.info(stores.get(i).name());
         }
-        LOGGER.info("**** option 2 = " + (end - start));
+        log.info("**** option 2 = {}", end - start);
         //  3/4 === 126
 
         start = System.currentTimeMillis();
         for (Path p : FileSystems.getDefault().getRootDirectories()) {
-            LOGGER.info("path "+p);
+            log.info("path {}", p);
         }
         end = System.currentTimeMillis();
-        LOGGER.info("**** option 3 = " + (end - start));
+        log.info("**** option 3 = {}", end - start);
         //  4/4 === 3
 
         start = System.currentTimeMillis();
         for (char c = 'A'; c <= 'Z'; ++c) {
             if (new File(c + ":").exists()) {
-                LOGGER.info(c + ":");
+                log.info(c + ":");
             }
         }
         end = System.currentTimeMillis();
-        LOGGER.info("**** option 4 = " + (end - start));
+        log.info("**** option 4 = {}", end - start);
         //  3/4 === 170
 
         start = System.currentTimeMillis();
@@ -65,14 +68,14 @@ public class WindowsTest {
             BufferedReader inStream = new BufferedReader(new InputStreamReader(theProcess.getInputStream()));
             String line;
             while ((line = inStream.readLine()) != null) {
-                LOGGER.info(line);
+                log.info(line);
             }
         }
         catch (IOException e) {
-            LOGGER.error("error", e);
+            log.error("error", e);
         }
         end = System.currentTimeMillis();
-        LOGGER.info("**** option 5 = " + (end - start));
+        log.info("**** option 5 = {}", end - start);
         //  4/4 === 179
 
         // jni
