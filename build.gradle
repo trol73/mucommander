@@ -268,7 +268,14 @@ shadowJar {
     mergeServiceFiles()
 }
 
-// ==================== ЗАДАЧИ СБОРКИ ====================
+tasks.named('shadowDistZip') {
+   archiveFileName.set("trolCommander-${project.version}.zip")
+   from("src/main/resources/images/trolcommander") {
+      include "icon*.png"
+      into "trolCommander-${project.version}/icons"
+   }
+}
+
 
 // Задача для сборки с локальными зависимостями
 tasks.register('buildWithLocalLibs') {
