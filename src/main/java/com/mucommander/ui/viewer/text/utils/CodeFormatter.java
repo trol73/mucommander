@@ -43,25 +43,6 @@ import java.io.*;
  */
 public class CodeFormatter {
 
-    public static String formatXml2(String src) throws CodeFormatException {
-        final Document document = parseXmlFile(src);
-        OutputStream bos = new ByteArrayOutputStream();
-
-        try {
-            DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
-            DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
-            LSSerializer serializer = impl.createLSSerializer();
-            serializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
-            LSOutput lso = impl.createLSOutput();
-
-            lso.setByteStream(bos);
-            serializer.write(document, lso);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bos.toString();
-    }
-
     public static String formatXml(String unformattedXml) throws CodeFormatException {
         try {
             final Document document = parseXmlFile(unformattedXml);

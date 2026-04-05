@@ -20,6 +20,7 @@ package com.mucommander.ui.icon;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 /**
  * Animated icon of a spinning dial used to notify users that an application is performing a getTask.
@@ -266,21 +267,17 @@ public class SpinningDial extends AnimatedIcon {
 
 
 
-    // - Color management ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Sets the color used to draw the dial.
      * @param c color in which to paint the dial.
      */
     public synchronized void setColor(Color c) {
         // Ignores calls that don't actually change anything.
-        if(!color.equals(c)) {
+        if (!color.equals(c)) {
             color = c;
 
-            // Resets stored images to make sure they get repainted
-            // with the right color.
-            for(int i = 0; i < frames.length; i++)
-                frames[i] = null;
+            // Resets stored images to make sure they get repainted with the right color.
+            Arrays.fill(frames, null);
         }
     }
 
@@ -298,34 +295,32 @@ public class SpinningDial extends AnimatedIcon {
 
 
 
-    // - Size methods --------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Returns the icon's height.
      * @return the icon's height.
      */
     @Override
-    public int getIconHeight() {return height;}
+    public int getIconHeight() {
+        return height;
+    }
 
     /**
      * Returns the icon's width.
      * @return the icon's width.
      */
     @Override
-    public int getIconWidth() {return width;}
+    public int getIconWidth() {
+        return width;
+    }
 
 
 
-    // - Rendering methods ---------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Initializes graphics for painting one of the dial's frames.
      * @param graphics graphics instance to initialize.
      */
     private void initializeGraphics(Graphics2D graphics) {
-        float scale;
-
-        scale = (float)Math.min(width, height) / FULL_SIZE;
+        float scale = (float)Math.min(width, height) / FULL_SIZE;
 
         graphics.setComposite(AlphaComposite.Clear);
         graphics.fillRect(0, 0, width, height);
@@ -348,18 +343,15 @@ public class SpinningDial extends AnimatedIcon {
         int currentFrame;
 
         // Ignores paint calls while not animated.
-        if(isAnimated()) {
+        if (isAnimated()) {
             // Checks whether the current frame has already been generated or not, generates
             // it if not.
-            if((frames[currentFrame = getFrame()]) == null) {
+            if ((frames[currentFrame = getFrame()]) == null) {
                 // Initializes the frame.
                 // Note: getGraphicsConfiguration() returns null if the component has not yet been added to a container
                 GraphicsConfiguration gc = c != null ? c.getGraphicsConfiguration() : null;
-                Image frame;
-                if (gc != null)
-                    frame = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-                else
-                    frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                Image frame = gc != null ? gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT)
+                        : new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
                 // Initializes the frame's g.
                 Graphics2D g = (Graphics2D)frame.getGraphics();
@@ -392,7 +384,7 @@ public class SpinningDial extends AnimatedIcon {
      * Starts / stops the spinning dial.
      * <p>
      * If <code>a</code> is <code>false</code>, the animation will stop and the
-     * the dial won't be displayed anymore until the animation resumes.
+     * dial won't be displayed anymore until the animation resumes.
      *
      * @param a whether to start or stop the animation.
      */
@@ -400,7 +392,7 @@ public class SpinningDial extends AnimatedIcon {
     public void setAnimated(boolean a) {
         super.setAnimated(a);
 
-        // Makes sure the dial disapears when the animation is stopped.
+        // Makes sure the dial disappears when the animation is stopped.
         if (!a) {
             repaint();
         }

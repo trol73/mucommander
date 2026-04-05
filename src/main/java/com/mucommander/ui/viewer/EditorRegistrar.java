@@ -29,12 +29,15 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
+import com.mucommander.ui.viewer.text.TextArea;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.text.TextEditor;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * EditorRegistrar maintains a list of registered file editors and provides methods to dynamically register file editors

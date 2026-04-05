@@ -29,6 +29,7 @@ import com.mucommander.ui.encoding.EncodingListener;
 import com.mucommander.ui.encoding.EncodingMenu;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import lombok.Getter;
 import org.fife.ui.rtextarea.GutterEx;
 
 import javax.swing.*;
@@ -41,6 +42,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 
 /**
@@ -52,11 +54,13 @@ public class TextViewer extends FileViewer implements EncodingListener {
 
 	private final static String CUSTOM_FULL_SCREEN_EVENT = "CUSTOM_FULL_SCREEN_EVENT";
 
-    private TextEditorImpl textEditorImpl;
+    private final TextEditorImpl textEditorImpl;
 
-	private static boolean lineWrap = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TcSnapshot.DEFAULT_LINE_WRAP);
+	@Getter
+    private static boolean lineWrap = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_WRAP, TcSnapshot.DEFAULT_LINE_WRAP);
 
-	private static boolean lineNumbers = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TcSnapshot.DEFAULT_LINE_NUMBERS);
+	@Getter
+    private static boolean lineNumbers = TcConfigurations.getSnapshot().getVariable(TcSnapshot.TEXT_FILE_PRESENTER_LINE_NUMBERS, TcSnapshot.DEFAULT_LINE_NUMBERS);
 
     TextMenuHelper menuHelper;
 
@@ -114,16 +118,8 @@ public class TextViewer extends FileViewer implements EncodingListener {
 		TextViewer.lineWrap = lineWrap;
 	}
 
-	public static boolean isLineWrap() {
-		return lineWrap;
-	}
-
-	static void setLineNumbers(boolean lineNumbers) {
+    static void setLineNumbers(boolean lineNumbers) {
 		TextViewer.lineNumbers = lineNumbers;
-	}
-
-	public static boolean isLineNumbers() {
-		return lineNumbers;
 	}
 
     void startEditing(AbstractFile file, DocumentListener documentListener) {
@@ -244,12 +240,10 @@ public class TextViewer extends FileViewer implements EncodingListener {
         //menuHelper.setupFileMenu(menuFile, TextViewer.this, getCurrentFile());
     }
 
-    ///////////////////////////////
-    // FileViewer implementation //
-    ///////////////////////////////
 
     @Override
     public void show(AbstractFile file) {
+        // TODO SHOULD BE IN SEPARATE THREAD !!!
         initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {
@@ -265,10 +259,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
         textEditorImpl.prepareForView(file);
         textEditorImpl.setSyntaxType(type);
     }
-    
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -278,9 +268,6 @@ public class TextViewer extends FileViewer implements EncodingListener {
       	super.actionPerformed(e);
     }
 
-    /////////////////////////////////////
-    // EncodingListener implementation //
-    /////////////////////////////////////
     @Override
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {
         // Store caret and scrollbar position before change
@@ -311,6 +298,16 @@ public class TextViewer extends FileViewer implements EncodingListener {
     TextFilesHistory.FileRecord getHistoryRecord() {
         return historyRecord;
     }
+//
+//
+//    void initHistoryRecord(AbstractFile file, Consumer<TextFilesHistory.FileRecord> initializer) {
+//        new Thread(() -> {
+//            historyRecord = new TextFilesHistory.FileRecord(file.getAbsolutePath());
+//System.out.println("FILE RECORD LOADED "  + gi);
+//            SwingUtilities.invokeLater(() -> initializer.accept(historyRecord));
+//        }).start();
+//    }
+
 
 
     /**

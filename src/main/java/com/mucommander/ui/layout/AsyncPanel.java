@@ -53,10 +53,10 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
 
     private class InitWorker extends SwingWorker<Void, Void> {
         private Exception exception;
+        volatile boolean finished = false;
 
         @Override
         protected Void doInBackground() {
-            AsyncPanel.this.start();
             try {
                 initTargetComponent();
             } catch (Exception e) {
@@ -67,6 +67,14 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
 
         @Override
         protected void done() {
+            if (finished) {
+                return;
+            }
+            finished = true;
+            finish();
+        }
+
+        private void finish() {
             JComponent targetComponent = getTargetComponent(exception);
             remove(waitComponent);
             setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -76,7 +84,7 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
             if (OsFamily.WINDOWS.isCurrent()) {
                 setSize(getSize());
             }
-            AsyncPanel.this.stop();
+            stop();
         }
     }
 
@@ -103,7 +111,7 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
      */
     private AsyncPanel(JComponent waitComponent) {
         super(new BorderLayout());
-
+        start();
         this.waitComponent = waitComponent;
         add(waitComponent, BorderLayout.CENTER);
 
@@ -132,6 +140,7 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
 
 
     protected void cancel() {
+        stop();
         if (worker != null) {
             worker.cancel(true);
         }
@@ -175,7 +184,6 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
         gbc.fill = GridBagConstraints.BOTH;
 
         tempPanel.add(label, gbc);
-
         return tempPanel;
     }
 
@@ -186,9 +194,6 @@ public abstract class AsyncPanel extends ZxSpectrumLoadPane {
      * needs to be done to update the layout.
      */
     protected void updateLayout() {
-//        Container tla = getTopLevelAncestor();
-//        if(tla instanceof Window)
-//            ((Window)tla).pack();
     }
 
 

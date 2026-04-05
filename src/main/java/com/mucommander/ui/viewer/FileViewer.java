@@ -85,7 +85,7 @@ public abstract class FileViewer extends FilePresenter implements ActionListener
     private final KeyListener mainKeyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
-            KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiers(), false);
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(e.getKeyCode(), e.getModifiersEx(), false);
             JMenuItem menuItem = menuKeyStrokes.get(keyStroke);
             if (menuItem != null) {
                 actionPerformed(new ActionEvent(menuItem, 0, null));

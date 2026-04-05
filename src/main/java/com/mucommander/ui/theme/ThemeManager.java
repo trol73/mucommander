@@ -139,7 +139,7 @@ public class ThemeManager {
                     }
                 }
                 if (currentTheme == null) {
-                    currentTheme         = new Theme(listener);
+                    currentTheme = new Theme(listener);
                     wasUserThemeModified = true;
                 }
             }

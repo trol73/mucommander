@@ -124,11 +124,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
             int action = new FileCollisionDialog(getFrame(), getFrame()/*mainFrame*/, collision, null, destFile, false, false).getActionValue();
 
             // User chose to overwrite the file
-            if (action == FileCollisionDialog.OVERWRITE_ACTION) {
-                // Do nothing, simply continue and file will be overwritten
-            } else {
-                return false;   // User chose to cancel or closed the dialog
-            }
+            return action == FileCollisionDialog.OVERWRITE_ACTION;   // User chose to cancel or closed the dialog
         }
         return true;
     }
@@ -217,7 +213,7 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
         if (OsFamily.MAC_OS_X.isCurrent()) {
             miSave = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_DOWN_MASK), this);
         } else {
-            miSave = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), this);
+            miSave = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save"), mnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK), this);
         }
         miSaveAs = MenuToolkit.addMenuItem(menuFile, Translator.get("file_editor.save_as"), mnemonicHelper, null, this);
         menuFile.add(new TMenuSeparator());
@@ -243,10 +239,6 @@ public abstract class FileEditor extends FilePresenter implements ActionListener
     }
 
 
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
-	
     /**
      * This method is invoked when the user asked to save current file to the specified file.
      * 

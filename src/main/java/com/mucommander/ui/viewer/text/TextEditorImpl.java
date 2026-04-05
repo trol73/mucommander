@@ -38,6 +38,9 @@ import com.mucommander.ui.viewer.text.tools.ExecPanel;
 import com.mucommander.ui.viewer.text.tools.ExecUtils;
 import com.mucommander.ui.viewer.text.tools.ProcessParams;
 import com.mucommander.utils.text.Translator;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.fife.ui.rtextarea.SearchResult;
@@ -62,11 +65,15 @@ import java.util.LinkedList;
  *
  * @author Maxence Bernard, Mariusz Jakubowski, Nicolas Rinaudo, Arik Hadas, Oleg Trifonov
  */
+@Slf4j
 class TextEditorImpl implements ThemeListener, ThemeId {
-
     private static final Insets INSETS = new Insets(4, 3, 4, 3);
 
-	FileFrame frame;
+    private static String lastLoadedThemeName;
+    private static EditorTheme editorTheme;
+
+	@Setter
+    FileFrame frame;
 
     private final TextArea textArea;
 
@@ -75,6 +82,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 	/** Indicates whether there is a line separator in the original file */
 	private boolean lineSeparatorExists;
 
+    @Getter
     private StatusBar statusBar;
 
     /**
@@ -139,12 +147,15 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 		textArea.setEditable(isEditable);
         textArea.addKeyListener(textAreaKeyListener);
 
-        try {
-            ThemeManager.readEditorTheme(ThemeManager.getCurrentSyntaxThemeName()).apply(textArea);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (lastLoadedThemeName == null || !lastLoadedThemeName.equals(ThemeManager.getCurrentSyntaxThemeName())) {
+            try {
+                editorTheme = ThemeManager.readEditorTheme(ThemeManager.getCurrentSyntaxThemeName());
+                lastLoadedThemeName = ThemeManager.getCurrentSyntaxThemeName();
+            } catch (Exception e) {
+                log.error("Can't load editor theme", e);
+            }
         }
-        //textArea.setCodeFoldingEnabled(true);
+        editorTheme.apply(textArea);
 
 		// Use theme colors and font
 		textArea.setForeground(ThemeManager.getCurrentColor(EDITOR_FOREGROUND_COLOR));
@@ -269,19 +280,12 @@ class TextEditorImpl implements ThemeListener, ThemeId {
             private void search(SearchEvent e) {
                 SearchResult result;
                 replaceDialogMode = true;
-                switch (e.getType()) {
-                    case FIND:
-                        result = SearchEngine.find(textArea, searchContext);
-                        break;
-                    case REPLACE:
-                        result = SearchEngine.replace(textArea, searchContext);
-                        break;
-                    case REPLACE_ALL:
-                        result = SearchEngine.replaceAll(textArea, searchContext);
-                        break;
-                    default:
-                        result = null;
-                }
+                result = switch (e.getType()) {
+                    case FIND -> SearchEngine.find(textArea, searchContext);
+                    case REPLACE -> SearchEngine.replace(textArea, searchContext);
+                    case REPLACE_ALL -> SearchEngine.replaceAll(textArea, searchContext);
+                    default -> null;
+                };
                 replaceDialogMode = false;
                 if (result == null) {
                     return;
@@ -399,7 +403,7 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 		// According to the documentation in DefaultEditorKit, the line separator is set to be as the system property
 		// if no other line separator exists in the file, but in practice it is not, so this is a workaround for it
 		if (!lineSeparatorExists)
-			document.putProperty(DefaultEditorKit.EndOfLineStringProperty, System.getProperty("line.separator"));
+			document.putProperty(DefaultEditorKit.EndOfLineStringProperty, System.lineSeparator());
 
 		try {
 			textArea.getUI().getEditorKit(textArea).write(new BufferedWriter(writer), document, 0, document.getLength());
@@ -515,10 +519,6 @@ class TextEditorImpl implements ThemeListener, ThemeId {
     }
 
 
-    public StatusBar getStatusBar() {
-        return statusBar;
-    }
-
     void setStatusBar(StatusBar statusBar) {
         this.statusBar = statusBar;
     }
@@ -560,10 +560,6 @@ class TextEditorImpl implements ThemeListener, ThemeId {
 
     void prepareForView(AbstractFile file) {
         this.file = file;
-    }
-
-    public void setFrame(FileFrame frame) {
-        this.frame = frame;
     }
 
     void selectIncludeFile(AbstractFile file) {

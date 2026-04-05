@@ -104,7 +104,7 @@ public class EditorBookmarksQL extends QuickListWithIcons<AbstractFile> {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_F4 && e.getModifiers() == 0) {
+        if (e.getKeyCode() == KeyEvent.VK_F4 && e.getModifiersEx() == 0) {
             e.consume();
             openBookmarkFileInEditor();
         }

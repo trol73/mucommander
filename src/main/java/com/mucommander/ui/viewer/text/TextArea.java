@@ -17,7 +17,9 @@
  */
 package com.mucommander.ui.viewer.text;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 
 import javax.swing.*;
@@ -28,14 +30,17 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * @author Oleg Trifonov
  * Created on 08/01/14.
  */
 public class TextArea extends RSyntaxTextArea implements DocumentListener {
-
     private static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
+
+    private boolean painted = false;
 
     /**
      * The #gotoLine(int) method can't be executed successfully if the model is not painted.
@@ -126,7 +131,16 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
                 forceCurrentLineHighlightRepaint();
             });
         }
+        if (!painted) {
+            painted = true;
+        }
     }
+
+    @Override
+    public void read(Reader in, Object desc) throws IOException {
+        super.read(in, desc);
+    }
+
 
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -194,6 +208,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         try {
             super.setDocument(doc);
         } catch (Exception e) {
+            e.printStackTrace();
             // Sometime RSyntaxTextArea can crash for python files on code folding parsing
             setCodeFoldingEnabled(false);
             super.setDocument(doc);
@@ -205,18 +220,14 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
     /**
      * Sets the line separator sequence to use when this file is saved (e.g.
      * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
-     *
      * Besides parameter checking, this method is preferred over
      * <code>getDocument().putProperty()</code> because can set the editor's
      * dirty flag when the line separator is changed.
      *
      * @param separator The new line separator.
-     * @param setDirty Whether the dirty flag should be set if the line
-     *        separator is changed.
-     * @throws NullPointerException If <code>separator</code> is
-     *         <code>null</code>.
-     * @throws IllegalArgumentException If <code>separator</code> is not one
-     *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+     * @param setDirty Whether the dirty flag should be set if the line separator is changed.
+     * @throws NullPointerException If <code>separator</code> is <code>null</code>.
+     * @throws IllegalArgumentException If <code>separator</code> is not one  of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
      * @see #getLineSeparator()
      */
     public void setLineSeparator(String separator, boolean setDirty) {
@@ -246,9 +257,8 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      * {@link #setLineSeparator(String)} to modify this value, then the value
      * returned from this method will always be a <code>String</code>.
      *
-     * @return The line separator.  If this value is <code>null</code>, then
-     *         the system default line separator is used (usually the value
-     *         of <code>System.getProperty("line.separator")</code>).
+     * @return The line separator.  If this value is <code>null</code>, then the system default line separator is used
+     * (usually the value of <code>System.getProperty("line.separator")</code>).
      * @see #setLineSeparator(String)
      * @see #setLineSeparator(String, boolean)
      */
@@ -267,8 +277,7 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
      *
      * @param separator The new line separator.
      * @throws NullPointerException If <code>separator</code> is <code>null</code>.
-     * @throws IllegalArgumentException If <code>separator</code> is not one
-     *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+     * @throws IllegalArgumentException If <code>separator</code> is not one of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
      * @see #getLineSeparator()
      */
     public void setLineSeparator(String separator) {
@@ -290,4 +299,36 @@ public class TextArea extends RSyntaxTextArea implements DocumentListener {
         }
     }
 
+    @Override
+    public void setSyntaxEditingStyle(String styleKey) {
+        if (!painted && (styleKey == null || SYNTAX_STYLE_NONE.equals(styleKey))) {
+            return;
+        }
+        super.setSyntaxEditingStyle(styleKey);
+    }
+
+
+    @Override
+    // Model that ignores syntax type changes and no mark file as "dirty"
+    protected Document createDefaultModel() {
+        return new RSyntaxDocument(SYNTAX_STYLE_NONE) {
+            private boolean ignoreChangeUpdate;
+
+            @Override
+            public void setSyntaxStyle(String styleKey) {
+                ignoreChangeUpdate = true;
+                super.setSyntaxStyle(styleKey);
+                ignoreChangeUpdate = false;
+            }
+            @Override
+            protected void fireChangedUpdate(DocumentEvent e) {
+                if (!ignoreChangeUpdate) {
+                    super.fireChangedUpdate(e);
+                } else {
+                    SwingUtilities.invokeLater(() -> repaint());
+                }
+            }
+
+        };
+    }
 }

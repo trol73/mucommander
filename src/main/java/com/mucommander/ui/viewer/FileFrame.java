@@ -2,8 +2,7 @@ package com.mucommander.ui.viewer;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-
-
+import java.io.IOException;
 import javax.swing.*;
 
 import com.mucommander.cache.WindowsStorage;
@@ -70,11 +69,12 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
             showGenericErrorDialog();
             return;
         }
-        AsyncPanel asyncPanel = createAsyncPanel(file);
+        JComponent asyncPanel = createAsyncPanel(file);
 
         // Add the AsyncPanel to the content pane
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(asyncPanel, BorderLayout.CENTER);
+//contentPane.add(filePresenter, BorderLayout.CENTER);
 
         // Add status bar if exists
         StatusBar statusBar = filePresenter.getStatusBar();
@@ -95,30 +95,28 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
         FileViewersList.update();
     }
 
+
+
     @NotNull
-    private AsyncPanel createAsyncPanel(AbstractFile file) {
+    private JComponent createAsyncPanel(AbstractFile file) {
+        if (file.isLocalFile()) {
+            try {
+                filePresenter.open(file);
+                setJMenuBar(filePresenter.getMenuBar());
+                initializeAfterLoad();
+            } catch (Exception e) {
+                LOGGER.debug("Exception caught", e);
+                showGenericErrorDialog();
+                dispose();
+            }
+            return filePresenter;
+        }
+
         return new AsyncPanel() {
                 @Override
                 public void initTargetComponent() throws Exception {
-                    // key dispatcher for Esc detection
-                    final KeyEventDispatcher keyEventDispatcher = e -> {
-                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                            e.consume();
-                            cancel();
-                            setVisible(false);
-                            dispose();
-                        }
-                        return false;
-                    };
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
-                    try {
-                        filePresenter.open(file);
-                    } finally {
-                        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
-                    }
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+                    openPresenter(file, this::cancel);
                 }
-
 
                 @Override
                 public JComponent getTargetComponent(Exception e) {
@@ -136,17 +134,45 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
                 @Override
                 protected void updateLayout() {
                     super.updateLayout();
-                    // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
-                    //pack();
-                    WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName(), true);
-                    // Request focus on the viewer when it is visible
-                    FocusRequester.requestFocus(filePresenter);
-
-                    // Restore (caret position, scroll position etc.)
-                    filePresenter.restoreStateOnStartup();
+                    initializeAfterLoad();
                 }
             };
     }
+
+    private void openPresenter(AbstractFile file, Runnable onCancel) throws IOException {
+        final KeyEventDispatcher keyEventDispatcher = e -> {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                e.consume();
+                if (onCancel != null) {
+                    onCancel.run();
+                }
+                setVisible(false);
+                dispose();
+            }
+            return false;
+        };
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
+        try {
+            filePresenter.open(file);
+        } finally {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
+        }
+    }
+
+    private void initializeAfterLoad() {
+        // Sets panel to preferred size, without exceeding a maximum size and with a minimum size
+        //pack();
+        WindowsStorage.getInstance().init(FileFrame.this, filePresenter.getClass().getCanonicalName(), true);
+        // Request focus on the viewer when it is visible
+        FocusRequester.requestFocus(filePresenter);
+
+        // Restore (caret position, scroll position etc.)
+        filePresenter.restoreStateOnStartup();
+    }
+
+
+
 
     private void showGenericErrorDialog() {
         InformationDialog.showErrorDialog(mainFrame, getGenericErrorDialogTitle(), getGenericErrorDialogMessage());

@@ -33,9 +33,9 @@ import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
 import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.viewer.EditorRegistrar;
+import com.mucommander.ui.viewer.text.TextArea;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.Map;
 
 /**

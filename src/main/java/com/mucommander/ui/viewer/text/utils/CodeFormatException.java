@@ -17,11 +17,13 @@
  */
 package com.mucommander.ui.viewer.text.utils;
 
+import lombok.Getter;
+
 /**
  * @author Oleg Trifonov
  */
+@Getter
 public class CodeFormatException extends Exception {
-
     private final int line;
     private final int row;
 
@@ -31,12 +33,4 @@ public class CodeFormatException extends Exception {
         this.row = row;
     }
 
-
-    public int getLine() {
-        return line;
-    }
-
-    public int getRow() {
-        return row;
-    }
 }

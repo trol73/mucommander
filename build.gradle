@@ -125,7 +125,7 @@ dependencies {
     implementation name: 'jftp-1.60-trol1'
     implementation name: 'jide-oss-3.7.4'
     implementation name: 'json-20251224'
-    implementation name: 'rsyntaxtextarea-3.6.1-SNAPSHOT'
+    implementation name: 'rsyntaxtextarea-3.6.3-SNAPSHOT'
     implementation name: 'sardine-5.3'
     implementation name: 'sevenzipjbinding-AllPlatforms'
     implementation name: 'sevenzipjbinding-Mac-arm64'

@@ -23,6 +23,7 @@ import com.mucommander.commons.io.EncodingDetector;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.statusbar.TaskWidget;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.SwingWorker;
 import java.io.PushbackInputStream;
@@ -56,33 +57,32 @@ public class FilePreloadWorker extends SwingWorker<Void, Void> {
             publish();
             final PushbackInputStream is = file.getPushBackInputStream(EncodingDetector.MAX_RECOMMENDED_BYTE_SIZE);
             if (is instanceof HasProgress) {
-                Thread progressThread = new Thread(() -> {
-                    while (true) {
-                        progress = ((HasProgress) is).getProgress();
-                        publish();
-                        if (progress >= 100 || readException != null || progress < 0) {
-                            progress = -1;
-                            publish();
-                            break;
-                        }
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException ignored) {}
-                    }
-                });
-                progressThread.setName("ProgressInputStreamThread");
-                progressThread.start();
-
-            }
-            // read one byte to init reader (actual for avrdude-files, etc.)
-            int b = is.read();
-            if (b >= 0) {
-                is.unread(b);
+                buildProgressThread((HasProgress) is).start();
             }
         } catch (Throwable e) {
             readException = e;
         }
         return null;
+    }
+
+    @NotNull
+    private Thread buildProgressThread(HasProgress is) {
+        Thread progressThread = new Thread(() -> {
+            while (true) {
+                progress = is.getProgress();
+                publish();
+                if (progress >= 100 || readException != null || progress < 0) {
+                    progress = -1;
+                    publish();
+                    break;
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {}
+            }
+        });
+        progressThread.setName("ProgressInputStreamThread");
+        return progressThread;
     }
 
     @Override

@@ -43,8 +43,6 @@ import java.util.Random;
  * @author Nicolas Rinaudo, Maxence Bernard
  */
 class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
-    // - Instance fields -----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /** Used to textPreview the editor's theme. */
     private RSyntaxTextArea textPreview;
 
@@ -113,9 +111,9 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
     }
 
     /**
-     * Creates the JPanel that contains all of the color configuration elements.
+     * Creates the JPanel that contains all the color configuration elements.
      * @param fontChooser font chooser used by the editor panel.
-     * @return the JPanel that contains all of the color configuration elements.
+     * @return the JPanel that contains all the color configuration elements.
      */
     private JPanel createHexColorsPanel(FontChooser fontChooser) {
         // Initialisation
@@ -176,7 +174,7 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
         mainPanel.add(createTextPreviewPanel(), BorderLayout.CENTER);
         addFontChooserListener(fontChooser, textPreview);
 
-        // Configuration panel initialisation.
+        // Configuration panel initialization.
         YBoxPanel configurationPanel = new YBoxPanel();
         configurationPanel.add(fontChooser);
         configurationPanel.addSpace(10);
@@ -192,7 +190,7 @@ class FileEditorPanel extends ThemeEditorPanel implements ThemeId {
         panel.add(createHexPreviewPanel(), BorderLayout.CENTER);
         addFontChooserListener(fontChooser, hexPreview);
 
-        // Configuration panel initialisation.
+        // Configuration panel initialization.
         YBoxPanel configurationPanel = new YBoxPanel();
         configurationPanel.add(fontChooser);
         configurationPanel.addSpace(10);

@@ -6,17 +6,16 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class ZxSpectrumLoadPane extends JPanel {
-    private final Color COLOR_BLUE = new Color(0x0001c8);
-    private final Color COLOR_YELLOW = new Color(0xbbbf0a);
+    private static final Color COLOR_BLUE = new Color(0x0001c8);
+    private static final Color COLOR_YELLOW = new Color(0xbbbf0a);
 //    private final Color COLOR_RED = new Color(0xaa0000);
 //    private final Color COLOR_CYAN = new Color(0x00aaaa);
-    private final Random r = new Random();
+    private static final Random r = new Random();
     private int randomPrev;
     private final Timer timer;
 
     public ZxSpectrumLoadPane() {
-        super();
-        timer = initTimer();
+        this(null);
     }
 
     public ZxSpectrumLoadPane(LayoutManager layout) {
@@ -25,7 +24,7 @@ public class ZxSpectrumLoadPane extends JPanel {
     }
 
     private Timer initTimer() {
-        ActionListener updater = evt -> ZxSpectrumLoadPane.this.repaint();
+        ActionListener updater = evt -> repaint();
         return new Timer(30, updater);
     }
 

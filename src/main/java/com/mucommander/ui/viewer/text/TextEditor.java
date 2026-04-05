@@ -172,8 +172,10 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     protected void restoreStateOnStartup() {
         final TextArea textArea = textEditorImpl.getTextArea();
         final TextFilesHistory.FileRecord historyRecord = textViewerDelegate.getHistoryRecord();
-        getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
-        textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
+        if (historyRecord != null) {
+            getViewport().setViewPosition(new java.awt.Point(0, historyRecord.getScrollPosition()));
+            textArea.gotoLine(historyRecord.getLine(), historyRecord.getColumn());
+        }
     }
 
 
@@ -200,7 +202,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
             try {
                 destFile.getParent().setLastModifiedDate(System.currentTimeMillis());
             } catch (IOException e) {
-                LOGGER.debug("failed to change the date of "+destFile, e);
+                LOGGER.debug("failed to change the date of {}", destFile, e);
                 // Fail silently
             }
         }
@@ -228,6 +230,7 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         textArea.discardAllEdits();
         textViewerDelegate.menuHelper.updateEditActions();
 
+        // TODO SHOULD BE IN SEPARATE THREAD !!!
         TextFilesHistory.FileRecord historyRecord = textViewerDelegate.initHistoryRecord(file);
         FileType type = historyRecord.getFileType();
         if (type == null) {
@@ -240,15 +243,9 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         textEditorImpl.prepareForEdit(file);
         textEditorImpl.setSyntaxType(type);
         textViewerDelegate.menuHelper.setSyntax(type);
-    	textViewerDelegate.startEditing(file, this);
+        textViewerDelegate.startEditing(file, this);
         textArea.discardAllEdits();
     }
-
-
-    
-    /////////////////////////////////////
-    // DocumentListener implementation //
-    /////////////////////////////////////
 
     @Override
     public void changedUpdate(DocumentEvent e) {
@@ -269,10 +266,6 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         setSaveNeeded(true);
     }
     
-    ///////////////////////////////////
-    // ActionListener implementation //
-    ///////////////////////////////////
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (textViewerDelegate.menuHelper.performAction(e, textViewerDelegate)) {
@@ -280,10 +273,6 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
         }
         super.actionPerformed(e);
     }
-    
-    /////////////////////////////////////
-    // EncodingListener implementation //
-    /////////////////////////////////////
 
     @Override
     public void encodingChanged(Object source, String oldEncoding, String newEncoding) {

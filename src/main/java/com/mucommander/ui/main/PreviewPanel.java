@@ -84,7 +84,7 @@ class PreviewPanel extends JPanel {
         textArea.setWrapStyleWord(true);
 
         textArea.addMouseWheelListener(e -> {
-            boolean isCtrlPressed = (e.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+            boolean isCtrlPressed = (e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0;
             if (isCtrlPressed) {
                 Font currentFont = textArea.getFont();
                 int currentFontSize = currentFont.getSize();

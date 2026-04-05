@@ -42,7 +42,7 @@ public class FocusRequester implements Runnable {
     private Component component;
 
     /** If true, focus will be requested using Component#requestFocusInWindow() instead of Component#requestFocus() */
-    private boolean requestFocusInWindow;
+    private final boolean requestFocusInWindow;
 	
     private FocusRequester(Component c, boolean requestFocusInWindow) {
         this.component = c;
@@ -61,15 +61,14 @@ public class FocusRequester implements Runnable {
      */
     public static synchronized void requestFocus(Component c) {
         if (c == null) {
-            LOGGER.debug(">>>>>>>>>>>>>>>>>> Component is null, returning!");
+            LOGGER.debug(">>>>>>>>>>>>>>>>> Component is null, returning!");
             return;
         }
         SwingUtilities.invokeLater(new FocusRequester(c, false));
     }
 
     /**
-     * Requests focus on the given component using {@link java.awt.Component#requestFocusInWindow(boolean)}}, after all
-     * currently queued Swing events have been processed.
+     * Requests focus on the given component, after all currently queued Swing events have been processed.
      *
      * <p>This method can typically be used when a component has been added to the screen but is not yet visible.
      * In that case, calling {@link java.awt.Component#requestFocusInWindow()} would have no effect.
@@ -85,11 +84,7 @@ public class FocusRequester implements Runnable {
         SwingUtilities.invokeLater(new FocusRequester(c, true));
     }
 
-
-    /////////////////////////////
-    // Runnable implementation //
-    /////////////////////////////
-    
+    @Override
     public void run() {
         // Request focus on the component
         if (requestFocusInWindow) {
@@ -97,12 +92,10 @@ public class FocusRequester implements Runnable {
         } else {
             component.requestFocus();
         }
-        if (component instanceof Frame) {
-            Frame f = (Frame) component;
+        if (component instanceof Frame f) {
             f.toFront();
         }
-        if (component instanceof MainFrame) {
-            MainFrame mainFrame = (MainFrame) component;
+        if (component instanceof MainFrame mainFrame) {
             mainFrame.getActiveTable().requestFocus();
         }
 

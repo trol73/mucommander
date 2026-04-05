@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -235,7 +234,6 @@ public abstract class AnimatedIcon implements Icon, AutoCloseable {
             if (g instanceof Graphics2D g2d) {
                 transform = g2d.getTransform();
             } else {
-                // Fallback: использовать масштаб 1.0
                 transform = new AffineTransform();
             }
             components.add(new TrackedComponent(c, x, y, (int)(getIconWidth() * transform.getScaleX()), (int)(getIconHeight() * transform.getScaleY())));
@@ -298,10 +296,10 @@ public abstract class AnimatedIcon implements Icon, AutoCloseable {
          * @param height height of the icon.
          */
         public TrackedComponent(Component c, int x, int y, int width, int height) {
-            Component ancestor;
+            Component ancestor = findNonRendererAncestor(c);
 
             // Identifies the component that displays the icon.
-            if((ancestor = findNonRendererAncestor(c)) != c) {
+            if (ancestor != c) {
                 Point pt = SwingUtilities.convertPoint(c, x, y, ancestor);
                 c = ancestor;
                 x = pt.x;
@@ -329,9 +327,7 @@ public abstract class AnimatedIcon implements Icon, AutoCloseable {
          * @param c component whose ancestors should be explored.
          */
         private Component findNonRendererAncestor(Component c) {
-            Component ancestor;
-
-            ancestor = SwingUtilities.getAncestorOfClass(CellRendererPane.class, c);
+            Component ancestor = SwingUtilities.getAncestorOfClass(CellRendererPane.class, c);
             if (ancestor != null && ancestor != c && ancestor.getParent() != null)
                 c = findNonRendererAncestor(ancestor.getParent());
             return c;
@@ -340,13 +336,13 @@ public abstract class AnimatedIcon implements Icon, AutoCloseable {
         /**
          * Forces the tracked component to repaint the animated icon.
          */
-        public void repaint() {component.repaint(x, y, width, height);}
+        public void repaint() {
+            component.repaint(x, y, width, height);
+        }
     }
 
 
 
-    // - Timer management ----------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Receives timer events and notifies the icon.
      * @author twall, Nicolas Rinaudo
