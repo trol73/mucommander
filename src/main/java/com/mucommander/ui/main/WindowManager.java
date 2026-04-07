@@ -35,7 +35,7 @@ import com.mucommander.ui.viewer.FileFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mucommander.ShutdownHook;
+import com.mucommander.launcher.ShutdownHook;
 import com.mucommander.commons.conf.ConfigurationEvent;
 import com.mucommander.commons.conf.ConfigurationListener;
 import com.mucommander.conf.TcConfigurations;

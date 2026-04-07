@@ -21,8 +21,8 @@ package com.mucommander.updates;
 import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -69,9 +69,8 @@ import java.io.InputStream;
  *
  * @author Maxence Bernard, Nicolas Rinaudo
  */
+@Slf4j
 public class VersionChecker extends DefaultHandler {
-	private static Logger logger;
-	
     // - XML structure ----------------------------------------------------------
     // --------------------------------------------------------------------------
     /** Root XML element. */
@@ -101,13 +100,31 @@ public class VersionChecker extends DefaultHandler {
     private static final int STATE_UNKNOWN      = 5;
 
 
-    /** Remote version number. */
+    /** Remote version number.
+     * -- GETTER --
+     *  Returns the version number of the latest trolCommander release.
+     */
+    @Getter
     private String latestVersion;
-    /** Where to download the latest version. */
+    /** Where to download the latest version.
+     * -- GETTER --
+     *  Returns the URL at which the latest version of trolCommander can be downloaded.
+     */
+    @Getter
     private String downloadURL;
-    /** URL to the latest JAR file. */
+    /** URL to the latest JAR file.
+     * -- GETTER --
+     *  Returns the URL to the latest JAR file, <code>null</code> if not available.
+     */
+    @Getter
     private String jarURL;
-    /** Remote release date. */
+
+    /** Remote release date.
+     * The date at which the latest version of trolCommander has been released.
+     * <p>
+     * The date format is YYYYMMDD.
+     */
+    @Getter
     private String releaseDate;
     /** Current state the parser is in. */
     private int state;
@@ -124,7 +141,7 @@ public class VersionChecker extends DefaultHandler {
      * @exception Exception thrown if any error happens while retrieving the remote version.
      */
     public static VersionChecker getInstance() throws Exception {
-        getLogger().info("Opening connection to " + RuntimeConstants.VERSION_URL);
+        log.info("Opening connection to {}", RuntimeConstants.VERSION_URL);
 
         // Parses the remote XML file using UTF-8 encoding.
         AbstractFile file = FileFactory.getFile(RuntimeConstants.VERSION_URL);
@@ -136,7 +153,7 @@ public class VersionChecker extends DefaultHandler {
 	        try {
 	            SAXParserFactory.newInstance().newSAXParser().parse(in, instance = new VersionChecker());
 	        } catch(Exception e) {
-	            getLogger().debug("Failed to read version XML file at "+RuntimeConstants.VERSION_URL, e);
+	            log.debug("Failed to read version XML file at {}", RuntimeConstants.VERSION_URL, e);
 	            throw e;
 	        }
         }
@@ -156,57 +173,21 @@ public class VersionChecker extends DefaultHandler {
     // --------------------------------------------------------------------------
     /**
      * Checks whether the remote version is newer than the current one.
-     * @return <code>true</code> if the remote version is newer than the current one,
-     *         <code>false</code> otherwise.
+     * @return <code>true</code> if the remote version is newer than the current one, <code>false</code> otherwise.
      */
     public boolean isNewVersionAvailable() {
+        String buildDate = RuntimeConstants.BUILD_DATE.replace("-", "");
         // If the local and remote versions are the same, compares release dates.
         if (latestVersion.equals(RuntimeConstants.VERSION.trim().toLowerCase())) {
-            // This ensures backward compatibility - if the remote version file does not contain
-            // release date information, ignore it.
+            // This ensures backward compatibility - if the remote version file does not contain release date information, ignore it.
             if (releaseDate.isEmpty()) {
                 return true;
             }
 
             // Checks whether the remote release date is later than the current release date.
-            return releaseDate.compareTo(RuntimeConstants.BUILD_DATE) > 0;
+            return releaseDate.compareTo(buildDate) > 0;
         }
-        return true;
-    }
-
-    /**
-     * Returns the version number of the latest trolCommander release.
-     * @return the version number of the latest trolCommander release.
-     */
-    public String getLatestVersion() {
-        return latestVersion;
-    }
-
-    /**
-     * Returns the URL at which the latest version of trolCommander can be downloaded.
-     * @return the URL at which the latest version of trolCommander can be downloaded.
-     */
-    public String getDownloadURL() {
-        return downloadURL;
-    }
-
-    /**
-     * Returns the URL to the latest JAR file, <code>null</code> if not available.
-     * @return the URL to the latest JAR file.
-     */
-    public String getJarURL() {
-        return jarURL;
-    }
-
-    /**
-     * Returns the date at which the latest version of trolCommander has been released.
-     * <p>
-     * The date format is YYYYMMDD.
-     *
-     * @return the date at which the latest version of trolCommander has been released.
-     */
-    public String getReleaseDate() {
-        return releaseDate;
+        return !releaseDate.isEmpty() && releaseDate.compareTo(buildDate) > 0;
     }
 
 
@@ -283,16 +264,9 @@ public class VersionChecker extends DefaultHandler {
         releaseDate   = releaseDate.trim();
 
         // Logs the data if in debug mode.
-        getLogger().debug("download URL: "  + downloadURL);
-        getLogger().debug("jar URL: "       + jarURL);
-        getLogger().debug("latestVersion: " + latestVersion);
-        getLogger().debug("releaseDate:   " + releaseDate);
-    }
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(VersionChecker.class);
-        }
-        return logger;
+        log.debug("download URL: {}", downloadURL);
+        log.debug("jar URL: {}", jarURL);
+        log.debug("latestVersion: {}", latestVersion);
+        log.debug("releaseDate: {}", releaseDate);
     }
 }

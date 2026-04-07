@@ -237,17 +237,27 @@ jar {
             'Implementation-Vendor': 'Oleg Trifonov',
             'Implementation-Version': project.version,
             'Build-Date': new Date().format('yyyy-MM-dd'),
+            'Build-Time': new Date().format('hh:mm:ss'),
+            'Build-URL': 'http://www.trolsoft.ru/content/soft/trolcommander/version.xml',
             'Class-Path': configurations.runtimeClasspath.files.collect { 
                 "lib/${it.name}" 
             }.join(' ')
         )
     }
     
-//    // Включение ресурсов в JAR
+
 //    from('res/runtime') {
 //        include '**/*'
 //        exclude '**/*.java'
 //    }
+}
+
+tasks.withType(Jar).configureEach {
+    exclude('META-INF/maven/**', 'docs/**')
+    exclude {
+        def name = it.name.toLowerCase()
+        (name.contains('license') && name.endsWith('.txt')) || name.equals('readme.txt')
+    }
 }
 
 // ==================== SHADOW JAR (fat-jar со всеми зависимостями) ====================
@@ -373,15 +383,15 @@ tasks.register('copyLibs', Copy) {
 //}
 
 
-// ✅ Отключить стандартные задачи дистрибуции (конфликтуют с shadowJar)
+//  Отключить стандартные задачи дистрибуции (конфликтуют с shadowJar)
 tasks.named('distZip') { enabled = false }
 tasks.named('distTar') { enabled = false }
 tasks.named('startScripts') { enabled = false }
 
-// ✅ Отключить стандартный jar, если используете только shadowJar
+// Отключить стандартный jar, если используете только shadowJar
 tasks.named('jar') { enabled = false }
 
-// ✅ Сделать shadowJar задачей сборки по умолчанию
+// Сделать shadowJar задачей сборки по умолчанию
 tasks.named('assemble') {
     dependsOn 'shadowJar'
 }

@@ -16,8 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander;
+package com.mucommander.launcher;
 
+import com.mucommander.PlatformManager;
+import com.mucommander.RuntimeConstants;
+import com.mucommander.TrolCommander;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mucommander.conf.TcConfigurations;
@@ -52,7 +55,7 @@ public class LauncherCmdHelper {
     private final String[] args;
 
 
-    LauncherCmdHelper(String[] args, boolean verbose, boolean fatalWarnings) {
+    public LauncherCmdHelper(String[] args, boolean verbose, boolean fatalWarnings) {
         this.args = args;
         this.verbose = verbose;
         this.fatalWarnings = fatalWarnings;
@@ -339,7 +342,7 @@ public class LauncherCmdHelper {
         printError(error.toString(), quit);
     }
 
-    void printFileError(String msg, Throwable exception) {
+    public void printFileError(String msg, Throwable exception) {
         printFileError(msg, exception, fatalWarnings);
     }
 
@@ -349,7 +352,7 @@ public class LauncherCmdHelper {
      * @param quit      whether to quit after printing the error message.
      * @param exception exception that triggered the error (for verbose output).
      */
-    void printError(String msg, Exception exception, boolean quit) {
+    public void printError(String msg, Exception exception, boolean quit) {
         printError(createErrorMessage(msg, exception, quit).toString(), quit);
     }
 
@@ -362,7 +365,7 @@ public class LauncherCmdHelper {
             error.append("Warning: ");
         }
         error.append(msg);
-        if (verbose && (exception != null)) {
+        if (verbose && exception != null) {
             error.append(": ").append(exception.getMessage());
         }
 

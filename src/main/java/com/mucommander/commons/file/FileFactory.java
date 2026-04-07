@@ -365,7 +365,7 @@ public class FileFactory {
         try {
             return getFile(absPath, null);
         } catch(IOException e) {
-            getLogger().info("Caught an exception", e);
+            getLogger().info("Caught an exception (file {})", absPath, e);
             return null;
         }
     }

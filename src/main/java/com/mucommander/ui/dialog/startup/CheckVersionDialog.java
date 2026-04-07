@@ -118,7 +118,7 @@ public class CheckVersionDialog extends QuestionDialog {
                 // If the platform is not capable of opening a new browser window,
                 // display the download URL.
                 message = downloadOption ? i18n("version_dialog.new_version") : i18n("version_dialog.new_version_url", downloadURL.toString());
-message += version.getLatestVersion() + "/ " + RuntimeConstants.VERSION + "(" + RuntimeConstants.BUILD_NUMBER + ")";
+//message += version.getLatestVersion() + "/ " + RuntimeConstants.VERSION + "(" + RuntimeConstants.BUILD_NUMBER + ")";
                 jarURL = version.getJarURL();
             } else {    // We're already running latest version
                 getLogger().debug("No new version.");

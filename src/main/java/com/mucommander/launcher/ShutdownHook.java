@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mucommander;
+package com.mucommander.launcher;
 
 import com.mucommander.auth.CredentialsManager;
 import com.mucommander.bookmark.BookmarkManager;
