@@ -21,6 +21,7 @@ package com.mucommander.ui.dialog.pref;
 import com.mucommander.commons.conf.ValueList;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
+import lombok.Getter;
 
 import javax.swing.*;
 
@@ -31,7 +32,11 @@ import javax.swing.*;
 public abstract class PreferencesPanel extends JPanel {
     /** Preferences dialog that contains this panel. */
     protected PreferencesDialog parent;
-    /** Panel's title. */
+    /** Panel's title.
+     * -- GETTER --
+     *  Returns the panel's title.
+     */
+    @Getter
     protected String title;
 
     /**
@@ -46,14 +51,6 @@ public abstract class PreferencesPanel extends JPanel {
     }
 
     /**
-     * Returns the panel's title.
-     * @return the panel's title.
-     */
-    public String getTitle() {
-        return title;
-    }
-	
-    /**
      * This method is called by PreferencesDialog after the user pressed 'OK'
      * to save new preferences.
      */
@@ -67,27 +64,27 @@ public abstract class PreferencesPanel extends JPanel {
         return true;
     }
 
-    protected String getVariable(TcPreference preference) {
+    protected static String getVariable(TcPreference preference) {
         return TcConfigurations.getPreferences().getVariable(preference);
     }
 
-    protected boolean getVariable(TcPreference preference, boolean value) {
+    protected static boolean getVariable(TcPreference preference, boolean value) {
         return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected String getVariable(TcPreference preference, String value) {
+    protected static String getVariable(TcPreference preference, String value) {
         return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected float getVariable(TcPreference preference, float value) {
+    protected static float getVariable(TcPreference preference, float value) {
         return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected int getVariable(TcPreference preference, int value) {
+    protected static int getVariable(TcPreference preference, int value) {
         return TcConfigurations.getPreferences().getVariable(preference, value);
     }
 
-    protected ValueList getListVariable(TcPreference preference, String separator) {
+    protected static ValueList getListVariable(TcPreference preference, String separator) {
         return TcConfigurations.getPreferences().getListVariable(preference, separator);
     }
 }

@@ -87,11 +87,7 @@ public abstract class CustomizeDialog extends FocusDialog implements ActionListe
         // Set preferred size
         setPreferredSize(PREFERRED_SIZE);
     }
-
-    //////////////////////
-    // Abstract methods //
-    //////////////////////
-
+    
     protected abstract JPanel createCustomizationPanel();
 
     protected abstract void commit();

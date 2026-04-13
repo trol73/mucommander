@@ -103,8 +103,7 @@ public class UserPopupMenuLoader {
         Object cmd = item.get("command");
         if (cmd instanceof String) {
             return new UserMenuItem.Command((String) cmd);
-        } else if (cmd instanceof JSONArray) {
-            JSONArray array = (JSONArray) cmd;
+        } else if (cmd instanceof JSONArray array) {
             List<List<String>> result = new ArrayList<>();
             if (arrayContainsArrays(array)) {
 //                for (Object o : array) {

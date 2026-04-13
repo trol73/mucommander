@@ -47,6 +47,7 @@ import com.mucommander.ui.main.tree.FoldersTreePanel;
 import com.mucommander.ui.quicklist.QuickList;
 import com.mucommander.ui.quicklist.QuickListContainer;
 import com.mucommander.ui.tabs.ActiveTabListener;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,32 +68,73 @@ import java.util.Set;
  */
 public class FolderPanel extends JPanel implements FocusListener, QuickListContainer, ActiveTabListener {
 	private static Logger logger;
+    @Getter
     private boolean previewMode;
 
 
     /** The following constants are used to identify the left and right folder panels */
 	public enum FolderPanelType { LEFT, RIGHT }
 
+    /**
+     * -- GETTER --
+     *  Returns the MainFrame that contains this panel.
+     */
+    @Getter
     private final MainFrame mainFrame;
 
+    /**
+     * -- GETTER --
+     *  Returns the LocationManager instance that notifies registered listeners of location changes that occur in this FolderPanel.
+     */
+    @Getter
     private final LocationManager locationManager = new LocationManager(this);
 
+    /**
+     * -- GETTER --
+     *  Returns the DrivePopupButton contained by this panel.
+     */
     /*  We're NOT using JComboBox anymore because of its strange behavior:
-        it calls actionPerformed() each time an item is highlighted with the arrow (UP/DOWN) keys,
-        so there is no way to tell if it's the final selection (ENTER) or not.
-    */
+           it calls actionPerformed() each time an item is highlighted with the arrow (UP/DOWN) keys,
+           so there is no way to tell if it's the final selection (ENTER) or not.
+       */
+    @Getter
     private final DrivePopupButton driveButton;
+    /**
+     * -- GETTER --
+     *  Returns the LocationTextField contained by this panel.
+     */
+    @Getter
     private final LocationTextField locationTextField;
+    /**
+     * -- GETTER --
+     *  Returns the FileTable contained by this panel.
+     */
+    @Getter
     private final FileTable fileTable;
+    /**
+     * -- GETTER --
+     *  Returns the FileTable tabs contained by this panel.
+     */
+    @Getter
     private final FileTableTabs tabs;
+    /**
+     * -- GETTER --
+     *  Returns a panel with a folders tree.
+     */
+    @Getter
     private final FoldersTreePanel foldersTreePanel;
     private final JSplitPane treeSplitPane;
 
+    @Getter
     private final FileDragSourceListener fileDragSourceListener;
 
     private final LocationChanger locationChanger;
 
-    /** Is directory tree visible */
+    /** Is directory tree visible
+     * -- GETTER --
+     *  Returns true if a directory tree is visible.
+     */
+    @Getter
     private boolean treeVisible = false;
 
     /** Saved width of a directory tree (when it's not visible) */ 
@@ -245,56 +287,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
     }
 
 
-    public FileDragSourceListener getFileDragSourceListener() {
-        return this.fileDragSourceListener;
-    }
-
-
-    /**
-     * Returns the MainFrame that contains this panel.
-     *
-     * @return the MainFrame that contains this panel
-     */
-    public MainFrame getMainFrame() {
-        return this.mainFrame;
-    }
-
-    /**
-     * Returns the FileTable contained by this panel.
-     *
-     * @return the FileTable contained by this panel
-     */
-    public FileTable getFileTable() {
-        return this.fileTable;
-    }
-
-    /**
-     * Returns the FileTable tabs contained by this panel.
-     *
-     * @return the FileTable tabs contained by this panel
-     */
-    public FileTableTabs getTabs() {
-        return this.tabs;
-    }
-
-    /**
-     * Returns the LocationTextField contained by this panel.
-     *
-     * @return the LocationTextField contained by this panel
-     */
-    public LocationTextField getLocationTextField() {
-        return locationTextField;
-    }
-
-    /**
-     * Returns the DrivePopupButton contained by this panel.
-     *
-     * @return the DrivePopupButton contained by this panel
-     */
-    public DrivePopupButton getDriveButton() {
-        return driveButton; 
-    }
-
     /**
      * Returns the visited folders history, wrapped in a FolderHistory object.
      *
@@ -302,17 +294,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
      */
     public LocalLocationHistory getFolderHistory() {
         return getTabs().getCurrentTab().getLocationHistory();
-    }
-
-    /**
-     * Returns the LocationManager instance that notifies registered listeners of location changes
-     * that occur in this FolderPanel.
-     *
-     * @return the LocationManager instance that notifies registered listeners of location changes that occur in
-     * this FolderPanel
-     */
-    public LocationManager getLocationManager() {
-        return locationManager;
     }
 
     /**
@@ -433,14 +414,7 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         }
     	fileTablePopups[index].show();
     }
-    
-    /**
-     * Returns true if a directory tree is visible.
-     */
-    public boolean isTreeVisible() {
-        return treeVisible;
-    }
-    
+
     /**
      * Returns width of a folders tree.
      * @return a width of a folders tree
@@ -460,14 +434,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         	treeSplitPane.setDividerLocation(width);
         	treeSplitPane.doLayout();
         }
-    }
-
-    /**
-     * Returns a panel with a folders tree.
-     * @return a panel with a folders tree
-     */
-    public FoldersTreePanel getFoldersTreePanel() {
-        return foldersTreePanel;
     }
 
     /**
@@ -543,7 +509,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         return logger;
     }
 
-
     public void setPreviewMode(boolean previewMode) {
         this.previewMode = previewMode;
         if (previewMode) {
@@ -563,10 +528,6 @@ public class FolderPanel extends JPanel implements FocusListener, QuickListConta
         }
         doLayout();
         repaint();
-    }
-
-    public boolean isPreviewMode() {
-        return previewMode;
     }
 
 }

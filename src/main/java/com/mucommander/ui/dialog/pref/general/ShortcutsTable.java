@@ -43,6 +43,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -254,7 +255,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	 * won't get to setModel(KeymapTableModel model) function.
 	 */
 	@Override
-    public void setModel(TableModel model) {
+    public void setModel(@NotNull TableModel model) {
 		super.setModel(model);
 	}
 	

@@ -18,6 +18,7 @@
 package com.mucommander.ui.viewer.text;
 
 import com.mucommander.commons.file.AbstractFile;
+import lombok.Getter;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -70,7 +71,7 @@ public enum FileType {
     MARKDOWN("Markdown", SyntaxConstants.SYNTAX_STYLE_MARKDOWN, "*.md"),
     MXML("MXML", SyntaxConstants.SYNTAX_STYLE_MXML, "*.mxml"),
     NSIS("Nsis", SyntaxConstants.SYNTAX_STYLE_NSIS, "*.nsi"),
-    PASCAL("Pascal", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr"),
+    PASCAL("Pascal", SyntaxConstants.SYNTAX_STYLE_DELPHI, "*.pas,*.dpr,*.pp,*.lpr"),
     PERL("Perl", SyntaxConstants.SYNTAX_STYLE_PERL, "*.pl"),
     PHP("PHP", SyntaxConstants.SYNTAX_STYLE_PHP, "*.php"),
     PROTOBUF("Protobuf", SyntaxConstants.SYNTAX_STYLE_PROTO, "*.proto"),
@@ -91,9 +92,11 @@ public enum FileType {
 
 
 
+    @Getter
     private final String contentType;
 
     private final WildcardFileFilter[] fileFilters;
+    @Getter
     private final String name;
 
     FileType(String name, String contentType, String fileMasks) {
@@ -105,14 +108,6 @@ public enum FileType {
 
     FileType(String name, String contentType) {
         this(name, contentType, null);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getContentType() {
-        return contentType;
     }
 
     public static FileType getFileType(AbstractFile file) {

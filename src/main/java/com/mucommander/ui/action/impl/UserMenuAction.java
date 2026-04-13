@@ -28,6 +28,7 @@ import com.mucommander.ui.notifier.NotificationType;
 import com.mucommander.ui.viewer.EditorRegistrar;
 import com.mucommander.ui.viewer.text.TextEditor;
 import com.mucommander.ui.viewer.text.TextFilesHistory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 public class UserMenuAction extends ParentFolderAction {
 
     private UserMenuAction(MainFrame mainFrame, Map<String, Object> properties) {
@@ -62,13 +64,13 @@ public class UserMenuAction extends ParentFolderAction {
                 openEditorAndShowError(mainFrame, localMenu, ej);
             } catch (IOException e) {
                 // TODO status bar
-                e.printStackTrace();
+                log.error("Load menu exception", e);
                 AbstractNotifier notifier = AbstractNotifier.getNotifier();
                 if (notifier != null) {
                     notifier.displayNotification(NotificationType.JOB_ERROR, "Error", e.getMessage());
                 }
             } catch (Throwable t) {
-                t.printStackTrace();
+                log.error("Load menu error", t);
             }
         }
         return null;

@@ -181,11 +181,11 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
 
     @Override
     public void componentChanged(PrefComponent component) {
-		if (component.hasChanged())
-			modifiedComponents.add(component);
-		else
-			modifiedComponents.remove(component);
-		
+		if (component.hasChanged()) {
+            modifiedComponents.add(component);
+        } else {
+            modifiedComponents.remove(component);
+        }
 		setCommitButtonsEnabled(!modifiedComponents.isEmpty());
 	}
     
@@ -194,7 +194,8 @@ public class GeneralPreferencesDialog extends PreferencesDialog {
     	super.setCommitButtonsEnabled(enable);
     	// if "commit buttons" are disabled that's mean that there is no change in any component
     	// located in this dialog => we can clear the list of modified components in this dialog.
-    	if (!enable)
-    		modifiedComponents.clear();
+    	if (!enable) {
+            modifiedComponents.clear();
+        }
     }
 }

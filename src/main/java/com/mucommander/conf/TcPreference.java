@@ -92,7 +92,7 @@ public enum TcPreference {
     FILE_GROUP_9_MASK(TcPreferences.FILE_GROUP_9_MASK),
     FILE_GROUP_10_MASK(TcPreferences.FILE_GROUP_10_MASK),
     CUSTOM_EXTERNAL_TERMINAL(TcPreferences.CUSTOM_EXTERNAL_TERMINAL),
-    USE_CUSTOM_EXTERNAL_TERMINAL(TcPreferences.USE_CUSTOM_EXTERNAL_TERMINAL),
+    EXTERNAL_TERMINAL_TYPE(TcPreferences.EXTERNAL_TERMINAL_TYPE),
     TERMINAL_SHELL(TcPreferences.TERMINAL_SHELL),
     TERMINAL_USE_CUSTOM_SHELL(TcPreferences.TERMINAL_USE_CUSTOM_SHELL),
 	FIND_FILE_ENCODING(TcPreferences.FIND_FILE_ENCODING),
@@ -104,7 +104,7 @@ public enum TcPreference {
 
 
 
-    private String label;
+    private final String label;
 	
 	TcPreference(String label) {
 		this.label = label;

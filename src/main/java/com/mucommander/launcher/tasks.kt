@@ -51,6 +51,7 @@ import java.awt.event.KeyEvent
 import java.lang.reflect.Constructor
 import java.util.*
 import javax.swing.KeyStroke
+import javax.swing.UIManager
 import kotlin.math.max
 import kotlin.system.exitProcess
 
@@ -84,6 +85,12 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
     }
     val installFlatMacDarkLafTask = LauncherTask("install_flat_macdark_laf") {
         FlatMacDarkLaf.installLafInfo()
+    }
+    val installVaquaLafTask = LauncherTask("install_aqua_lf") {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            val aquaLaf = org.violetlib.aqua.AquaLookAndFeel()
+            UIManager.installLookAndFeel(UIManager.LookAndFeelInfo(aquaLaf.getName(), aquaLaf.javaClass.getName()))
+        }
     }
     val prepareKeystrokeClassTask = LauncherTask("prepare_keystroke") {
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK)
@@ -185,6 +192,7 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
             installFlatIntelliJLafTask,
             installFlatMacLightLafTask,
             installFlatMacDarkLafTask,
+            installVaquaLafTask,
             prepareKeystrokeClassTask,
             initMacOsSupportTask,
         registerActionsTask,

@@ -115,13 +115,14 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
         } else {
             for (List<String> group : properties.command.commandsList) {
                 String[] list = new String[group.size()];
-                OSXTerminal.addNewTabWithCommands(menuFile.getParent(), group.toArray(list));
-                sleep(200);
+                String[] commands = group.toArray(list);
+                executeInNewTerminalTabs(menuFile.getParent(), commands);
             }
         }
     }
 
-    private void sleep(long ms) {
+
+    private static void sleep(long ms) {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ignore) {
@@ -156,48 +157,71 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     }
 
     private void executeInTerminal(UserMenuItem properties) {
+        AbstractFile home = menuFile.getParent();
         if (properties.command.isSingle()) {
-            OSXTerminal.openNewWindowAndRun(menuFile.getParent(), properties.command.singleCommand);
+            executeInNewTerminalWindow(home, properties.command.singleCommand);
         } else {
             for (List<String> group : properties.command.commandsList) {
                 String[] list = new String[group.size()];
-                OSXTerminal.openNewWindowAndRun(menuFile.getParent(), group.toArray(list));
-                sleep(200);
+                String[] commands = group.toArray(list);
+                executeInNewTerminalWindow(home, commands);
             }
         }
     }
 
     private static String getDefaultTerminalCommand() {
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                return "cmd /c start cmd.exe /K \"cd /d $p\"";
-            case LINUX:
-                return "";
-            case MAC_OS_X:
-                return "open -a Terminal .";
-        }
-        return "";
+        return switch (OsFamily.getCurrent()) {
+            case WINDOWS -> "cmd /c start cmd.exe /K \"cd /d $p\"";
+            case LINUX -> "";
+            case MAC_OS_X -> "open -a Terminal .";
+            default -> "";
+        };
     }
 
-    private static String getConsoleCommand(AbstractFile folder) {
-        String cmd = getTerminalCommand();
-        return cmd.replace("$p", folder.getAbsolutePath());
-    }
-
-    private static String getTerminalCommand() {
-        if (useCustomExternalTerminal()) {
-            return getCustomExternalTerminal();
+    private static void executeInNewTerminalTabs(AbstractFile home, String[] commands) {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            OSXTerminal.addNewTabWithCommands(home, commands);
         } else {
-            return getDefaultTerminalCommand();
+            // TODO
+            log.error("Operation not supported for {}", OsFamily.getCurrent());
         }
+        sleep(200);
     }
+
+    private static void executeInNewTerminalWindow(AbstractFile home, String... commands) {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+            OSXTerminal.openNewWindowAndRun(home, commands);
+        } else {
+            // TODO
+            log.error("Operation not supported for {}", OsFamily.getCurrent());
+        }
+        sleep(200);
+    }
+
+
+
+//    private static String getConsoleCommand(AbstractFile folder) {
+//        String cmd = getTerminalCommand();
+//        return cmd.replace("$p", folder.getAbsolutePath());
+//    }
+//
+//    private static String getTerminalCommand() {
+//        switch (getTerminalType()) {
+//            case TERMINAL_DEFAULT:
+//                return getDefaultTerminalCommand();
+//            case TERMINAL_CUSTOM:
+//                return getCustomExternalTerminal();
+//            case TERMINAL_ITERM:
+//                return "open -a iTerm ."
+//        }
+//    }
 
     private static String getCustomExternalTerminal() {
         return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL);
     }
 
-    private static boolean useCustomExternalTerminal() {
-        return TcConfigurations.getPreferences().getVariable(TcPreference.USE_CUSTOM_EXTERNAL_TERMINAL, TcPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
+    private static int getTerminalType() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.EXTERNAL_TERMINAL_TYPE, TcPreferences.DEFAULT_TERMINAL_TYPE);
     }
 
 

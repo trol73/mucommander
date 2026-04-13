@@ -26,16 +26,20 @@ import com.mucommander.desktop.DesktopManager;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.mucommander.conf.TcPreferences.*;
+
 /**
  * @author Oleg Trifonov
  * Created on 17/12/13.
  */
+@Slf4j
 public class TerminalAction extends ParentFolderAction {
     /**
      * Creates a new instance of <code>InternalViewAction</code>.
@@ -57,7 +61,7 @@ public class TerminalAction extends ParentFolderAction {
             try {
                 ProcessRunner.execute(cmd, currentFolder);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Execution error", e);
             }
         }
     }
@@ -72,7 +76,7 @@ public class TerminalAction extends ParentFolderAction {
         try {
             ProcessRunner.execute(tokens, currentFolder);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Execution error", e);
         }
     }
 
@@ -84,15 +88,23 @@ public class TerminalAction extends ParentFolderAction {
 
 
     private static String getTerminalCommand() {
-        return useCustomExternalTerminal() ? getCustomExternalTerminal() : DesktopManager.getDefaultTerminalAppCommand();
+        return switch (useCustomExternalTerminal()) {
+            case TERMINAL_DEFAULT -> DesktopManager.getDefaultTerminalAppCommand();
+            case TERMINAL_CUSTOM -> getCustomExternalTerminal();
+            case TERMINAL_ITERM -> "open -a iTerm .";
+            default -> {
+                log.error("Unknown terminal type");
+                yield "";
+            }
+        };
     }
 
     private static String getCustomExternalTerminal() {
         return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL);
     }
 
-    private static boolean useCustomExternalTerminal() {
-        return TcConfigurations.getPreferences().getVariable(TcPreference.USE_CUSTOM_EXTERNAL_TERMINAL, TcPreferences.DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL);
+    private static int useCustomExternalTerminal() {
+        return TcConfigurations.getPreferences().getVariable(TcPreference.EXTERNAL_TERMINAL_TYPE, TcPreferences.DEFAULT_TERMINAL_TYPE);
     }
 
     @Override

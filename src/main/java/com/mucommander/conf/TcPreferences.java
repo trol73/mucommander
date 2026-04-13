@@ -126,14 +126,17 @@ public class TcPreferences implements TcPreferencesAPI {
 
 
     // - Terminal variables -----------------------------------------------------
+	public static final int TERMINAL_DEFAULT = 0;
+	public static final int TERMINAL_CUSTOM = 1;
+	public static final int TERMINAL_ITERM = 2;	// MacOS only
     /** Section describing the terminal (external and built in) CONFIGURATION. */
     public static final String TERMINAL_SECTION = "terminal";
     /** Terminal invocation command. */
     public static final String CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "custom_external_command";
     /** Whether to use a custom shell invocation Terminal command. */
-    public static final String USE_CUSTOM_EXTERNAL_TERMINAL = TERMINAL_SECTION + '.' + "use_custom_external";
+    public static final String EXTERNAL_TERMINAL_TYPE = TERMINAL_SECTION + '.' + "external_type";
     /** Default custom terminal behavior. */
-    public static final boolean DEFAULT_USE_CUSTOM_EXTERNAL_TERMINAL = false;
+    public static final int DEFAULT_TERMINAL_TYPE = TERMINAL_DEFAULT;
 
     /** Terminal shell command. */
     public static final String TERMINAL_SHELL = TERMINAL_SECTION + '.' + "shell";

@@ -157,8 +157,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
                 if (fileChooser == null) {
                     if (RetinaImageIcon.IS_RETINA) {
                         Icon icon = OSXFile.getIcon(javaIoFile, preferredSize*2);
-                        if (icon instanceof ImageIcon) {
-                            ImageIcon imageIcon = (ImageIcon)icon;
+                        if (icon instanceof ImageIcon imageIcon) {
                             return new RetinaImageIcon(imageIcon.getImage());
                         }
                     }
@@ -260,7 +259,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         //
         if ((!(originalFile.getTopAncestor() instanceof LocalFile) || (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrent()))
                 && originalFile.isSymlink()) {
-            icon = getSymlinkIcon(icon);
+            icon = icon == null ? null : getSymlinkIcon(icon);
         }
 
         return icon;
