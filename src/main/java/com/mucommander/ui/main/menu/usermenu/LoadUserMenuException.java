@@ -1,67 +1,62 @@
+/*
+ * This file is part of trolCommander, http://www.trolsoft.ru/en/trolcommander
+ * Copyright (C) 2014-2026 Oleg Trifonov
+ *
+ * trolCommander is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * trolCommander is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mucommander.ui.main.menu.usermenu;
 
-import org.json.JSONException;
+import lombok.Getter;
 
 public class LoadUserMenuException extends Exception {
+    @Getter
+    private final int line;
 
-    private final int line, column;
+    @Getter
+    private final int column;
 
-    LoadUserMenuException(JSONException e) {
-        super(extractMessage(e), e);
-        this.line = parseJsonErrorLine(e);
-        this.column = parseJsonErrorColumn(e);
-
+    public LoadUserMenuException(String message) {
+        super(message);
+        line = parseLine(message);
+        column = parseColumn(message);
     }
 
-    private static String extractMessage(JSONException e) {
-        String msg = e.getMessage();
-        if (!msg.contains("[character ") || !msg.contains(" line ") || !msg.contains("]")) {
-            return msg;
-        }
-        int pos = msg.lastIndexOf('[');
-        if (pos < 0) {
-            return msg;
-        } else {
-            String firstPart = msg.substring(0, pos-1);
-            int posAt = firstPart.lastIndexOf("at ");
-            return posAt < 0 ? firstPart : firstPart.substring(0, posAt);
-        }
+    private static int parseLine(String message) {
+        return parseInt(message, ", line ");
     }
 
+    private static int parseColumn(String message) {
+        return parseInt(message, ", column ");
+    }
 
-    private int parseJsonErrorLine(JSONException e) {
-        String msg = e.getMessage();
-        int pos = msg.lastIndexOf("[character ");
-        if (pos < 0) {
+    private static int parseInt(String message, String attrName) {
+        int indexStart = message.indexOf(attrName);
+        if (indexStart < 0) {
             return -1;
         }
-        String[] parts = msg.substring(pos, msg.length()-1).split(" ");
+        indexStart += attrName.length();
+        int indexEnd1 = message.indexOf(',', indexStart);
+        int indexEnd2 = message.indexOf(':', indexStart);
+        int indexEnd = indexEnd1 > 0 && indexEnd1 < indexEnd2 ? indexEnd1 : indexEnd2;
+        if (indexEnd < 0) {
+            indexEnd = message.length() - 1;
+        }
         try {
-            return Integer.parseInt(parts[3]);
-        } catch (NumberFormatException nfe) {
+            return Integer.parseInt(message.substring(indexStart, indexEnd));
+        } catch (Exception e) {
             return -1;
         }
-    }
 
-    private int parseJsonErrorColumn(JSONException e) {
-        String msg = e.getMessage();
-        int pos = msg.lastIndexOf("[character ");
-        if (pos < 0) {
-            return -1;
-        }
-        String[] parts = msg.substring(pos, msg.length()-1).split(" ");
-        try {
-            return Integer.parseInt(parts[1]);
-        } catch (NumberFormatException nfe) {
-            return -1;
-        }
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public int getColumn() {
-        return column;
     }
 }

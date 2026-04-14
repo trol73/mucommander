@@ -465,4 +465,8 @@ public class TextEditor extends FileEditor implements DocumentListener, Encoding
     public TextArea getTextArea() {
         return textEditorImpl.getTextArea();
     }
+
+    public void gotoLine(int line, int colump) {
+        getTextArea().gotoLine(line, colump);
+    }
 }

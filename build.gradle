@@ -200,6 +200,8 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.26.3'
     testImplementation "io.kotest:kotest-assertions-core:6.1.9"
 
+    implementation 'org.yaml:snakeyaml:2.4'
+
     
     
     // === ИНСТРУМЕНТЫ СБОРКИ (если нужны в runtime) ===

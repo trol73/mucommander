@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/trolcommander
- * Copyright (C) 2014-2018 Oleg Trifonov
+ * Copyright (C) 2014-2026 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,7 +89,11 @@ public class UserMenuAction extends ParentFolderAction {
             return null;
         }
         try {
-            AbstractFile result = folder.getChild(".trolcommander-menu.json");
+            AbstractFile result = folder.getChild(".trolcommander-menu.yml");
+            if (result != null && result.exists()) {
+                return result;
+            }
+            result = folder.getChild(".trolcommander-menu.yaml");
             return result != null && result.exists() ? result : null;
         } catch (IOException e) {
             return null;
@@ -97,14 +101,14 @@ public class UserMenuAction extends ParentFolderAction {
     }
 
     private static void openEditorAndShowError(MainFrame mainFrame, AbstractFile localMenu, LoadUserMenuException e) {
+        TextFilesHistory.FileRecord historyRecord = TextFilesHistory.getInstance().get(localMenu);
+        historyRecord.update(e.getLine(), e.getLine(), e.getColumn(), historyRecord.getFileType(), historyRecord.getEncoding());
+
         Image image = ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage();
         System.out.println("open frame " + e.getMessage() + " " + e.getLine() + ":" + e.getColumn());
         EditorRegistrar.createEditorFrame(mainFrame, localMenu, image,
                 (fileFrame) -> {
                     TextEditor textEditor = (TextEditor)fileFrame.getFilePresenter();
-
-                    TextFilesHistory.FileRecord historyRecord = TextFilesHistory.getInstance().get(localMenu);
-                    historyRecord.update(e.getLine(), e.getLine(), e.getColumn(), historyRecord.getFileType(), historyRecord.getEncoding());
                     textEditor.getStatusBar().showMessage(e.getMessage(), 1000);
                 });
     }

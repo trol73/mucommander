@@ -22,10 +22,7 @@ import com.mucommander.ui.helper.MnemonicHelper;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.menu.UserPopupMenu;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.yaml.snakeyaml.Yaml;
 import ru.trolsoft.ui.TMenuSeparator;
 
 import javax.swing.*;
@@ -33,130 +30,135 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class UserPopupMenuLoader {
 
     public static UserPopupMenu loadMenu(MainFrame mainFrame, AbstractFile file) throws IOException, LoadUserMenuException {
         try (InputStream is = file.getInputStream()) {
-            JSONObject root = new JSONObject(new JSONTokener(is));
-            JSONArray items = root.getJSONArray("menu");
+            Yaml yaml = new Yaml();
+            Map<String, Object> root = yaml.load(is);
+            if (root == null || !root.containsKey("menu")) {
+                throw new LoadUserMenuException("Invalid YAML structure: 'menu' key not found");
+            }
+            @SuppressWarnings("unchecked")
+            List<Object> items = (List<Object>) root.get("menu");
             MnemonicHelper mnemonicHelper = new MnemonicHelper();
             UserPopupMenu menu = new UserPopupMenu(mainFrame, file);
             loadMenu(menu, null, items, mnemonicHelper);
             return menu;
-        } catch (JSONException e) {
-            throw new LoadUserMenuException(e);
+        } catch (LoadUserMenuException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new LoadUserMenuException(e.getMessage());
         }
     }
 
-    private static void loadMenu(UserPopupMenu menu, JMenu parent, JSONArray items, MnemonicHelper mnemonicHelper) {
+    private static void loadMenu(UserPopupMenu menu, JMenu parent, List<Object> items, MnemonicHelper mnemonicHelper) throws LoadUserMenuException {
         if (items == null) {
             return;
         }
-        for (int i = 0; i < items.length(); i++) {
-            Object obj = items.get(i);
-            if (obj instanceof String) {
+        for (Object obj : items) {
+            if (obj instanceof String objs && objs.equalsIgnoreCase("separator")) {
                 menu.add(new TMenuSeparator());
-            } else if (obj instanceof JSONObject) {
-                JSONObject item = items.getJSONObject(i);
-                String type = getItemProp(item, "type");
-
-                if ("separator".equalsIgnoreCase(type)) {
-                    menu.add(new TMenuSeparator());
-                } else if (type == null || "item".equalsIgnoreCase(type)) {
-                    String name = getItemProp(item,"name");
-
+            } else if (obj instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> item = (Map<String, Object>) obj;
+                String name = getItemProp(item, "name");
+                Object subItems = item.get("items");
+                String key = getItemProp(item, "key");
+                if (name != null && subItems != null) { // Submenu
+                    JMenu submenu = new JMenu(name);
+                    if (key != null && !key.isEmpty()) {
+                        submenu.setMnemonic(KeyStroke.getKeyStroke(key).getKeyCode());
+                    } else {
+                        submenu.setMnemonic(mnemonicHelper.getMnemonic(name));
+                    }
+                    if (parent == null) {
+                        menu.add(submenu);
+                    } else {
+                        parent.add(submenu);
+                    }
+                    @SuppressWarnings("unchecked")
+                    List<Object> subItemsList = (List<Object>) subItems;
+                    loadMenu(menu, submenu, subItemsList, new MnemonicHelper());
+                } else if (name != null) {
                     UserMenuItem.Command command = getItemCommand(item);
                     String console = getItemProp(item, "console");
-                    String key = getItemProp(item,"key");
-                    UserMenuItem properties = new UserMenuItem(
-                            command,
-                            UserMenuItem.ConsoleType.fromStr(console));
+                    UserMenuItem properties = new UserMenuItem(command, UserMenuItem.ConsoleType.fromStr(console));
                     JMenuItem mi = menu.add(parent, name, properties);
                     mi.setMnemonic(mnemonicHelper.getMnemonic(name));
                     if (key != null) {
                         KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
                         mi.setAccelerator(keyStroke);
                     }
-                } else if ("menu".equalsIgnoreCase(type)) {
-                    String name = getItemProp(item,"name");
-                    JMenu submenu = new JMenu(name);
-                    submenu.setMnemonic(mnemonicHelper.getMnemonic(name));
-                    if (parent == null) {
-                        menu.add(submenu);
-                    } else {
-                        parent.add(submenu);
-                    }
-                    loadMenu(menu, submenu, item.getJSONArray("items"), new MnemonicHelper());
+                } else {
+                    throw new LoadUserMenuException("Invalid item type at index: " + items.indexOf(obj) + ", '" + obj + "'");
                 }
             } else {
-                throw new JSONException("Not JSON object found at index " + i);
+                throw new LoadUserMenuException("Invalid item type at index: " + items.indexOf(obj) + ", '" + obj + "'");
             }
         }
     }
 
-    private static UserMenuItem.Command getItemCommand(JSONObject item) {
-        if (!item.has("command")) {
+    private static UserMenuItem.Command getItemCommand(Map<String, Object> item) {
+        if (!item.containsKey("command")) {
             return null;
         }
         Object cmd = item.get("command");
         if (cmd instanceof String) {
             return new UserMenuItem.Command((String) cmd);
-        } else if (cmd instanceof JSONArray array) {
+        } else if (cmd instanceof List) {
             List<List<String>> result = new ArrayList<>();
-            if (arrayContainsArrays(array)) {
-//                for (Object o : array) {
-                for (int i = 0; i < array.length(); i++) {
-                    Object o = array.get(i);
+            @SuppressWarnings("unchecked")
+            List<Object> cmdList = (List<Object>) cmd;
+
+            boolean containsArrays = listContainsLists(cmdList);
+            if (containsArrays) {
+                for (Object o : cmdList) {
                     List<String> group = new ArrayList<>();
                     result.add(group);
-                    if (o instanceof JSONArray groupArray) {
-                        //for (Object c : groupArray) {
-                        for (int j = 0; j < groupArray.length(); j++) {
-                            Object c = groupArray.get(i);
+                    if (o instanceof List) {
+                        @SuppressWarnings("unchecked")
+                        List<Object> groupList = (List<Object>) o;
+                        for (Object c : groupList) {
                             if (c instanceof String) {
                                 group.add((String) c);
                             } else {
-                                throw new JSONException("invalid command type " + item);
+                                throw new RuntimeException("invalid command type: " + item);
                             }
                         }
                     }
                 }
-                return new UserMenuItem.Command(result);
             } else {
                 List<String> group = new ArrayList<>();
                 result.add(group);
-//                for (Object c : array) {
-                for (int i = 0; i < array.length(); i++) {
-                    Object c = array.get(i);
+                for (Object c : cmdList) {
                     if (c instanceof String) {
                         group.add((String) c);
                     } else {
-                        throw new JSONException("invalid command type " + item);
+                        throw new RuntimeException("invalid command type: " + item);
                     }
                 }
-                return new UserMenuItem.Command(result);
             }
-
+            return new UserMenuItem.Command(result);
         }
-        throw new JSONException("invalid command type " + item);
+        throw new RuntimeException("invalid command type: " + item);
     }
 
-    private static boolean arrayContainsArrays(JSONArray array) {
-//        for (Object o : array) {
-        for (int i = 0; i < array.length(); i++) {
-            Object o = array.get(i);
-            if (o instanceof JSONArray) {
+    private static boolean listContainsLists(List<Object> list) {
+        for (Object o : list) {
+            if (o instanceof List) {
                 return true;
             }
         }
         return false;
     }
 
-
     @Nullable
-    private static String getItemProp(JSONObject item, String name) {
-        return item.has(name) ? item.getString(name) : null;
+    private static String getItemProp(Map<String, Object> item, String name) {
+        Object value = item.get(name);
+        return value != null ? value.toString() : null;
     }
 }
