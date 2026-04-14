@@ -130,4 +130,8 @@ public class ViewerHexTableModel extends AbstractTableModel {
         }
     }
 
+    public byte getByteAt(long offset) throws IOException {
+        return buffer.getByte(offset);
+    }
+
 }

@@ -1,16 +1,28 @@
 package ru.trolsoft.hexeditor.ui;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.trolsoft.hexeditor.events.OffsetChangeListener;
 import ru.trolsoft.hexeditor.events.SelectionChangeListener;
 
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
@@ -18,6 +30,7 @@ import java.util.Map;
  */
 public class HexTable extends JTable {
     private static final Dimension ZERO_DIMENSION = new Dimension(0, 0);
+    @Setter
     private SelectionChangeListener selectionChangeListener;
 
     /**
@@ -51,7 +64,14 @@ public class HexTable extends JTable {
     private long leadSelectionIndex;
     private long anchorSelectionIndex;
 
+    @Setter
+    @Getter
     private OffsetChangeListener offsetChangeListener;
+
+    private JPopupMenu popupMenu;
+    private JMenuItem copyBinaryItem;
+    private JMenuItem copyHexItem;
+    private JMenuItem saveSelectedItem;
 
     public HexTable(ViewerHexTableModel model) {
         super(model);
@@ -78,6 +98,52 @@ public class HexTable extends JTable {
         setShowGrid(false);
 
         setFont(getFont());
+
+        initContextMenu();
+    }
+
+    private void initContextMenu() {
+        popupMenu = new JPopupMenu();
+
+        copyBinaryItem = new JMenuItem("Copy selected as binary");
+        copyBinaryItem.addActionListener(e -> copySelectedAsBinary());
+        popupMenu.add(copyBinaryItem);
+
+        copyHexItem = new JMenuItem("Copy selected as hex");
+        copyHexItem.addActionListener(e -> copySelectedAsHex());
+        popupMenu.add(copyHexItem);
+
+        saveSelectedItem = new JMenuItem("Save selected");
+        saveSelectedItem.addActionListener(e -> saveSelected());
+        popupMenu.add(saveSelectedItem);
+
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showContextMenu(e);
+                }
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showContextMenu(e);
+                }
+            }
+        });
+    }
+
+    private void showContextMenu(java.awt.event.MouseEvent e) {
+        long from = getSmallestSelectionIndex();
+        long to = getLargestSelectionIndex();
+        boolean hasSelection = from >= 0 && to >= 0 && from <= to;
+
+        copyBinaryItem.setEnabled(hasSelection);
+        copyHexItem.setEnabled(hasSelection);
+        saveSelectedItem.setEnabled(hasSelection);
+
+        popupMenu.show(e.getComponent(), e.getX(), e.getY());
     }
 
 
@@ -668,20 +734,97 @@ public class HexTable extends JTable {
         super.processKeyEvent(e);
     }
 
-    public OffsetChangeListener getOffsetChangeListener() {
-        return offsetChangeListener;
+    private void copySelectedAsBinary() {
+        long from = getSmallestSelectionIndex();
+        long to = getLargestSelectionIndex();
+        if (from < 0 || to < 0 || from > to) {
+            return;
+        }
+
+        try {
+            int length = (int)(to - from + 1);
+            byte[] data = new byte[length];
+            for (int i = 0; i < length; i++) {
+                data[i] = model.getByteAt(from + i);
+            }
+
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable transferable = new Transferable() {
+                @Override
+                public DataFlavor[] getTransferDataFlavors() {
+                    return new DataFlavor[]{DataFlavor.stringFlavor};
+                }
+
+                @Override
+                public boolean isDataFlavorSupported(DataFlavor flavor) {
+                    return true;
+                }
+
+                @Override
+                public Object getTransferData(DataFlavor flavor) {
+                    return data;
+                }
+            };
+            clipboard.setContents(transferable, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setOffsetChangeListener(OffsetChangeListener offsetChangeListener) {
-        this.offsetChangeListener = offsetChangeListener;
+    private void copySelectedAsHex() {
+        long from = getSmallestSelectionIndex();
+        long to = getLargestSelectionIndex();
+        if (from < 0 || to < 0 || from > to) {
+            return;
+        }
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (long i = from; i <= to; i++) {
+                byte b = model.getByteAt(i);
+                if (!sb.isEmpty()) {
+                    sb.append(' ');
+                }
+                sb.append(String.format("%02X", b & 0xFF));
+            }
+
+            StringSelection stringSelection = new StringSelection(sb.toString());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    private void saveSelected() {
+        long from = getSmallestSelectionIndex();
+        long to = getLargestSelectionIndex();
+        if (from < 0 || to < 0 || from > to) {
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+        fileChooser.setDialogTitle("Save selected bytes");
+
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                for (long i = from; i <= to; i++) {
+                    fos.write(model.getByteAt(i));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "Error saving file: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
 
     private class CellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
         private final Point highlight;
         private final Map desktopAAHints;
         private boolean hasSeparatorLine;
@@ -793,7 +936,7 @@ public class HexTable extends JTable {
 
         private static final long serialVersionUID = 1L;
 
-        private final Map desktopAAHints;
+        private final Map<?, ?> desktopAAHints;
         private boolean centerText;
 
         HeaderRenderer() {
@@ -843,7 +986,4 @@ public class HexTable extends JTable {
         }
     }
 
-    public void setSelectionChangeListener(SelectionChangeListener selectionChangeListener) {
-        this.selectionChangeListener = selectionChangeListener;
-    }
 }
