@@ -69,7 +69,7 @@ public class OpenNativelyAction extends TcAction {
             	DesktopManager.open(selectedFile);
             	RecentExecutedFilesQL.addFile(selectedFile);
         	} catch(IOException e) {
-                InformationDialog.showErrorDialog(mainFrame);
+                InformationDialog.showErrorDialog(mainFrame.getJFrame());
             }
         }
     }

@@ -51,7 +51,7 @@ public class EmailAction extends SelectedFilesAction {
     public void performAction(FileSet files) {
         // Notifies the user that mail preferences are not set and brings the preferences dialog
         if (!SendMailJob.mailPreferencesSet()) {
-            InformationDialog.showErrorDialog(mainFrame, Translator.get("email_dialog.prefs_not_set"), Translator.get("email_dialog.prefs_not_set_title"));
+            InformationDialog.showErrorDialog(mainFrame.getJFrame(), Translator.get("email_dialog.prefs_not_set"), Translator.get("email_dialog.prefs_not_set_title"));
             SwingUtilities.invokeLater(() -> {
                 GeneralPreferencesDialog preferencesDialog = GeneralPreferencesDialog.getDialog();
                 preferencesDialog.setActiveTab(GeneralPreferencesDialog.MAIL_TAB);

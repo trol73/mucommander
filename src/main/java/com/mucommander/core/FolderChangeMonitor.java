@@ -148,7 +148,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
         this.lastCheckTimestamp = System.currentTimeMillis();
         this.waitBeforeCheckTime = waitAfterRefresh;
 		
-        folderPanel.getMainFrame().addWindowListener(this);
+        folderPanel.getMainFrame().getJFrame().addWindowListener(this);
 
         instances.add(this);
 		

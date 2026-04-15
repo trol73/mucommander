@@ -16,8 +16,8 @@ import java.io.IOException;
  */
 public class ZipFormatProvider implements ArchiveFormatProvider {
     private static final String[] EXTENSIONS =
-            {".zip", ".jar", ".war", ".wal", ".wmz", ".xpi", ".ear", ".sar", ".odt", ".ods", ".odp", ".odg", ".odf",
-                    ".egg", ".epub", ".cbz"};
+            {".zip", ".jar", ".war", ".wal", ".wmz", ".xpi", ".ear", ".sar", ".odt", ".ods", ".odp", ".odg", ".odf", ".egg", ".epub", ".cbz", ".kar"};
+
 
     /**
      * Static instance of the filename filter that matches archive filenames

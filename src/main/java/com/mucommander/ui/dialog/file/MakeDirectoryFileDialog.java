@@ -89,8 +89,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
 
     private JCheckBox convertWhiteSpaceCheckBox;
     /**
-     * As a developer, it is annoy to meet with Folder name that contains whitespace
-     * 
+     * As a developer, it is annoyed to meet with Folder name that contains whitespace
      */
     private String oldDirName;
 
@@ -101,7 +100,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
      * @param mkfileMode if true, the dialog will operate in 'mkfile' mode, if false in 'mkdir' mode
      */
     public MakeDirectoryFileDialog(MainFrame mainFrame, boolean mkfileMode) {
-        super(mainFrame, ActionManager.getActionInstance(mkfileMode ? MkfileAction.Descriptor.ACTION_ID : MkdirAction.Descriptor.ACTION_ID, mainFrame).getLabel(), mainFrame);
+        super(mainFrame.getJFrame(), ActionManager.getActionInstance(mkfileMode ? MkfileAction.Descriptor.ACTION_ID : MkdirAction.Descriptor.ACTION_ID, mainFrame).getLabel(), mainFrame.getJFrame());
         this.mainFrame = mainFrame;
         this.mkfileMode = mkfileMode;
         setStorageSuffix(mkfileMode ? "file" : "dir");
@@ -181,7 +180,7 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
             convertWhiteSpaceCheckBox.addItemListener(arg0 -> {
 					if (convertWhiteSpaceCheckBox.isSelected()) {
 						oldDirName = pathField.getText();
-						pathField.setText(oldDirName.replaceAll(" ", "_"));
+						pathField.setText(oldDirName.replace(" ", "_"));
 					} else {
 						pathField.setText(oldDirName);
 					}
@@ -223,14 +222,14 @@ public class MakeDirectoryFileDialog extends FocusDialog implements ActionListen
         PathUtils.ResolvedDestination resolvedDest = PathUtils.resolveDestination(enteredPath, mainFrame.getActivePanel().getCurrentFolder(), false);
         // The path entered doesn't correspond to any existing folder
         if (resolvedDest == null) {
-            InformationDialog.showErrorDialog(mainFrame, i18n("invalid_path", enteredPath));
+            InformationDialog.showErrorDialog(mainFrame.getJFrame(), i18n("invalid_path", enteredPath));
             return;
         }
 
         // Checks if the directory already exists and reports the error if that's the case
         int destinationType = resolvedDest.getDestinationType();
         if (destinationType == PathUtils.ResolvedDestination.EXISTING_FOLDER) {
-            InformationDialog.showErrorDialog(mainFrame, i18n("directory_already_exists", enteredPath));
+            InformationDialog.showErrorDialog(mainFrame.getJFrame(), i18n("directory_already_exists", enteredPath));
             return;
         }
 

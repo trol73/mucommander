@@ -83,7 +83,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      * @param mainFrame the {@link MainFrame} to use as a parent
      */
     public DebugConsoleDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(ShowDebugConsoleAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(ShowDebugConsoleAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         Container contentPane = getContentPane();
 
@@ -257,20 +257,14 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     private class DebugListCellRenderer extends DefaultListCellRenderer {
 
         private Color getLevelColor(LogLevel logLevel) {
-            switch (logLevel) {
-                case SEVERE:
-                    return Color.RED;
-                case WARNING:
-                    return new Color(255, 100, 0);     // Dark orange
-                case CONFIG:
-                    return Color.BLUE;
-                case INFO:
-                    return Color.BLACK;
-                case FINE:
-                    return Color.DARK_GRAY;
-                default:
-                    return new Color(110, 110, 110);    // Between Color.GRAY and Color.DARK_GRAY
-            }
+            return switch (logLevel) {
+                case SEVERE -> Color.RED;
+                case WARNING -> new Color(255, 100, 0);     // Dark orange
+                case CONFIG -> Color.BLUE;
+                case INFO -> Color.BLACK;
+                case FINE -> Color.DARK_GRAY;
+                default -> new Color(110, 110, 110);    // Between Color.GRAY and Color.DARK_GRAY
+            };
         }
 
         @Override

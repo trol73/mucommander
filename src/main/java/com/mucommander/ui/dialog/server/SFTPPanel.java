@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystems;
 import java.text.ParseException;
 
 import javax.swing.JButton;
@@ -104,9 +105,9 @@ public class SFTPPanel extends ServerPanel {
         }
 
         chooseFileButton.addActionListener(new ActionListener() {
-                JFileChooser fc = new JFileChooser(System.getProperty("user.home") + System.getProperty("file.separator") + ".ssh");
+                final JFileChooser fc = new JFileChooser(System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + ".ssh");
                 public void actionPerformed(ActionEvent e) {
-                    int returnVal = fc.showOpenDialog(mainFrame);
+                    int returnVal = fc.showOpenDialog(mainFrame.getJFrame());
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         privateKeyPathField.setText(fc.getSelectedFile().getAbsolutePath());
                     }

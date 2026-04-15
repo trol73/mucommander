@@ -33,6 +33,7 @@ import com.mucommander.ui.action.TcAction;
 import com.mucommander.ui.dialog.InformationDialog;
 import com.mucommander.ui.dialog.file.ProgressDialog;
 import com.mucommander.ui.main.MainFrame;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,15 +46,9 @@ import java.util.Map;
 public class CommandAction extends TcAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandAction.class);
 	
-    // - Instance fields -------------------------------------------------------
-    // -------------------------------------------------------------------------
     /** Command to init. */
-    private Command command;
+    private final Command command;
 
-
-
-    // - Initialization --------------------------------------------------------
-    // -------------------------------------------------------------------------
     /**
      * Creates a new <code>CommandAction</code> initialized with the specified parameters.
      * @param mainFrame  frame that will be affected by this action.
@@ -86,9 +81,9 @@ public class CommandAction extends TcAction {
             try {
                 ProcessRunner.execute(command.getTokens(selectedFiles), selectedFiles.getBaseFolder());
             } catch(Exception e) {
-                InformationDialog.showErrorDialog(mainFrame);
+                InformationDialog.showErrorDialog(mainFrame.getJFrame());
 
-                LOGGER.debug("Failed to execute command: " + command.getCommand(), e);
+                LOGGER.debug("Failed to execute command: {}", command.getCommand(), e);
             }
         }
         // Otherwise, copies the files locally before running the command.
@@ -105,11 +100,12 @@ public class CommandAction extends TcAction {
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-        private Command command;
+        private final Command command;
 
     	private static final String ACTION_ID_PREFIX = "OpenWith_";
-    	private String ACTION_ID;
-    	private String label;
+    	private final String ACTION_ID;
+    	@Getter
+        private final String label;
 
     	public Descriptor(Command command) {
             this.command = command;
@@ -123,11 +119,7 @@ public class CommandAction extends TcAction {
     	    return ACTION_ID;
     	}
 
-    	public String getLabel() {
-    	    return label;
-    	}
-
-    	public ActionCategory getCategory() {
+        public ActionCategory getCategory() {
     	    return ActionCategory.COMMANDS;
     	}
 

@@ -75,7 +75,7 @@ public class ViewAsQL extends QuickListWithDataList<ViewerFactory> {
             try {
                 ProcessRunner.execute(cmd.getTokens(file), file);
             } catch(Exception e) {
-                InformationDialog.showErrorDialog(mainFrame);
+                InformationDialog.showErrorDialog(mainFrame.getJFrame());
             }
         }
     }

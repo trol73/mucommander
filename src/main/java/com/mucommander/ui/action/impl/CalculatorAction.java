@@ -39,7 +39,7 @@ public class CalculatorAction extends TcAction {
 
     @Override
     public void performAction() {
-        new CalculatorDialog(mainFrame).showDialog();
+        new CalculatorDialog(mainFrame.getJFrame()).showDialog();
     }
 
     @Override

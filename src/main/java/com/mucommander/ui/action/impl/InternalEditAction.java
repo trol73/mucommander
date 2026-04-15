@@ -33,7 +33,6 @@ import com.mucommander.ui.dialog.file.ChangePermissionsDialog;
 import com.mucommander.ui.dialog.symlink.EditSymlinkDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.viewer.EditorRegistrar;
-import com.mucommander.ui.viewer.text.TextArea;
 
 import javax.swing.*;
 import java.util.Map;
@@ -71,7 +70,7 @@ public class InternalEditAction extends AbstractViewerAction {
     @Override
     protected void performInternalAction(AbstractFile file) {
         if (file.isSymlink() && file.getURL().getScheme().equals(FileProtocols.FILE)) {
-            new EditSymlinkDialog(mainFrame, file).showDialog();
+            new EditSymlinkDialog(mainFrame.getJFrame(), file).showDialog();
         } else if (file.isDirectory()) {
             FileSet fileSet = new FileSet();
             fileSet.add(file);

@@ -42,7 +42,7 @@ public class MinimizeWindowAction extends TcAction {
 
     @Override
     public void performAction() {
-        mainFrame.setExtendedState(JFrame.ICONIFIED);
+        mainFrame.getJFrame().setExtendedState(JFrame.ICONIFIED);
     }
 
 	@Override

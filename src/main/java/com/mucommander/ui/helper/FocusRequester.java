@@ -23,6 +23,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.mucommander.ui.PreloadedJFrame;
 import com.mucommander.ui.main.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,12 +96,14 @@ public class FocusRequester implements Runnable {
         if (component instanceof Frame f) {
             f.toFront();
         }
-        if (component instanceof MainFrame mainFrame) {
-            mainFrame.getActiveTable().requestFocus();
+        if (component instanceof PreloadedJFrame preloadedJFrame) {
+            var frame = preloadedJFrame.getMainFrameObject();
+            if (frame instanceof MainFrame mainFrame) {
+                mainFrame.getActiveTable().requestFocus();
+            }
         }
 
-
-        LOGGER.debug("focus requested on " + (component.getClass().getName()));
+        LOGGER.debug("focus requested on {}", (component.getClass().getName()));
 
         this.component = null;
     }

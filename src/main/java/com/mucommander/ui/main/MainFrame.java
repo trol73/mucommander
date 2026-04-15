@@ -30,6 +30,7 @@ import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
 import com.mucommander.conf.TcSnapshot;
 import com.mucommander.desktop.DesktopManager;
+import com.mucommander.ui.PreloadedJFrame;
 import com.mucommander.ui.action.ActionKeymap;
 import com.mucommander.ui.action.ActionManager;
 import com.mucommander.ui.action.impl.CloseWindowAction;
@@ -40,7 +41,6 @@ import com.mucommander.ui.event.LocationListener;
 import com.mucommander.ui.icon.IconManager;
 import com.mucommander.ui.layout.ProportionalSplitPane;
 import com.mucommander.ui.layout.YBoxPanel;
-import com.mucommander.ui.macosx.IMacOsWindow;
 import com.mucommander.ui.main.commandbar.CommandBar;
 import com.mucommander.ui.main.menu.MainMenuBar;
 import com.mucommander.ui.main.statusbar.StatusBar;
@@ -51,6 +51,8 @@ import com.mucommander.ui.main.table.SortInfo;
 import com.mucommander.ui.main.tabs.ConfFileTableTab;
 import com.mucommander.ui.main.toolbar.ToolBar;
 import com.mucommander.ui.terminal.TcTerminal;
+import lombok.Getter;
+
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -65,8 +67,13 @@ import java.util.WeakHashMap;
  * 
  * @author Maxence Bernard
  */
-public class MainFrame extends JFrame implements LocationListener, IMacOsWindow {
-	
+public class MainFrame implements LocationListener {
+    private final JFrame frameInstance;
+    /**
+     * -- GETTER --
+     *  Returns the ProportionalSplitPane component that splits the two panels.
+     */
+    @Getter
     private ProportionalSplitPane splitPane;
 
     private FolderPanel leftFolderPanel;
@@ -75,7 +82,17 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
     private FileTable leftTable;
     private FileTable rightTable;
     
-    /** Active table in the MainFrame */
+    /** Active table in the MainFrame
+     * -- GETTER --
+     *  Returns the currently active table.
+     *  <p>The returned table doesn't necessarily have focus, the focus can be in some other component
+     *  of the active
+     * , or nowhere in the MainFrame if it is currently not in the foreground.
+     *  <p>Use
+     *  to test if the table currently has focus.
+     *
+     */
+    @Getter
     private FileTable activeTable;
 
     private TcTerminal tcTerminal;
@@ -87,19 +104,41 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
     /** Toolbar component */
     private ToolBar toolbar;
 
-    /** Status bar instance */
+    /** Status bar instance
+     * -- GETTER --
+     *  Returns the status bar, where information about selected files and volume are displayed.
+     *  Note that a non-null instance of
+     *  is returned even if it is currently hidden.
+     */
+    @Getter
     private StatusBar statusBar;
 	
-    /** Command bar instance */
+    /** Command bar instance
+     * -- GETTER --
+     *  Returns the
+     * , i.e. the component that contains shortcuts to certains actions such as
+     *  View, Edit, Copy, Move, etc...
+     *  Note that a non-null instance of
+     *  is returned even if it is currently hidden.
+     */
+    @Getter
     private CommandBar commandBar;
 	
     /** Is no events mode enabled ? */
     private boolean noEventsMode;
 
-    /** Is this MainFrame active in the foreground ? */
+    /** Is this MainFrame active in the foreground ?
+     * -- GETTER --
+     *  Returns <code>true</code> if this MainFrame is currently active in the foreground.
+     */
+    @Getter
     private boolean foregroundActive;
 
-    /** Is single panel view? */
+    /** Is single panel view?
+     * -- GETTER --
+     *  Returns <code>true</code> if only one panel is show
+     */
+    @Getter
     private boolean singlePanel;
 
     /** Contains all registered ActivePanelListener instances, stored as weak references */
@@ -125,9 +164,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      */
     public MainFrame(ConfFileTableTab[] leftTabs, int indexOfLeftSelectedTab, FileTableConfiguration leftTableConf,
                      ConfFileTableTab[] rightTabs, int indexOfRightSelectedTab, FileTableConfiguration rightTableConf) {
-    		/*AbstractFile[] leftInitialFolders, AbstractFile[] rightInitialFolders,
-    				 int indexOfLeftSelectedTab, int indexOfRightSelectedTab,
-    			     FileURL[] leftLocationHistory, FileURL[] rightLocationHistory) { */
+        frameInstance = PreloadedJFrame.getJFrame(this);
         FolderPanel leftPanel = new FolderPanel(this, leftTabs, indexOfLeftSelectedTab, leftTableConf);
         FolderPanel rightPanel = new FolderPanel(this, rightTabs, indexOfRightSelectedTab, rightTableConf);
         init(leftPanel, rightPanel);
@@ -150,13 +187,19 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      * Copy constructor
      */
     public MainFrame(MainFrame mainFrame) {
+        frameInstance = PreloadedJFrame.getJFrame(this);
         FolderPanel leftFolderPanel = mainFrame.getLeftPanel();
         FolderPanel rightFolderPanel = mainFrame.getRightPanel();
         FileTable leftFileTable = leftFolderPanel.getFileTable();
         FileTable rightFileTable = rightFolderPanel.getFileTable();
 
-        init(new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(leftFolderPanel.getCurrentFolder().getURL())}, 0, leftFileTable.getConfiguration()),
-                new FolderPanel(this, new ConfFileTableTab[] {new ConfFileTableTab(rightFolderPanel.getCurrentFolder().getURL())}, 0, rightFileTable.getConfiguration()));
+        init(new FolderPanel(this,
+                        new ConfFileTableTab[] {
+                            new ConfFileTableTab(leftFolderPanel.getCurrentFolder().getURL())
+                        }, 0, leftFileTable.getConfiguration()),
+                        new FolderPanel(this, new ConfFileTableTab[] {
+                            new ConfFileTableTab(rightFolderPanel.getCurrentFolder().getURL())
+                        }, 0, rightFileTable.getConfiguration()));
 
         // TODO: Sorting should be part of the FileTable configuration
         this.leftTable.sortBy(leftFileTable.getSortInfo());
@@ -167,21 +210,20 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         // Set the window icon
         setWindowIcon();
 
-        DesktopManager.customizeMainFrame(this);
+        DesktopManager.customizeMainFrame(frameInstance);
 
         //initLookAndFeel();
 
         if (OsFamily.MAC_OS_X.isCurrent()) {
-            // Lion Fullscreen support
-            FullScreenUtilities.setWindowCanFullScreen(this, true);
+            FullScreenUtilities.setWindowCanFullScreen(frameInstance, true);    // Lion Fullscreen support
         }
 
         // Enable window resize
-        setResizable(true);
+        frameInstance.setResizable(true);
 
         // The toolbar should have no inset, this is why it is left out of the insetsPane
         JPanel contentPane = new JPanel(new BorderLayout());
-        setContentPane(contentPane);
+        frameInstance.setContentPane(contentPane);
 
         // Initializes the folder panels and file tables.
         this.leftFolderPanel = leftFolderPanel;
@@ -190,10 +232,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         rightTable = rightFolderPanel.getFileTable();
         activeTable  = leftTable;
 
-        // create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the
-        // preferences.
-        // Note: Toolbar.setVisible() has to be called no matter if Toolbar is visible or not, in order for it to be
-        // properly initialized
+        // create the toolbar and corresponding panel wrapping it, and show it only if it hasn't been disabled in the preferences.
+        // Note: Toolbar.setVisible() has to be called no matter if Toolbar is visible or not, in order for it to be properly initialized
         this.toolbar = new ToolBar(this);
         this.toolbarPanel = ToolbarMoreButton.wrapToolBar(toolbar);
         this.toolbarPanel.setVisible(TcConfigurations.getPreferences().getVariable(TcPreference.TOOLBAR_VISIBLE, TcPreferences.DEFAULT_TOOLBAR_VISIBLE));
@@ -216,7 +256,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
 
         // create menu bar (has to be created after toolbar)
         MainMenuBar menuBar = new MainMenuBar(this);
-        setJMenuBar(menuBar);
+        frameInstance.setJMenuBar(menuBar);
 
         // create the split pane that separates folder panels and allows to resize how much space is allocated to the
         // both of them. The split orientation is loaded from and saved to the preferences.
@@ -224,9 +264,9 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         // in JSplitPane which is anti-natural / confusing.
         int splitOrientation = TcConfigurations.getSnapshot().getVariable(TcSnapshot.getSplitOrientation(0), TcSnapshot.DEFAULT_SPLIT_ORIENTATION).equals(TcSnapshot.VERTICAL_SPLIT_ORIENTATION) ?
                 JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT;
-        splitPane = new ProportionalSplitPane(this, splitOrientation,false,
-                MainFrame.this.leftFolderPanel,
-                MainFrame.this.rightFolderPanel) {
+        splitPane = new ProportionalSplitPane(frameInstance, splitOrientation,false,
+                MainFrame.this.leftFolderPanel.getPanel(),
+                MainFrame.this.rightFolderPanel.getPanel()) {
             @Override
             public Insets getInsets() {
                 return new Insets(0, 0, 0, 0);
@@ -262,8 +302,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         insetsPane.add(southPanel, BorderLayout.SOUTH);
 
         // Perform CloseAction when the user asked the window to close
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
+        frameInstance.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frameInstance.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 ActionManager.performAction(CloseWindowAction.Descriptor.ACTION_ID, MainFrame.this);
@@ -276,7 +316,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         fireActivePanelChanged(activeTable.getFolderPanel());
 
         // Set the custom FocusTraversalPolicy that manages focus for both FolderPanel and their subcomponents.
-        setFocusTraversalPolicy(new CustomFocusTraversalPolicy());
+        frameInstance.setFocusTraversalPolicy(new CustomFocusTraversalPolicy());
     }
 
 
@@ -316,7 +356,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
             icons.add(IconManager.getIcon(IconManager.IconSet.TROLCOMMANDER, "icon256_24.png").getImage());
         }
 
-        setIconImages(icons);
+        frameInstance.setIconImages(icons);
     }
 
 
@@ -399,43 +439,6 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         return toolbarPanel;
     }
 
-    /**
-     * Returns the {@link CommandBar}, i.e. the component that contains shortcuts to certains actions such as
-     * View, Edit, Copy, Move, etc...
-     * Note that a non-null instance of {@link CommandBar} is returned even if it is currently hidden.
-     *
-     * @return the command bar component
-     */
-    public CommandBar getCommandBar() {
-        return commandBar;
-    }
-
-
-    /**
-     * Returns the status bar, where information about selected files and volume are displayed.
-     * Note that a non-null instance of {@link StatusBar} is returned even if it is currently hidden.
-     *
-     * @return the status bar
-     */
-    public StatusBar getStatusBar() {
-        return this.statusBar;
-    }
-
-
-    /**
-     * Returns the currently active table.
-     *
-     * <p>The returned table doesn't necessarily have focus, the focus can be in some other component
-     * of the active {@link FolderPanel}, or nowhere in the MainFrame if it is currently not in the foreground.
-     *
-     * <p>Use {@link FileTable#hasFocus()} to test if the table currently has focus.
-     *
-     * @return the currently active table
-     * @see FileTable#isActiveTable()
-     */
-    public FileTable getActiveTable() {
-        return activeTable;
-    }
 
     /**
      * Returns the currently active panel.
@@ -507,15 +510,6 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
 
 
     /**
-     * Returns the ProportionalSplitPane component that splits the two panels.
-     *
-     * @return the ProportionalSplitPane component that splits the two panels
-     */
-    public ProportionalSplitPane getSplitPane() {
-        return splitPane;
-    }
-
-    /**
      * Specifies how folder panels are split: if true is passed, the folder panels will be split vertically
      * (default), horizontally otherwise.
      *
@@ -545,8 +539,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      * vice-versa.
      */
     public void swapFolders() {
-        splitPane.remove(leftFolderPanel);
-        splitPane.remove(rightFolderPanel);
+        splitPane.remove(leftFolderPanel.getPanel());
+        splitPane.remove(rightFolderPanel.getPanel());
 
         // Swaps the folder panels.
         FolderPanel tempPanel = leftFolderPanel;
@@ -581,8 +575,8 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         rightTable.updateColumnsVisibility();
 
         // Do the swap and update the split pane
-        splitPane.setLeftComponent(leftFolderPanel);
-        splitPane.setRightComponent(rightFolderPanel);
+        splitPane.setLeftComponent(leftFolderPanel.getPanel());
+        splitPane.setRightComponent(rightFolderPanel.getPanel());
 
         splitPane.doLayout();
 
@@ -597,15 +591,6 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      */
     public void setSameFolder() {
         (activeTable == leftTable ? rightTable : leftTable).getFolderPanel().tryChangeCurrentFolder(activeTable.getFolderPanel().getCurrentFolder());
-    }
-
-    /**
-     * Returns <code>true</code> if this MainFrame is currently active in the foreground.
-     *
-     * @return <code>true</code> if this MainFrame is currently active in the foreground
-     */
-    public boolean isForegroundActive() {
-        return foregroundActive;
     }
 
     /**
@@ -633,11 +618,11 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
      * @return <code>true</code> if this MainFrame is active, or is an ancestor of a Window that is currently active
      */
     public boolean isAncestorOfActiveWindow() {
-        if (isActive()) {
+        if (frameInstance.isActive()) {
             return true;
         }
 
-        for (Window w : getOwnedWindows()) {
+        for (Window w : frameInstance.getOwnedWindows()) {
             if (w.isActive()) {
                 return true;
             }
@@ -663,7 +648,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         if (mainFrames.size() > 1) {
             title += " [" + (mainFrames.indexOf(this) + 1) + "]";
         }
-        setTitle(title);
+        frameInstance.setTitle(title);
 
         // Use new Window decorations introduced in Mac OS X 10.5 (Leopard)
         if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_5.isCurrentOrHigher() && currentFolder != null) {
@@ -686,19 +671,10 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
 
             // Note that for some strange reason (looks like a bug), setting the property to null won't remove
             // the previous icon.
-            getRootPane().putClientProperty("Window.documentFile", javaIoFile);
+            frameInstance.getRootPane().putClientProperty("Window.documentFile", javaIoFile);
         }
     }
 
-
-    /**
-     * Returns <code>true</code> if only one panel is show
-     *
-     * @return <code>true</code> if only one panel is show
-     */
-    public boolean isSinglePanel() {
-        return singlePanel;
-    }
 
     /**
      * Toggles single panel view state and returns new one
@@ -710,27 +686,16 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         return singlePanel;
     }
 
-
-    ///////////////////////
-    // Overridden methods //
-    ///////////////////////
-
     /**
      * Overrides <code>java.awt.Window#toFront</code> to have the window return to a normal state if it is minimized.
      */
-    @Override
     public void toFront() {
-        if ( (getExtendedState()&Frame.ICONIFIED) != 0)
-            setExtendedState(Frame.NORMAL);
-        super.toFront();
+        if ( (frameInstance.getExtendedState()&Frame.ICONIFIED) != 0) {
+            frameInstance.setExtendedState(Frame.NORMAL);
+        }
+        frameInstance.toFront();
     }
 
-
-
-
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     /**
      * Manages focus for both FolderPanel and their subcomponents.
@@ -817,7 +782,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
 
             int height = tcTerminal.loadHeight();
             if (height < 0) {
-                height = getHeight()/2;
+                height = frameInstance.getHeight()/2;
             }
             terminalSplitPane.setDividerLocation(height);
 
@@ -825,14 +790,14 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
             insetsPane.remove(splitPane);
             insetsPane.add(terminalSplitPane, BorderLayout.CENTER);
             tcTerminal.updateTitle();
-            revalidate();
+            frameInstance.revalidate();
             tcTerminal.getComponent().requestFocusInWindow();
         } else if (tcTerminal != null) {
             tcTerminal.storeHeight(terminalSplitPane.getDividerLocation());
             insetsPane.remove(terminalSplitPane);
             insetsPane.add(splitPane, BorderLayout.CENTER);
             tcTerminal.show(false);
-            revalidate();
+            frameInstance.revalidate();
             activeTable.requestFocus();
             updateWindowTitle();
         }
@@ -868,4 +833,7 @@ public class MainFrame extends JFrame implements LocationListener, IMacOsWindow 
         return terminalSplitPane.getHeight() - terminalSplitPane.getDividerLocation();
     }
 
+    public JFrame getJFrame() {
+        return frameInstance;
+    }
 }

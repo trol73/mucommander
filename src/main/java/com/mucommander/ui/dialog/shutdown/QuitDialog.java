@@ -63,10 +63,10 @@ public class QuitDialog extends QuestionDialog {
      * @param mainFrame the parent MainFrame
      */
     public QuitDialog(MainFrame mainFrame) {
-        super(mainFrame, 
+        super(mainFrame.getJFrame(),
               Translator.get("quit_dialog.title"),
               Translator.get("quit_dialog.desc", ""+WindowManager.getMainFrames().size()),
-              mainFrame,
+              mainFrame.getJFrame(),
               new String[] {ActionProperties.getActionLabel(QuitAction.Descriptor.ACTION_ID), Translator.get("cancel")},
               new int[] {QUIT_ACTION, CANCEL_ACTION},
               0);

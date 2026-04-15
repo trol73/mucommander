@@ -49,7 +49,7 @@ public abstract class JobDialog extends FocusDialog {
     private CollapseExpandButton collapseExpandButton;
 
     JobDialog(MainFrame mainFrame, String title, FileSet files) {
-        super(mainFrame, title, mainFrame);
+        super(mainFrame.getJFrame(), title, mainFrame.getJFrame());
 
         this.mainFrame = mainFrame;
         this.files = files;
@@ -63,7 +63,7 @@ public abstract class JobDialog extends FocusDialog {
      * @param title the error title
      */
     protected void showErrorDialog(String message, String title) {
-        InformationDialog.showErrorDialog(mainFrame, title, message);
+        InformationDialog.showErrorDialog(mainFrame.getJFrame(), title, message);
     }
 
     /**

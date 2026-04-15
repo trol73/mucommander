@@ -142,7 +142,7 @@ public abstract class QueuedTrash extends AbstractTrash {
 
             synchronized(moveToTrashLock) {     // Files can't be added to queue while files are moved to trash
                 if (!moveToTrash(queuedFiles)) {
-                    InformationDialog.showErrorDialog(WindowManager.getCurrentMainFrame(), Translator.get("delete_dialog.move_to_trash.option"), Translator.get("delete_dialog.move_to_trash.failed"));
+                    InformationDialog.showErrorDialog(WindowManager.getCurrentMainFrame().getJFrame(), Translator.get("delete_dialog.move_to_trash.option"), Translator.get("delete_dialog.move_to_trash.failed"));
                 }
 
                 queuedFiles.clear();

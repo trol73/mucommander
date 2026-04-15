@@ -151,7 +151,7 @@ public class FindFileDialog extends FocusDialog implements ActionListener, Docum
 
 
     public FindFileDialog(final MainFrame mainFrame, AbstractFile currentFolder) {
-        super(mainFrame, ActionProperties.getActionLabel(FindFileAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(FindFileAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
         this.mainFrame = mainFrame;
         Container contentPane = getContentPane();
 

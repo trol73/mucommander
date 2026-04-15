@@ -81,11 +81,8 @@ public class CommandBarDialog extends CustomizeDialog {
         return b1.getText().compareTo(b2.getText());
     };
 	
-	/**
-	 * Constructor
-	 */
     public CommandBarDialog(MainFrame mainFrame) {
-		super(mainFrame, ActionProperties.getActionLabel(CustomizeCommandBarAction.Descriptor.ACTION_ID));
+		super(mainFrame.getJFrame(), ActionProperties.getActionLabel(CustomizeCommandBarAction.Descriptor.ACTION_ID));
 	}
 	
     @Override

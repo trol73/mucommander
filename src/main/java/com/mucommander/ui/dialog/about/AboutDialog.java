@@ -92,7 +92,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
      * @param mainFrame frame this dialog is relative to.
      */
     public AboutDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(ShowAboutAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(ShowAboutAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         // Initializes the dialog's content.
         Container contentPane = getContentPane();

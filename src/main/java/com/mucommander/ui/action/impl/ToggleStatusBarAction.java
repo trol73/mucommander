@@ -64,7 +64,7 @@ public class ToggleStatusBarAction extends TcAction {
         updateLabel(visible);
         // Show/hide the status bar
         statusBar.setVisible(visible);
-        mainFrame.validate();
+        mainFrame.getJFrame().validate();
     }
 
 	@Override

@@ -60,17 +60,17 @@ import com.mucommander.ui.main.MainFrame;
 public class EditCredentialsDialog extends FocusDialog implements ActionListener, ListSelectionListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EditCredentialsDialog.class);
 	
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
-    private JButton removeButton;
-    private JButton goToButton;
-    private JButton closeButton;
+    private final JButton removeButton;
+    private final JButton goToButton;
+    private final JButton closeButton;
 
-    private JTextField loginField;
-    private JPasswordField passwordField;
+    private final JTextField loginField;
+    private final JPasswordField passwordField;
 
-    private AlteredVector<CredentialsMapping> credentials;
-    private DynamicList<CredentialsMapping> credentialsList;
+    private final AlteredVector<CredentialsMapping> credentials;
+    private final DynamicList<CredentialsMapping> credentialsList;
 
     private CredentialsMapping lastSelectedItem;
 
@@ -83,7 +83,7 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
 
 
     public EditCredentialsDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(EditCredentialsAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(EditCredentialsAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         this.mainFrame = mainFrame;
 
@@ -224,10 +224,8 @@ public class EditCredentialsDialog extends FocusDialog implements ActionListener
     }
 
 
-    ///////////////////////////
-    // ActionListener method //
-    ///////////////////////////
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 

@@ -107,11 +107,11 @@ public class LocationChanger {
 	}
 
     private void restoreDefaultCursor() {
-        mainFrame.setCursor(Cursor.getDefaultCursor());
+        mainFrame.getJFrame().setCursor(Cursor.getDefaultCursor());
     }
 
     private void showWaitCursor() {
-        mainFrame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        mainFrame.getJFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
     }
 
     /**
@@ -367,7 +367,7 @@ public class LocationChanger {
     }
 
 	private void showFailedToReadFolderDialog() {
-		InformationDialog.showErrorDialog(mainFrame,
+		InformationDialog.showErrorDialog(mainFrame.getJFrame(),
                 Translator.get("table.folder_access_error_title"),
                 Translator.get("failed_to_read_folder"));
 	}
@@ -376,7 +376,7 @@ public class LocationChanger {
      * Displays a popup dialog informing the user that the requested folder doesn't exist or isn't available.
      */
     private void showFolderDoesNotExistDialog() {
-        InformationDialog.showErrorDialog(mainFrame,
+        InformationDialog.showErrorDialog(mainFrame.getJFrame(),
                 Translator.get("table.folder_access_error_title"),
                 Translator.get("folder_does_not_exist"));
     }
@@ -388,7 +388,7 @@ public class LocationChanger {
      * @param e the Exception that was caught while changing the folder
      */
     private void showAccessErrorDialog(Exception e) {
-        InformationDialog.showErrorDialog(mainFrame,
+        InformationDialog.showErrorDialog(mainFrame.getJFrame(),
                 Translator.get("table.folder_access_error_title"),
                 Translator.get("table.folder_access_error"),
                 e == null ? null : e.getMessage(), e);
@@ -877,10 +877,10 @@ public class LocationChanger {
                     restoreDefaultCursor();
 
                     // Download or browse file ?
-                    QuestionDialog dialog = new QuestionDialog(mainFrame,
+                    QuestionDialog dialog = new QuestionDialog(mainFrame.getJFrame(),
                             null,
                             Translator.get("table.download_or_browse"),
-                            mainFrame,
+                            mainFrame.getJFrame(),
                             new String[] {BROWSE_TEXT, DOWNLOAD_TEXT, CANCEL_TEXT},
                             new int[] {BROWSE_ACTION, DOWNLOAD_ACTION, CANCEL_ACTION},
                             0);

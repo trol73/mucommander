@@ -108,7 +108,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
      * Checks if there is a file collision (file exists in the destination).
      * If there is no collision this method returns destFile.
      * If there is a collision this method returns: <ul>
-     *  <li>null if a user cancelled the transfer 
+     *  <li>null if a user canceled the transfer
      *  <li>null if a user skipped the file
      *  <li>destFile if a user resumed the transfer (and sets append flag)
      *  <li>destFile if a user has chosen to overwrite the file
@@ -142,7 +142,7 @@ public abstract class AbstractCopyJob extends TransferFileJob {
                 int choice;
                 // Use default action if one has been set, if not show up a dialog
                 if (defaultFileExistsAction==FileCollisionDialog.ASK_ACTION) {
-                    FileCollisionDialog dialog = new FileCollisionDialog(getProgressDialog(), getMainFrame(), collision, file, destFile, true, true);
+                    FileCollisionDialog dialog = new FileCollisionDialog(getProgressDialog(), getMainFrame().getJFrame(), collision, file, destFile, true, true);
                     choice = waitForUserResponse(dialog);
                     // If 'apply to all' was selected, this choice will be used for any other files (user will not be asked again)
                     if (dialog.applyToAllSelected())

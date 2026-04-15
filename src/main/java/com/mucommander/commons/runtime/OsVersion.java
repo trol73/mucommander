@@ -35,11 +35,6 @@ public enum OsVersion implements ComparableRuntimeProperty {
 	/** Unknown OS version */
 	UNKNOWN_VERSION("Unknown"),
 
-	//////////////////////
-	// Windows versions //
-	//////////////////////
-
-	// Windows 9X subfamily
 
 	/** Windows 95 */
 	WINDOWS_95("Windows 95"),
@@ -68,62 +63,50 @@ public enum OsVersion implements ComparableRuntimeProperty {
     WINDOWS_8_1("Windows 8.1"),
     /** Windows 10 */
     WINDOWS_10("Windows 10"),
+    /** Windows 11 */
+    WINDOWS_11("Windows 11"),
 
-
-	///////////////////////
-	// Mac OS X versions //
-	///////////////////////
 
 	/** Mac OS X 10.0 (Cheetah) */
 	MAC_OS_X_10_0("10.0"),
-
 	/** Mac OS X 10.1 (Puma) */
 	MAC_OS_X_10_1("10.1"),
-
 	/** Mac OS X 10.2 (Jaguar) */
 	MAC_OS_X_10_2("10.2"),
-
 	/** Mac OS X 10.3 (Panther) */
 	MAC_OS_X_10_3("10.3"),
-
 	/** Mac OS X 10.4 (Tiger) */
 	MAC_OS_X_10_4("10.4"),
-
 	/** Mac OS X 10.5 (Leopard) */
 	MAC_OS_X_10_5("10.5"),
-
 	/** Mac OS X 10.6 (Snow Leopard) */
 	MAC_OS_X_10_6("10.6"),
-
 	/** Mac OS X 10.7 (Lion) */
 	MAC_OS_X_10_7("10.7"),
-
 	/** Mac OS X 10.8 (Mountain Lion) */
 	MAC_OS_X_10_8("10.8"),
-
     /** Mac OS X 10.9 (Mavericks) */
     MAC_OS_X_10_9("10.9"),
-
     /** Mac OS X 10.10 (Yosemite) */
     MAC_OS_X_10_10("10.10"),
-
     /** Mac OS X 10.11 (El Capitan) */
     MAC_OS_X_10_11("10.11"),
-
     /** Mac OS X 10.12 (Sierra) */
     MAC_OS_X_10_12("10.12"),
-
     /** Mac OS X 10.13 (High Sierra) */
     MAC_OS_X_10_13("10.13"),
-
     /** Mac OS X 10.14 (Mojave) */
     MAC_OS_X_10_14("10.14"),
-
     /** Mac OS X 10.15 (Catalina) */
     MAC_OS_X_10_15("10.15"),
-
-    /** Mac OS X 10.16 (Big Sur) */
-    MAC_OS_X_10_16("10.16");
+    /** Big Sur */
+    MAC_OS_11("11"),
+    /** Monterey */
+    MAC_OS_12("12"),
+    /** Ventura */
+    MAC_OS_13("13"),
+    /** Sonoma */
+    MAC_OS_14("14");
 
 
 
@@ -178,37 +161,33 @@ public enum OsVersion implements ComparableRuntimeProperty {
         // http://lopica.sourceforge.net/os.html
 
         if (osFamily == OsFamily.WINDOWS) {
-            switch (osNameProp) {
-                case "Windows 95":
-                    return WINDOWS_95;
-                case "Windows 98":
-                    return WINDOWS_98;
-                case "Windows Me":
-                    return WINDOWS_ME;
-                case "Windows NT":
-                    return WINDOWS_NT;
-                case "Windows 2000":
-                    return WINDOWS_2000;
-                case "Windows XP":
-                    return WINDOWS_XP;
-                case "Windows 2003":
-                    return WINDOWS_2003;
-                case "Windows Vista":
-                    return WINDOWS_VISTA;
-                case "Windows 7":
-                    return WINDOWS_7;
-                case "Windows 8":
-                    return WINDOWS_8;
-                case "Windows 8.1":
-                    return WINDOWS_8_1;
-            }
-            // Newer version we don't know of yet, assume latest supported OS version
-            return WINDOWS_10;
+            return switch (osNameProp) {
+                case "Windows 95" -> WINDOWS_95;
+                case "Windows 98" -> WINDOWS_98;
+                case "Windows Me" -> WINDOWS_ME;
+                case "Windows NT" -> WINDOWS_NT;
+                case "Windows 2000" -> WINDOWS_2000;
+                case "Windows XP" -> WINDOWS_XP;
+                case "Windows 2003" -> WINDOWS_2003;
+                case "Windows Vista" -> WINDOWS_VISTA;
+                case "Windows 7" -> WINDOWS_7;
+                case "Windows 8" -> WINDOWS_8;
+                case "Windows 8.1" -> WINDOWS_8_1;
+                case "Windows 10" -> WINDOWS_10;
+                case "Windows 11" -> WINDOWS_11;
+                default -> WINDOWS_11;  // Newer version we don't know of yet, assume latest supported OS version
+            };
         }
         // Mac OS X versions
         if (osFamily == OsFamily.MAC_OS_X) {
-            if (osVersionProp.startsWith("10.16")) {
-                return MAC_OS_X_10_16;
+            if (osVersionProp.startsWith("14")) {
+                return MAC_OS_14;
+            } else if (osVersionProp.startsWith("13")) {
+                return MAC_OS_13;
+            } else if (osVersionProp.startsWith("12")) {
+                return MAC_OS_12;
+            } if (osVersionProp.startsWith("11")) {
+                return MAC_OS_11;
             } else if (osVersionProp.startsWith("10.15")) {
                 return MAC_OS_X_10_15;
             } else if (osVersionProp.startsWith("10.14")) {
@@ -242,8 +221,7 @@ public enum OsVersion implements ComparableRuntimeProperty {
             } else if (osVersionProp.startsWith("10.0")) {
                 return MAC_OS_X_10_0;
             }
-            // Newer version we don't know of yet, assume latest supported OS version
-            return MAC_OS_X_10_16;
+            return MAC_OS_14; // Newer version we don't know of yet, assume latest supported OS version
         }
 
         return OsVersion.UNKNOWN_VERSION;

@@ -44,13 +44,8 @@ import java.util.List;
  * @author Maxence Bernard, Arik Hadas
  */
 public class ShortcutsDialog extends FocusDialog implements ActionListener {
-
-    //////////////////////////
-    // Quick search actions //
-    //////////////////////////
-
     private final static String QUICK_SEARCH_TITLE = "shortcuts_dialog.quick_search";
-    private final static Map<String, String> QUICK_SEARCH_SHORTCUTS = new Hashtable<String, String>() {
+    private final static Map<String, String> QUICK_SEARCH_SHORTCUTS = new Hashtable<>() {
         {
             put("shortcuts_dialog.quick_search.start_search", "");
             put("shortcuts_dialog.quick_search.jump_to_previous", "UP");
@@ -77,7 +72,7 @@ public class ShortcutsDialog extends FocusDialog implements ActionListener {
     };
 
     public ShortcutsDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(ShowKeyboardShortcutsAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(ShowKeyboardShortcutsAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         Container contentPane = getContentPane();
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);

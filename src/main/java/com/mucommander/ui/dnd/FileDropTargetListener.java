@@ -196,16 +196,13 @@ public class FileDropTargetListener implements DropTargetListener {
         LOGGER.trace("cursor="+getDragActionCursor(currentDropAction, dragAccepted));
 
         // Change the mouse cursor on this FolderPanel and child components
-        folderPanel.setCursor(getDragActionCursor(currentDropAction, dragAccepted));
+        folderPanel.getPanel().setCursor(getDragActionCursor(currentDropAction, dragAccepted));
 
         return dragAccepted;
     }
 
 
-    ////////////////////////////////////
-    // FileDropTargetListener methods //
-    ////////////////////////////////////
-
+    @Override
     public void dragEnter(DropTargetDragEvent event) {
         acceptOrRejectDragEvent(event);
     }
@@ -225,13 +222,13 @@ public class FileDropTargetListener implements DropTargetListener {
 
     public void dragExit(DropTargetEvent event) {
         // Restore default cursor
-        folderPanel.setCursor(Cursor.getDefaultCursor());
+        folderPanel.getPanel().setCursor(Cursor.getDefaultCursor());
     }
 
 
     public void drop(DropTargetDropEvent event) {
         // Restore default cursor, no matter what
-        folderPanel.setCursor(Cursor.getDefaultCursor());
+        folderPanel.getPanel().setCursor(Cursor.getDefaultCursor());
 
         // The drop() method is called even if a DropTargetDropEvent was rejected before,
         // so this test is really necessary
@@ -270,13 +267,13 @@ public class FileDropTargetListener implements DropTargetListener {
                 folderPanel.tryChangeCurrentFolder(file.getParent(), file, false);
 
             // Request focus on the FolderPanel
-            folderPanel.requestFocus();
+            folderPanel.getPanel().requestFocus();
         }
         // Normal mode: copy or move dropped files to the FolderPanel's current folder
         else {
             MainFrame mainFrame = folderPanel.getMainFrame();
             AbstractFile destFolder = folderPanel.getCurrentFolder();
-            if(currentDropAction==DnDConstants.ACTION_MOVE) {
+            if (currentDropAction == DnDConstants.ACTION_MOVE) {
                 // Start moving files
                 ProgressDialog progressDialog = new ProgressDialog(mainFrame, Translator.get("move_dialog.moving"));
                 MoveJob moveJob = new MoveJob(progressDialog, mainFrame, droppedFiles, destFolder, null, FileCollisionDialog.ASK_ACTION, false);

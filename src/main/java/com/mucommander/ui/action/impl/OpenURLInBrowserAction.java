@@ -54,7 +54,7 @@ public class OpenURLInBrowserAction extends TcAction {
             try {
                 DesktopManager.browse(new URL((String)url));
             } catch(Exception e) {
-                InformationDialog.showErrorDialog(mainFrame);
+                InformationDialog.showErrorDialog(mainFrame.getJFrame());
             }
         }
     }

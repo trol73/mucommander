@@ -217,7 +217,7 @@ public class FocusDialog extends JDialog implements WindowListener, IMacOsWindow
         super.dispose();
 
         // fixed issue: return to main frame form FocusDialog
-        if ((ownerFocusedComponent instanceof JRootPane && getOwner() instanceof MainFrame)) {
+        if ((ownerFocusedComponent instanceof JRootPane && getOwner() instanceof JFrame)) {
             ownerFocusedComponent = null;
         }
 

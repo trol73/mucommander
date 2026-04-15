@@ -24,8 +24,7 @@ import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.desktop.QueuedTrash;
 import com.mucommander.ui.macosx.AppleScript;
 import com.sun.jna.platform.mac.MacFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,12 +54,11 @@ import java.util.stream.Collectors;
  * @see OSXTrashProvider
  * @author Maxence Bernard
  */
+@Slf4j
 public class OSXTrash extends QueuedTrash {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OSXTrash.class);
-	
     /** AppleScript that reveals the trash in Finder */
     private final static String REVEAL_TRASH_APPLESCRIPT =
-        "tell application \"Finder\" to open trash\n" + "activate application \"Finder\"\n";
+        "tell application \"Finder\" to open trash\nactivate application \"Finder\"\n";
 
     /** AppleScript that counts and returns the number of items in Trash */
     private final static String COUNT_TRASH_ITEMS_APPLESCRIPT = "tell application \"Finder\" to return count of items in trash";
@@ -137,7 +135,7 @@ public class OSXTrash extends QueuedTrash {
         try {
             return Integer.parseInt(output.toString().trim());
         } catch(NumberFormatException e) {
-            LOGGER.debug("Caught an exception", e);
+            log.debug("Caught an exception", e);
             return -1;
         }
     }
@@ -158,39 +156,32 @@ public class OSXTrash extends QueuedTrash {
 
     /**
      * Performs the actual job of moving files to the trash using JNA.
-     *
      */
     @Override
     protected boolean moveToTrash(List<AbstractFile> queuedFiles) {
-        if (queuedFiles.isEmpty()) {
+        if (queuedFiles.isEmpty())
             return true;
-        }
 
-        if (moveToTrashViaAppleScript(queuedFiles)) {
-            return true;
+        var partitionedByIsSmb = queuedFiles.stream().collect(Collectors.partitioningBy(this::isSmb));
+        var nonSmbFiles = partitionedByIsSmb.get(false);
+        if (moveToTrashViaJna(nonSmbFiles)) {
+            var smbFiles = partitionedByIsSmb.get(true);
+            return moveToTrashViaAppleScript(smbFiles);
+        } else {
+            log.error("failed to move files to trash using JNA, fall back to AppleScript");
+            return moveToTrashViaAppleScript(queuedFiles);
         }
-
-        boolean smbFs = queuedFiles.stream()
-                .map(file -> (File) file.getUnderlyingFileObject())
-                .map(File::toPath)
-                .map(path -> {
-                    try {
-                        return Files.getFileStore(path);
-                    } catch (IOException e) {
-                        LOGGER.warn("failed to retrieve FileStore of {}", path, e);
-                        return null;
-                    }
-                })
-                .map(fs -> fs != null ? fs.type() : null)
-                .anyMatch("smbfs"::equals);
-        if (smbFs) {
-            // JNA doesn't move files on SMB shares to trash
-            LOGGER.error("failed to move SMB files to trash");
+    }
+    private boolean isSmb(AbstractFile file) {
+        try {
+            File underlyingFile = (File) file.getUnderlyingFileObject();
+            java.nio.file.Path path = underlyingFile.toPath();
+            java.nio.file.FileStore fs = java.nio.file.Files.getFileStore(path);
+            return "smbfs".equals(fs.type());
+        } catch (IOException e) {
+            log.warn("failed to retrieve FileStore of {}", file, e);
             return false;
         }
-
-        LOGGER.info("fall back to removing files using JNA");
-        return moveToTrashViaJna(queuedFiles);
     }
 
     private boolean moveToTrashViaJna(List<AbstractFile> queuedFiles) {
@@ -198,13 +189,16 @@ public class OSXTrash extends QueuedTrash {
         try {
             macFileUtils.moveToTrash(files);
         } catch (IOException e) {
-            LOGGER.error("failed to move files to trash", e);
+            log.error("failed to move files to trash", e);
             return false;
         }
         return true;
     }
 
     private boolean moveToTrashViaAppleScript(List<AbstractFile> queuedFiles) {
+        if (queuedFiles.isEmpty()) {
+            return true;
+        }
         // Simple script for AppleScript versions with Unicode support, i.e. that allows Unicode characters in the
         // script (AppleScript 2.0 / Mac OS X 10.5 or higher).
         if (AppleScript.getScriptEncoding().equals(AppleScript.UTF8)) {
@@ -247,7 +241,7 @@ public class OSXTrash extends QueuedTrash {
 
                 return success;
             } catch(IOException e) {
-                LOGGER.debug("Caught IOException", e);
+                log.debug("Caught IOException", e);
 
                 if (tmpOut != null) {
                     try {

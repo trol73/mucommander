@@ -18,7 +18,6 @@
 
 package com.mucommander.ui.dialog.startup;
 
-import com.mucommander.RuntimeConstants;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
@@ -75,7 +74,7 @@ public class CheckVersionDialog extends QuestionDialog {
      * the user won't be notified if there is no new version (current version is the latest).
      */
     public CheckVersionDialog(MainFrame mainFrame, VersionChecker versionChecker, boolean userInitiated) {
-        super(mainFrame, "", mainFrame);
+        super(mainFrame.getJFrame(), "", mainFrame.getJFrame());
         this.mainFrame = mainFrame;
         this.userInitiated = userInitiated;
 

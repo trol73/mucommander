@@ -44,7 +44,8 @@ public class EditCommandsAction extends TcAction {
 
     @Override
     public void performAction() {
-        new EditCommandsDialog(mainFrame, mainFrame).showDialog();
+        var frame = mainFrame.getJFrame();
+        new EditCommandsDialog(frame, frame).showDialog();
     }
 
     @Override

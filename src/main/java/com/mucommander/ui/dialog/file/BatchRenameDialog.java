@@ -113,7 +113,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
      * @param files a list of files to rename
      */
     public BatchRenameDialog(MainFrame mainFrame, FileSet files) {
-        super(mainFrame, ActionProperties.getActionLabel(BatchRenameAction.Descriptor.ACTION_ID), null);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(BatchRenameAction.Descriptor.ACTION_ID), null);
         this.mainFrame = mainFrame;
         this.files = files;
         for (AbstractFile f : files) {        	
@@ -335,7 +335,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
             blockNames.remove(sel[i]);
             tableModel.fireTableRowsDeleted(sel[i], sel[i]);
         }
-        if (files.size() == 0) {
+        if (files.isEmpty()) {
             dispose();
         }
     }
@@ -594,7 +594,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
     private void doRename() {
         removeUnchangedFiles(false);
         // start rename job
-        if (files.size() > 0) {
+        if (!files.isEmpty()) {
             ProgressDialog progressDialog = new ProgressDialog(mainFrame, i18n("progress_dialog.processing_files"));
             BatchRenameJob job = new BatchRenameJob(progressDialog, mainFrame, files, newNames);
             progressDialog.start(job);
@@ -692,15 +692,12 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             AbstractFile f = files.get(rowIndex);
-            switch (columnIndex) {
-                case COL_ORIG_NAME:
-                    return f.getName();
-                case COL_CHANGED_NAME:
-                    return newNames.get(rowIndex);
-                case COL_CHANGE_BLOCK:
-                    return blockNames.get(rowIndex);
-            }
-            return null;
+            return switch (columnIndex) {
+                case COL_ORIG_NAME -> f.getName();
+                case COL_CHANGED_NAME -> newNames.get(rowIndex);
+                case COL_CHANGE_BLOCK -> blockNames.get(rowIndex);
+                default -> null;
+            };
         }
         
         /**
@@ -739,15 +736,12 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
 
         @Override
         public String getColumnName(int column) {
-            switch (column) {
-            case COL_ORIG_NAME:
-                return i18n("batch_rename_dialog.old_name");
-            case COL_CHANGED_NAME:
-                return i18n("batch_rename_dialog.new_name");
-            case COL_CHANGE_BLOCK:
-                return i18n("batch_rename_dialog.block_name");
-            }
-            return "";
+            return switch (column) {
+                case COL_ORIG_NAME -> i18n("batch_rename_dialog.old_name");
+                case COL_CHANGED_NAME -> i18n("batch_rename_dialog.new_name");
+                case COL_CHANGE_BLOCK -> i18n("batch_rename_dialog.block_name");
+                default -> "";
+            };
         }
 
         @Override
@@ -940,7 +934,7 @@ public class BatchRenameDialog extends FocusDialog implements ActionListener, Do
                     try {
                         name = name.substring(currentStartIndex - 1, Math.min(currentEndIndex, targetLen));
                     } catch (Exception e) {
-                    	LOGGER.info("currentStartIndex="+currentStartIndex+", currentEndIndex="+currentEndIndex, e);
+                    	LOGGER.info("currentStartIndex={}, currentEndIndex={}", currentStartIndex, currentEndIndex, e);
                     }
                 } else {
                     name = "";

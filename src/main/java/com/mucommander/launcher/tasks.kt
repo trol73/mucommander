@@ -18,11 +18,13 @@ import com.mucommander.commons.file.icon.impl.SwingFileIconProvider
 import com.mucommander.commons.file.impl.ftp.FTPProtocolProvider
 import com.mucommander.commons.file.impl.smb.SMBProtocolProvider
 import com.mucommander.commons.runtime.OsFamily
+import com.mucommander.commons.runtime.OsVersion
 import com.mucommander.conf.TcConfigurations
 import com.mucommander.conf.TcPreference
 import com.mucommander.conf.TcPreferences
 import com.mucommander.desktop.DesktopManager
 import com.mucommander.extension.ExtensionManager
+import com.mucommander.ui.PreloadedJFrame
 import com.mucommander.profiler.Profiler
 import com.mucommander.shell.ShellHistoryManager
 import com.mucommander.ui.action.ActionKeymapIO
@@ -87,7 +89,7 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
         FlatMacDarkLaf.installLafInfo()
     }
     val installVaquaLafTask = LauncherTask("install_aqua_lf") {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X && OsVersion.MAC_OS_X_10_13.isCurrentLower()) {
             val aquaLaf = org.violetlib.aqua.AquaLookAndFeel()
             UIManager.installLookAndFeel(UIManager.LookAndFeelInfo(aquaLaf.getName(), aquaLaf.javaClass.getName()))
         }
@@ -135,6 +137,9 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
     val startBonjourTask = LauncherTask("start_bonjour") {
         BonjourDirectory.setActive(isBonjourEnabled())
     }
+    val preloadedFramesTask = LauncherTask("preloaded_frames") {
+        PreloadedJFrame.init();
+    }
 
 
     val startTask = LauncherTask("start") {
@@ -176,7 +181,7 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
     val showSetupWindowTask = LauncherTask("show_setup_window") {
         val showSetup = TcConfigurations.getPreferences().getVariable(TcPreference.THEME_TYPE) == null
         if (showSetup) {
-            InitialSetupDialog(WindowManager.getCurrentMainFrame()).showDialog()
+            InitialSetupDialog(WindowManager.getCurrentMainFrame().jFrame).showDialog()
         }
     }.depends(loadConfigsTask)
 
@@ -186,6 +191,7 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
             prepareGraphicsTask,
             loadPreferencesTask,
             installFlatLightLafTask,
+            preloadedFramesTask,
 
             installFlatDarculaLafTask,
             installFlatDarkLafTask,

@@ -52,8 +52,6 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
 	private static final Dimension MINIMUM_SIZE = new Dimension(250, 0);
 	
     private JButton okButton;
-    
-    private JButton cancelButton;
 
     /** The text field in which the title is entered */
     private JTextField titleTextField;
@@ -62,7 +60,7 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
     private final FolderPanel folderPanel;
 
 	public TabTitleDialog(MainFrame mainFrame, FolderPanel folderPanel) {
-        super(mainFrame, ActionProperties.getActionLabel(SetTabTitleAction.Descriptor.ACTION_ID), folderPanel);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(SetTabTitleAction.Descriptor.ACTION_ID), folderPanel.getPanel());
 
         this.folderPanel = folderPanel;
 
@@ -76,7 +74,7 @@ public class TabTitleDialog extends FocusDialog implements ActionListener {
         titleTextField.selectAll();
 
         okButton = new JButton(i18n("ok"));
-        cancelButton = new JButton(i18n("cancel"));
+        JButton cancelButton = new JButton(i18n("cancel"));
 
     	// Get content-pane and set its layout.
     	Container contentPane = getContentPane();

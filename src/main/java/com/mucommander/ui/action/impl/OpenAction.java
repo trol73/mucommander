@@ -109,7 +109,7 @@ public class OpenAction extends TcAction {
 			DesktopManager.open(file);
 			RecentExecutedFilesQL.addFile(file);
 		} catch (IOException e) {
-			InformationDialog.showErrorDialog(mainFrame);
+			InformationDialog.showErrorDialog(mainFrame.getJFrame());
 		}
 	}
 
@@ -120,7 +120,7 @@ public class OpenAction extends TcAction {
         AbstractFile resolvedFile = resolveSymlink(file);
 
         if (resolvedFile == null) {
-            InformationDialog.showErrorDialog(mainFrame, Translator.get("cannot_open_cyclic_symlink"));
+            InformationDialog.showErrorDialog(mainFrame.getJFrame(), Translator.get("cannot_open_cyclic_symlink"));
             return null;
         }
         return resolvedFile;

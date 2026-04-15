@@ -30,8 +30,10 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.mucommander.ui.PreloadedJFrame;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.viewer.FileFrame;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +67,11 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      * or last frame to have been used if muCommander doesn't have focus */	
     private MainFrame currentMainFrame;
 
+    /**
+     * -- GETTER --
+     *  Returns the sole instance of WindowManager.
+     */
+    @Getter
     private static final WindowManager instance = new WindowManager();
 
 
@@ -116,16 +123,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         TcConfigurations.addPreferencesListener(this);
     }
 
-    /**
-     * Returns the sole instance of WindowManager.
-     *
-     * @return the sole instance of WindowManager
-     */
-    public static WindowManager getInstance() {
-        return instance;
-    }
-    
-	
+
     /**
      * Returns the <code>MainFrame</code> instance that was last active. Note that the returned <code>MainFrame</code>
      * may or may not be currently active.
@@ -169,7 +167,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // To catch user window closing actions
         for (MainFrame frame : newMainFrames) {
-            frame.addWindowListener(instance);
+            frame.getJFrame().addWindowListener(instance);
         }
 
         // Adds the new MainFrame to the vector
@@ -183,7 +181,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // Make frames visible
         for (MainFrame frame : newMainFrames) {
-            frame.setVisible(true);
+            frame.getJFrame().setVisible(true);
         }
 
         if (!instance.mainFrames.isEmpty()) {
@@ -206,14 +204,14 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             // Dispose all MainFrames but the current one
             for (int i = 0; i < nbFrames; i++) {
                 if (i != currentMainFrameIndex) {
-                    instance.mainFrames.get(i).dispose();
+                    instance.mainFrames.get(i).getJFrame().dispose();
                 }
             }
 
             // Dispose current MainFrame last so that its attributes (last folders, window position...) are saved last
             // in the preferences
             if (currentMainFrameIndex >= 0) {
-                instance.mainFrames.get(currentMainFrameIndex).dispose();
+                instance.mainFrames.get(currentMainFrameIndex).getJFrame().dispose();
             }
         }
 
@@ -286,7 +284,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             currentThread.setContextClassLoader(oldLoader);
 
             for (MainFrame mainFrame : instance.mainFrames) {
-                SwingUtilities.updateComponentTreeUI(mainFrame);
+                SwingUtilities.updateComponentTreeUI(mainFrame.getJFrame());
             }
         } catch(Throwable e) {
             getLogger().debug("Exception caught", e);
@@ -296,13 +294,12 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     @Override
     public void windowActivated(WindowEvent e) {
         Object source = e.getSource();
-        
-        // Return if event doesn't originate from a MainFrame (e.g. ViewerFrame or EditorFrame)
-        if (!(source instanceof MainFrame)) {
-            return;
-        }
 
-        currentMainFrame = (MainFrame)e.getSource();
+        // Return if event doesn't originate from a MainFrame/PreloadedJFrame (e.g. ViewerFrame or EditorFrame)
+        if(!(source instanceof PreloadedJFrame))
+            return;
+
+        currentMainFrame = (MainFrame) ((PreloadedJFrame)source).getMainFrameObject();
         // Let MainFrame know that it is active in the foreground
         currentMainFrame.setForegroundActive(true);
 
@@ -319,15 +316,14 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // Workaround for JRE bug #4841881 (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4841881) /
         // which causes Alt+Tab to focus the menu bar under certain L&F.
-        // This bug has also been reported as muCommmander bug #89.  
+        // This bug has also been reported as muCommmander bug #89.
         MenuSelectionManager.defaultManager().clearSelectedPath();
 
         // Return if event doesn't originate from a MainFrame (e.g. ViewerFrame or EditorFrame)
-        if (!(source instanceof MainFrame))
-            return;
-
-        // Let MainFrame know that it is not active anymore
-        ((MainFrame)e.getSource()).setForegroundActive(false);
+        if (source instanceof PreloadedJFrame pf) {
+            // Let MainFrame know that it is not active anymore
+            ((MainFrame)(pf).getMainFrameObject()).setForegroundActive(false);
+        }
     }
 
     @Override
@@ -340,17 +336,16 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     @Override
     public synchronized void windowClosed(WindowEvent e) {
         getLogger().trace("called");
-
         Object source = e.getSource();
-        if (source instanceof MainFrame) {
-            closeMainFrame((MainFrame) source);
-        } else if (source instanceof FileFrame) {
-            FileFrame fileFrame = (FileFrame)source;
+
+        if (source instanceof PreloadedJFrame pfSource) {
+            var mainFrame = (MainFrame) (pfSource).getMainFrameObject();
+            closeMainFrame(mainFrame);
+        } else if (source instanceof FileFrame fileFrame) {
             if (fileFrame.getReturnFocusTo() != null) {
                 return;
             }
-        } else if (source instanceof FocusDialog) {
-            FocusDialog focusDialog = (FocusDialog)source;
+        } else if (source instanceof FocusDialog focusDialog) {
             if (focusDialog.getReturnFocusTo() != null) {
                 return;
             }
@@ -358,11 +353,8 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // Test if there is at least one MainFrame still showing
         if (!mainFrames.isEmpty()) {
-            FocusRequester.requestFocus(currentMainFrame);
-            return;
-        }
-
-        if (!hasMoreActiveFrames()) {
+            FocusRequester.requestFocus(currentMainFrame.getJFrame());
+        } else if (!hasMoreActiveFrames()) {
             ShutdownHook.initiateShutdown();
         }
     }
@@ -381,7 +373,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         // So if there is only one window left, we update first window's title so that it removes window number (#1).
         int nbFrames = mainFrames.size();
         if (nbFrames == 1) {
-            mainFrames.get(0).updateWindowTitle();
+            mainFrames.getFirst().updateWindowTitle();
         } else {
             if (frameIndex >= 0) {
                 for (int i = frameIndex; i < nbFrames; i++) {

@@ -55,12 +55,11 @@ public abstract class QuickListWithDataList<T> extends QuickList implements KeyL
             public Dimension getPreferredSize() {
                 // default we have quicklist height for 10 lines maximum
                 // calculate new height to better filling
-                if (container instanceof FolderPanel) {
-                    FolderPanel folderPanel = (FolderPanel) container;
-                    Dimension parentSize = folderPanel.getSize();
+                if (container instanceof FolderPanel folderPanel) {
+                    Dimension parentSize = folderPanel.getPanel().getSize();
                     Dimension preferredSize = dataList.getPreferredSize();
                     return new Dimension(super.getPreferredSize().width,
-                            preferredSize.height < parentSize.height*8/10 ? preferredSize.height : parentSize.height*8/10);
+                            Math.min(preferredSize.height, parentSize.height * 8 / 10));
                 }
                 return super.getPreferredSize();
             }

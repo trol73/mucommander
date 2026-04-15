@@ -39,7 +39,7 @@ public class BatchRenameConfirmationDialog extends FocusDialog implements Action
     private boolean proceedWithRename = false;
  
     BatchRenameConfirmationDialog(MainFrame mainFrame, FileSet files, int changed, int unchanged) {
-        super(mainFrame, ActionProperties.getActionLabel(BatchRenameAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(BatchRenameAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         YBoxPanel mainPanel = new YBoxPanel();
         String msg = i18n("batch_rename_dialog.proceed_renaming", Integer.toString(changed), Integer.toString(unchanged));

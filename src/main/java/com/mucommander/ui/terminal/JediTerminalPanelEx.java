@@ -95,7 +95,7 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
 
         if (e.getModifiersEx() == InputEvent.ALT_DOWN_MASK && e.getKeyCode() == KeyEvent.VK_C) {
             if (id == KeyEvent.KEY_RELEASED) {
-                new CalculatorDialog(mainFrame).showDialog();
+                new CalculatorDialog(mainFrame.getJFrame()).showDialog();
             }
             e.consume();
             return;
@@ -114,7 +114,7 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
         lineHeight = this.lineHeight;
         int height = mainFrame.getTerminalPanelHeight() + delta * lineHeight;
         int minHeight = 2*lineHeight;
-        int maxHeight = mainFrame.getHeight() - minHeight;
+        int maxHeight = mainFrame.getJFrame().getHeight() - minHeight;
 
         if (delta < -2) {
             height = minHeight;

@@ -638,22 +638,23 @@ public abstract class FileJob implements Runnable {
         }
 
         QuestionDialog dialog;
+        var mainFrame = getMainFrame().getJFrame();
         if (getProgressDialog() == null) {
-            dialog = new QuestionDialog(getMainFrame(),
-                                        title,
-                                        message,
-                                        getMainFrame(),
-                                        actionTexts,
-                                        actionValues,
-                                        0);
+            dialog = new QuestionDialog(mainFrame,
+                    title,
+                    message,
+                    mainFrame,
+                    actionTexts,
+                    actionValues,
+                    0);
         } else {
             dialog = new QuestionDialog(getProgressDialog(), 
-                                        title,
-                                        message,
-                                        getMainFrame(),
-                                        actionTexts,
-                                        actionValues,
-                                        0);
+                    title,
+                    message,
+                    mainFrame,
+                    actionTexts,
+                    actionValues,
+                    0);
         }
         // Cancel or close dialog stops this job
         int userChoice = waitForUserResponse(dialog);

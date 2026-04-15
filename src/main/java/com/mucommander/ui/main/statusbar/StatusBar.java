@@ -576,7 +576,7 @@ public class StatusBar extends JPanel implements Runnable, MouseListener, Active
             if (isVisible() && !mainFrame.getNoEventsMode() && mainFrame.isForegroundActive()) {
                 updateVolumeInfo();
             }
-        } while (autoUpdateThread != null && mainFrame.isVisible());   // Stop when MainFrame is disposed
+        } while (autoUpdateThread != null && mainFrame.getJFrame().isVisible());   // Stop when MainFrame is disposed
     }
 
 

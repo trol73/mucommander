@@ -95,7 +95,7 @@ public class FileSelectionDialog extends FocusDialog implements ActionListener {
      * @param addToSelection if <code>true</code>, files matching
      */
     public FileSelectionDialog(MainFrame mainFrame, boolean addToSelection) {
-        super(mainFrame, i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"), mainFrame);
+        super(mainFrame.getJFrame(), i18n(addToSelection?"file_selection_dialog.mark":"file_selection_dialog.unmark"), mainFrame.getJFrame());
 	
         this.mainFrame = mainFrame;
         this.addToSelection = addToSelection;

@@ -50,7 +50,7 @@ public class UserMenuAction extends ParentFolderAction {
     public void performAction() {
         UserPopupMenu menu = createMenu(mainFrame);
         if (menu != null) {
-            menu.show(mainFrame);
+            menu.show(mainFrame.getJFrame());
         }
     }
 

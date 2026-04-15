@@ -70,7 +70,7 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
 	        int width  = (int)(screenSize.width * 0.8);
 	        int height = (int)(screenSize.height * 0.8);
 
-	        mainFrame.setBounds(new Rectangle(x, y, width, height));
+	        mainFrame.getJFrame().setBounds(new Rectangle(x, y, width, height));
 
 	        return new MainFrame[] {mainFrame};
 		}
@@ -141,7 +141,7 @@ public class DefaultMainFramesBuilder extends MainFrameBuilder {
             height = (int)(screenSize.height * 0.8);
         }
 
-        mainFrame.setBounds(new Rectangle(x, y, width, height));
+        mainFrame.getJFrame().setBounds(new Rectangle(x, y, width, height));
         
         return mainFrame;
 	}

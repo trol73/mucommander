@@ -88,7 +88,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
         //setFullScreen(true);
         if (!WindowsStorage.getInstance().init(this, filePresenter.getClass().getCanonicalName(), true)) {
             setSize(800, 600);
-            DialogToolkit.centerOnWindow(this, mainFrame);
+            DialogToolkit.centerOnWindow(this, mainFrame.getJFrame());
         }
 
         setVisible(true);
@@ -175,7 +175,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
 
 
     private void showGenericErrorDialog() {
-        InformationDialog.showErrorDialog(mainFrame, getGenericErrorDialogTitle(), getGenericErrorDialogMessage());
+        InformationDialog.showErrorDialog(mainFrame.getJFrame(), getGenericErrorDialogTitle(), getGenericErrorDialogMessage());
     }
 
 //	/**
@@ -203,7 +203,7 @@ public abstract class FileFrame extends JFrame implements QuickListContainer, IM
     		super.pack();
             DialogToolkit.fitToScreen(this);
             DialogToolkit.fitToMinDimension(this, getMinimumSize());
-            DialogToolkit.centerOnWindow(this, mainFrame);
+            DialogToolkit.centerOnWindow(this, mainFrame.getJFrame());
     	}
     }
 

@@ -60,7 +60,7 @@ public class FileCollisionRenameDialog extends FocusDialog implements ActionList
      * @param file the file to rename.
      */
     public FileCollisionRenameDialog(MainFrame mainFrame, AbstractFile file) {
-        super(mainFrame, i18n("rename"), mainFrame);
+        super(mainFrame.getJFrame(), i18n("rename"), mainFrame.getJFrame());
 
         Container contentPane = getContentPane();
 

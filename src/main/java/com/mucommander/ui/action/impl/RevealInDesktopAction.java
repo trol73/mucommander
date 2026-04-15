@@ -64,7 +64,7 @@ public class RevealInDesktopAction extends ParentFolderAction {
         try {
             DesktopManager.openInFileManager(getCurrentFolder());
         } catch(Exception e) {
-            InformationDialog.showErrorDialog(mainFrame);
+            InformationDialog.showErrorDialog(mainFrame.getJFrame());
         }
     }
 

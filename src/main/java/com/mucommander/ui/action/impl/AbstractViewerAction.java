@@ -75,7 +75,7 @@ abstract class AbstractViewerAction extends SelectedFileAction {
             try {
                 ProcessRunner.execute(customCommand.getTokens(file), file);
             } catch(Exception e) {
-                InformationDialog.showErrorDialog(mainFrame);
+                InformationDialog.showErrorDialog(mainFrame.getJFrame());
             }
         } else {
             // If it's distant, copies it locally before running the custom editor on it.

@@ -184,7 +184,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * @param mainFrame the main frame this dialog is attached to.
      */
     public RunDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(RunCommandAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(RunCommandAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
         this.mainFrame = mainFrame;
 		
         // Initializes the dialog's UI.
@@ -219,7 +219,7 @@ public class RunDialog extends FocusDialog implements ActionListener, ProcessLis
      * @param retValue process' return code (not used).
      */	
     public void processDied(int retValue) {
-        LOGGER.debug("process exit, return value= "+retValue);
+        LOGGER.debug("process exit, return value = {}", retValue);
         currentProcess = null;
         if (processInput != null) {
             processInput.close();

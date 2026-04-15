@@ -41,7 +41,7 @@ public class MaximizeWindowAction extends TcAction {
 
     @Override
     public void performAction() {
-        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainFrame.getJFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
 	@Override

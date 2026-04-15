@@ -225,18 +225,18 @@ public class ViewerRegistrar {
             }
             try {
                 if (mainFrame != null) {
-                    mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    mainFrame.getJFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 }
                 if (factory.canViewFile(file)) {
                     viewer = factory.createFileViewer();
                     if (mainFrame != null) {
-                        mainFrame.setCursor(Cursor.getDefaultCursor());
+                        mainFrame.getJFrame().setCursor(Cursor.getDefaultCursor());
                     }
                     break;
                 }
             } catch (WarnUserException e) {
                 if (mainFrame != null) {
-                    mainFrame.setCursor(Cursor.getDefaultCursor());
+                    mainFrame.getJFrame().setCursor(Cursor.getDefaultCursor());
                 }
             	// TODO: question the user how does he want to open the file (as image, text..)
                 // Todo: display a proper warning dialog with the appropriate icon
@@ -260,7 +260,7 @@ public class ViewerRegistrar {
                 }
             } catch (Exception e) {
                 if (mainFrame != null) {
-                    mainFrame.setCursor(Cursor.getDefaultCursor());
+                    mainFrame.getJFrame().setCursor(Cursor.getDefaultCursor());
                 }
             }
         }

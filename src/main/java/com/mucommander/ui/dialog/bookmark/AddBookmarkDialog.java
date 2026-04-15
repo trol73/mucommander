@@ -46,12 +46,12 @@ import java.awt.event.ActionListener;
  */
 public class AddBookmarkDialog extends FocusDialog implements ActionListener, DocumentListener {
 
-    private JTextField edtName;
-    private JTextField edtLocation;
-    private BookmarkParentComboBox cbParent;
+    private final JTextField edtName;
+    private final JTextField edtLocation;
+    private final BookmarkParentComboBox cbParent;
 
-    private JButton addButton;
-    private JButton cancelButton;
+    private final JButton addButton;
+    private final JButton cancelButton;
 
     // Dialog's width has to be at least 320
     private final static Dimension MINIMUM_DIALOG_DIMENSION = new Dimension(320,0);	
@@ -61,7 +61,7 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
 
 
     public AddBookmarkDialog(MainFrame mainFrame) {
-        super(mainFrame, ActionProperties.getActionLabel(AddBookmarkAction.Descriptor.ACTION_ID), mainFrame);
+        super(mainFrame.getJFrame(), ActionProperties.getActionLabel(AddBookmarkAction.Descriptor.ACTION_ID), mainFrame.getJFrame());
 
         Container contentPane = getContentPane();
         YBoxPanel mainPanel = new YBoxPanel(5);
@@ -78,7 +78,7 @@ public class AddBookmarkDialog extends FocusDialog implements ActionListener, Do
         edtName.getDocument().addDocumentListener(this);
         compPanel.addRow(i18n("name")+":", edtName, 10);
 		
-        // Add URL field, non editable
+        // Add URL field, not editable
         this.edtLocation = new JTextField(currentFolder.getCanonicalPath());
         compPanel.addRow(i18n("location")+":", edtLocation, 10);
 

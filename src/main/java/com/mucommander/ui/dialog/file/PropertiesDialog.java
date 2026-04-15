@@ -98,9 +98,9 @@ public class PropertiesDialog extends FocusDialog implements Runnable, ActionLis
 
 	
     public PropertiesDialog(MainFrame mainFrame, FileSet files) {
-        super(mainFrame,
+        super(mainFrame.getJFrame(),
               files.size() > 1 ? ActionProperties.getActionLabel(ShowFilePropertiesAction.Descriptor.ACTION_ID) :
-                      i18n("properties_dialog.file_properties", files.elementAt(0).getName()), mainFrame);
+                      i18n("properties_dialog.file_properties", files.elementAt(0).getName()), mainFrame.getJFrame());
 
         this.job = new PropertiesJob(files, mainFrame);
 		

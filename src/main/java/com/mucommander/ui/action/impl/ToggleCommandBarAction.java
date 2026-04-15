@@ -61,7 +61,7 @@ public class ToggleCommandBarAction extends TcAction {
         updateLabel(visible);
         // Show/hide the command bar
         commandBar.setVisible(visible);
-        mainFrame.validate();
+        mainFrame.getJFrame().validate();
     }
 
 	@Override

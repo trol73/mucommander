@@ -131,7 +131,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
 
 
     public ProgressDialog(MainFrame mainFrame, String title, TaskWidget taskWidget) {
-        super(mainFrame, title, mainFrame);
+        super(mainFrame.getJFrame(), title, mainFrame.getJFrame());
         this.taskWidget = taskWidget;
         this.mainFrame = mainFrame;
 
@@ -557,7 +557,7 @@ public class ProgressDialog extends FocusDialog implements ActionListener, ItemL
             synchronized(samples) {     // Ensures that paint() is not currently accessing the Vector
                 // Capacity reached, remove first sample
                 if (samples.size() == NB_SAMPLES_MAX) {
-                    samples.remove(0);
+                    samples.removeFirst();
                 }
 
                 // Add sample to the vector

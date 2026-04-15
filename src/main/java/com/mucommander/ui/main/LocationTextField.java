@@ -299,15 +299,13 @@ public class LocationTextField extends ProgressTextField implements LocationList
     }
 
 
-    ///////////////////////////
-    // FocusListener methods //
-    ///////////////////////////
-
+    @Override
     public void focusGained(FocusEvent e) {
         // Disable menu bar when this component has gained focus
-        folderPanel.getMainFrame().getJMenuBar().setEnabled(false);
+        folderPanel.getMainFrame().getJFrame().getJMenuBar().setEnabled(false);
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
 //    	// If we are not in the middle of a folder change, and focus has been
 //    	// lost then ensure location field's text is set to the current directory.
@@ -315,7 +313,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
 //    		locationField.setText(folderPanel.getCurrentFolder().getAbsolutePath());
     	
         // Enable menu bar when this component has lost focus
-        folderPanel.getMainFrame().getJMenuBar().setEnabled(true);
+        folderPanel.getMainFrame().getJFrame().getJMenuBar().setEnabled(true);
     }
 
 

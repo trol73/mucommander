@@ -90,7 +90,7 @@ public class ServerConnectDialog extends FocusDialog implements ActionListener, 
      * @param selectPanelClass class of the ServerPanel to select
      */
     public ServerConnectDialog(FolderPanel folderPanel, Class<? extends ServerPanel> selectPanelClass) {
-        super(folderPanel.getMainFrame(), ActionProperties.getActionLabel(ConnectToServerAction.Descriptor.ACTION_ID), folderPanel.getMainFrame());
+        super(folderPanel.getMainFrame().getJFrame(), ActionProperties.getActionLabel(ConnectToServerAction.Descriptor.ACTION_ID), folderPanel.getMainFrame().getJFrame());
         this.folderPanel = folderPanel;
         lastPanelClass = selectPanelClass;
 

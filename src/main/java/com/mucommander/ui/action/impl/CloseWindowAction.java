@@ -46,7 +46,7 @@ public class CloseWindowAction extends TcAction {
         if (WindowManager.getMainFrames().size() == 1) {
             ActionManager.performAction(QuitAction.Descriptor.ACTION_ID, mainFrame);
         } else {
-            mainFrame.dispose();
+            mainFrame.getJFrame().dispose();
         }
     }
 

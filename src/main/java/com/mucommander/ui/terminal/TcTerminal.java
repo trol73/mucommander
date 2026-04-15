@@ -147,7 +147,7 @@ public class TcTerminal {
 
 
     public void updateTitle() {
-        mainFrame.setTitle(termWidget.getTerminalDisplay().getWindowTitle());
+        mainFrame.getJFrame().setTitle(termWidget.getTerminalDisplay().getWindowTitle());
 //        mainFrame.setTitle(termWidget.getCurrentSession().getSessionName());
     }
 

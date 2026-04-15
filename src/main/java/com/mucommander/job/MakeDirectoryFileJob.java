@@ -113,7 +113,8 @@ public class MakeDirectoryFileJob extends FileJob {
                 if (collision != FileCollisionChecker.NO_COLLISION) {
                     // File already exists in destination, ask the user what to do (cancel, overwrite,...) but
                     // do not offer the multiple files mode options such as 'skip' and 'apply to all'.
-                    int choice = waitForUserResponse(new FileCollisionDialog(getMainFrame(), getMainFrame(), collision, null, file, false, false));
+                    var mainFrame = getMainFrame().getJFrame();
+                    int choice = waitForUserResponse(new FileCollisionDialog(mainFrame, mainFrame, collision, null, file, false, false));
 
                     // Overwrite file
                     if (choice == FileCollisionDialog.OVERWRITE_ACTION) {

@@ -44,6 +44,7 @@ import com.mucommander.ui.main.table.views.full.FileTableModel;
 import com.mucommander.ui.text.FilePathFieldKeyListener;
 import com.mucommander.ui.theme.*;
 import com.mucommander.utils.FileIconsCache;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +104,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
     /** Frame containing this file table. */
     private final MainFrame mainFrame;
-    /** Folder panel containing this frame. */
+    /** Folder panel containing this frame.
+     * -- GETTER --
+     *  Returns the FolderPanel that contains this FileTable
+     */
+    @Getter
     private final FolderPanel folderPanel;
 
 
@@ -114,7 +119,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** CellEditor used to edit filenames when clicked */
     private final FilenameEditor filenameEditor;
 
-    /** Contains sort-related variables */
+    /** Contains sort-related variables
+     * -- GETTER --
+     *  Returns a SortInfo instance that holds information about how this table is currently sorted
+     */
+    @Getter
     private final SortInfo sortInfo = new SortInfo();
 
     /** Row currently selected */
@@ -141,16 +150,32 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** Timestamp of last double click */
     private long lastDoubleClickTimestamp;
 
-    /** Is automatic columns sizing enabled ? */
+    /** Is automatic columns sizing enabled ?
+     * -- GETTER --
+     *  Returns <code>true</code> if the auto-columns sizing is currently enabled.
+     */
+    @Getter
     private boolean autoSizeColumnsEnabled;
 
-    /** Instance of the inner class that handles quick search */
+    /** Instance of the inner class that handles quick search
+     * -- GETTER --
+     *  Returns the the QuickSearch inner class instance used by this FileTable
+     */
+    @Getter
     private final QuickSearch quickSearch = new FileTableQuickSearch();
 
     /** TableSelectionListener instances registered to receive selection change events */
     private final WeakHashMap<TableSelectionListener, Void> tableSelectionListeners = new WeakHashMap<>();
 
-    /** True when this table is the current or last active table in the MainFrame */
+    /** True when this table is the current or last active table in the MainFrame
+     * -- GETTER --
+     *  Returns <code>true/</code> if this table is the active one in the MainFrame.
+     *  Being the active table doesn't necessarily mean that it currently has focus, the focus can be in some other component
+     *  of the active, or nowhere in the MainFrame if the window is not in the foreground.
+     *  <p>Use
+     *  to test if the table currently has focus.
+     */
+    @Getter
     private boolean isActiveTable;
 
     /** Timestamp of the last focus gain (in milliseconds) */
@@ -175,6 +200,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
     /** Table that shows the user to refresh if the location doesn't exist */
     private final DefaultOverlayable overlayTable;
 
+    @Getter
     private TableViewMode viewMode;
 
     private final FileTableConfiguration conf;
@@ -224,7 +250,7 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
         // Initializes event listening.
         addMouseListener(this);
-        folderPanel.addMouseListener(this);
+        folderPanel.getPanel().addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
         mainFrame.addActivePanelListener(this);
@@ -315,10 +341,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         // TODO restore header selection
     }
 
-
-    public TableViewMode getViewMode() {
-        return viewMode;
-    }
 
     private DefaultOverlayable createOverlayableTable() {
         return new DefaultOverlayable(scrollpaneWrapper) {
@@ -435,30 +457,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
 
 
     /**
-     * Returns the {@link FolderPanel} that contains this FileTable.
-     *
-     * @return the FolderPanel that contains this FileTable
-     */
-    public FolderPanel getFolderPanel() {
-        return folderPanel;
-    }
-
-
-    /**
-     * Returns <code>true/</code> if this table is the active one in the MainFrame.
-     * Being the active table doesn't necessarily mean that it currently has focus, the focus can be in some other component
-     * of the active {@link FolderPanel}, or nowhere in the MainFrame if the window is not in the foreground.
-     *
-     * <p>Use {@link #hasFocus()} to test if the table currently has focus.
-     *
-     * @return true if this table is the active one in the MainFrame
-     * @see com.mucommander.ui.main.MainFrame#getActiveTable()
-     */
-    public boolean isActiveTable() {
-        return isActiveTable;
-    }
-
-    /**
      * Convenience method that returns this table's model (the one that {@link #getModel()} returns),
      * as a {@link FileTableModel}, to avoid having to cast it.
      *
@@ -466,24 +464,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
      */
     public BaseFileTableModel getFileTableModel() {
         return tableModel;
-    }
-
-    /**
-     * Returns a {@link SortInfo} instance that holds information about how this table is currently sorted.
-     *
-     * @return a SortInfo instance that holds information about how this table is currently sorted
-     */
-    public SortInfo getSortInfo() {
-        return sortInfo;
-    }
-
-    /**
-     * Returns the {@link QuickSearch} inner class instance used by this FileTable.
-     *
-     * @return the QuickSearch inner class instance used by this FileTable
-     */
-    public QuickSearch getQuickSearch() {
-        return quickSearch;
     }
 
     /**
@@ -660,17 +640,6 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         setRowHeight(2*CellLabel.CELL_BORDER_HEIGHT + Math.max(getFontMetrics(filenameEditor.filenameField.getFont()).getHeight(), (int)FileIcons.getIconDimension().getHeight()));
         // Filename editor's row resize disabled because of Java bug #4398268 which prevents new rows from being visible after setRowHeight(row, height) has been called :/
         //		setRowHeight(Math.max(getFontMetrics(cellRenderer.getCellFont()).getHeight()+cellRenderer.CELL_BORDER_HEIGHT, editorRowHeight));
-    }
-
-
-
-    /**
-     * Returns <code>true</code> if the auto-columns sizing is currently enabled.
-     *
-     * @return true if the auto-columns sizing is currently enabled
-     */
-    public boolean isAutoSizeColumnsEnabled() {
-        return this.autoSizeColumnsEnabled;
     }
 
 
@@ -1074,14 +1043,11 @@ public class FileTable extends JTable implements MouseListener, MouseMotionListe
         }
 
         // The Owner and Group columns are displayable only if current folder has this information
-        switch (column) {
-            case OWNER:
-                return file.canGetOwner();
-            case GROUP:
-                return file.canGetGroup();
-            default:
-                return true;
-        }
+        return switch (column) {
+            case OWNER -> file.canGetOwner();
+            case GROUP -> file.canGetGroup();
+            default -> true;
+        };
     }
 
     /**

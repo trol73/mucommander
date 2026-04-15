@@ -132,7 +132,7 @@ public class DeleteDialog extends JobDialog implements ItemListener, ActionListe
             Dimension d = getContentPane().getPreferredSize();
             getContentPane().setMaximumSize(new Dimension(getContentPane().getMaximumSize().width, getContentPane().getPreferredSize().height));
             setMinimumSizeDialog(new Dimension(d.width*6/5, d.height*6/5));
-            int maxWidth = Math.max(d.width*4, mainFrame.getWidth());
+            int maxWidth = Math.max(d.width*4, mainFrame.getJFrame().getWidth());
             setMaximumSizeDialog(new Dimension(maxWidth, d.height*3/2));
         }
     }

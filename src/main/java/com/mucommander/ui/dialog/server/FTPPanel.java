@@ -102,7 +102,7 @@ public class FTPPanel extends ServerPanel implements ActionListener, EncodingLis
         addRow(Translator.get("server_connect_dialog.port"), portSpinner, 15);
 
         // Encoding combo box
-        encodingSelectBox = new EncodingSelectBox(new DialogOwner(mainFrame), lastEncoding);
+        encodingSelectBox = new EncodingSelectBox(new DialogOwner(mainFrame.getJFrame()), lastEncoding);
         encodingSelectBox.addEncodingListener(this);
         addRow(Translator.get("encoding"), encodingSelectBox, 15);
 
